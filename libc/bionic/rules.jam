@@ -1,0 +1,1 @@
+NO_LOCAL_SRC = malloc_leak.c ;
