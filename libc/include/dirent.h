@@ -68,7 +68,11 @@ extern  int              readdir_r(DIR*  dirp, struct dirent *entry, struct dire
 extern  int              closedir(DIR*  dirp);
 extern  void             rewinddir(DIR *dirp);
 extern  int              dirfd(DIR* dirp);
-
+extern  int              alphasort(const void *a, const void *b);
+extern  int              scandir(const char *dir, struct dirent ***namelist,
+                                 int(*filter)(const struct dirent *),
+                                 int(*compar)(const struct dirent **, 
+                                              const struct dirent **));
 __END_DECLS
 
 #endif /* _DIRENT_H_ */

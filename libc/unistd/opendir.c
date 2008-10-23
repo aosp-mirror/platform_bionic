@@ -203,3 +203,65 @@ void   rewinddir(DIR *dir)
     pthread_mutex_unlock( &dir->_DIR_lock );
 }
 
+
+int alphasort(const void *a, const void *b)
+{
+        struct dirent **d1, **d2;
+
+        d1 = (struct dirent **) a;
+        d2 = (struct dirent **) b;
+        return strcmp((*d1)->d_name, (*d2)->d_name);
+}
+
+
+int scandir(const char *dir, struct dirent ***namelist,
+            int(*filter)(const struct dirent *),
+            int(*compar)(const struct dirent **, const struct dirent **))
+{
+    DIR *d;
+    int n_elem = 0;
+    struct dirent *this_de, *de;
+    struct dirent **de_list = NULL;
+    int de_list_size = 0;
+
+    d = opendir(dir);
+    if (d == NULL) {
+        return -1;
+    }
+
+    while ((this_de = readdir(d)) != NULL) {
+        if (filter && (*filter)(this_de) == 0) {
+            continue;
+        }
+        if (n_elem == 0) {
+            de_list_size = 4;
+            de_list = (struct dirent **) 
+                    malloc(sizeof(struct dirent *)*de_list_size);
+            if (de_list == NULL) {
+                return -1;
+            }
+        }
+        else if (n_elem == de_list_size) {
+            struct dirent **de_list_new;
+
+            de_list_size += 10;
+            de_list_new = (struct dirent **) 
+                    realloc(de_list, sizeof(struct dirent *)*de_list_size);
+            if (de_list_new == NULL) {
+                free(de_list);
+                return -1;
+            }
+            de_list = de_list_new;
+        }
+        de = (struct dirent *) malloc(sizeof(struct dirent));
+        *de = *this_de;
+        de_list[n_elem++] = de;
+    }
+    closedir(d);
+    if (n_elem && compar) {
+        qsort(de_list, n_elem, sizeof(struct dirent *), 
+              (int (*)(const void *, const void *)) compar);
+    }
+    *namelist = de_list;
+    return n_elem;
+}
