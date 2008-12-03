@@ -135,6 +135,40 @@
       "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "zb5ed613d5ffb6454a80f0ee77f8e50bd",
+        "filename": "libc/include/termios.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:25Z",
+      "side": 1,
+      "message": "probably not needed :-)",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "z4635f3d8fd86aad36d4edd2f386f7866",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:25Z",
+      "side": 1,
+      "message": "any justification for this ? please add a comment",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
