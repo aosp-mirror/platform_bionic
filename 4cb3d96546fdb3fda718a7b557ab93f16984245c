@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "z2af611fbccd549fb666634405d7bc00e",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:22Z",
+      "side": 1,
+      "message": "please try to be consistent with the rest of the header file and do not use a space after the #. I agree this is ugly, but it\u0027s the NetBSD way.",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "z08ea96e23deea40174de28f90a7b5b55",
+        "filename": "libc/include/sys/tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:23Z",
+      "side": 1,
+      "message": "this is a performance penalty for ARMv5. Please conditionalize this",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
