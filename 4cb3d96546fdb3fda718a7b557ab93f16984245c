@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "z742593de8278e930e67830287c9ab440",
+        "filename": "libc/arch-arm/bionic/__clzsi2.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:24Z",
+      "side": 1,
+      "message": "Also, generally speaking, do not test against a specific architecture. It is so much better to test against feature-specific macros like __ARM_CPU_HAS_CLZ that can be defined in a single location with all the architecture-specific quirks",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "z134528123ce1affed7c15116f1ae9969",
         "filename": "libc/arch-arm/bionic/memcmp.S",
         "patchSetId": 1
