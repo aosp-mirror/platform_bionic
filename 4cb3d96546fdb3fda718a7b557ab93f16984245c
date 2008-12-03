@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "ze8a9e41354cbc8e8448a929c1c3c34af",
+        "filename": "libc/arch-arm/bionic/strlen.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-03T16:11:24Z",
+      "side": 1,
+      "message": "you should use a PLD(addr) macro instead, defined at the top of the header or in some common header file instead.\n",
+      "revId": "4cb3d96546fdb3fda718a7b557ab93f16984245c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "z2af611fbccd549fb666634405d7bc00e",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
