@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "z3812236589357315929df9e8632960b2",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2008-12-03T16:11:20Z",
+      "side": 1,
+      "message": "Sorry, its correct as written",
+      "revId": "33767fc71ba9b77953e55b78a9672f6101008599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "zde766d12c03e3d0b2a27fb72f230bbeb",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2008-12-03T16:11:20Z",
+      "side": 1,
+      "message": "Do you mean to call that variable \"compare\" ?",
+      "revId": "33767fc71ba9b77953e55b78a9672f6101008599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "z98134654e0b399a453d92c8fe077793f",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2008-12-03T16:11:20Z",
+      "side": 1,
+      "message": "Also here too.",
+      "revId": "33767fc71ba9b77953e55b78a9672f6101008599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
