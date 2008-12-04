@@ -25,6 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <machine/cpu-features.h>
+
     .text
 
     .global memcmp
@@ -41,8 +44,8 @@
  */
 
 memcmp:
-        pld         [r0, #0]
-        pld         [r1, #0]
+        PLD         (r0, #0)
+        PLD         (r1, #0)
 
         /* take of the case where length is 0 or the buffers are the same */
         cmp         r0, r1
@@ -53,8 +56,8 @@ memcmp:
         /* save registers */
         stmfd       sp!, {r4, lr}
         
-        pld         [r0, #32]
-        pld         [r1, #32]
+        PLD         (r0, #32)
+        PLD         (r1, #32)
 
         /* since r0 hold the result, move the first source
          * pointer somewhere else
@@ -104,8 +107,8 @@ memcmp:
         subs        r2, r2, #(32 + 4)
         bmi         1f
         
-0:      pld         [r4, #64]
-        pld         [r1, #64]
+0:      PLD         (r4, #64)
+        PLD         (r1, #64)
         ldr         r0, [r4], #4
         ldr         lr, [r1, #4]!
         eors        r0, r0, ip
@@ -192,8 +195,8 @@ memcmp:
         bic         r1, r1, #3
         ldr         lr, [r1], #4
 
-6:      pld         [r1, #64]
-        pld         [r4, #64]
+6:      PLD         (r1, #64)
+        PLD         (r4, #64)
         mov         ip, lr, lsr #16
         ldr         lr, [r1], #4
         ldr         r0, [r4], #4

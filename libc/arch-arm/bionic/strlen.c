@@ -27,6 +27,7 @@
  */
 #include <string.h>
 #include <stdint.h>
+#include <machine/cpu-features.h>
 
 size_t strlen(const char *s)
 {
@@ -62,7 +63,9 @@ size_t strlen(const char *s)
         "ldr     %[v], [ %[s] ], #4         \n"
         "sub     %[l], %[l], %[s]           \n"
         "0:                                 \n"
+#if __ARM_HAVE_PLD
         "pld     [ %[s], #64 ]              \n"
+#endif
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"

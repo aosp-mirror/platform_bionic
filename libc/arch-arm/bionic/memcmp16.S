@@ -25,6 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <machine/cpu-features.h>
+
     .text
 
     .global __memcmp16
@@ -41,8 +44,8 @@
  */
 
 __memcmp16:
-        pld         [r0, #0]
-        pld         [r1, #0]
+        PLD         (r0, #0)
+        PLD         (r1, #0)
 
         /* take of the case where length is nul or the buffers are the same */
         cmp         r0, r1
@@ -64,8 +67,8 @@ __memcmp16:
         bpl         0f
 
         /* small blocks (less then 12 words) */
-        pld         [r0, #32]
-        pld         [r1, #32]
+        PLD         (r0, #32)
+        PLD         (r1, #32)
 
 1:      ldrh        r0, [r3], #2
         ldrh        ip, [r1], #2
@@ -113,8 +116,8 @@ __memcmp16:
         bmi         1f
         
 0:
-        pld         [r3, #64]
-        pld         [r1, #64]
+        PLD         (r3, #64)
+        PLD         (r1, #64)
         ldr         r0, [r3], #4
         ldr         lr, [r1, #4]!
         eors        r0, r0, ip
@@ -195,8 +198,8 @@ __memcmp16:
         sub         r2, r2, #8
 
 6:
-        pld         [r3, #64]
-        pld         [r1, #64]
+        PLD         (r3, #64)
+        PLD         (r1, #64)
         mov         ip, lr, lsr #16
         ldr         lr, [r1], #4
         ldr         r0, [r3], #4
