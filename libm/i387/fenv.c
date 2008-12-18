@@ -28,7 +28,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <machine/npx.h>
+#include "npx.h"
 #include "fenv.h"
 
 const fenv_t __fe_dfl_env = {

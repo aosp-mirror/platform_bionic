@@ -16,6 +16,14 @@ include $(CLEAR_VARS)
 # DO NOT REMOVE --exclude-libs!
 
 LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a
+
+# for x86, exclude libgcc_eh.a for the same reasons as above
+ifneq ($(TARGET_SIMULATOR),true)
+ifeq ($(TARGET_ARCH),x86)
+LOCAL_LDFLAGS += -Wl,--exclude-libs=libgcc_eh.a
+endif
+endif
+
 LOCAL_SRC_FILES:= libdl.c
 
 LOCAL_MODULE:= libdl

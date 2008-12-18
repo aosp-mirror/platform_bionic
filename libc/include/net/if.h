@@ -37,5 +37,6 @@ __BEGIN_DECLS
  * Map an interface name into its corresponding index.
  */
 extern unsigned int if_nametoindex(const char *);
+extern char*        if_indextoname(unsigned ifindex, char *ifname);
 
 __END_DECLS

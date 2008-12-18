@@ -44,7 +44,11 @@
 
 __BEGIN_DECLS
 
-typedef unsigned char           wchar_t;
+#ifndef __cplusplus
+/* wchar_t is a builtin keyword of g++ */
+typedef unsigned char            wchar_t;
+#endif
+
 typedef int                     wint_t;
 typedef struct { int  dummy; }  mbstate_t;
 

@@ -4,12 +4,16 @@
 #
 # each non comment line has the following format:
 #
-# return_type    func_name[:syscall_name]([parameter_list])  (#syscall_number|stub)
+# return_type    func_name[:syscall_name[:call_id]]([parameter_list])  (#syscall_number|stub)
 #
 # note that:
 #      - syscall_name correspond to the name of the syscall, which may differ from
 #        the exported function name (example: the exit syscall is implemented by the _exit()
 #        function, which is not the same as the standard C exit() function which calls it)
+#        The call_id parameter, given that func_name and syscall_name have
+#        been provided, allows the user to specify dispatch style syscalls.
+#        For example, socket() syscall on i386 actually becomes:
+#          socketcall(__NR_socket, 1, *(rest of args on stack)).
 #
 #      - each parameter type is assumed to be stored on 32 bits, there is no plan to support
 #        64-bit architectures at the moment
@@ -24,7 +28,7 @@
 # process management
 void    _exit:exit_group (int)      248,252
 void    _exit_thread:exit (int)	    1
-int     fork (void)           2
+pid_t   __fork:fork (void)           2
 pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7
 int     waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
 pid_t   __clone:clone(int (*fn)(void*), void *child_stack, int flags, void *arg)  120
@@ -61,7 +65,7 @@ int     getrusage(int who, struct rusage*  r_usage)  77
 int     setgroups:setgroups32(int, const gid_t *)   206
 pid_t   getpgrp(void)  stub
 int     setpgid(pid_t, pid_t)  57
-pid_t   vfork(void)  190
+pid_t   vfork(void)  190,-1
 int     setregid:setregid32(gid_t, gid_t)  204
 int     chroot(const char *)  61
 int     prctl(int option, unsigned int arg2, unsigned int arg3, unsigned int arg4, unsigned int arg5)  172
@@ -72,6 +76,8 @@ int     acct(const char*  filepath)  51
 # file descriptors
 ssize_t     read (int, void*, size_t)        3
 ssize_t     write (int, const void*, size_t)       4
+ssize_t     __pread64:pread64 (int, void *, size_t, off_t, off_t) 180
+ssize_t     __pwrite64:pwrite64 (int, void *, size_t, off_t, off_t) 181
 int         __open:open (const char*, int, mode_t)  5
 int         __openat:openat (int, const char*, int, mode_t)  322,295
 int         close (int)                      6
@@ -148,12 +154,13 @@ int           clock_gettime(clockid_t clk_id, struct timespec *tp)    263,265
 int           clock_settime(clockid_t clk_id, const struct timespec *tp)  262,264
 int           clock_getres(clockid_t clk_id, struct timespec *res)   264,266
 int           clock_nanosleep(const struct timespec *req, struct timespec *rem)  265,267
+int           getitimer(int, const struct itimerval *)   105
 int           setitimer(int, const struct itimerval *, struct itimerval *)  104
-int           timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)   257,259
-int           timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*) 258,260
-int           timer_gettime(timer_t, struct itimerspec*)                                259,261
-int           timer_getoverrun(timer_t)                                                 260,262
-int           timer_delete(timer_t)                                                     261,263
+int           __timer_create:timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)    257,259
+int           __timer_settime:timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*) 258,260
+int           __timer_gettime:timer_gettime(timer_t, struct itimerspec*)                                259,261
+int           __timer_getoverrun:timer_getoverrun(timer_t)                                              260,262
+int           __timer_delete:timer_delete(timer_t)                                                      261,263
 int           utimes(const char*, const struct timeval tvp[2])                          269, 271
 
 # signals
@@ -181,6 +188,23 @@ int           setsockopt(int, int, int, const void *, socklen_t)  294,-1
 int           getsockopt(int, int, int, void *, socklen_t *)    295,-1
 int           sendmsg(int, const struct msghdr *, unsigned int)  296,-1
 int           recvmsg(int, struct msghdr *, unsigned int)   297,-1
+
+# sockets for x86. These are done as an "indexed" call to socketcall syscall.
+int           socket:socketcall:1 (int, int, int) -1,102
+int           bind:socketcall:2 (int, struct sockaddr *, int)  -1,102
+int           connect:socketcall:3(int, struct sockaddr *, socklen_t)   -1,102
+int           listen:socketcall:4(int, int)                   -1,102
+int           accept:socketcall:5(int, struct sockaddr *, socklen_t *)  -1,102
+int           getsockname:socketcall:6(int, struct sockaddr *, socklen_t *)  -1,102
+int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,102
+int           socketpair:socketcall:8(int, int, int, int*)    -1,102
+int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102
+int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102
+int           shutdown:socketcall:13(int, int)  -1,102
+int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102
+int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102
+int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102
+int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102
 
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)  156

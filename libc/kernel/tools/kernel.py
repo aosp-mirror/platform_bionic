@@ -57,6 +57,9 @@ class HeaderScanner:
     #
     re_combined =\
        re.compile(r"^.*<((%s)/[\d\w_\+\.\-/]*)>.*$" % string.join(kernel_dirs,"|") )
+    # some kernel files choose to include files with relative paths (x86 32/64
+    # dispatch for instance)
+    re_rel_dir = re.compile(r'^.*"([\d\w_\+\.\-/]+)".*$')
 
     def __init__(self,config={}):
         """initialize a HeaderScanner"""
@@ -68,13 +71,26 @@ class HeaderScanner:
         self.headers  = {}     # maps headers to set of users
         self.config   = config
 
-    def checkInclude(self,line,from_file):
+    def checkInclude(self, line, from_file, kernel_root=None):
+        relative = False
         m = HeaderScanner.re_combined.match(line)
+        if kernel_root and not m:
+            m = HeaderScanner.re_rel_dir.match(line)
+            relative = True
         if not m: return
 
         header = m.group(1)
         if from_file:
             self.files.add(from_file)
+            if kernel_root and relative:
+                hdr_dir = os.path.realpath(os.path.dirname(from_file))
+                hdr_dir = hdr_dir.replace("%s/" % os.path.realpath(kernel_root),
+                                          "")
+                if hdr_dir:
+                    _prefix = "%s/" % hdr_dir
+                else:
+                    _prefix = ""
+                header = "%s%s" % (_prefix, header)
 
         if not header in self.headers:
             self.headers[header] = set()
@@ -84,7 +100,7 @@ class HeaderScanner:
                 print "=== %s uses %s" % (from_file, header)
             self.headers[header].add(from_file)
 
-    def parseFile(self,path):
+    def parseFile(self, path, arch=None, kernel_root=None):
         """parse a given file for Linux headers"""
         if not os.path.exists(path):
             return
@@ -100,7 +116,8 @@ class HeaderScanner:
 
         hasIncludes = False
         for line in f:
-            if HeaderScanner.re_combined.match(line):
+            if (HeaderScanner.re_combined.match(line) or
+                (kernel_root and HeaderScanner.re_rel_dir.match(line))):
                 hasIncludes = True
                 break
 
@@ -113,11 +130,16 @@ class HeaderScanner:
         list = cpp.BlockParser().parseFile(path)
         if list:
             #list.removePrefixed("CONFIG_",self.config)
-            list.optimizeMacros(kernel_known_macros)
+            macros = kernel_known_macros.copy()
+            if kernel_root:
+                macros.update(self.config)
+                if arch and arch in kernel_default_arch_macros:
+                    macros.update(kernel_default_arch_macros[arch])
+            list.optimizeMacros(macros)
             list.optimizeIf01()
             includes = list.findIncludes()
             for inc in includes:
-                self.checkInclude(inc,path)
+                self.checkInclude(inc, path, kernel_root)
 
     def getHeaders(self):
         """return the set of all needed kernel headers"""
@@ -187,14 +209,15 @@ class KernelHeaderFinder:
         self.kernel_root   = kernel_root
         self.kernel_config = kernel_config
         self.needed        = {}
+        self.setArch(arch=None)
 
     def setArch(self,arch=None):
+        self.curr_arch = arch
+        self.arch_headers = set()
         if arch:
             self.prefix = "asm-%s/" % arch
-            self.arch_headers = set()
         else:
             self.prefix = None
-            self.arch_headers = set()
 
     def pathFromHeader(self,header):
         path = header
@@ -224,7 +247,8 @@ class KernelHeaderFinder:
         while i < len(workqueue):
             path = workqueue[i]
             i   += 1
-            fparser.parseFile(self.kernel_root + path)
+            fparser.parseFile(self.kernel_root + path,
+                              arch=self.curr_arch, kernel_root=self.kernel_root)
             for used in fparser.getHeaders():
                 path  = self.pathFromHeader(used)
                 if not path in needed:

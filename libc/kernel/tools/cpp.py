@@ -1799,7 +1799,7 @@ class BlockList:
                         bad = 0
                         if tok.id in [tokLN, tokSPACE]:
                             pass
-                        elif tok.value in [ 'struct', 'typedef', 'enum', 'union' ]:
+                        elif tok.value in [ 'struct', 'typedef', 'enum', 'union', '__extension__' ]:
                             state = 1
                         else:
                             if tok.value in [ 'static', 'extern', '__KINLINE' ]:

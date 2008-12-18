@@ -21,4 +21,14 @@ void *dlopen(const char *filename, int flag) { return 0; }
 char *dlerror(void) { return 0; }
 void *dlsym(void *handle, const char *symbol) { return 0; }
 int dlclose(void *handle) { return 0; }
+
+#ifdef __arm__
 void *dl_unwind_find_exidx(void *pc, int *pcount) { return 0; }
+#elif defined(__i386__)
+/* we munge the cb definition so we don't have to include any headers here.
+ * It won't affect anything since these are just symbols anyway */
+int dl_iterate_phdr(int (*cb)(void *info, void *size, void *data),
+                    void *data) { return 0; }
+#else
+#error Unsupported architecture. Only arm and x86 are supported.
+#endif

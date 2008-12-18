@@ -41,6 +41,11 @@
 #  define  __STDINT_MACROS
 #endif
 
+/* the definitions of STDINT_LIMITS depend on those of STDINT_MACROS */
+#if defined __STDINT_LIMITS && !defined __STDINT_MACROS
+#  define  __STDINT_MACROS
+#endif
+
 typedef __int8_t      int8_t;
 typedef __uint8_t     uint8_t;
 typedef __int16_t     int16_t;

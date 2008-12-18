@@ -2,7 +2,7 @@ LOCAL_PATH:= $(call my-dir)
 
 libm_common_src_files:= \
 	isinf.c  \
-        fpclassify.c \
+	fpclassify.c \
 	bsdsrc/b_exp.c \
 	bsdsrc/b_log.c \
 	bsdsrc/b_tgamma.c \
@@ -54,7 +54,6 @@ libm_common_src_files:= \
 	src/e_sinhf.c \
 	src/e_sqrt.c \
 	src/e_sqrtf.c \
-	arm/fenv.c \
 	src/k_cos.c \
 	src/k_cosf.c \
 	src/k_rem_pio2.c \
@@ -128,9 +127,6 @@ libm_common_src_files:= \
 	src/s_round.c \
 	src/s_roundf.c \
 	src/s_roundl.c \
-	src/s_scalbln.c \
-	src/s_scalbn.c \
-	src/s_scalbnf.c \
 	src/s_signbit.c \
 	src/s_signgam.c \
 	src/s_significand.c \
@@ -153,6 +149,32 @@ libm_common_src_files:= \
 	src/s_isnan.c \
 	src/s_modf.c
 
+
+ifeq ($(TARGET_ARCH),arm)
+  libm_common_src_files += \
+	arm/fenv.c \
+	src/e_ldexpf.c \
+	src/s_scalbln.c \
+	src/s_scalbn.c \
+	src/s_scalbnf.c
+
+  libm_common_includes = $(LOCAL_PATH)/arm
+
+else
+  ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
+    libm_common_src_files += \
+	i387/fenv.c \
+	i387/s_scalbnl.S \
+	i387/s_scalbn.S \
+	i387/s_scalbnf.S
+
+    libm_common_includes = $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
+  else
+    $(error "Unknown architecture")
+  endif
+endif
+
+
 # libm.a
 # ========================================================
 
@@ -162,7 +184,7 @@ LOCAL_SRC_FILES := \
     $(libm_common_src_files)
 
 LOCAL_ARM_MODE := arm
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/arm
+LOCAL_C_INCLUDES += $(libm_common_includes)
 
 LOCAL_MODULE:= libm
 
@@ -180,7 +202,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_ARM_MODE := arm
 
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/arm
+LOCAL_C_INCLUDES += $(libm_common_includes)
 
 LOCAL_MODULE:= libm
 

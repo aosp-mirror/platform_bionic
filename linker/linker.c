@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <dlfcn.h>
+#include <sys/stat.h>
 
 //#include <pthread.h>
 
@@ -409,6 +410,21 @@ static const char *sopaths[] = {
     0
 };
 
+static int _open_lib(const char *name)
+{
+    int fd;
+    struct stat filestat;
+
+    if ((stat(name, &filestat) >= 0) && S_ISREG(filestat.st_mode)) {
+        if ((fd = open(name, O_RDONLY)) >= 0)
+            return fd;
+    }
+
+    return -1;
+}
+
+/* TODO: Need to add support for initializing the so search path with
+ * LD_LIBRARY_PATH env variable for non-setuid programs. */
 static int open_library(const char *name)
 {
     int fd;
@@ -417,16 +433,16 @@ static int open_library(const char *name)
 
     TRACE("[ %5d opening %s ]\n", pid, name);
 
-    if(strlen(name) > 256) return -1;
     if(name == 0) return -1;
+    if(strlen(name) > 256) return -1;
 
-    fd = open(name, O_RDONLY);
-    if(fd != -1) return fd;
+    if ((name[0] == '/') && ((fd = _open_lib(name)) >= 0))
+        return fd;
 
-    for(path = sopaths; *path; path++){
-        sprintf(buf,"%s/%s", *path, name);
-        fd = open(buf, O_RDONLY);
-        if(fd != -1) return fd;
+    for (path = sopaths; *path; path++) {
+        snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        if ((fd = _open_lib(buf)) >= 0)
+            return fd;
     }
 
     return -1;
@@ -1026,7 +1042,7 @@ unsigned unload_library(soinfo *si)
     }
     else {
         si->refcount--;
-        ERROR("%5d not unloading '%s', decrementing refcount to %d\n",
+        PRINT("%5d not unloading '%s', decrementing refcount to %d\n",
               pid, si->name, si->refcount);
     }
     return si->refcount;

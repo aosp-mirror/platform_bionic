@@ -42,7 +42,7 @@ __BEGIN_DECLS
 #define SOCK_PACKET      10
 
 #ifdef __i386__
-# define __socketcall extern __cdecl
+# define __socketcall extern __attribute__((__cdecl__))
 #else
 # define __socketcall extern
 #endif

@@ -66,22 +66,11 @@ static __inline__ int tcflush(int fd, int __queue)
     return ioctl(fd, TCFLSH, (void *)(intptr_t)__queue);
 }
 
-static __inline__ pid_t tcgetpgrp(int fd)
-{
-    pid_t _pid;
-    return ioctl(fd, TIOCGPGRP, &_pid) ? (pid_t)-1 : _pid;
-}
-
-static __inline__ int tcsetpgrp(int fd, pid_t _pid)
-{
-    return ioctl(fd, TIOCSPGRP, &_pid);
-}
-
 static __inline__ pid_t tcgetsid(int fd)
 {
     pid_t _pid;
     return ioctl(fd, TIOCGSID, &_pid) ? (pid_t)-1 : _pid;
-}  
+}
 
 static __inline__ int tcsendbreak(int fd, int __duration)
 {

@@ -26,12 +26,12 @@
  * SUCH DAMAGE.
  */
 /* see the implementation of __set_tls and pthread.c to understand this
- * code. Basically, the content of fs:[0] always is a pointer to the base
+ * code. Basically, the content of gs:[0] always is a pointer to the base
  * address of the tls region
  */
 void*   __get_tls(void)
 {
   void*  tls;
-  asm ( "   movl  %%fs:0,%0" : "=r"(tls) );
+  asm ( "   movl  %%gs:0, %0" : "=r"(tls) );
   return tls;
 }

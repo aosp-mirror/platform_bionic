@@ -390,7 +390,15 @@ typedef struct
     intptr_t* addrs;
 } stack_crawl_state_t;
 
-static _Unwind_Reason_Code trace_function(_Unwind_Context *context, void *arg)
+
+/* depends how the system includes define this */
+#ifdef HAVE_UNWIND_CONTEXT_STRUCT
+typedef struct _Unwind_Context __unwind_context;
+#else
+typedef _Unwind_Context __unwind_context;
+#endif
+
+static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
 {
     stack_crawl_state_t* state = (stack_crawl_state_t*)arg;
     if (state->count) {

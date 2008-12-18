@@ -1,6 +1,6 @@
 LOCAL_PATH:= $(call my-dir)
 
-include $(LOCAL_PATH)/arch-arm/syscalls.mk
+include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
 libc_common_src_files := \
 	$(syscall_src) \
 	unistd/abort.c \
@@ -11,6 +11,7 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fcntl.c \
 	unistd/fnmatch.c \
+	unistd/ftime.c \
 	unistd/ftok.c \
 	unistd/getcwd.c \
 	unistd/getdtablesize.c \
@@ -19,6 +20,7 @@ libc_common_src_files := \
 	unistd/getpgrp.c \
 	unistd/getpriority.c \
 	unistd/getpt.c \
+	unistd/initgroups.c \
 	unistd/isatty.c \
 	unistd/issetugid.c \
 	unistd/lseek64.c \
@@ -44,18 +46,20 @@ libc_common_src_files := \
 	unistd/seteuid.c \
 	unistd/setpgrp.c \
 	unistd/sigblock.c \
+	unistd/siginterrupt.c \
 	unistd/siglist.c \
 	unistd/signal.c \
 	unistd/sigsetmask.c \
 	unistd/sigsuspend.c \
 	unistd/sigwait.c \
 	unistd/sleep.c \
-	unistd/socketcalls.c \
 	unistd/statfs.c \
 	unistd/strsignal.c \
 	unistd/sysconf.c \
 	unistd/syslog.c \
 	unistd/system.c \
+	unistd/tcgetpgrp.c \
+	unistd/tcsetpgrp.c \
 	unistd/time.c \
 	unistd/umount.c \
 	unistd/unlockpt.c \
@@ -74,6 +78,7 @@ libc_common_src_files := \
 	stdio/fileno.c \
 	stdio/findfp.c \
 	stdio/flags.c \
+	stdio/flockfile.c \
 	stdio/fopen.c \
 	stdio/fprintf.c \
 	stdio/fpurge.c \
@@ -122,6 +127,7 @@ libc_common_src_files := \
 	stdio/vsnprintf.c \
 	stdio/vsprintf.c \
 	stdio/vscanf.c \
+	stdio/vsscanf.c \
 	stdio/wbuf.c \
 	stdio/wsetup.c \
 	stdlib/_rand48.c \
@@ -132,9 +138,12 @@ libc_common_src_files := \
 	stdlib/atoll.c \
 	stdlib/bsearch.c \
 	stdlib/ctype_.c \
+	stdlib/div.c \
 	stdlib/exit.c \
 	stdlib/getenv.c \
 	stdlib/jrand48.c \
+	stdlib/ldiv.c \
+	stdlib/lldiv.c \
 	stdlib/locale.c \
 	stdlib/lrand48.c \
 	stdlib/mrand48.c \
@@ -200,22 +209,6 @@ libc_common_src_files := \
 	tzcode/localtime.c \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
-	arch-arm/bionic/__get_pc.S \
-	arch-arm/bionic/__get_sp.S \
-	arch-arm/bionic/_exit_with_stack_teardown.S \
-	arch-arm/bionic/_setjmp.S \
-	arch-arm/bionic/atomics_arm.S \
-	arch-arm/bionic/clone.S \
-	arch-arm/bionic/memcmp.S \
-	arch-arm/bionic/memcmp16.S \
-	arch-arm/bionic/memcpy.S \
-	arch-arm/bionic/memset.S \
-	arch-arm/bionic/setjmp.S \
-	arch-arm/bionic/sigsetjmp.S \
-	arch-arm/bionic/strlen.c.arm \
-	arch-arm/bionic/syscall.S \
-	arch-arm/bionic/kill.S \
-	arch-arm/bionic/tkill.S \
 	bionic/__errno.c \
 	bionic/__set_errno.c \
 	bionic/_rand48.c \
@@ -225,9 +218,10 @@ libc_common_src_files := \
 	bionic/dirname.c \
 	bionic/dirname_r.c \
 	bionic/drand48.c \
-	bionic/eabi.c \
 	bionic/erand48.c \
+	bionic/fork.c \
 	bionic/if_nametoindex.c \
+	bionic/if_indextoname.c \
 	bionic/ioctl.c \
 	bionic/ldexp.c \
 	bionic/libc_init_common.c \
@@ -274,12 +268,58 @@ libc_common_src_files := \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c
 
+ifeq ($(TARGET_ARCH),arm)
+libc_common_src_files += \
+	bionic/eabi.c \
+	arch-arm/bionic/__get_pc.S \
+	arch-arm/bionic/__get_sp.S \
+	arch-arm/bionic/_exit_with_stack_teardown.S \
+	arch-arm/bionic/_setjmp.S \
+	arch-arm/bionic/atomics_arm.S \
+	arch-arm/bionic/clone.S \
+	arch-arm/bionic/kill.S \
+	arch-arm/bionic/tkill.S \
+	arch-arm/bionic/memcmp.S \
+	arch-arm/bionic/memcmp16.S \
+	arch-arm/bionic/memcpy.S \
+	arch-arm/bionic/memset.S \
+	arch-arm/bionic/setjmp.S \
+	arch-arm/bionic/sigsetjmp.S \
+	arch-arm/bionic/strlen.c.arm \
+	arch-arm/bionic/syscall.S \
+	unistd/socketcalls.c
+
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
 # up any thumb code.
 libc_common_src_files += \
 	bionic/pthread.c.arm \
+	bionic/pthread-timers.c.arm \
 	bionic/ptrace.c.arm
+else # !arm
+
+ifeq ($(TARGET_ARCH),x86)
+libc_common_src_files += \
+	arch-x86/bionic/__get_sp.S \
+	arch-x86/bionic/__get_tls.c \
+	arch-x86/bionic/__set_tls.c \
+	arch-x86/bionic/atomics_x86.S \
+	arch-x86/bionic/clone.S \
+	arch-x86/bionic/_exit_with_stack_teardown.S \
+	arch-x86/bionic/setjmp.S \
+	arch-x86/bionic/_setjmp.S \
+	arch-x86/bionic/vfork.S \
+	arch-x86/string/bzero.S \
+	arch-x86/string/memset.S \
+	arch-x86/string/memcmp.S \
+	arch-x86/string/memcpy.S \
+	arch-x86/string/strlen.S \
+	bionic/pthread.c \
+	bionic/pthread-timers.c \
+	bionic/ptrace.c
+endif # x86
+
+endif # !arm
 
 libc_common_cflags := \
 		-DWITH_ERRLIST			\
@@ -289,7 +329,8 @@ libc_common_cflags := \
 		-D_LIBC=1 			\
 		-DSOFTFLOAT                     \
 		-DFLOATING_POINT		\
-		-DNEED_PSELECT=1
+		-DNEED_PSELECT=1		\
+		-DINET6
 
 ifeq ($(TARGET_BUILD_TYPE),debug)
   libc_common_cflags += -DDEBUG
@@ -313,13 +354,48 @@ LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) -DUSE_DL_PREFIX
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
+ifneq ($(TARGET_SIMULATOR),true)
+  ifeq ($(TARGET_ARCH),arm)
+    crtend_target_cflags := -mthumb-interwork
+  else
+    ifeq ($(TARGET_ARCH),x86)
+      crtend_target_cflags := -m32
+    endif
+  endif
 # We rename crtend.o to crtend_android.o to avoid a
 # name clash between gcc and bionic.
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_android.o
-$(GEN): $(LOCAL_PATH)/arch-arm/bionic/crtend.S
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) -mthumb-interwork -o $@ -c $<
+	$(TARGET_CC) $(crtend_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
+endif
+
+
+# crtbegin_so.o/crtend_so.o
+# These are needed for building the shared libs.
+ifneq ($(TARGET_SIMULATOR),true)
+
+ifeq ($(TARGET_ARCH),x86)
+
+crt_begin_end_so_target_cflags := -m32
+
+GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(crt_begin_end_so_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_so.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(crt_begin_end_so_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
+endif # TARGET_ARCH == x86
+
+endif # !TARGET_SIMULATOR
+
 
 LOCAL_MODULE := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
@@ -332,7 +408,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-include $(LOCAL_PATH)/arch-arm/syscalls.mk
+include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
 
 # To enable malloc leak check for statically linked programs, add
 # "WITH_MALLOC_CHECK_LIBC_A := true" to device/buildspec.mk
@@ -341,18 +417,39 @@ WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 LOCAL_SRC_FILES := \
 	$(libc_common_src_files) \
 	bionic/dlmalloc.c \
-	arch-arm/bionic/exidx_static.c \
 	bionic/libc_init_static.c
 
 ifeq ($(WITH_MALLOC_CHECK_LIBC_A),true)
   LOCAL_SRC_FILES += bionic/malloc_leak.c.arm
 endif
 
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_SRC_FILES += \
+	arch-arm/bionic/exidx_static.c
+
+else # TARGET_ARCH != arm
+
+ifeq ($(TARGET_ARCH),x86)
+LOCAL_SRC_FILES += \
+	arch-x86/bionic/dl_iterate_phdr_static.c
+endif
+
+endif
+
+ifneq ($(TARGET_SIMULATOR),true)
+  ifeq ($(TARGET_ARCH),arm)
+    crtbegin_static_target_cflags := -mthumb-interwork
+  else
+    ifeq ($(TARGET_ARCH),x86)
+      crtbegin_static_target_cflags := -m32
+    endif
+  endif
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_static.o
-$(GEN): $(LOCAL_PATH)/arch-arm/bionic/crtbegin_static.S
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_static.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) -mthumb-interwork -o $@ -c $<
+	$(TARGET_CC) $(crtbegin_static_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
+endif
 
 LOCAL_CFLAGS := $(libc_common_cflags)
 
@@ -383,8 +480,12 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
 	bionic/dlmalloc.c \
 	bionic/malloc_leak.c.arm \
-	arch-arm/bionic/exidx_dynamic.c \
 	bionic/libc_init_dynamic.c
+
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_SRC_FILES += \
+	arch-arm/bionic/exidx_dynamic.c
+endif
 
 LOCAL_MODULE:= libc
 
@@ -400,11 +501,20 @@ LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+ifneq ($(TARGET_SIMULATOR),true)
+  ifeq ($(TARGET_ARCH),arm)
+    crtbegin_dynamic_target_cflags := -mthumb-interwork
+  else
+    ifeq ($(TARGET_ARCH),x86)
+      crtbegin_dynamic_target_cflags := -m32
+    endif
+  endif
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_dynamic.o
-$(GEN): $(LOCAL_PATH)/arch-arm/bionic/crtbegin_dynamic.S
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_dynamic.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) -mthumb-interwork -o $@ -c $<
+	$(TARGET_CC) $(crtbegin_dynamic_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
+endif
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -423,8 +533,12 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
 	bionic/dlmalloc.c \
 	bionic/malloc_leak.c.arm \
-	arch-arm/bionic/exidx_dynamic.c \
 	bionic/libc_init_dynamic.c
+
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_SRC_FILES += \
+	arch-arm/bionic/exidx_dynamic.c
+endif
 
 LOCAL_MODULE:= libc_debug
 

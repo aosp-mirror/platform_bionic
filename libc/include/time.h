@@ -64,6 +64,7 @@ struct tm {
 #define   TM_ZONE   tm_zone
 
 extern char* asctime(const struct tm* a);
+extern char* asctime_r(const struct tm* a, char* buf);
 
 /* Return the difference between TIME1 and TIME0.  */
 extern double difftime (time_t __time1, time_t __time0);

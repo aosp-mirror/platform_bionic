@@ -61,16 +61,16 @@ struct prop_area {
 #define SERIAL_DIRTY(serial) ((serial) & 1)
 
 struct prop_info {
-    unsigned char name[PROP_NAME_MAX];
+    char name[PROP_NAME_MAX];
     unsigned volatile serial;
-    unsigned char value[PROP_VALUE_MAX];
+    char value[PROP_VALUE_MAX];
 };
 
 struct prop_msg 
 {
     unsigned cmd;
-    unsigned char name[PROP_NAME_MAX];
-    unsigned char value[PROP_VALUE_MAX];
+    char name[PROP_NAME_MAX];
+    char value[PROP_VALUE_MAX];
 };
 
 #define PROP_MSG_SETPROP 1

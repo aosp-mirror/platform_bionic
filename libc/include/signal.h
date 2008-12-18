@@ -114,6 +114,7 @@ extern int sigaction(int, const struct sigaction *, struct sigaction *);
 extern int sigpending(sigset_t *);
 extern int sigsuspend(const sigset_t *);
 extern int sigwait(const sigset_t *set, int *sig);
+extern int siginterrupt(int  sig, int  flag);
 
 extern int raise(int);
 extern int kill(pid_t, int);

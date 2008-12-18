@@ -292,7 +292,7 @@ char	*cuserid(char *);
 FILE	*fdopen(int, const char *);
 int	 fileno(FILE *);
 
-#if __POSIX_VISIBLE >= 199209
+#if (__POSIX_VISIBLE >= 199209) || 1 /* ANDROID: Bionic does include this */
 int	 pclose(FILE *);
 FILE	*popen(const char *, const char *);
 #endif
@@ -316,12 +316,6 @@ int	 putchar_unlocked(int);
 char	*tempnam(const char *, const char *);
 #endif
 __END_DECLS
-
-#ifndef _POSIX_THREADS
-#  define flockfile(fp)			/* nothing */
-#  define ftrylockfile(fp)		(0)
-#  define funlockfile(fp)		/* nothing */
-#endif
 
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
 

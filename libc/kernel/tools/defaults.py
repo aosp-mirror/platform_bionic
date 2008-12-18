@@ -36,6 +36,13 @@ kernel_known_macros = {
 # but just generates cleaner results
 kernel_remove_config_macros = True
 
+# maps an architecture to a set of default macros that would be provided by
+# toolchain preprocessor
+kernel_default_arch_macros = {
+    "arm": {},
+    "x86": {"__i386__": "1"},
+    }
+
 # this is the set of known static inline functions that we want to keep
 # in the final ARM headers. this is only used to keep optimized byteswapping
 # static functions and stuff like that.
