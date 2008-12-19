@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "zc8a52c6d3bfea13261281e301987a920",
+        "filename": "libc/bionic/logd_write.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-19T20:41:50Z",
+      "side": 1,
+      "message": "what\u0027s the purpose of this value. It seems unused here ?",
+      "revId": "030abd0c2857ee8dc57368a42762db329ea35bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "z0295aef5eab85d858f1f09938b4c4411",
+        "filename": "libc/bionic/logd_write.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2008-12-19T20:41:50Z",
+      "side": 1,
+      "message": "this comment should be in the patch description. It is not very useful in the source code.\n\nor you can just write \"return the number of bytes written\"",
+      "revId": "030abd0c2857ee8dc57368a42762db329ea35bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
