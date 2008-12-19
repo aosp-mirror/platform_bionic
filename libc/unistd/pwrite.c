@@ -27,23 +27,11 @@
  */
 #include <sys/types.h>
 #include <unistd.h>
-#include <errno.h>
 
-/*
- * Non-atomic emulation of the pwrite system call.
- */
-ssize_t pwrite(int fd, void *buf, size_t count, off_t offset)
+extern int __pwrite64(int fd, void *buf, size_t nbytes, off_t lo, off_t hi);
+
+ssize_t pwrite(int fd, void *buf, size_t nbytes, off_t offset)
 {
-    int save_errno;
-    ssize_t nwrite;
-    off_t save_offset = lseek(fd, offset, SEEK_SET);
-    if (save_offset < 0) {
-        return -1;
-    }
-    nwrite = write(fd, buf, count);
-    save_errno = errno;
-    /* Even if the write failed, try to restore the seek pointer */
-    lseek(fd, save_offset, SEEK_SET);
-    errno = save_errno;
-    return nwrite;
+    return __pwrite64(fd, buf, nbytes, offset, 0);
 }
+

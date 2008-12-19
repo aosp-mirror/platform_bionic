@@ -136,6 +136,11 @@ class SysCallsTxtParser:
         print "%d: %s" % (self.lineno, msg)
 
     def parse_line(self, line):
+        """ parse a syscall spec line.
+
+        line processing, format is
+           return type    func_name[:syscall_name[:call_id]] ( [paramlist] )   (syscall_number[,syscall_number_x86])|stub
+        """
         pos_lparen = line.find('(')
         E          = self.E
         if pos_lparen < 0:
@@ -154,6 +159,7 @@ class SysCallsTxtParser:
 
         syscall_func = return_type[-1]
         return_type  = string.join(return_type[:-1],' ')
+        call_id = -1
 
         pos_colon = syscall_func.find(':')
         if pos_colon < 0:
@@ -162,8 +168,20 @@ class SysCallsTxtParser:
             if pos_colon == 0 or pos_colon+1 >= len(syscall_func):
                 E("misplaced colon in '%s'" % line)
                 return
-            syscall_name = syscall_func[pos_colon+1:]
-            syscall_func = syscall_func[:pos_colon]
+
+            # now find if there is a call_id for a dispatch-type syscall
+            # after the optional 2nd colon
+            pos_colon2 = syscall_func.find(':', pos_colon + 1)
+            if pos_colon2 < 0:
+                syscall_name = syscall_func[pos_colon+1:]
+                syscall_func = syscall_func[:pos_colon]
+            else:
+                if pos_colon2+1 >= len(syscall_func):
+                    E("misplaced colon2 in '%s'" % line)
+                    return
+                syscall_name = syscall_func[(pos_colon+1):pos_colon2]
+                call_id = int(syscall_func[pos_colon2+1:])
+                syscall_func = syscall_func[:pos_colon]
 
         if pos_rparen > pos_lparen+1:
             syscall_params = line[pos_lparen+1:pos_rparen].split(',')
@@ -191,6 +209,7 @@ class SysCallsTxtParser:
 
         t = { "id"     : syscall_id,
               "id2"    : syscall_id2,
+              "cid"    : call_id,
               "name"   : syscall_name,
               "func"   : syscall_func,
               "params" : syscall_params,

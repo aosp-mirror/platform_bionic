@@ -134,6 +134,32 @@ static __inline__ int grantpt(int __fd)
   return 0;     /* devpts does this all for us! */
 }
 
+typedef struct {
+    int  quot;
+    int  rem;
+} div_t;
+
+extern div_t   div(int, int);
+
+typedef struct {
+    long int  quot;
+    long int  rem;
+} ldiv_t;
+
+extern ldiv_t   ldiv(long, long);
+
+typedef struct {
+    long long int  quot;
+    long long int  rem;
+} lldiv_t;
+
+extern lldiv_t   lldiv(long long, long long);
+
+/* make STLPort happy */
+extern int      mblen(const char *, size_t);
+extern size_t   mbstowcs(wchar_t *, const char *, size_t);
+extern int      mbtowc(wchar_t *, const char *, size_t);
+
 __END_DECLS
 
 #endif /* _STDLIB_H_ */

@@ -254,6 +254,7 @@ cpackl(long double x, long double y)
 #define	__ieee754_ynf	ynf
 #define	__ieee754_remainderf remainderf
 #define	__ieee754_scalbf scalbf
+#define __ieee754_ldexpf ldexpf
 
 /* fdlibm kernel function */
 int	__ieee754_rem_pio2(double,double*);

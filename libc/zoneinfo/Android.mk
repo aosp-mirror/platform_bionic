@@ -8,3 +8,7 @@ $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.dat : $(LOCAL_PATH)/zoneinfo.dat | $(A
 ALL_PREBUILT += $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.idx
 $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.idx : $(LOCAL_PATH)/zoneinfo.idx | $(ACP)
 	$(transform-prebuilt-to-target)
+
+ALL_PREBUILT += $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.version
+$(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.version : $(LOCAL_PATH)/zoneinfo.version | $(ACP)
+	$(transform-prebuilt-to-target)

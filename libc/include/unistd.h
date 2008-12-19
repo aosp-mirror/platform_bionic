@@ -184,6 +184,8 @@ extern int daemon(int, int);
 /* A special syscall that is only available on the ARM, not x86 function. */
 extern int cacheflush(long start, long end, long flags);
 
+extern pid_t tcgetpgrp(int fd);
+extern int   tcsetpgrp(int fd, pid_t _pid);
 
 __END_DECLS
 

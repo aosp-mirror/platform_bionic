@@ -36,6 +36,9 @@
 #include <stdlib.h>
 #include "local.h"
 
+/* BIONIC: remove any file lock associated with a FILE* pointer */
+extern void __fremovelock(FILE *fp);
+
 int
 fclose(FILE *fp)
 {
@@ -57,5 +60,6 @@ fclose(FILE *fp)
 		FREELB(fp);
 	fp->_flags = 0;		/* Release this FILE for reuse. */
 	fp->_r = fp->_w = 0;	/* Mess up if reaccessed. */
+	__fremovelock(fp);
 	return (r);
 }

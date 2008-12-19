@@ -48,6 +48,68 @@ typedef struct pthread_internal_t
 
 extern void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
 
+/* needed by posix-timers.c */
+
+static __inline__ void timespec_add( struct timespec*  a, const struct timespec*  b )
+{
+    a->tv_sec  += b->tv_sec;
+    a->tv_nsec += b->tv_nsec;
+    if (a->tv_nsec >= 1000000000) {
+        a->tv_nsec -= 1000000000;
+        a->tv_sec  += 1;
+    }
+}
+
+static  __inline__ void timespec_sub( struct timespec*  a, const struct timespec*  b )
+{
+    a->tv_sec  -= b->tv_sec;
+    a->tv_nsec -= b->tv_nsec;
+    if (a->tv_nsec < 0) {
+        a->tv_nsec += 1000000000;
+        a->tv_sec  -= 1;
+    }
+}
+
+static  __inline__ void timespec_zero( struct timespec*  a )
+{
+    a->tv_sec = a->tv_nsec = 0;
+}
+
+static  __inline__ int timespec_is_zero( const struct timespec*  a )
+{
+    return (a->tv_sec == 0 && a->tv_nsec == 0);
+}
+
+static  __inline__ int timespec_cmp( const struct timespec*  a, const struct timespec*  b )
+{
+    if (a->tv_sec  < b->tv_sec)  return -1;
+    if (a->tv_sec  > b->tv_sec)  return +1;
+    if (a->tv_nsec < b->tv_nsec) return -1;
+    if (a->tv_nsec > b->tv_nsec) return +1;
+    return 0;
+}
+
+static  __inline__ int timespec_cmp0( const struct timespec*  a )
+{
+    if (a->tv_sec < 0) return -1;
+    if (a->tv_sec > 0) return +1;
+    if (a->tv_nsec < 0) return -1;
+    if (a->tv_nsec > 0) return +1;
+    return 0;
+}
+
+extern int  __pthread_cond_timedwait(pthread_cond_t*, 
+                                     pthread_mutex_t*,
+                                     const struct timespec*, 
+                                     clockid_t);
+
+extern int  __pthread_cond_timedwait_relative(pthread_cond_t*,
+                                              pthread_mutex_t*,
+                                              const struct timespec*);
+
+/* needed by fork.c */
+extern void __timer_table_start_stop(int  stop);
+
 __END_DECLS
 
 #endif /* _PTHREAD_INTERNAL_H_ */

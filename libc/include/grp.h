@@ -74,6 +74,9 @@ char		*group_from_gid(gid_t, int);
 
 int   getgrouplist (const char *user, gid_t group,
                   gid_t *groups, int *ngroups);
+
+int   initgroups (const char *user, gid_t group);
+
 __END_DECLS
 
 #endif /* !_GRP_H_ */

@@ -38,6 +38,17 @@
 #ifndef _I386_ASM_H_
 #define _I386_ASM_H_
 
+/* This is borrowed from FreeBSD /src/sys/i386/include/asmacros.h v1.27 */
+/*
+ * CNAME and HIDENAME manage the relationship between symbol names in C
+ * and the equivalent assembly language names.  CNAME is given a name as
+ * it would be used in a C program.  It expands to the equivalent assembly
+ * language name.  HIDENAME is given an assembly-language name, and expands
+ * to a possibly-modified form that will be invisible to C programs.
+ */
+#define CNAME(csym)             csym
+#define HIDENAME(asmsym)        .asmsym
+
 #ifdef PIC
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
@@ -108,5 +119,6 @@
 #define	ASMSTR		.asciz
 
 #define RCSID(x)	.text; .asciz x
+#define __FBSDID(x)     RCSID(x)
 
 #endif /* !_I386_ASM_H_ */

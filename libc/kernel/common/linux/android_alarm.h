@@ -42,6 +42,7 @@ typedef enum {
 #define ANDROID_ALARM_SET_AND_WAIT(type) _IOW('a', 3 | ((type) << 4), struct timespec)
 #define ANDROID_ALARM_GET_TIME(type) _IOW('a', 4 | ((type) << 4), struct timespec)
 #define ANDROID_ALARM_SET_RTC _IOW('a', 5, struct timespec)
+#define ANDROID_ALARM_SET_TIMEZONE _IOW('a', 6, struct timezone)
 
 #define ANDROID_ALARM_BASE_CMD(cmd) (cmd & ~(_IOC(0, 0, 0xf0, 0)))
 #define ANDROID_ALARM_IOCTL_TO_TYPE(cmd) (_IOC_NR(cmd) >> 4)

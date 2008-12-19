@@ -27,6 +27,7 @@
  */
 #include <pthread.h>
 
+
 struct user_desc {
     unsigned int    entry_number;
     unsigned long   base_addr;
@@ -39,6 +40,8 @@ struct user_desc {
     unsigned int    useable:1;
     unsigned int    empty:25;
 };
+
+extern int __set_thread_area(struct user_desc *u_info);
 
 /* the following can't be const, since the first call will
  * update the 'entry_number' field
@@ -57,7 +60,11 @@ static struct user_desc  _tls_desc =
     0
 };
 
-/* we implement thread local storage through the fs: segment descriptor
+struct _thread_area_head {
+    void *self;
+};
+
+/* we implement thread local storage through the gs: segment descriptor
  * we create a segment descriptor for the tls
  */
 int __set_tls(void *ptr)
@@ -65,6 +72,9 @@ int __set_tls(void *ptr)
     int   rc, segment;
 
     _tls_desc.base_addr = (unsigned long)ptr;
+
+    /* We also need to write the location of the tls to ptr[0] */
+    ((struct _thread_area_head *)ptr)->self = ptr;
 
     rc = __set_thread_area( &_tls_desc );
     if (rc != 0)
@@ -76,7 +86,7 @@ int __set_tls(void *ptr)
     /* this weird computation comes from GLibc */
     segment = _tls_desc.entry_number*8 + 3;
     asm __volatile__ (
-        "   movw %w0, %%fs" :: "r"(segment)
+        "   movw %w0, %%gs" :: "q"(segment)
     );
     return 0;
 }

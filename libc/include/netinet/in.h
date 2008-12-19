@@ -31,6 +31,7 @@
 #include <endian.h>
 #include <linux/socket.h>
 #include <linux/in.h>
+#include <linux/in6.h>
 
 __BEGIN_DECLS
 

@@ -335,9 +335,9 @@ ip6_parsenumeric(sa, addr, host, hostlen, flags)
 	size_t numaddrlen;
 	char numaddr[512];
 
-	_DIAGASSERT(sa != NULL);
-	_DIAGASSERT(addr != NULL);
-	_DIAGASSERT(host != NULL);
+	assert(sa != NULL);
+	assert(addr != NULL);
+	assert(host != NULL);
 
 	if (inet_ntop(AF_INET6, addr, numaddr, sizeof(numaddr)) == NULL)
 		return EAI_SYSTEM;
@@ -380,8 +380,8 @@ ip6_sa2str(sa6, buf, bufsiz, flags)
 	const struct in6_addr *a6;
 	int n;
 
-	_DIAGASSERT(sa6 != NULL);
-	_DIAGASSERT(buf != NULL);
+	assert(sa6 != NULL);
+	assert(buf != NULL);
 
 	ifindex = (unsigned int)sa6->sin6_scope_id;
 	a6 = &sa6->sin6_addr;

@@ -36,6 +36,12 @@
 	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[8]) == 0) &&	\
 	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
 
+#define IN6_IS_ADDR_LOOPBACK(a)		\
+	((*(const uint32_t *)(const void *)(&(a)->s6_addr[0]) == 0) &&	\
+	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[4]) == 0) &&	\
+	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[8]) == 0) &&	\
+	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[12]) == ntohl(1)))
+
 #define IN6_IS_ADDR_V4COMPAT(a)		\
 	((*(const uint32_t *)(const void *)(&(a)->s6_addr[0]) == 0) &&	\
 	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[4]) == 0) &&	\
@@ -54,10 +60,34 @@
 #define IN6_IS_ADDR_SITELOCAL(a)	\
 	(((a)->s6_addr[0] == 0xfe) && (((a)->s6_addr[1] & 0xc0) == 0xc0))
 
-#define IN6_IS_ADDR_MULTICAST(a) \
-    (((__const uint8_t *) (a))[0] == 0xff)
+#define IN6_IS_ADDR_MULTICAST(a)	\
+	(((__const uint8_t *) (a))[0] == 0xff)
+
+
+#define IPV6_ADDR_SCOPE_NODELOCAL       0x01
+#define IPV6_ADDR_SCOPE_INTFACELOCAL    0x01
+#define IPV6_ADDR_SCOPE_LINKLOCAL       0x02
+#define IPV6_ADDR_SCOPE_SITELOCAL       0x05
+#define IPV6_ADDR_SCOPE_ORGLOCAL        0x08
+#define IPV6_ADDR_SCOPE_GLOBAL          0x0e
+
+#define IPV6_ADDR_MC_SCOPE(a)	\
+	((a)->s6_addr[1] & 0x0f)
+
+#define IN6_IS_ADDR_MC_LINKLOCAL(a)	\
+	(IN6_IS_ADDR_MULTICAST(a) &&  \
+	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_LINKLOCAL))
+#define IN6_IS_ADDR_MC_SITELOCAL(a)     \
+	(IN6_IS_ADDR_MULTICAST(a) &&  \
+	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_SITELOCAL))
+#define IN6_IS_ADDR_MC_ORGLOCAL(a)     \
+	(IN6_IS_ADDR_MULTICAST(a) &&  \
+	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_ORGLOCAL))
+
 
 #define IN6_ARE_ADDR_EQUAL(a, b)			\
     (memcmp(&(a)->s6_addr[0], &(b)->s6_addr[0], sizeof(struct in6_addr)) == 0)
+
+#define INET6_ADDRSTRLEN 46
 
 #endif /* _NETINET_IN6_H */
