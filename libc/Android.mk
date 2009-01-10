@@ -277,6 +277,7 @@ libc_common_src_files += \
 	arch-arm/bionic/_setjmp.S \
 	arch-arm/bionic/atomics_arm.S \
 	arch-arm/bionic/clone.S \
+	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/kill.S \
 	arch-arm/bionic/tkill.S \
 	arch-arm/bionic/memcmp.S \
@@ -330,7 +331,8 @@ libc_common_cflags := \
 		-DSOFTFLOAT                     \
 		-DFLOATING_POINT		\
 		-DNEED_PSELECT=1		\
-		-DINET6
+		-DINET6 \
+		-I$(LOCAL_PATH)/private \
 
 ifeq ($(TARGET_BUILD_TYPE),debug)
   libc_common_cflags += -DDEBUG

@@ -32,6 +32,17 @@
 
 __BEGIN_DECLS
 
+/** WARNING WARNING WARNING
+ **
+ ** This header file is *NOT* part of the public Bionic ABI/API
+ ** and should not be used/included by user-serviceable parts of
+ ** the system (e.g. applications).
+ **
+ ** It is only provided here for the benefit of the system dynamic
+ ** linker and the OpenGL sub-system (which needs to access the
+ ** pre-allocated slot directly for performance reason).
+ **/
+
 /* maximum number of elements in the TLS array */
 #define BIONIC_TLS_SLOTS            64
 

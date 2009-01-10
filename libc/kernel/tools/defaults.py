@@ -73,6 +73,17 @@ kernel_known_statics = {
         "x86" : kernel_known_x86_statics
     }
 
+# this is a list of macros which we want to specifically exclude from
+# the generated files.
+#
+kernel_ignored_macros = set(
+        [ "MAXHOSTNAMELEN",  # for some reason, Linux defines it to 64
+                             # while most of the BSD code expects this to be 256
+                             # so ignore the kernel-provided definition and
+                             # define it in the Bionic headers instead
+        ]
+    )
+
 # this is the standard disclaimer
 #
 kernel_disclaimer = """\

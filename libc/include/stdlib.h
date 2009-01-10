@@ -160,6 +160,11 @@ extern int      mblen(const char *, size_t);
 extern size_t   mbstowcs(wchar_t *, const char *, size_t);
 extern int      mbtowc(wchar_t *, const char *, size_t);
 
+/* Likewise, make libstdc++-v3 happy.  */
+extern int	wctomb(char *, wchar_t);
+extern size_t	wcstombs(char *, const wchar_t *, size_t);
+#define MB_CUR_MAX 1
+
 __END_DECLS
 
 #endif /* _STDLIB_H_ */

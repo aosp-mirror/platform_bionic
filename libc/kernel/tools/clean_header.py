@@ -69,6 +69,7 @@ def  cleanupFile( path ):
     list.removeVarsAndFuncs( statics )
     list.removeComments()
     list.removeEmptyLines()
+    list.removeMacroDefines( kernel_ignored_macros )
     list.insertDisclaimer( kernel.kernel_disclaimer )
 
     out = StringOutput()

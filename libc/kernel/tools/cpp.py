@@ -1571,6 +1571,13 @@ class Block:
         """returns True iff this is a conditional directive block"""
         return self.directive in ["if","ifdef","ifndef","else","elif","endif"]
 
+    def isDefine(self):
+        """returns the macro name in a #define directive, or None otherwise"""
+        if self.directive != "define":
+            return None
+
+        return self.tokens[0].value
+
     def isIf(self):
         """returns True iff this is an #if-like directive block"""
         return self.directive in ["if","ifdef","ifndef","elif"]
@@ -1677,6 +1684,10 @@ class BlockList:
         for b in self.blocks:
             if b.isIf():
                 b.expr.optimize(macros)
+
+    def removeMacroDefines(self,macros):
+        """remove known macro definitions from a BlockList"""
+        self.blocks = remove_macro_defines(self.blocks,macros)
 
     def removePrefixed(self,prefix,names):
         for b in self.blocks:
@@ -1993,6 +2004,16 @@ def test_BlockParser():
 #####                                                                           #####
 #####################################################################################
 #####################################################################################
+
+def  remove_macro_defines( blocks, excludedMacros=set() ):
+    """remove macro definitions like #define <macroName>  ...."""
+    result = []
+    for b in blocks:
+        macroName = b.isDefine()
+        if macroName == None or not macroName in excludedMacros:
+            result.append(b)
+
+    return result
 
 def  find_matching_endif( blocks, i ):
     n     = len(blocks)
