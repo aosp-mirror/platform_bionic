@@ -43,36 +43,21 @@
 #include <sys/cdefs.h>
 #include <machine/setjmp.h>
 
-#if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
 typedef long sigjmp_buf[_JBLEN + 1];
-#endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
-
 typedef long jmp_buf[_JBLEN];
 
 __BEGIN_DECLS
 
-/* BIONIC SPECIAL: we *don't* save the signal mask in setjmp/longjmp
- *                 this means we comply with ANSI, not with POSIX, and
- *                 our runtime runs well instead of getting stuck
- */
-#if 1
-#define  setjmp(x)   _setjmp(x)
-#define  longjmp(x,y)  _longjmp(x,y)
-#else
-int	setjmp(jmp_buf);
-void	longjmp(jmp_buf, int);
-#endif
+int     _setjmp(jmp_buf);
+void    _longjmp(jmp_buf, int);
+void    longjmperror(void);
 
-#if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
-int	sigsetjmp(sigjmp_buf, int);
-void	siglongjmp(sigjmp_buf, int);
-#endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
+int     setjmp(jmp_buf);
+void    longjmp(jmp_buf, int);
 
-#if __BSD_VISIBLE || __XPG_VISIBLE
-int	_setjmp(jmp_buf);
-void	_longjmp(jmp_buf, int);
-void	longjmperror(void);
-#endif /* __BSD_VISIBLE || __XPG_VISIBLE */
+int     sigsetjmp(sigjmp_buf, int);
+void    siglongjmp(sigjmp_buf, int);
+
 __END_DECLS
 
 #endif /* !_SETJMP_H_ */

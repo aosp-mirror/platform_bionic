@@ -73,6 +73,8 @@
 #define	_PATH_PROTOCOLS	"/system/etc/protocols"
 #define	_PATH_SERVICES	"/system/etc/services"
 
+#define  MAXHOSTNAMELEN  256
+
 /* BIONIC-BEGIN */
 #define  h_errno   (*__get_h_errno())
 extern int*  __get_h_errno(void);

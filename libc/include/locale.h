@@ -51,6 +51,10 @@ enum {
 
 extern char *setlocale(int category, const char *locale);
 
+/* Make libstdc++-v3 happy.  */
+struct lconv { };
+struct lconv *localeconv(void);
+
 __END_DECLS
 
 #endif /* _LOCALE_H_ */

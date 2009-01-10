@@ -9,18 +9,22 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_X86_PARAM_H
-#define _ASM_X86_PARAM_H
+#ifndef __LINUX_KEYCHORD_H_
+#define __LINUX_KEYCHORD_H_
 
-#ifndef HZ
-#define HZ 100
-#endif
+#include <linux/input.h>
 
-#define EXEC_PAGESIZE 4096
+#define KEYCHORD_VERSION 1
 
-#ifndef NOGROUP
-#define NOGROUP (-1)
-#endif
+struct input_keychord {
 
+ __u16 version;
+
+ __u16 id;
+
+ __u16 count;
+
+ __u16 keycodes[];
+};
 
 #endif
