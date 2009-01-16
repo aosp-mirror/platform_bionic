@@ -29,6 +29,13 @@
 #define _STDLIB_H_
 
 #include <sys/cdefs.h>
+
+/* wchar_t is required in stdlib.h according to POSIX.
+ * note that defining __need_wchar_t prevents stddef.h
+ * to define all other symbols it does normally */
+#define __need_wchar_t
+#include <stddef.h>
+
 #include <stddef.h>
 #include <string.h>
 #include <alloca.h>

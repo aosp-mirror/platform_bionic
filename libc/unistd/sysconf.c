@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <sys/sysconf.h>
 #include <limits.h>
-#include <sys/tls.h>
+#include <bionic_tls.h>
 #include <asm/page.h>
 #include <stdio.h>  /* for FOPEN_MAX */
 #include <errno.h>
