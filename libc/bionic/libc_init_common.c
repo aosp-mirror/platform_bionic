@@ -36,7 +36,7 @@
 #include "atexit.h"
 #include "libc_init_common.h"
 
-#include <sys/tls.h>
+#include <bionic_tls.h>
 #include <errno.h>
 
 extern void _init(void);

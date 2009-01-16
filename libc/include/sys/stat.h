@@ -77,6 +77,10 @@ extern int    lstat(const char *, struct stat *);
 extern int    mknod(const char *, mode_t, dev_t);
 extern mode_t umask(mode_t);
 
+#define  stat64    stat
+#define  fstat64   fstat
+#define  lstat64   lstat
+
 static __inline__ int mkfifo(const char *__p, mode_t __m)
 {
   return mknod(__p, (__m & ~S_IFMT) | S_IFIFO, (dev_t)0);

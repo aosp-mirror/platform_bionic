@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <errno.h>
-#include <sys/tls.h>
+#include <bionic_tls.h>
 
 volatile int*  __errno( void )
 {

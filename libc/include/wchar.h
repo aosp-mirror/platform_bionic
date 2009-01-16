@@ -30,10 +30,16 @@
 
 #include <sys/cdefs.h>
 #include <stdio.h>
+
+/* wchar_t is required in stdlib.h according to POSIX */
+#define __need___wchar_t
 #include <stddef.h>
+
 #include <stdarg.h>
 #include <time.h>
 #include <malloc.h>
+
+#include <stddef.h>
 
 /* IMPORTANT: Any code that relies on wide character support is essentially
  *            non-portable and/or broken. the only reason this header exist
@@ -43,11 +49,6 @@
  */
 
 __BEGIN_DECLS
-
-#ifndef __cplusplus
-/* wchar_t is a builtin keyword of g++ */
-typedef unsigned char            wchar_t;
-#endif
 
 typedef int                     wint_t;
 typedef struct { int  dummy; }  mbstate_t;

@@ -55,7 +55,7 @@
 #include "atexit.h"
 #include "libc_init_common.h"
 
-#include <sys/tls.h>
+#include <bionic_tls.h>
 #include <errno.h>
 
 __noreturn void __libc_init(uintptr_t *elfdata,

@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <sys/atomics.h>
-#include <sys/tls.h>
+#include <bionic_tls.h>
 #include <sys/mman.h>
 #include <pthread.h>
 #include <time.h>

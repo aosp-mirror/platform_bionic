@@ -14,7 +14,9 @@
 #include <sys/mman.h>
 
 #include <sys/atomics.h>
-#include <sys/tls.h>
+
+/* special private C library header - see Android.mk */
+#include <bionic_tls.h>
 
 #include "linker.h"
 #include "linker_debug.h"

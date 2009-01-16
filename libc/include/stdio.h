@@ -41,6 +41,16 @@
 #include <sys/cdefs.h>
 #include <sys/_types.h>
 
+/* va_list and size_t must be defined by stdio.h according to Posix */
+#define __need___va_list
+#include <stdarg.h>
+
+/* note that this forces stddef.h to *only* define size_t */
+#define __need_size_t
+#include <stddef.h>
+
+#include <stddef.h>
+
 #if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
 #include <sys/types.h>	/* XXX should be removed */
 #endif
