@@ -50,6 +50,9 @@ extern int    sem_trywait(sem_t *);
 extern int    sem_unlink(const char *);
 extern int    sem_wait(sem_t *);
 
+struct timespec;
+extern int    sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
+
 __END_DECLS
 
 #endif /* _SEMAPHORE_H */

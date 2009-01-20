@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <sys/atomics.h>
+#include <time.h>
 
 int sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -114,6 +115,62 @@ int sem_wait(sem_t *sem)
             break;
 
         __futex_wait(&sem->count, 0, 0);
+    }
+    return 0;
+}
+
+int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
+{
+    int  ret;
+
+    if (sem == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    /* POSIX says we need to try to decrement the semaphore
+     * before checking the timeout value */
+    if (__atomic_dec_if_positive(&sem->count))
+        return 0;
+
+    /* check it as per Posix */
+    if (abs_timeout == NULL    ||
+        abs_timeout->tv_sec < 0 ||
+        abs_timeout->tv_nsec < 0 ||
+        abs_timeout->tv_nsec >= 1000000000)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
+    for (;;) {
+        struct timespec ts;
+        int             ret;
+
+        /* Posix mandates CLOCK_REALTIME here */
+        clock_gettime( CLOCK_REALTIME, &ts );
+        ts.tv_sec  = abs_timeout->tv_sec - ts.tv_sec;
+        ts.tv_nsec = abs_timeout->tv_nsec - ts.tv_nsec;
+        if (ts.tv_nsec < 0) {
+            ts.tv_nsec += 1000000000;
+            ts.tv_sec  -= 1;
+        }
+
+        if (ts.tv_sec < 0 || ts.tv_nsec < 0) {
+            errno = ETIMEDOUT;
+            return -1;
+        }
+
+        ret = __futex_wait(&sem->count, 0, &ts);
+
+        /* return in case of timeout or interrupt */
+        if (ret == -ETIMEDOUT || ret == -EINTR) {
+            errno = -ret;
+            return -1;
+        }
+
+        if (__atomic_dec_if_positive(&sem->count))
+            break;
     }
     return 0;
 }

@@ -144,6 +144,9 @@ thr_timer_table_alloc( thr_timer_table_t*  t )
 {
     thr_timer_t*  timer;
 
+    if (t == NULL)
+        return NULL;
+
     pthread_mutex_lock(&t->lock);
     timer = t->free_timer;
     if (timer != NULL) {
@@ -201,7 +204,7 @@ thr_timer_table_from_id( thr_timer_table_t*  t,
     unsigned      index;
     thr_timer_t*  timer;
 
-    if (!TIMER_ID_IS_WRAPPED(id))
+    if (t == NULL || !TIMER_ID_IS_WRAPPED(id))
         return NULL;
 
     index = (unsigned) TIMER_ID_UNWRAP(id);
@@ -226,15 +229,21 @@ thr_timer_table_from_id( thr_timer_table_t*  t,
     return timer;
 }
 
-/* the static timer table */
+/* the static timer table - we only create it if the process
+ * really wants to use SIGEV_THREAD timers, which should be
+ * pretty infrequent
+ */
 
 static pthread_once_t      __timer_table_once = PTHREAD_ONCE_INIT;
-static thr_timer_table_t   __timer_table[1];
+static thr_timer_table_t*  __timer_table;
 
 static void
 __timer_table_init( void )
 {
-    thr_timer_table_init( __timer_table );
+    __timer_table = calloc(1,sizeof(*__timer_table));
+
+    if (__timer_table != NULL)
+        thr_timer_table_init( __timer_table );
 }
 
 static thr_timer_table_t*
@@ -254,8 +263,10 @@ __timer_table_get(void)
 void
 __timer_table_start_stop( int  stop )
 {
-    thr_timer_table_t*  table = __timer_table_get();
-    thr_timer_table_start_stop(table, stop);
+    if (__timer_table != NULL) {
+        thr_timer_table_t*  table = __timer_table_get();
+        thr_timer_table_start_stop(table, stop);
+    }
 }
 
 static thr_timer_t*
