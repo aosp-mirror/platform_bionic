@@ -56,9 +56,11 @@ abort(void)
 	if (cleanup_called == 0) {
 		while (p != NULL && p->next != NULL)
 			p = p->next;
-		if (p != NULL && p->fns[0] != NULL) {
+		/* the check for fn_dso == NULL is mostly paranoia */
+		if (p != NULL && p->fns[0].fn_dso == NULL &&
+		    p->fns[0].fn_ptr.std_func != NULL) {
 			cleanup_called = 1;
-			(*p->fns[0])();
+			(*p->fns[0].fn_ptr.std_func)();
 		}
 	}
 
