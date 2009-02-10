@@ -30,7 +30,10 @@
 
 void* __dso_handle = 0;
 
-int __aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
+/* Make this a weak symbol to avoid a multiple definition error when linking
+ * with libstdc++-v3.  */
+int __attribute__((weak))
+__aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
 {
     //return __cxa_atexit(destructor, object, dso_handle);
     return 0;

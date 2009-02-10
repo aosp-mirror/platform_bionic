@@ -66,6 +66,7 @@ libc_common_src_files := \
 	unistd/usleep.c \
 	unistd/wait.c \
 	stdio/asprintf.c \
+	stdio/clrerr.c \
 	stdio/fclose.c \
 	stdio/fdopen.c \
 	stdio/feof.c \
@@ -179,6 +180,7 @@ libc_common_src_files := \
 	string/strcat.c \
 	string/strchr.c \
 	string/strcmp.c \
+	string/strcoll.c \
 	string/strcpy.c \
 	string/strcspn.c \
 	string/strdup.c \
@@ -198,6 +200,7 @@ libc_common_src_files := \
 	string/strstr.c \
 	string/strtok.c \
 	string/strtotimeval.c \
+	string/strxfrm.c \
 	inet/bindresvport.c \
 	inet/inet_addr.c \
 	inet/inet_aton.c \
@@ -234,6 +237,7 @@ libc_common_src_files := \
 	bionic/ssp.c \
 	bionic/stubs.c \
 	bionic/system_properties.c \
+	bionic/time64.c \
 	bionic/thread_atexit.c \
 	bionic/utime.c \
 	bionic/utmp.c \

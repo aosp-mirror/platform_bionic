@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,12 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#include <string.h>
 
 /*
- * This function is an empty stub where GDB locates a breakpoint to get notified
- * about linker activity.
+ * Compare strings using the current locale.  Since Bionic really does not
+ * support locales, we assume we always use the C locale and call strcmp.
+ *
+ * This function is provided to make libstdc++-v3 usable.
  */
-void __attribute__((noinline)) rtld_db_dlactivity(void)
+int
+strcoll(const char *s1, const char *s2)
 {
+	return strcmp (s1, s2);
 }
-

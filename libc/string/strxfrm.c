@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,12 +25,23 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#include <string.h>
 
 /*
- * This function is an empty stub where GDB locates a breakpoint to get notified
- * about linker activity.
+ * Transform string s2 to string s1 using the current locale so that
+ * strcmp of transformed strings yields the same result as strcoll. 
+ * Since Bionic really does not support locales, we assume we always use
+ * the C locale.
+ *
+ * This function is provided to make libstdc++-v3 usable.
  */
-void __attribute__((noinline)) rtld_db_dlactivity(void)
+size_t
+strxfrm(char *s1, const char *s2, size_t n)
 {
-}
+	size_t len = strlen(s2) + 1;
 
+	if (len < n)
+		n = len;
+	memcpy(s1, s2, n);
+	return len;
+}
