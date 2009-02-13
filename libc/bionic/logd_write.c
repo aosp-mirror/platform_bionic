@@ -38,7 +38,7 @@
 #include <stdarg.h>
 #include <fcntl.h>
 
-#include <utils/logger.h>
+#include <cutils/logger.h>
 #include "logd.h"
 
 #include <pthread.h>
