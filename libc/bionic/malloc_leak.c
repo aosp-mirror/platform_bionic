@@ -58,6 +58,8 @@
 #define SIZE_FLAG_ZYGOTE_CHILD  (1<<31)
 #define SIZE_FLAG_MASK          (SIZE_FLAG_ZYGOTE_CHILD)
 
+#define MAX_SIZE_T           (~(size_t)0)
+
 /*
  * In a VM process, this is set to 1 after fork()ing out of zygote.
  */
@@ -608,8 +610,16 @@ void  chk_free(void* mem)
 
 void* chk_calloc(size_t n_elements, size_t elem_size)
 {
-    size_t size = n_elements * elem_size;
-    void* ptr = chk_malloc(size);
+    size_t  size;
+    void*   ptr;
+
+    /* Fail on overflow - just to be safe even though this code runs only
+     * within the debugging C library, not the production one */
+    if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
+        return NULL;
+    }
+    size = n_elements * elem_size;
+    ptr  = chk_malloc(size);
     if (ptr != NULL) {
         memset(ptr, 0, size);
     }
@@ -763,8 +773,16 @@ void leak_free(void* mem)
 
 void* leak_calloc(size_t n_elements, size_t elem_size)
 {
-    size_t size = n_elements * elem_size;
-    void* ptr = leak_malloc(size);
+    size_t  size;
+    void*   ptr;
+
+    /* Fail on overflow - just to be safe even though this code runs only
+     * within the debugging C library, not the production one */
+    if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
+        return NULL;
+    }
+    size = n_elements * elem_size;
+    ptr  = leak_malloc(size);
     if (ptr != NULL) {
         memset(ptr, 0, size);
     }

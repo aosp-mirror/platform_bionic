@@ -1133,13 +1133,25 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
         switch(type){
 #if defined(ANDROID_ARM_LINKER)
         case R_ARM_JUMP_SLOT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
         case R_ARM_GLOB_DAT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
         case R_ARM_ABS32:
             COUNT_RELOC(RELOC_ABSOLUTE);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO ABS %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
-            *((unsigned*)reloc) = sym_addr;
+            *((unsigned*)reloc) += sym_addr;
             break;
 #elif defined(ANDROID_X86_LINKER)
         case R_386_JUMP_SLOT:
@@ -1591,13 +1603,13 @@ static int link_image(soinfo *si, unsigned wr_offset)
     }
 #endif
 
-    /* If this is a SETUID programme, dup /dev/null to openned stdin,
+    /* If this is a SET?ID program, dup /dev/null to opened stdin,
        stdout and stderr to close a security hole described in:
 
     ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
 
      */
-    if (getuid() != geteuid())
+    if (getuid() != geteuid() || getgid() != getegid())
         nullify_closed_stdio ();
     call_constructors(si);
     notify_gdb_of_load(si);
