@@ -485,16 +485,19 @@ timer_settime( timer_t                   id,
             timer_gettime_internal(timer, ospec );
         }
 
-        /* compute next expiration time */
+        /* compute next expiration time. note that if the
+         * new it_interval is 0, we should disarm the timer
+         */
         expires = spec->it_value;
-        clock_gettime( timer->clock, &now );
-        if (!(flags & TIMER_ABSTIME)) {
-            timespec_add(&expires, &now);
-        } else {
-            if (timespec_cmp(&expires, &now) < 0)
-                expires = now;
+        if (!timespec_is_zero(&expires)) {
+            clock_gettime( timer->clock, &now );
+            if (!(flags & TIMER_ABSTIME)) {
+                timespec_add(&expires, &now);
+            } else {
+                if (timespec_cmp(&expires, &now) < 0)
+                    expires = now;
+            }
         }
-
         timer->expires = expires;
         timer->period  = spec->it_interval;
         thr_timer_unlock( timer );

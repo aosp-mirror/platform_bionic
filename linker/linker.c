@@ -49,6 +49,8 @@
 #include "linker.h"
 #include "linker_debug.h"
 
+#include "ba.h"
+
 #define SO_MAX 64
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
@@ -110,7 +112,8 @@ extern void __attribute__((noinline)) rtld_db_dlactivity(void);
 
 extern void  sched_yield(void);
 
-static struct r_debug _r_debug = {1, NULL, &rtld_db_dlactivity, RT_CONSISTENT, 0};
+static struct r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
+                                  RT_CONSISTENT, 0};
 static struct link_map *r_debug_tail = 0;
 
 //static pthread_mutex_t _r_debug_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -207,6 +210,7 @@ static soinfo *alloc_info(const char *name)
     memset(si, 0, sizeof(soinfo));
     strcpy((char*) si->name, name);
     sonext->next = si;
+    si->ba_index = -1; /* by default, prelinked */
     si->next = NULL;
     si->refcount = 0;
     sonext = si;
@@ -478,8 +482,6 @@ static int open_library(const char *name)
     return -1;
 }
 
-static unsigned libbase = LIBBASE;
-
 /* temporary space for holding the first page of the shared lib
  * which contains the elf header (with the pht). */
 static unsigned char __header[PAGE_SIZE];
@@ -625,64 +627,67 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
  *     segments into the correct locations within this memory range.
  *
  * Args:
- *     req_base: The requested base of the allocation. If 0, a sane one will be
+ *     si->base: The requested base of the allocation. If 0, a sane one will be
  *               chosen in the range LIBBASE <= base < LIBLAST.
- *     sz: The size of the allocation.
+ *     si->size: The size of the allocation.
  *
  * Returns:
- *     NULL on failure, and non-NULL pointer to memory region on success.
+ *     -1 on failure, and 0 on success.  On success, si->base will contain
+ *     the virtual address at which the library will be mapped.
  */
-static void *
-alloc_mem_region(const char *name, unsigned req_base, unsigned sz)
+
+static int reserve_mem_region(soinfo *si)
 {
-    void *base;
+    void *base = mmap((void *)si->base, si->size, PROT_READ | PROT_EXEC,
+                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (base == MAP_FAILED) {
+        ERROR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
+              "as requested, will try general pool: %d (%s)\n",
+              pid, (si->base ? "" : "non-"), si->name, si->base,
+              errno, strerror(errno));
+        return -1;
+    } else if (base != (void *)si->base) {
+        ERROR("OOPS: %5d %sprelinked library '%s' mapped at 0x%08x, "
+              "not at 0x%08x\n", pid, (si->base ? "" : "non-"),
+              si->name, (unsigned)base, si->base);
+        munmap(base, si->size);
+        return -1;
+    }
+    return 0;
+}
 
-    if (req_base) {
-        /* we should probably map it as PROT_NONE, but the init code needs
-         * to read the phdr, so mark everything as readable. */
-        base = mmap((void *)req_base, sz, PROT_READ | PROT_EXEC,
-                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        if (base == MAP_FAILED) {
-            WARN("%5d can NOT map (prelinked) library '%s' at 0x%08x "
-                 "as requested, will try general pool: %d (%s)\n",
-                 pid, name, req_base, errno, strerror(errno));
-        } else if (base != (void *)req_base) {
-            ERROR("OOPS: %5d prelinked library '%s' mapped at 0x%08x, "
-                  "not at 0x%08x\n", pid, name, (unsigned)base, req_base);
-            munmap(base, sz);
-            return NULL;
-        }
-
-        /* Here we know that we got a valid allocation. Hooray! */
-        return base;
+static int
+alloc_mem_region(soinfo *si)
+{
+    if (si->base) {
+        /* Attempt to mmap a prelinked library. */
+        si->ba_index = -1;
+        return reserve_mem_region(si);
     }
 
-    /* We either did not request a specific base address to map at
-     * (i.e. not-prelinked) OR we could not map at the requested address.
-     * Try to find a memory range in our "reserved" area that can be mapped.
-     */
-    while(libbase < LIBLAST) {
-        base = mmap((void*) libbase, sz, PROT_READ | PROT_EXEC,
-                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-
-        if(((unsigned)base) == libbase) {
-            /* success -- got the address we wanted */
-            return base;
+    /* This is not a prelinked library, so we attempt to allocate space
+       for it from the buddy allocator, which manages the area between
+       LIBBASE and LIBLAST.
+    */
+    si->ba_index = ba_allocate(si->size);
+    if(si->ba_index >= 0) {
+        si->base = ba_start_addr(si->ba_index);
+        PRINT("%5d mapping library '%s' at %08x (index %d) " \
+              "through buddy allocator.\n",
+              pid, si->name, si->base, si->ba_index);
+        if (reserve_mem_region(si) < 0) {
+            ba_free(si->ba_index);
+            si->ba_index = -1;
+            si->base = 0;
+            goto err;
         }
-
-        /* If we got a different address than requested (rather than
-         * just a failure), we need to unmap the mismapped library
-         * before trying again
-         */
-        if(base != MAP_FAILED)
-            munmap(base, sz);
-
-        libbase += LIBINC;
+        return 0;
     }
 
+err:
     ERROR("OOPS: %5d cannot map library '%s'. no vspace available.\n",
-          pid, name);
-    return NULL;
+          pid, si->name);
+    return -1;
 }
 
 #define MAYBE_MAP_FLAG(x,from,to)    (((x) & (from)) ? (to) : 0)
@@ -912,8 +917,7 @@ load_library(const char *name)
     int cnt;
     unsigned ext_sz;
     unsigned req_base;
-    void *base;
-    soinfo *si;
+    soinfo *si = NULL;
     Elf32_Ehdr *hdr;
 
     if(fd == -1)
@@ -939,14 +943,6 @@ load_library(const char *name)
     TRACE("[ %5d - '%s' (%s) wants base=0x%08x sz=0x%08x ]\n", pid, name,
           (req_base ? "prelinked" : "not pre-linked"), req_base, ext_sz);
 
-    /* Carve out a chunk of memory where we will map in the individual
-     * segments */
-    base = alloc_mem_region(name, req_base, ext_sz);
-    if (base == NULL)
-        goto fail;
-    TRACE("[ %5d allocated memory for %s @ %p (0x%08x) ]\n",
-          pid, name, base, (unsigned) ext_sz);
-
     /* Now configure the soinfo struct where we'll store all of our data
      * for the ELF object. If the loading fails, we waste the entry, but
      * same thing would happen if we failed during linking. Configuring the
@@ -956,19 +952,31 @@ load_library(const char *name)
     if (si == NULL)
         goto fail;
 
-    si->base = (unsigned)base;
+    /* Carve out a chunk of memory where we will map in the individual
+     * segments */
+    si->base = req_base;
     si->size = ext_sz;
     si->flags = 0;
     si->entry = 0;
     si->dynamic = (unsigned *)-1;
+    if (alloc_mem_region(si) < 0)
+        goto fail;
+
+    TRACE("[ %5d allocated memory for %s @ %p (0x%08x) ]\n",
+          pid, name, (void *)si->base, (unsigned) ext_sz);
 
     /* Now actually load the library's segments into right places in memory */
-    if (load_segments(fd, &__header[0], si) < 0)
+    if (load_segments(fd, &__header[0], si) < 0) {
+        if (si->ba_index >= 0) {
+            ba_free(si->ba_index);
+            si->ba_index = -1;
+        }
         goto fail;
+    }
 
     /* this might not be right. Technically, we don't even need this info
      * once we go through 'load_segments'. */
-    hdr = (Elf32_Ehdr *)base;
+    hdr = (Elf32_Ehdr *)si->base;
     si->phdr = (Elf32_Phdr *)((unsigned char *)si->base + hdr->e_phoff);
     si->phnum = hdr->e_phnum;
     /**/
@@ -977,6 +985,7 @@ load_library(const char *name)
     return si;
 
 fail:
+    if (si) free_info(si);
     close(fd);
     return NULL;
 }
@@ -985,8 +994,6 @@ static soinfo *
 init_library(soinfo *si)
 {
     unsigned wr_offset = 0xffffffff;
-    unsigned libbase_before = 0;
-    unsigned libbase_after = 0;
 
     /* At this point we know that whatever is loaded @ base is a valid ELF
      * shared library whose segments are properly mapped in. */
@@ -996,24 +1003,10 @@ init_library(soinfo *si)
     if (si->base < LIBBASE || si->base >= LIBLAST)
         si->flags |= FLAG_PRELINKED;
 
-        /* Adjust libbase for the size of this library, rounded up to
-        ** LIBINC alignment.  Make note of the previous and current
-        ** value of libbase to allow us to roll back in the event of
-        ** a link failure.
-        */
-    if (!(si->flags & FLAG_PRELINKED)) {
-        libbase_before = libbase;
-        libbase += (si->size + (LIBINC - 1)) & (~(LIBINC - 1));
-        libbase_after = libbase;
-    }
-
     if(link_image(si, wr_offset)) {
             /* We failed to link.  However, we can only restore libbase
             ** if no additional libraries have moved it since we updated it.
             */
-        if(!(si->flags & FLAG_PRELINKED) && (libbase == libbase_after)) {
-            libbase = libbase_before;
-        }
         munmap((void *)si->base, si->size);
         return NULL;
     }
@@ -1067,6 +1060,12 @@ unsigned unload_library(soinfo *si)
         }
 
         munmap((char *)si->base, si->size);
+        if (si->ba_index >= 0) {
+            PRINT("%5d releasing library '%s' address space at %08x "\
+                  "through buddy allocator.\n",
+                  pid, si->name, si->base);
+            ba_free(si->ba_index);
+        }
         free_info(si);
         si->refcount = 0;
     }
@@ -1707,6 +1706,8 @@ unsigned __linker_init(unsigned **elfdata)
         }
         vecs += 2;
     }
+
+    ba_init();
 
     si->base = 0;
     si->dynamic = (unsigned *)-1;

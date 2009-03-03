@@ -95,6 +95,8 @@ struct soinfo
     unsigned entry;
     unsigned base;
     unsigned size;
+    // buddy-allocator index, negative for prelinked libraries
+    int ba_index;
 
     unsigned *dynamic;
 

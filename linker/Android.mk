@@ -6,7 +6,8 @@ LOCAL_SRC_FILES:= \
 	linker.c \
 	rt.c \
 	dlfcn.c \
-	debugger.c
+	debugger.c \
+	ba.c
 
 LINKER_TEXT_BASE := 0xB0000100
 
@@ -16,7 +17,9 @@ LINKER_AREA_SIZE := 0x01000000
 
 LOCAL_LDFLAGS := -Wl,-Ttext,$(LINKER_TEXT_BASE)
 
-LOCAL_CFLAGS += -DPRELINK -DLINKER_TEXT_BASE=$(LINKER_TEXT_BASE) -DLINKER_AREA_SIZE=$(LINKER_AREA_SIZE)
+LOCAL_CFLAGS += -DPRELINK
+LOCAL_CFLAGS += -DLINKER_TEXT_BASE=$(LINKER_TEXT_BASE)
+LOCAL_CFLAGS += -DLINKER_AREA_SIZE=$(LINKER_AREA_SIZE)
 
 # we need to access the Bionic private header <bionic_tls.h>
 # in the linker

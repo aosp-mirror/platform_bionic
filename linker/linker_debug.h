@@ -35,8 +35,8 @@
  * this on when submitting back to repository */
 #define LINKER_DEBUG         0
 #define TRACE_DEBUG          0
-#define DO_TRACE_LOOKUP      1
-#define DO_TRACE_RELO        1
+#define DO_TRACE_LOOKUP      0
+#define DO_TRACE_RELO        0
 #define TIMING               0
 #define STATS                0
 #define COUNT_PAGES          0
