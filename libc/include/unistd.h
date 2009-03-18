@@ -34,6 +34,7 @@
 #include <sys/select.h>
 #include <sys/sysconf.h>
 #include <linux/capability.h>
+#include <pathconf.h>
 
 __BEGIN_DECLS
 
@@ -111,9 +112,6 @@ extern int link(const char *, const char *);
 extern int unlink(const char *);
 extern int chdir(const char *);
 extern int fchdir(int);
-extern int chmod(const char *, mode_t);
-extern int fchmod(int, mode_t);
-extern int mkdir(const char *, mode_t);
 extern int rmdir(const char *);
 extern int pipe(int *);
 extern int chroot(const char *);

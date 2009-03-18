@@ -488,6 +488,21 @@ int pthread_getattr_np(pthread_t thid, pthread_attr_t * attr)
     return 0;
 }
 
+int pthread_attr_setscope(pthread_attr_t *attr, int  scope)
+{
+    if (scope == PTHREAD_SCOPE_SYSTEM)
+        return 0;
+    if (scope == PTHREAD_SCOPE_PROCESS)
+        return ENOTSUP;
+
+    return EINVAL;
+}
+
+int pthread_attr_getscope(pthread_attr_t const *attr)
+{
+    return PTHREAD_SCOPE_SYSTEM;
+}
+
 
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation

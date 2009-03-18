@@ -469,7 +469,7 @@ timer_settime( timer_t                   id,
     }
 
     if ( __likely(!TIMER_ID_IS_WRAPPED(id)) ) {
-        return __timer_gettime( id, ospec );
+        return __timer_settime( id, flags, spec, ospec );
     } else {
         thr_timer_t*        timer = thr_timer_from_id(id);
         struct timespec     expires, now;
@@ -485,16 +485,19 @@ timer_settime( timer_t                   id,
             timer_gettime_internal(timer, ospec );
         }
 
-        /* compute next expiration time */
+        /* compute next expiration time. note that if the
+         * new it_interval is 0, we should disarm the timer
+         */
         expires = spec->it_value;
-        clock_gettime( timer->clock, &now );
-        if (!(flags & TIMER_ABSTIME)) {
-            timespec_add(&expires, &now);
-        } else {
-            if (timespec_cmp(&expires, &now) < 0)
-                expires = now;
+        if (!timespec_is_zero(&expires)) {
+            clock_gettime( timer->clock, &now );
+            if (!(flags & TIMER_ABSTIME)) {
+                timespec_add(&expires, &now);
+            } else {
+                if (timespec_cmp(&expires, &now) < 0)
+                    expires = now;
+            }
         }
-
         timer->expires = expires;
         timer->period  = spec->it_interval;
         thr_timer_unlock( timer );
@@ -560,11 +563,11 @@ timer_thread_start( void*  _arg )
         if (timespec_cmp( &expires, &now ) > 0)
         {
             /* cool, there was no overrun, so compute the
-             * relative timeout as 'now - expires', then wait
+             * relative timeout as 'expires - now', then wait
              */
             int              ret;
-            struct timespec  diff = now;
-            timespec_sub( &diff, &expires );
+            struct timespec  diff = expires;
+            timespec_sub( &diff, &now );
 
             ret = __pthread_cond_timedwait_relative(
                         &timer->cond, &timer->mutex, &diff);

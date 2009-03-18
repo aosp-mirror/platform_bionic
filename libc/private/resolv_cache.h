@@ -28,31 +28,39 @@
 #ifndef _RESOLV_CACHE_H_
 #define _RESOLV_CACHE_H_
 
-#include <netdb.h>
-
-const struct hostent  _resolv_hostent_none;
-#define _RESOLV_HOSTENT_NONE  ((struct hostent*)&_resolv_hostent_none)
-
 struct resolv_cache;  /* forward */
+
+/* get cache instance, can be NULL if cache is disabled
+ * (e.g. through an environment variable) */
 extern struct resolv_cache*  __get_res_cache(void);
-extern struct hostent**      __get_res_cache_hostent_p(void);
 
-extern struct resolv_cache*  _resolv_cache_get( void );
+/* this gets called everytime we detect some changes in the DNS configuration
+ * and will flush the cache */
+extern void   _resolv_cache_reset( unsigned  generation );
 
-extern struct resolv_cache*  _resolv_cache_create( void );
+typedef enum {
+    RESOLV_CACHE_UNSUPPORTED,  /* the cache can't handle that kind of queries */
+                               /* or the answer buffer is too small */
+    RESOLV_CACHE_NOTFOUND,     /* the cache doesn't know about this query */
+    RESOLV_CACHE_FOUND         /* the cache found the answer */
+} ResolvCacheStatus;
 
-extern void                  _resolv_cache_destroy( struct resolv_cache*  cache );
+extern ResolvCacheStatus
+_resolv_cache_lookup( struct resolv_cache*  cache,
+                      const void*           query,
+                      int                   querylen,
+                      void*                 answer,
+                      int                   answersize,
+                      int                  *answerlen );
 
-extern struct hostent*       _resolv_cache_lookup( struct resolv_cache*  cache,
-                                                   const char*           name,
-                                                   int                   af );
-
-extern void                  _resolv_cache_add( struct resolv_cache*  cache,
-                                                const char*           name,
-                                                int                   af,
-                                                struct hostent*       hp );
-
-extern struct hostent*       _resolv_hostent_copy( struct hostent*  hp );
-extern void                  _resolv_hostent_free( struct hostent*  hp );
+/* add a (query,answer) to the cache, only call if _resolv_cache_lookup
+ * did return RESOLV_CACHE_NOTFOUND
+ */
+extern void
+_resolv_cache_add( struct resolv_cache*  cache,
+                   const void*           query,
+                   int                   querylen,
+                   const void*           answer,
+                   int                   answerlen );
 
 #endif /* _RESOLV_CACHE_H_ */

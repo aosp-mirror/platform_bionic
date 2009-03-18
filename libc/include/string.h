@@ -82,9 +82,8 @@ extern size_t strspn(const char *, const char *);
 
 extern char*  strsignal(int  sig);
 
-/* Just declared to make libstdc++-v3 happy.  */
-extern int    strcoll (const char *, const char *);
-extern size_t strxfrm (char *, const char *, size_t);
+extern int    strcoll(const char *, const char *);
+extern size_t strxfrm(char *, const char *, size_t);
 
 __END_DECLS
 

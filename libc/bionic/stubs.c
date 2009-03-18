@@ -35,6 +35,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <ctype.h>
 
 /** Thread-specific state for the stubs functions
  **/
@@ -95,8 +96,9 @@ __stubs_state(void)
     return s;
 }
 
-static struct passwd *android_iinfo_to_passwd(
-    struct passwd *pw, struct android_id_info *iinfo)
+static struct passwd*
+android_iinfo_to_passwd( struct passwd          *pw,
+                         struct android_id_info *iinfo )
 {
     pw->pw_name  = (char*)iinfo->name;
     pw->pw_uid   = iinfo->aid;
@@ -106,8 +108,9 @@ static struct passwd *android_iinfo_to_passwd(
     return pw;
 }
 
-static struct group *android_iinfo_to_group(
-    struct group *gr, struct android_id_info *iinfo)
+static struct group*
+android_iinfo_to_group( struct group *gr,
+                        struct android_id_info *iinfo )
 {
     gr->gr_name   = (char*) iinfo->name;
     gr->gr_gid    = iinfo->aid;
@@ -116,8 +119,8 @@ static struct group *android_iinfo_to_group(
     return gr;
 }
 
-static struct passwd *android_id_to_passwd(
-    struct passwd *pw, unsigned id)
+static struct passwd *
+android_id_to_passwd( struct passwd *pw, unsigned id)
 {
     struct android_id_info *iinfo = android_ids;
     unsigned n;
@@ -126,11 +129,11 @@ static struct passwd *android_id_to_passwd(
             return android_iinfo_to_passwd(pw, iinfo + n);
         }
     }
-    return 0;
+    return NULL;
 }
 
-static struct passwd *android_name_to_passwd(
-    struct passwd *pw, const char *name)
+static struct passwd*
+android_name_to_passwd(struct passwd *pw, const char *name)
 {
     struct android_id_info *iinfo = android_ids;
     unsigned n;
@@ -139,11 +142,11 @@ static struct passwd *android_name_to_passwd(
             return android_iinfo_to_passwd(pw, iinfo + n);
         }
     }
-    return 0;
+    return NULL;
 }
 
-static struct group *android_id_to_group(
-    struct group *gr, unsigned id)
+static struct group*
+android_id_to_group( struct group *gr, unsigned id )
 {
     struct android_id_info *iinfo = android_ids;
     unsigned n;
@@ -152,11 +155,11 @@ static struct group *android_id_to_group(
             return android_iinfo_to_group(gr, iinfo + n);
         }
     }
-    return 0;
+    return NULL;
 }
 
-static struct group *android_name_to_group(
-    struct group *gr, const char *name)
+static struct group*
+android_name_to_group( struct group *gr, const char *name )
 {
     struct android_id_info *iinfo = android_ids;
     unsigned n;
@@ -165,10 +168,92 @@ static struct group *android_name_to_group(
             return android_iinfo_to_group(gr, iinfo + n);
         }
     }
+    return NULL;
+}
+
+/* translate a user/group name like app_1234 into the
+ * corresponding user/group id (AID_APP + 1234)
+ * returns 0 and sets errno to ENOENT in case of error
+ */
+static unsigned
+app_id_from_name( const char*  name )
+{
+    unsigned long  id;
+    char*          end;
+
+    if (memcmp(name, "app_", 4) != 0 || !isdigit(name[4]))
+        goto FAIL;
+
+    id = strtoul(name+4, &end, 10);
+    if (id == 0 || *end != '\0')
+        goto FAIL;
+
+    id += AID_APP;
+
+    /* check for overflow and that the value can be
+     * stored in our 32-bit uid_t/gid_t */
+    if (id < AID_APP || (unsigned)id != id)
+        goto FAIL;
+
+    return (unsigned)id;
+
+FAIL:
+    errno = ENOENT;
     return 0;
 }
 
-struct passwd* getpwuid(uid_t uid)
+/* translate a uid into the corresponding app_<uid>
+ * passwd structure (sets errno to ENOENT on failure)
+ */
+static struct passwd*
+app_id_to_passwd(uid_t  uid, stubs_state_t*  state)
+{
+    struct passwd*  pw = &state->passwd;
+
+    if (uid < AID_APP) {
+        errno = ENOENT;
+        return NULL;
+    }
+
+    snprintf( state->app_name_buffer, sizeof state->app_name_buffer,
+              "app_%u", uid - AID_APP );
+
+    pw->pw_name  = state->app_name_buffer;
+    pw->pw_dir   = "/data";
+    pw->pw_shell = "/system/bin/sh";
+    pw->pw_uid   = uid;
+    pw->pw_gid   = uid;
+
+    return pw;
+}
+
+/* translate a gid into the corresponding app_<gid>
+ * group structure (sets errno to ENOENT on failure)
+ */
+static struct group*
+app_id_to_group(gid_t  gid, stubs_state_t*  state)
+{
+    struct group*  gr = &state->group;
+
+    if (gid < AID_APP) {
+        errno = ENOENT;
+        return NULL;
+    }
+
+    snprintf(state->group_name_buffer, sizeof state->group_name_buffer,
+             "app_%u", gid - AID_APP);
+
+    gr->gr_name   = state->group_name_buffer;
+    gr->gr_gid    = gid;
+    gr->gr_mem[0] = gr->gr_name;
+    gr->gr_mem[1] = NULL;
+
+    return gr;
+}
+
+
+struct passwd*
+getpwuid(uid_t uid)
 {
     stubs_state_t*  state = __stubs_state();
     struct passwd*  pw;
@@ -181,35 +266,27 @@ struct passwd* getpwuid(uid_t uid)
     if ( android_id_to_passwd(pw, uid) != NULL )
         return pw;
 
-    if (uid < AID_APP) {
-        errno = ENOENT;
-        return NULL;
-    }
-
-    snprintf( state->app_name_buffer, sizeof state->app_name_buffer,
-              "app_%d", uid - AID_APP );
-
-    pw->pw_name  = state->app_name_buffer;
-    pw->pw_dir   = "/data";
-    pw->pw_shell = "/system/bin/sh";
-    pw->pw_uid   = uid;
-    pw->pw_gid   = uid;
-
-    return pw;
+    return app_id_to_passwd(uid, state);
 }
 
-struct passwd* getpwnam(const char *login)
+struct passwd*
+getpwnam(const char *login)
 {
     stubs_state_t*  state = __stubs_state();
 
     if (state == NULL)
         return NULL;
 
-    return android_name_to_passwd(&state->passwd, login);
+    if (android_name_to_passwd(&state->passwd, login) != NULL)
+        return &state->passwd;
+
+    return app_id_to_passwd( app_id_from_name(login), state );
 }
 
-int getgrouplist (const char *user, gid_t group,
-                  gid_t *groups, int *ngroups) {
+int
+getgrouplist (const char *user, gid_t group,
+              gid_t *groups, int *ngroups)
+{
     if (*ngroups < 1) {
         *ngroups = 1;
         return -1;
@@ -218,18 +295,20 @@ int getgrouplist (const char *user, gid_t group,
     return (*ngroups = 1);
 }
 
-char* getlogin(void)
+char*
+getlogin(void)
 {
     struct passwd *pw = getpwuid(getuid());
 
     if(pw) {
         return pw->pw_name;
     } else {
-        return 0;
+        return NULL;
     }
 }
 
-struct group* getgrgid(gid_t gid)
+struct group*
+getgrgid(gid_t gid)
 {
     stubs_state_t*  state = __stubs_state();
     struct group*   gr;
@@ -241,33 +320,24 @@ struct group* getgrgid(gid_t gid)
     if (gr != NULL)
         return gr;
 
-    if (gid < AID_APP) {
-        errno = ENOENT;
-        return NULL;
-    }
-
-    snprintf(state->group_name_buffer, sizeof state->group_name_buffer,
-             "app_%d", gid - AID_APP);
-
-    gr = &state->group;
-
-    gr->gr_name   = state->group_name_buffer;
-    gr->gr_gid    = gid;
-    gr->gr_mem[0] = gr->gr_name;
-    gr->gr_mem[1] = NULL;
-
-    return gr;
+    return app_id_to_group(gid, state);
 }
 
-struct group* getgrnam(const char *name)
+struct group*
+getgrnam(const char *name)
 {
     stubs_state_t*  state = __stubs_state();
+    unsigned        id;
 
     if (state == NULL)
         return NULL;
 
-    return android_name_to_group(&state->group, name);
+    if (android_name_to_group(&state->group, name) != 0)
+        return &state->group;
+
+    return app_id_to_group( app_id_from_name(name), state );
 }
+
 
 struct netent* getnetbyname(const char *name)
 {
@@ -308,5 +378,3 @@ struct protoent *getprotobynumber(int proto)
     fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
     return NULL;
 }
-
-

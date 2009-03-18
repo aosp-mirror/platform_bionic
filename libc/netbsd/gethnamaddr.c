@@ -626,37 +626,12 @@ gethostbyname_internal(const char *name, int af, res_state res)
 				break;
 		}
 
-#ifdef ANDROID_CHANGES
-        cache = __get_res_cache();
-        if (cache != NULL) {
-            hp = _resolv_cache_lookup( cache, name, af );
-            if (hp == _RESOLV_HOSTENT_NONE) {
-                h_errno = HOST_NOT_FOUND;
-                return NULL;
-            }
-            if (hp != NULL) {
-                h_errno = NETDB_SUCCESS;
-                return hp;
-            }
-        }
-#endif
-
 	hp = NULL;
 	h_errno = NETDB_INTERNAL;
 	if (nsdispatch(&hp, dtab, NSDB_HOSTS, "gethostbyname",
 	    default_dns_files, name, strlen(name), af) != NS_SUCCESS) {
-#ifdef ANDROID_CHANGES
-                /* cache negative DNS entry */
-                if (h_errno == HOST_NOT_FOUND && cache != NULL)
-                    _resolv_cache_add( cache, name, af, _RESOLV_HOSTENT_NONE );
-#endif
 		return NULL;
         }
-#ifdef ANDROID_CHANGES
-    if (cache != NULL) {
-        _resolv_cache_add( cache, name, af, hp );
-    }
-#endif
 	h_errno = NETDB_SUCCESS;
 	return hp;
 }

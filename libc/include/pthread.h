@@ -97,6 +97,9 @@ typedef volatile int  pthread_once_t;
 #define PTHREAD_PROCESS_PRIVATE  0
 #define PTHREAD_PROCESS_SHARED   1
 
+#define PTHREAD_SCOPE_SYSTEM     0
+#define PTHREAD_SCOPE_PROCESS    1
+
 /*
  * Prototypes
  */
@@ -127,6 +130,9 @@ int pthread_attr_getstack(pthread_attr_t const * attr, void ** stackaddr, size_t
 
 int pthread_attr_setguardsize(pthread_attr_t * attr, size_t guard_size);
 int pthread_attr_getguardsize(pthread_attr_t const * attr, size_t * guard_size);
+
+int pthread_attr_setscope(pthread_attr_t *attr, int  scope);
+int pthread_attr_getscope(pthread_attr_t const *attr);
 
 int pthread_getattr_np(pthread_t thid, pthread_attr_t * attr);
 

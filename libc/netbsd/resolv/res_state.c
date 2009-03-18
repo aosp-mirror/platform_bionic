@@ -46,7 +46,6 @@ typedef struct {
     struct __res_state     _nres[1];
     unsigned               _serial;
     struct prop_info*      _pi;
-    struct hostent*        _hostent;
     struct res_static      _rstatic[1];
 } _res_thread;
 
@@ -66,9 +65,9 @@ _res_thread_alloc(void)
         if ( res_ninit( rt->_nres ) < 0 ) {
             free(rt);
             rt = NULL;
+        } else {
+            memset(rt->_rstatic, 0, sizeof rt->_rstatic);
         }
-        rt->_hostent = NULL;
-        memset(rt->_rstatic, 0, sizeof rt->_rstatic);
     }
     return rt;
 }
@@ -93,7 +92,6 @@ _res_thread_free( void*  _rt )
     _res_thread*  rt = _rt;
 
     _res_static_done(rt->_rstatic);
-    _resolv_hostent_free(rt->_hostent);
     res_ndestroy(rt->_nres);
     free(rt);
 }
@@ -132,6 +130,7 @@ _res_thread_get(void)
         rt = NULL;
         pthread_setspecific( _res_key, rt );
     }
+    _resolv_cache_reset(rt->_serial);
     return rt;
 }
 
@@ -175,14 +174,6 @@ __res_put_state(res_state res)
 {
     /* nothing to do */
     res=res;
-}
-
-struct hostent**
-__get_res_cache_hostent_p(void)
-{
-    _res_thread*  rt = _res_thread_get();
-
-    return rt ? &rt->_hostent : NULL;
 }
 
 res_static

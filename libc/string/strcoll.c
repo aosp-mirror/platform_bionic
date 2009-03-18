@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_SHM_H
-#define _SYS_SHM_H
+#include <string.h>
 
-#include <sys/ipc.h>
-#include <linux/shm.h>
-
-__BEGIN_DECLS
-
-extern void*  shmat(int  shmid, const void*  shmaddr, int  shmflg);
-extern int    shmctl(int  shmid, int  cmd, struct shmid_ds*  buf);
-extern int    shmdt(const void*  shmaddr);
-extern int    shmget(key_t  key, size_t  size, int  shmflg);
-
-__END_DECLS
-
-#endif /* _SYS_SHM_H */
+/*
+ * Compare strings using the current locale.  Since Bionic really does not
+ * support locales, we assume we always use the C locale and call strcmp.
+ *
+ * This function is provided to make libstdc++-v3 usable.
+ */
+int
+strcoll(const char *s1, const char *s2)
+{
+	return strcmp (s1, s2);
+}

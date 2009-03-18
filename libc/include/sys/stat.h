@@ -71,6 +71,10 @@ struct stat {
     unsigned long long  st_ino;
 };
 
+extern int    chmod(const char *, mode_t);
+extern int    fchmod(int, mode_t);
+extern int    mkdir(const char *, mode_t);
+
 extern int    stat(const char *, struct stat *);
 extern int    fstat(int, struct stat *);
 extern int    lstat(const char *, struct stat *);

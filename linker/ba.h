@@ -25,19 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_MSG_H
-#define _SYS_MSG_H
 
-#include <sys/ipc.h>
-#include <linux/msg.h>
+#ifndef __LINKER_BA_H
+#define __LINKER_BA_H
 
-__BEGIN_DECLS
+extern void ba_init(void);
+extern int ba_allocate(unsigned long len);
+extern int ba_free(int index);
+extern unsigned long ba_start_addr(int index);
+extern unsigned long ba_len(int index);
 
-extern int  msgctl(int  msqid, int  cmd, struct msqid_ds *buf);
-extern int  msgget(key_t  key, int  msgflg);
-extern int  msgrcv(int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg);
-extern int  msgsnd(int  msqid, const void* msgp, size_t  msgsz, int  msgflg);
-
-__END_DECLS
-
-#endif /* _SYS_MSG_H */
+#endif

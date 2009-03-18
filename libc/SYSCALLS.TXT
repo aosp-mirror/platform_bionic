@@ -216,22 +216,6 @@ int sched_get_priority_max(int policy)  159
 int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
 
-# system-V inter-process communication
-# TODO: implement x86 stubs for these functions when needed (when ?)
-#
-int   semctl(int  semid, int  semnum, int  cmd, ...)          300,-1
-int   semget(key_t  key, int  nsems, int  semflg)             299,-1
-int   semop(int  semid, struct sembuf*  sops, size_t  nsops)  298,-1
-void* shmat(int  shmid, const void*  shmaddr, int  shmflg)  305,-1
-int   shmctl(int  shmid, int  cmd, struct shmid_ds*  buf)   308,-1
-int   shmdt(const void*  shmaddr)                           306,-1
-int   shmget(key_t  key, size_t  size, int  shmflg)         307,-1
-int   msgctl(int  msqid, int  cmd, struct msqid_ds *buf)    304,-1
-int   msgget(key_t  key, int  msgflg)                       303,-1
-int   msgrcv(int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg)  302,-1
-int   msgsnd(int  msqid, const void* msgp, size_t  msgsz, int  msgflg)               301,-1
-
-
 # other
 int     uname(struct utsname *)  122
 pid_t   __wait4:wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114

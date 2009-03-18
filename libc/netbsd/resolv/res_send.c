@@ -81,6 +81,9 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #endif
 #endif /* LIBC_SCCS and not lint */
 
+/* set to 1 to use our small/simple/limited DNS cache */
+#define  USE_RESOLV_CACHE  1
+
 /*
  * Send query to name server and wait for reply.
  */
@@ -110,6 +113,10 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <unistd.h>
 
 #include <isc/eventlib.h>
+
+#if USE_RESOLV_CACHE
+#  include <resolv_cache.h>
+#endif
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
@@ -344,12 +351,17 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	return (1);
 }
 
+
 int
 res_nsend(res_state statp,
 	  const u_char *buf, int buflen, u_char *ans, int anssiz)
 {
 	int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
 	char abuf[NI_MAXHOST];
+#if USE_RESOLV_CACHE
+        struct resolv_cache*  cache;
+        ResolvCacheStatus     cache_status = RESOLV_CACHE_UNSUPPORTED;
+#endif
 
 	if (statp->nscount == 0) {
 		errno = ESRCH;
@@ -364,6 +376,20 @@ res_nsend(res_state statp,
 	v_circuit = (statp->options & RES_USEVC) || buflen > PACKETSZ;
 	gotsomewhere = 0;
 	terrno = ETIMEDOUT;
+
+#if USE_RESOLV_CACHE
+        cache = __get_res_cache();
+        if (cache != NULL) {
+            int  anslen = 0;
+            cache_status = _resolv_cache_lookup(
+                                cache, buf, buflen,
+                                ans, anssiz, &anslen);
+
+            if (cache_status == RESOLV_CACHE_FOUND) {
+                return anslen;
+            }
+        }
+#endif
 
 	/*
 	 * If the ns_addr_list in the resolver context has changed, then
@@ -534,6 +560,12 @@ res_nsend(res_state statp,
 			(stdout, "%s", ""),
 			ans, (resplen > anssiz) ? anssiz : resplen);
 
+#if USE_RESOLV_CACHE
+                if (cache_status == RESOLV_CACHE_NOTFOUND) {
+                    _resolv_cache_add(cache, buf, buflen,
+                                      ans, resplen);
+                }
+#endif
 		/*
 		 * If we have temporarily opened a virtual circuit,
 		 * or if we haven't been asked to keep a socket open,

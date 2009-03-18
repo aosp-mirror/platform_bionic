@@ -34,6 +34,11 @@
 #include "thread_private.h"
 #include "atexit.h"
 
+/* temporary, for bug hunting */
+#include "logd.h"
+#define debug_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_DEBUG, "libc-abort", (format), ##__VA_ARGS__ )
+
 void
 abort(void)
 {
@@ -48,6 +53,9 @@ abort(void)
 	 * any errors -- X311J doesn't allow abort to return anyway.
 	 */
 	sigdelset(&mask, SIGABRT);
+    /* temporary, so deliberate seg fault can be caught by debuggerd */
+	sigdelset(&mask, SIGSEGV);
+    /* -- */
 	(void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
 
 	/*
@@ -63,6 +71,13 @@ abort(void)
 			(*p->fns[0].fn_ptr.std_func)();
 		}
 	}
+
+    /* temporary, for bug hunting */
+    debug_log("abort() called in pid %d\n", getpid());
+    /* seg fault seems to produce better debuggerd results than SIGABRT */
+    *((char*)0xdeadbaad) = 39;
+    debug_log("somehow we're not dead?\n");
+    /* -- */
 
 	(void)kill(getpid(), SIGABRT);
 
