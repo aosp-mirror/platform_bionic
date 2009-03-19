@@ -63,6 +63,18 @@ time_t:
   Instead, Bionic provides a <time64.h> header that defines a time64_t type,
   and related functions like mktime64(), localtime64(), etc...
 
+  strftime() uses time64_t internally, so the '%s' format (seconds since the
+  epoch) is supported for dates >= 2038.
+
+
+strftime_tz():
+
+  Bionic also provides the non-standard strftime_tz() function, a variant
+  of strftime() which also accepts a time locale descriptor as defined
+  by "struct strftime_locale" in <time.h>.
+
+  This function is used by the low-level framework code in Android.
+
 
 Timezone management:
 
