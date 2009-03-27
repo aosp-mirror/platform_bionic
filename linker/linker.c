@@ -37,7 +37,7 @@
 #include <dlfcn.h>
 #include <sys/stat.h>
 
-//#include <pthread.h>
+#include <pthread.h>
 
 #include <sys/mman.h>
 
@@ -110,15 +110,11 @@ unsigned bitmask[4096];
  */
 extern void __attribute__((noinline)) rtld_db_dlactivity(void);
 
-extern void  sched_yield(void);
-
 static struct r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
                                   RT_CONSISTENT, 0};
 static struct link_map *r_debug_tail = 0;
 
-//static pthread_mutex_t _r_debug_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static volatile int loader_lock = 0;
+static pthread_mutex_t _r_debug_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static void insert_soinfo_into_debug_map(soinfo * info)
 {
@@ -147,6 +143,17 @@ static void insert_soinfo_into_debug_map(soinfo * info)
     r_debug_tail = map;
 }
 
+static void remove_soinfo_from_debug_map(soinfo * info)
+{
+    struct link_map * map = &(info->linkmap);
+
+    if (r_debug_tail == map)
+        r_debug_tail = map->l_prev;
+
+    if (map->l_prev) map->l_prev->l_next = map->l_next;
+    if (map->l_next) map->l_next->l_prev = map->l_prev;
+}
+
 void notify_gdb_of_load(soinfo * info)
 {
     if (info->flags & FLAG_EXE) {
@@ -154,14 +161,7 @@ void notify_gdb_of_load(soinfo * info)
         return;
     }
 
-        /* yes, this is a little gross, but it does avoid
-        ** pulling in pthread_*() and at the moment we don't
-        ** dlopen() anything anyway
-        */
-    while(__atomic_swap(1, &loader_lock) != 0) {
-        sched_yield();
-        usleep(5000);
-    }
+    pthread_mutex_lock(&_r_debug_lock);
 
     _r_debug.r_state = RT_ADD;
     rtld_db_dlactivity();
@@ -171,7 +171,27 @@ void notify_gdb_of_load(soinfo * info)
     _r_debug.r_state = RT_CONSISTENT;
     rtld_db_dlactivity();
 
-    __atomic_swap(0, &loader_lock);
+    pthread_mutex_unlock(&_r_debug_lock);
+}
+
+void notify_gdb_of_unload(soinfo * info)
+{
+    if (info->flags & FLAG_EXE) {
+        // GDB already knows about the main executable
+        return;
+    }
+
+    pthread_mutex_lock(&_r_debug_lock);
+
+    _r_debug.r_state = RT_DELETE;
+    rtld_db_dlactivity();
+
+    remove_soinfo_from_debug_map(info);
+
+    _r_debug.r_state = RT_CONSISTENT;
+    rtld_db_dlactivity();
+
+    pthread_mutex_unlock(&_r_debug_lock);
 }
 
 void notify_gdb_of_libraries()
@@ -1066,6 +1086,7 @@ unsigned unload_library(soinfo *si)
                   pid, si->name, si->base);
             ba_free(si->ba_index);
         }
+        notify_gdb_of_unload(si);
         free_info(si);
         si->refcount = 0;
     }
@@ -1212,6 +1233,8 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
             TRACE_TYPE(RELO, "%5d RELO %08x <- %d @ %08x %s\n", pid,
                        reloc, s->st_size, sym_addr, sym_name);
             memcpy((void*)reloc, (void*)sym_addr, s->st_size);
+            break;
+        case R_ARM_NONE:
             break;
 #endif /* ANDROID_ARM_LINKER */
 
