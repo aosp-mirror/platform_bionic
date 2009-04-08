@@ -27,13 +27,23 @@
  * SUCH DAMAGE.
  */
 
+#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSETJMP__
+#define BIONIC_LIBSTDCPP_INCLUDE_CSETJMP__
+
 /*
- * Standard C++ Library wrapper around the C assert.h header file.  This file
- * can be included multiple times with different definition of NDEBUG, hence the
- * absence of include guards.
+ * Standard C++ Library wrapper around the C setjmp.h header file.
  */
 
-#ifndef BIONIC_LIBSTDCPP_INCLUDE_CASSERT__
-#define BIONIC_LIBSTDCPP_INCLUDE_CASSERT__
+#include <setjmp.h>
+
+#ifndef setjmp
+#define setjmp(env) setjmp (env)
 #endif
-#include <assert.h>
+
+namespace std
+{
+using ::jmp_buf;
+using ::longjmp;
+}  // namespace std
+
+#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSETJMP__
