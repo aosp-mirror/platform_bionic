@@ -39,8 +39,8 @@
 #include <stddef.h>
 
 namespace std {
-    using ::ptrdiff_t;
-    using ::size_t;
+using ::ptrdiff_t;
+using ::size_t;
 }  // namespace std
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
