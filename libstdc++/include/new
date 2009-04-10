@@ -1,11 +1,10 @@
+/* -*- c++ -*- */
 #ifndef __NEW__
 #define __NEW__
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace std {
-    using ::size_t;
-
     struct nothrow_t {};
     extern const nothrow_t nothrow;
 }
