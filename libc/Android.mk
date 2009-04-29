@@ -338,7 +338,7 @@ libc_common_cflags := \
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
 
-ifeq ($(TARGET_BUILD_TYPE),debug)
+ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
