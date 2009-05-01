@@ -112,6 +112,7 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #define MAX_DNS_PROPERTIES 8
 #define DNS_PROP_NAME_PREFIX "net.dns"
 #define DNS_CHANGE_PROP_NAME "net.dnschange"
+#define DNS_SEARCH_PROP_NAME "net.dns.search"
 const prop_info *dns_change_prop;
 int dns_last_change_counter;
 static int _get_dns_change_count();
@@ -167,6 +168,39 @@ res_ninit(res_state statp) {
 
 	return (__res_vinit(statp, 0));
 }
+
+#ifdef ANDROID_CHANGES
+int load_domain_search_list(res_state statp) {
+	char propvalue[PROP_VALUE_MAX];
+	register char *cp, **pp;
+
+	if(__system_property_get(DNS_SEARCH_PROP_NAME, propvalue) >= 1) {
+		strlcpy(statp->defdname, propvalue, sizeof(statp->defdname));
+		if ((cp = strchr(statp->defdname, '\n')) != NULL)
+			*cp = '\0';
+		cp = statp->defdname;
+		pp = statp->dnsrch;
+		while ( pp < statp->dnsrch + MAXDNSRCH ) {
+			while (*cp == ' ' || *cp == '\t') /* skip leading white space */
+				cp++;
+			if (*cp == '\0')  /* stop if nothing more */
+				break;
+			*pp++ = cp;  /* record this search domain */
+			while (*cp) { /* zero-terminate it */
+				if (*cp == ' ' || *cp == '\t') {
+					*cp++ = '\0';
+					break;
+				}
+				cp++;
+			}
+		}
+		*pp = NULL; /* statp->dnsrch has MAXDNSRCH+1 items */
+		if (pp > statp->dnsrch)
+			return 1;
+	}
+	return 0;
+}
+#endif
 
 /* This function has to be reachable by res_data.c but not publicly. */
 int
@@ -344,6 +378,9 @@ __res_vinit(res_state statp, int preinit) {
 			}
 		}
 	}
+
+	/* Add the domain search list */
+	havesearch = load_domain_search_list(statp);
 #else /* IGNORE resolv.conf */
 #define	MATCH(line, name) \
 	(!strncmp(line, name, sizeof(name) - 1) && \
