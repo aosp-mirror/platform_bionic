@@ -51,7 +51,7 @@
 
 #include "ba.h"
 
-#define SO_MAX 64
+#define SO_MAX 96
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
