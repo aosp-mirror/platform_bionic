@@ -912,7 +912,11 @@ get_port(const struct addrinfo *ai, const char *servname, int matchonly)
 		allownumeric = 1;
 		break;
 	case ANY:
+#if 1  /* ANDROID-SPECIFIC CHANGE TO MATCH GLIBC */	
+		allownumeric = 1;
+#else
 		allownumeric = 0;
+#endif
 		break;
 	default:
 		return EAI_SOCKTYPE;
@@ -1271,7 +1275,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
 
-	fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
+	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
 	memset(&q2, 0, sizeof(q2));
@@ -1630,7 +1634,7 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 		trailing_dot++;
 
 
-fprintf(stderr, "res_searchN() name = '%s'\n", name);
+        //fprintf(stderr, "res_searchN() name = '%s'\n", name);
 
 	/*
 	 * if there aren't any dots, it could be a user-level alias
