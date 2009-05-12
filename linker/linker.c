@@ -1121,7 +1121,8 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
         DEBUG("%5d Processing '%s' relocation at index %d\n", pid,
               si->name, idx);
         if(sym != 0) {
-            s = _do_lookup(si, strtab + symtab[sym].st_name, &base);
+            sym_name = (char *)(strtab + symtab[sym].st_name);
+            s = _do_lookup(si, sym_name, &base);
             if(s == 0) {
                 ERROR("%5d cannot locate '%s'...\n", pid, sym_name);
                 return -1;
@@ -1141,7 +1142,6 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
             sym_addr = (unsigned)(s->st_value + base);
-            sym_name = (char *)(strtab + symtab[sym].st_name);
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
             s = 0;
