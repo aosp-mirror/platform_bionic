@@ -28,6 +28,8 @@
 #include <stddef.h>
 #include <string.h>
 
+extern int  __cxa_atexit(void (*)(void*), void*, void* );
+
 void* __dso_handle = 0;
 
 /* Make this a weak symbol to avoid a multiple definition error when linking
@@ -35,8 +37,7 @@ void* __dso_handle = 0;
 int __attribute__((weak))
 __aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
 {
-    //return __cxa_atexit(destructor, object, dso_handle);
-    return 0;
+    return __cxa_atexit(destructor, object, dso_handle);
 }
 
 
