@@ -37,7 +37,8 @@ void* __dso_handle = 0;
 int __attribute__((weak))
 __aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
 {
-    return __cxa_atexit(destructor, object, dso_handle);
+    return 0;
+    //return __cxa_atexit(destructor, object, dso_handle);
 }
 
 
