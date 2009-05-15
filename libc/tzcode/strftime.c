@@ -69,6 +69,9 @@ static const struct lc_time_T   C_time_locale = {
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     }, {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    }, {
         "Sun", "Mon", "Tue", "Wed",
         "Thu", "Fri", "Sat"
     }, {
@@ -219,10 +222,17 @@ label:
                     pt, ptlim, modifier);
                 continue;
             case 'B':
-                pt = _add((t->tm_mon < 0 ||
-                    t->tm_mon >= MONSPERYEAR) ?
-                    "?" : locale->month[t->tm_mon],
-                    pt, ptlim, modifier);
+                if (modifier == '-') {
+                    pt = _add((t->tm_mon < 0 ||
+                                t->tm_mon >= MONSPERYEAR) ?
+                                "?" : Locale->standalone_month[t->tm_mon],
+                                pt, ptlim, modifier);
+                } else {
+                    pt = _add((t->tm_mon < 0 ||
+                                t->tm_mon >= MONSPERYEAR) ?
+                                "?" : Locale->month[t->tm_mon],
+                                pt, ptlim, modifier);
+                }
                 continue;
             case 'b':
             case 'h':

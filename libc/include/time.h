@@ -83,6 +83,7 @@ extern size_t      strftime(char *s, size_t max, const char *format, const struc
 struct strftime_locale {
     const char *  mon[12];
     const char *  month[12];
+    const char *  standalone_month[12];
     const char *  wday[7];
     const char *  weekday[7];
     const char *  X_fmt;
