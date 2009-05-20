@@ -73,7 +73,9 @@ for path in sources:
 
     print "cleaning: %-*s -> %-*s (%s)" % ( 35, path, 35, dst_path, r )
 
-usePerforce = os.environ.has_key("ANDROID_PRODUCT_OUT")
+# We don't use Perforce anymore, but just in case, define ANDROID_USE_P4
+# in your environment if you think you need it.
+usePerforce = os.environ.has_key("ANDROID_USE_P4")
 
 if usePerforce:
     b.updateP4Files()

@@ -82,4 +82,3 @@ struct msm_snd_endpoint {
 #define SND_GET_ENDPOINT _IOWR(SND_IOCTL_MAGIC, 5, struct msm_snd_endpoint *)
 
 #endif
-
