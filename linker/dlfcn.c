@@ -15,41 +15,49 @@
  */
 #include <dlfcn.h>
 #include <pthread.h>
+#include <stdio.h>
 #include "linker.h"
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
 #define DL_SUCCESS                    0
-#define DL_ERR_CANNOT_FIND_LIBRARY    1
+#define DL_ERR_CANNOT_LOAD_LIBRARY    1
 #define DL_ERR_INVALID_LIBRARY_HANDLE 2
 #define DL_ERR_BAD_SYMBOL_NAME        3
 #define DL_ERR_SYMBOL_NOT_FOUND       4
 #define DL_ERR_SYMBOL_NOT_GLOBAL      5
 
+static char dl_err_buf[1024];
+static const char *dl_err_str;
+
 static const char *dl_errors[] = {
-    [DL_SUCCESS] = NULL,
-    [DL_ERR_CANNOT_FIND_LIBRARY] = "Cannot find library",
+    [DL_ERR_CANNOT_LOAD_LIBRARY] = "Cannot load library",
     [DL_ERR_INVALID_LIBRARY_HANDLE] = "Invalid library handle",
     [DL_ERR_BAD_SYMBOL_NAME] = "Invalid symbol name",
     [DL_ERR_SYMBOL_NOT_FOUND] = "Symbol not found",
     [DL_ERR_SYMBOL_NOT_GLOBAL] = "Symbol is not global",
 };
 
-static int dl_last_err = DL_SUCCESS;
-
 #define likely(expr)   __builtin_expect (expr, 1)
 #define unlikely(expr) __builtin_expect (expr, 0)
 
 static pthread_mutex_t dl_lock = PTHREAD_MUTEX_INITIALIZER;
 
-void *dlopen(const char *filename, int flag) 
+static void set_dlerror(int err)
+{
+    snprintf(dl_err_buf, sizeof(dl_err_buf), "%s: %s", dl_errors[err],
+             linker_get_error());
+    dl_err_str = (const char *)&dl_err_buf[0];
+};
+
+void *dlopen(const char *filename, int flag)
 {
     soinfo *ret;
 
     pthread_mutex_lock(&dl_lock);
     ret = find_library(filename);
     if (unlikely(ret == NULL)) {
-        dl_last_err = DL_ERR_CANNOT_FIND_LIBRARY;
+        set_dlerror(DL_ERR_CANNOT_LOAD_LIBRARY);
     } else {
         ret->refcount++;
     }
@@ -59,9 +67,9 @@ void *dlopen(const char *filename, int flag)
 
 const char *dlerror(void)
 {
-    const char *err = dl_errors[dl_last_err];
-    dl_last_err = DL_SUCCESS;
-    return err;
+    const char *tmp = dl_err_str;
+    dl_err_str = NULL;
+    return (const char *)tmp;
 }
 
 void *dlsym(void *handle, const char *symbol)
@@ -71,16 +79,16 @@ void *dlsym(void *handle, const char *symbol)
     unsigned bind;
 
     pthread_mutex_lock(&dl_lock);
-    
+
     if(unlikely(handle == 0)) { 
-        dl_last_err = DL_ERR_INVALID_LIBRARY_HANDLE;
+        set_dlerror(DL_ERR_INVALID_LIBRARY_HANDLE);
         goto err;
     }
     if(unlikely(symbol == 0)) {
-        dl_last_err = DL_ERR_BAD_SYMBOL_NAME;
+        set_dlerror(DL_ERR_BAD_SYMBOL_NAME);
         goto err;
     }
-    
+
     if(handle == RTLD_DEFAULT) {
         sym = lookup(symbol, &base);
     } else if(handle == RTLD_NEXT) {
@@ -92,16 +100,17 @@ void *dlsym(void *handle, const char *symbol)
 
     if(likely(sym != 0)) {
         bind = ELF32_ST_BIND(sym->st_info);
-    
+
         if(likely((bind == STB_GLOBAL) && (sym->st_shndx != 0))) {
             unsigned ret = sym->st_value + base;
             pthread_mutex_unlock(&dl_lock);
             return (void*)ret;
         }
 
-        dl_last_err = DL_ERR_SYMBOL_NOT_GLOBAL;
+        set_dlerror(DL_ERR_SYMBOL_NOT_GLOBAL);
     }
-    else dl_last_err = DL_ERR_SYMBOL_NOT_FOUND;
+    else
+        set_dlerror(DL_ERR_SYMBOL_NOT_FOUND);
 
 err:
     pthread_mutex_unlock(&dl_lock);
