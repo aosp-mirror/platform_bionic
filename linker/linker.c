@@ -1248,13 +1248,38 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
     return 0;
 }
 
-static void call_array(unsigned *ctor, int count)
+
+/* Please read the "Initialization and Termination functions" functions.
+ * of the linker design note in bionic/linker/README.TXT to understand
+ * what the following code is doing.
+ *
+ * The important things to remember are:
+ *
+ *   DT_PREINIT_ARRAY must be called first for executables, and should
+ *   not appear in shared libraries.
+ *
+ *   DT_INIT should be called before DT_INIT_ARRAY if both are present
+ *
+ *   DT_FINI should be called after DT_FINI_ARRAY if both are present
+ *
+ *   DT_FINI_ARRAY must be parsed in reverse order.
+ */
+
+static void call_array(unsigned *ctor, int count, int reverse)
 {
-    int n;
-    for(n = count; n > 0; n--){
-        TRACE("[ %5d Looking at ctor *0x%08x == 0x%08x ]\n", pid,
+    int n, inc = 1;
+
+    if (reverse) {
+        ctor += (count-1);
+        inc   = -1;
+    }
+
+    for(n = count; n > 0; n--) {
+        TRACE("[ %5d Looking at %s *0x%08x == 0x%08x ]\n", pid,
+              reverse ? "dtor" : "ctor",
               (unsigned)ctor, (unsigned)*ctor);
-        void (*func)() = (void (*)()) *ctor++;
+        void (*func)() = (void (*)()) *ctor;
+        ctor += inc;
         if(((int) func == 0) || ((int) func == -1)) continue;
         TRACE("[ %5d Calling func @ 0x%08x ]\n", pid, (unsigned)func);
         func();
@@ -1263,17 +1288,11 @@ static void call_array(unsigned *ctor, int count)
 
 static void call_constructors(soinfo *si)
 {
-    /* TODO: THE ORIGINAL CODE SEEMED TO CALL THE INIT FUNCS IN THE WRONG ORDER.
-     *       Old order: init, init_array, preinit_array..
-     *       Correct order: preinit_array, init, init_array.
-     *       Verify WHY.
-     */
-
     if (si->flags & FLAG_EXE) {
         TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
               pid, (unsigned)si->preinit_array, si->preinit_array_count,
               si->name);
-        call_array(si->preinit_array, si->preinit_array_count);
+        call_array(si->preinit_array, si->preinit_array_count, 0);
         TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
     } else {
         if (si->preinit_array) {
@@ -1283,11 +1302,6 @@ static void call_constructors(soinfo *si)
         }
     }
 
-    // If we have an init section, then we should call it now, to make sure
-    // that all the funcs in the .ctors section get run.
-    // Note: For ARM, we shouldn't have a .ctor section (should be empty)
-    // when we have an (pre)init_array section, but let's be compatible with
-    // old (non-eabi) binaries and try the _init (DT_INIT) anyway.
     if (si->init_func) {
         TRACE("[ %5d Calling init_func @ 0x%08x for '%s' ]\n", pid,
               (unsigned)si->init_func, si->name);
@@ -1298,25 +1312,21 @@ static void call_constructors(soinfo *si)
     if (si->init_array) {
         TRACE("[ %5d Calling init_array @ 0x%08x [%d] for '%s' ]\n", pid,
               (unsigned)si->init_array, si->init_array_count, si->name);
-        call_array(si->init_array, si->init_array_count);
+        call_array(si->init_array, si->init_array_count, 0);
         TRACE("[ %5d Done calling init_array for '%s' ]\n", pid, si->name);
     }
 }
+
 
 static void call_destructors(soinfo *si)
 {
     if (si->fini_array) {
         TRACE("[ %5d Calling fini_array @ 0x%08x [%d] for '%s' ]\n", pid,
               (unsigned)si->fini_array, si->fini_array_count, si->name);
-        call_array(si->fini_array, si->fini_array_count);
+        call_array(si->fini_array, si->fini_array_count, 1);
         TRACE("[ %5d Done calling fini_array for '%s' ]\n", pid, si->name);
     }
 
-    // If we have an fini section, then we should call it now, to make sure
-    // that all the funcs in the .dtors section get run.
-    // Note: For ARM, we shouldn't have a .dtor section (should be empty)
-    // when we have an fini_array section, but let's be compatible with
-    // old (non-eabi) binaries and try the _fini (DT_FINI) anyway.
     if (si->fini_func) {
         TRACE("[ %5d Calling fini_func @ 0x%08x for '%s' ]\n", pid,
               (unsigned)si->fini_func, si->name);
