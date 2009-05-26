@@ -27,6 +27,7 @@
  */
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <sys/endian.h>
 #include <netdb.h>
 #include "servent.h"
 #include "services.h"
@@ -54,6 +55,7 @@ getservent_r( res_static  rs )
     int          namelen;
     int          nn,count;
     int          total = 0;
+    int          port;
     char*        p2;
 
     p = rs->servent_ptr;
@@ -92,9 +94,12 @@ getservent_r( res_static  rs )
     memcpy( rs->servent.s_name, p+1, namelen );
     rs->servent.s_name[namelen] = 0;
     p += 1 + namelen;
-    rs->servent.s_port = ((((unsigned char*)p)[0] << 8) |
-                           ((unsigned char*)p)[1]);
 
+    /* s_port must be in network byte order */
+    port = ((((unsigned char*)p)[0] << 8) |
+             ((unsigned char*)p)[1]);
+
+    rs->servent.s_port  = htons(port);
     rs->servent.s_proto = p[2] == 't' ? "tcp" : "udp";
     p += 4;  /* skip port(2) + proto(1) + aliascount(1) */
 
