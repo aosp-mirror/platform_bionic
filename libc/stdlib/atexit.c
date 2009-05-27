@@ -147,10 +147,19 @@ __cxa_finalize(void *dso)
 				p->fns[n].fn_ptr.cxa_func = NULL;
 				mprotect(p, pgsize, PROT_READ);
 			}
+#if ANDROID
+                        /* it looks like we should always call the function
+                         * with an argument, even if dso is not NULL. Otherwise
+                         * static destructors will not be called properly on
+                         * the ARM.
+                         */
+                        (*fn.fn_ptr.cxa_func)(fn.fn_arg);
+#else /* !ANDROID */
 			if (dso != NULL)
 				(*fn.fn_ptr.cxa_func)(fn.fn_arg);
 			else
 				(*fn.fn_ptr.std_func)();
+#endif /* !ANDROID */
 		}
 	}
 
