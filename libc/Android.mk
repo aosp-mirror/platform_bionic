@@ -444,6 +444,32 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_nomalloc.a
+# ========================================================
+#
+# This is a version of the static C library that does not
+# include malloc. It's useful in situations when calling
+# the user wants to provide their own malloc implementation,
+# or wants to explicitly disallow the use of the use of malloc,
+# like the dynamic loader.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+	$(libc_arch_static_src_files) \
+	bionic/libc_init_static.c
+
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_CFLAGS := $(libc_common_cflags)
+
+LOCAL_MODULE := libc_nomalloc
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc.a
 # ========================================================
 include $(CLEAR_VARS)
