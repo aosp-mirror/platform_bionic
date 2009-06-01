@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAV3///+8\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4897,
+      "author": {
+        "id": 1000392
+      },
+      "writtenOn": "2009-06-01T23:09:40Z",
+      "side": 1,
+      "message": "mchunkptr variables are almost always called \"p\".  \"pa\" and \"pb\" or \"ap\" and \"bp\" would be more consistent with the rest of the file.",
+      "revId": "69ec5c819870af5e90f4e5377e7e7cc747719fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAV3////E\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4900,
+      "author": {
+        "id": 1000392
+      },
+      "writtenOn": "2009-06-01T23:09:40Z",
+      "side": 1,
+      "message": "mspace_free() and mspace_realloc() just ignore \"msp\" when FOOTERS is enabled, allowing callers to pass in NULL.  This assertion would break that pattern.\n\nAlso, an assertion isn\u0027t appropriate here, because it\u0027s validating user input and not checking internal dlmalloc state.  (The later assertion is ok, though, since you\u0027re effectively checking \"if b follows a, both have the same mspace\", which is an internal invariant.)\n\nAnd, the other functions always do the ok_magic() check, even if FOOTERS isn\u0027t defined.\n\nI\u0027d suggest following the pattern that the other functions use:\n\n #if FOOTERS\n    mstate fm \u003d get_mstate_for(ma);\n #else /* FOOTERS */\n    mstate fm \u003d (mstate)msp;\n #endif /* FOOTERS */\n    if (!ok_magic(fm)) {\n      USAGE_ERROR_ACTION(fm, ma);\n      return NULL;\n    }",
+      "revId": "69ec5c819870af5e90f4e5377e7e7cc747719fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAV3///+0\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4907,
+      "author": {
+        "id": 1000392
+      },
+      "writtenOn": "2009-06-01T23:09:40Z",
+      "side": 1,
+      "message": "To satisfy the dlmalloc code assumptions, the rest of the function should be surrounded by\n\n if (!PREACTION(fm)) { ...\n\nand all return paths should call\n\n POSTACTION(fm);\n\n(see mspace_free())",
+      "revId": "69ec5c819870af5e90f4e5377e7e7cc747719fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAV3///+w\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4909,
+      "author": {
+        "id": 1000392
+      },
+      "writtenOn": "2009-06-01T23:09:40Z",
+      "side": 1,
+      "message": "This and the rest of the function should be wrapped in an appropriate call to RTCHECK() to ensure that the pointers are valid.  See mspace_free() and internal_realloc().\n\nIf the check fails, USER_ERROR_ACTION() and POSTACTION() should be called.",
+      "revId": "69ec5c819870af5e90f4e5377e7e7cc747719fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
