@@ -116,6 +116,7 @@ HOODLUM(free, void, (void *ptr));
 HOODLUM(realloc, void *, (void *ptr, size_t size));
 HOODLUM(calloc, void *, (size_t cnt, size_t size));
 
+static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 #define DL_ERR(fmt, x...)                                                     \
     do {                                                                      \
@@ -1615,7 +1616,9 @@ static int link_image(soinfo *si, unsigned wr_offset)
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
             soinfo *lsi = find_library(si->strtab + d[1]);
             if(lsi == 0) {
-                DL_ERR("%5d could not load '%s'\n", pid, si->strtab + d[1]);
+                strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
+                DL_ERR("%5d could not load needed library '%s' for '%s' (%s)\n",
+                       pid, si->strtab + d[1], si->name, tmp_err_buf);
                 goto fail;
             }
             lsi->refcount++;
