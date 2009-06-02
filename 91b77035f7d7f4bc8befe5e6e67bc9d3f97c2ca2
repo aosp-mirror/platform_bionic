@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH///8Q\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4913,
+      "author": {
+        "id": 1001707
+      },
+      "writtenOn": "2009-06-02T21:54:20Z",
+      "side": 1,
+      "message": "hohoho.\nI was able to find examples of just about every comment style available in this file .. I mean \"Hi, Doug, thanks for the great and useful library.\"\n\nDone.",
+      "revId": "91b77035f7d7f4bc8befe5e6e67bc9d3f97c2ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH///80\u003d",
         "filename": "libc/bionic/dlmalloc.c",
         "patchSetId": 2
@@ -30,6 +47,23 @@
       "writtenOn": "2009-06-02T21:06:08Z",
       "side": 1,
       "message": "Ok, I\u0027ll defer to Doug Lea on this. :)  Maybe add a comment:\n\nPREACTION/POSTACTION aren\u0027t necessary because we are only modifying fields of inuse chunks owned by the current thread, in which case no other malloc operations can touch them.",
+      "revId": "91b77035f7d7f4bc8befe5e6e67bc9d3f97c2ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH///8M\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4923,
+      "author": {
+        "id": 1001707
+      },
+      "writtenOn": "2009-06-02T21:54:20Z",
+      "side": 1,
+      "message": "Done.",
       "revId": "91b77035f7d7f4bc8befe5e6e67bc9d3f97c2ca2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
