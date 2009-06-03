@@ -25,18 +25,29 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 /*
  * libc_init_static.c
  *
- * This function takes the raw data block set up by the ELF loader
- * in the kernel and parses it.  It is invoked by crt0.S which makes
- * any necessary adjustments and passes calls this function using
- * the standard C calling convention.
+ * This function is called for dynamic executables after the dynamic
+ * linker has loaded and initialized all dependent shared libraries.
+ *
+ * It takes the raw data block set up by the ELF loader
+ * in the kernel and parses it.
  *
  * The arguments are:
- *  uintptr_t *elfdata	 -- The ELF loader data block; usually from the stack.
- *                          Basically a pointer to argc.
- *  void (*onexit)(void) -- Function to install into onexit
+ *      elfdata   -- The ELF loader data block; usually from the stack.
+ *                   Basically a pointer to argc.
+ *
+ *      onexit    -- Function to call on exit, can be NULL.
+ *
+ *      slingshot -- Address of the program's main function
+ *
+ *      structors -- Table of constructor functions arrays that must
+ *                   be called before the slingshot.
+ *
+ * It is called from the assembly fragment found in
+ * arch-$ARCH/bionic/crtbegin_dynamic.S
  */
 
 /*
@@ -62,5 +73,18 @@ __noreturn void __libc_init(uintptr_t *elfdata,
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors)
 {
-    __libc_init_common(elfdata, onexit, slingshot, structors, malloc_debug_init);
+    /* NOTE: At this point, the dynamic linker has *already* called
+     *       all initializers properly, so we ignore 'structors' to
+     *       avoid calling them twice.
+     */
+
+    /* NOTE2: Is it worthwhile to use malloc_debug_init() in the case of
+     *        of the non-debug shared C library ?
+     *
+     *        The implementation in bionic/malloc_leak.c contains a lot
+     *        of code which will turn to be unused, and we add a dispatch
+     *        overhead to malloc() et al. that proved to be significant
+     *        in the past (e.g. making boot sequence 5% slower)
+     */
+    __libc_init_common(elfdata, onexit, slingshot, NULL, malloc_debug_init);
 }

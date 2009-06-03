@@ -25,18 +25,30 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 /*
  * libc_init_static.c
  *
- * This function takes the raw data block set up by the ELF loader
- * in the kernel and parses it.  It is invoked by crt0.S which makes
- * any necessary adjustments and passes calls this function using
- * the standard C calling convention.
+ * This function is called for static executables, i.e. those that
+ * dont depend on shared libraries and are directly started by the
+ * Linux kernel.
+ *
+ * It takes the raw data block set up by the ELF loader
+ * in the kernel and parses it.
  *
  * The arguments are:
- *  uintptr_t *elfdata	 -- The ELF loader data block; usually from the stack.
- *                          Basically a pointer to argc.
- *  void (*onexit)(void) -- Function to install into onexit
+ *      elfdata   -- The ELF loader data block; usually from the stack.
+ *                   Basically a pointer to argc.
+ *
+ *      onexit    -- Function to call on exit, can be NULL.
+ *
+ *      slingshot -- Address of the program's main function
+ *
+ *      structors -- Table of constructor functions arrays that must
+ *                   be called before the slingshot.
+ *
+ * It is called from the assembly fragment found in
+ * arch-$ARCH/bionic/crtbegin_static.S
  */
 
 /*
@@ -51,18 +63,19 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <elf.h>
-#include "pthread_internal.h"
-#include "atexit.h"
+#include "bionic_preinit.h"
 #include "libc_init_common.h"
-
-#include <bionic_tls.h>
-#include <errno.h>
 
 __noreturn void __libc_init(uintptr_t *elfdata,
                        void (*onexit)(void),
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors)
 {
+    pthread_internal_t thread;
+    void *tls_area[BIONIC_TLS_SLOTS];
+
+    __libc_preinit( &thread, tls_area );
+
 /* 
  * To enable malloc checks for statically linked programs, add
  * "WITH_MALLOC_CHECK_LIBC_A := true" in device/buildspec.mk

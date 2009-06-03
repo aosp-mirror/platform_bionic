@@ -39,8 +39,11 @@
 #include <bionic_tls.h>
 #include <errno.h>
 
-extern void _init(void);
-extern void _fini(void);
+/* This contains the common C library initialization code.
+ * To understand what happens here, you should read the
+ * "Initialization and Finalization" section of the file
+ * named bionic/linker/README.TXT
+ */
 
 static void call_array(void(**list)())
 {
@@ -49,15 +52,6 @@ static void call_array(void(**list)())
         (*list)();
     }
 }
-
-static void __bionic_do_global_dtors(structors_array_t const * const p)
-{
-    call_array(p->fini_array);
-    //_fini();
-}
-
-extern unsigned __get_sp(void);
-extern pid_t    gettid(void);
 
 char*  __progname;
 char **environ;
@@ -69,29 +63,27 @@ unsigned int __page_shift = PAGE_SHIFT;
 
 int __system_properties_init(void);
 
+/* This function can be run under two different contexts:
+ *
+ * - for statically linked executables (i.e. those who do
+ *   not depend on shared libraries at all), it will be
+ *   called from the __libc_init() function defined in
+ *   bionic/libc_init_static.c
+ *
+ * - for dynamic executables, it will be called from the
+ *   __libc_init() function defined in bionic/libc_init_dynamic.c
+ *
+ */
 void __libc_init_common(uintptr_t *elfdata,
                        void (*onexit)(void),
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors,
                        void (*pre_ctor_hook)())
 {
-    pthread_internal_t thread;
-    pthread_attr_t thread_attr;
-    void *tls_area[BIONIC_TLS_SLOTS];
     int argc;
     char **argv, **envp, **envend;
     struct auxentry *auxentry;
     unsigned int page_size = 0, page_shift = 0;
-
-    /* The main thread's stack has empirically shown to be 84k */
-    unsigned stacktop = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-    unsigned stacksize = 128 * 1024; //84 * 1024;
-    unsigned stackbottom = stacktop - stacksize;
-
-    pthread_attr_init(&thread_attr);
-    pthread_attr_setstack(&thread_attr, (void*)stackbottom, stacksize);
-    _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom);
-    __init_tls(tls_area, &thread);
 
     argc = (int) *elfdata++;
     argv = (char**) elfdata;
@@ -106,17 +98,17 @@ void __libc_init_common(uintptr_t *elfdata,
 
     if (pre_ctor_hook) pre_ctor_hook();
 
-    // XXX: we should execute the .fini_array upon exit
+    if (structors != NULL) {
+        // pre-init array.
+        call_array(structors->preinit_array);
 
-    // pre-init array.
-    // XXX: I'm not sure what's the different with the init array.
-    call_array(structors->preinit_array);
+        // for compatibility with non-eabi binary, call the .ctors section
+        // this is only useful for static non-ARM (e.g. x86) executables.
+        call_array(structors->ctors_array);
 
-    // for compatibility with non-eabi binary, call the .ctors section
-    call_array(structors->ctors_array);
-
-    // call static constructors
-    call_array(structors->init_array);
+        // call static constructors
+        call_array(structors->init_array);
+    }
 
     exit(slingshot(argc, argv, envp));
 }

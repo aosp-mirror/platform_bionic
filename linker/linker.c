@@ -44,7 +44,7 @@
 #include <sys/atomics.h>
 
 /* special private C library header - see Android.mk */
-#include <bionic_tls.h>
+#include <bionic_preinit.h>
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -1691,6 +1691,7 @@ int main(int argc, char **argv)
 #define ANDROID_TLS_SLOTS  BIONIC_TLS_SLOTS
 
 static void * __tls_area[ANDROID_TLS_SLOTS];
+static pthread_internal_t  __main_thread;
 
 unsigned __linker_init(unsigned **elfdata)
 {
@@ -1709,8 +1710,7 @@ unsigned __linker_init(unsigned **elfdata)
     gettimeofday(&t0, 0);
 #endif
 
-    __set_tls(__tls_area);
-    ((unsigned *)__get_tls())[TLS_SLOT_THREAD_ID] = gettid();
+    __libc_preinit(&__main_thread, __tls_area);
 
     debugger_init();
 
