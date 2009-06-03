@@ -30,35 +30,25 @@
 	.type _start,#function
 	.globl _start
 
-# This is the small startup code that is called from
-# the dynamic linker to execute an executable once all
-# dependent shared libraries have been loaded and
-# initialized.
+# this is the small startup code that is first run when
+# any executable that is statically-linked with Bionic
+# runs.
 #
-# It's purpose is to call __libc_init as defined in
-# bionic/libc_init_dynamic.c with appropriate
+# it's purpose is to call __libc_init with appropriate
 # arguments, which are:
 #
 #    - the address of the raw data block setup by the Linux
 #      kernel ELF loader
 #
-#    - address of an "onexit" function (not used on any
-#      platform supported by Bionic)
+#    - address of an "onexit" function, not used on any
+#      platform supported by Bionic
 #
 #    - address of the "main" function of the program. We
 #      can't hard-code it in the adr pseudo instruction
 #      so we use a tiny trampoline that will get relocated
 #      by the dynamic linker before this code runs
 #
-#    - address of the constructors table, i.e. a table
-#      that points to various initialization and
-#      finalization sections for the program.
-#
-# NOTE: This code is currently placed in shared libraries
-#       by the build system, but will be ignored.
-#
-#       On the other hand, the arrays defined below are
-#       required and will be parsed by the dynamic linker.
+#    - address of the constructor list
 #
 _start:	
 	mov	r0, sp
@@ -73,7 +63,7 @@ _start:
     .long   __INIT_ARRAY__
     .long   __FINI_ARRAY__
     .long   __CTOR_LIST__
-
+      
 # the .ctors section contains a list of pointers to "constructor"
 # functions that need to be called in order during C library initialization,
 # just before the program is being run. This is a C++ requirement

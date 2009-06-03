@@ -29,27 +29,25 @@
 	.type _start, @function
 	.globl _start
 
-# This is the small startup code that is first run when
-# any static executable runs. A static executable is one
-# that is started directly by the Linux kernel, not from
-# the dynamic linker, it thus cannot depend on any shared
-# library.
+# this is the small startup code that is first run when
+# any executable that is statically-linked with Bionic
+# runs.
 #
-# It's purpose is to call __libc_init as defined in
-# bionic/libc_init_static.c with appropriate
+# it's purpose is to call __libc_init with appropriate
 # arguments, which are:
 #
 #    - the address of the raw data block setup by the Linux
 #      kernel ELF loader
 #
-#    - address of an "onexit" function (not used on any
-#      platform supported by Bionic).
+#    - address of an "onexit" function, not used on any
+#      platform supported by Bionic
 #
-#    - address of the "main" function of the program.
+#    - address of the "main" function of the program. We
+#      can't hard-code it in the adr pseudo instruction
+#      so we use a tiny trampoline that will get relocated
+#      by the dynamic linker before this code runs
 #
-#    - address of the constructors table, i.e. a table
-#      that points to various initialization and
-#      finalization sections for the program.
+#    - address of the constructor list
 #
 _start:	
         mov     %esp, %eax
