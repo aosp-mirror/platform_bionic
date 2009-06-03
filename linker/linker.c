@@ -53,6 +53,10 @@
 
 #define SO_MAX 96
 
+/* Assume average path length of 64 and max 8 paths */
+#define LDPATH_BUFSIZE 512
+#define LDPATH_MAX 8
+
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
  * Do NOT use malloc() and friends or pthread_*() code here.
@@ -66,7 +70,6 @@
  * - should we do anything special for STB_WEAK symbols?
  * - are we doing everything we should for ARM_COPY relocations?
  * - cleaner error reporting
- * - configuration for paths (LD_LIBRARY_PATH?)
  * - after linking, set as much stuff as possible to READONLY
  *   and NOEXEC
  * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
@@ -88,6 +91,9 @@ static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
+
+static char ldpaths_buf[LDPATH_BUFSIZE];
+static const char *ldpaths[LDPATH_MAX + 1];
 
 int debug_verbosity;
 static int pid;
@@ -503,13 +509,12 @@ static int _open_lib(const char *name)
     return -1;
 }
 
-/* TODO: Need to add support for initializing the so search path with
- * LD_LIBRARY_PATH env variable for non-setuid programs. */
 static int open_library(const char *name)
 {
     int fd;
     char buf[512];
     const char **path;
+    int n;
 
     TRACE("[ %5d opening %s ]\n", pid, name);
 
@@ -519,8 +524,21 @@ static int open_library(const char *name)
     if ((name[0] == '/') && ((fd = _open_lib(name)) >= 0))
         return fd;
 
+    for (path = ldpaths; *path; path++) {
+        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        if (n < 0 || n >= (int)sizeof(buf)) {
+            WARN("Ignoring very long library path: %s/%s\n", *path, name);
+            continue;
+        }
+        if ((fd = _open_lib(buf)) >= 0)
+            return fd;
+    }
     for (path = sopaths; *path; path++) {
-        snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        if (n < 0 || n >= (int)sizeof(buf)) {
+            WARN("Ignoring very long library path: %s/%s\n", *path, name);
+            continue;
+        }
         if ((fd = _open_lib(buf)) >= 0)
             return fd;
     }
@@ -1683,6 +1701,29 @@ fail:
     return -1;
 }
 
+static void parse_library_path(char *path, char *delim)
+{
+    size_t len;
+    char *ldpaths_bufp = ldpaths_buf;
+    int i = 0;
+
+    len = strlcpy(ldpaths_buf, path, sizeof(ldpaths_buf));
+
+    while (i < LDPATH_MAX && (ldpaths[i] = strsep(&ldpaths_bufp, delim))) {
+        if (*ldpaths[i] != '\0')
+            ++i;
+    }
+
+    /* Forget the last path if we had to truncate; this occurs if the 2nd to
+     * last char isn't '\0' (i.e. not originally a delim). */
+    if (i > 0 && len >= sizeof(ldpaths_buf) &&
+            ldpaths_buf[sizeof(ldpaths_buf) - 2] != '\0') {
+        ldpaths[i - 1] = NULL;
+    } else {
+        ldpaths[i] = NULL;
+    }
+}
+
 int main(int argc, char **argv)
 {
     return 0;
@@ -1701,6 +1742,7 @@ unsigned __linker_init(unsigned **elfdata)
     unsigned *vecs = (unsigned*) (argv + argc + 1);
     soinfo *si;
     struct link_map * map;
+    char *ldpath_env = NULL;
 
     pid = getpid();
 
@@ -1718,6 +1760,8 @@ unsigned __linker_init(unsigned **elfdata)
     while(vecs[0] != 0) {
         if(!strncmp((char*) vecs[0], "DEBUG=", 6)) {
             debug_verbosity = atoi(((char*) vecs[0]) + 6);
+        } else if(!strncmp((char*) vecs[0], "LD_LIBRARY_PATH=", 16)) {
+            ldpath_env = (char*) vecs[0] + 16;
         }
         vecs++;
     }
@@ -1776,6 +1820,10 @@ unsigned __linker_init(unsigned **elfdata)
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
+
+        /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
+    if (ldpath_env && getuid() == geteuid() && getgid() == getegid())
+        parse_library_path(ldpath_env, ":");
 
     if(link_image(si, 0)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
