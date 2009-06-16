@@ -18,57 +18,57 @@
 
 #define MSM_CAM_IOCTL_MAGIC 'm'
 
-#define MSM_CAM_IOCTL_GET_SENSOR_INFO   _IOR(MSM_CAM_IOCTL_MAGIC, 1, struct msm_camsensor_info *)
+#define MSM_CAM_IOCTL_GET_SENSOR_INFO _IOR(MSM_CAM_IOCTL_MAGIC, 1, struct msm_camsensor_info *)
 
-#define MSM_CAM_IOCTL_REGISTER_PMEM   _IOW(MSM_CAM_IOCTL_MAGIC, 2, struct msm_pmem_info *)
+#define MSM_CAM_IOCTL_REGISTER_PMEM _IOW(MSM_CAM_IOCTL_MAGIC, 2, struct msm_pmem_info *)
 
-#define MSM_CAM_IOCTL_UNREGISTER_PMEM   _IOW(MSM_CAM_IOCTL_MAGIC, 3, unsigned)
+#define MSM_CAM_IOCTL_UNREGISTER_PMEM _IOW(MSM_CAM_IOCTL_MAGIC, 3, unsigned)
 
-#define MSM_CAM_IOCTL_CTRL_COMMAND   _IOW(MSM_CAM_IOCTL_MAGIC, 4, struct msm_ctrl_cmd *)
+#define MSM_CAM_IOCTL_CTRL_COMMAND _IOW(MSM_CAM_IOCTL_MAGIC, 4, struct msm_ctrl_cmd *)
 
-#define MSM_CAM_IOCTL_CONFIG_VFE   _IOW(MSM_CAM_IOCTL_MAGIC, 5, struct msm_camera_vfe_cfg_cmd *)
+#define MSM_CAM_IOCTL_CONFIG_VFE _IOW(MSM_CAM_IOCTL_MAGIC, 5, struct msm_camera_vfe_cfg_cmd *)
 
-#define MSM_CAM_IOCTL_GET_STATS   _IOR(MSM_CAM_IOCTL_MAGIC, 6, struct msm_camera_stats_event_ctrl *)
+#define MSM_CAM_IOCTL_GET_STATS _IOR(MSM_CAM_IOCTL_MAGIC, 6, struct msm_camera_stats_event_ctrl *)
 
-#define MSM_CAM_IOCTL_GETFRAME   _IOR(MSM_CAM_IOCTL_MAGIC, 7, struct msm_camera_get_frame *)
+#define MSM_CAM_IOCTL_GETFRAME _IOR(MSM_CAM_IOCTL_MAGIC, 7, struct msm_camera_get_frame *)
 
-#define MSM_CAM_IOCTL_ENABLE_VFE   _IOW(MSM_CAM_IOCTL_MAGIC, 8, struct camera_enable_cmd *)
+#define MSM_CAM_IOCTL_ENABLE_VFE _IOW(MSM_CAM_IOCTL_MAGIC, 8, struct camera_enable_cmd *)
 
-#define MSM_CAM_IOCTL_CTRL_CMD_DONE   _IOW(MSM_CAM_IOCTL_MAGIC, 9, struct camera_cmd *)
+#define MSM_CAM_IOCTL_CTRL_CMD_DONE _IOW(MSM_CAM_IOCTL_MAGIC, 9, struct camera_cmd *)
 
-#define MSM_CAM_IOCTL_CONFIG_CMD   _IOW(MSM_CAM_IOCTL_MAGIC, 10, struct camera_cmd *)
+#define MSM_CAM_IOCTL_CONFIG_CMD _IOW(MSM_CAM_IOCTL_MAGIC, 10, struct camera_cmd *)
 
-#define MSM_CAM_IOCTL_DISABLE_VFE   _IOW(MSM_CAM_IOCTL_MAGIC, 11, struct camera_enable_cmd *)
+#define MSM_CAM_IOCTL_DISABLE_VFE _IOW(MSM_CAM_IOCTL_MAGIC, 11, struct camera_enable_cmd *)
 
-#define MSM_CAM_IOCTL_PAD_REG_RESET2   _IOW(MSM_CAM_IOCTL_MAGIC, 12, struct camera_enable_cmd *)
+#define MSM_CAM_IOCTL_PAD_REG_RESET2 _IOW(MSM_CAM_IOCTL_MAGIC, 12, struct camera_enable_cmd *)
 
-#define MSM_CAM_IOCTL_VFE_APPS_RESET   _IOW(MSM_CAM_IOCTL_MAGIC, 13, struct camera_enable_cmd *)
+#define MSM_CAM_IOCTL_VFE_APPS_RESET _IOW(MSM_CAM_IOCTL_MAGIC, 13, struct camera_enable_cmd *)
 
-#define MSM_CAM_IOCTL_RELEASE_FRAME_BUFFER   _IOW(MSM_CAM_IOCTL_MAGIC, 14, struct camera_enable_cmd *)
+#define MSM_CAM_IOCTL_RELEASE_FRAME_BUFFER _IOW(MSM_CAM_IOCTL_MAGIC, 14, struct camera_enable_cmd *)
 
-#define MSM_CAM_IOCTL_RELEASE_STATS_BUFFER   _IOW(MSM_CAM_IOCTL_MAGIC, 15, struct msm_stats_buf *)
+#define MSM_CAM_IOCTL_RELEASE_STATS_BUFFER _IOW(MSM_CAM_IOCTL_MAGIC, 15, struct msm_stats_buf *)
 
-#define MSM_CAM_IOCTL_AXI_CONFIG   _IOW(MSM_CAM_IOCTL_MAGIC, 16, struct msm_camera_vfe_cfg_cmd *)
+#define MSM_CAM_IOCTL_AXI_CONFIG _IOW(MSM_CAM_IOCTL_MAGIC, 16, struct msm_camera_vfe_cfg_cmd *)
 
-#define MSM_CAM_IOCTL_GET_PICTURE   _IOW(MSM_CAM_IOCTL_MAGIC, 17, struct msm_camera_ctrl_cmd *)
+#define MSM_CAM_IOCTL_GET_PICTURE _IOW(MSM_CAM_IOCTL_MAGIC, 17, struct msm_camera_ctrl_cmd *)
 
-#define MSM_CAM_IOCTL_SET_CROP   _IOW(MSM_CAM_IOCTL_MAGIC, 18, struct crop_info *)
+#define MSM_CAM_IOCTL_SET_CROP _IOW(MSM_CAM_IOCTL_MAGIC, 18, struct crop_info *)
 
-#define MSM_CAM_IOCTL_PICT_PP   _IOW(MSM_CAM_IOCTL_MAGIC, 19, uint8_t *)
+#define MSM_CAM_IOCTL_PICT_PP _IOW(MSM_CAM_IOCTL_MAGIC, 19, uint8_t *)
 
-#define MSM_CAM_IOCTL_PICT_PP_DONE   _IOW(MSM_CAM_IOCTL_MAGIC, 20, struct msm_snapshot_pp_status *)
+#define MSM_CAM_IOCTL_PICT_PP_DONE _IOW(MSM_CAM_IOCTL_MAGIC, 20, struct msm_snapshot_pp_status *)
 
-#define MSM_CAM_IOCTL_SENSOR_IO_CFG   _IOW(MSM_CAM_IOCTL_MAGIC, 21, struct sensor_cfg_data *)
+#define MSM_CAM_IOCTL_SENSOR_IO_CFG _IOW(MSM_CAM_IOCTL_MAGIC, 21, struct sensor_cfg_data *)
 
 #define MSM_CAMERA_LED_OFF 0
 #define MSM_CAMERA_LED_LOW 1
 #define MSM_CAMERA_LED_HIGH 2
 
-#define MSM_CAM_IOCTL_FLASH_LED_CFG   _IOW(MSM_CAM_IOCTL_MAGIC, 22, unsigned *)
+#define MSM_CAM_IOCTL_FLASH_LED_CFG _IOW(MSM_CAM_IOCTL_MAGIC, 22, unsigned *)
 
-#define MSM_CAM_IOCTL_UNBLOCK_POLL_FRAME   _IO(MSM_CAM_IOCTL_MAGIC, 23)
+#define MSM_CAM_IOCTL_UNBLOCK_POLL_FRAME _IO(MSM_CAM_IOCTL_MAGIC, 23)
 
-#define MSM_CAM_IOCTL_CTRL_COMMAND_2   _IOW(MSM_CAM_IOCTL_MAGIC, 24, struct msm_ctrl_cmd *)
+#define MSM_CAM_IOCTL_CTRL_COMMAND_2 _IOW(MSM_CAM_IOCTL_MAGIC, 24, struct msm_ctrl_cmd *)
 
 #define MAX_SENSOR_NUM 3
 #define MAX_SENSOR_NAME 32
