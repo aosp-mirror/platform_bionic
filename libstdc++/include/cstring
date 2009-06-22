@@ -39,59 +39,28 @@
 
 namespace std
 {
-using ::memccpy;
 using ::memchr;
-using ::memrchr;
 using ::memcmp;
 using ::memcpy;
 using ::memmove;
 using ::memset;
-using ::memmem;
-// In string.h but not part of the std
-// using ::memswap;
-
-using ::index;
-using ::rindex;
-using ::strchr;
-using ::strrchr;
-
-using ::strlen;
-using ::strcmp;
-using ::strcpy;
 using ::strcat;
-
-using ::strcasecmp;
-using ::strncasecmp;
-using ::strdup;
-
-using ::strstr;
-using ::strcasestr;
-using ::strtok;
-using ::strtok_r;
-
+using ::strchr;
+using ::strcmp;
+using ::strcoll;
+using ::strcpy;
+using ::strcspn;
 using ::strerror;
-using ::strerror_r;
-
-using ::strnlen;
+using ::strlen;
 using ::strncat;
-using ::strndup;
 using ::strncmp;
 using ::strncpy;
-
-// In string.h but not part of the std
-// using ::strlcat;
-// using ::strlcpy;
-
-using ::strcspn;
 using ::strpbrk;
-using ::strsep;
+using ::strrchr;
 using ::strspn;
-
-using ::strsignal;
-
-using ::strcoll;
+using ::strstr;
+using ::strtok;
 using ::strxfrm;
-
 }  // namespace std
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTRING__
