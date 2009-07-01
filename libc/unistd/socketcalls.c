@@ -232,7 +232,7 @@ int getsockopt(int s, int level, int optname, void *optval, socklen_t *optlen)
 #endif /* !__NR_getsockopt */
 
 #ifndef __NR_sendmsg
-ssize_t sendmsg (int socket, const struct msghdr *message, unsigned int flags)
+int sendmsg (int socket, const struct msghdr *message, unsigned int flags)
 {
     unsigned long  t[3];
 
@@ -245,7 +245,7 @@ ssize_t sendmsg (int socket, const struct msghdr *message, unsigned int flags)
 #endif /* __NR_sendmsg */
 
 #ifndef __NR_recvmsg
-ssize_t recvmsg(int socket, struct msghdr *message, unsigned int flags)
+int recvmsg(int socket, struct msghdr *message, unsigned int flags)
 {
     unsigned long  t[3];
 
