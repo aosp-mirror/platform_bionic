@@ -152,6 +152,7 @@ static void insert_soinfo_into_debug_map(soinfo * info)
     map = &(info->linkmap);
     map->l_addr = info->base;
     map->l_name = (char*) info->name;
+    map->l_ld = (uintptr_t)info->dynamic;
 
     /* Stick the new library at the end of the list.
      * gdb tends to care more about libc than it does
