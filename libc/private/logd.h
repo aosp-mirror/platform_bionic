@@ -28,6 +28,8 @@
 #ifndef _ANDROID_BIONIC_LOGD_H
 #define _ANDROID_BIONIC_LOGD_H
 
+#include <stdarg.h>
+
 enum  {
     ANDROID_LOG_UNKNOWN = 0,
     ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
@@ -43,5 +45,6 @@ enum  {
 };
 
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...);
+int __libc_android_log_vprint(int prio, const char *tag, const char *fmt, va_list ap);
 
 #endif /* _ANDROID_BIONIC_LOGD_H */

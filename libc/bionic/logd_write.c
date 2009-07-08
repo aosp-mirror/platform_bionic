@@ -126,10 +126,10 @@ static int __android_log_write(int prio, const char *tag, const char *msg)
 }
 
 
-static int __android_log_vprint(int prio, const char *tag, const char *fmt,
-				va_list ap)
+int __libc_android_log_vprint(int prio, const char *tag, const char *fmt,
+                              va_list ap)
 {
-    char buf[LOG_BUF_SIZE];    
+    char buf[LOG_BUF_SIZE];
 
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
 
@@ -139,7 +139,7 @@ static int __android_log_vprint(int prio, const char *tag, const char *fmt,
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...)
 {
     va_list ap;
-    char buf[LOG_BUF_SIZE];    
+    char buf[LOG_BUF_SIZE];
 
     va_start(ap, fmt);
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
