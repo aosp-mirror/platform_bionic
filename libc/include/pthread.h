@@ -179,9 +179,29 @@ int pthread_cond_timedwait(pthread_cond_t *cond,
  *         to the CLOCK_MONOTONIC clock instead, to avoid any problems when
  *         the wall-clock time is changed brutally
  */
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t         *cond,
+                                        pthread_mutex_t        *mutex,
+                                        const struct timespec  *abstime);
+
+/* BIONIC: DEPRECATED. same as pthread_cond_timedwait_monotonic_np()
+ * unfortunately pthread_cond_timedwait_monotonic has shipped already
+ */
 int pthread_cond_timedwait_monotonic(pthread_cond_t         *cond,
                                      pthread_mutex_t        *mutex,
                                      const struct timespec  *abstime);
+
+#define HAVE_PTHREAD_COND_TIMEDWAIT_MONOTONIC 1
+
+/* BIONIC: same as pthread_cond_timedwait, except the 'reltime' given refers
+ *         is relative to the current time.
+ */
+int pthread_cond_timedwait_relative_np(pthread_cond_t         *cond,
+                                     pthread_mutex_t        *mutex,
+                                     const struct timespec  *reltime);
+
+#define HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE 1
+
+
 
 int pthread_cond_timeout_np(pthread_cond_t *cond,
                             pthread_mutex_t * mutex,
