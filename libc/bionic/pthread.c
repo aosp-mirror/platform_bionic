@@ -789,7 +789,18 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
     if (!attr)
         return EINVAL;
 
-    return (pshared == PTHREAD_PROCESS_PRIVATE) ? 0 : ENOTSUP;
+    switch (pshared) {
+    case PTHREAD_PROCESS_PRIVATE:
+    case PTHREAD_PROCESS_SHARED:
+        /* our current implementation of pthread actually supports shared
+         * mutexes but won't cleanup if a process dies with the mutex held.
+         * Nevertheless, it's better than nothing. Shared mutexes are used
+         * by surfaceflinger and audioflinger.
+         */
+        return 0;
+    }
+
+    return ENOTSUP;
 }
 
 int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared)
