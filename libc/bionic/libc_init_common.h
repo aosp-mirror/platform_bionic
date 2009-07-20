@@ -38,10 +38,6 @@ typedef struct
     void (**ctors_array)(void);
 } structors_array_t;
 
-extern __noreturn void __libc_init_common(uintptr_t *elfdata,
-                       void (*onexit)(void),
-                       int (*slingshot)(int, char**, char**),
-                       structors_array_t const * const structors,
-                       void (*pre_ctor_hook)());
+extern void __libc_init_common(uintptr_t *elfdata);
 
 #endif
