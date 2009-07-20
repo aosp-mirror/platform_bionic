@@ -76,11 +76,6 @@
  *   headers provide versions that are negative...
  * - allocate space for soinfo structs dynamically instead of
  *   having a hard limit (64)
- *
- * features to add someday:
- *
- * - dlopen() and friends
- *
 */
 
 
@@ -1744,6 +1739,11 @@ unsigned __linker_init(unsigned **elfdata)
     struct link_map * map;
     char *ldpath_env = NULL;
 
+    /* Setup a temporary TLS area that is used to get a working
+     * errno for system calls.
+     */
+    __set_tls(__tls_area);
+
     pid = getpid();
 
 #if TIMING
@@ -1751,8 +1751,15 @@ unsigned __linker_init(unsigned **elfdata)
     gettimeofday(&t0, 0);
 #endif
 
-    __set_tls(__tls_area);
-    ((unsigned *)__get_tls())[TLS_SLOT_THREAD_ID] = gettid();
+    /* NOTE: we store the elfdata pointer on a special location
+     *       of the temporary TLS area in order to pass it to
+     *       the C Library's runtime initializer.
+     *
+     *       The initializer must clear the slot and reset the TLS
+     *       to point to a different location to ensure that no other
+     *       shared library constructor can access it.
+     */
+    __tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
 
     debugger_init();
 
