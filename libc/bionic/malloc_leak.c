@@ -91,7 +91,14 @@ static pthread_mutex_t gAllocationsMutex = PTHREAD_MUTEX_INITIALIZER;
 static HashTable gHashTable;
 
 // =============================================================================
-// output fucntions
+// log functions
+// =============================================================================
+
+#define debug_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak", (format), ##__VA_ARGS__ )
+
+// =============================================================================
+// output functions
 // =============================================================================
 
 static int hash_entry_compare(const void* arg1, const void* arg2)
@@ -257,12 +264,6 @@ struct AllocationEntry {
     uint32_t guard;
 };
 
-// =============================================================================
-// log funtions
-// =============================================================================
-
-#define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak", (format), ##__VA_ARGS__ )
 
 // =============================================================================
 // Hash Table functions

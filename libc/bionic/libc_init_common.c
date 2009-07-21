@@ -52,10 +52,6 @@ unsigned int __page_shift = PAGE_SHIFT;
 
 int __system_properties_init(void);
 
-#ifdef MALLOCK_LEAK_CHECK
-void malloc_debug_init(void);
-#endif
-
 void __libc_init_common(uintptr_t *elfdata)
 {
     int     argc = *elfdata;
@@ -87,9 +83,4 @@ void __libc_init_common(uintptr_t *elfdata)
 
     /* setup system properties - requires environment */
     __system_properties_init();
-
-    /* setup malloc leak checker, requires system properties */
-#if MALLOC_LEAK_CHECK
-    malloc_debug_init();
-#endif
 }

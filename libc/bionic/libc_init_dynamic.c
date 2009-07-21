@@ -77,6 +77,13 @@ void __libc_prenit(void)
     tls_area[TLS_SLOT_BIONIC_PREINIT] = NULL;
 
     __libc_init_common(elfdata);
+
+#ifdef MALLOC_LEAK_CHECK
+    /* setup malloc leak checker, requires system properties */
+    extern void malloc_debug_init(void);
+    malloc_debug_init();
+#endif
+
 }
 
 __noreturn void __libc_init(uintptr_t *elfdata,
