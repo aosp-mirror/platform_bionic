@@ -28,15 +28,24 @@
 #include <stddef.h>
 #include <string.h>
 
+extern int  __cxa_atexit(void (*)(void*), void*, void* );
+
 void* __dso_handle = 0;
+
+/* The "C++ ABI for ARM" document states that static C++ constructors,
+ * which are called from the .init_array, should manually call
+ * __aeabi_atexit() to register static destructors explicitely.
+ *
+ * Note that 'dso_handle' is the address of a magic linker-generate
+ * variable from the shared object that contains the constructor/destructor
+ */
 
 /* Make this a weak symbol to avoid a multiple definition error when linking
  * with libstdc++-v3.  */
 int __attribute__((weak))
 __aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
 {
-    //return __cxa_atexit(destructor, object, dso_handle);
-    return 0;
+    return __cxa_atexit(destructor, object, dso_handle);
 }
 
 

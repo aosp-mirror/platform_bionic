@@ -204,6 +204,7 @@ soinfo *find_library(const char *name);
 unsigned unload_library(soinfo *si);
 Elf32_Sym *lookup_in_library(soinfo *si, const char *name);
 Elf32_Sym *lookup(const char *name, unsigned *base);
+const char *linker_get_error(void);
 
 #ifdef ANDROID_ARM_LINKER 
 typedef long unsigned int *_Unwind_Ptr;

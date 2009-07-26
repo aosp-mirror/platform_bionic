@@ -27,20 +27,45 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
-#define BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#ifndef BIONIC_LIBSTDCPP_INCLUDE_CMATH__
+#define BIONIC_LIBSTDCPP_INCLUDE_CMATH__
 
 /*
- * Standard C++ Library wrapper around the C stddef.h header file.
- * The following 2 types are also declared in the 'std' namespace:
- *   . ptrdiff_t
- *   . size_t
+ * Standard C++ Library wrapper around the C time.h header file.
  */
-#include <stddef.h>
 
-namespace std {
-using ::ptrdiff_t;
-using ::size_t;
+#include <cstddef>
+#include <math.h>
+
+namespace std
+{
+// Functions.
+using ::cos;
+using ::sin;
+using ::tan;
+using ::acos;
+using ::asin;
+using ::atan;
+using ::atan2;
+
+using ::cosh;
+using ::sinh;
+using ::tanh;
+
+using ::exp;
+using ::frexp;
+using ::ldexp;
+using ::log;
+using ::log10;
+using ::modf;
+
+using ::pow;
+using ::sqrt;
+
+using ::ceil;
+using ::fabs;
+using ::floor;
+using ::fmod;
 }  // namespace std
 
-#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#endif  // BIONIC_LIBSTDCPP_INCLUDE_CMATH__

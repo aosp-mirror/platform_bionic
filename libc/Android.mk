@@ -1,6 +1,9 @@
 LOCAL_PATH:= $(call my-dir)
 
 include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
+
+# Define the common source files for all the libc instances
+# =========================================================
 libc_common_src_files := \
 	$(syscall_src) \
 	unistd/abort.c \
@@ -272,6 +275,8 @@ libc_common_src_files := \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c
 
+# Architecture specific source files go here
+# =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
 	bionic/eabi.c \
@@ -301,6 +306,14 @@ libc_common_src_files += \
 	bionic/pthread.c.arm \
 	bionic/pthread-timers.c.arm \
 	bionic/ptrace.c.arm
+
+# these are used by the static and dynamic versions of the libc
+# respectively
+libc_arch_static_src_files := \
+	arch-arm/bionic/exidx_static.c
+
+libc_arch_dynamic_src_files := \
+	arch-arm/bionic/exidx_dynamic.c
 else # !arm
 
 ifeq ($(TARGET_ARCH),x86)
@@ -322,10 +335,17 @@ libc_common_src_files += \
 	bionic/pthread.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
-endif # x86
 
+# this is needed for static versions of libc
+libc_arch_static_src_files := \
+	arch-x86/bionic/dl_iterate_phdr_static.c
+
+libc_arch_dynamic_src_files :=
+endif # x86
 endif # !arm
 
+# Define some common cflags
+# ========================================================
 libc_common_cflags := \
 		-DWITH_ERRLIST			\
 		-DANDROID_CHANGES		\
@@ -337,161 +357,157 @@ libc_common_cflags := \
 		-DNEED_PSELECT=1		\
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
+		-DUSE_DL_PREFIX
 
-ifeq ($(TARGET_BUILD_TYPE),debug)
+ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
 ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -fstrict-aliasing
-endif
+  libc_crt_target_cflags := -mthumb-interwork
+else # !arm
+  ifeq ($(TARGET_ARCH),x86)
+    libc_crt_target_cflags := -m32
+  endif # x86
+endif # !arm
 
+# Define some common includes
+# ========================================================
 libc_common_c_includes := \
 		$(LOCAL_PATH)/stdlib  \
 		$(LOCAL_PATH)/string  \
 		$(LOCAL_PATH)/stdio
 
-# libc_common.a
-# ========================================================
 
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := $(libc_common_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags) -DUSE_DL_PREFIX
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
-
-ifneq ($(TARGET_SIMULATOR),true)
-  ifeq ($(TARGET_ARCH),arm)
-    crtend_target_cflags := -mthumb-interwork
-  else
-    ifeq ($(TARGET_ARCH),x86)
-      crtend_target_cflags := -m32
-    endif
-  endif
-# We rename crtend.o to crtend_android.o to avoid a
-# name clash between gcc and bionic.
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_android.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
-	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(crtend_target_cflags) -o $@ -c $<
-ALL_GENERATED_SOURCES += $(GEN)
-endif
-
-
-# crtbegin_so.o/crtend_so.o
-# These are needed for building the shared libs.
-ifneq ($(TARGET_SIMULATOR),true)
+# Define the libc run-time (crt) support object files that must be built,
+# which are needed to build all other objects (shared/static libs and
+# executables)
+# ==========================================================================
 
 ifeq ($(TARGET_ARCH),x86)
-
-crt_begin_end_so_target_cflags := -m32
-
+# we only need begin_so/end_so for x86, since it needs an appropriate .init
+# section in the shared library with a function to call all the entries in
+# .ctors section. ARM uses init_array, and does not need the function.
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(crt_begin_end_so_target_cflags) -o $@ -c $<
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(crt_begin_end_so_target_cflags) -o $@ -c $<
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
-
 endif # TARGET_ARCH == x86
 
-endif # !TARGET_SIMULATOR
+
+GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_static.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_static.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_dynamic.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_dynamic.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
 
 
+# We rename crtend.o to crtend_android.o to avoid a
+# name clash between gcc and bionic.
+GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_android.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
+
+# To enable malloc leak check for statically linked programs, add
+# "WITH_MALLOC_CHECK_LIBC_A := true" to buildspec.mk
+WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
+
+# ========================================================
+# libc_common.a
+# ========================================================
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_common_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
 
 
-# libc.a
 # ========================================================
+# libc_nomalloc.a
+# ========================================================
+#
+# This is a version of the static C library that does not
+# include malloc. It's useful in situations when calling
+# the user wants to provide their own malloc implementation,
+# or wants to explicitly disallow the use of the use of malloc,
+# like the dynamic loader.
 
 include $(CLEAR_VARS)
 
-include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
-
-# To enable malloc leak check for statically linked programs, add
-# "WITH_MALLOC_CHECK_LIBC_A := true" to device/buildspec.mk
-WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
-
 LOCAL_SRC_FILES := \
-	$(libc_common_src_files) \
-	bionic/dlmalloc.c \
+	$(libc_arch_static_src_files) \
 	bionic/libc_init_static.c
 
-ifeq ($(WITH_MALLOC_CHECK_LIBC_A),true)
-  LOCAL_SRC_FILES += bionic/malloc_leak.c.arm
-endif
-
-ifeq ($(TARGET_ARCH),arm)
-LOCAL_SRC_FILES += \
-	arch-arm/bionic/exidx_static.c
-
-else # TARGET_ARCH != arm
-
-ifeq ($(TARGET_ARCH),x86)
-LOCAL_SRC_FILES += \
-	arch-x86/bionic/dl_iterate_phdr_static.c
-endif
-
-endif
-
-ifneq ($(TARGET_SIMULATOR),true)
-  ifeq ($(TARGET_ARCH),arm)
-    crtbegin_static_target_cflags := -mthumb-interwork
-  else
-    ifeq ($(TARGET_ARCH),x86)
-      crtbegin_static_target_cflags := -m32
-    endif
-  endif
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_static.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_static.S
-	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(crtbegin_static_target_cflags) -o $@ -c $<
-ALL_GENERATED_SOURCES += $(GEN)
-endif
-
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags)
 
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
-
-ifeq ($(WITH_MALLOC_CHECK_LIBC_A),true)
-  LOCAL_CFLAGS += -DUSE_DL_PREFIX -DMALLOC_LEAK_CHECK
-endif
-
+LOCAL_MODULE := libc_nomalloc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
-LOCAL_MODULE:= libc
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
 
 
-# libc.so
 # ========================================================
-
+# libc.a
+# ========================================================
 include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+	$(libc_arch_static_src_files) \
+	bionic/dlmalloc.c \
+	bionic/libc_init_static.c
 
 LOCAL_CFLAGS := $(libc_common_cflags)
 
-LOCAL_CFLAGS += -DUSE_DL_PREFIX
+ifeq ($(WITH_MALLOC_CHECK_LIBC_A),true)
+  LOCAL_CFLAGS += -DMALLOC_LEAK_CHECK
+  LOCAL_SRC_FILES += bionic/malloc_leak.c.arm
+endif
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
+LOCAL_MODULE := libc
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
+# libc.so
+# ========================================================
+include $(CLEAR_VARS)
+
+LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+
 LOCAL_SRC_FILES := \
+	$(libc_arch_dynamic_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_leak.c.arm \
 	bionic/libc_init_dynamic.c
-
-ifeq ($(TARGET_ARCH),arm)
-LOCAL_SRC_FILES += \
-	arch-arm/bionic/exidx_dynamic.c
-endif
 
 LOCAL_MODULE:= libc
 
@@ -507,44 +523,25 @@ LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-ifneq ($(TARGET_SIMULATOR),true)
-  ifeq ($(TARGET_ARCH),arm)
-    crtbegin_dynamic_target_cflags := -mthumb-interwork
-  else
-    ifeq ($(TARGET_ARCH),x86)
-      crtbegin_dynamic_target_cflags := -m32
-    endif
-  endif
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_dynamic.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_dynamic.S
-	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(crtbegin_dynamic_target_cflags) -o $@ -c $<
-ALL_GENERATED_SOURCES += $(GEN)
-endif
-
 include $(BUILD_SHARED_LIBRARY)
 
 
+# ========================================================
 # libc_debug.so
 # ========================================================
-
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := $(libc_common_cflags)
-
-LOCAL_CFLAGS += -DUSE_DL_PREFIX -DMALLOC_LEAK_CHECK
+LOCAL_CFLAGS := \
+	$(libc_common_cflags) \
+	-DMALLOC_LEAK_CHECK
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
+	$(libc_arch_dynamic_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_leak.c.arm \
 	bionic/libc_init_dynamic.c
-
-ifeq ($(TARGET_ARCH),arm)
-LOCAL_SRC_FILES += \
-	arch-arm/bionic/exidx_dynamic.c
-endif
 
 LOCAL_MODULE:= libc_debug
 
@@ -563,9 +560,6 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_PRELINK_MODULE := false
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng
-
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_dynamic.o
-ALL_GENERATED_SOURCES += $(GEN)
 
 include $(BUILD_SHARED_LIBRARY)
 

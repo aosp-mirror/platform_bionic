@@ -27,20 +27,71 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
-#define BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSTRING__
+#define BIONIC_LIBSTDCPP_INCLUDE_CSTRING__
 
 /*
- * Standard C++ Library wrapper around the C stddef.h header file.
- * The following 2 types are also declared in the 'std' namespace:
- *   . ptrdiff_t
- *   . size_t
+ * Standard C++ Library wrapper around the C string.h header file.
  */
-#include <stddef.h>
 
-namespace std {
-using ::ptrdiff_t;
-using ::size_t;
+#include <cstddef>
+#include <string.h>
+
+namespace std
+{
+using ::memccpy;
+using ::memchr;
+using ::memrchr;
+using ::memcmp;
+using ::memcpy;
+using ::memmove;
+using ::memset;
+using ::memmem;
+// In string.h but not part of the std
+// using ::memswap;
+
+using ::index;
+using ::rindex;
+using ::strchr;
+using ::strrchr;
+
+using ::strlen;
+using ::strcmp;
+using ::strcpy;
+using ::strcat;
+
+using ::strcasecmp;
+using ::strncasecmp;
+using ::strdup;
+
+using ::strstr;
+using ::strcasestr;
+using ::strtok;
+using ::strtok_r;
+
+using ::strerror;
+using ::strerror_r;
+
+using ::strnlen;
+using ::strncat;
+using ::strndup;
+using ::strncmp;
+using ::strncpy;
+
+// In string.h but not part of the std
+// using ::strlcat;
+// using ::strlcpy;
+
+using ::strcspn;
+using ::strpbrk;
+using ::strsep;
+using ::strspn;
+
+using ::strsignal;
+
+using ::strcoll;
+using ::strxfrm;
+
 }  // namespace std
 
-#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTRING__

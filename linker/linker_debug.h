@@ -55,17 +55,16 @@
 #define TRUE                 1
 #define FALSE                0
 
-
-#define __PRINTVF(v,f,x...)   do {                                        \
-        (debug_verbosity > (v)) && (printf(x), ((f) && fflush(stdout))); \
-    } while (0)
 /* Only use printf() during debugging.  We have seen occasional memory
  * corruption when the linker uses printf().
  */
 #if LINKER_DEBUG
 extern int debug_verbosity;
 #warning "*** LINKER IS USING printf(); DO NOT CHECK THIS IN ***"
-#define _PRINTVF(v,f,x...)    __PRINTVF(v,f,x)
+#define _PRINTVF(v,f,x...)                                                \
+    do {                                                                  \
+        (debug_verbosity > (v)) && (printf(x), ((f) && fflush(stdout)));  \
+    } while (0)
 #else /* !LINKER_DEBUG */
 #define _PRINTVF(v,f,x...)   do {} while(0)
 #endif /* LINKER_DEBUG */
@@ -75,8 +74,9 @@ extern int debug_verbosity;
 #define TRACE(x...)          _PRINTVF(1, TRUE, x)
 #define WARN(fmt,args...)    \
         _PRINTVF(-1, TRUE, "%s:%d| WARNING: " fmt, __FILE__, __LINE__, ## args)
-#define ERROR(fmt,args...)   \
-        __PRINTVF(-1, TRUE, "%s:%d| ERROR: " fmt, __FILE__, __LINE__, ## args)
+#define ERROR(fmt,args...)    \
+        _PRINTVF(-1, TRUE, "%s:%d| ERROR: " fmt, __FILE__, __LINE__, ## args)
+
 
 #if TRACE_DEBUG
 #define DEBUG(x...)          _PRINTVF(2, TRUE, "DEBUG: " x)

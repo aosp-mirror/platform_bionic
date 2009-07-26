@@ -27,20 +27,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
-#define BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#ifndef BIONIC_LIBSTDCPP_INCLUDE_CSIGNAL__
+#define BIONIC_LIBSTDCPP_INCLUDE_CSIGNAL__
 
 /*
- * Standard C++ Library wrapper around the C stddef.h header file.
- * The following 2 types are also declared in the 'std' namespace:
- *   . ptrdiff_t
- *   . size_t
+ * Standard C++ Library wrapper around the C signal.h header file.
  */
-#include <stddef.h>
 
-namespace std {
-using ::ptrdiff_t;
-using ::size_t;
+#include <signal.h>
+
+namespace std
+{
+using ::sig_atomic_t;
+using ::signal;
+using ::raise;
 }  // namespace std
 
-#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDDEF__
+#endif  // BIONIC_LIBSTDCPP_INCLUDE_CSIGNAL__

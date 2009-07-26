@@ -51,7 +51,11 @@
 
 #include "ba.h"
 
-#define SO_MAX 64
+#define SO_MAX 96
+
+/* Assume average path length of 64 and max 8 paths */
+#define LDPATH_BUFSIZE 512
+#define LDPATH_MAX 8
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -66,7 +70,6 @@
  * - should we do anything special for STB_WEAK symbols?
  * - are we doing everything we should for ARM_COPY relocations?
  * - cleaner error reporting
- * - configuration for paths (LD_LIBRARY_PATH?)
  * - after linking, set as much stuff as possible to READONLY
  *   and NOEXEC
  * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
@@ -89,6 +92,9 @@ static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
 
+static char ldpaths_buf[LDPATH_BUFSIZE];
+static const char *ldpaths[LDPATH_MAX + 1];
+
 int debug_verbosity;
 static int pid;
 
@@ -103,6 +109,32 @@ unsigned bitmask[4096];
 #ifndef PT_ARM_EXIDX
 #define PT_ARM_EXIDX    0x70000001      /* .ARM.exidx segment */
 #endif
+
+#define HOODLUM(name, ret, ...)                                               \
+    ret name __VA_ARGS__                                                      \
+    {                                                                         \
+        char errstr[] = "ERROR: " #name " called from the dynamic linker!\n"; \
+        write(2, errstr, sizeof(errstr));                                     \
+        abort();                                                              \
+    }
+HOODLUM(malloc, void *, (size_t size));
+HOODLUM(free, void, (void *ptr));
+HOODLUM(realloc, void *, (void *ptr, size_t size));
+HOODLUM(calloc, void *, (size_t cnt, size_t size));
+
+static char tmp_err_buf[768];
+static char __linker_dl_err_buf[768];
+#define DL_ERR(fmt, x...)                                                     \
+    do {                                                                      \
+        snprintf(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),            \
+                 "%s[%d]: " fmt, __func__, __LINE__, ##x);                    \
+        ERROR(fmt, ##x);                                                      \
+    } while(0)
+
+const char *linker_get_error(void)
+{
+    return (const char *)&__linker_dl_err_buf[0];
+}
 
 /*
  * This function is an empty stub where GDB locates a breakpoint to get notified
@@ -207,7 +239,7 @@ static soinfo *alloc_info(const char *name)
     soinfo *si;
 
     if(strlen(name) >= SOINFO_NAME_LEN) {
-        ERROR("%5d library name %s too long\n", pid, name);
+        DL_ERR("%5d library name %s too long\n", pid, name);
         return 0;
     }
 
@@ -216,7 +248,7 @@ static soinfo *alloc_info(const char *name)
     */
     if (!freelist) {
         if(socount == SO_MAX) {
-            ERROR("%5d too many libraries when loading %s\n", pid, name);
+            DL_ERR("%5d too many libraries when loading %s\n", pid, name);
             return NULL;
         }
         freelist = sopool + socount++;
@@ -252,7 +284,7 @@ static void free_info(soinfo *si)
     }
     if (trav == NULL) {
         /* si was not ni solist */
-        ERROR("%5d name %s is not in solist!\n", pid, si->name);
+        DL_ERR("%5d name %s is not in solist!\n", pid, si->name);
         return;
     }
 
@@ -477,13 +509,12 @@ static int _open_lib(const char *name)
     return -1;
 }
 
-/* TODO: Need to add support for initializing the so search path with
- * LD_LIBRARY_PATH env variable for non-setuid programs. */
 static int open_library(const char *name)
 {
     int fd;
     char buf[512];
     const char **path;
+    int n;
 
     TRACE("[ %5d opening %s ]\n", pid, name);
 
@@ -493,8 +524,21 @@ static int open_library(const char *name)
     if ((name[0] == '/') && ((fd = _open_lib(name)) >= 0))
         return fd;
 
+    for (path = ldpaths; *path; path++) {
+        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        if (n < 0 || n >= (int)sizeof(buf)) {
+            WARN("Ignoring very long library path: %s/%s\n", *path, name);
+            continue;
+        }
+        if ((fd = _open_lib(buf)) >= 0)
+            return fd;
+    }
     for (path = sopaths; *path; path++) {
-        snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        if (n < 0 || n >= (int)sizeof(buf)) {
+            WARN("Ignoring very long library path: %s/%s\n", *path, name);
+            continue;
+        }
         if ((fd = _open_lib(buf)) >= 0)
             return fd;
     }
@@ -521,7 +565,7 @@ is_prelinked(int fd, const char *name)
 
     sz = lseek(fd, -sizeof(prelink_info_t), SEEK_END);
     if (sz < 0) {
-        ERROR("lseek() failed!\n");
+        DL_ERR("lseek() failed!\n");
         return 0;
     }
 
@@ -597,7 +641,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
 
     TRACE("[ %5d Computing extents for '%s'. ]\n", pid, name);
     if (verify_elf_object(_hdr, name) < 0) {
-        ERROR("%5d - %s is not a valid ELF object\n", pid, name);
+        DL_ERR("%5d - %s is not a valid ELF object\n", pid, name);
         return (unsigned)-1;
     }
 
@@ -625,7 +669,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
     }
 
     if ((min_vaddr == 0xffffffff) && (max_vaddr == 0)) {
-        ERROR("%5d - No loadable segments found in %s.\n", pid, name);
+        DL_ERR("%5d - No loadable segments found in %s.\n", pid, name);
         return (unsigned)-1;
     }
 
@@ -661,13 +705,13 @@ static int reserve_mem_region(soinfo *si)
     void *base = mmap((void *)si->base, si->size, PROT_READ | PROT_EXEC,
                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (base == MAP_FAILED) {
-        ERROR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
+        DL_ERR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
               "as requested, will try general pool: %d (%s)\n",
               pid, (si->base ? "" : "non-"), si->name, si->base,
               errno, strerror(errno));
         return -1;
     } else if (base != (void *)si->base) {
-        ERROR("OOPS: %5d %sprelinked library '%s' mapped at 0x%08x, "
+        DL_ERR("OOPS: %5d %sprelinked library '%s' mapped at 0x%08x, "
               "not at 0x%08x\n", pid, (si->base ? "" : "non-"),
               si->name, (unsigned)base, si->base);
         munmap(base, si->size);
@@ -705,7 +749,7 @@ alloc_mem_region(soinfo *si)
     }
 
 err:
-    ERROR("OOPS: %5d cannot map library '%s'. no vspace available.\n",
+    DL_ERR("OOPS: %5d cannot map library '%s'. no vspace available.\n",
           pid, si->name);
     return -1;
 }
@@ -764,7 +808,7 @@ load_segments(int fd, void *header, soinfo *si)
                          MAP_PRIVATE | MAP_FIXED, fd,
                          phdr->p_offset & (~PAGE_MASK));
             if (pbase == MAP_FAILED) {
-                ERROR("%d failed to map segment from '%s' @ 0x%08x (0x%08x). "
+                DL_ERR("%d failed to map segment from '%s' @ 0x%08x (0x%08x). "
                       "p_vaddr=0x%08x p_offset=0x%08x\n", pid, si->name,
                       (unsigned)tmp, len, phdr->p_vaddr, phdr->p_offset);
                 goto fail;
@@ -820,8 +864,8 @@ load_segments(int fd, void *header, soinfo *si)
                                   MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS,
                                   -1, 0);
                 if (extra_base == MAP_FAILED) {
-                    ERROR("[ %5d - failed to extend segment from '%s' @ 0x%08x "
-                          "(0x%08x) ]\n", pid, si->name, (unsigned)tmp,
+                    DL_ERR("[ %5d - failed to extend segment from '%s' @ 0x%08x"
+                           " (0x%08x) ]\n", pid, si->name, (unsigned)tmp,
                           extra_len);
                     goto fail;
                 }
@@ -873,7 +917,7 @@ load_segments(int fd, void *header, soinfo *si)
 
     /* Sanity check */
     if (total_sz > si->size) {
-        ERROR("%5d - Total length (0x%08x) of mapped segments from '%s' is "
+        DL_ERR("%5d - Total length (0x%08x) of mapped segments from '%s' is "
               "greater than what was allocated (0x%08x). THIS IS BAD!\n",
               pid, total_sz, si->name, si->size);
         goto fail;
@@ -940,18 +984,20 @@ load_library(const char *name)
     soinfo *si = NULL;
     Elf32_Ehdr *hdr;
 
-    if(fd == -1)
+    if(fd == -1) {
+        DL_ERR("Library '%s' not found\n", name);
         return NULL;
+    }
 
     /* We have to read the ELF header to figure out what to do with this image
      */
     if (lseek(fd, 0, SEEK_SET) < 0) {
-        ERROR("lseek() failed!\n");
+        DL_ERR("lseek() failed!\n");
         goto fail;
     }
 
     if ((cnt = read(fd, &__header[0], PAGE_SIZE)) < 0) {
-        ERROR("read() failed!\n");
+        DL_ERR("read() failed!\n");
         goto fail;
     }
 
@@ -1042,8 +1088,8 @@ soinfo *find_library(const char *name)
         if(!strcmp(name, si->name)) {
             if(si->flags & FLAG_ERROR) return 0;
             if(si->flags & FLAG_LINKED) return si;
-            ERROR("OOPS: %5d recursive link to '%s'\n", pid, si->name);
-            return 0;
+            DL_ERR("OOPS: %5d recursive link to '%s'\n", pid, si->name);
+            return NULL;
         }
     }
 
@@ -1074,7 +1120,7 @@ unsigned unload_library(soinfo *si)
                 if(lsi)
                     unload_library(lsi);
                 else
-                    ERROR("%5d could not unload '%s'\n",
+                    DL_ERR("%5d could not unload '%s'\n",
                           pid, si->strtab + d[1]);
             }
         }
@@ -1121,27 +1167,27 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
         DEBUG("%5d Processing '%s' relocation at index %d\n", pid,
               si->name, idx);
         if(sym != 0) {
-            s = _do_lookup(si, strtab + symtab[sym].st_name, &base);
+            sym_name = (char *)(strtab + symtab[sym].st_name);
+            s = _do_lookup(si, sym_name, &base);
             if(s == 0) {
-                ERROR("%5d cannot locate '%s'...\n", pid, sym_name);
+                DL_ERR("%5d cannot locate '%s'...\n", pid, sym_name);
                 return -1;
             }
 #if 0
             if((base == 0) && (si->base != 0)){
                     /* linking from libraries to main image is bad */
-                ERROR("%5d cannot locate '%s'...\n", 
+                DL_ERR("%5d cannot locate '%s'...\n",
                        pid, strtab + symtab[sym].st_name);
                 return -1;
             }
 #endif
             if ((s->st_shndx == SHN_UNDEF) && (s->st_value != 0)) {
-                ERROR("%5d In '%s', shndx=%d && value=0x%08x. We do not "
+                DL_ERR("%5d In '%s', shndx=%d && value=0x%08x. We do not "
                       "handle this yet\n", pid, si->name, s->st_shndx,
                       s->st_value);
                 return -1;
             }
             sym_addr = (unsigned)(s->st_value + base);
-            sym_name = (char *)(strtab + symtab[sym].st_name);
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
             s = 0;
@@ -1198,7 +1244,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
             COUNT_RELOC(RELOC_RELATIVE);
             MARK(rel->r_offset);
             if(sym){
-                ERROR("%5d odd RELATIVE form...\n", pid);
+                DL_ERR("%5d odd RELATIVE form...\n", pid);
                 return -1;
             }
             TRACE_TYPE(RELO, "%5d RELO RELATIVE %08x <- +%08x\n", pid,
@@ -1239,7 +1285,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
 #endif /* ANDROID_ARM_LINKER */
 
         default:
-            ERROR("%5d unknown reloc type %d @ %p (%d)\n",
+            DL_ERR("%5d unknown reloc type %d @ %p (%d)\n",
                   pid, type, rel, (int) (rel - start));
             return -1;
         }
@@ -1248,13 +1294,38 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
     return 0;
 }
 
-static void call_array(unsigned *ctor, int count)
+
+/* Please read the "Initialization and Termination functions" functions.
+ * of the linker design note in bionic/linker/README.TXT to understand
+ * what the following code is doing.
+ *
+ * The important things to remember are:
+ *
+ *   DT_PREINIT_ARRAY must be called first for executables, and should
+ *   not appear in shared libraries.
+ *
+ *   DT_INIT should be called before DT_INIT_ARRAY if both are present
+ *
+ *   DT_FINI should be called after DT_FINI_ARRAY if both are present
+ *
+ *   DT_FINI_ARRAY must be parsed in reverse order.
+ */
+
+static void call_array(unsigned *ctor, int count, int reverse)
 {
-    int n;
-    for(n = count; n > 0; n--){
-        TRACE("[ %5d Looking at ctor *0x%08x == 0x%08x ]\n", pid,
+    int n, inc = 1;
+
+    if (reverse) {
+        ctor += (count-1);
+        inc   = -1;
+    }
+
+    for(n = count; n > 0; n--) {
+        TRACE("[ %5d Looking at %s *0x%08x == 0x%08x ]\n", pid,
+              reverse ? "dtor" : "ctor",
               (unsigned)ctor, (unsigned)*ctor);
-        void (*func)() = (void (*)()) *ctor++;
+        void (*func)() = (void (*)()) *ctor;
+        ctor += inc;
         if(((int) func == 0) || ((int) func == -1)) continue;
         TRACE("[ %5d Calling func @ 0x%08x ]\n", pid, (unsigned)func);
         func();
@@ -1263,31 +1334,20 @@ static void call_array(unsigned *ctor, int count)
 
 static void call_constructors(soinfo *si)
 {
-    /* TODO: THE ORIGINAL CODE SEEMED TO CALL THE INIT FUNCS IN THE WRONG ORDER.
-     *       Old order: init, init_array, preinit_array..
-     *       Correct order: preinit_array, init, init_array.
-     *       Verify WHY.
-     */
-
     if (si->flags & FLAG_EXE) {
         TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
               pid, (unsigned)si->preinit_array, si->preinit_array_count,
               si->name);
-        call_array(si->preinit_array, si->preinit_array_count);
+        call_array(si->preinit_array, si->preinit_array_count, 0);
         TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
     } else {
         if (si->preinit_array) {
-            ERROR("%5d Shared library '%s' has a preinit_array table @ 0x%08x."
-                  " This is INVALID.\n", pid, si->name,
-                  (unsigned)si->preinit_array);
+            DL_ERR("%5d Shared library '%s' has a preinit_array table @ 0x%08x."
+                   " This is INVALID.\n", pid, si->name,
+                   (unsigned)si->preinit_array);
         }
     }
 
-    // If we have an init section, then we should call it now, to make sure
-    // that all the funcs in the .ctors section get run.
-    // Note: For ARM, we shouldn't have a .ctor section (should be empty)
-    // when we have an (pre)init_array section, but let's be compatible with
-    // old (non-eabi) binaries and try the _init (DT_INIT) anyway.
     if (si->init_func) {
         TRACE("[ %5d Calling init_func @ 0x%08x for '%s' ]\n", pid,
               (unsigned)si->init_func, si->name);
@@ -1298,25 +1358,21 @@ static void call_constructors(soinfo *si)
     if (si->init_array) {
         TRACE("[ %5d Calling init_array @ 0x%08x [%d] for '%s' ]\n", pid,
               (unsigned)si->init_array, si->init_array_count, si->name);
-        call_array(si->init_array, si->init_array_count);
+        call_array(si->init_array, si->init_array_count, 0);
         TRACE("[ %5d Done calling init_array for '%s' ]\n", pid, si->name);
     }
 }
+
 
 static void call_destructors(soinfo *si)
 {
     if (si->fini_array) {
         TRACE("[ %5d Calling fini_array @ 0x%08x [%d] for '%s' ]\n", pid,
               (unsigned)si->fini_array, si->fini_array_count, si->name);
-        call_array(si->fini_array, si->fini_array_count);
+        call_array(si->fini_array, si->fini_array_count, 1);
         TRACE("[ %5d Done calling fini_array for '%s' ]\n", pid, si->name);
     }
 
-    // If we have an fini section, then we should call it now, to make sure
-    // that all the funcs in the .dtors section get run.
-    // Note: For ARM, we shouldn't have a .dtor section (should be empty)
-    // when we have an fini_array section, but let's be compatible with
-    // old (non-eabi) binaries and try the _fini (DT_FINI) anyway.
     if (si->fini_func) {
         TRACE("[ %5d Calling fini_func @ 0x%08x for '%s' ]\n", pid,
               (unsigned)si->fini_func, si->name);
@@ -1334,7 +1390,7 @@ static int nullify_closed_stdio (void)
 
     dev_null = open("/dev/null", O_RDWR);
     if (dev_null < 0) {
-        ERROR("Cannot open /dev/null.\n");
+        DL_ERR("Cannot open /dev/null.\n");
         return -1;
     }
     TRACE("[ %5d Opened /dev/null file-descriptor=%d]\n", pid, dev_null);
@@ -1360,7 +1416,7 @@ static int nullify_closed_stdio (void)
         /* The only error we allow is that the file descriptor does not
            exist, in which case we dup /dev/null to it. */
         if (errno != EBADF) {
-            ERROR("nullify_stdio: unhandled error %s\n", strerror(errno));
+            DL_ERR("nullify_stdio: unhandled error %s\n", strerror(errno));
             return_value = -1;
             continue;
         }
@@ -1371,9 +1427,9 @@ static int nullify_closed_stdio (void)
         do {
             status = dup2(dev_null, i);
         } while (status < 0 && errno == EINTR);
-        
+
         if (status < 0) {
-            ERROR("nullify_stdio: dup2 error %s\n", strerror(errno));
+            DL_ERR("nullify_stdio: dup2 error %s\n", strerror(errno));
             return_value = -1;
             continue;
         }
@@ -1382,12 +1438,12 @@ static int nullify_closed_stdio (void)
     /* If /dev/null is not one of the stdio file descriptors, close it. */
     if (dev_null > 2) {
         TRACE("[ %5d Closing /dev/null file-descriptor=%d]\n", pid, dev_null);
-	do {
+        do {
             status = close(dev_null);
         } while (status < 0 && errno == EINTR);
 
         if (status < 0) {
-            ERROR("nullify_stdio: close error %s\n", strerror(errno));
+            DL_ERR("nullify_stdio: close error %s\n", strerror(errno));
             return_value = -1;
         }
     }
@@ -1455,7 +1511,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 }
             } else if (phdr->p_type == PT_DYNAMIC) {
                 if (si->dynamic != (unsigned *)-1) {
-                    ERROR("%5d multiple PT_DYNAMIC segments found in '%s'. "
+                    DL_ERR("%5d multiple PT_DYNAMIC segments found in '%s'. "
                           "Segment at 0x%08x, previously one found at 0x%08x\n",
                           pid, si->name, si->base + phdr->p_vaddr,
                           (unsigned)si->dynamic);
@@ -1468,7 +1524,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
     }
 
     if (si->dynamic == (unsigned *)-1) {
-        ERROR("%5d missing PT_DYNAMIC?!\n", pid);
+        DL_ERR("%5d missing PT_DYNAMIC?!\n", pid);
         goto fail;
     }
 
@@ -1492,7 +1548,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
             break;
         case DT_PLTREL:
             if(*d != DT_REL) {
-                ERROR("DT_RELA not supported\n");
+                DL_ERR("DT_RELA not supported\n");
                 goto fail;
             }
             break;
@@ -1517,7 +1573,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
             *d = (int) &_r_debug;
             break;
         case DT_RELA:
-            ERROR("%5d DT_RELA not supported\n", pid);
+            DL_ERR("%5d DT_RELA not supported\n", pid);
             goto fail;
         case DT_INIT:
             si->init_func = (void (*)(void))(si->base + *d);
@@ -1569,16 +1625,18 @@ static int link_image(soinfo *si, unsigned wr_offset)
            pid, si->base, si->strtab, si->symtab);
 
     if((si->strtab == 0) || (si->symtab == 0)) {
-        ERROR("%5d missing essential tables\n", pid);
+        DL_ERR("%5d missing essential tables\n", pid);
         goto fail;
     }
 
     for(d = si->dynamic; *d; d += 2) {
         if(d[0] == DT_NEEDED){
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
-            soinfo *lsi = find_library(si->strtab + d[1]);            
+            soinfo *lsi = find_library(si->strtab + d[1]);
             if(lsi == 0) {
-                ERROR("%5d could not load '%s'\n", pid, si->strtab + d[1]);
+                strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
+                DL_ERR("%5d could not load needed library '%s' for '%s' (%s)\n",
+                       pid, si->strtab + d[1], si->name, tmp_err_buf);
                 goto fail;
             }
             lsi->refcount++;
@@ -1643,6 +1701,29 @@ fail:
     return -1;
 }
 
+static void parse_library_path(char *path, char *delim)
+{
+    size_t len;
+    char *ldpaths_bufp = ldpaths_buf;
+    int i = 0;
+
+    len = strlcpy(ldpaths_buf, path, sizeof(ldpaths_buf));
+
+    while (i < LDPATH_MAX && (ldpaths[i] = strsep(&ldpaths_bufp, delim))) {
+        if (*ldpaths[i] != '\0')
+            ++i;
+    }
+
+    /* Forget the last path if we had to truncate; this occurs if the 2nd to
+     * last char isn't '\0' (i.e. not originally a delim). */
+    if (i > 0 && len >= sizeof(ldpaths_buf) &&
+            ldpaths_buf[sizeof(ldpaths_buf) - 2] != '\0') {
+        ldpaths[i - 1] = NULL;
+    } else {
+        ldpaths[i] = NULL;
+    }
+}
+
 int main(int argc, char **argv)
 {
     return 0;
@@ -1661,6 +1742,7 @@ unsigned __linker_init(unsigned **elfdata)
     unsigned *vecs = (unsigned*) (argv + argc + 1);
     soinfo *si;
     struct link_map * map;
+    char *ldpath_env = NULL;
 
     pid = getpid();
 
@@ -1678,6 +1760,8 @@ unsigned __linker_init(unsigned **elfdata)
     while(vecs[0] != 0) {
         if(!strncmp((char*) vecs[0], "DEBUG=", 6)) {
             debug_verbosity = atoi(((char*) vecs[0]) + 6);
+        } else if(!strncmp((char*) vecs[0], "LD_LIBRARY_PATH=", 16)) {
+            ldpath_env = (char*) vecs[0] + 16;
         }
         vecs++;
     }
@@ -1737,8 +1821,14 @@ unsigned __linker_init(unsigned **elfdata)
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
 
-    if(link_image(si, 0)){
-        ERROR("CANNOT LINK EXECUTABLE '%s'\n", argv[0]);
+        /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
+    if (ldpath_env && getuid() == geteuid() && getgid() == getegid())
+        parse_library_path(ldpath_env, ":");
+
+    if(link_image(si, 0)) {
+        char errmsg[] = "CANNOT LINK EXECUTABLE\n";
+        write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
+        write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
 
