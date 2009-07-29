@@ -85,6 +85,11 @@ using ::srand;
 using ::random;
 using ::srandom;
 
+using ::malloc;
+using ::free;
+using ::calloc;
+using ::realloc;
+
 using ::unlockpt;
 using ::ptsname;
 using ::ptsname_r;

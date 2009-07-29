@@ -28,23 +28,14 @@
 /*
  * libc_init_static.c
  *
- * This function takes the raw data block set up by the ELF loader
- * in the kernel and parses it.  It is invoked by crt0.S which makes
- * any necessary adjustments and passes calls this function using
- * the standard C calling convention.
+ * The program startup function __libc_init() defined here is
+ * used for static executables only (i.e. those that don't depend
+ * on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
+ * which is directly invoked by the kernel when the program is launched.
  *
- * The arguments are:
- *  uintptr_t *elfdata	 -- The ELF loader data block; usually from the stack.
- *                          Basically a pointer to argc.
- *  void (*onexit)(void) -- Function to install into onexit
+ * The 'structors' parameter contains pointers to various initializer
+ * arrays that must be run before the program's 'main' routine is launched.
  */
-
-/*
- * Several Linux ABIs don't pass the onexit pointer, and the ones that
- * do never use it.  Therefore, unless USE_ONEXIT is defined, we just
- * ignore the onexit pointer.
- */
-/* #define USE_ONEXIT */
 
 #include <stddef.h>
 #include <stdio.h>
@@ -58,19 +49,47 @@
 #include <bionic_tls.h>
 #include <errno.h>
 
+static void call_array(void(**list)())
+{
+    // First element is -1, list is null-terminated
+    while (*++list) {
+        (*list)();
+    }
+}
+
 __noreturn void __libc_init(uintptr_t *elfdata,
                        void (*onexit)(void),
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors)
 {
-/* 
- * To enable malloc checks for statically linked programs, add
- * "WITH_MALLOC_CHECK_LIBC_A := true" in device/buildspec.mk
- */
+    int  argc;
+    char **argv, **envp;
+
+    /* Initialize the C runtime environment */
+    __libc_init_common(elfdata);
+
 #ifdef MALLOC_LEAK_CHECK
-    extern void malloc_debug_init();
-    __libc_init_common(elfdata, onexit, slingshot, structors, malloc_debug_init);
-#else
-    __libc_init_common(elfdata, onexit, slingshot, structors, NULL);
+    /* setup malloc leak checker, requires system properties */
+    extern void malloc_debug_init(void);
+    malloc_debug_init();
 #endif
+
+    /* Several Linux ABIs don't pass the onexit pointer, and the ones that
+     * do never use it.  Therefore, we ignore it.
+     */
+
+    /* pre-init array. */
+    call_array(structors->preinit_array);
+
+    /* .ctors section initializers, for non-arm-eabi ABIs */
+    call_array(structors->ctors_array);
+
+    // call static constructors
+    call_array(structors->init_array);
+
+    argc = (int) *elfdata;
+    argv = (char**)(elfdata + 1);
+    envp = argv + argc + 1;
+
+    exit(slingshot(argc, argv, envp));
 }

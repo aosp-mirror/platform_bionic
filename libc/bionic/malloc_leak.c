@@ -91,7 +91,14 @@ static pthread_mutex_t gAllocationsMutex = PTHREAD_MUTEX_INITIALIZER;
 static HashTable gHashTable;
 
 // =============================================================================
-// output fucntions
+// log functions
+// =============================================================================
+
+#define debug_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak", (format), ##__VA_ARGS__ )
+
+// =============================================================================
+// output functions
 // =============================================================================
 
 static int hash_entry_compare(const void* arg1, const void* arg2)
@@ -257,12 +264,6 @@ struct AllocationEntry {
     uint32_t guard;
 };
 
-// =============================================================================
-// log funtions
-// =============================================================================
-
-#define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak", (format), ##__VA_ARGS__ )
 
 // =============================================================================
 // Hash Table functions
@@ -515,8 +516,8 @@ static void dump_stack_trace()
 
     tmp[0] = 0; // Need to initialize tmp[0] for the first strcat
     for (i=0 ; i<c; i++) {
-        sprintf(buf, "%2d: %08x\n", i, addrs[i]);
-        strcat(tmp, buf);
+        snprintf(buf, sizeof buf, "%2d: %08x\n", i, addrs[i]);
+        strlcat(tmp, buf, sizeof tmp);
     }
     __libc_android_log_print(ANDROID_LOG_ERROR, "libc", "call stack:\n%s", tmp);
 }
@@ -526,69 +527,90 @@ static int is_valid_malloc_pointer(void* addr)
     return 1;
 }
 
+static void assert_log_message(const char* format, ...)
+{
+    va_list  args;
+
+    pthread_mutex_lock(&gAllocationsMutex);
+        gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
+        va_start(args, format);
+        __libc_android_log_vprint(ANDROID_LOG_ERROR, "libc",
+                                format, args);
+        va_end(args);
+        dump_stack_trace();
+        if (gTrapOnError) {
+            __builtin_trap();
+        }
+        gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
+    pthread_mutex_unlock(&gAllocationsMutex);
+}
+
 static void assert_valid_malloc_pointer(void* mem)
 {
     if (mem && !is_valid_malloc_pointer(mem)) {
-        pthread_mutex_lock(&gAllocationsMutex);
-        gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
-            __libc_android_log_print(ANDROID_LOG_ERROR, "libc",
-                    "*** MALLOC CHECK: buffer %p, is not a valid "
-                    "malloc pointer (are you mixing up new/delete "
-                    "and malloc/free?)", mem);
-            dump_stack_trace();
-                if (gTrapOnError) {
-                    __builtin_trap();
-                }
-        gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
-        pthread_mutex_unlock(&gAllocationsMutex);
+        assert_log_message(
+            "*** MALLOC CHECK: buffer %p, is not a valid "
+            "malloc pointer (are you mixing up new/delete "
+            "and malloc/free?)", mem);
     }
 }
 
-static void chk_out_of_bounds_check__locked(void* buffer, size_t size)
+/* Check that a given address corresponds to a guarded block,
+ * and returns its original allocation size in '*allocated'.
+ * 'func' is the capitalized name of the caller function.
+ * Returns 0 on success, or -1 on failure.
+ * NOTE: Does not return if gTrapOnError is set.
+ */
+static int chk_mem_check(void*       mem,
+                         size_t*     allocated,
+                         const char* func)
 {
-    int i;
-    char* buf = (char*)buffer - CHK_SENTINEL_HEAD_SIZE;
+    char*  buffer;
+    size_t offset, bytes;
+    int    i;
+    char*  buf;
+
+    /* first check the bytes in the sentinel header */
+    buf = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
     for (i=0 ; i<CHK_SENTINEL_HEAD_SIZE ; i++) {
         if (buf[i] != CHK_SENTINEL_VALUE) {
-            gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
-            __libc_android_log_print(ANDROID_LOG_ERROR, "libc",
-                    "*** MALLOC CHECK: buffer %p, size=%lu, "
-                    "corrupted %d bytes before allocation",
-                    buffer, size, CHK_SENTINEL_HEAD_SIZE-i);
-            dump_stack_trace();
-            if (gTrapOnError) {
-                __builtin_trap();
-            }
-            gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
+            assert_log_message( 
+                "*** %s CHECK: buffer %p "
+                "corrupted %d bytes before allocation",
+                func, mem, CHK_SENTINEL_HEAD_SIZE-i);
+            return -1;
         }
     }
-    buf = (char*)buffer + size;
+
+    /* then the ones in the sentinel trailer */
+    buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
+    offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
+    bytes  = *(size_t *)(buffer + offset);
+
+    buf = (char*)mem + bytes;
     for (i=CHK_SENTINEL_TAIL_SIZE-1 ; i>=0 ; i--) {
         if (buf[i] != CHK_SENTINEL_VALUE) {
-            gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
-            __libc_android_log_print(ANDROID_LOG_ERROR, "libc",
-                    "*** MALLOC CHECK: buffer %p, size=%lu, "
-                    "corrupted %d bytes after allocation",
-                    buffer, size, i+1);
-            dump_stack_trace();
-            if (gTrapOnError) {
-                __builtin_trap();
-            }
-            gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
+            assert_log_message( 
+                "*** %s CHECK: buffer %p, size=%lu, "
+                "corrupted %d bytes after allocation",
+                func, buffer, bytes, i+1);
+            return -1;
         }
     }
+
+    *allocated = bytes;
+    return 0;
 }
+
 
 void* chk_malloc(size_t bytes)
 {
     char* buffer = (char*)dlmalloc(bytes + CHK_OVERHEAD_SIZE);
     if (buffer) {
-        pthread_mutex_lock(&gAllocationsMutex);
-            memset(buffer, CHK_SENTINEL_VALUE, bytes + CHK_OVERHEAD_SIZE);
-            size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
-            *(size_t *)(buffer + offset) = bytes;
-            buffer += CHK_SENTINEL_HEAD_SIZE;
-        pthread_mutex_unlock(&gAllocationsMutex);
+        memset(buffer, CHK_SENTINEL_VALUE, bytes + CHK_OVERHEAD_SIZE);
+        size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
+        *(size_t *)(buffer + offset) = bytes;
+        buffer += CHK_SENTINEL_HEAD_SIZE;
     }
     return buffer;
 }
@@ -597,14 +619,14 @@ void  chk_free(void* mem)
 {
     assert_valid_malloc_pointer(mem);
     if (mem) {
-        pthread_mutex_lock(&gAllocationsMutex);
-            char* buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
-            size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
-            size_t bytes = *(size_t *)(buffer + offset);
-            chk_out_of_bounds_check__locked(mem, bytes);
-        pthread_mutex_unlock(&gAllocationsMutex);
-        memset(buffer, CHK_FILL_FREE, bytes);
-        dlfree(buffer);
+        size_t  size;
+        char*   buffer;
+
+        if (chk_mem_check(mem, &size, "FREE") == 0) {
+            buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
+            memset(buffer, CHK_FILL_FREE, size + CHK_OVERHEAD_SIZE);
+            dlfree(buffer);
+        }
     }
 }
 
@@ -628,18 +650,19 @@ void* chk_calloc(size_t n_elements, size_t elem_size)
 
 void* chk_realloc(void* mem, size_t bytes)
 {
+    char*   buffer;
+    int     ret;
+    size_t  old_bytes = 0;
+
     assert_valid_malloc_pointer(mem);
+
+    if (mem != NULL && chk_mem_check(mem, &old_bytes, "REALLOC") < 0)
+        return NULL;
+
     char* new_buffer = chk_malloc(bytes);
     if (mem == NULL) {
         return new_buffer;
     }
-
-    pthread_mutex_lock(&gAllocationsMutex);
-        char* buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
-        size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
-        size_t old_bytes = *(size_t *)(buffer + offset);
-        chk_out_of_bounds_check__locked(mem, old_bytes);
-    pthread_mutex_unlock(&gAllocationsMutex);
 
     if (new_buffer) {
         size_t size = (bytes < old_bytes)?(bytes):(old_bytes);

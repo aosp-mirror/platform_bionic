@@ -39,23 +39,6 @@
 #include <bionic_tls.h>
 #include <errno.h>
 
-extern void _init(void);
-extern void _fini(void);
-
-static void call_array(void(**list)())
-{
-    // First element is -1, list is null-terminated
-    while (*++list) {
-        (*list)();
-    }
-}
-
-static void __bionic_do_global_dtors(structors_array_t const * const p)
-{
-    call_array(p->fini_array);
-    //_fini();
-}
-
 extern unsigned __get_sp(void);
 extern pid_t    gettid(void);
 
@@ -69,23 +52,19 @@ unsigned int __page_shift = PAGE_SHIFT;
 
 int __system_properties_init(void);
 
-void __libc_init_common(uintptr_t *elfdata,
-                       void (*onexit)(void),
-                       int (*slingshot)(int, char**, char**),
-                       structors_array_t const * const structors,
-                       void (*pre_ctor_hook)())
+void __libc_init_common(uintptr_t *elfdata)
 {
-    pthread_internal_t thread;
-    pthread_attr_t thread_attr;
-    void *tls_area[BIONIC_TLS_SLOTS];
-    int argc;
-    char **argv, **envp, **envend;
-    struct auxentry *auxentry;
-    unsigned int page_size = 0, page_shift = 0;
+    int     argc = *elfdata;
+    char**  argv = (char**)(elfdata + 1);
+    char**  envp = argv + argc + 1;
 
-    /* The main thread's stack has empirically shown to be 84k */
+    pthread_attr_t             thread_attr;
+    static pthread_internal_t  thread;
+    static void*               tls_area[BIONIC_TLS_SLOTS];
+
+    /* setup pthread runtime and maint thread descriptor */
     unsigned stacktop = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-    unsigned stacksize = 128 * 1024; //84 * 1024;
+    unsigned stacksize = 128 * 1024;
     unsigned stackbottom = stacktop - stacksize;
 
     pthread_attr_init(&thread_attr);
@@ -93,30 +72,15 @@ void __libc_init_common(uintptr_t *elfdata,
     _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom);
     __init_tls(tls_area, &thread);
 
-    argc = (int) *elfdata++;
-    argv = (char**) elfdata;
-    envp = argv+(argc+1);
-    environ = envp;
-
-    __progname = argv[0] ? argv[0] : "<unknown>";
-
+    /* clear errno - requires TLS area */
     errno = 0;
 
+    /* set program name */
+    __progname = argv[0] ? argv[0] : "<unknown>";
+
+    /* setup environment pointer */
+    environ = envp;
+
+    /* setup system properties - requires environment */
     __system_properties_init();
-
-    if (pre_ctor_hook) pre_ctor_hook();
-
-    // XXX: we should execute the .fini_array upon exit
-
-    // pre-init array.
-    // XXX: I'm not sure what's the different with the init array.
-    call_array(structors->preinit_array);
-
-    // for compatibility with non-eabi binary, call the .ctors section
-    call_array(structors->ctors_array);
-
-    // call static constructors
-    call_array(structors->init_array);
-
-    exit(slingshot(argc, argv, envp));
 }
