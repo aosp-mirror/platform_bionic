@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAdX///1M\u003d",
+        "filename": "libdl/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:55:32Z",
+      "side": 1,
+      "message": "Please remove this",
+      "revId": "ae123a1f56645b51b9103e30ca2fedd77ccf6401",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
