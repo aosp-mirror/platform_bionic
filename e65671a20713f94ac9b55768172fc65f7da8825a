@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAdX///1I\u003d",
+        "filename": "libm/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:54:09Z",
+      "side": 1,
+      "message": "Please remove this. The NOTICE file is generated automatically from a script anyway.",
+      "revId": "e65671a20713f94ac9b55768172fc65f7da8825a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
