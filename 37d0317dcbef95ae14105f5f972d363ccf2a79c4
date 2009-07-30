@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAdX///1s\u003d",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:43:33Z",
+      "side": 1,
+      "message": "Please document the fact that there can be a third code corresponding to the SuperH Linux kernel.\n\nWe may want to modify the structure of this file later to accomodate even more architectures, but that will be enough for now.",
+      "revId": "37d0317dcbef95ae14105f5f972d363ccf2a79c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
