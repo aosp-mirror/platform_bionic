@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAdX///1c\u003d",
+        "filename": "libc/include/sys/linux-syscalls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:46:04Z",
+      "side": 1,
+      "message": "please remove trailing whitespace",
+      "revId": "336efb5267e465ac52d78327d37f79553b3f0584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdX///1k\u003d",
+        "filename": "libc/unistd/socketcalls.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:46:04Z",
+      "side": 1,
+      "message": "sendmsg should return a ssize_t\nchanging its type is an ABI violation.\nPlease don\u0027t do that. Is there a specific reason for this change?",
+      "revId": "336efb5267e465ac52d78327d37f79553b3f0584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdX///1g\u003d",
+        "filename": "libc/unistd/socketcalls.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:46:04Z",
+      "side": 1,
+      "message": "same here. Is there a specific reason for this change?",
+      "revId": "336efb5267e465ac52d78327d37f79553b3f0584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
