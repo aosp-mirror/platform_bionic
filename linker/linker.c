@@ -976,6 +976,7 @@ load_library(const char *name)
     int cnt;
     unsigned ext_sz;
     unsigned req_base;
+    const char *bname;
     soinfo *si = NULL;
     Elf32_Ehdr *hdr;
 
@@ -1009,7 +1010,8 @@ load_library(const char *name)
      * same thing would happen if we failed during linking. Configuring the
      * soinfo struct here is a lot more convenient.
      */
-    si = alloc_info(name);
+    bname = strrchr(name, '/');
+    si = alloc_info(bname ? bname + 1 : name);
     if (si == NULL)
         goto fail;
 
@@ -1078,9 +1080,11 @@ init_library(soinfo *si)
 soinfo *find_library(const char *name)
 {
     soinfo *si;
+    const char *bname = strrchr(name, '/');
+    bname = bname ? bname + 1 : name;
 
     for(si = solist; si != 0; si = si->next){
-        if(!strcmp(name, si->name)) {
+        if(!strcmp(bname, si->name)) {
             if(si->flags & FLAG_ERROR) return 0;
             if(si->flags & FLAG_LINKED) return si;
             DL_ERR("OOPS: %5d recursive link to '%s'", pid, si->name);
