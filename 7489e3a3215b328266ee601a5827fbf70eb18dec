@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAdX///18\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:38:30Z",
+      "side": 1,
+      "message": "you forgot to add string/memmove.c and netbsd/resolv/res_state.c here.\n\nI recommend doing something like this instead:\n\n# the following sources should better be compiled as 32-bit ARM instruction on arm targets.\n#\narm_optimized_sources :\u003d string/memmove.c netbsd/resolv/res_state.c\n\nifeq ($(TARGET_ARCH),arm)\n  arm_optimized_sources :\u003d $(arm_optimized_sources:%\u003d%.arm)\nendif\n\nlibc_common_src_files +\u003d $(arm_optimized_sources)",
+      "revId": "7489e3a3215b328266ee601a5827fbf70eb18dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdX///2A\u003d",
+        "filename": "libc/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:38:30Z",
+      "side": 1,
+      "message": "please remove this.",
+      "revId": "7489e3a3215b328266ee601a5827fbf70eb18dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdX///14\u003d",
+        "filename": "libc/arch-sh/bionic/misc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-07-30T16:38:30Z",
+      "side": 1,
+      "message": "Please provide a working implementation.",
+      "revId": "7489e3a3215b328266ee601a5827fbf70eb18dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
