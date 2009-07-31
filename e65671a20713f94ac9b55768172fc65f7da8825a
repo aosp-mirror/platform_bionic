@@ -16,6 +16,24 @@
       "revId": "e65671a20713f94ac9b55768172fc65f7da8825a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdX///uo\u003d",
+        "filename": "libm/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1001893
+      },
+      "writtenOn": "2009-07-31T01:10:40Z",
+      "side": 1,
+      "message": "Thanks for review. May I know where should we add the credit for contribute? Just like, we added it in dalvik/README.txt.",
+      "parentUuid": "AAAAdX///1I\u003d",
+      "revId": "e65671a20713f94ac9b55768172fc65f7da8825a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
