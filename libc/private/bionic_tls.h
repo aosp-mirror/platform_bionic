@@ -87,8 +87,10 @@ extern void __init_tls(void**  tls, void*  thread_info);
 extern int __set_tls(void *ptr);
 
 /* get the TLS */
+/* Linux kernel helpers for its TLS implementation */
 #ifdef __arm__
-#  define __get_tls() ( *((volatile void **) 0xffff0ff0) )
+typedef void* (__kernel_get_tls_t)(void);
+#define __get_tls (*(__kernel_get_tls_t *)0xffff0fe0)
 #else
 extern void*  __get_tls( void );
 #endif
