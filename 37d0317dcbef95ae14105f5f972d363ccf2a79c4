@@ -16,6 +16,24 @@
       "revId": "37d0317dcbef95ae14105f5f972d363ccf2a79c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAdn///vY\u003d",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001893
+      },
+      "writtenOn": "2009-08-05T06:03:23Z",
+      "side": 1,
+      "message": "Do you mean I should add some comment in README like:\n- additionally, if the syscall number is different amoung ARM, x86 and SuperH, use:\n   return_type  funcname[:syscall_name](parameters)   arm_number,x86_number,superh_number",
+      "parentUuid": "AAAAdX///1s\u003d",
+      "revId": "37d0317dcbef95ae14105f5f972d363ccf2a79c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
