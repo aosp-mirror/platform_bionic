@@ -1154,6 +1154,23 @@ void mspace_free(mspace msp, void* mem);
 */
 void* mspace_realloc(mspace msp, void* mem, size_t newsize);
 
+#if ANDROID /* Added for Android, not part of dlmalloc as released */
+/*
+  mspace_merge_objects will merge allocated memory mema and memb
+  together, provided memb immediately follows mema.  It is roughly as
+  if memb has been freed and mema has been realloced to a larger size.
+  On successfully merging, mema will be returned. If either argument
+  is null or memb does not immediately follow mema, null will be
+  returned.
+
+  Both mema and memb should have been previously allocated using
+  malloc or a related routine such as realloc. If either mema or memb
+  was not malloced or was previously freed, the result is undefined,
+  but like mspace_free, the default is to abort the program.
+*/
+void* mspace_merge_objects(mspace msp, void* mema, void* memb);
+#endif
+
 /*
   mspace_calloc behaves as calloc, but operates within
   the given space.
@@ -4871,6 +4888,62 @@ void* mspace_realloc(mspace msp, void* oldmem, size_t bytes) {
     return internal_realloc(ms, oldmem, bytes);
   }
 }
+
+#if ANDROID
+void* mspace_merge_objects(mspace msp, void* mema, void* memb)
+{
+  /* PREACTION/POSTACTION aren't necessary because we are only
+     modifying fields of inuse chunks owned by the current thread, in
+     which case no other malloc operations can touch them.
+   */
+  if (mema == NULL || memb == NULL) {
+    return NULL;
+  }
+  mchunkptr pa = mem2chunk(mema);
+  mchunkptr pb = mem2chunk(memb);
+
+#if FOOTERS
+  mstate fm = get_mstate_for(pa);
+#else /* FOOTERS */
+  mstate fm = (mstate)msp;
+#endif /* FOOTERS */
+  if (!ok_magic(fm)) {
+    USAGE_ERROR_ACTION(fm, pa);
+    return NULL;
+  }
+  check_inuse_chunk(fm, pa);
+  if (RTCHECK(ok_address(fm, pa) && ok_cinuse(pa))) {
+    if (next_chunk(pa) != pb) {
+      /* Since pb may not be in fm, we can't check ok_address(fm, pb);
+         since ok_cinuse(pb) would be unsafe before an address check,
+         return NULL rather than invoke USAGE_ERROR_ACTION if pb is not
+         in use or is a bogus address.
+       */
+      return NULL;
+    }
+    /* Since b follows a, they share the mspace. */
+#if FOOTERS
+    assert(fm == get_mstate_for(pb));
+#endif /* FOOTERS */
+    check_inuse_chunk(fm, pb);
+    if (RTCHECK(ok_address(fm, pb) && ok_cinuse(pb))) {
+      size_t sz = chunksize(pb);
+      pa->head += sz;
+      /* Make sure pa still passes. */
+      check_inuse_chunk(fm, pa);
+      return mema;
+    }
+    else {
+      USAGE_ERROR_ACTION(fm, pb);
+      return NULL;
+    }
+  }
+  else {
+    USAGE_ERROR_ACTION(fm, pa);
+    return NULL;
+  }
+}
+#endif /* ANDROID */
 
 void* mspace_memalign(mspace msp, size_t alignment, size_t bytes) {
   mstate ms = (mstate)msp;

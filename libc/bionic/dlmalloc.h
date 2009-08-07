@@ -547,6 +547,21 @@ void mspace_free(mspace msp, void* mem);
 void* mspace_realloc(mspace msp, void* mem, size_t newsize);
 
 /*
+  mspace_merge_objects will merge allocated memory mema and memb
+  together, provided memb immediately follows mema.  It is roughly as
+  if memb has been freed and mema has been realloced to a larger size.
+  On successfully merging, mema will be returned. If either argument
+  is null or memb does not immediately follow mema, null will be
+  returned.
+
+  Both mema and memb should have been previously allocated using
+  malloc or a related routine such as realloc. If either mema or memb
+  was not malloced or was previously freed, the result is undefined,
+  but like mspace_free, the default is to abort the program.
+*/
+void* mspace_merge_objects(mspace msp, void* mema, void* memb);
+
+/*
   mspace_calloc behaves as calloc, but operates within
   the given space.
 */
