@@ -1085,7 +1085,10 @@ soinfo *find_library(const char *name)
 
     for(si = solist; si != 0; si = si->next){
         if(!strcmp(bname, si->name)) {
-            if(si->flags & FLAG_ERROR) return 0;
+            if(si->flags & FLAG_ERROR) {
+                DL_ERR("%5d '%s' failed to load previously", pid, bname);
+                return NULL;
+            }
             if(si->flags & FLAG_LINKED) return si;
             DL_ERR("OOPS: %5d recursive link to '%s'", pid, si->name);
             return NULL;
