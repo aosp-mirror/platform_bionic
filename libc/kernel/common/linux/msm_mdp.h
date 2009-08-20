@@ -30,6 +30,7 @@ enum {
  MDP_Y_CBCR_H2V1,
  MDP_RGBA_8888,
  MDP_BGRA_8888,
+ MDP_RGBX_8888,
  MDP_IMGTYPE_LIMIT
 };
 
@@ -81,3 +82,4 @@ struct mdp_blit_req_list {
 };
 
 #endif
+
