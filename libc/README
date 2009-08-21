@@ -1,4 +1,5 @@
-Welcome to Bionic, Android small and custom C library for the Android platform
+Welcome to Bionic, Android's small and custom C library for the Android
+platform.
 
 Bionic is mainly a port of the BSD C library to our Linux kernel with the
 following additions/changes:
