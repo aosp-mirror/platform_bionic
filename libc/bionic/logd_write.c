@@ -46,62 +46,80 @@
 #define LOG_BUF_SIZE	1024
 
 typedef enum {
-    LOG_ID_MAIN = 0,
+    LOG_ID_NONE = 0,
+    LOG_ID_MAIN,
     LOG_ID_RADIO,
     LOG_ID_MAX
 } log_id_t;
 
-static int __write_to_log_init(log_id_t, struct iovec *vec);
-static int (*write_to_log)(log_id_t, struct iovec *vec) = __write_to_log_init;
+/* logger handles writing to object, pointed by log channel id */
+typedef int (*logger_function_t)(log_id_t log_id, struct iovec *vec);
+
+typedef struct {
+    logger_function_t logger;
+    int               fd;
+    const char        *path;
+} log_channel_t;
+
+static int __write_to_log_init(log_id_t log_id, struct iovec *vec);
+static int __write_to_log_null(log_id_t log_id, struct iovec *vec);
+
 static pthread_mutex_t log_init_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static int log_fds[(int)LOG_ID_MAX] = { -1, -1 };
+log_channel_t log_channels[LOG_ID_MAX] = {
+    { __write_to_log_null, -1, NULL },
+    { __write_to_log_init, -1, "/dev/"LOGGER_LOG_MAIN },
+    { __write_to_log_init, -1, "/dev/"LOGGER_LOG_RADIO }
+};
 
-static int __write_to_log_null(log_id_t log_fd, struct iovec *vec)
+static int __write_to_log_null(log_id_t log_id, struct iovec *vec)
 {
-    return -1;
+    /* 
+     * ALTERED behaviour from previous version
+     * always returns successful result
+     */
+    int    i = 0;
+    size_t res = 0;
+
+    for ( ; i < 3; ++i) {
+        res += vec[i].iov_len;
+    }
+
+    return (int)res;
 }
 
+/*
+ *  it's supposed, that log_id contains valid id always.
+ *  this check must be performed in higher level functions
+ */
 static int __write_to_log_kernel(log_id_t log_id, struct iovec *vec)
 {
     ssize_t ret;
-    int log_fd;
-
-    if ((int)log_id >= 0 && (int)log_id < (int)LOG_ID_MAX) {
-        log_fd = log_fds[(int)log_id];
-    } else {
-        return EBADF;
-    }
 
     do {
-        ret = writev(log_fd, vec, 3);
-    } while (ret < 0 && errno == EINTR);
+        ret = writev(log_channels[log_id].fd, vec, 3);
+    } while ((ret < 0) && (errno == EINTR));
 
     return ret;
 }
 
 static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
 {
-    pthread_mutex_lock(&log_init_lock);
+    if ((LOG_ID_NONE < log_id) && (log_id < LOG_ID_MAX)) {
+        pthread_mutex_lock(&log_init_lock);
 
-    if (write_to_log == __write_to_log_init) {
-        log_fds[LOG_ID_MAIN] = open("/dev/"LOGGER_LOG_MAIN, O_WRONLY);
-        log_fds[LOG_ID_RADIO] = open("/dev/"LOGGER_LOG_RADIO, O_WRONLY);
+        int fd = open(log_channels[log_id].path, O_WRONLY);
 
-        write_to_log = __write_to_log_kernel;
+        log_channels[log_id].logger =
+            (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
 
-        if (log_fds[LOG_ID_MAIN] < 0 || log_fds[LOG_ID_RADIO] < 0) {
-            close(log_fds[LOG_ID_MAIN]);
-            close(log_fds[LOG_ID_RADIO]);
-            log_fds[LOG_ID_MAIN] = -1;
-            log_fds[LOG_ID_RADIO] = -1;
-            write_to_log = __write_to_log_null;
-        }
+        pthread_mutex_unlock(&log_init_lock);
+
+        return log_channels[log_id].logger(log_id, vec);
     }
 
-    pthread_mutex_unlock(&log_init_lock);
-
-    return write_to_log(log_id, vec);
+    /* log_id is invalid */
+    return -1;
 }
 
 static int __android_log_write(int prio, const char *tag, const char *msg)
@@ -109,7 +127,7 @@ static int __android_log_write(int prio, const char *tag, const char *msg)
     struct iovec vec[3];
     log_id_t log_id = LOG_ID_MAIN;
 
-    if (!tag)
+    if (tag == NULL)
         tag = "";
 
     if (!strcmp(tag, "HTC_RIL"))
@@ -122,7 +140,7 @@ static int __android_log_write(int prio, const char *tag, const char *msg)
     vec[2].iov_base   = (void *) msg;
     vec[2].iov_len    = strlen(msg) + 1;
 
-    return write_to_log(log_id, vec);
+    return log_channels[log_id].logger(log_id, vec);
 }
 
 
