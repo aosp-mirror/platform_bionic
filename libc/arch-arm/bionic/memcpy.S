@@ -28,6 +28,109 @@
 
 #include <machine/cpu-features.h>
 
+#if __ARM_ARCH__ == 7 || defined(__ARM_NEON__)
+
+		.text
+		.fpu    neon
+
+		.global memcpy
+		.type memcpy, %function
+		.align 4
+
+#define NEON_MAX_PREFETCH_DISTANCE 320
+
+memcpy:
+		mov	ip, r0
+		cmp	r2, #16
+		blt     4f	@ Have less than 16 bytes to copy
+
+		@ First ensure 16 byte alignment for the destination buffer
+		tst	r0, #0xF
+		beq	2f
+		tst	r0, #1
+		ldrneb	r3, [r1], #1
+		strneb	r3, [ip], #1
+		subne	r2, r2, #1
+		tst	ip, #2
+		ldrneb	r3, [r1], #1
+		strneb	r3, [ip], #1
+		ldrneb	r3, [r1], #1
+		strneb	r3, [ip], #1
+		subne	r2, r2, #2
+
+		tst	ip, #4
+		beq	1f
+		vld4.8	{d0[0], d1[0], d2[0], d3[0]}, [r1]!
+		vst4.8	{d0[0], d1[0], d2[0], d3[0]}, [ip, :32]!
+		sub	r2, r2, #4
+1:
+		tst	ip, #8
+		beq	2f
+		vld1.8	{d0}, [r1]!
+		vst1.8	{d0}, [ip, :64]!
+		sub	r2, r2, #8
+2:
+		subs	r2, r2, #32
+		blt	3f
+		mov	r3, #32
+
+		@ Main copy loop, 32 bytes are processed per iteration.
+		@ ARM instructions are used for doing fine-grained prefetch,
+		@ increasing prefetch distance progressively up to
+		@ NEON_MAX_PREFETCH_DISTANCE at runtime
+1:
+		vld1.8	{d0-d3}, [r1]!
+		cmp	r3, #(NEON_MAX_PREFETCH_DISTANCE - 32)
+		pld	[r1, r3]
+		addle	r3, r3, #32
+		vst1.8	{d0-d3}, [ip, :128]!
+		sub	r2, r2, #32
+		cmp	r2, r3
+		bge	1b
+		cmp	r2, #0
+		blt	3f
+1:		@ Copy the remaining part of the buffer (already prefetched)
+		vld1.8	{d0-d3}, [r1]!
+		subs	r2, r2, #32
+		vst1.8	{d0-d3}, [ip, :128]!
+		bge	1b
+3:		@ Copy up to 31 remaining bytes
+		tst	r2, #16
+		beq	4f
+		vld1.8	{d0, d1}, [r1]!
+		vst1.8	{d0, d1}, [ip, :128]!
+4:
+		@ Use ARM instructions exclusively for the final trailing part
+		@ not fully fitting into full 16 byte aligned block in order
+		@ to avoid "ARM store after NEON store" hazard. Also NEON
+		@ pipeline will be (mostly) flushed by the time when the
+		@ control returns to the caller, making the use of NEON mostly
+		@ transparent (and avoiding hazards in the caller code)
+
+		movs	r3, r2, lsl #29
+		bcc	1f
+	.rept	8
+		ldrcsb	r3, [r1], #1
+		strcsb	r3, [ip], #1
+	.endr
+1:
+		bpl	1f
+	.rept	4
+		ldrmib	r3, [r1], #1
+		strmib	r3, [ip], #1
+	.endr
+1:
+		movs	r2, r2, lsl #31
+		ldrcsb	r3, [r1], #1
+		strcsb	r3, [ip], #1
+		ldrcsb	r3, [r1], #1
+		strcsb	r3, [ip], #1
+		ldrmib	r3, [r1], #1
+		strmib	r3, [ip], #1
+		bx	lr
+
+#else	/* __ARM_ARCH__ < 7 */
+
 	.text
 
     .global memcpy
@@ -384,4 +487,6 @@ copy_last_3_and_return:
 		ldmfd		sp!, {r0, r4, lr}
 		bx			lr
         .fnend
+
+#endif
 
