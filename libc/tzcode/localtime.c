@@ -75,6 +75,31 @@ static __inline__ void _tzUnlock(void)
         pthread_mutex_unlock(&_tzMutex);
 }
 
+/* Complex computations to determine the min/max of time_t depending
+ * on TYPE_BIT / TYPE_SIGNED / TYPE_INTEGRAL.
+ * These macros cannot be used in pre-processor directives, so we
+ * let the C compiler do the work, which makes things a bit funky.
+ */
+static const time_t TIME_T_MAX =
+    TYPE_INTEGRAL(time_t) ?
+        ( TYPE_SIGNED(time_t) ?
+            ~((time_t)1 << (TYPE_BIT(time_t)-1))
+        :
+            ~(time_t)0
+        )
+    : /* if time_t is a floating point number */
+        ( sizeof(time_t) > sizeof(float) ? (time_t)DBL_MAX : (time_t)FLT_MAX );
+
+static const time_t TIME_T_MIN =
+    TYPE_INTEGRAL(time_t) ?
+        ( TYPE_SIGNED(time_t) ?
+            ((time_t)1 << (TYPE_BIT(time_t)-1))
+        :
+            0
+        )
+    :
+        ( sizeof(time_t) > sizeof(float) ? (time_t)DBL_MIN : (time_t)FLT_MIN );
+
 #ifndef WILDABBR
 /*
 ** Someone might make incorrect use of a time zone abbreviation:
@@ -1683,11 +1708,16 @@ increment_overflow(number, delta)
 int *   number;
 int delta;
 {
-    int number0;
+    unsigned  number0 = (unsigned)*number;
+    unsigned  number1 = (unsigned)(number0 + delta);
 
-    number0 = *number;
-    *number += delta;
-    return (*number < number0) != (delta < 0);
+    *number = (int)number1;
+
+    if (delta >= 0) {
+        return ((int)number1 < (int)number0);
+    } else {
+        return ((int)number1 > (int)number0);
+    }
 }
 
 static int
@@ -1695,11 +1725,16 @@ long_increment_overflow(number, delta)
 long *  number;
 int delta;
 {
-    long    number0;
+    unsigned long  number0 = (unsigned long)*number;
+    unsigned long  number1 = (unsigned long)(number0 + delta);
 
-    number0 = *number;
-    *number += delta;
-    return (*number < number0) != (delta < 0);
+    *number = (long)number1;
+
+    if (delta >= 0) {
+        return ((long)number1 < (long)number0);
+    } else {
+        return ((long)number1 > (long)number0);
+    }
 }
 
 static int
@@ -1868,14 +1903,14 @@ const int       do_norm_secs;
         } else  dir = tmcomp(&mytm, &yourtm);
         if (dir != 0) {
             if (t == lo) {
-                ++t;
-                if (t <= lo)
+                if (t == TIME_T_MAX)
                     return WRONG;
+                ++t;
                 ++lo;
             } else if (t == hi) {
-                --t;
-                if (t >= hi)
+                if (t == TIME_T_MIN)
                     return WRONG;
+                --t;
                 --hi;
             }
             if (lo > hi)
