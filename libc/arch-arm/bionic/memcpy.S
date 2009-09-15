@@ -40,6 +40,7 @@
 #define NEON_MAX_PREFETCH_DISTANCE 320
 
 memcpy:
+        .fnstart
 		mov	ip, r0
 		cmp	r2, #16
 		blt     4f	@ Have less than 16 bytes to copy
@@ -128,6 +129,7 @@ memcpy:
 		ldrmib	r3, [r1], #1
 		strmib	r3, [ip], #1
 		bx	lr
+        .fnend
 
 #else	/* __ARM_ARCH__ < 7 */
 

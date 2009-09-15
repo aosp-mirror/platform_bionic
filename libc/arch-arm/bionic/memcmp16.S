@@ -44,6 +44,7 @@
  */
 
 __memcmp16:
+        .fnstart
         PLD         (r0, #0)
         PLD         (r1, #0)
 
@@ -79,6 +80,7 @@ __memcmp16:
         bx          lr
 
 
+        .save {r4, lr}
         /* save registers */
 0:      stmfd       sp!, {r4, lr}
         
@@ -93,6 +95,7 @@ __memcmp16:
         /* restore registers and return */
         ldmnefd     sp!, {r4, lr}
         bxne        lr
+        .fnend
 
 
 

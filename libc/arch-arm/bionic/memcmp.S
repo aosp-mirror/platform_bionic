@@ -44,6 +44,7 @@
  */
 
 memcmp:
+        .fnstart
         PLD         (r0, #0)
         PLD         (r1, #0)
 
@@ -53,6 +54,7 @@ memcmp:
         moveq       r0, #0
         bxeq        lr
 
+        .save {r4, lr}
         /* save registers */
         stmfd       sp!, {r4, lr}
         
@@ -174,6 +176,7 @@ memcmp:
 9:      /* restore registers and return */
         ldmfd       sp!, {r4, lr}
         bx          lr
+        .fnend
 
 
 

@@ -41,6 +41,8 @@
    .equ     kernel_cmpxchg, 0xFFFF0FC0
    .equ     kernel_atomic_base, 0xFFFF0FFF
 __atomic_dec:
+    .fnstart
+    .save {r4, lr}
     stmdb   sp!, {r4, lr}
     mov     r2, r0
 1: @ atomic_dec
@@ -53,8 +55,11 @@ __atomic_dec:
     add     r0, r1, #1
     ldmia   sp!, {r4, lr}
     bx      lr
+    .fnend
 
 __atomic_inc:
+    .fnstart
+    .save {r4, lr}
     stmdb   sp!, {r4, lr}
     mov     r2, r0
 1: @ atomic_inc
@@ -67,9 +72,12 @@ __atomic_inc:
     sub     r0, r1, #1
     ldmia   sp!, {r4, lr}
     bx      lr
+    .fnend
 
 /* r0(old) r1(new) r2(addr) -> r0(zero_if_succeeded) */
 __atomic_cmpxchg:
+    .fnstart
+    .save {r4, lr}
     stmdb   sp!, {r4, lr}
     mov     r4, r0          /* r4 = save oldvalue */
 1: @ atomic_cmpxchg
@@ -84,6 +92,7 @@ __atomic_cmpxchg:
 2: @ atomic_cmpxchg
     ldmia   sp!, {r4, lr}
     bx      lr
+    .fnend
 #else
 #define KUSER_CMPXCHG 0xffffffc0
 
