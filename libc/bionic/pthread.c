@@ -1241,22 +1241,12 @@ int pthread_cond_timeout_np(pthread_cond_t *cond,
                             pthread_mutex_t * mutex,
                             unsigned msecs)
 {
-    int oldvalue;
     struct timespec ts;
-    int status;
 
     ts.tv_sec = msecs / 1000;
     ts.tv_nsec = (msecs % 1000) * 1000000;
 
-    oldvalue = cond->value;
-
-    pthread_mutex_unlock(mutex);
-    status = __futex_wait(&cond->value, oldvalue, &ts);
-    pthread_mutex_lock(mutex);
-
-    if(status == (-ETIMEDOUT)) return ETIMEDOUT;
-
-    return 0;
+    return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
 
 

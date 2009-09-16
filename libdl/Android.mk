@@ -36,6 +36,21 @@ LOCAL_MODULE:= libdl
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_SYSTEM_SHARED_LIBRARIES := 
 
+ifeq ($(TARGET_ARCH),sh)
+# for SuperH, additional code is necessary to handle .ctors section.
+GEN_SOBEGIN := $(TARGET_OUT_STATIC_LIBRARIES)/sobegin.o
+$(GEN_SOBEGIN): $(LOCAL_PATH)/arch-sh/sobegin.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) -o $@ -c $<
+
+GEN_SOEND := $(TARGET_OUT_STATIC_LIBRARIES)/soend.o
+$(GEN_SOEND): $(LOCAL_PATH)/arch-sh/soend.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) -o $@ -c $<
+
+LOCAL_ADDITIONAL_DEPENDENCIES := $(GEN_SOBEGIN) $(GEN_SOEND)
+endif
+
 include $(BUILD_SHARED_LIBRARY)
 
 BUILD_DLTEST:=0
