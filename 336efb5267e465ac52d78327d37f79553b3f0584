@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAm3///hg\u003d",
+        "filename": "libc/unistd/socketcalls.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2009-09-17T22:33:13Z",
+      "side": 1,
+      "message": "Indeed, sys/socket.h defines those functions as returning int. http://android.git.kernel.org/?p\u003dplatform/bionic.git;a\u003dblob;f\u003dlibc/include/sys/socket.h;h\u003d208663ea2ac302dbb015ae81932da6dff2c8d2d2;hb\u003drefs/heads/master",
+      "parentUuid": "AAAAdn///vM\u003d",
+      "revId": "336efb5267e465ac52d78327d37f79553b3f0584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAdX///1g\u003d",
         "filename": "libc/unistd/socketcalls.c",
         "patchSetId": 1
