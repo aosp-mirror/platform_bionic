@@ -207,6 +207,13 @@ int pthread_cond_timeout_np(pthread_cond_t *cond,
                             pthread_mutex_t * mutex,
                             unsigned msecs);
 
+/* same as pthread_mutex_lock(), but will wait up to 'msecs' milli-seconds
+ * before returning. same return values than pthread_mutex_trylock though, i.e.
+ * returns EBUSY if the lock could not be acquired after the timeout
+ * expired.
+ */
+int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs);
+
 int pthread_key_create(pthread_key_t *key, void (*destructor_function)(void *));
 int pthread_key_delete (pthread_key_t);
 int pthread_setspecific(pthread_key_t key, const void *value);
