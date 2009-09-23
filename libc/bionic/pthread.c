@@ -1138,7 +1138,7 @@ __timespec_to_absolute(struct timespec*  ts, const struct timespec*  abstime, cl
         ts->tv_sec--;
         ts->tv_nsec += 1000000000;
     }
-    if ((ts->tv_nsec < 0) || (ts->tv_nsec < 0))
+    if ((ts->tv_nsec < 0) || (ts->tv_sec < 0))
         return -1;
 
     return 0;
