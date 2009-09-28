@@ -175,7 +175,6 @@ libc_common_src_files := \
 	string/memccpy.c \
 	string/memchr.c \
 	string/memmem.c \
-	string/memmove.c.arm \
 	string/memrchr.c \
 	string/memswap.c \
 	string/strcasecmp.c \
@@ -259,7 +258,7 @@ libc_common_src_files := \
 	netbsd/resolv/res_mkquery.c \
 	netbsd/resolv/res_query.c \
 	netbsd/resolv/res_send.c \
-	netbsd/resolv/res_state.c.arm \
+	netbsd/resolv/res_state.c \
 	netbsd/resolv/res_cache.c \
 	netbsd/net/nsdispatch.c \
 	netbsd/net/getaddrinfo.c \
@@ -297,6 +296,7 @@ libc_common_src_files += \
 	arch-arm/bionic/sigsetjmp.S \
 	arch-arm/bionic/strlen.c.arm \
 	arch-arm/bionic/syscall.S \
+	string/memmove.c.arm \
 	unistd/socketcalls.c
 
 # These files need to be arm so that gdbserver
@@ -332,6 +332,7 @@ libc_common_src_files += \
 	arch-x86/string/memcmp.S \
 	arch-x86/string/memcpy.S \
 	arch-x86/string/strlen.S \
+	string/memmove.c \
 	bionic/pthread.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
@@ -341,7 +342,38 @@ libc_arch_static_src_files := \
 	arch-x86/bionic/dl_iterate_phdr_static.c
 
 libc_arch_dynamic_src_files :=
-endif # x86
+else # !x86
+
+ifeq ($(TARGET_ARCH),sh)
+libc_common_src_files += \
+	arch-sh/bionic/__get_pc.S \
+	arch-sh/bionic/__get_sp.S \
+	arch-sh/bionic/_exit_with_stack_teardown.S \
+	arch-sh/bionic/_setjmp.S \
+	arch-sh/bionic/atomics_sh.c \
+	arch-sh/bionic/atomic_cmpxchg.S \
+	arch-sh/bionic/clone.S \
+	arch-sh/bionic/pipe.S \
+	arch-sh/bionic/memcpy.S \
+	arch-sh/bionic/memset.S \
+	arch-sh/bionic/bzero.S \
+	arch-sh/bionic/setjmp.S \
+	arch-sh/bionic/sigsetjmp.S \
+	arch-sh/bionic/syscall.S \
+	arch-sh/bionic/memmove.S \
+	arch-sh/bionic/__set_tls.c \
+	arch-sh/bionic/__get_tls.c \
+	arch-sh/bionic/ffs.S \
+	string/memcmp.c \
+	string/strlen.c \
+	bionic/eabi.c \
+	bionic/pthread.c \
+	bionic/pthread-timers.c \
+	bionic/ptrace.c \
+	unistd/socketcalls.c
+endif # sh
+
+endif # !x86
 endif # !arm
 
 # Define some common cflags
