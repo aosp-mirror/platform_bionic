@@ -51,6 +51,7 @@
 
 #include "ba.h"
 
+#define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 96
 
 /* Assume average path length of 64 and max 8 paths */
@@ -86,6 +87,9 @@ static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
+#if ALLOW_SYMBOLS_FROM_MAIN
+static soinfo *somain; /* main process, always the one after libdl_info */
+#endif
 
 static inline int validate_soinfo(soinfo *si)
 {
@@ -458,6 +462,19 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
                 goto done;
         }
     }
+
+#if ALLOW_SYMBOLS_FROM_MAIN
+    /* If we are resolving relocations while dlopen()ing a library, it's OK for
+     * the library to resolve a symbol that's defined in the executable itself,
+     * although this is rare and is generally a bad idea.
+     */
+    if (somain) {
+        lsi = somain;
+        DEBUG("%5d %s: looking up %s in executable %s\n",
+              pid, si->name, name, lsi->name);
+        s = _do_lookup_in_so(lsi, name, &elf_hash);
+    }
+#endif
 
 done:
     if(s != NULL) {
@@ -1893,6 +1910,14 @@ unsigned __linker_init(unsigned **elfdata)
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
+
+#if ALLOW_SYMBOLS_FROM_MAIN
+    /* Set somain after we've loaded all the libraries in order to prevent
+     * linking of symbols back to the main image, which is not set up at that
+     * point yet.
+     */
+    somain = si;
+#endif
 
 #if TIMING
     gettimeofday(&t1,NULL);
