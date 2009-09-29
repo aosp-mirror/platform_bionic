@@ -51,6 +51,7 @@
 
 #include "ba.h"
 
+#define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 96
 
 /* Assume average path length of 64 and max 8 paths */
@@ -86,6 +87,15 @@ static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
+#if ALLOW_SYMBOLS_FROM_MAIN
+static soinfo *somain; /* main process, always the one after libdl_info */
+#endif
+
+static inline int validate_soinfo(soinfo *si)
+{
+    return (si >= sopool && si < sopool + SO_MAX) ||
+        si == &libdl_info;
+}
 
 static char ldpaths_buf[LDPATH_BUFSIZE];
 static const char *ldpaths[LDPATH_MAX + 1];
@@ -421,53 +431,98 @@ _do_lookup_in_so(soinfo *si, const char *name, unsigned *elf_hash)
     return _elf_lookup (si, *elf_hash, name);
 }
 
-/* This is used by dl_sym() */
-Elf32_Sym *lookup_in_library(soinfo *si, const char *name)
-{
-    unsigned unused = 0;
-    return _do_lookup_in_so(si, name, &unused);
-}
-
 static Elf32_Sym *
-_do_lookup(soinfo *user_si, const char *name, unsigned *base)
+_do_lookup(soinfo *si, const char *name, unsigned *base)
 {
     unsigned elf_hash = 0;
-    Elf32_Sym *s = NULL;
-    soinfo *si;
+    Elf32_Sym *s;
+    unsigned *d;
+    soinfo *lsi = si;
 
     /* Look for symbols in the local scope first (the object who is
      * searching). This happens with C++ templates on i386 for some
      * reason. */
-    if (user_si) {
-        s = _do_lookup_in_so(user_si, name, &elf_hash);
-        if (s != NULL)
-            *base = user_si->base;
-    }
+    s = _do_lookup_in_so(si, name, &elf_hash);
+    if(s != NULL)
+        goto done;
 
-    for(si = solist; (s == NULL) && (si != NULL); si = si->next)
-    {
-        if((si->flags & FLAG_ERROR) || (si == user_si))
-            continue;
-        s = _do_lookup_in_so(si, name, &elf_hash);
-        if (s != NULL) {
-            *base = si->base;
-            break;
+    for(d = si->dynamic; *d; d += 2) {
+        if(d[0] == DT_NEEDED){
+            lsi = (soinfo *)d[1];
+            if (!validate_soinfo(lsi)) {
+                DL_ERR("%5d bad DT_NEEDED pointer in %s",
+                       pid, si->name);
+                return 0;
+            }
+
+            DEBUG("%5d %s: looking up %s in %s\n",
+                  pid, si->name, name, lsi->name);
+            s = _do_lookup_in_so(lsi, name, &elf_hash);
+            if(s != NULL)
+                goto done;
         }
     }
 
-    if (s != NULL) {
-        TRACE_TYPE(LOOKUP, "%5d %s s->st_value = 0x%08x, "
-                   "si->base = 0x%08x\n", pid, name, s->st_value, si->base);
+#if ALLOW_SYMBOLS_FROM_MAIN
+    /* If we are resolving relocations while dlopen()ing a library, it's OK for
+     * the library to resolve a symbol that's defined in the executable itself,
+     * although this is rare and is generally a bad idea.
+     */
+    if (somain) {
+        lsi = somain;
+        DEBUG("%5d %s: looking up %s in executable %s\n",
+              pid, si->name, name, lsi->name);
+        s = _do_lookup_in_so(lsi, name, &elf_hash);
+    }
+#endif
+
+done:
+    if(s != NULL) {
+        TRACE_TYPE(LOOKUP, "%5d si %s sym %s s->st_value = 0x%08x, "
+                   "found in %s, base = 0x%08x\n",
+                   pid, si->name, name, s->st_value, lsi->name, lsi->base);
+        *base = lsi->base;
         return s;
     }
 
     return 0;
 }
 
-/* This is used by dl_sym() */
-Elf32_Sym *lookup(const char *name, unsigned *base)
+/* This is used by dl_sym().  It performs symbol lookup only within the
+   specified soinfo object and not in any of its dependencies.
+ */
+Elf32_Sym *lookup_in_library(soinfo *si, const char *name)
 {
-    return _do_lookup(NULL, name, base);
+    unsigned unused = 0;
+    return _do_lookup_in_so(si, name, &unused);
+}
+
+/* This is used by dl_sym().  It performs a global symbol lookup.
+ */
+Elf32_Sym *lookup(const char *name, soinfo **found)
+{
+    unsigned elf_hash = 0;
+    Elf32_Sym *s = NULL;
+    soinfo *si;
+
+    for(si = solist; (s == NULL) && (si != NULL); si = si->next)
+    {
+        if(si->flags & FLAG_ERROR)
+            continue;
+        s = _do_lookup_in_so(si, name, &elf_hash);
+        if (s != NULL) {
+            *found = si;
+            break;
+        }
+    }
+
+    if(s != NULL) {
+        TRACE_TYPE(LOOKUP, "%5d %s s->st_value = 0x%08x, "
+                   "si->base = 0x%08x\n", pid, name, s->st_value, si->base);
+        return s;
+    }
+
+    return 0;
 }
 
 #if 0
@@ -1116,14 +1171,16 @@ unsigned unload_library(soinfo *si)
 
         for(d = si->dynamic; *d; d += 2) {
             if(d[0] == DT_NEEDED){
-                TRACE("%5d %s needs to unload %s\n", pid,
-                      si->name, si->strtab + d[1]);
-                soinfo *lsi = find_library(si->strtab + d[1]);
-                if(lsi)
+                soinfo *lsi = (soinfo *)d[1];
+                d[1] = 0;
+                if (validate_soinfo(lsi)) {
+                    TRACE("%5d %s needs to unload %s\n", pid,
+                          si->name, lsi->name);
                     unload_library(lsi);
+                }
                 else
-                    DL_ERR("%5d could not unload '%s'",
-                          pid, si->strtab + d[1]);
+                    DL_ERR("%5d %s: could not unload dependent library",
+                           pid, si->name);
             }
         }
 
@@ -1641,6 +1698,14 @@ static int link_image(soinfo *si, unsigned wr_offset)
                        pid, si->strtab + d[1], si->name, tmp_err_buf);
                 goto fail;
             }
+            /* Save the soinfo of the loaded DT_NEEDED library in the payload
+               of the DT_NEEDED entry itself, so that we can retrieve the
+               soinfo directly later from the dynamic segment.  This is a hack,
+               but it allows us to map from DT_NEEDED to soinfo efficiently
+               later on when we resolve relocations, trying to look up a symgol
+               with dlsym().
+            */
+            d[1] = (unsigned)lsi;
             lsi->refcount++;
         }
     }
@@ -1845,6 +1910,14 @@ unsigned __linker_init(unsigned **elfdata)
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
+
+#if ALLOW_SYMBOLS_FROM_MAIN
+    /* Set somain after we've loaded all the libraries in order to prevent
+     * linking of symbols back to the main image, which is not set up at that
+     * point yet.
+     */
+    somain = si;
+#endif
 
 #if TIMING
     gettimeofday(&t1,NULL);
