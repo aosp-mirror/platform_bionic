@@ -27,7 +27,11 @@ LOCAL_CFLAGS += -DLINKER_TEXT_BASE=$(LINKER_TEXT_BASE)
 LOCAL_CFLAGS += -DLINKER_AREA_SIZE=$(LINKER_AREA_SIZE)
 
 # we need to access the Bionic private header <bionic_tls.h>
-# in the linker
+# in the linker; duplicate the HAVE_ARM_TLS_REGISTER definition
+# from the libc build
+ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
+    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+endif
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/private
 
 ifeq ($(TARGET_ARCH),arm)
