@@ -288,6 +288,7 @@ libc_common_src_files += \
 	arch-arm/bionic/clone.S \
 	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/kill.S \
+	arch-arm/bionic/libgcc_compat.c \
 	arch-arm/bionic/tkill.S \
 	arch-arm/bionic/memcmp.S \
 	arch-arm/bionic/memcmp16.S \
