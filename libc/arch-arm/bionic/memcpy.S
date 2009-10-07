@@ -28,21 +28,7 @@
 
 #include <machine/cpu-features.h>
 
-/* VERY IMPORTANT NOTE:
- *        The following ARMv7-optimized version of memcpy is DISABLED !
- *
- *        Because the corresponding machine code is not properly emulated
- *        by the Android emulator at this time, and because running the
- *        dex pre-optimization pass in the emulator is required when
- *        building -user images (corresponding to the system images of
- *        production devices).
- *
- *        The code will be re-enabled as soon as we fix the ARMv7 emulation
- *        issues. An even better fix would be to *not* have to run the
- *        dex pre-opt pass in the emulator, but on the build host instead.
- */
-#if 0
-/* #if __ARM_ARCH__ == 7 || defined(__ARM_NEON__) */
+#if __ARM_ARCH__ == 7 || defined(__ARM_NEON__)
 
         .text
         .fpu    neon
