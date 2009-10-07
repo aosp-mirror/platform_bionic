@@ -73,10 +73,8 @@ abort(void)
 	}
 
     /* temporary, for bug hunting */
-    debug_log("abort() called in pid %d\n", getpid());
     /* seg fault seems to produce better debuggerd results than SIGABRT */
     *((char*)0xdeadbaad) = 39;
-    debug_log("somehow we're not dead?\n");
     /* -- */
 
 	(void)kill(getpid(), SIGABRT);
