@@ -1240,9 +1240,13 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
 #endif
-            if ((s->st_shndx == SHN_UNDEF) && (s->st_value != 0)) {
-                DL_ERR("%5d In '%s', shndx=%d && value=0x%08x. We do not "
-                      "handle this yet", pid, si->name, s->st_shndx,
+            // st_shndx==SHN_UNDEF means an undefined symbol.
+            // st_value should be 0 then, except that the low bit of st_value is
+            // used to indicate whether the symbol points to an ARM or thumb function,
+            // and should be ignored in the following check.
+            if ((s->st_shndx == SHN_UNDEF) && ((s->st_value & ~1) != 0)) {
+                DL_ERR("%5d In '%s', symbol=%s shndx=%d && value=0x%08x. We do not "
+                      "handle this yet", pid, si->name, sym_name, s->st_shndx,
                       s->st_value);
                 return -1;
             }
