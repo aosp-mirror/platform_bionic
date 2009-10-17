@@ -91,6 +91,18 @@ static soinfo *sonext = &libdl_info;
 static soinfo *somain; /* main process, always the one after libdl_info */
 #endif
 
+
+/* Set up for the buddy allocator managing the prelinked libraries. */
+static struct ba_bits ba_prelink_bitmap[(LIBLAST - LIBBASE) / LIBINC];
+static struct ba ba_prelink = {
+    .base = LIBBASE,
+    .size = LIBLAST - LIBBASE,
+    .min_alloc = LIBINC,
+    .max_order = 128,
+    .bitmap = ba_prelink_bitmap,
+    .num_entries = sizeof(ba_prelink_bitmap)/sizeof(ba_prelink_bitmap[0]),
+};
+
 static inline int validate_soinfo(soinfo *si)
 {
     return (si >= sopool && si < sopool + SO_MAX) ||
@@ -783,14 +795,14 @@ alloc_mem_region(soinfo *si)
        for it from the buddy allocator, which manages the area between
        LIBBASE and LIBLAST.
     */
-    si->ba_index = ba_allocate(si->size);
+    si->ba_index = ba_allocate(&ba_prelink, si->size);
     if(si->ba_index >= 0) {
-        si->base = ba_start_addr(si->ba_index);
+        si->base = ba_start_addr(&ba_prelink, si->ba_index);
         PRINT("%5d mapping library '%s' at %08x (index %d) " \
               "through buddy allocator.\n",
               pid, si->name, si->base, si->ba_index);
         if (reserve_mem_region(si) < 0) {
-            ba_free(si->ba_index);
+            ba_free(&ba_prelink, si->ba_index);
             si->ba_index = -1;
             si->base = 0;
             goto err;
@@ -1086,7 +1098,7 @@ load_library(const char *name)
     /* Now actually load the library's segments into right places in memory */
     if (load_segments(fd, &__header[0], si) < 0) {
         if (si->ba_index >= 0) {
-            ba_free(si->ba_index);
+            ba_free(&ba_prelink, si->ba_index);
             si->ba_index = -1;
         }
         goto fail;
@@ -1189,7 +1201,7 @@ unsigned unload_library(soinfo *si)
             PRINT("%5d releasing library '%s' address space at %08x "\
                   "through buddy allocator.\n",
                   pid, si->name, si->base);
-            ba_free(si->ba_index);
+            ba_free(&ba_prelink, si->ba_index);
         }
         notify_gdb_of_unload(si);
         free_info(si);
@@ -1897,7 +1909,7 @@ unsigned __linker_init(unsigned **elfdata)
         vecs += 2;
     }
 
-    ba_init();
+    ba_init(&ba_prelink);
 
     si->base = 0;
     si->dynamic = (unsigned *)-1;
