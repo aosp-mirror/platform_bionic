@@ -41,9 +41,16 @@
 #define BA_START_ADDR(index) (BA_OFFSET(index) + ba->base)
 #define BA_LEN(index) ((1 << BA_ORDER(index)) * ba->min_alloc)
 
+static unsigned long ba_order(struct ba *ba, unsigned long len);
+
 void ba_init(struct ba *ba)
 {
     int i, index = 0;
+
+    unsigned long max_order = ba_order(ba, ba->size);
+    if (ba->max_order == 0 || ba->max_order > max_order)
+        ba->max_order = max_order;
+
     for (i = sizeof(ba->num_entries) * 8 - 1; i >= 0; i--) {
         if (ba->num_entries &  1<<i) {
             BA_ORDER(index) = i;

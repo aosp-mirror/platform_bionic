@@ -98,7 +98,7 @@ static struct ba ba_prelink = {
     .base = LIBBASE,
     .size = LIBLAST - LIBBASE,
     .min_alloc = LIBINC,
-    .max_order = 128,
+    /* max_order will be determined automatically */
     .bitmap = ba_prelink_bitmap,
     .num_entries = sizeof(ba_prelink_bitmap)/sizeof(ba_prelink_bitmap[0]),
 };
