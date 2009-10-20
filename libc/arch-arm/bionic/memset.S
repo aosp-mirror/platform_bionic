@@ -80,7 +80,7 @@ memset:
         
 		rsb         r3, r0, #0
 		ands		r3, r3, #0x1C
-		beq         aligned32
+		beq         3f
 		cmp         r3, r2
 		andhi		r3, r2, #0x1C
 		sub         r2, r2, r3
@@ -93,7 +93,7 @@ memset:
 		movs		r3, r3, lsl #2
         strcs       r1, [r0], #4
 
-aligned32:
+3:
         subs        r2, r2, #32
         mov         r3, r1
         bmi         2f
