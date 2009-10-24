@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2008, 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -246,7 +246,7 @@ static soinfo *alloc_info(const char *name)
 
     if(strlen(name) >= SOINFO_NAME_LEN) {
         DL_ERR("%5d library name %s too long", pid, name);
-        return 0;
+        return NULL;
     }
 
     /* The freelist is populated when we call free_info(), which in turn is
@@ -407,7 +407,7 @@ static Elf32_Sym *_elf_lookup(soinfo *si, unsigned hash, const char *name)
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 static unsigned elfhash(const char *_name)
@@ -425,17 +425,9 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-_do_lookup_in_so(soinfo *si, const char *name, unsigned *elf_hash)
-{
-    if (*elf_hash == 0)
-        *elf_hash = elfhash(name);
-    return _elf_lookup (si, *elf_hash, name);
-}
-
-static Elf32_Sym *
 _do_lookup(soinfo *si, const char *name, unsigned *base)
 {
-    unsigned elf_hash = 0;
+    unsigned elf_hash = elfhash(name);
     Elf32_Sym *s;
     unsigned *d;
     soinfo *lsi = si;
@@ -443,7 +435,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
     /* Look for symbols in the local scope first (the object who is
      * searching). This happens with C++ templates on i386 for some
      * reason. */
-    s = _do_lookup_in_so(si, name, &elf_hash);
+    s = _elf_lookup(si, elf_hash, name);
     if(s != NULL)
         goto done;
 
@@ -453,12 +445,12 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
             if (!validate_soinfo(lsi)) {
                 DL_ERR("%5d bad DT_NEEDED pointer in %s",
                        pid, si->name);
-                return 0;
+                return NULL;
             }
 
             DEBUG("%5d %s: looking up %s in %s\n",
                   pid, si->name, name, lsi->name);
-            s = _do_lookup_in_so(lsi, name, &elf_hash);
+            s = _elf_lookup(lsi, elf_hash, name);
             if(s != NULL)
                 goto done;
         }
@@ -473,7 +465,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
         lsi = somain;
         DEBUG("%5d %s: looking up %s in executable %s\n",
               pid, si->name, name, lsi->name);
-        s = _do_lookup_in_so(lsi, name, &elf_hash);
+        s = _elf_lookup(lsi, elf_hash, name);
     }
 #endif
 
@@ -486,7 +478,7 @@ done:
         return s;
     }
 
-    return 0;
+    return NULL;
 }
 
 /* This is used by dl_sym().  It performs symbol lookup only within the
@@ -494,15 +486,14 @@ done:
  */
 Elf32_Sym *lookup_in_library(soinfo *si, const char *name)
 {
-    unsigned unused = 0;
-    return _do_lookup_in_so(si, name, &unused);
+    return _elf_lookup(si, elfhash(name), name);
 }
 
 /* This is used by dl_sym().  It performs a global symbol lookup.
  */
 Elf32_Sym *lookup(const char *name, soinfo **found)
 {
-    unsigned elf_hash = 0;
+    unsigned elf_hash = elfhash(name);
     Elf32_Sym *s = NULL;
     soinfo *si;
 
@@ -510,7 +501,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found)
     {
         if(si->flags & FLAG_ERROR)
             continue;
-        s = _do_lookup_in_so(si, name, &elf_hash);
+        s = _elf_lookup(si, elfhash, name);
         if (s != NULL) {
             *found = si;
             break;
@@ -523,7 +514,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found)
         return s;
     }
 
-    return 0;
+    return NULL;
 }
 
 #if 0
@@ -1768,7 +1759,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
     return 0;
 
 fail:
-    ERROR("failed to link %s\n", si->name);
+    DL_ERR("failed to link %s\n", si->name);
     si->flags |= FLAG_ERROR;
     return -1;
 }
