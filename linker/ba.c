@@ -30,65 +30,41 @@
 #include "linker_debug.h"
 #include "ba.h"
 
-struct ba_bits {
-    unsigned allocated:1;           /* 1 if allocated, 0 if free */
-    unsigned order:7;               /* size of the region in ba space */
-};
-
-struct ba_info {
-    /* start address of the ba space */
-    unsigned long base;
-    /* total size of the ba space */
-    unsigned long size;
-    /* number of entries in the ba space */
-    int num_entries;
-    /* the bitmap for the region indicating which entries are allocated
-     * and which are free */
-    struct ba_bits *bitmap;
-};
-
 #undef min
 #define min(a,b) ((a)<(b)?(a):(b))
 
-#define BA_MIN_ALLOC LIBINC
-#define BA_MAX_ORDER 128
-#define BA_START LIBBASE
-#define BA_SIZE (LIBLAST - LIBBASE)
-
-#define BA_IS_FREE(index) (!(ba.bitmap[index].allocated))
-#define BA_ORDER(index) ba.bitmap[index].order
+#define BA_IS_FREE(index) (!(ba->bitmap[index].allocated))
+#define BA_ORDER(index) ba->bitmap[index].order
 #define BA_BUDDY_INDEX(index) ((index) ^ (1 << BA_ORDER(index)))
 #define BA_NEXT_INDEX(index) ((index) + (1 << BA_ORDER(index)))
-#define BA_OFFSET(index) ((index) * BA_MIN_ALLOC)
-#define BA_START_ADDR(index) (BA_OFFSET(index) + ba.base)
-#define BA_LEN(index) ((1 << BA_ORDER(index)) * BA_MIN_ALLOC)
+#define BA_OFFSET(index) ((index) * ba->min_alloc)
+#define BA_START_ADDR(index) (BA_OFFSET(index) + ba->base)
+#define BA_LEN(index) ((1 << BA_ORDER(index)) * ba->min_alloc)
 
-static struct ba_bits ba_bitmap[BA_SIZE / BA_MIN_ALLOC];
+static unsigned long ba_order(struct ba *ba, unsigned long len);
 
-static struct ba_info ba = {
-    .base = BA_START,
-    .size = BA_SIZE,
-    .bitmap = ba_bitmap,
-    .num_entries = sizeof(ba_bitmap)/sizeof(ba_bitmap[0]),
-};
-
-void ba_init(void)
+void ba_init(struct ba *ba)
 {
     int i, index = 0;
-    for (i = sizeof(ba.num_entries) * 8 - 1; i >= 0; i--) {
-        if (ba.num_entries &  1<<i) {
+
+    unsigned long max_order = ba_order(ba, ba->size);
+    if (ba->max_order == 0 || ba->max_order > max_order)
+        ba->max_order = max_order;
+
+    for (i = sizeof(ba->num_entries) * 8 - 1; i >= 0; i--) {
+        if (ba->num_entries &  1<<i) {
             BA_ORDER(index) = i;
             index = BA_NEXT_INDEX(index);
         }
     }
 }
 
-int ba_free(int index)
+int ba_free(struct ba *ba, int index)
 {
     int buddy, curr = index;
 
     /* clean up the bitmap, merging any buddies */
-    ba.bitmap[curr].allocated = 0;
+    ba->bitmap[curr].allocated = 0;
     /* find a slots buddy Buddy# = Slot# ^ (1 << order)
      * if the buddy is also free merge them
      * repeat until the buddy is not free or end of the bitmap is reached
@@ -103,16 +79,16 @@ int ba_free(int index)
         } else {
             break;
         }
-    } while (curr < ba.num_entries);
+    } while (curr < ba->num_entries);
 
     return 0;
 }
 
-static unsigned long ba_order(unsigned long len)
+static unsigned long ba_order(struct ba *ba, unsigned long len)
 {
     unsigned long i;
 
-    len = (len + BA_MIN_ALLOC - 1) / BA_MIN_ALLOC;
+    len = (len + ba->min_alloc - 1) / ba->min_alloc;
     len--;
     for (i = 0; i < sizeof(len)*8; i++)
         if (len >> i == 0)
@@ -120,14 +96,14 @@ static unsigned long ba_order(unsigned long len)
     return i;
 }
 
-int ba_allocate(unsigned long len)
+int ba_allocate(struct ba *ba, unsigned long len)
 {
     int curr = 0;
-    int end = ba.num_entries;
+    int end = ba->num_entries;
     int best_fit = -1;
-    unsigned long order = ba_order(len);
+    unsigned long order = ba_order(ba, len);
 
-    if (order > BA_MAX_ORDER)
+    if (order > ba->max_order)
         return -1;
 
     /* look through the bitmap:
@@ -165,16 +141,16 @@ int ba_allocate(unsigned long len)
         buddy = BA_BUDDY_INDEX(best_fit);
         BA_ORDER(buddy) = BA_ORDER(best_fit);
     }
-    ba.bitmap[best_fit].allocated = 1;
+    ba->bitmap[best_fit].allocated = 1;
     return best_fit;
 }
 
-unsigned long ba_start_addr(int index)
+unsigned long ba_start_addr(struct ba *ba, int index)
 {
     return BA_START_ADDR(index);
 }
 
-unsigned long ba_len(int index)
+unsigned long ba_len(struct ba *ba, int index)
 {
     return BA_LEN(index);
 }
