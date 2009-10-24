@@ -29,10 +29,31 @@
 #ifndef __LINKER_BA_H
 #define __LINKER_BA_H
 
-extern void ba_init(void);
-extern int ba_allocate(unsigned long len);
-extern int ba_free(int index);
-extern unsigned long ba_start_addr(int index);
-extern unsigned long ba_len(int index);
+struct ba_bits {
+    unsigned allocated:1;           /* 1 if allocated, 0 if free */
+    unsigned order:7;               /* size of the region in ba space */
+};
+
+struct ba {
+    /* start address of the ba space */
+    unsigned long base;
+    /* total size of the ba space */
+    unsigned long size;
+    /* the smaller allocation that can be made */
+    unsigned long min_alloc;
+    /* the order of the largest allocation that can be made */
+    unsigned long max_order;
+    /* number of entries in the ba space */
+    int num_entries;
+    /* the bitmap for the region indicating which entries are allocated
+     * and which are free */
+    struct ba_bits *bitmap;
+};
+
+extern void ba_init(struct ba *ba);
+extern int ba_allocate(struct ba *ba, unsigned long len);
+extern int ba_free(struct ba *ba, int index);
+extern unsigned long ba_start_addr(struct ba *ba, int index);
+extern unsigned long ba_len(struct ba *ba, int index);
 
 #endif
