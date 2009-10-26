@@ -68,7 +68,6 @@
  *
  * open issues / todo:
  *
- * - should we do anything special for STB_WEAK symbols?
  * - are we doing everything we should for ARM_COPY relocations?
  * - cleaner error reporting
  * - after linking, set as much stuff as possible to READONLY
@@ -406,13 +405,13 @@ static Elf32_Sym *_elf_lookup(soinfo *si, unsigned hash, const char *name)
         s = symtab + n;
         if(strcmp(strtab + s->st_name, name)) continue;
 
-            /* only concern ourselves with global symbols */
+            /* only concern ourselves with global and weak symbol definitions */
         switch(ELF32_ST_BIND(s->st_info)){
         case STB_GLOBAL:
+        case STB_WEAK:
                 /* no section == undefined */
             if(s->st_shndx == 0) continue;
 
-        case STB_WEAK:
             TRACE_TYPE(LOOKUP, "%5d FOUND %s in %s (%08x) %d\n", pid,
                        name, si->name, s->st_value, s->st_size);
             return s;
@@ -446,7 +445,13 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
 
     /* Look for symbols in the local scope first (the object who is
      * searching). This happens with C++ templates on i386 for some
-     * reason. */
+     * reason.
+     *
+     * Notes on weak symbols:
+     * The ELF specs are ambigious about treatment of weak definitions in
+     * dynamic linking.  Some systems return the first definition found
+     * and some the first non-weak definition.   This is system dependent.
+     * Here we return the first definition found for simplicity.  */
     s = _elf_lookup(si, elf_hash, name);
     if(s != NULL)
         goto done;
@@ -513,7 +518,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found)
     {
         if(si->flags & FLAG_ERROR)
             continue;
-        s = _elf_lookup(si, elfhash, name);
+        s = _elf_lookup(si, elf_hash, name);
         if (s != NULL) {
             *found = si;
             break;
@@ -1232,10 +1237,64 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
             s = _do_lookup(si, sym_name, &base);
-            if(s == 0) {
-                DL_ERR("%5d cannot locate '%s'...", pid, sym_name);
-                return -1;
-            }
+            if(s == NULL) {
+                /* We only allow an undefined symbol if this is a weak
+                   reference..   */
+                s = &symtab[sym];
+                if (ELF32_ST_BIND(s->st_info) != STB_WEAK) {
+                    DL_ERR("%5d cannot locate '%s'...\n", pid, sym_name);
+                    return -1;
+                }
+
+                /* IHI0044C AAELF 4.5.1.1:
+
+                   Libraries are not searched to resolve weak references.
+                   It is not an error for a weak reference to remain
+                   unsatisfied.
+
+                   During linking, the value of an undefined weak reference is:
+                   - Zero if the relocation type is absolute
+                   - The address of the place if the relocation is pc-relative
+                   - The address of nominial base address if the relocation
+                     type is base-relative.
+                  */
+
+                switch (type) {
+#if defined(ANDROID_ARM_LINKER)
+                case R_ARM_JUMP_SLOT:
+                case R_ARM_GLOB_DAT:
+                case R_ARM_ABS32:
+                case R_ARM_RELATIVE:    /* Don't care. */
+                case R_ARM_NONE:        /* Don't care. */
+#elif defined(ANDROID_X86_LINKER)
+                case R_386_JUMP_SLOT:
+                case R_386_GLOB_DAT:
+                case R_386_32:
+                case R_386_RELATIVE:    /* Dont' care. */
+#endif /* ANDROID_*_LINKER */
+                    /* sym_addr was initialized to be zero above or relocation
+                       code below does not care about value of sym_addr.
+                       No need to do anything.  */
+                    break;
+
+#if defined(ANDROID_X86_LINKER)
+                case R_386_PC32:
+                    sym_addr = reloc;
+                    break;
+#endif /* ANDROID_X86_LINKER */
+
+#if defined(ANDROID_ARM_LINKER)
+                case R_ARM_COPY:
+                    /* Fall through.  Can't really copy if weak symbol is
+                       not found in run-time.  */
+#endif /* ANDROID_ARM_LINKER */
+                default:
+                    DL_ERR("%5d unknown weak reloc type %d @ %p (%d)\n",
+                                 pid, type, rel, (int) (rel - start));
+                    return -1;
+                }
+            } else {
+                /* We got a definition.  */
 #if 0
             if((base == 0) && (si->base != 0)){
                     /* linking from libraries to main image is bad */
@@ -1244,20 +1303,11 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
 #endif
-            // st_shndx==SHN_UNDEF means an undefined symbol.
-            // st_value should be 0 then, except that the low bit of st_value is
-            // used to indicate whether the symbol points to an ARM or thumb function,
-            // and should be ignored in the following check.
-            if ((s->st_shndx == SHN_UNDEF) && ((s->st_value & ~1) != 0)) {
-                DL_ERR("%5d In '%s', symbol=%s shndx=%d && value=0x%08x. We do not "
-                      "handle this yet", pid, si->name, sym_name, s->st_shndx,
-                      s->st_value);
-                return -1;
-            }
-            sym_addr = (unsigned)(s->st_value + base);
+                sym_addr = (unsigned)(s->st_value + base);
+	    }
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
-            s = 0;
+            s = NULL;
         }
 
 /* TODO: This is ugly. Split up the relocations by arch into
