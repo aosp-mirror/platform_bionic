@@ -37,8 +37,9 @@
         .type memcpy, %function
         .align 4
 
-/* a prefetch distance of 32*4 works best experimentally */
-#define PREFETCH_DISTANCE   (32*4)
+/* a prefetch distance of 4 cache-lines works best experimentally */
+#define CACHE_LINE_SIZE     64
+#define PREFETCH_DISTANCE   (CACHE_LINE_SIZE*4)
 
 memcpy:
         .fnstart
@@ -46,8 +47,8 @@ memcpy:
         stmfd       sp!, {r0, lr}
 
         /* start preloading as early as possible */
-        pld         [r1, #0]
-        pld         [r1, #32]
+        pld         [r1, #(CACHE_LINE_SIZE*0)]
+        pld         [r1, #(CACHE_LINE_SIZE*1)]
 
         /* do we have at least 16-bytes to copy (needed for alignment below) */
         cmp         r2, #16
@@ -79,13 +80,11 @@ memcpy:
 2:
 
 0:      /* preload immediately the next cache line, which we may need */
-        pld         [r1, #(32*0)]
-        pld         [r1, #(32*1)]
-        pld         [r1, #(32*2)]
-        pld         [r1, #(32*3)]
+        pld         [r1, #(CACHE_LINE_SIZE*0)]
+        pld         [r1, #(CACHE_LINE_SIZE*1)]
 
-        /* make sure we have at least 128 bytes to copy */
-        subs        r2, r2, #128
+        /* make sure we have at least 64 bytes to copy */
+        subs        r2, r2, #64
         blo         2f
 
         /* preload all the cache lines we need.
@@ -94,29 +93,21 @@ memcpy:
          * avoid the goofy code below. In practice this doesn't seem to make
          * a big difference.
          */
-        pld         [r1, #(PREFETCH_DISTANCE + 32*0)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*1)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*2)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*3)]
+        pld         [r1, #(CACHE_LINE_SIZE*2)]
+        pld         [r1, #(CACHE_LINE_SIZE*3)]
+        pld         [r1, #(PREFETCH_DISTANCE)]
 
-1:      /* The main loop copies 128 bytes at a time */
+1:      /* The main loop copies 64 bytes at a time */
         vld1.8      {d0  - d3},   [r1]!
         vld1.8      {d4  - d7},   [r1]!
-        vld1.8      {d16 - d19},  [r1]!
-        vld1.8      {d20 - d23},  [r1]!
-        pld         [r1, #(PREFETCH_DISTANCE + 32*0)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*1)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*2)]
-        pld         [r1, #(PREFETCH_DISTANCE + 32*3)]
-        subs        r2, r2, #128
+        pld         [r1, #(PREFETCH_DISTANCE)]
+        subs        r2, r2, #64
         vst1.8      {d0  - d3},   [r0, :128]!
         vst1.8      {d4  - d7},   [r0, :128]!
-        vst1.8      {d16 - d19},  [r0, :128]!
-        vst1.8      {d20 - d23},  [r0, :128]!
         bhs         1b
 
 2:      /* fix-up the remaining count and make sure we have >= 32 bytes left */
-        add         r2, r2, #128
+        add         r2, r2, #64
         subs        r2, r2, #32
         blo         4f
 
