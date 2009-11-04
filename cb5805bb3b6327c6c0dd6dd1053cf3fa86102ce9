@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAo3///1Y\u003d",
+        "filename": "libc/include/sys/_sigdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2009-11-04T22:55:51Z",
+      "side": 1,
+      "message": "By policy, we don\u0027t change the original copyright lines.",
+      "revId": "cb5805bb3b6327c6c0dd6dd1053cf3fa86102ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///1U\u003d",
+        "filename": "libc/unistd/signame.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2009-11-04T22:55:51Z",
+      "side": 1,
+      "message": "We very much prefer to not record that information in the source tree, the change history contains that information.",
+      "revId": "cb5805bb3b6327c6c0dd6dd1053cf3fa86102ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
