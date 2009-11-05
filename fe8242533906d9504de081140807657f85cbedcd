@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAo3///s8\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-11-05T23:20:56Z",
+      "side": 1,
+      "message": "moving the #endif to line 1253 removes some significant code from the ARM case and probably explains the breakage. Care to explain why you did this ?",
+      "revId": "fe8242533906d9504de081140807657f85cbedcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///s4\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1297,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2009-11-05T23:20:56Z",
+      "side": 1,
+      "message": "this function can only be called from the SH linker since reading the .rela section is only performed if ANDROID_SH_LINKER is defined.\n\nIt would be better if the definition of this function would be too, since its implementation doesn\u0027t contain any ARM or x86 specific code.",
+      "revId": "fe8242533906d9504de081140807657f85cbedcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
