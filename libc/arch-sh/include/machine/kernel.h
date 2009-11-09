@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,18 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+#ifndef _ARCH_SH_KERNEL_H
+#define _ARCH_SH_KERNEL_H
 
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+/* this file contains kernel-specific definitions that were optimized out of
+   our processed kernel headers, but still useful nonetheless... */
+
+typedef unsigned long   __kernel_blkcnt_t;
+typedef unsigned long   __kernel_blksize_t;
+
+/* these aren't really defined by the kernel headers though... */
+typedef unsigned long   __kernel_fsblkcnt_t;
+typedef unsigned long   __kernel_fsfilcnt_t;
+typedef unsigned int    __kernel_id_t;
+
+#endif /* _ARCH_SH_KERNEL_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,39 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+#include <sys/linux-syscalls.h>
 
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+.text
+.type   pipe, @function
+.globl  pipe
+.align  4
+
+pipe:
+    /* invoke trap */
+    mov.l   0f, r3          /* trap num */
+    trapa   #(0 + 0x10)
+
+
+    /* check return value */
+    cmp/pz  r0
+    bt      setfds
+
+    /* keep error number */
+    sts.l   pr, @-r15
+    mov.l   1f, r1
+    jsr     @r1
+    mov     r0, r4
+    lds.l   @r15+, pr
+    bra     end
+    nop
+setfds:
+    mov.l   r0, @r4
+    add     #4, r4
+    mov.l   r1, @r4
+end:
+    rts
+    nop
+
+    .align  2
+0:  .long   __NR_pipe
+1:  .long   __set_syscall_errno
