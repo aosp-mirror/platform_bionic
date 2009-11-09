@@ -194,6 +194,7 @@ class SysCallsTxtParser:
         if number == "stub":
             syscall_id  = -1
             syscall_id2 = -1
+            syscall_id3 = -1
         else:
             try:
                 if number[0] == '#':
@@ -201,14 +202,21 @@ class SysCallsTxtParser:
                 numbers = string.split(number,',')
                 syscall_id  = int(numbers[0])
                 syscall_id2 = syscall_id
+                syscall_id3 = syscall_id
                 if len(numbers) > 1:
                     syscall_id2 = int(numbers[1])
+                    syscall_id3 = syscall_id2
+                if len(numbers) > 2:
+                    syscall_id3 = int(numbers[2])
             except:
                 E("invalid syscall number in '%s'" % line)
                 return
 
+        print str(syscall_id) + ':' + str(syscall_id2) + ':' + str(syscall_id3)
+
         t = { "id"     : syscall_id,
               "id2"    : syscall_id2,
+              "id3"    : syscall_id3,
               "cid"    : call_id,
               "name"   : syscall_name,
               "func"   : syscall_func,
