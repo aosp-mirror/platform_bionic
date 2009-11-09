@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,26 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+.text
+.type   __atomic_cmpxchg, @function
+.globl  __atomic_cmpxchg
+.align 4
 
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+__atomic_cmpxchg:
+    mova    1f, r0
+    nop
+    mov     r15, r1
+    mov     #-8, r15    /* critical region start */
+0:  mov.l   @r6, r2
+    cmp/eq  r2, r4
+    bt      not_yet_modified
+    mov     #1, r0
+    bra     done
+    nop
+not_yet_modified:
+    mov     #0, r0
+    mov.l   r5, @r6
+done:
+1:  mov     r1, r15     /* critical region end */
+    rts
+    nop

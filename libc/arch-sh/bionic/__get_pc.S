@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+.text
+.type   __get_pc, @function
+.globl  __get_pc
+.align  4
 
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+__get_pc:
+    mova    1f, r0
+    rts
+1:  nop
+
