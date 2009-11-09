@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
-
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+/* see the implementation of __set_tls and pthread.c to understand this
+ * code. Basically, the content of fs:[0] always is a pointer to the base
+ * address of the tls region
+ */
+void *__get_tls(void)
+{
+    void *tls;
+    asm volatile("stc gbr, %0" : "=r"(tls));
+    return tls;
+}

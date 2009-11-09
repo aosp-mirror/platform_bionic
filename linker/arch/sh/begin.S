@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -18,16 +18,33 @@
  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
  * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES ; LOSS
+ * OF USE, DATA, OR PROFITS ; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+.text
+.align  4
+.type   _start,#function
+.globl  _start
 
-const char * const sys_siglist[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = z,
-#include <sys/_sigdefs.h>
-};
+_start:
+    mov     r15, r4
+
+    mov.l   0f, r0
+    jsr     @r0
+    nop
+
+    /* linker init returns the _entry address in the main image */
+    jmp     @r0
+    nop
+
+    .balign 4
+0:  .long   __linker_init
+
+    .section .ctors, "wa"
+    .globl  __CTOR_LIST__
+__CTOR_LIST__:
+    .long   -1
