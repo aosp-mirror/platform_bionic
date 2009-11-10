@@ -227,6 +227,11 @@ size_t mbsrtowcs(wchar_t *dst, const char **src, size_t len, mbstate_t *ps)
     return len;
 }
 
+size_t mbstowcs(wchar_t *dst, const char *src, size_t len)
+{
+    return mbsrtowcs(dst, &src, len, NULL);
+}
+
 wint_t  putwc(wchar_t wc, FILE *stream)
 {
     return fputc((char)wc, stream);
@@ -337,6 +342,11 @@ size_t wcsrtombs(char *dst, const wchar_t **src, size_t len, mbstate_t *ps)
 
     *src = (wchar_t*)(s + len);
     return len;
+}
+
+size_t wcstombs(char *dst, const wchar_t *src, size_t len)
+{
+    return wcsrtombs(dst, &src, len, NULL);
 }
 
 size_t wcsspn(const wchar_t *ws1, const wchar_t *ws2)
