@@ -22,6 +22,9 @@
 #        assembler template for the syscall; it's up to the bionic implementation to provide
 #        a relevant C stub
 #
+#      - additionally, if the syscall number is different amoung ARM, x86 and SuperH, use:
+#        return_type funcname[:syscall_name](parameters) arm_number,x86_number,superh_number
+#
 # the file is processed by a python script named gensyscalls.py
 #
 
@@ -65,7 +68,7 @@ int     getrusage(int who, struct rusage*  r_usage)  77
 int     setgroups:setgroups32(int, const gid_t *)   206
 pid_t   getpgrp(void)  stub
 int     setpgid(pid_t, pid_t)  57
-pid_t   vfork(void)  190,-1
+pid_t   vfork(void)  190,-1,190
 int     setregid:setregid32(gid_t, gid_t)  204
 int     chroot(const char *)  61
 int     prctl(int option, unsigned int arg2, unsigned int arg3, unsigned int arg4, unsigned int arg5)  172
@@ -102,7 +105,7 @@ int         __fcntl:fcntl(int, int, void*)  55
 int         flock(int, int)   143
 int         fchmod(int, mode_t)  94
 int         dup(int)  41
-int         pipe(int *)  42
+int         pipe(int *)  42,42,-1
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
 int         ftruncate(int, off_t)  93
@@ -190,21 +193,24 @@ int           sendmsg(int, const struct msghdr *, unsigned int)  296,-1
 int           recvmsg(int, struct msghdr *, unsigned int)   297,-1
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
-int           socket:socketcall:1 (int, int, int) -1,102
-int           bind:socketcall:2 (int, struct sockaddr *, int)  -1,102
-int           connect:socketcall:3(int, struct sockaddr *, socklen_t)   -1,102
-int           listen:socketcall:4(int, int)                   -1,102
-int           accept:socketcall:5(int, struct sockaddr *, socklen_t *)  -1,102
-int           getsockname:socketcall:6(int, struct sockaddr *, socklen_t *)  -1,102
-int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,102
-int           socketpair:socketcall:8(int, int, int, int*)    -1,102
-int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102
-int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102
-int           shutdown:socketcall:13(int, int)  -1,102
-int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102
-int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102
-int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102
-int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102
+int           socket:socketcall:1 (int, int, int) -1,102,-1
+int           bind:socketcall:2 (int, struct sockaddr *, int)  -1,102,-1
+int           connect:socketcall:3(int, struct sockaddr *, socklen_t)   -1,102,-1
+int           listen:socketcall:4(int, int)                   -1,102,-1
+int           accept:socketcall:5(int, struct sockaddr *, socklen_t *)  -1,102,-1
+int           getsockname:socketcall:6(int, struct sockaddr *, socklen_t *)  -1,102,-1
+int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,102,-1
+int           socketpair:socketcall:8(int, int, int, int*)    -1,102,-1
+int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102,-1
+int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102,-1
+int           shutdown:socketcall:13(int, int)  -1,102,-1
+int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102,-1
+int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102,-1
+int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102,-1
+int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102,-1
+
+# sockets for sh.
+int           __socketcall:__socketcall(int, unsigned long*) -1,-1,102
 
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)  156
@@ -234,9 +240,9 @@ int     epoll_create(int size)     250,254
 int     epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)    251,255
 int     epoll_wait(int epfd, struct epoll_event *events, int max, int timeout)   252,256
 
-int     inotify_init(void)      316,291
-int     inotify_add_watch(int, const char *, unsigned int)  317,292
-int     inotify_rm_watch(int, unsigned int)  318,293
+int     inotify_init(void)      316,291,290
+int     inotify_add_watch(int, const char *, unsigned int)  317,292,291
+int     inotify_rm_watch(int, unsigned int)  318,293,292
 
 int     poll(struct pollfd *, unsigned int, long)  168
 
