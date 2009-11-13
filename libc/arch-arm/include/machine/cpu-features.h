@@ -149,7 +149,6 @@
 #  define __ARM_HAVE_PC_INTERWORK
 #endif
 
-
 /* Assembly-only macros */
 
 /* define a handy PLD(address) macro since the cache preload

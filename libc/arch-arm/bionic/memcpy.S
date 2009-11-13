@@ -28,6 +28,127 @@
 
 #include <machine/cpu-features.h>
 
+#if __ARM_ARCH__ == 7 || defined(__ARM_NEON__)
+
+        .text
+        .fpu    neon
+
+        .global memcpy
+        .type memcpy, %function
+        .align 4
+
+/* a prefetch distance of 4 cache-lines works best experimentally */
+#define CACHE_LINE_SIZE     64
+#define PREFETCH_DISTANCE   (CACHE_LINE_SIZE*4)
+
+memcpy:
+        .fnstart
+        .save       {r0, lr}
+        stmfd       sp!, {r0, lr}
+
+        /* start preloading as early as possible */
+        pld         [r1, #(CACHE_LINE_SIZE*0)]
+        pld         [r1, #(CACHE_LINE_SIZE*1)]
+
+        /* do we have at least 16-bytes to copy (needed for alignment below) */
+        cmp         r2, #16
+        blo         5f
+
+        /* align destination to half cache-line for the write-buffer */
+        rsb         r3, r0, #0
+        ands        r3, r3, #0xF
+        beq         0f
+
+        /* copy up to 15-bytes (count in r3) */
+        sub         r2, r2, r3
+        movs        ip, r3, lsl #31
+        ldrmib      lr, [r1], #1
+        strmib      lr, [r0], #1
+        ldrcsb      ip, [r1], #1
+        ldrcsb      lr, [r1], #1
+        strcsb      ip, [r0], #1
+        strcsb      lr, [r0], #1
+        movs        ip, r3, lsl #29
+        bge         1f
+        // copies 4 bytes, destination 32-bits aligned
+        vld4.8      {d0[0], d1[0], d2[0], d3[0]}, [r1]!
+        vst4.8      {d0[0], d1[0], d2[0], d3[0]}, [r0, :32]!
+1:      bcc         2f
+        // copies 8 bytes, destination 64-bits aligned
+        vld1.8      {d0}, [r1]!
+        vst1.8      {d0}, [r0, :64]!
+2:
+
+0:      /* preload immediately the next cache line, which we may need */
+        pld         [r1, #(CACHE_LINE_SIZE*0)]
+        pld         [r1, #(CACHE_LINE_SIZE*1)]
+
+        /* make sure we have at least 64 bytes to copy */
+        subs        r2, r2, #64
+        blo         2f
+
+        /* preload all the cache lines we need.
+         * NOTE: the number of pld below depends on PREFETCH_DISTANCE,
+         * ideally would would increase the distance in the main loop to
+         * avoid the goofy code below. In practice this doesn't seem to make
+         * a big difference.
+         */
+        pld         [r1, #(CACHE_LINE_SIZE*2)]
+        pld         [r1, #(CACHE_LINE_SIZE*3)]
+        pld         [r1, #(PREFETCH_DISTANCE)]
+
+1:      /* The main loop copies 64 bytes at a time */
+        vld1.8      {d0  - d3},   [r1]!
+        vld1.8      {d4  - d7},   [r1]!
+        pld         [r1, #(PREFETCH_DISTANCE)]
+        subs        r2, r2, #64
+        vst1.8      {d0  - d3},   [r0, :128]!
+        vst1.8      {d4  - d7},   [r0, :128]!
+        bhs         1b
+
+2:      /* fix-up the remaining count and make sure we have >= 32 bytes left */
+        add         r2, r2, #64
+        subs        r2, r2, #32
+        blo         4f
+
+3:      /* 32 bytes at a time. These cache lines were already preloaded */
+        vld1.8      {d0 - d3},  [r1]!
+        subs        r2, r2, #32
+        vst1.8      {d0 - d3},  [r0, :128]!
+        bhs         3b
+
+4:      /* less than 32 left */
+        add         r2, r2, #32
+        tst         r2, #0x10
+        beq         5f
+        // copies 16 bytes, 128-bits aligned
+        vld1.8      {d0, d1}, [r1]!
+        vst1.8      {d0, d1}, [r0, :128]!
+
+5:      /* copy up to 15-bytes (count in r2) */
+        movs        ip, r2, lsl #29
+        bcc         1f
+        vld1.8      {d0}, [r1]!
+        vst1.8      {d0}, [r0]!
+1:      bge         2f
+        vld4.8      {d0[0], d1[0], d2[0], d3[0]}, [r1]!
+        vst4.8      {d0[0], d1[0], d2[0], d3[0]}, [r0]!
+2:      movs        ip, r2, lsl #31
+        ldrmib      r3, [r1], #1
+        ldrcsb      ip, [r1], #1
+        ldrcsb      lr, [r1], #1
+        strmib      r3, [r0], #1
+        strcsb      ip, [r0], #1
+        strcsb      lr, [r0], #1
+
+        ldmfd       sp!, {r0, lr}
+        bx          lr
+        .fnend
+
+
+#else   /* __ARM_ARCH__ < 7 */
+
+
 	.text
 
     .global memcpy
@@ -40,9 +161,9 @@
 		 * note that memcpy() always returns the destination pointer,
 		 * so we have to preserve R0.
 		 */
-	
-memcpy:	
-		/* The stack must always be 64-bits aligned to be compliant with the 
+
+memcpy:
+		/* The stack must always be 64-bits aligned to be compliant with the
 		 * ARM ABI. Since we have to save R0, we might as well save R4
 		 * which we can use for better pipelining of the reads below
 		 */
@@ -82,10 +203,10 @@ memcpy:
         strmib		r3, [r0], #1
 		strcsb		r4, [r0], #1
 		strcsb		r12,[r0], #1
-		
+
 src_aligned:
 
-		/* see if src and dst are aligned together (congruent) */	
+		/* see if src and dst are aligned together (congruent) */
 		eor			r12, r0, r1
 		tst			r12, #3
 		bne			non_congruent
@@ -103,7 +224,7 @@ src_aligned:
 		andhi		r3, r2, #0x1C
 
 		/* conditionnaly copies 0 to 7 words (length in r3) */
-		movs		r12, r3, lsl #28 
+		movs		r12, r3, lsl #28
 		ldmcsia		r1!, {r4, r5, r6, r7}	/* 16 bytes */
 		ldmmiia		r1!, {r8, r9}			/*  8 bytes */
 		stmcsia		r0!, {r4, r5, r6, r7}
@@ -124,7 +245,7 @@ cached_aligned32:
 
         /*
          * We preload a cache-line up to 64 bytes ahead. On the 926, this will
-         * stall only until the requested world is fetched, but the linefill 
+         * stall only until the requested world is fetched, but the linefill
          * continues in the the background.
          * While the linefill is going, we write our previous cache-line
          * into the write-buffer (which should have some free space).
@@ -150,19 +271,19 @@ cached_aligned32:
 
         // NOTE: if r12 is more than 64 ahead of r1, the following ldrhi
         // for ARM9 preload will not be safely guarded by the preceding subs.
-        // When it is safely guarded the only possibility to have SIGSEGV here 
+        // When it is safely guarded the only possibility to have SIGSEGV here
         // is because the caller overstates the length.
         ldrhi       r3, [r12], #32      /* cheap ARM9 preload */
         stmia       r0!, { r4-r11 }
 		bhs         1b
-		
+
         add         r2, r2, #32
 
 
 
 
 less_than_32_left:
-		/* 
+		/*
 		 * less than 32 bytes left at this point (length in r2)
 		 */
 
@@ -174,7 +295,7 @@ less_than_32_left:
 		beq			1f
 
 		/* conditionnaly copies 0 to 31 bytes */
-		movs		r12, r2, lsl #28 
+		movs		r12, r2, lsl #28
 		ldmcsia		r1!, {r4, r5, r6, r7}	/* 16 bytes */
 		ldmmiia		r1!, {r8, r9}			/*  8 bytes */
 		stmcsia		r0!, {r4, r5, r6, r7}
@@ -182,7 +303,7 @@ less_than_32_left:
 		movs		r12, r2, lsl #30
 		ldrcs		r3, [r1], #4			/*  4 bytes */
 		ldrmih		r4, [r1], #2			/*  2 bytes */
-		strcs		r3, [r0], #4		
+		strcs		r3, [r0], #4
 		strmih		r4, [r0], #2
 		tst         r2, #0x1
 		ldrneb		r3, [r1]				/*  last byte  */
@@ -200,34 +321,34 @@ non_congruent:
 		 * here source is aligned to 4 bytes
 		 * but destination is not.
 		 *
-		 * in the code below r2 is the number of bytes read 
+		 * in the code below r2 is the number of bytes read
 		 * (the number of bytes written is always smaller, because we have
 		 * partial words in the shift queue)
 		 */
 		cmp			r2, #4
 		blo			copy_last_3_and_return
-		
+
         /* Use post-incriment mode for stm to spill r5-r11 to reserved stack
          * frame. Don't update sp.
          */
         stmea		sp, {r5-r11}
-		
+
 		/* compute shifts needed to align src to dest */
 		rsb			r5, r0, #0
 		and			r5, r5, #3			/* r5 = # bytes in partial words */
-		mov			r12, r5, lsl #3		/* r12 = right */ 
+		mov			r12, r5, lsl #3		/* r12 = right */
 		rsb			lr, r12, #32		/* lr = left  */
-		
+
 		/* read the first word */
 		ldr			r3, [r1], #4
 		sub			r2, r2, #4
-		
+
 		/* write a partial word (0 to 3 bytes), such that destination
 		 * becomes aligned to 32 bits (r5 = nb of words to copy for alignment)
 		 */
 		movs		r5, r5, lsl #31
 		strmib		r3, [r0], #1
-		movmi		r3, r3, lsr #8		
+		movmi		r3, r3, lsr #8
 		strcsb		r3, [r0], #1
 		movcs		r3, r3, lsr #8
 		strcsb		r3, [r0], #1
@@ -235,7 +356,7 @@ non_congruent:
 
 		cmp			r2, #4
 		blo			partial_word_tail
-		
+
 		/* Align destination to 32 bytes (cache line boundary) */
 1:		tst			r0, #0x1c
 		beq			2f
@@ -366,7 +487,7 @@ partial_word_tail:
 		strcsb		r3, [r0], #1
 		movcs		r3, r3, lsr #8
 		strcsb		r3, [r0], #1
-		
+
 		/* Refill spilled registers from the stack. Don't update sp. */
 		ldmfd		sp, {r5-r11}
 
@@ -385,3 +506,5 @@ copy_last_3_and_return:
 		bx			lr
         .fnend
 
+
+#endif    /* __ARM_ARCH__ < 7 */

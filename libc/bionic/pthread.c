@@ -441,7 +441,7 @@ int pthread_attr_setstackaddr(pthread_attr_t * attr, void * stack_addr)
 
 int pthread_attr_getstackaddr(pthread_attr_t const * attr, void ** stack_addr)
 {
-    *stack_addr = attr->stack_base + attr->stack_size;
+    *stack_addr = (char*)attr->stack_base + attr->stack_size;
     return 0;
 }
 
@@ -789,7 +789,18 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
     if (!attr)
         return EINVAL;
 
-    return (pshared == PTHREAD_PROCESS_PRIVATE) ? 0 : ENOTSUP;
+    switch (pshared) {
+    case PTHREAD_PROCESS_PRIVATE:
+    case PTHREAD_PROCESS_SHARED:
+        /* our current implementation of pthread actually supports shared
+         * mutexes but won't cleanup if a process dies with the mutex held.
+         * Nevertheless, it's better than nothing. Shared mutexes are used
+         * by surfaceflinger and audioflinger.
+         */
+        return 0;
+    }
+
+    return ENOTSUP;
 }
 
 int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared)
@@ -1114,6 +1125,135 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
 }
 
 
+/* initialize 'ts' with the difference between 'abstime' and the current time
+ * according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
+ */
+static int
+__timespec_to_absolute(struct timespec*  ts, const struct timespec*  abstime, clockid_t  clock)
+{
+    clock_gettime(clock, ts);
+    ts->tv_sec  = abstime->tv_sec - ts->tv_sec;
+    ts->tv_nsec = abstime->tv_nsec - ts->tv_nsec;
+    if (ts->tv_nsec < 0) {
+        ts->tv_sec--;
+        ts->tv_nsec += 1000000000;
+    }
+    if ((ts->tv_nsec < 0) || (ts->tv_sec < 0))
+        return -1;
+
+    return 0;
+}
+
+/* initialize 'abstime' to the current time according to 'clock' plus 'msecs'
+ * milliseconds.
+ */
+static void
+__timespec_to_relative_msec(struct timespec*  abstime, unsigned  msecs, clockid_t  clock)
+{
+    clock_gettime(clock, abstime);
+    abstime->tv_sec  += msecs/1000;
+    abstime->tv_nsec += (msecs%1000)*1000000;
+    if (abstime->tv_nsec >= 1000000000) {
+        abstime->tv_sec++;
+        abstime->tv_nsec -= 1000000000;
+    }
+}
+
+int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
+{
+    clockid_t        clock = CLOCK_MONOTONIC;
+    struct timespec  abstime;
+    struct timespec  ts;
+
+    /* compute absolute expiration time */
+    __timespec_to_relative_msec(&abstime, msecs, clock);
+
+    if (__likely(mutex != NULL))
+    {
+        int  mtype = (mutex->value & MUTEX_TYPE_MASK);
+
+        if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
+        {
+            /* fast path for unconteded lock */
+            if (__atomic_cmpxchg(0, 1, &mutex->value) == 0)
+                return 0;
+
+            /* loop while needed */
+            while (__atomic_swap(2, &mutex->value) != 0) {
+                if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
+                    return EBUSY;
+
+                __futex_wait(&mutex->value, 2, &ts);
+            }
+            return 0;
+        }
+        else
+        {
+            int  tid = __get_thread()->kernel_id;
+            int  oldv;
+
+            if ( tid == MUTEX_OWNER(mutex) )
+            {
+                int  oldv, counter;
+
+                if (mtype == MUTEX_TYPE_ERRORCHECK) {
+                    /* already locked by ourselves */
+                    return EDEADLK;
+                }
+
+                _recursive_lock();
+                oldv = mutex->value;
+                counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
+                mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
+                _recursive_unlock();
+                return 0;
+            }
+            else
+            {
+                /*
+                 * If the new lock is available immediately, we grab it in
+                 * the "uncontended" state.
+                 */
+                int new_lock_type = 1;
+
+                for (;;) {
+                    int  oldv;
+                    struct timespec  ts;
+
+                    _recursive_lock();
+                    oldv = mutex->value;
+                    if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
+                        mutex->value = ((tid << 16) | mtype | new_lock_type);
+                    } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
+                        oldv ^= 3;
+                        mutex->value = oldv;
+                    }
+                    _recursive_unlock();
+
+                    if (oldv == mtype)
+                        break;
+
+                    /*
+                     * The lock was held, possibly contended by others.  From
+                     * now on, if we manage to acquire the lock, we have to
+                     * assume that others are still contending for it so that
+                     * we'll wake them when we unlock it.
+                     */
+                    new_lock_type = 2;
+
+                    if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
+                        return EBUSY;
+
+                    __futex_wait( &mutex->value, oldv, &ts );
+                }
+                return 0;
+            }
+        }
+    }
+    return EINVAL;
+}
+
+
 /* XXX *technically* there is a race condition that could allow
  * XXX a signal to be missed.  If thread A is preempted in _wait()
  * XXX after unlocking the mutex and before waiting, and if other
@@ -1178,16 +1318,8 @@ int __pthread_cond_timedwait(pthread_cond_t *cond,
     struct timespec * tsp;
 
     if (abstime != NULL) {
-        clock_gettime(clock, &ts);
-        ts.tv_sec = abstime->tv_sec - ts.tv_sec;
-        ts.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
-        if (ts.tv_nsec < 0) {
-            ts.tv_sec--;
-            ts.tv_nsec += 1000000000;
-        }
-        if((ts.tv_nsec < 0) || (ts.tv_sec < 0)) {
+        if (__timespec_to_absolute(&ts, abstime, clock) < 0)
             return ETIMEDOUT;
-        }
         tsp = &ts;
     } else {
         tsp = NULL;
@@ -1204,11 +1336,26 @@ int pthread_cond_timedwait(pthread_cond_t *cond,
 }
 
 
+/* this one exists only for backward binary compatibility */
 int pthread_cond_timedwait_monotonic(pthread_cond_t *cond,
                                      pthread_mutex_t * mutex,
                                      const struct timespec *abstime)
 {
     return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
+}
+
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t *cond,
+                                     pthread_mutex_t * mutex,
+                                     const struct timespec *abstime)
+{
+    return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
+}
+
+int pthread_cond_timedwait_relative_np(pthread_cond_t *cond,
+                                      pthread_mutex_t * mutex,
+                                      const struct timespec *reltime)
+{
+    return __pthread_cond_timedwait_relative(cond, mutex, reltime);
 }
 
 int pthread_cond_timeout_np(pthread_cond_t *cond,
