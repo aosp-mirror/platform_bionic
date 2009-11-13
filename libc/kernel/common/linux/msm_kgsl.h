@@ -188,5 +188,12 @@ struct kgsl_sharedmem_from_vmalloc {
 
 #define IOCTL_KGSL_SHAREDMEM_FLUSH_CACHE   _IOW(KGSL_IOC_TYPE, 0x24, struct kgsl_sharedmem_free)
 
+struct kgsl_drawctxt_set_bin_base_offset {
+ unsigned int drawctxt_id;
+ unsigned int offset;
+};
+
+#define IOCTL_KGSL_DRAWCTXT_SET_BIN_BASE_OFFSET   _IOW(KGSL_IOC_TYPE, 0x25, struct kgsl_drawctxt_set_bin_base_offset)
+
 #endif
 
