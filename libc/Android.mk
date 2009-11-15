@@ -288,6 +288,7 @@ libc_common_src_files += \
 	arch-arm/bionic/clone.S \
 	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/kill.S \
+	arch-arm/bionic/libgcc_compat.c \
 	arch-arm/bionic/tkill.S \
 	arch-arm/bionic/memcmp.S \
 	arch-arm/bionic/memcmp16.S \
@@ -399,6 +400,16 @@ endif
 ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := -mthumb-interwork
+  #
+  # Define HAVE_ARM_TLS_REGISTER macro to indicate to the C library
+  # that it should access the hardware TLS register directly in
+  # private/bionic_tls.h
+  #
+  # The value must match your kernel configuration
+  #
+  ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
+    libc_common_cflags += -DHAVE_ARM_TLS_REGISTER
+  endif
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags := -m32

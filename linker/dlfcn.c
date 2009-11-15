@@ -74,7 +74,7 @@ const char *dlerror(void)
 
 void *dlsym(void *handle, const char *symbol)
 {
-    unsigned base;
+    soinfo *found;
     Elf32_Sym *sym;
     unsigned bind;
 
@@ -90,19 +90,19 @@ void *dlsym(void *handle, const char *symbol)
     }
 
     if(handle == RTLD_DEFAULT) {
-        sym = lookup(symbol, &base);
+        sym = lookup(symbol, &found);
     } else if(handle == RTLD_NEXT) {
-        sym = lookup(symbol, &base);
+        sym = lookup(symbol, &found);
     } else {
-        sym = lookup_in_library((soinfo*) handle, symbol);
-        base = ((soinfo*) handle)->base;
+        found = (soinfo*)handle;
+        sym = lookup_in_library(found, symbol);
     }
 
     if(likely(sym != 0)) {
         bind = ELF32_ST_BIND(sym->st_info);
 
         if(likely((bind == STB_GLOBAL) && (sym->st_shndx != 0))) {
-            unsigned ret = sym->st_value + base;
+            unsigned ret = sym->st_value + found->base;
             pthread_mutex_unlock(&dl_lock);
             return (void*)ret;
         }

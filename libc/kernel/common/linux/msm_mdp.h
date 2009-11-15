@@ -30,6 +30,7 @@ enum {
  MDP_Y_CBCR_H2V1,
  MDP_RGBA_8888,
  MDP_BGRA_8888,
+ MDP_RGBX_8888,
  MDP_IMGTYPE_LIMIT
 };
 
@@ -46,6 +47,7 @@ enum {
 #define MDP_ROT_270 (MDP_ROT_90|MDP_FLIP_UD|MDP_FLIP_LR)
 #define MDP_DITHER 0x8
 #define MDP_BLUR 0x10
+#define MDP_BLEND_FG_PREMULT 0x20000
 
 #define MDP_TRANSP_NOP 0xffffffff
 #define MDP_ALPHA_NOP 0xff
@@ -81,3 +83,4 @@ struct mdp_blit_req_list {
 };
 
 #endif
+

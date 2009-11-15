@@ -96,7 +96,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        optlist, args = getopt.getopt( sys.argv[1:], 'uv' )
+        optlist, args = getopt.getopt( sys.argv[1:], 'uvk:' )
     except:
         # unrecognized option
         sys.stderr.write( "error: unrecognized option\n" )
@@ -108,6 +108,8 @@ if __name__ == "__main__":
         elif opt == '-v':
             verbose = 1
             D_setlevel(1)
+        elif opt == '-k':
+            kernel_original_path = arg
 
     if len(args) == 0:
         usage()

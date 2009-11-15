@@ -54,9 +54,9 @@
 
 #define MSM_CAM_IOCTL_SET_CROP   _IOW(MSM_CAM_IOCTL_MAGIC, 18, struct crop_info *)
 
-#define MSM_CAM_IOCTL_PICT_PP   _IOW(MSM_CAM_IOCTL_MAGIC, 19, uint8_t *)
+#define MSM_CAM_IOCTL_PP   _IOW(MSM_CAM_IOCTL_MAGIC, 19, uint8_t *)
 
-#define MSM_CAM_IOCTL_PICT_PP_DONE   _IOW(MSM_CAM_IOCTL_MAGIC, 20, struct msm_snapshot_pp_status *)
+#define MSM_CAM_IOCTL_PP_DONE   _IOW(MSM_CAM_IOCTL_MAGIC, 20, struct msm_snapshot_pp_status *)
 
 #define MSM_CAM_IOCTL_SENSOR_IO_CFG   _IOW(MSM_CAM_IOCTL_MAGIC, 21, struct sensor_cfg_data *)
 
@@ -72,6 +72,11 @@
 
 #define MAX_SENSOR_NUM 3
 #define MAX_SENSOR_NAME 32
+
+#define PP_SNAP 1
+#define PP_RAW_SNAP (1<<1)
+#define PP_PREV (1<<2)
+#define PP_MASK (PP_SNAP|PP_RAW_SNAP|PP_PREV)
 
 #define MSM_CAM_CTRL_CMD_DONE 0
 #define MSM_CAM_SENSOR_VFE_CMD 1
@@ -130,11 +135,12 @@ struct msm_camera_cfg_cmd {
 #define CMD_SNAP_BUF_RELEASE 11
 #define CMD_SNAP_BUF_CFG 12
 #define CMD_STATS_DISABLE 13
-#define CMD_STATS_ENABLE 14
+#define CMD_STATS_AEC_AWB_ENABLE 14
 #define CMD_STATS_AF_ENABLE 15
 #define CMD_STATS_BUF_RELEASE 16
 #define CMD_STATS_AF_BUF_RELEASE 17
-#define UPDATE_STATS_INVALID 18
+#define CMD_STATS_ENABLE 18
+#define UPDATE_STATS_INVALID 19
 
 struct msm_vfe_cfg_cmd {
  int cmd_type;
@@ -150,7 +156,7 @@ struct camera_enable_cmd {
 #define MSM_PMEM_OUTPUT1 0
 #define MSM_PMEM_OUTPUT2 1
 #define MSM_PMEM_OUTPUT1_OUTPUT2 2
-#define MSM_PMEM_THUMBAIL 3
+#define MSM_PMEM_THUMBNAIL 3
 #define MSM_PMEM_MAINIMG 4
 #define MSM_PMEM_RAW_MAINIMG 5
 #define MSM_PMEM_AEC_AWB 6

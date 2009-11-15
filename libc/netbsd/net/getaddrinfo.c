@@ -335,6 +335,36 @@ str2number(const char *p)
 		return -1;
 }
 
+/* Determine whether IPv6 connectivity is available. */
+static int
+_have_ipv6() {
+	/*
+	 * Connect a UDP socket to an global unicast IPv6 address. This will
+	 * cause no network traffic, but will fail fast if the system has no or
+	 * limited IPv6 connectivity (e.g., only a link-local address).
+	 */
+	static const struct sockaddr_in6 sin6_test = {
+		/* family, port, flow label */
+		AF_INET6, 0, 0,
+		/* 2000:: */
+		{{{ 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }}},
+		/* scope ID */
+		0};
+	static const struct sockaddr *sa_test = (struct sockaddr *) &sin6_test;
+	int s = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+	if (s < 0)
+		return 0;
+	int ret;
+	do {
+		ret = connect(s, sa_test, sizeof(sin6_test));
+	} while (ret < 0 && errno == EINTR);
+	int have_ipv6 = (ret == 0);
+	do {
+		ret = close(s);
+	} while (ret < 0 && errno == EINTR);
+	return have_ipv6;
+}
+
 int
 getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
@@ -1274,7 +1304,6 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
-
 	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
@@ -1299,15 +1328,20 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		/* prefer IPv6 */
 		q.name = name;
 		q.qclass = C_IN;
-		q.qtype = T_AAAA;
 		q.answer = buf->buf;
 		q.anslen = sizeof(buf->buf);
-		q.next = &q2;
-		q2.name = name;
-		q2.qclass = C_IN;
-		q2.qtype = T_A;
-		q2.answer = buf2->buf;
-		q2.anslen = sizeof(buf2->buf);
+		/* If AI_ADDRCONFIG, lookup IPv6 only if we have connectivity */
+		if (!(pai->ai_flags & AI_ADDRCONFIG) || _have_ipv6()) {
+			q.qtype = T_AAAA;
+			q.next = &q2;
+			q2.name = name;
+			q2.qclass = C_IN;
+			q2.qtype = T_A;
+			q2.answer = buf2->buf;
+			q2.anslen = sizeof(buf2->buf);
+		} else {
+			q.qtype = T_A;
+		}
 		break;
 	case AF_INET:
 		q.name = name;
