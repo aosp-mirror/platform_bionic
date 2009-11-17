@@ -159,6 +159,13 @@ extern soinfo libdl_info;
 #define R_ARM_JUMP_SLOT  22
 #define R_ARM_RELATIVE   23
 
+/* According to the AAPCS specification, we only
+ * need the above relocations. However, in practice,
+ * the following ones turn up from time to time.
+ */
+#define R_ARM_ABS32      2
+#define R_ARM_REL32      3
+
 #elif defined(ANDROID_X86_LINKER)
 
 #define R_386_32         1
@@ -193,12 +200,6 @@ extern soinfo libdl_info;
 #ifndef DT_PREINIT_ARRAYSZ
 #define DT_PREINIT_ARRAYSZ 33
 #endif
-
-/* in theory we only need the above relative relocations,
-   but in practice the following one turns up from time
-   to time.  fushigi na.
-*/
-#define R_ARM_ABS32      2
 
 soinfo *find_library(const char *name);
 unsigned unload_library(soinfo *si);
