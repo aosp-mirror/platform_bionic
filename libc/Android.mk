@@ -521,17 +521,12 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
 	bionic/dlmalloc.c \
+	bionic/malloc_debug_common.c \
 	bionic/libc_init_static.c
 
-LOCAL_CFLAGS := $(libc_common_cflags)
-
-ifeq ($(WITH_MALLOC_CHECK_LIBC_A),true)
-  LOCAL_CFLAGS += -DMALLOC_LEAK_CHECK
-  LOCAL_SRC_FILES += bionic/malloc_leak.c.arm
-endif
-
+LOCAL_CFLAGS := $(libc_common_cflags) \
+                -DLIBC_STATIC
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-
 LOCAL_MODULE := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
@@ -550,7 +545,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
 	$(libc_arch_dynamic_src_files) \
 	bionic/dlmalloc.c \
-	bionic/malloc_leak.c.arm \
+	bionic/malloc_debug_common.c \
 	bionic/libc_init_dynamic.c
 
 LOCAL_MODULE:= libc
@@ -570,8 +565,16 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 include $(BUILD_SHARED_LIBRARY)
 
 
+# For all builds, except for the -user build we will enable memory
+# allocation checking (including memory leaks, buffer overwrites, etc.)
+# Note that all these checks are also controlled by env. settings
+# that can enable, or disable specific checks. Note also that some of
+# the checks are available only in emulator and are implemeted in
+# libc_malloc_qemu_instrumented.so.
+ifneq ($(TARGET_BUILD_VARIANT),user)
+
 # ========================================================
-# libc_debug.so
+# libc_malloc_debug_leak.so
 # ========================================================
 include $(CLEAR_VARS)
 
@@ -582,30 +585,49 @@ LOCAL_CFLAGS := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	$(libc_arch_dynamic_src_files) \
-	bionic/dlmalloc.c \
-	bionic/malloc_leak.c.arm \
-	bionic/libc_init_dynamic.c
+	bionic/malloc_debug_leak.c
 
-LOCAL_MODULE:= libc_debug
+LOCAL_MODULE:= libc_malloc_debug_leak
 
-# WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
-# make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
-# ensures that symbols that are pulled into those new libraries from libgcc.a are not declared
-# external; if that were the case, then libc would not pull those symbols from libgcc.a as it
-# should, instead relying on the external symbols from the dependent libraries.  That would
-# create an "cloaked" dependency on libgcc.a in libc though the libraries, which is not what
-# you wanted!
-
-LOCAL_SHARED_LIBRARIES := libdl
+LOCAL_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Don't prelink
 LOCAL_PRELINK_MODULE := false
 # Don't install on release build
-LOCAL_MODULE_TAGS := eng
+LOCAL_MODULE_TAGS := eng debug
 
 include $(BUILD_SHARED_LIBRARY)
+
+
+# ========================================================
+# libc_malloc_debug_qemu.so
+# ========================================================
+include $(CLEAR_VARS)
+
+LOCAL_CFLAGS := \
+	$(libc_common_cflags) \
+	-DMALLOC_QEMU_INSTRUMENT
+
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+
+LOCAL_SRC_FILES := \
+	bionic/malloc_debug_qemu.c
+
+LOCAL_MODULE:= libc_malloc_debug_qemu
+
+LOCAL_SHARED_LIBRARIES := libc
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+# Don't prelink
+LOCAL_PRELINK_MODULE := false
+# Don't install on release build
+LOCAL_MODULE_TAGS := eng debug
+
+include $(BUILD_SHARED_LIBRARY)
+
+endif	#!user
+
 
 # ========================================================
 include $(call all-makefiles-under,$(LOCAL_PATH))

@@ -52,8 +52,6 @@
 #include "libc_init_common.h"
 #include <bionic_tls.h>
 
-extern void malloc_debug_init();
-
 /* We flag the __libc_preinit function as a constructor to ensure
  * that its address is listed in libc.so's .init_array section.
  * This ensures that the function is called by the dynamic linker
@@ -78,12 +76,11 @@ void __libc_prenit(void)
 
     __libc_init_common(elfdata);
 
-#ifdef MALLOC_LEAK_CHECK
-    /* setup malloc leak checker, requires system properties */
+    /* Setup malloc routines accordingly to the environment.
+     * Requires system properties
+     */
     extern void malloc_debug_init(void);
     malloc_debug_init();
-#endif
-
 }
 
 __noreturn void __libc_init(uintptr_t *elfdata,
