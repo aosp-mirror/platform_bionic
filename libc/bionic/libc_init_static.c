@@ -68,12 +68,6 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* Initialize the C runtime environment */
     __libc_init_common(elfdata);
 
-#ifdef MALLOC_LEAK_CHECK
-    /* setup malloc leak checker, requires system properties */
-    extern void malloc_debug_init(void);
-    malloc_debug_init();
-#endif
-
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */

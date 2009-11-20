@@ -38,6 +38,7 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <unwind.h>
+#include <dlfcn.h>
 
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -47,212 +48,37 @@
 
 #include "dlmalloc.h"
 #include "logd.h"
+#include "malloc_debug_common.h"
 
-// =============================================================================
-// Utilities directly used by Dalvik
-// =============================================================================
+// This file should be included into the build only when
+// MALLOC_LEAK_CHECK, or MALLOC_QEMU_INSTRUMENT, or both
+// macros are defined.
+#ifndef MALLOC_LEAK_CHECK
+#error MALLOC_LEAK_CHECK is not defined.
+#endif  // !MALLOC_LEAK_CHECK
 
-#define HASHTABLE_SIZE      1543
-#define BACKTRACE_SIZE      32
-/* flag definitions, currently sharing storage with "size" */
-#define SIZE_FLAG_ZYGOTE_CHILD  (1<<31)
-#define SIZE_FLAG_MASK          (SIZE_FLAG_ZYGOTE_CHILD)
-
-#define MAX_SIZE_T           (~(size_t)0)
-
-/*
- * In a VM process, this is set to 1 after fork()ing out of zygote.
- */
-int gMallocLeakZygoteChild = 0;
-
-// =============================================================================
-// Structures
-// =============================================================================
-
-typedef struct HashEntry HashEntry;
-struct HashEntry {
-    size_t slot;
-    HashEntry* prev;
-    HashEntry* next;
-    size_t numEntries;
-    // fields above "size" are NOT sent to the host
-    size_t size;
-    size_t allocations;
-    intptr_t backtrace[0];
-};
-
-typedef struct HashTable HashTable;
-struct HashTable {
-    size_t count;
-    HashEntry* slots[HASHTABLE_SIZE];
-};
-
-static pthread_mutex_t gAllocationsMutex = PTHREAD_MUTEX_INITIALIZER;
-static HashTable gHashTable;
+// Global variables defined in malloc_debug_common.c
+extern int gMallocLeakZygoteChild;
+extern pthread_mutex_t gAllocationsMutex;
+extern HashTable gHashTable;
+extern const MallocDebug __libc_malloc_default_dispatch;
+extern const MallocDebug* __libc_malloc_dispatch;
 
 // =============================================================================
 // log functions
 // =============================================================================
 
 #define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak", (format), ##__VA_ARGS__ )
+    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak_check", (format), ##__VA_ARGS__ )
+#define error_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__ )
+#define info_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__ )
 
-// =============================================================================
-// output functions
-// =============================================================================
+static int gTrapOnError = 1;
 
-static int hash_entry_compare(const void* arg1, const void* arg2)
-{
-    HashEntry* e1 = *(HashEntry**)arg1;
-    HashEntry* e2 = *(HashEntry**)arg2;
-
-    size_t nbAlloc1 = e1->allocations;
-    size_t nbAlloc2 = e2->allocations;
-    size_t size1 = e1->size & ~SIZE_FLAG_MASK;
-    size_t size2 = e2->size & ~SIZE_FLAG_MASK;
-    size_t alloc1 = nbAlloc1 * size1;
-    size_t alloc2 = nbAlloc2 * size2;
-
-    // sort in descending order by:
-    // 1) total size
-    // 2) number of allocations
-    //
-    // This is used for sorting, not determination of equality, so we don't
-    // need to compare the bit flags.
-    int result;
-    if (alloc1 > alloc2) {
-        result = -1;
-    } else if (alloc1 < alloc2) {
-        result = 1;
-    } else {
-        if (nbAlloc1 > nbAlloc2) {
-            result = -1;
-        } else if (nbAlloc1 < nbAlloc2) {
-            result = 1;
-        } else {
-            result = 0;
-        }
-    }
-    return result;
-}
-
-/*
- * Retrieve native heap information.
- *
- * "*info" is set to a buffer we allocate
- * "*overallSize" is set to the size of the "info" buffer
- * "*infoSize" is set to the size of a single entry
- * "*totalMemory" is set to the sum of all allocations we're tracking; does
- *   not include heap overhead
- * "*backtraceSize" is set to the maximum number of entries in the back trace
- */
-void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
-        size_t* infoSize, size_t* totalMemory, size_t* backtraceSize)
-{
-    // don't do anything if we have invalid arguments
-    if (info == NULL || overallSize == NULL || infoSize == NULL ||
-            totalMemory == NULL || backtraceSize == NULL) {
-        return;
-    }
-
-    pthread_mutex_lock(&gAllocationsMutex);
-
-    if (gHashTable.count == 0) {
-        *info = NULL;
-        *overallSize = 0;
-        *infoSize = 0;
-        *totalMemory = 0;
-        *backtraceSize = 0;
-        goto done;
-    }
-    
-    void** list = (void**)dlmalloc(sizeof(void*) * gHashTable.count);
-
-    // debug_log("*****\ngHashTable.count = %d\n", gHashTable.count);
-    // debug_log("list = %p\n", list);
-
-    // get the entries into an array to be sorted
-    int index = 0;
-    int i;
-    for (i = 0 ; i < HASHTABLE_SIZE ; i++) {
-        HashEntry* entry = gHashTable.slots[i];
-        while (entry != NULL) {
-            list[index] = entry;
-            *totalMemory = *totalMemory +
-                ((entry->size & ~SIZE_FLAG_MASK) * entry->allocations);
-            index++;
-            entry = entry->next;
-        }
-    }
-
-    // debug_log("sorted list!\n");
-    // XXX: the protocol doesn't allow variable size for the stack trace (yet)
-    *infoSize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * BACKTRACE_SIZE);
-    *overallSize = *infoSize * gHashTable.count;
-    *backtraceSize = BACKTRACE_SIZE;
-
-    // debug_log("infoSize = 0x%x overall = 0x%x\n", *infoSize, *overallSize);
-    // now get A byte array big enough for this
-    *info = (uint8_t*)dlmalloc(*overallSize);
-
-    // debug_log("info = %p\n", info);
-    if (*info == NULL) {
-        *overallSize = 0;
-        goto done;
-    }
-
-    // debug_log("sorting list...\n");
-    qsort((void*)list, gHashTable.count, sizeof(void*), hash_entry_compare);
-
-    uint8_t* head = *info;
-    const int count = gHashTable.count;
-    for (i = 0 ; i < count ; i++) {
-        HashEntry* entry = list[i];
-        size_t entrySize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * entry->numEntries);
-        if (entrySize < *infoSize) {
-            /* we're writing less than a full entry, clear out the rest */
-            /* TODO: only clear out the part we're not overwriting? */
-            memset(head, 0, *infoSize);
-        } else {
-            /* make sure the amount we're copying doesn't exceed the limit */
-            entrySize = *infoSize;
-        }
-        memcpy(head, &(entry->size), entrySize);
-        head += *infoSize;
-    }
-
-    dlfree(list);
-
-done:
-    // debug_log("+++++ done!\n");
-    pthread_mutex_unlock(&gAllocationsMutex);
-}
-
-void free_malloc_leak_info(uint8_t* info)
-{
-    dlfree(info);
-}
-
-struct mallinfo mallinfo()
-{
-    return dlmallinfo();
-}
-
-void* valloc(size_t bytes) {
-    /* assume page size of 4096 bytes */
-    return memalign( getpagesize(), bytes );
-}
-
-
-/*
- * Code guarded by MALLOC_LEAK_CHECK is only needed when malloc check is
- * enabled. Currently we exclude them in libc.so, and only include them in
- * libc_debug.so.
- */
-#ifdef MALLOC_LEAK_CHECK
 #define MALLOC_ALIGNMENT    8
 #define GUARD               0x48151642
-
 #define DEBUG               0
 
 // =============================================================================
@@ -407,13 +233,13 @@ static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
     if (state->count) {
         intptr_t ip = (intptr_t)_Unwind_GetIP(context);
         if (ip) {
-            state->addrs[0] = ip; 
+            state->addrs[0] = ip;
             state->addrs++;
             state->count--;
             return _URC_NO_REASON;
         }
     }
-    /* 
+    /*
      * If we run out of space to record the address or 0 has been seen, stop
      * unwinding the stack.
      */
@@ -428,70 +254,6 @@ int get_backtrace(intptr_t* addrs, size_t max_entries)
     state.addrs = (intptr_t*)addrs;
     _Unwind_Backtrace(trace_function, (void*)&state);
     return max_entries - state.count;
-}
-
-// =============================================================================
-// malloc leak function dispatcher
-// =============================================================================
-
-static void* leak_malloc(size_t bytes);
-static void  leak_free(void* mem);
-static void* leak_calloc(size_t n_elements, size_t elem_size);
-static void* leak_realloc(void* oldMem, size_t bytes);
-static void* leak_memalign(size_t alignment, size_t bytes);
-
-static void* fill_malloc(size_t bytes);
-static void  fill_free(void* mem);
-static void* fill_realloc(void* oldMem, size_t bytes);
-static void* fill_memalign(size_t alignment, size_t bytes);
-
-static void* chk_malloc(size_t bytes);
-static void  chk_free(void* mem);
-static void* chk_calloc(size_t n_elements, size_t elem_size);
-static void* chk_realloc(void* oldMem, size_t bytes);
-static void* chk_memalign(size_t alignment, size_t bytes);
-
-typedef struct {
-    void* (*malloc)(size_t bytes);
-    void  (*free)(void* mem);
-    void* (*calloc)(size_t n_elements, size_t elem_size);
-    void* (*realloc)(void* oldMem, size_t bytes);
-    void* (*memalign)(size_t alignment, size_t bytes);
-} MallocDebug;
-
-static const MallocDebug gMallocEngineTable[] __attribute__((aligned(32))) =
-{
-    { dlmalloc,     dlfree,     dlcalloc,       dlrealloc,     dlmemalign },
-    { leak_malloc,  leak_free,  leak_calloc,    leak_realloc,  leak_memalign },
-    { fill_malloc,  fill_free,  dlcalloc,       fill_realloc,  fill_memalign },
-    { chk_malloc,   chk_free,   chk_calloc,     chk_realloc,   chk_memalign }
-};
-
-enum {
-    INDEX_NORMAL = 0,
-    INDEX_LEAK_CHECK,
-    INDEX_MALLOC_FILL,
-    INDEX_MALLOC_CHECK,
-};
-
-static MallocDebug const * gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
-static int gMallocDebugLevel;
-static int gTrapOnError = 1;
-
-void* malloc(size_t bytes) {
-    return gMallocDispatch->malloc(bytes);
-}
-void free(void* mem) {
-    gMallocDispatch->free(mem);
-}
-void* calloc(size_t n_elements, size_t elem_size) {
-    return gMallocDispatch->calloc(n_elements, elem_size);
-}
-void* realloc(void* oldMem, size_t bytes) {
-    return gMallocDispatch->realloc(oldMem, bytes);
-}
-void* memalign(size_t alignment, size_t bytes) {
-    return gMallocDispatch->memalign(alignment, bytes);
 }
 
 // =============================================================================
@@ -532,7 +294,9 @@ static void assert_log_message(const char* format, ...)
     va_list  args;
 
     pthread_mutex_lock(&gAllocationsMutex);
-        gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
+    {
+        const MallocDebug* current_dispatch = __libc_malloc_dispatch;
+        __libc_malloc_dispatch = &__libc_malloc_default_dispatch;
         va_start(args, format);
         __libc_android_log_vprint(ANDROID_LOG_ERROR, "libc",
                                 format, args);
@@ -541,7 +305,8 @@ static void assert_log_message(const char* format, ...)
         if (gTrapOnError) {
             __builtin_trap();
         }
-        gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
+        __libc_malloc_dispatch = current_dispatch;
+    }
     pthread_mutex_unlock(&gAllocationsMutex);
 }
 
@@ -574,7 +339,7 @@ static int chk_mem_check(void*       mem,
     buf = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
     for (i=0 ; i<CHK_SENTINEL_HEAD_SIZE ; i++) {
         if (buf[i] != CHK_SENTINEL_VALUE) {
-            assert_log_message( 
+            assert_log_message(
                 "*** %s CHECK: buffer %p "
                 "corrupted %d bytes before allocation",
                 func, mem, CHK_SENTINEL_HEAD_SIZE-i);
@@ -590,7 +355,7 @@ static int chk_mem_check(void*       mem,
     buf = (char*)mem + bytes;
     for (i=CHK_SENTINEL_TAIL_SIZE-1 ; i>=0 ; i--) {
         if (buf[i] != CHK_SENTINEL_VALUE) {
-            assert_log_message( 
+            assert_log_message(
                 "*** %s CHECK: buffer %p, size=%lu, "
                 "corrupted %d bytes after allocation",
                 func, buffer, bytes, i+1);
@@ -743,11 +508,11 @@ void* leak_malloc(size_t bytes)
 
             intptr_t backtrace[BACKTRACE_SIZE];
             size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
-    
+
             AllocationEntry* header = (AllocationEntry*)base;
             header->entry = record_backtrace(backtrace, numEntries, bytes);
             header->guard = GUARD;
-    
+
             // now increment base to point to after our header.
             // this should just work since our header is 8 bytes.
             base = (AllocationEntry*)base + 1;
@@ -765,7 +530,7 @@ void leak_free(void* mem)
 
         // check the guard to make sure it is valid
         AllocationEntry* header = (AllocationEntry*)mem - 1;
-        
+
         if (header->guard != GUARD) {
             // could be a memaligned block
             if (((void**)mem)[-1] == MEMALIGN_GUARD) {
@@ -773,7 +538,7 @@ void leak_free(void* mem)
                 header = (AllocationEntry*)mem - 1;
             }
         }
-        
+
         if (header->guard == GUARD || is_valid_entry(header->entry)) {
             // decrement the allocations
             HashEntry* entry = header->entry;
@@ -842,7 +607,7 @@ void* leak_memalign(size_t alignment, size_t bytes)
     // need to make sure it's a power of two
     if (alignment & (alignment-1))
         alignment = 1L << (31 - __builtin_clz(alignment));
-    
+
     // here, aligment is at least MALLOC_ALIGNMENT<<1 bytes
     // we will align by at least MALLOC_ALIGNMENT bytes
     // and at most alignment-MALLOC_ALIGNMENT bytes
@@ -855,7 +620,7 @@ void* leak_memalign(size_t alignment, size_t bytes)
 
         // align the pointer
         ptr += ((-ptr) % alignment);
-        
+
         // there is always enough space for the base pointer and the guard
         ((void**)ptr)[-1] = MEMALIGN_GUARD;
         ((void**)ptr)[-2] = base;
@@ -863,61 +628,4 @@ void* leak_memalign(size_t alignment, size_t bytes)
         return (void*)ptr;
     }
     return base;
-}
-#endif /* MALLOC_LEAK_CHECK */
-
-// called from libc_init()
-extern char*  __progname;
-
-void malloc_debug_init()
-{
-    unsigned int level = 0;
-#ifdef MALLOC_LEAK_CHECK
-    // if MALLOC_LEAK_CHECK is enabled, use level=1 by default
-    level = 1;
-#endif
-    char env[PROP_VALUE_MAX];
-    int len = __system_property_get("libc.debug.malloc", env);
-
-    if (len) {
-        level = atoi(env);
-#ifndef MALLOC_LEAK_CHECK
-        /* Alert the user that libc_debug.so needs to be installed as libc.so
-         * when performing malloc checks.
-         */
-        if (level != 0) {
-            __libc_android_log_print(ANDROID_LOG_INFO, "libc",
-                 "Malloc checks need libc_debug.so pushed to the device!\n");
-
-        }
-#endif
-    }
-
-#ifdef MALLOC_LEAK_CHECK
-    gMallocDebugLevel = level;
-    switch (level) {
-    default:
-    case 0:
-        gMallocDispatch = &gMallocEngineTable[INDEX_NORMAL];
-        break;
-    case 1:
-        __libc_android_log_print(ANDROID_LOG_INFO, "libc",
-                "%s using MALLOC_DEBUG = %d (leak checker)\n",
-                __progname, level);
-        gMallocDispatch = &gMallocEngineTable[INDEX_LEAK_CHECK];
-        break;
-    case 5:
-        __libc_android_log_print(ANDROID_LOG_INFO, "libc",
-                "%s using MALLOC_DEBUG = %d (fill)\n", 
-                __progname, level);
-        gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_FILL];
-        break;
-    case 10:
-        __libc_android_log_print(ANDROID_LOG_INFO, "libc",
-                "%s using MALLOC_DEBUG = %d (sentinels, fill)\n", 
-                __progname, level);
-        gMallocDispatch = &gMallocEngineTable[INDEX_MALLOC_CHECK];
-        break;
-    }
-#endif
 }
