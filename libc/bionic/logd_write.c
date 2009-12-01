@@ -66,7 +66,7 @@ static int __write_to_log_null(log_id_t log_id, struct iovec *vec);
 
 static pthread_mutex_t log_init_lock = PTHREAD_MUTEX_INITIALIZER;
 
-log_channel_t log_channels[LOG_ID_MAX] = {
+static log_channel_t log_channels[LOG_ID_MAX] = {
     { __write_to_log_null, -1, NULL },
     { __write_to_log_init, -1, "/dev/"LOGGER_LOG_MAIN },
     { __write_to_log_init, -1, "/dev/"LOGGER_LOG_RADIO }
@@ -112,6 +112,7 @@ static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
 
         log_channels[log_id].logger =
             (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
+        log_channels[log_id].fd = fd;
 
         pthread_mutex_unlock(&log_init_lock);
 
