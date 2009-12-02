@@ -1295,6 +1295,13 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) += sym_addr;
             break;
+        case R_ARM_REL32:
+            COUNT_RELOC(RELOC_RELATIVE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO REL32 %08x <- %08x - %08x %s\n", pid,
+                       reloc, sym_addr, rel->r_offset, sym_name);
+            *((unsigned*)reloc) += sym_addr - rel->r_offset;
+            break;
 #elif defined(ANDROID_X86_LINKER)
         case R_386_JUMP_SLOT:
             COUNT_RELOC(RELOC_ABSOLUTE);
