@@ -113,6 +113,8 @@ static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
         log_channels[log_id].logger =
             (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
 
+        log_channels[log_id].fd = fd;
+
         pthread_mutex_unlock(&log_init_lock);
 
         return log_channels[log_id].logger(log_id, vec);
