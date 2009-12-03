@@ -139,6 +139,8 @@ struct kgsl_drawctxt_destroy {
 struct kgsl_sharedmem_from_pmem {
  int pmem_fd;
  unsigned int gpuaddr;
+ unsigned int len;
+ unsigned int offset;
 };
 
 #define IOCTL_KGSL_SHAREDMEM_FROM_PMEM   _IOWR(KGSL_IOC_TYPE, 0x20, struct kgsl_sharedmem_from_pmem)
