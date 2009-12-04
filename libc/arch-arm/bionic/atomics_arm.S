@@ -28,11 +28,17 @@
 #include <sys/linux-syscalls.h>
 
 .global __atomic_cmpxchg
+.type __atomic_cmpxchg, %function
 .global __atomic_swap
+.type __atomic_swap, %function
 .global __atomic_dec
+.type __atomic_dec, %function
 .global __atomic_inc
+.type __atomic_inc, %function
 .global __futex_wait
+.type __futex_wait, %function
 .global __futex_wake
+.type __futex_wake, %function
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1

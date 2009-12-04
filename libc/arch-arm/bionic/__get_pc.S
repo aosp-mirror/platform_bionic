@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 .global __get_pc
+.type __get_pc, %function
 
 __get_pc:
 	mov r0, pc
