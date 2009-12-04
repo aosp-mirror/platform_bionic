@@ -101,6 +101,7 @@ extern void * bsearch(const void *key, const void *base0,
 	int (*compar)(const void *, const void *));
 
 extern void qsort(void *, size_t, size_t, int (*)(const void *, const void *));
+extern void qsort_r(void *a, size_t n, size_t es, void *thunk, int (*)(void *, const void *, const void *));
 
 extern long jrand48(unsigned short *);
 extern long mrand48(void);
