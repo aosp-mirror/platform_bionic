@@ -155,7 +155,6 @@ libc_common_src_files := \
 	stdlib/nrand48.c \
 	stdlib/putenv.c \
 	stdlib/qsort.c \
-	stdlib/qsort_r.c \
 	stdlib/seed48.c \
 	stdlib/setenv.c \
 	stdlib/setjmperr.c \
