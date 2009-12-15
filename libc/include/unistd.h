@@ -145,7 +145,7 @@ extern int ftruncate(int, off_t);
 extern int pause(void);
 extern unsigned int alarm(unsigned int);
 extern unsigned int sleep(unsigned int);
-extern void usleep(unsigned long);
+extern int usleep(unsigned long);
 
 extern int gethostname(char *, size_t);
 extern int sethostname(const char *, size_t);
