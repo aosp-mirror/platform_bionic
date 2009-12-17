@@ -29,6 +29,8 @@
 #define PTRACE_GETCRUNCHREGS 25
 #define PTRACE_SETCRUNCHREGS 26
 
+#define PTRACE_GETVFPREGS 27
+
 #define USR26_MODE 0x00000000
 #define FIQ26_MODE 0x00000001
 #define IRQ26_MODE 0x00000002
@@ -61,7 +63,12 @@
 #ifndef __ASSEMBLY__
 
 struct pt_regs {
- long uregs[18];
+  long uregs[18];
+};
+
+struct user_vfp {
+  unsigned long long fpregs[32];
+  unsigned long fpscr;
 };
 
 #define ARM_cpsr uregs[16]
