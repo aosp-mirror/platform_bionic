@@ -117,6 +117,37 @@ err:
     return 0;
 }
 
+int dladdr(void *addr, Dl_info *info)
+{
+    int ret = 0;
+
+    pthread_mutex_lock(&dl_lock);
+
+    /* Determine if this address can be found in any library currently mapped */
+    soinfo *si = find_containing_library(addr);
+
+    if(si) {
+        memset(info, 0, sizeof(Dl_info));
+
+        info->dli_fname = si->name;
+        info->dli_fbase = (void*)si->base;
+
+        /* Determine if any symbol in the library contains the specified address */
+        Elf32_Sym *sym = find_containing_symbol(addr, si);
+
+        if(sym != NULL) {
+            info->dli_sname = si->strtab + sym->st_name;
+            info->dli_saddr = (void*)(si->base + sym->st_value);
+        }
+
+        ret = 1;
+    }
+
+    pthread_mutex_unlock(&dl_lock);
+
+    return ret;
+}
+
 int dlclose(void *handle)
 {
     pthread_mutex_lock(&dl_lock);
@@ -126,22 +157,22 @@ int dlclose(void *handle)
 }
 
 #if defined(ANDROID_ARM_LINKER)
-//                     0000000 00011111 111112 22222222 233333333334444444444
-//                     0123456 78901234 567890 12345678 901234567890123456789
+//                     0000000 00011111 111112 22222222 2333333 333344444444445555555
+//                     0123456 78901234 567890 12345678 9012345 678901234567890123456
 #define ANDROID_LIBDL_STRTAB \
-                      "dlopen\0dlclose\0dlsym\0dlerror\0dl_unwind_find_exidx\0"
+                      "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0dl_unwind_find_exidx\0"
 
 #elif defined(ANDROID_X86_LINKER)
-//                     0000000 00011111 111112 22222222 2333333333344444
-//                     0123456 78901234 567890 12345678 9012345678901234
+//                     0000000 00011111 111112 22222222 2333333 3333444444444455
+//                     0123456 78901234 567890 12345678 9012345 6789012345678901
 #define ANDROID_LIBDL_STRTAB \
-                      "dlopen\0dlclose\0dlsym\0dlerror\0dl_iterate_phdr\0"
+                      "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0dl_iterate_phdr\0"
 
 #elif defined(ANDROID_SH_LINKER)
-//                     0000000 00011111 111112 22222222 2333333333344444
-//                     0123456 78901234 567890 12345678 9012345678901234
+//                     0000000 00011111 111112 22222222 2333333 3333444444444455
+//                     0123456 78901234 567890 12345678 9012345 6789012345678901
 #define ANDROID_LIBDL_STRTAB \
-                      "dlopen\0dlclose\0dlsym\0dlerror\0dl_iterate_phdr\0"
+                      "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0dl_iterate_phdr\0"
 
 #else /* !defined(ANDROID_ARM_LINKER) && !defined(ANDROID_X86_LINKER) */
 #error Unsupported architecture. Only ARM and x86 are presently supported.
@@ -175,20 +206,25 @@ static Elf32_Sym libdl_symtab[] = {
       st_info: STB_GLOBAL << 4,
       st_shndx: 1,
     },
-#ifdef ANDROID_ARM_LINKER
     { st_name: 29,
+      st_value: (Elf32_Addr) &dladdr,
+      st_info: STB_GLOBAL << 4,
+      st_shndx: 1,
+    },
+#ifdef ANDROID_ARM_LINKER
+    { st_name: 36,
       st_value: (Elf32_Addr) &dl_unwind_find_exidx,
       st_info: STB_GLOBAL << 4,
       st_shndx: 1,
     },
 #elif defined(ANDROID_X86_LINKER)
-    { st_name: 29,
+    { st_name: 36,
       st_value: (Elf32_Addr) &dl_iterate_phdr,
       st_info: STB_GLOBAL << 4,
       st_shndx: 1,
     },
 #elif defined(ANDROID_SH_LINKER)
-    { st_name: 29,
+    { st_name: 36,
       st_value: (Elf32_Addr) &dl_iterate_phdr,
       st_info: STB_GLOBAL << 4,
       st_shndx: 1,
@@ -216,7 +252,7 @@ static Elf32_Sym libdl_symtab[] = {
  * stubbing them out in libdl.
  */
 static unsigned libdl_buckets[1] = { 1 };
-static unsigned libdl_chains[6] = { 0, 2, 3, 4, 5, 0 };
+static unsigned libdl_chains[7] = { 0, 2, 3, 4, 5, 6, 0 };
 
 soinfo libdl_info = {
     name: "libdl.so",
@@ -226,7 +262,7 @@ soinfo libdl_info = {
     symtab: libdl_symtab,
 
     nbucket: 1,
-    nchain: 6,
+    nchain: 7,
     bucket: libdl_buckets,
     chain: libdl_chains,
 };
