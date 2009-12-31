@@ -512,13 +512,17 @@ Elf32_Sym *lookup_in_library(soinfo *si, const char *name)
 
 /* This is used by dl_sym().  It performs a global symbol lookup.
  */
-Elf32_Sym *lookup(const char *name, soinfo **found)
+Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start)
 {
     unsigned elf_hash = 0;
     Elf32_Sym *s = NULL;
     soinfo *si;
 
-    for(si = solist; (s == NULL) && (si != NULL); si = si->next)
+    if(start == NULL) {
+        start = solist;
+    }
+
+    for(si = start; (s == NULL) && (si != NULL); si = si->next)
     {
         if(si->flags & FLAG_ERROR)
             continue;

@@ -90,9 +90,15 @@ void *dlsym(void *handle, const char *symbol)
     }
 
     if(handle == RTLD_DEFAULT) {
-        sym = lookup(symbol, &found);
+        sym = lookup(symbol, &found, NULL);
     } else if(handle == RTLD_NEXT) {
-        sym = lookup(symbol, &found);
+        void *ret_addr = __builtin_return_address(0);
+        soinfo *si = find_containing_library(ret_addr);
+
+        sym = NULL;
+        if(si && si->next) {
+            sym = lookup(symbol, &found, si->next);
+        }
     } else {
         found = (soinfo*)handle;
         sym = lookup_in_library(found, symbol);
