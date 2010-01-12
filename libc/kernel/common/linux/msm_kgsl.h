@@ -139,6 +139,8 @@ struct kgsl_drawctxt_destroy {
 struct kgsl_sharedmem_from_pmem {
  int pmem_fd;
  unsigned int gpuaddr;
+ unsigned int len;
+ unsigned int offset;
 };
 
 #define IOCTL_KGSL_SHAREDMEM_FROM_PMEM   _IOWR(KGSL_IOC_TYPE, 0x20, struct kgsl_sharedmem_from_pmem)
@@ -187,6 +189,13 @@ struct kgsl_sharedmem_from_vmalloc {
 #define IOCTL_KGSL_SHAREDMEM_FROM_VMALLOC   _IOWR(KGSL_IOC_TYPE, 0x23, struct kgsl_sharedmem_from_vmalloc)
 
 #define IOCTL_KGSL_SHAREDMEM_FLUSH_CACHE   _IOW(KGSL_IOC_TYPE, 0x24, struct kgsl_sharedmem_free)
+
+struct kgsl_drawctxt_set_bin_base_offset {
+ unsigned int drawctxt_id;
+ unsigned int offset;
+};
+
+#define IOCTL_KGSL_DRAWCTXT_SET_BIN_BASE_OFFSET   _IOW(KGSL_IOC_TYPE, 0x25, struct kgsl_drawctxt_set_bin_base_offset)
 
 #endif
 
