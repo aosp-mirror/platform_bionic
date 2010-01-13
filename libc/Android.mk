@@ -273,7 +273,11 @@ libc_common_src_files := \
 	netbsd/nameser/ns_ttl.c \
 	netbsd/nameser/ns_netint.c \
 	netbsd/nameser/ns_print.c \
-	netbsd/nameser/ns_samedomain.c
+	netbsd/nameser/ns_samedomain.c \
+	regex/regcomp.c \
+	regex/regerror.c \
+	regex/regexec.c \
+	regex/regfree.c \
 
 # Architecture specific source files go here
 # =========================================================
@@ -391,7 +395,8 @@ libc_common_cflags := \
 		-DNEED_PSELECT=1		\
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
-		-DUSE_DL_PREFIX
+		-DUSE_DL_PREFIX \
+		-DPOSIX_MISTAKE
 
 ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
