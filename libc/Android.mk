@@ -26,6 +26,7 @@ libc_common_src_files := \
 	unistd/initgroups.c \
 	unistd/isatty.c \
 	unistd/issetugid.c \
+	unistd/killpg.c \
 	unistd/lseek64.c \
 	unistd/mmap.c \
 	unistd/nice.c \
