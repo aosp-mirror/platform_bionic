@@ -225,7 +225,9 @@ libc_common_src_files := \
 	bionic/dirname_r.c \
 	bionic/drand48.c \
 	bionic/erand48.c \
+	bionic/err.c \
 	bionic/fork.c \
+	bionic/fts.c \
 	bionic/if_nametoindex.c \
 	bionic/if_indextoname.c \
 	bionic/ioctl.c \
