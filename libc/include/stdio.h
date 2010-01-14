@@ -437,4 +437,15 @@ static __inline int __sputc(int _c, FILE *_p) {
 #define getchar_unlocked()	getc_unlocked(stdin)
 #define putchar_unlocked(c)	putc_unlocked(c, stdout)
 
+#ifdef _GNU_SOURCE
+/*
+ * glibc defines dprintf(int, const char*, ...), which is poorly named
+ * and likely to conflict with locally defined debugging printfs
+ * fdprintf is a better name, and some programs that use fdprintf use a
+ * #define fdprintf dprintf for compatibility
+ */
+int fdprintf(int, const char*, ...);
+int vfdprintf(int, const char*, __va_list);
+#endif /* _GNU_SOURCE */
+
 #endif /* _STDIO_H_ */

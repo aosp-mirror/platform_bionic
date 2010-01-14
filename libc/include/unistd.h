@@ -99,6 +99,10 @@ extern int setfsuid(uid_t);
 extern int issetugid(void);
 extern char* getlogin(void);
 extern int getlogin_r(char* name, size_t namesize);
+extern char* getusershell(void);
+extern void setusershell(void);
+extern void endusershell(void);
+
 
 
 /* Macros for access() */
@@ -163,6 +167,8 @@ extern char *optarg;
 extern int optind, opterr, optopt;
 
 extern int isatty(int);
+extern char* ttyname(int);
+extern int ttyname_r(int, char*, size_t);
 
 extern int  acct(const char*  filepath);
 

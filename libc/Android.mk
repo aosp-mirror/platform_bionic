@@ -222,11 +222,13 @@ libc_common_src_files := \
 	bionic/arc4random.c \
 	bionic/basename.c \
 	bionic/basename_r.c \
+	bionic/clearenv.c \
 	bionic/dirname.c \
 	bionic/dirname_r.c \
 	bionic/drand48.c \
 	bionic/erand48.c \
 	bionic/err.c \
+	bionic/fdprintf.c \
 	bionic/fork.c \
 	bionic/fts.c \
 	bionic/if_nametoindex.c \

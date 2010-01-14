@@ -361,6 +361,12 @@ char* ttyname(int fd)
     return NULL;
 }
 
+int ttyname_r(int fd, char *buf, size_t buflen)
+{
+    fprintf(stderr, "FIX ME! implement ttyname_r() %s:%d\n", __FILE__, __LINE__);
+    return -ERANGE;
+}
+
 struct netent *getnetbyaddr(uint32_t net, int type)
 {
     fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
@@ -378,3 +384,20 @@ struct protoent *getprotobynumber(int proto)
     fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
     return NULL;
 }
+
+char* getusershell(void)
+{
+    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
+    return NULL;
+}
+
+void setusershell(void)
+{
+    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
+}
+
+void endusershell(void)
+{
+    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
+}
+
