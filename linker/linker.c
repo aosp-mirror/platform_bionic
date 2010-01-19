@@ -471,7 +471,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
             DEBUG("%5d %s: looking up %s in %s\n",
                   pid, si->name, name, lsi->name);
             s = _do_lookup_in_so(lsi, name, &elf_hash);
-            if(s != NULL)
+            if ((s != NULL) && (s->st_shndx != SHN_UNDEF))
                 goto done;
         }
     }
