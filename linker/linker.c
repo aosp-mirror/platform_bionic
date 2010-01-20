@@ -48,6 +48,7 @@
 
 #include "linker.h"
 #include "linker_debug.h"
+#include "linker_format.h"
 
 #include "ba.h"
 
@@ -142,7 +143,7 @@ static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 #define DL_ERR(fmt, x...)                                                     \
     do {                                                                      \
-        snprintf(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),            \
+        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),            \
                  "%s[%d]: " fmt, __func__, __LINE__, ##x);                    \
         ERROR(fmt "\n", ##x);                                                      \
     } while(0)
@@ -584,7 +585,7 @@ static int open_library(const char *name)
         return fd;
 
     for (path = ldpaths; *path; path++) {
-        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        n = format_buffer(buf, sizeof(buf), "%s/%s", *path, name);
         if (n < 0 || n >= (int)sizeof(buf)) {
             WARN("Ignoring very long library path: %s/%s\n", *path, name);
             continue;
@@ -593,7 +594,7 @@ static int open_library(const char *name)
             return fd;
     }
     for (path = sopaths; *path; path++) {
-        n = snprintf(buf, sizeof(buf), "%s/%s", *path, name);
+        n = format_buffer(buf, sizeof(buf), "%s/%s", *path, name);
         if (n < 0 || n >= (int)sizeof(buf)) {
             WARN("Ignoring very long library path: %s/%s\n", *path, name);
             continue;

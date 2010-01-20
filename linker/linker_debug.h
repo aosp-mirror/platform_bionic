@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2008-2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,12 +31,17 @@
 
 #include <stdio.h>
 
-/* WARNING: For linker debugging only.. Be careful not to leave  any of
- * this on when submitting back to repository */
-#define LINKER_DEBUG         0
-#define TRACE_DEBUG          0
-#define DO_TRACE_LOOKUP      0
-#define DO_TRACE_RELO        0
+#ifndef LINKER_DEBUG
+#error LINKER_DEBUG should be defined to either 1 or 0 in Android.mk
+#endif
+
+/* set LINKER_DEBUG_TO_LOG to 1 to send the logs to logcat,
+ * or 0 to use stdout instead.
+ */
+#define LINKER_DEBUG_TO_LOG  1
+#define TRACE_DEBUG          1
+#define DO_TRACE_LOOKUP      1
+#define DO_TRACE_RELO        1
 #define TIMING               0
 #define STATS                0
 #define COUNT_PAGES          0
@@ -59,12 +64,21 @@
  * corruption when the linker uses printf().
  */
 #if LINKER_DEBUG
+#include "linker_format.h"
 extern int debug_verbosity;
-#warning "*** LINKER IS USING printf(); DO NOT CHECK THIS IN ***"
-#define _PRINTVF(v,f,x...)                                                \
-    do {                                                                  \
-        (debug_verbosity > (v)) && (printf(x), ((f) && fflush(stdout)));  \
+#if LINKER_DEBUG_TO_LOG
+extern int format_log(int, const char *, const char *, ...);
+#define _PRINTVF(v,f,x...)                                        \
+    do {                                                          \
+        if (debug_verbosity > (v)) format_log(5-(v),"linker",x);  \
     } while (0)
+#else /* !LINKER_DEBUG_TO_LOG */
+extern int format_fd(int, const char *, ...);
+#define _PRINTVF(v,f,x...)                           \
+    do {                                             \
+        if (debug_verbosity > (v)) format_fd(1, x);  \
+    } while (0)
+#endif /* !LINKER_DEBUG_TO_LOG */
 #else /* !LINKER_DEBUG */
 #define _PRINTVF(v,f,x...)   do {} while(0)
 #endif /* LINKER_DEBUG */

@@ -17,6 +17,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include "linker.h"
+#include "linker_format.h"
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
@@ -45,7 +46,7 @@ static pthread_mutex_t dl_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static void set_dlerror(int err)
 {
-    snprintf(dl_err_buf, sizeof(dl_err_buf), "%s: %s", dl_errors[err],
+    format_buffer(dl_err_buf, sizeof(dl_err_buf), "%s: %s", dl_errors[err],
              linker_get_error());
     dl_err_str = (const char *)&dl_err_buf[0];
 };

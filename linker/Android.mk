@@ -4,6 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= \
 	arch/$(TARGET_ARCH)/begin.S \
 	linker.c \
+	linker_format.c \
 	rt.c \
 	dlfcn.c \
 	debugger.c \
@@ -30,6 +31,10 @@ LOCAL_LDFLAGS := -Wl,-Ttext,$(LINKER_TEXT_BASE)
 LOCAL_CFLAGS += -DPRELINK
 LOCAL_CFLAGS += -DLINKER_TEXT_BASE=$(LINKER_TEXT_BASE)
 LOCAL_CFLAGS += -DLINKER_AREA_SIZE=$(LINKER_AREA_SIZE)
+
+# Set LINKER_DEBUG to either 1 or 0
+#
+LOCAL_CFLAGS += -DLINKER_DEBUG=0
 
 # we need to access the Bionic private header <bionic_tls.h>
 # in the linker; duplicate the HAVE_ARM_TLS_REGISTER definition
