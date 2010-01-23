@@ -2,19 +2,21 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __clone, @function
-    .globl __clone
+    .type __sys_clone, @function
+    .globl __sys_clone
     .align 4
 
-__clone:
+__sys_clone:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
     pushl   %esi
-    mov     20(%esp), %ebx
-    mov     24(%esp), %ecx
-    mov     28(%esp), %edx
-    mov     32(%esp), %esi
+    pushl   %edi
+    mov     24(%esp), %ebx
+    mov     28(%esp), %ecx
+    mov     32(%esp), %edx
+    mov     36(%esp), %esi
+    mov     40(%esp), %edi
     movl    $__NR_clone, %eax
     int     $0x80
     cmpl    $-129, %eax
@@ -25,6 +27,7 @@ __clone:
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    popl    %edi
     popl    %esi
     popl    %edx
     popl    %ecx

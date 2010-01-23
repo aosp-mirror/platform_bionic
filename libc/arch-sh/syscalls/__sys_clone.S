@@ -2,15 +2,18 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __clone, @function
-    .globl __clone
+    .type __sys_clone, @function
+    .globl __sys_clone
     .align 4
 
-__clone:
+__sys_clone:
+
+    /* get ready for additonal arg */
+    mov.l   @r15, r0
 
     /* invoke trap */
     mov.l   0f, r3  /* trap num */
-    trapa   #(4 + 0x10)
+    trapa   #(5 + 0x10)
 
     /* check return value */
     cmp/pz  r0

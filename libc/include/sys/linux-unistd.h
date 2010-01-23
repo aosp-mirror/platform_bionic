@@ -10,7 +10,7 @@ void             _exit_thread (int);
 pid_t            __fork (void);
 pid_t            _waitpid (pid_t, int*, int, struct rusage*);
 int              waitid (int, pid_t, struct siginfo_t*, int,void*);
-pid_t            __clone (int (*fn)(void*), void *child_stack, int flags, void *arg);
+pid_t            __sys_clone (int, void*, int*, void*, int*);
 int              execve (const char*, char* const*, char* const*);
 int              setuid (uid_t);
 uid_t            getuid (void);
