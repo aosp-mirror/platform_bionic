@@ -46,6 +46,7 @@ Differences between current and Android 2.1:
 
 - <wchar.h>: Add mbstowcs() and wcstombs()
 
+- add clone() implementation for ARM (x86 and SH-4 not working yet)
 
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:

@@ -72,3 +72,8 @@ __return:
     .align 2
 0:  .long   __NR_clone
 1:  .long   __thread_entry
+
+/* XXX: TODO: Add __bionic_clone here
+ *            See bionic/bionic_clone.c and arch-arm/bionic/clone.S
+ *            for more details...
+ */
