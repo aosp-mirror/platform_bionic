@@ -14,7 +14,7 @@ ifeq ($(TARGET_ARCH),sh)
 LINKER_TEXT_BASE := 0x70000100
 else
 # This is aligned to 4K page boundary so that both GNU ld and gold work.  Gold
-# actually produces a correct binary with starting adding 0xB0000100 but the
+# actually produces a correct binary with starting address 0xB0000100 but the
 # extra objcopy step to rename symbols causes the resulting binary to be misaligned
 # and unloadable.  Increasing the alignment adds an extra 3840 bytes in padding
 # but switching to gold saves about 1M of space.
