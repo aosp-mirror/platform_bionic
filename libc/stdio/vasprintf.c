@@ -48,10 +48,7 @@ vasprintf(char **str, const char *fmt, __va_list ap)
 	return (ret);
 
 err:
-	if (f._bf._base) {
-		free(f._bf._base);
-		f._bf._base = NULL;
-	}
+	free(f._bf._base);
 	*str = NULL;
 	errno = ENOMEM;
 	return (-1);
