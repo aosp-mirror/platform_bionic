@@ -31,12 +31,14 @@
 char*  strndup(const char*  s, size_t n)
 {
     size_t  slen = (size_t)strlen(s);
-    int     len  = slen < n ? slen : n;
-    char*   copy = malloc(len+1);
+    char*   copy;
 
+    if (slen < n)
+        n = slen;
+    copy = malloc(n+1);
     if (copy) {
-        memcpy( copy, s, len );
-        copy[len] = 0;
+        memcpy(copy, s, n);
+        copy[n] = 0;
     }
     return copy;
 }
