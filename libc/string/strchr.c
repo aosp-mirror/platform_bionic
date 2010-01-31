@@ -38,6 +38,6 @@ strchr(const char *p, int ch)
 			return((char *)p);
 		if (!*p)
 			return((char *)NULL);
-  }
+	}
 	/* NOTREACHED */
 }

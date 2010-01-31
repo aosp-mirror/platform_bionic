@@ -54,8 +54,8 @@ strncpy(char *dst, const char *src, size_t n)
 				/* NUL pad the remaining n-1 bytes */
 				while (--n != 0)
 					*d++ = 0;
-      break;
-  }
+				break;
+			}
 		} while (--n != 0);
 	}
 	return (dst);

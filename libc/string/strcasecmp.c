@@ -98,8 +98,8 @@ strncasecmp(const char *s1, const char *s2, size_t n)
 			if (cm[*us1] != cm[*us2++])
 				return (cm[*us1] - cm[*--us2]);
 			if (*us1++ == '\0')
-      break;
+				break;
 		} while (--n != 0);
-  }
+	}
 	return (0);
 }
