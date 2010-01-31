@@ -39,7 +39,7 @@ asprintf(char **str, const char *fmt, ...)
 	f._bf._size = f._w = 127;		/* Leave room for the NUL */
 	va_start(ap, fmt);
 	ret = vfprintf(&f, fmt, ap);
-  va_end(ap);
+	va_end(ap);
 	if (ret == -1)
 		goto err;
 	*f._p = '\0';
@@ -50,10 +50,7 @@ asprintf(char **str, const char *fmt, ...)
 	return (ret);
 
 err:
-	if (f._bf._base) {
-		free(f._bf._base);
-		f._bf._base = NULL;
-	}
+	free(f._bf._base);
 	*str = NULL;
 	errno = ENOMEM;
 	return (-1);
