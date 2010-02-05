@@ -323,6 +323,8 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
     } else {
         // create a new entry
         entry = (HashEntry*)dlmalloc(sizeof(HashEntry) + numEntries*sizeof(intptr_t));
+        if (!entry)
+            return NULL;
         entry->allocations = 1;
         entry->slot = slot;
         entry->prev = NULL;
