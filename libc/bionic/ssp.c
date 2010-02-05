@@ -76,9 +76,9 @@ void __stack_chk_fail(void)
     sigprocmask(SIG_BLOCK, &sigmask, NULL);
 
     /* Use /proc/self/exe link to obtain the program name for logging
-     * purposes. If it's not available, we set it to "unknown" */
+     * purposes. If it's not available, we set it to "<unknown>" */
     if ((count = readlink("/proc/self/exe", path, sizeof(path) - 1)) == -1) {
-        strlcpy(path, "unknown", sizeof(path));
+        strlcpy(path, "<unknown>", sizeof(path));
     } else {
         path[count] = '\0';
     }
