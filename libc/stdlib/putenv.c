@@ -42,7 +42,7 @@ putenv(const char *str)
 	if ((equal = strchr(p, '=')) == NULL) {
 		(void)free(p);
 		return (-1);
-  }
+	}
 	*equal = '\0';
 	rval = setenv(p, equal + 1, 1);
 	(void)free(p);

@@ -387,7 +387,7 @@ size_t wcsxfrm(wchar_t *ws1, const wchar_t *ws2, size_t n)
 
 int wctob(wint_t c)
 {
-  return c;
+    return c;
 }
 
 wctype_t wctype(const char *property)
