@@ -198,7 +198,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     // debug_log("info = %p\n", info);
     if (*info == NULL) {
         *overallSize = 0;
-        goto done;
+        goto out_nomem_info;
     }
 
     // debug_log("sorting list...\n");
@@ -220,6 +220,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         head += *infoSize;
     }
 
+out_nomem_info:
     dlfree(list);
 
 done:
