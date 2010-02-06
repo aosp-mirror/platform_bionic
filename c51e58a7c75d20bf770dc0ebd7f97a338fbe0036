@@ -16,6 +16,24 @@
       "revId": "c51e58a7c75d20bf770dc0ebd7f97a338fbe0036",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAr3//+sU\u003d",
+        "filename": "libc/stdio/findfp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003237
+      },
+      "writtenOn": "2010-02-06T20:57:22Z",
+      "side": 1,
+      "message": "Hi, Kenny!\n\n    Perhaps does it align with the \"FILE usual\" array below, where 3 means (stdin + stdout + stderr) ?",
+      "parentUuid": "AAAAr3//+uA\u003d",
+      "revId": "c51e58a7c75d20bf770dc0ebd7f97a338fbe0036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
