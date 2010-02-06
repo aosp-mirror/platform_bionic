@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAr3//+uI\u003d",
+        "filename": "libc/stdlib/sha1hash.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000748
+      },
+      "writtenOn": "2010-02-06T19:18:09Z",
+      "side": 1,
+      "message": "This makes it less readable.",
+      "revId": "7dd90a0816b5376ffc1de4499d56935e0bd574a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
