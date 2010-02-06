@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAr3//+ts\u003d",
+        "filename": "libc/bionic/ssp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000748
+      },
+      "writtenOn": "2010-02-06T19:29:21Z",
+      "side": 1,
+      "message": "Should update the comment (although it seems redundant).",
+      "revId": "f80079496cefebac5a3123c043d81219c300b0c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
