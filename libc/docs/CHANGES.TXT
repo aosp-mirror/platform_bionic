@@ -58,6 +58,12 @@ Differences between current and Android 2.1:
 - fix sem_post() to wake up multiple threads when called rapidly in
   succession.
 
+- DNS: partial implementation of RFC3484 (rule 1, 2, 5, 6, 8, 10 and
+  modified rule 9), for better address selection/sorting.
+  In the process, removed code that was previously used for "sortlist"
+  in /etc/resolv.conf. (resolv.conf is already ignored, so the latter
+  is a no-op for actual functionality.)
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
