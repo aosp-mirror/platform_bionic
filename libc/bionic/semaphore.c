@@ -196,7 +196,8 @@ int  sem_trywait(sem_t *sem)
     if (__atomic_dec_if_positive(&sem->count) > 0) {
         return 0;
     } else {
-        return EAGAIN;
+        errno = EAGAIN;
+        return -1;
     }
 }
 

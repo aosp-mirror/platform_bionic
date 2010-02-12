@@ -46,7 +46,14 @@ Differences between current and Android 2.1:
 
 - <wchar.h>: Add mbstowcs() and wcstombs()
 
-- add clone() implementation for ARM (x86 and SH-4 not working yet)
+- add clone() implementation for ARM (x86 and SH-4 not working yet).
+
+- <sys/epoll.h>: <sys/system_properties.h>: Add missing C++ inclusion guards
+
+- fix getpwnam() and getpwgrp() to accept "app_0" as a valid user name.
+
+- fix sem_trywait() to return -1 and set errno to EAGAIN, instead of
+  returning EAGAIN directly.
 
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
