@@ -27,8 +27,8 @@
  */
 
 /*
- * Contains definition of global variables and implementation of routines
- * that are used by malloc leak detection code and other components in
+ * Contains definition of structures, global variables, and implementation of
+ * routines that are used by malloc leak detection code and other components in
  * the system. The trick is that some components expect these data and
  * routines to be defined / implemented in libc.so library, regardless
  * whether or not MALLOC_LEAK_CHECK macro is defined. To make things even
@@ -237,11 +237,11 @@ void* memalign(size_t alignment, size_t bytes) {
 // =============================================================================
 
 #define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "libc", (format), ##__VA_ARGS__ )
+   __libc_android_log_print(ANDROID_LOG_DEBUG, "libc", (format), ##__VA_ARGS__ )
 #define error_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
+   __libc_android_log_print(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
 #define info_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
+   __libc_android_log_print(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
 
 /* Table for dispatching malloc calls, depending on environment. */
 static MallocDebug gMallocUse __attribute__((aligned(32))) = {
@@ -259,41 +259,62 @@ extern char*  __progname;
  *      CHK_SENTINEL_VALUE, and CHK_FILL_FREE macros.
  * 10 - For adding pre-, and post- allocation stubs in order to detect
  *      buffer overruns.
- * 20 - For enabling emulator memory allocation instrumentation detecting
- *      memory leaks and buffer overruns.
+ * Note that emulator's memory allocation instrumentation is not controlled by
+ * libc.debug.malloc value, but rather by emulator, started with -memcheck
+ * option. Note also, that if emulator has started with -memcheck option,
+ * emulator's instrumented memory allocation will take over value saved in
+ * libc.debug.malloc. In other words, if emulator has started with -memcheck
+ * option, libc.debug.malloc value is ignored.
  * Actual functionality for debug levels 1-10 is implemented in
- * libc_malloc_debug_leak.so, while functionality for debug level 20 is
- * implemented in libc_malloc_debug_qemu.so and can be run inside the
- * emulator only.
+ * libc_malloc_debug_leak.so, while functionality for emultor's instrumented
+ * allocations is implemented in libc_malloc_debug_qemu.so and can be run inside
+  * the emulator only.
  */
 static void* libc_malloc_impl_handle = NULL;
+
+/* Make sure we have MALLOC_ALIGNMENT that matches the one that is
+ * used in dlmalloc. Emulator's memchecker needs this value to properly
+ * align its guarding zones.
+ */
+#ifndef MALLOC_ALIGNMENT
+#define MALLOC_ALIGNMENT ((size_t)8U)
+#endif  /* MALLOC_ALIGNMENT */
 
 /* Initializes memory allocation framework once per process. */
 static void malloc_init_impl(void)
 {
     const char* so_name = NULL;
-    unsigned int debug_level = 0;
+    MallocDebugInit malloc_debug_initialize = NULL;
     unsigned int qemu_running = 0;
-    int len;
+    unsigned int debug_level = 0;
+    unsigned int memcheck_enabled = 0;
     char env[PROP_VALUE_MAX];
+    char memcheck_tracing[PROP_VALUE_MAX];
 
-    // Get custom malloc debug level.
-    len = __system_property_get("libc.debug.malloc", env);
-    if (len) {
+    /* Get custom malloc debug level. Note that emulator started with
+     * memory checking option will have priority over debug level set in
+     * libc.debug.malloc system property. */
+    if (__system_property_get("ro.kernel.qemu", env) && atoi(env)) {
+        qemu_running = 1;
+        if (__system_property_get("ro.kernel.memcheck", memcheck_tracing)) {
+            if (memcheck_tracing[0] != '0') {
+                // Emulator has started with memory tracing enabled. Enforce it.
+                debug_level = 20;
+                memcheck_enabled = 1;
+            }
+        }
+    }
+
+    /* If debug level has not been set by memcheck option in the emulator,
+     * lets grab it from libc.debug.malloc system property. */
+    if (!debug_level && __system_property_get("libc.debug.malloc", env)) {
         debug_level = atoi(env);
     }
 
     /* Debug level 0 means that we should use dlxxx allocation
-     * routines (default).
-     */
+     * routines (default). */
     if (!debug_level) {
         return;
-    }
-
-    // Get emulator running status.
-    len = __system_property_get("ro.kernel.qemu", env);
-    if (len) {
-        qemu_running = atoi(env);
     }
 
     // Lets see which .so must be loaded for the requested debug level
@@ -304,17 +325,23 @@ static void malloc_init_impl(void)
             so_name = "/system/lib/libc_malloc_debug_leak.so";
             break;
         case 20:
-            // Quick check: debug level 20 can only be handled in emulator
+            // Quick check: debug level 20 can only be handled in emulator.
             if (!qemu_running) {
-                info_log("%s: Debug level %d can only be set in emulator\n",
-                         __progname, debug_level);
+                error_log("%s: Debug level %d can only be set in emulator\n",
+                          __progname, debug_level);
+                return;
+            }
+            // Make sure that memory checking has been enabled in emulator.
+            if (!memcheck_enabled) {
+                error_log("%s: Memory checking is not enabled in the emulator\n",
+                          __progname);
                 return;
             }
             so_name = "/system/lib/libc_malloc_debug_qemu.so";
             break;
         default:
-            info_log("%s: Debug level %d is unknown\n",
-                     __progname, debug_level);
+            error_log("%s: Debug level %d is unknown\n",
+                      __progname, debug_level);
             return;
     }
 
@@ -324,6 +351,36 @@ static void malloc_init_impl(void)
         error_log("%s: Missing module %s required for malloc debug level %d\n",
                  __progname, so_name, debug_level);
         return;
+    }
+
+    // Initialize malloc debugging in the loaded module.
+    malloc_debug_initialize =
+            dlsym(libc_malloc_impl_handle, "malloc_debug_initialize");
+    if (malloc_debug_initialize == NULL) {
+        error_log("%s: Initialization routine is not found in %s\n",
+                  __progname, so_name);
+        dlclose(libc_malloc_impl_handle);
+        return;
+    }
+    if (malloc_debug_initialize()) {
+        dlclose(libc_malloc_impl_handle);
+        return;
+    }
+
+    if (debug_level == 20) {
+        // For memory checker we need to do extra initialization.
+        int (*memcheck_initialize)(int, const char*) =
+                dlsym(libc_malloc_impl_handle, "memcheck_initialize");
+        if (memcheck_initialize == NULL) {
+            error_log("%s: memcheck_initialize routine is not found in %s\n",
+                      __progname, so_name);
+            dlclose(libc_malloc_impl_handle);
+            return;
+        }
+        if (memcheck_initialize(MALLOC_ALIGNMENT, memcheck_tracing)) {
+            dlclose(libc_malloc_impl_handle);
+            return;
+        }
     }
 
     // Initialize malloc dispatch table with appropriate routines.
@@ -374,8 +431,8 @@ static void malloc_init_impl(void)
             break;
         case 20:
             __libc_android_log_print(ANDROID_LOG_INFO, "libc",
-                    "%s using MALLOC_DEBUG = %d (instrumented for emulator)\n",
-                    __progname, debug_level);
+                "%s[%u] using MALLOC_DEBUG = %d (instrumented for emulator)\n",
+                __progname, getpid(), debug_level);
             gMallocUse.malloc =
                 dlsym(libc_malloc_impl_handle, "qemu_instrumented_malloc");
             gMallocUse.free =
@@ -421,9 +478,8 @@ static pthread_once_t  malloc_init_once_ctl = PTHREAD_ONCE_INIT;
  */
 void malloc_debug_init(void)
 {
-    /* We need to initialize malloc iff we impelement here custom
-     * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so
-     */
+    /* We need to initialize malloc iff we implement here custom
+     * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so */
 #if defined(USE_DL_PREFIX) && !defined(LIBC_STATIC)
     if (pthread_once(&malloc_init_once_ctl, malloc_init_impl)) {
         error_log("Unable to initialize malloc_debug component.");

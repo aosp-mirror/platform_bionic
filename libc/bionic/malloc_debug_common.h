@@ -70,12 +70,27 @@ struct HashTable {
 /* Entry in malloc dispatch table. */
 typedef struct MallocDebug MallocDebug;
 struct MallocDebug {
+    /* Address of the actual malloc routine. */
     void* (*malloc)(size_t bytes);
+    /* Address of the actual free routine. */
     void  (*free)(void* mem);
+    /* Address of the actual calloc routine. */
     void* (*calloc)(size_t n_elements, size_t elem_size);
+    /* Address of the actual realloc routine. */
     void* (*realloc)(void* oldMem, size_t bytes);
+    /* Address of the actual memalign routine. */
     void* (*memalign)(size_t alignment, size_t bytes);
 };
+
+/* Malloc debugging initialization routine.
+ * This routine must be implemented in .so modules that implement malloc
+ * debugging. This routine is called once per process from malloc_init_impl
+ * routine implemented in bionic/libc/bionic/malloc_debug_common.c when malloc
+ * debugging gets initialized for the process.
+ * Return:
+ *  0 on success, -1 on failure.
+ */
+typedef int (*MallocDebugInit)(void);
 
 #ifdef __cplusplus
 };  /* end of extern "C" */
