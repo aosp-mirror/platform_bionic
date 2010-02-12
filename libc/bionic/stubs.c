@@ -185,7 +185,7 @@ app_id_from_name( const char*  name )
         goto FAIL;
 
     id = strtoul(name+4, &end, 10);
-    if (id == 0 || *end != '\0')
+    if (*end != '\0')
         goto FAIL;
 
     id += AID_APP;
