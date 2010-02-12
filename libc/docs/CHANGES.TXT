@@ -55,6 +55,9 @@ Differences between current and Android 2.1:
 - fix sem_trywait() to return -1 and set errno to EAGAIN, instead of
   returning EAGAIN directly.
 
+- fix sem_post() to wake up multiple threads when called rapidly in
+  succession.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 

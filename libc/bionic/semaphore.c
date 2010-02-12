@@ -180,7 +180,7 @@ int sem_post(sem_t *sem)
     if (sem == NULL)
         return EINVAL;
 
-    if (__atomic_inc((volatile int*)&sem->count) == 0)
+    if (__atomic_inc((volatile int*)&sem->count) >= 0)
         __futex_wake(&sem->count, 1);
 
     return 0;
