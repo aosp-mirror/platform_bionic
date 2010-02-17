@@ -629,3 +629,12 @@ void* leak_memalign(size_t alignment, size_t bytes)
     }
     return base;
 }
+
+/* Initializes malloc debugging framework.
+ * See comments on MallocDebugInit in malloc_debug_common.h
+ */
+int malloc_debug_initialize(void)
+{
+    // We don't really have anything that requires initialization here.
+    return 0;
+}
