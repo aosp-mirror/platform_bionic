@@ -180,6 +180,8 @@ int              sched_getparam (pid_t pid, struct sched_param *param);
 int              sched_get_priority_max (int policy);
 int              sched_get_priority_min (int policy);
 int              sched_rr_get_interval (pid_t pid, struct timespec *interval);
+int              ioprio_set (int which, int who, int ioprio);
+int              ioprio_get (int which, int who);
 int              uname (struct utsname *);
 pid_t            __wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
 mode_t           umask (mode_t);

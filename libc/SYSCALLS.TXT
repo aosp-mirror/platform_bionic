@@ -227,6 +227,10 @@ int sched_get_priority_max(int policy)  159
 int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
 
+# io priorities
+int ioprio_set(int which, int who, int ioprio) 314,289
+int ioprio_get(int which, int who) 315,290
+
 # other
 int     uname(struct utsname *)  122
 pid_t   __wait4:wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114
