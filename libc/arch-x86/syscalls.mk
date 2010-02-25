@@ -40,6 +40,7 @@ syscall_src += arch-x86/syscalls/chroot.S
 syscall_src += arch-x86/syscalls/prctl.S
 syscall_src += arch-x86/syscalls/capget.S
 syscall_src += arch-x86/syscalls/capset.S
+syscall_src += arch-x86/syscalls/sigaltstack.S
 syscall_src += arch-x86/syscalls/acct.S
 syscall_src += arch-x86/syscalls/read.S
 syscall_src += arch-x86/syscalls/write.S

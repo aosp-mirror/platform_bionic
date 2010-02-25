@@ -48,6 +48,7 @@ int              chroot (const char *);
 int              prctl (int option, unsigned int arg2, unsigned int arg3, unsigned int arg4, unsigned int arg5);
 int              capget (cap_user_header_t header, cap_user_data_t data);
 int              capset (cap_user_header_t header, const cap_user_data_t data);
+int              sigaltstack (const stack_t*, stack_t*);
 int              acct (const char*  filepath);
 ssize_t          read (int, void*, size_t);
 ssize_t          write (int, const void*, size_t);

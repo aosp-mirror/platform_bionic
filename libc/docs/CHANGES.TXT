@@ -68,6 +68,8 @@ Differences between current and Android 2.1:
   errno. Previous implementation returned -1 on error, setting errno, which
   is not Posix compliant.
 
+- add sigaltstack() implementation for ARM.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 

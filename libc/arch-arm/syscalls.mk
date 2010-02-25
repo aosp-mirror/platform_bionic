@@ -37,6 +37,7 @@ syscall_src += arch-arm/syscalls/chroot.S
 syscall_src += arch-arm/syscalls/prctl.S
 syscall_src += arch-arm/syscalls/capget.S
 syscall_src += arch-arm/syscalls/capset.S
+syscall_src += arch-arm/syscalls/sigaltstack.S
 syscall_src += arch-arm/syscalls/acct.S
 syscall_src += arch-arm/syscalls/read.S
 syscall_src += arch-arm/syscalls/write.S

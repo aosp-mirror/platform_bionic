@@ -42,6 +42,7 @@
 #define __NR_prctl                        (__NR_SYSCALL_BASE + 172)
 #define __NR_capget                       (__NR_SYSCALL_BASE + 184)
 #define __NR_capset                       (__NR_SYSCALL_BASE + 185)
+#define __NR_sigaltstack                  (__NR_SYSCALL_BASE + 186)
 #define __NR_acct                         (__NR_SYSCALL_BASE + 51)
 #define __NR_read                         (__NR_SYSCALL_BASE + 3)
 #define __NR_write                        (__NR_SYSCALL_BASE + 4)
