@@ -1688,7 +1688,17 @@ extern int __rt_sigprocmask(int, const sigset_t *, sigset_t *, size_t);
 
 int pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
 {
-    return __rt_sigprocmask(how, set, oset, _NSIG / 8);
+    /* pthread_sigmask must return the error code, but the syscall
+     * will set errno instead and return 0/-1
+     */
+    int ret, old_errno = errno;
+
+    ret = __rt_sigprocmask(how, set, oset, _NSIG / 8);
+    if (ret < 0)
+        ret = errno;
+
+    errno = old_errno;
+    return ret;
 }
 
 

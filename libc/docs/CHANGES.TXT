@@ -64,6 +64,10 @@ Differences between current and Android 2.1:
   in /etc/resolv.conf. (resolv.conf is already ignored, so the latter
   is a no-op for actual functionality.)
 
+- fix pthread_sigmask() to properly return an error code without touching
+  errno. Previous implementation returned -1 on error, setting errno, which
+  is not Posix compliant.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
