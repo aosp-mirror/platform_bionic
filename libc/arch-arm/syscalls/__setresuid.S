@@ -2,12 +2,12 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type setresuid, #function
-    .globl setresuid
+    .type __setresuid, #function
+    .globl __setresuid
     .align 4
     .fnstart
 
-setresuid:
+__setresuid:
     .save   {r4, r7}
     stmfd   sp!, {r4, r7}
     ldr     r7, =__NR_setresuid32

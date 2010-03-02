@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,9 @@
  */
 #include <unistd.h>
 
-int seteuid(uid_t euid)
+int setresuid(uid_t ruid, uid_t euid, uid_t suid)
 {
     cpuacct_add(euid);
-    return __setresuid(-1, euid,-1);
+    return __setresuid(ruid, euid, suid);
+
 }

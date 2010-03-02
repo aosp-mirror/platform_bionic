@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type setresuid, @function
-    .globl setresuid
+    .type __setresuid, @function
+    .globl __setresuid
     .align 4
 
-setresuid:
+__setresuid:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx

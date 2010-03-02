@@ -2,19 +2,19 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type setuid, @function
-    .globl setuid
+    .type __setreuid, @function
+    .globl __setreuid
     .align 4
 
-setuid:
+__setreuid:
 
     /* invoke trap */
     mov.l   0f, r3  /* trap num */
-    trapa   #(1 + 0x10)
+    trapa   #(2 + 0x10)
 
     /* check return value */
     cmp/pz  r0
-    bt      __NR_setuid32_end
+    bt      __NR_setreuid32_end
 
     /* keep error number */
     sts.l   pr, @-r15
@@ -23,10 +23,10 @@ setuid:
     mov     r0, r4
     lds.l   @r15+, pr
 
-__NR_setuid32_end:
+__NR_setreuid32_end:
     rts
     nop
 
     .align  2
-0:  .long   __NR_setuid32
+0:  .long   __NR_setreuid32
 1:  .long   __set_syscall_errno

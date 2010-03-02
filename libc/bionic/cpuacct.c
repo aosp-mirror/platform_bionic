@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,35 @@
  * SUCH DAMAGE.
  */
 #include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <sys/stat.h>
+//#include <sys/types.h>
 
-int seteuid(uid_t euid)
+int cpuacct_add(uid_t uid)
 {
-    cpuacct_add(euid);
-    return __setresuid(-1, euid,-1);
+    int count;
+    FILE *fp;
+    char buf[80];
+
+    count = snprintf(buf, sizeof(buf), "/acct/uid/%d/tasks", uid);
+    fp = fopen(buf, "w+");
+    if (!fp) {
+        /* Note: sizeof("tasks") returns 6, which includes the NULL char */
+        buf[count - sizeof("tasks")] = 0;
+        if (mkdir(buf, 0775) < 0)
+            return -errno;
+
+        /* Note: sizeof("tasks") returns 6, which includes the NULL char */
+        buf[count - sizeof("tasks")] = '/';
+        fp = fopen(buf, "w+");
+    }
+    if (!fp)
+        return -errno;
+
+    fprintf(fp, "0");
+    if (fclose(fp))
+        return -errno;
+
+    return 0;
 }

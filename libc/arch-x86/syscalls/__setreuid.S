@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type setreuid, @function
-    .globl setreuid
+    .type __setreuid, @function
+    .globl __setreuid
     .align 4
 
-setreuid:
+__setreuid:
     pushl   %ebx
     pushl   %ecx
     mov     12(%esp), %ebx

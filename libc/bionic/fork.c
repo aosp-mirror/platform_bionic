@@ -43,6 +43,14 @@ int  fork(void)
     ret = __fork();
     if (ret != 0) {  /* not a child process */
         __timer_table_start_stop(0);
+    } else {
+        /*
+         * Newly created process must update cpu accounting.
+         * Call cpuacct_add passing in our uid, which will take
+         * the current task id and add it to the uid group passed
+         * as a parameter.
+         */
+        cpuacct_add(getuid());
     }
     return ret;
 }

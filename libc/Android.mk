@@ -47,7 +47,10 @@ libc_common_src_files := \
 	unistd/sbrk.c \
 	unistd/send.c \
 	unistd/setegid.c \
+	unistd/setuid.c \
 	unistd/seteuid.c \
+	unistd/setreuid.c \
+	unistd/setresuid.c \
 	unistd/setpgrp.c \
 	unistd/sigblock.c \
 	unistd/siginterrupt.c \
@@ -219,6 +222,7 @@ libc_common_src_files := \
 	bionic/__errno.c \
 	bionic/__set_errno.c \
 	bionic/_rand48.c \
+	bionic/cpuacct.c \
 	bionic/arc4random.c \
 	bionic/basename.c \
 	bionic/basename_r.c \

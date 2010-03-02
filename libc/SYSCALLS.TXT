@@ -42,7 +42,7 @@ pid_t   __sys_clone:clone (int, void*, int*, void*, int*) 120
 
 int     execve (const char*, char* const*, char* const*)  11
 
-int     setuid:setuid32 (uid_t)    213
+int     __setuid:setuid32 (uid_t)    213
 uid_t   getuid:getuid32 ()         199
 gid_t   getgid:getgid32 ()         200
 uid_t   geteuid:geteuid32 ()       201
@@ -56,8 +56,8 @@ pid_t   getppid()		   64
 pid_t   setsid()                   66
 int     setgid:setgid32(gid_t)     214
 int     seteuid:seteuid32(uid_t)   stub
-int     setreuid:setreuid32(uid_t, uid_t)   203
-int     setresuid:setresuid32(uid_t, uid_t, uid_t)   208
+int     __setreuid:setreuid32(uid_t, uid_t)   203
+int     __setresuid:setresuid32(uid_t, uid_t, uid_t)   208
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   210
 void*   __brk:brk(void*)           45
 # see comments in arch-arm/bionic/kill.S to understand why we don't generate an ARM stub for kill/tkill
