@@ -408,6 +408,14 @@ libc_common_cflags := \
 		-DUSE_DL_PREFIX \
 		-DPOSIX_MISTAKE
 
+# these macro definitions are required to implement the
+# 'timezone' and 'daylight' global variables, as well as
+# properly update the 'tm_gmtoff' field in 'struct tm'.
+#
+libc_common_cflags += \
+    -DTM_GMTOFF=tm_gmtoff \
+    -DUSG_COMPAT=1
+
 ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif

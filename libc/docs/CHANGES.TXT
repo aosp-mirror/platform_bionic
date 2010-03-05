@@ -70,6 +70,12 @@ Differences between current and Android 2.1:
 
 - add sigaltstack() implementation for ARM.
 
+- <time.h>: Properly implement the 'timezone' and 'daylight' global variables
+  (they were not defined previously, though declared in the header).
+
+- <time.h>: Fix timezone management implementation to properly update
+  'tm_gmtoff' field in 'struct tm' structure.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
