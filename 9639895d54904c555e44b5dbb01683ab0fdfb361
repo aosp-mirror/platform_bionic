@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAvX///9Y\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:14:06Z",
+      "side": 1,
+      "message": "this is probably missing the bcopy/strcmp/strncmp sources here.",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///9U\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:14:06Z",
+      "side": 1,
+      "message": "trailing space here.",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///9Q\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:14:06Z",
+      "side": 1,
+      "message": "It\u0027s probably not necessary to mention Atom in the comment since the flags don\u0027t seem to be specific to it.",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///9I\u003d",
+        "filename": "libc/arch-x86/string/cache_wrapper.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:14:06Z",
+      "side": 1,
+      "message": "Can you simplify this file ?",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
