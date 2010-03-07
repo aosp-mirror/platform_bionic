@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAvX///9o\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:03:29Z",
+      "side": 1,
+      "message": "can you update this table as well. There doesn\u0027t seem to be anything cpu-specific in the dladdr() implementation. Will add the sh maintainer as reviewer too.",
+      "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///9k\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-07T03:03:29Z",
+      "side": 1,
+      "message": "quick question, does that search in the executable itself too ? I believe the GLibc dladdr() does.",
+      "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
