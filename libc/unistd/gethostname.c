@@ -41,11 +41,11 @@ int gethostname(char*  buff, size_t  buflen)
         int  namelen = strlen(name.nodename);
 
         if ((int)buflen < namelen+1) {
-    errno = EINVAL;
+            errno = EINVAL;
             result = -1;
         } else {
             memcpy( buff, name.nodename, namelen+1 );
-  }
+        }
     }
     return result;
 }

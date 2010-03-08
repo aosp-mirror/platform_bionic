@@ -76,6 +76,10 @@ Differences between current and Android 2.1:
 - <time.h>: Fix timezone management implementation to properly update
   'tm_gmtoff' field in 'struct tm' structure.
 
+- DNS: get rid of spurious random DNS queries when trying to resolve
+  an unknown domain name. Due to an initialization bug, a random DNS search
+  list was generated for each thread is net.dns.search is not defined.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
