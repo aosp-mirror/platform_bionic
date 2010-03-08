@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAvX///5I\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2010-03-08T23:44:46Z",
+      "side": 1,
+      "message": "Indeed it is. That\u0027s a merge error. You\u0027ve added arch-sh since the eclair branch and the change didn\u0027t get propagated for the new arch. Thank you... I\u0027ll take care of it.",
+      "parentUuid": "AAAAvX///9Y\u003d",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvX///9U\u003d",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAvX///5E\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2010-03-08T23:44:46Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "AAAAvX///9U\u003d",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvX///9Q\u003d",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2010-03-07T03:14:06Z",
       "side": 1,
       "message": "It\u0027s probably not necessary to mention Atom in the comment since the flags don\u0027t seem to be specific to it.",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///5A\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2010-03-08T23:44:46Z",
+      "side": 1,
+      "message": "We would prefer to be specific that these are Atom... not IA. Eventually, we\u0027ll probably support both IA (generic) and Atom (specific implementation)... for now, just Atom. This will be even more pronounced once we bring in the Atom aware compiler.",
+      "parentUuid": "AAAAvX///9Q\u003d",
       "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
