@@ -121,6 +121,24 @@
       "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvX///40\u003d",
+        "filename": "libc/arch-x86/string/cache_wrapper.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2010-03-08T23:45:31Z",
+      "side": 1,
+      "message": "Good catch. The #if was there for trying some things (debugging). I\u0027ll take out the entire section.",
+      "parentUuid": "AAAAvX///9I\u003d",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
