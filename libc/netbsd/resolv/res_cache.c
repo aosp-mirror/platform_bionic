@@ -251,7 +251,7 @@ _bprint( char*  p, char*  end, const char*  format, ... )
         return p;
 
     va_start(args, format);
-    n = snprintf( p, avail, format, args);
+    n = vsnprintf( p, avail, format, args);
     va_end(args);
 
     /* certain C libraries return -1 in case of truncation */
