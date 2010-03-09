@@ -107,6 +107,23 @@
     },
     {
       "key": {
+        "uuid": "AAAAvX///3s\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-09T00:41:53Z",
+      "side": 1,
+      "message": "I understand that, but I believe that the code works on all other modern x86 CPUs, even though it is optimized for Atom.\n\nIf in the future we want to support another variant, we may introduce configuration here through TARGET_ARCH_VARIANT like we do for ARM.\n\nWell, it\u0027s not a big deal, do as you want.",
+      "revId": "9639895d54904c555e44b5dbb01683ab0fdfb361",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvX///9I\u003d",
         "filename": "libc/arch-x86/string/cache_wrapper.S",
         "patchSetId": 1
