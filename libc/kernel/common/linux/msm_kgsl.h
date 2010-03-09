@@ -49,6 +49,10 @@ struct kgsl_devmemstore {
  unsigned int sbz;
  volatile unsigned int eoptimestamp;
  unsigned int sbz2;
+ volatile unsigned int ts_cmp_enable;
+ unsigned int sbz3;
+ volatile unsigned int ref_wait_ts;
+ unsigned int sbz4;
 };
 
 #define KGSL_DEVICE_MEMSTORE_OFFSET(field)   offsetof(struct kgsl_devmemstore, field)
@@ -65,7 +69,8 @@ enum kgsl_property_type {
  KGSL_PROP_DEVICE_POWER = 0x00000003,
  KGSL_PROP_SHMEM = 0x00000004,
  KGSL_PROP_SHMEM_APERTURES = 0x00000005,
- KGSL_PROP_MMU_ENABLE = 0x00000006
+ KGSL_PROP_MMU_ENABLE = 0x00000006,
+ KGSL_PROP_INTERRUPT_WAITS = 0x00000007,
 };
 
 struct kgsl_shadowprop {
