@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAvn///+g\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-10T17:59:15Z",
+      "side": 1,
+      "message": "replace all this with memset(info, 0, sizeof(struct Dl_info));",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///+I\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-10T17:59:15Z",
+      "side": 1,
+      "message": "get rid of empty line",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///+E\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-10T17:59:15Z",
+      "side": 1,
+      "message": "this is wrong. if you don\u0027t find a symbol in the list, you still return success. Instead of break, you need to return 1, and let the default case fall through to return 0.",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///+A\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-10T17:59:15Z",
+      "side": 1,
+      "message": "this should take a void * as argument, not unsigned.",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
