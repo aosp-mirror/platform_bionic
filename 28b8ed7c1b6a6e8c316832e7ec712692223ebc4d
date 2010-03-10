@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAvn///8c\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-10T23:42:33Z",
+      "side": 1,
+      "message": "Fair enough. I read the linux manpage, which did not actually spell out that it was valid to not return a symbol.",
+      "parentUuid": "AAAAvn///9w\u003d",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvn///+A\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 4
