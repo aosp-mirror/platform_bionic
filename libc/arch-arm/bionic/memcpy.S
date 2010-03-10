@@ -28,7 +28,7 @@
 
 #include <machine/cpu-features.h>
 
-#if __ARM_ARCH__ == 7 || defined(__ARM_NEON__)
+#if defined(__ARM_NEON__)
 
         .text
         .fpu    neon
