@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "AAAAvn////s\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1001893
+      },
+      "writtenOn": "2010-03-10T06:59:08Z",
+      "side": 1,
+      "message": "Can you change it like this as well for ANDROID_SH_LINKER?\n//                     0000000 00011111 111112 22222222 2333333 333344444444445\n//                     0123456 78901234 567890 12345678 9012345 678901234567890\n#define ANDROID_LIBDL_STRTAB                                          \\\n                      \"dlopen\\0dlclose\\0dlsym\\0dlerror\\0dladdr\\0dl_iterate_phdr\"",
+      "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn////o\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1001893
+      },
+      "writtenOn": "2010-03-10T06:59:08Z",
+      "side": 1,
+      "message": "and here\n-st_name: 29,\n+st_name: 36,",
+      "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvX///9k\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 1
