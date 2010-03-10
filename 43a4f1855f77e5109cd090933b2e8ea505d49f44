@@ -67,6 +67,24 @@
       "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn////c\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1003310
+      },
+      "writtenOn": "2010-03-10T14:57:06Z",
+      "side": 1,
+      "message": "It searches everything in the solist, which includes the executable itself.",
+      "parentUuid": "AAAAvX///9k\u003d",
+      "revId": "43a4f1855f77e5109cd090933b2e8ea505d49f44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
