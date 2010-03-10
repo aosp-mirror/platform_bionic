@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAvn///9w\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-03-10T19:18:46Z",
+      "side": 1,
+      "message": "This is by design.  If a symbol cannot be found, it is still useful to know which library the address came from, so the dladdr() manpage states that in this case the function should return success, but with the sname and saddr members set to NULL.  This is also what glibc\u0027s implementation does (see elf/dl-addr.c)  The only time dladdr() should return failure is if the address does not fall into one of the loaded libraries at all.",
+      "parentUuid": "AAAAvn///+E\u003d",
+      "revId": "28b8ed7c1b6a6e8c316832e7ec712692223ebc4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAvn///+A\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 4
