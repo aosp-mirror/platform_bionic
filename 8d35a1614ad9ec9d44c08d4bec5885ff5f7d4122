@@ -67,6 +67,24 @@
       "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///70\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-11T00:19:13Z",
+      "side": 1,
+      "message": "I totally missed that, thanks for noticing!\n\nPlease add back the explicit null terminators to all these strings.",
+      "parentUuid": "AAAAvn///78\u003d",
+      "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
