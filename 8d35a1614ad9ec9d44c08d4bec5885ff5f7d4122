@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAvn///8I\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-03-11T00:07:35Z",
+      "side": 1,
+      "message": "You need to lock dl_lock in here.",
+      "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///8U\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-03-11T00:07:35Z",
+      "side": 1,
+      "message": "Why don\u0027t you move the memset() here?   No need to initialize it outside the if statement.",
+      "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///8Q\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-03-11T00:07:35Z",
+      "side": 1,
+      "message": "This looks like a function that is better put in linker.c, near lookup().",
+      "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
