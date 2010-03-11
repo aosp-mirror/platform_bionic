@@ -16,6 +16,24 @@
       "revId": "662787d406a73d987df5ca6dcf4a49055a6ff055",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAv3////k\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-03-11T19:13:47Z",
+      "side": 1,
+      "message": "That indentation is correct.  The previous lines are continuations of the if statement, so they are only indented by three spaces.  That\u0027s why I\u0027d originally put another blank line in here, to try to set it off from the if clause a bit more, but neither solution really looks all that nice.  Putting all three pieces on the same line makes it rather long, so I\u0027m not sure what the nicest-looking way to format it is.  Suggestions?",
+      "parentUuid": "AAAAv3////s\u003d",
+      "revId": "662787d406a73d987df5ca6dcf4a49055a6ff055",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
