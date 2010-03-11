@@ -44,6 +44,9 @@
 #include <assert.h>
 #include <malloc.h>
 
+#define  __likely(cond)    __builtin_expect(!!(cond), 1)
+#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
+
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
@@ -712,6 +715,9 @@ int pthread_setschedparam(pthread_t thid, int policy,
 int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
 int __futex_wake(volatile void *ftx, int count);
 
+int __futex_wait_private(volatile void *ftx, int val, const struct timespec *timeout);
+int __futex_wake_private(volatile void *ftx, int count);
+
 // mutex lock states
 //
 // 0: unlocked
@@ -723,7 +729,8 @@ int __futex_wake(volatile void *ftx, int count);
  * bits:     name     description
  * 31-16     tid      owner thread's kernel id (recursive and errorcheck only)
  * 15-14     type     mutex type
- * 13-2      counter  counter of recursive mutexes
+ * 13        sharing  sharing flag
+ * 12-2      counter  counter of recursive mutexes
  * 1-0       state    lock state (0, 1 or 2)
  */
 
@@ -737,10 +744,21 @@ int __futex_wake(volatile void *ftx, int count);
 #define  MUTEX_TYPE_ERRORCHECK 0x8000
 
 #define  MUTEX_COUNTER_SHIFT  2
-#define  MUTEX_COUNTER_MASK   0x3ffc
+#define  MUTEX_COUNTER_MASK   0x1ffc
 
+#define  MUTEX_SHARING_MASK   0x2000
 
+#define  MUTEX_IS_SHARED(m)  (((m)->value & MUTEX_SHARING_MASK) != 0)
 
+/* A mutex attribute stores the following in its fields:
+ *
+ * bits:    name     description
+ * 0-3      type     type of thread (NORMAL/RECURSIVE/ERRORCHECK)
+ * 4        sharing  1 if shared, or 0 otherwise.
+ */
+
+#define MUTEXATTR_TYPE_MASK     0x0007
+#define MUTEXATTR_SHARING_MASK  0x0010
 
 int pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
@@ -764,10 +782,12 @@ int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 
 int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)
 {
-    if (attr && *attr >= PTHREAD_MUTEX_NORMAL &&
-                *attr <= PTHREAD_MUTEX_ERRORCHECK ) {
-        *type = *attr;
-        return 0;
+    if (attr) {
+        int  atype = (*attr & MUTEXATTR_TYPE_MASK);
+        if (atype >= PTHREAD_MUTEX_NORMAL && atype <= PTHREAD_MUTEX_ERRORCHECK) {
+            *type = atype;
+            return 0;
+        }
     }
     return EINVAL;
 }
@@ -776,7 +796,7 @@ int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
 {
     if (attr && type >= PTHREAD_MUTEX_NORMAL &&
                 type <= PTHREAD_MUTEX_ERRORCHECK ) {
-        *attr = type;
+        *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
         return 0;
     }
     return EINVAL;
@@ -791,54 +811,70 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
 
     switch (pshared) {
     case PTHREAD_PROCESS_PRIVATE:
+        *attr &= ~MUTEXATTR_SHARING_MASK;
+        return 0;
+
     case PTHREAD_PROCESS_SHARED:
         /* our current implementation of pthread actually supports shared
          * mutexes but won't cleanup if a process dies with the mutex held.
          * Nevertheless, it's better than nothing. Shared mutexes are used
          * by surfaceflinger and audioflinger.
          */
+        *attr |= MUTEXATTR_SHARING_MASK;
         return 0;
     }
 
-    return ENOTSUP;
+    return EINVAL;
 }
 
 int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared)
 {
-    if (!attr)
+    if (!attr || !pshared)
         return EINVAL;
 
-    *pshared = PTHREAD_PROCESS_PRIVATE;
+    *pshared = (*attr & MUTEXATTR_SHARING_MASK) ? PTHREAD_PROCESS_SHARED
+                                                : PTHREAD_PROCESS_PRIVATE;
     return 0;
 }
 
 int pthread_mutex_init(pthread_mutex_t *mutex,
                        const pthread_mutexattr_t *attr)
 {
-    if ( mutex ) {
-        if (attr == NULL) {
-            mutex->value = MUTEX_TYPE_NORMAL;
-            return 0;
-        }
-        switch ( *attr ) {
-        case PTHREAD_MUTEX_NORMAL:
-            mutex->value = MUTEX_TYPE_NORMAL;
-            return 0;
+    int value = 0;
 
-        case PTHREAD_MUTEX_RECURSIVE:
-            mutex->value = MUTEX_TYPE_RECURSIVE;
-            return 0;
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
 
-        case PTHREAD_MUTEX_ERRORCHECK:
-            mutex->value = MUTEX_TYPE_ERRORCHECK;
-            return 0;
-        }
+    if (__likely(attr == NULL)) {
+        mutex->value = MUTEX_TYPE_NORMAL;
+        return 0;
     }
-    return EINVAL;
+
+    if ((*attr & MUTEXATTR_SHARING_MASK) != 0)
+        value |= MUTEX_SHARING_MASK;
+
+    switch (*attr & MUTEXATTR_TYPE_MASK) {
+    case PTHREAD_MUTEX_NORMAL:
+        value |= MUTEX_TYPE_NORMAL;
+        break;
+    case PTHREAD_MUTEX_RECURSIVE:
+        value |= MUTEX_TYPE_RECURSIVE;
+        break;
+    case PTHREAD_MUTEX_ERRORCHECK:
+        value |= MUTEX_TYPE_ERRORCHECK;
+        break;
+    default:
+        return EINVAL;
+    }
+    mutex->value = value;
+    return 0;
 }
 
 int pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
+
     mutex->value = 0xdead10cc;
     return 0;
 }
@@ -855,35 +891,46 @@ int pthread_mutex_destroy(pthread_mutex_t *mutex)
  * Non-recursive mutexes don't use the thread-id or counter fields, and the
  * "type" value is zero, so the only bits that will be set are the ones in
  * the lock state field.
+ *
+ * This routine is used for both shared and private mutexes.
  */
 static __inline__ void
 _normal_lock(pthread_mutex_t*  mutex)
 {
-    /*
-     * The common case is an unlocked mutex, so we begin by trying to
-     * change the lock's state from 0 to 1.  __atomic_cmpxchg() returns 0
-     * if it made the swap successfully.  If the result is nonzero, this
-     * lock is already held by another thread.
-     */
-    if (__atomic_cmpxchg(0, 1, &mutex->value ) != 0) {
+    if (__likely(!MUTEX_IS_SHARED(mutex))) {
         /*
-         * We want to go to sleep until the mutex is available, which
-         * requires promoting it to state 2.  We need to swap in the new
-         * state value and then wait until somebody wakes us up.
-         *
-         * __atomic_swap() returns the previous value.  We swap 2 in and
-         * see if we got zero back; if so, we have acquired the lock.  If
-         * not, another thread still holds the lock and we wait again.
-         *
-         * The second argument to the __futex_wait() call is compared
-         * against the current value.  If it doesn't match, __futex_wait()
-         * returns immediately (otherwise, it sleeps for a time specified
-         * by the third argument; 0 means sleep forever).  This ensures
-         * that the mutex is in state 2 when we go to sleep on it, which
-         * guarantees a wake-up call.
-         */
-        while (__atomic_swap(2, &mutex->value ) != 0)
-            __futex_wait(&mutex->value, 2, 0);
+        * The common case is an unlocked mutex, so we begin by trying to
+        * change the lock's state from 0 to 1.  __atomic_cmpxchg() returns 0
+        * if it made the swap successfully.  If the result is nonzero, this
+        * lock is already held by another thread.
+        */
+        if (__atomic_cmpxchg(0, 1, &mutex->value) != 0) {
+            /*
+            * We want to go to sleep until the mutex is available, which
+            * requires promoting it to state 2.  We need to swap in the new
+            * state value and then wait until somebody wakes us up.
+            *
+            * __atomic_swap() returns the previous value.  We swap 2 in and
+            * see if we got zero back; if so, we have acquired the lock.  If
+            * not, another thread still holds the lock and we wait again.
+            *
+            * The second argument to the __futex_wait() call is compared
+            * against the current value.  If it doesn't match, __futex_wait()
+            * returns immediately (otherwise, it sleeps for a time specified
+            * by the third argument; 0 means sleep forever).  This ensures
+            * that the mutex is in state 2 when we go to sleep on it, which
+            * guarantees a wake-up call.
+            */
+            while (__atomic_swap(2, &mutex->value ) != 0)
+                __futex_wait_private(&mutex->value, 2, 0);
+        }
+    } else {
+        /* Same algorithm, with the sharing bit flag set */
+        const int sharing = MUTEX_SHARING_MASK;
+        if (__atomic_cmpxchg(sharing|0, sharing|1, &mutex->value) != 0) {
+            while (__atomic_swap(sharing|2, &mutex->value ) != (sharing|0))
+                __futex_wait(&mutex->value, sharing|2, 0);
+        }
     }
 }
 
@@ -894,50 +941,59 @@ _normal_lock(pthread_mutex_t*  mutex)
 static __inline__ void
 _normal_unlock(pthread_mutex_t*  mutex)
 {
-    /*
-     * The mutex value will be 1 or (rarely) 2.  We use an atomic decrement
-     * to release the lock.  __atomic_dec() returns the previous value;
-     * if it wasn't 1 we have to do some additional work.
-     */
-    if (__atomic_dec(&mutex->value) != 1) {
+    if (__likely(!MUTEX_IS_SHARED(mutex))) {
         /*
-         * Start by releasing the lock.  The decrement changed it from
-         * "contended lock" to "uncontended lock", which means we still
-         * hold it, and anybody who tries to sneak in will push it back
-         * to state 2.
-         *
-         * Once we set it to zero the lock is up for grabs.  We follow
-         * this with a __futex_wake() to ensure that one of the waiting
-         * threads has a chance to grab it.
-         *
-         * This doesn't cause a race with the swap/wait pair in
-         * _normal_lock(), because the __futex_wait() call there will
-         * return immediately if the mutex value isn't 2.
-         */
-        mutex->value = 0;
+        * The mutex value will be 1 or (rarely) 2.  We use an atomic decrement
+        * to release the lock.  __atomic_dec() returns the previous value;
+        * if it wasn't 1 we have to do some additional work.
+        */
+        if (__atomic_dec(&mutex->value) != 1) {
+            /*
+            * Start by releasing the lock.  The decrement changed it from
+            * "contended lock" to "uncontended lock", which means we still
+            * hold it, and anybody who tries to sneak in will push it back
+            * to state 2.
+            *
+            * Once we set it to zero the lock is up for grabs.  We follow
+            * this with a __futex_wake() to ensure that one of the waiting
+            * threads has a chance to grab it.
+            *
+            * This doesn't cause a race with the swap/wait pair in
+            * _normal_lock(), because the __futex_wait() call there will
+            * return immediately if the mutex value isn't 2.
+            */
+            mutex->value = 0;
 
-        /*
-         * Wake up one waiting thread.  We don't know which thread will be
-         * woken or when it'll start executing -- futexes make no guarantees
-         * here.  There may not even be a thread waiting.
-         *
-         * The newly-woken thread will replace the 0 we just set above
-         * with 2, which means that when it eventually releases the mutex
-         * it will also call FUTEX_WAKE.  This results in one extra wake
-         * call whenever a lock is contended, but lets us avoid forgetting
-         * anyone without requiring us to track the number of sleepers.
-         *
-         * It's possible for another thread to sneak in and grab the lock
-         * between the zero assignment above and the wake call below.  If
-         * the new thread is "slow" and holds the lock for a while, we'll
-         * wake up a sleeper, which will swap in a 2 and then go back to
-         * sleep since the lock is still held.  If the new thread is "fast",
-         * running to completion before we call wake, the thread we
-         * eventually wake will find an unlocked mutex and will execute.
-         * Either way we have correct behavior and nobody is orphaned on
-         * the wait queue.
-         */
-        __futex_wake(&mutex->value, 1);
+            /*
+            * Wake up one waiting thread.  We don't know which thread will be
+            * woken or when it'll start executing -- futexes make no guarantees
+            * here.  There may not even be a thread waiting.
+            *
+            * The newly-woken thread will replace the 0 we just set above
+            * with 2, which means that when it eventually releases the mutex
+            * it will also call FUTEX_WAKE.  This results in one extra wake
+            * call whenever a lock is contended, but lets us avoid forgetting
+            * anyone without requiring us to track the number of sleepers.
+            *
+            * It's possible for another thread to sneak in and grab the lock
+            * between the zero assignment above and the wake call below.  If
+            * the new thread is "slow" and holds the lock for a while, we'll
+            * wake up a sleeper, which will swap in a 2 and then go back to
+            * sleep since the lock is still held.  If the new thread is "fast",
+            * running to completion before we call wake, the thread we
+            * eventually wake will find an unlocked mutex and will execute.
+            * Either way we have correct behavior and nobody is orphaned on
+            * the wait queue.
+            */
+            __futex_wake_private(&mutex->value, 1);
+        }
+    } else {
+        /* Same algorithm with sharing bit flag set */
+        const int sharing = MUTEX_SHARING_MASK;
+        if (__atomic_dec(&mutex->value) != (sharing|1)) {
+            mutex->value = sharing;
+            __futex_wake(&mutex->value, 1);
+        }
     }
 }
 
@@ -955,173 +1011,200 @@ _recursive_unlock(void)
     _normal_unlock( &__recursive_lock );
 }
 
-#define  __likely(cond)    __builtin_expect(!!(cond), 1)
-#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
-
 int pthread_mutex_lock(pthread_mutex_t *mutex)
 {
-    if (__likely(mutex != NULL))
-    {
-        int  mtype = (mutex->value & MUTEX_TYPE_MASK);
+    int  mtype, tid, new_lock_type, sharing;
 
-        if ( __likely(mtype == MUTEX_TYPE_NORMAL) ) {
-            _normal_lock(mutex);
-        }
-        else
-        {
-            int  tid = __get_thread()->kernel_id;
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
 
-            if ( tid == MUTEX_OWNER(mutex) )
-            {
-                int  oldv, counter;
+    /* get mutex type */
+    mtype = (mutex->value & MUTEX_TYPE_MASK);
 
-                if (mtype == MUTEX_TYPE_ERRORCHECK) {
-                    /* trying to re-lock a mutex we already acquired */
-                    return EDEADLK;
-                }
-                /*
-                 * We own the mutex, but other threads are able to change
-                 * the contents (e.g. promoting it to "contended"), so we
-                 * need to hold the global lock.
-                 */
-                _recursive_lock();
-                oldv         = mutex->value;
-                counter      = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-                mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-                _recursive_unlock();
-            }
-            else
-            {
-                /*
-                 * If the new lock is available immediately, we grab it in
-                 * the "uncontended" state.
-                 */
-                int new_lock_type = 1;
-
-                for (;;) {
-                    int  oldv;
-
-                    _recursive_lock();
-                    oldv = mutex->value;
-                    if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
-                        mutex->value = ((tid << 16) | mtype | new_lock_type);
-                    } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
-                        oldv ^= 3;
-                        mutex->value = oldv;
-                    }
-                    _recursive_unlock();
-
-                    if (oldv == mtype)
-                        break;
-
-                    /*
-                     * The lock was held, possibly contended by others.  From
-                     * now on, if we manage to acquire the lock, we have to
-                     * assume that others are still contending for it so that
-                     * we'll wake them when we unlock it.
-                     */
-                    new_lock_type = 2;
-
-                    __futex_wait( &mutex->value, oldv, 0 );
-                }
-            }
-        }
+    /* Handle normal mutexes quickly */
+    if ( __likely(mtype == MUTEX_TYPE_NORMAL) ) {
+        _normal_lock(mutex);
         return 0;
     }
-    return EINVAL;
+
+    /* This is a recursive or error check mutex.
+     * Check that we don't already own it.
+     */
+    tid = __get_thread()->kernel_id;
+    if ( tid == MUTEX_OWNER(mutex) )
+    {
+        int  oldv, counter;
+
+        if (mtype == MUTEX_TYPE_ERRORCHECK) {
+            /* trying to re-lock a mutex we already acquired */
+            return EDEADLK;
+        }
+        /*
+         * We own the mutex, but other threads are able to change
+         * the contents (e.g. promoting it to "contended"), so we
+         * need to hold the global lock.
+         */
+        _recursive_lock();
+        oldv         = mutex->value;
+        counter      = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
+        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
+        _recursive_unlock();
+
+        return 0;
+    }
+
+    /* We don't own it, try to lock it.
+     * If the new lock is available immediately, we grab it in
+     * the "uncontended" state.
+     */
+    new_lock_type = 1;
+    sharing       = (mutex->value & MUTEX_SHARING_MASK);
+
+    mtype |= sharing;  /* restore sharing bit flag */
+
+    /* here, mtype corresponds to the uncontended value for the mutex,
+     * i.e. something like:
+     *
+     *  <tid=0><type=?><sharing=?><counter=0><state=0>
+     */
+
+    for (;;) {
+        int  oldv;
+
+        _recursive_lock();
+        oldv = mutex->value;
+        if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
+            mutex->value = ((tid << 16) | mtype | new_lock_type);
+        } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
+            oldv ^= 3;
+            mutex->value = oldv;
+        }
+        _recursive_unlock();
+
+        if (oldv == mtype)
+            break;
+
+        /*
+         * The lock was held, possibly contended by others.  From
+         * now on, if we manage to acquire the lock, we have to
+         * assume that others are still contending for it so that
+         * we'll wake them when we unlock it.
+         */
+        new_lock_type = 2;
+
+        if (sharing) {
+            __futex_wait(&mutex->value, oldv, 0);
+        } else {
+            __futex_wait_private(&mutex->value, oldv, 0);
+        }
+    }
+    return 0;
 }
 
 
 int pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
-    if (__likely(mutex != NULL))
-    {
-        int  mtype = (mutex->value & MUTEX_TYPE_MASK);
+    int mtype, tid, sharing, oldv;
 
-        if (__likely(mtype == MUTEX_TYPE_NORMAL)) {
-            _normal_unlock(mutex);
-        }
-        else
-        {
-            int  tid = __get_thread()->kernel_id;
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
 
-            if ( tid == MUTEX_OWNER(mutex) )
-            {
-                int  oldv;
+    mtype = (mutex->value & MUTEX_TYPE_MASK);
 
-                _recursive_lock();
-                oldv = mutex->value;
-                if (oldv & MUTEX_COUNTER_MASK) {
-                    mutex->value = oldv - (1 << MUTEX_COUNTER_SHIFT);
-                    oldv = 0;
-                } else {
-                    mutex->value = mtype;
-                }
-                _recursive_unlock();
-
-                if ((oldv & 3) == 2)
-                    __futex_wake( &mutex->value, 1 );
-            }
-            else {
-                /* trying to unlock a lock we do not own */
-                return EPERM;
-            }
-        }
+    if (__likely(mtype == MUTEX_TYPE_NORMAL)) {
+        _normal_unlock(mutex);
         return 0;
     }
-    return EINVAL;
+
+    tid     = __get_thread()->kernel_id;
+    sharing = (mutex->value & MUTEX_SHARING_MASK);
+
+    mtype |= sharing; /* restore sharing bit flag */
+
+    /* ensure that we own the mutex */
+    if (__unlikely(tid != MUTEX_OWNER(mutex)))
+        return EPERM;
+
+    /* decrement or unlock it */
+    _recursive_lock();
+    oldv = mutex->value;
+    if (oldv & MUTEX_COUNTER_MASK) {
+        /* decrement non-0 counter */
+        mutex->value = oldv - (1 << MUTEX_COUNTER_SHIFT);
+        oldv = 0;
+    } else {
+        /* counter was 0, revert to uncontended value */
+        mutex->value = mtype;
+    }
+    _recursive_unlock();
+
+    /* if the mutex was contended, wake one waiting thread */
+    if ((oldv & 3) == 2) {
+        if (sharing) {
+            __futex_wake(&mutex->value, 1);
+        } else {
+            __futex_wake_private(&mutex->value, 1);
+        }
+    }
+    return 0;
 }
 
 
 int pthread_mutex_trylock(pthread_mutex_t *mutex)
 {
-    if (__likely(mutex != NULL))
+    int mtype, sharing, tid, oldv;
+
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
+
+    mtype = (mutex->value & MUTEX_TYPE_MASK);
+
+    /* handle normal mutex first */
+    if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
-        int  mtype = (mutex->value & MUTEX_TYPE_MASK);
+        int sharing = (mutex->value & MUTEX_SHARING_MASK);
 
-        if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
-        {
-            if (__atomic_cmpxchg(0, 1, &mutex->value) == 0)
-                return 0;
-
-            return EBUSY;
-        }
-        else
-        {
-            int  tid = __get_thread()->kernel_id;
-            int  oldv;
-
-            if ( tid == MUTEX_OWNER(mutex) )
-            {
-                int  oldv, counter;
-
-                if (mtype == MUTEX_TYPE_ERRORCHECK) {
-                    /* already locked by ourselves */
-                    return EDEADLK;
-                }
-
-                _recursive_lock();
-                oldv = mutex->value;
-                counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-                mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-                _recursive_unlock();
-                return 0;
-            }
-
-            /* try to lock it */
-            _recursive_lock();
-            oldv = mutex->value;
-            if (oldv == mtype)  /* uncontended released lock => state 1 */
-                mutex->value = ((tid << 16) | mtype | 1);
-            _recursive_unlock();
-
-            if (oldv != mtype)
-                return EBUSY;
-
+        if (__atomic_cmpxchg(sharing|0, sharing|1, &mutex->value) == 0)
             return 0;
-        }
+
+        return EBUSY;
     }
-    return EINVAL;
+
+    /* recursive or errorcheck mutex, do we already own it ? */
+    tid = __get_thread()->kernel_id;
+    sharing = mutex->value & MUTEX_SHARING_MASK;
+
+    if ( tid == MUTEX_OWNER(mutex) )
+    {
+        int  counter;
+
+        if (mtype == MUTEX_TYPE_ERRORCHECK) {
+            /* already locked by ourselves */
+            return EDEADLK;
+        }
+
+        _recursive_lock();
+        oldv = mutex->value;
+        counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
+        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
+        _recursive_unlock();
+        return 0;
+    }
+
+    /* we don't own it, so try to get it */
+    mtype |= sharing;
+
+    /* try to lock it */
+    _recursive_lock();
+    oldv = mutex->value;
+    if (oldv == mtype)  /* uncontended released lock => state 1 */
+        mutex->value = ((tid << 16) | mtype | 1);
+    _recursive_unlock();
+
+    if (oldv != mtype)
+        return EBUSY;
+
+    return 0;
 }
 
 
@@ -1164,16 +1247,21 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     clockid_t        clock = CLOCK_MONOTONIC;
     struct timespec  abstime;
     struct timespec  ts;
+    int              mtype, tid, oldv, sharing, new_lock_type;
 
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
 
-    if (__likely(mutex != NULL))
-    {
-        int  mtype = (mutex->value & MUTEX_TYPE_MASK);
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
 
-        if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
-        {
+
+    /* handle normal mutexes first */
+    mtype = (mutex->value & MUTEX_TYPE_MASK);
+
+    if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
+    {
+        if (__likely(!MUTEX_IS_SHARED(mutex))) {
             /* fast path for unconteded lock */
             if (__atomic_cmpxchg(0, 1, &mutex->value) == 0)
                 return 0;
@@ -1183,76 +1271,124 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
                 if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
                     return EBUSY;
 
-                __futex_wait(&mutex->value, 2, &ts);
+                __futex_wait_private(&mutex->value, 2, &ts);
             }
-            return 0;
+        } else /* sharing */ {
+            const int  sharing = MUTEX_SHARING_MASK;
+            if (__atomic_cmpxchg(sharing|0, sharing|1, &mutex->value) == 0)
+                return 0;
+
+            /* loop while needed */
+            while (__atomic_swap(sharing|2, &mutex->value) != (sharing|0)) {
+                if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
+                    return EBUSY;
+
+                __futex_wait(&mutex->value, sharing|2, &ts);
+            }
         }
-        else
-        {
-            int  tid = __get_thread()->kernel_id;
-            int  oldv;
+        return 0;
+    }
 
-            if ( tid == MUTEX_OWNER(mutex) )
-            {
-                int  oldv, counter;
+    /* recursive or errorcheck - do we own the mutex ? */
+    tid = __get_thread()->kernel_id;
 
-                if (mtype == MUTEX_TYPE_ERRORCHECK) {
-                    /* already locked by ourselves */
-                    return EDEADLK;
-                }
+    if ( tid == MUTEX_OWNER(mutex) )
+    {
+        int  counter;
 
-                _recursive_lock();
-                oldv = mutex->value;
-                counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-                mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-                _recursive_unlock();
-                return 0;
-            }
-            else
-            {
-                /*
-                 * If the new lock is available immediately, we grab it in
-                 * the "uncontended" state.
-                 */
-                int new_lock_type = 1;
+        if (mtype == MUTEX_TYPE_ERRORCHECK) {
+            /* already locked by ourselves */
+            return EDEADLK;
+        }
 
-                for (;;) {
-                    int  oldv;
-                    struct timespec  ts;
+        _recursive_lock();
+        oldv = mutex->value;
+        counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
+        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
+        _recursive_unlock();
+        return 0;
+    }
 
-                    _recursive_lock();
-                    oldv = mutex->value;
-                    if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
-                        mutex->value = ((tid << 16) | mtype | new_lock_type);
-                    } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
-                        oldv ^= 3;
-                        mutex->value = oldv;
-                    }
-                    _recursive_unlock();
+    /* we don't own it, try to lock it */
+    new_lock_type = 1;
+    sharing = (mutex->value & MUTEX_SHARING_MASK);
 
-                    if (oldv == mtype)
-                        break;
+    mtype |= sharing;
 
-                    /*
-                     * The lock was held, possibly contended by others.  From
-                     * now on, if we manage to acquire the lock, we have to
-                     * assume that others are still contending for it so that
-                     * we'll wake them when we unlock it.
-                     */
-                    new_lock_type = 2;
+    for (;;) {
+        struct timespec  ts;
 
-                    if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
-                        return EBUSY;
+        _recursive_lock();
+        oldv = mutex->value;
+        if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
+            mutex->value = ((tid << 16) | mtype | new_lock_type);
+        } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
+            oldv ^= 3;
+            mutex->value = oldv;
+        }
+        _recursive_unlock();
 
-                    __futex_wait( &mutex->value, oldv, &ts );
-                }
-                return 0;
-            }
+        if (oldv == mtype)
+            break;
+
+        /*
+         * The lock was held, possibly contended by others.  From
+         * now on, if we manage to acquire the lock, we have to
+         * assume that others are still contending for it so that
+         * we'll wake them when we unlock it.
+         */
+        new_lock_type = 2;
+
+        if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
+            return EBUSY;
+
+        if (sharing) {
+            __futex_wait(&mutex->value, oldv, &ts);
+        } else {
+            __futex_wait_private(&mutex->value, oldv, &ts);
         }
     }
-    return EINVAL;
+    return 0;
 }
 
+
+int
+pthread_condattr_init(pthread_condattr_t *attr)
+{
+    *attr = PTHREAD_PROCESS_PRIVATE;
+    return 0;
+}
+
+int
+pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared)
+{
+    if (attr == NULL)
+        return EINVAL;
+
+    if (pshared != PTHREAD_PROCESS_PRIVATE &&
+        pshared != PTHREAD_PROCESS_SHARED)
+        return EINVAL;
+
+    *attr = pshared;
+    return 0;
+}
+
+int
+pthread_condattr_getpshared(pthread_condattr_t *attr, int *pshared)
+{
+    if (attr == NULL || pshared == NULL)
+        return EINVAL;
+
+    *pshared = *attr;
+    return 0;
+}
+
+int
+pthread_condattr_destroy(pthread_condattr_t *attr)
+{
+    *attr = 0xdeada11d;
+    return 0;
+}
 
 /* XXX *technically* there is a race condition that could allow
  * XXX a signal to be missed.  If thread A is preempted in _wait()
@@ -1262,10 +1398,29 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
  * XXX then the signal will be lost.
  */
 
+/* Condition variables:
+ * bits     name      description
+ * 0        sharing   1 if process-shared, 0 if private
+ * 2-31     counter   counter increment on each signal/broadcast
+ */
+
+#define COND_SHARING_MASK       0x0001
+#define COND_COUNTER_INCREMENT  0x0002
+#define COND_COUNTER_MASK       (~COND_SHARING_MASK)
+
+#define  COND_IS_SHARED(cond) (((cond)->value & COND_SHARING_MASK) != 0)
+
 int pthread_cond_init(pthread_cond_t *cond,
                       const pthread_condattr_t *attr)
 {
+    if (cond == NULL)
+        return EINVAL;
+
     cond->value = 0;
+
+    if (attr != NULL && *attr == PTHREAD_PROCESS_SHARED)
+        cond->value |= COND_SHARING_MASK;
+
     return 0;
 }
 
@@ -1275,17 +1430,53 @@ int pthread_cond_destroy(pthread_cond_t *cond)
     return 0;
 }
 
+/* This function is used by pthread_cond_broadcast and
+ * pthread_cond_signal to 'pulse' the condition variable.
+ *
+ * This means atomically decrementing the counter value
+ * while leaving the other bits untouched.
+ */
+static void
+__pthread_cond_pulse(pthread_cond_t *cond)
+{
+    long flags = (cond->value & ~COND_COUNTER_MASK);
+
+    for (;;) {
+        long  oldval  = cond->value;
+        long  newval  = ((oldval - COND_COUNTER_INCREMENT) & COND_COUNTER_MASK) | flags;
+        if (__atomic_cmpxchg(oldval, newval, &cond->value) == 0)
+            break;
+    }
+}
+
 int pthread_cond_broadcast(pthread_cond_t *cond)
 {
-    __atomic_dec(&cond->value);
-    __futex_wake(&cond->value, INT_MAX);
+    if (cond == NULL)
+        return EINVAL;
+
+    __pthread_cond_pulse(cond);
+
+    if (COND_IS_SHARED(cond)) {
+        __futex_wake(&cond->value, INT_MAX);
+    } else {
+        __futex_wake_private(&cond->value, INT_MAX);
+    }
+
     return 0;
 }
 
 int pthread_cond_signal(pthread_cond_t *cond)
 {
-    __atomic_dec(&cond->value);
-    __futex_wake(&cond->value, 1);
+    if (cond == NULL)
+        return EINVAL;
+
+    __pthread_cond_pulse(cond);
+
+    if (COND_IS_SHARED(cond)) {
+        __futex_wake(&cond->value, 1);
+    } else {
+        __futex_wake_private(&cond->value, 1);
+    }
     return 0;
 }
 
@@ -1302,7 +1493,11 @@ int __pthread_cond_timedwait_relative(pthread_cond_t *cond,
     int  oldvalue = cond->value;
 
     pthread_mutex_unlock(mutex);
-    status = __futex_wait(&cond->value, oldvalue, reltime);
+    if (COND_IS_SHARED(cond)) {
+        status = __futex_wait(&cond->value, oldvalue, reltime);
+    } else {
+        status = __futex_wait_private(&cond->value, oldvalue, reltime);
+    }
     pthread_mutex_lock(mutex);
 
     if (status == (-ETIMEDOUT)) return ETIMEDOUT;

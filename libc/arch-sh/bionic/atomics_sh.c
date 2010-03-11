@@ -98,3 +98,21 @@ int __futex_wake(volatile void *ftx, int count)
 {
     return futex(ftx, FUTEX_WAKE, count, NULL, NULL, 0);
 }
+
+/* Private futexes belong to a single address space and cannot be
+ * shared among processes. They are however significantly faster to
+ * operate than standard futexes.
+ */
+#define FUTEX_PRIVATE_FLAG  128
+#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
+#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
+
+int __futex_wait_private(volatile void *ftx, int val, const struct timespec *timeout)
+{
+    return futex(ftx, FUTEX_WAIT_PRIVATE, val, (void *)timeout, NULL, 0);
+}
+
+int __futex_wake_private(volatile void *ftx, int count)
+{
+    return futex(ftx, FUTEX_WAKE_PRIVATE, count, NULL, NULL, 0);
+}
