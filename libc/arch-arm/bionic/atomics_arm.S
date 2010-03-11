@@ -43,19 +43,6 @@
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-/* Private futexes belong to a single address space and cannot be
- * shared among processes. They are however significantly faster to
- * operate than standard futexes.
- */
-.global __futex_wait_private
-.type __futex_wait_private, %function
-.global __futex_wake_private
-.type __futex_wake_private, %function
-
-#define FUTEX_PRIVATE_FLAG  128
-#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
-#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
-
 #if 1
    .equ     kernel_cmpxchg, 0xFFFF0FC0
    .equ     kernel_atomic_base, 0xFFFF0FFF
@@ -198,28 +185,6 @@ __futex_wake:
     ldmia   sp!, {r4, r7}
     bx      lr
 
-__futex_wait_private:
-    .fnstart
-    stmdb   sp!, {r4, r7}
-    .save   {r4, r7}
-    mov     r3, r2
-    mov     r2, r1
-    mov     r1, #FUTEX_WAIT_PRIVATE
-    ldr     r7, =__NR_futex
-    swi     #0
-    ldmia   sp!, {r4, r7}
-    bx      lr
-    .fnend
-
-__futex_wake_private:
-    stmdb   sp!, {r4, r7}
-    mov     r2, r1
-    mov     r1, #FUTEX_WAKE_PRIVATE
-    ldr     r7, =__NR_futex
-    swi     #0
-    ldmia   sp!, {r4, r7}
-    bx      lr
-
 #else
 
 __futex_wait:
@@ -232,19 +197,6 @@ __futex_wait:
 __futex_wake:
     mov     r2, r1
     mov     r1, #FUTEX_WAKE
-    swi     #__NR_futex
-    bx      lr
-
-__futex_wait_private:
-    mov     r3, r2
-    mov     r2, r1
-    mov     r1, #FUTEX_WAIT_PRIVATE
-    swi     #__NR_futex
-    bx      lr
-
-__futex_wake_private:
-    mov     r2, r1
-    mov     r1, #FUTEX_WAKE_PRIVATE
     swi     #__NR_futex
     bx      lr
 

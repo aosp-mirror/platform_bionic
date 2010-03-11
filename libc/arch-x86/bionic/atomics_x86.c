@@ -60,43 +60,6 @@ int __futex_wake(volatile void *ftx, int count)
     return ret;
 }
 
-/* Private futexes belong to a single address space and cannot be
- * shared among processes. They are however significantly faster to
- * operate than standard futexes.
- */
-#define FUTEX_PRIVATE_FLAG  128
-#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
-#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
-
-int __futex_wait_private(volatile void *ftx, int val)
-{
-    int ret;
-    asm volatile (
-        "int $0x80;"
-        : "=a" (ret)
-        : "0" (FUTEX_SYSCALL),
-          "b" (ftx),
-          "c" (FUTEX_WAIT_PRIVATE),
-          "d" (val),
-          "S" (0)
-    );
-    return ret;
-}
-
-int __futex_wake_private(volatile void *ftx, int count)
-{
-    int ret;
-    asm volatile (
-        "int $0x80;"
-        : "=a" (ret)
-        : "0" (FUTEX_SYSCALL),
-          "b" (ftx),
-          "c" (FUTEX_WAKE_PRIVATE),
-          "d" (count)
-    );
-    return ret;
-}
-
 int __atomic_cmpxchg(int old, int new, volatile int* addr) {
     int xchg;
     asm volatile (

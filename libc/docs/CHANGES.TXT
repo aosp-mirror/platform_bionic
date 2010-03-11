@@ -80,16 +80,6 @@ Differences between current and Android 2.1:
   an unknown domain name. Due to an initialization bug, a random DNS search
   list was generated for each thread is net.dns.search is not defined.
 
-- <pthread.h>: Add pthread_condattr_init/destroy/setpshared/getpshared.
-  Also modify mutex and condvar implementation to use private futexes by
-  default, unless PROCESS_SHARED is specified in the init attributes.
-
-  Private futexes are limited to a single address space and can't be shared
-  among processes. However they are much faster to wake/wait for. This should
-  speed up mutex and condvar operations.
-
-  NOTE: PROCESS_SHARED mutexes are still NOT robust (see note below).
-
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
