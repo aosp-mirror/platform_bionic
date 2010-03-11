@@ -50,6 +50,23 @@
       "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAvn///78\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1001893
+      },
+      "writtenOn": "2010-03-11T00:14:59Z",
+      "side": 1,
+      "message": "Can you remove the last \u0027\\0\u0027? Or add \u0027\\0\u0027 at end of others arch string define?",
+      "revId": "8d35a1614ad9ec9d44c08d4bec5885ff5f7d4122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
