@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAv3////s\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-03-11T19:06:44Z",
+      "side": 1,
+      "message": "Inconsistent indentation here.",
+      "revId": "662787d406a73d987df5ca6dcf4a49055a6ff055",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
