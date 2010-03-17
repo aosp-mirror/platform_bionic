@@ -665,8 +665,9 @@ void* chk_realloc(void* mem, size_t bytes)
     }
 
     if (new_buffer) {
-        size_t size = (bytes < old_bytes)?(bytes):(old_bytes);
-        memcpy(new_buffer, mem, size);
+        if (bytes > old_bytes)
+            bytes = old_bytes;
+        memcpy(new_buffer, mem, bytes);
         chk_free(mem);
     }
 
