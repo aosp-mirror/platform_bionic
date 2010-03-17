@@ -37,7 +37,7 @@ strlcpy(char *dst, const char *src, size_t siz)
 			if ((*d++ = *s++) == '\0')
 				break;
 		}
-  }
+	}
 
 	/* Not enough room in dst, add NUL and traverse rest of src */
 	if (n == 0) {

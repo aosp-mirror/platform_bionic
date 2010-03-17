@@ -52,6 +52,6 @@ strncat(char *dst, const char *src, size_t n)
 			d++;
 		} while (--n != 0);
 		*d = 0;
-  }
+	}
 	return (dst);
 }

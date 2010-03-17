@@ -29,7 +29,7 @@
 
 /*
  * Transform string s2 to string s1 using the current locale so that
- * strcmp of transformed strings yields the same result as strcoll. 
+ * strcmp of transformed strings yields the same result as strcoll.
  * Since Bionic really does not support locales, we assume we always use
  * the C locale.
  *

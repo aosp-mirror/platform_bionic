@@ -51,6 +51,6 @@ strstr(const char *s, const char *find)
 			} while (sc != c);
 		} while (strncmp(s, find, len) != 0);
 		s--;
-    }
+	}
 	return ((char *)s);
 }
