@@ -1248,11 +1248,57 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     return 0;
 }
 
+int pthread_condattr_init(pthread_condattr_t *attr)
+{
+    if (attr == NULL)
+        return EINVAL;
+
+    *attr = PTHREAD_PROCESS_PRIVATE;
+    return 0;
+}
+
+int pthread_condattr_getpshared(pthread_condattr_t *attr, int *pshared)
+{
+    if (attr == NULL || pshared == NULL)
+        return EINVAL;
+
+    *pshared = *attr;
+    return 0;
+}
+
+int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared)
+{
+    if (attr == NULL)
+        return EINVAL;
+
+    if (pshared != PTHREAD_PROCESS_SHARED &&
+        pshared != PTHREAD_PROCESS_PRIVATE)
+        return EINVAL;
+
+    *attr = pshared;
+    return 0;
+}
+
+int pthread_condattr_destroy(pthread_condattr_t *attr)
+{
+    if (attr == NULL)
+        return EINVAL;
+
+    *attr = 0xdeada11d;
+    return 0;
+}
+
+/* We use one bit in condition variable values as the 'shared' flag
+ * The rest is a counter.
+ */
+#define COND_SHARING_MASK       0x0001
+#define COND_COUNTER_INCREMENT  0x0002
+#define COND_COUNTER_MASK       (~COND_SHARING_MASK)
 
 /* XXX *technically* there is a race condition that could allow
  * XXX a signal to be missed.  If thread A is preempted in _wait()
  * XXX after unlocking the mutex and before waiting, and if other
- * XXX threads call signal or broadcast UINT_MAX times (exactly),
+ * XXX threads call signal or broadcast UINT_MAX/2 times (exactly),
  * XXX before thread A is scheduled again and calls futex_wait(),
  * XXX then the signal will be lost.
  */
@@ -1260,26 +1306,59 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 int pthread_cond_init(pthread_cond_t *cond,
                       const pthread_condattr_t *attr)
 {
+    if (cond == NULL)
+        return EINVAL;
+
     cond->value = 0;
+
+    if (attr != NULL && *attr == PTHREAD_PROCESS_SHARED)
+        cond->value |= COND_SHARING_MASK;
+
     return 0;
 }
 
 int pthread_cond_destroy(pthread_cond_t *cond)
 {
+    if (cond == NULL)
+        return EINVAL;
+
     cond->value = 0xdeadc04d;
     return 0;
 }
 
+/* This function is used by pthread_cond_broadcast and
+ * pthread_cond_signal to atomically decrement the counter.
+ */
+static void
+__pthread_cond_pulse(pthread_cond_t *cond)
+{
+    long flags = (cond->value & ~COND_COUNTER_MASK);
+
+    for (;;) {
+        long oldval = cond->value;
+        long newval = ((oldval - COND_COUNTER_INCREMENT) & COND_COUNTER_MASK)
+                      | flags;
+        if (__atomic_cmpxchg(oldval, newval, &cond->value) == 0)
+            break;
+    }
+}
+
 int pthread_cond_broadcast(pthread_cond_t *cond)
 {
-    __atomic_dec(&cond->value);
+    if (__unlikely(cond == NULL))
+        return EINVAL;
+
+    __pthread_cond_pulse(cond);
     __futex_wake(&cond->value, INT_MAX);
     return 0;
 }
 
 int pthread_cond_signal(pthread_cond_t *cond)
 {
-    __atomic_dec(&cond->value);
+    if (__unlikely(cond == NULL))
+        return EINVAL;
+
+    __pthread_cond_pulse(cond);
     __futex_wake(&cond->value, 1);
     return 0;
 }

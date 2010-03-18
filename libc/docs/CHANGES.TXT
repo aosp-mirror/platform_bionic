@@ -78,7 +78,13 @@ Differences between current and Android 2.1:
 
 - DNS: get rid of spurious random DNS queries when trying to resolve
   an unknown domain name. Due to an initialization bug, a random DNS search
-  list was generated for each thread is net.dns.search is not defined.
+  list was generated for each thread if net.dns.search is not defined.
+
+- <pthread.h>: Add pthread_condattr_init/destroy/setpshared/getpshared functions
+  to enable proper shared conditional variable initialization.
+
+  XXX: The implementation still always uses shared condvars, independent
+       of the flags being selected. This will change in a later commit.
 
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
