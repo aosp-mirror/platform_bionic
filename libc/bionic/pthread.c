@@ -43,11 +43,15 @@
 #include <memory.h>
 #include <assert.h>
 #include <malloc.h>
+#include <linux/futex.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
 extern int  __set_errno(int);
+
+#define  __likely(cond)    __builtin_expect(!!(cond), 1)
+#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
 
 void _thread_created_hook(pid_t thread_id) __attribute__((noinline));
 
@@ -712,6 +716,21 @@ int pthread_setschedparam(pthread_t thid, int policy,
 int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
 int __futex_wake(volatile void *ftx, int count);
 
+int __futex_syscall3(volatile void *ftx, int op, int val);
+int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout);
+
+#ifndef FUTEX_PRIVATE_FLAG
+#define FUTEX_PRIVATE_FLAG  128
+#endif
+
+#ifndef FUTEX_WAIT_PRIVATE
+#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
+#endif
+
+#ifndef FUTEX_WAKE_PRIVATE
+#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
+#endif
+
 // mutex lock states
 //
 // 0: unlocked
@@ -723,7 +742,8 @@ int __futex_wake(volatile void *ftx, int count);
  * bits:     name     description
  * 31-16     tid      owner thread's kernel id (recursive and errorcheck only)
  * 15-14     type     mutex type
- * 13-2      counter  counter of recursive mutexes
+ * 13        shared   process-shared flag
+ * 12-2      counter  counter of recursive mutexes
  * 1-0       state    lock state (0, 1 or 2)
  */
 
@@ -737,9 +757,17 @@ int __futex_wake(volatile void *ftx, int count);
 #define  MUTEX_TYPE_ERRORCHECK 0x8000
 
 #define  MUTEX_COUNTER_SHIFT  2
-#define  MUTEX_COUNTER_MASK   0x3ffc
+#define  MUTEX_COUNTER_MASK   0x1ffc
+#define  MUTEX_SHARED_MASK    0x2000
 
-
+/* a mutex attribute holds the following fields
+ *
+ * bits:     name       description
+ * 0-3       type       type of mutex
+ * 4         shared     process-shared flag
+ */
+#define  MUTEXATTR_TYPE_MASK   0x000f
+#define  MUTEXATTR_SHARED_MASK 0x0010
 
 
 int pthread_mutexattr_init(pthread_mutexattr_t *attr)
@@ -764,10 +792,14 @@ int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 
 int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)
 {
-    if (attr && *attr >= PTHREAD_MUTEX_NORMAL &&
-                *attr <= PTHREAD_MUTEX_ERRORCHECK ) {
-        *type = *attr;
-        return 0;
+    if (attr) {
+        int  atype = (*attr & MUTEXATTR_TYPE_MASK);
+
+         if (atype >= PTHREAD_MUTEX_NORMAL &&
+             atype <= PTHREAD_MUTEX_ERRORCHECK) {
+            *type = atype;
+            return 0;
+        }
     }
     return EINVAL;
 }
@@ -776,7 +808,7 @@ int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
 {
     if (attr && type >= PTHREAD_MUTEX_NORMAL &&
                 type <= PTHREAD_MUTEX_ERRORCHECK ) {
-        *attr = type;
+        *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
         return 0;
     }
     return EINVAL;
@@ -791,54 +823,70 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
 
     switch (pshared) {
     case PTHREAD_PROCESS_PRIVATE:
+        *attr &= ~MUTEXATTR_SHARED_MASK;
+        return 0;
+
     case PTHREAD_PROCESS_SHARED:
         /* our current implementation of pthread actually supports shared
          * mutexes but won't cleanup if a process dies with the mutex held.
          * Nevertheless, it's better than nothing. Shared mutexes are used
          * by surfaceflinger and audioflinger.
          */
+        *attr |= MUTEXATTR_SHARED_MASK;
         return 0;
     }
-
-    return ENOTSUP;
+    return EINVAL;
 }
 
 int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared)
 {
-    if (!attr)
+    if (!attr || !pshared)
         return EINVAL;
 
-    *pshared = PTHREAD_PROCESS_PRIVATE;
+    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED
+                                               : PTHREAD_PROCESS_PRIVATE;
     return 0;
 }
 
 int pthread_mutex_init(pthread_mutex_t *mutex,
                        const pthread_mutexattr_t *attr)
 {
-    if ( mutex ) {
-        if (attr == NULL) {
-            mutex->value = MUTEX_TYPE_NORMAL;
-            return 0;
-        }
-        switch ( *attr ) {
-        case PTHREAD_MUTEX_NORMAL:
-            mutex->value = MUTEX_TYPE_NORMAL;
-            return 0;
+    int value = 0;
 
-        case PTHREAD_MUTEX_RECURSIVE:
-            mutex->value = MUTEX_TYPE_RECURSIVE;
-            return 0;
+    if (mutex == NULL)
+        return EINVAL;
 
-        case PTHREAD_MUTEX_ERRORCHECK:
-            mutex->value = MUTEX_TYPE_ERRORCHECK;
-            return 0;
-        }
+    if (__likely(attr == NULL)) {
+        mutex->value = MUTEX_TYPE_NORMAL;
+        return 0;
     }
-    return EINVAL;
+
+    if ((*attr & MUTEXATTR_SHARED_MASK) != 0)
+        value |= MUTEX_SHARED_MASK;
+
+    switch (*attr & MUTEXATTR_TYPE_MASK) {
+    case PTHREAD_MUTEX_NORMAL:
+        value |= MUTEX_TYPE_NORMAL;
+        break;
+    case PTHREAD_MUTEX_RECURSIVE:
+        value |= MUTEX_TYPE_RECURSIVE;
+        break;
+    case PTHREAD_MUTEX_ERRORCHECK:
+        value |= MUTEX_TYPE_ERRORCHECK;
+        break;
+    default:
+        return EINVAL;
+    }
+
+    mutex->value = value;
+    return 0;
 }
 
 int pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
+    if (__unlikely(mutex == NULL))
+        return EINVAL;
+
     mutex->value = 0xdead10cc;
     return 0;
 }
@@ -859,13 +907,15 @@ int pthread_mutex_destroy(pthread_mutex_t *mutex)
 static __inline__ void
 _normal_lock(pthread_mutex_t*  mutex)
 {
+    /* We need to preserve the shared flag during operations */
+    int  shared = mutex->value & MUTEX_SHARED_MASK;
     /*
      * The common case is an unlocked mutex, so we begin by trying to
      * change the lock's state from 0 to 1.  __atomic_cmpxchg() returns 0
      * if it made the swap successfully.  If the result is nonzero, this
      * lock is already held by another thread.
      */
-    if (__atomic_cmpxchg(0, 1, &mutex->value ) != 0) {
+    if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value ) != 0) {
         /*
          * We want to go to sleep until the mutex is available, which
          * requires promoting it to state 2.  We need to swap in the new
@@ -882,8 +932,10 @@ _normal_lock(pthread_mutex_t*  mutex)
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
-        while (__atomic_swap(2, &mutex->value ) != 0)
-            __futex_wait(&mutex->value, 2, 0);
+        int  wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
+
+        while (__atomic_swap(shared|2, &mutex->value ) != (shared|0))
+            __futex_syscall4(&mutex->value, wait_op, shared|2, 0);
     }
 }
 
@@ -894,12 +946,16 @@ _normal_lock(pthread_mutex_t*  mutex)
 static __inline__ void
 _normal_unlock(pthread_mutex_t*  mutex)
 {
+    /* We need to preserve the shared flag during operations */
+    int  shared = mutex->value & MUTEX_SHARED_MASK;
+
     /*
-     * The mutex value will be 1 or (rarely) 2.  We use an atomic decrement
+     * The mutex state will be 1 or (rarely) 2.  We use an atomic decrement
      * to release the lock.  __atomic_dec() returns the previous value;
      * if it wasn't 1 we have to do some additional work.
      */
-    if (__atomic_dec(&mutex->value) != 1) {
+    if (__atomic_dec(&mutex->value) != (shared|1)) {
+        int  wake_op = shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE;
         /*
          * Start by releasing the lock.  The decrement changed it from
          * "contended lock" to "uncontended lock", which means we still
@@ -914,7 +970,7 @@ _normal_unlock(pthread_mutex_t*  mutex)
          * _normal_lock(), because the __futex_wait() call there will
          * return immediately if the mutex value isn't 2.
          */
-        mutex->value = 0;
+        mutex->value = shared;
 
         /*
          * Wake up one waiting thread.  We don't know which thread will be
@@ -937,7 +993,7 @@ _normal_unlock(pthread_mutex_t*  mutex)
          * Either way we have correct behavior and nobody is orphaned on
          * the wait queue.
          */
-        __futex_wake(&mutex->value, 1);
+        __futex_syscall3(&mutex->value, wake_op, 1);
     }
 }
 
@@ -946,26 +1002,24 @@ static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
 static void
 _recursive_lock(void)
 {
-    _normal_lock( &__recursive_lock);
+    _normal_lock(&__recursive_lock);
 }
 
 static void
 _recursive_unlock(void)
 {
-    _normal_unlock( &__recursive_lock );
+    _normal_unlock(&__recursive_lock );
 }
-
-#define  __likely(cond)    __builtin_expect(!!(cond), 1)
-#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
 
 int pthread_mutex_lock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, new_lock_type;
+    int mtype, tid, new_lock_type, shared, wait_op;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
     mtype = (mutex->value & MUTEX_TYPE_MASK);
+    shared = (mutex->value & MUTEX_SHARED_MASK);
 
     /* Handle normal case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) ) {
@@ -1003,6 +1057,10 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
      */
     new_lock_type = 1;
 
+    /* compute futex wait opcode and restore shared flag in mtype */
+    wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
+    mtype  |= shared;
+
     for (;;) {
         int  oldv;
 
@@ -1027,7 +1085,7 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
          */
         new_lock_type = 2;
 
-        __futex_wait( &mutex->value, oldv, 0 );
+        __futex_syscall4(&mutex->value, wait_op, oldv, NULL);
     }
     return 0;
 }
@@ -1035,12 +1093,13 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
 
 int pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, oldv;
+    int mtype, tid, oldv, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype = (mutex->value & MUTEX_TYPE_MASK);
+    mtype  = (mutex->value & MUTEX_TYPE_MASK);
+    shared = (mutex->value & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if (__likely(mtype == MUTEX_TYPE_NORMAL)) {
@@ -1060,31 +1119,33 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
         mutex->value = oldv - (1 << MUTEX_COUNTER_SHIFT);
         oldv = 0;
     } else {
-        mutex->value = mtype;
+        mutex->value = shared | mtype;
     }
     _recursive_unlock();
 
     /* Wake one waiting thread, if any */
-    if ((oldv & 3) == 2)
-        __futex_wake( &mutex->value, 1 );
-
+    if ((oldv & 3) == 2) {
+        int wake_op = shared ? FUTEX_WAIT_PRIVATE : FUTEX_WAIT;
+        __futex_syscall3(&mutex->value, wake_op, 1);
+    }
     return 0;
 }
 
 
 int pthread_mutex_trylock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, oldv;
+    int mtype, tid, oldv, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype = (mutex->value & MUTEX_TYPE_MASK);
+    mtype  = (mutex->value & MUTEX_TYPE_MASK);
+    shared = (mutex->value & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
-        if (__atomic_cmpxchg(0, 1, &mutex->value) == 0)
+        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0)
             return 0;
 
         return EBUSY;
@@ -1108,6 +1169,9 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
         _recursive_unlock();
         return 0;
     }
+
+    /* Restore sharing bit in mtype */
+    mtype |= shared;
 
     /* Try to lock it, just once. */
     _recursive_lock();
@@ -1162,7 +1226,7 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     clockid_t        clock = CLOCK_MONOTONIC;
     struct timespec  abstime;
     struct timespec  ts;
-    int              mtype, tid, oldv, new_lock_type;
+    int              mtype, tid, oldv, new_lock_type, shared, wait_op;
 
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
@@ -1170,21 +1234,24 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype = (mutex->value & MUTEX_TYPE_MASK);
+    mtype  = (mutex->value & MUTEX_TYPE_MASK);
+    shared = (mutex->value & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
+        int  wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
+
         /* fast path for unconteded lock */
-        if (__atomic_cmpxchg(0, 1, &mutex->value) == 0)
+        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0)
             return 0;
 
         /* loop while needed */
-        while (__atomic_swap(2, &mutex->value) != 0) {
+        while (__atomic_swap(shared|2, &mutex->value) != (shared|0)) {
             if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
                 return EBUSY;
 
-            __futex_wait(&mutex->value, 2, &ts);
+            __futex_syscall4(&mutex->value, wait_op, shared|2, &ts);
         }
         return 0;
     }
@@ -1215,6 +1282,10 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
      */
     new_lock_type = 1;
 
+    /* Compute wait op and restore sharing bit in mtype */
+    wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
+    mtype  |= shared;
+
     for (;;) {
         int  oldv;
         struct timespec  ts;
@@ -1243,7 +1314,7 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
         if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
             return EBUSY;
 
-        __futex_wait( &mutex->value, oldv, &ts );
+        __futex_syscall4(&mutex->value, wait_op, oldv, &ts);
     }
     return 0;
 }

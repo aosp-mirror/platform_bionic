@@ -41,6 +41,38 @@ __futex_wake:
     popl    %ebx
     ret
 
+/* int __futex_syscall3(volatile void *ftx, int op, int count) */
+.text
+.globl __futex_syscall3
+.type __futex_syscall3, @function
+.align 4
+__futex_syscall3:
+    pushl   %ebx
+    movl    8(%esp), %ebx      /* ftx */
+    movl    12(%esp), %ecx      /* op */
+    movl    16(%esp), %edx      /* value */
+    movl    $__NR_futex, %eax
+    int     $0x80
+    popl    %ebx
+    ret
+
+/* int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout) */
+.text
+.globl __futex_syscall4
+.type __futex_syscall4, @function
+.align 4
+__futex_syscall4:
+    pushl   %ebx
+    pushl   %esi
+    movl    12(%esp), %ebx      /* ftx */
+    movl    16(%esp), %ecx      /* op */
+    movl    20(%esp), %edx      /* val */
+    movl    24(%esp), %esi      /* timeout */
+    movl    $__NR_futex, %eax
+    int     $0x80
+    popl    %esi
+    popl    %ebx
+    ret
 
 /* int __atomic_cmpxchg(int old, int new, volatile int* addr) */
 
