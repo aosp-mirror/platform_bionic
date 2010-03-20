@@ -83,13 +83,10 @@ Differences between current and Android 2.1:
 - <pthread.h>: Add pthread_condattr_init/destroy/setpshared/getpshared functions
   to enable proper shared conditional variable initialization.
 
-  Modify the pthread_mutex_t implementation to use private futexes for
-  performance reasons. Mutexes are no longer shareable between processes
-  by default anymore, unless you use PTHREAD_PROCESS_SHARED with
-  pthread_mutexattr_setpshared().
-
-  XXX: The implementation still always uses shared condvars, independent
-       of the flags being selected. This will change in a later commit.
+  Modify the pthread_mutex_t and pthread_cond_t implementation to use private
+  futexes for performance reasons. Mutexes and Condvars are no longer shareable
+  between processes by default anymore, unless you use PTHREAD_PROCESS_SHARED
+  with pthread_mutexattr_setpshared() and/or pthread_condattr_setpshared().
 
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:

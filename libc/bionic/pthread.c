@@ -1361,9 +1361,11 @@ int pthread_condattr_destroy(pthread_condattr_t *attr)
 /* We use one bit in condition variable values as the 'shared' flag
  * The rest is a counter.
  */
-#define COND_SHARING_MASK       0x0001
+#define COND_SHARED_MASK        0x0001
 #define COND_COUNTER_INCREMENT  0x0002
-#define COND_COUNTER_MASK       (~COND_SHARING_MASK)
+#define COND_COUNTER_MASK       (~COND_SHARED_MASK)
+
+#define COND_IS_SHARED(c)  (((c)->value & COND_SHARED_MASK) != 0)
 
 /* XXX *technically* there is a race condition that could allow
  * XXX a signal to be missed.  If thread A is preempted in _wait()
@@ -1382,7 +1384,7 @@ int pthread_cond_init(pthread_cond_t *cond,
     cond->value = 0;
 
     if (attr != NULL && *attr == PTHREAD_PROCESS_SHARED)
-        cond->value |= COND_SHARING_MASK;
+        cond->value |= COND_SHARED_MASK;
 
     return 0;
 }
@@ -1397,13 +1399,19 @@ int pthread_cond_destroy(pthread_cond_t *cond)
 }
 
 /* This function is used by pthread_cond_broadcast and
- * pthread_cond_signal to atomically decrement the counter.
+ * pthread_cond_signal to atomically decrement the counter
+ * then wake-up 'counter' threads.
  */
-static void
-__pthread_cond_pulse(pthread_cond_t *cond)
+static int
+__pthread_cond_pulse(pthread_cond_t *cond, int  counter)
 {
-    long flags = (cond->value & ~COND_COUNTER_MASK);
+    long flags;
+    int  wake_op;
 
+    if (__unlikely(cond == NULL))
+        return EINVAL;
+
+    flags = (cond->value & ~COND_COUNTER_MASK);
     for (;;) {
         long oldval = cond->value;
         long newval = ((oldval - COND_COUNTER_INCREMENT) & COND_COUNTER_MASK)
@@ -1411,26 +1419,20 @@ __pthread_cond_pulse(pthread_cond_t *cond)
         if (__atomic_cmpxchg(oldval, newval, &cond->value) == 0)
             break;
     }
+
+    wake_op = COND_IS_SHARED(cond) ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE;
+    __futex_syscall3(&cond->value, wake_op, counter);
+    return 0;
 }
 
 int pthread_cond_broadcast(pthread_cond_t *cond)
 {
-    if (__unlikely(cond == NULL))
-        return EINVAL;
-
-    __pthread_cond_pulse(cond);
-    __futex_wake(&cond->value, INT_MAX);
-    return 0;
+    return __pthread_cond_pulse(cond, INT_MAX);
 }
 
 int pthread_cond_signal(pthread_cond_t *cond)
 {
-    if (__unlikely(cond == NULL))
-        return EINVAL;
-
-    __pthread_cond_pulse(cond);
-    __futex_wake(&cond->value, 1);
-    return 0;
+    return __pthread_cond_pulse(cond, 1);
 }
 
 int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
@@ -1444,9 +1446,10 @@ int __pthread_cond_timedwait_relative(pthread_cond_t *cond,
 {
     int  status;
     int  oldvalue = cond->value;
+    int  wait_op  = COND_IS_SHARED(cond) ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
 
     pthread_mutex_unlock(mutex);
-    status = __futex_wait(&cond->value, oldvalue, reltime);
+    status = __futex_syscall4(&cond->value, wait_op, oldvalue, reltime);
     pthread_mutex_lock(mutex);
 
     if (status == (-ETIMEDOUT)) return ETIMEDOUT;
