@@ -378,6 +378,24 @@ Bigint {
 #endif
 #endif
 
+/* Special value used to indicate an invalid Bigint value,
+ * e.g. when a memory allocation fails. The idea is that we
+ * want to avoid introducing NULL checks everytime a bigint
+ * computation is performed. Also the NULL value can also be
+ * already used to indicate "value not initialized yet" and
+ * returning NULL might alter the execution code path in
+ * case of OOM.
+ */
+#define  BIGINT_INVALID   ((Bigint *)&bigint_invalid_value)
+
+static const Bigint bigint_invalid_value;
+
+
+/* Return BIGINT_INVALID on allocation failure.
+ *
+ * Most of the code here depends on the fact that this function
+ * never returns NULL.
+ */
  static Bigint *
 Balloc
 #ifdef KR_headers
@@ -397,11 +415,15 @@ Balloc
 	else {
 		x = 1 << k;
 		rv = (Bigint *)MALLOC(sizeof(Bigint) + (x-1)*sizeof(Long));
+		if (rv == NULL) {
+		        rv = BIGINT_INVALID;
+			goto EXIT;
+		}
 		rv->k = k;
 		rv->maxwds = x;
 		}
 	rv->sign = rv->wds = 0;
-
+EXIT:
 	mutex_unlock(&freelist_mutex);
 
 	return rv;
@@ -415,7 +437,7 @@ Bfree
 	(Bigint *v)
 #endif
 {
-	if (v) {
+	if (v && v != BIGINT_INVALID) {
 		mutex_lock(&freelist_mutex);
 
 		v->next = freelist[v->k];
@@ -425,8 +447,23 @@ Bfree
 		}
 	}
 
-#define Bcopy(x,y) memcpy(&x->sign, &y->sign, \
-    y->wds*sizeof(Long) + 2*sizeof(int))
+#define Bcopy_valid(x,y) memcpy(&(x)->sign, &(y)->sign, \
+    (y)->wds*sizeof(Long) + 2*sizeof(int))
+
+#define Bcopy(x,y)  Bcopy_ptr(&(x),(y))
+
+ static void
+Bcopy_ptr(Bigint **px, Bigint *y)
+{
+	if (*px == BIGINT_INVALID)
+		return; /* no space to store copy */
+	if (y == BIGINT_INVALID) {
+		Bfree(*px); /* invalid input */
+		*px = BIGINT_INVALID;
+	} else {
+		Bcopy_valid(*px,y);
+	}
+}
 
  static Bigint *
 multadd
@@ -442,6 +479,9 @@ multadd
 	ULong xi, z;
 #endif
 	Bigint *b1;
+
+	if (b == BIGINT_INVALID)
+		return b;
 
 	wds = b->wds;
 	x = b->x;
@@ -463,7 +503,11 @@ multadd
 	if (a) {
 		if (wds >= b->maxwds) {
 			b1 = Balloc(b->k+1);
-			Bcopy(b1, b);
+			if (b1 == BIGINT_INVALID) {
+				Bfree(b);
+				return b1;
+			}
+			Bcopy_valid(b1, b);
 			Bfree(b);
 			b = b1;
 			}
@@ -489,10 +533,15 @@ s2b
 	for(k = 0, y = 1; x > y; y <<= 1, k++) ;
 #ifdef Pack_32
 	b = Balloc(k);
+	if (b == BIGINT_INVALID)
+		return b;
 	b->x[0] = y9;
 	b->wds = 1;
 #else
 	b = Balloc(k+1);
+	if (b == BIGINT_INVALID)
+		return b;
+
 	b->x[0] = y9 & 0xffff;
 	b->wds = (b->x[1] = y9 >> 16) ? 2 : 1;
 #endif
@@ -604,8 +653,10 @@ i2b
 	Bigint *b;
 
 	b = Balloc(1);
-	b->x[0] = i;
-	b->wds = 1;
+	if (b != BIGINT_INVALID) {
+		b->x[0] = i;
+		b->wds = 1;
+		}
 	return b;
 	}
 
@@ -625,6 +676,9 @@ mult
 	ULong z2;
 #endif
 
+	if (a == BIGINT_INVALID || b == BIGINT_INVALID)
+		return BIGINT_INVALID;
+
 	if (a->wds < b->wds) {
 		c = a;
 		a = b;
@@ -637,6 +691,8 @@ mult
 	if (wc > a->maxwds)
 		k++;
 	c = Balloc(k);
+	if (c == BIGINT_INVALID)
+		return c;
 	for(x = c->x, xa = x + wc; x < xa; x++)
 		*x = 0;
 	xa = a->x;
@@ -711,6 +767,9 @@ pow5mult
 	int i;
 	static const int p05[3] = { 5, 25, 125 };
 
+	if (b == BIGINT_INVALID)
+		return b;
+
 	if ((i = k & 3) != 0)
 		b = multadd(b, p05[i-1], 0);
 
@@ -718,7 +777,12 @@ pow5mult
 		return b;
 	if (!(p5 = p5s)) {
 		/* first time */
-		p5 = p5s = i2b(625);
+		p5 = i2b(625);
+		if (p5 == BIGINT_INVALID) {
+			Bfree(b);
+			return p5;
+		}
+		p5s = p5;
 		p5->next = 0;
 		}
 	for(;;) {
@@ -730,7 +794,12 @@ pow5mult
 		if (!(k = (unsigned int) k >> 1))
 			break;
 		if (!(p51 = p5->next)) {
-			p51 = p5->next = mult(p5,p5);
+			p51 = mult(p5,p5);
+			if (p51 == BIGINT_INVALID) {
+				Bfree(b);
+				return p51;
+			}
+			p5->next = p51;
 			p51->next = 0;
 			}
 		p5 = p51;
@@ -750,6 +819,9 @@ lshift
 	Bigint *b1;
 	ULong *x, *x1, *xe, z;
 
+	if (b == BIGINT_INVALID)
+		return b;
+
 #ifdef Pack_32
 	n = (unsigned int)k >> 5;
 #else
@@ -760,6 +832,10 @@ lshift
 	for(i = b->maxwds; n1 > i; i <<= 1)
 		k1++;
 	b1 = Balloc(k1);
+	if (b1 == BIGINT_INVALID) {
+		Bfree(b);
+		return b1;
+	}
 	x1 = b1->x;
 	for(i = 0; i < n; i++)
 		*x1++ = 0;
@@ -809,6 +885,13 @@ cmp
 	ULong *xa, *xa0, *xb, *xb0;
 	int i, j;
 
+	if (a == BIGINT_INVALID || b == BIGINT_INVALID)
+#ifdef DEBUG
+		Bug("cmp called with a or b invalid");
+#else
+		return 0; /* equal - the best we can do right now */
+#endif
+
 	i = a->wds;
 	j = b->wds;
 #ifdef DEBUG
@@ -848,11 +931,16 @@ diff
 	Long z;
 #endif
 
+	if (a == BIGINT_INVALID || b == BIGINT_INVALID)
+		return BIGINT_INVALID;
+
 	i = cmp(a,b);
 	if (!i) {
 		c = Balloc(0);
-		c->wds = 1;
-		c->x[0] = 0;
+		if (c != BIGINT_INVALID) {
+			c->wds = 1;
+			c->x[0] = 0;
+			}
 		return c;
 		}
 	if (i < 0) {
@@ -864,6 +952,8 @@ diff
 	else
 		i = 0;
 	c = Balloc(a->k);
+	if (c == BIGINT_INVALID)
+		return c;
 	c->sign = i;
 	wa = a->wds;
 	xa = a->x;
@@ -972,6 +1062,9 @@ b2d
 #define d1 word1(d)
 #endif
 
+	if (a == BIGINT_INVALID)
+		return NAN;
+
 	xa0 = a->x;
 	xa = xa0 + a->wds;
 	y = *--xa;
@@ -1054,6 +1147,8 @@ d2b
 #else
 	b = Balloc(2);
 #endif
+	if (b == BIGINT_INVALID)
+		return b;
 	x = b->x;
 
 	z = d0 & Frac_mask;
@@ -1168,6 +1263,9 @@ ratio
 {
 	_double da, db;
 	int k, ka, kb;
+
+	if (a == BIGINT_INVALID || b == BIGINT_INVALID)
+		return NAN; /* for lack of better value ? */
 
 	value(da) = b2d(a, &ka);
 	value(db) = b2d(b, &kb);
@@ -1821,6 +1919,9 @@ quorem
 	ULong si, zs;
 #endif
 
+	if (b == BIGINT_INVALID || S == BIGINT_INVALID)
+		return 0;
+
 	n = S->wds;
 #ifdef DEBUG
 	/*debug*/ if (b->wds > n)
@@ -2046,15 +2147,17 @@ __dtoa
 			!word1(d) && !(word0(d) & 0xfffff) ? "Infinity" :
 #endif
 				"NaN";
-        result = Balloc(strlen(s)+1);
-        s0 = (char *)(void *)result;
-        strcpy(s0, s);
-        if (rve)
-            *rve =
+		result = Balloc(strlen(s)+1);
+		if (result == BIGINT_INVALID)
+			return NULL;
+		s0 = (char *)(void *)result;
+		strcpy(s0, s);
+		if (rve)
+			*rve =
 #ifdef IEEE_Arith
-                s0[3] ? s0 + 8 :
+				s0[3] ? s0 + 8 :
 #endif
-                        s0 + 3;
+				s0 + 3;
 		return s0;
 		}
 #endif
@@ -2063,12 +2166,14 @@ __dtoa
 #endif
 	if (!value(d)) {
 		*decpt = 1;
-        result = Balloc(2);
-        s0 = (char *)(void *)result;
-        strcpy(s0, "0");
-        if (rve)
-            *rve = s0 + 1;
-        return s0;
+		result = Balloc(2);
+		if (result == BIGINT_INVALID)
+			return NULL;
+        	s0 = (char *)(void *)result;
+        	strcpy(s0, "0");
+        	if (rve)
+			*rve = s0 + 1;
+        	return s0;
 		}
 
 	b = d2b(value(d), &be, &bbits);
@@ -2199,6 +2304,10 @@ __dtoa
         // complicated way the block size need to be computed
         // buuurk....
 	result = Balloc(result_k);
+	if (result == BIGINT_INVALID) {
+		Bfree(b);
+		return NULL;
+	}
 	s = s0 = (char *)(void *)result;
 
 	if (ilim >= 0 && ilim <= Quick_max && try_quick) {
@@ -2426,13 +2535,18 @@ __dtoa
 	 * and for all and pass them and a shift to quorem, so it
 	 * can do shifts and ors to compute the numerator for q.
 	 */
+	if (S == BIGINT_INVALID) {
+		i = 0;
+	} else {
 #ifdef Pack_32
-	if ((i = ((s5 ? 32 - hi0bits(S->x[S->wds-1]) : 1) + s2) & 0x1f) != 0)
-		i = 32 - i;
+		if ((i = ((s5 ? 32 - hi0bits(S->x[S->wds-1]) : 1) + s2) & 0x1f) != 0)
+			i = 32 - i;
 #else
-	if (i = ((s5 ? 32 - hi0bits(S->x[S->wds-1]) : 1) + s2) & 0xf)
-		i = 16 - i;
+		if (i = ((s5 ? 32 - hi0bits(S->x[S->wds-1]) : 1) + s2) & 0xf)
+			i = 16 - i;
 #endif
+	}
+
 	if (i > 4) {
 		i -= 4;
 		b2 += i;
