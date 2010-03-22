@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#include <dlfcn.h>
 /* These are stubs for functions that are actually defined
  * in the dynamic linker (dlfcn.c), and hijacked at runtime.
  */
 void *dlopen(const char *filename, int flag) { return 0; }
-char *dlerror(void) { return 0; }
+const char *dlerror(void) { return 0; }
 void *dlsym(void *handle, const char *symbol) { return 0; }
+int dladdr(void *addr, Dl_info *info) { return 0; }
 int dlclose(void *handle) { return 0; }
 
 #ifdef __arm__

@@ -601,13 +601,12 @@ int pthread_join(pthread_t thid, void ** ret_val)
 
     for (thread = gThreadList; thread != NULL; thread = thread->next)
         if (thread == (pthread_internal_t*)thid)
-            break;
+            goto FoundIt;
 
-    if (!thread) {
-        pthread_mutex_unlock(&gThreadListLock);
-        return ESRCH;
-    }
+    pthread_mutex_unlock(&gThreadListLock);
+    return ESRCH;
 
+FoundIt:
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
         pthread_mutex_unlock(&gThreadListLock);
         return EINVAL;

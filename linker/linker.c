@@ -535,6 +535,40 @@ Elf32_Sym *lookup(const char *name, soinfo **found)
     return NULL;
 }
 
+soinfo *find_containing_library(void *addr)
+{
+    soinfo *si;
+
+    for(si = solist; si != NULL; si = si->next)
+    {
+        if((unsigned)addr >= si->base && (unsigned)addr - si->base < si->size) {
+            return si;
+        }
+    }
+
+    return NULL;
+}
+
+Elf32_Sym *find_containing_symbol(void *addr, soinfo *si)
+{
+    unsigned int i;
+    unsigned soaddr = (unsigned)addr - si->base;
+
+    /* Search the library's symbol table for any defined symbol which
+     * contains this address */
+    for(i=0; i<si->nchain; i++) {
+        Elf32_Sym *sym = &si->symtab[i];
+
+        if(sym->st_shndx != SHN_UNDEF &&
+           soaddr >= sym->st_value &&
+           soaddr < sym->st_value + sym->st_size) {
+            return sym;
+        }
+    }
+
+    return NULL;
+}
+
 #if 0
 static void dump(soinfo *si)
 {

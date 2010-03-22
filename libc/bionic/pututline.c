@@ -34,7 +34,7 @@ void pututline(struct utmp* utmp)
 {
     FILE* f;
     struct utmp u;
-    int i;
+    long i;
 
     if (!(f = fopen(_PATH_UTMP, "w+")))
         return;
