@@ -1124,7 +1124,7 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
 
     /* Wake one waiting thread, if any */
     if ((oldv & 3) == 2) {
-        int wake_op = shared ? FUTEX_WAIT_PRIVATE : FUTEX_WAIT;
+        int wake_op = shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE;
         __futex_syscall3(&mutex->value, wake_op, 1);
     }
     return 0;
