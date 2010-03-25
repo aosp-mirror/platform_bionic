@@ -14,6 +14,8 @@ Differences between current and Android 2.2:
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
+- Support FP register save/load in setjmp()/longjmp() on ARMv7 builds.
+
 - Add support for SH-4 CPU architecture !
 
 - __atomic_swap(): use LDREX/STREX CPU instructions on ARMv6 and higher.
