@@ -3,6 +3,7 @@
 
 /*
  * Copyright (c) 1997 Mark Brinicombe
+ * Copyright (c) 2010 Android Open Source Project.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,6 +36,7 @@
 
 #include <machine/asm.h>
 #include <machine/setjmp.h>
+#include <machine/cpu-features.h>
 
 /*
  * C library -- _setjmp, _longjmp
@@ -51,18 +53,20 @@
 
 ENTRY(_setjmp)
 	ldr	r1, .L_setjmp_magic
-	str	r1, [r0], #4
-#ifdef SOFTFLOAT
-	add	r0, r0, #52
-#else
-	/* Store fp registers */
-	sfm	f4, 4, [r0], #48
-	/* Store fpsr */
-	rfs	r1
-	str	r1, [r0], #0x0004
-#endif	/* SOFTFLOAT */
-	/* Store integer registers */
-        stmia	r0, {r4-r14}
+	str	r1, [r0, #(_JB_MAGIC * 4)]
+
+	/* Store core registers */
+	add     r1, r0, #(_JB_CORE_BASE * 4)
+	stmia   r1, {r4-r14}
+
+#ifdef __ARM_HAVE_VFP
+	/* Store floating-point registers */
+	add     r1, r0, #(_JB_FLOAT_BASE * 4)
+	vstmia  r1, {d8-d15}
+	/* Store floating-point state */
+	fmrx    r1, fpscr
+	str     r1, [r0, #(_JB_FLOAT_STATE * 4)]
+#endif  /* __ARM_HAVE_VFP */
 
         mov	r0, #0x00000000
         bx      lr
@@ -72,21 +76,22 @@ ENTRY(_setjmp)
 
 ENTRY(_longjmp)
 	ldr	r2, .L_setjmp_magic
-	ldr	r3, [r0], #4
+	ldr	r3, [r0, #(_JB_MAGIC * 4)]
 	teq	r2, r3
 	bne	botch
 
-#ifdef SOFTFLOAT
-	add	r0, r0, #52
-#else
-	/* Restore fp registers */
-	lfm	f4, 4, [r0], #48
-	/* Restore fpsr */
-	ldr	r4, [r0], #0x0004
-	wfs	r4
-#endif	/* SOFTFLOAT */
-       	/* Restore integer registers */
-        ldmia	r0, {r4-r14}
+#ifdef __ARM_HAVE_VFP
+	/* Restore floating-point registers */
+	add     r2, r0, #(_JB_FLOAT_BASE * 4)
+	vldmia  r2, {d8-d15}
+	/* Restore floating-point state */
+	ldr     r2, [r0, #(_JB_FLOAT_STATE * 4)]
+	fmxr    fpscr, r2
+#endif /* __ARM_HAVE_VFP */
+
+	/* Restore core registers */
+	add     r2, r0, #(_JB_CORE_BASE * 4)
+	ldmia   r2, {r4-r14}
 
 	/* Validate sp and r14 */
 	teq	sp, #0
