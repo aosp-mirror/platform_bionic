@@ -1498,7 +1498,7 @@ _rfc3484_compare(const void *ptr1, const void* ptr2)
 		const struct sockaddr_in6 *a2_src = (const struct sockaddr_in6 *)&a2->src_addr;
 		const struct sockaddr_in6 *a2_dst = (const struct sockaddr_in6 *)a2->ai->ai_addr;
 		prefixlen1 = _common_prefix_len(&a1_src->sin6_addr, &a1_dst->sin6_addr);
-		prefixlen1 = _common_prefix_len(&a2_src->sin6_addr, &a2_dst->sin6_addr);
+		prefixlen2 = _common_prefix_len(&a2_src->sin6_addr, &a2_dst->sin6_addr);
 		if (prefixlen1 != prefixlen2) {
 			return prefixlen2 - prefixlen1;
 		}
