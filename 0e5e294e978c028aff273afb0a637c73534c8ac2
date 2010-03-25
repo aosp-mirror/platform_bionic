@@ -16,6 +16,24 @@
       "revId": "0e5e294e978c028aff273afb0a637c73534c8ac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAwH///wo\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1993,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2010-03-25T21:11:29Z",
+      "side": 1,
+      "message": "I agree, please move this out into a different change.",
+      "parentUuid": "AAAAwH///xw\u003d",
+      "revId": "0e5e294e978c028aff273afb0a637c73534c8ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
