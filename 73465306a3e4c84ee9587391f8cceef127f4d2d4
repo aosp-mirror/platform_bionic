@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAwH///mI\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-29T22:07:54Z",
+      "side": 1,
+      "message": "please remove this from the patch. It\u0027s unrelated to the issue at hand.",
+      "revId": "73465306a3e4c84ee9587391f8cceef127f4d2d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
