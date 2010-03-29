@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+typedef void *psaddr_t;
+typedef pid_t lwpid_t;
 
 #define TD_THR_ANY_USER_FLAGS       0xffffffff
 #define TD_THR_LOWEST_PRIORITY      -20
@@ -67,6 +69,7 @@ typedef pthread_t thread_t;
 typedef struct
 {
     pid_t pid;
+    struct ps_prochandle *ph;
 } td_thragent_t;
 
 typedef struct
@@ -123,18 +126,36 @@ struct ps_prochandle;
 extern "C"{
 #endif
 
-extern td_err_e td_ta_new(struct ps_prochandle const * proc_handle, td_thragent_t ** thread_agent);
+extern td_err_e td_ta_new(struct ps_prochandle * proc_handle, td_thragent_t ** thread_agent);
+
+extern td_err_e td_ta_delete(td_thragent_t * ta);
 
 extern td_err_e td_ta_set_event(td_thragent_t const * agent, td_thr_events_t * event);
 
 extern td_err_e td_ta_event_addr(td_thragent_t const * agent, td_event_e event, td_notify_t * notify);
 
+extern td_err_e td_ta_clear_event(const td_thragent_t * ta_arg,
+				  td_thr_events_t * event);
+
 extern td_err_e td_ta_event_getmsg(td_thragent_t const * agent, td_event_msg_t * event);
+
+extern td_err_e td_ta_map_lwp2thr(td_thragent_t const * agent, lwpid_t lwpid,
+				  td_thrhandle_t *th);
+
+extern td_err_e td_thr_get_info(td_thrhandle_t const * handle,
+				td_thrinfo_t * info);
+
+extern td_err_e td_thr_event_enable(td_thrhandle_t const * handle,
+				    td_event_e event);
 
 extern td_err_e td_ta_thr_iter(td_thragent_t const * agent, td_thr_iter_f * func, void * cookie,
                                td_thr_state_e state, int32_t prio, sigset_t * sigmask, uint32_t user_flags);
 
 extern char const ** td_symbol_list(void);
+
+extern td_err_e td_thr_tls_get_addr(const td_thrhandle_t * th,
+				    psaddr_t map_address, size_t offset,
+				    psaddr_t * address);
 
 #ifdef __cplusplus
 }
