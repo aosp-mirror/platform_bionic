@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAwX///6s\u003d",
+        "filename": "libc/stdio/asprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-03-31T20:22:26Z",
+      "side": 1,
+      "message": "you are not setting f._bf._base to NULL, this could result in a dangling pointer.",
+      "revId": "d1f72e872f73366dddcea4abc75885a3d9a318c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
