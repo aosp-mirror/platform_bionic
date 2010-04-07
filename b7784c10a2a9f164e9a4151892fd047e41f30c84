@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAwX///jM\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-04-07T23:55:39Z",
+      "side": 1,
+      "message": "There\u0027s too much code duplication between lookup() and lookup_next().  Please have a common function that both lookup() and lookup_next() call, which takes the starting soinfo struct, and moves along until the end of solist.",
+      "revId": "b7784c10a2a9f164e9a4151892fd047e41f30c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAwX///jQ\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1000866
+      },
+      "writtenOn": "2010-04-07T23:55:39Z",
+      "side": 1,
+      "message": "return NULL;",
+      "revId": "b7784c10a2a9f164e9a4151892fd047e41f30c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
