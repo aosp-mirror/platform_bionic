@@ -39,6 +39,7 @@
 #define ARPHRD_ROSE 270
 #define ARPHRD_X25 271  
 #define ARPHRD_HWX25 272  
+#define ARPHRD_CAN 280  
 #define ARPHRD_PPP 512
 #define ARPHRD_CISCO 513  
 #define ARPHRD_HDLC ARPHRD_CISCO
@@ -72,6 +73,10 @@
 #define ARPHRD_IEEE80211 801  
 #define ARPHRD_IEEE80211_PRISM 802  
 #define ARPHRD_IEEE80211_RADIOTAP 803  
+#define ARPHRD_IEEE802154 804
+
+#define ARPHRD_PHONET 820  
+#define ARPHRD_PHONET_PIPE 821  
 
 #define ARPHRD_VOID 0xFFFF  
 #define ARPHRD_NONE 0xFFFE  
@@ -108,11 +113,11 @@ struct arpreq_old {
 
 struct arphdr
 {
- unsigned short ar_hrd;
- unsigned short ar_pro;
+ __be16 ar_hrd;
+ __be16 ar_pro;
  unsigned char ar_hln;
  unsigned char ar_pln;
- unsigned short ar_op;
+ __be16 ar_op;
 
 };
 

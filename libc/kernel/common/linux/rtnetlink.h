@@ -12,7 +12,11 @@
 #ifndef __LINUX_RTNETLINK_H
 #define __LINUX_RTNETLINK_H
 
+#include <linux/types.h>
 #include <linux/netlink.h>
+#include <linux/if_link.h>
+#include <linux/if_addr.h>
+#include <linux/neighbour.h>
 
 enum {
  RTM_BASE = 16,
@@ -85,8 +89,6 @@ enum {
 
  RTM_NEWPREFIX = 52,
 #define RTM_NEWPREFIX RTM_NEWPREFIX
- RTM_GETPREFIX = 54,
-#define RTM_GETPREFIX RTM_GETPREFIX
 
  RTM_GETMULTICAST = 58,
 #define RTM_GETMULTICAST RTM_GETMULTICAST
@@ -100,6 +102,21 @@ enum {
 #define RTM_GETNEIGHTBL RTM_GETNEIGHTBL
  RTM_SETNEIGHTBL,
 #define RTM_SETNEIGHTBL RTM_SETNEIGHTBL
+
+ RTM_NEWNDUSEROPT = 68,
+#define RTM_NEWNDUSEROPT RTM_NEWNDUSEROPT
+
+ RTM_NEWADDRLABEL = 72,
+#define RTM_NEWADDRLABEL RTM_NEWADDRLABEL
+ RTM_DELADDRLABEL,
+#define RTM_DELADDRLABEL RTM_DELADDRLABEL
+ RTM_GETADDRLABEL,
+#define RTM_GETADDRLABEL RTM_GETADDRLABEL
+
+ RTM_GETDCB = 78,
+#define RTM_GETDCB RTM_GETDCB
+ RTM_SETDCB,
+#define RTM_SETDCB RTM_SETDCB
 
  __RTM_MAX,
 #define RTM_MAX (((__RTM_MAX + 3) & ~3) - 1)
@@ -172,6 +189,7 @@ enum
 #define RTPROT_DNROUTED 13  
 #define RTPROT_XORP 14  
 #define RTPROT_NTK 15  
+#define RTPROT_DHCP 16  
 
 enum rt_scope_t
 {
@@ -192,12 +210,12 @@ enum rt_class_t
 {
  RT_TABLE_UNSPEC=0,
 
+ RT_TABLE_COMPAT=252,
  RT_TABLE_DEFAULT=253,
  RT_TABLE_MAIN=254,
  RT_TABLE_LOCAL=255,
- __RT_TABLE_MAX
+ RT_TABLE_MAX=0xFFFFFFFF
 };
-#define RT_TABLE_MAX (__RT_TABLE_MAX - 1)
 
 enum rtattr_type_t
 {
@@ -216,6 +234,7 @@ enum rtattr_type_t
  RTA_CACHEINFO,
  RTA_SESSION,
  RTA_MP_ALGO,
+ RTA_TABLE,
  __RTA_MAX
 };
 
@@ -286,6 +305,8 @@ enum
 #define RTAX_INITCWND RTAX_INITCWND
  RTAX_FEATURES,
 #define RTAX_FEATURES RTAX_FEATURES
+ RTAX_RTO_MIN,
+#define RTAX_RTO_MIN RTAX_RTO_MIN
  __RTAX_MAX
 };
 
@@ -317,168 +338,6 @@ struct rta_session
  __u32 spi;
  } u;
 };
-
-struct ifaddrmsg
-{
- unsigned char ifa_family;
- unsigned char ifa_prefixlen;
- unsigned char ifa_flags;
- unsigned char ifa_scope;
- int ifa_index;
-};
-
-enum
-{
- IFA_UNSPEC,
- IFA_ADDRESS,
- IFA_LOCAL,
- IFA_LABEL,
- IFA_BROADCAST,
- IFA_ANYCAST,
- IFA_CACHEINFO,
- IFA_MULTICAST,
- __IFA_MAX
-};
-
-#define IFA_MAX (__IFA_MAX - 1)
-
-#define IFA_F_SECONDARY 0x01
-#define IFA_F_TEMPORARY IFA_F_SECONDARY
-
-#define IFA_F_DEPRECATED 0x20
-#define IFA_F_TENTATIVE 0x40
-#define IFA_F_PERMANENT 0x80
-
-struct ifa_cacheinfo
-{
- __u32 ifa_prefered;
- __u32 ifa_valid;
- __u32 cstamp;
- __u32 tstamp;
-};
-
-#define IFA_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct ifaddrmsg))))
-#define IFA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ifaddrmsg))
-
-struct ndmsg
-{
- unsigned char ndm_family;
- unsigned char ndm_pad1;
- unsigned short ndm_pad2;
- int ndm_ifindex;
- __u16 ndm_state;
- __u8 ndm_flags;
- __u8 ndm_type;
-};
-
-enum
-{
- NDA_UNSPEC,
- NDA_DST,
- NDA_LLADDR,
- NDA_CACHEINFO,
- NDA_PROBES,
- __NDA_MAX
-};
-
-#define NDA_MAX (__NDA_MAX - 1)
-
-#define NDA_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct ndmsg))))
-#define NDA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ndmsg))
-
-#define NTF_PROXY 0x08  
-#define NTF_ROUTER 0x80
-
-#define NUD_INCOMPLETE 0x01
-#define NUD_REACHABLE 0x02
-#define NUD_STALE 0x04
-#define NUD_DELAY 0x08
-#define NUD_PROBE 0x10
-#define NUD_FAILED 0x20
-
-#define NUD_NOARP 0x40
-#define NUD_PERMANENT 0x80
-#define NUD_NONE 0x00
-
-struct nda_cacheinfo
-{
- __u32 ndm_confirmed;
- __u32 ndm_used;
- __u32 ndm_updated;
- __u32 ndm_refcnt;
-};
-
-struct ndt_stats
-{
- __u64 ndts_allocs;
- __u64 ndts_destroys;
- __u64 ndts_hash_grows;
- __u64 ndts_res_failed;
- __u64 ndts_lookups;
- __u64 ndts_hits;
- __u64 ndts_rcv_probes_mcast;
- __u64 ndts_rcv_probes_ucast;
- __u64 ndts_periodic_gc_runs;
- __u64 ndts_forced_gc_runs;
-};
-
-enum {
- NDTPA_UNSPEC,
- NDTPA_IFINDEX,
- NDTPA_REFCNT,
- NDTPA_REACHABLE_TIME,
- NDTPA_BASE_REACHABLE_TIME,
- NDTPA_RETRANS_TIME,
- NDTPA_GC_STALETIME,
- NDTPA_DELAY_PROBE_TIME,
- NDTPA_QUEUE_LEN,
- NDTPA_APP_PROBES,
- NDTPA_UCAST_PROBES,
- NDTPA_MCAST_PROBES,
- NDTPA_ANYCAST_DELAY,
- NDTPA_PROXY_DELAY,
- NDTPA_PROXY_QLEN,
- NDTPA_LOCKTIME,
- __NDTPA_MAX
-};
-#define NDTPA_MAX (__NDTPA_MAX - 1)
-
-struct ndtmsg
-{
- __u8 ndtm_family;
- __u8 ndtm_pad1;
- __u16 ndtm_pad2;
-};
-
-struct ndt_config
-{
- __u16 ndtc_key_len;
- __u16 ndtc_entry_size;
- __u32 ndtc_entries;
- __u32 ndtc_last_flush;
- __u32 ndtc_last_rand;
- __u32 ndtc_hash_rnd;
- __u32 ndtc_hash_mask;
- __u32 ndtc_hash_chain_gc;
- __u32 ndtc_proxy_qlen;
-};
-
-enum {
- NDTA_UNSPEC,
- NDTA_NAME,
- NDTA_THRESH1,
- NDTA_THRESH2,
- NDTA_THRESH3,
- NDTA_CONFIG,
- NDTA_PARMS,
- NDTA_STATS,
- NDTA_GC_INTERVAL,
- __NDTA_MAX
-};
-#define NDTA_MAX (__NDTA_MAX - 1)
-
-#define NDTA_RTA(r) ((struct rtattr*)(((char*)(r)) +   NLMSG_ALIGN(sizeof(struct ndtmsg))))
-#define NDTA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ndtmsg))
 
 struct rtgenmsg
 {
@@ -523,103 +382,6 @@ struct prefix_cacheinfo
  __u32 valid_time;
 };
 
-struct rtnl_link_stats
-{
- __u32 rx_packets;
- __u32 tx_packets;
- __u32 rx_bytes;
- __u32 tx_bytes;
- __u32 rx_errors;
- __u32 tx_errors;
- __u32 rx_dropped;
- __u32 tx_dropped;
- __u32 multicast;
- __u32 collisions;
-
- __u32 rx_length_errors;
- __u32 rx_over_errors;
- __u32 rx_crc_errors;
- __u32 rx_frame_errors;
- __u32 rx_fifo_errors;
- __u32 rx_missed_errors;
-
- __u32 tx_aborted_errors;
- __u32 tx_carrier_errors;
- __u32 tx_fifo_errors;
- __u32 tx_heartbeat_errors;
- __u32 tx_window_errors;
-
- __u32 rx_compressed;
- __u32 tx_compressed;
-};
-
-struct rtnl_link_ifmap
-{
- __u64 mem_start;
- __u64 mem_end;
- __u64 base_addr;
- __u16 irq;
- __u8 dma;
- __u8 port;
-};
-
-enum
-{
- IFLA_UNSPEC,
- IFLA_ADDRESS,
- IFLA_BROADCAST,
- IFLA_IFNAME,
- IFLA_MTU,
- IFLA_LINK,
- IFLA_QDISC,
- IFLA_STATS,
- IFLA_COST,
-#define IFLA_COST IFLA_COST
- IFLA_PRIORITY,
-#define IFLA_PRIORITY IFLA_PRIORITY
- IFLA_MASTER,
-#define IFLA_MASTER IFLA_MASTER
- IFLA_WIRELESS,
-#define IFLA_WIRELESS IFLA_WIRELESS
- IFLA_PROTINFO,
-#define IFLA_PROTINFO IFLA_PROTINFO
- IFLA_TXQLEN,
-#define IFLA_TXQLEN IFLA_TXQLEN
- IFLA_MAP,
-#define IFLA_MAP IFLA_MAP
- IFLA_WEIGHT,
-#define IFLA_WEIGHT IFLA_WEIGHT
- IFLA_OPERSTATE,
- IFLA_LINKMODE,
- __IFLA_MAX
-};
-
-#define IFLA_MAX (__IFLA_MAX - 1)
-
-#define IFLA_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct ifinfomsg))))
-#define IFLA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ifinfomsg))
-
-enum
-{
- IFLA_INET6_UNSPEC,
- IFLA_INET6_FLAGS,
- IFLA_INET6_CONF,
- IFLA_INET6_STATS,
- IFLA_INET6_MCAST,
- IFLA_INET6_CACHEINFO,
- __IFLA_INET6_MAX
-};
-
-#define IFLA_INET6_MAX (__IFLA_INET6_MAX - 1)
-
-struct ifla_cacheinfo
-{
- __u32 max_reasm_len;
- __u32 tstamp;
- __u32 reachable_time;
- __u32 retrans_time;
-};
-
 struct tcmsg
 {
  unsigned char tcm_family;
@@ -641,6 +403,7 @@ enum
  TCA_RATE,
  TCA_FCNT,
  TCA_STATS2,
+ TCA_STAB,
  __TCA_MAX
 };
 
@@ -648,6 +411,28 @@ enum
 
 #define TCA_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct tcmsg))))
 #define TCA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct tcmsg))
+
+struct nduseroptmsg
+{
+ unsigned char nduseropt_family;
+ unsigned char nduseropt_pad1;
+ unsigned short nduseropt_opts_len;
+ int nduseropt_ifindex;
+ __u8 nduseropt_icmp_type;
+ __u8 nduseropt_icmp_code;
+ unsigned short nduseropt_pad2;
+ unsigned int nduseropt_pad3;
+
+};
+
+enum
+{
+ NDUSEROPT_UNSPEC,
+ NDUSEROPT_SRCADDR,
+ __NDUSEROPT_MAX
+};
+
+#define NDUSEROPT_MAX (__NDUSEROPT_MAX - 1)
 
 #define RTMGRP_LINK 1
 #define RTMGRP_NOTIFY 2
@@ -701,10 +486,19 @@ enum rtnetlink_groups {
  RTNLGRP_NOP2,
  RTNLGRP_DECnet_ROUTE,
 #define RTNLGRP_DECnet_ROUTE RTNLGRP_DECnet_ROUTE
- RTNLGRP_NOP3,
+ RTNLGRP_DECnet_RULE,
+#define RTNLGRP_DECnet_RULE RTNLGRP_DECnet_RULE
  RTNLGRP_NOP4,
  RTNLGRP_IPV6_PREFIX,
 #define RTNLGRP_IPV6_PREFIX RTNLGRP_IPV6_PREFIX
+ RTNLGRP_IPV6_RULE,
+#define RTNLGRP_IPV6_RULE RTNLGRP_IPV6_RULE
+ RTNLGRP_ND_USEROPT,
+#define RTNLGRP_ND_USEROPT RTNLGRP_ND_USEROPT
+ RTNLGRP_PHONET_IFADDR,
+#define RTNLGRP_PHONET_IFADDR RTNLGRP_PHONET_IFADDR
+ RTNLGRP_PHONET_ROUTE,
+#define RTNLGRP_PHONET_ROUTE RTNLGRP_PHONET_ROUTE
  __RTNLGRP_MAX
 };
 #define RTNLGRP_MAX (__RTNLGRP_MAX - 1)

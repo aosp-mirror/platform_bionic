@@ -12,6 +12,7 @@
 #ifndef __LINUX_PKT_CLS_H
 #define __LINUX_PKT_CLS_H
 
+#include <linux/types.h>
 #include <linux/pkt_sched.h>
 
 #define _TC_MAKE32(x) ((x))
@@ -179,8 +180,8 @@ enum
 
 struct tc_u32_key
 {
- __u32 mask;
- __u32 val;
+ __be32 mask;
+ __be32 val;
  int off;
  int offmask;
 };
@@ -191,12 +192,12 @@ struct tc_u32_sel
  unsigned char offshift;
  unsigned char nkeys;
 
- __u16 offmask;
+ __be16 offmask;
  __u16 off;
  short offoff;
 
  short hoff;
- __u32 hmask;
+ __be32 hmask;
  struct tc_u32_key keys[0];
 };
 
@@ -273,6 +274,7 @@ enum
  TCA_FW_POLICE,
  TCA_FW_INDEV,
  TCA_FW_ACT,
+ TCA_FW_MASK,
  __TCA_FW_MAX
 };
 
@@ -295,6 +297,56 @@ enum
 
 enum
 {
+ FLOW_KEY_SRC,
+ FLOW_KEY_DST,
+ FLOW_KEY_PROTO,
+ FLOW_KEY_PROTO_SRC,
+ FLOW_KEY_PROTO_DST,
+ FLOW_KEY_IIF,
+ FLOW_KEY_PRIORITY,
+ FLOW_KEY_MARK,
+ FLOW_KEY_NFCT,
+ FLOW_KEY_NFCT_SRC,
+ FLOW_KEY_NFCT_DST,
+ FLOW_KEY_NFCT_PROTO_SRC,
+ FLOW_KEY_NFCT_PROTO_DST,
+ FLOW_KEY_RTCLASSID,
+ FLOW_KEY_SKUID,
+ FLOW_KEY_SKGID,
+ FLOW_KEY_VLAN_TAG,
+ __FLOW_KEY_MAX,
+};
+
+#define FLOW_KEY_MAX (__FLOW_KEY_MAX - 1)
+
+enum
+{
+ FLOW_MODE_MAP,
+ FLOW_MODE_HASH,
+};
+
+enum
+{
+ TCA_FLOW_UNSPEC,
+ TCA_FLOW_KEYS,
+ TCA_FLOW_MODE,
+ TCA_FLOW_BASECLASS,
+ TCA_FLOW_RSHIFT,
+ TCA_FLOW_ADDEND,
+ TCA_FLOW_MASK,
+ TCA_FLOW_XOR,
+ TCA_FLOW_DIVISOR,
+ TCA_FLOW_ACT,
+ TCA_FLOW_POLICE,
+ TCA_FLOW_EMATCHES,
+ TCA_FLOW_PERTURB,
+ __TCA_FLOW_MAX
+};
+
+#define TCA_FLOW_MAX (__TCA_FLOW_MAX - 1)
+
+enum
+{
  TCA_BASIC_UNSPEC,
  TCA_BASIC_CLASSID,
  TCA_BASIC_EMATCHES,
@@ -304,6 +356,17 @@ enum
 };
 
 #define TCA_BASIC_MAX (__TCA_BASIC_MAX - 1)
+
+enum
+{
+ TCA_CGROUP_UNSPEC,
+ TCA_CGROUP_ACT,
+ TCA_CGROUP_POLICE,
+ TCA_CGROUP_EMATCHES,
+ __TCA_CGROUP_MAX,
+};
+
+#define TCA_CGROUP_MAX (__TCA_CGROUP_MAX - 1)
 
 struct tcf_ematch_tree_hdr
 {
@@ -346,16 +409,14 @@ enum
 };
 #define TCF_LAYER_MAX (__TCF_LAYER_MAX - 1)
 
-enum
-{
- TCF_EM_CONTAINER,
- TCF_EM_CMP,
- TCF_EM_NBYTE,
- TCF_EM_U32,
- TCF_EM_META,
- TCF_EM_TEXT,
- __TCF_EM_MAX
-};
+#define TCF_EM_CONTAINER 0
+#define TCF_EM_CMP 1
+#define TCF_EM_NBYTE 2
+#define TCF_EM_U32 3
+#define TCF_EM_META 4
+#define TCF_EM_TEXT 5
+#define TCF_EM_VLAN 6
+#define TCF_EM_MAX 6
 
 enum
 {
