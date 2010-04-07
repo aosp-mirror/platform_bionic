@@ -12,6 +12,8 @@
 #ifndef __LINUX_PKT_SCHED_H
 #define __LINUX_PKT_SCHED_H
 
+#include <linux/types.h>
+
 #define TC_PRIO_BESTEFFORT 0
 #define TC_PRIO_FILLER 1
 #define TC_PRIO_BULK 2
@@ -53,11 +55,33 @@ struct tc_ratespec
 {
  unsigned char cell_log;
  unsigned char __reserved;
- unsigned short feature;
- short addend;
+ unsigned short overhead;
+ short cell_align;
  unsigned short mpu;
  __u32 rate;
 };
+
+#define TC_RTAB_SIZE 1024
+
+struct tc_sizespec {
+ unsigned char cell_log;
+ unsigned char size_log;
+ short cell_align;
+ int overhead;
+ unsigned int linklayer;
+ unsigned int mpu;
+ unsigned int mtu;
+ unsigned int tsize;
+};
+
+enum {
+ TCA_STAB_UNSPEC,
+ TCA_STAB_BASE,
+ TCA_STAB_DATA,
+ __TCA_STAB_MAX
+};
+
+#define TCA_STAB_MAX (__TCA_STAB_MAX - 1)
 
 struct tc_fifo_qopt
 {
@@ -71,6 +95,11 @@ struct tc_prio_qopt
 {
  int bands;
  __u8 priomap[TC_PRIO_MAX+1];
+};
+
+struct tc_multiq_qopt {
+ __u16 bands;
+ __u16 max_bands;
 };
 
 struct tc_tbf_qopt
@@ -100,6 +129,11 @@ struct tc_sfq_qopt
  __u32 limit;
  unsigned divisor;
  unsigned flows;
+};
+
+struct tc_sfq_xstats
+{
+ __s32 allot;
 };
 
 enum
@@ -401,5 +435,19 @@ struct tc_netem_corrupt
 };
 
 #define NETEM_DIST_SCALE 8192
+
+enum
+{
+ TCA_DRR_UNSPEC,
+ TCA_DRR_QUANTUM,
+ __TCA_DRR_MAX
+};
+
+#define TCA_DRR_MAX (__TCA_DRR_MAX - 1)
+
+struct tc_drr_stats
+{
+ __u32 deficit;
+};
 
 #endif
