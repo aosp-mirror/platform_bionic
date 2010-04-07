@@ -33,7 +33,12 @@
 #define NETLINK_KOBJECT_UEVENT 15  
 #define NETLINK_GENERIC 16
 
+#define NETLINK_SCSITRANSPORT 18  
+#define NETLINK_ECRYPTFS 19
+
 #define MAX_LINKS 32 
+
+struct net;
 
 struct sockaddr_nl
 {
@@ -93,6 +98,8 @@ struct nlmsgerr
 #define NETLINK_ADD_MEMBERSHIP 1
 #define NETLINK_DROP_MEMBERSHIP 2
 #define NETLINK_PKTINFO 3
+#define NETLINK_BROADCAST_ERROR 4
+#define NETLINK_NO_ENOBUFS 5
 
 struct nl_pktinfo
 {
@@ -111,6 +118,10 @@ struct nlattr
  __u16 nla_len;
  __u16 nla_type;
 };
+
+#define NLA_F_NESTED (1 << 15)
+#define NLA_F_NET_BYTEORDER (1 << 14)
+#define NLA_TYPE_MASK ~(NLA_F_NESTED | NLA_F_NET_BYTEORDER)
 
 #define NLA_ALIGNTO 4
 #define NLA_ALIGN(len) (((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
