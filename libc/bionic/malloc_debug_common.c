@@ -149,7 +149,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
 
     if (*info == NULL) {
         *overallSize = 0;
-        goto done;
+        goto out_nomem_info;
     }
 
     qsort((void*)list, gHashTable.count, sizeof(void*), hash_entry_compare);
@@ -161,8 +161,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         size_t entrySize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * entry->numEntries);
         if (entrySize < *infoSize) {
             /* we're writing less than a full entry, clear out the rest */
-            /* TODO: only clear out the part we're not overwriting? */
-            memset(head, 0, *infoSize);
+            memset(head + entrySize, 0, *infoSize - entrySize);
         } else {
             /* make sure the amount we're copying doesn't exceed the limit */
             entrySize = *infoSize;
@@ -171,6 +170,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         head += *infoSize;
     }
 
+out_nomem_info:
     dlfree(list);
 
 done:
