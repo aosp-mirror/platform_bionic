@@ -34,6 +34,24 @@
       "revId": "c51e58a7c75d20bf770dc0ebd7f97a338fbe0036",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAx3///iQ\u003d",
+        "filename": "libc/stdio/findfp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2010-04-29T14:37:22Z",
+      "side": 1,
+      "message": "I think that\u0027s the case indeed. in the following lines is stdin/stdout/stderr. It\u0027d be good to make the comment more explicit. It\u0027d be better to use a constant instead of \"3\" in the following code.",
+      "parentUuid": "AAAAr3//+sU\u003d",
+      "revId": "c51e58a7c75d20bf770dc0ebd7f97a338fbe0036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
