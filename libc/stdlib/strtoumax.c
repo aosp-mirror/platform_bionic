@@ -57,7 +57,7 @@ strtoumax(const char *nptr, char **endptr, int base)
 	if (c == '-') {
 		neg = 1;
 		c = *s++;
-	} else { 
+	} else {
 		neg = 0;
 		if (c == '+')
 			c = *s++;
@@ -76,7 +76,7 @@ strtoumax(const char *nptr, char **endptr, int base)
             case x: cutoff = UINTMAX_MAX / x;    \
 	            cutlim = UINTMAX_MAX % x;    \
 		    break
-		    	
+
         switch (base) {
         CASE_BASE(8);
 	CASE_BASE(10);
@@ -85,7 +85,7 @@ strtoumax(const char *nptr, char **endptr, int base)
 	    cutoff = UINTMAX_MAX / base;
 	    cutlim = UINTMAX_MAX % base;
 	}
-	
+
 	for (acc = 0, any = 0;; c = (unsigned char) *s++) {
 		if (isdigit(c))
 			c -= '0';

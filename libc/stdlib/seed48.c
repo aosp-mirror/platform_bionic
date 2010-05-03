@@ -22,7 +22,7 @@ unsigned short *
 seed48(unsigned short xseed[3])
 {
 	static unsigned short sseed[3];
-  
+
 	sseed[0] = __rand48_seed[0];
 	sseed[1] = __rand48_seed[1];
 	sseed[2] = __rand48_seed[2];
