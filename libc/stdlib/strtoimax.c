@@ -103,7 +103,7 @@ strtoimax(const char *nptr, char **endptr, int base)
 		    cutoff = INTMAX_MAX / x; \
 		 }; \
 		 break
-		 
+
 	switch (base) {
             case 4:
                 if (neg) {
@@ -118,13 +118,13 @@ strtoimax(const char *nptr, char **endptr, int base)
 	    CASE_BASE(8);
 	    CASE_BASE(10);
 	    CASE_BASE(16);
-	    default:  
+	    default:
 	              cutoff  = neg ? INTMAX_MIN : INTMAX_MAX;
 		      cutlim  = cutoff % base;
 	              cutoff /= base;
 	}
 #undef CASE_BASE
-	
+
 	if (neg) {
 		if (cutlim > 0) {
 			cutlim -= base;

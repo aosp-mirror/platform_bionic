@@ -4,7 +4,7 @@ By Steve Reid <sreid@sea-to-sky.net>
 100% Public Domain
 
 -----------------
-Modified 7/98 
+Modified 7/98
 By James H. Brown <jbrown@burgoyne.com>
 Still 100% Public Domain
 
@@ -26,7 +26,7 @@ Since the file IO in main() reads 16K at a time, any file 8K or larger would
 be guaranteed to generate the wrong hash (e.g. Test Vector #3, a million
 "a"s).
 
-I also changed the declaration of variables i & j in SHA1Update to 
+I also changed the declaration of variables i & j in SHA1Update to
 unsigned long from unsigned int for the same reason.
 
 These changes should make no difference to any 32 bit implementations since
@@ -53,7 +53,7 @@ Still 100% public domain
 Modified 4/01
 By Saul Kravitz <Saul.Kravitz@celera.com>
 Still 100% PD
-Modified to run on Compaq Alpha hardware.  
+Modified to run on Compaq Alpha hardware.
 
 -----------------
 Modified 2/03
@@ -116,7 +116,7 @@ void SHA1Final(unsigned char digest[20], SHA1_CTX* context);
 void SHAPrintContext(SHA1_CTX *context, char *msg){
   printf("%s (%d,%d) %x %x %x %x %x\n",
 	 msg,
-	 context->count[0], context->count[1], 
+	 context->count[0], context->count[1],
 	 context->state[0],
 	 context->state[1],
 	 context->state[2],
@@ -238,8 +238,7 @@ unsigned char finalcount[8];
     while ((context->count[0] & 504) != 448) {
         SHA1Update(context, (unsigned char *)"\0", 1);
     }
-    SHA1Update(context, finalcount, 8);  /* Should cause a SHA1Transform()
-*/
+    SHA1Update(context, finalcount, 8);  /* Should cause a SHA1Transform() */
     for (i = 0; i < 20; i++) {
         digest[i] = (unsigned char)
          ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
@@ -254,7 +253,7 @@ unsigned char finalcount[8];
     SHA1Transform(context->state, context->buffer);
 #endif
 }
-  
+
 /*************************************************************/
 
 /* This is not quite the MIME base64 algorithm: it uses _ instead of /,
@@ -302,7 +301,7 @@ int main(int argc, char** argv)
       fputs("Unable to open file.", stderr);
       return(-1);
     }
-  } 
+  }
   SHA1Init(&context);
   while (!feof(file)) {  /* note: what if ferror(file) */
     i = fread(buffer, 1, 16384, file);
