@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/linux-syscalls.h>
+#include <machine/cpu-features.h>
 
 .global __atomic_cmpxchg
 .type __atomic_cmpxchg, %function
