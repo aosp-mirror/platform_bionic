@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAyX///nI\u003d",
+        "filename": "libm/src/e_j0f.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2010-05-07T22:14:06Z",
+      "side": 1,
+      "message": "I\u0027d prefer if you agreed to not include this line. It tends to make lawyers nervous.",
+      "revId": "c1f8dd9f0b0fe4d3953edefd2d6172573f6b7504",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
