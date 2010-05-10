@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAyX///cQ\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-10T21:57:51Z",
+      "side": 1,
+      "message": "you are right that it can\u0027t happen, sorry about that.",
+      "parentUuid": "AAAAyX///es\u003d",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAyX///fc\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 4
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "This was all copied verbatim from the parse_library_path above.  I can factor them both out into a common function if you\u0027d like, but I didn\u0027t want to mess with the algorithm itself, since robust string manipulation is tricky, and that code seemed to know what it was doing.",
       "parentUuid": "AAAAyX///fc\u003d",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAyX///cI\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2036,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-10T21:57:51Z",
+      "side": 1,
+      "message": "\"subtle\" code like this tends to create subtle bugs when it is later modified (or existing hard-to-catch bugs are replicated through copy and paste).\n\nit would be good to factor and simplify the parsing into a single function, but since this is not the original intent of this patch, I\u0027ll accept it as is. Waiting for others opinion on the subject though.\n\nthank you",
+      "parentUuid": "AAAAyX///ek\u003d",
       "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
