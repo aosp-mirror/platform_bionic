@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAyX///es\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-05-10T20:53:21Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand how this can happen.  If it makes it through the preloads list and doesn\u0027t match, it will start looking in the dynamic symbol table.  If there are any DT_NEEDED sections, lsi will be set to those, and a match will jump to \u0027done\u0027 with the correct value in lsi.  If there are no DT_NEEDED, it will fall through the loop unmodified into the ALLOW_SYMBOLS_FROM_MAIN section, which will set it to somain if non-NULL.  If it is NULL, it will fall all the way to \u0027done\u0027, but since s is NULL, it will simply return 0.  Is there some case I\u0027m missing where the value of lsi will affect anything downstream of the preload lookup?",
+      "parentUuid": "AAAAyX///fo\u003d",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAyX///fc\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2010-05-10T20:37:04Z",
       "side": 1,
       "message": "this code is a bit hard to understand. Can you replace it with a simpler loop instead that copies data from path into ldpreloads_buf, using strtok_r ?",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAyX///ek\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2036,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-05-10T20:53:21Z",
+      "side": 1,
+      "message": "This was all copied verbatim from the parse_library_path above.  I can factor them both out into a common function if you\u0027d like, but I didn\u0027t want to mess with the algorithm itself, since robust string manipulation is tricky, and that code seemed to know what it was doing.",
+      "parentUuid": "AAAAyX///fc\u003d",
       "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
