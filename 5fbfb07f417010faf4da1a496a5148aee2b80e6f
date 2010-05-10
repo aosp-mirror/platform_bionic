@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAyX///fo\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-10T20:37:04Z",
+      "side": 1,
+      "message": "please consider reloading the value of \u0027lsi\u0027 to \u0027si\u0027 here, otherwise incorrect results might be returned in the case of a static executable that doesn\u0027t have any DT_NEEDED symbols.",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAyX///fc\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2036,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-10T20:37:04Z",
+      "side": 1,
+      "message": "this code is a bit hard to understand. Can you replace it with a simpler loop instead that copies data from path into ldpreloads_buf, using strtok_r ?",
+      "revId": "5fbfb07f417010faf4da1a496a5148aee2b80e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
