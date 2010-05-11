@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAyn///q4\u003d",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-11T23:50:29Z",
+      "side": 1,
+      "message": "I would really prefer that you defined sigaction:sigaction for x86 and sh, and __sigaction:sigaction for arm, as in:\n\n__sigaction:sigaction(....) 67,-1,-1\nsigaction:sigaction(....) -1,67,67\n\nAnd add a comment to explain that. This will result in a much smaller change overall (and yes, it works).",
+      "revId": "0d85c175453ba26502429a381e05eb00df37bf00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
