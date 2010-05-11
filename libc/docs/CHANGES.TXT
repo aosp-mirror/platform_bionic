@@ -1,7 +1,12 @@
 Bionic ChangeLog:
 -----------------
 
-Differences between current and Android 2.1:
+Differences between current and Android 2.2:
+
+- <pthread.h>: Add reader/writer locks implementation.
+
+-------------------------------------------------------------------------------
+Differences between Android 2.2. and Android 2.1:
 
 - Add support for SH-4 CPU architecture !
 
