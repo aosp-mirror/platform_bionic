@@ -1,5 +1,6 @@
 /* e_j1f.c -- float version of e_j1.c.
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
+ * Bug in __ieee754_j1f fixed by Scott Turner 1/16/2010
  */
 
 /*
@@ -64,7 +65,7 @@ __ieee754_j1f(float x)
 	 * j1(x) = 1/sqrt(pi) * (P(1,x)*cc - Q(1,x)*ss) / sqrt(x)
 	 * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
 	 */
-		if(ix>0x80000000) z = (invsqrtpi*cc)/sqrtf(y);
+		if(((uint32_t)hx)>0x80000000) z = (invsqrtpi*cc)/sqrtf(y);
 		else {
 		    u = ponef(y); v = qonef(y);
 		    z = invsqrtpi*(u*cc-v*ss)/sqrtf(y);
