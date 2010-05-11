@@ -1,7 +1,12 @@
 Bionic ChangeLog:
 -----------------
 
-Differences between current and Android 2.1:
+Differences between current and Android 2.2:
+
+- <pthread.h>: Add reader/writer locks implementation.
+
+-------------------------------------------------------------------------------
+Differences between Android 2.2. and Android 2.1:
 
 - Support FP register save/load in setjmp()/longjmp() on ARMv7 builds.
 
