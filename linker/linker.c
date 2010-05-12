@@ -59,6 +59,9 @@
 #define LDPATH_BUFSIZE 512
 #define LDPATH_MAX 8
 
+#define LDPRELOAD_BUFSIZE 512
+#define LDPRELOAD_MAX 8
+
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
  * Do NOT use malloc() and friends or pthread_*() code here.
@@ -111,6 +114,11 @@ static inline int validate_soinfo(soinfo *si)
 
 static char ldpaths_buf[LDPATH_BUFSIZE];
 static const char *ldpaths[LDPATH_MAX + 1];
+
+static char ldpreloads_buf[LDPRELOAD_BUFSIZE];
+static const char *ldpreload_names[LDPRELOAD_MAX + 1];
+
+static soinfo *preloads[LDPRELOAD_MAX + 1];
 
 int debug_verbosity;
 static int pid;
@@ -443,6 +451,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
     Elf32_Sym *s;
     unsigned *d;
     soinfo *lsi = si;
+    int i;
 
     /* Look for symbols in the local scope first (the object who is
      * searching). This happens with C++ templates on i386 for some
@@ -456,6 +465,14 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
     s = _elf_lookup(si, elf_hash, name);
     if(s != NULL)
         goto done;
+
+    /* Next, look for it in the preloads list */
+    for(i = 0; preloads[i] != NULL; i++) {
+        lsi = preloads[i];
+        s = _do_lookup_in_so(lsi, name, &elf_hash);
+        if(s != NULL)
+            goto done;
+    }
 
     for(d = si->dynamic; *d; d += 2) {
         if(d[0] == DT_NEEDED){
@@ -1908,6 +1925,23 @@ static int link_image(soinfo *si, unsigned wr_offset)
         goto fail;
     }
 
+    /* if this is the main executable, then load all of the preloads now */
+    if(si->flags & FLAG_EXE) {
+        int i;
+        memset(preloads, 0, sizeof(preloads));
+        for(i = 0; ldpreload_names[i] != NULL; i++) {
+            soinfo *lsi = find_library(ldpreload_names[i]);
+            if(lsi == 0) {
+                strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
+                DL_ERR("%5d could not load needed library '%s' for '%s' (%s)",
+                       pid, ldpreload_names[i], si->name, tmp_err_buf);
+                goto fail;
+            }
+            lsi->refcount++;
+            preloads[i] = lsi;
+        }
+    }
+
     for(d = si->dynamic; *d; d += 2) {
         if(d[0] == DT_NEEDED){
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
@@ -2024,6 +2058,30 @@ static void parse_library_path(char *path, char *delim)
     }
 }
 
+static void parse_preloads(char *path, char *delim)
+{
+    size_t len;
+    char *ldpreloads_bufp = ldpreloads_buf;
+    int i = 0;
+
+    len = strlcpy(ldpreloads_buf, path, sizeof(ldpreloads_buf));
+
+    while (i < LDPRELOAD_MAX && (ldpreload_names[i] = strsep(&ldpreloads_bufp, delim))) {
+        if (*ldpreload_names[i] != '\0') {
+            ++i;
+        }
+    }
+
+    /* Forget the last path if we had to truncate; this occurs if the 2nd to
+     * last char isn't '\0' (i.e. not originally a delim). */
+    if (i > 0 && len >= sizeof(ldpreloads_buf) &&
+            ldpreloads_buf[sizeof(ldpreloads_buf) - 2] != '\0') {
+        ldpreload_names[i - 1] = NULL;
+    } else {
+        ldpreload_names[i] = NULL;
+    }
+}
+
 int main(int argc, char **argv)
 {
     return 0;
@@ -2043,6 +2101,7 @@ unsigned __linker_init(unsigned **elfdata)
     soinfo *si;
     struct link_map * map;
     char *ldpath_env = NULL;
+    char *ldpreload_env = NULL;
 
     /* Setup a temporary TLS area that is used to get a working
      * errno for system calls.
@@ -2074,6 +2133,8 @@ unsigned __linker_init(unsigned **elfdata)
             debug_verbosity = atoi(((char*) vecs[0]) + 6);
         } else if(!strncmp((char*) vecs[0], "LD_LIBRARY_PATH=", 16)) {
             ldpath_env = (char*) vecs[0] + 16;
+        } else if(!strncmp((char*) vecs[0], "LD_PRELOAD=", 11)) {
+            ldpreload_env = (char*) vecs[0] + 11;
         }
         vecs++;
     }
@@ -2136,6 +2197,10 @@ unsigned __linker_init(unsigned **elfdata)
         /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
     if (ldpath_env && getuid() == geteuid() && getgid() == getegid())
         parse_library_path(ldpath_env, ":");
+
+    if (ldpreload_env && getuid() == geteuid() && getgid() == getegid()) {
+        parse_preloads(ldpreload_env, " :");
+    }
 
     if(link_image(si, 0)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
