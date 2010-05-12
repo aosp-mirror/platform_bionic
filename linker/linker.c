@@ -469,7 +469,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
     /* Next, look for it in the preloads list */
     for(i = 0; preloads[i] != NULL; i++) {
         lsi = preloads[i];
-        s = _do_lookup_in_so(lsi, name, &elf_hash);
+        s = _elf_lookup(lsi, elf_hash, name);
         if(s != NULL)
             goto done;
     }
