@@ -16,6 +16,24 @@
       "revId": "0d85c175453ba26502429a381e05eb00df37bf00",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAyn///mA\u003d",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-05-12T13:38:02Z",
+      "side": 1,
+      "message": "Oh, cool, I didn\u0027t realize you could do that.  That\u0027ll make it way easier--I\u0027ll re-spin the patch as soon as I get a chance.",
+      "parentUuid": "AAAAyn///q4\u003d",
+      "revId": "0d85c175453ba26502429a381e05eb00df37bf00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
