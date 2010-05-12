@@ -205,8 +205,6 @@ __fremovelock(FILE*  fp)
             lock->file = NULL;
         }
         lock_table_unlock(t);
-
-        if (lock != NULL)
-            free(lock);
+        free(lock);
     }
 }

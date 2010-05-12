@@ -1,5 +1,6 @@
 /* e_j0f.c -- float version of e_j0.c.
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
+ * Bugs in __ieee754_j0f and __ieee754_y0f fixed by Scott Turner 01/16/2010
  */
 
 /*
@@ -63,7 +64,7 @@ __ieee754_j0f(float x)
 	 * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
 	 * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
 	 */
-		if(ix>0x80000000) z = (invsqrtpi*cc)/sqrtf(x);
+		if(((uint32_t)hx)>0x80000000) z = (invsqrtpi*cc)/sqrtf(x);
 		else {
 		    u = pzerof(x); v = qzerof(x);
 		    z = invsqrtpi*(u*cc-v*ss)/sqrtf(x);
@@ -107,7 +108,7 @@ __ieee754_y0f(float x)
 	int32_t hx,ix;
 
 	GET_FLOAT_WORD(hx,x);
-        ix = 0x7fffffff&hx;
+        ix = hx&0x7fffffff;
     /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
 	if(ix>=0x7f800000) return  one/(x+x*x);
         if(ix==0) return -one/zero;
@@ -137,7 +138,7 @@ __ieee754_y0f(float x)
                     if ((s*c)<zero) cc = z/ss;
                     else            ss = z/cc;
                 }
-                if(ix>0x80000000) z = (invsqrtpi*ss)/sqrtf(x);
+                if(((uint32_t)hx)>0x80000000) z = (invsqrtpi*ss)/sqrtf(x);
                 else {
                     u = pzerof(x); v = qzerof(x);
                     z = invsqrtpi*(u*ss+v*cc)/sqrtf(x);
