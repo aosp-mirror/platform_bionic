@@ -142,6 +142,7 @@ int              __rt_sigaction (int sig, const struct sigaction *act, struct si
 int              __rt_sigprocmask (int  how, const sigset_t *set, sigset_t *oset, size_t sigsetsize);
 int              __rt_sigtimedwait (const sigset_t *set, struct siginfo_t  *info, struct timespec_t  *timeout, size_t  sigset_size);
 int              sigpending (sigset_t *);
+int              __sigaction (int, const struct sigaction *, struct sigaction *);
 int              socket (int, int, int);
 int              socketpair (int, int, int, int*);
 int              bind (int, struct sockaddr *, int);
