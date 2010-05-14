@@ -51,6 +51,7 @@ typedef int sig_atomic_t;
 #endif
 
 extern const char * const sys_siglist[];
+extern const char * const sys_signame[];
 
 static __inline__ int sigismember(sigset_t *set, int signum)
 {
