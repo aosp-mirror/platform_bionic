@@ -40,8 +40,8 @@
 #include <stdlib.h>
 #include "local.h"
 
-/* 
- * Re-direct an existing, open (probably) file to some other file. 
+/*
+ * Re-direct an existing, open (probably) file to some other file.
  * ANSI is written such that the original file gets closed if at
  * all possible, no matter what.
  */

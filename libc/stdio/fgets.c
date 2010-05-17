@@ -63,12 +63,12 @@ fgets(char *buf, int n, FILE *fp)
 				/* EOF/error: stop with partial or no line */
 				if (s == buf)
 					return (NULL);
-      break;
-  }
+				break;
+			}
 		}
 		len = fp->_r;
 		p = fp->_p;
-  
+
 		/*
 		 * Scan through at most n bytes of the current buffer,
 		 * looking for '\n'.  If found, copy up to and including

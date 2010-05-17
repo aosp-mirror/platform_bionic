@@ -204,7 +204,7 @@ fseeko(FILE *fp, off_t offset, int whence)
 	if ((*seekfn)(fp->_cookie, curoff, SEEK_SET) == POS_ERR)
 		goto dumb;
 	fp->_r = 0;
- 	fp->_p = fp->_bf._base;
+	fp->_p = fp->_bf._base;
 	if (HASUB(fp))
 		FREEUB(fp);
 	fp->_flags &= ~__SEOF;
