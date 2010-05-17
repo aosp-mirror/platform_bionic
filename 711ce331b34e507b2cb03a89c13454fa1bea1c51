@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzH///mc\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1736,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-17T15:16:43Z",
+      "side": 1,
+      "message": "it would be nice if you could protect against thid \u003d\u003d 0 and thname \u003d\u003d NULL here and return EINVAL in these cases.",
+      "revId": "711ce331b34e507b2cb03a89c13454fa1bea1c51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzH///mY\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1742,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-17T15:16:43Z",
+      "side": 1,
+      "message": "can you save the old errno and restore it upon exit of the function  ? It looks like the spec do not mention that the variable is modified by this function.",
+      "revId": "711ce331b34e507b2cb03a89c13454fa1bea1c51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzH///mU\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-05-17T15:16:43Z",
+      "side": 1,
+      "message": "it would be nice if you could guard against EINTR here too.",
+      "revId": "711ce331b34e507b2cb03a89c13454fa1bea1c51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
