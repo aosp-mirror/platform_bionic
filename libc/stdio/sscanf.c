@@ -48,7 +48,7 @@ int
 sscanf(const char *str, const char *fmt, ...)
 {
 	int ret;
-  va_list ap;
+	va_list ap;
 	FILE f;
 	struct __sfileext fext;
 
@@ -60,6 +60,6 @@ sscanf(const char *str, const char *fmt, ...)
 	f._lb._base = NULL;
 	va_start(ap, fmt);
 	ret = vfscanf(&f, fmt, ap);
-  va_end(ap);
+	va_end(ap);
 	return (ret);
 }

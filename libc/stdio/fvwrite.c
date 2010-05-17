@@ -83,7 +83,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 		do {
 			GETIOV(;);
 #if 1  /* BIONIC: don't limit to 1KB writes */
-            w = (*fp->_write)(fp->_cookie, p, len);
+			w = (*fp->_write)(fp->_cookie, p, len);
 #else
 			w = (*fp->_write)(fp->_cookie, p, MIN(len, BUFSIZ2));
 #endif
@@ -183,7 +183,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 			} else if (s >= (w = fp->_bf._size)) {
 				w = (*fp->_write)(fp->_cookie, p, w);
 				if (w <= 0)
-				 	goto err;
+					goto err;
 			} else {
 				w = s;
 				COPY(w);

@@ -53,7 +53,7 @@ fopen(const char *file, const char *mode)
 	if ((f = open(file, oflags, DEFFILEMODE)) < 0) {
 		fp->_flags = 0;			/* release */
 		return (NULL);
-  }
+	}
 	fp->_file = f;
 	fp->_flags = flags;
 	fp->_cookie = fp;

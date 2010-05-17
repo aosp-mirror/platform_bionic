@@ -39,7 +39,6 @@
 static int
 eofread(void *cookie, char *buf, int len)
 {
-
 	return (0);
 }
 
