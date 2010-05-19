@@ -480,6 +480,12 @@ long double	tgammal(long double);
 #endif
 long double	truncl(long double);
 
+/* BIONIC: GLibc compatibility - required by the ARM toolchain */
+#ifdef _GNU_SOURCE
+void  sincos(double x, double *sin, double *cos);
+void  sincosf(float x, float *sin, float *cos);
+#endif
+
 /* #endif */ /* __ISO_C_VISIBLE >= 1999 */
 __END_DECLS
 

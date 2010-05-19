@@ -5,6 +5,8 @@ Differences between current and Android 2.2:
 
 - <pthread.h>: Add reader/writer locks implementation.
 
+- <math.h>: Added sincos() and sincosf() (GLibc compatibility).
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
