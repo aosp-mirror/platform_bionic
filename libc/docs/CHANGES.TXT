@@ -7,6 +7,9 @@ Differences between current and Android 2.2:
 
 - <math.h>: Added sincos() and sincosf() (GLibc compatibility).
 
+- <sys/sysinfo.h>: Added missing sysinfo() system call implementation
+  (the function was already declared in the header though).
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
