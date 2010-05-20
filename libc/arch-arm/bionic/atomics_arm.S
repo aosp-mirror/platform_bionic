@@ -143,7 +143,7 @@ __atomic_inc:
 /* r0(new) r1(addr) -> r0(old) */
 /* replaced swp instruction with ldrex/strex for ARMv6 & ARMv7 */
 __atomic_swap:
-#if defined (_ARM_HAVE_LDREX_STREX)
+#if defined (__ARM_HAVE_LDREX_STREX)
 1:  ldrex   r2, [r1]
     strex   r3, r0, [r1]
     teq     r3, #0
