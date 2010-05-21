@@ -38,7 +38,7 @@
  * IMPORTANT: We have no intention to support anything below an ARMv4T !
  */
 
-/* _ARM_ARCH_REVISION is a number corresponding to the ARM revision
+/* __ARM_ARCH__ is a number corresponding to the ARM revision
  * we're going to support
  *
  * it looks like our toolchain doesn't define __ARM_ARCH__
@@ -142,18 +142,32 @@
  *
  *     ldr  pc, [<some address>]
  *
- * note that this affects any instruction that explicitely changes the
+ * note that this affects any instruction that explicitly changes the
  * value of the pc register, including ldm { ...,pc } or 'add pc, #offset'
  */
 #if __ARM_ARCH__ >= 5
 #  define __ARM_HAVE_PC_INTERWORK
 #endif
 
-/* define _ARM_HAVE_LDREX_STREX for ARMv6 and ARMv7 architecure to be
- * used in replacement of depricated swp instruction
+/* define __ARM_HAVE_LDREX_STREX for ARMv6 and ARMv7 architecture to be
+ * used in replacement of deprecated swp instruction
  */
 #if __ARM_ARCH__ >= 6
-#  define _ARM_HAVE_LDREX_STREX
+#  define __ARM_HAVE_LDREX_STREX
+#endif
+
+/* define __ARM_HAVE_DMB for ARMv7 architecture
+ */
+#if __ARM_ARCH__ >= 7
+#  define __ARM_HAVE_DMB
+#endif
+
+/* define __ARM_HAVE_LDREXD for ARMv7 architecture
+ * (also present in ARMv6K, but not implemented in ARMv7-M, neither of which
+ * we care about)
+ */
+#if __ARM_ARCH__ >= 7
+#  define __ARM_HAVE_LDREXD
 #endif
 
 /* define _ARM_HAVE_VFP if we have VFPv3
