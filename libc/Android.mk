@@ -440,6 +440,14 @@ else # !arm
   endif # x86
 endif # !arm
 
+# Define ANDROID_SMP appropriately.
+ifeq ($(TARGET_CPU_SMP),true)
+    libc_common_cflags += -DANDROID_SMP=1
+else
+    libc_common_cflags += -DANDROID_SMP=0
+endif
+
+
 # Define some common includes
 # ========================================================
 libc_common_c_includes := \
