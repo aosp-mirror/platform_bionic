@@ -30,6 +30,7 @@
 #include <sys/time.h>
 #include <sys/atomics.h>
 #include <time.h>
+#include <cutils/atomic-inline.h>
 
 int sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -103,6 +104,7 @@ __atomic_dec_if_positive( volatile unsigned int*  pvalue )
     return old;
 }
 
+/* lock a semaphore */
 int sem_wait(sem_t *sem)
 {
     if (sem == NULL) {
@@ -116,6 +118,7 @@ int sem_wait(sem_t *sem)
 
         __futex_wait(&sem->count, 0, 0);
     }
+    ANDROID_MEMBAR_FULL();
     return 0;
 }
 
@@ -130,8 +133,10 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 
     /* POSIX says we need to try to decrement the semaphore
      * before checking the timeout value */
-    if (__atomic_dec_if_positive(&sem->count))
+    if (__atomic_dec_if_positive(&sem->count)) {
+        ANDROID_MEMBAR_FULL();
         return 0;
+    }
 
     /* check it as per Posix */
     if (abs_timeout == NULL    ||
@@ -169,17 +174,21 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
             return -1;
         }
 
-        if (__atomic_dec_if_positive(&sem->count))
+        if (__atomic_dec_if_positive(&sem->count)) {
+            ANDROID_MEMBAR_FULL();
             break;
+        }
     }
     return 0;
 }
 
+/* unlock a semaphore */
 int sem_post(sem_t *sem)
 {
     if (sem == NULL)
         return EINVAL;
 
+    ANDROID_MEMBAR_FULL();
     if (__atomic_inc((volatile int*)&sem->count) >= 0)
         __futex_wake(&sem->count, 1);
 
@@ -194,6 +203,7 @@ int  sem_trywait(sem_t *sem)
     }
 
     if (__atomic_dec_if_positive(&sem->count) > 0) {
+        ANDROID_MEMBAR_FULL();
         return 0;
     } else {
         errno = EAGAIN;

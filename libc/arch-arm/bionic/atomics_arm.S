@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/linux-syscalls.h>
+#include <machine/cpu-features.h>
 
 .global __atomic_cmpxchg
 .type __atomic_cmpxchg, %function
@@ -39,9 +40,73 @@
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-#if 1
-   .equ     kernel_cmpxchg, 0xFFFF0FC0
-   .equ     kernel_atomic_base, 0xFFFF0FFF
+#if defined(__ARM_HAVE_LDREX_STREX)
+/*
+ * ===========================================================================
+ *      ARMv6+ implementation
+ * ===========================================================================
+ */
+
+/* r0(addr) -> r0(old) */
+__atomic_dec:
+    .fnstart
+    mov     r1, r0                      @ copy addr so we don't clobber it
+1:  ldrex   r0, [r1]                    @ load current value into r0
+    sub     r2, r0, #1                  @ generate new value into r2
+    strex   r3, r2, [r1]                @ try to store new value; result in r3
+    cmp     r3, #0                      @ success?
+    bxeq    lr                          @ yes, return
+    b       1b                          @ no, retry
+    .fnend
+
+/* r0(addr) -> r0(old) */
+__atomic_inc:
+    .fnstart
+    mov     r1, r0
+1:  ldrex   r0, [r1]
+    add     r2, r0, #1
+    strex   r3, r2, [r1]
+    cmp     r3, #0
+    bxeq    lr
+    b       1b
+    .fnend
+
+/* r0(old) r1(new) r2(addr) -> r0(zero_if_succeeded) */
+__atomic_cmpxchg:
+    .fnstart
+1:  mov     ip, #2                      @ ip=2 means "new != old"
+    ldrex   r3, [r2]                    @ load current value into r3
+    teq     r0, r3                      @ new == old?
+    strexeq ip, r1, [r2]                @ yes, try store, set ip to 0 or 1
+    teq     ip, #1                      @ strex failure?
+    beq     1b                          @ yes, retry
+    mov     r0, ip                      @ return 0 on success, 2 on failure
+    bx      lr
+    .fnend
+
+/* r0(new) r1(addr) -> r0(old) */
+__atomic_swap:
+    .fnstart
+1:  ldrex   r2, [r1]
+    strex   r3, r0, [r1]
+    teq     r3, #0
+    bne     1b
+    mov     r0, r2
+    bx      lr
+    .fnend
+
+#else /*not defined __ARM_HAVE_LDREX_STREX*/
+/*
+ * ===========================================================================
+ *      Pre-ARMv6 implementation
+ * ===========================================================================
+ */
+
+    /* int __kernel_cmpxchg(int oldval, int newval, int* ptr) */
+    .equ    kernel_cmpxchg, 0xFFFF0FC0
+    .equ    kernel_atomic_base, 0xFFFF0FFF
+
+/* r0(addr) -> r0(old) */
 __atomic_dec:
     .fnstart
     .save {r4, lr}
@@ -59,6 +124,7 @@ __atomic_dec:
     bx      lr
     .fnend
 
+/* r0(addr) -> r0(old) */
 __atomic_inc:
     .fnstart
     .save {r4, lr}
@@ -95,64 +161,16 @@ __atomic_cmpxchg:
     ldmia   sp!, {r4, lr}
     bx      lr
     .fnend
-#else
-#define KUSER_CMPXCHG 0xffffffc0
-
-/* r0(old) r1(new) r2(addr) -> r0(zero_if_succeeded) */
-__atomic_cmpxchg:
-    stmdb   sp!, {r4, lr}
-    mov     r4, r0          /* r4 = save oldvalue */
-1:  add     lr, pc, #4
-    mov     r0, r4          /* r0 = oldvalue */
-    mov     pc, #KUSER_CMPXCHG
-    bcs     2f              /* swap was made. we're good, return. */
-    ldr     r3, [r2]        /* swap not made, see if it's because *ptr!=oldvalue */
-    cmp     r3, r4
-    beq     1b
-2:  ldmia   sp!, {r4, lr}
-    bx      lr
-
-/* r0(addr) -> r0(old) */
-__atomic_dec:
-    stmdb   sp!, {r4, lr}
-    mov     r2, r0          /* address */
-1:  ldr     r0, [r2]        /* oldvalue */
-    add     lr, pc, #4
-    sub     r1, r0, #1      /* newvalue = oldvalue - 1 */
-    mov     pc, #KUSER_CMPXCHG
-    bcc     1b              /* no swap, try again until we get it right */
-    mov     r0, ip          /* swapped, return the old value */
-    ldmia   sp!, {r4, lr}
-    bx      lr
-
-/* r0(addr) -> r0(old) */
-__atomic_inc:
-    stmdb   sp!, {r4, lr}
-    mov     r2, r0          /* address */
-1:  ldr     r0, [r2]        /* oldvalue */
-    add     lr, pc, #4
-    add     r1, r0, #1      /* newvalue = oldvalue + 1 */
-    mov     pc, #KUSER_CMPXCHG
-    bcc     1b              /* no swap, try again until we get it right */
-    mov     r0, ip          /* swapped, return the old value */
-    ldmia   sp!, {r4, lr}
-    bx      lr
-#endif
 
 /* r0(new) r1(addr) -> r0(old) */
-/* replaced swp instruction with ldrex/strex for ARMv6 & ARMv7 */
 __atomic_swap:
-#if defined (__ARM_HAVE_LDREX_STREX)
-1:  ldrex   r2, [r1]
-    strex   r3, r0, [r1]
-    teq     r3, #0
-    bne     1b
-    mov     r0, r2
-    mcr     p15, 0, r0, c7, c10, 5 /* or, use dmb */
-#else
+    .fnstart
     swp     r0, r0, [r1]
-#endif
     bx      lr
+    .fnend
+
+#endif /*not defined __ARM_HAVE_LDREX_STREX*/
+
 
 /* __futex_wait(*ftx, val, *timespec) */
 /* __futex_wake(*ftx, counter) */
@@ -197,6 +215,8 @@ __futex_wait:
     .fnend
 
 __futex_wake:
+    .fnstart
+    .save   {r4, r7}
     stmdb   sp!, {r4, r7}
     mov     r2, r1
     mov     r1, #FUTEX_WAKE
@@ -204,6 +224,7 @@ __futex_wake:
     swi     #0
     ldmia   sp!, {r4, r7}
     bx      lr
+    .fnend
 
 #else
 
