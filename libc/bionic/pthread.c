@@ -44,6 +44,7 @@
 #include <assert.h>
 #include <malloc.h>
 #include <linux/futex.h>
+#include <cutils/atomic-inline.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
@@ -936,6 +937,7 @@ _normal_lock(pthread_mutex_t*  mutex)
         while (__atomic_swap(shared|2, &mutex->value ) != (shared|0))
             __futex_syscall4(&mutex->value, wait_op, shared|2, 0);
     }
+    ANDROID_MEMBAR_FULL();
 }
 
 /*
@@ -945,6 +947,8 @@ _normal_lock(pthread_mutex_t*  mutex)
 static __inline__ void
 _normal_unlock(pthread_mutex_t*  mutex)
 {
+    ANDROID_MEMBAR_FULL();
+
     /* We need to preserve the shared flag during operations */
     int  shared = mutex->value & MUTEX_SHARED_MASK;
 
@@ -1144,8 +1148,10 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
-        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0)
+        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+            ANDROID_MEMBAR_FULL();
             return 0;
+        }
 
         return EBUSY;
     }
@@ -1241,9 +1247,11 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     {
         int  wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
 
-        /* fast path for unconteded lock */
-        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0)
+        /* fast path for uncontended lock */
+        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+            ANDROID_MEMBAR_FULL();
             return 0;
+        }
 
         /* loop while needed */
         while (__atomic_swap(shared|2, &mutex->value) != (shared|0)) {
@@ -1252,6 +1260,7 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 
             __futex_syscall4(&mutex->value, wait_op, shared|2, &ts);
         }
+        ANDROID_MEMBAR_FULL();
         return 0;
     }
 
