@@ -31,6 +31,16 @@
 #include <sys/atomics.h>
 #include <time.h>
 #include <cutils/atomic-inline.h>
+#include <bionic_futex.h>
+
+/* Use the lower 31-bits for the counter, and the high bit for
+ * the shared flag.
+ */
+#define SEM_VALUE_MASK  0x7fffffff
+#define SEM_SHARED_MASK 0x80000000
+
+#define SEM_GET_SHARED(sem)  ((sem)->count & SEM_SHARED_MASK)
+#define SEM_GET_VALUE(sem)   ((sem)->count & SEM_VALUE_MASK)
 
 int sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -39,12 +49,16 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
         return -1;
     }
 
-    if (pshared != 0) {
-        errno = ENOSYS;
+    /* ensure that 'value' can be stored in the semaphore */
+    if ((value & SEM_VALUE_MASK) != value) {
+        errno = EINVAL;
         return -1;
     }
 
     sem->count = value;
+    if (pshared != 0)
+        sem->count |= SEM_SHARED_MASK;
+
     return 0;
 }
 
@@ -55,10 +69,11 @@ int sem_destroy(sem_t *sem)
         errno = EINVAL;
         return -1;
     }
-    if (sem->count == 0) {
+    if ((sem->count & SEM_VALUE_MASK) == 0) {
         errno = EBUSY;
         return -1;
     }
+    sem->count = 0;
     return 0;
 }
 
@@ -91,32 +106,60 @@ int sem_unlink(const char * name)
 }
 
 
+/* Return 0 if a semaphore's value is 0
+ * Otherwise, decrement the value and return the old value.
+ */
 static int
-__atomic_dec_if_positive( volatile unsigned int*  pvalue )
+__sem_dec_if_positive(volatile unsigned int *pvalue)
 {
+    unsigned int  shared = (*pvalue & SEM_SHARED_MASK);
     unsigned int  old;
 
     do {
-        old = *pvalue;
+        old = (*pvalue & SEM_VALUE_MASK);
     }
-    while ( old != 0 && __atomic_cmpxchg( (int)old, (int)old-1, (volatile int*)pvalue ) != 0 );
+    while ( old != 0 &&
+            __atomic_cmpxchg((int)(old|shared),
+                             (int)((old-1)|shared),
+                             (volatile int*)pvalue) != 0 );
 
+    return old;
+}
+
+/* Increment the value of a semaphore atomically.
+ * NOTE: the value will wrap above SEM_VALUE_MASK
+ */
+static int
+__sem_inc(volatile unsigned int *pvalue)
+{
+    unsigned int  shared = (*pvalue & SEM_SHARED_MASK);
+    unsigned int  old;
+
+    do {
+        old = (*pvalue & SEM_VALUE_MASK);
+    } while ( __atomic_cmpxchg((int)(old|shared),
+                               (int)(((old+1)&SEM_VALUE_MASK)|shared),
+                               (volatile int*)pvalue) != 0);
     return old;
 }
 
 /* lock a semaphore */
 int sem_wait(sem_t *sem)
 {
+    unsigned shared;
+
     if (sem == NULL) {
         errno = EINVAL;
         return -1;
     }
 
+    shared = SEM_GET_SHARED(sem);
+
     for (;;) {
-        if (__atomic_dec_if_positive(&sem->count))
+        if (__sem_dec_if_positive(&sem->count))
             break;
 
-        __futex_wait(&sem->count, 0, 0);
+        __futex_wait_ex(&sem->count, shared, shared, NULL);
     }
     ANDROID_MEMBAR_FULL();
     return 0;
@@ -125,6 +168,7 @@ int sem_wait(sem_t *sem)
 int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 {
     int  ret;
+    unsigned int shared;
 
     if (sem == NULL) {
         errno = EINVAL;
@@ -133,7 +177,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 
     /* POSIX says we need to try to decrement the semaphore
      * before checking the timeout value */
-    if (__atomic_dec_if_positive(&sem->count)) {
+    if (__sem_dec_if_positive(&sem->count)) {
         ANDROID_MEMBAR_FULL();
         return 0;
     }
@@ -147,6 +191,8 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
         errno = EINVAL;
         return -1;
     }
+
+    shared = SEM_GET_SHARED(sem);
 
     for (;;) {
         struct timespec ts;
@@ -166,7 +212,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
             return -1;
         }
 
-        ret = __futex_wait(&sem->count, 0, &ts);
+        ret = __futex_wait_ex(&sem->count, shared, shared, &ts);
 
         /* return in case of timeout or interrupt */
         if (ret == -ETIMEDOUT || ret == -EINTR) {
@@ -174,7 +220,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
             return -1;
         }
 
-        if (__atomic_dec_if_positive(&sem->count)) {
+        if (__sem_dec_if_positive(&sem->count)) {
             ANDROID_MEMBAR_FULL();
             break;
         }
@@ -185,12 +231,16 @@ int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 /* unlock a semaphore */
 int sem_post(sem_t *sem)
 {
+    unsigned int shared;
+
     if (sem == NULL)
         return EINVAL;
 
+    shared = SEM_GET_SHARED(sem);
+
     ANDROID_MEMBAR_FULL();
-    if (__atomic_inc((volatile int*)&sem->count) >= 0)
-        __futex_wake(&sem->count, 1);
+    if (__sem_inc(&sem->count) >= 0)
+        __futex_wake_ex(&sem->count, shared, 1);
 
     return 0;
 }
@@ -202,7 +252,7 @@ int  sem_trywait(sem_t *sem)
         return -1;
     }
 
-    if (__atomic_dec_if_positive(&sem->count) > 0) {
+    if (__sem_dec_if_positive(&sem->count) > 0) {
         ANDROID_MEMBAR_FULL();
         return 0;
     } else {
@@ -218,6 +268,6 @@ int  sem_getvalue(sem_t *sem, int *sval)
         return -1;
     }
 
-    *sval = sem->count;
+    *sval = SEM_GET_VALUE(sem);
     return 0;
 }
