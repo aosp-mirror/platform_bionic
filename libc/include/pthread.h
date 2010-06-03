@@ -231,6 +231,8 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid);
 
 int pthread_once(pthread_once_t  *once_control, void (*init_routine)(void));
 
+int pthread_setname_np(pthread_t thid, const char *thname);
+
 typedef void  (*__pthread_cleanup_func_t)(void*);
 
 typedef struct __pthread_cleanup_t {
