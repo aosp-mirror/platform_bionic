@@ -185,6 +185,12 @@ extern int cacheflush(long start, long end, long flags);
 extern pid_t tcgetpgrp(int fd);
 extern int   tcsetpgrp(int fd, pid_t _pid);
 
+#define TEMP_FAILURE_RETRY(expr) \
+    ({ long int __ret;                            \
+       do __ret = (long int)(expr);               \
+       while (__ret == -1L && errno == EINTR);    \
+       __ret; })
+
 __END_DECLS
 
 #endif /* _UNISTD_H_ */
