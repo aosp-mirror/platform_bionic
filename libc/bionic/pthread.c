@@ -45,6 +45,9 @@
 #include <malloc.h>
 #include <linux/futex.h>
 #include <cutils/atomic-inline.h>
+#include <sys/prctl.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
@@ -1887,4 +1890,55 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
         _normal_unlock( &once_lock );
     }
     return 0;
+}
+
+/* This value is not exported by kernel headers, so hardcode it here */
+#define MAX_TASK_COMM_LEN	16
+#define TASK_COMM_FMT 		"/proc/self/task/%u/comm"
+
+int pthread_setname_np(pthread_t thid, const char *thname)
+{
+    size_t thname_len;
+    int saved_errno, ret;
+
+    if (thid == 0 || thname == NULL)
+        return EINVAL;
+
+    thname_len = strlen(thname);
+    if (thname_len >= MAX_TASK_COMM_LEN)
+        return ERANGE;
+
+    saved_errno = errno;
+    if (thid == pthread_self())
+    {
+        ret = prctl(PR_SET_NAME, (unsigned long)thname, 0, 0, 0) ? errno : 0;
+    }
+    else
+    {
+        /* Have to change another thread's name */
+        pthread_internal_t *thread = (pthread_internal_t *)thid;
+        char comm_name[sizeof(TASK_COMM_FMT) + 8];
+        ssize_t n;
+        int fd;
+
+        snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, (unsigned int)thread->kernel_id);
+        fd = open(comm_name, O_RDWR);
+        if (fd == -1)
+        {
+            ret = errno;
+            goto exit;
+        }
+        n = TEMP_FAILURE_RETRY(write(fd, thname, thname_len));
+        close(fd);
+
+        if (n < 0)
+            ret = errno;
+        else if ((size_t)n != thname_len)
+            ret = EIO;
+        else
+            ret = 0;
+    }
+exit:
+    errno = saved_errno;
+    return ret;
 }
