@@ -38,3 +38,9 @@ void  sincosf(float x, float *psin, float *pcos)
     *psin = sinf(x);
     *pcos = cosf(x);
 }
+
+void  sincosl(long double x, long double *psin, long double *pcos)
+{
+    *psin = sin(x);
+    *pcos = cos(x);
+}
