@@ -47,4 +47,21 @@ struct termio {
 #define TIOCM_OUT2 0x4000
 #define TIOCM_LOOP 0x8000
 
+#define N_TTY 0
+#define N_SLIP 1
+#define N_MOUSE 2
+#define N_PPP 3
+#define N_STRIP 4
+#define N_AX25 5
+#define N_X25 6  
+#define N_6PACK 7
+#define N_MASC 8  
+#define N_R3964 9  
+#define N_PROFIBUS_FDL 10  
+#define N_IRDA 11  
+#define N_SMSBLOCK 12  
+#define N_HDLC 13  
+#define N_SYNC_PPP 14
+#define N_HCI 15  
+
 #endif
