@@ -135,7 +135,7 @@ extern char*  ptsname(int);
 extern int    ptsname_r(int, char*, size_t);
 extern int    getpt(void);
 
-static __inline__ int grantpt(int __fd)
+static __inline__ int grantpt(int __fd __attribute((unused)))
 {
   (void)__fd;
   return 0;     /* devpts does this all for us! */
