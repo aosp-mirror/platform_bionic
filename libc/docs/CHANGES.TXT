@@ -8,6 +8,9 @@ Differences between current and Android 2.2:
 - <semaphore.h>: Use private futexes for semaphore implementation,
   unless your set 'pshared' to non-0 when calling sem_init().
 
+- <sys/sysinfo.h>: Added missing sysinfo() system call implementation
+  (the function was already declared in the header though).
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
