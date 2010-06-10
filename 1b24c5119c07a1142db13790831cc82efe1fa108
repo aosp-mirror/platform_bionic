@@ -16,6 +16,41 @@
       "revId": "1b24c5119c07a1142db13790831cc82efe1fa108",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+0E\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-06-10T21:13:50Z",
+      "side": 1,
+      "message": "yes, I think relying on strtoul is not the correct way to do that. Using a single hex digit isn\u0027t allowed too I think. Please consider using a different function, I\u0027m sure there is something appropriate in the C library already. If not, just use a small utility func that is capable of reading two hex numbers and return an error if the input is incorrectly formatted.",
+      "parentUuid": "AAAAzX//+04\u003d",
+      "revId": "1b24c5119c07a1142db13790831cc82efe1fa108",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+0M\u003d",
+        "filename": "libc/inet/ether_ntoa.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-06-10T21:13:50Z",
+      "side": 1,
+      "message": "wow: the second and third parameters must be swapped here !",
+      "revId": "1b24c5119c07a1142db13790831cc82efe1fa108",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
