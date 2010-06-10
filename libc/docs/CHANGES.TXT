@@ -13,6 +13,9 @@ Differences between current and Android 2.2:
 - <sys/sysinfo.h>: Added missing sysinfo() system call implementation
   (the function was already declared in the header though).
 
+- sysconf() didn't work for some arguments due to a small bug in the
+  /proc line parser.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 

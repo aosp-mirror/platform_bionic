@@ -317,7 +317,7 @@ line_parser_addc( LineParser*  p, int  c )
 static int
 line_parser_getc( LineParser*  p )
 {
-    if (p->in_len >= p->in_pos) {
+    if (p->in_pos >= p->in_len) {
         int  ret;
 
         p->in_len = p->in_pos = 0;
