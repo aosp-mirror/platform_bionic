@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAzX//+2c\u003d",
+        "filename": "libc/include/net/if_ether.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-10T18:08:14Z",
+      "side": 1,
+      "message": "this header itself depends on sys/types.h (u_int8_t and size_t)",
+      "parentUuid": "AAAAzX//+6I\u003d",
+      "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAzX//+6M\u003d",
         "filename": "libc/include/net/if_ether.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2010-06-10T01:09:09Z",
       "side": 1,
       "message": "can you get rid of this extra line ?",
+      "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+2o\u003d",
+        "filename": "libc/include/net/if_ether.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-10T18:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAzX//+6M\u003d",
       "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAzX//+2U\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-10T18:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAzX//+6Y\u003d",
+      "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAzX//+6U\u003d",
         "filename": "libc/inet/ether_aton.c",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAzX//+2Q\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-10T18:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAzX//+6U\u003d",
+      "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAzX//+6Q\u003d",
         "filename": "libc/inet/ether_ntoa.c",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2010-06-10T01:09:09Z",
       "side": 1,
       "message": "for safety, I would prefer that you use snprintf(buf, 18, ....)",
+      "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+2Y\u003d",
+        "filename": "libc/inet/ether_ntoa.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-10T18:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAzX//+6Q\u003d",
       "revId": "59896aa5b5bb448e91714381edeba8713fc529bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
