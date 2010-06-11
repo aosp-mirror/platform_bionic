@@ -124,6 +124,7 @@ extern int readlink(const char *, char *, size_t);
 extern int chown(const char *, uid_t, gid_t);
 extern int fchown(int, uid_t, gid_t);
 extern int lchown(const char *, uid_t, gid_t);
+extern int truncate(const char *, off_t);
 extern char *getcwd(char *, size_t);
 
 extern int sync(void);
