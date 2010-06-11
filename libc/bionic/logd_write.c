@@ -38,12 +38,17 @@
 #include <stdarg.h>
 #include <fcntl.h>
 
-#include <cutils/logger.h>
 #include "logd.h"
+
+/* should match system/core/include/cutils/logger.h */
+#define LOGGER_LOG_MAIN     "log/main"
+#define LOGGER_LOG_RADIO    "log/radio"
+#define LOGGER_LOG_EVENTS   "log/events"
+#define LOGGER_LOG_SYSTEM   "log/system"
 
 #include <pthread.h>
 
-#define LOG_BUF_SIZE	1024
+#define LOG_BUF_SIZE    1024
 
 typedef enum {
     LOG_ID_NONE = 0,
