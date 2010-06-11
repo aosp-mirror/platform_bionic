@@ -18,6 +18,9 @@ Differences between current and Android 2.2:
 
 - <termio.h>: added missing header (just includes <termios.h>)
 
+- <unistd.h>: add missing declaration for truncate(). The implementation
+  was already here since Android 1.5.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
