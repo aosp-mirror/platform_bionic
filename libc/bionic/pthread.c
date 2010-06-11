@@ -44,7 +44,7 @@
 #include <assert.h>
 #include <malloc.h>
 #include <bionic_futex.h>
-#include <cutils/atomic-inline.h>
+#include <bionic_atomic_inline.h>
 #include <sys/prctl.h>
 #include <sys/stat.h>
 #include <fcntl.h>
