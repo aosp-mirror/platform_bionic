@@ -16,6 +16,8 @@ Differences between current and Android 2.2:
 - sysconf() didn't work for some arguments due to a small bug in the
   /proc line parser.
 
+- <termio.h>: added missing header (just includes <termios.h>)
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
