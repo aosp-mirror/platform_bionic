@@ -30,7 +30,7 @@
 #include <sys/time.h>
 #include <sys/atomics.h>
 #include <time.h>
-#include <cutils/atomic-inline.h>
+#include <bionic_atomic_inline.h>
 #include <bionic_futex.h>
 
 /* Use the lower 31-bits for the counter, and the high bit for
