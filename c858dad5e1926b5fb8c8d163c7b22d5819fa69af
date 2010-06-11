@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzX//+qk\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2010-06-11T21:32:37Z",
+      "side": 1,
+      "message": "This has a read overflow if *asc\u003d\u003d\u0027\\0\u0027 when entering the function.",
+      "revId": "c858dad5e1926b5fb8c8d163c7b22d5819fa69af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
