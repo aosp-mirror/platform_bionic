@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAzX//+ng\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-06-12T00:04:39Z",
+      "side": 1,
+      "message": "can you write something simpler than that, calling these functions is overkill.\ntry:\n\nunsigned d;\nd \u003d (unsigned)(c-\u00270\u0027);\nif (d \u003c 10) return (int)d;\nd \u003d (unsigned)(c-\u0027a\u0027);\nif (d \u003c 6) return (int)(10+d);\nd \u003d (unsigned)(c-\u0027A\u0027);\nif (d \u003c 6) return (int)(10+d);\nreturn -1;",
+      "revId": "e44c441f8299491dda99a48ef5a5a4b021beb8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+nc\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-06-12T00:04:39Z",
+      "side": 1,
+      "message": "no post increment within function calls, please.",
+      "revId": "e44c441f8299491dda99a48ef5a5a4b021beb8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
