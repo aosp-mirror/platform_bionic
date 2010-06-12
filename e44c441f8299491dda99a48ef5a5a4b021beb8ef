@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAzX//+nI\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-12T00:51:15Z",
+      "side": 1,
+      "message": "Agreed, although inet_ntoa and strtoul use them too. Done.",
+      "parentUuid": "AAAAzX//+ng\u003d",
+      "revId": "e44c441f8299491dda99a48ef5a5a4b021beb8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAzX//+nc\u003d",
         "filename": "libc/inet/ether_aton.c",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2010-06-12T00:04:39Z",
       "side": 1,
       "message": "no post increment within function calls, please.",
+      "revId": "e44c441f8299491dda99a48ef5a5a4b021beb8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAzX//+nE\u003d",
+        "filename": "libc/inet/ether_aton.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2010-06-12T00:51:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAzX//+nc\u003d",
       "revId": "e44c441f8299491dda99a48ef5a5a4b021beb8ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
