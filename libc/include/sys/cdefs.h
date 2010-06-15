@@ -371,6 +371,14 @@
 
 #define	__link_set_entry(set, idx)	(__link_set_begin(set)[idx])
 
+/*
+ * Some of the recend FreeBSD sources used in Bionic need this.
+ * Originally, this is used to embed the rcs versions of each source file
+ * in the generated binary. We certainly don't want this in Bionic.
+ */
+#define	__FBSDID(s)	struct __hack
+
+
 #define  __BIONIC__   1
 
 #endif /* !_SYS_CDEFS_H_ */
