@@ -21,6 +21,31 @@ Differences between current and Android 2.2:
 - <unistd.h>: add missing declaration for truncate(). The implementation
   was already here since Android 1.5.
 
+- <wchar.h>: small fixes to really support wchar_t in Bionic (not there yet).
+
+     the size of wchar_t is still 32-bit (decided by the compiler)
+
+     WCHAR_MIN: changed from 0 to INT_MIN
+     WCHAR_MAX: changed from 255 to INT_MAX
+
+     wcpcpy(), wcpncpy(), wcscat(), wcschr(), wcscmp(),
+     wcscpy(), wcscspn(), wcsdup(), wcslcat(), wcslcpy(),
+     wcslen(), wcsncat(), wcsncmp(), wcsncpy(), wcsnlen(),
+     wcspbrk(), wcsrchr(), wcsrchr(), wcsspn(), wcsstr(),
+     wcstok(), wcswidth(), wmemchr(), wmemcmp(), wmemcpy(),
+     wmemmove(), wmemset(): Added proper implementations.
+
+     wcscasecmp(), wcsncasecmp(): Added implementation limited
+     to ASCII codes for lower/upper.
+
+     wcscoll(): added dummy implementation that calls wcscmp()
+     wcsxfrm(): added dummy implementation that calls wcsncpy()
+
+  NOTE: Technically, this breaks the ABI, but we never claimed to support
+        wchar_t anyway. The wchar_t support is still *NOT* official at this
+        point. We need better multi-byte support code, and wprintf/wscanf
+        stuff too.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 

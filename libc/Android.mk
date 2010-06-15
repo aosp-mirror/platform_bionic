@@ -205,6 +205,34 @@ libc_common_src_files := \
 	string/strtok.c \
 	string/strtotimeval.c \
 	string/strxfrm.c \
+	wchar/wcpcpy.c \
+	wchar/wcpncpy.c \
+	wchar/wcscasecmp.c \
+	wchar/wcscat.c \
+	wchar/wcschr.c \
+	wchar/wcscmp.c \
+	wchar/wcscoll.c \
+	wchar/wcscpy.c \
+	wchar/wcscspn.c \
+	wchar/wcsdup.c \
+	wchar/wcslcat.c \
+	wchar/wcslcpy.c \
+	wchar/wcslen.c \
+	wchar/wcsncasecmp.c \
+	wchar/wcsncat.c \
+	wchar/wcsncmp.c \
+	wchar/wcsncpy.c \
+	wchar/wcsnlen.c \
+	wchar/wcspbrk.c \
+	wchar/wcsrchr.c \
+	wchar/wcsspn.c \
+	wchar/wcsstr.c \
+	wchar/wcstok.c \
+	wchar/wcswidth.c \
+	wchar/wmemchr.c \
+	wchar/wmemcpy.c \
+	wchar/wmemmove.c \
+	wchar/wmemset.c \
 	inet/bindresvport.c \
 	inet/inet_addr.c \
 	inet/inet_aton.c \

@@ -70,9 +70,9 @@ typedef enum {
     WC_TYPE_MAX
 } wctype_t;
 
-#define  WCHAR_MAX   255
-#define  WCHAR_MIN   0
-#define  WEOF        (-1)
+#define  WCHAR_MAX   INT_MAX
+#define  WCHAR_MIN   INT_MIN
+#define  WEOF        ((wchar_t)(-1))
 
 extern wint_t            btowc(int);
 extern int               fwprintf(FILE *, const wchar_t *, ...);
