@@ -37,7 +37,7 @@
 #include "linker.h"
 
 #include <sys/socket.h>
-#include <cutils/sockets.h>
+#include <sys/un.h>
 
 void notify_gdb_of_libraries();
 
@@ -45,6 +45,47 @@ void notify_gdb_of_libraries();
     do { \
         ret = (cond); \
     } while (ret < 0 && errno == EINTR)
+
+
+static int socket_abstract_client(const char *name, int type)
+{
+    struct sockaddr_un addr;
+    size_t namelen;
+    socklen_t alen;
+    int s, err;
+
+    namelen  = strlen(name);
+
+    // Test with length +1 for the *initial* '\0'.
+    if ((namelen + 1) > sizeof(addr.sun_path)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    /* This is used for abstract socket namespace, we need
+     * an initial '\0' at the start of the Unix socket path.
+     *
+     * Note: The path in this case is *not* supposed to be
+     * '\0'-terminated. ("man 7 unix" for the gory details.)
+     */
+    memset (&addr, 0, sizeof addr);
+    addr.sun_family = AF_LOCAL;
+    addr.sun_path[0] = 0;
+    memcpy(addr.sun_path + 1, name, namelen);
+
+    alen = namelen + offsetof(struct sockaddr_un, sun_path) + 1;
+
+    s = socket(AF_LOCAL, type, 0);
+    if(s < 0) return -1;
+
+    RETRY_ON_EINTR(err,connect(s, (struct sockaddr *) &addr, alen));
+    if (err < 0) {
+        close(s);
+        s = -1;
+    }
+
+    return s;
+}
 
 void debugger_signal_handler(int n)
 {
@@ -55,8 +96,7 @@ void debugger_signal_handler(int n)
     signal(SIGUSR1, SIG_IGN);
 
     tid = gettid();
-    s = socket_local_client("android:debuggerd",
-            ANDROID_SOCKET_NAMESPACE_ABSTRACT, SOCK_STREAM);
+    s = socket_abstract_client("android:debuggerd", SOCK_STREAM);
 
     if(s >= 0) {
         /* debugger knows our pid from the credentials on the
