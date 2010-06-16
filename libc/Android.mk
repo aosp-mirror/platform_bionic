@@ -229,7 +229,9 @@ libc_common_src_files := \
 	wchar/wcsstr.c \
 	wchar/wcstok.c \
 	wchar/wcswidth.c \
+	wchar/wcsxfrm.c \
 	wchar/wmemchr.c \
+	wchar/wmemcmp.c \
 	wchar/wmemcpy.c \
 	wchar/wmemmove.c \
 	wchar/wmemset.c \

@@ -302,12 +302,6 @@ wchar_t *wcswcs(const wchar_t *ws1, const wchar_t *ws2)
     return (wchar_t*) strstr( (const char*)ws1, (const char*)ws2 );
 }
 
-size_t wcsxfrm(wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    memcpy( (char*)ws1, (const char*)ws2, n );
-    return n;
-}
-
 int wctob(wint_t c)
 {
     return c;
