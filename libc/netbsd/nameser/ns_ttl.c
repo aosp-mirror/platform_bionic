@@ -47,7 +47,7 @@ static int	fmt1(int t, char s, char **buf, size_t *buflen);
 
 /* Macros. */
 
-#define T(x) if ((x) < 0) return (-1); else
+#define T(x) do { if ((x) < 0) return (-1); } while(0)
 
 /* Public. */
 

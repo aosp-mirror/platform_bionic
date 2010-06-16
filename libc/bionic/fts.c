@@ -548,9 +548,9 @@ fts_build(FTS *sp, int type)
 	DIR *dirp;
 	void *oldaddr;
 	size_t len, maxlen;
-	int nitems, cderrno, descend, level, nlinks, nostat, doadjust;
+	int nitems, cderrno, descend, level, nlinks, nostat = 0, doadjust;
 	int saved_errno;
-	char *cp;
+	char *cp = NULL;
 
 	/* Set current node pointer. */
 	cur = sp->fts_cur;

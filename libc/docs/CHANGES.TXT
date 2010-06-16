@@ -46,6 +46,19 @@ Differences between current and Android 2.2:
         point. We need better multi-byte support code, and wprintf/wscanf
         stuff too.
 
+- <inttypes.h>: add missing declarations for strntoimax abd strntoumax.
+
+- <stdlib.h>: add missing declarations for drand48() and erand48().
+
+- clearerr(): fix broken implementation.
+
+- Feature test macros like _POSIX_C_SOURCE / _XOPEN_SOURCE / _C99_SOURCE
+  are now handled correctly by our C library headers (see <sys/cdefs.h>)
+
+- <sys/select.h>: add missing declaration for pselect()
+
+- 
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 

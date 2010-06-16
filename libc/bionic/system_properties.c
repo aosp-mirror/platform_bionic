@@ -126,7 +126,7 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
     for(;;) {
         serial = pi->serial;
         while(SERIAL_DIRTY(serial)) {
-            __futex_wait(&pi->serial, serial, 0);
+            __futex_wait((volatile void *)&pi->serial, serial, 0);
             serial = pi->serial;
         }
         len = SERIAL_VALUE_LEN(serial);
@@ -164,7 +164,7 @@ int __system_property_wait(const prop_info *pi)
     } else {
         n = pi->serial;
         do {
-            __futex_wait(&pi->serial, n, 0);
+            __futex_wait((volatile void *)&pi->serial, n, 0);
         } while(n == pi->serial);
     }
     return 0;

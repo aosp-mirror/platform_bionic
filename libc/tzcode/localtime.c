@@ -389,7 +389,11 @@ const time_t    t0;
     if (TYPE_INTEGRAL(time_t) &&
         TYPE_BIT(time_t) - TYPE_SIGNED(time_t) < SECSPERREPEAT_BITS)
             return 0;
+#if SECSPERREPEAT_BITS <= 32  /* to avoid compiler warning (condition is always false) */
         return (t1 - t0) == SECSPERREPEAT;
+#else
+        return 0;
+#endif
 }
 
 static int toint(unsigned char *s) {

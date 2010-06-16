@@ -253,6 +253,9 @@ intmax_t	imaxabs(intmax_t);
 imaxdiv_t	imaxdiv(intmax_t, intmax_t);
 intmax_t	strtoimax(const char *, char **, int);
 uintmax_t	strtoumax(const char *, char **, int);
+
+intmax_t	strntoimax(const char *nptr, char **endptr, int base, size_t n);
+uintmax_t	strntoumax(const char *nptr, char **endptr, int base, size_t n);
 __END_DECLS
 
 #endif /* _INTTYPES_H_ */
