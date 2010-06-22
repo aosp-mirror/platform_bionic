@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,67 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-.text
-.align  4
-.type   _start,#function
-.globl  _start
 
-# this is the small startup code that is first run when
-# any executable that is statically-linked with Bionic
-# runs.
+# Implement static C++ destructors when the shared
+# library is unloaded through dlclose().
 #
-# it's purpose is to call __libc_init with appropriate
-# arguments, which are:
+# A call to this function must be the first entry
+# in the .fini_array. See 3.3.5.3.C of C++ ABI
+# standard.
 #
-#    - the address of the raw data block setup by the Linux
-#      kernel ELF loader
-#
-#    - address of an "onexit" function, not used on any
-#      platform supported by Bionic
-#
-#    - address of the "main" function of the program. We
-#      can't hard-code it in the adr pseudo instruction
-#      so we use a tiny trampoline that will get relocated
-#      by the dynamic linker before this code runs
-#
-#    - address of the constructor list
-#
-_start:
-    mov     r15, r4
-    mov     #0, r5
-    mov.l   0f, r6
-    mova    2f, r0
-    mov     r0, r7
-    mov.l   1f, r0
-    jmp     @r0
-    nop
+__on_dlclose:
+        adr     r0, 0f
+        ldr     r0, [r0]
+        b       __cxa_finalize
 
-    .balign 4
-0:  .long   main
-1:  .long   __libc_init
-2:  .long   __PREINIT_ARRAY__
-    .long   __INIT_ARRAY__
-    .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
+0:
+        .long   __dso_handle
 
-    .section .preinit_array, "aw"
-    .globl __PREINIT_ARRAY__
-__PREINIT_ARRAY__:
-    .long -1
-
-    .section .init_array, "aw"
-    .globl __INIT_ARRAY__
+	.section .init_array, "aw"
+	.globl __INIT_ARRAY__
 __INIT_ARRAY__:
-    .long -1
+	.long -1
 
-    .section .fini_array, "aw"
-    .globl __FINI_ARRAY__
+        .section .fini_array, "aw"
+        .globl __FINI_ARRAY__
 __FINI_ARRAY__:
-    .long -1
-
-    .section .ctors, "aw"
-    .globl __CTOR_LIST__
-__CTOR_LIST__:
-    .long -1
+        .long -1
+        .long __on_dlclose
 
 #include "__dso_handle.S"
