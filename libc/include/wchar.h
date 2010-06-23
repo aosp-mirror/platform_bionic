@@ -72,7 +72,7 @@ typedef enum {
 
 #define  WCHAR_MAX   INT_MAX
 #define  WCHAR_MIN   INT_MIN
-#define  WEOF        ((wchar_t)(-1))
+#define  WEOF        ((wint_t)(-1))
 
 extern wint_t            btowc(int);
 extern int               fwprintf(FILE *, const wchar_t *, ...);

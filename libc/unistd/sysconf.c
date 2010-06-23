@@ -96,7 +96,7 @@ sysconf( int  name )
     case _SC_COLL_WEIGHTS_MAX:  return _POSIX2_COLL_WEIGHTS_MASK;
 #endif
 #ifdef _POSIX2_EXPR_NEST_MAX
-    case _SC_EXPR_NEXT_MASK:    return _POSIX2_EXPR_NEST_MAX;
+    case _SC_EXPR_NEST_MAX:    return _POSIX2_EXPR_NEST_MAX;
 #endif
 #ifdef _POSIX2_LINE_MAX
     case _SC_LINE_MAX:          return _POSIX2_LINE_MAX;

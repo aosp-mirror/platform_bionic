@@ -26,17 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
+#ifndef _BIONIC_CPUACCT_H
+#define _BIONIC_CPUACCT_H
 
-extern char** environ;
+#include <sys/cdefs.h>
+#include <sys/types.h>
 
-int clearenv(void)
-{
-    char **P = environ;
+__BEGIN_DECLS
 
-    if (P != NULL) {
-        for (; *P; ++P)
-            *P = NULL;
-    }
-    return 0;
-}
+extern int cpuacct_add(uid_t uid);
+
+__END_DECLS
+
+#endif /* _BIONIC_CPUACCT_H */

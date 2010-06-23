@@ -48,6 +48,7 @@
 #include <sys/prctl.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);

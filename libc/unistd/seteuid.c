@@ -26,6 +26,9 @@
  * SUCH DAMAGE.
  */
 #include <unistd.h>
+#include "cpuacct.h"
+
+extern int __setresuid(uid_t, uid_t, uid_t);
 
 int seteuid(uid_t euid)
 {

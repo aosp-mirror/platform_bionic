@@ -48,7 +48,7 @@ static inline int digitval(int ch)
 uintmax_t
 strntoumax(const char *nptr, char **endptr, int base, size_t n)
 {
-    const unsigned char*  p   = nptr;
+    const unsigned char*  p   = (const unsigned char *)nptr;
     const unsigned char*  end = p + n;
     int                   minus = 0;
     uintmax_t             v = 0;

@@ -209,7 +209,7 @@ matcher(struct re_guts *g, char *string, size_t nmatch, regmatch_t pmatch[],
 			STATETEARDOWN(m);
 			return(REG_ESPACE);
 		}
-		for (i = 1; i <= m->g->nsub; i++)
+		for (i = 1; i <= (int)m->g->nsub; i++)
 			m->pmatch[i].rm_so = m->pmatch[i].rm_eo = -1;
 		if (!g->backrefs && !(m->eflags&REG_BACKR)) {
 			NOTE("dissecting");
@@ -267,8 +267,8 @@ matcher(struct re_guts *g, char *string, size_t nmatch, regmatch_t pmatch[],
 	}
 	if (nmatch > 1) {
 		assert(m->pmatch != NULL);
-		for (i = 1; i < nmatch; i++)
-			if (i <= m->g->nsub)
+		for (i = 1; i < (ssize_t)nmatch; i++)
+			if (i <= (int)m->g->nsub)
 				pmatch[i] = m->pmatch[i];
 			else {
 				pmatch[i].rm_so = -1;
