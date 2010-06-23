@@ -107,6 +107,8 @@ extern long mrand48(void);
 extern long nrand48(unsigned short *);
 extern long lrand48(void);
 extern unsigned short *seed48(unsigned short*);
+extern double erand48(unsigned short xsubi[3]);
+extern double drand48(void);
 extern void srand48(long);
 extern unsigned int arc4random(void);
 extern void arc4random_stir(void);

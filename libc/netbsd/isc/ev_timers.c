@@ -33,6 +33,7 @@ __RCSID("$NetBSD: ev_timers.c,v 1.2 2004/05/20 19:52:31 christos Exp $");
 /* Import. */
 
 #include <errno.h>
+#include <time.h>
 
 #include <isc/assertions.h>
 #include <isc/eventlib.h>

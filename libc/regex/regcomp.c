@@ -249,8 +249,8 @@ static void
 p_ere(struct parse *p, int stop)	/* character this ERE should end at */
 {
 	char c;
-	sopno prevback;
-	sopno prevfwd;
+	sopno prevback = 0;
+	sopno prevfwd = 0;
 	sopno conc;
 	int first = 1;		/* is this the first alternative? */
 
@@ -767,7 +767,7 @@ static void
 p_b_cclass(struct parse *p, cset *cs)
 {
 	char *sp = p->next;
-	struct cclass *cp;
+	const struct cclass *cp;
 	size_t len;
 	char *u;
 	char c;
@@ -831,7 +831,7 @@ p_b_coll_elem(struct parse *p,
     int endc)			/* name ended by endc,']' */
 {
 	char *sp = p->next;
-	struct cname *cp;
+	const struct cname *cp;
 	int len;
 
 	while (MORE() && !SEETWO(endc, ']'))
@@ -1084,7 +1084,7 @@ freeset(struct parse *p, cset *cs)
 	cset *top = &p->g->sets[p->g->ncsets];
 	size_t css = (size_t)p->g->csetsize;
 
-	for (i = 0; i < css; i++)
+	for (i = 0; i < (ssize_t)css; i++)
 		CHsub(cs, i);
 	if (cs == top-1)	/* recover only the easy case */
 		p->g->ncsets--;
@@ -1112,10 +1112,10 @@ freezeset(struct parse *p, cset *cs)
 	for (cs2 = &p->g->sets[0]; cs2 < top; cs2++)
 		if (cs2->hash == h && cs2 != cs) {
 			/* maybe */
-			for (i = 0; i < css; i++)
+			for (i = 0; i < (ssize_t)css; i++)
 				if (!!CHIN(cs2, i) != !!CHIN(cs, i))
 					break;		/* no */
-			if (i == css)
+			if (i == (ssize_t)css)
 				break;			/* yes */
 		}
 
@@ -1136,7 +1136,7 @@ firstch(struct parse *p, cset *cs)
 	int i;
 	size_t css = (size_t)p->g->csetsize;
 
-	for (i = 0; i < css; i++)
+	for (i = 0; i < (ssize_t)css; i++)
 		if (CHIN(cs, i))
 			return((char)i);
 	assert(never);
@@ -1153,7 +1153,7 @@ nch(struct parse *p, cset *cs)
 	size_t css = (size_t)p->g->csetsize;
 	int n = 0;
 
-	for (i = 0; i < css; i++)
+	for (i = 0; i < (ssize_t)css; i++)
 		if (CHIN(cs, i))
 			n++;
 	return(n);
@@ -1412,7 +1412,7 @@ static void
 findmust(struct parse *p, struct re_guts *g)
 {
 	sop *scan;
-	sop *start;    /* start initialized in the default case, after that */
+	sop *start = NULL;    /* start initialized in the default case, after that */
 	sop *newstart; /* newstart was initialized in the OCHAR case */
 	sopno newlen;
 	sop s;

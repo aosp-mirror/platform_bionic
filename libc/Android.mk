@@ -445,7 +445,6 @@ libc_common_cflags := \
 		-D_LIBC=1 			\
 		-DSOFTFLOAT                     \
 		-DFLOATING_POINT		\
-		-DNEED_PSELECT=1		\
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
 		-DUSE_DL_PREFIX \

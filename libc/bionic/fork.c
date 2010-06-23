@@ -27,6 +27,7 @@
  */
 #include <unistd.h>
 #include "pthread_internal.h"
+#include "cpuacct.h"
 
 extern int  __fork(void);
 
