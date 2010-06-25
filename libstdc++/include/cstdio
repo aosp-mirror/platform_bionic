@@ -36,6 +36,8 @@
 #include <cstddef>
 #include <stdio.h>
 
+extern "C++" {
+
 namespace std {
 using ::FILE;
 using ::fpos_t;
@@ -88,5 +90,7 @@ using ::vscanf;
 using ::vsnprintf;
 using ::vsscanf;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDIO__

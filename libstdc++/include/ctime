@@ -37,6 +37,8 @@
 #include <cstddef>
 #include <time.h>
 
+extern "C++" {
+
 namespace std 
 {
 // Types.
@@ -55,5 +57,7 @@ using ::gmtime;
 using ::localtime;
 using ::strftime;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CTIME__

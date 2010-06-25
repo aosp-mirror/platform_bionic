@@ -36,6 +36,8 @@
 
 #include <ctype.h>
 
+extern "C++" {
+
 namespace std 
 {
 using ::isalnum;
@@ -52,5 +54,7 @@ using ::isxdigit;
 using ::tolower;
 using ::toupper;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CCTYPE__
