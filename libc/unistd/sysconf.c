@@ -44,7 +44,7 @@
 #define  SYSTEM_MQ_OPEN_MAX     8
 #define  SYSTEM_MQ_PRIO_MAX     32768
 #define  SYSTEM_SEM_NSEMS_MAX   256
-#define  SYSTEM_SEM_VALUE_MAX   (2147483647)
+#define  SYSTEM_SEM_VALUE_MAX   0x3fffffff  /* see bionic/semaphore.c */
 #define  SYSTEM_SIGQUEUE_MAX    32
 #define  SYSTEM_TIMER_MAX       32
 #define  SYSTEM_LOGIN_NAME_MAX  256
