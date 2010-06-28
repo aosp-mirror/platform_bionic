@@ -37,6 +37,8 @@
 #include <cstddef>
 #include <math.h>
 
+extern "C++" {
+
 namespace std
 {
 // Functions.
@@ -67,5 +69,7 @@ using ::fabs;
 using ::floor;
 using ::fmod;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CMATH__

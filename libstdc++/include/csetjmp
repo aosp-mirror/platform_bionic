@@ -36,6 +36,8 @@
 
 #include <setjmp.h>
 
+extern "C++" {
+
 #ifndef setjmp
 #define setjmp(env) setjmp (env)
 #endif
@@ -45,5 +47,7 @@ namespace std
 using ::jmp_buf;
 using ::longjmp;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSETJMP__

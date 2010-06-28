@@ -35,6 +35,8 @@
  */
 #include <stdlib.h>
 
+extern "C++" {
+
 namespace std {
 
 using ::exit;
@@ -109,5 +111,7 @@ using ::mbtowc;
 using ::wctomb;
 using ::wcstombs;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTDLIB__
