@@ -1,6 +1,7 @@
 #ifndef _TYPEINFO_HEADER_GAURD
 #define _TYPEINFO_HEADER_GAURD
 
+extern "C++" {
 
 namespace std {
     class type_info;
@@ -24,5 +25,7 @@ private:
     type_info(type_info const & right);
     type_info & operator=(type_info const & right);
 };
+
+}  // C++
 
 #endif

@@ -36,11 +36,15 @@
 
 #include <signal.h>
 
+extern "C++" {
+
 namespace std
 {
 using ::sig_atomic_t;
 using ::signal;
 using ::raise;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSIGNAL__
