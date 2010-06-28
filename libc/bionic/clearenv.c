@@ -30,10 +30,10 @@ extern char** environ;
 
 int clearenv(void)
 {
-	char **P = environ;
-	int offset;
+	char **P;
 
-	for (P = &environ[offset]; *P; ++P)
+	for (P = environ; *P; ++P)
 		*P = 0;
-        return 0;
+
+	return 0;
 }
