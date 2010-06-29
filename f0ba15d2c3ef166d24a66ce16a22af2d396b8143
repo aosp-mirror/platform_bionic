@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA0n///Uo\u003d",
+        "filename": "libc/arch-x86/bionic/sigsetjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-06-29T20:18:32Z",
+      "side": 1,
+      "message": "this is definitely missing a copyright disclaimer",
+      "revId": "f0ba15d2c3ef166d24a66ce16a22af2d396b8143",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
