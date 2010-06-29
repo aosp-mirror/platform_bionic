@@ -3,7 +3,9 @@ Bionic ChangeLog:
 
 Differences between current and Android 2.2:
 
-- <pthread.h>: Add reader/writer locks implementation.
+- <pthread.h>: Add reader/writer locks implementation. Add sanity
+  checking to pthread_mutex_destroy() (e.g. a locked mutex will return
+  EBUSY).
 
 - <semaphore.h>: Use private futexes for semaphore implementation,
   unless your set 'pshared' to non-0 when calling sem_init().
