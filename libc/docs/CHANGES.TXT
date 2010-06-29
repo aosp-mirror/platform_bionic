@@ -3,7 +3,9 @@ Bionic ChangeLog:
 
 Differences between current and Android 2.2:
 
-- <pthread.h>: Add reader/writer locks implementation.
+- <pthread.h>: Add reader/writer locks implementation. Add sanity
+  checking to pthread_mutex_destroy() (e.g. a locked mutex will return
+  EBUSY).
 
 - <math.h>: Added sincos(), sincosf() and sincosl() (GLibc compatibility).
 

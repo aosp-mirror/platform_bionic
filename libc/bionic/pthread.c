@@ -880,8 +880,13 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
 
 int pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
-    if (__unlikely(mutex == NULL))
-        return EINVAL;
+    int ret;
+
+    /* use trylock to ensure that the mutex value is
+     * valid and is not already locked. */
+    ret = pthread_mutex_trylock(mutex);
+    if (ret != 0)
+        return ret;
 
     mutex->value = 0xdead10cc;
     return 0;
