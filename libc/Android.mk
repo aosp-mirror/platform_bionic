@@ -291,7 +291,6 @@ libc_common_src_files := \
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
-	bionic/eabi.c \
 	bionic/bionic_clone.c \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
@@ -299,6 +298,7 @@ libc_common_src_files += \
 	arch-arm/bionic/_setjmp.S \
 	arch-arm/bionic/atomics_arm.S \
 	arch-arm/bionic/clone.S \
+	arch-arm/bionic/eabi.c \
 	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/kill.S \
 	arch-arm/bionic/libgcc_compat.c \
@@ -393,7 +393,6 @@ libc_common_src_files += \
 	string/strncmp.c \
 	string/memcmp.c \
 	string/strlen.c \
-	bionic/eabi.c \
 	bionic/pthread.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c \
@@ -461,16 +460,27 @@ libc_common_c_includes := \
 		$(LOCAL_PATH)/string  \
 		$(LOCAL_PATH)/stdio
 
+# Needed to access private/__dso_handle.S from
+# crtbegin_xxx.S and crtend_xxx.S
+#
+libc_crt_target_cflags += -I$(LOCAL_PATH)/private
 
 # Define the libc run-time (crt) support object files that must be built,
 # which are needed to build all other objects (shared/static libs and
 # executables)
 # ==========================================================================
 
-ifeq ($(TARGET_ARCH),x86)
-# we only need begin_so/end_so for x86, since it needs an appropriate .init
-# section in the shared library with a function to call all the entries in
-# .ctors section. ARM uses init_array, and does not need the function.
+ifneq ($(filter arm x86,$(TARGET_ARCH)),)
+# ARM and x86 need crtbegin_so/crtend_so.
+#
+# For x86, the .init section must point to a function that calls all
+# entries in the .ctors section. (on ARM this is done through the
+# .init_array section instead).
+#
+# For both platforms, the .fini_array section must point to a function
+# that will call __cxa_finalize(&__dso_handle) in order to ensure that
+# static C++ destructors are properly called on dlclose().
+#
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 	@mkdir -p $(dir $@)

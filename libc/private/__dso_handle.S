@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,64 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
-	.align 4
-	.type _start,#function
-	.globl _start
 
-# this is the small startup code that is first run when
-# any executable that is statically-linked with Bionic
-# runs.
+# The __dso_handle global variable is used by static
+# C++ constructors and destructors in the binary.
+# See http://www.codesourcery.com/public/cxx-abi/abi.html#dso-dtor
 #
-# it's purpose is to call __libc_init with appropriate
-# arguments, which are:
-#
-#    - the address of the raw data block setup by the Linux
-#      kernel ELF loader
-#
-#    - address of an "onexit" function, not used on any
-#      platform supported by Bionic
-#
-#    - address of the "main" function of the program. We
-#      can't hard-code it in the adr pseudo instruction
-#      so we use a tiny trampoline that will get relocated
-#      by the dynamic linker before this code runs
-#
-#    - address of the constructor list
-#
-_start:	
-	mov	r0, sp
-	mov	r1, #0
-	adr r2, 0f
-	adr r3, 1f
-	b	__libc_init
-
-0:  b   main
-
-1:  .long   __PREINIT_ARRAY__
-    .long   __INIT_ARRAY__
-    .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
-
-	.section .preinit_array, "aw"
-	.globl __PREINIT_ARRAY__
-__PREINIT_ARRAY__:
-	.long -1
-
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
-__INIT_ARRAY__:
-	.long -1
-
-	.section .fini_array, "aw"
-	.globl __FINI_ARRAY__
-__FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
-
-
-#include "__dso_handle.S"
+        .section .bss
+        .align 4
+        .globl __dso_handle
+__dso_handle:
+        .long 0

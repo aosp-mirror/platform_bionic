@@ -30,7 +30,7 @@
 	.globl _start
 
 # this is the small startup code that is first run when
-# any executable that is statically-linked with Bionic
+# any executable that is dynamically-linked with Bionic
 # runs.
 #
 # it's purpose is to call __libc_init with appropriate
@@ -94,3 +94,4 @@ __FINI_ARRAY__:
 __CTOR_LIST__:
 	.long -1
 
+#include "__dso_handle.S"
