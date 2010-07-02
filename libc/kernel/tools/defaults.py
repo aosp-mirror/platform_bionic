@@ -71,6 +71,7 @@ kernel_known_generic_statics = set(
           "__cmsg_nxthdr",                    # linux/socket.h
           "cmsg_nxthdr",                      # linux/socket.h
           "ipt_get_target",
+          "ip6t_get_target",
         ]
     )
 
