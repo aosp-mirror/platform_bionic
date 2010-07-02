@@ -504,6 +504,10 @@ libc_common_c_includes := \
 		$(LOCAL_PATH)/string  \
 		$(LOCAL_PATH)/stdio
 
+# Needed to access private/__dso_handle.S from
+# crtbegin_xxx.S and crtend_xxx.S
+#
+libc_crt_target_cflags += -I$(LOCAL_PATH)/private
 
 # Define the libc run-time (crt) support object files that must be built,
 # which are needed to build all other objects (shared/static libs and
