@@ -10,6 +10,10 @@ Differences between current and Android 2.2:
 - <semaphore.h>: Use private futexes for semaphore implementation,
   unless your set 'pshared' to non-0 when calling sem_init().
 
+  Also fixed a bug in sem_post() to make it wake up all waiting
+  threads, instead of one. As a consequence, the maximum semaphore
+  value is now reduced to 0x3fffffff.
+
 - <math.h>: Added sincos(), sincosf() and sincosl() (GLibc compatibility).
 
 - <sys/sysinfo.h>: Added missing sysinfo() system call implementation
@@ -59,7 +63,6 @@ Differences between current and Android 2.2:
 
 - <sys/select.h>: add missing declaration for pselect()
 
-- 
 
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
