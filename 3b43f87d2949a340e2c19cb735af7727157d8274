@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA0n//+78\u003d",
+        "filename": "libc/arch-arm/bionic/crtend_so.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003004
+      },
+      "writtenOn": "2010-07-02T08:23:52Z",
+      "side": 1,
+      "message": "could you remove the whitespace?",
+      "revId": "3b43f87d2949a340e2c19cb735af7727157d8274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
