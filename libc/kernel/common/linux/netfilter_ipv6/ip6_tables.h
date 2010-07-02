@@ -173,6 +173,15 @@ struct ip6t_get_entries
 
 #define IP6T_ERROR_TARGET XT_ERROR_TARGET
 
+static __inline__ struct ip6t_entry_target *
+ip6t_get_target(struct ip6t_entry *e)
+{
+ return (void *)e + e->target_offset;
+}
+
 #define IP6T_MATCH_ITERATE(e, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct ip6t_entry_match *__m;     for (__i = sizeof(struct ip6t_entry);   __i < (e)->target_offset;   __i += __m->u.match_size) {   __m = (void *)(e) + __i;     __ret = fn(__m , ## args);   if (__ret != 0)   break;   }   __ret;  })
+
 #define IP6T_ENTRY_ITERATE(entries, size, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct ip6t_entry *__e;     for (__i = 0; __i < (size); __i += __e->next_offset) {   __e = (void *)(entries) + __i;     __ret = fn(__e , ## args);   if (__ret != 0)   break;   }   __ret;  })
+
 #endif
+
