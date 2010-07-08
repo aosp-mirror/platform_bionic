@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type fstatfs, @function
-    .globl fstatfs
+    .type __fstatfs64, @function
+    .globl __fstatfs64
     .align 4
 
-fstatfs:
+__fstatfs64:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx

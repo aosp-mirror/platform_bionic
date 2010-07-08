@@ -2,12 +2,12 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type fstatfs, #function
-    .globl fstatfs
+    .type __fstatfs64, #function
+    .globl __fstatfs64
     .align 4
     .fnstart
 
-fstatfs:
+__fstatfs64:
     .save   {r4, r7}
     stmfd   sp!, {r4, r7}
     ldr     r7, =__NR_fstatfs64

@@ -87,7 +87,7 @@ int              fsync (int);
 int              fchown (int, uid_t, gid_t);
 void             sync (void);
 int              __fcntl64 (int, int, void *);
-int              fstatfs (int, size_t, struct statfs *);
+int              __fstatfs64 (int, size_t, struct statfs *);
 ssize_t          sendfile (int out_fd, int in_fd, off_t *offset, size_t count);
 int              fstatat (int dirfd, const char *path, struct stat *buf, int flags);
 int              mkdirat (int dirfd, const char *pathname, mode_t mode);
