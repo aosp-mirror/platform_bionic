@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA0n//+gE\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-08T22:31:12Z",
+      "side": 1,
+      "message": "just curious, why is this needed here and not the other libraries?\nSince it is quite unusual, I would appreciate if you added a comment above that line that explains why it is needed.",
+      "revId": "aa46fa24035f3ab020f9a7abd86c25ae2196bb32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
