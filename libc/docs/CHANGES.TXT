@@ -63,6 +63,8 @@ Differences between current and Android 2.2:
 
 - <sys/select.h>: add missing declaration for pselect()
 
+- <sys/vfs.h>: fixed implementation of fstatfs() (also fixes fpathconf()
+  which uses it).
 
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
