@@ -61,7 +61,7 @@ void __attribute__((constructor)) __libc_prenit(void);
 
 void __libc_prenit(void)
 {
-    /* Read the ELF data pointer form a special slot of the
+    /* Read the ELF data pointer from a special slot of the
      * TLS area, then call __libc_init_common with it.
      *
      * Note that:
