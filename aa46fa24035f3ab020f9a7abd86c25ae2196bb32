@@ -16,6 +16,24 @@
       "revId": "aa46fa24035f3ab020f9a7abd86c25ae2196bb32",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA0n//+bg\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1003004
+      },
+      "writtenOn": "2010-07-09T02:31:16Z",
+      "side": 1,
+      "message": "Because we have an undefined symbol error (dl_iterate_phdr) on x86? I confirm we got this error on building android-x86.\n\nOr, could you suggest a way to add the missed symbol?",
+      "parentUuid": "AAAA0n//+gE\u003d",
+      "revId": "aa46fa24035f3ab020f9a7abd86c25ae2196bb32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
