@@ -14,6 +14,7 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fcntl.c \
 	unistd/fnmatch.c \
+	unistd/fstatfs.c \
 	unistd/ftime.c \
 	unistd/ftok.c \
 	unistd/getcwd.c \
