@@ -70,6 +70,24 @@
       "revId": "aa46fa24035f3ab020f9a7abd86c25ae2196bb32",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA03///+c\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2010-07-13T17:30:48Z",
+      "side": 1,
+      "message": "On Linux, gl_iterate_phdr is provided as part of the glibc source.\nThere are separate versions for the static library and dynamic library versions.\nThis is analogous to what bionic does for ARM for dl_unwind_find_exidx.\n\nThe problem here is that bionic only is providing the static version of dl_iterate_phdr. The static version is quite simple since it doesn\u0027t have to crawl up the list of dynamic binaries to locate the correct one. The dynamic version is quite tightly tied to the bionic dynamic linker implementation.\n\nThe normal libc doesn\u0027t use this... it is used by libc_malloc_debug_leak. I don\u0027t know if libc_malloc_debug_leak is actually used anywhere. This version of libc calls the building GCC unwind code when it detects a problem. The built in GCC unwind code calls dl_iterate_phdr... and expects that it is defined by the C library. It isn\u0027t so defined for bionic.\n\nSO...\nThe allow_undefined is only a work-around and not really a very good one. We really need a dynamic implementation of dl_iterate_phdr. Very likely... there is one in the code that bionic/libc was based on.",
+      "parentUuid": "AAAA0n//+Fw\u003d",
+      "revId": "aa46fa24035f3ab020f9a7abd86c25ae2196bb32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
