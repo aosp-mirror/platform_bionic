@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA1X///xI\u003d",
+        "filename": "libc/bionic/fork.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-16T01:35:17Z",
+      "side": 1,
+      "message": "It would be better to place the actual list parsing and callback calling to pthread-atfork.c, i.e. put all implementations details related to this feature in the same source file, and just use function calls here, e.g.:\n\n__bionic_atfork_run_prepare()",
+      "revId": "edfa5aa69de7c65d67aff7ca3272009561aba70f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA1X///xU\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-16T01:35:17Z",
+      "side": 1,
+      "message": "this global variable *must* be protected from thread race by a mutex.\nAlso, I would prefer that you would put all changes in a separate file (e.g. bionic/libc/bionic/pthread-atfork.c)",
+      "revId": "edfa5aa69de7c65d67aff7ca3272009561aba70f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA1X///xQ\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-16T01:35:17Z",
+      "side": 1,
+      "message": "this is missing a mutex",
+      "revId": "edfa5aa69de7c65d67aff7ca3272009561aba70f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA1X///xM\u003d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-16T01:35:17Z",
+      "side": 1,
+      "message": "I would recommend using \u003csys/queue.h\u003e facilities to implement the circular list",
+      "revId": "edfa5aa69de7c65d67aff7ca3272009561aba70f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA1X///xY\u003d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-16T01:35:17Z",
+      "side": 1,
+      "message": "Please do not define a new global variable if possible. Even if you absolutely have to, use a __bionic_ prefix to ensure that this is not mistaken for anything else or would not conflict with other stuff in the future.",
+      "revId": "edfa5aa69de7c65d67aff7ca3272009561aba70f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
