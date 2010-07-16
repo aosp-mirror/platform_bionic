@@ -683,6 +683,7 @@ LOCAL_MODULE:= libc_malloc_debug_leak
 LOCAL_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 # Don't prelink
 LOCAL_PRELINK_MODULE := false
 # Don't install on release build
