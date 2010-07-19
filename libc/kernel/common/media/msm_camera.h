@@ -72,6 +72,9 @@
 
 #define MSM_CAM_IOCTL_ENABLE_OUTPUT_IND   _IOW(MSM_CAM_IOCTL_MAGIC, 25, uint32_t *)
 
+#define MSM_CAM_IOCTL_AF_CTRL   _IOR(MSM_CAM_IOCTL_MAGIC, 26, struct msm_ctrl_cmt_t *)
+#define MSM_CAM_IOCTL_AF_CTRL_DONE   _IOW(MSM_CAM_IOCTL_MAGIC, 27, struct msm_ctrl_cmt_t *)
+
 #define MAX_SENSOR_NUM 3
 #define MAX_SENSOR_NAME 32
 
@@ -144,6 +147,30 @@ struct msm_camera_cfg_cmd {
 #define CMD_STATS_ENABLE 18
 #define UPDATE_STATS_INVALID 19
 
+#define CMD_STATS_AEC_ENABLE 20
+#define CMD_STATS_AWB_ENABLE 21
+#define CMD_STATS_AEC_AXI_CFG 22
+#define CMD_STATS_AWB_AXI_CFG 23
+#define CMD_STATS_RS_AXI_CFG 24
+#define CMD_STATS_CS_AXI_CFG 25
+#define CMD_STATS_IHIST_AXI_CFG 26
+#define CMD_STATS_SKIN_AXI_CFG 27
+#define CMD_STATS_AEC_BUF_RELEASE 28
+#define CMD_STATS_AWB_BUF_RELEASE 29
+#define CMD_STATS_RS_BUF_RELEASE 30
+#define CMD_STATS_CS_BUF_RELEASE 31
+#define CMD_STATS_IHIST_BUF_RELEASE 32
+#define CMD_STATS_SKIN_BUF_RELEASE 33
+
+#define CMD_AXI_CFG_SNAP_GEMINI 34
+#define CMD_AXI_CFG_SNAP 35
+#define CMD_AXI_CFG_PREVIEW 36
+#define CMD_AXI_CFG_VIDEO 37
+
+#define CMD_STATS_IHIST_ENABLE 38
+#define CMD_STATS_RS_ENABLE 39
+#define CMD_STATS_CS_ENABLE 40
+
 struct msm_vfe_cfg_cmd {
  int cmd_type;
  uint16_t length;
@@ -163,12 +190,20 @@ struct camera_enable_cmd {
 #define MSM_PMEM_RAW_MAINIMG 5
 #define MSM_PMEM_AEC_AWB 6
 #define MSM_PMEM_AF 7
-#define MSM_PMEM_MAX 8
+#define MSM_PMEM_AEC 8
+#define MSM_PMEM_AWB 9
+#define MSM_PMEM_RS 10
+#define MSM_PMEM_CS 11
+#define MSM_PMEM_IHIST 12
+#define MSM_PMEM_SKIN 13
+#define MSM_PMEM_VIDEO 14
+#define MSM_PMEM_PREVIEW 15
+#define MSM_PMEM_MAX 16
 
 #define FRAME_PREVIEW_OUTPUT1 0
 #define FRAME_PREVIEW_OUTPUT2 1
 #define FRAME_SNAPSHOT 2
-#define FRAME_THUMBAIL 3
+#define FRAME_THUMBNAIL 3
 #define FRAME_RAW_SNAPSHOT 4
 #define FRAME_MAX 5
 
@@ -197,11 +232,17 @@ struct outputCfg {
 #define CAMIF_TO_AXI_VIA_OUTPUT_2 3
 #define OUTPUT_1_AND_CAMIF_TO_AXI_VIA_OUTPUT_2 4
 #define OUTPUT_2_AND_CAMIF_TO_AXI_VIA_OUTPUT_1 5
-#define LAST_AXI_OUTPUT_MODE_ENUM = OUTPUT_2_AND_CAMIF_TO_AXI_VIA_OUTPUT_1 6
+#define OUTPUT_1_AND_3 6
+#define LAST_AXI_OUTPUT_MODE_ENUM = OUTPUT_1_AND_3 7  
 
 #define MSM_FRAME_PREV_1 0
 #define MSM_FRAME_PREV_2 1
 #define MSM_FRAME_ENC 2
+
+#define OUTPUT_TYPE_P 1
+#define OUTPUT_TYPE_T 2
+#define OUTPUT_TYPE_S 3
+#define OUTPUT_TYPE_V 4
 
 struct msm_frame {
  int path;
@@ -216,7 +257,13 @@ struct msm_frame {
 
 #define STAT_AEAW 0
 #define STAT_AF 1
-#define STAT_MAX 2
+#define STAT_AEC 2
+#define STAT_AWB 3
+#define STAT_RS 4
+#define STAT_CS 5
+#define STAT_IHIST 6
+#define STAT_SKIN 7
+#define STAT_MAX 8
 
 struct msm_stats_buf {
  int type;
