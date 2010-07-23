@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA3H///gU\u003d",
+        "filename": "libc/docs/CHANGES.TXT",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-07-23T01:52:24Z",
+      "side": 1,
+      "message": "this should go into a new section (Differences between current and Android 2.2). And we might as well update the title of the current one.",
+      "revId": "2745d5b4d8ef0238193312763a66a25258e950f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
