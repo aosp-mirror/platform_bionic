@@ -70,6 +70,8 @@ Differences between current and Android 2.2:
 - <sys/vfs.h>: fixed implementation of fstatfs() (also fixes fpathconf()
   which uses it).
 
+- Added an implementation of pthread_atfork()
+
 
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:

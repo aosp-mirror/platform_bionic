@@ -41,9 +41,12 @@ int  fork(void)
      * of error, or in the parent process
      */
     __timer_table_start_stop(1);
+    __bionic_atfork_run_prepare();
+
     ret = __fork();
     if (ret != 0) {  /* not a child process */
         __timer_table_start_stop(0);
+        __bionic_atfork_run_parent();
     } else {
         /*
          * Newly created process must update cpu accounting.
@@ -52,6 +55,7 @@ int  fork(void)
          * as a parameter.
          */
         cpuacct_add(getuid());
+        __bionic_atfork_run_child();
     }
     return ret;
 }
