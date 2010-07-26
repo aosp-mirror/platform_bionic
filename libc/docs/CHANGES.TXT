@@ -72,6 +72,8 @@ Differences between current and Android 2.2:
 
 - Added an implementation of pthread_atfork()
 
+- <dlfcn.h>: fixed dlopen() implementation to support dlopen(NULL, ...).
+  This allows one to look at the dynamic symbols exported by an executable.
 
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:

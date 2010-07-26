@@ -1200,7 +1200,17 @@ init_library(soinfo *si)
 soinfo *find_library(const char *name)
 {
     soinfo *si;
-    const char *bname = strrchr(name, '/');
+    const char *bname;
+
+#if ALLOW_SYMBOLS_FROM_MAIN
+    if (name == NULL)
+        return somain;
+#else
+    if (name == NULL)
+        return NULL;
+#endif
+
+    bname = strrchr(name, '/');
     bname = bname ? bname + 1 : name;
 
     for(si = solist; si != 0; si = si->next){
@@ -2193,6 +2203,7 @@ unsigned __linker_init(unsigned **elfdata)
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
+    si->refcount = 1;
 
         /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
     if (ldpath_env && getuid() == geteuid() && getgid() == getegid())
