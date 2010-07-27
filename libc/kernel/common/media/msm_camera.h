@@ -170,6 +170,7 @@ struct msm_camera_cfg_cmd {
 #define CMD_STATS_IHIST_ENABLE 38
 #define CMD_STATS_RS_ENABLE 39
 #define CMD_STATS_CS_ENABLE 40
+#define CMD_AXI_CFG_O1_AND_O2 41  
 
 struct msm_vfe_cfg_cmd {
  int cmd_type;
