@@ -173,16 +173,13 @@ int           __timer_delete:timer_delete(timer_t)                              
 int           utimes(const char*, const struct timeval tvp[2])                          269, 271
 
 # signals
-int     sigaction(int, const struct sigaction *, struct sigaction *)  -1,67,67
+int     sigaction(int, const struct sigaction *, struct sigaction *)  67
 int     sigprocmask(int, const sigset_t *, sigset_t *)  126
 int     __sigsuspend:sigsuspend(int unused1, int unused2, unsigned mask)  72
 int     __rt_sigaction:rt_sigaction (int sig, const struct sigaction *act, struct sigaction *oact, size_t sigsetsize)  174
 int     __rt_sigprocmask:rt_sigprocmask (int  how, const sigset_t *set, sigset_t *oset, size_t sigsetsize)  175
 int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t *set, struct siginfo_t  *info, struct timespec_t  *timeout, size_t  sigset_size)  177
 int     sigpending(sigset_t *)  73
-
-# special stub for ARM, see arch-arm/bionic/sigaction.c
-int     __sigaction:sigaction(int, const struct sigaction *, struct sigaction *)  67,-1,-1
 
 # sockets
 int           socket(int, int, int)              281,-1

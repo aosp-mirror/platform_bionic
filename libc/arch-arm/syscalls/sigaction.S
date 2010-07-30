@@ -2,12 +2,12 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __sigaction, #function
-    .globl __sigaction
+    .type sigaction, #function
+    .globl sigaction
     .align 4
     .fnstart
 
-__sigaction:
+sigaction:
     .save   {r4, r7}
     stmfd   sp!, {r4, r7}
     ldr     r7, =__NR_sigaction
