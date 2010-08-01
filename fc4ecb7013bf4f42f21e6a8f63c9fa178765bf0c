@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA33///rY\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-01T07:25:04Z",
+      "side": 1,
+      "message": "According to POSIX, this should realloc be CLOCK_REALTIME.\nSee http://www.opengroup.org/onlinepubs/000095399/functions/pthread_mutex_timedlock.html",
+      "revId": "fc4ecb7013bf4f42f21e6a8f63c9fa178765bf0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
