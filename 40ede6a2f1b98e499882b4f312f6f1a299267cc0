@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA33///ZI\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1226,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-08-04T05:15:48Z",
+      "side": 1,
+      "message": "This code is all pretty much a copy of the normal pthread_mutex_lock() code, with the addition of a timeout to the futex call.  Is it worth trying to factor the implementations together, or are there some subtle differences I\u0027m missing?",
+      "revId": "40ede6a2f1b98e499882b4f312f6f1a299267cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA33///ZE\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1003080
+      },
+      "writtenOn": "2010-08-04T05:15:48Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "40ede6a2f1b98e499882b4f312f6f1a299267cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
