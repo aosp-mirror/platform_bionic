@@ -131,7 +131,7 @@ extern int sync(void);
 
 extern int close(int);
 extern off_t lseek(int, off_t, int);
-extern loff_t lseek64(int, loff_t, int);
+extern off64_t lseek64(int, off64_t, int);
 
 extern ssize_t read(int, void *, size_t);
 extern ssize_t write(int, const void *, size_t);
