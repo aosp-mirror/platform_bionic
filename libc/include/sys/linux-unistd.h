@@ -53,7 +53,7 @@ int              acct (const char*  filepath);
 ssize_t          read (int, void*, size_t);
 ssize_t          write (int, const void*, size_t);
 ssize_t          __pread64 (int, void *, size_t, off_t, off_t);
-ssize_t          __pwrite64 (int, void *, size_t, off_t, off_t);
+ssize_t          __pwrite64 (int, const void *, size_t, off_t, off_t);
 int              __open (const char*, int, mode_t);
 int              __openat (int, const char*, int, mode_t);
 int              close (int);
