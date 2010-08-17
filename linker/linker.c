@@ -2040,7 +2040,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
     return 0;
 
 fail:
-    DL_ERR("failed to link %s\n", si->name);
+    ERROR("failed to link %s\n", si->name);
     si->flags |= FLAG_ERROR;
     return -1;
 }
