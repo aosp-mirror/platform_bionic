@@ -38,12 +38,17 @@
 #include <stdarg.h>
 #include <fcntl.h>
 
-#include <cutils/logger.h>
 #include "logd.h"
+
+/* should match system/core/include/cutils/logger.h */
+#define LOGGER_LOG_MAIN     "log/main"
+#define LOGGER_LOG_RADIO    "log/radio"
+#define LOGGER_LOG_EVENTS   "log/events"
+#define LOGGER_LOG_SYSTEM   "log/system"
 
 #include <pthread.h>
 
-#define LOG_BUF_SIZE	1024
+#define LOG_BUF_SIZE    1024
 
 typedef enum {
     LOG_ID_NONE = 0,
@@ -112,6 +117,8 @@ static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
 
         log_channels[log_id].logger =
             (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
+        log_channels[log_id].fd = fd;
+
         log_channels[log_id].fd = fd;
 
         pthread_mutex_unlock(&log_init_lock);

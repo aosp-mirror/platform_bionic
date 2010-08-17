@@ -51,7 +51,11 @@ alarm(secs)
 	itp->it_value.tv_sec = secs;
 	itp->it_value.tv_usec = 0;
 	if (setitimer(ITIMER_REAL, itp, &oitv) < 0)
+#if 1 /* BIONIC: Same behaviour than GLibc for errors */
+		return 0;
+#else
 		return (-1);
+#endif
 	if (oitv.it_value.tv_usec)
 		oitv.it_value.tv_sec++;
 	return (oitv.it_value.tv_sec);

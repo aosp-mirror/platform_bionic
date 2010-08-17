@@ -107,6 +107,8 @@ extern long mrand48(void);
 extern long nrand48(unsigned short *);
 extern long lrand48(void);
 extern unsigned short *seed48(unsigned short*);
+extern double erand48(unsigned short xsubi[3]);
+extern double drand48(void);
 extern void srand48(long);
 extern unsigned int arc4random(void);
 extern void arc4random_stir(void);
@@ -135,7 +137,7 @@ extern char*  ptsname(int);
 extern int    ptsname_r(int, char*, size_t);
 extern int    getpt(void);
 
-static __inline__ int grantpt(int __fd)
+static __inline__ int grantpt(int __fd __attribute((unused)))
 {
   (void)__fd;
   return 0;     /* devpts does this all for us! */

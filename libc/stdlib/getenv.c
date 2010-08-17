@@ -62,8 +62,8 @@ __findenv(const char *name, int *offset)
 		if (i == 0 && *cp++ == '=') {
 			*offset = p - environ;
 			return (cp);
-    }
-  }
+		}
+	}
 	return (NULL);
 }
 

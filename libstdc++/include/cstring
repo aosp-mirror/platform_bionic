@@ -37,6 +37,8 @@
 #include <cstddef>
 #include <string.h>
 
+extern "C++" {
+
 namespace std
 {
 using ::memchr;
@@ -62,5 +64,7 @@ using ::strstr;
 using ::strtok;
 using ::strxfrm;
 }  // namespace std
+
+}  // extern C++
 
 #endif  // BIONIC_LIBSTDCPP_INCLUDE_CSTRING__

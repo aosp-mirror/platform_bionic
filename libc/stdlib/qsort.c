@@ -39,11 +39,11 @@ static __inline void	 swapfunc(char *, char *, int, int);
 /*
  * Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".
  */
-#define swapcode(TYPE, parmi, parmj, n) { 		\
-	long i = (n) / sizeof (TYPE); 			\
-	TYPE *pi = (TYPE *) (parmi); 			\
-	TYPE *pj = (TYPE *) (parmj); 			\
-	do { 						\
+#define swapcode(TYPE, parmi, parmj, n) {		\
+	long i = (n) / sizeof (TYPE);			\
+	TYPE *pi = (TYPE *) (parmi);			\
+	TYPE *pj = (TYPE *) (parmj);			\
+	do {						\
 		TYPE	t = *pi;			\
 		*pi++ = *pj;				\
 		*pj++ = t;				\
@@ -56,7 +56,7 @@ static __inline void	 swapfunc(char *, char *, int, int);
 static __inline void
 swapfunc(char *a, char *b, int n, int swaptype)
 {
-	if (swaptype <= 1) 
+	if (swaptype <= 1)
 		swapcode(long, a, b, n)
 	else
 		swapcode(char, a, b, n)
@@ -70,7 +70,7 @@ swapfunc(char *a, char *b, int n, int swaptype)
 	} else						\
 		swapfunc(a, b, es, swaptype)
 
-#define vecswap(a, b, n) 	if ((n) > 0) swapfunc(a, b, n, swaptype)
+#define vecswap(a, b, n)	if ((n) > 0) swapfunc(a, b, n, swaptype)
 
 static __inline char *
 med3(char *a, char *b, char *c, int (*cmp)(const void *, const void *))
@@ -110,7 +110,7 @@ loop:	SWAPINIT(a, es);
 	}
 	swap(a, pm);
 	pa = pb = (char *)a + es;
-    
+
 	pc = pd = (char *)a + (n - 1) * es;
 	for (;;) {
 		while (pb <= pc && (r = cmp(pb, a)) <= 0) {
@@ -118,7 +118,7 @@ loop:	SWAPINIT(a, es);
 				swap_cnt = 1;
 				swap(pa, pb);
 				pa += es;
-      }
+			}
 			pb += es;
 		}
 		while (pb <= pc && (r = cmp(pc, a)) >= 0) {
@@ -138,11 +138,11 @@ loop:	SWAPINIT(a, es);
 	}
 	if (swap_cnt == 0) {  /* Switch to insertion sort */
 		for (pm = (char *) a + es; pm < (char *) a + n * es; pm += es)
-			for (pl = pm; pl > (char *) a && cmp(pl - es, pl) > 0; 
+			for (pl = pm; pl > (char *) a && cmp(pl - es, pl) > 0;
 			     pl -= es)
 				swap(pl, pl - es);
 		return;
-    }
+	}
 
 	pn = (char *)a + n * es;
 	r = min(pa - (char *)a, pb - pa);
@@ -151,11 +151,11 @@ loop:	SWAPINIT(a, es);
 	vecswap(pb, pn - r, r);
 	if ((r = pb - pa) > (int)es)
 		qsort(a, r / es, es, cmp);
-	if ((r = pd - pc) > (int)es) { 
+	if ((r = pd - pc) > (int)es) {
 		/* Iterate rather than recurse to save stack space */
 		a = pn - r;
 		n = r / es;
 		goto loop;
 	}
-/*		qsort(pn - r, r / es, es, cmp);*/
+	/* qsort(pn - r, r / es, es, cmp); */
 }

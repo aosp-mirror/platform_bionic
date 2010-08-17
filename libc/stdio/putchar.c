@@ -42,7 +42,7 @@ putchar_unlocked(int c)
 {
 	FILE *so = stdout;
 
-	return (putc_unlocked(c,so));
+	return (putc_unlocked(c, so));
 }
 
 #undef putchar

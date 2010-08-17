@@ -141,7 +141,7 @@ b64_ntop(src, srclength, target, targsize)
 	size_t targsize;
 {
 	size_t datalength = 0;
-	u_char input[3];
+	u_char input[3] = { 0, 0, 0 };  /* make compiler happy */
 	u_char output[4];
 	size_t i;
 

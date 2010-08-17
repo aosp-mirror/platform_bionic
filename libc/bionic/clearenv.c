@@ -26,14 +26,17 @@
  * SUCH DAMAGE.
  */
 
+#include <stddef.h>
+
 extern char** environ;
 
 int clearenv(void)
 {
-	char **P = environ;
-	int offset;
+    char **P = environ;
 
-	for (P = &environ[offset]; *P; ++P)
-		*P = 0;
-        return 0;
+    if (P != NULL) {
+        for (; *P; ++P)
+            *P = NULL;
+    }
+    return 0;
 }

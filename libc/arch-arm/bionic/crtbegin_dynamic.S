@@ -31,7 +31,7 @@
 	.globl _start
 
 # this is the small startup code that is first run when
-# any executable that is statically-linked with Bionic
+# any executable that is dynamically-linked with Bionic
 # runs.
 #
 # it's purpose is to call __libc_init with appropriate
@@ -63,13 +63,7 @@ _start:
     .long   __INIT_ARRAY__
     .long   __FINI_ARRAY__
     .long   __CTOR_LIST__
-      
-# the .ctors section contains a list of pointers to "constructor"
-# functions that need to be called in order during C library initialization,
-# just before the program is being run. This is a C++ requirement
-#
-# the last entry shall be 0, and is defined in crtend.S
-#
+
 	.section .preinit_array, "aw"
 	.globl __PREINIT_ARRAY__
 __PREINIT_ARRAY__:
@@ -90,3 +84,4 @@ __FINI_ARRAY__:
 __CTOR_LIST__:
 	.long -1
 
+#include "__dso_handle.S"

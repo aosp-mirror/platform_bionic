@@ -120,7 +120,7 @@ int         fsync(int)  118
 int         fchown:fchown32(int, uid_t, gid_t)  207
 void        sync(void)  36
 int         __fcntl64:fcntl64(int, int, void *)  221
-int         fstatfs:fstatfs64(int, size_t, struct statfs *)  267,269
+int         __fstatfs64:fstatfs64(int, size_t, struct statfs *)  267,269
 ssize_t     sendfile(int out_fd, int in_fd, off_t *offset, size_t count)  187
 int         fstatat:fstatat64(int dirfd, const char *path, struct stat *buf, int flags)   327,300
 int         mkdirat(int dirfd, const char *pathname, mode_t mode)  323,296
@@ -241,6 +241,7 @@ int     __syslog:syslog(int, char *, int)  103
 int     init_module(void *, unsigned long, const char *)  128
 int     delete_module(const char*, unsigned int)   129
 int     klogctl:syslog(int, char *, int)   103
+int     sysinfo(struct sysinfo *)  116
 
 # futex
 int	futex(void *, int, int, void *, void *, int) 240

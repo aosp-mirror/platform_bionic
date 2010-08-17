@@ -29,6 +29,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 /* stubs for wide-char functions */
 wint_t  btowc(int c)
@@ -71,28 +72,25 @@ int swprintf(wchar_t *s, size_t n, const wchar_t *format, ...)
 
 int vwprintf(const wchar_t *format, va_list arg)
 {
-    return vprintf((const char*)format, arg);
+    return vfwprintf(stdout, format, arg);
 }
 
 int vfwprintf(FILE *stream, const wchar_t *format, va_list arg)
 {
-    return vfprintf(stream, (const char*)format, arg);
+    errno = ENOTSUP;
+    return -1;
 }
 
 int vswprintf(wchar_t *s, size_t n, const wchar_t *format, va_list arg)
 {
-    return vsnprintf( (char*)s, n, (const char*)format, arg );
+    errno = ENOTSUP;
+    return -1;
 }
 
 int fwscanf(FILE *stream, const wchar_t *format, ... )
 {
-    va_list  args;
-    int      result;
-
-    va_start (args, format);
-    result = vfscanf( stream, (const char*)format, args );
-    va_end (args);
-    return result;
+    errno = ENOTSUP;
+    return -1;
 }
 
 int wscanf(const wchar_t *format, ... )
@@ -101,20 +99,15 @@ int wscanf(const wchar_t *format, ... )
     int      result;
 
     va_start (args, format);
-    result = vscanf( (const char*)format, args );
+    result = fwscanf(stdout, format, args );
     va_end (args);
     return result;
 }
 
 int swscanf(const wchar_t *s, const wchar_t *format, ... )
 {
-    va_list  args;
-    int      result;
-
-    va_start (args, format);
-    result = vscanf( (const char*)format, args );
-    va_end (args);
-    return result;
+    errno = ENOTSUP;
+    return -1;
 }
 
 int iswalnum(wint_t wc) { return isalnum(wc); }
@@ -150,7 +143,7 @@ int iswctype(wint_t wc, wctype_t charclass)
 
 wint_t fgetwc(FILE *stream)
 {
-    return fgetc(stream);
+    return (wint_t)fgetc(stream);
 }
 
 wchar_t *fgetws(wchar_t *ws, int n, FILE *stream)
@@ -264,69 +257,9 @@ size_t wcrtomb(char *s, wchar_t wc, mbstate_t *ps)
     return 1;
 }
 
-wchar_t *wcscat(wchar_t *ws1, const wchar_t *ws2)
-{
-    return (wchar_t*) strcat((char*)ws1, (const char*)ws2);
-}
-
-wchar_t *wcschr(const wchar_t *ws, wchar_t wc)
-{
-    return (wchar_t*)strchr( (const char*)ws, (char)wc );
-}
-
-int wcscmp(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return strcmp( (const char*)ws1, (const char*)ws2 );
-}
-
-int wcscoll(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return strcmp( (const char*)ws1, (const char*)ws2 );
-}
-
-wchar_t *wcscpy(wchar_t *ws1, const wchar_t *ws2)
-{
-    return (wchar_t*) strcpy( (char*)ws1, (const char*)ws2 );
-}
-
-size_t wcscspn(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return strspn( (const char*)ws1, (const char*)ws2 );
-}
-
-size_t wcslen(const wchar_t *ws)
-{
-    return (size_t)strlen( (const char*)ws );
-}
-
 size_t wcsftime(wchar_t *wcs, size_t maxsize, const wchar_t *format,  const struct tm *timptr)
 {
     return strftime( (char*)wcs, maxsize, (const char*)format, timptr );
-}
-
-wchar_t *wcsncat(wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return (wchar_t*) strncat( (char*)ws1, (const char*)ws2, n );
-}
-
-int wcsncmp(const wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return strncmp( (const char*)ws1, (const char*)ws2, n );
-}
-
-wchar_t *wcsncpy(wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return (wchar_t*) strncpy( (char*)ws1, (const char*)ws2, n );
-}
-
-wchar_t *wcspbrk(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return (wchar_t*) strpbrk( (const char*)ws1, (const char*)ws2 );
-}
-
-wchar_t *wcsrchr(const wchar_t *ws, wchar_t wc)
-{
-    return (wchar_t*) strrchr( (const char*)ws, (int)wc );
 }
 
 size_t wcsrtombs(char *dst, const wchar_t **src, size_t len, mbstate_t *ps)
@@ -349,24 +282,9 @@ size_t wcstombs(char *dst, const wchar_t *src, size_t len)
     return wcsrtombs(dst, &src, len, NULL);
 }
 
-size_t wcsspn(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return strspn( (const char*)ws1, (const char*)ws2 );
-}
-
-wchar_t *wcsstr(const wchar_t *ws1, const wchar_t *ws2)
-{
-    return (wchar_t*) strstr( (const char*)ws1, (const char*)ws2 );
-}
-
 double wcstod(const wchar_t *nptr, wchar_t **endptr)
 {
     return strtod( (const char*)nptr, (char**)endptr );
-}
-
-wchar_t *wcstok(wchar_t *ws1, const wchar_t *ws2, wchar_t **ptr)
-{
-    return (wchar_t*) strtok_r( (char*)ws1, (const char*)ws2, (char**)ptr );
 }
 
 long int wcstol(const wchar_t *nptr, wchar_t **endptr, int base)
@@ -384,11 +302,6 @@ wchar_t *wcswcs(const wchar_t *ws1, const wchar_t *ws2)
     return (wchar_t*) strstr( (const char*)ws1, (const char*)ws2 );
 }
 
-int wcswidth(const wchar_t *pwcs, size_t n)
-{
-    return  strnlen( (const char*)pwcs, n );
-}
-
 size_t wcsxfrm(wchar_t *ws1, const wchar_t *ws2, size_t n)
 {
     memcpy( (char*)ws1, (const char*)ws2, n );
@@ -397,7 +310,7 @@ size_t wcsxfrm(wchar_t *ws1, const wchar_t *ws2, size_t n)
 
 int wctob(wint_t c)
 {
-  return c;
+    return c;
 }
 
 wctype_t wctype(const char *property)
@@ -420,29 +333,4 @@ wctype_t wctype(const char *property)
 int wcwidth(wchar_t wc)
 {
     return (wc > 0);
-}
-
-wchar_t *wmemchr(const wchar_t *ws, wchar_t wc, size_t n)
-{
-    return (wchar_t*)  memchr( (const char*)ws, (int)wc, n );
-}
-
-int wmemcmp(const wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return  memcmp( (const char*)ws1, (const char*)ws2, n );
-}
-
-wchar_t *wmemcpy(wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return (wchar_t*) memcpy( (char*)ws1, (const char*)ws2, n );
-}
-
-wchar_t *wmemmove(wchar_t *ws1, const wchar_t *ws2, size_t n)
-{
-    return (wchar_t*)memmove( (char*)ws1, (const char*)ws2, n );
-}
-
-wchar_t *wmemset(wchar_t *ws, wchar_t wc, size_t n)
-{
-    return (wchar_t*) memset( (char*)ws, (int)wc, n );
 }

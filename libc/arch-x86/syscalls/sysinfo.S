@@ -2,18 +2,14 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type fstatfs, @function
-    .globl fstatfs
+    .type sysinfo, @function
+    .globl sysinfo
     .align 4
 
-fstatfs:
+sysinfo:
     pushl   %ebx
-    pushl   %ecx
-    pushl   %edx
-    mov     16(%esp), %ebx
-    mov     20(%esp), %ecx
-    mov     24(%esp), %edx
-    movl    $__NR_fstatfs64, %eax
+    mov     8(%esp), %ebx
+    movl    $__NR_sysinfo, %eax
     int     $0x80
     cmpl    $-129, %eax
     jb      1f
@@ -23,7 +19,5 @@ fstatfs:
     addl    $4, %esp
     orl     $-1, %eax
 1:
-    popl    %edx
-    popl    %ecx
     popl    %ebx
     ret

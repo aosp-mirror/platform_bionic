@@ -53,7 +53,7 @@ const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 	_P,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L,
 	_L,	_L,	_L,	_L,	_L,	_L,	_L,	_L,
 	_L,	_L,	_L,	_L,	_L,	_L,	_L,	_L,
-/* determine printability based on the IS0 8859 8-bit standard */
+	/* determine printability based on the IS0 8859 8-bit standard */
 	_L,	_L,	_L,	_P,	_P,	_P,	_P,	_C,
 
 	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, /* 80 */

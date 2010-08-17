@@ -2,19 +2,19 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type fstatfs, @function
-    .globl fstatfs
+    .type sysinfo, @function
+    .globl sysinfo
     .align 4
 
-fstatfs:
+sysinfo:
 
     /* invoke trap */
     mov.l   0f, r3  /* trap num */
-    trapa   #(3 + 0x10)
+    trapa   #(1 + 0x10)
 
     /* check return value */
     cmp/pz  r0
-    bt      __NR_fstatfs64_end
+    bt      __NR_sysinfo_end
 
     /* keep error number */
     sts.l   pr, @-r15
@@ -23,10 +23,10 @@ fstatfs:
     mov     r0, r4
     lds.l   @r15+, pr
 
-__NR_fstatfs64_end:
+__NR_sysinfo_end:
     rts
     nop
 
     .align  2
-0:  .long   __NR_fstatfs64
+0:  .long   __NR_sysinfo
 1:  .long   __set_syscall_errno

@@ -14,6 +14,7 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fcntl.c \
 	unistd/fnmatch.c \
+	unistd/fstatfs.c \
 	unistd/ftime.c \
 	unistd/ftok.c \
 	unistd/getcwd.c \
@@ -175,7 +176,6 @@ libc_common_src_files := \
 	stdlib/tolower_.c \
 	stdlib/toupper_.c \
 	stdlib/wchar.c \
-	string/bcopy.c \
 	string/index.c \
 	string/memccpy.c \
 	string/memchr.c \
@@ -186,7 +186,6 @@ libc_common_src_files := \
 	string/strcasestr.c \
 	string/strcat.c \
 	string/strchr.c \
-	string/strcmp.c \
 	string/strcoll.c \
 	string/strcpy.c \
 	string/strcspn.c \
@@ -196,7 +195,6 @@ libc_common_src_files := \
 	string/strlcat.c \
 	string/strlcpy.c \
 	string/strncat.c \
-	string/strncmp.c \
 	string/strncpy.c \
 	string/strndup.c \
 	string/strnlen.c \
@@ -208,6 +206,34 @@ libc_common_src_files := \
 	string/strtok.c \
 	string/strtotimeval.c \
 	string/strxfrm.c \
+	wchar/wcpcpy.c \
+	wchar/wcpncpy.c \
+	wchar/wcscasecmp.c \
+	wchar/wcscat.c \
+	wchar/wcschr.c \
+	wchar/wcscmp.c \
+	wchar/wcscoll.c \
+	wchar/wcscpy.c \
+	wchar/wcscspn.c \
+	wchar/wcsdup.c \
+	wchar/wcslcat.c \
+	wchar/wcslcpy.c \
+	wchar/wcslen.c \
+	wchar/wcsncasecmp.c \
+	wchar/wcsncat.c \
+	wchar/wcsncmp.c \
+	wchar/wcsncpy.c \
+	wchar/wcsnlen.c \
+	wchar/wcspbrk.c \
+	wchar/wcsrchr.c \
+	wchar/wcsspn.c \
+	wchar/wcsstr.c \
+	wchar/wcstok.c \
+	wchar/wcswidth.c \
+	wchar/wmemchr.c \
+	wchar/wmemcpy.c \
+	wchar/wmemmove.c \
+	wchar/wmemset.c \
 	inet/bindresvport.c \
 	inet/inet_addr.c \
 	inet/inet_aton.c \
@@ -292,7 +318,6 @@ libc_common_src_files := \
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
-	bionic/eabi.c \
 	bionic/bionic_clone.c \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
@@ -300,6 +325,7 @@ libc_common_src_files += \
 	arch-arm/bionic/_setjmp.S \
 	arch-arm/bionic/atomics_arm.S \
 	arch-arm/bionic/clone.S \
+	arch-arm/bionic/eabi.c \
 	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/kill.S \
 	arch-arm/bionic/libgcc_compat.c \
@@ -313,6 +339,9 @@ libc_common_src_files += \
 	arch-arm/bionic/strlen.c.arm \
 	arch-arm/bionic/syscall.S \
 	string/memmove.c.arm \
+	string/bcopy.c \
+	string/strcmp.c \
+	string/strncmp.c \
 	unistd/socketcalls.c
 
 # These files need to be arm so that gdbserver
@@ -320,6 +349,7 @@ libc_common_src_files += \
 # up any thumb code.
 libc_common_src_files += \
 	bionic/pthread.c.arm \
+	bionic/pthread-rwlocks.c.arm \
 	bionic/pthread-timers.c.arm \
 	bionic/ptrace.c.arm
 
@@ -344,13 +374,17 @@ libc_common_src_files += \
 	arch-x86/bionic/_setjmp.S \
 	arch-x86/bionic/vfork.S \
 	arch-x86/bionic/syscall.S \
-	arch-x86/string/bzero.S \
-	arch-x86/string/memset.S \
-	arch-x86/string/memcmp.S \
-	arch-x86/string/memcpy.S \
+	arch-x86/string/bcopy_wrapper.S \
+	arch-x86/string/memcpy_wrapper.S \
+	arch-x86/string/memmove_wrapper.S \
+	arch-x86/string/bzero_wrapper.S \
+	arch-x86/string/memcmp_wrapper.S \
+	arch-x86/string/memset_wrapper.S \
+	arch-x86/string/strcmp_wrapper.S \
+	arch-x86/string/strncmp_wrapper.S \
 	arch-x86/string/strlen.S \
-	string/memmove.c \
 	bionic/pthread.c \
+	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
 
@@ -381,10 +415,13 @@ libc_common_src_files += \
 	arch-sh/bionic/__set_tls.c \
 	arch-sh/bionic/__get_tls.c \
 	arch-sh/bionic/ffs.S \
+	string/bcopy.c \
+	string/strcmp.c \
+	string/strncmp.c \
 	string/memcmp.c \
 	string/strlen.c \
-	bionic/eabi.c \
 	bionic/pthread.c \
+	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c \
 	unistd/socketcalls.c
@@ -403,7 +440,6 @@ libc_common_cflags := \
 		-D_LIBC=1 			\
 		-DSOFTFLOAT                     \
 		-DFLOATING_POINT		\
-		-DNEED_PSELECT=1		\
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
 		-DUSE_DL_PREFIX \
@@ -437,6 +473,10 @@ ifeq ($(TARGET_ARCH),arm)
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags := -m32
+
+    # Enable recent IA friendly memory routines (such as for Atom)
+    # These will not work on the earlier x86 machines
+    libc_common_cflags += -mtune=i686 -DUSE_SSSE3 -DUSE_SSE2
   endif # x86
 endif # !arm
 
@@ -447,6 +487,10 @@ else
     libc_common_cflags += -DANDROID_SMP=0
 endif
 
+# Needed to access private/__dso_handle.S from
+# crtbegin_xxx.S and crtend_xxx.S
+#
+libc_crt_target_cflags += -I$(LOCAL_PATH)/private
 
 # Define some common includes
 # ========================================================
@@ -461,10 +505,17 @@ libc_common_c_includes := \
 # executables)
 # ==========================================================================
 
-ifeq ($(TARGET_ARCH),x86)
-# we only need begin_so/end_so for x86, since it needs an appropriate .init
-# section in the shared library with a function to call all the entries in
-# .ctors section. ARM uses init_array, and does not need the function.
+ifneq ($(filter arm x86,$(TARGET_ARCH)),)
+# ARM and x86 need crtbegin_so/crtend_so.
+#
+# For x86, the .init section must point to a function that calls all
+# entries in the .ctors section. (on ARM this is done through the
+# .init_array section instead).
+#
+# For both platforms, the .fini_array section must point to a function
+# that will call __cxa_finalize(&__dso_handle) in order to ensure that
+# static C++ destructors are properly called on dlclose().
+#
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 	@mkdir -p $(dir $@)

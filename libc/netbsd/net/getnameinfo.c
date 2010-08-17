@@ -339,11 +339,14 @@ ip6_parsenumeric(sa, addr, host, hostlen, flags)
 	assert(addr != NULL);
 	assert(host != NULL);
 
+	if (hostlen < 0)
+		return EAI_OVERFLOW;
+
 	if (inet_ntop(AF_INET6, addr, numaddr, sizeof(numaddr)) == NULL)
 		return EAI_SYSTEM;
 
 	numaddrlen = strlen(numaddr);
-	if (numaddrlen + 1 > hostlen) /* don't forget terminator */
+	if (numaddrlen + 1 > (size_t)hostlen) /* don't forget terminator */
 		return EAI_OVERFLOW;
 	strlcpy(host, numaddr, hostlen);
 
@@ -356,7 +359,7 @@ ip6_parsenumeric(sa, addr, host, hostlen, flags)
 		    zonebuf, sizeof(zonebuf), flags);
 		if (zonelen < 0)
 			return EAI_OVERFLOW;
-		if ((size_t) zonelen + 1 + numaddrlen + 1 > hostlen)
+		if ((size_t) zonelen + 1 + numaddrlen + 1 > (size_t)hostlen)
 			return EAI_OVERFLOW;
 		/* construct <numeric-addr><delim><zoneid> */
 		memcpy(host + numaddrlen + 1, zonebuf,

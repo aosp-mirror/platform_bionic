@@ -44,7 +44,7 @@
 #define  SYSTEM_MQ_OPEN_MAX     8
 #define  SYSTEM_MQ_PRIO_MAX     32768
 #define  SYSTEM_SEM_NSEMS_MAX   256
-#define  SYSTEM_SEM_VALUE_MAX   (2147483647)
+#define  SYSTEM_SEM_VALUE_MAX   0x3fffffff  /* see bionic/semaphore.c */
 #define  SYSTEM_SIGQUEUE_MAX    32
 #define  SYSTEM_TIMER_MAX       32
 #define  SYSTEM_LOGIN_NAME_MAX  256
@@ -96,7 +96,7 @@ sysconf( int  name )
     case _SC_COLL_WEIGHTS_MAX:  return _POSIX2_COLL_WEIGHTS_MASK;
 #endif
 #ifdef _POSIX2_EXPR_NEST_MAX
-    case _SC_EXPR_NEXT_MASK:    return _POSIX2_EXPR_NEST_MAX;
+    case _SC_EXPR_NEST_MAX:    return _POSIX2_EXPR_NEST_MAX;
 #endif
 #ifdef _POSIX2_LINE_MAX
     case _SC_LINE_MAX:          return _POSIX2_LINE_MAX;
@@ -317,7 +317,7 @@ line_parser_addc( LineParser*  p, int  c )
 static int
 line_parser_getc( LineParser*  p )
 {
-    if (p->in_len >= p->in_pos) {
+    if (p->in_pos >= p->in_len) {
         int  ret;
 
         p->in_len = p->in_pos = 0;

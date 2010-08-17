@@ -60,34 +60,43 @@ HashTable gHashTable;
 
 static int hash_entry_compare(const void* arg1, const void* arg2)
 {
+    int result;
+
     HashEntry* e1 = *(HashEntry**)arg1;
     HashEntry* e2 = *(HashEntry**)arg2;
 
-    size_t nbAlloc1 = e1->allocations;
-    size_t nbAlloc2 = e2->allocations;
-    size_t size1 = e1->size & ~SIZE_FLAG_MASK;
-    size_t size2 = e2->size & ~SIZE_FLAG_MASK;
-    size_t alloc1 = nbAlloc1 * size1;
-    size_t alloc2 = nbAlloc2 * size2;
-
-    // sort in descending order by:
-    // 1) total size
-    // 2) number of allocations
-    //
-    // This is used for sorting, not determination of equality, so we don't
-    // need to compare the bit flags.
-    int result;
-    if (alloc1 > alloc2) {
+    // if one or both arg pointers are null, deal gracefully
+    if (e1 == NULL) {
+        result = (e2 == NULL) ? 0 : 1;
+    } else if (e2 == NULL) {
         result = -1;
-    } else if (alloc1 < alloc2) {
-        result = 1;
     } else {
-        if (nbAlloc1 > nbAlloc2) {
+        size_t nbAlloc1 = e1->allocations;
+        size_t nbAlloc2 = e2->allocations;
+        size_t size1 = e1->size & ~SIZE_FLAG_MASK;
+        size_t size2 = e2->size & ~SIZE_FLAG_MASK;
+        size_t alloc1 = nbAlloc1 * size1;
+        size_t alloc2 = nbAlloc2 * size2;
+
+        // sort in descending order by:
+        // 1) total size
+        // 2) number of allocations
+        //
+        // This is used for sorting, not determination of equality, so we don't
+        // need to compare the bit flags.
+        int result;
+        if (alloc1 > alloc2) {
             result = -1;
-        } else if (nbAlloc1 < nbAlloc2) {
+        } else if (alloc1 < alloc2) {
             result = 1;
         } else {
-            result = 0;
+            if (nbAlloc1 > nbAlloc2) {
+                result = -1;
+            } else if (nbAlloc1 < nbAlloc2) {
+                result = 1;
+            } else {
+                result = 0;
+            }
         }
     }
     return result;
@@ -149,7 +158,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
 
     if (*info == NULL) {
         *overallSize = 0;
-        goto done;
+        goto out_nomem_info;
     }
 
     qsort((void*)list, gHashTable.count, sizeof(void*), hash_entry_compare);
@@ -161,8 +170,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         size_t entrySize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * entry->numEntries);
         if (entrySize < *infoSize) {
             /* we're writing less than a full entry, clear out the rest */
-            /* TODO: only clear out the part we're not overwriting? */
-            memset(head, 0, *infoSize);
+            memset(head + entrySize, 0, *infoSize - entrySize);
         } else {
             /* make sure the amount we're copying doesn't exceed the limit */
             entrySize = *infoSize;
@@ -171,6 +179,7 @@ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         head += *infoSize;
     }
 
+out_nomem_info:
     dlfree(list);
 
 done:
