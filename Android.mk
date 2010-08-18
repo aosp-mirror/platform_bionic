@@ -14,6 +14,11 @@
 # limitations under the License.
 #
 
+LOCAL_PATH := $(call my-dir)
+
 ifneq ($(TARGET_SIMULATOR),true)
   include $(call all-subdir-makefiles)
+else
+  # The host dalvikvm needs Android's concatenated & indexed timezone data.
+  include $(LOCAL_PATH)/libc/zoneinfo/Android.mk
 endif
