@@ -242,8 +242,6 @@ libc_common_src_files := \
 	inet/inet_ntoa.c \
 	inet/inet_ntop.c \
 	inet/inet_pton.c \
-	inet/ether_aton.c \
-	inet/ether_ntoa.c \
 	tzcode/asctime.c \
 	tzcode/difftime.c \
 	tzcode/localtime.c \
