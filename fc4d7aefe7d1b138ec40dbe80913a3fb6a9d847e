@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA6X///2c\u003d",
+        "filename": "libc/arch-arm/bionic/strcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:22:01Z",
+      "side": 1,
+      "message": "I\u0027m not sure that we want to retain the ARM copyright here due to the CLA.",
+      "revId": "fc4d7aefe7d1b138ec40dbe80913a3fb6a9d847e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
