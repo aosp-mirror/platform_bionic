@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA6X///1U\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:59:33Z",
+      "side": 1,
+      "message": "please correct spacing with \"if (__unlikely...\"",
+      "revId": "bf8060cf885c7c10edf99358bdf68520e42c24f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA6X///1g\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:59:33Z",
+      "side": 1,
+      "message": "I would prefer if you would start with the non-blocking case first, since it removes one level of identation for the blocking code, and make things easier to understand (no need for else). use __unlikely to keep the blocking case faster though.",
+      "revId": "bf8060cf885c7c10edf99358bdf68520e42c24f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA6X///1c\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:59:33Z",
+      "side": 1,
+      "message": "please remove trailing space",
+      "revId": "bf8060cf885c7c10edf99358bdf68520e42c24f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA6X///1Y\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:59:33Z",
+      "side": 1,
+      "message": "agin, if the previous block always return, remove the else and the block indentation to make things easier to read.",
+      "revId": "bf8060cf885c7c10edf99358bdf68520e42c24f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA6X///1E\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-08-25T13:59:33Z",
+      "side": 1,
+      "message": "for performance reasons, I would prefer that pthread_mutex_lock and pthread_mutex_trylock keep their own straightforward implementation. It\u0027s ok to merge the timed lock routines with a single support one though.",
+      "revId": "bf8060cf885c7c10edf99358bdf68520e42c24f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
