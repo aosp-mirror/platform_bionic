@@ -16,6 +16,24 @@
       "revId": "fc4d7aefe7d1b138ec40dbe80913a3fb6a9d847e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA6X///uY\u003d",
+        "filename": "libc/arch-arm/bionic/strcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000371
+      },
+      "writtenOn": "2010-08-25T20:17:21Z",
+      "side": 1,
+      "message": "I need to understand how this code was written\nWas it copied from code that had a Copyright arm statement on it?\nWas it written from scratch completely?",
+      "parentUuid": "AAAA6X///2c\u003d",
+      "revId": "fc4d7aefe7d1b138ec40dbe80913a3fb6a9d847e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
