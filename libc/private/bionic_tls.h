@@ -88,22 +88,48 @@ extern int __set_tls(void *ptr);
 
 /* get the TLS */
 #ifdef __arm__
-/* Linux kernel helpers for its TLS implementation */
-/* For performance reasons, avoid calling the kernel helper
+/* The standard way to get the TLS is to call a kernel helper
+ * function (i.e. a function provided at a fixed address in a
+ * "magic page" mapped in all user-space address spaces ), which
+ * contains the most appropriate code path for the target device.
+ *
+ * However, for performance reasons, we're going to use our own
+ * machine code for the system's C shared library.
+ *
+ * We cannot use this optimization in the static version of the
+ * C library, because we don't know where the corresponding code
+ * is going to run.
+ */
+#  ifdef LIBC_STATIC
+
+/* Use the kernel helper in static C library. */
+  typedef volatile void* (__kernel_get_tls_t)(void);
+#    define __get_tls() (*(__kernel_get_tls_t *)0xffff0fe0)()
+
+#  else /* !LIBC_STATIC */
+/* Use optimized code path.
  * Note that HAVE_ARM_TLS_REGISTER is build-specific
  * (it must match your kernel configuration)
  */
-#  ifdef HAVE_ARM_TLS_REGISTER
-#    define __get_tls() \
+#    ifdef HAVE_ARM_TLS_REGISTER
+ /* We can read the address directly from a coprocessor
+  * register, which avoids touching the data cache
+  * completely.
+  */
+#      define __get_tls() \
     ({ register unsigned int __val asm("r0"); \
        asm ("mrc p15, 0, r0, c13, c0, 3" : "=r"(__val) ); \
        (volatile void*)__val; })
-#  else /* !HAVE_ARM_TLS_REGISTER */
-#    define __get_tls() ( *((volatile void **) 0xffff0ff0) )
-#  endif
-#else
+#    else /* !HAVE_ARM_TLS_REGISTER */
+ /* The kernel provides the address of the TLS at a fixed
+  * address of the magic page too.
+  */
+#      define __get_tls() ( *((volatile void **) 0xffff0ff0) )
+#    endif
+#  endif /* !LIBC_STATIC */
+#else /* !ARM */
 extern void*  __get_tls( void );
-#endif
+#endif /* !ARM */
 
 /* return the stack base and size, used by our malloc debugger */
 extern void*  __get_stack_base(int  *p_stack_size);
