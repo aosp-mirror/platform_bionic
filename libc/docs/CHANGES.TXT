@@ -75,6 +75,13 @@ Differences between current and Android 2.2:
 - <dlfcn.h>: fixed dlopen() implementation to support dlopen(NULL, ...).
   This allows one to look at the dynamic symbols exported by an executable.
 
+- <private/bionic_tls.h>: use kernel helper functions for static versions
+  of the C library. This is necessary because we don't know where the corresponding
+  machine code is going to run, and the optimization for __get_tls() might
+  not match the features of the target device where we run a static executable
+  linked to the C library. This fixes one of the bug that explains why gdbserver
+  didn't work well with threads.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.2. and Android 2.1:
 
