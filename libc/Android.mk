@@ -64,7 +64,6 @@ libc_common_src_files := \
 	unistd/sleep.c \
 	unistd/statfs.c \
 	unistd/strsignal.c \
-	unistd/sysconf.c \
 	unistd/syslog.c \
 	unistd/system.c \
 	unistd/tcgetpgrp.c \
@@ -247,7 +246,6 @@ libc_common_src_files := \
 	tzcode/localtime.c \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
-	bionic/__errno.c \
 	bionic/__set_errno.c \
 	bionic/_rand48.c \
 	bionic/cpuacct.c \
@@ -316,6 +314,23 @@ libc_common_src_files := \
 	regex/regexec.c \
 	regex/regfree.c \
 
+# The following files are common, but must be compiled
+# with different C flags when building a static C library.
+#
+# The reason for this is the implementation of __get_tls()
+# that will differ between the shared and static versions
+# of the library.
+#
+# See comments in private/bionic_tls.h for more details.
+#
+# NOTE: bionic/pthread.c is added later to this list
+#       because it needs special handling on ARM, see
+#       below.
+#
+libc_static_common_src_files := \
+        unistd/sysconf.c \
+        bionic/__errno.c \
+
 # Architecture specific source files go here
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
@@ -350,11 +365,13 @@ libc_common_src_files += \
 # can set breakpoints in them without messing
 # up any thumb code.
 libc_common_src_files += \
-	bionic/pthread.c.arm \
 	bionic/pthread-atfork.c.arm \
 	bionic/pthread-rwlocks.c.arm \
 	bionic/pthread-timers.c.arm \
 	bionic/ptrace.c.arm
+
+libc_static_common_src_files += \
+        bionic/pthread.c.arm \
 
 # these are used by the static and dynamic versions of the libc
 # respectively
@@ -386,11 +403,13 @@ libc_common_src_files += \
 	arch-x86/string/strcmp_wrapper.S \
 	arch-x86/string/strncmp_wrapper.S \
 	arch-x86/string/strlen.S \
-	bionic/pthread.c \
 	bionic/pthread-atfork.c \
 	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
+
+libc_static_common_src_files += \
+        bionic/pthread.c \
 
 # this is needed for static versions of libc
 libc_arch_static_src_files := \
@@ -424,12 +443,15 @@ libc_common_src_files += \
 	string/strncmp.c \
 	string/memcmp.c \
 	string/strlen.c \
-	bionic/pthread.c \
 	bionic/pthread-atfork.c \
 	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c \
 	unistd/socketcalls.c
+
+libc_static_common_src_files += \
+        bionic/pthread.c \
+
 endif # sh
 
 endif # !x86
@@ -593,10 +615,12 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
+	$(libc_static_common_src_files) \
 	bionic/libc_init_static.c
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+                -DLIBC_STATIC
 
 LOCAL_MODULE := libc_nomalloc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
@@ -612,6 +636,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
+	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.c \
 	bionic/libc_init_static.c
@@ -636,6 +661,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
 	$(libc_arch_dynamic_src_files) \
+	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.c \
 	bionic/libc_init_dynamic.c
