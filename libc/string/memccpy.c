@@ -38,18 +38,9 @@ void *memccpy(void *dst, const void *src, int c, size_t n)
     for (;;) {
         if (ch == c || p >= p_end) break;
         *q++ = ch = *p++;
-
-        if (ch == c || p >= p_end) break;
-        *q++ = ch = *p++;
-
-        if (ch == c || p >= p_end) break;
-        *q++ = ch = *p++;
-
-        if (ch == c || p >= p_end) break;
-        *q++ = ch = *p++;
     }
 
-    if (p >= p_end)
+    if (p >= p_end && ch != c)
         return NULL;
 
     return q;
