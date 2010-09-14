@@ -19,7 +19,8 @@
 #define CPCAP_AUDIO_OUT_SPEAKER 0
 #define CPCAP_AUDIO_OUT_HEADSET 1
 #define CPCAP_AUDIO_OUT_HEADSET_AND_SPEAKER 2
-#define CPCAP_AUDIO_OUT_MAX 2
+#define CPCAP_AUDIO_OUT_STANDBY 3
+#define CPCAP_AUDIO_OUT_MAX 3
 
 struct cpcap_audio_stream {
  unsigned id;
@@ -33,16 +34,17 @@ struct cpcap_audio_stream {
 
 #define CPCAP_AUDIO_OUT_SET_VOLUME _IOW(CPCAP_AUDIO_MAGIC, 1, unsigned int)
 
-#define CPCAP_AUDIO_OUT_GET_OUTPUT   _IOR(CPCAP_AUDIO_MAGIC, 2, unsigned int *)
+#define CPCAP_AUDIO_OUT_GET_OUTPUT   _IOR(CPCAP_AUDIO_MAGIC, 2, struct cpcap_audio_stream *)
 #define CPCAP_AUDIO_OUT_GET_VOLUME   _IOR(CPCAP_AUDIO_MAGIC, 3, unsigned int *)
 
 #define CPCAP_AUDIO_IN_MIC1 0
 #define CPCAP_AUDIO_IN_MIC2 1
-#define CPCAP_AUDIO_IN_MAX 1
+#define CPCAP_AUDIO_IN_STANDBY 2
+#define CPCAP_AUDIO_IN_MAX 2
 
 #define CPCAP_AUDIO_IN_SET_INPUT _IOW(CPCAP_AUDIO_MAGIC, 4,   const struct cpcap_audio_stream *)
 
-#define CPCAP_AUDIO_IN_GET_INPUT _IOR(CPCAP_AUDIO_MAGIC, 5,   struct cpcap_audio_stream *)
+#define CPCAP_AUDIO_IN_GET_INPUT _IOR(CPCAP_AUDIO_MAGIC, 5, struct cpcap_audio_stream *)
 
 #define CPCAP_AUDIO_IN_VOL_MIN 0
 #define CPCAP_AUDIO_IN_VOL_MAX 31
