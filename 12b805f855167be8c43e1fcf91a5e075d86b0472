@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA7n///s4\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-09-17T09:39:18Z",
+      "side": 1,
+      "message": "unlike the original source, this assumes 32-bit alignment.\n\nLooking at the rest of the code, it looks like \"base\" is the address of the global static __header array of byte, which isn\u0027t guaranteed to be in such a position. On certain ARM cpus, this will lead to a SIGBUS.",
+      "revId": "12b805f855167be8c43e1fcf91a5e075d86b0472",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
