@@ -606,8 +606,8 @@ static void dump(soinfo *si)
 #endif
 
 static const char *sopaths[] = {
+    "/vendor/lib",
     "/system/lib",
-    "/lib",
     0
 };
 
