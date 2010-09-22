@@ -1866,15 +1866,15 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
  */
 int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 {
-    static pthread_mutex_t   once_lock = PTHREAD_MUTEX_INITIALIZER;
+    static pthread_mutex_t   once_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
     if (*once_control == PTHREAD_ONCE_INIT) {
-        _normal_lock( &once_lock );
+        pthread_mutex_lock( &once_lock );
         if (*once_control == PTHREAD_ONCE_INIT) {
             (*init_routine)();
             *once_control = ~PTHREAD_ONCE_INIT;
         }
-        _normal_unlock( &once_lock );
+        pthread_mutex_unlock( &once_lock );
     }
     return 0;
 }
