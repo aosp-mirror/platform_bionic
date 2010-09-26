@@ -259,6 +259,8 @@ int     inotify_rm_watch(int, unsigned int)  318,293,292
 
 int     poll(struct pollfd *, unsigned int, long)  168
 
+int     eventfd:eventfd2(unsigned int, int)  356,328
+
 # ARM-specific ARM_NR_BASE == 0x0f0000 == 983040
 int     __set_tls:ARM_set_tls(void*)                                 983045,-1
 int     cacheflush:ARM_cacheflush(long start, long end, long flags)  983042,-1

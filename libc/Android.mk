@@ -11,6 +11,7 @@ libc_common_src_files := \
 	unistd/brk.c \
 	unistd/creat.c \
 	unistd/daemon.c \
+	unistd/eventfd.c \
 	unistd/exec.c \
 	unistd/fcntl.c \
 	unistd/fnmatch.c \

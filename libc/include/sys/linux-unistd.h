@@ -202,6 +202,7 @@ int              inotify_init (void);
 int              inotify_add_watch (int, const char *, unsigned int);
 int              inotify_rm_watch (int, unsigned int);
 int              poll (struct pollfd *, unsigned int, long);
+int              eventfd (unsigned int, int);
 int              __set_tls (void*);
 int              cacheflush (long start, long end, long flags);
 #ifdef __cplusplus
