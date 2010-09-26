@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA7n///Jg\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-09-26T20:19:52Z",
+      "side": 1,
+      "message": "I would prefer if you could add a comment here that explains that the alignment is needed due to how verify_elf_object is implemented. This will prevent surprises during maintenance in the future.",
+      "revId": "e147c9c5a51467fd38413fe215068773ad8dacec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA7n///Jc\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-09-26T20:19:52Z",
+      "side": 1,
+      "message": "Similarly, please add a comment here explaining why \u0027base\u0027 must be 32-bit aligned. A real check and associated panic would also be great.",
+      "revId": "e147c9c5a51467fd38413fe215068773ad8dacec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
