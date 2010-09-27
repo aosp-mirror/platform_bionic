@@ -33,7 +33,7 @@ void    _exit:exit_group (int)      248,252
 void    _exit_thread:exit (int)	    1
 pid_t   __fork:fork (void)           2
 pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7
-int     waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
+int     __waitid:waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
 
 # NOTE: this system call is never called directly, but we list it there
 #       to have __NR_clone properly defined.
