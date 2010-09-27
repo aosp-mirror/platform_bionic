@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA7n///FU\u003d",
+        "filename": "libc/include/sys/cdefs_hidden_pop.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-09-27T12:24:47Z",
+      "side": 1,
+      "message": "This is missing a copyright disclaimer",
+      "revId": "bc3cae64545f1a77f82cb87fdc2166d6838095db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA7n///FQ\u003d",
+        "filename": "libc/include/sys/cdefs_hidden_push.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-09-27T12:24:47Z",
+      "side": 1,
+      "message": "missing copyright header",
+      "revId": "bc3cae64545f1a77f82cb87fdc2166d6838095db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
