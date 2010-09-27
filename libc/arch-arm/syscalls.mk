@@ -66,6 +66,7 @@ syscall_src += arch-arm/syscalls/flock.S
 syscall_src += arch-arm/syscalls/fchmod.S
 syscall_src += arch-arm/syscalls/dup.S
 syscall_src += arch-arm/syscalls/pipe.S
+syscall_src += arch-arm/syscalls/pipe2.S
 syscall_src += arch-arm/syscalls/dup2.S
 syscall_src += arch-arm/syscalls/select.S
 syscall_src += arch-arm/syscalls/ftruncate.S
