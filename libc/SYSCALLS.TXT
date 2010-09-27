@@ -118,6 +118,7 @@ int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_s
 int         ftruncate(int, off_t)  93
 int         getdents:getdents64(unsigned int, struct dirent *, unsigned int)   217,220
 int         fsync(int)  118
+int         fdatasync(int) 148
 int         fchown:fchown32(int, uid_t, gid_t)  207
 void        sync(void)  36
 int         __fcntl64:fcntl64(int, int, void *)  221

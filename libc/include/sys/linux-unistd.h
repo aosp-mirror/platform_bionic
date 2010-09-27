@@ -85,6 +85,7 @@ int              select (int, struct fd_set *, struct fd_set *, struct fd_set *,
 int              ftruncate (int, off_t);
 int              getdents (unsigned int, struct dirent *, unsigned int);
 int              fsync (int);
+int              fdatasync (int);
 int              fchown (int, uid_t, gid_t);
 void             sync (void);
 int              __fcntl64 (int, int, void *);

@@ -75,6 +75,7 @@ syscall_src += arch-sh/syscalls/select.S
 syscall_src += arch-sh/syscalls/ftruncate.S
 syscall_src += arch-sh/syscalls/getdents.S
 syscall_src += arch-sh/syscalls/fsync.S
+syscall_src += arch-sh/syscalls/fdatasync.S
 syscall_src += arch-sh/syscalls/fchown.S
 syscall_src += arch-sh/syscalls/sync.S
 syscall_src += arch-sh/syscalls/__fcntl64.S

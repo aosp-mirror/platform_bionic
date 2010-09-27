@@ -72,6 +72,7 @@
 #define __NR__newselect                   (__NR_SYSCALL_BASE + 142)
 #define __NR_ftruncate                    (__NR_SYSCALL_BASE + 93)
 #define __NR_fsync                        (__NR_SYSCALL_BASE + 118)
+#define __NR_fdatasync                    (__NR_SYSCALL_BASE + 148)
 #define __NR_fchown32                     (__NR_SYSCALL_BASE + 207)
 #define __NR_sync                         (__NR_SYSCALL_BASE + 36)
 #define __NR_fcntl64                      (__NR_SYSCALL_BASE + 221)
