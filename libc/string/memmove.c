@@ -31,7 +31,11 @@ void *memmove(void *dst, const void *src, size_t n)
 {
   const char *p = src;
   char *q = dst;
-  if (__builtin_expect(q < p, 1)) {
+
+  /* we can use highgly-optimized memcpy() if the destination
+   * is before the source, or if the two blocks are non-overlapping
+   */
+  if (__builtin_expect((q < p || (q-p) <= (ptrdiff_t)n), 1)) {
     return memcpy(dst, src, n);
   } else {
 #define PRELOAD_DISTANCE 64
