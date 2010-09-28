@@ -118,6 +118,9 @@ extern int chdir(const char *);
 extern int fchdir(int);
 extern int rmdir(const char *);
 extern int pipe(int *);
+#ifdef _GNU_SOURCE  /* GLibc compatibility */
+extern int pipe2(int *, int);
+#endif
 extern int chroot(const char *);
 extern int symlink(const char *, const char *);
 extern int readlink(const char *, char *, size_t);
