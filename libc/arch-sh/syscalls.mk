@@ -161,3 +161,4 @@ syscall_src += arch-sh/syscalls/inotify_init.S
 syscall_src += arch-sh/syscalls/inotify_add_watch.S
 syscall_src += arch-sh/syscalls/inotify_rm_watch.S
 syscall_src += arch-sh/syscalls/poll.S
+syscall_src += arch-sh/syscalls/eventfd.S
