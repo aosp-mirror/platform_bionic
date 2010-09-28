@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type waitid, @function
-    .globl waitid
+    .type __waitid, @function
+    .globl __waitid
     .align 4
 
-waitid:
+__waitid:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
