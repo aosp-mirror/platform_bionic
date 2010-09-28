@@ -79,6 +79,7 @@ int              flock (int, int);
 int              fchmod (int, mode_t);
 int              dup (int);
 int              pipe (int *);
+int              pipe2 (int *, int);
 int              dup2 (int, int);
 int              select (int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *);
 int              ftruncate (int, off_t);

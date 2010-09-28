@@ -112,6 +112,7 @@ int         flock(int, int)   143
 int         fchmod(int, mode_t)  94
 int         dup(int)  41
 int         pipe(int *)  42,42,-1
+int         pipe2(int *, int) 359,331
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
 int         ftruncate(int, off_t)  93
@@ -229,8 +230,8 @@ int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
 
 # io priorities
-int ioprio_set(int which, int who, int ioprio) 314,289
-int ioprio_get(int which, int who) 315,290
+int ioprio_set(int which, int who, int ioprio) 314,289,288
+int ioprio_get(int which, int who) 315,290,289
 
 # other
 int     uname(struct utsname *)  122
