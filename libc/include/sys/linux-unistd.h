@@ -9,7 +9,7 @@ void             _exit (int);
 void             _exit_thread (int);
 pid_t            __fork (void);
 pid_t            _waitpid (pid_t, int*, int, struct rusage*);
-int              waitid (int, pid_t, struct siginfo_t*, int,void*);
+int              __waitid (int, pid_t, struct siginfo_t*, int,void*);
 pid_t            __sys_clone (int, void*, int*, void*, int*);
 int              execve (const char*, char* const*, char* const*);
 int              __setuid (uid_t);
