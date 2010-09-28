@@ -182,9 +182,9 @@
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 316)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 317)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 318)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 356)
 #define __NR_ARM_set_tls                  (__NR_SYSCALL_BASE + 983045)
 #define __NR_ARM_cacheflush               (__NR_SYSCALL_BASE + 983042)
-#define __NR_eventfd                      (__NR_SYSCALL_BASE + 351)
 #endif
 
 #ifdef __i386__
@@ -226,7 +226,7 @@
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 291)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 292)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 293)
-#define __NR_eventfd                      (__NR_SYSCALL_BASE + 323)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 328)
 #endif
 
 #if defined(__SH3__) || defined(__SH4__) 
@@ -284,7 +284,7 @@
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 290)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 291)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 292)
-#define __NR_eventfd                      (__NR_SYSCALL_BASE + 323)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 328)
 #endif
 
 #endif

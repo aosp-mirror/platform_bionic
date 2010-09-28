@@ -10,7 +10,7 @@
 eventfd:
     .save   {r4, r7}
     stmfd   sp!, {r4, r7}
-    ldr     r7, =__NR_eventfd
+    ldr     r7, =__NR_eventfd2
     swi     #0
     ldmfd   sp!, {r4, r7}
     movs    r0, r0
