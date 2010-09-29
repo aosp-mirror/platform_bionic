@@ -72,6 +72,7 @@
 #define __NR__newselect                   (__NR_SYSCALL_BASE + 142)
 #define __NR_ftruncate                    (__NR_SYSCALL_BASE + 93)
 #define __NR_fsync                        (__NR_SYSCALL_BASE + 118)
+#define __NR_fdatasync                    (__NR_SYSCALL_BASE + 148)
 #define __NR_fchown32                     (__NR_SYSCALL_BASE + 207)
 #define __NR_sync                         (__NR_SYSCALL_BASE + 36)
 #define __NR_fcntl64                      (__NR_SYSCALL_BASE + 221)
@@ -138,6 +139,7 @@
 #define __NR_openat                       (__NR_SYSCALL_BASE + 322)
 #define __NR_madvise                      (__NR_SYSCALL_BASE + 220)
 #define __NR_mincore                      (__NR_SYSCALL_BASE + 219)
+#define __NR_pipe2                        (__NR_SYSCALL_BASE + 359)
 #define __NR_getdents64                   (__NR_SYSCALL_BASE + 217)
 #define __NR_fstatfs64                    (__NR_SYSCALL_BASE + 267)
 #define __NR_fstatat64                    (__NR_SYSCALL_BASE + 327)
@@ -180,6 +182,7 @@
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 316)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 317)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 318)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 356)
 #define __NR_ARM_set_tls                  (__NR_SYSCALL_BASE + 983045)
 #define __NR_ARM_cacheflush               (__NR_SYSCALL_BASE + 983042)
 #endif
@@ -194,6 +197,7 @@
 #define __NR_openat                       (__NR_SYSCALL_BASE + 295)
 #define __NR_madvise                      (__NR_SYSCALL_BASE + 219)
 #define __NR_mincore                      (__NR_SYSCALL_BASE + 218)
+#define __NR_pipe2                        (__NR_SYSCALL_BASE + 331)
 #define __NR_getdents64                   (__NR_SYSCALL_BASE + 220)
 #define __NR_fstatfs64                    (__NR_SYSCALL_BASE + 269)
 #define __NR_fstatat64                    (__NR_SYSCALL_BASE + 300)
@@ -222,6 +226,7 @@
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 291)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 292)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 293)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 328)
 #endif
 
 #if defined(__SH3__) || defined(__SH4__) 
@@ -235,6 +240,7 @@
 #define __NR_openat                       (__NR_SYSCALL_BASE + 295)
 #define __NR_madvise                      (__NR_SYSCALL_BASE + 219)
 #define __NR_mincore                      (__NR_SYSCALL_BASE + 218)
+#define __NR_pipe2                        (__NR_SYSCALL_BASE + 331)
 #define __NR_getdents64                   (__NR_SYSCALL_BASE + 220)
 #define __NR_fstatfs64                    (__NR_SYSCALL_BASE + 269)
 #define __NR_fstatat64                    (__NR_SYSCALL_BASE + 300)
@@ -270,14 +276,15 @@
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
 #define __NR___socketcall                 (__NR_SYSCALL_BASE + 102)
-#define __NR_ioprio_set                   (__NR_SYSCALL_BASE + 289)
-#define __NR_ioprio_get                   (__NR_SYSCALL_BASE + 290)
+#define __NR_ioprio_set                   (__NR_SYSCALL_BASE + 288)
+#define __NR_ioprio_get                   (__NR_SYSCALL_BASE + 289)
 #define __NR_epoll_create                 (__NR_SYSCALL_BASE + 254)
 #define __NR_epoll_ctl                    (__NR_SYSCALL_BASE + 255)
 #define __NR_epoll_wait                   (__NR_SYSCALL_BASE + 256)
 #define __NR_inotify_init                 (__NR_SYSCALL_BASE + 290)
 #define __NR_inotify_add_watch            (__NR_SYSCALL_BASE + 291)
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 292)
+#define __NR_eventfd2                     (__NR_SYSCALL_BASE + 328)
 #endif
 
 #endif

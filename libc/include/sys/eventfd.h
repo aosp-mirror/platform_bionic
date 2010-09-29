@@ -25,39 +25,26 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#ifndef _SYS_EVENTFD_H
+#define _SYS_EVENTFD_H
 
 #include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include <fcntl.h>
 
 __BEGIN_DECLS
 
-#define WEXITSTATUS(s)  (((s) & 0xff00) >> 8)
-#define WCOREDUMP(s)    ((s) & 0x80)
-#define WTERMSIG(s)     ((s) & 0x7f)
-#define WSTOPSIG(s)     WEXITSTATUS(s)
+#define  EFD_CLOEXEC   O_CLOEXEC
+#define  EFD_NONBLOCK  O_NONBLOCK
 
-#define WIFEXITED(s)    (WTERMSIG(s) == 0)
-#define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
-#define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
+/* type of event counter */
+typedef uint64_t  eventfd_t;
 
-extern pid_t  wait(int *);
-extern pid_t  waitpid(pid_t, int *, int);
-extern pid_t  wait3(int *, int, struct rusage *);
-extern pid_t  wait4(pid_t, int *, int, struct rusage *);
+extern int eventfd(unsigned int initval, int flags);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-extern int  waidit(idtype_t which, id_t id, siginfo_t *info, int options);
+/* Compatibility with GLibc */
+extern int eventfd_read(int fd, eventfd_t *counter);
+extern int eventfd_write(int fd, const eventfd_t counter);
 
 __END_DECLS
 
-#endif /* _SYS_WAIT_H_ */
+#endif /* _SYS_EVENTFD_H */

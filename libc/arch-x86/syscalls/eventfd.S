@@ -2,22 +2,16 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type waitid, @function
-    .globl waitid
+    .type eventfd, @function
+    .globl eventfd
     .align 4
 
-waitid:
+eventfd:
     pushl   %ebx
     pushl   %ecx
-    pushl   %edx
-    pushl   %esi
-    pushl   %edi
-    mov     24(%esp), %ebx
-    mov     28(%esp), %ecx
-    mov     32(%esp), %edx
-    mov     36(%esp), %esi
-    mov     40(%esp), %edi
-    movl    $__NR_waitid, %eax
+    mov     12(%esp), %ebx
+    mov     16(%esp), %ecx
+    movl    $__NR_eventfd2, %eax
     int     $0x80
     cmpl    $-129, %eax
     jb      1f
@@ -27,9 +21,6 @@ waitid:
     addl    $4, %esp
     orl     $-1, %eax
 1:
-    popl    %edi
-    popl    %esi
-    popl    %edx
     popl    %ecx
     popl    %ebx
     ret

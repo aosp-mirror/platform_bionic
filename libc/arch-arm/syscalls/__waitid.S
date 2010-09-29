@@ -2,12 +2,12 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type waitid, #function
-    .globl waitid
+    .type __waitid, #function
+    .globl __waitid
     .align 4
     .fnstart
 
-waitid:
+__waitid:
     mov     ip, sp
     .save   {r4, r5, r6, r7}
     stmfd   sp!, {r4, r5, r6, r7}

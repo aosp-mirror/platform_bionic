@@ -33,7 +33,7 @@ void    _exit:exit_group (int)      248,252
 void    _exit_thread:exit (int)	    1
 pid_t   __fork:fork (void)           2
 pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7
-int     waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
+int     __waitid:waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
 
 # NOTE: this system call is never called directly, but we list it there
 #       to have __NR_clone properly defined.
@@ -112,11 +112,13 @@ int         flock(int, int)   143
 int         fchmod(int, mode_t)  94
 int         dup(int)  41
 int         pipe(int *)  42,42,-1
+int         pipe2(int *, int) 359,331
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
 int         ftruncate(int, off_t)  93
 int         getdents:getdents64(unsigned int, struct dirent *, unsigned int)   217,220
 int         fsync(int)  118
+int         fdatasync(int) 148
 int         fchown:fchown32(int, uid_t, gid_t)  207
 void        sync(void)  36
 int         __fcntl64:fcntl64(int, int, void *)  221
@@ -229,8 +231,8 @@ int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
 
 # io priorities
-int ioprio_set(int which, int who, int ioprio) 314,289
-int ioprio_get(int which, int who) 315,290
+int ioprio_set(int which, int who, int ioprio) 314,289,288
+int ioprio_get(int which, int who) 315,290,289
 
 # other
 int     uname(struct utsname *)  122
@@ -256,6 +258,8 @@ int     inotify_add_watch(int, const char *, unsigned int)  317,292,291
 int     inotify_rm_watch(int, unsigned int)  318,293,292
 
 int     poll(struct pollfd *, unsigned int, long)  168
+
+int     eventfd:eventfd2(unsigned int, int)  356,328
 
 # ARM-specific ARM_NR_BASE == 0x0f0000 == 983040
 int     __set_tls:ARM_set_tls(void*)                                 983045,-1

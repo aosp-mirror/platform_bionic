@@ -29,6 +29,7 @@
 #include <stddef.h>
 
 extern pid_t  __wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
+extern int    __waitid(idtype_t which, id_t id, siginfo_t *info, int options, struct rusage *ru);
 
 pid_t  wait( int*  status )
 {
@@ -43,4 +44,10 @@ pid_t  wait3(int*  status, int options, struct rusage*  rusage)
 pid_t  waitpid(pid_t  pid, int*  status, int  options)
 {
     return __wait4( pid, status, options, NULL );
+}
+
+int  waitid(idtype_t which, id_t id, siginfo_t *info, int options)
+{
+    /* the system call takes an option struct rusage that we don't need */
+    return __waitid(which, id, info, options, NULL);
 }
