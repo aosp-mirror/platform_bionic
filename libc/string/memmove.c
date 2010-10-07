@@ -31,7 +31,10 @@ void *memmove(void *dst, const void *src, size_t n)
 {
   const char *p = src;
   char *q = dst;
-  if (__builtin_expect(q < p, 1)) {
+  /* We can use the optimized memcpy if the destination is below the
+   * source (i.e. q < p), or if it is completely over it (i.e. q >= p+n).
+   */
+  if (__builtin_expect((q < p) || ((size_t)(q - p) >= n), 1)) {
     return memcpy(dst, src, n);
   } else {
 #define PRELOAD_DISTANCE 64
