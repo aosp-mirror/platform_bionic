@@ -14,7 +14,7 @@ __socketcall:
 
     /* check return value */
     cmp/pz  r0
-    bt      __NR___socketcall_end
+    bt      __NR_socketcall_end
 
     /* keep error number */
     sts.l   pr, @-r15
@@ -23,10 +23,10 @@ __socketcall:
     mov     r0, r4
     lds.l   @r15+, pr
 
-__NR___socketcall_end:
+__NR_socketcall_end:
     rts
     nop
 
     .align  2
-0:  .long   __NR___socketcall
+0:  .long   __NR_socketcall
 1:  .long   __set_syscall_errno

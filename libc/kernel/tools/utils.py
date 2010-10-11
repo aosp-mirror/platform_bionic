@@ -231,6 +231,15 @@ def create_file_path(path):
 def walk_source_files(paths,callback,args,excludes=[]):
     """recursively walk a list of paths and files, only keeping the source files in directories"""
     for path in paths:
+        if len(path) > 0 and path[0] == '@':
+            # this is the name of another file, include it and parse it
+            path = path[1:]
+            if os.path.exists(path):
+                for line in open(path):
+                    if len(line) > 0 and line[-1] == '\n':
+                        line = line[:-1]
+                    walk_source_files([line],callback,args,excludes)
+            continue
         if not os.path.isdir(path):
             callback(path,args)
         else:
@@ -238,7 +247,7 @@ def walk_source_files(paths,callback,args,excludes=[]):
                 #print "w-- %s (ex: %s)" % (repr((root,dirs)), repr(excludes))
                 if len(excludes):
                     for d in dirs[:]:
-                        if d in excludes:
+                        if os.path.join(root,d) in excludes:
                             dirs.remove(d)
                 for f in files:
                     r, ext = os.path.splitext(f)
@@ -395,3 +404,19 @@ class BatchFileUpdater:
             D2("P4 DELETES: %s" % files)
             o = commands.getoutput( "p4 delete " + files )
             D2( o )
+
+    def updateGitFiles(self):
+        adds, deletes, edits = self.getChanges()
+
+        if adds:
+            for dst in sorted(adds):
+                self._writeFile(dst)
+            commands.getoutput("git add " + " ".join(adds))
+
+        if deletes:
+            commands.getoutput("git rm " + " ".join(deletes))
+
+        if edits:
+            for dst in sorted(edits):
+                self._writeFile(dst)
+            commands.getoutput("git add " + " ".join(edits))

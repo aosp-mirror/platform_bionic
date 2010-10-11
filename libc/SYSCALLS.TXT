@@ -219,7 +219,7 @@ int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -
 int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102,-1
 
 # sockets for sh.
-int           __socketcall:__socketcall(int, unsigned long*) -1,-1,102
+int           __socketcall:socketcall(int, unsigned long*) -1,-1,102
 
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)  156

@@ -3,7 +3,7 @@
 # this program is used to find source code that includes linux kernel headers directly
 # (e.g. with #include <linux/...> or #include <asm/...>)
 #
-# then it lists
+# then it lists them on the standard output.
 
 import sys, cpp, glob, os, re, getopt, kernel
 from utils import *
@@ -12,20 +12,14 @@ from defaults import *
 program_dir = find_program_dir()
 
 wanted_archs   = kernel_archs
-wanted_include = os.path.normpath(program_dir + '/../original')
-wanted_config  = os.path.normpath(program_dir + '/../original/config')
+wanted_config  = None
 
 def usage():
     print """\
-  usage:  find_headers.py [options] (file|directory|@listfile)+
+  usage:  find_headers.py [options] <kernel-root> (file|directory|@listfile)+
 
      options:
-        -d <include-dir>   specify alternate kernel headers
-                           'include' directory
-                           ('%s' by default)
-
-        -c <file>          specify alternate .config file
-                           ('%s' by default)
+        -c <file>          specify .config file (none by default)
 
         -a <archs>         used to specify an alternative list
                            of architectures to support
@@ -37,12 +31,12 @@ def usage():
     by a set of source files or directories containing them. the search
     is recursive to find *all* required files.
 
-""" % ( wanted_include, wanted_config, string.join(kernel_archs,",") )
+""" % ( string.join(kernel_archs,",") )
     sys.exit(1)
 
 
 try:
-    optlist, args = getopt.getopt( sys.argv[1:], 'vc:d:a:' )
+    optlist, args = getopt.getopt( sys.argv[1:], 'vc:d:a:k:' )
 except:
     # unrecognized option
     print "error: unrecognized option"
@@ -51,8 +45,6 @@ except:
 for opt, arg in optlist:
     if opt == '-a':
         wanted_archs = string.split(arg,',')
-    elif opt == '-d':
-        wanted_include = arg
     elif opt == '-c':
         wanted_config = arg
     elif opt == '-v':
@@ -62,10 +54,10 @@ for opt, arg in optlist:
     else:
         usage()
 
-if len(args) < 1:
+if len(args) < 2:
     usage()
 
-kernel_root = wanted_include
+kernel_root = args[0]
 if not os.path.exists(kernel_root):
     sys.stderr.write( "error: directory '%s' does not exist\n" % kernel_root )
     sys.exit(1)
@@ -74,26 +66,26 @@ if not os.path.isdir(kernel_root):
     sys.stderr.write( "error: '%s' is not a directory\n" % kernel_root )
     sys.exit(1)
 
-if not os.path.isdir(kernel_root+"/linux"):
-    sys.stderr.write( "error: '%s' does not have a 'linux' directory\n" % kernel_root )
+if not os.path.isdir(kernel_root+"/include/linux"):
+    sys.stderr.write( "error: '%s' does not have an 'include/linux' directory\n" % kernel_root )
     sys.exit(1)
 
-if not os.path.exists(wanted_config):
-    sys.stderr.write( "error: file '%s' does not exist\n" % wanted_config )
-    sys.exit(1)
+if wanted_config:
+    if not os.path.exists(wanted_config):
+        sys.stderr.write( "error: file '%s' does not exist\n" % wanted_config )
+        sys.exit(1)
 
-if not os.path.isfile(wanted_config):
-    sys.stderr.write( "error: '%s' is not a file\n" % wanted_config )
-    sys.exit(1)
+    if not os.path.isfile(wanted_config):
+        sys.stderr.write( "error: '%s' is not a file\n" % wanted_config )
+        sys.exit(1)
 
 # find all architectures in the kernel tree
-re_asm_ = re.compile(r"asm-(\w+)")
 archs   = []
-for dir in os.listdir(kernel_root):
-    m = re_asm_.match(dir)
-    if m:
-        if verbose: print ">> found kernel arch '%s'" % m.group(1)
-        archs.append(m.group(1))
+for archdir in os.listdir(kernel_root+"/arch"):
+    if os.path.exists("%s/arch/%s/include/asm" % (kernel_root, archdir)):
+        if verbose:
+            print "Found arch '%s'" % archdir
+        archs.append(archdir)
 
 # if we're using the 'kernel_headers' directory, there is only asm/
 # and no other asm-<arch> directories (arm is assumed, which sucks)
@@ -126,6 +118,7 @@ if wanted_archs != None:
 
 # helper function used to walk the user files
 def parse_file(path, parser):
+    #print "parse %s" % path
     parser.parseFile(path)
 
 
@@ -136,7 +129,8 @@ def parse_file(path, parser):
 # try to read the config file
 try:
     cparser = kernel.ConfigParser()
-    cparser.parseFile( wanted_config )
+    if wanted_config:
+        cparser.parseFile( wanted_config )
 except:
     sys.stderr.write( "error: can't parse '%s'" % wanted_config )
     sys.exit(1)
@@ -145,7 +139,8 @@ kernel_config = cparser.getDefinitions()
 
 # first, obtain the list of kernel files used by our clients
 fparser = kernel.HeaderScanner()
-walk_source_files( args, parse_file, fparser, excludes=["kernel_headers"] )
+dir_excludes=[".repo","external/kernel-headers","ndk","out","prebuilt","bionic/libc/kernel","development/ndk","external/qemu/distrib"]
+walk_source_files( args[1:], parse_file, fparser, excludes=["./"+f for f in dir_excludes] )
 headers = fparser.getHeaders()
 files   = fparser.getFiles()
 
@@ -170,6 +165,6 @@ if 0:    # just for debugging
     sys.exit(0)
 
 for h in sorted(headers):
-    print h
+    print "%s" % h
 
 sys.exit(0)

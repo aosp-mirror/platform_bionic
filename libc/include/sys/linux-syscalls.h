@@ -280,7 +280,7 @@
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
-#define __NR___socketcall                 (__NR_SYSCALL_BASE + 102)
+#define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
 #define __NR_getcpu                       (__NR_SYSCALL_BASE + 318)
 #define __NR_ioprio_set                   (__NR_SYSCALL_BASE + 288)
 #define __NR_ioprio_get                   (__NR_SYSCALL_BASE + 289)

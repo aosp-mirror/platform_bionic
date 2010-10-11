@@ -557,7 +557,7 @@ class State:
         for sc in self.syscalls:
             if sc.has_key("asm-arm") and 'arm' in all_archs:
                 fname = "arch-arm/syscalls/%s.S" % sc["func"]
-                D( ">>> generating "+fname )
+                D2( ">>> generating "+fname )
                 fp = create_file( fname )
                 fp.write(sc["asm-arm"])
                 fp.close()
@@ -565,7 +565,7 @@ class State:
 
             if sc.has_key("asm-thumb") and 'arm' in all_archs:
                 fname = "arch-arm/syscalls/%s.S" % sc["func"]
-                D( ">>> generating "+fname )
+                D2( ">>> generating "+fname )
                 fp = create_file( fname )
                 fp.write(sc["asm-thumb"])
                 fp.close()
@@ -573,7 +573,7 @@ class State:
 
             if sc.has_key("asm-x86") and 'x86' in all_archs:
                 fname = "arch-x86/syscalls/%s.S" % sc["func"]
-                D( ">>> generating "+fname )
+                D2( ">>> generating "+fname )
                 fp = create_file( fname )
                 fp.write(sc["asm-x86"])
                 fp.close()
@@ -581,7 +581,7 @@ class State:
 
             if sc.has_key("asm-sh"):
                 fname = "arch-sh/syscalls/%s.S" % sc["func"]
-                D( ">>> generating "+fname )
+                D2( ">>> generating "+fname )
                 fp = create_file( fname )
                 fp.write(sc["asm-sh"])
                 fp.close()
@@ -626,7 +626,7 @@ class State:
 
         for stub in self.new_stubs + self.other_files:
             if not os.path.exists( bionic_root + stub ):
-                # new file, P4 add it
+                # new file, git add it
                 D( "new file:     " + stub)
                 adds.append( bionic_root + stub )
                 shutil.copyfile( bionic_temp + stub, bionic_root + stub )
@@ -643,16 +643,21 @@ class State:
 
 
         if adds:
-            commands.getoutput("p4 add " + " ".join(adds))
+            commands.getoutput("git add " + " ".join(adds))
         if deletes:
-            commands.getoutput("p4 delete " + " ".join(deletes))
+            commands.getoutput("git rm " + " ".join(deletes))
         if edits:
-            commands.getoutput("p4 edit " +
-                               " ".join((bionic_root + file) for file in edits))
             for file in edits:
                 shutil.copyfile( bionic_temp + file, bionic_root + file )
+            commands.getoutput("git add " +
+                               " ".join((bionic_root + file) for file in edits))
 
-        D("ready to go !!")
+        commands.getoutput("git add %s%s" % (bionic_root,"SYSCALLS.TXT"))
+
+        if (not adds) and (not deletes) and (not edits):
+            D("no changes detected!")
+        else:
+            D("ready to go!!")
 
 D_setlevel(1)
 
