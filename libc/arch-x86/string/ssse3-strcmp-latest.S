@@ -45,11 +45,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #ifndef cfi_restore
-# define cfi_restore(reg)		.cfi_restore (reg)
+# define cfi_restore(reg)		.cfi_restore reg
 #endif
 
 #ifndef cfi_adjust_cfa_offset
 # define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
+#endif
+
+#ifndef cfi_remember_state
+# define cfi_remember_state		.cfi_remember_state
+#endif
+
+#ifndef cfi_restore_state
+# define cfi_restore_state		.cfi_restore_state
 #endif
 
 #ifndef ENTRY
@@ -201,6 +209,9 @@ L(crosspage):
 	PUSH	(%ebx)
 	PUSH	(%edi)
 	PUSH	(%esi)
+#ifdef USE_AS_STRNCMP
+	cfi_remember_state
+#endif
 
 	movl	%edx, %edi
 	movl	%eax, %ecx
@@ -1521,17 +1532,18 @@ L(gobble_ashr_12):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
+#ifdef USE_AS_STRNCMP
+	cmp	$16, %ebp
+	lea	-16(%ebp), %ebp
+	jbe	L(more8byteseq)
+#endif
+
 	add	$16, %ecx
 	movdqa	%xmm4, %xmm3
 
 	add	$16, %edi
 	jg	L(nibble_ashr_12)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
-	jbe	L(more8byteseq)
-#endif
 	movdqa	(%eax, %ecx), %xmm1
 	movdqa	(%edx, %ecx), %xmm2
 	movdqa	%xmm2, %xmm4
@@ -2087,10 +2099,7 @@ L(neq_bigger):
 	RETURN
 
 #ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebx)
-	CFI_PUSH (%edi)
-	CFI_PUSH (%esi)
-
+	cfi_restore_state
 	.p2align 4
 L(more8byteseq):
 	POP	(%esi)
