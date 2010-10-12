@@ -40,7 +40,7 @@
     __libc_android_log_print(ANDROID_LOG_DEBUG, "libc-abort", (format), ##__VA_ARGS__ )
 
 #ifdef __arm__
-void
+__LIBC_HIDDEN__ void
 __libc_android_abort(void)
 #else
 void
