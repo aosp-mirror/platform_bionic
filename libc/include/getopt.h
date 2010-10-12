@@ -71,14 +71,19 @@ int	 getopt_long_only(int, char * const *, const char *,
 #ifndef _GETOPT_DEFINED_
 #define _GETOPT_DEFINED_
 int	 getopt(int, char * const *, const char *);
-int	 getsubopt(char **, char * const *, char **);
+
 
 extern   char *optarg;                  /* getopt(3) external variables */
 extern   int opterr;
 extern   int optind;
 extern   int optopt;
 extern   int optreset;
+
+#if 0 /* MISSING FROM BIONIC */
+int       getsubopt(char **, char * const *, char **);
 extern   char *suboptarg;               /* getsubopt(3) external variable */
+#endif /* MISSING */
+
 #endif
 __END_DECLS
  
