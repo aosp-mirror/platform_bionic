@@ -1143,7 +1143,7 @@ _cache_flush_locked( Cache*  cache )
          "*************************");
 }
 
-struct resolv_cache*
+static struct resolv_cache*
 _resolv_cache_create( void )
 {
     struct resolv_cache*  cache;
