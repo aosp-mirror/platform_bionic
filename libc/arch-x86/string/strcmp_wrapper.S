@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if defined(USE_SSSE3)
 
 # define ssse3_strcmp_latest strcmp
-# include "ssse3-strcmp.S"
+# include "ssse3-strcmp-latest.S"
 
 #else
 
