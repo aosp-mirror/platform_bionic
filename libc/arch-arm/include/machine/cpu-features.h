@@ -158,6 +158,7 @@
 
 
 /* Assembly-only macros */
+#ifdef __ASSEMBLY__
 
 /* define a handy PLD(address) macro since the cache preload
  * is an optional opcode
@@ -167,5 +168,7 @@
 #else
 #  define  PLD(reg,offset)    /* nothing */
 #endif
+
+#endif /* ! __ASSEMBLY__ */
 
 #endif /* _ARM_MACHINE_CPU_FEATURES_H */
