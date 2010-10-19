@@ -40,6 +40,7 @@ int __set_errno(int n)
  * (tail-called in the case of 0-4 arg versions)
  */
 
+__LIBC_HIDDEN__
 int __set_syscall_errno(int n)
 {
         /* some syscalls, mmap() for example, have valid return
