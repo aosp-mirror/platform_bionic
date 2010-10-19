@@ -50,7 +50,6 @@ __BEGIN_DECLS
 extern __noreturn void exit(int);
 extern __noreturn void abort(void);
 extern int atexit(void (*)(void));
-extern int on_exit(void (*)(int, void *), void *);
 
 extern char *getenv(const char *);
 extern int putenv(const char *);
@@ -164,6 +163,7 @@ typedef struct {
 
 extern lldiv_t   lldiv(long long, long long);
 
+#if 1 /* MISSING FROM BIONIC - ENABLED FOR STLPort and libstdc++-v3 */
 /* make STLPort happy */
 extern int      mblen(const char *, size_t);
 extern size_t   mbstowcs(wchar_t *, const char *, size_t);
@@ -172,7 +172,13 @@ extern int      mbtowc(wchar_t *, const char *, size_t);
 /* Likewise, make libstdc++-v3 happy.  */
 extern int	wctomb(char *, wchar_t);
 extern size_t	wcstombs(char *, const wchar_t *, size_t);
+#endif /* MISSING */
+
 #define MB_CUR_MAX 1
+
+#if 0 /* MISSING FROM BIONIC */
+extern int on_exit(void (*)(int, void *), void *);
+#endif /* MISSING */
 
 __END_DECLS
 

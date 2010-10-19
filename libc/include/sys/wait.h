@@ -56,7 +56,7 @@ extern pid_t  wait4(pid_t, int *, int, struct rusage *);
  */
 typedef int idtype_t;
 
-extern int  waidit(idtype_t which, id_t id, siginfo_t *info, int options);
+extern int  waitid(idtype_t which, id_t id, siginfo_t *info, int options);
 
 __END_DECLS
 
