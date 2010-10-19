@@ -43,7 +43,7 @@
  * so we add 1 here.
 #endif
  */
-int
+static int
 __slbexpand(FILE *fp, size_t newsize)
 {
 	void *p;
