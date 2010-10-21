@@ -84,3 +84,39 @@ void __libc_init_common(uintptr_t *elfdata)
     /* setup system properties - requires environment */
     __system_properties_init();
 }
+
+/* This function will be called during normal program termination
+ * to run the destructors that are listed in the .fini_array section
+ * of the executable, if any.
+ *
+ * 'fini_array' points to a list of function addresses. The first
+ * entry in the list has value -1, the last one has value 0.
+ */
+void __libc_fini(void* array)
+{
+    int count;
+    void** fini_array = array;
+    const size_t  minus1 = ~(size_t)0; /* ensure proper sign extension */
+
+    /* Sanity check - first entry must be -1 */
+    if (array == NULL || (size_t)fini_array[0] != minus1) {
+        return;
+    }
+
+    /* skip over it */
+    fini_array += 1;
+
+    /* Count the number of destructors. */
+    for (count = 0; fini_array[count] != NULL; count++);
+
+    /* Now call each destructor in reverse order. */
+    while (count > 0) {
+        void (*func)() = (void (*)) fini_array[--count];
+
+        /* Sanity check, any -1 in the list is ignored */
+        if ((size_t)func == minus1)
+            continue;
+
+        func();
+    }
+}
