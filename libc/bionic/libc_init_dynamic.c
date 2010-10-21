@@ -57,9 +57,9 @@
  * This ensures that the function is called by the dynamic linker
  * as soon as the shared library is loaded.
  */
-void __attribute__((constructor)) __libc_prenit(void);
+void __attribute__((constructor)) __libc_preinit(void);
 
-void __libc_prenit(void)
+void __libc_preinit(void)
 {
     /* Read the ELF data pointer from a special slot of the
      * TLS area, then call __libc_init_common with it.
@@ -83,14 +83,19 @@ void __libc_prenit(void)
     malloc_debug_init();
 }
 
+/* This function is called from the executable's _start entry point
+ * (see arch-$ARCH/bionic/crtbegin_dynamic.S), which is itself
+ * called by the dynamic linker after it has loaded all shared
+ * libraries the executable depends on.
+ *
+ * Note that the dynamic linker has also run all constructors in the
+ * executable at this point.
+ */
 __noreturn void __libc_init(uintptr_t *elfdata,
                        void (*onexit)(void),
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors)
 {
-    /* When we reach this point, all initializers have been already
-     * run by the dynamic linker, so ignore 'structors'.
-     */
     int     argc = (int)*elfdata;
     char**  argv = (char**)(elfdata + 1);
     char**  envp = argv + argc + 1;
@@ -98,6 +103,13 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
+
+    /* The executable may have its own destructors listed in its .fini_array
+     * so we need to ensure that these are called when the program exits
+     * normally.
+     */
+    if (structors->fini_array)
+        __cxa_atexit(__libc_fini,structors->fini_array,NULL);
 
     exit(slingshot(argc, argv, envp));
 }
