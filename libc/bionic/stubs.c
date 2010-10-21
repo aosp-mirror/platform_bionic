@@ -40,8 +40,8 @@
 /** Thread-specific state for the stubs functions
  **/
 
-pthread_once_t   the_once = PTHREAD_ONCE_INIT;
-pthread_key_t    the_key;
+static pthread_once_t   the_once = PTHREAD_ONCE_INIT;
+static pthread_key_t    the_key;
 
 typedef struct {
     struct passwd  passwd;
