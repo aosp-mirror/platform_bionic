@@ -260,7 +260,7 @@ __timer_table_get(void)
  ** requirements: the timers of fork child processes must be
  ** disarmed but not deleted.
  **/
-void
+__LIBC_HIDDEN__ void
 __timer_table_start_stop( int  stop )
 {
     if (__timer_table != NULL) {
