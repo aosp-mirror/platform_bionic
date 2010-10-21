@@ -191,7 +191,7 @@ funlockfile(FILE * fp)
 
 
 /* called from fclose() to remove the file lock */
-void
+__LIBC_HIDDEN__ void
 __fremovelock(FILE*  fp)
 {
     LockTable*  t = lock_table_lock();
