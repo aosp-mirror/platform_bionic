@@ -385,7 +385,7 @@ const struct res_sym __p_class_syms[] = {
 /*
  * Names of message sections.
  */
-const struct res_sym __p_default_section_syms[] = {
+static const struct res_sym __p_default_section_syms[] = {
 	{ns_s_qd,	"QUERY",	(char *)0},
 	{ns_s_an,	"ANSWER",	(char *)0},
 	{ns_s_ns,	"AUTHORITY",	(char *)0},
@@ -393,7 +393,7 @@ const struct res_sym __p_default_section_syms[] = {
 	{0,             (char *)0,	(char *)0}
 };
 
-const struct res_sym __p_update_section_syms[] = {
+static const struct res_sym __p_update_section_syms[] = {
 	{S_ZONE,	"ZONE",		(char *)0},
 	{S_PREREQ,	"PREREQUISITE",	(char *)0},
 	{S_UPDATE,	"UPDATE",	(char *)0},
