@@ -39,5 +39,6 @@ typedef struct
 } structors_array_t;
 
 extern void __libc_init_common(uintptr_t *elfdata);
+extern void __libc_fini(void* finit_array);
 
 #endif
