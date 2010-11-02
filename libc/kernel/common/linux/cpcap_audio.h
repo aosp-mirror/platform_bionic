@@ -20,7 +20,8 @@
 #define CPCAP_AUDIO_OUT_HEADSET 1
 #define CPCAP_AUDIO_OUT_HEADSET_AND_SPEAKER 2
 #define CPCAP_AUDIO_OUT_STANDBY 3
-#define CPCAP_AUDIO_OUT_MAX 3
+#define CPCAP_AUDIO_OUT_ANLG_DOCK_HEADSET 4
+#define CPCAP_AUDIO_OUT_MAX 4
 
 struct cpcap_audio_stream {
  unsigned id;
