@@ -21,7 +21,7 @@ struct mtp_file_range {
 
  loff_t offset;
 
- size_t length;
+ int64_t length;
 };
 
 struct mtp_event {
