@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA9n///YY\u003d",
+        "filename": "libc/arch-arm/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2010-11-20T02:22:33Z",
+      "side": 1,
+      "message": "We don\u0027t normally add such authorship mentions in the code, and we prefer to let everything fall under \"The Android Open-Source Project\". Precise mentions make other members of the Android ecosystem nervous. I don\u0027t know whether bionic has any looser requirements.",
+      "revId": "9d3b9b0e276535b187164d22a4257b0716d4d620",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
