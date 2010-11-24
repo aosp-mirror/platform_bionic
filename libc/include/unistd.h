@@ -133,7 +133,9 @@ extern off64_t lseek64(int, off64_t, int);
 extern ssize_t read(int, void *, size_t);
 extern ssize_t write(int, const void *, size_t);
 extern ssize_t pread(int, void *, size_t, off_t);
+extern ssize_t pread64(int, void *, size_t, off64_t);
 extern ssize_t pwrite(int, const void *, size_t, off_t);
+extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 
 extern int dup(int);
 extern int dup2(int, int);

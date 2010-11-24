@@ -39,10 +39,12 @@ libc_common_src_files := \
 	unistd/perror.c \
 	unistd/popen.c \
 	unistd/pread.c \
+	unistd/pread64.c \
 	unistd/pselect.c \
 	unistd/ptsname.c \
 	unistd/ptsname_r.c \
 	unistd/pwrite.c \
+	unistd/pwrite64.c \
 	unistd/raise.c \
 	unistd/reboot.c \
 	unistd/recv.c \
