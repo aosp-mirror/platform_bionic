@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA9n//+Ok\u003d",
+        "filename": "libc/kernel/common/linux/input.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1003957
+      },
+      "writtenOn": "2010-11-30T07:28:50Z",
+      "side": 1,
+      "message": "What happened here?  It looks like we added some non-standard scan codes at one time that don\u0027t actually belong in input.h.",
+      "revId": "db6e3c5446d6a5ffdbc345d564d72067a659c565",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
