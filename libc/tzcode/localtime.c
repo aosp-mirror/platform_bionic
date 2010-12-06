@@ -60,6 +60,14 @@ static char elsieid[] = "@(#)localtime.c    8.3";
 #  define  XLOG(x)   do{}while (0)
 #endif
 
+/* Add the following function implementations:
+ *  timelocal()
+ *  timegm()
+ *  time2posix()
+ *  posix2time()
+ */
+#define STD_INSPIRED 1
+
 /* THREAD-SAFETY SUPPORT GOES HERE */
 static pthread_mutex_t  _tzMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -1509,7 +1517,7 @@ struct tm *     tmp;
 }
 
 #ifdef STD_INSPIRED
-
+#if 0 /* disabled because there is no good documentation for this function */
 struct tm *
 offtime(timep, offset)
 const time_t * const    timep;
@@ -1517,7 +1525,7 @@ const long      offset;
 {
     return gmtsub(timep, offset, &tmGlobal);
 }
-
+#endif /* 0 */
 #endif /* defined STD_INSPIRED */
 
 /*
@@ -2106,6 +2114,7 @@ struct tm * const   tmp;
     return result;
 }
 
+#if 0 /* disable due to lack of clear documentation on this function */
 time_t
 timeoff(tmp, offset)
 struct tm * const   tmp;
@@ -2120,6 +2129,7 @@ const long      offset;
 
     return result;
 }
+#endif /* 0 */
 
 #endif /* defined STD_INSPIRED */
 

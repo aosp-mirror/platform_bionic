@@ -128,6 +128,11 @@ extern int  timer_settime(timer_t timerid, int flags, const struct itimerspec *v
 extern int  timer_gettime(timer_t timerid, struct itimerspec *value);
 extern int  timer_getoverrun(timer_t  timerid);
 
+extern time_t timelocal(struct tm *tm);
+extern time_t timegm(struct tm* tm);
+extern time_t time2posix(time_t ti);
+extern time_t posix2time(time_t ti);
+
 __END_DECLS
 
 #endif /* _TIME_H_ */
