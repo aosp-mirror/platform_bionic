@@ -84,6 +84,7 @@
 #define ETH_P_TRAILER 0x001C  
 #define ETH_P_PHONET 0x00F5  
 #define ETH_P_IEEE802154 0x00F6  
+#define ETH_P_CAIF 0x00F7  
 
 struct ethhdr {
  unsigned char h_dest[ETH_ALEN];
