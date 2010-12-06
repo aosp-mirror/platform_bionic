@@ -1,7 +1,16 @@
 Bionic ChangeLog:
 -----------------
 
-Differences between current and Android 2.2:
+Differences between current and Android 2.3:
+
+- <android/api-level.h>: Added new header to define __ANDROID_API__ to
+  a constant integer corresponding to the native API level. This header
+  also exists in the NDK's platform headers.
+
+- <sys/cdefs.h>: Include <android/api-level.h>
+
+-------------------------------------------------------------------------------
+Differences between Android 2.3 and Android 2.2:
 
 - <pthread.h>: Add reader/writer locks implementation. Add sanity
   checking to pthread_mutex_destroy() (e.g. a locked mutex will return
