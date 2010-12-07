@@ -53,7 +53,7 @@ int              acct (const char*  filepath);
 ssize_t          read (int, void*, size_t);
 ssize_t          write (int, const void*, size_t);
 ssize_t          __pread64 (int, void *, size_t, off_t, off_t);
-ssize_t          __pwrite64 (int, const void *, size_t, off_t, off_t);
+ssize_t          __pwrite64 (int, void *, size_t, off_t, off_t);
 int              __open (const char*, int, mode_t);
 int              __openat (int, const char*, int, mode_t);
 int              close (int);
@@ -183,6 +183,9 @@ int              sched_getparam (pid_t pid, struct sched_param *param);
 int              sched_get_priority_max (int policy);
 int              sched_get_priority_min (int policy);
 int              sched_rr_get_interval (pid_t pid, struct timespec *interval);
+int              sched_setaffinity (pid_t pid, size_t setsize, const cpu_set_t* set);
+int              __sched_getaffinity (pid_t pid, size_t setsize, cpu_set_t* set);
+int              __getcpu (unsigned *cpu, unsigned *node, void *unused);
 int              ioprio_set (int which, int who, int ioprio);
 int              ioprio_get (int which, int who);
 int              uname (struct utsname *);
@@ -205,7 +208,6 @@ int              poll (struct pollfd *, unsigned int, long);
 int              eventfd (unsigned int, int);
 int              __set_tls (void*);
 int              cacheflush (long start, long end, long flags);
-int              eventfd (int count, int flags);
 #ifdef __cplusplus
 }
 #endif

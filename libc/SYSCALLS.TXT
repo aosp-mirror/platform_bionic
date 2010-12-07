@@ -229,6 +229,9 @@ int sched_getparam(pid_t pid, struct sched_param *param)  155
 int sched_get_priority_max(int policy)  159
 int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
+int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) 241
+int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)  242
+int __getcpu:getcpu(unsigned *cpu, unsigned *node, void *unused) 345,318,318
 
 # io priorities
 int ioprio_set(int which, int who, int ioprio) 314,289,288
