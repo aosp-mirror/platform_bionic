@@ -9,6 +9,8 @@ Differences between current and Android 2.3:
 
 - <sys/cdefs.h>: Include <android/api-level.h>
 
+- <time.h>: Add timegm(), timelocal(), time2posix() and posix2time()
+
 -------------------------------------------------------------------------------
 Differences between Android 2.3 and Android 2.2:
 
