@@ -43,6 +43,11 @@ kernel_default_arch_macros = {
     "x86": {"__i386__": "1"},
     }
 
+# Replace tokens in the output according to this mapping
+kernel_token_replacements = {
+    {"asm": "__asm__"},
+    }
+
 # this is the set of known static inline functions that we want to keep
 # in the final ARM headers. this is only used to keep optimized byteswapping
 # static functions and stuff like that.
