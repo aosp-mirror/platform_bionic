@@ -38,8 +38,6 @@ sigsetmask(int mask)
         sigset_t  the_sigset;
     } in, out;
 
-    in.the_mask = mask;
-
     n = sigprocmask(SIG_SETMASK, &in.the_sigset, &out.the_sigset);
     if (n)
         return n;
