@@ -145,6 +145,7 @@ extern int flock(int, int);
 extern int fsync(int);
 extern int fdatasync(int);
 extern int ftruncate(int, off_t);
+extern int ftruncate64(int, off64_t);
 
 extern int pause(void);
 extern unsigned int alarm(unsigned int);

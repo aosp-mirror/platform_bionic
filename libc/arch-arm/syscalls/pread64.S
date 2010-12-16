@@ -2,17 +2,17 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __pwrite64, #function
-    .globl __pwrite64
+    .type pread64, #function
+    .globl pread64
     .align 4
     .fnstart
 
-__pwrite64:
+pread64:
     mov     ip, sp
     .save   {r4, r5, r6, r7}
     stmfd   sp!, {r4, r5, r6, r7}
     ldmfd   ip, {r4, r5, r6}
-    ldr     r7, =__NR_pwrite64
+    ldr     r7, =__NR_pread64
     swi     #0
     ldmfd   sp!, {r4, r5, r6, r7}
     movs    r0, r0

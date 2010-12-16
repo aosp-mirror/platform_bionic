@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __pwrite64, @function
-    .globl __pwrite64
+    .type pwrite64, @function
+    .globl pwrite64
     .align 4
 
-__pwrite64:
+pwrite64:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx

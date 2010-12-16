@@ -2,22 +2,18 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __pread64, @function
-    .globl __pread64
+    .type ftruncate64, @function
+    .globl ftruncate64
     .align 4
 
-__pread64:
+ftruncate64:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
-    pushl   %esi
-    pushl   %edi
-    mov     24(%esp), %ebx
-    mov     28(%esp), %ecx
-    mov     32(%esp), %edx
-    mov     36(%esp), %esi
-    mov     40(%esp), %edi
-    movl    $__NR_pread64, %eax
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
+    mov     24(%esp), %edx
+    movl    $__NR_ftruncate64, %eax
     int     $0x80
     cmpl    $-129, %eax
     jb      1f
@@ -27,8 +23,6 @@ __pread64:
     addl    $4, %esp
     orl     $-1, %eax
 1:
-    popl    %edi
-    popl    %esi
     popl    %edx
     popl    %ecx
     popl    %ebx

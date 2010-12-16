@@ -85,8 +85,8 @@ int     acct(const char*  filepath)  51
 # file descriptors
 ssize_t     read (int, void*, size_t)        3
 ssize_t     write (int, const void*, size_t)       4
-ssize_t     __pread64:pread64 (int, void *, size_t, off_t, off_t) 180
-ssize_t     __pwrite64:pwrite64 (int, void *, size_t, off_t, off_t) 181
+ssize_t     pread64 (int, void *, size_t, off64_t) 180
+ssize_t     pwrite64 (int, void *, size_t, off64_t) 181
 int         __open:open (const char*, int, mode_t)  5
 int         __openat:openat (int, const char*, int, mode_t)  322,295
 int         close (int)                      6
@@ -116,6 +116,7 @@ int         pipe2(int *, int) 359,331
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
 int         ftruncate(int, off_t)  93
+int         ftruncate64(int, off64_t) 194
 int         getdents:getdents64(unsigned int, struct dirent *, unsigned int)   217,220
 int         fsync(int)  118
 int         fdatasync(int) 148

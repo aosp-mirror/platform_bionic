@@ -245,6 +245,59 @@ superh_7args_header = """
 """
 
 
+def param_uses_64bits(param):
+    """Returns True iff a syscall parameter description corresponds
+       to a 64-bit type."""
+    param = param.strip()
+    # First, check that the param type begins with one of the known
+    # 64-bit types.
+    if not ( \
+       param.startswith("int64_t") or param.startswith("uint64_t") or \
+       param.startswith("loff_t") or param.startswith("off64_t") or \
+       param.startswith("long long") or param.startswith("unsigned long long") or
+       param.startswith("signed long long") ):
+           return False
+
+    # Second, check that there is no pointer type here
+    if param.find("*") >= 0:
+            return False
+
+    # Ok
+    return True
+
+def count_arm_param_registers(params):
+    """This function is used to count the number of register used
+       to pass parameters when invoking a thumb or ARM system call.
+       This is because the ARM EABI mandates that 64-bit quantities
+       must be passed in an even+odd register pair. So, for example,
+       something like:
+
+             foo(int fd, off64_t pos)
+
+       would actually need 4 registers:
+             r0 -> int
+             r1 -> unused
+             r2-r3 -> pos
+   """
+    count = 0
+    for param in params:
+        if param_uses_64bits(param):
+            if (count & 1) != 0:
+                count += 1
+            count += 2
+        else:
+            count += 1
+    return count
+
+def count_generic_param_registers(params):
+    count = 0
+    for param in params:
+        if param_uses_64bits(param):
+            count += 2
+        else:
+            count += 1
+    return count
+
 class State:
     def __init__(self):
         self.old_stubs = []
@@ -370,25 +423,28 @@ class State:
             syscall_name   = t["name"]
 
             if t["id"] >= 0:
+                num_regs = count_arm_param_registers(syscall_params)
                 if gen_thumb_stubs:
-                    t["asm-thumb"] = self.thumb_genstub(syscall_func,len(syscall_params),"__NR_"+syscall_name)
+                    t["asm-thumb"] = self.thumb_genstub(syscall_func,num_regs,"__NR_"+syscall_name)
                 else:
                     if gen_eabi_stubs:
-                        t["asm-arm"]   = self.arm_eabi_genstub(syscall_func,len(syscall_params),"__NR_"+syscall_name)
+                        t["asm-arm"]   = self.arm_eabi_genstub(syscall_func,num_regs,"__NR_"+syscall_name)
                     else:
-                        t["asm-arm"]   = self.arm_genstub(syscall_func,len(syscall_params),"__NR_"+syscall_name)
+                        t["asm-arm"]   = self.arm_genstub(syscall_func,num_regs,"__NR_"+syscall_name)
 
             if t["id2"] >= 0:
+                num_regs = count_generic_param_registers(syscall_params)
                 if t["cid"] >= 0:
-                    t["asm-x86"] = self.x86_genstub_cid(syscall_func, len(syscall_params), "__NR_"+syscall_name, t["cid"])
+                    t["asm-x86"] = self.x86_genstub_cid(syscall_func, num_regs, "__NR_"+syscall_name, t["cid"])
                 else:
-                    t["asm-x86"] = self.x86_genstub(syscall_func,len(syscall_params),"__NR_"+syscall_name)
+                    t["asm-x86"] = self.x86_genstub(syscall_func, num_regs, "__NR_"+syscall_name)
             elif t["cid"] >= 0:
                 E("cid for dispatch syscalls is only supported for x86 in "
                   "'%s'" % syscall_name)
                 return
             if t["id3"] >= 0:
-                t["asm-sh"] = self.superh_genstub(syscall_func,len(syscall_params),"__NR_"+syscall_name)
+                num_regs = count_generic_param_registers(syscall_params)
+                t["asm-sh"] = self.superh_genstub(syscall_func,num_regs,"__NR_"+syscall_name)
 
 
 

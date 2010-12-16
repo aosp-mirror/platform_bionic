@@ -14,6 +14,8 @@ Differences between current and Android 2.3:
 - <sched.h>: Add sched_getcpu(), sched_getaffinity(), sched_setaffinity(),
   cpu_set_t and related macros (e.g. CPU_SETSIZE, CPU_ZERO, CPU_SET, ...)
 
+- <unistd.h>: Add ftruncate64().
+
 -------------------------------------------------------------------------------
 Differences between Android 2.3 and Android 2.2:
 

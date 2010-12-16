@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __pwrite64, @function
-    .globl __pwrite64
+    .type pread64, @function
+    .globl pread64
     .align 4
 
-__pwrite64:
+pread64:
 
     /* get ready for additonal arg */
     mov.l   @r15, r0
@@ -17,7 +17,7 @@ __pwrite64:
 
     /* check return value */
     cmp/pz  r0
-    bt      __NR_pwrite64_end
+    bt      __NR_pread64_end
 
     /* keep error number */
     sts.l   pr, @-r15
@@ -26,10 +26,10 @@ __pwrite64:
     mov     r0, r4
     lds.l   @r15+, pr
 
-__NR_pwrite64_end:
+__NR_pread64_end:
     rts
     nop
 
     .align  2
-0:  .long   __NR_pwrite64
+0:  .long   __NR_pread64
 1:  .long   __set_syscall_errno

@@ -28,10 +28,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-extern int __pread64(int fd, void *buf, size_t nbytes, loff_t offset);
-
 ssize_t pread(int fd, void *buf, size_t nbytes, off_t offset)
 {
-    return __pread64(fd, buf, nbytes, offset);
+    return pread64(fd, buf, nbytes, (off64_t)offset);
 }
 
