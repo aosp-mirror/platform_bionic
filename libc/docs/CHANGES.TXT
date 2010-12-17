@@ -1,7 +1,23 @@
 Bionic ChangeLog:
 -----------------
 
-Differences between current and Android 2.2:
+Differences between current and Android 2.3:
+
+- <android/api-level.h>: Added new header to define __ANDROID_API__ to
+  a constant integer corresponding to the native API level. This header
+  also exists in the NDK's platform headers.
+
+- <sys/cdefs.h>: Include <android/api-level.h>
+
+- <time.h>: Add timegm(), timelocal(), time2posix() and posix2time()
+
+- <sched.h>: Add sched_getcpu(), sched_getaffinity(), sched_setaffinity(),
+  cpu_set_t and related macros (e.g. CPU_SETSIZE, CPU_ZERO, CPU_SET, ...)
+
+- <unistd.h>: Add ftruncate64().
+
+-------------------------------------------------------------------------------
+Differences between Android 2.3 and Android 2.2:
 
 - <pthread.h>: Add reader/writer locks implementation. Add sanity
   checking to pthread_mutex_destroy() (e.g. a locked mutex will return
@@ -69,6 +85,8 @@ Differences between current and Android 2.2:
 
 - <sys/vfs.h>: fixed implementation of fstatfs() (also fixes fpathconf()
   which uses it).
+
+- Added an implementation of pthread_atfork()
 
 - <dlfcn.h>: fixed dlopen() implementation to support dlopen(NULL, ...).
   This allows one to look at the dynamic symbols exported by an executable.

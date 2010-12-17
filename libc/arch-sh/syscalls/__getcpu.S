@@ -2,22 +2,19 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type __pread64, @function
-    .globl __pread64
+    .type __getcpu, @function
+    .globl __getcpu
     .align 4
 
-__pread64:
-
-    /* get ready for additonal arg */
-    mov.l   @r15, r0
+__getcpu:
 
     /* invoke trap */
     mov.l   0f, r3  /* trap num */
-    trapa   #(5 + 0x10)
+    trapa   #(3 + 0x10)
 
     /* check return value */
     cmp/pz  r0
-    bt      __NR_pread64_end
+    bt      __NR_getcpu_end
 
     /* keep error number */
     sts.l   pr, @-r15
@@ -26,10 +23,10 @@ __pread64:
     mov     r0, r4
     lds.l   @r15+, pr
 
-__NR_pread64_end:
+__NR_getcpu_end:
     rts
     nop
 
     .align  2
-0:  .long   __NR_pread64
+0:  .long   __NR_getcpu
 1:  .long   __set_syscall_errno

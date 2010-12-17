@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # define USE_AS_STRNCMP
 # define ssse3_strcmp_latest strncmp
-# include "ssse3-strcmp.S"
+# include "ssse3-strcmp-latest.S"
 
 #else
 

@@ -2062,7 +2062,7 @@ freedtoa(char *s)
  *	   calculation.
  */
 
- char *
+__LIBC_HIDDEN__  char *
 __dtoa
 #ifdef KR_headers
 	(_d, mode, ndigits, decpt, sign, rve)

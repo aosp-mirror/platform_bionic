@@ -62,7 +62,7 @@ void __libc_init_common(uintptr_t *elfdata)
     static pthread_internal_t  thread;
     static void*               tls_area[BIONIC_TLS_SLOTS];
 
-    /* setup pthread runtime and maint thread descriptor */
+    /* setup pthread runtime and main thread descriptor */
     unsigned stacktop = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
     unsigned stacksize = 128 * 1024;
     unsigned stackbottom = stacktop - stacksize;

@@ -33,7 +33,7 @@
 */
 #define HAS_GMTIME_R
 #define HAS_LOCALTIME_R
-/*#define HAS_TIMEGM */
+#define HAS_TIMEGM
 
 
 /* Details of non-standard tm struct elements.

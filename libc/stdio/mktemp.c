@@ -65,7 +65,7 @@ mkdtemp(char *path)
 
 char *_mktemp(char *);
 
-char *
+__LIBC_HIDDEN__ char *
 _mktemp(char *path)
 {
 	return(_gettemp(path, (int *)NULL, 0, 0) ? path : (char *)NULL);

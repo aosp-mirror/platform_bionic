@@ -17,6 +17,7 @@
 #include <linux/compiler.h>  
 
 #define IFNAMSIZ 16
+#define IFALIASZ 256
 #include <linux/hdlc/ioctl.h>
 
 #define IFF_UP 0x1  
@@ -42,13 +43,24 @@
 #define IFF_LOWER_UP 0x10000  
 #define IFF_DORMANT 0x20000  
 
-#define IFF_VOLATILE (IFF_LOOPBACK|IFF_POINTOPOINT|IFF_BROADCAST|  IFF_MASTER|IFF_SLAVE|IFF_RUNNING|IFF_LOWER_UP|IFF_DORMANT)
+#define IFF_ECHO 0x40000  
+
+#define IFF_VOLATILE (IFF_LOOPBACK|IFF_POINTOPOINT|IFF_BROADCAST|IFF_ECHO|  IFF_MASTER|IFF_SLAVE|IFF_RUNNING|IFF_LOWER_UP|IFF_DORMANT)
 
 #define IFF_802_1Q_VLAN 0x1  
 #define IFF_EBRIDGE 0x2  
 #define IFF_SLAVE_INACTIVE 0x4  
 #define IFF_MASTER_8023AD 0x8  
 #define IFF_MASTER_ALB 0x10  
+#define IFF_BONDING 0x20  
+#define IFF_SLAVE_NEEDARP 0x40  
+#define IFF_ISATAP 0x80  
+#define IFF_MASTER_ARPMON 0x100  
+#define IFF_WAN_HDLC 0x200  
+#define IFF_XMIT_DST_RELEASE 0x400  
+#define IFF_DONT_BRIDGE 0x800  
+#define IFF_IN_NETPOLL 0x1000  
+#define IFF_DISABLE_NETPOLL 0x2000  
 
 #define IF_GET_IFACE 0x0001  
 #define IF_GET_PROTO 0x0002
@@ -90,8 +102,7 @@ enum {
  IF_LINK_MODE_DORMANT,
 };
 
-struct ifmap
-{
+struct ifmap {
  unsigned long mem_start;
  unsigned long mem_end;
  unsigned short base_addr;
@@ -101,8 +112,7 @@ struct ifmap
 
 };
 
-struct if_settings
-{
+struct if_settings {
  unsigned int type;
  unsigned int size;
  union {
@@ -118,8 +128,7 @@ struct if_settings
  } ifs_ifsu;
 };
 
-struct ifreq
-{
+struct ifreq {
 #define IFHWADDRLEN 6
  union
  {
@@ -161,11 +170,9 @@ struct ifreq
 #define ifr_newname ifr_ifru.ifru_newname  
 #define ifr_settings ifr_ifru.ifru_settings  
 
-struct ifconf
-{
+struct ifconf {
  int ifc_len;
- union
- {
+ union {
  char __user *ifcu_buf;
  struct ifreq __user *ifcu_req;
  } ifc_ifcu;
@@ -174,3 +181,4 @@ struct ifconf
 #define ifc_req ifc_ifcu.ifcu_req  
 
 #endif
+

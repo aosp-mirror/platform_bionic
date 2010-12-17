@@ -104,9 +104,9 @@ static void map_v4v6_address(const char *, char *);
 static void map_v4v6_hostent(struct hostent *, char **, char *);
 static void addrsort(char **, int, res_state);
 
-void _sethtent(int);
-void _endhtent(void);
-struct hostent *_gethtent(void);
+static void _sethtent(int);
+static void _endhtent(void);
+static struct hostent *_gethtent(void);
 void ht_sethostent(int);
 void ht_endhostent(void);
 struct hostent *ht_gethostbyname(char *);
@@ -114,11 +114,11 @@ struct hostent *ht_gethostbyaddr(const char *, int, int);
 void dns_service(void);
 #undef dn_skipname
 int dn_skipname(const u_char *, const u_char *);
-int _gethtbyaddr(void *, void *, va_list);
-int _gethtbyname(void *, void *, va_list);
-struct hostent *_gethtbyname2(const char *, int);
-int _dns_gethtbyaddr(void *, void *, va_list);
-int _dns_gethtbyname(void *, void *, va_list);
+static int _gethtbyaddr(void *, void *, va_list);
+static int _gethtbyname(void *, void *, va_list);
+static struct hostent *_gethtbyname2(const char *, int);
+static int _dns_gethtbyaddr(void *, void *, va_list);
+static int _dns_gethtbyname(void *, void *, va_list);
 
 static struct hostent *gethostbyname_internal(const char *, int, res_state);
 
@@ -692,7 +692,7 @@ gethostbyaddr(const char *addr,	/* XXX should have been def'd as u_char! */
 	return hp;
 }
 
-void
+static void
 _sethtent(int f)
 {
     res_static  rs = __res_get_static();
@@ -704,7 +704,7 @@ _sethtent(int f)
 	rs->stayopen = f;
 }
 
-void
+static void
 _endhtent(void)
 {
     res_static  rs = __res_get_static();
@@ -716,7 +716,7 @@ _endhtent(void)
 	}
 }
 
-struct hostent *
+static struct hostent *
 _gethtent(void)
 {
 	char *p;
@@ -829,7 +829,7 @@ _gethtbyname(void *rv, void *cb_data, va_list ap)
 	return NS_SUCCESS;
 }
 
-struct hostent *
+static struct hostent *
 _gethtbyname2(const char *name, int af)
 {
 	struct hostent *p;
@@ -920,7 +920,7 @@ _gethtbyname2(const char *name, int af)
 }
 
 /*ARGSUSED*/
-int
+static int
 _gethtbyaddr(void *rv, void *cb_data, va_list ap)
 {
 	struct hostent *p;
@@ -1053,7 +1053,7 @@ gethostent(void)
 }
 
 /*ARGSUSED*/
-int
+static int
 _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 {
 	querybuf *buf;
@@ -1113,7 +1113,7 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 }
 
 /*ARGSUSED*/
-int
+static int
 _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 {
 	char qbuf[MAXDNAME + 1], *qp, *ep;

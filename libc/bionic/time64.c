@@ -364,7 +364,7 @@ static int safe_year(const Year year)
 }
 
 
-void copy_tm_to_TM(const struct tm *src, struct TM *dest) {
+static void copy_tm_to_TM(const struct tm *src, struct TM *dest) {
     if( src == NULL ) {
         memset(dest, 0, sizeof(*dest));
     }
@@ -396,7 +396,7 @@ void copy_tm_to_TM(const struct tm *src, struct TM *dest) {
 }
 
 
-void copy_TM_to_tm(const struct TM *src, struct tm *dest) {
+static void copy_TM_to_tm(const struct TM *src, struct tm *dest) {
     if( src == NULL ) {
         memset(dest, 0, sizeof(*dest));
     }
@@ -735,14 +735,14 @@ struct TM *localtime64_r (const Time64_T *time, struct TM *local_tm)
 }
 
 
-int valid_tm_wday( const struct TM* date ) {
+static int valid_tm_wday( const struct TM* date ) {
     if( 0 <= date->tm_wday && date->tm_wday <= 6 )
         return 1;
     else
         return 0;
 }
 
-int valid_tm_mon( const struct TM* date ) {
+static int valid_tm_mon( const struct TM* date ) {
     if( 0 <= date->tm_mon && date->tm_mon <= 11 )
         return 1;
     else

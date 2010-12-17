@@ -196,6 +196,9 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 
     // Wait for our creating thread to release us. This lets it have time to
     // notify gdb about this thread before it starts doing anything.
+    //
+    // This also provides the memory barrier needed to ensure that all memory
+    // accesses previously made by the creating thread are visible to us.
     pthread_mutex_t * start_mutex = (pthread_mutex_t *)&tls[TLS_SLOT_SELF];
     pthread_mutex_lock(start_mutex);
     pthread_mutex_destroy(start_mutex);
@@ -264,7 +267,7 @@ done:
 }
 
 /*
- * Create a new thread. The thread's stack is layed out like so:
+ * Create a new thread. The thread's stack is laid out like so:
  *
  * +---------------------------+
  * |     pthread_internal_t    |
@@ -334,6 +337,10 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
 
     // Create a mutex for the thread in TLS_SLOT_SELF to wait on once it starts so we can keep
     // it from doing anything until after we notify the debugger about it
+    //
+    // This also provides the memory barrier we need to ensure that all
+    // memory accesses previously performed by this thread are visible to
+    // the new thread.
     start_mutex = (pthread_mutex_t *) &tls[TLS_SLOT_SELF];
     pthread_mutex_init(start_mutex, NULL);
     pthread_mutex_lock(start_mutex);
@@ -1421,6 +1428,18 @@ __pthread_cond_pulse(pthread_cond_t *cond, int  counter)
             break;
     }
 
+    /*
+     * Ensure that all memory accesses previously made by this thread are
+     * visible to the woken thread(s).  On the other side, the "wait"
+     * code will issue any necessary barriers when locking the mutex.
+     *
+     * This may not strictly be necessary -- if the caller follows
+     * recommended practice and holds the mutex before signaling the cond
+     * var, the mutex ops will provide correct semantics.  If they don't
+     * hold the mutex, they're subject to race conditions anyway.
+     */
+    ANDROID_MEMBAR_FULL();
+
     __futex_wake_ex(&cond->value, COND_IS_SHARED(cond), counter);
     return 0;
 }
@@ -1867,12 +1886,16 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
 int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 {
     static pthread_mutex_t   once_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+    volatile pthread_once_t* ocptr = once_control;
 
-    if (*once_control == PTHREAD_ONCE_INIT) {
+    pthread_once_t tmp = *ocptr;
+    ANDROID_MEMBAR_FULL();
+    if (tmp == PTHREAD_ONCE_INIT) {
         pthread_mutex_lock( &once_lock );
-        if (*once_control == PTHREAD_ONCE_INIT) {
+        if (*ocptr == PTHREAD_ONCE_INIT) {
             (*init_routine)();
-            *once_control = ~PTHREAD_ONCE_INIT;
+            ANDROID_MEMBAR_FULL();
+            *ocptr = ~PTHREAD_ONCE_INIT;
         }
         pthread_mutex_unlock( &once_lock );
     }

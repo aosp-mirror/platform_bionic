@@ -128,12 +128,14 @@ extern int sync(void);
 
 extern int close(int);
 extern off_t lseek(int, off_t, int);
-extern loff_t lseek64(int, loff_t, int);
+extern off64_t lseek64(int, off64_t, int);
 
 extern ssize_t read(int, void *, size_t);
 extern ssize_t write(int, const void *, size_t);
 extern ssize_t pread(int, void *, size_t, off_t);
-extern ssize_t pwrite(int, void *, size_t, off_t);
+extern ssize_t pread64(int, void *, size_t, off64_t);
+extern ssize_t pwrite(int, const void *, size_t, off_t);
+extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 
 extern int dup(int);
 extern int dup2(int, int);
@@ -143,6 +145,7 @@ extern int flock(int, int);
 extern int fsync(int);
 extern int fdatasync(int);
 extern int ftruncate(int, off_t);
+extern int ftruncate64(int, off64_t);
 
 extern int pause(void);
 extern unsigned int alarm(unsigned int);

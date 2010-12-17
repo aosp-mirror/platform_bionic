@@ -29,7 +29,7 @@
 
 extern int __llseek(int fd, unsigned long  offset_hi, unsigned long  offset_lo, loff_t*  result, int  whence);
 
-loff_t lseek64(int fd, loff_t off, int whence)
+off64_t lseek64(int fd, off64_t off, int whence)
 {
     loff_t  result;
 
