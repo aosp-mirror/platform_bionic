@@ -1299,11 +1299,13 @@ _get_scope(const struct sockaddr *addr)
 		if (IN_LOOPBACK(na) ||                          /* 127.0.0.0/8 */
 		    (na & 0xffff0000) == 0xa9fe0000) {          /* 169.254.0.0/16 */
 			return IPV6_ADDR_SCOPE_LINKLOCAL;
-		} else if ((na & 0xff000000) == 0x0a000000 ||   /* 10.0.0.0/8 */
-			   (na & 0xfff00000) == 0xac100000 ||   /* 172.16.0.0/12 */
-			   (na & 0xffff0000) == 0xc0a80000) {   /* 192.168.0.0/16 */
-			return IPV6_ADDR_SCOPE_SITELOCAL;
 		} else {
+			/*
+			 * According to draft-ietf-6man-rfc3484-revise-01 section 2.3,
+			 * it is best not to treat the private IPv4 ranges
+			 * (10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16) as being
+			 * in a special scope, so we don't.
+			 */
 			return IPV6_ADDR_SCOPE_GLOBAL;
 		}
 	} else {
