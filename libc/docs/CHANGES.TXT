@@ -16,6 +16,9 @@ Differences between current and Android 2.3:
 
 - <unistd.h>: Add ftruncate64().
 
+- <signal.h>: Changed the definition of SIGRTMAX to 64. However, note that
+  sigset_t is only 32-bit and cannot deal with real-time signals.
+
 -------------------------------------------------------------------------------
 Differences between Android 2.3 and Android 2.2:
 
