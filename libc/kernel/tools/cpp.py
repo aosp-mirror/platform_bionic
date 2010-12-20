@@ -1863,6 +1863,16 @@ class BlockList:
         tokens = tokens[:-1]  # remove trailing tokLN
         self.blocks = [ Block(tokens) ] + self.blocks
 
+    def replaceTokens(self,replacements=dict()):
+        """replace tokens according to the given dict
+           """
+        for b in self.blocks:
+            if not b.isDirective():
+                for tok in b.tokens:
+                    if tok.id == tokIDENT:
+                        if tok.value in replacements:
+                            tok.value = replacements[tok.value]
+
 class BlockParser:
     """a class used to convert an input source file into a BlockList object"""
 
