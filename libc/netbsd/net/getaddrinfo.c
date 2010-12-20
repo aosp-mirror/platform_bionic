@@ -1525,9 +1525,13 @@ _get_scope(const struct sockaddr *addr)
 #define IN6_IS_ADDR_6TO4(a)	 \
 	(((a)->s6_addr[0] == 0x20) && ((a)->s6_addr[1] == 0x02))
 
+/* 6bone testing address area (3ffe::/16), deprecated in RFC 3701. */
+#define IN6_IS_ADDR_6BONE(a)      \
+	(((a)->s6_addr[0] == 0x3f) && ((a)->s6_addr[1] == 0xfe))
+
 /*
  * Get the label for a given IPv4/IPv6 address.
- * RFC 3484, section 2.1, plus Teredo added in with label 5.
+ * RFC 3484, section 2.1, plus changes from draft-ietf-6man-rfc3484-revise-01.
  */
 
 /*ARGSUSED*/
@@ -1535,19 +1539,27 @@ static int
 _get_label(const struct sockaddr *addr)
 {
 	if (addr->sa_family == AF_INET) {
-		return 4;
+		return 3;
 	} else if (addr->sa_family == AF_INET6) {
 		const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)addr;
 		if (IN6_IS_ADDR_LOOPBACK(&addr6->sin6_addr)) {
 			return 0;
-		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr)) {
+		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
+			return 1;
+		} else if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr)) {
 			return 3;
+		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
+			return 4;
 		} else if (IN6_IS_ADDR_TEREDO(&addr6->sin6_addr)) {
 			return 5;
-		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
-			return 2;
+		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr)) {
+			return 10;
+		} else if (IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr)) {
+			return 11;
+		} else if (IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
+			return 12;
 		} else {
-			return 1;
+			return 2;
 		}
 	} else {
 		/*
@@ -1560,7 +1572,7 @@ _get_label(const struct sockaddr *addr)
 
 /*
  * Get the precedence for a given IPv4/IPv6 address.
- * RFC 3484, section 2.1, plus Teredo added in with precedence 25.
+ * RFC 3484, section 2.1, plus changes from draft-ietf-6man-rfc3484-revise-01.
  */
 
 /*ARGSUSED*/
@@ -1568,22 +1580,28 @@ static int
 _get_precedence(const struct sockaddr *addr)
 {
 	if (addr->sa_family == AF_INET) {
-		return 10;
+		return 30;
 	} else if (addr->sa_family == AF_INET6) {
 		const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)addr;
 		if (IN6_IS_ADDR_LOOPBACK(&addr6->sin6_addr)) {
+			return 60;
+		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
 			return 50;
-		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr)) {
+		} else if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr)) {
+			return 30;
+		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
 			return 20;
 		} else if (IN6_IS_ADDR_TEREDO(&addr6->sin6_addr)) {
-			return 25;
-		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
-			return 30;
+			return 10;
+		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr) ||
+		           IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr) ||
+		           IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
+			return 1;
 		} else {
 			return 40;
 		}
 	} else {
-		return 5;
+		return 1;
 	}
 }
 
