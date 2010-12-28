@@ -71,6 +71,7 @@ def  cleanupFile( path ):
     list.removeEmptyLines()
     list.removeMacroDefines( kernel_ignored_macros )
     list.insertDisclaimer( kernel.kernel_disclaimer )
+    list.replaceTokens( kernel_token_replacements )
 
     out = StringOutput()
     list.write(out)
