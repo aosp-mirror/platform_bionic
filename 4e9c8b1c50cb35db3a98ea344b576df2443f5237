@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA+3//+hM\u003d",
+        "filename": "libc/arch-x86/bionic/crtbegin_so.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2010-12-31T10:44:15Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand this change. Can you add a comment that explain why this is here. It looks like this label is never used, so I suspect it has to do with symbol dependencies to ensure that the actual __dso_handle variable is part of the final link.\n\nBut then, why is this not ensured by the \"lea\" instruction on line 4 then?\n\n(i.e. this seems to define a 32-bit variable that points to __dso_handle, not a variable named __dso_handle, right?)",
+      "revId": "4e9c8b1c50cb35db3a98ea344b576df2443f5237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
