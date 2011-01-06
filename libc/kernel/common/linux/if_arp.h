@@ -77,6 +77,7 @@
 
 #define ARPHRD_PHONET 820  
 #define ARPHRD_PHONET_PIPE 821  
+#define ARPHRD_CAIF 822  
 
 #define ARPHRD_VOID 0xFFFF  
 #define ARPHRD_NONE 0xFFFE  
@@ -111,8 +112,7 @@ struct arpreq_old {
 #define ATF_NETMASK 0x20  
 #define ATF_DONTPUB 0x40  
 
-struct arphdr
-{
+struct arphdr {
  __be16 ar_hrd;
  __be16 ar_pro;
  unsigned char ar_hln;
@@ -122,3 +122,4 @@ struct arphdr
 };
 
 #endif
+
