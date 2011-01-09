@@ -754,6 +754,7 @@ mult
 }
 
  static Bigint *p5s;
+ static pthread_mutex_t p5s_mutex = PTHREAD_MUTEX_INITIALIZER;
 
  static Bigint *
 pow5mult
@@ -775,11 +776,13 @@ pow5mult
 
 	if (!(k = (unsigned int) k >> 2))
 		return b;
+	mutex_lock(&p5s_mutex);
 	if (!(p5 = p5s)) {
 		/* first time */
 		p5 = i2b(625);
 		if (p5 == BIGINT_INVALID) {
 			Bfree(b);
+			mutex_unlock(&p5s_mutex);
 			return p5;
 		}
 		p5s = p5;
@@ -797,6 +800,7 @@ pow5mult
 			p51 = mult(p5,p5);
 			if (p51 == BIGINT_INVALID) {
 				Bfree(b);
+				mutex_unlock(&p5s_mutex);
 				return p51;
 			}
 			p5->next = p51;
@@ -804,6 +808,7 @@ pow5mult
 		}
 		p5 = p51;
 	}
+	mutex_unlock(&p5s_mutex);
 	return b;
 }
 
