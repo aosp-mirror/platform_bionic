@@ -1219,7 +1219,6 @@ cvt(double value, int ndigits, int flags, char *sign, int *decpt, int ch,
 {
 	int mode, dsgn;
 	char *digits, *bp, *rve;
-	static  char  temp[64];
 
 	if (ch == 'f') {
 		mode = 3;		/* ndigits after the decimal point */
