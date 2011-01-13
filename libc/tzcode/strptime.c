@@ -89,29 +89,31 @@ static const struct {
 #define _LEGAL_ALT(x)       { if (alt_format & ~(x)) return (0); }
 
 
+struct century_relyear {
+    int century;
+    int relyear;
+};
 static  int _conv_num(const unsigned char **, int *, int, int);
-static  unsigned char *_strptime(const unsigned char *, const char *, struct tm *, int);
+static  unsigned char *_strptime(const unsigned char *, const char *, struct tm *,
+        struct century_relyear *);
 
 
 char *
 strptime(const char *buf, const char *fmt, struct tm *tm)
 {
-    return (char*)(_strptime((const unsigned char*)buf, fmt, tm, 1));
+    struct century_relyear cr;
+    cr.century = TM_YEAR_BASE;
+    cr.relyear = -1;
+    return (char*)(_strptime((const unsigned char*)buf, fmt, tm, &cr));
 }
 
 static unsigned char *
-_strptime(const unsigned char *buf, const char *fmt, struct tm *tm, int initialize)
+_strptime(const unsigned char *buf, const char *fmt, struct tm *tm, struct century_relyear *cr)
 {
     unsigned char c;
     const unsigned char *bp;
     size_t len = 0;
     int alt_format, i;
-    static int century, relyear;
-
-    if (initialize) {
-        century = TM_YEAR_BASE;
-        relyear = -1;
-    }
 
     bp = (unsigned char *)buf;
     while ((c = *fmt) != '\0') {
@@ -158,43 +160,43 @@ literal:
          */
         case 'c':   /* Date and time, using the locale's format. */
             _LEGAL_ALT(_ALT_E);
-            if (!(bp = _strptime(bp, _ctloc(d_t_fmt), tm, 0)))
+            if (!(bp = _strptime(bp, _ctloc(d_t_fmt), tm, cr)))
                 return (NULL);
             break;
 
         case 'D':   /* The date as "%m/%d/%y". */
             _LEGAL_ALT(0);
-            if (!(bp = _strptime(bp, "%m/%d/%y", tm, 0)))
+            if (!(bp = _strptime(bp, "%m/%d/%y", tm, cr)))
                 return (NULL);
             break;
     
         case 'R':   /* The time as "%H:%M". */
             _LEGAL_ALT(0);
-            if (!(bp = _strptime(bp, "%H:%M", tm, 0)))
+            if (!(bp = _strptime(bp, "%H:%M", tm, cr)))
                 return (NULL);
             break;
 
         case 'r':   /* The time as "%I:%M:%S %p". */
             _LEGAL_ALT(0);
-            if (!(bp = _strptime(bp, "%I:%M:%S %p", tm, 0)))
+            if (!(bp = _strptime(bp, "%I:%M:%S %p", tm, cr)))
                 return (NULL);
             break;
 
         case 'T':   /* The time as "%H:%M:%S". */
             _LEGAL_ALT(0);
-            if (!(bp = _strptime(bp, "%H:%M:%S", tm, 0)))
+            if (!(bp = _strptime(bp, "%H:%M:%S", tm, cr)))
                 return (NULL);
             break;
 
         case 'X':   /* The time, using the locale's format. */
             _LEGAL_ALT(_ALT_E);
-            if (!(bp = _strptime(bp, _ctloc(t_fmt), tm, 0)))
+            if (!(bp = _strptime(bp, _ctloc(t_fmt), tm, cr)))
                 return (NULL);
             break;
 
         case 'x':   /* The date, using the locale's format. */
             _LEGAL_ALT(_ALT_E);
-            if (!(bp = _strptime(bp, _ctloc(d_fmt), tm, 0)))
+            if (!(bp = _strptime(bp, _ctloc(d_fmt), tm, cr)))
                 return (NULL);
             break;
 
@@ -253,7 +255,7 @@ literal:
             if (!(_conv_num(&bp, &i, 0, 99)))
                 return (NULL);
 
-            century = i * 100;
+            cr->century = i * 100;
             break;
 
         case 'd':   /* The day of month. */
@@ -359,13 +361,13 @@ literal:
             if (!(_conv_num(&bp, &i, 0, 9999)))
                 return (NULL);
 
-            relyear = -1;
+            cr->relyear = -1;
             tm->tm_year = i - TM_YEAR_BASE;
             break;
 
         case 'y':   /* The year within the century (2 digits). */
             _LEGAL_ALT(_ALT_E | _ALT_O);
-            if (!(_conv_num(&bp, &relyear, 0, 99)))
+            if (!(_conv_num(&bp, &cr->relyear, 0, 99)))
                 return (NULL);
             break;
 
@@ -391,14 +393,14 @@ literal:
      * We need to evaluate the two digit year spec (%y)
      * last as we can get a century spec (%C) at any time.
      */
-    if (relyear != -1) {
-        if (century == TM_YEAR_BASE) {
-            if (relyear <= 68)
-                tm->tm_year = relyear + 2000 - TM_YEAR_BASE;
+    if (cr->relyear != -1) {
+        if (cr->century == TM_YEAR_BASE) {
+            if (cr->relyear <= 68)
+                tm->tm_year = cr->relyear + 2000 - TM_YEAR_BASE;
             else
-                tm->tm_year = relyear + 1900 - TM_YEAR_BASE;
+                tm->tm_year = cr->relyear + 1900 - TM_YEAR_BASE;
         } else {
-            tm->tm_year = relyear + century - TM_YEAR_BASE;
+            tm->tm_year = cr->relyear + cr->century - TM_YEAR_BASE;
         }
     }
 
