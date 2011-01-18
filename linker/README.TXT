@@ -77,7 +77,7 @@ section:
       Same as DT_INITARRAY but for finalizers. Note that the
       functions must be called in reverse-order though
 
-      Note: this is generally stroed in a .fini_array section
+      Note: this is generally stored in a .fini_array section
 
   DT_FINI_ARRAYSZ
       Size of FT_FINIARRAY
@@ -88,7 +88,7 @@ section:
       a list of functions that need to be called before any other
       initialization function (i.e. DT_INIT and/or DT_INIT_ARRAY)
 
-      Note: this is generally stroed in a .preinit_array section
+      Note: this is generally stored in a .preinit_array section
 
   DT_PREINIT_ARRAYSZ
       The size of DT_PREINIT_ARRAY
@@ -103,14 +103,14 @@ Note that the implementation of static C++ constructors is very
 much processor dependent, and may use different ELF sections.
 
 On the ARM (see "C++ ABI for ARM" document), the static constructors
-must be called explicitely from the DT_INIT_ARRAY, and each one of them
+must be called explicitly from the DT_INIT_ARRAY, and each one of them
 shall register a destructor by calling the special __eabi_atexit()
 function (provided by the C library). The DT_FINI_ARRAY is not used
 by static C++ destructors.
 
 On x86, the lists of constructors and destructors are placed in special
 sections named ".ctors" and ".dtors", and the DT_INIT / DT_FINI functions
-are in charge of calling them explicitely.
+are in charge of calling them explicitly.
 
 
 Debugging:
@@ -140,4 +140,4 @@ affect new processes being launched.
 
 By default, traces are sent to logcat, with the "linker" tag. You can
 change this to go to stdout instead by setting the definition of
-LINKER_DEBUG_TO_LOG to 0 in "linker_debug.h"
+LINKER_DEBUG_TO_LOG to 0 in "linker_debug.h".
