@@ -340,35 +340,55 @@ str2number(const char *p)
 		return -1;
 }
 
-/* Determine whether IPv6 connectivity is available. */
+/*
+ * Connect a UDP socket to a given unicast address. This will cause no network
+ * traffic, but will fail fast if the system has no or limited reachability to
+ * the destination (e.g., no IPv4 address, no IPv6 default route, ...).
+ */
 static int
-_have_ipv6() {
-	/*
-	 * Connect a UDP socket to an global unicast IPv6 address. This will
-	 * cause no network traffic, but will fail fast if the system has no or
-	 * limited IPv6 connectivity (e.g., only a link-local address).
-	 */
-	static const struct sockaddr_in6 sin6_test = {
-		/* family, port, flow label */
-		AF_INET6, 0, 0,
-		/* 2000:: */
-		{{{ 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }}},
-		/* scope ID */
-		0};
-        sockaddr_union addr_test;
-        addr_test.in6 = sin6_test;
-	int s = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+_test_connect(int pf, struct sockaddr *addr, size_t addrlen) {
+	int s = socket(pf, SOCK_DGRAM, IPPROTO_UDP);
 	if (s < 0)
 		return 0;
 	int ret;
 	do {
-		ret = connect(s, &addr_test.generic, sizeof(addr_test.in6));
+		ret = connect(s, addr, addrlen);
 	} while (ret < 0 && errno == EINTR);
-	int have_ipv6 = (ret == 0);
+	int success = (ret == 0);
 	do {
 		ret = close(s);
 	} while (ret < 0 && errno == EINTR);
-	return have_ipv6;
+	return success;
+}
+
+/*
+ * The following functions determine whether IPv4 or IPv6 connectivity is
+ * available in order to implement AI_ADDRCONFIG.
+ *
+ * Strictly speaking, AI_ADDRCONFIG should not look at whether connectivity is
+ * available, but whether addresses of the specified family are "configured
+ * on the local system". However, bionic doesn't currently support getifaddrs,
+ * so checking for connectivity is the next best thing.
+ */
+static int
+_have_ipv6() {
+	static const struct sockaddr_in6 sin6_test = {
+		.sin6_family = AF_INET6,
+		.sin6_addr.s6_addr = {  // 2000::
+			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+		};
+        sockaddr_union addr = { .in6 = sin6_test };
+	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6));
+}
+
+static int
+_have_ipv4() {
+	static const struct sockaddr_in sin_test = {
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
+	};
+        sockaddr_union addr = { .in = sin_test };
+        return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
 }
 
 int
@@ -1687,17 +1707,27 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.qclass = C_IN;
 		q.answer = buf->buf;
 		q.anslen = sizeof(buf->buf);
-		/* If AI_ADDRCONFIG, lookup IPv6 only if we have connectivity */
-		if (!(pai->ai_flags & AI_ADDRCONFIG) || _have_ipv6()) {
+		int query_ipv6 = 1, query_ipv4 = 1;
+		if (pai->ai_flags & AI_ADDRCONFIG) {
+			query_ipv6 = _have_ipv6();
+			query_ipv4 = _have_ipv4();
+		}
+		if (query_ipv6) {
 			q.qtype = T_AAAA;
-			q.next = &q2;
-			q2.name = name;
-			q2.qclass = C_IN;
-			q2.qtype = T_A;
-			q2.answer = buf2->buf;
-			q2.anslen = sizeof(buf2->buf);
-		} else {
+			if (query_ipv4) {
+				q.next = &q2;
+				q2.name = name;
+				q2.qclass = C_IN;
+				q2.qtype = T_A;
+				q2.answer = buf2->buf;
+				q2.anslen = sizeof(buf2->buf);
+			}
+		} else if (query_ipv4) {
 			q.qtype = T_A;
+		} else {
+			free(buf);
+			free(buf2);
+			return NS_NOTFOUND;
 		}
 		break;
 	case AF_INET:
