@@ -110,7 +110,7 @@ env_match(char* envstr, const char* name)
     while (envstr[cnt] == name[cnt] && name[cnt] != '\0')
         cnt++;
 
-    if (name[cnt] != '\0' && envstr[cnt] == '=')
+    if (name[cnt] == '\0' && envstr[cnt] == '=')
         return envstr + cnt + 1;
 
     return NULL;
