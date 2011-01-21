@@ -30,5 +30,5 @@
 
 int raise(int signum)
 {
-    return kill(getpid(), signum);
+    return kill(gettid(), signum);
 }
