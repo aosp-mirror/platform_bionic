@@ -103,6 +103,10 @@
 #include <stdarg.h>
 #include "nsswitch.h"
 
+#ifdef ANDROID_CHANGES
+#include <sys/system_properties.h>
+#endif /* ANDROID_CHANGES */
+
 typedef union sockaddr_union {
     struct sockaddr     generic;
     struct sockaddr_in  in;
@@ -416,6 +420,16 @@ android_getaddrinfo_proxy(
 	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
 		// Don't use the proxy in local mode.  This is used by the
 		// proxy itself.
+		return -1;
+	}
+
+	// Temporary cautious hack to disable the DNS proxy for processes
+	// requesting special treatment.  Ideally the DNS proxy should
+	// accomodate these apps, though.
+	char propname[PROP_NAME_MAX];
+	char propvalue[PROP_VALUE_MAX];
+	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
+	if (__system_property_get(propname, propvalue) > 0) {
 		return -1;
 	}
 
