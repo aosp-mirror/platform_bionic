@@ -4,6 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= \
 	arch/$(TARGET_ARCH)/begin.S \
 	linker.c \
+	linker_environ.c \
 	linker_format.c \
 	rt.c \
 	dlfcn.c \
@@ -93,6 +94,6 @@ $(linked_module): $(TARGET_CRTBEGIN_STATIC_O) $(all_objects) $(all_libraries) $(
 # just for this module
 $(LOCAL_BUILT_MODULE): TARGET_CRTBEGIN_STATIC_O :=
 # This line is not strictly necessary because the dynamic linker is built
-# as a static executable, but it won't hurt if in the future we start 
+# as a static executable, but it won't hurt if in the future we start
 # building the linker as a dynamic one.
 $(LOCAL_BUILT_MODULE): TARGET_CRTBEGIN_DYNAMIC_O :=

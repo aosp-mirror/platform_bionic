@@ -1858,7 +1858,13 @@ int pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
      */
     int ret, old_errno = errno;
 
-    ret = __rt_sigprocmask(how, set, oset, _NSIG / 8);
+    /* Use NSIG which corresponds to the number of signals in
+     * our 32-bit sigset_t implementation. As such, this function, or
+     * anything that deals with sigset_t cannot manage real-time signals
+     * (signo >= 32). We might want to introduce sigset_rt_t as an
+     * extension to do so in the future.
+     */
+    ret = __rt_sigprocmask(how, set, oset, NSIG / 8);
     if (ret < 0)
         ret = errno;
 
