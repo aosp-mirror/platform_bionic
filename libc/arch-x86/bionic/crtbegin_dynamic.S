@@ -66,14 +66,7 @@ _start:
 1:  .long   __PREINIT_ARRAY__
     .long   __INIT_ARRAY__
     .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
-      
-# the .ctors section contains a list of pointers to "constructor"
-# functions that need to be called in order during C library initialization,
-# just before the program is being run. This is a C++ requirement
-#
-# the last entry shall be 0, and is defined in crtend.S
-#
+
 	.section .preinit_array, "aw"
 	.globl __PREINIT_ARRAY__
 __PREINIT_ARRAY__:
@@ -87,11 +80,6 @@ __INIT_ARRAY__:
 	.section .fini_array, "aw"
 	.globl __FINI_ARRAY__
 __FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
 	.long -1
 
 #include "__dso_handle.S"
