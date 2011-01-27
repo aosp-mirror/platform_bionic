@@ -65,7 +65,6 @@ _start:
 1:  .long   __PREINIT_ARRAY__
     .long   __INIT_ARRAY__
     .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
 
 	.section .preinit_array, "aw"
 	.globl __PREINIT_ARRAY__
@@ -80,11 +79,6 @@ __INIT_ARRAY__:
 	.section .fini_array, "aw"
 	.globl __FINI_ARRAY__
 __FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
 	.long -1
 
 #include "__dso_handle.S"
