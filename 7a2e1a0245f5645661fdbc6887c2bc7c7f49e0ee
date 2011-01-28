@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA+3//7O0\u003d",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-01-28T17:17:20Z",
+      "side": 0,
+      "message": "I\u0027d prefer if we removed this in a separate patch. We have some preliminary SuperH support in the AOSP tree, and it\u0027d be nice to contact its maintainer to see if it is ok with him to remove this right now.",
+      "revId": "7a2e1a0245f5645661fdbc6887c2bc7c7f49e0ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//7Ow\u003d",
+        "filename": "libc/bionic/libc_init_static.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-01-28T17:17:20Z",
+      "side": 0,
+      "message": "I would also prefer that you do not remove this, for the same reasons.",
+      "revId": "7a2e1a0245f5645661fdbc6887c2bc7c7f49e0ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
