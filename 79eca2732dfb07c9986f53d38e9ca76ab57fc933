@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA+3//66Q\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1000269
+      },
+      "writtenOn": "2011-01-31T16:06:44Z",
+      "side": 1,
+      "message": "add a tiny comment above this documenting what it returns, including possible error values.  looks like you always return the default cache age (CONFIG_SECONDS) in case of parse errors.\n\nyou might also want to document that the TTL (which is relative number of seconds, not absolute unix time) isn\u0027t capped here, so if we want a TTL max age, it needs to be done elsewhere?",
+      "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//66M\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1000269
+      },
+      "writtenOn": "2011-01-31T16:06:44Z",
+      "side": 1,
+      "message": "just for the first one?  so we\u0027re still caching the whole DNS packet reply but with the age of one RR\u0027s TTL?\n\nif a DNS request has multiple questions and a subsequent DNS request only has one of those multiple questions, there\u0027s no caching on the second part still, right?",
+      "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
