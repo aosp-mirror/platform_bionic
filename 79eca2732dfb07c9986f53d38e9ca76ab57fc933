@@ -33,6 +33,24 @@
       "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//66E\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-01-31T16:19:34Z",
+      "side": 1,
+      "message": "Each RR can have a different TTL and thus must be cached independently. A correct cache should do something like the following:\n\n- cache each individual RR according to its TTL\n- when a new query arrives, look if an answer can be constructed from all the cached RRs, if so, create a new DNS answer packet from these\n- if not, perform a real request, and before returning the answer to the caller, update the cache with the updated RRs whenever possible.\n\nIt is something we should do in netd instead.\n\nI feel this patch is too primitive. At a minimum, please use the smallest TTL for all RRs in the answer packet. Otherwise, you risk over-caching stuff depending on how the answer packet is structured, something that definitely is out of our control.",
+      "parentUuid": "AAAA+3//66M\u003d",
+      "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
