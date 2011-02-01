@@ -51,6 +51,24 @@
       "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//6vc\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-02-01T11:40:38Z",
+      "side": 1,
+      "message": "Thanks for the review comments, we are working on an update based on what you detail above.",
+      "parentUuid": "AAAA+3//66E\u003d",
+      "revId": "79eca2732dfb07c9986f53d38e9ca76ab57fc933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
