@@ -32,12 +32,15 @@
 #include <time.h>
 #include "pthread.h"
 
+#include <errno.h>
+#include "arpa_nameser.h"
+
 /* This code implements a small and *simple* DNS resolver cache.
  *
- * It is only used to cache DNS answers for a maximum of CONFIG_SECONDS seconds
- * in order to reduce DNS traffic. It is not supposed to be a full DNS cache,
- * since we plan to implement that in the future in a dedicated process running
- * on the system.
+ * It is only used to cache DNS answers for a time defined by the smallest TTL
+ * among the answer records in order to reduce DNS traffic. It is not supposed
+ * to be a full DNS cache, since we plan to implement that in the future in a
+ * dedicated process running on the system.
  *
  * Note that its design is kept simple very intentionally, i.e.:
  *
@@ -47,9 +50,8 @@
  *    (this means that two similar queries that encode the DNS name
  *     differently will be treated distinctly).
  *
- *  - the TTLs of answer RRs are ignored. our DNS resolver library does not use
- *    them anyway, but it means that records with a TTL smaller than
- *    CONFIG_SECONDS will be kept in the cache anyway.
+ *    the smallest TTL value among the answer records are used as the time
+ *    to keep an answer in the cache.
  *
  *    this is bad, but we absolutely want to avoid parsing the answer packets
  *    (and should be solved by the later full DNS cache process).
@@ -141,6 +143,7 @@
 /* set to 1 to debug query data */
 #define  DEBUG_DATA  0
 
+#undef XLOG
 #if DEBUG
 #  include <logd.h>
 #  define  XLOG(...)   \
@@ -148,6 +151,9 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+
+#include <arpa/inet.h>
+#include "resolv_private.h"
 
 /** BOUNDED BUFFER FORMATTING
  **/
@@ -987,10 +993,50 @@ typedef struct Entry {
     int              querylen;
     const uint8_t*   answer;
     int              answerlen;
-    time_t           when;   /* time_t when entry was added to table */
-    int              id;     /* for debugging purpose */
+    time_t           expires;   /* time_t when the entry isn't valid any more */
+    int              id;        /* for debugging purpose */
 } Entry;
 
+/**
+ * Parse the answer records and find the smallest
+ * TTL among the answer records.
+ *
+ * The returned TTL is the number of seconds to
+ * keep the answer in the cache.
+ *
+ * In case of parse error zero (0) is returned which
+ * indicates that the answer shall not be cached.
+ */
+static u_long
+answer_getTTL(const void* answer, int answerlen)
+{
+    ns_msg handle;
+    int ancount, n;
+    u_long result, ttl;
+    ns_rr rr;
+
+    result = 0;
+    if (ns_initparse(answer, answerlen, &handle) >= 0) {
+        // get number of answer records
+        ancount = ns_msg_count(handle, ns_s_an);
+        for (n = 0; n < ancount; n++) {
+            if (ns_parserr(&handle, ns_s_an, n, &rr) == 0) {
+                ttl = ns_rr_ttl(rr);
+                if (n == 0 || ttl < result) {
+                    result = ttl;
+                }
+            } else {
+                XLOG("ns_parserr failed ancount no = %d. errno = %s\n", n, strerror(errno));
+            }
+        }
+    } else {
+        XLOG("ns_parserr failed. %s\n", strerror(errno));
+    }
+
+    XLOG("TTL = %d\n", result);
+
+    return result;
+}
 
 static void
 entry_free( Entry*  e )
@@ -1071,8 +1117,6 @@ entry_alloc( const Entry*  init, const void*  answer, int  answerlen )
     e->answerlen = answerlen;
 
     memcpy( (char*)e->answer, answer, e->answerlen );
-
-    e->when  = _time_now();
 
     return e;
 }
@@ -1183,12 +1227,47 @@ _cache_dump_mru( Cache*  cache )
 
     XLOG("%s", temp);
 }
+
+static void
+_dump_answer(const void* answer, int answerlen)
+{
+    res_state statep;
+    FILE* fp;
+    char* buf;
+    int fileLen;
+
+    fp = fopen("/data/reslog.txt", "w+");
+    if (fp != NULL) {
+        statep = __res_get_state();
+
+        res_pquery(statep, answer, answerlen, fp);
+
+        //Get file length
+        fseek(fp, 0, SEEK_END);
+        fileLen=ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+        buf = (char *)malloc(fileLen+1);
+        if (buf != NULL) {
+            //Read file contents into buffer
+            fread(buf, fileLen, 1, fp);
+            XLOG("%s\n", buf);
+            free(buf);
+        }
+        fclose(fp);
+        remove("/data/reslog.txt");
+    }
+    else {
+        XLOG("_dump_answer: can't open file\n");
+    }
+}
 #endif
 
 #if DEBUG
 #  define  XLOG_QUERY(q,len)   _dump_query((q), (len))
+#  define  XLOG_ANSWER(a, len) _dump_answer((a), (len))
 #else
 #  define  XLOG_QUERY(q,len)   ((void)0)
+#  define  XLOG_ANSWER(a,len)  ((void)0)
 #endif
 
 /* This function tries to find a key within the hash table
@@ -1322,7 +1401,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
     now = _time_now();
 
     /* remove stale entries here */
-    if ( (unsigned)(now - e->when) >= CONFIG_SECONDS ) {
+    if (now >= e->expires) {
         XLOG( " NOT IN CACHE (STALE ENTRY %p DISCARDED)", *lookup );
         _cache_remove_p(cache, lookup);
         goto Exit;
@@ -1363,6 +1442,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
     Entry    key[1];
     Entry*   e;
     Entry**  lookup;
+    u_long   ttl;
 
     /* don't assume that the query has already been cached
      */
@@ -1375,6 +1455,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
 
     XLOG( "%s: query:", __FUNCTION__ );
     XLOG_QUERY(query,querylen);
+    XLOG_ANSWER(answer, answerlen);
 #if DEBUG_DATA
     XLOG( "answer:");
     XLOG_BYTES(answer,answerlen);
@@ -1401,9 +1482,13 @@ _resolv_cache_add( struct resolv_cache*  cache,
         }
     }
 
-    e = entry_alloc( key, answer, answerlen );
-    if (e != NULL) {
-        _cache_add_p(cache, lookup, e);
+    ttl = answer_getTTL(answer, answerlen);
+    if (ttl > 0) {
+        e = entry_alloc(key, answer, answerlen);
+        if (e != NULL) {
+            e->expires = ttl + _time_now();
+            _cache_add_p(cache, lookup, e);
+        }
     }
 #if DEBUG
     _cache_dump_mru(cache);
