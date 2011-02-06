@@ -55,8 +55,11 @@ class HeaderScanner:
     #    <asm-generic/*>
     #    <mtd/*>
     #
-    re_combined =\
-       re.compile(r"^.*<((%s)/[\d\w_\+\.\-/]*)>.*$" % string.join(kernel_dirs,"|") )
+    re_combined_str=\
+       r"^.*<((%s)/[\d\w_\+\.\-/]*)>.*$" % string.join(kernel_dirs,"|")
+
+    re_combined = re.compile(re_combined_str)
+
     # some kernel files choose to include files with relative paths (x86 32/64
     # dispatch for instance)
     re_rel_dir = re.compile(r'^.*"([\d\w_\+\.\-/]+)".*$')

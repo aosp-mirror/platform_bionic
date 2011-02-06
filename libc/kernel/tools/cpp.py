@@ -1529,7 +1529,7 @@ def test_CppExpr():
 
 class Block:
     """a class used to model a block of input source text. there are two block types:
-        - direcive blocks: contain the tokens of a single pre-processor directive (e.g. #if)
+        - directive blocks: contain the tokens of a single pre-processor directive (e.g. #if)
         - text blocks, contain the tokens of non-directive blocks
 
        the cpp parser class below will transform an input source file into a list of Block
@@ -1609,6 +1609,91 @@ class Block:
         else:
             return None
 
+    def removeWhiteSpace(self):
+        # Remove trailing whitespace and empty lines
+        # All whitespace is also contracted to a single space
+        if self.directive != None:
+            return
+
+        tokens = []
+        line   = 0     # index of line start
+        space  = -1    # index of first space, or -1
+        ii = 0
+        nn = len(self.tokens)
+        while ii < nn:
+            tok = self.tokens[ii]
+
+            # If we find a space, record its position if this is the first
+            # one the line start or the previous character. Don't append
+            # anything to tokens array yet though.
+            if tok.id == tokSPACE:
+                if space < 0:
+                    space = ii
+                ii += 1
+                continue
+
+            # If this is a line space, ignore the spaces we found previously
+            # on the line, and remove empty lines.
+            if tok.id == tokLN:
+                old_line  = line
+                old_space = space
+                #print "N line=%d space=%d ii=%d" % (line, space, ii)
+                ii   += 1
+                line  = ii
+                space = -1
+                if old_space == old_line:  # line only contains spaces
+                    #print "-s"
+                    continue
+                if ii-1 == old_line:  # line is empty
+                    #print "-e"
+                    continue
+                tokens.append(tok)
+                continue
+
+            # Other token, append any space range if any, converting each
+            # one to a single space character, then append the token.
+            if space >= 0:
+                jj = space
+                space = -1
+                while jj < ii:
+                    tok2 = self.tokens[jj]
+                    tok2.value = " "
+                    tokens.append(tok2)
+                    jj += 1
+
+            tokens.append(tok)
+            ii += 1
+
+        self.tokens = tokens
+
+    def writeWithWarning(self,out,warning,left_count,repeat_count):
+        # removeWhiteSpace() will sometimes creates non-directive blocks
+        # without any tokens. These come from blocks that only contained
+        # empty lines and spaces. They should not be printed in the final
+        # output, and then should not be counted for this operation.
+        #
+        if not self.directive and self.tokens == []:
+            return left_count
+
+        if self.directive:
+            out.write(str(self) + "\n")
+            left_count -= 1
+            if left_count == 0:
+                out.write(warning)
+                left_count = repeat_count
+
+        else:
+            for tok in self.tokens:
+                out.write(str(tok))
+                if tok.id == tokLN:
+                    left_count -= 1
+                    if left_count == 0:
+                        out.write(warning)
+                        left_count = repeat_count
+
+        return left_count
+
+
     def __repr__(self):
         """generate the representation of a given block"""
         if self.directive:
@@ -1650,7 +1735,6 @@ class Block:
                 result += str(tok)
 
         return result
-
 
 class BlockList:
     """a convenience class used to hold and process a list of blocks returned by
@@ -1694,6 +1778,10 @@ class BlockList:
             if b.isIf():
                 b.expr.removePrefixed(prefix,names)
 
+    def removeWhiteSpace(self):
+        for b in self.blocks:
+            b.removeWhiteSpace()
+
     def optimizeAll(self,macros):
         self.optimizeMacros(macros)
         self.optimizeIf01()
@@ -1713,71 +1801,16 @@ class BlockList:
     def write(self,out):
         out.write(str(self))
 
+    def writeWithWarning(self,out,warning,repeat_count):
+        left_count = repeat_count
+        for b in self.blocks:
+            left_count = b.writeWithWarning(out,warning,left_count,repeat_count)
+
     def removeComments(self):
         for b in self.blocks:
             for tok in b.tokens:
                 if tok.id == tokSPACE:
                     tok.value = " "
-
-    def removeEmptyLines(self):
-        # state = 1 => previous line was tokLN
-        # state = 0 => previous line was directive
-        state  = 1
-        for b in self.blocks:
-            if b.isDirective():
-                #print "$$$ directive %s" % str(b)
-                state = 0
-            else:
-                # a tokLN followed by spaces is replaced by a single tokLN
-                # several successive tokLN are replaced by a single one
-                #
-                dst   = []
-                src   = b.tokens
-                n     = len(src)
-                i     = 0
-                #print "$$$ parsing %s" % repr(src)
-                while i < n:
-                    # find final tokLN
-                    j = i
-                    while j < n and src[j].id != tokLN:
-                        j += 1
-
-                    if j >= n:
-                        # uhhh
-                        dst += src[i:]
-                        break
-
-                    if src[i].id == tokSPACE:
-                        k = i+1
-                        while src[k].id == tokSPACE:
-                            k += 1
-
-                        if k == j: # empty lines with spaces in it
-                            i = j  # remove the spaces
-
-                    if i == j:
-                        # an empty line
-                        if state == 1:
-                            i += 1   # remove it
-                        else:
-                            state = 1
-                            dst.append(src[i])
-                            i   += 1
-                    else:
-                        # this line is not empty, remove trailing spaces
-                        k = j
-                        while k > i and src[k-1].id == tokSPACE:
-                            k -= 1
-
-                        nn = i
-                        while nn < k:
-                            dst.append(src[nn])
-                            nn += 1
-                        dst.append(src[j])
-                        state = 0
-                        i = j+1
-
-                b.tokens = dst
 
     def removeVarsAndFuncs(self,knownStatics=set()):
         """remove all extern and static declarations corresponding
@@ -1789,66 +1822,118 @@ class BlockList:
            which is useful for optimized byteorder swap functions and
            stuff like that.
            """
-        # state = 1 => typedef/struct encountered
-        # state = 2 => vars or func declaration encountered, skipping until ";"
         # state = 0 => normal (i.e. LN + spaces)
+        # state = 1 => typedef/struct encountered, ends with ";"
+        # state = 2 => var declaration encountered, ends with ";"
+        # state = 3 => func declaration encountered, ends with "}"
         state      = 0
         depth      = 0
         blocks2    = []
+        skipTokens = False
         for b in self.blocks:
             if b.isDirective():
                 blocks2.append(b)
             else:
                 n     = len(b.tokens)
                 i     = 0
-                first = 0
-                if state == 2:
+                if skipTokens:
                     first = n
+                else:
+                    first = 0
                 while i < n:
                     tok = b.tokens[i]
-                    if state == 0:
-                        bad = 0
-                        if tok.id in [tokLN, tokSPACE]:
-                            pass
-                        elif tok.value in [ 'struct', 'typedef', 'enum', 'union', '__extension__' ]:
-                            state = 1
-                        else:
-                            if tok.value in [ 'static', 'extern', '__KINLINE' ]:
-                                j = i+1
-                                ident = ""
-                                while j < n and not (b.tokens[j].id in [ '(', ';' ]):
-                                    if b.tokens[j].id == tokIDENT:
-                                        ident = b.tokens[j].value
-                                    j += 1
-                                if j < n and ident in knownStatics:
-                                    # this is a known static, we're going to keep its
-                                    # definition in the final output
-                                    state = 1
-                                else:
-                                    #print "### skip static '%s'" % ident
-                                    pass
-
-                            if state == 0:
-                                if i > first:
-                                    #print "### intermediate from '%s': '%s'" % (tok.value, repr(b.tokens[first:i]))
-                                    blocks2.append( Block(b.tokens[first:i]) )
-                                state = 2
-                                first = n
-
-                    else:  # state > 0
-                        if tok.id == '{':
+                    tokid = tok.id
+                    # If we are not looking for the start of a new
+                    # type/var/func, then skip over tokens until
+                    # we find our terminator, managing the depth of
+                    # accolades as we go.
+                    if state > 0:
+                        terminator = False
+                        if tokid == '{':
                             depth += 1
-
-                        elif tok.id == '}':
+                        elif tokid == '}':
                             if depth > 0:
                                 depth -= 1
+                            if (depth == 0) and (state == 3):
+                                terminator = True
+                        elif tokid == ';' and depth == 0:
+                            terminator = True
 
-                        elif depth == 0 and tok.id == ';':
-                            if state == 2:
-                                first = i+1
+                        if terminator:
+                            # we found the terminator
                             state = 0
+                            if skipTokens:
+                                skipTokens = False
+                                first = i+1
 
-                    i += 1
+                        i = i+1
+                        continue
+
+                    # We are looking for the start of a new type/func/var
+                    # ignore whitespace
+                    if tokid in [tokLN, tokSPACE]:
+                        i = i+1
+                        continue
+
+                    # Is it a new type definition, then start recording it
+                    if tok.value in [ 'struct', 'typedef', 'enum', 'union', '__extension__' ]:
+                        #print "$$$ keep type declr" + repr(b.tokens[i:])
+                        state = 1
+                        i     = i+1
+                        continue
+
+                    # Is it a variable or function definition. If so, first
+                    # try to determine which type it is, and also extract
+                    # its name.
+                    #
+                    # We're going to parse the next tokens of the same block
+                    # until we find a semi-column or a left parenthesis.
+                    #
+                    # The semi-column corresponds to a variable definition,
+                    # the left-parenthesis to a function definition.
+                    #
+                    # We also assume that the var/func name is the last
+                    # identifier before the terminator.
+                    #
+                    j = i+1
+                    ident = ""
+                    while j < n:
+                        tokid = b.tokens[j].id
+                        if tokid == '(':  # a function declaration
+                            state = 3
+                            break
+                        elif tokid == ';': # a variable declaration
+                            state = 2
+                            break
+                        if tokid == tokIDENT:
+                            ident = b.tokens[j].value
+                        j += 1
+
+                    if j >= n:
+                        # This can only happen when the declaration
+                        # does not end on the current block (e.g. with
+                        # a directive mixed inside it.
+                        #
+                        # We will treat it as malformed because
+                        # it's very hard to recover from this case
+                        # without making our parser much more
+                        # complex.
+                        #
+                        #print "### skip unterminated static '%s'" % ident
+                        break
+
+                    if ident in knownStatics:
+                        #print "### keep var/func '%s': %s" % (ident,repr(b.tokens[i:j]))
+                        pass
+                    else:
+                        # We're going to skip the tokens for this declaration
+                        #print "### skip variable /func'%s': %s" % (ident,repr(b.tokens[i:j]))
+                        if i > first:
+                            blocks2.append( Block(b.tokens[first:i]))
+                        skipTokens = True
+                        first      = n
+
+                    i = i+1
 
                 if i > first:
                     #print "### final '%s'" % repr(b.tokens[first:i])

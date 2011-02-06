@@ -7,12 +7,12 @@ from utils import *
 
 noUpdate = 1
 
-def  cleanupFile( path ):
+def  cleanupFile( path, original_path=kernel_original_path ):
     """reads an original header and perform the cleanup operation on it
        this functions returns the destination path and the clean header
        as a single string"""
     # check the header path
-    src_path    = path
+    src_path = path
 
     if not os.path.exists(src_path):
         if noUpdate:
@@ -26,7 +26,6 @@ def  cleanupFile( path ):
         sys.stderr.write( "warning: not a file: %s\n" % path )
         return None, None
 
-    original_path = kernel_original_path
     if os.path.commonprefix( [ src_path, original_path ] ) != original_path:
         if noUpdate:
             panic( "file is not in 'original' directory: %s\n" % path );
@@ -54,27 +53,27 @@ def  cleanupFile( path ):
     else:
         dst_path = "common/" + src_path
 
-    dst_path = os.path.normpath( original_path + "/../" + dst_path )
+    dst_path = os.path.normpath( kernel_cleaned_path + "/" + dst_path )
 
     # now, let's parse the file
     #
-    list = cpp.BlockParser().parseFile(path)
-    if not list:
+    blocks = cpp.BlockParser().parseFile(path)
+    if not blocks:
         sys.stderr.write( "error: can't parse '%s'" % path )
         sys.exit(1)
 
 
-    list.optimizeMacros( kernel_known_macros )
-    list.optimizeIf01()
-    list.removeVarsAndFuncs( statics )
-    list.removeComments()
-    list.removeEmptyLines()
-    list.removeMacroDefines( kernel_ignored_macros )
-    list.insertDisclaimer( kernel.kernel_disclaimer )
-    list.replaceTokens( kernel_token_replacements )
+    blocks.optimizeMacros( kernel_known_macros )
+    blocks.optimizeIf01()
+    blocks.removeVarsAndFuncs( statics )
+    blocks.replaceTokens( kernel_token_replacements )
+    blocks.removeComments()
+    blocks.removeMacroDefines( kernel_ignored_macros )
+    blocks.removeWhiteSpace()
 
     out = StringOutput()
-    list.write(out)
+    out.write( kernel_disclaimer )
+    blocks.writeWithWarning(out, kernel_warning, 4)
     return dst_path, out.get()
 
 
@@ -92,12 +91,15 @@ if __name__ == "__main__":
                 if the content has changed. with this, you can pass more
                 than one file on the command-line
 
+            -k<path>  specify path of original kernel headers
+            -d<path>  specify path of cleaned kernel headers
+
         <header_path> must be in a subdirectory of 'original'
     """ % os.path.basename(sys.argv[0])
         sys.exit(1)
 
     try:
-        optlist, args = getopt.getopt( sys.argv[1:], 'uvk:' )
+        optlist, args = getopt.getopt( sys.argv[1:], 'uvk:d:' )
     except:
         # unrecognized option
         sys.stderr.write( "error: unrecognized option\n" )
@@ -111,6 +113,8 @@ if __name__ == "__main__":
             D_setlevel(1)
         elif opt == '-k':
             kernel_original_path = arg
+        elif opt == '-d':
+            kernel_cleaned_path = arg
 
     if len(args) == 0:
         usage()
@@ -143,9 +147,6 @@ if __name__ == "__main__":
         print "cleaning: %-*s -> %-*s (%s)" % ( 35, path, 35, dst_path, r )
 
 
-    if os.environ.has_key("ANDROID_PRODUCT_OUT"):
-        b.updateP4Files()
-    else:
-        b.updateFiles()
+    b.updateGitFiles()
 
     sys.exit(0)

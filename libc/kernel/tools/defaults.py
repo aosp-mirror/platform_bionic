@@ -16,7 +16,11 @@ kernel_dirs = [ "linux", "asm", "asm-generic", "mtd" ]
 
 # path to the directory containing the original kernel headers
 #
-kernel_original_path = os.path.normpath( find_program_dir() + '/../original' )
+kernel_original_path = os.path.normpath( find_program_dir() + '/../../../../external/kernel-headers/original' )
+
+# path to the default location of the cleaned-up headers
+#
+kernel_cleaned_path = os.path.normpath( find_program_dir() + '/..' )
 
 # a special value that is used to indicate that a given macro is known to be
 # undefined during optimization
@@ -112,6 +116,18 @@ kernel_disclaimer = """\
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
+"""
+
+# This is the warning line that will be inserted every N-th line in the output
+kernel_warning = """\
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 """
