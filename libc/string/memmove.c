@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <string.h>
+#include <strings.h>
 
 void *memmove(void *dst, const void *src, size_t n)
 {
@@ -37,39 +38,7 @@ void *memmove(void *dst, const void *src, size_t n)
   if (__builtin_expect((q < p) || ((size_t)(q - p) >= n), 1)) {
     return memcpy(dst, src, n);
   } else {
-#define PRELOAD_DISTANCE 64
-      /* a semi-optimized memmove(). we're preloading the src and dst buffers
-       * as we go */
-    size_t c0, c1, i;
-    p += n;
-    q += n;
-    /* note: we preload the destination as well, because the 1-byte at a time
-     * copy below doesn't take advantage of the write-buffer, we need
-     * to use the cache instead as a poor man's write-combiner */
-    __builtin_prefetch(p-1);
-    __builtin_prefetch(q-1);
-    if (PRELOAD_DISTANCE > 32) {
-        __builtin_prefetch(p-(32+1));
-        __builtin_prefetch(q-(32+1));
-    }
-    /* do the prefetech as soon as possible, prevent the compiler to
-     * reorder the instructions above the prefetch */
-    asm volatile("":::"memory");
-    c0 = n & 0x1F; /* cache-line is 32 bytes */
-    c1 = n >> 5;
-    while ( c1-- ) {
-        /* ARMv6 can have up to 3 memory access outstanding */
-      __builtin_prefetch(p - (PRELOAD_DISTANCE+1));
-      __builtin_prefetch(q - (PRELOAD_DISTANCE+1));
-      asm volatile("":::"memory");
-      for (i=0 ; i<32 ; i++) {
-        *--q = *--p;
-      }
-    }
-    while ( c0-- ) {
-      *--q = *--p;
-    }
+    bcopy(src, dst, n);
+    return dst;
   }
-
-  return dst;
 }
