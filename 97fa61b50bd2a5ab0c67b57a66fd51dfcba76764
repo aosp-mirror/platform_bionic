@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA+3//5O0\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-02-10T10:31:22Z",
+      "side": 1,
+      "message": "You might want to update this comment to say that this is the \"default maximum number of entries...\" and that it can be overriden with the environment variable (or something else, see below).",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//5Oo\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-02-10T10:31:22Z",
+      "side": 1,
+      "message": "Do you want to reset max_entries here too to force a re-read of the configuration value the next time the cache is used?",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//5Os\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1200,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-02-10T10:31:22Z",
+      "side": 1,
+      "message": "I would suggest using a system property here.\n\nFor the record, new VM processes are forked from Zygote. As such they will get the value of ANDROID_DNS_CACHE_SIZE as it was defined when the Zygote itself was launched, and will ignore any future changes to the variable.\n\nThis is not true of executables launched from a shell.\n\nIf you intend to be a one-time configuration variable, I\u0027d suggest using a read-only system property like ro.net.dns_cache_size that can be initialized in init.rc or init.\u003cboardname\u003e.rc\n\nIf you intend this to be a dynamic configuration variable, using a system property like net.dns_cache_size will ensure that its actual value is used by all processes on the system. Note that changing the value of any net. property automatically flushes the DNS cache too.",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//5Ow\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-02-10T10:31:22Z",
+      "side": 1,
+      "message": "I think you should try to check the result here and return a minimum size if it is too small or negative.",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
