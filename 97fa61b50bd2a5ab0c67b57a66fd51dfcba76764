@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "AAAA+3//5Hw\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1200,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2011-02-11T15:49:48Z",
+      "side": 1,
+      "message": "As long as it\u0027s good enough that all processes have the same cache size I propose to use a read-only system property initialized in init.rc. I would say it\u0027s",
+      "parentUuid": "AAAA+3//5Os\u003d",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAA+3//5Ow\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 1
@@ -64,6 +82,24 @@
       "writtenOn": "2011-02-10T10:31:22Z",
       "side": 1,
       "message": "I think you should try to check the result here and return a minimum size if it is too small or negative.",
+      "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//5Hs\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2011-02-11T15:49:48Z",
+      "side": 1,
+      "message": "If the property is set to negative value or not set the cache size will be set to 64",
+      "parentUuid": "AAAA+3//5Ow\u003d",
       "revId": "97fa61b50bd2a5ab0c67b57a66fd51dfcba76764",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
