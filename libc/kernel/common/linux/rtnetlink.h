@@ -18,6 +18,10 @@
 #include <linux/if_addr.h>
 #include <linux/neighbour.h>
 
+#define RTNL_FAMILY_IPMR 128
+#define RTNL_FAMILY_IP6MR 129
+#define RTNL_FAMILY_MAX 129
+
 enum {
  RTM_BASE = 16,
 #define RTM_BASE RTM_BASE
@@ -126,8 +130,7 @@ enum {
 #define RTM_NR_FAMILIES (RTM_NR_MSGTYPES >> 2)
 #define RTM_FAM(cmd) (((cmd) - RTM_BASE) >> 2)
 
-struct rtattr
-{
+struct rtattr {
  unsigned short rta_len;
  unsigned short rta_type;
 };
@@ -141,8 +144,7 @@ struct rtattr
 #define RTA_DATA(rta) ((void*)(((char*)(rta)) + RTA_LENGTH(0)))
 #define RTA_PAYLOAD(rta) ((int)((rta)->rta_len) - RTA_LENGTH(0))
 
-struct rtmsg
-{
+struct rtmsg {
  unsigned char rtm_family;
  unsigned char rtm_dst_len;
  unsigned char rtm_src_len;
@@ -156,8 +158,7 @@ struct rtmsg
  unsigned rtm_flags;
 };
 
-enum
-{
+enum {
  RTN_UNSPEC,
  RTN_UNICAST,
  RTN_LOCAL,
@@ -191,8 +192,7 @@ enum
 #define RTPROT_NTK 15  
 #define RTPROT_DHCP 16  
 
-enum rt_scope_t
-{
+enum rt_scope_t {
  RT_SCOPE_UNIVERSE=0,
 
  RT_SCOPE_SITE=200,
@@ -206,8 +206,7 @@ enum rt_scope_t
 #define RTM_F_EQUALIZE 0x400  
 #define RTM_F_PREFIX 0x800  
 
-enum rt_class_t
-{
+enum rt_class_t {
  RT_TABLE_UNSPEC=0,
 
  RT_TABLE_COMPAT=252,
@@ -217,8 +216,7 @@ enum rt_class_t
  RT_TABLE_MAX=0xFFFFFFFF
 };
 
-enum rtattr_type_t
-{
+enum rtattr_type_t {
  RTA_UNSPEC,
  RTA_DST,
  RTA_SRC,
@@ -235,6 +233,7 @@ enum rtattr_type_t
  RTA_SESSION,
  RTA_MP_ALGO,
  RTA_TABLE,
+ RTA_MARK,
  __RTA_MAX
 };
 
@@ -243,8 +242,7 @@ enum rtattr_type_t
 #define RTM_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct rtmsg))))
 #define RTM_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct rtmsg))
 
-struct rtnexthop
-{
+struct rtnexthop {
  unsigned short rtnh_len;
  unsigned char rtnh_flags;
  unsigned char rtnh_hops;
@@ -263,8 +261,7 @@ struct rtnexthop
 #define RTNH_SPACE(len) RTNH_ALIGN(RTNH_LENGTH(len))
 #define RTNH_DATA(rtnh) ((struct rtattr*)(((char*)(rtnh)) + RTNH_LENGTH(0)))
 
-struct rta_cacheinfo
-{
+struct rta_cacheinfo {
  __u32 rta_clntref;
  __u32 rta_lastuse;
  __s32 rta_expires;
@@ -277,8 +274,7 @@ struct rta_cacheinfo
  __u32 rta_tsage;
 };
 
-enum
-{
+enum {
  RTAX_UNSPEC,
 #define RTAX_UNSPEC RTAX_UNSPEC
  RTAX_LOCK,
@@ -307,6 +303,8 @@ enum
 #define RTAX_FEATURES RTAX_FEATURES
  RTAX_RTO_MIN,
 #define RTAX_RTO_MIN RTAX_RTO_MIN
+ RTAX_INITRWND,
+#define RTAX_INITRWND RTAX_INITRWND
  __RTAX_MAX
 };
 
@@ -317,8 +315,7 @@ enum
 #define RTAX_FEATURE_TIMESTAMP 0x00000004
 #define RTAX_FEATURE_ALLFRAG 0x00000008
 
-struct rta_session
-{
+struct rta_session {
  __u8 proto;
  __u8 pad1;
  __u16 pad2;
@@ -339,13 +336,11 @@ struct rta_session
  } u;
 };
 
-struct rtgenmsg
-{
+struct rtgenmsg {
  unsigned char rtgen_family;
 };
 
-struct ifinfomsg
-{
+struct ifinfomsg {
  unsigned char ifi_family;
  unsigned char __ifi_pad;
  unsigned short ifi_type;
@@ -354,8 +349,7 @@ struct ifinfomsg
  unsigned ifi_change;
 };
 
-struct prefixmsg
-{
+struct prefixmsg {
  unsigned char prefix_family;
  unsigned char prefix_pad1;
  unsigned short prefix_pad2;
@@ -376,14 +370,12 @@ enum
 
 #define PREFIX_MAX (__PREFIX_MAX - 1)
 
-struct prefix_cacheinfo
-{
+struct prefix_cacheinfo {
  __u32 preferred_time;
  __u32 valid_time;
 };
 
-struct tcmsg
-{
+struct tcmsg {
  unsigned char tcm_family;
  unsigned char tcm__pad1;
  unsigned short tcm__pad2;
@@ -393,8 +385,7 @@ struct tcmsg
  __u32 tcm_info;
 };
 
-enum
-{
+enum {
  TCA_UNSPEC,
  TCA_KIND,
  TCA_OPTIONS,
@@ -412,8 +403,7 @@ enum
 #define TCA_RTA(r) ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct tcmsg))))
 #define TCA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct tcmsg))
 
-struct nduseroptmsg
-{
+struct nduseroptmsg {
  unsigned char nduseropt_family;
  unsigned char nduseropt_pad1;
  unsigned short nduseropt_opts_len;
@@ -425,8 +415,7 @@ struct nduseroptmsg
 
 };
 
-enum
-{
+enum {
  NDUSEROPT_UNSPEC,
  NDUSEROPT_SRCADDR,
  __NDUSEROPT_MAX
@@ -503,8 +492,7 @@ enum rtnetlink_groups {
 };
 #define RTNLGRP_MAX (__RTNLGRP_MAX - 1)
 
-struct tcamsg
-{
+struct tcamsg {
  unsigned char tca_family;
  unsigned char tca__pad1;
  unsigned short tca__pad2;
@@ -515,3 +503,4 @@ struct tcamsg
 #define TCAA_MAX 1
 
 #endif
+
