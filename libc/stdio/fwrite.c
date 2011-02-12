@@ -45,6 +45,7 @@ fwrite(const void *buf, size_t size, size_t count, FILE *fp)
 	size_t n;
 	struct __suio uio;
 	struct __siov iov;
+	int ret;
 
 	iov.iov_base = (void *)buf;
 	uio.uio_resid = iov.iov_len = n = count * size;
@@ -56,7 +57,10 @@ fwrite(const void *buf, size_t size, size_t count, FILE *fp)
 	 * skip the divide if this happens, since divides are
 	 * generally slow and since this occurs whenever size==0.
 	 */
-	if (__sfvwrite(fp, &uio) == 0)
+	FLOCKFILE(fp);
+	ret = __sfvwrite(fp, &uio);
+	FUNLOCKFILE(fp);
+	if (ret == 0)
 		return (count);
 	return ((n - uio.uio_resid) / size);
 }

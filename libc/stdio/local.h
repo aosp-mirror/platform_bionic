@@ -46,6 +46,7 @@
  */
 
 int	__sflush(FILE *);
+int	__sflush_locked(FILE *);
 FILE	*__sfp(void);
 int	__srefill(FILE *);
 int	__sread(void *, char *, int);
@@ -59,6 +60,7 @@ int	__swhatbuf(FILE *, size_t *, int *);
 int	_fwalk(int (*)(FILE *));
 int	__swsetup(FILE *);
 int	__sflags(const char *, int *);
+int	__vfprintf(FILE *, const char *, __va_list);
 
 extern void __atexit_register_cleanup(void (*)(void));
 extern int __sdidinit;
@@ -89,3 +91,6 @@ extern int __sdidinit;
 	free((char *)(fp)->_lb._base); \
 	(fp)->_lb._base = NULL; \
 }
+
+#define FLOCKFILE(fp)   do { if (__isthreaded) flockfile(fp); } while (0)
+#define FUNLOCKFILE(fp) do { if (__isthreaded) funlockfile(fp); } while (0)

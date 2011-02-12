@@ -44,11 +44,15 @@ fputs(const char *s, FILE *fp)
 {
 	struct __suio uio;
 	struct __siov iov;
+	int ret;
 
 	iov.iov_base = (void *)s;
 	iov.iov_len = uio.uio_resid = strlen(s);
 	uio.uio_iov = &iov;
 	uio.uio_iovcnt = 1;
+	FLOCKFILE(fp);
 	_SET_ORIENTATION(fp, -1);
-	return (__sfvwrite(fp, &uio));
+	ret = __sfvwrite(fp, &uio);
+	FUNLOCKFILE(fp);
+	return (ret);
 }

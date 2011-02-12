@@ -45,8 +45,9 @@ _fwalk(int (*function)(FILE *))
 
 	ret = 0;
 	for (g = &__sglue; g != NULL; g = g->next)
-		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
-			if (fp->_flags != 0)
+		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++) {
+			if ((fp->_flags != 0) && ((fp->_flags & __SIGN) == 0))
 				ret |= (*function)(fp);
+		}
 	return (ret);
 }

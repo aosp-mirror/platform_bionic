@@ -32,6 +32,7 @@
  */
 
 #include <stdio.h>
+#include "local.h"
 
 /*
  * A subroutine version of the macro getc_unlocked.
@@ -54,8 +55,8 @@ getc(FILE *fp)
 {
 	int c;
 
-	flockfile(fp);
+	FLOCKFILE(fp);
 	c = __sgetc(fp);
-	funlockfile(fp);
+	FUNLOCKFILE(fp);
 	return (c);
 }

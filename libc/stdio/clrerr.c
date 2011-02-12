@@ -32,12 +32,13 @@
  */
 
 #include <stdio.h>
+#include "local.h"
 #undef	clearerr
 
 void
 clearerr(FILE *fp)
 {
-	flockfile(fp);
+	FLOCKFILE(fp);
 	__sclearerr(fp);
-	funlockfile(fp);
+	FUNLOCKFILE(fp);
 }

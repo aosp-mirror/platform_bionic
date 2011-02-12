@@ -39,14 +39,18 @@
 int
 fflush(FILE *fp)
 {
+	int r;
 
 	if (fp == NULL)
-		return (_fwalk(__sflush));
+		return (_fwalk(__sflush_locked));
+	FLOCKFILE(fp);
 	if ((fp->_flags & (__SWR | __SRW)) == 0) {
 		errno = EBADF;
-		return (EOF);
-	}
-	return (__sflush(fp));
+		r = EOF;
+	} else
+		r = __sflush(fp);
+	FUNLOCKFILE(fp);
+	return (r);
 }
 
 int
@@ -79,4 +83,15 @@ __sflush(FILE *fp)
 		}
 	}
 	return (0);
+}
+
+int
+__sflush_locked(FILE *fp)
+{
+	int r;
+
+	FLOCKFILE(fp);
+	r = __sflush(fp);
+	FUNLOCKFILE(fp);
+	return (r);
 }

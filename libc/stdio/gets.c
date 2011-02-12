@@ -32,6 +32,7 @@
  */
 
 #include <stdio.h>
+#include "local.h"
 
 __warn_references(gets,
     "warning: gets() is very unsafe; consider using fgets()");
@@ -42,14 +43,17 @@ gets(char *buf)
 	int c;
 	char *s;
 
-	for (s = buf; (c = getchar()) != '\n';)
+	FLOCKFILE(stdin);
+	for (s = buf; (c = getchar_unlocked()) != '\n';)
 		if (c == EOF)
-			if (s == buf)
+			if (s == buf) {
+				FUNLOCKFILE(stdin);
 				return (NULL);
-			else
+			} else
 				break;
 		else
 			*s++ = c;
 	*s = '\0';
+	FUNLOCKFILE(stdin);
 	return (buf);
 }
