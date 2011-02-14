@@ -170,6 +170,7 @@ __END_DECLS
 #define	__SOFF	0x1000		/* set iff _offset is in fact correct */
 #define	__SMOD	0x2000		/* true => fgetln modified _p text */
 #define	__SALC	0x4000		/* allocate string space dynamically */
+#define	__SIGN	0x8000		/* ignore this file in _fwalk */
 
 /*
  * The following three definitions are for ANSI C, which took them
@@ -406,38 +407,43 @@ static __inline int __sputc(int _c, FILE *_p) {
 #define	__sclearerr(p)	((void)((p)->_flags &= ~(__SERR|__SEOF)))
 #define	__sfileno(p)	((p)->_file)
 
-#define	feof(p)		__sfeof(p)
-#define	ferror(p)	__sferror(p)
+extern	int __isthreaded;
 
-#ifndef _POSIX_THREADS
-#define	clearerr(p)	__sclearerr(p)
-#endif
+#define	feof(p)		(!__isthreaded ? __sfeof(p) : (feof)(p))
+#define	ferror(p)	(!__isthreaded ? __sferror(p) : (ferror)(p))
+#define	clearerr(p)	(!__isthreaded ? __sclearerr(p) : (clearerr)(p))
 
 #if __POSIX_VISIBLE
-#define	fileno(p)	__sfileno(p)
+#define	fileno(p)	(!__isthreaded ? __sfileno(p) : (fileno)(p))
 #endif
 
+#define	getc(fp)	(!__isthreaded ? __sgetc(fp) : (getc)(fp))
+
+#if __BSD_VISIBLE
+/*
+ * The macro implementations of putc and putc_unlocked are not
+ * fully POSIX compliant; they do not set errno on failure
+ */
+#define putc(x, fp)	(!__isthreaded ? __sputc(x, fp) : (putc)(x, fp))
+#endif /* __BSD_VISIBLE */
+
 #ifndef lint
-#ifndef _POSIX_THREADS
-#define	getc(fp)	__sgetc(fp)
-#endif /* _POSIX_THREADS */
+#if __POSIX_VISIBLE >= 199506
 #define	getc_unlocked(fp)	__sgetc(fp)
 /*
  * The macro implementations of putc and putc_unlocked are not
  * fully POSIX compliant; they do not set errno on failure
  */
 #if __BSD_VISIBLE
-#ifndef _POSIX_THREADS
-#define putc(x, fp)	__sputc(x, fp)
-#endif /* _POSIX_THREADS */
 #define putc_unlocked(x, fp)	__sputc(x, fp)
 #endif /* __BSD_VISIBLE */
+#endif /* __POSIX_VISIBLE >= 199506 */
 #endif /* lint */
 
 #define	getchar()	getc(stdin)
 #define	putchar(x)	putc(x, stdout)
-#define getchar_unlocked()	getc_unlocked(stdin)
-#define putchar_unlocked(c)	putc_unlocked(c, stdout)
+#define	getchar_unlocked()	getc_unlocked(stdin)
+#define	putchar_unlocked(c)	putc_unlocked(c, stdout)
 
 #ifdef _GNU_SOURCE
 /*

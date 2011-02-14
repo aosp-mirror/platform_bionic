@@ -36,9 +36,6 @@
 #include <stdlib.h>
 #include "local.h"
 
-/* BIONIC: remove any file lock associated with a FILE* pointer */
-extern void __fremovelock(FILE *fp);
-
 int
 fclose(FILE *fp)
 {
@@ -48,6 +45,7 @@ fclose(FILE *fp)
 		errno = EBADF;
 		return (EOF);
 	}
+	FLOCKFILE(fp);
 	WCIO_FREE(fp);
 	r = fp->_flags & __SWR ? __sflush(fp) : 0;
 	if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0)
@@ -58,8 +56,8 @@ fclose(FILE *fp)
 		FREEUB(fp);
 	if (HASLB(fp))
 		FREELB(fp);
-	fp->_flags = 0;		/* Release this FILE for reuse. */
 	fp->_r = fp->_w = 0;	/* Mess up if reaccessed. */
-	__fremovelock(fp);
+	fp->_flags = 0;		/* Release this FILE for reuse. */
+	FUNLOCKFILE(fp);
 	return (r);
 }

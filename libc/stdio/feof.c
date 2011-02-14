@@ -32,6 +32,7 @@
  */
 
 #include <stdio.h>
+#include "local.h"
 
 /*
  * A subroutine version of the macro feof.
@@ -41,5 +42,10 @@
 int
 feof(FILE *fp)
 {
-	return (__sfeof(fp));
+	int ret;
+
+	FLOCKFILE(fp);
+	ret = __sfeof(fp);
+	FUNLOCKFILE(fp);
+	return (ret);
 }

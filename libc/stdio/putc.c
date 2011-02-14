@@ -60,8 +60,8 @@ putc(int c, FILE *fp)
 {
 	int ret;
 
-	flockfile(fp);
+	FLOCKFILE(fp);
 	ret = putc_unlocked(c, fp);
-	funlockfile(fp);
+	FUNLOCKFILE(fp);
 	return (ret);
 }

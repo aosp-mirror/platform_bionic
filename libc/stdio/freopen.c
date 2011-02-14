@@ -59,6 +59,8 @@ freopen(const char *file, const char *mode, FILE *fp)
 	if (!__sdidinit)
 		__sinit();
 
+	FLOCKFILE(fp);
+
 	/*
 	 * There are actually programs that depend on being able to "freopen"
 	 * descriptors that weren't originally open.  Keep this from breaking.
@@ -120,6 +122,7 @@ freopen(const char *file, const char *mode, FILE *fp)
 
 	if (f < 0) {			/* did not get it after all */
 		fp->_flags = 0;		/* set it free */
+		FUNLOCKFILE(fp);
 		errno = sverrno;	/* restore in case _close clobbered */
 		return (NULL);
 	}
@@ -154,5 +157,6 @@ freopen(const char *file, const char *mode, FILE *fp)
 	 */
 	if (oflags & O_APPEND)
 		(void) __sseek((void *)fp, (fpos_t)0, SEEK_END);
+	FUNLOCKFILE(fp);
 	return (fp);
 }

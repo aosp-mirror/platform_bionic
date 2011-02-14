@@ -36,5 +36,5 @@
 int
 fgetc(FILE *fp)
 {
-	return (__sgetc(fp));
+	return (getc(fp));
 }

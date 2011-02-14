@@ -58,7 +58,7 @@ vsnprintf(char *str, size_t n, const char *fmt, __va_list ap)
 	f._flags = __SWR | __SSTR;
 	f._bf._base = f._p = (unsigned char *)str;
 	f._bf._size = f._w = n - 1;
-	ret = vfprintf(&f, fmt, ap);
+	ret = __vfprintf(&f, fmt, ap);
 	*f._p = '\0';
 	return (ret);
 }
