@@ -541,6 +541,7 @@ android_getaddrinfo_proxy(
 		if (fread(&name_len, sizeof(name_len), 1, proxy) != 1) {
 			break;
 		}
+		name_len = ntohl(name_len);
 		if (name_len != 0) {
 			ai->ai_canonname = (char*) malloc(name_len);
 			if (fread(ai->ai_canonname, name_len, 1, proxy) != 1) {
