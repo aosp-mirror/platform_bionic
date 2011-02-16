@@ -25,15 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
 
-    .global memset
-    .type memset, %function
-
-    .global bzero
-    .type bzero, %function
-
-    .align
+#include <machine/asm.h>
 	
 		/*
 		 * Optimized memset() for ARM.
@@ -41,15 +34,15 @@
          * memset() returns its first argument.
 		 */
 	
-bzero:
+ENTRY(bzero)
         mov     r2, r1
         mov     r1, #0
+END(bzero)
 
-memset:	
+ENTRY(memset)
 		/* compute the offset to align the destination
 		 * offset = (4-(src&3))&3 = -src & 3
 		 */
-        .fnstart
         .save       {r0, r4-r7, lr}
 		stmfd		sp!, {r0, r4-r7, lr}
 		rsb			r3, r0, #0
@@ -113,5 +106,4 @@ memset:
 		strcsb		r1, [r0]
         ldmfd		sp!, {r0, r4-r7, lr}
         bx          lr
-        .fnend
-    
+END(memset)

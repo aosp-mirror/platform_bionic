@@ -27,12 +27,7 @@
  */
 
 #include <machine/cpu-features.h>
-
-    .text
-
-    .global __memcmp16
-    .type __memcmp16, %function
-    .align 4
+#include <machine/asm.h>
 
 /*
  * Optimized memcmp16() for ARM9.
@@ -43,8 +38,7 @@
  * (2) The loads are scheduled in a way they won't stall
  */
 
-__memcmp16:
-        .fnstart
+ENTRY(__memcmp16)
         PLD         (r0, #0)
         PLD         (r1, #0)
 
@@ -95,8 +89,6 @@ __memcmp16:
         /* restore registers and return */
         ldmnefd     sp!, {r4, lr}
         bxne        lr
-        .fnend
-
 
 
 0:      /* here the first pointer is aligned, and we have at least 3 words
@@ -237,3 +229,4 @@ __memcmp16:
 7:      /* fix up the 2 pointers and fallthrough... */
         sub         r1, r1, #2
         b           2b
+END(__memcmp16)
