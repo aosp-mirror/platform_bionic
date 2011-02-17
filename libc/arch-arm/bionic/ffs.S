@@ -36,8 +36,8 @@
  * 6 bits as an index into the table.  This algorithm should be a win
  * over the checking each bit in turn as per the C compiled version.
  *
- * under ARMv5 there's an instruction called CLZ (count leading Zero's) that
- * could be used
+ * Some newer ARM architectures have an instruction named
+ * CLZ (count leading Zero's) that is used
  *
  * This is the ffs algorithm devised by d.seal and posted to comp.sys.arm on
  * 16 Feb 1994.
@@ -47,7 +47,7 @@ ENTRY(ffs)
 	/* Standard trick to isolate bottom bit in r0 or 0 if r0 = 0 on entry */
  	rsb     r1, r0, #0
  	ands    r0, r0, r1
-#ifndef __ARM_ARCH_5__
+#ifndef __ARM_HAVE_CLZ
 	/*
 	 * now r0 has at most one set bit, call this X
 	 * if X = 0, all further instructions are skipped
@@ -74,9 +74,9 @@ ENTRY(ffs)
 	.byte	10,  0,  0, 25,  0,  0, 21, 27  /* 40-47 */
 	.byte	31,  0,  0,  0,  0, 24,  0, 20  /* 48-55 */
 	.byte   30,  0, 23, 19, 29, 18, 17,  0  /* 56-63 */
-#else
+#else /* !defined(__ARM_HAVE_CLZ) */
 	clzne	r0, r0
 	rsbne	r0, r0, #32
 	bx		lr
-#endif
+#endif /* !defined(__ARM_HAVE_CLZ) */
 
