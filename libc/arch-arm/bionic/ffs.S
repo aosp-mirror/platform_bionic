@@ -29,6 +29,7 @@
  */
 
 #include <machine/asm.h>
+#include <machine/cpu-features.h>
 
 /*
  * ffs - find first set bit, this algorithm isolates the first set
