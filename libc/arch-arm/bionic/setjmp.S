@@ -79,6 +79,7 @@ ENTRY(setjmp)
 
 	mov	r0, #0x00000000
 	bx      lr
+END(setjmp)
 
 .Lsetjmp_magic:
 	.word	_JB_MAGIC_SETJMP
@@ -138,3 +139,4 @@ botch:
 	bl	PIC_SYM(_C_LABEL(longjmperror), PLT)
 	bl	PIC_SYM(_C_LABEL(abort), PLT)
 	b	. - 8		/* Cannot get here */
+END(longjmp)

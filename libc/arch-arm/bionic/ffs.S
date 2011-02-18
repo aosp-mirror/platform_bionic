@@ -62,6 +62,7 @@ ENTRY(ffs)
 	ldrneb  r0, [ r2, r0, lsr #26 ]
 
 	bx		lr
+END(ffs)
 
 .text;
 .type .L_ffs_table, _ASM_TYPE_OBJECT;
@@ -79,5 +80,6 @@ ENTRY(ffs)
 	clzne	r0, r0
 	rsbne	r0, r0, #32
 	bx		lr
+END(ffs)
 #endif /* !defined(__ARM_HAVE_CLZ) */
 
