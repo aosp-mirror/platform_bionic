@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA+3//4FA\u003d",
+        "filename": "libc/netbsd/net/getnameinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1000269
+      },
+      "writtenOn": "2011-02-21T23:54:22Z",
+      "side": 1,
+      "message": "bad indentation.  also, please use { braces } even for single-line if/else statement bodies.  the rest of this code does.",
+      "revId": "a978b443f7e47499495fe8022aa6c9ba273192b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA+3//4E8\u003d",
+        "filename": "libc/netbsd/net/getnameinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000269
+      },
+      "writtenOn": "2011-02-21T23:54:22Z",
+      "side": 1,
+      "message": "remove trailing ;",
+      "revId": "a978b443f7e47499495fe8022aa6c9ba273192b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
