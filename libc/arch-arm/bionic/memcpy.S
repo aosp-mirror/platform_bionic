@@ -27,6 +27,7 @@
  */
 
 #include <machine/cpu-features.h>
+#include <machine/asm.h>
 
 #if defined(__ARM_NEON__)
 
@@ -143,17 +144,11 @@ memcpy:
 
         ldmfd       sp!, {r0, lr}
         bx          lr
-        .fnend
+END(memcpy)
 
 
 #else   /* __ARM_ARCH__ < 7 */
 
-
-	.text
-
-    .global memcpy
-    .type memcpy, %function
-    .align 4
 
 		/*
 		 * Optimized memcpy() for ARM.
@@ -162,12 +157,11 @@ memcpy:
 		 * so we have to preserve R0.
 		 */
 
-memcpy:
+ENTRY(memcpy)
 		/* The stack must always be 64-bits aligned to be compliant with the
 		 * ARM ABI. Since we have to save R0, we might as well save R4
 		 * which we can use for better pipelining of the reads below
 		 */
-        .fnstart
         .save       {r0, r4, lr}
         stmfd       sp!, {r0, r4, lr}
         /* Making room for r5-r11 which will be spilled later */
@@ -504,7 +498,7 @@ copy_last_3_and_return:
         add         sp,  sp, #28
 		ldmfd		sp!, {r0, r4, lr}
 		bx			lr
-        .fnend
+END(memcpy)
 
 
 #endif    /* __ARM_ARCH__ < 7 */

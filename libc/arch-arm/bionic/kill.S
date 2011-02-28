@@ -33,17 +33,13 @@
    of a corrupted malloc heap).
 */
 #include <sys/linux-syscalls.h>
+#include <machine/asm.h>
 
 #ifndef __NR_kill
 #define __NR_kill   37
 #endif
 
-    .text
-    .type kill, #function
-    .globl kill
-    .align 4
-
-kill:
+ENTRY(kill)
     stmfd   sp!, {r4-r7, ip, lr}
     ldr     r7, =__NR_kill
     swi     #0
@@ -51,3 +47,4 @@ kill:
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
+END(kill)

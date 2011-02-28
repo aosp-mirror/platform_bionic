@@ -9,9 +9,7 @@
 #include <signal.h>
 #include <stdint.h>
 #include <sys/types.h>
-
-typedef void *psaddr_t;
-typedef pid_t lwpid_t;
+#include <sys/procfs.h>
 
 #define TD_THR_ANY_USER_FLAGS       0xffffffff
 #define TD_THR_LOWEST_PRIORITY      -20

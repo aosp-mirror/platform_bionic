@@ -105,8 +105,29 @@ def find_bionic_root():
     else:
         return None
 
+def find_original_kernel_headers():
+    """try to find the directory containing the original kernel headers"""
+    bionic_root = find_bionic_root()
+    if not bionic_root:
+        D("Could not find Bionic root !!")
+        return None
+
+    path = os.path.normpath(bionic_root + "/../../external/kernel-headers/original")
+    if not os.path.isdir(path):
+        D("Could not find %s" % (path))
+        return None
+
+    return path
+
 def find_kernel_headers():
     """try to find the directory containing the kernel headers for this machine"""
+
+    # First try to find the original kernel headers.
+    ret = find_original_kernel_headers()
+    if ret:
+        D("found original kernel headers in: %s" % (ret))
+        return ret
+
     status, version = commands.getstatusoutput( "uname -r" )  # get Linux kernel version
     if status != 0:
         D("could not execute 'uname -r' command properly")
@@ -116,14 +137,39 @@ def find_kernel_headers():
     if len(version) > 5 and version[-5:] == "-xenU":
         version = version[:-5]
 
-    path = "/usr/src/linux-headers-" + version
-    D("probing %s for kernel headers" % (path+"/include"))
+    path = "/usr/src/linux-headers-" + version + "/include"
+    D("probing %s for kernel headers" % (path))
     ret = os.path.isdir( path )
     if ret:
-        D("found kernel headers in: %s" % (path + "/include"))
+        D("found kernel headers in: %s" % (path))
         return path
     return None
 
+def find_arch_header(kernel_headers,arch,header):
+    # First, try in <root>/arch/<arm>/include/<header>
+    # corresponding to the location in the kernel source tree for
+    # certain architectures (e.g. arm).
+    path = "%s/arch/%s/include/asm/%s" % (kernel_headers, arch, header)
+    D("Probing for %s" % path)
+    if os.path.exists(path):
+        return path
+
+    # Try <root>/asm-<arch>/include/<header> corresponding to the location
+    # in the kernel source tree for other architectures (e.g. x86).
+    path = "%s/include/asm-%s/%s" % (kernel_headers, arch, header)
+    D("Probing for %s" % path)
+    if os.path.exists(path):
+        return path
+
+    # Otherwise, look under <root>/asm-<arch>/<header> corresponding
+    # the original kernel headers directory
+    path = "%s/asm-%s/%s" % (kernel_headers, arch, header)
+    D("Probing for %s" % path)
+    if os.path.exists(path):
+        return path
+
+
+    return None
 
 # parser for the SYSCALLS.TXT file
 #
@@ -212,7 +258,12 @@ class SysCallsTxtParser:
                 E("invalid syscall number in '%s'" % line)
                 return
 
-        print str(syscall_id) + ':' + str(syscall_id2) + ':' + str(syscall_id3)
+		global verbose
+        if verbose >= 2:
+            if call_id < 0:
+                print "%s: %d,%d,%d" % (syscall_name, syscall_id, syscall_id2, syscall_id3)
+            else:
+                print "%s(%d): %d,%d,%d" % (syscall_name, call_id, syscall_id, syscall_id2, syscall_id3)
 
         t = { "id"     : syscall_id,
               "id2"    : syscall_id2,

@@ -20,8 +20,7 @@ __pthread_clone:
         movl    %eax, -12(%ecx)
         movl    24(%esp), %eax
         movl    %eax, -8(%ecx)
-        lea     (%ecx), %eax
-        movl    %eax, -4(%ecx)
+        movl    %ecx, -4(%ecx)
 
         movl    $__NR_clone, %eax
         int     $0x80

@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "local.h"
 #include "fvwrite.h"
 
 /*
@@ -44,6 +45,7 @@ puts(const char *s)
 	size_t c = strlen(s);
 	struct __suio uio;
 	struct __siov iov[2];
+	int ret;
 
 	iov[0].iov_base = (void *)s;
 	iov[0].iov_len = c;
@@ -52,5 +54,8 @@ puts(const char *s)
 	uio.uio_resid = c + 1;
 	uio.uio_iov = &iov[0];
 	uio.uio_iovcnt = 2;
-	return (__sfvwrite(stdout, &uio) ? EOF : '\n');
+	FLOCKFILE(stdout);
+	ret = __sfvwrite(stdout, &uio);
+	FUNLOCKFILE(stdout);
+	return (ret ? EOF : '\n');
 }

@@ -32,6 +32,7 @@
  */
 
 #include <stdio.h>
+#include "local.h"
 
 /*
  * A subroutine version of the macro fileno.
@@ -41,5 +42,10 @@
 int
 fileno(FILE *fp)
 {
-	return (__sfileno(fp));
+	int ret;
+
+	FLOCKFILE(fp);
+	ret = __sfileno(fp);
+	FUNLOCKFILE(fp);
+	return (ret);
 }

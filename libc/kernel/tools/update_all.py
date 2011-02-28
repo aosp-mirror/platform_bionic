@@ -6,7 +6,7 @@ from utils import *
 
 def usage():
     print """\
-  usage: %(progname)s
+  usage: %(progname)s [kernel-original-path]
 
     this program is used to update all the auto-generated clean headers
     used by the Bionic C library. it assumes the following:
@@ -31,13 +31,19 @@ except:
     sys.stderr.write( "error: unrecognized option\n" )
     usage()
 
-if len(optlist) > 0 or len(args) > 0:
+if len(optlist) > 0 or len(args) > 1:
     usage()
 
 progdir = find_program_dir()
-original_dir = os.path.normpath( progdir + "/../original" )
-if not os.path.isdir( original_dir ):
-    panic( "required directory does not exists: %s\n" % original_dir )
+
+if len(args) == 1:
+    original_dir = arg[0]
+    if not os.path.isdir(original_dir):
+        panic( "Not a directory: %s" % original_dir )
+else:
+    original_dir = kernel_original_path
+    if not os.path.isdir(original_dir):
+        panic( "Missing directory, please specify one through command-line: %s" % original_dir )
 
 # find all source files in 'original'
 #
@@ -57,29 +63,36 @@ b.readDir( os.path.normpath( progdir + "/../common" ) )
 
 #print "OLD " + repr(b.old_files)
 
+oldlen = 120
 for path in sources:
-    dst_path, newdata = clean_header.cleanupFile(path)
+    dst_path, newdata = clean_header.cleanupFile(path, original_dir)
     if not dst_path:
         continue
 
     b.readFile( dst_path )
     r = b.editFile( dst_path, newdata )
     if r == 0:
-        r = "unchanged"
+        state = "unchanged"
     elif r == 1:
-        r = "edited"
+        state = "edited"
     else:
-        r = "added"
+        state = "added"
 
-    print "cleaning: %-*s -> %-*s (%s)" % ( 35, path, 35, dst_path, r )
+    str = "cleaning: %-*s -> %-*s (%s)" % ( 35, "<original>" + path[len(original_dir):], 35, dst_path, state )
+    if sys.stdout.isatty():
+        print "%-*s" % (oldlen,str),
+        if (r == 0):
+            print "\r",
+        else:
+            print "\n",
+            oldlen = 0
+    else:
+        print str
 
-# We don't use Perforce anymore, but just in case, define ANDROID_USE_P4
-# in your environment if you think you need it.
-usePerforce = os.environ.has_key("ANDROID_USE_P4")
+    oldlen = len(str)
 
-if usePerforce:
-    b.updateP4Files()
-else:
-    b.updateFiles()
+print "%-*s" % (oldlen,"Done!")
+
+b.updateGitFiles()
 
 sys.exit(0)

@@ -33,14 +33,9 @@
 
 #include <stdio.h>
 #include <errno.h>
-#include "local.h"
 
 int
 fputc(int c, FILE *fp)
 {
-	if (cantwrite(fp)) {
-		errno = EBADF;
-		return (EOF);
-	}
 	return (putc(c, fp));
 }

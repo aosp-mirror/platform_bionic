@@ -61,6 +61,7 @@ setvbuf(FILE *fp, char *buf, int mode, size_t size)
 	 * malloc()ed.  We also clear any eof condition, as if this were
 	 * a seek.
 	 */
+	FLOCKFILE(fp);
 	ret = 0;
 	(void)__sflush(fp);
 	if (HASUB(fp))
@@ -107,6 +108,7 @@ nbf:
 			fp->_w = 0;
 			fp->_bf._base = fp->_p = fp->_nbuf;
 			fp->_bf._size = 1;
+			FUNLOCKFILE(fp);
 			return (ret);
 		}
 		flags |= __SMBF;
@@ -145,6 +147,7 @@ nbf:
 		/* begin/continue reading, or stay in intermediate state */
 		fp->_w = 0;
 	}
+	FUNLOCKFILE(fp);
 	__atexit_register_cleanup(_cleanup);
 
 	return (ret);

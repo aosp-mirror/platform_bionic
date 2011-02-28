@@ -54,7 +54,7 @@
 #include "ba.h"
 
 #define ALLOW_SYMBOLS_FROM_MAIN 1
-#define SO_MAX 96
+#define SO_MAX 128
 
 /* Assume average path length of 64 and max 8 paths */
 #define LDPATH_BUFSIZE 512

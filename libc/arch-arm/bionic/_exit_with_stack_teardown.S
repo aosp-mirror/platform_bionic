@@ -26,15 +26,10 @@
  * SUCH DAMAGE.
  */
 #include <asm/unistd.h>
-
-.text
-.type _exit_with_stack_teardown, #function
-.globl _exit_with_stack_teardown
-.align 4
+#include <machine/asm.h>
 
 @ void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode)
-
-_exit_with_stack_teardown:
+ENTRY(_exit_with_stack_teardown)
 
 #if __ARM_EABI__
     mov     lr, r2
@@ -53,3 +48,4 @@ _exit_with_stack_teardown:
     @ exit() should never return, cause a crash if it does
     mov		r0, #0
     ldr		r0, [r0]
+END(_exit_with_stack_teardown)

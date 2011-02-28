@@ -32,18 +32,15 @@
    abort due to a fatal runtime error (e.g. detection
    of a corrupted malloc heap).
 */
+
 #include <sys/linux-syscalls.h>
+#include <machine/asm.h>
 
 #ifndef __NR_tkill
 #define __NR_tkill  238
 #endif
 
-    .text
-    .type tkill, #function
-    .globl tkill
-    .align 4
-
-tkill:
+ENTRY(tkill)
     stmfd   sp!, {r4-r7, ip, lr}
     ldr     r7, =__NR_tkill
     swi     #0
@@ -51,3 +48,4 @@ tkill:
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
+END(tkill)

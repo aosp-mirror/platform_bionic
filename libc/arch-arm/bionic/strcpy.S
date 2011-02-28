@@ -30,15 +30,9 @@
  */
 
 #include <machine/cpu-features.h>
+#include <machine/asm.h>
 
-	.text
-
-	.global strcpy
-	.type strcpy, %function
-	.align 4
-
-strcpy:
-	.fnstart
+ENTRY(strcpy)
 	PLD(r1, #0)
 	eor	r2, r0, r1
 	mov	ip, r0
@@ -136,3 +130,4 @@ strcpy:
 	cmp	r2, #0
 	bne	4b
 	bx	lr
+END(strcpy)

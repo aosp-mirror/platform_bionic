@@ -27,12 +27,7 @@
  */
 
 #include <machine/cpu-features.h>
-
-    .text
-
-    .global memcmp
-    .type memcmp, %function
-    .align 4
+#include <machine/asm.h>
 
 /*
  * Optimized memcmp() for ARM9.
@@ -43,8 +38,7 @@
  * (2) The loads are scheduled in a way they won't stall
  */
 
-memcmp:
-        .fnstart
+ENTRY(memcmp)
         PLD         (r0, #0)
         PLD         (r1, #0)
 
@@ -176,7 +170,7 @@ memcmp:
 9:      /* restore registers and return */
         ldmfd       sp!, {r4, lr}
         bx          lr
-        .fnend
+END(memcmp)
 
 
 

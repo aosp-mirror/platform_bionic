@@ -26,14 +26,9 @@
  * SUCH DAMAGE.
  */
 #include <sys/linux-syscalls.h>
+#include <machine/asm.h>
 
-    .text
-    .type __pthread_clone, #function
-    .global __pthread_clone
-    .align 4
-    .fnstart
-
-__pthread_clone:
+ENTRY(__pthread_clone)
     @ insert the args onto the new stack
     str     r0, [r1, #-4]
     str     r3, [r1, #-8]
@@ -73,7 +68,7 @@ __pthread_clone:
 __error:
     mov     r0, #-1
     bx      lr
-    .fnend
+END(__pthread_clone)
 
 
     #
@@ -88,12 +83,8 @@ __error:
     #       at the end of the parameter list makes the
     #       implementation much simpler.
     #
-    .type __bionic_clone, #function
-    .globl __bionic_clone
-    .align 4
-    .fnstart
 
-__bionic_clone:
+ENTRY(__bionic_clone)
     mov     ip, sp
     .save   {r4, r5, r6, r7}
 
@@ -124,5 +115,4 @@ __bionic_clone:
     ldr    r0, [sp, #-4]
     ldr    r1, [sp, #-8]
     b      __bionic_clone_entry
-
-    .fnend
+END(__bionic_clone)

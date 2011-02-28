@@ -48,7 +48,7 @@ __LIBC_HIDDEN__ int
 __sfvwrite(FILE *fp, struct __suio *uio)
 {
 	size_t len;
-	char *p;
+	const char *p;
 	struct __siov *iov;
 	int w, s;
 	char *nl;

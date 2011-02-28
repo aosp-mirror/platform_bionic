@@ -40,8 +40,8 @@ def parse_command_line(args):
     if len(args) == 0:
         linux_root = find_kernel_headers()
         if linux_root == None:
-            print "could not locate this system kernel headers root directory, please"
-            print "specify one when calling this program, i.e. 'checksyscalls <headers-directory>'"
+            print "Could not locate original or system kernel headers root directory."
+            print "Please specify one when calling this program, i.e. 'checksyscalls <headers-directory>'"
             sys.exit(1)
         print "using the following kernel headers root: '%s'" % linux_root
     else:
@@ -112,62 +112,63 @@ def process_header(header_file,dict):
 
 arm_dict = {}
 x86_dict = {}
+superh_dict = {}
 
-
-# remove trailing slash and '/include' from the linux_root, if any
+# remove trailing slash from the linux_root, if any
 if linux_root[-1] == '/':
     linux_root = linux_root[:-1]
 
-if len(linux_root) > 8 and linux_root[-8:] == '/include':
-    linux_root = linux_root[:-8]
-
-arm_unistd = linux_root + "/include/asm-arm/unistd.h"
-if not os.path.exists(arm_unistd):
-    print "WEIRD: could not locate the ARM unistd.h header file"
-    print "tried searching in '%s'" % arm_unistd
-    print "maybe using a different set of kernel headers might help"
+arm_unistd = find_arch_header(linux_root, "arm", "unistd.h")
+if not arm_unistd:
+    print "WEIRD: Could not locate the ARM unistd.h kernel header file,"
+    print "maybe using a different set of kernel headers might help."
     sys.exit(1)
 
 # on recent kernels, asm-i386 and asm-x64_64 have been merged into asm-x86
 # with two distinct unistd_32.h and unistd_64.h definition files.
 # take care of this here
 #
-x86_unistd = linux_root + "/include/asm-i386/unistd.h"
-if not os.path.exists(x86_unistd):
-    x86_unistd1 = x86_unistd
-    x86_unistd = linux_root + "/include/asm-x86/unistd_32.h"
-    if not os.path.exists(x86_unistd):
-        print "WEIRD: could not locate the i386/x86 unistd.h header file"
-        print "tried searching in '%s' and '%s'" % (x86_unistd1, x86_unistd)
-        print "maybe using a different set of kernel headers might help"
+x86_unistd = find_arch_header(linux_root, "i386", "unistd.h")
+if not x86_unistd:
+    x86_unistd = find_arch_header(linux_root, "x86", "unistd_32.h")
+    if not x86_unistd:
+        print "WEIRD: Could not locate the i386/x86 unistd.h header file,"
+        print "maybe using a different set of kernel headers might help."
         sys.exit(1)
 
-process_header( linux_root+"/include/asm-arm/unistd.h", arm_dict )
+superh_unistd = find_arch_header(linux_root, "sh", "unistd_32.h")
+if not superh_unistd:
+    print "WEIRD: Could not locate the SuperH unistd.h kernel header file,"
+    print "maybe using a different set of kernel headers might help."
+    sys.exit(1)
+
+process_header( arm_unistd, arm_dict )
 process_header( x86_unistd, x86_dict )
+process_header( superh_unistd, superh_dict )
 
 # now perform the comparison
 errors = 0
-for sc in syscalls:
-    sc_name = sc["name"]
-    sc_id   = sc["id"]
-    if sc_id >= 0:
-        if not arm_dict.has_key(sc_name):
-            print "arm syscall %s not defined !!" % sc_name
-            errors += 1
-        elif arm_dict[sc_name] != sc_id:
-            print "arm syscall %s should be %d instead of %d !!" % (sc_name, arm_dict[sc_name], sc_id)
-            errors += 1
 
-for sc in syscalls:
-    sc_name = sc["name"]
-    sc_id2  = sc["id2"]
-    if sc_id2 >= 0:
-        if not x86_dict.has_key(sc_name):
-            print "x86 syscall %s not defined !!" % sc_name
-            errors += 1
-        elif x86_dict[sc_name] != sc_id2:
-            print "x86 syscall %s should be %d instead of %d !!" % (sc_name, x86_dict[sc_name], sc_id2)
-            errors += 1
+def check_syscalls(archname, idname, arch_dict):
+    errors = 0
+    for sc in syscalls:
+        sc_name = sc["name"]
+        sc_id   = sc[idname]
+        if sc_id >= 0:
+            if not arch_dict.has_key(sc_name):
+                print "%s syscall %s not defined, should be %d !!" % (archname, sc_name, sc_id)
+                errors += 1
+            elif not arch_dict.has_key(sc_name):
+                print "%s syscall %s is not implemented!" % (archname, sc_name)
+                errors += 1
+            elif arch_dict[sc_name] != sc_id:
+                print "%s syscall %s should be %d instead of %d !!" % (archname, sc_name, arch_dict[sc_name], sc_id)
+                errors += 1
+    return errors
+
+errors += check_syscalls("arm", "id", arm_dict)
+errors += check_syscalls("x86", "id2", x86_dict)
+errors += check_syscalls("superh", "id3", superh_dict)
 
 if errors == 0:
     print "congratulations, everything's fine !!"

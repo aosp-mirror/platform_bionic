@@ -117,6 +117,7 @@ VFSCANF(FILE *fp, const char *fmt0, __va_list ap)
 	static short basefix[17] =
 		{ 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
+	FLOCKFILE(fp);
 	_SET_ORIENTATION(fp, -1);
 
 	nassigned = 0;
@@ -124,8 +125,10 @@ VFSCANF(FILE *fp, const char *fmt0, __va_list ap)
 	base = 0;		/* XXX just to keep gcc happy */
 	for (;;) {
 		c = *fmt++;
-		if (c == 0)
+		if (c == 0) {
+			FUNLOCKFILE(fp);
 			return (nassigned);
+		}
 		if (isspace(c)) {
 			while ((fp->_r > 0 || __srefill(fp) == 0) &&
 			    isspace(*fp->_p))
@@ -292,6 +295,7 @@ literal:
 		 * Disgusting backwards compatibility hacks.	XXX
 		 */
 		case '\0':	/* compat */
+			FUNLOCKFILE(fp);
 			return (EOF);
 
 		default:	/* compat */
@@ -689,8 +693,10 @@ literal:
 		}
 	}
 input_failure:
-	return (nassigned ? nassigned : -1);
+	if (nassigned == 0)
+		nassigned = -1;
 match_failure:
+	FUNLOCKFILE(fp);
 	return (nassigned);
 }
 
