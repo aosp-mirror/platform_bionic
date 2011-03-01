@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/H///3U\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-01T14:54:17Z",
+      "side": 1,
+      "message": "I would prefer if you would perform the timeout check with the mutex unlock first.",
+      "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/H///3w\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1476,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-01T14:54:17Z",
+      "side": 1,
+      "message": "You return an ETIMEDOUT with an unlocked mutex here, this is pretty bad. Please try to keep the same semantics, this is subtle.",
+      "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/H///3c\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-01T14:54:17Z",
+      "side": 1,
+      "message": "I would appreciate if you would add a comment here explaining that futex_wait() uses CLOCK_MONOTONIC timespec values, (so this specific change doesn\u0027t introduce a change in semantics).",
+      "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
