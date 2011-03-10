@@ -64,6 +64,11 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.43 2006/02/17 15:58:26 ginsbach Exp $");
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"
+#include <sys/system_properties.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/un.h>
+#include <errno.h>
 #else
 #include <resolv.h>
 #endif
@@ -124,7 +129,93 @@ int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t h
 	}
 }
 
+#ifdef ANDROID_CHANGES
+/* On success length of the host name is returned. A return
+ * value of 0 means there's no host name associated with
+ * the address. On failure -1 is returned in which case
+ * normal execution flow shall continue. */
+static int
+android_gethostbyaddr_proxy(struct hostent* hp, const char *addr, socklen_t addrLen, int addrFamily) {
 
+	int sock;
+	const int one = 1;
+	struct sockaddr_un proxy_addr;
+	const char* cache_mode = getenv("ANDROID_DNS_MODE");
+	FILE* proxy = NULL;
+	int result = -1;
+
+	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
+		// Don't use the proxy in local mode.  This is used by the
+		// proxy itself.
+		return -1;
+	}
+
+	// Temporary cautious hack to disable the DNS proxy for processes
+	// requesting special treatment.  Ideally the DNS proxy should
+	// accomodate these apps, though.
+	char propname[PROP_NAME_MAX];
+	char propvalue[PROP_VALUE_MAX];
+	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
+	if (__system_property_get(propname, propvalue) > 0) {
+		return -1;
+	}
+	// create socket
+	sock = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (sock < 0) {
+		return -1;
+	}
+
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+	memset(&proxy_addr, 0, sizeof(proxy_addr));
+	proxy_addr.sun_family = AF_UNIX;
+	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
+			sizeof(proxy_addr.sun_path));
+	if (TEMP_FAILURE_RETRY(connect(sock, (const struct sockaddr*) &proxy_addr,
+							sizeof(proxy_addr))) != 0) {
+		close(sock);
+		return -1;
+	}
+
+	// send request to DnsProxyListener
+	proxy = fdopen(sock,"r+");
+	if (proxy == NULL) {
+		goto exit;
+	}
+
+	if (fprintf(proxy, "gethostbyaddr %s %d %d", addr, addrLen, addrFamily) < 0) {
+		goto exit;
+	}
+
+	// literal NULL byte at end, required by FrameworkListener
+	if (fputc(0, proxy) == EOF || fflush(proxy) != 0) {
+		goto exit;
+	}
+
+	result = 0;
+	uint32_t name_len;
+	if (fread(&name_len, sizeof(name_len), 1, proxy) != 1) {
+		goto exit;
+	}
+
+	name_len = ntohl(name_len);
+	if (name_len <= 0) {
+		goto exit;
+	}
+
+	if (fread(hp->h_name, name_len, 1, proxy) != 1) {
+		goto exit;
+	}
+
+	result = name_len;
+
+ exit:
+	if (proxy != NULL) {
+		fclose(proxy);
+	}
+
+	return result;
+}
+#endif
 /*
  * getnameinfo_inet():
  * Format an IPv4 or IPv6 sockaddr into a printable string.
@@ -277,7 +368,21 @@ getnameinfo_inet(sa, salen, host, hostlen, serv, servlen, flags)
 			break;
 		}
 	} else {
+#ifdef ANDROID_CHANGES
+		struct hostent android_proxy_hostent;
+		char android_proxy_buf[MAXDNAME];
+		android_proxy_hostent.h_name = android_proxy_buf;
+
+		int hostnamelen = android_gethostbyaddr_proxy(&android_proxy_hostent,
+				addr, afd->a_addrlen, afd->a_af);
+		if (hostnamelen >= 0) {
+			hp = (hostnamelen > 0) ? &android_proxy_hostent : NULL;
+		} else {
+			hp = gethostbyaddr(addr, afd->a_addrlen, afd->a_af);
+		}
+#else
 		hp = gethostbyaddr(addr, afd->a_addrlen, afd->a_af);
+#endif
 
 		if (hp) {
 #if 0
