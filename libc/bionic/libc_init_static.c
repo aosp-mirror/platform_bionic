@@ -75,8 +75,10 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* pre-init array. */
     call_array(structors->preinit_array);
 
+#ifndef __i386__
     /* .ctors section initializers, for non-arm-eabi ABIs */
     call_array(structors->ctors_array);
+#endif
 
     // call static constructors
     call_array(structors->init_array);
