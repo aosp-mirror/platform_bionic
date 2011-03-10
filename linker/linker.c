@@ -822,7 +822,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
 static int reserve_mem_region(soinfo *si)
 {
     void *base = mmap((void *)si->base, si->size, PROT_READ | PROT_EXEC,
-                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+                      MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (base == MAP_FAILED) {
         DL_ERR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
               "as requested, will try general pool: %d (%s)",
