@@ -242,7 +242,7 @@ typedef int64_t  intmax_t;
 #  define UINTMAX_MAX	UINT64_MAX
 #endif
 
-#ifndef __STDINT_MACROS
+#ifdef __STDINT_MACROS
 #  define INTMAX_C(c)	INT64_C(c)
 #  define UINTMAX_C(c)	UINT64_C(c)
 #endif
