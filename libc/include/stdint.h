@@ -41,11 +41,6 @@
 #  define  __STDINT_MACROS
 #endif
 
-/* the definitions of STDINT_LIMITS depend on those of STDINT_MACROS */
-#if defined __STDINT_LIMITS && !defined __STDINT_MACROS
-#  define  __STDINT_MACROS
-#endif
-
 #if !defined __STRICT_ANSI__ || __STDC_VERSION__ >= 199901L
 #  define __STDC_INT64__
 #endif
@@ -185,13 +180,14 @@ typedef uint64_t      uint_fast64_t;
 #  define UINT_FAST64_MAX UINT64_MAX
 #endif
 
+#define __INT64_C(c)     c ## LL
+#define __UINT64_C(c)     c ## ULL
+
 #ifdef __STDINT_MACROS
-#  define __INT64_C(c)     c ## LL
 #  define INT64_C(c)       __INT64_C(c)
 #  define INT_LEAST64_C(c) INT64_C(c)
 #  define INT_FAST64_C(c)  INT64_C(c)
 
-#  define __UINT64_C(c)     c ## ULL
 #  define UINT64_C(c)       __UINT64_C(c)
 #  define UINT_LEAST64_C(c) UINT64_C(c)
 #  define UINT_FAST64_C(c)  UINT64_C(c)
