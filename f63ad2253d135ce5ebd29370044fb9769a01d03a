@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/H//+fA\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-12T12:35:52Z",
+      "side": 1,
+      "message": "this semantic change to the ARM and x86 linkers doesn\u0027t belong here!",
+      "revId": "f63ad2253d135ce5ebd29370044fb9769a01d03a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/H//+e8\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-12T12:35:52Z",
+      "side": 1,
+      "message": "leading tab",
+      "revId": "f63ad2253d135ce5ebd29370044fb9769a01d03a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/H//+e4\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-12T12:35:52Z",
+      "side": 1,
+      "message": "what? Changing the value of PAGE_MASK doesn\u0027t belong in this patch.",
+      "revId": "f63ad2253d135ce5ebd29370044fb9769a01d03a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
