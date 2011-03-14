@@ -16,6 +16,24 @@
       "revId": "3f5ec86d6383685979d8d23ef508b6c609569b38",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/X///+c\u003d",
+        "filename": "libc/unistd/sigblock.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2011-03-14T18:37:31Z",
+      "side": 1,
+      "message": "Good catch. The intention is to call sigemptyset on the_sigset and not on the_mask. I will resubmit the patch.",
+      "parentUuid": "AAAA/X///+8\u003d",
+      "revId": "3f5ec86d6383685979d8d23ef508b6c609569b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
