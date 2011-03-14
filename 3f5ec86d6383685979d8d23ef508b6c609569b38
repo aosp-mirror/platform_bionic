@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/X///+8\u003d",
+        "filename": "libc/unistd/sigblock.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000269
+      },
+      "writtenOn": "2011-03-14T18:19:40Z",
+      "side": 1,
+      "message": "What\u0027s the point?  This is just blown away in the next line, right?",
+      "revId": "3f5ec86d6383685979d8d23ef508b6c609569b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
