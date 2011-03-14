@@ -38,6 +38,7 @@ __RCSID("$Heimdal: md5.c,v 1.15 2001/01/29 04:33:44 assar Exp $"
         "$NetBSD: md5.c,v 1.1.1.4 2002/09/12 12:41:42 joda Exp $");
 #endif
 
+#include <endian.h>
 #include "md5.h"
 #include "hash.h"
 
@@ -178,8 +179,11 @@ calc (struct md5 *m, u_int32_t *data)
 /*
  * From `Performance analysis of MD5' by Joseph D. Touch <touch@isi.edu>
  */
+#if !defined(__BYTE_ORDER) || !defined (__BIG_ENDIAN)
+#error __BYTE_ORDER macros not defined
+#endif
 
-#if defined(WORDS_BIGENDIAN)
+#if __BYTE_ORDER == __BIG_ENDIAN
 static inline u_int32_t
 swap_u_int32_t (u_int32_t t)
 {
@@ -217,7 +221,7 @@ MD5_Update (struct md5 *m, const void *v, size_t len)
     p += l;
     len -= l;
     if(offset == 64){
-#if defined(WORDS_BIGENDIAN)
+#if __BYTE_ORDER == __BIG_ENDIAN
       int i;
       u_int32_t current[16];
       struct x32 *u = (struct x32*)m->save;
