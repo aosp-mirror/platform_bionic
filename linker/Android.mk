@@ -76,8 +76,6 @@ LOCAL_STATIC_LIBRARIES := libc_nomalloc
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_SUFFIX := $(TARGET_EXECUTABLE_SUFFIX)
 
-# Executables are not prelinked.
-LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SYSTEM)/dynamic_binary.mk
 
