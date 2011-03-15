@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/X///5E\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-15T11:28:51Z",
+      "side": 1,
+      "message": "I would prefer such config variables to be called ARCH_ARM_MEMCPY_ALIGNMENT_DIVIDER instead.",
+      "revId": "310f795f7bd6f2c89bc5d2f1fcb95ab2ebce3907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/X///5A\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-15T11:28:51Z",
+      "side": 1,
+      "message": "Same here, ARCH_ARM_NEON_MEMSET_DIVIDER would be better.",
+      "revId": "310f795f7bd6f2c89bc5d2f1fcb95ab2ebce3907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
