@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/X///5M\u003d",
+        "filename": "libc/arch-arm/bionic/memcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-15T11:26:25Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to use the NEON-specific registers (e.g. d8-d15). Are you sure you don\u0027t want to test against VFPv3 instead?",
+      "revId": "fe1e2912fb5664aa028e2b205b6659b66d37e75a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
