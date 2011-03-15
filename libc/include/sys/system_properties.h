@@ -46,6 +46,10 @@ typedef struct prop_info prop_info;
 */
 int __system_property_get(const char *name, char *value);
 
+/* Set a system property by name.
+**/
+int __system_property_set(const char *key, const char *value);
+
 /* Return a pointer to the system property named name, if it
 ** exists, or NULL if there is no such property.  Use 
 ** __system_property_read() to obtain the string value from
