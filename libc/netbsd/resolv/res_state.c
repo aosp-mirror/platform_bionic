@@ -38,21 +38,32 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
+/* Set to 1 to enable debug traces */
+#define DEBUG 0
+
+#if DEBUG
+#  include <logd.h>
+#  include <unistd.h>  /* for gettid() */
+#  define D(...)  __libc_android_log_print(ANDROID_LOG_DEBUG,"libc", __VA_ARGS__)
+#else
+#  define D(...)  do{}while(0)
+#endif
+
 static pthread_key_t   _res_key;
 static pthread_once_t  _res_once;
 
 typedef struct {
-    int                    _h_errno;
-    struct __res_state     _nres[1];
-    unsigned               _serial;
-    struct prop_info*      _pi;
-    struct res_static      _rstatic[1];
+    int                  _h_errno;
+    struct __res_state  _nres[1];
+    unsigned             _serial;
+    struct prop_info*   _pi;
+    struct res_static   _rstatic[1];
 } _res_thread;
 
 static _res_thread*
 _res_thread_alloc(void)
 {
-    _res_thread*  rt = malloc(sizeof(*rt));
+    _res_thread*  rt = calloc(1, sizeof(*rt));
 
     if (rt) {
         rt->_h_errno = 0;
@@ -62,12 +73,7 @@ _res_thread_alloc(void)
         if (rt->_pi) {
             rt->_serial = rt->_pi->serial;
         }
-        if ( res_ninit( rt->_nres ) < 0 ) {
-            free(rt);
-            rt = NULL;
-        } else {
-            memset(rt->_rstatic, 0, sizeof rt->_rstatic);
-        }
+        memset(rt->_rstatic, 0, sizeof rt->_rstatic);
     }
     return rt;
 }
@@ -91,6 +97,8 @@ _res_thread_free( void*  _rt )
 {
     _res_thread*  rt = _rt;
 
+    D("%s: rt=%p for thread=%d", __FUNCTION__, rt, gettid());
+
     _res_static_done(rt->_rstatic);
     res_ndestroy(rt->_nres);
     free(rt);
@@ -108,27 +116,59 @@ _res_thread_get(void)
     _res_thread*  rt;
     pthread_once( &_res_once, _res_init_key );
     rt = pthread_getspecific( _res_key );
-    if (rt == NULL) {
-        if ((rt = _res_thread_alloc()) == NULL) {
-            return NULL;
+
+    if (rt != NULL) {
+        /* We already have one thread-specific DNS state object.
+         * Check the serial value for any changes to net.* properties */
+        D("%s: Called for tid=%d rt=%p rt->pi=%p rt->serial=%d",
+           __FUNCTION__, gettid(), rt, rt->_pi, rt->_serial);
+        if (rt->_pi == NULL) {
+            /* The property wasn't created when _res_thread_get() was
+             * called the last time. This should only happen very
+             * early during the boot sequence. First, let's try to see if it
+             * is here now. */
+            rt->_pi = (struct prop_info*) __system_property_find("net.change");
+            if (rt->_pi == NULL) {
+                /* Still nothing, return current state */
+                D("%s: exiting for tid=%d rt=%d since system property not found",
+                  __FUNCTION__, gettid(), rt);
+                return rt;
+            }
         }
-        rt->_h_errno = 0;
-        rt->_serial = 0;
-        pthread_setspecific( _res_key, rt );
+        if (rt->_serial == rt->_pi->serial) {
+            /* Nothing changed, so return the current state */
+            D("%s: tid=%d rt=%p nothing changed, returning",
+              __FUNCTION__, gettid(), rt);
+            return rt;
+        }
+        /* Update the recorded serial number, and go reset the state */
+        rt->_serial = rt->_pi->serial;
+        goto RESET_STATE;
     }
-    /* Check the serial value for any chanes to net.* properties. */
-    if (rt->_pi == NULL) {
-        rt->_pi = (struct prop_info*) __system_property_find("net.change");
+
+    /* It is the first time this function is called in this thread,
+     * we need to create a new thread-specific DNS resolver state. */
+    rt = _res_thread_alloc();
+    if (rt == NULL) {
+        return NULL;
     }
-    if (rt->_pi == NULL || rt->_serial == rt->_pi->serial) {
-        return rt;
-    }
-    rt->_serial = rt->_pi->serial;
-    /* Reload from system properties. */
+    pthread_setspecific( _res_key, rt );
+    D("%s: tid=%d Created new DNS state rt=%p",
+      __FUNCTION__, gettid(), rt);
+
+RESET_STATE:
+    /* Reset the state, note that res_ninit() can now properly reset
+     * an existing state without leaking memory.
+     */
+    D("%s: tid=%d, rt=%p, resetting DNS state (options RES_INIT=%d)",
+      __FUNCTION__, gettid(), rt, (rt->_nres->options & RES_INIT) != 0);
     if ( res_ninit( rt->_nres ) < 0 ) {
-        free(rt);
-        rt = NULL;
-        pthread_setspecific( _res_key, rt );
+        /* This should not happen */
+        D("%s: tid=%d rt=%p, woot, res_ninit() returned < 0",
+          __FUNCTION__, gettid(), rt);
+        _res_thread_free(rt);
+        pthread_setspecific( _res_key, NULL );
+        return NULL;
     }
     _resolv_cache_reset(rt->_serial);
     return rt;
