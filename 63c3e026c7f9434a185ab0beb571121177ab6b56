@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/X///cE\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-18T21:08:19Z",
+      "side": 1,
+      "message": "I would prefer that an initial timeout check be performed here before the unlocking, in order to return -ETIMEDOUT immediately if needed. This matches the previous implementation.",
+      "revId": "63c3e026c7f9434a185ab0beb571121177ab6b56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/X///b4\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1542,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-18T21:08:19Z",
+      "side": 1,
+      "message": "Can you change this comment to say this instead:\n\nWe use CLOCK_MONOTONIC to match the clock used by the default futex_wait() implementation in the kernel. This also provides protection against real-time clock changes.",
+      "revId": "63c3e026c7f9434a185ab0beb571121177ab6b56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
