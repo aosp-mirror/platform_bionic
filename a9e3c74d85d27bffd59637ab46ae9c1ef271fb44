@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAA/X///cQ\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-18T17:00:24Z",
+      "side": 1,
+      "message": "I\u0027m talking about performing an initial timeout check *before* any mutex locking/unlocking, so you can return ETIMEDOUT immediately if needed. How this is implemented is not too important.",
+      "parentUuid": "AAAA/H///lY\u003d",
+      "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAA/H///3w\u003d",
         "filename": "libc/bionic/pthread.c",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "I think the most important part is that in __pthread_cond_timedwait we convert it back to relative clock (because futex_wait take relative clock).\nAnd we use CLOCK_MONOTONIC (like in pthread_mutex_lock_timeout_np) because this prevent race against CLOCK_REALTIME modification.",
       "parentUuid": "AAAA/H///3c\u003d",
+      "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/X///cM\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-03-18T17:00:24Z",
+      "side": 1,
+      "message": "The thing is: the futex_wait() implementation depends on CLOCK_MONOTONIC, but this didn\u0027t appear in the original code at all (one need to look deep inside the kernel code to see this).\n\nIn this patch, you\u0027re making the clock explicit. It would be nice if you could add a comment explaining that this is to match the kernel implementation. This will prevent other people who modify this code to incorrectly change the clock, without realizing what\u0027s happening.\n\nActually, futex_wait() can use CLOCK_REALTIME too, if a special flag is used, but we don\u0027t need to worry about this here.",
+      "parentUuid": "AAAA/H///lA\u003d",
       "revId": "a9e3c74d85d27bffd59637ab46ae9c1ef271fb44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
