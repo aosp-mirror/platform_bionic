@@ -67,6 +67,7 @@
 #include <netdb.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <strings.h>
 #include <syslog.h>
 
 #ifndef LOG_AUTH

@@ -123,6 +123,7 @@ __RCSID("$NetBSD: res_debug.c,v 1.7 2004/11/07 02:25:01 christos Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 
 
