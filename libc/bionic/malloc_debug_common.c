@@ -84,7 +84,6 @@ static int hash_entry_compare(const void* arg1, const void* arg2)
         //
         // This is used for sorting, not determination of equality, so we don't
         // need to compare the bit flags.
-        int result;
         if (alloc1 > alloc2) {
             result = -1;
         } else if (alloc1 < alloc2) {
