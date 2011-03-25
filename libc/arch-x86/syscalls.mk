@@ -127,6 +127,7 @@ syscall_src += arch-x86/syscalls/__timer_gettime.S
 syscall_src += arch-x86/syscalls/__timer_getoverrun.S
 syscall_src += arch-x86/syscalls/__timer_delete.S
 syscall_src += arch-x86/syscalls/utimes.S
+syscall_src += arch-x86/syscalls/utimensat.S
 syscall_src += arch-x86/syscalls/sigaction.S
 syscall_src += arch-x86/syscalls/sigprocmask.S
 syscall_src += arch-x86/syscalls/__sigsuspend.S

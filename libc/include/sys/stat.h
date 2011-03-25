@@ -103,6 +103,10 @@ extern int fchownat(int dirfd, const char *path, uid_t owner, gid_t group, int f
 extern int fchmodat(int dirfd, const char *path, mode_t mode, int flags);
 extern int renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath);
 
+# define UTIME_NOW      ((1l << 30) - 1l)
+# define UTIME_OMIT     ((1l << 30) - 2l)
+extern int utimensat (int fd, const char *path, const struct timespec times[2], int flags);
+
 __END_DECLS
 
 #endif /* _SYS_STAT_H_ */
