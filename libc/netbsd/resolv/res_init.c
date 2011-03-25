@@ -225,15 +225,15 @@ __res_vinit(res_state statp, int preinit) {
 	char dnsProperty[PROP_VALUE_MAX];
 #endif
 
+        if ((statp->options & RES_INIT) != 0U)
+                res_ndestroy(statp);
+
 	if (!preinit) {
 		statp->retrans = RES_TIMEOUT;
 		statp->retry = RES_DFLRETRY;
 		statp->options = RES_DEFAULT;
 		statp->id = res_randomid();
 	}
-
-	if ((statp->options & RES_INIT) != 0U)
-		res_ndestroy(statp);
 
 	memset(u, 0, sizeof(u));
 #ifdef USELOOPBACK
