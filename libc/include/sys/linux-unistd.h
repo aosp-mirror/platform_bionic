@@ -138,6 +138,7 @@ int              __timer_gettime (timer_t, struct itimerspec*);
 int              __timer_getoverrun (timer_t);
 int              __timer_delete (timer_t);
 int              utimes (const char*, const struct timeval tvp[2]);
+int              utimensat (int, const char *, const struct timespec times[2], int);
 int              sigaction (int, const struct sigaction *, struct sigaction *);
 int              sigprocmask (int, const sigset_t *, sigset_t *);
 int              __sigsuspend (int unused1, int unused2, unsigned mask);
