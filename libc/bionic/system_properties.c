@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <stddef.h>
 #include <errno.h>
+#include <poll.h>
 
 #include <sys/mman.h>
 
@@ -156,15 +157,17 @@ int __system_property_get(const char *name, char *value)
 
 static int send_prop_msg(prop_msg *msg)
 {
+    struct pollfd pollfds[1];
     struct sockaddr_un addr;
     socklen_t alen;
     size_t namelen;
     int s;
     int r;
+    int result = -1;
 
     s = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(s < 0) {
-        return -1;
+        return result;
     }
 
     memset(&addr, 0, sizeof(addr));
@@ -175,30 +178,37 @@ static int send_prop_msg(prop_msg *msg)
 
     if(TEMP_FAILURE_RETRY(connect(s, (struct sockaddr *) &addr, alen) < 0)) {
         close(s);
-        return -1;
+        return result;
     }
 
     r = TEMP_FAILURE_RETRY(send(s, msg, sizeof(prop_msg), 0));
 
     if(r == sizeof(prop_msg)) {
-        r = 0;
-    } else {
-        r = -1;
+        // We successfully wrote to the property server but now we
+        // wait for the property server to finish its work.  It
+        // acknowledges its completion by closing the socket so we
+        // poll here (on nothing), waiting for the socket to close.
+        // If you 'adb shell setprop foo bar' you'll see the POLLHUP
+        // once the socket closes.  Out of paranoia we cap our poll
+        // at 250 ms.
+        pollfds[0].fd = s;
+        pollfds[0].events = 0;
+        r = TEMP_FAILURE_RETRY(poll(pollfds, 1, 250 /* ms */));
+        if (r == 1 && (pollfds[0].revents & POLLHUP) != 0) {
+            result = 0;
+        }
     }
 
     close(s);
-    return r;
+    return result;
 }
 
 int __system_property_set(const char *key, const char *value)
 {
-    unsigned old_serial;
-    volatile unsigned *serial;
-    prop_msg msg;
     int err;
-    prop_area *pa = __system_property_area__;
     int tries = 0;
     int update_seen = 0;
+    prop_msg msg;
 
     if(key == 0) return -1;
     if(value == 0) value = "";
@@ -210,53 +220,10 @@ int __system_property_set(const char *key, const char *value)
     strlcpy(msg.name, key, sizeof msg.name);
     strlcpy(msg.value, value, sizeof msg.value);
 
-    /* Note the system properties serial number before we do our update. */
-    const prop_info *pi = __system_property_find(key);
-    if(pi != NULL) {
-        serial = &pi->serial;
-    } else {
-        serial = &pa->serial;
-    }
-    old_serial = *serial;
-
     err = send_prop_msg(&msg);
     if(err < 0) {
         return err;
     }
-
-    /**
-     * Wait for the shared memory page to be written back and be
-     * visible in our address space before returning to the caller
-     * who might reasonably expect subsequent reads to match what was
-     * just written.
-     *
-     * Sleep 5 ms after failed checks and only wait up to a 500 ms
-     * total, just in case the system property server fails to update
-     * for whatever reason.
-     */
-    do {
-        struct timespec timeout;
-        timeout.tv_sec = 0;
-        timeout.tv_nsec = 2500000;  // 2.5 ms
-
-        if(tries++ > 0) {
-            usleep(2500); // 2.5 ms
-        }
-        __futex_wait(serial, old_serial, &timeout);
-        if(pi != NULL) {
-            unsigned new_serial = *serial;
-            /* Waiting on a specific prop_info to be updated. */
-            if (old_serial != new_serial && !SERIAL_DIRTY(new_serial)) {
-                update_seen = 1;
-            }
-        } else {
-            /* Waiting for a prop_info to be created. */
-            const prop_info *new_pi = __system_property_find(key);
-            if(new_pi != NULL && !SERIAL_DIRTY(new_pi->serial)) {
-                update_seen = 1;
-            }
-        }
-    } while (!update_seen && tries < 100);
 
     return 0;
 }
