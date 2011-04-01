@@ -196,6 +196,18 @@ static int send_prop_msg(prop_msg *msg)
         r = TEMP_FAILURE_RETRY(poll(pollfds, 1, 250 /* ms */));
         if (r == 1 && (pollfds[0].revents & POLLHUP) != 0) {
             result = 0;
+        } else {
+            // Ignore the timeout and treat it like a success anyway.
+            // The init process is single-threaded and its property
+            // service is sometimes slow to respond (perhaps it's off
+            // starting a child process or something) and thus this
+            // times out and the caller thinks it failed, even though
+            // it's still getting around to it.  So we fake it here,
+            // mostly for ctl.* properties, but we do try and wait 250
+            // ms so callers who do read-after-write can reliably see
+            // what they've written.  Most of the time.
+            // TODO: fix the system properties design.
+            result = 0;
         }
     }
 
