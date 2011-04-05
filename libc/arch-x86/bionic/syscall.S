@@ -20,18 +20,15 @@
     .align 4
 
 syscall:
-    push    %eax
     push    %ebx
-    push    %ecx
-    push    %edx
     push    %esi
     push    %edi
-    mov     28(%esp),%eax
-    mov     32(%esp),%ebx
-    mov     36(%esp),%ecx
-    mov     40(%esp),%edx
-    mov     44(%esp),%esi
-    mov     48(%esp),%edi
+    mov     16(%esp),%eax
+    mov     20(%esp),%ebx
+    mov     24(%esp),%ecx
+    mov     28(%esp),%edx
+    mov     32(%esp),%esi
+    mov     36(%esp),%edi
 
     int     $0x80
 
@@ -45,8 +42,5 @@ syscall:
 1:
     pop    %edi
     pop    %esi
-    pop    %edx
-    pop    %ecx
     pop    %ebx
-    pop    %eax
     ret
