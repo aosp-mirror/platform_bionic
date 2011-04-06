@@ -86,8 +86,14 @@ def process_nr_line(line,dict):
 
     m = re_arm_nr_line.match(line)
     if m:
-        #print "%s = %s" % (m.group(1), m.group(2))
-        dict["ARM_"+m.group(1)] = int(m.group(2)) + 0x0f0000
+        offset_str = m.group(2)
+        #print "%s = %s" % (m.group(1), offset_str)
+        base = 10
+        if offset_str.lower().startswith("0x"):
+          # Processing something similar to
+          #   #define __ARM_NR_cmpxchg  (__ARM_NR_BASE+0x00fff0)
+          base = 16
+        dict["ARM_"+m.group(1)] = int(offset_str, base) + 0x0f0000
         return
 
     m = re_x86_line.match(line)
