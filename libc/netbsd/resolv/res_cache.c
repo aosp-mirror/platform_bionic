@@ -34,6 +34,7 @@
 
 #include <errno.h>
 #include "arpa_nameser.h"
+#include <sys/system_properties.h>
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
@@ -106,7 +107,7 @@
  */
 #define  CONFIG_SECONDS    (60*10)    /* 10 minutes */
 
-/* maximum number of entries kept in the cache. This value has been
+/* default number of entries kept in the cache. This value has been
  * determined by browsing through various sites and counting the number
  * of corresponding requests. Keep in mind that our framework is currently
  * performing two requests per name lookup (one for IPv4, the other for IPv6)
@@ -125,9 +126,15 @@
  * most high-level websites use lots of media/ad servers with different names
  * but these are generally reused when browsing through the site.
  *
- * As such, a valud of 64 should be relatively conformtable at the moment.
+ * As such, a value of 64 should be relatively comfortable at the moment.
+ *
+ * The system property ro.net.dns_cache_size can be used to override the default
+ * value with a custom value
  */
 #define  CONFIG_MAX_ENTRIES    64
+
+/* name of the system property that can be used to set the cache size */
+#define  DNS_CACHE_SIZE_PROP_NAME   "ro.net.dns_cache_size"
 
 /****************************************************************************/
 /****************************************************************************/
@@ -1147,15 +1154,15 @@ entry_equals( const Entry*  e1, const Entry*  e2 )
  * for simplicity, the hash-table fields 'hash' and 'hlink' are
  * inlined in the Entry structure.
  */
-#define  MAX_HASH_ENTRIES   (2*CONFIG_MAX_ENTRIES)
 
 typedef struct resolv_cache {
+    int              max_entries;
     int              num_entries;
     Entry            mru_list;
     pthread_mutex_t  lock;
     unsigned         generation;
     int              last_id;
-    Entry*           entries[ MAX_HASH_ENTRIES ];
+    Entry*           entries;
 } Cache;
 
 
@@ -1167,9 +1174,9 @@ _cache_flush_locked( Cache*  cache )
     int     nn;
     time_t  now = _time_now();
 
-    for (nn = 0; nn < MAX_HASH_ENTRIES; nn++) 
+    for (nn = 0; nn < cache->max_entries; nn++)
     {
-        Entry**  pnode = &cache->entries[nn];
+        Entry**  pnode = (Entry**) &cache->entries[nn];
 
         while (*pnode != NULL) {
             Entry*  node = *pnode;
@@ -1187,6 +1194,30 @@ _cache_flush_locked( Cache*  cache )
          "*************************");
 }
 
+/* Return max number of entries allowed in the cache,
+ * i.e. cache size. The cache size is either defined
+ * by system property ro.net.dns_cache_size or by
+ * CONFIG_MAX_ENTRIES if system property not set
+ * or set to invalid value. */
+static int
+_res_cache_get_max_entries( void )
+{
+    int result = -1;
+    char cache_size[PROP_VALUE_MAX];
+
+    if (__system_property_get(DNS_CACHE_SIZE_PROP_NAME, cache_size) > 0) {
+        result = atoi(cache_size);
+    }
+
+    // ro.net.dns_cache_size not set or set to negative value
+    if (result <= 0) {
+        result = CONFIG_MAX_ENTRIES;
+    }
+
+    XLOG("cache size: %d", result);
+    return result;
+}
+
 static struct resolv_cache*
 _resolv_cache_create( void )
 {
@@ -1194,10 +1225,17 @@ _resolv_cache_create( void )
 
     cache = calloc(sizeof(*cache), 1);
     if (cache) {
-        cache->generation = ~0U;
-        pthread_mutex_init( &cache->lock, NULL );
-        cache->mru_list.mru_prev = cache->mru_list.mru_next = &cache->mru_list;
-        XLOG("%s: cache created\n", __FUNCTION__);
+        cache->max_entries = _res_cache_get_max_entries();
+        cache->entries = calloc(sizeof(*cache->entries), cache->max_entries);
+        if (cache->entries) {
+            cache->generation = ~0U;
+            pthread_mutex_init( &cache->lock, NULL );
+            cache->mru_list.mru_prev = cache->mru_list.mru_next = &cache->mru_list;
+            XLOG("%s: cache created\n", __FUNCTION__);
+        } else {
+            free(cache);
+            cache = NULL;
+        }
     }
     return cache;
 }
@@ -1288,8 +1326,8 @@ static Entry**
 _cache_lookup_p( Cache*   cache,
                  Entry*   key )
 {
-    int      index = key->hash % MAX_HASH_ENTRIES;
-    Entry**  pnode = &cache->entries[ key->hash % MAX_HASH_ENTRIES ];
+    int      index = key->hash % cache->max_entries;
+    Entry**  pnode = (Entry**) &cache->entries[ index ];
 
     while (*pnode != NULL) {
         Entry*  node = *pnode;
@@ -1470,7 +1508,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
         goto Exit;
     }
 
-    if (cache->num_entries >= CONFIG_MAX_ENTRIES) {
+    if (cache->num_entries >= cache->max_entries) {
         _cache_remove_oldest(cache);
         /* need to lookup again */
         lookup = _cache_lookup_p(cache, key);
