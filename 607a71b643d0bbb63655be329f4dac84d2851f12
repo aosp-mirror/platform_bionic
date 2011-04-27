@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAA/n//+I0\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1560,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-04-27T23:19:58Z",
+      "side": 1,
+      "message": "so you mean the first in the list is the default?  Could we say that in the comment?",
+      "revId": "607a71b643d0bbb63655be329f4dac84d2851f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/3///qU\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1594,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-04-27T23:19:58Z",
+      "side": 1,
+      "message": "This assumes that the default iface is set.  It would be nice if we had a fallback - perhaps the first in the list?",
+      "revId": "607a71b643d0bbb63655be329f4dac84d2851f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/3///qQ\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1619,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-04-27T23:19:58Z",
+      "side": 1,
+      "message": "else clause to free the orphaned cache_info",
+      "revId": "607a71b643d0bbb63655be329f4dac84d2851f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAA/3///p4\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-04-27T23:19:58Z",
+      "side": 1,
+      "message": "do you want to accept the nameserver at all if this fails?",
+      "revId": "607a71b643d0bbb63655be329f4dac84d2851f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
