@@ -135,7 +135,7 @@ int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t h
  * the address. On failure -1 is returned in which case
  * normal execution flow shall continue. */
 static int
-android_gethostbyaddr_proxy(struct hostent* hp, const char *addr, socklen_t addrLen, int addrFamily) {
+android_gethostbyaddr_proxy(struct hostent* hp, const void *addr, socklen_t addrLen, int addrFamily) {
 
 	int sock;
 	const int one = 1;
@@ -170,7 +170,7 @@ android_gethostbyaddr_proxy(struct hostent* hp, const char *addr, socklen_t addr
 	proxy_addr.sun_family = AF_UNIX;
 	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
 			sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock, (const struct sockaddr*) &proxy_addr,
+	if (TEMP_FAILURE_RETRY(connect(sock, (const struct sockaddr*) (void*) &proxy_addr,
 							sizeof(proxy_addr))) != 0) {
 		close(sock);
 		return -1;
@@ -182,7 +182,12 @@ android_gethostbyaddr_proxy(struct hostent* hp, const char *addr, socklen_t addr
 		goto exit;
 	}
 
-	if (fprintf(proxy, "gethostbyaddr %s %d %d", addr, addrLen, addrFamily) < 0) {
+	char buf[INET6_ADDRSTRLEN]; // big enough for IPv4 and IPv6
+	const char* addrStr = inet_ntop(addrFamily, addr, &buf, sizeof(buf));
+	if (addrStr == NULL) {
+		goto exit;
+	}
+	if (fprintf(proxy, "gethostbyaddr %s %d %d", addrStr, addrLen, addrFamily) < 0) {
 		goto exit;
 	}
 
