@@ -159,7 +159,13 @@ literal:
 			flags |= MAXINT;
 			goto again;
 		case 'L':
-			flags |= LONGDBL;
+			flags |=
+				(*fmt == 'd') ? LLONG :
+				(*fmt == 'i') ? LLONG :
+				(*fmt == 'o') ? LLONG :
+				(*fmt == 'u') ? LLONG :
+				(*fmt == 'x') ? LLONG :
+				LONGDBL;
 			goto again;
 		case 'h':
 			if (*fmt == 'h') {
