@@ -81,6 +81,25 @@ _event_getmsg_helper(td_thrhandle_t const * handle, void * bkpt_addr)
 {
     void * pc;
 
+#ifdef __i386__
+    /* Get the eip from offset 12*4 = 48 as defined in the struct
+     * user_regs_struct in user_32.h
+     */
+    pc = (void *)ptrace(PTRACE_PEEKUSR, handle->tid, (void *)48 /* eip */, NULL);
+    /* FIXME - pc is a non-decremented breakpoint address, hence the
+     * addition of 1 on test.  This seems to work for the thread hook
+     * function in libc.so but should be properly fixed.
+     */
+    if (pc == ((int)bkpt_addr + 1)) {
+        /* The hook function takes the id of the new thread as it's first
+         * param, so grab it from ecx at offset 4 in struct user_regs_struct
+         * (using fastcall convention for x86)
+         */
+        gEventMsgHandle.pid = ptrace(PTRACE_PEEKUSR, handle->tid, (void *)4 /* ecx */, NULL);
+        gEventMsgHandle.tid = gEventMsgHandle.pid;
+        return 0x42;
+    }
+#else
     pc = (void *)ptrace(PTRACE_PEEKUSR, handle->tid, (void *)60 /* r15/pc */, NULL);
 
     if (pc == bkpt_addr) {
@@ -90,6 +109,7 @@ _event_getmsg_helper(td_thrhandle_t const * handle, void * bkpt_addr)
         gEventMsgHandle.tid = gEventMsgHandle.pid;
         return 0x42;
     }
+#endif
     return 0;
 }
 
@@ -156,7 +176,7 @@ td_ta_event_addr(td_thragent_t const * agent, td_event_e event, td_notify_t * no
 {
     int32_t err;
 
-    /* 
+    /*
      * This is nasty, ps_pglobal_lookup is implemented in gdbserver and looks up
      * the symbol from it's cache, which is populated at start time with the
      * symbols returned from td_symbol_list via calls back to the host.
