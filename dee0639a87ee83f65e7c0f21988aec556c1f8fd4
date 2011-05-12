@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABAH///1E\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1002471
+      },
+      "writtenOn": "2011-05-12T08:50:06Z",
+      "side": 1,
+      "message": "How about moving these definitions into \u003cmachine/cpu-features.h\u003e?",
+      "revId": "dee0639a87ee83f65e7c0f21988aec556c1f8fd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
