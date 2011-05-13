@@ -36,6 +36,7 @@
 #ifndef __BIONIC_ERRDEF
 #error "__BIONIC_ERRDEF must be defined before including this file"
 #endif
+__BIONIC_ERRDEF( 0              ,   0, "Success" )
 __BIONIC_ERRDEF( EPERM          ,   1, "Operation not permitted" )
 __BIONIC_ERRDEF( ENOENT         ,   2, "No such file or directory" )
 __BIONIC_ERRDEF( ESRCH          ,   3, "No such process" )
