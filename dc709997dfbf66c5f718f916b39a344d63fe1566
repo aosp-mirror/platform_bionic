@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABAX///4c\u003d",
+        "filename": "libc/arch-x86/bionic/__stack_chk_fail_local.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000483
+      },
+      "writtenOn": "2011-05-13T19:50:41Z",
+      "side": 1,
+      "message": "This should be the AOSP copyright header, with an optional comment noting Intel as contributor in a second comment block below it.",
+      "revId": "dc709997dfbf66c5f718f916b39a344d63fe1566",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
