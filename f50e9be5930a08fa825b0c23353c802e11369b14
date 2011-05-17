@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABAn///xo\u003d",
+        "filename": "libc/arch-arm/bionic/strcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-05-17T11:29:20Z",
+      "side": 1,
+      "message": "I must say I was surprised to see Thumb-2 instructions here. But apparently, looking at the generated machine code shows that this file is compiled as 32-bit ARM and the assembler automatically kept the conditional instructions below.\n\nInteresting, the system boots properly in the emulator with this patch, so let\u0027s accept it.",
+      "revId": "f50e9be5930a08fa825b0c23353c802e11369b14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
