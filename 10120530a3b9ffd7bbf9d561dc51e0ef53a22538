@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABAn///Xw\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "You should say that the first element is not a \"real\" element in that it has no cache.  It is only used as a placeholder for the list lock (all other locks in the array are wasted) and the default interface name.\n\nI wonder why you don\u0027t just have a separate default interface name string and mutex for the list and clean up the data structure, but I guess as long as this is documented clearly it\u0027s ok.",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///FM\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1594,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "call it ifname.  Sometimes it\u0027s not the default_ifname, so let\u0027s not call it that.",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///FU\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1597,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "if (default_ifname[0] \u003d\u003d \u0027\\0\u0027) ?  it can\u0027t be null.  If it can be null should be:\n\nif (default_ifname \u003d\u003d NULL || default_ifname[0] \u003d\u003d \u0027\\0\u0027) {",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///D0\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "we should lock the list here.  Two callers could otherwise both add elements for the same ifname.",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///Dw\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1672,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "unlock.",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///DA\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1701,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "call _resolve_res_cache_list_get and then deref the cache from the returned cache_info.  remove all this code.",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///Ao\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1776,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "should you pthread_once here and bleow or are you sure that will have been called before this?",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABAn///As\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1881,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-05-19T21:23:09Z",
+      "side": 1,
+      "message": "you don\u0027t dup this and it will get freed when the cache is reset.  Should it be duplicated?",
+      "revId": "10120530a3b9ffd7bbf9d561dc51e0ef53a22538",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
