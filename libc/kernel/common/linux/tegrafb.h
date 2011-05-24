@@ -43,9 +43,14 @@
 #define TEGRA_FB_WIN_BLEND_PREMULT 1
 #define TEGRA_FB_WIN_BLEND_COVERAGE 2
 
+#define TEGRA_FB_WIN_FLAG_INVERT_H (1<<0)
+#define TEGRA_FB_WIN_FLAG_INVERT_V (1<<1)
+#define TEGRA_FB_WIN_FLAG_TILED (1<<2)
+
 struct tegra_fb_windowattr {
  __s32 index;
  __u32 buff_id;
+ __u32 flags;
  __u32 blend;
  __u32 offset;
  __u32 offset_u;
