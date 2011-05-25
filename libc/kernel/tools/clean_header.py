@@ -7,7 +7,7 @@ from utils import *
 
 noUpdate = 1
 
-def  cleanupFile( path, original_path=kernel_original_path ):
+def  cleanupFile( path, original_path):
     """reads an original header and perform the cleanup operation on it
        this functions returns the destination path and the clean header
        as a single string"""
@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
     if noUpdate:
         for path in args:
-            dst_path, newdata = cleanupFile(path)
+            dst_path, newdata = cleanupFile(path,kernel_original_path)
             print newdata
 
         sys.exit(0)
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     b = BatchFileUpdater()
 
     for path in args:
-        dst_path, newdata = cleanupFile(path)
+        dst_path, newdata = cleanupFile(path,kernel_original_path)
         if not dst_path:
             continue
 
