@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABBn///bc\u003d",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-05-27T16:49:48Z",
+      "side": 1,
+      "message": "i was going to suggest submitting this upstream, but upstream doesn\u0027t have this bug because it uses lots of little files and never needs to seek ;-)",
+      "revId": "227f9a629e761490bc42889614081e8eefa9a624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABBn///bY\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-05-27T16:49:48Z",
+      "side": 1,
+      "message": "there\u0027s a memory leak here too, isn\u0027t there? we free de_list, but not the dirents it contains pointers to.",
+      "revId": "227f9a629e761490bc42889614081e8eefa9a624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
