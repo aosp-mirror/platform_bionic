@@ -39,7 +39,7 @@ long ptrace(int request, pid_t pid, void * addr, void * data)
         {
             long word;
             long ret;
-            
+
             ret = __ptrace(request, pid, addr, &word);
             if (ret == 0) {
                 return word;
