@@ -401,7 +401,7 @@ libc_common_src_files += \
 	arch-x86/string/memset_wrapper.S \
 	arch-x86/string/strcmp_wrapper.S \
 	arch-x86/string/strncmp_wrapper.S \
-	arch-x86/string/strlen.S \
+	arch-x86/string/strlen_wrapper.S \
 	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
