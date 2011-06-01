@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAABB3///3U\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Made static.",
+      "parentUuid": "AAABB3///8k\u003d",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABB3///8g\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2011-06-01T09:02:06Z",
       "side": 1,
       "message": "there are a couple of cases with:\n\n( \u003cspace\u003e \u0026_res ..... init \u003cspace\u003e )",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///3Q\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABB3///8g\u003d",
       "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAABB3///3M\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABB3///7o\u003d",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABB3///70\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2011-06-01T09:02:06Z",
       "side": 1,
       "message": "is locking needed here?",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///1o\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1741,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Ug - yeah.  And worse: since we\u0027re giving a pointer to the thing we really need the lock to cover its use as well.  Reworking the locks in the next patch.",
+      "parentUuid": "AAABB3///70\u003d",
       "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "AAABB3///1k\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1805,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABB3///7k\u003d",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABB3///7g\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 4
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "AAABB3///1c\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1807,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABB3///7g\u003d",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABB3///7c\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 4
@@ -115,6 +223,24 @@
       "writtenOn": "2011-06-01T09:02:06Z",
       "side": 1,
       "message": "dont we need to make a copy of nsaddrinfo as this can bee freed?",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///1U\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-01T21:38:24Z",
+      "side": 1,
+      "message": "Mattias wants to address that in the future change",
+      "parentUuid": "AAABB3///7c\u003d",
       "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
