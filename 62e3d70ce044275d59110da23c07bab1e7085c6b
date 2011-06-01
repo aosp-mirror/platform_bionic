@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABB3///8k\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "_resolv_cache_info_create can return null so we might want to check for null where _res_cache_list is de-referenced? It is in places but not everywhere. Alternatively we could reserve space for _res_cache_list statically.",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///8g\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "there are a couple of cases with:\n\n( \u003cspace\u003e \u0026_res ..... init \u003cspace\u003e )",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///7o\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "declare (void). done in some cases, not all.",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///70\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1741,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "is locking needed here?",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///7k\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1805,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "j? i! :)",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///7g\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1807,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "no need to test for null prior free. free does that internally",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3///7c\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2011-06-01T09:02:06Z",
+      "side": 1,
+      "message": "dont we need to make a copy of nsaddrinfo as this can bee freed?",
+      "revId": "62e3d70ce044275d59110da23c07bab1e7085c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
