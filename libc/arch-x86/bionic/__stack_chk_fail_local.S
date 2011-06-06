@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,24 +25,24 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+/*
+ * Contributed by: Intel Corporation
+ */
 
-.text
-.align 4
-.type _start, @function
-.globl _start
+	.text
+	.p2align 4,,15
+	.globl	__stack_chk_fail_local
+	.hidden	__stack_chk_fail_local
+	.type	__stack_chk_fail_local, @function
 
-_start:
-        /* save the elfdata ptr to %eax, AND push it onto the stack */
-        mov    %esp, %eax
-        pushl  %esp
+__stack_chk_fail_local:
+#ifdef __PIC__
+	pushl	%ebx
+	call	__x86.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	call	__stack_chk_fail@PLT
+#else /* PIC */
+	jmp   __stack_chk_fail
+#endif /* not PIC */
 
-        pushl  %eax
-        call   __linker_init
-
-        /* linker init returns (%eax) the _entry address in the main image */
-        /* entry point expects sp to point to elfdata */
-        popl   %esp
-        jmp    *%eax
-
-
-#include "__stack_chk_fail_local.S"
+	.size	__stack_chk_fail_local, .-__stack_chk_fail_local
