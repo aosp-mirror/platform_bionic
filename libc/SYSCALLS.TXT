@@ -76,6 +76,8 @@ int     setpgid(pid_t, pid_t)  57
 pid_t   vfork(void)  190,-1,190
 int     setregid:setregid32(gid_t, gid_t)  204
 int     chroot(const char *)  61
+# IMPORTANT: Even though <sys/prctl.h> declares prctl(int,...), the syscall stub must take 6 arguments
+#            to match the kernel implementation.
 int     prctl(int option, unsigned int arg2, unsigned int arg3, unsigned int arg4, unsigned int arg5)  172
 int     capget(cap_user_header_t header, cap_user_data_t data) 184
 int     capset(cap_user_header_t header, const cap_user_data_t data) 185
