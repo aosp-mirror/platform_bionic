@@ -131,7 +131,4 @@ frame_dummy:
 	.comm	object.4466,24,4
 	.weak	__register_frame_info_bases
 	.weak	__deregister_frame_info_bases
-
 #include "__dso_handle.S"
-#include "__stack_chk_fail_local.S"
-

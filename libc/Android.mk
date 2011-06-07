@@ -554,7 +554,7 @@ ifneq ($(filter arm x86,$(TARGET_ARCH)),)
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_cflags) -fPIC -o $@ -c $<
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_so.o
