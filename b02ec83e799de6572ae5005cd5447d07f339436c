@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAABCH////0\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2011-06-07T22:01:47Z",
+      "side": 1,
+      "message": "Hmm - did not turn up in my limited testing, but you are right - the insert function is critically flawed.\n\nI\u0027ll wait for your patch.  Sorry about the gross error.",
+      "parentUuid": "AAABB3//+9k\u003d",
+      "revId": "b02ec83e799de6572ae5005cd5447d07f339436c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABB3//+9g\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 5
