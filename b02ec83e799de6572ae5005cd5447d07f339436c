@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABB3//+9k\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2011-06-07T20:49:05Z",
+      "side": 1,
+      "message": "_res_cache_list will always be NULL. Will cause crash",
+      "revId": "b02ec83e799de6572ae5005cd5447d07f339436c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABB3//+9g\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1641,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2011-06-07T20:49:05Z",
+      "side": 1,
+      "message": "_resolv_flush_cache_for_iface is still needed since ResolverController is using the function",
+      "revId": "b02ec83e799de6572ae5005cd5447d07f339436c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
