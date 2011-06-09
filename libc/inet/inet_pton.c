@@ -47,9 +47,11 @@ __RCSID("$NetBSD: inet_pton.c,v 1.6.10.1 2011/01/10 00:42:17 riz Exp $");
 
 // android-removed: #include "port_after.h"
 
-#ifdef __weak_alias
-__weak_alias(inet_pton,_inet_pton)
-#endif
+// BEGIN android-removed
+// #ifdef __weak_alias
+// __weak_alias(inet_pton,_inet_pton)
+// #endif
+// END android-removed
 
 /*%
  * WARNING: Don't even consider trying to compile this on a system where
