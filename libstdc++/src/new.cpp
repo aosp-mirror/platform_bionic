@@ -7,7 +7,7 @@ void* operator new(std::size_t size)
 {
     void* p = malloc(size);
     if (p == NULL) {
-        // abort();
+        abort();
     }
     return p;
 }
@@ -16,7 +16,7 @@ void* operator new[](std::size_t size)
 {
     void* p = malloc(size);
     if (p == NULL) {
-        // abort();
+        abort();
     }
     return p;
 }
