@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAABDX///sQ\u003d",
+        "filename": "libc/arch-arm/bionic/atexit.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2011-06-20T16:06:04Z",
+      "side": 1,
+      "message": "yup. I\u0027ll tweak that at the next upload.",
+      "parentUuid": "AAABDX///sw\u003d",
+      "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAABDX///sk\u003d",
         "filename": "libc/arch-arm/bionic/atexit.S",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2011-06-20T15:50:19Z",
       "side": 1,
       "message": "I would appreciate if you added a comment here explaining where atexit() is implemented and the reason why.",
+      "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX///sM\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2011-06-20T16:06:04Z",
+      "side": 1,
+      "message": "no problem there.",
+      "parentUuid": "AAABDX///sc\u003d",
       "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
