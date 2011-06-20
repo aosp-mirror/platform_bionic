@@ -26,63 +26,41 @@
  * SUCH DAMAGE.
  */
 	.text
-	.align 4
-	.type _start,#function
-	.globl _start
+	.p2align 4,,15
+	.globl	atexit
+	.hidden	atexit
+	.type	atexit, @function
+atexit:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%ebx
+	call	__x86.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	subl	$20, %esp
+	movl	$0, 4(%esp)
+	movl	__dso_handle@GOTOFF(%ebx), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, (%esp)
+	call	__cxa_atexit@PLT
+	addl	$20, %esp
+	popl	%ebx
+	popl	%ebp
+	ret
+	.size	atexit, .-atexit
 
-# this is the small startup code that is first run when
-# any executable that is dynamically-linked with Bionic
-# runs.
-#
-# it's purpose is to call __libc_init with appropriate
-# arguments, which are:
-#
-#    - the address of the raw data block setup by the Linux
-#      kernel ELF loader
-#
-#    - address of an "onexit" function, not used on any
-#      platform supported by Bionic
-#
-#    - address of the "main" function of the program. We
-#      can't hard-code it in the adr pseudo instruction
-#      so we use a tiny trampoline that will get relocated
-#      by the dynamic linker before this code runs
-#
-#    - address of the constructor list
-#
-_start:	
-	mov	r0, sp
-	mov	r1, #0
-	adr r2, 0f
-	adr r3, 1f
-	b	__libc_init
-
-0:  b   main
-
-1:  .long   __PREINIT_ARRAY__
-    .long   __INIT_ARRAY__
-    .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
-
-	.section .preinit_array, "aw"
-	.globl __PREINIT_ARRAY__
-__PREINIT_ARRAY__:
-	.long -1
-
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
-__INIT_ARRAY__:
-	.long -1
-
-	.section .fini_array, "aw"
-	.globl __FINI_ARRAY__
-__FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
-
-#include "__dso_handle.S"
-#include "atexit.S"
+	.section	.text.__x86.get_pc_thunk.bx,"axG",@progbits,__x86.get_pc_thunk.bx,comdat
+	.globl	__x86.get_pc_thunk.bx
+	.hidden	__x86.get_pc_thunk.bx
+	.type	__x86.get_pc_thunk.bx, @function
+__x86.get_pc_thunk.bx:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	movl	(%esp), %ebx
+	ret

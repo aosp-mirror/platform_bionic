@@ -52,4 +52,10 @@ __FINI_ARRAY__:
         .long -1
         .long __on_dlclose
 
+#ifdef CRT_LEGACY_WORKAROUND
 #include "__dso_handle.S"
+#else
+#include "__dso_handle_so.S"
+#endif
+
+#include "atexit.S"
