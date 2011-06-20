@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABDX///sw\u003d",
+        "filename": "libc/arch-arm/bionic/atexit.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-20T15:50:19Z",
+      "side": 1,
+      "message": "we probably want to use 2011 here instead.",
+      "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX///sk\u003d",
+        "filename": "libc/arch-arm/bionic/atexit.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-20T15:50:19Z",
+      "side": 1,
+      "message": "this is interesting. I understand that we might want to make this function hidden here, but I\u0027m concerned that this may break the NDK ABI for existing native code.\n\nThe issue is that libc.so must continue to export an atexit() function to avoid breaking existing shared libraries distributed with applications. Even if the corresponding handler function was never called anyway, this is to avoid an error when loading the libraries due to a missing symbol dependency.\n\nIt\u0027s also probably very hard to provide a libc.so atexit() that does the right thing when called from a shared library, but we should at least try to make it work in the usual case where the program normally exits with exit(), i.e. when the library is never dlclose()-d.\n\nI believe that just making atexit() visible for libc.so (and only libc.so) should be enough, but I wonder how this is going to interfer with static linking when generating the shared library.",
+      "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX///sc\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-20T15:50:19Z",
+      "side": 1,
+      "message": "I would appreciate if you added a comment here explaining where atexit() is implemented and the reason why.",
+      "revId": "7ffb2d0c6d49e130e0011c52c91d14d8e2125c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
