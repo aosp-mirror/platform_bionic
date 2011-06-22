@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABDX///Lo\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-06-22T16:12:50Z",
+      "side": 1,
+      "message": "this should probably be rewritten as seekdir(dir, 0).",
+      "revId": "1b1b47f1c0650a6c3ed92e2726212ecc4ad32fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX///Lg\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-06-22T16:12:50Z",
+      "side": 1,
+      "message": "i think you\u0027ll want to take the lock here too, for the barrier.",
+      "revId": "1b1b47f1c0650a6c3ed92e2726212ecc4ad32fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
