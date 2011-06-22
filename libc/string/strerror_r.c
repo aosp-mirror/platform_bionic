@@ -21,7 +21,7 @@ __code_string_lookup( const CodeString*  strings,
 
     for (;;)
     {
-        if (strings[nn].code == 0)
+        if (strings[nn].msg == NULL)
             break;
 
         if (strings[nn].code == code)
