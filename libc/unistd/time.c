@@ -34,12 +34,15 @@ time_t
 time(time_t *t)
 {
 	struct timeval tt;
+	time_t ret;
 
 	if (gettimeofday(&tt, (struct timezone *)0) < 0)
-		return (-1);
-	if (t)
-		*t = (time_t)tt.tv_sec;
-	return (tt.tv_sec);
+		ret = -1;
+	else
+		ret = tt.tv_sec;
+	if (t != NULL)
+		*t = ret;
+	return ret;
 }
 
 // return monotonically increasing CPU time in ticks relative to unspecified epoch
