@@ -16,6 +16,24 @@
       "revId": "03334f941be1041288817ef1b241479e1cfd9bfb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX//+7g\u003d",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1002471
+      },
+      "writtenOn": "2011-06-23T03:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAABDX///Dk\u003d",
+      "revId": "03334f941be1041288817ef1b241479e1cfd9bfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
