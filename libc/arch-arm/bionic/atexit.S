@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,64 +25,45 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
-	.align 4
-	.type _start,#function
-	.globl _start
 
-# this is the small startup code that is first run when
-# any executable that is dynamically-linked with Bionic
-# runs.
-#
-# it's purpose is to call __libc_init with appropriate
-# arguments, which are:
-#
-#    - the address of the raw data block setup by the Linux
-#      kernel ELF loader
-#
-#    - address of an "onexit" function, not used on any
-#      platform supported by Bionic
-#
-#    - address of the "main" function of the program. We
-#      can't hard-code it in the adr pseudo instruction
-#      so we use a tiny trampoline that will get relocated
-#      by the dynamic linker before this code runs
-#
-#    - address of the constructor list
-#
-_start:	
-	mov	r0, sp
+#ifndef CRT_LEGACY_WORKAROUND
+	.arch armv5te
+	.fpu softvfp
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 4
+	.eabi_attribute 18, 4
+	.code	16
+	.section	.text.atexit,"ax",%progbits
+	.align	2
+	.global	atexit
+	.hidden	atexit
+	.code	16
+	.thumb_func
+	.type	atexit, %function
+atexit:
+	.fnstart
+.LFB0:
+	.save	{r4, lr}
+	push	{r4, lr}
+.LCFI0:
+	ldr	r3, .L3
 	mov	r1, #0
-	adr r2, 0f
-	adr r3, 1f
-	b	__libc_init
-
-0:  b   main
-
-1:  .long   __PREINIT_ARRAY__
-    .long   __INIT_ARRAY__
-    .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
-
-	.section .preinit_array, "aw"
-	.globl __PREINIT_ARRAY__
-__PREINIT_ARRAY__:
-	.long -1
-
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
-__INIT_ARRAY__:
-	.long -1
-
-	.section .fini_array, "aw"
-	.globl __FINI_ARRAY__
-__FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
-
-#include "__dso_handle.S"
-#include "atexit.S"
+	@ sp needed for prologue
+.LPIC0:
+	add	r3, pc
+	ldr	r2, [r3]
+	bl	__cxa_atexit
+	pop	{r4, pc}
+.L4:
+	.align	2
+.L3:
+	.word	__dso_handle-(.LPIC0+4)
+.LFE0:
+	.fnend
+	.size	atexit, .-atexit
+#endif

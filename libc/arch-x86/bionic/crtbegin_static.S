@@ -132,4 +132,5 @@ frame_dummy:
 	.weak	__deregister_frame_info_bases
 
 #include "__dso_handle.S"
+#include "atexit.S"
 #include "__stack_chk_fail_local.S"
