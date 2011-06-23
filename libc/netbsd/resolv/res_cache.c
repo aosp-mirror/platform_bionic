@@ -27,6 +27,7 @@
  */
 
 #include "resolv_cache.h"
+#include <resolv.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -35,6 +36,12 @@
 #include <errno.h>
 #include "arpa_nameser.h"
 #include <sys/system_properties.h>
+#include <net/if.h>
+#include <netdb.h>
+#include <linux/if.h>
+
+#include <arpa/inet.h>
+#include "resolv_private.h"
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
@@ -158,9 +165,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-
-#include <arpa/inet.h>
-#include "resolv_private.h"
 
 /** BOUNDED BUFFER FORMATTING
  **/
@@ -1165,6 +1169,14 @@ typedef struct resolv_cache {
     Entry*           entries;
 } Cache;
 
+typedef struct resolv_cache_info {
+    char                        ifname[IF_NAMESIZE + 1];
+    struct in_addr              ifaddr;
+    Cache*                      cache;
+    struct resolv_cache_info*   next;
+    char*                       nameservers[MAXNS +1];
+    struct addrinfo*            nsaddrinfo[MAXNS + 1];
+} CacheInfo;
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
 
@@ -1543,11 +1555,47 @@ Exit:
 /****************************************************************************/
 /****************************************************************************/
 
-static struct resolv_cache*  _res_cache;
 static pthread_once_t        _res_cache_once;
 
+// Head of the list of caches.  Protected by _res_cache_list_lock.
+static struct resolv_cache_info _res_cache_list;
+
+// name of the current default inteface
+static char            _res_default_ifname[IF_NAMESIZE + 1];
+
+// lock protecting everything in the _resolve_cache_info structs (next ptr, etc)
+static pthread_mutex_t _res_cache_list_lock;
+
+
+/* lookup the default interface name */
+static char *_get_default_iface_locked();
+/* insert resolv_cache_info into the list of resolv_cache_infos */
+static void _insert_cache_info_locked(struct resolv_cache_info* cache_info);
+/* creates a resolv_cache_info */
+static struct resolv_cache_info* _create_cache_info( void );
+/* gets cache associated with an interface name, or NULL if none exists */
+static struct resolv_cache* _find_named_cache_locked(const char* ifname);
+/* gets a resolv_cache_info associated with an interface name, or NULL if not found */
+static struct resolv_cache_info* _find_cache_info_locked(const char* ifname);
+/* free dns name server list of a resolv_cache_info structure */
+static void _free_nameservers(struct resolv_cache_info* cache_info);
+/* look up the named cache, and creates one if needed */
+static struct resolv_cache* _get_res_cache_for_iface_locked(const char* ifname);
+/* empty the named cache */
+static void _flush_cache_for_iface_locked(const char* ifname);
+/* empty the nameservers set for the named cache */
+static void _free_nameservers_locked(struct resolv_cache_info* cache_info);
+/* lookup the namserver for the name interface */
+static int _get_nameserver_locked(const char* ifname, int n, char* addr, int addrLen);
+/* lookup the addr of the nameserver for the named interface */
+static struct addrinfo* _get_nameserver_addr_locked(const char* ifname, int n);
+/* lookup the inteface's address */
+static struct in_addr* _get_addr_locked(const char * ifname);
+
+
+
 static void
-_res_cache_init( void )
+_res_cache_init(void)
 {
     const char*  env = getenv(CONFIG_ENV);
 
@@ -1556,29 +1604,392 @@ _res_cache_init( void )
         return;
     }
 
-    _res_cache = _resolv_cache_create();
+    memset(&_res_default_ifname, 0, sizeof(_res_default_ifname));
+    memset(&_res_cache_list, 0, sizeof(_res_cache_list));
+    pthread_mutex_init(&_res_cache_list_lock, NULL);
 }
 
-
 struct resolv_cache*
-__get_res_cache( void )
+__get_res_cache(void)
 {
-    pthread_once( &_res_cache_once, _res_cache_init );
-    return _res_cache;
+    struct resolv_cache *cache;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    char* ifname = _get_default_iface_locked();
+
+    // if default interface not set then use the first cache
+    // associated with an interface as the default one.
+    if (ifname[0] == '\0') {
+        struct resolv_cache_info* cache_info = _res_cache_list.next;
+        while (cache_info) {
+            if (cache_info->ifname[0] != '\0') {
+                ifname = cache_info->ifname;
+            }
+
+            cache_info = cache_info->next;
+        }
+    }
+    cache = _get_res_cache_for_iface_locked(ifname);
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    XLOG("_get_res_cache. default_ifname = %s\n", ifname);
+    return cache;
+}
+
+static struct resolv_cache*
+_get_res_cache_for_iface_locked(const char* ifname)
+{
+    if (ifname == NULL)
+        return NULL;
+
+    struct resolv_cache* cache = _find_named_cache_locked(ifname);
+    if (!cache) {
+        struct resolv_cache_info* cache_info = _create_cache_info();
+        if (cache_info) {
+            cache = _resolv_cache_create();
+            if (cache) {
+                int len = sizeof(cache_info->ifname);
+                cache_info->cache = cache;
+                strncpy(cache_info->ifname, ifname, len - 1);
+                cache_info->ifname[len - 1] = '\0';
+
+                _insert_cache_info_locked(cache_info);
+            } else {
+                free(cache_info);
+            }
+        }
+    }
+    return cache;
 }
 
 void
-_resolv_cache_reset( unsigned  generation )
+_resolv_cache_reset(unsigned  generation)
 {
     XLOG("%s: generation=%d", __FUNCTION__, generation);
 
-    if (_res_cache == NULL)
-        return;
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
 
-    pthread_mutex_lock( &_res_cache->lock );
-    if (_res_cache->generation != generation) {
-        _cache_flush_locked(_res_cache);
-        _res_cache->generation = generation;
+    char* ifname = _get_default_iface_locked();
+    // if default interface not set then use the first cache
+    // associated with an interface as the default one.
+    // Note: Copied the code from __get_res_cache since this
+    // method will be deleted/obsolete when cache per interface
+    // implemented all over
+    if (ifname[0] == '\0') {
+        struct resolv_cache_info* cache_info = _res_cache_list.next;
+        while (cache_info) {
+            if (cache_info->ifname[0] != '\0') {
+                ifname = cache_info->ifname;
+            }
+
+            cache_info = cache_info->next;
+        }
     }
-    pthread_mutex_unlock( &_res_cache->lock );
+    struct resolv_cache* cache = _get_res_cache_for_iface_locked(ifname);
+
+    if (cache == NULL) {
+        pthread_mutex_unlock(&_res_cache_list_lock);
+        return;
+    }
+
+    pthread_mutex_lock( &cache->lock );
+    if (cache->generation != generation) {
+        _cache_flush_locked(cache);
+        cache->generation = generation;
+    }
+    pthread_mutex_unlock( &cache->lock );
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+void
+_resolv_flush_cache_for_default_iface(void)
+{
+    char* ifname;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    ifname = _get_default_iface_locked();
+    _flush_cache_for_iface_locked(ifname);
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+void
+_resolv_flush_cache_for_iface(const char* ifname)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    _flush_cache_for_iface_locked(ifname);
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+static void
+_flush_cache_for_iface_locked(const char* ifname)
+{
+    struct resolv_cache* cache = _find_named_cache_locked(ifname);
+    if (cache) {
+        pthread_mutex_lock(&cache->lock);
+        _cache_flush_locked(cache);
+        pthread_mutex_unlock(&cache->lock);
+    }
+}
+
+static struct resolv_cache_info*
+_create_cache_info(void)
+{
+    struct resolv_cache_info*  cache_info;
+
+    cache_info = calloc(sizeof(*cache_info), 1);
+    return cache_info;
+}
+
+static void
+_insert_cache_info_locked(struct resolv_cache_info* cache_info)
+{
+    struct resolv_cache_info* last;
+
+    for (last = &_res_cache_list; last->next; last = last->next);
+
+    last->next = cache_info;
+
+}
+
+static struct resolv_cache*
+_find_named_cache_locked(const char* ifname) {
+
+    struct resolv_cache_info* info = _find_cache_info_locked(ifname);
+
+    if (info != NULL) return info->cache;
+
+    return NULL;
+}
+
+static struct resolv_cache_info*
+_find_cache_info_locked(const char* ifname)
+{
+    if (ifname == NULL)
+        return NULL;
+
+    struct resolv_cache_info* cache_info = _res_cache_list.next;
+
+    while (cache_info) {
+        if (strcmp(cache_info->ifname, ifname) == 0) {
+            break;
+        }
+
+        cache_info = cache_info->next;
+    }
+    return cache_info;
+}
+
+static char*
+_get_default_iface_locked(void)
+{
+    char* iface = _res_default_ifname;
+
+    return iface;
+}
+
+void
+_resolv_set_default_iface(const char* ifname)
+{
+    XLOG("_resolv_set_default_if ifname %s\n",ifname);
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    int size = sizeof(_res_default_ifname);
+    memset(_res_default_ifname, 0, size);
+    strncpy(_res_default_ifname, ifname, size - 1);
+    _res_default_ifname[size - 1] = '\0';
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+void
+_resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers)
+{
+    int i, rt, index;
+    struct addrinfo hints;
+    char sbuf[NI_MAXSERV];
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+    // creates the cache if not created
+    _get_res_cache_for_iface_locked(ifname);
+
+    struct resolv_cache_info* cache_info = _find_cache_info_locked(ifname);
+
+    if (cache_info != NULL) {
+        // free current before adding new
+        _free_nameservers_locked(cache_info);
+
+        memset(&hints, 0, sizeof(hints));
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_DGRAM; /*dummy*/
+        hints.ai_flags = AI_NUMERICHOST;
+        sprintf(sbuf, "%u", NAMESERVER_PORT);
+
+        index = 0;
+        for (i = 0; i < numservers && i < MAXNS; i++) {
+            rt = getaddrinfo(servers[i], sbuf, &hints, &cache_info->nsaddrinfo[index]);
+            if (rt == 0) {
+                cache_info->nameservers[index] = strdup(servers[i]);
+                index++;
+            } else {
+                cache_info->nsaddrinfo[index] = NULL;
+            }
+        }
+    }
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+static void
+_free_nameservers_locked(struct resolv_cache_info* cache_info)
+{
+    int i;
+    for (i = 0; i <= MAXNS; i++) {
+        free(cache_info->nameservers[i]);
+        cache_info->nameservers[i] = NULL;
+        freeaddrinfo(cache_info->nsaddrinfo[i]);
+        cache_info->nsaddrinfo[i] = NULL;
+    }
+}
+
+int
+_resolv_cache_get_nameserver(int n, char* addr, int addrLen)
+{
+    char *ifname;
+    int result = 0;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    ifname = _get_default_iface_locked();
+    result = _get_nameserver_locked(ifname, n, addr, addrLen);
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    return result;
+}
+
+static int
+_get_nameserver_locked(const char* ifname, int n, char* addr, int addrLen)
+{
+    int len = 0;
+    char* ns;
+    struct resolv_cache_info* cache_info;
+
+    if (n < 1 || n > MAXNS || !addr)
+        return 0;
+
+    cache_info = _find_cache_info_locked(ifname);
+    if (cache_info) {
+        ns = cache_info->nameservers[n - 1];
+        if (ns) {
+            len = strlen(ns);
+            if (len < addrLen) {
+                strncpy(addr, ns, len);
+                addr[len] = '\0';
+            } else {
+                len = 0;
+            }
+        }
+    }
+
+    return len;
+}
+
+struct addrinfo*
+_cache_get_nameserver_addr(int n)
+{
+    struct addrinfo *result;
+    char* ifname;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    ifname = _get_default_iface_locked();
+
+    result = _get_nameserver_addr_locked(ifname, n);
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    return result;
+}
+
+static struct addrinfo*
+_get_nameserver_addr_locked(const char* ifname, int n)
+{
+    struct addrinfo* ai = NULL;
+    struct resolv_cache_info* cache_info;
+
+    if (n < 1 || n > MAXNS)
+        return NULL;
+
+    cache_info = _find_cache_info_locked(ifname);
+    if (cache_info) {
+        ai = cache_info->nsaddrinfo[n - 1];
+    }
+    return ai;
+}
+
+void
+_resolv_set_addr_of_iface(const char* ifname, struct in_addr* addr)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+    struct resolv_cache_info* cache_info = _find_cache_info_locked(ifname);
+    if (cache_info) {
+        memcpy(&cache_info->ifaddr, addr, sizeof(*addr));
+
+        if (DEBUG) {
+            char* addr_s = inet_ntoa(cache_info->ifaddr);
+            XLOG("address of interface %s is %s\n", ifname, addr_s);
+        }
+    }
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+struct in_addr*
+_resolv_get_addr_of_default_iface(void)
+{
+    struct in_addr* ai = NULL;
+    char* ifname;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+    ifname = _get_default_iface_locked();
+    ai = _get_addr_locked(ifname);
+    pthread_mutex_unlock(&_res_cache_list_lock);
+
+    return ai;
+}
+
+struct in_addr*
+_resolv_get_addr_of_iface(const char* ifname)
+{
+    struct in_addr* ai = NULL;
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+    ai =_get_addr_locked(ifname);
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    return ai;
+}
+
+static struct in_addr*
+_get_addr_locked(const char * ifname)
+{
+    struct resolv_cache_info* cache_info = _find_cache_info_locked(ifname);
+    if (cache_info) {
+        return &cache_info->ifaddr;
+    }
+    return NULL;
 }
