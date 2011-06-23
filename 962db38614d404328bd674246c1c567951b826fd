@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABDX//+sU\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-23T19:51:39Z",
+      "side": 1,
+      "message": "please no tabs.",
+      "revId": "962db38614d404328bd674246c1c567951b826fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX//+sQ\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-23T19:51:39Z",
+      "side": 1,
+      "message": "this is incorrect. _DIR_avail simply holds the number of entries that were read in the buffer, this had nothing to do with the current position.\n\nTo implement this correctly, you need to add a member to the DIR state that indicates the offset/index of the current entry, and increment it on each readdir() call.\n\nThen have seekdir() perform the necessary number of readdir() operation to go to the same index.",
+      "revId": "962db38614d404328bd674246c1c567951b826fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABDX//+sM\u003d",
+        "filename": "libc/unistd/opendir.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2011-06-23T19:51:39Z",
+      "side": 1,
+      "message": "Again, this is wrong, _DIR_avail is not an offset. Did you even try your code with anything other than 0?",
+      "revId": "962db38614d404328bd674246c1c567951b826fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
