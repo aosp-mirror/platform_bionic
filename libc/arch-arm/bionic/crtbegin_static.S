@@ -86,3 +86,4 @@ __CTOR_LIST__:
 
 
 #include "__dso_handle.S"
+#include "atexit.S"

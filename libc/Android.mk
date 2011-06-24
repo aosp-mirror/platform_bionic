@@ -523,6 +523,10 @@ endif
 #
 libc_crt_target_cflags += -I$(LOCAL_PATH)/private
 
+ifeq ($(TARGET_ARCH),arm)
+libc_crt_target_cflags += -DCRT_LEGACY_WORKAROUND
+endif
+
 # Define some common includes
 # ========================================================
 libc_common_c_includes := \
@@ -598,6 +602,9 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags)
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
+endif
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
