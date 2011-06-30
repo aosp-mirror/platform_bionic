@@ -48,6 +48,16 @@
 
 #include <pthread.h>
 
+/* IMPORTANT IMPORTANT IMPORTANT: TECHNICAL NOTE
+ *
+ * Some of the functions below can be called when our malloc() implementation
+ * has detected that the heap is corrupted, or even from a signal handler.
+ *
+ * These functions should *not* use a function that allocates heap memory
+ * or is not signal-safe. Using direct system calls is acceptable, and we
+ * also assume that pthread_mutex_lock/unlock can be used too.
+ */
+
 #define LOG_BUF_SIZE    1024
 
 typedef enum {
@@ -77,9 +87,10 @@ static log_channel_t log_channels[LOG_ID_MAX] = {
     { __write_to_log_init, -1, "/dev/"LOGGER_LOG_RADIO }
 };
 
+/* Important: see technical note at start of source file */
 static int __write_to_log_null(log_id_t log_id, struct iovec *vec)
 {
-    /* 
+    /*
      * ALTERED behaviour from previous version
      * always returns successful result
      */
@@ -97,23 +108,21 @@ static int __write_to_log_null(log_id_t log_id, struct iovec *vec)
  *  it's supposed, that log_id contains valid id always.
  *  this check must be performed in higher level functions
  */
+/* Important: see technical note at start of source file */
 static int __write_to_log_kernel(log_id_t log_id, struct iovec *vec)
 {
-    ssize_t ret;
-
-    do {
-        ret = writev(log_channels[log_id].fd, vec, 3);
-    } while ((ret < 0) && (errno == EINTR));
-
-    return ret;
+    return TEMP_FAILURE_RETRY( writev(log_channels[log_id].fd, vec, 3) );
 }
 
+/* Important: see technical note at start of source file */
 static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
 {
     if ((LOG_ID_NONE < log_id) && (log_id < LOG_ID_MAX)) {
+        int fd;
+
         pthread_mutex_lock(&log_init_lock);
 
-        int fd = open(log_channels[log_id].path, O_WRONLY);
+        fd = TEMP_FAILURE_RETRY(open(log_channels[log_id].path, O_WRONLY));
 
         log_channels[log_id].logger =
             (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
@@ -130,7 +139,9 @@ static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
     return -1;
 }
 
-static int __android_log_write(int prio, const char *tag, const char *msg)
+/* Important: see technical note at start of source file */
+__LIBC_HIDDEN__
+int __libc_android_log_write(int prio, const char *tag, const char *msg)
 {
     struct iovec vec[3];
     log_id_t log_id = LOG_ID_MAIN;
@@ -151,7 +162,11 @@ static int __android_log_write(int prio, const char *tag, const char *msg)
     return log_channels[log_id].logger(log_id, vec);
 }
 
-
+/* The functions below are not designed to be called from a heap panic
+ * function or from a signal handler. As such, they are free to use complex
+ * C library functions like vsnprintf()
+ */
+__LIBC_HIDDEN__
 int __libc_android_log_vprint(int prio, const char *tag, const char *fmt,
                               va_list ap)
 {
@@ -159,9 +174,10 @@ int __libc_android_log_vprint(int prio, const char *tag, const char *fmt,
 
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
 
-    return __android_log_write(prio, tag, buf);
+    return __libc_android_log_write(prio, tag, buf);
 }
 
+__LIBC_HIDDEN__
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...)
 {
     va_list ap;
@@ -171,20 +187,21 @@ int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...)
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
     va_end(ap);
 
-    return __android_log_write(prio, tag, buf);
+    return __libc_android_log_write(prio, tag, buf);
 }
 
+__LIBC_HIDDEN__
 int __libc_android_log_assert(const char *cond, const char *tag,
 			      const char *fmt, ...)
 {
     va_list ap;
-    char buf[LOG_BUF_SIZE];    
+    char buf[LOG_BUF_SIZE];
 
     va_start(ap, fmt);
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
     va_end(ap);
 
-    __android_log_write(ANDROID_LOG_FATAL, tag, buf);
+    __libc_android_log_write(ANDROID_LOG_FATAL, tag, buf);
 
     exit(1);
 
