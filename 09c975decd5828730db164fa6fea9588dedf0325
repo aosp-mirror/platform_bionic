@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABEX///G0\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2278,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-07-01T06:10:23Z",
+      "side": 1,
+      "message": "explicitly",
+      "revId": "09c975decd5828730db164fa6fea9588dedf0325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEX///HE\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-07-01T06:10:23Z",
+      "side": 1,
+      "message": "missing ) in both copies of this.\n\nand since only this string differs between the two copies, we should factor this out into __bionic_heap_error or...",
+      "revId": "09c975decd5828730db164fa6fea9588dedf0325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEX///HA\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2306,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-07-01T06:10:23Z",
+      "side": 1,
+      "message": "...just pass the literals in from the macros.",
+      "revId": "09c975decd5828730db164fa6fea9588dedf0325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAABEX///G8\u003d",
+        "filename": "libc/bionic/logd_write.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2011-07-01T06:10:23Z",
+      "side": 1,
+      "message": "isn\u0027t TEMP_FAILURE_RETRY visible here?",
+      "revId": "09c975decd5828730db164fa6fea9588dedf0325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
