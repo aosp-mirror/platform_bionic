@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAABEX///B0\u003d",
+        "filename": "libc/bionic/logd_write.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000483
+      },
+      "writtenOn": "2011-07-01T14:43:45Z",
+      "side": 1,
+      "message": "This should be documented as \"must not allocate memory or call anything that does\", so that future changes don\u0027t break this.",
+      "revId": "500b90b3e31e2250fec43d9e5e53cf7cab061c86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
