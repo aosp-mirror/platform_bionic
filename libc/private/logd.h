@@ -44,6 +44,7 @@ enum  {
     ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
 };
 
+int __libc_android_log_write(int prio, const char* tag, const char* buffer);
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...);
 int __libc_android_log_vprint(int prio, const char *tag, const char *fmt, va_list ap);
 
