@@ -479,7 +479,8 @@ libc_common_cflags := \
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
 		-DUSE_DL_PREFIX \
-		-DPOSIX_MISTAKE
+		-DPOSIX_MISTAKE \
+                -DLOG_ON_HEAP_ERROR \
 
 # these macro definitions are required to implement the
 # 'timezone' and 'daylight' global variables, as well as
