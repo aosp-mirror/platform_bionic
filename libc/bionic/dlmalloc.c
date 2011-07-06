@@ -2287,7 +2287,7 @@ static void __bionic_heap_error(const char* msg, const char* function)
         strlcat(buffer, " IN ", sizeof(buffer));
         strlcat(buffer, function, sizeof(buffer));
     }
-    __libc_android_log_write(ANDROID_LOG_FATAL,"libc","%s", buffer);
+    __libc_android_log_write(ANDROID_LOG_FATAL,"libc",buffer);
     abort();
 }
 
