@@ -2270,7 +2270,7 @@ static void reset_on_error(mstate m);
  * was detected. We need to be careful about not using a log function
  * that may require an allocation here!
  */
-#ifdef __ANDROID__
+#ifdef LOG_ON_HEAP_ERROR
 
 #  include <private/logd.h>
 
@@ -2300,7 +2300,7 @@ static void __bionic_heap_error(const char* msg, const char* function)
     __bionic_heap_error("INVALID HEAP ADDRESS", __FUNCTION__)
 #  endif
 
-#else /* !__ANDROID__ */
+#else /* !LOG_ON_HEAP_ERROR */
 
 #  ifndef CORRUPTION_ERROR_ACTION
 #    define CORRUPTION_ERROR_ACTION(m) ABORT
@@ -2310,7 +2310,7 @@ static void __bionic_heap_error(const char* msg, const char* function)
 #    define USAGE_ERROR_ACTION(m,p) ABORT
 #  endif /* USAGE_ERROR_ACTION */
 
-#endif /* !__ANDROID__ */
+#endif /* !LOG_ON_HEAP_ERROR */
 
 
 #endif /* PROCEED_ON_ERROR */
