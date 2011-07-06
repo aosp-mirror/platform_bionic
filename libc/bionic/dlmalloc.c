@@ -2265,53 +2265,13 @@ static void reset_on_error(mstate m);
 
 #else /* PROCEED_ON_ERROR */
 
-/* The following Android-specific code is used to print an informative
- * fatal error message to the log when we detect that a heap corruption
- * was detected. We need to be careful about not using a log function
- * that may require an allocation here!
- */
-#ifdef __ANDROID__
+#ifndef CORRUPTION_ERROR_ACTION
+#define CORRUPTION_ERROR_ACTION(m) ABORT
+#endif /* CORRUPTION_ERROR_ACTION */
 
-#  include <private/logd.h>
-
-static void __bionic_heap_error(const char* msg, const char* function)
-{
-    /* We format the buffer explicitely, i.e. without using snprintf()
-     * which may use malloc() internally. Not something we can trust
-     * if we just detected a corrupted heap.
-     */
-    char buffer[256];
-    strlcpy(buffer, "@@@ ABORTING: ", sizeof(buffer));
-    strlcat(buffer, msg, sizeof(buffer));
-    if (function != NULL) {
-        strlcat(buffer, " IN ", sizeof(buffer));
-        strlcat(buffer, function, sizeof(buffer));
-    }
-    __libc_android_log_write(ANDROID_LOG_FATAL,"libc","%s", buffer);
-    abort();
-}
-
-#  ifndef CORRUPTION_ERROR_ACTION
-#    define CORRUPTION_ERROR_ACTION(m)  \
-    __bionic_heap_error("HEAP MEMORY CORRUPTION", __FUNCTION__)
-#  endif
-#  ifndef USAGE_ERROR_ACTION
-#    define USAGE_ERROR_ACTION(m,p)   \
-    __bionic_heap_error("INVALID HEAP ADDRESS", __FUNCTION__)
-#  endif
-
-#else /* !__ANDROID__ */
-
-#  ifndef CORRUPTION_ERROR_ACTION
-#    define CORRUPTION_ERROR_ACTION(m) ABORT
-#  endif /* CORRUPTION_ERROR_ACTION */
-
-#  ifndef USAGE_ERROR_ACTION
-#    define USAGE_ERROR_ACTION(m,p) ABORT
-#  endif /* USAGE_ERROR_ACTION */
-
-#endif /* !__ANDROID__ */
-
+#ifndef USAGE_ERROR_ACTION
+#define USAGE_ERROR_ACTION(m,p) ABORT
+#endif /* USAGE_ERROR_ACTION */
 
 #endif /* PROCEED_ON_ERROR */
 
