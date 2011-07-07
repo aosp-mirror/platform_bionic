@@ -31,7 +31,7 @@ struct omap_ion_tiler_alloc_data {
  size_t offset;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define OMAP_ION_HEAP_TILER_MASK (1 << ION_HEAP_OMAP_TILER)
+#define OMAP_ION_HEAP_TILER_MASK (1 << OMAP_ION_HEAP_TYPE_TILER)
 enum {
  OMAP_ION_TILER_ALLOC,
 };
