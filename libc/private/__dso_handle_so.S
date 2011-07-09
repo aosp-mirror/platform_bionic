@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,27 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdarg.h>
 
-extern int  __open(const char*, int, int);
-
-int open(const char *pathname, int flags, ...)
-{
-    mode_t  mode = 0;
-
-    flags |= O_LARGEFILE;
-
-    if (flags & O_CREAT)
-    {
-        va_list  args;
-
-        va_start(args, flags);
-        mode = (mode_t) va_arg(args, int);
-        va_end(args);
-    }
-
-    return __open(pathname, flags, mode);
-}
-
+# The __dso_handle global variable is used by static
+# C++ constructors and destructors in the binary.
+# See http://www.codesourcery.com/public/cxx-abi/abi.html#dso-dtor
+#
+	.data
+        .align 4
+	.hidden __dso_handle
+        .globl __dso_handle
+__dso_handle:
+        .long __dso_handle

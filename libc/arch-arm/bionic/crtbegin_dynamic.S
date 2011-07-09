@@ -85,3 +85,4 @@ __CTOR_LIST__:
 	.long -1
 
 #include "__dso_handle.S"
+#include "atexit.S"

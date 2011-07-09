@@ -104,6 +104,7 @@ unlock:
 	return (ret);
 }
 
+#ifdef CRT_LEGACY_WORKAROUND
 /*
  * Register a function to be performed at exit.
  */
@@ -112,6 +113,7 @@ atexit(void (*func)(void))
 {
 	return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
 }
+#endif
 
 /*
  * Call all handlers registered with __cxa_atexit() for the shared

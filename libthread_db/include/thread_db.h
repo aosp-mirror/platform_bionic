@@ -9,9 +9,7 @@
 #include <signal.h>
 #include <stdint.h>
 #include <sys/types.h>
-
-typedef void *psaddr_t;
-typedef pid_t lwpid_t;
+#include <sys/procfs.h>
 
 #define TD_THR_ANY_USER_FLAGS       0xffffffff
 #define TD_THR_LOWEST_PRIORITY      -20
@@ -150,6 +148,10 @@ extern td_err_e td_thr_event_enable(td_thrhandle_t const * handle,
 
 extern td_err_e td_ta_thr_iter(td_thragent_t const * agent, td_thr_iter_f * func, void * cookie,
                                td_thr_state_e state, int32_t prio, sigset_t * sigmask, uint32_t user_flags);
+
+extern td_err_e td_thr_event_enable(td_thrhandle_t const * handle, td_event_e event);
+
+extern td_err_e td_thr_get_info(td_thrhandle_t const * handle, td_thrinfo_t * info);
 
 extern char const ** td_symbol_list(void);
 

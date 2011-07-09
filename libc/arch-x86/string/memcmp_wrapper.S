@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if defined(USE_SSSE3)
 
 # define MEMCMP memcmp
-# include "ssse3-memcmp3.S"
+# include "ssse3-memcmp3-new.S"
 
 #else
 

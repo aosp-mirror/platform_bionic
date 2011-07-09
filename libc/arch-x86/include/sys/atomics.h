@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,27 +25,41 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdarg.h>
+#ifndef _SYS_ATOMICS_H
+#define _SYS_ATOMICS_H
 
-extern int  __open(const char*, int, int);
+#include <sys/cdefs.h>
+#include <sys/time.h>
 
-int open(const char *pathname, int flags, ...)
+__BEGIN_DECLS
+
+static inline __attribute__((always_inline)) int
+__atomic_cmpxchg(int old, int _new, volatile int *ptr)
 {
-    mode_t  mode = 0;
-
-    flags |= O_LARGEFILE;
-
-    if (flags & O_CREAT)
-    {
-        va_list  args;
-
-        va_start(args, flags);
-        mode = (mode_t) va_arg(args, int);
-        va_end(args);
-    }
-
-    return __open(pathname, flags, mode);
+  return !__sync_bool_compare_and_swap (ptr, old, _new);
 }
 
+static inline __attribute__((always_inline)) int
+__atomic_swap(int _new, volatile int *ptr)
+{
+  return __sync_lock_test_and_set(ptr, _new);
+}
+
+static inline __attribute__((always_inline)) int
+__atomic_dec(volatile int *ptr)
+{
+  return __sync_fetch_and_sub (ptr, 1);
+}
+
+static inline __attribute__((always_inline)) int
+__atomic_inc(volatile int *ptr)
+{
+  return __sync_fetch_and_add (ptr, 1);
+}
+
+int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
+int __futex_wake(volatile void *ftx, int count);
+
+__END_DECLS
+
+#endif /* _SYS_ATOMICS_H */

@@ -25,27 +25,42 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdarg.h>
+	.text
+	.p2align 4,,15
+	.globl	atexit
+	.hidden	atexit
+	.type	atexit, @function
+atexit:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%ebx
+	call	__x86.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	subl	$20, %esp
+	movl	$0, 4(%esp)
+	movl	__dso_handle@GOTOFF(%ebx), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, (%esp)
+	call	__cxa_atexit@PLT
+	addl	$20, %esp
+	popl	%ebx
+	popl	%ebp
+	ret
+	.size	atexit, .-atexit
 
-extern int  __open(const char*, int, int);
-
-int open(const char *pathname, int flags, ...)
-{
-    mode_t  mode = 0;
-
-    flags |= O_LARGEFILE;
-
-    if (flags & O_CREAT)
-    {
-        va_list  args;
-
-        va_start(args, flags);
-        mode = (mode_t) va_arg(args, int);
-        va_end(args);
-    }
-
-    return __open(pathname, flags, mode);
-}
-
+	.section	.text.__x86.get_pc_thunk.bx,"axG",@progbits,__x86.get_pc_thunk.bx,comdat
+	.globl	__x86.get_pc_thunk.bx
+	.hidden	__x86.get_pc_thunk.bx
+	.type	__x86.get_pc_thunk.bx, @function
+__x86.get_pc_thunk.bx:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	movl	(%esp), %ebx
+	ret

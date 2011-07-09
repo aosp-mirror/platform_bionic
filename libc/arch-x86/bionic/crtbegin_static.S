@@ -65,7 +65,6 @@ _start:
 1:  .long   __PREINIT_ARRAY__
     .long   __INIT_ARRAY__
     .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
 
 	.section .preinit_array, "aw"
 	.globl __PREINIT_ARRAY__
@@ -76,15 +75,62 @@ __PREINIT_ARRAY__:
 	.globl __INIT_ARRAY__
 __INIT_ARRAY__:
 	.long -1
+	.long	frame_dummy
 
 	.section .fini_array, "aw"
 	.globl __FINI_ARRAY__
 __FINI_ARRAY__:
 	.long -1
+	.long	__do_global_dtors_aux
 
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
+	.section	.eh_frame,"a",@progbits
+	.align 4
+	.type	__EH_FRAME_BEGIN__, @object
+__EH_FRAME_BEGIN__:
+	.text
+	.p2align 4,,15
+	.type	__do_global_dtors_aux, @function
+__do_global_dtors_aux:
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$24, %esp
+	cmpb	$0, completed.4454
+	jne	.L4
+	movl	$__deregister_frame_info_bases, %eax
+	testl	%eax, %eax
+	je	.L3
+	movl	$__EH_FRAME_BEGIN__, (%esp)
+	call	__deregister_frame_info_bases
+.L3:
+	movb	$1, completed.4454
+.L4:
+	leave
+	ret
+	.text
+	.p2align 4,,15
+	.type	frame_dummy, @function
+frame_dummy:
+	pushl	%ebp
+	movl	$__register_frame_info_bases, %eax
+	movl	%esp, %ebp
+	subl	$24, %esp
+	testl	%eax, %eax
+	je	.L7
+	movl	%ebx, 12(%esp)
+	movl	$0, 8(%esp)
+	movl	$object.4466, 4(%esp)
+	movl	$__EH_FRAME_BEGIN__, (%esp)
+	call	__register_frame_info_bases
+.L7:
+	leave
+	ret
+	.local	completed.4454
+	.comm	completed.4454,1,1
+	.local	object.4466
+	.comm	object.4466,24,4
+	.weak	__register_frame_info_bases
+	.weak	__deregister_frame_info_bases
 
 #include "__dso_handle.S"
+#include "atexit.S"
+#include "__stack_chk_fail_local.S"
