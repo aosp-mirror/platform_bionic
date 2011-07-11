@@ -49,6 +49,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <bionic_pthread.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
@@ -1963,4 +1964,16 @@ int pthread_setname_np(pthread_t thid, const char *thname)
 exit:
     errno = saved_errno;
     return ret;
+}
+
+/* Return the kernel thread ID for a pthread.
+ * This is only defined for implementations where pthread <-> kernel is 1:1, which this is.
+ * Not the same as pthread_getthreadid_np, which is commonly defined to be opaque.
+ * Internal, not an NDK API.
+ */
+
+pid_t __pthread_gettid(pthread_t thid)
+{
+    pthread_internal_t* thread = (pthread_internal_t*)thid;
+    return thread->kernel_id;
 }
