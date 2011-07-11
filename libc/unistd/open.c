@@ -35,9 +35,7 @@ int open(const char *pathname, int flags, ...)
 {
     mode_t  mode = 0;
 
-#if !defined(__i386__)
     flags |= O_LARGEFILE;
-#endif
 
     if (flags & O_CREAT)
     {
