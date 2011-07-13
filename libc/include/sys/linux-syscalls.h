@@ -20,6 +20,7 @@
 #define __NR_getresuid32                  (__NR_SYSCALL_BASE + 209)
 #define __NR_getresgid32                  (__NR_SYSCALL_BASE + 211)
 #define __NR_gettid                       (__NR_SYSCALL_BASE + 224)
+#define __NR_readahead                    (__NR_SYSCALL_BASE + 225)
 #define __NR_getgroups32                  (__NR_SYSCALL_BASE + 205)
 #define __NR_getpgid                      (__NR_SYSCALL_BASE + 132)
 #define __NR_getppid                      (__NR_SYSCALL_BASE + 64)

@@ -20,6 +20,7 @@ gid_t            getegid (void);
 uid_t            getresuid (void);
 gid_t            getresgid (void);
 pid_t            gettid (void);
+ssize_t          readahead (int, off64_t, size_t);
 int              getgroups (int, gid_t *);
 pid_t            getpgid (pid_t);
 pid_t            getppid (void);
