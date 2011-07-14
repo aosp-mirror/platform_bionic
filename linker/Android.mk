@@ -8,8 +8,7 @@ LOCAL_SRC_FILES:= \
 	linker_format.c \
 	rt.c \
 	dlfcn.c \
-	debugger.c \
-	ba.c
+	debugger.c
 
 ifeq ($(TARGET_ARCH),sh)
 # SH-4A series virtual address range from 0x00000000 to 0x7FFFFFFF.
