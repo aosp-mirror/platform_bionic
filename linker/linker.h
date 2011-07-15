@@ -83,6 +83,7 @@ typedef struct soinfo soinfo;
 #define FLAG_LINKED     0x00000001
 #define FLAG_ERROR      0x00000002
 #define FLAG_EXE        0x00000004 // The main executable
+#define FLAG_PRELINKED  0x00000008 // This is a pre-linked lib
 
 #define SOINFO_NAME_LEN 128
 
@@ -94,6 +95,8 @@ struct soinfo
     unsigned entry;
     unsigned base;
     unsigned size;
+    // buddy-allocator index, negative for prelinked libraries
+    int ba_index;
 
     unsigned *dynamic;
 
@@ -150,6 +153,17 @@ struct soinfo
 
 
 extern soinfo libdl_info;
+
+/* these must all be powers of two */
+#ifdef ARCH_SH
+#define LIBBASE 0x60000000
+#define LIBLAST 0x70000000
+#define LIBINC  0x00100000
+#else
+#define LIBBASE 0x80000000
+#define LIBLAST 0x90000000
+#define LIBINC  0x00100000
+#endif
 
 #ifdef ANDROID_ARM_LINKER
 
