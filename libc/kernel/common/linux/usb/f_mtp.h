@@ -7,36 +7,34 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef __LINUX_USB_F_MTP_H
 #define __LINUX_USB_F_MTP_H
-
-#define MTP_INTERFACE_MODE_MTP 0
-#define MTP_INTERFACE_MODE_PTP 1
-
 struct mtp_file_range {
-
  int fd;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  loff_t offset;
-
  int64_t length;
+ uint16_t command;
+ uint32_t transaction_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 struct mtp_event {
-
  size_t length;
-
  void *data;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 #define MTP_SEND_FILE _IOW('M', 0, struct mtp_file_range)
-
 #define MTP_RECEIVE_FILE _IOW('M', 1, struct mtp_file_range)
-
-#define MTP_SET_INTERFACE_MODE _IOW('M', 2, int)
-
 #define MTP_SEND_EVENT _IOW('M', 3, struct mtp_event)
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MTP_SEND_FILE_WITH_HEADER _IOW('M', 4, struct mtp_file_range)
 #endif
