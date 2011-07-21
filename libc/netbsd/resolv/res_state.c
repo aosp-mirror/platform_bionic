@@ -170,7 +170,6 @@ RESET_STATE:
         pthread_setspecific( _res_key, NULL );
         return NULL;
     }
-    _resolv_cache_reset(rt->_serial);
     return rt;
 }
 
