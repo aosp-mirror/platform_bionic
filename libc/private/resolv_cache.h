@@ -30,13 +30,45 @@
 
 struct resolv_cache;  /* forward */
 
-/* get cache instance, can be NULL if cache is disabled
- * (e.g. through an environment variable) */
+/* gets the cache for the default interface. Might be NULL*/
 extern struct resolv_cache*  __get_res_cache(void);
+
+/* get the cache for a specified interface. Can be NULL*/
+extern struct resolv_cache* __get_res_cache_for_iface(const char* ifname);
 
 /* this gets called everytime we detect some changes in the DNS configuration
  * and will flush the cache */
-extern void   _resolv_cache_reset( unsigned  generation );
+extern void  _resolv_cache_reset( unsigned  generation );
+
+/* Gets the address of the n:th name server for the default interface
+ * Return length of address on success else 0.
+ * Note: The first name server is at n = 1 */
+extern int _resolv_cache_get_nameserver(int n, char* addr, int addrLen);
+
+/* Gets the address of the n:th name server for a certain interface
+ * Return length of address on success else 0.
+ * Note: The first name server is at n = 1 */
+extern int _resolv_cache_get_nameserver_for_iface(const char* ifname, int n,
+        char* addr, int addrLen);
+
+/* Gets addrinfo of the n:th name server associated with an interface.
+ * NULL is returned if no address if found.
+ * Note: The first name server is at n = 1. */
+extern struct addrinfo* _resolv_cache_get_nameserver_addr_for_iface(const char* ifname, int n);
+
+/* Gets addrinfo of the n:th name server associated with the default interface
+ * NULL is returned if no address if found.
+ * Note: The first name server is at n = 1. */
+extern struct addrinfo* _resolv_cache_get_nameserver_addr(int n);
+
+/* gets the address associated with the default interface */
+extern struct in_addr* _resolv_get_addr_of_default_iface();
+
+/* gets the address associated with the specified interface */
+extern struct in_addr* _resolv_get_addr_of_iface(const char* ifname);
+
+/* Get name of default interface */
+extern char* _resolv_get_default_iface();
 
 typedef enum {
     RESOLV_CACHE_UNSUPPORTED,  /* the cache can't handle that kind of queries */
