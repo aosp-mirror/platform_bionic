@@ -1860,8 +1860,10 @@ _free_nameservers_locked(struct resolv_cache_info* cache_info)
     for (i = 0; i <= MAXNS; i++) {
         free(cache_info->nameservers[i]);
         cache_info->nameservers[i] = NULL;
-        freeaddrinfo(cache_info->nsaddrinfo[i]);
-        cache_info->nsaddrinfo[i] = NULL;
+        if (cache_info->nsaddrinfo[i] != NULL) {
+            freeaddrinfo(cache_info->nsaddrinfo[i]);
+            cache_info->nsaddrinfo[i] = NULL;
+        }
     }
 }
 
