@@ -92,6 +92,9 @@ static struct dirent*
 _readdir_unlocked(DIR*  dir)
 {
     struct dirent*  entry;
+#ifndef NDEBUG
+    unsigned reclen;
+#endif
 
     if ( !dir->_DIR_avail )
     {
@@ -115,15 +118,18 @@ _readdir_unlocked(DIR*  dir)
     if (((long)(void*)entry & 3) != 0)
         return NULL;
 
-    if ( (unsigned)entry->d_reclen > sizeof(*entry)         ||
-         entry->d_reclen <= offsetof(struct dirent, d_name) )
+#ifndef NDEBUG
+    // paranoid testing of the interface with the kernel getdents64 system call
+    reclen = offsetof(struct dirent, d_name) + strlen(entry->d_name) + 1;
+    if ( reclen > sizeof(*entry) || reclen <= offsetof(struct dirent, d_name) )
         goto Bad;
 
-    if ( (char*)entry + entry->d_reclen > (char*)dir->_DIR_buff + sizeof(dir->_DIR_buff) )
+    if ( (char*)entry + reclen > (char*)dir->_DIR_buff + sizeof(dir->_DIR_buff) )
         goto Bad;
 
-    if ( !memchr( entry->d_name, 0, entry->d_reclen - offsetof(struct dirent, d_name)) )
+    if ( !memchr( entry->d_name, 0, reclen - offsetof(struct dirent, d_name)) )
         goto Bad; 
+#endif
 
     dir->_DIR_next   = (struct dirent*)((char*)entry + entry->d_reclen);
     dir->_DIR_avail -= entry->d_reclen;
