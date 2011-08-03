@@ -41,7 +41,7 @@ struct wchar_io_data {
 
 /* BIONIC: disable wchar support */
 #define WCIO_GET(fp) \
-	((struct whcar_io_data*) 0)
+	((struct wchar_io_data*) 0)
 
 #define _SET_ORIENTATION(fp, mode) ((void)0)
 
