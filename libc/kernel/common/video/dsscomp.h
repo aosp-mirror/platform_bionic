@@ -272,41 +272,53 @@ struct dsscomp_check_ovl_data {
  struct dss2_ovl_info ovl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct dsscomp_setup_dispc_data {
+ __u32 sync_id;
+ struct dss2_rect_t win;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ enum dsscomp_setup_mode mode;
+ __u16 num_ovls;
+ __u16 get_sync_obj;
+ struct dss2_mgr_info mgr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct dss2_ovl_info ovls[5];
+};
 struct dsscomp_wb_copy_data {
  struct dss2_ovl_info ovl, wb;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct dsscomp_display_info {
  __u32 ix;
  __u32 overlays_available;
- __u32 overlays_owned;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 overlays_owned;
  enum omap_channel channel;
  enum omap_dss_display_state state;
  __u8 enabled;
- struct omap_video_timings timings;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct omap_video_timings timings;
  struct s3d_disp_info s3d_info;
  struct dss2_mgr_info mgr;
 };
-enum dsscomp_wait_phase {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum dsscomp_wait_phase {
  DSSCOMP_WAIT_PROGRAMMED = 1,
  DSSCOMP_WAIT_DISPLAYED,
  DSSCOMP_WAIT_RELEASED,
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct dsscomp_wait_data {
  __u32 timeout_us;
  enum dsscomp_wait_phase phase;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define DSSCOMP_SETUP_MGR _IOW('O', 128, struct dsscomp_setup_mgr_data)
 #define DSSCOMP_CHECK_OVL _IOWR('O', 129, struct dsscomp_check_ovl_data)
 #define DSSCOMP_WB_COPY _IOW('O', 130, struct dsscomp_wb_copy_data)
-#define DSSCOMP_QUERY_DISPLAY _IOWR('O', 131, struct dsscomp_display_info)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DSSCOMP_QUERY_DISPLAY _IOWR('O', 131, struct dsscomp_display_info)
 #define DSSCOMP_WAIT _IOW('O', 132, struct dsscomp_wait_data)
-#define DSSCOMP_SETUP_MGR_G _IOW('O', 127, struct dsscomp_setup_mgr_data)
+#define DSSCOMP_SETUP_DISPC _IOW('O', 127, struct dsscomp_setup_dispc_data)
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 
