@@ -427,18 +427,20 @@ format_hex(char *buffer, size_t buffsize, uint64_t value, int isCap)
 static void
 out_vformat(Out *o, const char *format, va_list args)
 {
-    int nn = 0, mm;
-    int padZero = 0;
-    int padLeft = 0;
-    char sign = '\0';
-    int width = -1;
-    int prec  = -1;
-    size_t bytelen = sizeof(int);
-    const char*  str;
-    int slen;
-    char buffer[32];  /* temporary buffer used to format numbers */
+    int nn = 0;
 
     for (;;) {
+        int mm;
+        int padZero = 0;
+        int padLeft = 0;
+        char sign = '\0';
+        int width = -1;
+        int prec  = -1;
+        size_t bytelen = sizeof(int);
+        const char*  str;
+        int slen;
+        char buffer[32];  /* temporary buffer used to format numbers */
+
         char  c;
 
         /* first, find all characters that are not 0 or '%' */
@@ -525,9 +527,6 @@ out_vformat(Out *o, const char *format, va_list args)
             bytelen = sizeof(ptrdiff_t);
             c = format[nn++];
             break;
-        case 'p':
-            bytelen = sizeof(void*);
-            c = format[nn++];
         default:
             ;
         }
@@ -543,7 +542,7 @@ out_vformat(Out *o, const char *format, va_list args)
             buffer[1] = '\0';
             str = buffer;
         } else if (c == 'p') {
-            uint64_t  value = (uint64_t)(ptrdiff_t) va_arg(args, void*);
+            uint64_t  value = (uintptr_t) va_arg(args, void*);
             buffer[0] = '0';
             buffer[1] = 'x';
             format_hex(buffer + 2, sizeof buffer-2, value, 0);
@@ -684,7 +683,7 @@ int  main(void)
     utest_expect("-8123", "%d", -8123);
     utest_expect("16", "%hd", 0x7fff0010);
     utest_expect("16", "%hhd", 0x7fffff10);
-    utest_expect("68719476736", "%lld", 0x1000000000);
+    utest_expect("68719476736", "%lld", 0x1000000000LL);
     utest_expect("70000", "%ld", 70000);
     utest_expect("0xb0001234", "%p", (void*)0xb0001234);
     utest_expect("12ab", "%x", 0x12ab);
@@ -697,6 +696,9 @@ int  main(void)
     utest_expect("1234    ", "%-8d", 1234);
     utest_expect("abcdef     ", "%-11s", "abcdef");
     utest_expect("something:1234", "%s:%d", "something", 1234);
+    utest_expect("005:5:05", "%03d:%d:%02d", 5, 5, 5);
+    utest_expect("5,0x0", "%d,%p", 5, NULL);
+    utest_expect("68719476736,6,7,8", "%lld,%d,%d,%d", 0x1000000000LL, 6, 7, 8);
     return gFails != 0;
 }
 
