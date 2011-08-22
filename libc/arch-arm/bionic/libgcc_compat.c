@@ -30,7 +30,7 @@
  * dynamic linker to copy their definition into the final libc.so binary.
  *
  * They are required to ensure backwards binary compatibility with
- * Android 1.5 and Android 1.6 system images. Some applications built
+ * Android 1.5, 1.6 and even 3.0  system images. Some applications built
  * using the NDK require them to be here.
  *
  * Now, for a more elaborate description of the issue:
@@ -68,6 +68,11 @@
  * applications that were generated with a previous version of the NDK
  * still need all 1.5/1.6 helper functions in libc.so and libn.so
  *
+ * After 3.2, the toolchain was updated again, adding __aeabi_f2uiz to the
+ * list of requirements. Technically, this is due to mis-linked NDK libraries
+ * but it is easier to add a single function here than asking several app
+ * developers to fix their build.
+ *
  * Final note: some of the functions below should really be in libm.so to
  *             completely reflect the state of 1.5/1.6 system images. However,
  *             since libm.so depends on libc.so, it's easier to put all of
@@ -96,6 +101,7 @@
     XX(__aeabi_dsub)         \
     XX(__aeabi_f2d)          \
     XX(__aeabi_f2iz)         \
+    XX(__aeabi_f2uiz)        \
     XX(__aeabi_fadd)         \
     XX(__aeabi_fcmpun)       \
     XX(__aeabi_fdiv)         \
