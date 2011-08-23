@@ -370,10 +370,13 @@ res_nsend(res_state statp,
         ResolvCacheStatus     cache_status = RESOLV_CACHE_UNSUPPORTED;
 #endif
 
+#if !USE_RESOLV_CACHE
 	if (statp->nscount == 0) {
 		errno = ESRCH;
 		return (-1);
 	}
+#endif
+
 	if (anssiz < HFIXEDSZ) {
 		errno = EINVAL;
 		return (-1);
@@ -385,7 +388,8 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-        cache = __get_res_cache();
+        // get the cache associated with the interface
+        cache = __get_res_cache(statp->iface);
         if (cache != NULL) {
             int  anslen = 0;
             cache_status = _resolv_cache_lookup(
@@ -394,7 +398,16 @@ res_nsend(res_state statp,
 
             if (cache_status == RESOLV_CACHE_FOUND) {
                 return anslen;
+            } else {
+                // had a cache miss for a known interface, so populate the thread private
+                // data so the normal resolve path can do its thing
+                _resolv_populate_res_for_iface(statp);
             }
+        }
+
+        if (statp->nscount == 0) {
+            errno = ESRCH;
+            return (-1);
         }
 #endif
 

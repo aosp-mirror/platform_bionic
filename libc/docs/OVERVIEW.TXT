@@ -282,16 +282,9 @@ DNS resolver:
 
      - read /system/etc/resolv.conf instead of /etc/resolv.conf
 
-     - read the list of servers from system properties. the code looks for
-       'net.dns1', 'net.dns2', etc.. Each property should contain the IP
-       address of a DNS server.
-
-       these properties are set/modified by other parts of the Android system
-       (e.g. the dhcpd daemon).
-
-       the implementation also supports per-process DNS server list, using the
-       properties 'net.dns1.<pid>', 'net.dns2.<pid>', etc... Where <pid> stands
-       for the numerical ID of the current process.
+     - get the list of servers and the search domains for this process's
+       current interface from the dns cache.  This information is sent
+       from the framework via cache functions.
 
      - when performing a query, use a properly randomized Query ID (instead of
        a incremented one), for increased security.
