@@ -95,6 +95,8 @@ struct soinfo
     unsigned base;
     unsigned size;
 
+    int unused;  // DO NOT USE, maintained for compatibility.
+
     unsigned *dynamic;
 
     unsigned wrprotect_start;
