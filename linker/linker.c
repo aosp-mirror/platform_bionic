@@ -2009,8 +2009,8 @@ static int link_image(soinfo *si, unsigned wr_offset)
      */
     if (program_is_setuid)
         nullify_closed_stdio ();
-    call_constructors(si);
     notify_gdb_of_load(si);
+    call_constructors(si);
     return 0;
 
 fail:
