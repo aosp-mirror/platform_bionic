@@ -45,7 +45,7 @@ kernel_default_arch_macros = {
 
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
-    {"asm": "__asm__"},
+    "asm": "__asm__",
     }
 
 # this is the set of known static inline functions that we want to keep
