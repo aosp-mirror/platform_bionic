@@ -1405,6 +1405,10 @@ _cache_remove_oldest( Cache*  cache )
         XLOG("%s: OLDEST NOT IN HTABLE ?", __FUNCTION__);
         return;
     }
+    if (DEBUG) {
+        XLOG("Cache full - removing oldest");
+        XLOG_QUERY(oldest->query, oldest->querylen);
+    }
     _cache_remove_p(cache, lookup);
 }
 
@@ -1453,6 +1457,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
     /* remove stale entries here */
     if (now >= e->expires) {
         XLOG( " NOT IN CACHE (STALE ENTRY %p DISCARDED)", *lookup );
+        XLOG_QUERY(e->query, e->querylen);
         _cache_remove_p(cache, lookup);
         goto Exit;
     }
