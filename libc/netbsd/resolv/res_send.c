@@ -646,6 +646,9 @@ res_nsend(res_state statp,
 		errno = terrno;
 	return (-1);
  fail:
+#if USE_RESOLV_CACHE
+	_resolv_cache_query_failed(cache, buf, buflen);
+#endif
 	res_nclose(statp);
 	return (-1);
 }
