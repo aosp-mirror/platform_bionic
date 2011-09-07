@@ -103,6 +103,26 @@ struct omap_dss_cpr_coefs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __s16 br, bg, bb;
 };
+struct dsscomp_videomode {
+ const char *name;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 refresh;
+ __u32 xres;
+ __u32 yres;
+ __u32 pixclock;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 left_margin;
+ __u32 right_margin;
+ __u32 upper_margin;
+ __u32 lower_margin;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 hsync_len;
+ __u32 vsync_len;
+ __u32 sync;
+ __u32 vmode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 flag;
+};
 enum s3d_disp_type {
  S3D_DISP_NONE = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -301,6 +321,16 @@ struct dsscomp_display_info {
  struct s3d_disp_info s3d_info;
  struct dss2_mgr_info mgr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u16 width_in_mm;
+ __u16 height_in_mm;
+ __u32 modedb_len;
+ struct dsscomp_videomode modedb[];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct dsscomp_setup_display_data {
+ __u32 ix;
+ struct dsscomp_videomode mode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum dsscomp_wait_phase {
  DSSCOMP_WAIT_PROGRAMMED = 1,
@@ -319,7 +349,8 @@ struct dsscomp_wait_data {
 #define DSSCOMP_WB_COPY _IOW('O', 130, struct dsscomp_wb_copy_data)
 #define DSSCOMP_QUERY_DISPLAY _IOWR('O', 131, struct dsscomp_display_info)
 #define DSSCOMP_WAIT _IOW('O', 132, struct dsscomp_wait_data)
-#define DSSCOMP_SETUP_DISPC _IOW('O', 127, struct dsscomp_setup_dispc_data)
+#define DSSCOMP_SETUP_DISPC _IOW('O', 133, struct dsscomp_setup_dispc_data)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DSSCOMP_SETUP_DISPLAY _IOW('O', 134, struct dsscomp_setup_display_data)
 #endif
 
