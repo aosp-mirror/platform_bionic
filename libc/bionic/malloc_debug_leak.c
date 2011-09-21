@@ -263,7 +263,7 @@ int get_backtrace(intptr_t* addrs, size_t max_entries)
 // =============================================================================
 
 #define CHK_FILL_FREE           0xef
-#define CHK_SENTINEL_VALUE      0xeb
+#define CHK_SENTINEL_VALUE      (char)0xeb
 #define CHK_SENTINEL_HEAD_SIZE  16
 #define CHK_SENTINEL_TAIL_SIZE  16
 #define CHK_OVERHEAD_SIZE       (   CHK_SENTINEL_HEAD_SIZE +    \
