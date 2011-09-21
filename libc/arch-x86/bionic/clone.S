@@ -22,6 +22,7 @@ __pthread_clone:
         movl    %eax, -8(%ecx)
         movl    %ecx, -4(%ecx)
 
+        subl    $16, %ecx
         movl    $__NR_clone, %eax
         int     $0x80
         test    %eax, %eax
@@ -39,7 +40,6 @@ __pthread_clone:
         # we're in the child thread now, call __thread_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        subl    $16, %esp
         jmp     __thread_entry
         hlt
 
