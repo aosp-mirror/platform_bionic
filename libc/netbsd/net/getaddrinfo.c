@@ -188,8 +188,8 @@ static const struct explore explore[] = {
 #endif
 
 static const ns_src default_dns_files[] = {
-	{ NSSRC_FILES, 	NS_SUCCESS },
-	{ NSSRC_DNS, 	NS_SUCCESS },
+	{ NSSRC_FILES,	NS_SUCCESS },
+	{ NSSRC_DNS,	NS_SUCCESS },
 	{ 0, 0 }
 };
 
@@ -247,61 +247,61 @@ static const char * const ai_errlist[] = {
 	"Success",
 	"Address family for hostname not supported",	/* EAI_ADDRFAMILY */
 	"Temporary failure in name resolution",		/* EAI_AGAIN      */
-	"Invalid value for ai_flags",		       	/* EAI_BADFLAGS   */
-	"Non-recoverable failure in name resolution", 	/* EAI_FAIL       */
+	"Invalid value for ai_flags",			/* EAI_BADFLAGS   */
+	"Non-recoverable failure in name resolution",	/* EAI_FAIL       */
 	"ai_family not supported",			/* EAI_FAMILY     */
-	"Memory allocation failure", 			/* EAI_MEMORY     */
-	"No address associated with hostname", 		/* EAI_NODATA     */
+	"Memory allocation failure",			/* EAI_MEMORY     */
+	"No address associated with hostname",		/* EAI_NODATA     */
 	"hostname nor servname provided, or not known",	/* EAI_NONAME     */
 	"servname not supported for ai_socktype",	/* EAI_SERVICE    */
-	"ai_socktype not supported", 			/* EAI_SOCKTYPE   */
-	"System error returned in errno", 		/* EAI_SYSTEM     */
+	"ai_socktype not supported",			/* EAI_SOCKTYPE   */
+	"System error returned in errno",		/* EAI_SYSTEM     */
 	"Invalid value for hints",			/* EAI_BADHINTS	  */
 	"Resolved protocol is unknown",			/* EAI_PROTOCOL   */
 	"Argument buffer overflow",			/* EAI_OVERFLOW   */
-	"Unknown error", 				/* EAI_MAX        */
+	"Unknown error",				/* EAI_MAX        */
 };
 
 /* XXX macros that make external reference is BAD. */
 
-#define GET_AI(ai, afd, addr) 					\
-do { 								\
-	/* external reference: pai, error, and label free */ 	\
-	(ai) = get_ai(pai, (afd), (addr)); 			\
-	if ((ai) == NULL) { 					\
-		error = EAI_MEMORY; 				\
-		goto free; 					\
-	} 							\
+#define GET_AI(ai, afd, addr)					\
+do {								\
+	/* external reference: pai, error, and label free */	\
+	(ai) = get_ai(pai, (afd), (addr));			\
+	if ((ai) == NULL) {					\
+		error = EAI_MEMORY;				\
+		goto free;					\
+	}							\
 } while (/*CONSTCOND*/0)
 
-#define GET_PORT(ai, serv) 					\
-do { 								\
-	/* external reference: error and label free */ 		\
-	error = get_port((ai), (serv), 0); 			\
-	if (error != 0) 					\
-		goto free; 					\
+#define GET_PORT(ai, serv)					\
+do {								\
+	/* external reference: error and label free */		\
+	error = get_port((ai), (serv), 0);			\
+	if (error != 0)						\
+		goto free;					\
 } while (/*CONSTCOND*/0)
 
-#define GET_CANONNAME(ai, str) 					\
-do { 								\
-	/* external reference: pai, error and label free */ 	\
-	error = get_canonname(pai, (ai), (str)); 		\
-	if (error != 0) 					\
-		goto free; 					\
+#define GET_CANONNAME(ai, str)					\
+do {								\
+	/* external reference: pai, error and label free */	\
+	error = get_canonname(pai, (ai), (str));		\
+	if (error != 0)						\
+		goto free;					\
 } while (/*CONSTCOND*/0)
 
-#define ERR(err) 						\
-do { 								\
-	/* external reference: error, and label bad */ 		\
-	error = (err); 						\
-	goto bad; 						\
-	/*NOTREACHED*/ 						\
+#define ERR(err)						\
+do {								\
+	/* external reference: error, and label bad */		\
+	error = (err);						\
+	goto bad;						\
+	/*NOTREACHED*/						\
 } while (/*CONSTCOND*/0)
 
-#define MATCH_FAMILY(x, y, w) 						\
-	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == PF_UNSPEC || 	\
+#define MATCH_FAMILY(x, y, w)						\
+	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == PF_UNSPEC ||	\
 	    (y) == PF_UNSPEC)))
-#define MATCH(x, y, w) 							\
+#define MATCH(x, y, w)							\
 	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == ANY || (y) == ANY)))
 
 const char *
@@ -377,26 +377,42 @@ _test_connect(int pf, struct sockaddr *addr, size_t addrlen) {
  * available, but whether addresses of the specified family are "configured
  * on the local system". However, bionic doesn't currently support getifaddrs,
  * so checking for connectivity is the next best thing.
+ *
+ * Note that simply checking connectivity is going to do the wrong thing on
+ * multihomed devices.  Now we pass in a hint from the framework about what
+ * to use for this request ("v4", "v4v6", or "v6").
  */
 static int
-_have_ipv6() {
-	static const struct sockaddr_in6 sin6_test = {
-		.sin6_family = AF_INET6,
-		.sin6_addr.s6_addr = {  // 2000::
-			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-		};
-        sockaddr_union addr = { .in6 = sin6_test };
-	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6));
+_have_ipv6(const char *propvalue) {
+	if (*propvalue != 0) {
+		if ((strcmp(propvalue, "v4v6") == 0) || (strcmp(propvalue, "v6") == 0)) {
+			return 1;
+		} else {
+			return 0;
+		}
+	} else {
+		static const struct sockaddr_in6 sin6_test = {
+			.sin6_family = AF_INET6,
+			.sin6_addr.s6_addr = {  // 2000::
+				0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+			};
+		sockaddr_union addr = { .in6 = sin6_test };
+		return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6));
+	}
 }
 
 static int
-_have_ipv4() {
-	static const struct sockaddr_in sin_test = {
-		.sin_family = AF_INET,
-		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
-	};
-        sockaddr_union addr = { .in = sin_test };
-        return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
+_have_ipv4(const char *propvalue) {
+	if (*propvalue != 0) {
+		return (strncmp(propvalue, "v4", 2) == 0);
+	} else {
+		static const struct sockaddr_in sin_test = {
+			.sin_family = AF_INET,
+			.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
+		};
+		sockaddr_union addr = { .in = sin_test };
+		return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
+	}
 }
 
 // Returns 0 on success, else returns non-zero on error (in which case
@@ -1375,9 +1391,9 @@ getanswer(const querybuf *answer, int anslen, const char *qname, int qtype,
 		}
 		cp += n;			/* name */
 		type = _getshort(cp);
- 		cp += INT16SZ;			/* type */
+		cp += INT16SZ;			/* type */
 		class = _getshort(cp);
- 		cp += INT16SZ + INT32SZ;	/* class, TTL */
+		cp += INT16SZ + INT32SZ;	/* class, TTL */
 		n = _getshort(cp);
 		cp += INT16SZ;			/* len */
 		if (class != C_IN) {
@@ -1616,8 +1632,8 @@ _get_precedence(const struct sockaddr *addr)
 		} else if (IN6_IS_ADDR_TEREDO(&addr6->sin6_addr)) {
 			return 10;
 		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr) ||
-		           IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr) ||
-		           IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
+			   IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr) ||
+			   IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
 			return 1;
 		} else {
 			return 40;
@@ -1909,8 +1925,16 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.anslen = sizeof(buf->buf);
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
-			query_ipv6 = _have_ipv6();
-			query_ipv4 = _have_ipv4();
+			/* check if the fwk gave us a hint */
+			char propname[PROP_NAME_MAX];
+			char propvalue[PROP_VALUE_MAX];
+			propvalue[0] = 0;
+			snprintf(propname, sizeof(propname), "net.dnsproto.%d", getpid());
+			if (__system_property_get(propname, propvalue) <= 0) {
+				__system_property_get("net.dnsproto", propvalue);
+			}
+			query_ipv6 = _have_ipv6(propvalue);
+			query_ipv4 = _have_ipv4(propvalue);
 		}
 		if (query_ipv6) {
 			q.qtype = T_AAAA;
@@ -2336,7 +2360,7 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 			 * we only wanted one iteration of the loop, so stop.
 			 */
 			if (!(res->options & RES_DNSRCH))
-			        done++;
+				done++;
 		}
 	}
 
