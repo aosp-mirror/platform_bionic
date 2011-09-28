@@ -546,7 +546,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start)
     return NULL;
 }
 
-soinfo *find_containing_library(void *addr)
+soinfo *find_containing_library(const void *addr)
 {
     soinfo *si;
 
@@ -560,7 +560,7 @@ soinfo *find_containing_library(void *addr)
     return NULL;
 }
 
-Elf32_Sym *find_containing_symbol(void *addr, soinfo *si)
+Elf32_Sym *find_containing_symbol(const void *addr, soinfo *si)
 {
     unsigned int i;
     unsigned soaddr = (unsigned)addr - si->base;

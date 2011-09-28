@@ -124,7 +124,7 @@ err:
     return 0;
 }
 
-int dladdr(void *addr, Dl_info *info)
+int dladdr(const void *addr, Dl_info *info)
 {
     int ret = 0;
 
