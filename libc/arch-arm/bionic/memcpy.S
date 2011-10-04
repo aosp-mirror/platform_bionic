@@ -34,16 +34,11 @@
         .text
         .fpu    neon
 
-        .global memcpy
-        .type memcpy, %function
-        .align 4
-
 /* a prefetch distance of 4 cache-lines works best experimentally */
 #define CACHE_LINE_SIZE     64
 #define PREFETCH_DISTANCE   (CACHE_LINE_SIZE*4)
 
-memcpy:
-        .fnstart
+ENTRY(memcpy)
         .save       {r0, lr}
         stmfd       sp!, {r0, lr}
 
