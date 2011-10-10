@@ -23,7 +23,7 @@ trap "rm -rf $temp_dir; exit" INT TERM EXIT
 # URL from "Sources for Time Zone and Daylight Saving Time Data"
 # http://www.twinsun.com/tz/tz-link.htm
 echo "Looking for new tzdata..."
-wget -N --no-verbose 'ftp://elsie.nci.nih.gov/pub/tzdata*.tar.gz'
+wget -N --no-verbose 'ftp://munnari.oz.au/pub/tzdata*.tar.gz'
 zoneinfo_version_file=$bionic_zoneinfo_dir/zoneinfo.version
 if [ -f "$zoneinfo_version_file" ]; then
   current_version=tzdata`sed s/\n// < $zoneinfo_version_file`
