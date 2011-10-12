@@ -37,16 +37,10 @@
 	.eabi_attribute 26, 2
 	.eabi_attribute 30, 4
 	.eabi_attribute 18, 4
-	.code	16
-	.section	.text.atexit,"ax",%progbits
-	.align	2
-	.global	atexit
 	.hidden	atexit
 	.code	16
 	.thumb_func
-	.type	atexit, %function
-atexit:
-	.fnstart
+ENTRY(atexit)
 .LFB0:
 	.save	{r4, lr}
 	push	{r4, lr}
@@ -64,6 +58,5 @@ atexit:
 .L3:
 	.word	__dso_handle-(.LPIC0+4)
 .LFE0:
-	.fnend
-	.size	atexit, .-atexit
+END(atexit)
 #endif

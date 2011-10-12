@@ -28,12 +28,9 @@
  */
 
 #include <machine/cpu-features.h>
+#include <machine/asm.h>
 
 	.text
-
-	.global strcmp
-	.type strcmp, %function
-	.align 4
 
 #ifdef __ARMEB__
 #define SHFT2LSB lsl
@@ -54,8 +51,7 @@
 #define magic1(REG) REG
 #define magic2(REG) REG, lsl #7
 
-strcmp:
-	.fnstart
+ENTRY(strcmp)
 	PLD(r0, #0)
 	PLD(r1, #0)
 	eor	r2, r0, r1
@@ -136,7 +132,6 @@ strcmp:
 #endif
 	ldr	r4, [sp], #4
 	bx	lr
-	.fnend
 
 .Lstrcmp_unaligned:
 	wp1 .req r0
@@ -319,3 +314,4 @@ strcmp:
 	ldr	r4, [sp], #4
 	ldr	r5, [sp], #4
 	bx	lr
+END(strcmp)
