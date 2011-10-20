@@ -43,21 +43,17 @@
 #    - address of an "onexit" function, not used on any
 #      platform supported by Bionic
 #
-#    - address of the "main" function of the program. We
-#      can't hard-code it in the adr pseudo instruction
-#      so we use a tiny trampoline that will get relocated
-#      by the dynamic linker before this code runs
+#    - address of the "main" function of the program.
 #
 #    - address of the constructor list
 #
 _start:	
 	mov	r0, sp
 	mov	r1, #0
-	adr r2, 0f
-	adr r3, 1f
-	b	__libc_init
-
-0:  b   main
+	ldr	r2, =main
+	adr	r3, 1f
+	ldr	r4, =__libc_init
+	bx	r4
 
 1:  .long   __PREINIT_ARRAY__
     .long   __INIT_ARRAY__
