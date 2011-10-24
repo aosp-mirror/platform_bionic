@@ -1741,16 +1741,17 @@ static int link_image(soinfo *si, unsigned wr_offset)
             if (phdr->p_type == PT_LOAD) {
                 /* For the executable, we use the si->size field only in
                    dl_unwind_find_exidx(), so the meaning of si->size
-                   is not the size of the executable; it is the last
-                   virtual address of the loadable part of the executable;
-                   since si->base == 0 for an executable, we use the
-                   range [0, si->size) to determine whether a PC value
-                   falls within the executable section.  Of course, if
-                   a value is below phdr->p_vaddr, it's not in the
-                   executable section, but a) we shouldn't be asking for
-                   such a value anyway, and b) if we have to provide
-                   an EXIDX for such a value, then the executable's
-                   EXIDX is probably the better choice.
+                   is not the size of the executable; it is the distance
+                   between the load location of the executable and the last
+                   address of the loadable part of the executable.
+                   We use the range [si->base, si->base + si->size) to
+                   determine whether a PC value falls within the executable
+                   section. Of course, if a value is between si->base and
+                   (si->base + phdr->p_vaddr), it's not in the executable
+                   section, but a) we shouldn't be asking for such a value
+                   anyway, and b) if we have to provide an EXIDX for such a
+                   value, then the executable's EXIDX is probably the better
+                   choice.
                 */
                 DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
                 if (phdr->p_vaddr + phdr->p_memsz > si->size)
@@ -1760,12 +1761,20 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 if (!(phdr->p_flags & PF_W)) {
                     unsigned _end;
 
-                    if (phdr->p_vaddr < si->wrprotect_start)
-                        si->wrprotect_start = phdr->p_vaddr;
-                    _end = (((phdr->p_vaddr + phdr->p_memsz + PAGE_SIZE - 1) &
+                    if (si->base + phdr->p_vaddr < si->wrprotect_start)
+                        si->wrprotect_start = si->base + phdr->p_vaddr;
+                    _end = (((si->base + phdr->p_vaddr + phdr->p_memsz + PAGE_SIZE - 1) &
                              (~PAGE_MASK)));
                     if (_end > si->wrprotect_end)
                         si->wrprotect_end = _end;
+                    /* Make the section writable just in case we'll have to
+                     * write to it during relocation (i.e. text segment).
+                     * However, we will remember what range of addresses
+                     * should be write protected.
+                     */
+                    mprotect((void *) (si->base + phdr->p_vaddr),
+                             phdr->p_memsz,
+                             PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
                 }
             } else if (phdr->p_type == PT_DYNAMIC) {
                 if (si->dynamic != (unsigned *)-1) {
@@ -2183,7 +2192,7 @@ unsigned __linker_init(unsigned **elfdata)
         vecs += 2;
     }
 
-    si->base = 0;
+    si->base = (Elf32_Addr) si->phdr - si->phdr->p_vaddr;
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
