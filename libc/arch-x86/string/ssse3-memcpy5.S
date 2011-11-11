@@ -104,7 +104,7 @@ name:					\
 #define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 #define POP(REG)	popl REG; CFI_POP (REG)
 
-#ifdef SHARED
+#if (defined SHARED || defined __PIC__)
 # define PARMS		8		/* Preserve EBX.  */
 # define ENTRANCE	PUSH (%ebx);
 # define RETURN_END	POP (%ebx); ret
@@ -216,7 +216,7 @@ L(48bytesormore):
 #ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
 #else
-# ifdef SHARED
+# if (defined SHARED || defined __PIC__)
 	call	__i686.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_shared_cache_size_half@GOTOFF(%ebx), %ecx
@@ -287,7 +287,7 @@ L(shl_0_gobble):
 #ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %ecx
 #else
-# ifdef SHARED
+# if (defined SHARED || defined __PIC__)
 	call	__i686.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size_half@GOTOFF(%ebx), %ecx
