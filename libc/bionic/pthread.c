@@ -692,7 +692,7 @@ FoundIt:
             goto Exit;
         }
     }
-    while ( __atomic_cmpxchg( flags, flags | PTHREAD_ATTR_FLAG_DETACHED,
+    while ( __bionic_cmpxchg( flags, flags | PTHREAD_ATTR_FLAG_DETACHED,
                               (volatile int*)&thread->attr.flags ) != 0 );
 Exit:
     pthread_mutex_unlock(&gThreadListLock);
@@ -926,17 +926,17 @@ _normal_lock(pthread_mutex_t*  mutex)
     int  shared = mutex->value & MUTEX_SHARED_MASK;
     /*
      * The common case is an unlocked mutex, so we begin by trying to
-     * change the lock's state from 0 to 1.  __atomic_cmpxchg() returns 0
+     * change the lock's state from 0 to 1.  __bionic_cmpxchg() returns 0
      * if it made the swap successfully.  If the result is nonzero, this
      * lock is already held by another thread.
      */
-    if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value ) != 0) {
+    if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value ) != 0) {
         /*
          * We want to go to sleep until the mutex is available, which
          * requires promoting it to state 2.  We need to swap in the new
          * state value and then wait until somebody wakes us up.
          *
-         * __atomic_swap() returns the previous value.  We swap 2 in and
+         * __bionic_swap() returns the previous value.  We swap 2 in and
          * see if we got zero back; if so, we have acquired the lock.  If
          * not, another thread still holds the lock and we wait again.
          *
@@ -947,7 +947,7 @@ _normal_lock(pthread_mutex_t*  mutex)
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
-        while (__atomic_swap(shared|2, &mutex->value ) != (shared|0))
+        while (__bionic_swap(shared|2, &mutex->value ) != (shared|0))
             __futex_wait_ex(&mutex->value, shared, shared|2, 0);
     }
     ANDROID_MEMBAR_FULL();
@@ -967,10 +967,10 @@ _normal_unlock(pthread_mutex_t*  mutex)
 
     /*
      * The mutex state will be 1 or (rarely) 2.  We use an atomic decrement
-     * to release the lock.  __atomic_dec() returns the previous value;
+     * to release the lock.  __bionic_atomic_dec() returns the previous value;
      * if it wasn't 1 we have to do some additional work.
      */
-    if (__atomic_dec(&mutex->value) != (shared|1)) {
+    if (__bionic_atomic_dec(&mutex->value) != (shared|1)) {
         /*
          * Start by releasing the lock.  The decrement changed it from
          * "contended lock" to "uncontended lock", which means we still
@@ -1158,7 +1158,7 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
-        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+        if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
             ANDROID_MEMBAR_FULL();
             return 0;
         }
@@ -1256,13 +1256,13 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
     {
         /* fast path for uncontended lock */
-        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+        if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
             ANDROID_MEMBAR_FULL();
             return 0;
         }
 
         /* loop while needed */
-        while (__atomic_swap(shared|2, &mutex->value) != (shared|0)) {
+        while (__bionic_swap(shared|2, &mutex->value) != (shared|0)) {
             if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
                 return EBUSY;
 
@@ -1431,7 +1431,7 @@ __pthread_cond_pulse(pthread_cond_t *cond, int  counter)
         long oldval = cond->value;
         long newval = ((oldval - COND_COUNTER_INCREMENT) & COND_COUNTER_MASK)
                       | flags;
-        if (__atomic_cmpxchg(oldval, newval, &cond->value) == 0)
+        if (__bionic_cmpxchg(oldval, newval, &cond->value) == 0)
             break;
     }
 
