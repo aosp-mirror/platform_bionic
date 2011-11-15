@@ -2192,7 +2192,18 @@ unsigned __linker_init(unsigned **elfdata)
         vecs += 2;
     }
 
-    si->base = (Elf32_Addr) si->phdr - si->phdr->p_vaddr;
+    /* Compute the value of si->base. We can't rely on the fact that
+     * the first entry is the PHDR because this will not be true
+     * for certain executables (e.g. some in the NDK unit test suite)
+     */
+    int nn;
+    si->base = 0;
+    for ( nn = 0; nn < si->phnum; nn++ ) {
+        if (si->phdr[nn].p_type == PT_PHDR) {
+            si->base = (Elf32_Addr) si->phdr - si->phdr[nn].p_vaddr;
+            break;
+        }
+    }
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
