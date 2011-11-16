@@ -346,10 +346,11 @@ libc_common_src_files += \
 	arch-arm/bionic/__get_sp.S \
 	arch-arm/bionic/_exit_with_stack_teardown.S \
 	arch-arm/bionic/_setjmp.S \
-	arch-arm/bionic/atomics_arm.S \
+	arch-arm/bionic/atomics_arm.c \
 	arch-arm/bionic/clone.S \
 	arch-arm/bionic/eabi.c \
 	arch-arm/bionic/ffs.S \
+	arch-arm/bionic/futex_arm.S \
 	arch-arm/bionic/kill.S \
 	arch-arm/bionic/libgcc_compat.c \
 	arch-arm/bionic/tkill.S \
@@ -394,9 +395,9 @@ libc_common_src_files += \
 	arch-x86/bionic/__get_sp.S \
 	arch-x86/bionic/__get_tls.c \
 	arch-x86/bionic/__set_tls.c \
-	arch-x86/bionic/atomics_x86.S \
 	arch-x86/bionic/clone.S \
 	arch-x86/bionic/_exit_with_stack_teardown.S \
+	arch-x86/bionic/futex_x86.S \
 	arch-x86/bionic/setjmp.S \
 	arch-x86/bionic/_setjmp.S \
 	arch-x86/bionic/sigsetjmp.S \
