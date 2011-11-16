@@ -1,0 +1,82 @@
+#!/bin/bash
+# Run with no arguments from any directory, with no special setup required.
+
+# Abort if any command returns an error exit status, or if an undefined
+# variable is used.
+set -e
+set -u
+
+echo "Looking for bionic..."
+bionic_dir=$(cd $(dirname $0)/../../.. && pwd)
+bionic_zoneinfo_dir=$bionic_dir/libc/zoneinfo
+bionic_zoneinfo_tools_dir=$bionic_dir/libc/tools/zoneinfo
+if [[ ! -d "$bionic_zoneinfo_dir" || ! -d "$bionic_zoneinfo_tools_dir" ]]; then
+  echo "Can't find bionic's zoneinfo directories!"
+  exit 1
+fi
+
+echo "Switching to temporary directory..."
+temp_dir=`mktemp -d`
+cd $temp_dir
+trap "rm -rf $temp_dir; exit" INT TERM EXIT
+
+# URL from "Sources for Time Zone and Daylight Saving Time Data"
+# http://www.twinsun.com/tz/tz-link.htm
+echo "Looking for new tzdata..."
+wget -N --no-verbose 'ftp://munnari.oz.au/pub/tzdata*.tar.gz'
+zoneinfo_version_file=$bionic_zoneinfo_dir/zoneinfo.version
+if [ -f "$zoneinfo_version_file" ]; then
+  current_version=tzdata`sed s/\n// < $zoneinfo_version_file`
+else
+  current_version=missing
+fi
+latest_archive=`ls -r -v tzdata*.tar.gz | head -n1`
+latest_version=`basename $latest_archive .tar.gz`
+if [ "$current_version" == "$latest_version" ]; then
+  echo "You already have the latest tzdata ($latest_version)!"
+  exit 1
+fi
+
+md5_sum=`md5sum $latest_archive`
+echo "MD5: $md5_sum"
+
+echo "Extracting $latest_version..."
+mkdir $latest_version
+tar -C $latest_version -zxf $latest_archive
+
+echo "Compiling $latest_version..."
+mkdir data
+for i in \
+    africa \
+    antarctica \
+    asia \
+    australasia \
+    etcetera \
+    europe \
+    factory \
+    northamerica \
+    solar87 \
+    solar88 \
+    solar89 \
+    southamerica
+do
+    zic -d data $latest_version/$i
+done
+
+echo "Compacting $latest_version..."
+(
+    cat $latest_version/* | grep '^Link' | awk '{print $1, $2, $3}'
+    (
+        cat $latest_version/* | grep '^Zone' | awk '{print $2}'
+        cat $latest_version/* | grep '^Link' | awk '{print $3}'
+    ) | LC_ALL="C" sort
+) | grep -v Riyadh8 > setup
+
+javac -d . \
+    $bionic_zoneinfo_tools_dir/ZoneCompactor.java \
+    $bionic_zoneinfo_tools_dir/ZoneInfo.java
+java ZoneCompactor setup data
+
+echo "Updating bionic to $latest_version..."
+mv zoneinfo.dat zoneinfo.idx $bionic_zoneinfo_dir
+echo $latest_version | sed 's/tzdata//' > $bionic_zoneinfo_dir/zoneinfo.version
