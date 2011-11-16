@@ -174,7 +174,7 @@ __sem_dec(volatile unsigned int *pvalue)
 
         new = SEMCOUNT_DECREMENT(old);
     }
-    while (__atomic_cmpxchg((int)(old|shared),
+    while (__bionic_cmpxchg((int)(old|shared),
                             (int)(new|shared),
                             (volatile int *)pvalue) != 0);
     return ret;
@@ -198,7 +198,7 @@ __sem_trydec(volatile unsigned int *pvalue)
 
         new = SEMCOUNT_DECREMENT(old);
     }
-    while (__atomic_cmpxchg((int)(old|shared),
+    while (__bionic_cmpxchg((int)(old|shared),
                             (int)(new|shared),
                             (volatile int *)pvalue) != 0);
 
@@ -235,7 +235,7 @@ __sem_inc(volatile unsigned int *pvalue)
         else
             new = SEMCOUNT_INCREMENT(old);
     }
-    while ( __atomic_cmpxchg((int)(old|shared),
+    while ( __bionic_cmpxchg((int)(old|shared),
                              (int)(new|shared),
                              (volatile int*)pvalue) != 0);
 
