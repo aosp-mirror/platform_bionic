@@ -81,9 +81,6 @@ void ATTRIBUTES _thread_created_hook(pid_t thread_id);
 #define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
 
 #define DEFAULT_STACKSIZE (1024 * 1024)
-#define STACKBASE 0x10000000
-
-static uint8_t * gStackBase = (uint8_t *)STACKBASE;
 
 static pthread_mutex_t mmap_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -252,7 +249,7 @@ static void *mkstack(size_t size, size_t guard_size)
 
     pthread_mutex_lock(&mmap_lock);
 
-    stack = mmap((void *)gStackBase, size,
+    stack = mmap(NULL, size,
                  PROT_READ | PROT_WRITE,
                  MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE,
                  -1, 0);
