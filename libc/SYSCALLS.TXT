@@ -63,6 +63,7 @@ void*   __brk:brk(void*)           45
 # see comments in arch-arm/bionic/kill.S to understand why we don't generate an ARM stub for kill/tkill
 int     kill(pid_t, int)           -1,37
 int     tkill(pid_t tid, int sig)  -1,238
+int     tgkill(pid_t tgid, pid_t tid, int sig)  -1,270
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  26
 int     __set_thread_area:set_thread_area(void*  user_desc)  -1,243
 int     __getpriority:getpriority(int, int)  96
