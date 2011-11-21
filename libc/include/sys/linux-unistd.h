@@ -32,6 +32,7 @@ int              setresgid (gid_t, gid_t, gid_t);
 void*            __brk (void*);
 int              kill (pid_t, int);
 int              tkill (pid_t tid, int sig);
+int              tgkill (pid_t tgid, pid_t tid, int sig);
 int              __ptrace (int request, int pid, void* addr, void* data);
 int              __set_thread_area (void*  user_desc);
 int              __getpriority (int, int);

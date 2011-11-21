@@ -26,6 +26,7 @@ syscall_src += arch-sh/syscalls/setresgid.S
 syscall_src += arch-sh/syscalls/__brk.S
 syscall_src += arch-sh/syscalls/kill.S
 syscall_src += arch-sh/syscalls/tkill.S
+syscall_src += arch-sh/syscalls/tgkill.S
 syscall_src += arch-sh/syscalls/__ptrace.S
 syscall_src += arch-sh/syscalls/__set_thread_area.S
 syscall_src += arch-sh/syscalls/__getpriority.S

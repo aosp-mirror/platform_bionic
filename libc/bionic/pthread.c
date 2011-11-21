@@ -1836,7 +1836,7 @@ static void pthread_key_clean_all(void)
 }
 
 // man says this should be in <linux/unistd.h>, but it isn't
-extern int tkill(int tid, int sig);
+extern int tgkill(int tgid, int tid, int sig);
 
 int pthread_kill(pthread_t tid, int sig)
 {
@@ -1844,7 +1844,7 @@ int pthread_kill(pthread_t tid, int sig)
     int  old_errno = errno;
     pthread_internal_t * thread = (pthread_internal_t *)tid;
 
-    ret = tkill(thread->kernel_id, sig);
+    ret = tgkill(getpid(), thread->kernel_id, sig);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;

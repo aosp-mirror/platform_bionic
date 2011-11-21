@@ -26,6 +26,7 @@ syscall_src += arch-x86/syscalls/setresgid.S
 syscall_src += arch-x86/syscalls/__brk.S
 syscall_src += arch-x86/syscalls/kill.S
 syscall_src += arch-x86/syscalls/tkill.S
+syscall_src += arch-x86/syscalls/tgkill.S
 syscall_src += arch-x86/syscalls/__ptrace.S
 syscall_src += arch-x86/syscalls/__set_thread_area.S
 syscall_src += arch-x86/syscalls/__getpriority.S
