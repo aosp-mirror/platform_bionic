@@ -1867,6 +1867,19 @@ error:
 	free(elems);
 }
 
+static int _using_alt_dns()
+{
+	char propname[PROP_NAME_MAX];
+	char propvalue[PROP_VALUE_MAX];
+
+	propvalue[0] = 0;
+	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
+	if (__system_property_get(propname, propvalue) > 0 ) {
+		return 1;
+	}
+	return 0;
+}
+
 /*ARGSUSED*/
 static int
 _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
@@ -1909,14 +1922,12 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.anslen = sizeof(buf->buf);
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
-			query_ipv6 = _have_ipv6();
-			query_ipv4 = _have_ipv4();
-			if (query_ipv6 == 0 && query_ipv4 == 0) {
-				// Both our IPv4 and IPv6 connectivity probes failed, which indicates
-				// that we have neither an IPv4 or an IPv6 default route (and thus no
-				// global IPv4 or IPv6 connectivity). We might be in a walled garden.
-				// Throw up our arms and ask for both A and AAAA.
-				query_ipv6 = query_ipv4 = 1;
+			// Only implement AI_ADDRCONFIG if the application is not
+			// using its own DNS servers, since our implementation
+			// only works on the default connection.
+			if (!_using_alt_dns()) {
+				query_ipv6 = _have_ipv6();
+				query_ipv4 = _have_ipv4();
 			}
 		}
 		if (query_ipv6) {
