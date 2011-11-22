@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,35 +25,46 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_ATOMICS_H
-#define _SYS_ATOMICS_H
 
-#include <sys/cdefs.h>
-#include <sys/time.h>
 
-__BEGIN_DECLS
-
-/* Note: atomic operations that were exported by the C library didn't
- *       provide any memory barriers, which created potential issues on
- *       multi-core devices. We now define them as inlined calls to
- *       GCC sync builtins, which always provide a full barrier.
+/* The purpose of this file is to export a small set of atomic-related
+ * functions from the C library, to ensure binary ABI compatibility for
+ * the NDK.
  *
- *       NOTE: The C library still exports atomic functions by the same
- *              name to ensure ABI stability for existing NDK machine code.
+ * These functions were initially exposed by the NDK through <sys/atomics.h>,
+ * which was unfortunate because their implementation didn't provide any
+ * memory barriers at all.
  *
- *       If you are an NDK developer, we encourage you to rebuild your
- *       unmodified sources against this header as soon as possible.
+ * This wasn't a problem for the platform code that used them, because it
+ * used explicit barrier instructions around them. On the other hand, it means
+ * that any NDK-generated machine code that linked against them would not
+ * perform correctly when running on multi-core devices.
+ *
+ * To fix this, the platform code was first modified to not use any of these
+ * functions (everything is now inlined through assembly statements, see
+ * libc/private/bionic_arm_inline.h and the headers it includes.
+ *
+ * The functions here are thus only for the benefit of NDK applications,
+ * and now includes full memory barriers to prevent any random memory ordering
+ * issue from cropping.
+ *
+ * Note that we also provide an updated <sys/atomics.h> header that defines
+ * always_inlined versions of the functions that use the GCC builtin
+ * intrinsics to perform the same thing.
+ *
+ * NOTE: There is no need for a similar file for non-ARM platforms.
  */
-#define __ATOMIC_INLINE__ static __inline__ __attribute__((always_inline))
 
-__ATOMIC_INLINE__ int
-__atomic_cmpxchg(int old, int _new, volatile int *ptr)
+/* DO NOT INCLUDE <sys/atomics.h> HERE ! */
+
+int
+__android_cmpxchg(int old, int _new, volatile int *ptr)
 {
     /* We must return 0 on success */
     return __sync_val_compare_and_swap(ptr, old, _new) != old;
 }
 
-__ATOMIC_INLINE__ int
+int
 __atomic_swap(int _new, volatile int *ptr)
 {
     int prev;
@@ -63,22 +74,14 @@ __atomic_swap(int _new, volatile int *ptr)
     return prev;
 }
 
-__ATOMIC_INLINE__ int
+int
 __atomic_dec(volatile int *ptr)
 {
   return __sync_fetch_and_sub (ptr, 1);
 }
 
-__ATOMIC_INLINE__ int
+int
 __atomic_inc(volatile int *ptr)
 {
   return __sync_fetch_and_add (ptr, 1);
 }
-
-
-int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
-int __futex_wake(volatile void *ftx, int count);
-
-__END_DECLS
-
-#endif /* _SYS_ATOMICS_H */
