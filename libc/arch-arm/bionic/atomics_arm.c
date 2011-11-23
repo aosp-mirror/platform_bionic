@@ -58,7 +58,7 @@
 /* DO NOT INCLUDE <sys/atomics.h> HERE ! */
 
 int
-__android_cmpxchg(int old, int _new, volatile int *ptr)
+__atomic_cmpxchg(int old, int _new, volatile int *ptr)
 {
     /* We must return 0 on success */
     return __sync_val_compare_and_swap(ptr, old, _new) != old;
