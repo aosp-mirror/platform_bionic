@@ -60,6 +60,8 @@ static struct user_desc  _tls_desc =
     0
 };
 
+static pthread_mutex_t  _tls_desc_lock = PTHREAD_MUTEX_INITIALIZER;
+
 struct _thread_area_head {
     void *self;
 };
@@ -71,6 +73,7 @@ int __set_tls(void *ptr)
 {
     int   rc, segment;
 
+    pthread_mutex_lock(&_tls_desc_lock);
     _tls_desc.base_addr = (unsigned long)ptr;
 
     /* We also need to write the location of the tls to ptr[0] */
@@ -88,6 +91,8 @@ int __set_tls(void *ptr)
     asm __volatile__ (
         "   movw %w0, %%gs" :: "q"(segment)
     );
+    pthread_mutex_unlock(&_tls_desc_lock);
+
     return 0;
 }
 
