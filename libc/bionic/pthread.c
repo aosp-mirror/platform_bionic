@@ -568,6 +568,7 @@ void pthread_exit(void * retval)
     void*                stack_base = thread->attr.stack_base;
     int                  stack_size = thread->attr.stack_size;
     int                  user_stack = (thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) != 0;
+    sigset_t mask;
 
     // call the cleanup handlers first
     while (thread->cleanup_stack) {
@@ -609,6 +610,10 @@ void pthread_exit(void * retval)
         }
         pthread_mutex_unlock(&gThreadListLock);
     }
+
+    sigfillset(&mask);
+    sigdelset(&mask, SIGSEGV);
+    (void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
 
     // destroy the thread stack
     if (user_stack)
