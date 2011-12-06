@@ -34,7 +34,7 @@ char *
 strchr(const char *p, int ch)
 {
 	for (;; ++p) {
-		if (*p == ch)
+		if (*p == (char) ch)
 			return((char *)p);
 		if (!*p)
 			return((char *)NULL);

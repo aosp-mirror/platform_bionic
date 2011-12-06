@@ -35,10 +35,10 @@ void *memrchr(const void *s, int c, size_t n)
         const char*  q = p + n;
 
         while (1) {
-            q--; if (q < p || q[0] == c) break;
-            q--; if (q < p || q[0] == c) break;
-            q--; if (q < p || q[0] == c) break;
-            q--; if (q < p || q[0] == c) break;
+            q--; if (q < p || q[0] == (char) c) break;
+            q--; if (q < p || q[0] == (char) c) break;
+            q--; if (q < p || q[0] == (char) c) break;
+            q--; if (q < p || q[0] == (char) c) break;
         }
         if (q >= p)
             return (void*)q;
