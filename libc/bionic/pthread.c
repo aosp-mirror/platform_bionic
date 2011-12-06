@@ -1885,7 +1885,7 @@ int pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
     kernel_sigset_t  in_set, *in_set_ptr;
     kernel_sigset_t  out_set;
 
-    in_set.kernel[0]  = in_set.kernel[1]  =  0;
+    in_set.kernel[0] = in_set.kernel[1] = 0;
     out_set.kernel[0] = out_set.kernel[1] = 0;
 
     /* 'in_set_ptr' is the second parameter to __rt_sigprocmask. It must be NULL
