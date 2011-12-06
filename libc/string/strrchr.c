@@ -36,7 +36,7 @@ strrchr(const char *p, int ch)
 	char *save;
 
 	for (save = NULL;; ++p) {
-		if (*p == ch)
+		if (*p == (char) ch)
 			save = (char *)p;
 		if (!*p)
 			return(save);
