@@ -30,16 +30,19 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include "cpuacct.h"
+#include <fcntl.h>
 
 int cpuacct_add(uid_t uid)
 {
     int count;
-    FILE *fp;
+    int fd;
     char buf[80];
+    ssize_t n;
+    int ret = 0;
 
     count = snprintf(buf, sizeof(buf), "/acct/uid/%d/tasks", uid);
-    fp = fopen(buf, "w+");
-    if (!fp) {
+    fd = open(buf, O_RDWR | O_CREAT, 0666);
+    if (fd == -1) {
         /* Note: sizeof("tasks") returns 6, which includes the NULL char */
         buf[count - sizeof("tasks")] = 0;
         if (mkdir(buf, 0775) < 0)
@@ -47,14 +50,19 @@ int cpuacct_add(uid_t uid)
 
         /* Note: sizeof("tasks") returns 6, which includes the NULL char */
         buf[count - sizeof("tasks")] = '/';
-        fp = fopen(buf, "w+");
+        fd = open(buf, O_RDWR | O_CREAT, 0666);
     }
-    if (!fp)
+    if (fd == -1)
         return -errno;
 
-    fprintf(fp, "0");
-    if (fclose(fp))
+    n = TEMP_FAILURE_RETRY(write(fd, "0", 1));
+    if (n < 0)
+        ret = -errno;
+    else if (n == 0)
+        ret = -EIO;
+
+    if (TEMP_FAILURE_RETRY(close(fd)) == -1)
         return -errno;
 
-    return 0;
+    return ret;
 }
