@@ -760,8 +760,11 @@ int pthread_setschedparam(pthread_t thid, int policy,
  */
 
 
-#define  MUTEX_OWNER(m)  (((m)->value >> 16) & 0xffff)
-#define  MUTEX_COUNTER(m) (((m)->value >> 2) & 0xfff)
+#define  MUTEX_VALUE_OWNER(v)  (((v) >> 16) & 0xffff)
+#define  MUTEX_VALUE_COUNTER(v) (((v) >> 2) & 0xfff)
+
+#define  MUTEX_OWNER(m)        MUTEX_VALUE_OWNER((m)->value)
+#define  MUTEX_COUNTER(m)      MUTEX_VALUE_COUNTER((m)->value)
 
 #define  MUTEX_TYPE_MASK       0xc000
 #define  MUTEX_TYPE_NORMAL     0x0000
@@ -922,10 +925,8 @@ int pthread_mutex_destroy(pthread_mutex_t *mutex)
  * the lock state field.
  */
 static __inline__ void
-_normal_lock(pthread_mutex_t*  mutex)
+_normal_lock(pthread_mutex_t*  mutex, int shared)
 {
-    /* We need to preserve the shared flag during operations */
-    int  shared = mutex->value & MUTEX_SHARED_MASK;
     /*
      * The common case is an unlocked mutex, so we begin by trying to
      * change the lock's state from 0 to 1.  __bionic_cmpxchg() returns 0
@@ -960,12 +961,9 @@ _normal_lock(pthread_mutex_t*  mutex)
  * that we are in fact the owner of this lock.
  */
 static __inline__ void
-_normal_unlock(pthread_mutex_t*  mutex)
+_normal_unlock(pthread_mutex_t*  mutex, int shared)
 {
     ANDROID_MEMBAR_FULL();
-
-    /* We need to preserve the shared flag during operations */
-    int  shared = mutex->value & MUTEX_SHARED_MASK;
 
     /*
      * The mutex state will be 1 or (rarely) 2.  We use an atomic decrement
@@ -1014,58 +1012,88 @@ _normal_unlock(pthread_mutex_t*  mutex)
     }
 }
 
-static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static void
-_recursive_lock(void)
+/* This common inlined function is used to increment the counter of an
+ * errorcheck or recursive mutex.
+ *
+ * For errorcheck mutexes, it will return EDEADLK
+ * If the counter overflows, it will return EAGAIN
+ * Otherwise, it atomically increments the counter and returns 0
+ * after providing an acquire barrier.
+ *
+ * mtype is the current mutex type
+ * mvalue is the current mutex value (already loaded)
+ * mutex pointers to the mutex.
+ */
+static __inline__ __attribute__((always_inline)) int
+_recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
 {
-    _normal_lock(&__recursive_lock);
+    if (mtype == MUTEX_TYPE_ERRORCHECK) {
+        /* trying to re-lock a mutex we already acquired */
+        return EDEADLK;
+    }
+
+    /* Detect recursive lock overflow and return EAGAIN.
+     * This is safe because only the owner thread can modify the
+     * counter bits in the mutes value
+     */
+    if ((mvalue & MUTEX_COUNTER_MASK) == MUTEX_COUNTER_MASK) {
+        return EAGAIN;
+    }
+
+    /* We own the mutex, but other threads are able to change
+     * the contents (e.g. promoting it to "contended" by changing
+     * its lower bits), so we need to atomically update it using
+     * a cmpxchg loop.
+     */
+    for (;;) {
+        /* increment counter, overflow was already checked */
+        int newvalue = mvalue + (1 << MUTEX_COUNTER_SHIFT);
+        if (__likely(__bionic_cmpxchg(mvalue, newvalue, &mutex->value) == 0)) {
+            ANDROID_MEMBAR_FULL();
+            return 0;
+        }
+        /* argh, value was changed, by another thread which updated the 'state'
+         * field, so reload and try again.
+         */
+        mvalue = mutex->value;
+    }
 }
 
-static void
+static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static __inline__ void
+_recursive_lock(void)
+{
+    _normal_lock(&__recursive_lock, 0);
+}
+
+static __inline__ void
 _recursive_unlock(void)
 {
-    _normal_unlock(&__recursive_lock );
+    _normal_unlock(&__recursive_lock, 0);
 }
 
 int pthread_mutex_lock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, new_lock_type, shared;
+    int mvalue, mtype, tid, new_lock_type, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype = (mutex->value & MUTEX_TYPE_MASK);
-    shared = (mutex->value & MUTEX_SHARED_MASK);
+    mvalue = mutex->value;
+    mtype = (mvalue & MUTEX_TYPE_MASK);
+    shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle normal case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) ) {
-        _normal_lock(mutex);
+        _normal_lock(mutex, shared);
         return 0;
     }
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_OWNER(mutex) )
-    {
-        int  oldv, counter;
-
-        if (mtype == MUTEX_TYPE_ERRORCHECK) {
-            /* trying to re-lock a mutex we already acquired */
-            return EDEADLK;
-        }
-        /*
-         * We own the mutex, but other threads are able to change
-         * the contents (e.g. promoting it to "contended"), so we
-         * need to hold the global lock.
-         */
-        _recursive_lock();
-        oldv         = mutex->value;
-        counter      = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-        _recursive_unlock();
-        return 0;
-    }
+    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+        return _recursive_increment(mutex, mvalue, mtype);
 
     /* We don't own the mutex, so try to get it.
      *
@@ -1109,23 +1137,24 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
 
 int pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, oldv, shared;
+    int mvalue, mtype, tid, oldv, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype  = (mutex->value & MUTEX_TYPE_MASK);
-    shared = (mutex->value & MUTEX_SHARED_MASK);
+    mvalue = mutex->value;
+    mtype  = (mvalue & MUTEX_TYPE_MASK);
+    shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if (__likely(mtype == MUTEX_TYPE_NORMAL)) {
-        _normal_unlock(mutex);
+        _normal_unlock(mutex, shared);
         return 0;
     }
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid != MUTEX_OWNER(mutex) )
+    if ( tid != MUTEX_VALUE_OWNER(mvalue) )
         return EPERM;
 
     /* We do, decrement counter or release the mutex if it is 0 */
@@ -1149,13 +1178,14 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
 
 int pthread_mutex_trylock(pthread_mutex_t *mutex)
 {
-    int mtype, tid, oldv, shared;
+    int mvalue, mtype, tid, oldv, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype  = (mutex->value & MUTEX_TYPE_MASK);
-    shared = (mutex->value & MUTEX_SHARED_MASK);
+    mvalue = mutex->value;
+    mtype  = (mvalue & MUTEX_TYPE_MASK);
+    shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
@@ -1170,22 +1200,8 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_OWNER(mutex) )
-    {
-        int counter;
-
-        if (mtype == MUTEX_TYPE_ERRORCHECK) {
-            /* already locked by ourselves */
-            return EDEADLK;
-        }
-
-        _recursive_lock();
-        oldv = mutex->value;
-        counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-        _recursive_unlock();
-        return 0;
-    }
+    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+        return _recursive_increment(mutex, mvalue, mtype);
 
     /* Restore sharing bit in mtype */
     mtype |= shared;
@@ -1243,7 +1259,7 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     clockid_t        clock = CLOCK_MONOTONIC;
     struct timespec  abstime;
     struct timespec  ts;
-    int              mtype, tid, oldv, new_lock_type, shared;
+    int               mvalue, mtype, tid, oldv, new_lock_type, shared;
 
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
@@ -1251,8 +1267,9 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     if (__unlikely(mutex == NULL))
         return EINVAL;
 
-    mtype  = (mutex->value & MUTEX_TYPE_MASK);
-    shared = (mutex->value & MUTEX_SHARED_MASK);
+    mvalue = mutex->value;
+    mtype  = (mvalue & MUTEX_TYPE_MASK);
+    shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
     if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
@@ -1276,22 +1293,8 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_OWNER(mutex) )
-    {
-        int  oldv, counter;
-
-        if (mtype == MUTEX_TYPE_ERRORCHECK) {
-            /* already locked by ourselves */
-            return EDEADLK;
-        }
-
-        _recursive_lock();
-        oldv = mutex->value;
-        counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
-        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
-        _recursive_unlock();
-        return 0;
-    }
+    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+        return _recursive_increment(mutex, mvalue, mtype);
 
     /* We don't own the mutex, so try to get it.
      *
