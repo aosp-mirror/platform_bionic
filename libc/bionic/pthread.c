@@ -1931,18 +1931,70 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 {
     static pthread_mutex_t   once_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
     volatile pthread_once_t* ocptr = once_control;
+    pthread_once_t value;
 
-    pthread_once_t tmp = *ocptr;
-    ANDROID_MEMBAR_FULL();
-    if (tmp == PTHREAD_ONCE_INIT) {
-        pthread_mutex_lock( &once_lock );
-        if (*ocptr == PTHREAD_ONCE_INIT) {
-            (*init_routine)();
-            ANDROID_MEMBAR_FULL();
-            *ocptr = ~PTHREAD_ONCE_INIT;
-        }
-        pthread_mutex_unlock( &once_lock );
+    /* PTHREAD_ONCE_INIT is 0, we use the following bit flags
+     *
+     *   bit 0 set  -> initialization is under way
+     *   bit 1 set  -> initialization is complete
+     */
+#define ONCE_INITIALIZING           (1 << 0)
+#define ONCE_COMPLETED              (1 << 1)
+
+    /* First check if the once is already initialized. This will be the common
+    * case and we want to make this as fast as possible. Note that this still
+    * requires a load_acquire operation here to ensure that all the
+    * stores performed by the initialization function are observable on
+    * this CPU after we exit.
+    */
+    if (__likely((*ocptr & ONCE_COMPLETED) != 0)) {
+        ANDROID_MEMBAR_FULL();
+        return 0;
     }
+
+    for (;;) {
+        /* Try to atomically set the INITIALIZING flag.
+         * This requires a cmpxchg loop, and we may need
+         * to exit prematurely if we detect that 
+         * COMPLETED is now set.
+         */
+        int32_t  oldval, newval;
+
+        do {
+            oldval = *ocptr;
+            if ((oldval & ONCE_COMPLETED) != 0)
+                break;
+
+            newval = oldval | ONCE_INITIALIZING;
+        } while (__bionic_cmpxchg(oldval, newval, ocptr) != 0);
+
+        if ((oldval & ONCE_COMPLETED) != 0) {
+            /* We detected that COMPLETED was set while in our loop */
+            ANDROID_MEMBAR_FULL();
+            return 0;
+        }
+
+        if ((oldval & ONCE_INITIALIZING) == 0) {
+            /* We got there first, we can jump out of the loop to
+             * handle the initialization */
+            break;
+        }
+
+        /* Another thread is running the initialization and hasn't completed
+         * yet, so wait for it, then try again. */
+        __futex_wait_ex(ocptr, 0, oldval, NULL);
+    }
+
+    /* call the initialization function. */
+    (*init_routine)();
+
+    /* Do a store_release indicating that initialization is complete */
+    ANDROID_MEMBAR_FULL();
+    *ocptr = ONCE_COMPLETED;
+
+    /* Wake up any waiters, if any */
+    __futex_wake_ex(ocptr, 0, INT_MAX);
+
     return 0;
 }
 
