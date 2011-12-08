@@ -228,129 +228,142 @@ enum omapdss_buffer_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  OMAP_DSS_BUFTYPE_TILER_PAGE,
 };
+enum omapdss_buffer_addressing_type {
+ OMAP_DSS_BUFADDR_DIRECT,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ OMAP_DSS_BUFADDR_BYTYPE,
+ OMAP_DSS_BUFADDR_ION,
+ OMAP_DSS_BUFADDR_GRALLOC,
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dss2_ovl_info {
  struct dss2_ovl_cfg cfg;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ enum omapdss_buffer_addressing_type addressing;
  union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct {
  void *address;
- __u16 ba_type;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 uv_type;
+ void *uv_address;
  };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct {
+ enum omapdss_buffer_type ba_type;
+ enum omapdss_buffer_type uv_type;
+ };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct {
  __u32 ba;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 uv;
  };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  };
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dss2_mgr_info {
  __u32 ix;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 default_color;
  enum omap_dss_trans_key_type trans_key_type;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 trans_key;
  struct omap_dss_cpr_coefs cpr_coefs;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 trans_enabled;
  __u8 interlaced;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 alpha_blending;
  __u8 cpr_enabled;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 swap_rb;
 } __attribute__ ((aligned(4)));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum dsscomp_setup_mode {
  DSSCOMP_SETUP_MODE_APPLY = (1 << 0),
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_SETUP_MODE_DISPLAY = (1 << 1),
  DSSCOMP_SETUP_MODE_CAPTURE = (1 << 2),
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_SETUP_APPLY = DSSCOMP_SETUP_MODE_APPLY,
  DSSCOMP_SETUP_DISPLAY =
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_SETUP_MODE_APPLY | DSSCOMP_SETUP_MODE_DISPLAY,
  DSSCOMP_SETUP_CAPTURE =
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_SETUP_MODE_APPLY | DSSCOMP_SETUP_MODE_CAPTURE,
  DSSCOMP_SETUP_DISPLAY_CAPTURE =
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_SETUP_DISPLAY | DSSCOMP_SETUP_CAPTURE,
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dsscomp_setup_mgr_data {
  __u32 sync_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct dss2_rect_t win;
  enum dsscomp_setup_mode mode;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 num_ovls;
  __u16 get_sync_obj;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct dss2_mgr_info mgr;
  struct dss2_ovl_info ovls[0];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dsscomp_check_ovl_data {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  enum dsscomp_setup_mode mode;
  struct dss2_mgr_info mgr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct dss2_ovl_info ovl;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dsscomp_setup_dispc_data {
  __u32 sync_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  enum dsscomp_setup_mode mode;
  __u16 num_ovls;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 num_mgrs;
  __u16 get_sync_obj;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct dss2_mgr_info mgrs[3];
  struct dss2_ovl_info ovls[5];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dsscomp_wb_copy_data {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct dss2_ovl_info ovl, wb;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dsscomp_display_info {
  __u32 ix;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 overlays_available;
  __u32 overlays_owned;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  enum omap_channel channel;
  enum omap_dss_display_state state;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 enabled;
  struct omap_video_timings timings;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct s3d_disp_info s3d_info;
  struct dss2_mgr_info mgr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 width_in_mm;
  __u16 height_in_mm;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 modedb_len;
  struct dsscomp_videomode modedb[];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dsscomp_setup_display_data {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 ix;
  struct dsscomp_videomode mode;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum dsscomp_wait_phase {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_WAIT_PROGRAMMED = 1,
  DSSCOMP_WAIT_DISPLAYED,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  DSSCOMP_WAIT_RELEASED,
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dsscomp_wait_data {
  __u32 timeout_us;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  enum dsscomp_wait_phase phase;
 };
-#define DSSCOMP_SETUP_MGR _IOW('O', 128, struct dsscomp_setup_mgr_data)
-#define DSSCOMP_CHECK_OVL _IOWR('O', 129, struct dsscomp_check_ovl_data)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DSSCOMP_WB_COPY _IOW('O', 130, struct dsscomp_wb_copy_data)
-#define DSSCOMP_QUERY_DISPLAY _IOWR('O', 131, struct dsscomp_display_info)
-#define DSSCOMP_WAIT _IOW('O', 132, struct dsscomp_wait_data)
-#define DSSCOMP_SETUP_DISPC _IOW('O', 133, struct dsscomp_setup_dispc_data)
+#define DSSCIOC_SETUP_MGR _IOW('O', 128, struct dsscomp_setup_mgr_data)
+#define DSSCIOC_CHECK_OVL _IOWR('O', 129, struct dsscomp_check_ovl_data)
+#define DSSCIOC_WB_COPY _IOW('O', 130, struct dsscomp_wb_copy_data)
+#define DSSCIOC_QUERY_DISPLAY _IOWR('O', 131, struct dsscomp_display_info)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DSSCOMP_SETUP_DISPLAY _IOW('O', 134, struct dsscomp_setup_display_data)
+#define DSSCIOC_WAIT _IOW('O', 132, struct dsscomp_wait_data)
+#define DSSCIOC_SETUP_DISPC _IOW('O', 133, struct dsscomp_setup_dispc_data)
+#define DSSCIOC_SETUP_DISPLAY _IOW('O', 134, struct dsscomp_setup_display_data)
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 
