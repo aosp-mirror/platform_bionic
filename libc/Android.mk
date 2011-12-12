@@ -512,11 +512,8 @@ ifeq ($(TARGET_ARCH),arm)
   endif
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
-    libc_crt_target_cflags := -m32
-
-    # Enable recent IA friendly memory routines (such as for Atom)
-    # These will not work on the earlier x86 machines
-    libc_common_cflags += -mtune=i686 -DUSE_SSSE3 -DUSE_SSE2
+    libc_crt_target_cflags :=
+    # TARGET_GLOBAL_CFLAGS from build/core/combo/TARGET_linux-x86.mk sets all required flags.
   endif # x86
 endif # !arm
 
