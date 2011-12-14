@@ -513,7 +513,12 @@ ifeq ($(TARGET_ARCH),arm)
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags :=
-    # TARGET_GLOBAL_CFLAGS from build/core/combo/TARGET_linux-x86.mk sets all required flags.
+    ifeq ($(ARCH_X86_HAVE_SSE2),true)
+        libc_crt_target_cflags += -DUSE_SSE2=1
+    endif
+    ifeq ($(ARCH_X86_HAVE_SSSE3),true)
+        libc_crt_target_cflags += -DUSE_SSSE3=1
+    endif
   endif # x86
 endif # !arm
 
