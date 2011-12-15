@@ -83,6 +83,7 @@ int __set_tls(void *ptr)
     if (rc != 0)
     {
         /* could not set thread local area */
+        pthread_mutex_unlock(&_tls_desc_lock);
         return -1;
     }
 
