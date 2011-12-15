@@ -774,6 +774,22 @@ void* dlrealloc(void*, size_t);
 void* dlmemalign(size_t, size_t);
 
 /*
+  int posix_memalign(void **memptr, size_t alignment, size_t size);
+  Places a pointer to a newly allocated chunk of size bytes, aligned
+  in accord with the alignment argument, in *memptr.
+
+  The return value is 0 on success, and ENOMEM on failure.
+
+  The alignment argument should be a power of two. If the argument is
+  not a power of two, the nearest greater power is used.
+  8-byte alignment is guaranteed by normal malloc calls, so don't
+  bother calling memalign with an argument of 8 or less.
+
+  Overreliance on posix_memalign is a sure way to fragment space.
+*/
+int posix_memalign(void **memptr, size_t alignment, size_t size);
+
+/*
   valloc(size_t n);
   Equivalent to memalign(pagesize, n), where pagesize is the page
   size of the system. If the pagesize is unknown, 4096 is used.
@@ -4505,6 +4521,18 @@ void* dlrealloc(void* oldmem, size_t bytes) {
 
 void* dlmemalign(size_t alignment, size_t bytes) {
   return internal_memalign(gm, alignment, bytes);
+}
+
+int posix_memalign(void **memptr, size_t alignment, size_t size) {
+  int ret = 0;
+
+  *memptr = dlmemalign(alignment, size);
+
+  if (*memptr == 0) {
+    ret = ENOMEM;
+  }
+
+  return ret;
 }
 
 void** dlindependent_calloc(size_t n_elements, size_t elem_size,
