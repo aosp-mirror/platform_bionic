@@ -37,13 +37,13 @@ if len(optlist) > 0 or len(args) > 1:
 progdir = find_program_dir()
 
 if len(args) == 1:
-    original_dir = arg[0]
+    original_dir = args[0]
     if not os.path.isdir(original_dir):
-        panic( "Not a directory: %s" % original_dir )
+        panic( "Not a directory: %s\n" % original_dir )
 else:
     original_dir = kernel_original_path
     if not os.path.isdir(original_dir):
-        panic( "Missing directory, please specify one through command-line: %s" % original_dir )
+        panic( "Missing directory, please specify one through command-line: %s\n" % original_dir )
 
 # find all source files in 'original'
 #

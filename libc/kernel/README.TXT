@@ -56,7 +56,7 @@ the tools you can use are:
 
   * tools/update_all.py
     automatically update all clean headers from the content of 
-    'bionic/kernel/original'. this is the script you're likely going to 
+    'external/kernel-headers/original'. this is the script you're likely going to
     run whenever you update the original headers.
 
 NOTE:

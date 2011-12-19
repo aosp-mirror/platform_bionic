@@ -37,7 +37,7 @@ def  cleanupFile( path, original_path):
         src_path = src_path[1:]
 
     if len(src_path) == 0:
-        panic( "oops, internal error, can't extract correct relative path" )
+        panic( "oops, internal error, can't extract correct relative path\n" )
 
     # convert into destination path, extracting architecture if needed
     # and the corresponding list of known static functions
