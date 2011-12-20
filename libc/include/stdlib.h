@@ -67,6 +67,8 @@ extern unsigned long strtoul(const char *, char **, int);
 extern unsigned long long strtoull(const char *, char **, int);
 extern double strtod(const char *nptr, char **endptr);
 
+extern int posix_memalign(void **memptr, size_t alignment, size_t size);
+
 static __inline__ float strtof(const char *nptr, char **endptr)
 {
     return (float)strtod(nptr, endptr);
