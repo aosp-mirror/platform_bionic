@@ -1617,8 +1617,11 @@ static void call_array(unsigned *ctor, int count, int reverse)
     }
 }
 
-static void call_constructors(soinfo *si)
+void call_constructors_recursive(soinfo *si)
 {
+    if (si->constructors_called)
+        return;
+
     if (si->flags & FLAG_EXE) {
         TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
               pid, (unsigned)si->preinit_array, si->preinit_array_count,
@@ -1630,6 +1633,21 @@ static void call_constructors(soinfo *si)
             DL_ERR("%5d Shared library '%s' has a preinit_array table @ 0x%08x."
                    " This is INVALID.", pid, si->name,
                    (unsigned)si->preinit_array);
+        }
+    }
+
+    if (si->dynamic) {
+        unsigned *d;
+        for(d = si->dynamic; *d; d += 2) {
+            if(d[0] == DT_NEEDED){
+                soinfo* lsi = (soinfo *)d[1];
+                if (!validate_soinfo(lsi)) {
+                    DL_ERR("%5d bad DT_NEEDED pointer in %s",
+                           pid, si->name);
+                } else {
+                    call_constructors_recursive(lsi);
+                }
+            }
         }
     }
 
@@ -1646,8 +1664,9 @@ static void call_constructors(soinfo *si)
         call_array(si->init_array, si->init_array_count, 0);
         TRACE("[ %5d Done calling init_array for '%s' ]\n", pid, si->name);
     }
-}
 
+    si->constructors_called = 1;
+}
 
 static void call_destructors(soinfo *si)
 {
@@ -2046,7 +2065,6 @@ static int link_image(soinfo *si, unsigned wr_offset)
     if (program_is_setuid)
         nullify_closed_stdio ();
     notify_gdb_of_load(si);
-    call_constructors(si);
     return 0;
 
 fail:
@@ -2250,6 +2268,8 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
+
+    call_constructors_recursive(si);
 
 #if ALLOW_SYMBOLS_FROM_MAIN
     /* Set somain after we've loaded all the libraries in order to prevent

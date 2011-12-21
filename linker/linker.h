@@ -149,6 +149,8 @@ struct soinfo
 
     unsigned refcount;
     struct link_map linkmap;
+
+    int constructors_called;
 };
 
 
@@ -217,6 +219,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start);
 soinfo *find_containing_library(const void *addr);
 Elf32_Sym *find_containing_symbol(const void *addr, soinfo *si);
 const char *linker_get_error(void);
+void call_constructors_recursive(soinfo *si);
 
 #ifdef ANDROID_ARM_LINKER 
 typedef long unsigned int *_Unwind_Ptr;
