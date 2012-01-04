@@ -50,6 +50,7 @@ gid_t   getegid:getegid32 ()       202
 uid_t   getresuid:getresuid32 ()   209
 gid_t   getresgid:getresgid32 ()   211
 pid_t   gettid()                   224
+ssize_t readahead(int, off64_t, size_t)     225
 int     getgroups:getgroups32(int, gid_t *)    205
 pid_t   getpgid(pid_t)             132
 pid_t   getppid()		   64
