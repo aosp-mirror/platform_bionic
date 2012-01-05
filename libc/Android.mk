@@ -684,7 +684,13 @@ include $(BUILD_STATIC_LIBRARY)
 # ========================================================
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := $(libc_common_cflags)
+# pthread deadlock prediction:
+# set -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=1 to enable support for
+# pthread deadlock prediction.
+# Since this code is experimental it is disabled by default.
+# see libc/bionic/pthread_debug.c for details
+
+LOCAL_CFLAGS := $(libc_common_cflags) -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
@@ -692,6 +698,7 @@ LOCAL_SRC_FILES := \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.c \
+	bionic/pthread_debug.c \
 	bionic/libc_init_dynamic.c
 
 LOCAL_MODULE:= libc
@@ -762,7 +769,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE:= libc_malloc_debug_qemu
 
-LOCAL_SHARED_LIBRARIES := libc
+LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 

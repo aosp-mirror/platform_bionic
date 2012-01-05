@@ -51,6 +51,9 @@
 #include <stdio.h>
 #include <bionic_pthread.h>
 
+extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
+extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
+
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
@@ -897,20 +900,6 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
     return 0;
 }
 
-int pthread_mutex_destroy(pthread_mutex_t *mutex)
-{
-    int ret;
-
-    /* use trylock to ensure that the mutex value is
-     * valid and is not already locked. */
-    ret = pthread_mutex_trylock(mutex);
-    if (ret != 0)
-        return ret;
-
-    mutex->value = 0xdead10cc;
-    return 0;
-}
-
 
 /*
  * Lock a non-recursive mutex.
@@ -1073,7 +1062,8 @@ _recursive_unlock(void)
     _normal_unlock(&__recursive_lock, 0);
 }
 
-int pthread_mutex_lock(pthread_mutex_t *mutex)
+__LIBC_HIDDEN__
+int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, new_lock_type, shared;
 
@@ -1134,8 +1124,21 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
     return 0;
 }
 
+int pthread_mutex_lock(pthread_mutex_t *mutex)
+{
+    int err = pthread_mutex_lock_impl(mutex);
+#ifdef PTHREAD_DEBUG
+    if (PTHREAD_DEBUG_ENABLED) {
+        if (!err) {
+            pthread_debug_mutex_lock_check(mutex);
+        }
+    }
+#endif
+    return err;
+}
 
-int pthread_mutex_unlock(pthread_mutex_t *mutex)
+__LIBC_HIDDEN__
+int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, oldv, shared;
 
@@ -1175,8 +1178,18 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
     return 0;
 }
 
+int pthread_mutex_unlock(pthread_mutex_t *mutex)
+{
+#ifdef PTHREAD_DEBUG
+    if (PTHREAD_DEBUG_ENABLED) {
+        pthread_debug_mutex_unlock_check(mutex);
+    }
+#endif
+    return pthread_mutex_unlock_impl(mutex);
+}
 
-int pthread_mutex_trylock(pthread_mutex_t *mutex)
+__LIBC_HIDDEN__
+int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, oldv, shared;
 
@@ -1219,6 +1232,18 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
     return 0;
 }
 
+int pthread_mutex_trylock(pthread_mutex_t *mutex)
+{
+    int err = pthread_mutex_trylock_impl(mutex);
+#ifdef PTHREAD_DEBUG
+    if (PTHREAD_DEBUG_ENABLED) {
+        if (!err) {
+            pthread_debug_mutex_lock_check(mutex);
+        }
+    }
+#endif
+    return err;
+}
 
 /* initialize 'ts' with the difference between 'abstime' and the current time
  * according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
@@ -1254,7 +1279,8 @@ __timespec_to_relative_msec(struct timespec*  abstime, unsigned  msecs, clockid_
     }
 }
 
-int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
+__LIBC_HIDDEN__
+int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
 {
     clockid_t        clock = CLOCK_MONOTONIC;
     struct timespec  abstime;
@@ -1338,6 +1364,35 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     }
     return 0;
 }
+
+int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
+{
+    int err = pthread_mutex_lock_timeout_np_impl(mutex, msecs);
+#ifdef PTHREAD_DEBUG
+    if (PTHREAD_DEBUG_ENABLED) {
+        if (!err) {
+            pthread_debug_mutex_lock_check(mutex);
+        }
+    }
+#endif
+    return err;
+}
+
+int pthread_mutex_destroy(pthread_mutex_t *mutex)
+{
+    int ret;
+
+    /* use trylock to ensure that the mutex value is
+     * valid and is not already locked. */
+    ret = pthread_mutex_trylock_impl(mutex);
+    if (ret != 0)
+        return ret;
+
+    mutex->value = 0xdead10cc;
+    return 0;
+}
+
+
 
 int pthread_condattr_init(pthread_condattr_t *attr)
 {
