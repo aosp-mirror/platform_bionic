@@ -60,6 +60,7 @@ void *dlopen(const char *filename, int flag)
     if (unlikely(ret == NULL)) {
         set_dlerror(DL_ERR_CANNOT_LOAD_LIBRARY);
     } else {
+        call_constructors_recursive(ret);
         ret->refcount++;
     }
     pthread_mutex_unlock(&dl_lock);

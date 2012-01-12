@@ -87,6 +87,7 @@ section:
       present in executables, not shared libraries, which contains
       a list of functions that need to be called before any other
       initialization function (i.e. DT_INIT and/or DT_INIT_ARRAY)
+      in the executable or any of its libraries.
 
       Note: this is generally stored in a .preinit_array section
 
