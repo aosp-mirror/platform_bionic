@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACAn////E\u003d",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-01-12T17:39:02Z",
+      "side": 1,
+      "message": "Please don\u0027t use tabs.\n\nThe rest of that file seems to be using #define\u003cone_space\u003ename\u003ctwo_spaces\u003evalue, and the new code should be consistent with that.",
+      "revId": "52b7ffe093aebfa44aa20078531d9eb8f5631838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
