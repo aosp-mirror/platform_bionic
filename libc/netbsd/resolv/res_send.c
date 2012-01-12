@@ -99,6 +99,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <arpa/inet.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"
@@ -109,6 +110,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <isc/eventlib.h>
@@ -116,6 +118,8 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #if USE_RESOLV_CACHE
 #  include <resolv_cache.h>
 #endif
+
+#include "logd.h"
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
@@ -130,6 +134,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include "res_private.h"
 
 #define EXT(res) ((res)->_u._ext)
+#define DBG 0
 
 static const int highestFD = FD_SETSIZE - 1;
 
@@ -152,7 +157,10 @@ static int		pselect(int, void *, void *, void *,
 				const sigset_t *);
 #endif
 void res_pquery(const res_state, const u_char *, int, FILE *);
-
+static int connect_with_timeout(int sock, const struct sockaddr *nsap,
+			socklen_t salen, int sec);
+static int retrying_select(const int sock, fd_set *readset, fd_set *writeset,
+			const struct timespec *finish);
 
 /* BIONIC-BEGIN: implement source port randomization */
 typedef union {
@@ -521,16 +529,23 @@ res_nsend(res_state statp,
 
 		Dprint(((statp->options & RES_DEBUG) &&
 			getnameinfo(nsap, (socklen_t)nsaplen, abuf, sizeof(abuf),
-				    NULL, 0, niflags) == 0),
-		       (stdout, ";; Querying server (# %d) address = %s\n",
-			ns + 1, abuf));
+				NULL, 0, niflags) == 0),
+				(stdout, ";; Querying server (# %d) address = %s\n",
+				ns + 1, abuf));
 
 
 		if (v_circuit) {
 			/* Use VC; at most one attempt per server. */
 			try = statp->retry;
+
 			n = send_vc(statp, buf, buflen, ans, anssiz, &terrno,
 				    ns);
+
+			if (DBG) {
+				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+					"used send_vc %d\n", n);
+			}
+
 			if (n < 0)
 				goto fail;
 			if (n == 0)
@@ -538,12 +553,26 @@ res_nsend(res_state statp,
 			resplen = n;
 		} else {
 			/* Use datagrams. */
+			if (DBG) {
+				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+					"using send_dg\n");
+			}
+
 			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere);
+			if (DBG) {
+				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+					"used send_dg %d\n",n);
+			}
+
 			if (n < 0)
 				goto fail;
 			if (n == 0)
 				goto next_ns;
+			if (DBG) {
+				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+					"time=%d, %d\n",time(NULL), time(NULL)%2);
+			}
 			if (v_circuit)
 				goto same_ns;
 			resplen = n;
@@ -668,6 +697,23 @@ get_nsaddr(statp, n)
 	}
 }
 
+static int get_timeout(const res_state statp, const int ns)
+{
+	int timeout = (statp->retrans << ns);
+	if (ns > 0) {
+		timeout /= statp->nscount;
+	}
+	if (timeout <= 0) {
+		timeout = 1;
+	}
+	if (DBG) {
+		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+			"using timeout of %d sec\n", timeout);
+	}
+
+	return timeout;
+}
+
 static int
 send_vc(res_state statp,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
@@ -682,6 +728,10 @@ send_vc(res_state statp,
 	u_short len;
 	u_char *cp;
 	void *tmp;
+
+	if (DBG) {
+		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc", "using send_vc\n");
+	}
 
 	nsap = get_nsaddr(statp, (size_t)ns);
 	nsaplen = get_salen(nsap);
@@ -735,7 +785,8 @@ send_vc(res_state statp,
 			res_nclose(statp);
 			return (0);
 		}
-		if (connect(statp->_vcsock, nsap, (socklen_t)nsaplen) < 0) {
+		if (connect_with_timeout(statp->_vcsock, nsap, (socklen_t)nsaplen,
+				get_timeout(statp, ns)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno, nsap,
 			    nsaplen);
@@ -859,6 +910,111 @@ send_vc(res_state statp,
 	return (resplen);
 }
 
+/* return -1 on error (errno set), 0 on success */
+static int
+connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int sec)
+{
+	int res, origflags;
+	fd_set rset, wset;
+	struct timespec now, timeout, finish;
+
+	origflags = fcntl(sock, F_GETFL, 0);
+	fcntl(sock, F_SETFL, origflags | O_NONBLOCK);
+
+	res = connect(sock, nsap, salen);
+	if (res < 0 && errno != EINPROGRESS) {
+                res = -1;
+                goto done;
+	}
+	if (res != 0) {
+		now = evNowTime();
+		timeout = evConsTime((long)sec, 0L);
+		finish = evAddTime(now, timeout);
+		if (DBG) {
+			__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+				"  %d send_vc\n", sock);
+		}
+
+		res = retrying_select(sock, &rset, &wset, &finish);
+		if (res <= 0) {
+                        res = -1;
+		}
+	}
+done:
+	fcntl(sock, F_SETFL, origflags);
+	if (DBG) {
+		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+			"  %d connect_with_timeout returning %s\n", sock, res);
+	}
+	return res;
+}
+
+static int
+retrying_select(const int sock, fd_set *readset, fd_set *writeset, const struct timespec *finish)
+{
+	struct timespec now, timeout;
+	int n, error;
+	socklen_t len;
+
+
+retry:
+	if (DBG) {
+		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc", "  %d retying_select\n", sock);
+	}
+
+	now = evNowTime();
+	if (readset) {
+		FD_ZERO(readset);
+		FD_SET(sock, readset);
+	}
+	if (writeset) {
+		FD_ZERO(writeset);
+		FD_SET(sock, writeset);
+	}
+	if (evCmpTime(*finish, now) > 0)
+		timeout = evSubTime(*finish, now);
+	else
+		timeout = evConsTime(0L, 0L);
+
+	n = pselect(sock + 1, readset, writeset, NULL, &timeout, NULL);
+	if (n == 0) {
+		if (DBG) {
+			__libc_android_log_print(ANDROID_LOG_DEBUG, " libc",
+				"  %d retrying_select timeout\n", sock);
+		}
+		errno = ETIMEDOUT;
+		return 0;
+	}
+	if (n < 0) {
+		if (errno == EINTR)
+			goto retry;
+		if (DBG) {
+			__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+				"  %d retrying_select got error %d\n",sock, n);
+		}
+		return n;
+	}
+	if ((readset && FD_ISSET(sock, readset)) || (writeset && FD_ISSET(sock, writeset))) {
+		len = sizeof(error);
+		if (getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len) < 0 || error) {
+			errno = error;
+			if (DBG) {
+				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+					"  %d retrying_select dot error2 %d\n", sock, errno);
+			}
+
+			return -1;
+		}
+	}
+	if (DBG) {
+		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+			"  %d retrying_select returning %d for %d\n",sock, n);
+	}
+
+	return n;
+}
+
+
 static int
 send_dg(res_state statp,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
@@ -944,33 +1100,19 @@ send_dg(res_state statp,
 	/*
 	 * Wait for reply.
 	 */
-	seconds = (statp->retrans << ns);
-	if (ns > 0)
-		seconds /= statp->nscount;
-	if (seconds <= 0)
-		seconds = 1;
+	seconds = get_timeout(statp, ns);
 	now = evNowTime();
 	timeout = evConsTime((long)seconds, 0L);
 	finish = evAddTime(now, timeout);
-	goto nonow;
- wait:
-	now = evNowTime();
- nonow:
-	FD_ZERO(&dsmask);
-	FD_SET(s, &dsmask);
-	if (evCmpTime(finish, now) > 0)
-		timeout = evSubTime(finish, now);
-	else
-		timeout = evConsTime(0L, 0L);
-	n = pselect(s + 1, &dsmask, NULL, NULL, &timeout, NULL);
+retry:
+	n = retrying_select(s, &dsmask, NULL, &finish);
+
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
 		*gotsomewhere = 1;
 		return (0);
 	}
 	if (n < 0) {
-		if (errno == EINTR)
-			goto wait;
 		Perror(statp, stderr, "select", errno);
 		res_nclose(statp);
 		return (0);
@@ -1006,7 +1148,7 @@ send_dg(res_state statp,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ";; old answer:\n"),
 			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
+		goto retry;
 	}
 	if (!(statp->options & RES_INSECURE1) &&
 	    !res_ourserver_p(statp, (struct sockaddr *)(void *)&from)) {
@@ -1019,7 +1161,7 @@ send_dg(res_state statp,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ";; not our server:\n"),
 			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
+		goto retry;
 	}
 #ifdef RES_USE_EDNS0
 	if (anhp->rcode == FORMERR && (statp->options & RES_USE_EDNS0) != 0U) {
@@ -1049,7 +1191,7 @@ send_dg(res_state statp,
 			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ";; wrong query name:\n"),
 			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
+		goto retry;;
 	}
 	if (anhp->rcode == SERVFAIL ||
 	    anhp->rcode == NOTIMP ||
