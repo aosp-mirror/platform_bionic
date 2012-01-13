@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACCX////Q\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2123,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2012-01-13T18:15:00Z",
+      "side": 1,
+      "message": "There shouldn\u0027t be tabs in this file.",
+      "revId": "8871ec18f041913ae75ba48bf831fb17b7f8d1c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
