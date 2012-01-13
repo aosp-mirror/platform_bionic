@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACDH////8\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-01-13T17:49:42Z",
+      "side": 1,
+      "message": "I would prefer if the code was more explicit about its assumptions. For example, this function will crash with a SIGBUS if magic32 is not 32-bit aligned.\n\nIn this specific case, the first page of the ELF header is copied to __header, so this is not a problem, but I would strongly prefer that this is made explicit in the function.\n\nSo, please choose either one of these:\n\n1/ Add a simple test for 32-bit alignment for magic32, and return -1 if this is not the case (i.e. make the function generic)\n\nor\n\n2/ Modify the function to check __header directly, and rename it to show that it is not a generic function (plus document the pre-requisite).",
+      "revId": "4d34b11c0807aa2db390820aa4331f3ae7b1bba9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
