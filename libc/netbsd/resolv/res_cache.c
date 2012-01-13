@@ -42,6 +42,7 @@
 
 #include <arpa/inet.h>
 #include "resolv_private.h"
+#include "resolv_iface.h"
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
