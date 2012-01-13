@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACCX///8I\u003d",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-01-13T20:08:45Z",
+      "side": 1,
+      "message": "no tabs",
+      "revId": "0cd99442c7ad91039ce60612a4a9cfb16c9372e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACCX///8E\u003d",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-01-13T20:08:45Z",
+      "side": 1,
+      "message": "i don\u0027t think this is what you really wanted to have in this header file.",
+      "revId": "0cd99442c7ad91039ce60612a4a9cfb16c9372e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
