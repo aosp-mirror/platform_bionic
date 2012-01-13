@@ -251,6 +251,7 @@ int     init_module(void *, unsigned long, const char *)  128
 int     delete_module(const char*, unsigned int)   129
 int     klogctl:syslog(int, char *, int)   103
 int     sysinfo(struct sysinfo *)  116
+int     personality(unsigned long)  136
 
 # futex
 int	futex(void *, int, int, void *, void *, int) 240
