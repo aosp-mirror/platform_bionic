@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,38 +25,22 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _RESOLV_H_
-#define _RESOLV_H_
+#ifndef _RESOLV_IFACE_H
+#define _RESOLV_IFACE_H
 
-#include <sys/param.h>
-#include <sys/types.h>
+/* This header contains declarations related to per-interface DNS
+ * server selection. They are used by system/netd/ and should not be
+ * exposed by the C library's public NDK headers.
+ *
+ * NOTE: <resolv.h> contains the same declarations, this will be removed
+ *        when we change system/netd to use this header instead.
+ */
 #include <sys/cdefs.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <arpa/nameser.h>
 #include <netinet/in.h>
 
 __BEGIN_DECLS
 
-struct res_state;
-
-extern struct __res_state *__res_state(void);
-#define _res (*__res_state())
-
-/* Base-64 functions - because some code expects it there */
-
-#define b64_ntop        __b64_ntop
-#define b64_pton        __b64_pton
-extern int   b64_ntop(u_char const *, size_t, char *, size_t);
-extern int   b64_pton(char const *, u_char *, size_t);
-
-
-/* The following declarations should *not* be part of the public C library
- * headers, and are also in bionic/libc/private/resolv_iface.h
- *
- * Use a guard macro to prevent duplication until we modify system/netd
- * to use the proper header.
- */
+/* Use a guard macro until we remove the same definitions from <resolv.h> */
 #ifndef _BIONIC_RESOLV_IFACE_FUNCTIONS_DECLARED
 #define _BIONIC_RESOLV_IFACE_FUNCTIONS_DECLARED
 
@@ -79,4 +63,4 @@ extern void _resolv_flush_cache_for_iface(const char* ifname);
 
 __END_DECLS
 
-#endif /* _RESOLV_H_ */
+#endif /* _RESOLV_IFACE_H */
