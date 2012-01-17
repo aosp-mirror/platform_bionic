@@ -413,7 +413,7 @@ res_nsend(res_state statp,
 				if (EXT(statp).nssocks[ns] == -1)
 					continue;
 				peerlen = sizeof(peer);
-				if (getsockname(EXT(statp).nssocks[ns],
+				if (getpeername(EXT(statp).nssocks[ns],
 				    (struct sockaddr *)(void *)&peer, &peerlen) < 0) {
 					needclose++;
 					break;
