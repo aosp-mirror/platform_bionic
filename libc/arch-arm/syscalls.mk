@@ -169,6 +169,7 @@ syscall_src += arch-arm/syscalls/init_module.S
 syscall_src += arch-arm/syscalls/delete_module.S
 syscall_src += arch-arm/syscalls/klogctl.S
 syscall_src += arch-arm/syscalls/sysinfo.S
+syscall_src += arch-arm/syscalls/personality.S
 syscall_src += arch-arm/syscalls/futex.S
 syscall_src += arch-arm/syscalls/epoll_create.S
 syscall_src += arch-arm/syscalls/epoll_ctl.S
