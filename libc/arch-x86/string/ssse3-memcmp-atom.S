@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Intel Corporation
+Copyright (c) 2010, 2011 Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,24 +28,16 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MEMCMP
-# define MEMCMP		ssse3_memcmp3_new
-#endif
-
 #ifndef L
 # define L(label)	.L##label
 #endif
 
-#ifndef ALIGN
-# define ALIGN(n)	.p2align n
-#endif
-
 #ifndef cfi_startproc
-# define cfi_startproc			.cfi_startproc
+# define cfi_startproc	.cfi_startproc
 #endif
 
 #ifndef cfi_endproc
-# define cfi_endproc			.cfi_endproc
+# define cfi_endproc	.cfi_endproc
 #endif
 
 #ifndef cfi_rel_offset
@@ -53,7 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #ifndef cfi_restore
-# define cfi_restore(reg)		.cfi_restore reg
+# define cfi_restore(reg)	.cfi_restore reg
 #endif
 
 #ifndef cfi_adjust_cfa_offset
@@ -61,35 +53,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #ifndef cfi_remember_state
-# define cfi_remember_state		.cfi_remember_state
+# define cfi_remember_state	.cfi_remember_state
 #endif
 
 #ifndef cfi_restore_state
-# define cfi_restore_state		.cfi_restore_state
+# define cfi_restore_state	.cfi_restore_state
 #endif
 
 #ifndef ENTRY
-# define ENTRY(name)			\
-	.type name,  @function; 	\
-	.globl name;			\
-	.p2align 4;			\
-name:					\
+# define ENTRY(name)             \
+	.type name, @function;   \
+	.globl name;             \
+	.p2align 4;              \
+name:                            \
 	cfi_startproc
 #endif
 
 #ifndef END
-# define END(name)			\
-	cfi_endproc;			\
+# define END(name)               \
+	cfi_endproc;             \
 	.size name, .-name
 #endif
 
-#define CFI_PUSH(REG)						\
-  cfi_adjust_cfa_offset (4);					\
-  cfi_rel_offset (REG, 0)
+#ifndef MEMCMP
+# define MEMCMP	memcmp
+#endif
 
-#define CFI_POP(REG)						\
-  cfi_adjust_cfa_offset (-4);					\
-  cfi_restore (REG)
+#define CFI_PUSH(REG)	\
+	cfi_adjust_cfa_offset (4);	\
+	cfi_rel_offset (REG, 0)
+
+#define CFI_POP(REG)	\
+	cfi_adjust_cfa_offset (-4);	\
+	cfi_restore (REG)
 
 #define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 #define POP(REG)	popl REG; CFI_POP (REG)
@@ -101,22 +97,39 @@ name:					\
 #define RETURN_END	POP (%edi); POP (%esi); POP (%ebx); ret
 #define RETURN		RETURN_END; cfi_restore_state; cfi_remember_state
 
-	.section .text.ssse3,"ax",@progbits
+/* Warning!
+           wmemcmp has to use SIGNED comparison for elements.
+           memcmp has to use UNSIGNED comparison for elemnts.
+*/
+
+	.text
 ENTRY (MEMCMP)
 	movl	LEN(%esp), %ecx
+
+#ifdef USE_AS_WMEMCMP
+	shl	$2, %ecx
+	jz	L(zero)
+#endif
+
 	movl	BLK1(%esp), %eax
 	cmp	$48, %ecx
 	movl	BLK2(%esp), %edx
 	jae	L(48bytesormore)
+
+#ifndef USE_AS_WMEMCMP
 	cmp	$1, %ecx
 	jbe	L(less1bytes)
-	PUSH (%ebx)
+#endif
+
+	PUSH	(%ebx)
 	add	%ecx, %edx
 	add	%ecx, %eax
 	jmp	L(less48bytes)
 
-	CFI_POP (%ebx)
-	ALIGN (4)
+	CFI_POP	(%ebx)
+
+#ifndef USE_AS_WMEMCMP
+	.p2align 4
 L(less1bytes):
 	jb	L(zero)
 	movb	(%eax), %cl
@@ -127,29 +140,30 @@ L(less1bytes):
 	neg	%eax
 L(1bytesend):
 	ret
+#endif
 
-	ALIGN (4)
+	.p2align 4
 L(zero):
-	mov	$0, %eax
+	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+	.p2align 4
 L(48bytesormore):
-	PUSH (%ebx)
-	PUSH (%esi)
-	PUSH (%edi)
+	PUSH	(%ebx)
+	PUSH	(%esi)
+	PUSH	(%edi)
 	cfi_remember_state
-	movdqu    (%eax), %xmm3
-	movdqu    (%edx), %xmm0
+	movdqu	(%eax), %xmm3
+	movdqu	(%edx), %xmm0
 	movl	%eax, %edi
 	movl	%edx, %esi
-	pcmpeqb   %xmm0, %xmm3
-	pmovmskb  %xmm3, %edx
+	pcmpeqb	%xmm0, %xmm3
+	pmovmskb %xmm3, %edx
 	lea	16(%edi), %edi
 
-	sub      $0xffff, %edx
+	sub	$0xffff, %edx
 	lea	16(%esi), %esi
-	jnz	  L(less16bytes)
+	jnz	L(less16bytes)
 	mov	%edi, %edx
 	and	$0xf, %edx
 	xor	%edx, %edi
@@ -160,6 +174,7 @@ L(48bytesormore):
 	jz	L(shr_0)
 	xor	%edx, %esi
 
+#ifndef USE_AS_WMEMCMP
 	cmp	$8, %edx
 	jae	L(next_unaligned_table)
 	cmp	$0, %edx
@@ -178,7 +193,7 @@ L(48bytesormore):
 	je	L(shr_6)
 	jmp	L(shr_7)
 
-	ALIGN (4)
+	.p2align 2
 L(next_unaligned_table):
 	cmp	$8, %edx
 	je	L(shr_8)
@@ -195,8 +210,17 @@ L(next_unaligned_table):
 	cmp	$14, %edx
 	je	L(shr_14)
 	jmp	L(shr_15)
+#else
+	cmp	$0, %edx
+	je	L(shr_0)
+	cmp	$4, %edx
+	je	L(shr_4)
+	cmp	$8, %edx
+	je	L(shr_8)
+	jmp	L(shr_12)
+#endif
 
-	ALIGN (4)
+	.p2align 4
 L(shr_0):
 	cmp	$80, %ecx
 	jae	L(shr_0_gobble)
@@ -215,13 +239,13 @@ L(shr_0):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_0_gobble):
 	lea	-48(%ecx), %ecx
 	movdqa	(%esi), %xmm0
@@ -261,13 +285,14 @@ L(shr_0_gobble_loop_next):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
+#ifndef USE_AS_WMEMCMP
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_1):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -291,13 +316,13 @@ L(shr_1):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	1(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_1_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -344,13 +369,14 @@ L(shr_1_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	1(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
+
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_2):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -374,13 +400,13 @@ L(shr_2):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	2(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_2_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -427,13 +453,13 @@ L(shr_2_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	2(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_3):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -457,13 +483,13 @@ L(shr_3):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	3(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_3_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -510,13 +536,14 @@ L(shr_3_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	3(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_4):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -540,13 +567,13 @@ L(shr_4):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	4(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_4_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -593,13 +620,14 @@ L(shr_4_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	4(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
+#ifndef USE_AS_WMEMCMP
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_5):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -623,13 +651,13 @@ L(shr_5):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	5(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_5_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -676,13 +704,13 @@ L(shr_5_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	5(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_6):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -706,13 +734,13 @@ L(shr_6):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	6(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_6_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -759,13 +787,13 @@ L(shr_6_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	6(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_7):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -789,13 +817,13 @@ L(shr_7):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	7(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_7_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -842,13 +870,14 @@ L(shr_7_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	7(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_8):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -872,13 +901,13 @@ L(shr_8):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	8(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_8_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -925,13 +954,14 @@ L(shr_8_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	8(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
+#ifndef USE_AS_WMEMCMP
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_9):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -955,13 +985,13 @@ L(shr_9):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	9(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_9_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1008,13 +1038,13 @@ L(shr_9_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	9(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_10):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1038,13 +1068,13 @@ L(shr_10):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	10(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_10_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1091,13 +1121,13 @@ L(shr_10_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	10(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_11):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1121,13 +1151,13 @@ L(shr_11):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	11(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_11_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1174,13 +1204,14 @@ L(shr_11_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	11(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_12):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1204,13 +1235,13 @@ L(shr_12):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	12(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_12_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1257,13 +1288,14 @@ L(shr_12_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	12(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
+#ifndef USE_AS_WMEMCMP
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_13):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1287,13 +1319,13 @@ L(shr_13):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	13(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_13_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1340,13 +1372,13 @@ L(shr_13_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	13(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_14):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1370,13 +1402,13 @@ L(shr_14):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	14(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_14_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1423,13 +1455,13 @@ L(shr_14_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	14(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_15):
 	cmp	$80, %ecx
 	lea	-48(%ecx), %ecx
@@ -1453,13 +1485,13 @@ L(shr_15):
 	jnz	L(exit)
 	lea	(%ecx, %edi,1), %eax
 	lea	15(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(shr_15_gobble):
 	sub	$32, %ecx
 	movdqa	16(%esi), %xmm0
@@ -1506,13 +1538,14 @@ L(shr_15_gobble_next):
 
 	lea	(%ecx, %edi,1), %eax
 	lea	15(%ecx, %esi,1), %edx
-	POP (%edi)
-	POP (%esi)
+	POP	(%edi)
+	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
 	cfi_restore_state
 	cfi_remember_state
-	ALIGN (4)
+	.p2align 4
 L(exit):
 	pmovmskb %xmm1, %ebx
 	sub	$0xffff, %ebx
@@ -1520,9 +1553,12 @@ L(exit):
 	lea	-16(%esi), %esi
 	lea	-16(%edi), %edi
 	mov	%ebx, %edx
+
 L(first16bytes):
 	add	%eax, %esi
 L(less16bytes):
+
+#ifndef USE_AS_WMEMCMP
 	test	%dl, %dl
 	jz	L(next_24_bytes)
 
@@ -1547,61 +1583,61 @@ L(less16bytes):
 	test	$0x40, %dl
 	jnz	L(Byte22)
 L(Byte23):
-	movzbl	 -9(%edi), %eax
-	movzbl	 -9(%esi), %edx
+	movzbl	-9(%edi), %eax
+	movzbl	-9(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte16):
-	movzbl	 -16(%edi), %eax
-	movzbl	 -16(%esi), %edx
+	movzbl	-16(%edi), %eax
+	movzbl	-16(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte17):
-	movzbl	 -15(%edi), %eax
-	movzbl	 -15(%esi), %edx
+	movzbl	-15(%edi), %eax
+	movzbl	-15(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte18):
-	movzbl	 -14(%edi), %eax
-	movzbl	 -14(%esi), %edx
+	movzbl	-14(%edi), %eax
+	movzbl	-14(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte19):
-	movzbl	 -13(%edi), %eax
-	movzbl	 -13(%esi), %edx
+	movzbl	-13(%edi), %eax
+	movzbl	-13(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte20):
-	movzbl	 -12(%edi), %eax
-	movzbl	 -12(%esi), %edx
+	movzbl	-12(%edi), %eax
+	movzbl	-12(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte21):
-	movzbl	 -11(%edi), %eax
-	movzbl	 -11(%esi), %edx
+	movzbl	-11(%edi), %eax
+	movzbl	-11(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(Byte22):
-	movzbl	 -10(%edi), %eax
-	movzbl	 -10(%esi), %edx
+	movzbl	-10(%edi), %eax
+	movzbl	-10(%esi), %edx
 	sub	%edx, %eax
 	RETURN
 
-	ALIGN (4)
+	.p2align 4
 L(next_24_bytes):
 	lea	8(%edi), %edi
 	lea	8(%esi), %esi
@@ -1626,20 +1662,70 @@ L(next_24_bytes):
 	test	$0x40, %dh
 	jnz	L(Byte22)
 
-	ALIGN (4)
+	.p2align 4
 L(Byte31):
-	movzbl	 -9(%edi), %eax
-	movzbl	 -9(%esi), %edx
+	movzbl	-9(%edi), %eax
+	movzbl	-9(%esi), %edx
 	sub	%edx, %eax
 	RETURN_END
+#else
+
+/* special for wmemcmp */
+	test	%dl, %dl
+	jz	L(next_two_double_words)
+	and	$15, %dl
+	jz	L(second_double_word)
+	mov	-16(%edi), %ecx
+	cmp	-16(%esi), %ecx
+	mov	$1, %eax
+	jg	L(nequal_bigger)
+	neg	%eax
+	RETURN
+
+
+	.p2align 4
+L(second_double_word):
+	mov	-12(%edi), %ecx
+	cmp	-12(%esi), %ecx
+	mov	$1, %eax
+	jg	L(nequal_bigger)
+	neg	%eax
+	RETURN
+	
+	.p2align 4
+L(next_two_double_words):
+	and	$15, %dh
+	jz	L(fourth_double_word)
+	mov	-8(%edi), %ecx
+	cmp	-8(%esi), %ecx
+	mov	$1, %eax
+	jg	L(nequal_bigger)
+	neg	%eax
+	RETURN
+
+	.p2align 4
+L(fourth_double_word):
+	mov	-4(%edi), %ecx
+	cmp	-4(%esi), %ecx
+	mov	$1, %eax
+	jg	L(nequal_bigger)
+	neg	%eax
+	RETURN
+
+	.p2align 4
+L(nequal_bigger):
+	RETURN_END
+#endif
+
 	CFI_PUSH (%ebx)
 
-	ALIGN (4)
+	.p2align 4
 L(more8bytes):
 	cmp	$16, %ecx
 	jae	L(more16bytes)
 	cmp	$8, %ecx
 	je	L(8bytes)
+#ifndef USE_AS_WMEMCMP
 	cmp	$9, %ecx
 	je	L(9bytes)
 	cmp	$10, %ecx
@@ -1653,13 +1739,17 @@ L(more8bytes):
 	cmp	$14, %ecx
 	je	L(14bytes)
 	jmp	L(15bytes)
+#else
+	jmp	L(12bytes)
+#endif
 
-	ALIGN (4)
+	.p2align 4
 L(more16bytes):
 	cmp	$24, %ecx
 	jae	L(more24bytes)
 	cmp	$16, %ecx
 	je	L(16bytes)
+#ifndef USE_AS_WMEMCMP
 	cmp	$17, %ecx
 	je	L(17bytes)
 	cmp	$18, %ecx
@@ -1673,13 +1763,17 @@ L(more16bytes):
 	cmp	$22, %ecx
 	je	L(22bytes)
 	jmp	L(23bytes)
+#else
+	jmp	L(20bytes)
+#endif
 
-	ALIGN (4)
+	.p2align 4
 L(more24bytes):
 	cmp	$32, %ecx
 	jae	L(more32bytes)
 	cmp	$24, %ecx
 	je	L(24bytes)
+#ifndef USE_AS_WMEMCMP
 	cmp	$25, %ecx
 	je	L(25bytes)
 	cmp	$26, %ecx
@@ -1693,13 +1787,17 @@ L(more24bytes):
 	cmp	$30, %ecx
 	je	L(30bytes)
 	jmp	L(31bytes)
+#else
+	jmp	L(28bytes)
+#endif
 
-	ALIGN (4)
+	.p2align 4
 L(more32bytes):
 	cmp	$40, %ecx
 	jae	L(more40bytes)
 	cmp	$32, %ecx
 	je	L(32bytes)
+#ifndef USE_AS_WMEMCMP
 	cmp	$33, %ecx
 	je	L(33bytes)
 	cmp	$34, %ecx
@@ -1713,11 +1811,35 @@ L(more32bytes):
 	cmp	$38, %ecx
 	je	L(38bytes)
 	jmp	L(39bytes)
+#else
+	jmp	L(36bytes)
+#endif
 
-	ALIGN (4)
+	.p2align 4
+L(less48bytes):
+	cmp	$8, %ecx
+	jae	L(more8bytes)
+#ifndef USE_AS_WMEMCMP
+	cmp	$2, %ecx
+	je	L(2bytes)
+	cmp	$3, %ecx
+	je	L(3bytes)
+	cmp	$4, %ecx
+	je	L(4bytes)
+	cmp	$5, %ecx
+	je	L(5bytes)
+	cmp	$6, %ecx
+	je	L(6bytes)
+	jmp	L(7bytes)
+#else
+	jmp	L(4bytes)
+#endif
+
+	.p2align 4
 L(more40bytes):
 	cmp	$40, %ecx
 	je	L(40bytes)
+#ifndef USE_AS_WMEMCMP
 	cmp	$41, %ecx
 	je	L(41bytes)
 	cmp	$42, %ecx
@@ -1732,24 +1854,7 @@ L(more40bytes):
 	je	L(46bytes)
 	jmp	L(47bytes)
 
-	ALIGN (4)
-L(less48bytes):
-	cmp	$8, %ecx
-	jae	L(more8bytes)
-	cmp	$2, %ecx
-	je	L(2bytes)
-	cmp	$3, %ecx
-	je	L(3bytes)
-	cmp	$4, %ecx
-	je	L(4bytes)
-	cmp	$5, %ecx
-	je	L(5bytes)
-	cmp	$6, %ecx
-	je	L(6bytes)
-	jmp	L(7bytes)
-
-
-	ALIGN (4)
+	.p2align 4
 L(44bytes):
 	mov	-44(%eax), %ecx
 	mov	-44(%edx), %ebx
@@ -1806,11 +1911,64 @@ L(4bytes):
 	cmp	%ebx, %ecx
 	mov	$0, %eax
 	jne	L(find_diff)
-	POP (%ebx)
+	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
+#else
+	.p2align 4
+L(44bytes):
+	mov	-44(%eax), %ecx
+	cmp	-44(%edx), %ecx
+	jne	L(find_diff)
+L(40bytes):
+	mov	-40(%eax), %ecx
+	cmp	-40(%edx), %ecx
+	jne	L(find_diff)
+L(36bytes):
+	mov	-36(%eax), %ecx
+	cmp	-36(%edx), %ecx
+	jne	L(find_diff)
+L(32bytes):
+	mov	-32(%eax), %ecx
+	cmp	-32(%edx), %ecx
+	jne	L(find_diff)
+L(28bytes):
+	mov	-28(%eax), %ecx
+	cmp	-28(%edx), %ecx
+	jne	L(find_diff)
+L(24bytes):
+	mov	-24(%eax), %ecx
+	cmp	-24(%edx), %ecx
+	jne	L(find_diff)
+L(20bytes):
+	mov	-20(%eax), %ecx
+	cmp	-20(%edx), %ecx
+	jne	L(find_diff)
+L(16bytes):
+	mov	-16(%eax), %ecx
+	cmp	-16(%edx), %ecx
+	jne	L(find_diff)
+L(12bytes):
+	mov	-12(%eax), %ecx
+	cmp	-12(%edx), %ecx
+	jne	L(find_diff)
+L(8bytes):
+	mov	-8(%eax), %ecx
+	cmp	-8(%edx), %ecx
+	jne	L(find_diff)
+L(4bytes):
+	mov	-4(%eax), %ecx
+	xor	%eax, %eax
+	cmp	-4(%edx), %ecx
+	jne	L(find_diff)
+	POP	(%ebx)
+	ret
+	CFI_PUSH (%ebx)
+#endif
 
-	ALIGN (4)
+#ifndef USE_AS_WMEMCMP
+
+	.p2align 4
 L(45bytes):
 	mov	-45(%eax), %ecx
 	mov	-45(%edx), %ebx
@@ -1870,11 +2028,11 @@ L(5bytes):
 	cmp	-1(%edx), %cl
 	mov	$0, %eax
 	jne	L(end)
-	POP (%ebx)
+	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
 
-	ALIGN (4)
+	.p2align 4
 L(46bytes):
 	mov	-46(%eax), %ecx
 	mov	-46(%edx), %ebx
@@ -1938,11 +2096,11 @@ L(2bytes):
 	cmp	%bh, %ch
 	mov	$0, %eax
 	jne	L(end)
-	POP (%ebx)
+	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
 
-	ALIGN (4)
+	.p2align 4
 L(47bytes):
 	movl	-47(%eax), %ecx
 	movl	-47(%edx), %ebx
@@ -2009,11 +2167,11 @@ L(3bytes):
 	cmpb	-1(%edx), %al
 	mov	$0, %eax
 	jne	L(end)
-	POP (%ebx)
+	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
 
-	ALIGN (4)
+	.p2align 4
 L(find_diff):
 	cmpb	%bl, %cl
 	jne	L(end)
@@ -2024,12 +2182,29 @@ L(find_diff):
 	cmp	%bl, %cl
 	jne	L(end)
 	cmp	%bx, %cx
+
+	.p2align 4
 L(end):
-	POP (%ebx)
+	POP	(%ebx)
 	mov	$1, %eax
 	ja	L(bigger)
 	neg	%eax
 L(bigger):
 	ret
+#else
 
+/* for wmemcmp */
+	.p2align 4
+L(find_diff):
+	POP	(%ebx)
+	mov	$1, %eax
+	jg	L(find_diff_bigger)
+	neg	%eax
+	ret
+
+	.p2align 4
+L(find_diff_bigger):
+	ret
+
+#endif
 END (MEMCMP)

@@ -1,5 +1,6 @@
-/*-
- * Copyright (c) 1990 The Regents of the University of California.
+/*	$OpenBSD: rindex.c,v 1.6 2005/08/08 08:05:37 espie Exp $ */
+/*
+ * Copyright (c) 1988 Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,7 +29,20 @@
  */
 
 #include <string.h>
+#include "libc_logging.h"
 
-extern "C" char* strchr(const char* p, int ch) {
-  return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+char *
+__strrchr_chk(const char *p, int ch, size_t s_len)
+{
+	char *save;
+
+	for (save = NULL;; ++p, s_len--) {
+		if (s_len == 0)
+			__fortify_chk_fail("strrchr read beyond buffer", 0);
+		if (*p == (char) ch)
+			save = (char *)p;
+		if (!*p)
+			return(save);
+	}
+	/* NOTREACHED */
 }
