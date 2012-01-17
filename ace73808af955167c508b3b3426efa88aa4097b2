@@ -118,6 +118,40 @@
       "revId": "ace73808af955167c508b3b3426efa88aa4097b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACCX///4Q\u003d",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-01-17T21:09:48Z",
+      "side": 1,
+      "message": "missing usual copyright header.",
+      "revId": "ace73808af955167c508b3b3426efa88aa4097b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACCX///4U\u003d",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-01-17T21:09:48Z",
+      "side": 1,
+      "message": "no spaces before (",
+      "revId": "ace73808af955167c508b3b3426efa88aa4097b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
