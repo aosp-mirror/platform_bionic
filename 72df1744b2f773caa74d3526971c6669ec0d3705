@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACCX///28\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-01-18T01:22:17Z",
+      "side": 1,
+      "message": "we set REALLOC_ZERO_BYTES_FREES in libc/Android.mk. i think we should have all our malloc configuration in one place, preferably the makefile.\n\nwe can worry about making the makefile less nasty some other day!",
+      "revId": "72df1744b2f773caa74d3526971c6669ec0d3705",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
