@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACLX///88\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2088,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-01-20T18:39:16Z",
+      "side": 1,
+      "message": "Can you please move this variable declaration to it\u0027s own line. The combination of assignments and variable declaration is hard to read for me.\n\nunsigned *vecs \u003d (unsigned *) (argv + argc + 1);\nunsigned *v;",
+      "revId": "861b42a2d83f72f11b4271b5b8431595a097c7c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
