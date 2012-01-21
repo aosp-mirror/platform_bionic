@@ -16,6 +16,24 @@
       "revId": "72df1744b2f773caa74d3526971c6669ec0d3705",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACPn////4\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2012-01-21T01:46:07Z",
+      "side": 1,
+      "message": "Yes, move this to the makefile and abandon the other part which I apparently changed last year.",
+      "parentUuid": "AAACCX///28\u003d",
+      "revId": "72df1744b2f773caa74d3526971c6669ec0d3705",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
