@@ -2135,7 +2135,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
 
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
-    unsigned *vecs = (unsigned*) (argv + argc + 1);
+    unsigned *vecs = (unsigned*) (argv + argc + 1), *v;
     soinfo *si;
     struct link_map * map;
     const char *ldpath_env = NULL;
@@ -2163,12 +2163,23 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
      */
     __tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
 
-    /* Are we setuid? */
-    program_is_setuid = (getuid() != geteuid()) || (getgid() != getegid());
-
     /* Initialize environment functions, and get to the ELF aux vectors table */
     vecs = linker_env_init(vecs);
 
+    /* Check auxv for AT_SECURE first to see if program is setuid, setgid,
+       has file caps, or caused a SELinux/AppArmor domain transition. */
+    for (v = vecs; v[0]; v += 2) {
+        if (v[0] == AT_SECURE) {
+            /* kernel told us whether to enable secure mode */
+            program_is_setuid = v[1];
+            goto sanitize;
+        }
+    }
+
+    /* Kernel did not provide AT_SECURE - fall back on legacy test. */
+    program_is_setuid = (getuid() != geteuid()) || (getgid() != getegid());
+
+sanitize:
     /* Sanitize environment if we're loading a setuid program */
     if (program_is_setuid)
         linker_env_secure();
