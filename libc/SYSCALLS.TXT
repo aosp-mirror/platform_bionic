@@ -134,6 +134,10 @@ int         mkdirat(int dirfd, const char *pathname, mode_t mode)  323,296
 int         fchownat(int dirfd, const char *path, uid_t owner, gid_t group, int flags)  325,298
 int         fchmodat(int dirfd, const char *path, mode_t mode, int flags)  333,306
 int         renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath)  329,302
+int         fsetxattr(int, const char *, const void *, size_t, int) 228
+ssize_t     fgetxattr(int, const char *, void *, size_t) 231
+ssize_t     flistxattr(int, char *, size_t) 234
+int         fremovexattr(int, const char *) 237
 
 # file system
 int     link (const char*, const char*)  9
@@ -159,7 +163,16 @@ int     access(const char *, int)  33
 int     symlink(const char *, const char *)  83
 int     fchdir(int)    133
 int     truncate(const char*, off_t)    92
+int     setxattr(const char *, const char *, const void *, size_t, int) 226
+int     lsetxattr(const char *, const char *, const void *, size_t, int) 227
+ssize_t getxattr(const char *, const char *, void *, size_t) 229
+ssize_t lgetxattr(const char *, const char *, void *, size_t) 230
+ssize_t listxattr(const char *, char *, size_t) 232
+ssize_t llistxattr(const char *, char *, size_t) 233
+int     removexattr(const char *, const char *) 235
+int     lremovexattr(const char *, const char *) 236
 int     __statfs64:statfs64(const char *, size_t, struct statfs *)  266,268
+
 # time
 int           pause ()                       29
 int           gettimeofday(struct timeval*, struct timezone*)       78
