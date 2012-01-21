@@ -2135,7 +2135,8 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
 
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
-    unsigned *vecs = (unsigned*) (argv + argc + 1), *v;
+    unsigned *vecs = (unsigned*) (argv + argc + 1);
+    unsigned *v;
     soinfo *si;
     struct link_map * map;
     const char *ldpath_env = NULL;
