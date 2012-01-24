@@ -746,12 +746,6 @@ int pthread_setschedparam(pthread_t thid, int policy,
 }
 
 
-// mutex lock states
-//
-// 0: unlocked
-// 1: locked, no waiters
-// 2: locked, maybe waiters
-
 /* a mutex is implemented as a 32-bit integer holding the following fields
  *
  * bits:     name     description
@@ -762,21 +756,146 @@ int pthread_setschedparam(pthread_t thid, int policy,
  * 1-0       state    lock state (0, 1 or 2)
  */
 
+/* Convenience macro, creates a mask of 'bits' bits that starts from
+ * the 'shift'-th least significant bit in a 32-bit word.
+ *
+ * Examples: FIELD_MASK(0,4)  -> 0xf
+ *           FIELD_MASK(16,9) -> 0x1ff0000
+ */
+#define  FIELD_MASK(shift,bits)           (((1 << (bits))-1) << (shift))
 
-#define  MUTEX_VALUE_OWNER(v)  (((v) >> 16) & 0xffff)
-#define  MUTEX_VALUE_COUNTER(v) (((v) >> 2) & 0xfff)
+/* This one is used to create a bit pattern from a given field value */
+#define  FIELD_TO_BITS(val,shift,bits)    (((val) & ((1 << (bits))-1)) << (shift))
 
-#define  MUTEX_OWNER(m)        MUTEX_VALUE_OWNER((m)->value)
-#define  MUTEX_COUNTER(m)      MUTEX_VALUE_COUNTER((m)->value)
+/* And this one does the opposite, i.e. extract a field's value from a bit pattern */
+#define  FIELD_FROM_BITS(val,shift,bits)  (((val) >> (shift)) & ((1 << (bits))-1))
 
-#define  MUTEX_TYPE_MASK       0xc000
-#define  MUTEX_TYPE_NORMAL     0x0000
-#define  MUTEX_TYPE_RECURSIVE  0x4000
-#define  MUTEX_TYPE_ERRORCHECK 0x8000
+/* Mutex state:
+ *
+ * 0 for unlocked
+ * 1 for locked, no waiters
+ * 2 for locked, maybe waiters
+ */
+#define  MUTEX_STATE_SHIFT      0
+#define  MUTEX_STATE_LEN        2
 
-#define  MUTEX_COUNTER_SHIFT  2
-#define  MUTEX_COUNTER_MASK   0x1ffc
-#define  MUTEX_SHARED_MASK    0x2000
+#define  MUTEX_STATE_MASK           FIELD_MASK(MUTEX_STATE_SHIFT, MUTEX_STATE_LEN)
+#define  MUTEX_STATE_FROM_BITS(v)   FIELD_FROM_BITS(v, MUTEX_STATE_SHIFT, MUTEX_STATE_LEN)
+#define  MUTEX_STATE_TO_BITS(v)     FIELD_TO_BITS(v, MUTEX_STATE_SHIFT, MUTEX_STATE_LEN)
+
+#define  MUTEX_STATE_UNLOCKED            0   /* must be 0 to match __PTHREAD_MUTEX_INIT_VALUE */
+#define  MUTEX_STATE_LOCKED_UNCONTENDED  1   /* must be 1 due to atomic dec in unlock operation */
+#define  MUTEX_STATE_LOCKED_CONTENDED    2   /* must be 1 + LOCKED_UNCONTENDED due to atomic dec */
+
+#define  MUTEX_STATE_FROM_BITS(v)    FIELD_FROM_BITS(v, MUTEX_STATE_SHIFT, MUTEX_STATE_LEN)
+#define  MUTEX_STATE_TO_BITS(v)      FIELD_TO_BITS(v, MUTEX_STATE_SHIFT, MUTEX_STATE_LEN)
+
+#define  MUTEX_STATE_BITS_UNLOCKED            MUTEX_STATE_TO_BITS(MUTEX_STATE_UNLOCKED)
+#define  MUTEX_STATE_BITS_LOCKED_UNCONTENDED  MUTEX_STATE_TO_BITS(MUTEX_STATE_LOCKED_UNCONTENDED)
+#define  MUTEX_STATE_BITS_LOCKED_CONTENDED    MUTEX_STATE_TO_BITS(MUTEX_STATE_LOCKED_CONTENDED)
+
+/* return true iff the mutex if locked with no waiters */
+#define  MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(v)  (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_UNCONTENDED)
+
+/* return true iff the mutex if locked with maybe waiters */
+#define  MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(v)   (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_CONTENDED)
+
+/* used to flip from LOCKED_UNCONTENDED to LOCKED_CONTENDED */
+#define  MUTEX_STATE_BITS_FLIP_CONTENTION(v)      ((v) ^ (MUTEX_STATE_BITS_LOCKED_CONTENDED ^ MUTEX_STATE_BITS_LOCKED_UNCONTENDED))
+
+/* Mutex counter:
+ *
+ * We need to check for overflow before incrementing, and we also need to
+ * detect when the counter is 0
+ */
+#define  MUTEX_COUNTER_SHIFT         2
+#define  MUTEX_COUNTER_LEN           11
+#define  MUTEX_COUNTER_MASK          FIELD_MASK(MUTEX_COUNTER_SHIFT, MUTEX_COUNTER_LEN)
+
+#define  MUTEX_COUNTER_BITS_WILL_OVERFLOW(v)    (((v) & MUTEX_COUNTER_MASK) == MUTEX_COUNTER_MASK)
+#define  MUTEX_COUNTER_BITS_IS_ZERO(v)          (((v) & MUTEX_COUNTER_MASK) == 0)
+
+/* Used to increment the counter directly after overflow has been checked */
+#define  MUTEX_COUNTER_BITS_ONE      FIELD_TO_BITS(1,MUTEX_COUNTER_SHIFT,MUTEX_COUNTER_LEN)
+
+/* Returns true iff the counter is 0 */
+#define  MUTEX_COUNTER_BITS_ARE_ZERO(v)  (((v) & MUTEX_COUNTER_MASK) == 0)
+
+/* Mutex shared bit flag
+ *
+ * This flag is set to indicate that the mutex is shared among processes.
+ * This changes the futex opcode we use for futex wait/wake operations
+ * (non-shared operations are much faster).
+ */
+#define  MUTEX_SHARED_SHIFT    13
+#define  MUTEX_SHARED_MASK     FIELD_MASK(MUTEX_SHARED_SHIFT,1)
+
+/* Mutex type:
+ *
+ * We support normal, recursive and errorcheck mutexes.
+ *
+ * The constants defined here *cannot* be changed because they must match
+ * the C library ABI which defines the following initialization values in
+ * <pthread.h>:
+ *
+ *   __PTHREAD_MUTEX_INIT_VALUE
+ *   __PTHREAD_RECURSIVE_MUTEX_VALUE
+ *   __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE
+ */
+#define  MUTEX_TYPE_SHIFT      14
+#define  MUTEX_TYPE_LEN        2
+#define  MUTEX_TYPE_MASK       FIELD_MASK(MUTEX_TYPE_SHIFT,MUTEX_TYPE_LEN)
+
+#define  MUTEX_TYPE_NORMAL          0  /* Must be 0 to match __PTHREAD_MUTEX_INIT_VALUE */
+#define  MUTEX_TYPE_RECURSIVE       1
+#define  MUTEX_TYPE_ERRORCHECK      2
+
+#define  MUTEX_TYPE_TO_BITS(t)       FIELD_TO_BITS(t, MUTEX_TYPE_SHIFT, MUTEX_TYPE_LEN)
+
+#define  MUTEX_TYPE_BITS_NORMAL      MUTEX_TYPE_TO_BITS(MUTEX_TYPE_NORMAL)
+#define  MUTEX_TYPE_BITS_RECURSIVE   MUTEX_TYPE_TO_BITS(MUTEX_TYPE_RECURSIVE)
+#define  MUTEX_TYPE_BITS_ERRORCHECK  MUTEX_TYPE_TO_BITS(MUTEX_TYPE_ERRORCHECK)
+
+/* Mutex owner field:
+ *
+ * This is only used for recursive and errorcheck mutexes. It holds the
+ * kernel TID of the owning thread. Note that this works because the Linux
+ * kernel _only_ uses 16-bit values for thread ids.
+ *
+ * More specifically, it will wrap to 10000 when it reaches over 32768 for
+ * application processes. You can check this by running the following inside
+ * an adb shell session:
+ *
+    OLDPID=$$;
+    while true; do
+    NEWPID=$(sh -c 'echo $$')
+    if [ "$NEWPID" -gt 32768 ]; then
+        echo "AARGH: new PID $NEWPID is too high!"
+        exit 1
+    fi
+    if [ "$NEWPID" -lt "$OLDPID" ]; then
+        echo "****** Wrapping from PID $OLDPID to $NEWPID. *******"
+    else
+        echo -n "$NEWPID!"
+    fi
+    OLDPID=$NEWPID
+    done
+
+ * Note that you can run the same example on a desktop Linux system,
+ * the wrapping will also happen at 32768, but will go back to 300 instead.
+ */
+#define  MUTEX_OWNER_SHIFT     16
+#define  MUTEX_OWNER_LEN       16
+
+#define  MUTEX_OWNER_FROM_BITS(v)    FIELD_FROM_BITS(v,MUTEX_OWNER_SHIFT,MUTEX_OWNER_LEN)
+#define  MUTEX_OWNER_TO_BITS(v)      FIELD_TO_BITS(v,MUTEX_OWNER_SHIFT,MUTEX_OWNER_LEN)
+
+/* Convenience macros.
+ *
+ * These are used to form or modify the bit pattern of a given mutex value
+ */
+
+
 
 /* a mutex attribute holds the following fields
  *
@@ -875,7 +994,7 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
         return EINVAL;
 
     if (__likely(attr == NULL)) {
-        mutex->value = MUTEX_TYPE_NORMAL;
+        mutex->value = MUTEX_TYPE_BITS_NORMAL;
         return 0;
     }
 
@@ -884,13 +1003,13 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
 
     switch (*attr & MUTEXATTR_TYPE_MASK) {
     case PTHREAD_MUTEX_NORMAL:
-        value |= MUTEX_TYPE_NORMAL;
+        value |= MUTEX_TYPE_BITS_NORMAL;
         break;
     case PTHREAD_MUTEX_RECURSIVE:
-        value |= MUTEX_TYPE_RECURSIVE;
+        value |= MUTEX_TYPE_BITS_RECURSIVE;
         break;
     case PTHREAD_MUTEX_ERRORCHECK:
-        value |= MUTEX_TYPE_ERRORCHECK;
+        value |= MUTEX_TYPE_BITS_ERRORCHECK;
         break;
     default:
         return EINVAL;
@@ -916,17 +1035,21 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
 static __inline__ void
 _normal_lock(pthread_mutex_t*  mutex, int shared)
 {
+    /* convenience shortcuts */
+    const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
+    const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
     /*
      * The common case is an unlocked mutex, so we begin by trying to
-     * change the lock's state from 0 to 1.  __bionic_cmpxchg() returns 0
-     * if it made the swap successfully.  If the result is nonzero, this
-     * lock is already held by another thread.
+     * change the lock's state from 0 (UNLOCKED) to 1 (LOCKED).
+     * __bionic_cmpxchg() returns 0 if it made the swap successfully.
+     * If the result is nonzero, this lock is already held by another thread.
      */
-    if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value ) != 0) {
+    if (__bionic_cmpxchg(unlocked, locked_uncontended, &mutex->value) != 0) {
+        const int locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
         /*
          * We want to go to sleep until the mutex is available, which
-         * requires promoting it to state 2.  We need to swap in the new
-         * state value and then wait until somebody wakes us up.
+         * requires promoting it to state 2 (CONTENDED). We need to
+         * swap in the new state value and then wait until somebody wakes us up.
          *
          * __bionic_swap() returns the previous value.  We swap 2 in and
          * see if we got zero back; if so, we have acquired the lock.  If
@@ -939,8 +1062,8 @@ _normal_lock(pthread_mutex_t*  mutex, int shared)
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
-        while (__bionic_swap(shared|2, &mutex->value ) != (shared|0))
-            __futex_wait_ex(&mutex->value, shared, shared|2, 0);
+        while (__bionic_swap(locked_contended, &mutex->value) != unlocked)
+            __futex_wait_ex(&mutex->value, shared, locked_contended, 0);
     }
     ANDROID_MEMBAR_FULL();
 }
@@ -959,7 +1082,7 @@ _normal_unlock(pthread_mutex_t*  mutex, int shared)
      * to release the lock.  __bionic_atomic_dec() returns the previous value;
      * if it wasn't 1 we have to do some additional work.
      */
-    if (__bionic_atomic_dec(&mutex->value) != (shared|1)) {
+    if (__bionic_atomic_dec(&mutex->value) != (shared|MUTEX_STATE_BITS_LOCKED_UNCONTENDED)) {
         /*
          * Start by releasing the lock.  The decrement changed it from
          * "contended lock" to "uncontended lock", which means we still
@@ -1001,20 +1124,6 @@ _normal_unlock(pthread_mutex_t*  mutex, int shared)
     }
 }
 
-static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static __inline__ void
-_recursive_lock(void)
-{
-    _normal_lock(&__recursive_lock, 0);
-}
-
-static __inline__ void
-_recursive_unlock(void)
-{
-    _normal_unlock(&__recursive_lock, 0);
-}
-
 /* This common inlined function is used to increment the counter of an
  * errorcheck or recursive mutex.
  *
@@ -1030,7 +1139,7 @@ _recursive_unlock(void)
 static __inline__ __attribute__((always_inline)) int
 _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
 {
-    if (mtype == MUTEX_TYPE_ERRORCHECK) {
+    if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
         /* trying to re-lock a mutex we already acquired */
         return EDEADLK;
     }
@@ -1039,28 +1148,27 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
      * This is safe because only the owner thread can modify the
      * counter bits in the mutex value.
      */
-    if ((mvalue & MUTEX_COUNTER_MASK) == MUTEX_COUNTER_MASK) {
+    if (MUTEX_COUNTER_BITS_WILL_OVERFLOW(mvalue)) {
         return EAGAIN;
     }
 
     /* We own the mutex, but other threads are able to change
      * the lower bits (e.g. promoting it to "contended"), so we
-     * need to use the recursive global lock to do that.
-     *
-     * The lock/unlock sequence also provides a full memory barrier
-     * so we don't need to add one here explicitely.
+     * need to use an atomic cmpxchg loop to update the counter.
      */
-    _recursive_lock();
-
-    /* increment counter, overflow was already checked */
-
-    /* NOTE: we need to reload the value since its lower bits could have
-     * been modified since the exit of _recursive_lock()
-     */
-    mutex->value = mutex->value + (1 << MUTEX_COUNTER_SHIFT);
-
-    _recursive_unlock();
-    return 0;
+    for (;;) {
+        /* increment counter, overflow was already checked */
+        int newval = mvalue + MUTEX_COUNTER_BITS_ONE;
+        if (__likely(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
+            /* mutex is still locked, not need for a memory barrier */
+            return 0;
+        }
+        /* the value was changed, this happens when another thread changes
+         * the lower state bits from 1 to 2 to indicate contention. This
+         * cannot change the counter, so simply reload and try again.
+         */
+        mvalue = mutex->value;
+    }
 }
 
 __LIBC_HIDDEN__
@@ -1076,53 +1184,72 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle normal case first */
-    if ( __likely(mtype == MUTEX_TYPE_NORMAL) ) {
+    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
         _normal_lock(mutex, shared);
         return 0;
     }
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
-    /* We don't own the mutex, so try to get it.
-     *
-     * First, we try to change its state from 0 to 1, if this
-     * doesn't work, try to change it to state 2.
-     */
-    new_lock_type = 1;
-
-    /* compute futex wait opcode and restore shared flag in mtype */
+    /* Add in shared state to avoid extra 'or' operations below */
     mtype |= shared;
 
-    for (;;) {
-        int  oldv;
-
-        _recursive_lock();
-        oldv = mutex->value;
-        if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
-            mutex->value = ((tid << 16) | mtype | new_lock_type);
-        } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
-            oldv ^= 3;
-            mutex->value = oldv;
+    /* First, if the mutex is unlocked, try to quickly acquire it.
+     * In the optimistic case where this works, set the state to 1 to
+     * indicate locked with no contention */
+    if (mvalue == mtype) {
+        int newval = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+        if (__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0) {
+            ANDROID_MEMBAR_FULL();
+            return 0;
         }
-        _recursive_unlock();
-
-        if (oldv == mtype)
-            break;
-
-        /*
-         * The lock was held, possibly contended by others.  From
-         * now on, if we manage to acquire the lock, we have to
-         * assume that others are still contending for it so that
-         * we'll wake them when we unlock it.
-         */
-        new_lock_type = 2;
-
-        __futex_wait_ex(&mutex->value, shared, oldv, NULL);
+        /* argh, the value changed, reload before entering the loop */
+        mvalue = mutex->value;
     }
-    return 0;
+
+    for (;;) {
+        int newval;
+
+        /* if the mutex is unlocked, its value should be 'mtype' and
+         * we try to acquire it by setting its owner and state atomically.
+         * NOTE: We put the state to 2 since we _know_ there is contention
+         * when we are in this loop. This ensures all waiters will be
+         * unlocked.
+         */
+        if (mvalue == mtype) {
+            newval = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+            /* TODO: Change this to __bionic_cmpxchg_acquire when we
+             *        implement it to get rid of the explicit memory
+             *        barrier below.
+             */
+            if (__unlikely(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
+                mvalue = mutex->value;
+                continue;
+            }
+            ANDROID_MEMBAR_FULL();
+            return 0;
+        }
+
+        /* the mutex is already locked by another thread, if its state is 1
+         * we will change it to 2 to indicate contention. */
+        if (MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(mvalue)) {
+            newval = MUTEX_STATE_BITS_FLIP_CONTENTION(mvalue); /* locked state 1 => state 2 */
+            if (__unlikely(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
+                mvalue = mutex->value;
+                continue;
+            }
+            mvalue = newval;
+        }
+
+        /* wait until the mutex is unlocked */
+        __futex_wait_ex(&mutex->value, shared, mvalue, NULL);
+
+        mvalue = mutex->value;
+    }
+    /* NOTREACHED */
 }
 
 int pthread_mutex_lock(pthread_mutex_t *mutex)
@@ -1151,29 +1278,45 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if (__likely(mtype == MUTEX_TYPE_NORMAL)) {
+    if (__likely(mtype == MUTEX_TYPE_BITS_NORMAL)) {
         _normal_unlock(mutex, shared);
         return 0;
     }
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid != MUTEX_VALUE_OWNER(mvalue) )
+    if ( tid != MUTEX_OWNER_FROM_BITS(mvalue) )
         return EPERM;
 
-    /* We do, decrement counter or release the mutex if it is 0 */
-    _recursive_lock();
-    oldv = mutex->value;
-    if (oldv & MUTEX_COUNTER_MASK) {
-        mutex->value = oldv - (1 << MUTEX_COUNTER_SHIFT);
-        oldv = 0;
-    } else {
-        mutex->value = shared | mtype;
+    /* If the counter is > 0, we can simply decrement it atomically.
+     * Since other threads can mutate the lower state bits (and only the
+     * lower state bits), use a cmpxchg to do it.
+     */
+    if (!MUTEX_COUNTER_BITS_IS_ZERO(mvalue)) {
+        for (;;) {
+            int newval = mvalue - MUTEX_COUNTER_BITS_ONE;
+            if (__likely(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
+                /* success: we still own the mutex, so no memory barrier */
+                return 0;
+            }
+            /* the value changed, so reload and loop */
+            mvalue = mutex->value;
+        }
     }
-    _recursive_unlock();
+
+    /* the counter is 0, so we're going to unlock the mutex by resetting
+     * its value to 'unlocked'. We need to perform a swap in order
+     * to read the current state, which will be 2 if there are waiters
+     * to awake.
+     *
+     * TODO: Change this to __bionic_swap_release when we implement it
+     *        to get rid of the explicit memory barrier below.
+     */
+    ANDROID_MEMBAR_FULL();  /* RELEASE BARRIER */
+    mvalue = __bionic_swap(mtype | shared | MUTEX_STATE_BITS_UNLOCKED, &mutex->value);
 
     /* Wake one waiting thread, if any */
-    if ((oldv & 3) == 2) {
+    if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(mvalue)) {
         __futex_wake_ex(&mutex->value, shared, 1);
     }
     return 0;
@@ -1202,9 +1345,11 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
+    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) )
     {
-        if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+        if (__bionic_cmpxchg(shared|MUTEX_STATE_BITS_UNLOCKED,
+                             shared|MUTEX_STATE_BITS_LOCKED_UNCONTENDED,
+                             &mutex->value) == 0) {
             ANDROID_MEMBAR_FULL();
             return 0;
         }
@@ -1214,23 +1359,22 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
-    /* Restore sharing bit in mtype */
-    mtype |= shared;
+    /* Same as pthread_mutex_lock, except that we don't want to wait, and
+     * the only operation that can succeed is a single cmpxchg to acquire the
+     * lock if it is released / not owned by anyone. No need for a complex loop.
+     */
+    mtype |= shared | MUTEX_STATE_BITS_UNLOCKED;
+    mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
 
-    /* Try to lock it, just once. */
-    _recursive_lock();
-    oldv = mutex->value;
-    if (oldv == mtype)  /* uncontended released lock => state 1 */
-        mutex->value = ((tid << 16) | mtype | 1);
-    _recursive_unlock();
+    if (__likely(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
+        ANDROID_MEMBAR_FULL();
+        return 0;
+    }
 
-    if (oldv != mtype)
-        return EBUSY;
-
-    return 0;
+    return EBUSY;
 }
 
 int pthread_mutex_trylock(pthread_mutex_t *mutex)
@@ -1299,20 +1443,24 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
+    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) )
     {
-        /* fast path for uncontended lock */
-        if (__bionic_cmpxchg(shared|0, shared|1, &mutex->value) == 0) {
+        const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
+        const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+        const int locked_contended   = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+
+        /* fast path for uncontended lock. Note: MUTEX_TYPE_BITS_NORMAL is 0 */
+        if (__bionic_cmpxchg(unlocked, locked_uncontended, &mutex->value) == 0) {
             ANDROID_MEMBAR_FULL();
             return 0;
         }
 
         /* loop while needed */
-        while (__bionic_swap(shared|2, &mutex->value) != (shared|0)) {
+        while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
             if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
                 return EBUSY;
 
-            __futex_wait_ex(&mutex->value, shared, shared|2, &ts);
+            __futex_wait_ex(&mutex->value, shared, locked_contended, &ts);
         }
         ANDROID_MEMBAR_FULL();
         return 0;
@@ -1320,50 +1468,75 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
 
     /* Do we already own this recursive or error-check mutex ? */
     tid = __get_thread()->kernel_id;
-    if ( tid == MUTEX_VALUE_OWNER(mvalue) )
+    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
-    /* We don't own the mutex, so try to get it.
-     *
-     * First, we try to change its state from 0 to 1, if this
-     * doesn't work, try to change it to state 2.
+    /* the following implements the same loop than pthread_mutex_lock_impl
+     * but adds checks to ensure that the operation never exceeds the
+     * absolute expiration time.
      */
-    new_lock_type = 1;
+    mtype |= shared;
 
-    /* Compute wait op and restore sharing bit in mtype */
-    mtype  |= shared;
+    /* first try a quick lock */
+    if (mvalue == mtype) {
+        mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+        if (__likely(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
+            ANDROID_MEMBAR_FULL();
+            return 0;
+        }
+        mvalue = mutex->value;
+    }
 
     for (;;) {
-        int  oldv;
-        struct timespec  ts;
+        struct timespec ts;
 
-        _recursive_lock();
-        oldv = mutex->value;
-        if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
-            mutex->value = ((tid << 16) | mtype | new_lock_type);
-        } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
-            oldv ^= 3;
-            mutex->value = oldv;
+        /* if the value is 'unlocked', try to acquire it directly */
+        /* NOTE: put state to 2 since we know there is contention */
+        if (mvalue == mtype) /* unlocked */ {
+            mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+            if (__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0) {
+                ANDROID_MEMBAR_FULL();
+                return 0;
+            }
+            /* the value changed before we could lock it. We need to check
+             * the time to avoid livelocks, reload the value, then loop again. */
+            if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
+                return EBUSY;
+
+            mvalue = mutex->value;
+            continue;
         }
-        _recursive_unlock();
 
-        if (oldv == mtype)
-            break;
+        /* The value is locked. If 'uncontended', try to switch its state
+         * to 'contented' to ensure we get woken up later. */
+        if (MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(mvalue)) {
+            int newval = MUTEX_STATE_BITS_FLIP_CONTENTION(mvalue);
+            if (__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0) {
+                /* this failed because the value changed, reload it */
+                mvalue = mutex->value;
+            } else {
+                /* this succeeded, update mvalue */
+                mvalue = newval;
+            }
+        }
 
-        /*
-         * The lock was held, possibly contended by others.  From
-         * now on, if we manage to acquire the lock, we have to
-         * assume that others are still contending for it so that
-         * we'll wake them when we unlock it.
-         */
-        new_lock_type = 2;
-
+        /* check time and update 'ts' */
         if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
             return EBUSY;
 
-        __futex_wait_ex(&mutex->value, shared, oldv, &ts);
+        /* Only wait to be woken up if the state is '2', otherwise we'll
+         * simply loop right now. This can happen when the second cmpxchg
+         * in our loop failed because the mutex was unlocked by another
+         * thread.
+         */
+        if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(mvalue)) {
+            if (__futex_wait_ex(&mutex->value, shared, mvalue, &ts) == ETIMEDOUT) {
+                return EBUSY;
+            }
+            mvalue = mutex->value;
+        }
     }
-    return 0;
+    /* NOTREACHED */
 }
 
 int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
