@@ -33,6 +33,24 @@
       "revId": "a620678876a296cdc27a373dcfe74235a7bffb55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACT3///+s\u003d",
+        "filename": "libc/arch-arm/bionic/strlen-armv7.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-01-24T20:37:06Z",
+      "side": 1,
+      "message": "Please clarify whether you\u0027re submitted code on behalf of Linaro, or whether you independently copied that code from Linaro.",
+      "parentUuid": "AAACT3////I\u003d",
+      "revId": "a620678876a296cdc27a373dcfe74235a7bffb55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
