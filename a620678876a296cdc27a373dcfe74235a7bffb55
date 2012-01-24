@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACT3////M\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-01-24T16:52:49Z",
+      "side": 1,
+      "message": "Did you mean \"true\"?",
+      "revId": "a620678876a296cdc27a373dcfe74235a7bffb55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACT3////I\u003d",
+        "filename": "libc/arch-arm/bionic/strlen-armv7.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-01-24T16:52:49Z",
+      "side": 1,
+      "message": "This needs to be \"Copyright 2010 The Android Open Source Project\"",
+      "revId": "a620678876a296cdc27a373dcfe74235a7bffb55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
