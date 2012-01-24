@@ -195,9 +195,9 @@ execvp(const char *name, char * const *argv)
 			(void)writev(STDERR_FILENO, iov, 3);
 			continue;
 		}
-		bcopy(p, buf, lp);
+		memcpy(buf, p, lp);
 		buf[lp] = '/';
-		bcopy(name, buf + lp + 1, ln);
+		memcpy(buf + lp + 1, name, ln);
 		buf[lp + ln + 1] = '\0';
 
 retry:		(void)execve(bp, argv, environ);
@@ -217,7 +217,7 @@ retry:		(void)execve(bp, argv, environ);
 				goto done;
 			memp[0] = "sh";
 			memp[1] = bp;
-			bcopy(argv + 1, memp + 2, cnt * sizeof(char *));
+			memcpy(memp + 2, argv + 1, cnt * sizeof(char *));
 			(void)execve(_PATH_BSHELL, memp, environ);
 			goto done;
 		case ENOMEM:
