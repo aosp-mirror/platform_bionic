@@ -1001,6 +1001,20 @@ _normal_unlock(pthread_mutex_t*  mutex, int shared)
     }
 }
 
+static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static __inline__ void
+_recursive_lock(void)
+{
+    _normal_lock(&__recursive_lock, 0);
+}
+
+static __inline__ void
+_recursive_unlock(void)
+{
+    _normal_unlock(&__recursive_lock, 0);
+}
+
 /* This common inlined function is used to increment the counter of an
  * errorcheck or recursive mutex.
  *
@@ -1023,43 +1037,30 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
 
     /* Detect recursive lock overflow and return EAGAIN.
      * This is safe because only the owner thread can modify the
-     * counter bits in the mutes value
+     * counter bits in the mutex value.
      */
     if ((mvalue & MUTEX_COUNTER_MASK) == MUTEX_COUNTER_MASK) {
         return EAGAIN;
     }
 
     /* We own the mutex, but other threads are able to change
-     * the contents (e.g. promoting it to "contended" by changing
-     * its lower bits), so we need to atomically update it using
-     * a cmpxchg loop.
+     * the lower bits (e.g. promoting it to "contended"), so we
+     * need to use the recursive global lock to do that.
+     *
+     * The lock/unlock sequence also provides a full memory barrier
+     * so we don't need to add one here explicitely.
      */
-    for (;;) {
-        /* increment counter, overflow was already checked */
-        int newvalue = mvalue + (1 << MUTEX_COUNTER_SHIFT);
-        if (__likely(__bionic_cmpxchg(mvalue, newvalue, &mutex->value) == 0)) {
-            ANDROID_MEMBAR_FULL();
-            return 0;
-        }
-        /* argh, value was changed, by another thread which updated the 'state'
-         * field, so reload and try again.
-         */
-        mvalue = mutex->value;
-    }
-}
+    _recursive_lock();
 
-static pthread_mutex_t  __recursive_lock = PTHREAD_MUTEX_INITIALIZER;
+    /* increment counter, overflow was already checked */
 
-static __inline__ void
-_recursive_lock(void)
-{
-    _normal_lock(&__recursive_lock, 0);
-}
+    /* NOTE: we need to reload the value since its lower bits could have
+     * been modified since the exit of _recursive_lock()
+     */
+    mutex->value = mutex->value + (1 << MUTEX_COUNTER_SHIFT);
 
-static __inline__ void
-_recursive_unlock(void)
-{
-    _normal_unlock(&__recursive_lock, 0);
+    _recursive_unlock();
+    return 0;
 }
 
 __LIBC_HIDDEN__
