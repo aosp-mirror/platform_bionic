@@ -138,9 +138,19 @@
  *
  * The system property ro.net.dns_cache_size can be used to override the default
  * value with a custom value
+ *
+ *
+ * ******************************************
+ * * NOTE - this has changed.
+ * * 1) we've added IPv6 support so each dns query results in 2 responses
+ * * 2) we've made this a system-wide cache, so the cost is less (it's not
+ * *    duplicated in each process) and the need is greater (more processes
+ * *    making different requests).
+ * * Upping by 2x for IPv6
+ * * Upping by another 5x for the centralized nature
+ * *****************************************
  */
-#define  CONFIG_MAX_ENTRIES    64
-
+#define  CONFIG_MAX_ENTRIES    64 * 2 * 5
 /* name of the system property that can be used to set the cache size */
 #define  DNS_CACHE_SIZE_PROP_NAME   "ro.net.dns_cache_size"
 
@@ -1217,6 +1227,16 @@ _res_cache_get_max_entries( void )
 {
     int result = -1;
     char cache_size[PROP_VALUE_MAX];
+
+    const char* cache_mode = getenv("ANDROID_DNS_MODE");
+
+    if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
+        // Don't use the cache in local mode.  This is used by the
+        // proxy itself.
+        // TODO - change this to 0 when all dns stuff uses proxy (5918973)
+        XLOG("setup cache for non-cache process. size=1");
+        return 1;
+    }
 
     if (__system_property_get(DNS_CACHE_SIZE_PROP_NAME, cache_size) > 0) {
         result = atoi(cache_size);
