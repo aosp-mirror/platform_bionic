@@ -126,6 +126,7 @@ static void logSignalSummary(int signum, const siginfo_t* info)
  */
 void debugger_signal_handler(int n, siginfo_t* info, void* unused)
 {
+    char msgbuf[128];
     unsigned tid;
     int s;
 
@@ -134,7 +135,7 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused)
     tid = gettid();
     s = socket_abstract_client("android:debuggerd", SOCK_STREAM);
 
-    if(s >= 0) {
+    if (s >= 0) {
         /* debugger knows our pid from the credentials on the
          * local socket but we need to tell it our tid.  It
          * is paranoid and will verify that we are giving a tid
@@ -147,9 +148,24 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused)
             /* if the write failed, there is no point to read on
              * the file descriptor. */
             RETRY_ON_EINTR(ret, read(s, &tid, 1));
+            int savedErrno = errno;
             notify_gdb_of_libraries();
+            errno = savedErrno;
         }
+
+        if (ret < 0) {
+            /* read or write failed -- broken connection? */
+            format_buffer(msgbuf, sizeof(msgbuf),
+                "Failed while talking to debuggerd: %s", strerror(errno));
+            __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
+        }
+
         close(s);
+    } else {
+        /* socket failed; maybe process ran out of fds */
+        format_buffer(msgbuf, sizeof(msgbuf),
+            "Unable to open connection to debuggerd: %s", strerror(errno));
+        __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
     }
 
     /* remove our net so we fault for real when we return */
