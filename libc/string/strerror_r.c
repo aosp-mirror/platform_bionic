@@ -35,7 +35,7 @@ __code_string_lookup( const CodeString*  strings,
 
 static const CodeString  _sys_error_strings[] =
 {
-#define  __BIONIC_ERRDEF(x,y,z)  { y, z },
+#define  __BIONIC_ERRDEF(x,y,z)  { x, z },
 #include <sys/_errdefs.h>
     { 0, NULL }
 };

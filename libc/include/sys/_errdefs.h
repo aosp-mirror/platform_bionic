@@ -167,7 +167,4 @@ __BIONIC_ERRDEF( EKEYREJECTED   , 129, "Key was rejected by service" )
 __BIONIC_ERRDEF( EOWNERDEAD     , 130, "Owner died" )
 __BIONIC_ERRDEF( ENOTRECOVERABLE, 131, "State not recoverable" )
 
-/* the following is not defined by Linux but needed for the BSD portions of the C library */
-__BIONIC_ERRDEF( EFTYPE, 1000, "Stupid C library hack !!" )
-
 #undef __BIONIC_ERRDEF
