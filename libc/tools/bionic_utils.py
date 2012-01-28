@@ -4,13 +4,13 @@ import sys, os, commands, string
 
 # support Bionic architectures, add new ones as appropriate
 #
-bionic_archs = [ "arm", "x86" ]
+bionic_archs = [ "arm", "x86", "mips" ]
 
 # basic debugging trace support
 # call D_setlevel to set the verbosity level
 # and D(), D2(), D3(), D4() to add traces
 #
-verbose = 1
+verbose = 0
 
 def D(msg):
     global verbose
@@ -178,7 +178,7 @@ class SysCallsTxtParser:
         self.syscalls = []
         self.lineno   = 0
 
-    def E(msg):
+    def E(self, msg):
         print "%d: %s" % (self.lineno, msg)
 
     def parse_line(self, line):
@@ -238,36 +238,55 @@ class SysCallsTxtParser:
 
         number = line[pos_rparen+1:].strip()
         if number == "stub":
-            syscall_id  = -1
-            syscall_id2 = -1
+            syscall_common = -1
+            syscall_arm  = -1
+            syscall_x86 = -1
+            syscall_mips = -1
         else:
             try:
                 if number[0] == '#':
                     number = number[1:].strip()
                 numbers = string.split(number,',')
-                syscall_id  = int(numbers[0])
-                syscall_id2 = syscall_id
-                if len(numbers) > 1:
-                    syscall_id2 = int(numbers[1])
+                if len(numbers) == 1:
+                    syscall_common = int(numbers[0])
+                    syscall_arm = -1
+                    syscall_x86 = -1
+                    syscall_mips = -1
+                else:
+                    if len(numbers) == 3:
+                        syscall_common = -1
+                        syscall_arm  = int(numbers[0])
+                        syscall_x86 = int(numbers[1])
+                        syscall_mips = int(numbers[2])
+                    else:
+                        E("invalid syscall number format in '%s'" % line)
+                        return
             except:
                 E("invalid syscall number in '%s'" % line)
                 return
 
-		global verbose
+        global verbose
         if verbose >= 2:
-            if call_id < 0:
-                print "%s: %d,%d" % (syscall_name, syscall_id, syscall_id2)
+            if call_id == -1:
+                if syscall_common == -1:
+                    print "%s: %d,%d,%d" % (syscall_name, syscall_arm, syscall_x86, syscall_mips)
+                else:
+                    print "%s: %d" % (syscall_name, syscall_common)
             else:
-                print "%s(%d): %d,%d" % (syscall_name, call_id, syscall_id, syscall_id2)
+                if syscall_common == -1:
+                    print "%s(%d): %d,%d,%d" % (syscall_name, call_id, syscall_arm, syscall_x86, syscall_mips)
+                else:
+                    print "%s(%d): %d" % (syscall_name, call_id, syscall_common)
 
-        t = { "id"     : syscall_id,
-              "id2"    : syscall_id2,
+        t = { "armid"  : syscall_arm,
+              "x86id"  : syscall_x86,
+              "mipsid" : syscall_mips,
+              "common" : syscall_common,
               "cid"    : call_id,
               "name"   : syscall_name,
               "func"   : syscall_func,
               "params" : syscall_params,
               "decl"   : "%-15s  %s (%s);" % (return_type, syscall_func, params) }
-
         self.syscalls.append(t)
 
     def parse_file(self, file_path):
