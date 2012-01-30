@@ -1622,6 +1622,19 @@ void call_constructors_recursive(soinfo *si)
     if (si->constructors_called)
         return;
 
+    // Set this before actually calling the constructors, otherwise it doesn't
+    // protect against recursive constructor calls. One simple example of
+    // constructor recursion is the libc debug malloc, which is implemented in
+    // libc_malloc_debug_leak.so:
+    // 1. The program depends on libc, so libc's constructor is called here.
+    // 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.
+    // 3. dlopen() calls call_constructors_recursive() with the newly created
+    //    soinfo for libc_malloc_debug_leak.so.
+    // 4. The debug so depends on libc, so call_constructors_recursive() is
+    //    called again with the libc soinfo. If it doesn't trigger the early-
+    //    out above, the libc constructor will be called again (recursively!).
+    si->constructors_called = 1;
+
     if (si->flags & FLAG_EXE) {
         TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
               pid, (unsigned)si->preinit_array, si->preinit_array_count,
@@ -1665,7 +1678,6 @@ void call_constructors_recursive(soinfo *si)
         TRACE("[ %5d Done calling init_array for '%s' ]\n", pid, si->name);
     }
 
-    si->constructors_called = 1;
 }
 
 static void call_destructors(soinfo *si)
