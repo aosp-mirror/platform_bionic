@@ -49,12 +49,6 @@ LOCAL_CFLAGS += -DANDROID_ARM_LINKER
 else
   ifeq ($(TARGET_ARCH),x86)
     LOCAL_CFLAGS += -DANDROID_X86_LINKER
-  else
-    ifeq ($(TARGET_ARCH),sh)
-      LOCAL_CFLAGS += -DANDROID_SH_LINKER
-    else
-      $(error Unsupported TARGET_ARCH $(TARGET_ARCH))
-    endif
   endif
 endif
 

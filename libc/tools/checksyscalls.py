@@ -118,7 +118,6 @@ def process_header(header_file,dict):
 
 arm_dict = {}
 x86_dict = {}
-superh_dict = {}
 
 # remove trailing slash from the linux_root, if any
 if linux_root[-1] == '/':
@@ -142,15 +141,8 @@ if not x86_unistd:
         print "maybe using a different set of kernel headers might help."
         sys.exit(1)
 
-superh_unistd = find_arch_header(linux_root, "sh", "unistd_32.h")
-if not superh_unistd:
-    print "WEIRD: Could not locate the SuperH unistd.h kernel header file,"
-    print "maybe using a different set of kernel headers might help."
-    sys.exit(1)
-
 process_header( arm_unistd, arm_dict )
 process_header( x86_unistd, x86_dict )
-process_header( superh_unistd, superh_dict )
 
 # now perform the comparison
 errors = 0
@@ -174,7 +166,6 @@ def check_syscalls(archname, idname, arch_dict):
 
 errors += check_syscalls("arm", "id", arm_dict)
 errors += check_syscalls("x86", "id2", x86_dict)
-errors += check_syscalls("superh", "id3", superh_dict)
 
 if errors == 0:
     print "congratulations, everything's fine !!"
