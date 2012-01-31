@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACbn////U\u003d",
+        "filename": "libc/bionic/libc_init_dynamic.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-01-31T11:29:02Z",
+      "side": 1,
+      "message": "this should probably be guarded by a #ifdef to avoid compiler warnings.",
+      "revId": "19de74d681baf3e7f26d1bc085cf84904277a2e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAACbn////Q\u003d",
+        "filename": "libc/bionic/libc_init_dynamic.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-01-31T11:29:02Z",
+      "side": 1,
+      "message": "probably not the correct #ifdef.\n\nI suggest using a feature-based macro, defined at the start of this source file, and testing on it, as in:\n\n  // define HAVE_CTORS_INITIALIZERS only if the C library\n  // initialization should call the executable\u0027s constructors\n  // before running the main program.\n  #ifdef __mips__\n  #  define HAVE_CTORS_INITIALIZERS 1\n  #endif\n\n  ...\n\n  #ifdef HAVE_CTORS_INITIALIZERS\n  static void call_array(....\n  ...\n  #endif\n\n  ...\n\n  ... __libc_init ( ... )\n  {\n  #ifdef HAVE_CTORS_INITIALIZERS\n    call_array(ctors);\n  #endif\n    ...",
+      "revId": "19de74d681baf3e7f26d1bc085cf84904277a2e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
