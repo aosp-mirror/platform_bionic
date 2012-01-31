@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACbn////o\u003d",
+        "filename": "libc/include/sys/_errdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-01-31T09:06:51Z",
+      "side": 1,
+      "message": "did you mean #ifdef here?\n\nAlso, I\u0027m reluctant to add something that depends on ANDROID_CHANGES (which is normally only defined when building the C library), to a C header that might be exposed through the NDK.",
+      "revId": "520556fa3e2ff668fdc4eda36ad31491fbb48ea8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
