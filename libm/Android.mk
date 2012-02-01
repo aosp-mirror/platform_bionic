@@ -173,17 +173,7 @@ else
 
     libm_common_includes = $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
   else
-    ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-sh)
-      libm_common_src_files += \
-		sh/fenv.c \
-		src/s_scalbln.c \
-		src/s_scalbn.c \
-		src/s_scalbnf.c
-
-      libm_common_includes = $(LOCAL_PATH)/sh
-    else
-      $(error "Unknown architecture")
-    endif
+    $(error "Unknown architecture")
   endif
 endif
 
