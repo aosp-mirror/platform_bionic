@@ -4,7 +4,7 @@
 #
 # each non comment line has the following format:
 #
-# return_type    func_name[:syscall_name[:call_id]]([parameter_list])  (#syscall_number|stub)
+# return_type    func_name[:syscall_name[:call_id]]([parameter_list])  (syscall_number|"stub")
 #
 # note that:
 #      - syscall_name correspond to the name of the syscall, which may differ from
@@ -22,15 +22,15 @@
 #        assembler template for the syscall; it's up to the bionic implementation to provide
 #        a relevant C stub
 #
-#      - additionally, if the syscall number is different amoung ARM, x86 and SuperH, use:
-#        return_type funcname[:syscall_name](parameters) arm_number,x86_number,superh_number
+#      - additionally, if the syscall number is different amoung ARM, and x86, use:
+#        return_type funcname[:syscall_name](parameters) arm_number,x86_number
 #
 # the file is processed by a python script named gensyscalls.py
 #
 
 # process management
 void    _exit:exit_group (int)      248,252
-void    _exit_thread:exit (int)	    1
+void    _exit_thread:exit (int)     1
 pid_t   __fork:fork (void)           2
 pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7
 int     __waitid:waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
@@ -53,7 +53,7 @@ pid_t   gettid()                   224
 ssize_t readahead(int, off64_t, size_t)     225
 int     getgroups:getgroups32(int, gid_t *)    205
 pid_t   getpgid(pid_t)             132
-pid_t   getppid()		   64
+pid_t   getppid()                  64
 pid_t   setsid()                   66
 int     setgid:setgid32(gid_t)     214
 int     seteuid:seteuid32(uid_t)   stub
@@ -115,7 +115,7 @@ int         __fcntl:fcntl(int, int, void*)  55
 int         flock(int, int)   143
 int         fchmod(int, mode_t)  94
 int         dup(int)  41
-int         pipe(int *)  42,42,-1
+int         pipe(int *)  42,42
 int         pipe2(int *, int) 359,331
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
@@ -220,24 +220,21 @@ int           sendmsg(int, const struct msghdr *, unsigned int)  296,-1
 int           recvmsg(int, struct msghdr *, unsigned int)   297,-1
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
-int           socket:socketcall:1 (int, int, int) -1,102,-1
-int           bind:socketcall:2 (int, struct sockaddr *, int)  -1,102,-1
-int           connect:socketcall:3(int, struct sockaddr *, socklen_t)   -1,102,-1
-int           listen:socketcall:4(int, int)                   -1,102,-1
-int           accept:socketcall:5(int, struct sockaddr *, socklen_t *)  -1,102,-1
-int           getsockname:socketcall:6(int, struct sockaddr *, socklen_t *)  -1,102,-1
-int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,102,-1
-int           socketpair:socketcall:8(int, int, int, int*)    -1,102,-1
-int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102,-1
-int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102,-1
+int           socket:socketcall:1 (int, int, int) -1,102
+int           bind:socketcall:2 (int, struct sockaddr *, int)  -1,102
+int           connect:socketcall:3(int, struct sockaddr *, socklen_t)   -1,102
+int           listen:socketcall:4(int, int)                   -1,102
+int           accept:socketcall:5(int, struct sockaddr *, socklen_t *)  -1,102
+int           getsockname:socketcall:6(int, struct sockaddr *, socklen_t *)  -1,102
+int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,102
+int           socketpair:socketcall:8(int, int, int, int*)    -1,102
+int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102
+int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102
 int           shutdown:socketcall:13(int, int)  -1,102,-1
-int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102,-1
-int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102,-1
-int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102,-1
-int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102,-1
-
-# sockets for sh.
-int           __socketcall:socketcall(int, unsigned long*) -1,-1,102
+int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102
+int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102
+int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102
+int           recvmsg:socketcall:17(int, struct msghdr *, unsigned int)   -1,102
 
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)  156
@@ -250,11 +247,11 @@ int sched_get_priority_min(int policy)  160
 int sched_rr_get_interval(pid_t pid, struct timespec *interval)  161
 int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) 241
 int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)  242
-int __getcpu:getcpu(unsigned *cpu, unsigned *node, void *unused) 345,318,318
+int __getcpu:getcpu(unsigned *cpu, unsigned *node, void *unused) 345,318
 
 # io priorities
-int ioprio_set(int which, int who, int ioprio) 314,289,288
-int ioprio_get(int which, int who) 315,290,289
+int ioprio_set(int which, int who, int ioprio) 314,289
+int ioprio_get(int which, int who) 315,290
 
 # other
 int     uname(struct utsname *)  122
@@ -277,8 +274,8 @@ int     epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)    251,25
 int     epoll_wait(int epfd, struct epoll_event *events, int max, int timeout)   252,256
 
 int     inotify_init(void)      316,291,290
-int     inotify_add_watch(int, const char *, unsigned int)  317,292,291
-int     inotify_rm_watch(int, unsigned int)  318,293,292
+int     inotify_add_watch(int, const char *, unsigned int)  317,292
+int     inotify_rm_watch(int, unsigned int)  318,293
 
 int     poll(struct pollfd *, unsigned int, long)  168
 
