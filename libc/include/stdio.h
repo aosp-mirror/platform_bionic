@@ -452,8 +452,10 @@ extern	int __isthreaded;
  * fdprintf is a better name, and some programs that use fdprintf use a
  * #define fdprintf dprintf for compatibility
  */
+__BEGIN_DECLS
 int fdprintf(int, const char*, ...);
 int vfdprintf(int, const char*, __va_list);
+__END_DECLS
 #endif /* _GNU_SOURCE */
 
 #endif /* _STDIO_H_ */
