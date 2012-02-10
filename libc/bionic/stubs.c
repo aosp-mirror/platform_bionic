@@ -250,28 +250,56 @@ android_name_to_group( struct group *gr, const char *name )
 static unsigned
 app_id_from_name( const char*  name )
 {
-    unsigned long  id;
+    unsigned long  userid;
+    unsigned long  appid;
     char*          end;
 
-    if (memcmp(name, "app_", 4) != 0 || !isdigit(name[4]))
+    if (name[0] != 'u' || !isdigit(name[1]))
         goto FAIL;
 
-    id = strtoul(name+4, &end, 10);
-    if (*end != '\0')
+    userid = strtoul(name+1, &end, 10);
+    if (end[0] != '_' || end[1] == 0 || !isdigit(end[2]))
         goto FAIL;
 
-    id += AID_APP;
-
-    /* check for overflow and that the value can be
-     * stored in our 32-bit uid_t/gid_t */
-    if (id < AID_APP || (unsigned)id != id)
+    if (end[1] == 'a')
+        appid = strtoul(end+2, &end, 10) + AID_APP;
+    else if (end[1] == 'i')
+        appid = strtoul(end+2, &end, 10) + AID_ISOLATED_START;
+    else
         goto FAIL;
 
-    return (unsigned)id;
+    if (end[0] != 0)
+        goto FAIL;
+
+    /* check that user id won't overflow */
+    if (userid > 1000)
+        goto FAIL;
+
+    /* check that app id is within range */
+    if (appid < AID_APP || appid >= AID_USER)
+        goto FAIL;
+
+    return (unsigned)(appid + userid*AID_USER);
 
 FAIL:
     errno = ENOENT;
     return 0;
+}
+
+static void
+print_app_uid_name(uid_t  uid, char* buffer, int bufferlen)
+{
+    uid_t appid;
+    uid_t userid;
+
+    appid = uid % AID_USER;
+    userid = uid / AID_USER;
+
+    if (appid < AID_ISOLATED_START) {
+        snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
+    } else {
+        snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+    }
 }
 
 /* translate a uid into the corresponding app_<uid>
@@ -287,8 +315,7 @@ app_id_to_passwd(uid_t  uid, stubs_state_t*  state)
         return NULL;
     }
 
-    snprintf( state->app_name_buffer, sizeof state->app_name_buffer,
-              "app_%u", uid - AID_APP );
+    print_app_uid_name(uid, state->app_name_buffer, sizeof state->app_name_buffer);
 
     pw->pw_name  = state->app_name_buffer;
     pw->pw_dir   = "/data";
@@ -306,14 +333,15 @@ static struct group*
 app_id_to_group(gid_t  gid, stubs_state_t*  state)
 {
     struct group*  gr = &state->group;
+    int appid;
+    int userid;
 
     if (gid < AID_APP) {
         errno = ENOENT;
         return NULL;
     }
 
-    snprintf(state->group_name_buffer, sizeof state->group_name_buffer,
-             "app_%u", gid - AID_APP);
+    print_app_uid_name(gid, state->group_name_buffer, sizeof state->group_name_buffer);
 
     gr->gr_name   = state->group_name_buffer;
     gr->gr_gid    = gid;
