@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAC83////o\u003d",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-02-16T18:08:13Z",
+      "side": 1,
+      "message": "This would only work on some mobile networks.  The problem is larger than that, involving local usb links, wifi connections, other types of mobile networks, etc.",
+      "revId": "96af04c150fe726ede6ac4ddc50b455a3c56abe1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
