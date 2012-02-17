@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAADBX///+s\u003d",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1925,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-02-17T20:19:08Z",
+      "side": 1,
+      "message": "line too long.",
+      "revId": "c63ea9957f0de1dcac33b66a767700c9df63645c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
