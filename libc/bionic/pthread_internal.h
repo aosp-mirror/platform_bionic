@@ -41,12 +41,12 @@ typedef struct pthread_internal_t
     pthread_cond_t              join_cond;
     int                         join_count;
     void*                       return_value;
-    int                         intern;
+    int                         internal_flags;
     __pthread_cleanup_t*        cleanup_stack;
     void**                      tls;         /* thread-local storage area */
 } pthread_internal_t;
 
-extern void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+extern int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
 
 /* needed by posix-timers.c */
 
