@@ -113,6 +113,8 @@
     XX(__aeabi_l2d)          \
     XX(__aeabi_l2f)          \
     XX(__aeabi_lmul)         \
+    XX(__aeabi_llsl)         \
+    XX(__aeabi_llsr)         \
     XX(__aeabi_ui2d)         \
     XX(__aeabi_ui2f)         \
     XX(__aeabi_ul2d)         \
