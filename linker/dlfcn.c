@@ -42,7 +42,7 @@ static const char *dl_errors[] = {
 #define likely(expr)   __builtin_expect (expr, 1)
 #define unlikely(expr) __builtin_expect (expr, 0)
 
-static pthread_mutex_t dl_lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t dl_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 static void set_dlerror(int err)
 {
