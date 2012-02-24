@@ -187,7 +187,7 @@ android_gethostbyaddr_proxy(struct hostent* hp, const void *addr, socklen_t addr
 	if (addrStr == NULL) {
 		goto exit;
 	}
-	if (fprintf(proxy, "0 gethostbyaddr %s %d %d", addrStr, addrLen, addrFamily) < 0) {
+	if (fprintf(proxy, "gethostbyaddr %s %d %d", addrStr, addrLen, addrFamily) < 0) {
 		goto exit;
 	}
 
