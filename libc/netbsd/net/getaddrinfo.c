@@ -461,7 +461,7 @@ android_getaddrinfo_proxy(
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
-	if (fprintf(proxy, "0 getaddrinfo %s %s %d %d %d %d",
+	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
 		    hints == NULL ? -1 : hints->ai_flags,
