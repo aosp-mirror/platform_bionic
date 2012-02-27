@@ -130,6 +130,9 @@ static const char in6_loopback[] = {
 };
 #endif
 
+// This should be synchronized to ResponseCode.h
+static const int DnsProxyQueryResult = 222;
+
 static const struct afd {
 	int a_af;
 	int a_addrlen;
@@ -476,12 +479,15 @@ android_getaddrinfo_proxy(
 		goto exit;
 	}
 
-	int remote_rv;
-	if (fread(&remote_rv, sizeof(int), 1, proxy) != 1) {
+	char buf[5];
+	// read result code for gethostbyaddr
+	if (fread(buf, 1, sizeof(buf), proxy) != sizeof(buf)) {
 		goto exit;
 	}
 
-	if (remote_rv != 0) {
+	int result_code = (int)strtol(buf, NULL, 10);
+	// verify the code itself
+	if (result_code != DnsProxyQueryResult ) {
 		goto exit;
 	}
 
