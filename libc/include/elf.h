@@ -28,30 +28,7 @@
 #ifndef _ELF_H
 #define _ELF_H
 
-/* these definitions are missing from the BSD sources */
-enum {
-    AT_NULL = 0,
-    AT_IGNORE,
-    AT_EXECFD,
-    AT_PHDR,
-    AT_PHENT,
-    AT_PHNUM,
-    AT_PAGESZ,
-    AT_BASE,
-    AT_FLAGS,
-    AT_ENTRY,
-    AT_NOTELF,
-    AT_UID,
-    AT_EUID,
-    AT_GID,
-    AT_EGID,
-    AT_PLATFORM,
-    AT_HWCAP,
-    AT_CLKTCK,
-
-    AT_SECURE = 23
-};
-
+#include <linux/auxvec.h>
 #include <sys/exec_elf.h>
 
 #endif /* _ELF_H */
