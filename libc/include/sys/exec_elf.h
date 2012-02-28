@@ -130,4 +130,6 @@
 #define STT_LOPROC	13		/* reserved range for processor */
 #define STT_HIPROC	15		/*  specific symbol types */
 
+#define PT_GNU_RELRO    0x6474e552      /* Read-only post relocation */
+
 #endif /* _SYS_EXEC_ELF_H_ */

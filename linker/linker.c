@@ -906,10 +906,10 @@ load_segments(int fd, void *header, soinfo *si)
 {
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *)header;
     Elf32_Phdr *phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
-    unsigned char *base = (unsigned char *)si->base;
+    Elf32_Addr base = (Elf32_Addr) si->base;
     int cnt;
     unsigned len;
-    unsigned char *tmp;
+    Elf32_Addr tmp;
     unsigned char *pbase;
     unsigned char *extra_base;
     unsigned extra_len;
@@ -933,7 +933,7 @@ load_segments(int fd, void *header, soinfo *si)
             TRACE("[ %d - Trying to load segment from '%s' @ 0x%08x "
                   "(0x%08x). p_vaddr=0x%08x p_offset=0x%08x ]\n", pid, si->name,
                   (unsigned)tmp, len, phdr->p_vaddr, phdr->p_offset);
-            pbase = mmap(tmp, len, PFLAGS_TO_PROT(phdr->p_flags),
+            pbase = mmap((void *)tmp, len, PFLAGS_TO_PROT(phdr->p_flags),
                          MAP_PRIVATE | MAP_FIXED, fd,
                          phdr->p_offset & (~PAGE_MASK));
             if (pbase == MAP_FAILED) {
@@ -975,7 +975,7 @@ load_segments(int fd, void *header, soinfo *si)
              *                  |                     |
              *                 _+---------------------+  page boundary
              */
-            tmp = (unsigned char *)(((unsigned)pbase + len + PAGE_SIZE - 1) &
+            tmp = (Elf32_Addr)(((unsigned)pbase + len + PAGE_SIZE - 1) &
                                     (~PAGE_MASK));
             if (tmp < (base + phdr->p_vaddr + phdr->p_memsz)) {
                 extra_len = base + phdr->p_vaddr + phdr->p_memsz - tmp;
@@ -1030,6 +1030,17 @@ load_segments(int fd, void *header, soinfo *si)
             DEBUG_DUMP_PHDR(phdr, "PT_DYNAMIC", pid);
             /* this segment contains the dynamic linking information */
             si->dynamic = (unsigned *)(base + phdr->p_vaddr);
+        } else if (phdr->p_type == PT_GNU_RELRO) {
+            if ((phdr->p_vaddr >= si->size)
+                    || ((phdr->p_vaddr + phdr->p_memsz) >= si->size)
+                    || ((base + phdr->p_vaddr + phdr->p_memsz) < base)) {
+                DL_ERR("%d invalid GNU_RELRO in '%s' "
+                       "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
+                       phdr->p_vaddr, phdr->p_memsz);
+                goto fail;
+            }
+            si->gnu_relro_start = (Elf32_Addr) (base + phdr->p_vaddr);
+            si->gnu_relro_len = (unsigned) phdr->p_memsz;
         } else {
 #ifdef ANDROID_ARM_LINKER
             if (phdr->p_type == PT_ARM_EXIDX) {
@@ -1251,10 +1262,29 @@ unsigned unload_library(soinfo *si)
         TRACE("%5d unloading '%s'\n", pid, si->name);
         call_destructors(si);
 
+        /*
+         * Make sure that we undo the PT_GNU_RELRO protections we added
+         * in link_image. This is needed to undo the DT_NEEDED hack below.
+         */
+        if ((si->gnu_relro_start != 0) && (si->gnu_relro_len != 0)) {
+            Elf32_Addr start = (si->gnu_relro_start & ~PAGE_MASK);
+            unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
+            if (mprotect((void *) start, len, PROT_READ | PROT_WRITE) < 0)
+                DL_ERR("%5d %s: could not undo GNU_RELRO protections. "
+                       "Expect a crash soon. errno=%d (%s)",
+                       pid, si->name, errno, strerror(errno));
+
+        }
+
         for(d = si->dynamic; *d; d += 2) {
             if(d[0] == DT_NEEDED){
                 soinfo *lsi = (soinfo *)d[1];
+
+                // The next line will segfault if the we don't undo the
+                // PT_GNU_RELRO protections (see comments above and in
+                // link_image().
                 d[1] = 0;
+
                 if (validate_soinfo(lsi)) {
                     TRACE("%5d %s needs to unload %s\n", pid,
                           si->name, lsi->name);
@@ -1749,6 +1779,17 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 }
                 DEBUG_DUMP_PHDR(phdr, "PT_DYNAMIC", pid);
                 si->dynamic = (unsigned *) (si->base + phdr->p_vaddr);
+            } else if (phdr->p_type == PT_GNU_RELRO) {
+                if ((phdr->p_vaddr >= si->size)
+                        || ((phdr->p_vaddr + phdr->p_memsz) >= si->size)
+                        || ((si->base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
+                    DL_ERR("%d invalid GNU_RELRO in '%s' "
+                           "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
+                           phdr->p_vaddr, phdr->p_memsz);
+                    goto fail;
+                }
+                si->gnu_relro_start = (Elf32_Addr) (si->base + phdr->p_vaddr);
+                si->gnu_relro_len = (unsigned) phdr->p_memsz;
             }
         }
     }
@@ -1890,7 +1931,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
                of the DT_NEEDED entry itself, so that we can retrieve the
                soinfo directly later from the dynamic segment.  This is a hack,
                but it allows us to map from DT_NEEDED to soinfo efficiently
-               later on when we resolve relocations, trying to look up a symgol
+               later on when we resolve relocations, trying to look up a symbol
                with dlsym().
             */
             d[1] = (unsigned)lsi;
@@ -1937,6 +1978,16 @@ static int link_image(soinfo *si, unsigned wr_offset)
                  PROT_READ | PROT_EXEC);
     }
 #endif
+
+    if (si->gnu_relro_start != 0 && si->gnu_relro_len != 0) {
+        Elf32_Addr start = (si->gnu_relro_start & ~PAGE_MASK);
+        unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
+        if (mprotect((void *) start, len, PROT_READ) < 0) {
+            DL_ERR("%5d GNU_RELRO mprotect of library '%s' failed: %d (%s)\n",
+                   pid, si->name, errno, strerror(errno));
+            goto fail;
+        }
+    }
 
     /* If this is a SET?ID program, dup /dev/null to opened stdin,
        stdout and stderr to close a security hole described in:
@@ -2147,6 +2198,8 @@ sanitize:
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
     si->refcount = 1;
+    si->gnu_relro_start = 0;
+    si->gnu_relro_len = 0;
 
         /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
     if (ldpath_env)
@@ -2264,6 +2317,8 @@ unsigned __linker_init(unsigned **elfdata) {
     linker_so.flags |= FLAG_LINKER;
     linker_so.wrprotect_start = 0xffffffff;
     linker_so.wrprotect_end = 0;
+    linker_so.gnu_relro_start = 0;
+    linker_so.gnu_relro_len = 0;
 
     if (link_image(&linker_so, 0)) {
         // It would be nice to print an error message, but if the linker

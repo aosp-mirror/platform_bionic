@@ -12,7 +12,7 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_LDFLAGS := -shared
 
-LOCAL_CFLAGS += -fno-stack-protector
+LOCAL_CFLAGS += -fno-stack-protector -Wstrict-overflow=5
 
 # Set LINKER_DEBUG to either 1 or 0
 #
