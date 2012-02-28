@@ -131,6 +131,7 @@ __cxa_finalize(void *dso)
 	if (__atexit_invalid)
 		return;
 
+	_ATEXIT_LOCK();
 	call_depth++;
 
 	for (p = __atexit; p != NULL; p = p->next) {
@@ -149,6 +150,7 @@ __cxa_finalize(void *dso)
 				p->fns[n].fn_ptr.cxa_func = NULL;
 				mprotect(p, pgsize, PROT_READ);
 			}
+			_ATEXIT_UNLOCK();
 #if ANDROID
                         /* it looks like we should always call the function
                          * with an argument, even if dso is not NULL. Otherwise
@@ -162,6 +164,7 @@ __cxa_finalize(void *dso)
 			else
 				(*fn.fn_ptr.std_func)();
 #endif /* !ANDROID */
+			_ATEXIT_LOCK();
 		}
 	}
 
@@ -178,6 +181,7 @@ __cxa_finalize(void *dso)
 		}
 		__atexit = NULL;
 	}
+	_ATEXIT_UNLOCK();
 }
 
 /*
