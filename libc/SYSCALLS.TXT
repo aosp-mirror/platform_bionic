@@ -190,7 +190,7 @@ int           __timer_gettime:timer_gettime(timer_t, struct itimerspec*)        
 int           __timer_getoverrun:timer_getoverrun(timer_t)                                              260,262
 int           __timer_delete:timer_delete(timer_t)                                                      261,263
 int           utimes(const char*, const struct timeval tvp[2])                          269, 271
-int           utimensat(int, const char *, const struct timespec times[2], int)         348, 320, 320
+int           utimensat(int, const char *, const struct timespec times[2], int)         348, 320
 
 # signals
 int     sigaction(int, const struct sigaction *, struct sigaction *)  67
@@ -229,7 +229,7 @@ int           getpeername:socketcall:7(int, struct sockaddr *, socklen_t *)  -1,
 int           socketpair:socketcall:8(int, int, int, int*)    -1,102
 int           sendto:socketcall:11(int, const void *, size_t, int, const struct sockaddr *, socklen_t)  -1,102
 int           recvfrom:socketcall:12(int, void *, size_t, unsigned int, struct sockaddr *, socklen_t *)  -1,102
-int           shutdown:socketcall:13(int, int)  -1,102,-1
+int           shutdown:socketcall:13(int, int)  -1,102
 int           setsockopt:socketcall:14(int, int, int, const void *, socklen_t)  -1,102
 int           getsockopt:socketcall:15(int, int, int, void *, socklen_t *)    -1,102
 int           sendmsg:socketcall:16(int, const struct msghdr *, unsigned int)  -1,102

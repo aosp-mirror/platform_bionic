@@ -189,7 +189,6 @@ int              setsockopt (int, int, int, const void *, socklen_t);
 int              getsockopt (int, int, int, void *, socklen_t *);
 int              sendmsg (int, const struct msghdr *, unsigned int);
 int              recvmsg (int, struct msghdr *, unsigned int);
-int              __socketcall (int, unsigned long*);
 int              sched_setscheduler (pid_t pid, int policy, const struct sched_param *param);
 int              sched_getscheduler (pid_t pid);
 int              sched_yield (void);
