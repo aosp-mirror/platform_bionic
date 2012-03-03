@@ -34,17 +34,18 @@
 # standard.
 #
 __on_dlclose:
-        adr     r0, 0f
+        ldr     r0, .L1
+.LPIC0:
+        add     r0, pc
         ldr     r0, [r0]
         b       __cxa_finalize
+.L1:
+        .word   __dso_handle-(.LPIC0+4)
 
-0:
-        .long   __dso_handle
-
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
+        .section .init_array, "aw"
+        .globl __INIT_ARRAY__
 __INIT_ARRAY__:
-	.long -1
+        .long -1
 
         .section .fini_array, "aw"
         .globl __FINI_ARRAY__
