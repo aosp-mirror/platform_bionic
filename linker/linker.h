@@ -31,7 +31,8 @@
 
 #include <unistd.h>
 #include <sys/types.h>
-#include <linux/elf.h>
+#include <elf.h>
+#include <sys/exec_elf.h>
 
 #undef PAGE_MASK
 #undef PAGE_SIZE
@@ -143,6 +144,10 @@ struct soinfo
     struct link_map linkmap;
 
     int constructors_called;
+
+    Elf32_Addr gnu_relro_start;
+    unsigned gnu_relro_len;
+
 };
 
 
