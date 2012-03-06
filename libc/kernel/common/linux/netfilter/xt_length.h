@@ -7,14 +7,20 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _XT_LENGTH_H
 #define _XT_LENGTH_H
-
 struct xt_length_info {
  u_int16_t min, max;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  u_int8_t invert;
 };
-
 #endif

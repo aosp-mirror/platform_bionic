@@ -82,4 +82,3 @@ struct tegra_nvhdcp_packet {
 #define TEGRAIO_NVHDCP_RENEGOTIATE _IO('F', 0x75)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-

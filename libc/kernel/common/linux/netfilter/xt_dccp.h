@@ -7,28 +7,32 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _XT_DCCP_H_
 #define _XT_DCCP_H_
-
 #define XT_DCCP_SRC_PORTS 0x01
 #define XT_DCCP_DEST_PORTS 0x02
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_DCCP_TYPE 0x04
 #define XT_DCCP_OPTION 0x08
-
 #define XT_DCCP_VALID_FLAGS 0x0f
-
 struct xt_dccp_info {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  u_int16_t dpts[2];
  u_int16_t spts[2];
-
  u_int16_t flags;
  u_int16_t invflags;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  u_int16_t typemask;
  u_int8_t option;
 };
-
 #endif
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

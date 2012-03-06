@@ -7,23 +7,29 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _QNX4TYPES_H
 #define _QNX4TYPES_H
-
 typedef __le16 qnx4_nxtnt_t;
 typedef __u8 qnx4_ftype_t;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
  __le32 xtnt_blk;
  __le32 xtnt_size;
 } qnx4_xtnt_t;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __le16 qnx4_mode_t;
 typedef __le16 qnx4_muid_t;
 typedef __le16 qnx4_mgid_t;
 typedef __le32 qnx4_off_t;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __le16 qnx4_nlink_t;
-
 #endif

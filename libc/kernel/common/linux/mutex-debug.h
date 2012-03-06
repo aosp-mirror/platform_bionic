@@ -7,16 +7,20 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef __LINUX_MUTEX_DEBUG_H
 #define __LINUX_MUTEX_DEBUG_H
-
 #include <linux/linkage.h>
 #include <linux/lockdep.h>
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __DEBUG_MUTEX_INITIALIZER(lockname)   , .magic = &lockname
-
 #define mutex_init(mutex)  do {   static struct lock_class_key __key;     __mutex_init((mutex), #mutex, &__key);  } while (0)
-
 #endif

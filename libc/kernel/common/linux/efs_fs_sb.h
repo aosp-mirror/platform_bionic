@@ -7,55 +7,64 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef __EFS_FS_SB_H__
 #define __EFS_FS_SB_H__
-
 #define EFS_SUPER_MAGIC 0x414A53
-
 #define EFS_MAGIC 0x072959
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EFS_NEWMAGIC 0x07295a
-
 #define IS_EFS_MAGIC(x) ((x == EFS_MAGIC) || (x == EFS_NEWMAGIC))
-
 #define EFS_SUPER 1
 #define EFS_ROOTINODE 2
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct efs_super {
  __be32 fs_size;
  __be32 fs_firstcg;
  __be32 fs_cgfsize;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __be16 fs_cgisize;
  __be16 fs_sectors;
  __be16 fs_heads;
  __be16 fs_ncg;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __be16 fs_dirty;
  __be32 fs_time;
  __be32 fs_magic;
  char fs_fname[6];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char fs_fpack[6];
  __be32 fs_bmsize;
  __be32 fs_tfree;
  __be32 fs_tinode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __be32 fs_bmblock;
  __be32 fs_replsb;
  __be32 fs_lastialloc;
  char fs_spare[20];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __be32 fs_checksum;
 };
-
 struct efs_sb_info {
  __u32 fs_magic;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 fs_start;
  __u32 first_block;
  __u32 total_blocks;
  __u32 group_size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 data_free;
  __u32 inode_free;
  __u16 inode_blocks;
  __u16 total_groups;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 #endif
-

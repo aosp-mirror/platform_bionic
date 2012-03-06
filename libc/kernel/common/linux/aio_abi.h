@@ -7,58 +7,60 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef __LINUX__AIO_ABI_H
 #define __LINUX__AIO_ABI_H
-
 #include <asm/byteorder.h>
-
 typedef unsigned long aio_context_t;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
  IOCB_CMD_PREAD = 0,
  IOCB_CMD_PWRITE = 1,
  IOCB_CMD_FSYNC = 2,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  IOCB_CMD_FDSYNC = 3,
-
  IOCB_CMD_NOOP = 6,
 };
-
 struct io_event {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u64 data;
  __u64 obj;
  __s64 res;
  __s64 res2;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 #ifdef __LITTLE_ENDIAN
 #define PADDED(x,y) x, y
 #elif defined(__BIG_ENDIAN)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PADDED(x,y) y, x
 #else
 #error edit for your odd byteorder.
 #endif
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct iocb {
-
  __u64 aio_data;
  __u32 PADDED(aio_key, aio_reserved1);
-
  __u16 aio_lio_opcode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __s16 aio_reqprio;
  __u32 aio_fildes;
-
  __u64 aio_buf;
  __u64 aio_nbytes;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __s64 aio_offset;
-
  __u64 aio_reserved2;
  __u64 aio_reserved3;
 };
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #undef IFBIG
 #undef IFLITTLE
-
 #endif
-

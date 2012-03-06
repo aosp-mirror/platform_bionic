@@ -7,37 +7,45 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _LINUX_CTYPE_H
 #define _LINUX_CTYPE_H
-
 #define _U 0x01  
 #define _L 0x02  
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define _D 0x04  
 #define _C 0x08  
 #define _P 0x10  
 #define _S 0x20  
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define _X 0x40  
 #define _SP 0x80  
-
 #define __ismask(x) (_ctype[(int)(unsigned char)(x)])
-
 #define isalnum(c) ((__ismask(c)&(_U|_L|_D)) != 0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define isalpha(c) ((__ismask(c)&(_U|_L)) != 0)
 #define iscntrl(c) ((__ismask(c)&(_C)) != 0)
 #define isdigit(c) ((__ismask(c)&(_D)) != 0)
 #define isgraph(c) ((__ismask(c)&(_P|_U|_L|_D)) != 0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define islower(c) ((__ismask(c)&(_L)) != 0)
 #define isprint(c) ((__ismask(c)&(_P|_U|_L|_D|_SP)) != 0)
 #define ispunct(c) ((__ismask(c)&(_P)) != 0)
 #define isspace(c) ((__ismask(c)&(_S)) != 0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define isupper(c) ((__ismask(c)&(_U)) != 0)
 #define isxdigit(c) ((__ismask(c)&(_D|_X)) != 0)
-
 #define isascii(c) (((unsigned char)(c))<=0x7f)
 #define toascii(c) (((unsigned char)(c))&0x7f)
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define tolower(c) __tolower(c)
 #define toupper(c) __toupper(c)
 #endif

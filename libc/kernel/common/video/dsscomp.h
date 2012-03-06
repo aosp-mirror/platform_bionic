@@ -369,4 +369,3 @@ struct dsscomp_wait_data {
 #define DSSCIOC_SETUP_DISPC _IOW('O', 133, struct dsscomp_setup_dispc_data)
 #define DSSCIOC_SETUP_DISPLAY _IOW('O', 134, struct dsscomp_setup_display_data)
 #endif
-
