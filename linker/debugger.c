@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <signal.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <errno.h>
 
 #include "linker.h"
@@ -46,6 +47,8 @@ void notify_gdb_of_libraries();
         ret = (cond); \
     } while (ret < 0 && errno == EINTR)
 
+// see man(2) prctl, specifically the section about PR_GET_NAME
+#define MAX_TASK_NAME_LEN (16)
 
 static int socket_abstract_client(const char *name, int type)
 {
@@ -100,6 +103,7 @@ static int socket_abstract_client(const char *name, int type)
 static void logSignalSummary(int signum, const siginfo_t* info)
 {
     char buffer[128];
+    char threadname[MAX_TASK_NAME_LEN + 1]; // one more for termination
 
     char* signame;
     switch (signum) {
@@ -113,9 +117,16 @@ static void logSignalSummary(int signum, const siginfo_t* info)
         default:        signame = "???";        break;
     }
 
+    if (prctl(PR_GET_NAME, (unsigned long)threadname, 0, 0, 0) != 0) {
+        strcpy(threadname, "<name unknown>");
+    } else {
+        // short names are null terminated by prctl, but the manpage
+        // implies that 16 byte names are not.
+        threadname[MAX_TASK_NAME_LEN] = 0;
+    }
     format_buffer(buffer, sizeof(buffer),
-        "Fatal signal %d (%s) at 0x%08x (code=%d)",
-        signum, signame, info->si_addr, info->si_code);
+        "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
+        signum, signame, info->si_addr, info->si_code, gettid(), threadname);
 
     __libc_android_log_write(ANDROID_LOG_FATAL, "libc", buffer);
 }
