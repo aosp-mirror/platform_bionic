@@ -7,8 +7,14 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #include <asm/processor.h>
-
 #define XOR_TRY_TEMPLATES   do {   xor_speed(&xor_block_8regs);   xor_speed(&xor_block_8regs_p);   xor_speed(&xor_block_32regs);   xor_speed(&xor_block_32regs_p);   } while (0)

@@ -69,4 +69,3 @@ union nf_inet_addr {
  struct in6_addr in6;
 };
 #endif
-

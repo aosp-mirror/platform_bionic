@@ -64,4 +64,3 @@ struct ion_custom_data {
 #define ION_IOC_IMPORT _IOWR(ION_IOC_MAGIC, 5, int)
 #define ION_IOC_CUSTOM _IOWR(ION_IOC_MAGIC, 6, struct ion_custom_data)
 #endif
-
