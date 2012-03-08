@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAADtn////0\u003d",
+        "filename": "libc/bionic/fork.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-08T17:27:51Z",
+      "side": 1,
+      "message": "i\u0027d rather have another function in pthread_internal.h to do this, rather than have fork.c mess with pthread_internal_t directly. actually, isn\u0027t __bionic_atfork_run_child the ideal place for this?",
+      "revId": "927602e8761cc328ab7fe718cdcd288a41867a18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
