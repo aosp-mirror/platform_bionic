@@ -40,6 +40,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+extern int tgkill(int tgid, int tid, int sig);
+
 void notify_gdb_of_libraries();
 
 #define  RETRY_ON_EINTR(ret,cond) \
@@ -181,6 +183,24 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused)
 
     /* remove our net so we fault for real when we return */
     signal(n, SIG_DFL);
+
+    /*
+     * These signals are not re-thrown when we resume.  This means that
+     * crashing due to (say) SIGPIPE doesn't work the way you'd expect it
+     * to.  We work around this by throwing them manually.  We don't want
+     * to do this for *all* signals because it'll screw up the address for
+     * faults like SIGSEGV.
+     */
+    switch (n) {
+        case SIGABRT:
+        case SIGFPE:
+        case SIGPIPE:
+        case SIGSTKFLT:
+            (void) tgkill(getpid(), gettid(), n);
+            break;
+        default:    // SIGILL, SIGBUS, SIGSEGV
+            break;
+    }
 }
 
 void debugger_init()
