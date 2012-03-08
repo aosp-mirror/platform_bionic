@@ -7,203 +7,208 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef LINUX_MOD_DEVICETABLE_H
 #define LINUX_MOD_DEVICETABLE_H
-
 #define PCI_ANY_ID (~0)
-
 struct pci_device_id {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 vendor, device;
  __u32 subvendor, subdevice;
  __u32 class, class_mask;
  kernel_ulong_t driver_data;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 #define IEEE1394_MATCH_VENDOR_ID 0x0001
 #define IEEE1394_MATCH_MODEL_ID 0x0002
 #define IEEE1394_MATCH_SPECIFIER_ID 0x0004
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IEEE1394_MATCH_VERSION 0x0008
-
 struct ieee1394_device_id {
  __u32 match_flags;
  __u32 vendor_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 model_id;
  __u32 specifier_id;
  __u32 version;
  kernel_ulong_t driver_data
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __attribute__((aligned(sizeof(kernel_ulong_t))));
 };
-
 struct usb_device_id {
-
  __u16 match_flags;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 idVendor;
  __u16 idProduct;
  __u16 bcdDevice_lo;
  __u16 bcdDevice_hi;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 bDeviceClass;
  __u8 bDeviceSubClass;
  __u8 bDeviceProtocol;
-
  __u8 bInterfaceClass;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 bInterfaceSubClass;
  __u8 bInterfaceProtocol;
-
  kernel_ulong_t driver_info;
 };
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_DEVICE_ID_MATCH_VENDOR 0x0001
 #define USB_DEVICE_ID_MATCH_PRODUCT 0x0002
 #define USB_DEVICE_ID_MATCH_DEV_LO 0x0004
 #define USB_DEVICE_ID_MATCH_DEV_HI 0x0008
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_DEVICE_ID_MATCH_DEV_CLASS 0x0010
 #define USB_DEVICE_ID_MATCH_DEV_SUBCLASS 0x0020
 #define USB_DEVICE_ID_MATCH_DEV_PROTOCOL 0x0040
 #define USB_DEVICE_ID_MATCH_INT_CLASS 0x0080
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_DEVICE_ID_MATCH_INT_SUBCLASS 0x0100
 #define USB_DEVICE_ID_MATCH_INT_PROTOCOL 0x0200
-
 struct ccw_device_id {
  __u16 match_flags;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 cu_type;
  __u16 dev_type;
  __u8 cu_model;
  __u8 dev_model;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  kernel_ulong_t driver_info;
 };
-
 #define CCW_DEVICE_ID_MATCH_CU_TYPE 0x01
 #define CCW_DEVICE_ID_MATCH_CU_MODEL 0x02
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CCW_DEVICE_ID_MATCH_DEVICE_TYPE 0x04
 #define CCW_DEVICE_ID_MATCH_DEVICE_MODEL 0x08
-
 #define PNP_ID_LEN 8
 #define PNP_MAX_DEVICES 8
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct pnp_device_id {
  __u8 id[PNP_ID_LEN];
  kernel_ulong_t driver_data;
 };
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct pnp_card_device_id {
  __u8 id[PNP_ID_LEN];
  kernel_ulong_t driver_data;
  struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 id[PNP_ID_LEN];
  } devs[PNP_MAX_DEVICES];
 };
-
 #define SERIO_ANY 0xff
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct serio_device_id {
  __u8 type;
  __u8 extra;
  __u8 id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 proto;
 };
-
 struct of_device_id
 {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char name[32];
  char type[32];
  char compatible[128];
  kernel_ulong_t data;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 struct vio_device_id {
  char type[32];
  char compat[32];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 struct pcmcia_device_id {
  __u16 match_flags;
-
  __u16 manf_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 card_id;
-
  __u8 func_id;
-
  __u8 function;
-
  __u8 device_no;
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 prod_id_hash[4]
  __attribute__((aligned(sizeof(__u32))));
-
  kernel_ulong_t prod_id[4]
  __attribute__((aligned(sizeof(kernel_ulong_t))));
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  kernel_ulong_t driver_info;
  kernel_ulong_t cisfile;
 };
-
 #define PCMCIA_DEV_ID_MATCH_MANF_ID 0x0001
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PCMCIA_DEV_ID_MATCH_CARD_ID 0x0002
 #define PCMCIA_DEV_ID_MATCH_FUNC_ID 0x0004
 #define PCMCIA_DEV_ID_MATCH_FUNCTION 0x0008
 #define PCMCIA_DEV_ID_MATCH_PROD_ID1 0x0010
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PCMCIA_DEV_ID_MATCH_PROD_ID2 0x0020
 #define PCMCIA_DEV_ID_MATCH_PROD_ID3 0x0040
 #define PCMCIA_DEV_ID_MATCH_PROD_ID4 0x0080
 #define PCMCIA_DEV_ID_MATCH_DEVICE_NO 0x0100
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PCMCIA_DEV_ID_MATCH_FAKE_CIS 0x0200
 #define PCMCIA_DEV_ID_MATCH_ANONYMOUS 0x0400
-
 struct i2c_device_id {
  __u16 id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-
 #define INPUT_DEVICE_ID_EV_MAX 0x1f
 #define INPUT_DEVICE_ID_KEY_MAX 0x1ff
 #define INPUT_DEVICE_ID_REL_MAX 0x0f
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INPUT_DEVICE_ID_ABS_MAX 0x3f
 #define INPUT_DEVICE_ID_MSC_MAX 0x07
 #define INPUT_DEVICE_ID_LED_MAX 0x0f
 #define INPUT_DEVICE_ID_SND_MAX 0x07
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INPUT_DEVICE_ID_FF_MAX 0x7f
 #define INPUT_DEVICE_ID_SW_MAX 0x0f
-
 #define INPUT_DEVICE_ID_MATCH_BUS 1
 #define INPUT_DEVICE_ID_MATCH_VENDOR 2
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INPUT_DEVICE_ID_MATCH_PRODUCT 4
 #define INPUT_DEVICE_ID_MATCH_VERSION 8
-
 #define INPUT_DEVICE_ID_MATCH_EVBIT 0x0010
 #define INPUT_DEVICE_ID_MATCH_KEYBIT 0x0020
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INPUT_DEVICE_ID_MATCH_RELBIT 0x0040
 #define INPUT_DEVICE_ID_MATCH_ABSBIT 0x0080
 #define INPUT_DEVICE_ID_MATCH_MSCIT 0x0100
 #define INPUT_DEVICE_ID_MATCH_LEDBIT 0x0200
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INPUT_DEVICE_ID_MATCH_SNDBIT 0x0400
 #define INPUT_DEVICE_ID_MATCH_FFBIT 0x0800
 #define INPUT_DEVICE_ID_MATCH_SWBIT 0x1000
-
 struct input_device_id {
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  kernel_ulong_t flags;
-
  __u16 bustype;
  __u16 vendor;
  __u16 product;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 version;
-
  kernel_ulong_t evbit[INPUT_DEVICE_ID_EV_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t keybit[INPUT_DEVICE_ID_KEY_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t relbit[INPUT_DEVICE_ID_REL_MAX / BITS_PER_LONG + 1];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  kernel_ulong_t absbit[INPUT_DEVICE_ID_ABS_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t mscbit[INPUT_DEVICE_ID_MSC_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t ledbit[INPUT_DEVICE_ID_LED_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t sndbit[INPUT_DEVICE_ID_SND_MAX / BITS_PER_LONG + 1];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  kernel_ulong_t ffbit[INPUT_DEVICE_ID_FF_MAX / BITS_PER_LONG + 1];
  kernel_ulong_t swbit[INPUT_DEVICE_ID_SW_MAX / BITS_PER_LONG + 1];
-
  kernel_ulong_t driver_info;
 };
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

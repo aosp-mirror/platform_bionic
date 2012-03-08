@@ -7,33 +7,40 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef __sizes_h
 #define __sizes_h 1
-
 #define SZ_1K 0x00000400
 #define SZ_4K 0x00001000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SZ_8K 0x00002000
 #define SZ_16K 0x00004000
 #define SZ_64K 0x00010000
 #define SZ_128K 0x00020000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SZ_256K 0x00040000
 #define SZ_512K 0x00080000
-
 #define SZ_1M 0x00100000
 #define SZ_2M 0x00200000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SZ_4M 0x00400000
 #define SZ_8M 0x00800000
 #define SZ_16M 0x01000000
 #define SZ_32M 0x02000000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SZ_64M 0x04000000
 #define SZ_128M 0x08000000
 #define SZ_256M 0x10000000
 #define SZ_512M 0x20000000
-
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SZ_1G 0x40000000
 #define SZ_2G 0x80000000
-
 #endif
-

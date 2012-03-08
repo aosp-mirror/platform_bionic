@@ -7,15 +7,20 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _LINUX_IRQRETURN_H
 #define _LINUX_IRQRETURN_H
-
 typedef int irqreturn_t;
-
 #define IRQ_NONE (0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IRQ_HANDLED (1)
 #define IRQ_RETVAL(x) ((x) != 0)
-
 #endif

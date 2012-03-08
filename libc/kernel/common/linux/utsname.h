@@ -7,38 +7,45 @@
  ***   structures, and macros generated from the original header, and thus,
  ***   contains no copyrightable information.
  ***
+ ***   To edit the content of this header, modify the corresponding
+ ***   source file (e.g. under external/kernel-headers/original/) then
+ ***   run bionic/libc/kernel/tools/update_all.py
+ ***
+ ***   Any manual change here will be lost the next time this script will
+ ***   be run. You've been warned!
+ ***
  ****************************************************************************
  ****************************************************************************/
 #ifndef _LINUX_UTSNAME_H
 #define _LINUX_UTSNAME_H
-
 #define __OLD_UTS_LEN 8
-
 struct oldold_utsname {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char sysname[9];
  char nodename[9];
  char release[9];
  char version[9];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char machine[9];
 };
-
 #define __NEW_UTS_LEN 64
-
 struct old_utsname {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char sysname[65];
  char nodename[65];
  char release[65];
  char version[65];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char machine[65];
 };
-
 struct new_utsname {
  char sysname[65];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char nodename[65];
  char release[65];
  char version[65];
  char machine[65];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char domainname[65];
 };
-
 #endif
