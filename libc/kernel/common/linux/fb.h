@@ -394,3 +394,4 @@ struct fb_cursor {
  struct fb_image image;
 };
 #endif
+
