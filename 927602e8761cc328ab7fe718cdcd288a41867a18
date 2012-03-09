@@ -16,6 +16,24 @@
       "revId": "927602e8761cc328ab7fe718cdcd288a41867a18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAADxH///+0\u003d",
+        "filename": "libc/bionic/fork.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2012-03-09T19:21:00Z",
+      "side": 1,
+      "message": "I don\u0027t think that __bionic_atfork_run_child() is a great place for this. That function really is about doing the rundown list.\n\nShould the kernel_id be set before the rundowns?\n\npthread_internal.h (as an inline) seems like a reasonable place. The only other place would be pthread.c... but then there would be overhead for an additional function call.",
+      "parentUuid": "AAADtn////0\u003d",
+      "revId": "927602e8761cc328ab7fe718cdcd288a41867a18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
