@@ -201,7 +201,7 @@ android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, 
 	}
 
 	result = 0;
-	char msg_buf[5];
+	char msg_buf[4];
 	// read result code for gethostbyaddr
 	if (fread(msg_buf, 1, sizeof(msg_buf), proxy) != sizeof(msg_buf)) {
 		goto exit;

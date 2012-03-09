@@ -479,7 +479,7 @@ android_getaddrinfo_proxy(
 		goto exit;
 	}
 
-	char buf[5];
+	char buf[4];
 	// read result code for gethostbyaddr
 	if (fread(buf, 1, sizeof(buf), proxy) != sizeof(buf)) {
 		goto exit;
