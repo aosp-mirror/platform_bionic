@@ -52,6 +52,24 @@
       "revId": "927602e8761cc328ab7fe718cdcd288a41867a18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAADxn///94\u003d",
+        "filename": "libc/bionic/fork.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2012-03-09T20:47:21Z",
+      "side": 1,
+      "message": "I\u0027d recommend pthread.c with a prototype for it in pthread_internal.h then.",
+      "parentUuid": "AAADx3////w\u003d",
+      "revId": "927602e8761cc328ab7fe718cdcd288a41867a18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
