@@ -2011,3 +2011,14 @@ pid_t __pthread_gettid(pthread_t thid)
     pthread_internal_t* thread = (pthread_internal_t*)thid;
     return thread->kernel_id;
 }
+
+int __pthread_settid(pthread_t thid, pid_t tid)
+{
+    if (thid == 0)
+        return EINVAL;
+
+    pthread_internal_t* thread = (pthread_internal_t*)thid;
+    thread->kernel_id = tid;
+
+    return 0;
+}

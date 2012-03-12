@@ -27,6 +27,7 @@
  */
 #include <unistd.h>
 #include "pthread_internal.h"
+#include "bionic_pthread.h"
 #include "cpuacct.h"
 
 extern int  __fork(void);
@@ -48,6 +49,9 @@ int  fork(void)
         __timer_table_start_stop(0);
         __bionic_atfork_run_parent();
     } else {
+        /* Adjusting the kernel id after a fork */
+        (void)__pthread_settid(pthread_self(), gettid());
+
         /*
          * Newly created process must update cpu accounting.
          * Call cpuacct_add passing in our uid, which will take

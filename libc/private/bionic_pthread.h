@@ -35,6 +35,7 @@ __BEGIN_DECLS
 
 /* Internal, not an NDK API */
 extern pid_t __pthread_gettid(pthread_t thid);
+extern int __pthread_settid(pthread_t thid, pid_t tid);
 
 __END_DECLS
 
