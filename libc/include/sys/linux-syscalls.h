@@ -146,6 +146,7 @@
 #define __NR_syslog                       (__NR_SYSCALL_BASE + 103)
 #define __NR_sysinfo                      (__NR_SYSCALL_BASE + 116)
 #define __NR_personality                  (__NR_SYSCALL_BASE + 136)
+#define __NR_perf_event_open              (__NR_SYSCALL_BASE + 364)
 #define __NR_futex                        (__NR_SYSCALL_BASE + 240)
 #define __NR_poll                         (__NR_SYSCALL_BASE + 168)
 
