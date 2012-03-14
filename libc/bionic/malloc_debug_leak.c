@@ -25,26 +25,26 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <dlfcn.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <pthread.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdarg.h>
-#include <fcntl.h>
 #include <unwind.h>
-#include <dlfcn.h>
 
-#include <sys/socket.h>
-#include <sys/un.h>
+#include <arpa/inet.h>
 #include <sys/select.h>
-#include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/system_properties.h>
+#include <sys/types.h>
+#include <sys/un.h>
 
 #include "dlmalloc.h"
 #include "logd.h"
@@ -372,7 +372,11 @@ static int chk_mem_check(void*       mem,
 
 void* chk_malloc(size_t bytes)
 {
-    char* buffer = (char*)dlmalloc(bytes + CHK_OVERHEAD_SIZE);
+    size_t size = bytes + CHK_OVERHEAD_SIZE;
+    if (size < bytes) { // Overflow.
+        return NULL;
+    }
+    uint8_t* buffer = (uint8_t*) dlmalloc(size);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes + CHK_OVERHEAD_SIZE);
         size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
@@ -505,7 +509,12 @@ void* leak_malloc(size_t bytes)
     // 1. allocate enough memory and include our header
     // 2. set the base pointer to be right after our header
 
-    void* base = dlmalloc(bytes + sizeof(AllocationEntry));
+    size_t size = bytes + sizeof(AllocationEntry);
+    if (size < bytes) { // Overflow.
+        return NULL;
+    }
+
+    void* base = dlmalloc(size);
     if (base != NULL) {
         pthread_mutex_lock(&gAllocationsMutex);
 
@@ -615,6 +624,10 @@ void* leak_memalign(size_t alignment, size_t bytes)
     // we will align by at least MALLOC_ALIGNMENT bytes
     // and at most alignment-MALLOC_ALIGNMENT bytes
     size_t size = (alignment-MALLOC_ALIGNMENT) + bytes;
+    if (size < bytes) { // Overflow.
+        return NULL;
+    }
+
     void* base = leak_malloc(size);
     if (base != NULL) {
         intptr_t ptr = (intptr_t)base;
