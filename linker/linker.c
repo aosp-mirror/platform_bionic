@@ -1032,7 +1032,7 @@ load_segments(int fd, void *header, soinfo *si)
             si->dynamic = (unsigned *)(base + phdr->p_vaddr);
         } else if (phdr->p_type == PT_GNU_RELRO) {
             if ((phdr->p_vaddr >= si->size)
-                    || ((phdr->p_vaddr + phdr->p_memsz) >= si->size)
+                    || ((phdr->p_vaddr + phdr->p_memsz) > si->size)
                     || ((base + phdr->p_vaddr + phdr->p_memsz) < base)) {
                 DL_ERR("%d invalid GNU_RELRO in '%s' "
                        "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
@@ -1781,7 +1781,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 si->dynamic = (unsigned *) (si->base + phdr->p_vaddr);
             } else if (phdr->p_type == PT_GNU_RELRO) {
                 if ((phdr->p_vaddr >= si->size)
-                        || ((phdr->p_vaddr + phdr->p_memsz) >= si->size)
+                        || ((phdr->p_vaddr + phdr->p_memsz) > si->size)
                         || ((si->base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
                     DL_ERR("%d invalid GNU_RELRO in '%s' "
                            "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
