@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEC3////8\u003d",
+        "filename": "libc/bionic/pthread-atfork.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-16T23:33:27Z",
+      "side": 1,
+      "message": "this is definitely worth a comment, since we got it wrong twice so far.",
+      "revId": "373d411527d5468ddf201eb8b8a9b34f33045be0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEC3////4\u003d",
+        "filename": "libc/bionic/pthread-atfork.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-16T23:33:27Z",
+      "side": 1,
+      "message": "unnecessary whitespace.",
+      "revId": "373d411527d5468ddf201eb8b8a9b34f33045be0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
