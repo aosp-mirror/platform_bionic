@@ -815,16 +815,15 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
     return (unsigned)req_base;
 }
 
-/* alloc_mem_region
+/* reserve_mem_region
  *
  *     This function reserves a chunk of memory to be used for mapping in
- *     the shared library. We reserve the entire memory region here, and
+ *     a prelinked shared library. We reserve the entire memory region here, and
  *     then the rest of the linker will relocate the individual loadable
  *     segments into the correct locations within this memory range.
  *
  * Args:
- *     si->base: The requested base of the allocation. If 0, a sane one will be
- *               chosen in the range LIBBASE <= base < LIBLAST.
+ *     si->base: The requested base of the allocation.
  *     si->size: The size of the allocation.
  *
  * Returns:
@@ -834,7 +833,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
 
 static int reserve_mem_region(soinfo *si)
 {
-    void *base = mmap((void *)si->base, si->size, PROT_READ | PROT_EXEC,
+    void *base = mmap((void *)si->base, si->size, PROT_NONE,
                       MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (base == MAP_FAILED) {
         DL_ERR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
@@ -852,8 +851,7 @@ static int reserve_mem_region(soinfo *si)
     return 0;
 }
 
-static int
-alloc_mem_region(soinfo *si)
+static int alloc_mem_region(soinfo *si)
 {
     if (si->base) {
         /* Attempt to mmap a prelinked library. */
@@ -864,7 +862,7 @@ alloc_mem_region(soinfo *si)
        allocator.
     */
 
-    void *base = mmap(NULL, si->size, PROT_READ | PROT_EXEC,
+    void *base = mmap(NULL, si->size, PROT_NONE,
                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (base == MAP_FAILED) {
         DL_ERR("%5d mmap of library '%s' failed: %d (%s)\n",
