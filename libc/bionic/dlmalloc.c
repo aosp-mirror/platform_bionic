@@ -3332,7 +3332,7 @@ static void* mmap_alloc(mstate m, size_t nb) {
       chunk_plus_offset(p, psize)->head = FENCEPOST_HEAD;
       chunk_plus_offset(p, psize+SIZE_T_SIZE)->head = 0;
 
-      if (mm < m->least_addr)
+      if (m->least_addr == 0 || mm < m->least_addr)
         m->least_addr = mm;
       if ((m->footprint += mmsize) > m->max_footprint)
         m->max_footprint = m->footprint;
@@ -3678,7 +3678,9 @@ static void* sys_alloc(mstate m, size_t nb) {
       m->max_footprint = m->footprint;
 
     if (!is_initialized(m)) { /* first-time initialization */
-      m->seg.base = m->least_addr = tbase;
+      if (m->least_addr == 0 || tbase < m->least_addr)
+        m->least_addr = tbase;
+      m->seg.base = tbase;
       m->seg.size = tsize;
       m->seg.sflags = mmap_flag;
       m->magic = mparams.magic;
