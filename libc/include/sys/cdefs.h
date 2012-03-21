@@ -306,9 +306,11 @@
 #if __GNUC_PREREQ__(2, 96)
 #define __noreturn    __attribute__((__noreturn__))
 #define __mallocfunc  __attribute__((malloc))
+#define __purefunc    __attribute__((pure))
 #else
 #define __noreturn
 #define __mallocfunc
+#define __purefunc
 #endif
 
 /*
