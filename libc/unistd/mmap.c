@@ -32,12 +32,19 @@
 extern void*  __mmap2(void*, size_t, int, int, int, size_t);
 
 #define  MMAP2_SHIFT  12
-void*   mmap( void*  addr,  size_t  size, int  prot, int  flags, int  fd,  long  offset )
+void* mmap(void *addr, size_t size, int prot, int flags, int fd, long offset)
 {
-    if ( offset & ((1UL << MMAP2_SHIFT)-1) ) {
-    errno = EINVAL;
-    return MAP_FAILED;
-  }
+    void *ret;
 
-    return __mmap2(addr, size, prot, flags, fd, (size_t)offset >> MMAP2_SHIFT);
+    if (offset & ((1UL << MMAP2_SHIFT)-1)) {
+        errno = EINVAL;
+        return MAP_FAILED;
+    }
+
+    ret = __mmap2(addr, size, prot, flags, fd, (size_t)offset >> MMAP2_SHIFT);
+
+    if (ret && (flags & (MAP_PRIVATE | MAP_ANONYMOUS)))
+	    madvise(ret, size, MADV_MERGEABLE);
+
+    return ret;
 }
