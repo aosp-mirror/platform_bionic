@@ -145,7 +145,7 @@ _pthread_internal_remove( pthread_internal_t*  thread )
     pthread_mutex_unlock(&gThreadListLock);
 }
 
-static void
+__LIBC_ABI_PRIVATE__ void
 _pthread_internal_add( pthread_internal_t*  thread )
 {
     pthread_mutex_lock(&gThreadListLock);
@@ -157,7 +157,7 @@ _pthread_internal_add( pthread_internal_t*  thread )
     pthread_mutex_unlock(&gThreadListLock);
 }
 
-pthread_internal_t*
+__LIBC_ABI_PRIVATE__ pthread_internal_t*
 __get_thread(void)
 {
     void**  tls = (void**)__get_tls();
@@ -217,6 +217,7 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
     pthread_exit( (void*)func(arg) );
 }
 
+__LIBC_ABI_PRIVATE__
 void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
 {
     if (attr == NULL) {
@@ -238,8 +239,6 @@ void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t *
     thread->join_count = 0;
 
     thread->cleanup_stack = NULL;
-
-    _pthread_internal_add(thread);
 }
 
 
@@ -370,6 +369,8 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     }
 
     _init_thread(thread, tid, (pthread_attr_t*)attr, stack);
+
+    _pthread_internal_add(thread);
 
     if (!madestack)
         thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;

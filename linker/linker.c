@@ -2054,10 +2054,6 @@ static void parse_preloads(const char *path, char *delim)
     }
 }
 
-#define ANDROID_TLS_SLOTS  BIONIC_TLS_SLOTS
-
-static void * __tls_area[ANDROID_TLS_SLOTS];
-
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -2076,18 +2072,6 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
     const char *ldpath_env = NULL;
     const char *ldpreload_env = NULL;
 
-    /* Setup a temporary TLS area that is used to get a working
-     * errno for system calls.
-     */
-    __set_tls(__tls_area);
-
-    pid = getpid();
-
-#if TIMING
-    struct timeval t0, t1;
-    gettimeofday(&t0, 0);
-#endif
-
     /* NOTE: we store the elfdata pointer on a special location
      *       of the temporary TLS area in order to pass it to
      *       the C Library's runtime initializer.
@@ -2096,7 +2080,14 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata)
      *       to point to a different location to ensure that no other
      *       shared library constructor can access it.
      */
-    __tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
+    __libc_init_tls(elfdata);
+
+    pid = getpid();
+
+#if TIMING
+    struct timeval t0, t1;
+    gettimeofday(&t0, 0);
+#endif
 
     /* Initialize environment functions, and get to the ELF aux vectors table */
     vecs = linker_env_init(vecs);

@@ -52,12 +52,19 @@ unsigned int __page_shift = PAGE_SHIFT;
 
 int __system_properties_init(void);
 
-void __libc_init_common(uintptr_t *elfdata)
+/* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
+ * in memory. Beware: all writes to libc globals from this function will
+ * apply to linker-private copies and will not be visible from libc later on.
+ *
+ * Note: this function creates a pthread_internal_t for the initial thread and
+ * stores the pointer in TLS, but does not add it to pthread's gThreadList. This
+ * has to be done later from libc itself (see __libc_init_common).
+ *
+ * This function also stores elfdata argument in a specific TLS slot to be later
+ * picked up by the libc constructor.
+ */
+void __libc_init_tls(unsigned** elfdata)
 {
-    int     argc = *elfdata;
-    char**  argv = (char**)(elfdata + 1);
-    char**  envp = argv + argc + 1;
-
     pthread_attr_t             thread_attr;
     static pthread_internal_t  thread;
     static void*               tls_area[BIONIC_TLS_SLOTS];
@@ -72,7 +79,19 @@ void __libc_init_common(uintptr_t *elfdata)
     _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom);
     __init_tls(tls_area, &thread);
 
-    /* clear errno - requires TLS area */
+    tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
+}
+
+void __libc_init_common(uintptr_t *elfdata)
+{
+    int     argc = *elfdata;
+    char**  argv = (char**)(elfdata + 1);
+    char**  envp = argv + argc + 1;
+
+    /* get the initial thread from TLS and add it to gThreadList */
+    _pthread_internal_add(__get_thread());
+
+    /* clear errno */
     errno = 0;
 
     /* set program name */

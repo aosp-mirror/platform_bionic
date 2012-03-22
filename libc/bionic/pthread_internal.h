@@ -47,6 +47,8 @@ typedef struct pthread_internal_t
 } pthread_internal_t;
 
 extern void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+void _pthread_internal_add( pthread_internal_t*  thread );
+pthread_internal_t* __get_thread(void);
 
 /* needed by posix-timers.c */
 
