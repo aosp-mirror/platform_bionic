@@ -93,35 +93,20 @@ typedef unsigned long sigset_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <asm-generic/signal.h>
 #ifndef __ASSEMBLY__
-#ifdef __i386__
 struct sigaction {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __sighandler_t _sa_handler;
  void (*_sa_sigaction)(int, struct siginfo *, void *);
  } _u;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  sigset_t sa_mask;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long sa_flags;
  void (*sa_restorer)(void);
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define sa_handler _u._sa_handler
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define sa_sigaction _u._sa_sigaction
-#else
-struct sigaction {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __sighandler_t sa_handler;
- unsigned long sa_flags;
- __sigrestore_t sa_restorer;
- sigset_t sa_mask;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-struct k_sigaction {
- struct sigaction sa;
-};
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
 typedef struct sigaltstack {
  void __user *ss_sp;
  int ss_flags;

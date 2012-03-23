@@ -17,26 +17,27 @@ they can be also included before or after any Bionic C library header.
 
 the generation process works as follows:
 
-  * 'bionic/kernel/original/'
+  * 'external/kernel-headers/original/'
     contains a set of kernel headers as normally found in the 'include'
     directory of a normal Linux kernel source tree. note that this should
     only contain the files that are really needed by Android (use
     'find_headers.py' to find these automatically).
 
-  * 'bionic/kernel/common'
+  * 'bionic/libc/kernel/common'
     contains the non-arch-specific clean headers and directories
     (e.g. linux, asm-generic and mtd)
 
-  *'bionic/kernel/arch-arm/'
+  * 'bionic/libc/kernel/arch-arm/'
     contains the ARM-specific directory tree of clean headers.
 
-  * 'bionic/kernel/arch-arm/asm'
+  * 'bionic/libc/kernel/arch-arm/asm'
     contains the real ARM-specific headers
 
-  * 'bionic/kernel/arch-x86'
+  * 'bionic/libc/kernel/arch-x86'
+    'bionic/libc/kernel/arch-x86/asm'
     similarly contains all headers and symlinks to be used on x86
 
-  * 'bionic/kernel/tools' contains various Python and shell scripts used
+  * 'bionic/libc/kernel/tools' contains various Python and shell scripts used
     to manage and re-generate the headers
 
 the tools you can use are:

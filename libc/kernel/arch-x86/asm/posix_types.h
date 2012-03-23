@@ -16,9 +16,4 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifdef __i386__
 #include "posix_types_32.h"
-#else
-#include "posix_types_64.h"
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif

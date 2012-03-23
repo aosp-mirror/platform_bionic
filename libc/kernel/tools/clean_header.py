@@ -62,8 +62,11 @@ def  cleanupFile( path, original_path):
         sys.stderr.write( "error: can't parse '%s'" % path )
         sys.exit(1)
 
+    macros = kernel_known_macros.copy()
+    if arch and arch in kernel_default_arch_macros:
+        macros.update(kernel_default_arch_macros[arch])
 
-    blocks.optimizeMacros( kernel_known_macros )
+    blocks.optimizeMacros( macros )
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs( statics )
     blocks.replaceTokens( kernel_token_replacements )
