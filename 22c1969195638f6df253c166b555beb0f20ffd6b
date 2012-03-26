@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAETn////Y\u003d",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2012-03-26T11:53:21Z",
+      "side": 1,
+      "message": "Please rebase.  See https://android-review.googlesource.com/#/c/31950/",
+      "revId": "22c1969195638f6df253c166b555beb0f20ffd6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAETn////U\u003d",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2012-03-26T11:53:21Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "22c1969195638f6df253c166b555beb0f20ffd6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
