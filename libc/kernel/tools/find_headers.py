@@ -88,20 +88,20 @@ for archdir in os.listdir(kernel_root+"/arch"):
         archs.append(archdir)
 
 # if we're using the 'kernel_headers' directory, there is only asm/
-# and no other asm-<arch> directories (arm is assumed, which sucks)
+# and no other asm-<arch> directories
 #
 in_kernel_headers = False
 if len(archs) == 0:
     # this can happen when we're using the 'kernel_headers' directory
     if os.path.isdir(kernel_root+"/asm"):
         in_kernel_headers = True
-        archs = [ "arm" ]
+        archs = [ "arm", "mips"]
 
 # if the user has specified some architectures with -a <archs> ensure that
 # all those he wants are available from the kernel include tree
 if wanted_archs != None:
-    if in_kernel_headers and wanted_archs != [ "arm" ]:
-        sys.stderr.write( "error: when parsing kernel_headers, 'arm' architecture only is supported at the moment\n" )
+    if in_kernel_headers and wanted_archs != [ "arm", "mips" ]:
+        sys.stderr.write( "error: when parsing kernel_headers, only 'arm' and 'mips' architectures are supported at the moment\n" )
         sys.exit(1)
     missing = []
     for arch in wanted_archs:
