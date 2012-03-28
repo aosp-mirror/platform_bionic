@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEZn////c\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-28T18:00:09Z",
+      "side": 1,
+      "message": "static consts instead of #defines, and avoid the locals below?\n\nclearer to call GUARD_BIT GUARD_READY?",
+      "revId": "36c6c62a22ebdfc1eb09cb4b29fce5ca7c61cce3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
