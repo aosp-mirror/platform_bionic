@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEbn////I\u003d",
+        "filename": "libc/arch-x86/bionic/crtbegin_dynamic.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-29T03:51:18Z",
+      "side": 1,
+      "message": "pushing",
+      "revId": "cb08204053a285951b1907ef14a832f16a1a4679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEbn////E\u003d",
+        "filename": "libc/arch-x86/bionic/crtbegin_static.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-03-29T03:51:18Z",
+      "side": 1,
+      "message": "pushing",
+      "revId": "cb08204053a285951b1907ef14a832f16a1a4679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
