@@ -51,6 +51,8 @@
 #
 _start:	
         mov     %esp, %eax
+        # before push arguments, align the stack to a 16 byte boundary
+        andl    $~15, %esp
         mov     $1f, %edx
         pushl   %edx
         mov     $0f, %edx
