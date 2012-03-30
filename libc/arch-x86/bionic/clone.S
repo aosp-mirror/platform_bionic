@@ -13,16 +13,21 @@ __pthread_clone:
         pushl   %ebx
         pushl   %ecx
         movl    16(%esp), %ecx
-        movl    20(%esp), %ebx
+
+        # save tls
+        movl    %ecx, %ebx
+        # 16-byte alignment on child stack
+        andl    $~15, %ecx
 
         # insert arguments onto the child stack
         movl    12(%esp), %eax
-        movl    %eax, -12(%ecx)
+        movl    %eax, -16(%ecx)
         movl    24(%esp), %eax
-        movl    %eax, -8(%ecx)
-        movl    %ecx, -4(%ecx)
+        movl    %eax, -12(%ecx)
+        movl    %ebx, -8(%ecx)
 
         subl    $16, %ecx
+        movl    20(%esp), %ebx
         movl    $__NR_clone, %eax
         int     $0x80
         test    %eax, %eax
@@ -40,7 +45,7 @@ __pthread_clone:
         # we're in the child thread now, call __thread_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        jmp     __thread_entry
+        call    __thread_entry
         hlt
 
 2:
