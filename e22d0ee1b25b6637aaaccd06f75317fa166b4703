@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEen////8\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-03-31T17:28:22Z",
+      "side": 1,
+      "message": "I\u0027d prefer something a bit more specific here, like:\n\nlibstdc++: Fix x86 thread-safe one-time-construction implementation.",
+      "revId": "e22d0ee1b25b6637aaaccd06f75317fa166b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEen////4\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-03-31T17:28:22Z",
+      "side": 1,
+      "message": "I would appreciate if you could replace this text with:\n\n\"\"\"\nThe root of the problem is that the existing implementation is based on the ARM C++ ABI, which mandates that only the lsb of the guard variable should be tested by compiler-generated code before calling __cxa_guard_acquire et al.\n\nThe Itanium / x86 C++ ABIs define a different convention where the low-order _byte_ is tested instead.\n\nMeanwhile, guard variables are 32-bit aligned for ARM, and 64-bit for x86.\n\nReference documentation:\n\n- section 3.2.3 of ARM IHI 0041C (for ARM)\n- section 3.3.2 of the Itanium C++ ABI specification v1.83 (for x86).\n\nThis patch modifies the implementation in a way that satisfies both ABIs (and doesn\u0027t require changing the toolchains).\n\"\"\"",
+      "revId": "e22d0ee1b25b6637aaaccd06f75317fa166b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEen////0\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-03-31T17:28:22Z",
+      "side": 1,
+      "message": "nitpick: it\u0027s not really specific to GCC",
+      "revId": "e22d0ee1b25b6637aaaccd06f75317fa166b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEen////w\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-03-31T17:28:22Z",
+      "side": 1,
+      "message": "I think we can remove lines 15 to 63 here.",
+      "revId": "e22d0ee1b25b6637aaaccd06f75317fa166b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEeH////g\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-03-31T17:28:22Z",
+      "side": 1,
+      "message": "Note: on x86, the compiler-generated machine code will pass the address of a 64-bit guard variable to this function. The code below works because the system is little-endian, and that  this is also the address of the lowest 32-bits of the guard variable.\n\nThe C++ ABI one-time-construction explicitely mention that the first byte (i.e. the one at the lowest address) should be tested, which means the code below won\u0027t work on big-endian systems.\n\nWhile this is no big deal for now, I think this is worthy of a comment, as well as a feature macro check to ensure we #error when trying to compile the source for such target systems.\n\nAnother alternative is to redefine ready, pending, waiting as 0x1000000, 0x10000 and 0x100 respecitvely for big-endian systems, but since we don\u0027t have a way to test it for now, not sure this is worth the effort.",
+      "revId": "e22d0ee1b25b6637aaaccd06f75317fa166b4703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
