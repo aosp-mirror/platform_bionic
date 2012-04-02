@@ -37,6 +37,9 @@ if [ "$current_version" == "$latest_version" ]; then
   exit 1
 fi
 
+md5_sum=`md5sum $latest_archive`
+echo "MD5: $md5_sum"
+
 echo "Extracting $latest_version..."
 mkdir $latest_version
 tar -C $latest_version -zxf $latest_archive
