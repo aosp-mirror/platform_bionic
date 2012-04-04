@@ -108,7 +108,10 @@ static const char *ldpreload_names[LDPRELOAD_MAX + 1];
 
 static soinfo *preloads[LDPRELOAD_MAX + 1];
 
+#if LINKER_DEBUG
 int debug_verbosity;
+#endif
+
 static int pid;
 
 /* This boolean is set if the program being loaded is setuid */
@@ -2120,10 +2123,12 @@ sanitize:
 
     /* Get a few environment variables */
     {
+#if LINKER_DEBUG
         const char* env;
         env = linker_env_get("DEBUG"); /* XXX: TODO: Change to LD_DEBUG */
         if (env)
             debug_verbosity = atoi(env);
+#endif
 
         /* Normally, these are cleaned by linker_env_secure, but the test
          * against program_is_setuid doesn't cost us anything */
