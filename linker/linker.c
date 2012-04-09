@@ -408,33 +408,6 @@ static Elf32_Sym *_elf_lookup(soinfo *si, unsigned hash, const char *name)
     return NULL;
 }
 
-/*
- * Essentially the same method as _elf_lookup() above, but only
- * searches for LOCAL symbols
- */
-static Elf32_Sym *_elf_lookup_local(soinfo *si, unsigned hash, const char *name)
-{
-    Elf32_Sym *symtab = si->symtab;
-    const char *strtab = si->strtab;
-    unsigned n = hash % si->nbucket;;
-
-    TRACE_TYPE(LOOKUP, "%5d LOCAL SEARCH %s in %s@0x%08x %08x %d\n", pid,
-               name, si->name, si->base, hash, hash % si->nbucket);
-    for(n = si->bucket[hash % si->nbucket]; n != 0; n = si->chain[n]){
-        Elf32_Sym *s = symtab + n;
-        if (strcmp(strtab + s->st_name, name)) continue;
-        if (ELF32_ST_BIND(s->st_info) != STB_LOCAL) continue;
-        /* no section == undefined */
-        if(s->st_shndx == 0) continue;
-
-        TRACE_TYPE(LOOKUP, "%5d FOUND LOCAL %s in %s (%08x) %d\n", pid,
-                   name, si->name, s->st_value, s->st_size);
-        return s;
-    }
-
-    return NULL;
-}
-
 static unsigned elfhash(const char *_name)
 {
     const unsigned char *name = (const unsigned char *) _name;
@@ -457,16 +430,6 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
     unsigned *d;
     soinfo *lsi = si;
     int i;
-
-    /* If we are trying to find a symbol for the linker itself, look
-     * for LOCAL symbols first. Avoid using LOCAL symbols for other
-     * shared libraries until we have a better understanding of what
-     * might break by doing so. */
-    if (si->flags & FLAG_LINKER) {
-        s = _elf_lookup_local(si, elf_hash, name);
-        if(s != NULL)
-            goto done;
-    }
 
     /* Look for symbols in the local scope (the object who is
      * searching). This happens with C++ templates on i386 for some
