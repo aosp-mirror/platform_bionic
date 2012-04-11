@@ -28,8 +28,6 @@
 
 #include <machine/asm.h>
 
-ENTRY(__on_dlclose)
-
 # Implement static C++ destructors when the shared
 # library is unloaded through dlclose().
 #
@@ -37,10 +35,11 @@ ENTRY(__on_dlclose)
 # in the .fini_array. See 3.3.5.3.C of C++ ABI
 # standard.
 #
-__on_dlclose:
+ENTRY(__on_dlclose)
         adr     r0, 0f
         ldr     r0, [r0]
         b       __cxa_finalize
+END(__on_dlclose)
 
 0:
         .long   __dso_handle
@@ -55,8 +54,6 @@ __INIT_ARRAY__:
 __FINI_ARRAY__:
         .long -1
         .long __on_dlclose
-
-END(__on_dlclose)
 
 #ifdef CRT_LEGACY_WORKAROUND
 #include "__dso_handle.S"
