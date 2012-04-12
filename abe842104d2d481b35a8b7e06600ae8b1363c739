@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "AAAErH////k\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-04-12T09:41:18Z",
+      "side": 1,
+      "message": "Thanks for pointing this.\nWe may not need to check the _BYTE_ORDER. Just use letoh32 here should be ok. Right?",
+      "parentUuid": "AAAEsn////k\u003d",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAEsn////o\u003d",
         "filename": "libstdc++/src/one_time_construction.cpp",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2012-04-12T09:22:05Z",
       "side": 1,
       "message": "I think the definitions above and how they are used below could be simplified. There is no need to require constant typecasts between _guard_t and _guard_u types. A single type should be enough, for example:\n\n  #if defined(__arm__)\n  // The ARM C++ ABI mandates that guard variable are\n  // 32-bit aligned, 32-bit values. And only its LSB is tested by\n  // the compiler-generated code before calling \n  // __cxa_guard_acquire.\n  //\n  typedef union {\n    int volatile state;\n    int32_t aligner;\n  } guard_t;\n\n  const static int ready \u003d 0x1;\n  const static int pending \u003d 0x2;\n  const static int waiting \u003d 0x6;\n\n  #elif defined(__i386__)\n  // The Itanium/x86 C++ ABI mandates that guard variables\n  // are 64-bit aligned, 64-bit values. Also, the least-significant\n  // byte is tested by the compiler-generated code before, we calling\n  // __cxa_guard_acquire. We can access it through the first\n  // 32-bit word in the union below.\n  //\n  typedef union {\n    int volatile state;\n    int64_t aligner;\n  } guard_t;\n\n  const static int ready \u003d 0x1;\n  const static int pending \u003d 0x100;\n  const static int waiting \u003d 0x10000;\n\n  #else\n  // Avoid generating bad code when this source is ported to a\n  // a new CPU architecture.\n  #  error Unknown CPU architecture. Please update this source with the right C++ ABI support.\n  #endif\n\nThen later, usage simply becomes:\n\n  ... __cxa_guard_acquire(guard_t* gv)\n  {\n    if (__atomic_cmpxchg(0, pending, \u0026gv-\u003estate) \u003d\u003d 0) {\n       ...\n    }\n    ...\n  }",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAErH////g\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-04-12T09:41:18Z",
+      "side": 1,
+      "message": "We tried to avoid include the large block in #if ... #else... #endif. :).\n\nAnd does this change break MIPS? Our change will not impact MIPS.",
+      "parentUuid": "AAAEsn////o\u003d",
       "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "AAAErH////c\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-04-12T09:41:18Z",
+      "side": 1,
+      "message": "New patchset will use the definition you suggested.",
+      "parentUuid": "AAAEsn////c\u003d",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAEsn////g\u003d",
         "filename": "libstdc++/src/one_time_construction.cpp",
         "patchSetId": 4
@@ -81,6 +135,24 @@
       "writtenOn": "2012-04-12T09:22:05Z",
       "side": 1,
       "message": "you probably meant \"_guard_t volatile * gv\" here.",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAErH////Y\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-04-12T09:41:18Z",
+      "side": 1,
+      "message": "Yeah. Right. We mean \"_guard_t\" instead of int",
+      "parentUuid": "AAAEsn////g\u003d",
       "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
