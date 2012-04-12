@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAEsn////U\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-04-12T10:44:05Z",
+      "side": 1,
+      "message": "yes, looking at the code in \u003csys/endian.h\u003e, that should be usable in constant expressions (i.e. it won\u0027t generate a function call).",
+      "parentUuid": "AAAErH////k\u003d",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAEsn////o\u003d",
         "filename": "libstdc++/src/one_time_construction.cpp",
         "patchSetId": 4
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "We tried to avoid include the large block in #if ... #else... #endif. :).\n\nAnd does this change break MIPS? Our change will not impact MIPS.",
       "parentUuid": "AAAEsn////o\u003d",
+      "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEsn////Q\u003d",
+        "filename": "libstdc++/src/one_time_construction.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-04-12T10:44:05Z",
+      "side": 1,
+      "message": "Actually, I tried looking for the MIPS C++ ABI after sending my last review. I couldn\u0027t find one online, but on the other hand, the GCC 4.6 sources seem to indicate that it follows the generic one (i.e. 64-bit aligned 64-bit values, testing of the first _byte_, independent of endianess).\n\nThe GNU libstdc++ uses the following trick to compute the ready/pending/waiting values: an inline function that returns the value corresponding to the n-th byte of an int, something like:\n\n  static inline int __get_guard_bit(int bytenum) {\n    union { int i; char c[sizeof(int)]; } u \u003d { 0 };\n    u.c[bytenum] \u003d 1;\n    return u.i\n  }\n\n  #define  _READY_BIT   __get_guard_bit(0)\n  #define  _PENDING_BIT __get_guard_bit(1)\n  #define  _WAITING_BIT  __get_guard_bit(2)\n\nThis avoids checking for endianess explicitely. On the other hand, it relies on the compiler to properly optimize all computations (also the code doesn\u0027t use any static const int values, probably to avoid generating static initializers).\n\nI\u0027m not sure we want to use this here. letoh32() seems to be just fine and portable enough for me.\n\nIn all cases, it means we should be able to use the same block for defined(__i386__) and defined(__mips__)",
+      "parentUuid": "AAAErH////g\u003d",
       "revId": "abe842104d2d481b35a8b7e06600ae8b1363c739",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
