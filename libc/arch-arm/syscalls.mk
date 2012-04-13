@@ -108,6 +108,7 @@ syscall_src += arch-arm/syscalls/rmdir.S
 syscall_src += arch-arm/syscalls/rename.S
 syscall_src += arch-arm/syscalls/__getcwd.S
 syscall_src += arch-arm/syscalls/access.S
+syscall_src += arch-arm/syscalls/faccessat.S
 syscall_src += arch-arm/syscalls/symlink.S
 syscall_src += arch-arm/syscalls/fchdir.S
 syscall_src += arch-arm/syscalls/truncate.S

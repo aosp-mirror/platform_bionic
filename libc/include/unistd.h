@@ -107,6 +107,7 @@ extern void endusershell(void);
 #define F_OK  0  /* Existence */
 
 extern int access(const char *, int);
+extern int faccessat(int, const char *, int, int);
 extern int link(const char *, const char *);
 extern int unlink(const char *);
 extern int chdir(const char *);
