@@ -160,6 +160,7 @@ int     rmdir(const char *)  40
 int     rename(const char *, const char *)  38
 int     __getcwd:getcwd(char * buf, size_t size)  183
 int     access(const char *, int)  33
+int     faccessat(int, const char *, int, int)  334,307
 int     symlink(const char *, const char *)  83
 int     fchdir(int)    133
 int     truncate(const char*, off_t)    92
