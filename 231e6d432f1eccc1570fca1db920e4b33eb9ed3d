@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEuX///94\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-04-16T15:44:29Z",
+      "side": 1,
+      "message": "i doubt this is right. does reltime get updated if __futex_wait_ex returns -EINTR?",
+      "revId": "231e6d432f1eccc1570fca1db920e4b33eb9ed3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
