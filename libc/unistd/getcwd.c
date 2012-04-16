@@ -26,10 +26,15 @@
  * SUCH DAMAGE.
  */
 #include <unistd.h>
+#include <errno.h>
 
 extern int __getcwd(char * buf, size_t size);
 
 char *getcwd(char *buf, size_t size)
 {
+  if (buf == NULL || size == 0) {
+    errno = EINVAL;
+    return NULL;
+  }
   return ( __getcwd(buf, size) < 0 ) ? NULL : buf;
 }
