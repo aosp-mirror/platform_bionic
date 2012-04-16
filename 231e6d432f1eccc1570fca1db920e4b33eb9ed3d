@@ -16,6 +16,24 @@
       "revId": "231e6d432f1eccc1570fca1db920e4b33eb9ed3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEuH///7I\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1005314
+      },
+      "writtenOn": "2012-04-16T16:13:48Z",
+      "side": 1,
+      "message": "Good catch! I will rework the patch tomorrow. :-)",
+      "parentUuid": "AAAEuX///94\u003d",
+      "revId": "231e6d432f1eccc1570fca1db920e4b33eb9ed3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
