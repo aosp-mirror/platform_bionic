@@ -181,7 +181,7 @@ int           nanosleep(const struct timespec *, struct timespec *)   162
 int           clock_gettime(clockid_t clk_id, struct timespec *tp)    263,265
 int           clock_settime(clockid_t clk_id, const struct timespec *tp)  262,264
 int           clock_getres(clockid_t clk_id, struct timespec *res)   264,266
-int           clock_nanosleep(const struct timespec *req, struct timespec *rem)  265,267
+int           clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *req, struct timespec *rem)  265,267
 int           getitimer(int, const struct itimerval *)   105
 int           setitimer(int, const struct itimerval *, struct itimerval *)  104
 int           __timer_create:timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)    257,259
