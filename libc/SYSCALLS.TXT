@@ -47,8 +47,8 @@ uid_t   getuid:getuid32 ()         199
 gid_t   getgid:getgid32 ()         200
 uid_t   geteuid:geteuid32 ()       201
 gid_t   getegid:getegid32 ()       202
-uid_t   getresuid:getresuid32 ()   209
-gid_t   getresgid:getresgid32 ()   211
+uid_t   getresuid:getresuid32 (uid_t *ruid, uid_t *euid, uid_t *suid)   209
+gid_t   getresgid:getresgid32 (gid_t *rgid, gid_t *egid, gid_t *sgid)   211
 pid_t   gettid()                   224
 ssize_t readahead(int, off64_t, size_t)     225
 int     getgroups:getgroups32(int, gid_t *)    205
