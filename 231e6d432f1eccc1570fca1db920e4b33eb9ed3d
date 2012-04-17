@@ -34,6 +34,24 @@
       "revId": "231e6d432f1eccc1570fca1db920e4b33eb9ed3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAEuH///4k\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1005314
+      },
+      "writtenOn": "2012-04-17T09:04:57Z",
+      "side": 1,
+      "message": "Hi Elliott,\n    Just double checked the code, that is not a real issue:\n    According to the manual page of pthread_cond_wait annd pthread_cond_timedwait, \n(1) The pthread_cond_wait will never return error which means that __pthread_cond_timedwait_relative( )\u0027s reltime is NULL and it will keep calling __futex_wait_ex( ) when interrupted.\n(2) the pthread_cond_timedwait will return -EINTR immediately when interrupted, instead of keeping loop of calling __futex_wait_ex(). The caller should determine whether it continue to wait or go ahead.\n   \n   The do { } while( ) is the case (1).",
+      "parentUuid": "AAAEuH///7I\u003d",
+      "revId": "231e6d432f1eccc1570fca1db920e4b33eb9ed3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
