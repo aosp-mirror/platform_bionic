@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAE2X////w\u003d",
+        "filename": "libc/stdio/findfp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-04-18T17:04:27Z",
+      "side": 1,
+      "message": "I agree that volatile here is unnecessary. Memory barrier should be enough.",
+      "revId": "19791c839fa85905bd7a3716a8c76abc0d5342e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
