@@ -659,6 +659,12 @@ include $(CLEAR_VARS)
 # see libc/bionic/pthread_debug.c for details
 
 LOCAL_CFLAGS := $(libc_common_cflags) -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
+
+ifeq ($(TARGET_ARCH),arm)
+# TODO: At some point, we need to remove this custom linker script.
+LOCAL_LDFLAGS := -Wl,-T,$(BUILD_SYSTEM)/armelf.xsc
+endif
+
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
