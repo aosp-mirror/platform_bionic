@@ -99,13 +99,22 @@ _event_getmsg_helper(td_thrhandle_t const * handle, void * bkpt_addr)
         gEventMsgHandle.tid = gEventMsgHandle.pid;
         return 0x42;
     }
-#else
+#elif defined(__arm__)
     pc = (void *)ptrace(PTRACE_PEEKUSR, handle->tid, (void *)60 /* r15/pc */, NULL);
 
     if (pc == bkpt_addr) {
         // The hook function takes the id of the new thread as it's first param,
         // so grab it from r0.
         gEventMsgHandle.pid = ptrace(PTRACE_PEEKUSR, handle->tid, (void *)0 /* r0 */, NULL);
+        gEventMsgHandle.tid = gEventMsgHandle.pid;
+        return 0x42;
+    }
+#elif defined(__mips__)
+    pc = (void *)ptrace(PTRACE_PEEKUSR, handle->tid, (void *)(64*4) /* pc */, NULL);
+    if (pc == bkpt_addr) {
+        // The hook function takes the id of the new thread as it's first param,
+        // so grab it from a0
+        gEventMsgHandle.pid = ptrace(PTRACE_PEEKUSR, handle->tid, (void *)(4*4) /* a0 */, NULL);
         gEventMsgHandle.tid = gEventMsgHandle.pid;
         return 0x42;
     }
