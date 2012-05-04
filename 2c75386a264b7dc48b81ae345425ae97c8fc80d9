@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFQ3///6A\u003d",
+        "filename": "libthread_db/libthread_db.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-05-04T05:41:12Z",
+      "side": 1,
+      "message": "spaces, not tabs.",
+      "revId": "2c75386a264b7dc48b81ae345425ae97c8fc80d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
