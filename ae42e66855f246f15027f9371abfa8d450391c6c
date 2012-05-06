@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFUH///k0\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-05-06T21:12:07Z",
+      "side": 1,
+      "message": "Please call this BOARD_MALLOC_ALIGNMENT",
+      "revId": "ae42e66855f246f15027f9371abfa8d450391c6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
