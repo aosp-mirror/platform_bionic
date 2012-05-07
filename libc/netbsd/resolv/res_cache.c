@@ -1412,6 +1412,27 @@ _cache_remove_oldest( Cache*  cache )
     _cache_remove_p(cache, lookup);
 }
 
+/* Remove all expired entries from the hash table.
+ */
+static void _cache_remove_expired(Cache* cache) {
+    Entry* e;
+    time_t now = _time_now();
+
+    for (e = cache->mru_list.mru_next; e != &cache->mru_list;) {
+        // Entry is old, remove
+        if (now >= e->expires) {
+            Entry** lookup = _cache_lookup_p(cache, e);
+            if (*lookup == NULL) { /* should not happen */
+                XLOG("%s: ENTRY NOT IN HTABLE ?", __FUNCTION__);
+                return;
+            }
+            e = e->mru_next;
+            _cache_remove_p(cache, lookup);
+        } else {
+            e = e->mru_next;
+        }
+    }
+}
 
 ResolvCacheStatus
 _resolv_cache_lookup( struct resolv_cache*  cache,
@@ -1526,7 +1547,10 @@ _resolv_cache_add( struct resolv_cache*  cache,
     }
 
     if (cache->num_entries >= cache->max_entries) {
-        _cache_remove_oldest(cache);
+        _cache_remove_expired(cache);
+        if (cache->num_entries >= cache->max_entries) {
+            _cache_remove_oldest(cache);
+        }
         /* need to lookup again */
         lookup = _cache_lookup_p(cache, key);
         e      = *lookup;
