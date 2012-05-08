@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFUH///b0\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-05-08T00:43:32Z",
+      "side": 1,
+      "message": "Can we put these new functions next to each other?",
+      "revId": "b26b5db5657ec5c6418e5b275c55e91d52948729",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFUH///bw\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1621,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-05-08T00:43:32Z",
+      "side": 1,
+      "message": "_resolv_cache_query_failed?\n\n_resolv_cache_notify_failed makes it sound like the notify failed.",
+      "revId": "b26b5db5657ec5c6418e5b275c55e91d52948729",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
