@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFX3////w\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-05-08T02:52:36Z",
+      "side": 1,
+      "message": "\u003d\u003d -1 or !\u003d 0?",
+      "revId": "12bb2c0f6cbd65f2372070976b2ab27db5d1e478",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
