@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFUH///as\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-05-08T01:49:49Z",
+      "side": 1,
+      "message": "i think we should move this up to L595, so we only mutate thread-\u003etls under the lock.",
+      "revId": "01f17cb823fc1cdd8183545dcb0578c1ae8b01f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
