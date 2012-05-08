@@ -346,6 +346,7 @@ libc_common_src_files += \
 	arch-arm/bionic/__get_sp.S \
 	arch-arm/bionic/_exit_with_stack_teardown.S \
 	arch-arm/bionic/_setjmp.S \
+	arch-arm/bionic/abort_arm.S \
 	arch-arm/bionic/atomics_arm.S \
 	arch-arm/bionic/clone.S \
 	arch-arm/bionic/eabi.c \
