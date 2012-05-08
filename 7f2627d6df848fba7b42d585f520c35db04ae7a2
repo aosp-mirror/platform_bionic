@@ -33,6 +33,24 @@
       "revId": "7f2627d6df848fba7b42d585f520c35db04ae7a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFYH///6g\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-05-08T18:23:01Z",
+      "side": 1,
+      "message": "yes, but libc_common_flags isn\u0027t.",
+      "parentUuid": "AAAFXn///4g\u003d",
+      "revId": "7f2627d6df848fba7b42d585f520c35db04ae7a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
