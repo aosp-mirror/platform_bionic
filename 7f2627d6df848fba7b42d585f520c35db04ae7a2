@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFYH///64\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-05-08T18:10:35Z",
+      "side": 1,
+      "message": "why don\u0027t we say this once at the top, conditionally adding it to libc_common_flags instead of repeating ourselves?",
+      "revId": "7f2627d6df848fba7b42d585f520c35db04ae7a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
