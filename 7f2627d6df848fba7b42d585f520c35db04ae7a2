@@ -16,6 +16,23 @@
       "revId": "7f2627d6df848fba7b42d585f520c35db04ae7a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFXn///4g\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1003360
+      },
+      "writtenOn": "2012-05-08T18:13:30Z",
+      "side": 1,
+      "message": "LOCAL_CFLAGS is cleared by CLEAR_VARS",
+      "revId": "7f2627d6df848fba7b42d585f520c35db04ae7a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
