@@ -465,6 +465,13 @@ ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
+# To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
+# the appropriate BoardConfig.mk file.
+#
+ifneq ($(BOARD_MALLOC_ALIGNMENT),)
+  libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
+endif
+
 ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := -mthumb-interwork
