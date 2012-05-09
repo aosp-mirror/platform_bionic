@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFYH///vA\u003d",
+        "filename": "libc/bionic/libc_init_dynamic.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-05-09T20:30:16Z",
+      "side": 1,
+      "message": "isn\u0027t the first element a count, or -1 to mean \"null-terminated list\"?",
+      "revId": "49448cc6187fca9d971b537f34247888fde897fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
