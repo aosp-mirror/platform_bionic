@@ -16,6 +16,24 @@
       "revId": "49448cc6187fca9d971b537f34247888fde897fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFa3///7o\u003d",
+        "filename": "libc/bionic/libc_init_dynamic.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-05-09T21:30:00Z",
+      "side": 1,
+      "message": "I believe the first element for ctors array is always -1 irrespective of whether the array contains any elements or not.",
+      "parentUuid": "AAAFYH///vA\u003d",
+      "revId": "49448cc6187fca9d971b537f34247888fde897fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
