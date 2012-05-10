@@ -493,6 +493,9 @@ ifeq ($(TARGET_ARCH),arm)
   ifeq ($(ARCH_ARM_HAVE_32_BYTE_CACHE_LINES),true)
     libc_common_cflags += -DHAVE_32_BYTE_CACHE_LINE
   endif
+  ifeq ($(ARCH_ARM_USE_NON_NEON_MEMCPY),true)
+    libc_common_cflags += -DARCH_ARM_USE_NON_NEON_MEMCPY
+  endif
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags :=
