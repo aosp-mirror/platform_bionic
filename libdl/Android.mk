@@ -36,12 +36,12 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 ifeq ($(TARGET_ARCH),sh)
 # for SuperH, additional code is necessary to handle .ctors section.
-GEN_SOBEGIN := $(TARGET_OUT_STATIC_LIBRARIES)/sobegin.o
+GEN_SOBEGIN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/sobegin.o
 $(GEN_SOBEGIN): $(LOCAL_PATH)/arch-sh/sobegin.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) -o $@ -c $<
 
-GEN_SOEND := $(TARGET_OUT_STATIC_LIBRARIES)/soend.o
+GEN_SOEND := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/soend.o
 $(GEN_SOEND): $(LOCAL_PATH)/arch-sh/soend.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) -o $@ -c $<

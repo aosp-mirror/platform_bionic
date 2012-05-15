@@ -559,13 +559,13 @@ ifeq ($(TARGET_ARCH),x86)
     # This flag must be added for x86 targets, but not for ARM
     libc_crt_target_so_cflags += -fPIC
 endif
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_so.o
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_so.o
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
@@ -573,13 +573,13 @@ ALL_GENERATED_SOURCES += $(GEN)
 endif # TARGET_ARCH == x86 || TARGET_ARCH == arm
 
 
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_static.o
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_static.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtbegin_dynamic.o
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_dynamic.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
@@ -588,7 +588,7 @@ ALL_GENERATED_SOURCES += $(GEN)
 
 # We rename crtend.o to crtend_android.o to avoid a
 # name clash between gcc and bionic.
-GEN := $(TARGET_OUT_STATIC_LIBRARIES)/crtend_android.o
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_android.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
