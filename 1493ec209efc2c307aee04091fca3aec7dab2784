@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAFZn///3c\u003d",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "wow, can we have a comment that explains why this is important. Never heard about it. I assume it might be important",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3Y\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "this is a non-trivial functionality change that doesn\u0027t seem strictly related to MIPS. care to explain why it is needed?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3U\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "nope, nope, nope. Please do not accumulate that kind of bandaid in the dynamic linker, they are a complete maintenance nightmare. We should fix the toolchain instead.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3Q\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "Again, that seems to exhibit radically different behaviour compared to other platforms. I would like to understand why you need this. I\u0027m pretty skeptical about these platform-specific oddities.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3M\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1224,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "Can you point to the relevant spec for this function. I don\u0027 t know why it is needed. The constructors/destructors should be in the .init_array and .fini_array sections (or .init/.fini pointer, or .preinit_array for executables). Why would it be different on MIPS?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3I\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1326,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "why? we removed prelinking for a very specific reason (security), and I don\u0027t think we want to put it back in the platform.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3E\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "As far as I know, these are static relocations, and should never appear in shared libraries / executables. Is there a problem with the toolchain?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///3A\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1688,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "I\u0027m surprised by this. Where is the spec that describes how this function works and why it is needed. Please also provide the corresponding support code in ld/gold if possible so we can check it. thanks.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///28\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1816,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "this will conflict with another patch to the C library initialization routine that you provided, which make it run the .ctors constructors too. I don\u0027t think you want to run these twice.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///24\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "Ah, I see. however, this kind of change should come in its own patch, not in this one.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFZn///20\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2475,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-05-16T17:47:32Z",
+      "side": 1,
+      "message": "this is a drastic functionality change, per the comment above. What is the motivation for it?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
