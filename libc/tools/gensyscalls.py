@@ -364,23 +364,6 @@ class State:
               "idname" : idname }
         return mips_call % t
 
-    def superh_genstub(self, fname, flags, idname):
-        numargs = int(flags)
-        t = { "fname"  : fname,
-              "idname" : idname,
-              "numargs" : numargs }
-        superh_call = superh_header
-        if flags:
-            if numargs == 5:
-                superh_call += superh_5args_header
-            if numargs == 6:
-                superh_call += superh_6args_header
-            if numargs == 7:
-                superh_call += superh_7args_header
-        superh_call += superh_call_default
-        return superh_call % t
-
-
     def process_file(self,input):
         parser = SysCallsTxtParser()
         parser.parse_file(input)
