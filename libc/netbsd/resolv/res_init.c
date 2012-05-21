@@ -99,6 +99,8 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #include <netdb.h>
 
 #ifdef ANDROID_CHANGES
+#include <errno.h>
+#include <fcntl.h>
 #include <sys/system_properties.h>
 #endif /* ANDROID_CHANGES */
 
@@ -716,10 +718,44 @@ net_mask(in)		/* XXX - should really use system's version of this */
 	return (htonl(IN_CLASSC_NET));
 }
 
+#ifdef ANDROID_CHANGES
+static int
+real_randomid(u_int *random_value) {
+	/* open the nonblocking random device, returning -1 on failure */
+	int random_device = open("/dev/urandom", O_RDONLY);
+	if (random_device < 0) {
+		return -1;
+	}
+
+	/* read from the random device, returning -1 on failure (or too many retries)*/
+	u_int retry = 5;
+	for (retry; retry > 0; retry--) {
+		int retval = read(random_device, random_value, sizeof(u_int));
+		if (retval == sizeof(u_int)) {
+			*random_value &= 0xffff;
+			close(random_device);
+			return 0;
+		} else if ((retval < 0) && (errno != EINTR)) {
+			break;
+		}
+	}
+
+	close(random_device);
+	return -1;
+}
+#endif /* ANDROID_CHANGES */
+
 u_int
 res_randomid(void) {
+#ifdef ANDROID_CHANGES
+	int status = 0;
+	u_int output = 0;
+	status = real_randomid(&output);
+	if (status != -1) {
+		return output;
+	}
+#endif /* ANDROID_CHANGES */
 	struct timeval now;
-
 	gettimeofday(&now, NULL);
 	return (0xffff & (now.tv_sec ^ now.tv_usec ^ getpid()));
 }
