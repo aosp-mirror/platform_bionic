@@ -2290,7 +2290,22 @@ static void reset_on_error(mstate m);
 
 #  include <private/logd.h>
 
-static void __bionic_heap_error(const char* msg, const char* function)
+/* Convert a pointer into hex string */
+static void __bionic_itox(char* hex, void* ptr)
+{
+    intptr_t val = (intptr_t) ptr;
+    /* Terminate with NULL */
+    hex[8] = 0;
+    int i;
+
+    for (i = 7; i >= 0; i--) {
+        int digit = val & 15;
+        hex[i] = (digit <= 9) ? digit + '0' : digit - 10 + 'a';
+        val >>= 4;
+    }
+}
+
+static void __bionic_heap_error(const char* msg, const char* function, void* p)
 {
     /* We format the buffer explicitely, i.e. without using snprintf()
      * which may use malloc() internally. Not something we can trust
@@ -2303,17 +2318,25 @@ static void __bionic_heap_error(const char* msg, const char* function)
         strlcat(buffer, " IN ", sizeof(buffer));
         strlcat(buffer, function, sizeof(buffer));
     }
+
+    if (p != NULL) {
+        char hexbuffer[9];
+        __bionic_itox(hexbuffer, p);
+        strlcat(buffer, " addr=0x", sizeof(buffer));
+        strlcat(buffer, hexbuffer, sizeof(buffer));
+    }
+
     __libc_android_log_write(ANDROID_LOG_FATAL,"libc",buffer);
     abort();
 }
 
 #  ifndef CORRUPTION_ERROR_ACTION
 #    define CORRUPTION_ERROR_ACTION(m)  \
-    __bionic_heap_error("HEAP MEMORY CORRUPTION", __FUNCTION__)
+    __bionic_heap_error("HEAP MEMORY CORRUPTION", __FUNCTION__, 0)
 #  endif
 #  ifndef USAGE_ERROR_ACTION
 #    define USAGE_ERROR_ACTION(m,p)   \
-    __bionic_heap_error("INVALID HEAP ADDRESS", __FUNCTION__)
+    __bionic_heap_error("INVALID HEAP ADDRESS", __FUNCTION__, p)
 #  endif
 
 #else /* !LOG_ON_HEAP_ERROR */
