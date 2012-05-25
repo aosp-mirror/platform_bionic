@@ -640,10 +640,6 @@ static int open_library(const char *name)
     return -1;
 }
 
-/* temporary space for holding the first page of the shared lib
- * which contains the elf header (with the pht). */
-static unsigned char __header[PAGE_SIZE];
-
 typedef struct {
     long mmap_addr;
     char tag[4]; /* 'P', 'R', 'E', ' ' */
@@ -1086,29 +1082,34 @@ load_library(const char *name)
     unsigned ext_sz;
     unsigned req_base;
     const char *bname;
+    struct stat sb;
     soinfo *si = NULL;
-    Elf32_Ehdr *hdr;
+    Elf32_Ehdr *hdr = MAP_FAILED;
 
-    if(fd == -1) {
+    if (fd == -1) {
         DL_ERR("Library '%s' not found", name);
         return NULL;
     }
 
-    /* We have to read the ELF header to figure out what to do with this image
+    /* We have to read the ELF header to figure out what to do with this image.
+     * Map entire file for this.  There won't be much difference in physical
+     * memory usage or performance.
      */
-    if (lseek(fd, 0, SEEK_SET) < 0) {
-        DL_ERR("lseek() failed!");
+    if (fstat(fd, &sb) < 0) {
+        DL_ERR("%5d fstat() failed! (%s)", pid, strerror(errno));
         goto fail;
     }
 
-    if ((cnt = read(fd, &__header[0], PAGE_SIZE)) < 0) {
-        DL_ERR("read() failed!");
+    hdr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (hdr == MAP_FAILED) {
+        DL_ERR("%5d failed to mmap() header of '%s' (%s)",
+               pid, name, strerror(errno));
         goto fail;
     }
 
     /* Parse the ELF header and get the size of the memory footprint for
      * the library */
-    req_base = get_lib_extents(fd, name, &__header[0], &ext_sz);
+    req_base = get_lib_extents(fd, name, hdr, &ext_sz);
     if (req_base == (unsigned)-1)
         goto fail;
     TRACE("[ %5d - '%s' (%s) wants base=0x%08x sz=0x%08x ]\n", pid, name,
@@ -1138,22 +1139,20 @@ load_library(const char *name)
           pid, name, (void *)si->base, (unsigned) ext_sz);
 
     /* Now actually load the library's segments into right places in memory */
-    if (load_segments(fd, &__header[0], si) < 0) {
+    if (load_segments(fd, hdr, si) < 0) {
         goto fail;
     }
 
-    /* this might not be right. Technically, we don't even need this info
-     * once we go through 'load_segments'. */
-    hdr = (Elf32_Ehdr *)si->base;
     si->phdr = (Elf32_Phdr *)((unsigned char *)si->base + hdr->e_phoff);
     si->phnum = hdr->e_phnum;
-    /**/
 
+    munmap(hdr, sb.st_size);
     close(fd);
     return si;
 
 fail:
     if (si) free_info(si);
+    if (hdr != MAP_FAILED) munmap(hdr, sb.st_size);
     close(fd);
     return NULL;
 }
@@ -1678,7 +1677,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
 
     if (si->flags & (FLAG_EXE | FLAG_LINKER)) {
         /* Locate the needed program segments (DYNAMIC/ARM_EXIDX) for
-         * linkage info if this is the executable or the linker itself. 
+         * linkage info if this is the executable or the linker itself.
          * If this was a dynamic lib, that would have been done at load time.
          *
          * TODO: It's unfortunate that small pieces of this are
