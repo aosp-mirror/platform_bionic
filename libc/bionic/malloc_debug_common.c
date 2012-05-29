@@ -298,6 +298,7 @@ static void malloc_init_impl(void)
     unsigned int memcheck_enabled = 0;
     char env[PROP_VALUE_MAX];
     char memcheck_tracing[PROP_VALUE_MAX];
+    char debug_program[PROP_VALUE_MAX];
 
     /* Get custom malloc debug level. Note that emulator started with
      * memory checking option will have priority over debug level set in
@@ -323,6 +324,15 @@ static void malloc_init_impl(void)
      * routines (default). */
     if (!debug_level) {
         return;
+    }
+
+    /* If libc.debug.malloc.program is set and is not a substring of progname,
+     * then exit.
+     */
+    if (__system_property_get("libc.debug.malloc.program", debug_program)) {
+        if (!strstr(__progname, debug_program)) {
+            return;
+        }
     }
 
     // Lets see which .so must be loaded for the requested debug level
