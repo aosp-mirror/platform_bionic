@@ -287,7 +287,7 @@ static void dump_malloc_descriptor(char* str,
 /*
  * Logging helper macros.
  */
-#define debug_log(format, ...)                                              \
+#define qemu_debug_log(format, ...)                                         \
     do {                                                                    \
         __libc_android_log_print(ANDROID_LOG_DEBUG, "memcheck",             \
                                  (format), ##__VA_ARGS__ );                 \
@@ -296,7 +296,7 @@ static void dump_malloc_descriptor(char* str,
         }                                                                   \
     } while (0)
 
-#define error_log(format, ...)                                              \
+#define qemu_error_log(format, ...)                                         \
     do {                                                                    \
         __libc_android_log_print(ANDROID_LOG_ERROR, "memcheck",             \
                                  (format), ##__VA_ARGS__ );                 \
@@ -305,7 +305,7 @@ static void dump_malloc_descriptor(char* str,
         }                                                                   \
     } while (0)
 
-#define info_log(format, ...)                                               \
+#define qemu_info_log(format, ...)                                          \
     do {                                                                    \
         __libc_android_log_print(ANDROID_LOG_INFO, "memcheck",              \
                                  (format), ##__VA_ARGS__ );                 \
@@ -692,7 +692,7 @@ memcheck_initialize(int alignment, const char* memcheck_param)
 
     notify_qemu_libc_initialized(malloc_pid);
 
-    debug_log("Instrumented for pid=%03u: malloc=%p, free=%p, calloc=%p, realloc=%p, memalign=%p",
+    qemu_debug_log("Instrumented for pid=%03u: malloc=%p, free=%p, calloc=%p, realloc=%p, memalign=%p",
               malloc_pid, qemu_instrumented_malloc, qemu_instrumented_free,
               qemu_instrumented_calloc, qemu_instrumented_realloc,
               qemu_instrumented_memalign);
@@ -717,7 +717,7 @@ qemu_instrumented_malloc(size_t bytes)
     desc.suffix_size = DEFAULT_SUFFIX_SIZE;
     desc.ptr = dlmalloc(mallocdesc_alloc_size(&desc));
     if (desc.ptr == NULL) {
-        error_log("<libc_pid=%03u, pid=%03u> malloc(%u): dlmalloc(%u) failed.",
+        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%u): dlmalloc(%u) failed.",
                   malloc_pid, getpid(), bytes, mallocdesc_alloc_size(&desc));
         return NULL;
     }
@@ -797,7 +797,7 @@ qemu_instrumented_calloc(size_t n_elements, size_t elem_size)
 
     if (n_elements == 0 || elem_size == 0) {
         // Just let go zero bytes allocation.
-        info_log("::: <libc_pid=%03u, pid=%03u>: Zero calloc redir to malloc",
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: Zero calloc redir to malloc",
                  malloc_pid, getpid());
         return qemu_instrumented_malloc(0);
     }
@@ -874,14 +874,14 @@ qemu_instrumented_realloc(void* mem, size_t bytes)
 
     if (mem == NULL) {
         // Nothing to realloc. just do regular malloc.
-        info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %u) redir to malloc",
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %u) redir to malloc",
                  malloc_pid, getpid(), mem, bytes);
         return qemu_instrumented_malloc(bytes);
     }
 
     if (bytes == 0) {
         // This is a "free" condition.
-        info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %u) redir to free and malloc",
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %u) redir to free and malloc",
                  malloc_pid, getpid(), mem, bytes);
         qemu_instrumented_free(mem);
 
@@ -977,7 +977,7 @@ qemu_instrumented_memalign(size_t alignment, size_t bytes)
 
     if (bytes == 0) {
         // Just let go zero bytes allocation.
-        info_log("::: <libc_pid=%03u, pid=%03u>: memalign(%X, %u) redir to malloc",
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: memalign(%X, %u) redir to malloc",
                  malloc_pid, getpid(), alignment, bytes);
         return qemu_instrumented_malloc(0);
     }
