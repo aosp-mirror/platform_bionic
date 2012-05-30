@@ -30,8 +30,7 @@
 	.globl _start
 
 # this is the small startup code that is first run when
-# any executable that is dynamically-linked with Bionic
-# runs.
+# any executable that is linked with Bionic runs.
 #
 # it's purpose is to call __libc_init with appropriate
 # arguments, which are:
