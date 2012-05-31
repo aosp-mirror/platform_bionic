@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
 
-# Implement static C++ destructors when the shared
-# library is unloaded through dlclose().
-#
-# A call to this function must be the first entry
-# in the .fini_array. See 3.3.5.3.C of C++ ABI
-# standard.
-#
-ENTRY(__on_dlclose)
-        adr     r0, 0f
-        ldr     r0, [r0]
-        b       __cxa_finalize
-END(__on_dlclose)
-
-0:
-        .long   __dso_handle
-
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
-__INIT_ARRAY__:
-	.long -1
-
-        .section .fini_array, "aw"
-        .globl __FINI_ARRAY__
-__FINI_ARRAY__:
-        .long -1
-        .long __on_dlclose
-
-#ifdef CRT_LEGACY_WORKAROUND
-#include "__dso_handle.S"
-#else
-#include "__dso_handle_so.S"
-#endif
-
-#include "atexit.S"
+__attribute__ ((visibility ("hidden")))
+__attribute__ ((section (".data")))
+void *__dso_handle;
