@@ -82,15 +82,31 @@ struct MallocDebug {
     void* (*memalign)(size_t alignment, size_t bytes);
 };
 
-/* Malloc debugging initialization routine.
- * This routine must be implemented in .so modules that implement malloc
- * debugging. This routine is called once per process from malloc_init_impl
- * routine implemented in bionic/libc/bionic/malloc_debug_common.c when malloc
+/* Malloc debugging initialization and finalization routines.
+ *
+ * These routines must be implemented in .so modules that implement malloc
+ * debugging. The are is called once per process from malloc_init_impl and
+ * malloc_fini_impl respectively.
+ *
+ * They are implemented in bionic/libc/bionic/malloc_debug_common.c when malloc
  * debugging gets initialized for the process.
- * Return:
- *  0 on success, -1 on failure.
+ *
+ * MallocDebugInit returns:
+ *    0 on success, -1 on failure.
  */
 typedef int (*MallocDebugInit)(void);
+typedef void (*MallocDebugFini)(void);
+
+// =============================================================================
+// log functions
+// =============================================================================
+
+#define debug_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak_check", (format), ##__VA_ARGS__ )
+#define error_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__ )
+#define info_log(format, ...)  \
+    __libc_android_log_print(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__ )
 
 #ifdef __cplusplus
 };  /* end of extern "C" */
