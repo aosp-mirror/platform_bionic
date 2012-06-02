@@ -61,21 +61,10 @@
 extern int gMallocLeakZygoteChild;
 extern pthread_mutex_t gAllocationsMutex;
 extern HashTable gHashTable;
-extern const MallocDebug __libc_malloc_default_dispatch;
-extern const MallocDebug* __libc_malloc_dispatch;
 
 // =============================================================================
-// log functions
+// stack trace functions
 // =============================================================================
-
-#define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "malloc_leak_check", (format), ##__VA_ARGS__ )
-#define error_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__ )
-#define info_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__ )
-
-static int gTrapOnError = 1;
 
 #define MALLOC_ALIGNMENT    8
 #define GUARD               0x48151642
@@ -210,250 +199,12 @@ static void remove_entry(HashEntry* entry)
     gHashTable.count--;
 }
 
-
 // =============================================================================
-// stack trace functions
-// =============================================================================
-
-typedef struct
-{
-    size_t count;
-    intptr_t* addrs;
-} stack_crawl_state_t;
-
-
-/* depends how the system includes define this */
-#ifdef HAVE_UNWIND_CONTEXT_STRUCT
-typedef struct _Unwind_Context __unwind_context;
-#else
-typedef _Unwind_Context __unwind_context;
-#endif
-
-static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
-{
-    stack_crawl_state_t* state = (stack_crawl_state_t*)arg;
-    if (state->count) {
-        intptr_t ip = (intptr_t)_Unwind_GetIP(context);
-        if (ip) {
-            state->addrs[0] = ip;
-            state->addrs++;
-            state->count--;
-            return _URC_NO_REASON;
-        }
-    }
-    /*
-     * If we run out of space to record the address or 0 has been seen, stop
-     * unwinding the stack.
-     */
-    return _URC_END_OF_STACK;
-}
-
-static inline
-int get_backtrace(intptr_t* addrs, size_t max_entries)
-{
-    stack_crawl_state_t state;
-    state.count = max_entries;
-    state.addrs = (intptr_t*)addrs;
-    _Unwind_Backtrace(trace_function, (void*)&state);
-    return max_entries - state.count;
-}
-
-// =============================================================================
-// malloc check functions
+// malloc fill functions
 // =============================================================================
 
 #define CHK_FILL_FREE           0xef
 #define CHK_SENTINEL_VALUE      (char)0xeb
-#define CHK_SENTINEL_HEAD_SIZE  16
-#define CHK_SENTINEL_TAIL_SIZE  16
-#define CHK_OVERHEAD_SIZE       (   CHK_SENTINEL_HEAD_SIZE +    \
-                                    CHK_SENTINEL_TAIL_SIZE +    \
-                                    sizeof(size_t) )
-
-static void dump_stack_trace()
-{
-    intptr_t addrs[20];
-    int c = get_backtrace(addrs, 20);
-    char buf[16];
-    char tmp[16*20];
-    int i;
-
-    tmp[0] = 0; // Need to initialize tmp[0] for the first strcat
-    for (i=0 ; i<c; i++) {
-        snprintf(buf, sizeof buf, "%2d: %08x\n", i, addrs[i]);
-        strlcat(tmp, buf, sizeof tmp);
-    }
-    __libc_android_log_print(ANDROID_LOG_ERROR, "libc", "call stack:\n%s", tmp);
-}
-
-static int is_valid_malloc_pointer(void* addr)
-{
-    return 1;
-}
-
-static void assert_log_message(const char* format, ...)
-{
-    va_list  args;
-
-    pthread_mutex_lock(&gAllocationsMutex);
-    {
-        const MallocDebug* current_dispatch = __libc_malloc_dispatch;
-        __libc_malloc_dispatch = &__libc_malloc_default_dispatch;
-        va_start(args, format);
-        __libc_android_log_vprint(ANDROID_LOG_ERROR, "libc",
-                                format, args);
-        va_end(args);
-        dump_stack_trace();
-        if (gTrapOnError) {
-            __builtin_trap();
-        }
-        __libc_malloc_dispatch = current_dispatch;
-    }
-    pthread_mutex_unlock(&gAllocationsMutex);
-}
-
-static void assert_valid_malloc_pointer(void* mem)
-{
-    if (mem && !is_valid_malloc_pointer(mem)) {
-        assert_log_message(
-            "*** MALLOC CHECK: buffer %p, is not a valid "
-            "malloc pointer (are you mixing up new/delete "
-            "and malloc/free?)", mem);
-    }
-}
-
-/* Check that a given address corresponds to a guarded block,
- * and returns its original allocation size in '*allocated'.
- * 'func' is the capitalized name of the caller function.
- * Returns 0 on success, or -1 on failure.
- * NOTE: Does not return if gTrapOnError is set.
- */
-static int chk_mem_check(void*       mem,
-                         size_t*     allocated,
-                         const char* func)
-{
-    char*  buffer;
-    size_t offset, bytes;
-    int    i;
-    char*  buf;
-
-    /* first check the bytes in the sentinel header */
-    buf = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
-    for (i=0 ; i<CHK_SENTINEL_HEAD_SIZE ; i++) {
-        if (buf[i] != CHK_SENTINEL_VALUE) {
-            assert_log_message(
-                "*** %s CHECK: buffer %p "
-                "corrupted %d bytes before allocation",
-                func, mem, CHK_SENTINEL_HEAD_SIZE-i);
-            return -1;
-        }
-    }
-
-    /* then the ones in the sentinel trailer */
-    buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
-    offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
-    bytes  = *(size_t *)(buffer + offset);
-
-    buf = (char*)mem + bytes;
-    for (i=CHK_SENTINEL_TAIL_SIZE-1 ; i>=0 ; i--) {
-        if (buf[i] != CHK_SENTINEL_VALUE) {
-            assert_log_message(
-                "*** %s CHECK: buffer %p, size=%lu, "
-                "corrupted %d bytes after allocation",
-                func, buffer, bytes, i+1);
-            return -1;
-        }
-    }
-
-    *allocated = bytes;
-    return 0;
-}
-
-
-void* chk_malloc(size_t bytes)
-{
-    size_t size = bytes + CHK_OVERHEAD_SIZE;
-    if (size < bytes) { // Overflow.
-        return NULL;
-    }
-    uint8_t* buffer = (uint8_t*) dlmalloc(size);
-    if (buffer) {
-        memset(buffer, CHK_SENTINEL_VALUE, bytes + CHK_OVERHEAD_SIZE);
-        size_t offset = dlmalloc_usable_size(buffer) - sizeof(size_t);
-        *(size_t *)(buffer + offset) = bytes;
-        buffer += CHK_SENTINEL_HEAD_SIZE;
-    }
-    return buffer;
-}
-
-void  chk_free(void* mem)
-{
-    assert_valid_malloc_pointer(mem);
-    if (mem) {
-        size_t  size;
-        char*   buffer;
-
-        if (chk_mem_check(mem, &size, "FREE") == 0) {
-            buffer = (char*)mem - CHK_SENTINEL_HEAD_SIZE;
-            memset(buffer, CHK_FILL_FREE, size + CHK_OVERHEAD_SIZE);
-            dlfree(buffer);
-        }
-    }
-}
-
-void* chk_calloc(size_t n_elements, size_t elem_size)
-{
-    size_t  size;
-    void*   ptr;
-
-    /* Fail on overflow - just to be safe even though this code runs only
-     * within the debugging C library, not the production one */
-    if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
-        return NULL;
-    }
-    size = n_elements * elem_size;
-    ptr  = chk_malloc(size);
-    if (ptr != NULL) {
-        memset(ptr, 0, size);
-    }
-    return ptr;
-}
-
-void* chk_realloc(void* mem, size_t bytes)
-{
-    char*   buffer;
-    int     ret;
-    size_t  old_bytes = 0;
-
-    assert_valid_malloc_pointer(mem);
-
-    if (mem != NULL && chk_mem_check(mem, &old_bytes, "REALLOC") < 0)
-        return NULL;
-
-    char* new_buffer = chk_malloc(bytes);
-    if (mem == NULL) {
-        return new_buffer;
-    }
-
-    if (new_buffer) {
-        if (bytes > old_bytes)
-            bytes = old_bytes;
-        memcpy(new_buffer, mem, bytes);
-        chk_free(mem);
-    }
-
-    return new_buffer;
-}
-
-void* chk_memalign(size_t alignment, size_t bytes)
-{
-    // XXX: it's better to use malloc, than being wrong
-    return chk_malloc(bytes);
-}
-
-// =============================================================================
-// malloc fill functions
-// =============================================================================
 
 void* fill_malloc(size_t bytes)
 {
@@ -500,6 +251,9 @@ void* fill_memalign(size_t alignment, size_t bytes)
 // =============================================================================
 
 #define MEMALIGN_GUARD  ((void*)0xA1A41520)
+
+extern __LIBC_HIDDEN__
+int get_backtrace(intptr_t* addrs, size_t max_entries);
 
 void* leak_malloc(size_t bytes)
 {
@@ -644,13 +398,4 @@ void* leak_memalign(size_t alignment, size_t bytes)
         return (void*)ptr;
     }
     return base;
-}
-
-/* Initializes malloc debugging framework.
- * See comments on MallocDebugInit in malloc_debug_common.h
- */
-int malloc_debug_initialize(void)
-{
-    // We don't really have anything that requires initialization here.
-    return 0;
 }

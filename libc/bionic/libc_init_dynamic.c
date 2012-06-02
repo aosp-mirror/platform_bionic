@@ -89,6 +89,12 @@ void __libc_preinit(void)
     malloc_debug_init();
 }
 
+void __libc_postfini(void)
+{
+    extern void malloc_debug_fini(void);
+    malloc_debug_fini();
+}
+
 /* This function is called from the executable's _start entry point
  * (see arch-$ARCH/bionic/crtbegin_dynamic.S), which is itself
  * called by the dynamic linker after it has loaded all shared
