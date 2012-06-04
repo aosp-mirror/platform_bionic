@@ -205,6 +205,12 @@ libc_common_src_files := \
 	string/strtok.c \
 	string/strtotimeval.c \
 	string/strxfrm.c \
+	string/__memcpy_chk.c \
+	string/__memmove_chk.c \
+	string/__strcat_chk.c \
+	string/__strcpy_chk.c \
+	string/__strncat_chk.c \
+	string/__strncpy_chk.c \
 	wchar/wcpcpy.c \
 	wchar/wcpncpy.c \
 	wchar/wcscasecmp.c \
