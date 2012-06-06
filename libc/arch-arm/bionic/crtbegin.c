@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CRT_LEGACY_WORKAROUND
-	.arch armv5te
-	.fpu softvfp
-	.eabi_attribute 20, 1
-	.eabi_attribute 21, 1
-	.eabi_attribute 23, 3
-	.eabi_attribute 24, 1
-	.eabi_attribute 25, 1
-	.eabi_attribute 26, 2
-	.eabi_attribute 30, 4
-	.eabi_attribute 18, 4
-	.hidden	atexit
-	.code	16
-	.thumb_func
-ENTRY(atexit)
-.LFB0:
-	.save	{r4, lr}
-	push	{r4, lr}
-.LCFI0:
-	ldr	r3, .L3
-	mov	r1, #0
-	@ sp needed for prologue
-.LPIC0:
-	add	r3, pc
-	ldr	r2, [r3]
-	bl	__cxa_atexit
-	pop	{r4, pc}
-.L4:
-	.align	2
-.L3:
-	.word	__dso_handle-(.LPIC0+4)
-.LFE0:
-END(atexit)
-#endif
+typedef struct
+{
+    void (**preinit_array)(void);
+    void (**init_array)(void);
+    void (**fini_array)(void);
+    void (**ctors_array)(void);
+} structors_array_t;
+
+extern int main(int argc, char **argv, char **env);
+
+extern void __libc_init(
+  unsigned int *elfdata,
+  void (*onexit)(void),
+  int (*slingshot)(int, char**, char**),
+  structors_array_t const * const structors
+);
+
+__attribute__ ((section (".preinit_array")))
+void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".init_array")))
+void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".ctors")))
+void (*__CTOR_LIST__)(void) = (void (*)(void)) -1;
+
+__attribute__((visbility("hidden")))
+void _start() {
+  structors_array_t array;
+  void *elfdata;
+
+  array.preinit_array = &__PREINIT_ARRAY__;
+  array.init_array =    &__INIT_ARRAY__;
+  array.fini_array =    &__FINI_ARRAY__;
+  array.ctors_array =   &__CTOR_LIST__;
+
+  elfdata = __builtin_frame_address(0) + sizeof(void *);
+  __libc_init(elfdata, (void *) 0, &main, &array);
+}
+
+#include "__dso_handle.h"
+#include "atexit.h"

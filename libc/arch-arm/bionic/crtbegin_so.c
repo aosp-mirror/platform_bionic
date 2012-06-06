@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,61 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
-	.align 4
-	.type _start,#function
-	.globl _start
 
-# this is the small startup code that is first run when
-# any executable that is linked with Bionic runs.
-#
-# it's purpose is to call __libc_init with appropriate
-# arguments, which are:
-#
-#    - the address of the raw data block setup by the Linux
-#      kernel ELF loader
-#
-#    - address of an "onexit" function, not used on any
-#      platform supported by Bionic
-#
-#    - address of the "main" function of the program.
-#
-#    - address of the constructor list
-#
-_start:	
-	mov	r0, sp
-	mov	r1, #0
-	ldr	r2, =main
-	adr	r3, 1f
-	ldr	r4, =__libc_init
-	blx	r4
-	mov	r0, #0
-	bx	r0
+extern void __cxa_finalize(void *);
+extern void *__dso_handle;
 
-1:  .long   __PREINIT_ARRAY__
-    .long   __INIT_ARRAY__
-    .long   __FINI_ARRAY__
-    .long   __CTOR_LIST__
+__attribute__((visbility("hidden")))
+void __on_dlclose() {
+  __cxa_finalize(&__dso_handle);
+}
 
-	.section .preinit_array, "aw"
-	.globl __PREINIT_ARRAY__
-__PREINIT_ARRAY__:
-	.long -1
+#ifdef CRT_LEGACY_WORKAROUND
+#include "__dso_handle.h"
+#else
+#include "__dso_handle_so.h"
+#endif
 
-	.section .init_array, "aw"
-	.globl __INIT_ARRAY__
-__INIT_ARRAY__:
-	.long -1
-
-	.section .fini_array, "aw"
-	.globl __FINI_ARRAY__
-__FINI_ARRAY__:
-	.long -1
-
-	.section .ctors, "aw"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
-
-#include "__dso_handle.S"
-#include "atexit.S"
+#include "atexit.h"
