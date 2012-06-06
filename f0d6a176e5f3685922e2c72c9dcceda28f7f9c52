@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGUX///1I\u003d",
+        "filename": "libc/bionic/crtbrand.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-06-06T15:05:34Z",
+      "side": 1,
+      "message": "if we include this, we\u0027ll need to update libc/NOTICE too.",
+      "revId": "f0d6a176e5f3685922e2c72c9dcceda28f7f9c52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
