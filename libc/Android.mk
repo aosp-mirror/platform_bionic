@@ -434,18 +434,19 @@ endif # !arm
 # Define some common cflags
 # ========================================================
 libc_common_cflags := \
-		-DWITH_ERRLIST			\
-		-DANDROID_CHANGES		\
-		-DUSE_LOCKS 			\
-		-DREALLOC_ZERO_BYTES_FREES 	\
-		-D_LIBC=1 			\
-		-DSOFTFLOAT                     \
-		-DFLOATING_POINT		\
-		-DINET6 \
-		-I$(LOCAL_PATH)/private \
-		-DUSE_DL_PREFIX \
-		-DPOSIX_MISTAKE \
-                -DLOG_ON_HEAP_ERROR \
+    -DWITH_ERRLIST \
+    -DANDROID_CHANGES \
+    -DUSE_LOCKS \
+    -DREALLOC_ZERO_BYTES_FREES \
+    -D_LIBC=1 \
+    -DSOFTFLOAT \
+    -DFLOATING_POINT \
+    -DINET6 \
+    -I$(LOCAL_PATH)/private \
+    -DUSE_DL_PREFIX \
+    -DPOSIX_MISTAKE \
+    -DLOG_ON_HEAP_ERROR \
+    -std=gnu99
 
 # these macro definitions are required to implement the
 # 'timezone' and 'daylight' global variables, as well as
