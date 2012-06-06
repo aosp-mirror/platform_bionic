@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAGUH///1s\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-06-06T15:53:04Z",
+      "side": 1,
+      "message": "this line no longer exists in our internal tree.",
+      "revId": "f0d6a176e5f3685922e2c72c9dcceda28f7f9c52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUX///1I\u003d",
         "filename": "libc/bionic/crtbrand.c",
         "patchSetId": 1
