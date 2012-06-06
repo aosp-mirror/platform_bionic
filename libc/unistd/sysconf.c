@@ -25,16 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <sys/sysconf.h>
-#include <limits.h>
-#include <bionic_tls.h>
+
 #include <asm/page.h>
-#include <stdio.h>  /* for FOPEN_MAX */
+#include <bionic_tls.h>
+#include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>  // For FOPEN_MAX.
 #include <string.h>
-#include <ctype.h>
+#include <sys/sysconf.h>
+#include <unistd.h>
 
 /* seems to be the default on Linux, per the GLibc sources and my own digging */
 
@@ -62,18 +65,88 @@
 #define  SYSTEM_2_FORT_DEV   -1       /* Fortran development unsupported */
 #define  SYSTEM_2_FORT_RUN   -1       /* Fortran runtime unsupported */
 #define  SYSTEM_2_SW_DEV     -1       /* posix software dev utilities unsupported */
-#define  SYSTEM_2_LOCALEDEF  -1       /* localdef() unimplemented */
+#define  SYSTEM_2_LOCALEDEF  -1       /* localedef() unimplemented */
 #define  SYSTEM_2_UPE        -1       /* No UPE for you ! (User Portability Utilities) */
 #define  SYSTEM_2_VERSION    -1       /* No posix command-line tools */
 
-static int  __get_nproc_conf(void);
-static int  __get_nproc_onln(void);
-static int  __get_phys_pages(void);
-static int  __get_avphys_pages(void);
+static bool __matches_cpuN(const char* s) {
+  // The %c trick is to ensure that we have the anchored match "^cpu[0-9]+$".
+  unsigned cpu;
+  char dummy;
+  return (sscanf(s, "cpu%u%c", &cpu, &dummy) == 1);
+}
 
-int
-sysconf( int  name )
-{
+static int __get_nproc_conf(void) {
+  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
+  // from there. This method works on both.
+  DIR* d = opendir("/sys/devices/system/cpu");
+  if (!d) {
+    return 1;
+  }
+
+  int result = 0;
+  struct dirent de;
+  struct dirent* e;
+  while (!readdir_r(d, &de, &e) && e != NULL) {
+    if (e->d_type == DT_DIR && __matches_cpuN(e->d_name)) {
+      ++result;
+    }
+  }
+  closedir(d);
+  return result;
+}
+
+static int __get_nproc_onln(void) {
+  FILE* fp = fopen("/proc/stat", "r");
+  if (fp == NULL) {
+    return 1;
+  }
+
+  int result = 0;
+  char buf[256];
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
+    // Extract just the first word from the line.
+    // 'cpu0 7976751 1364388 3116842 469770388 8629405 0 49047 0 0 0'
+    char* p = strchr(buf, ' ');
+    if (p != NULL) {
+      *p = 0;
+    }
+    if (__matches_cpuN(buf)) {
+      ++result;
+    }
+  }
+  fclose(fp);
+  return result;
+}
+
+static int __get_meminfo(const char* pattern) {
+  FILE* fp = fopen("/proc/meminfo", "r");
+  if (fp == NULL) {
+    return -1;
+  }
+
+  int result = -1;
+  char buf[256];
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
+    long total;
+    if (sscanf(buf, pattern, &total) == 1) {
+      result = (int) (total / (PAGE_SIZE/1024));
+      break;
+    }
+  }
+  fclose(fp);
+  return result;
+}
+
+static int __get_phys_pages(void) {
+  return __get_meminfo("MemTotal: %ld kB");
+}
+
+static int __get_avphys_pages(void) {
+  return __get_meminfo("MemFree: %ld kB");
+}
+
+int sysconf(int name) {
     switch (name) {
 #ifdef _POSIX_ARG_MAX
     case _SC_ARG_MAX:           return _POSIX_ARG_MAX;
@@ -265,170 +338,4 @@ sysconf( int  name )
         errno = ENOSYS;
         return -1;
     }
-}
-
-
-typedef struct {
-    int   rpos;
-    int   len;
-    int   overflow;
-    int   fd;
-    int   in_len;
-    int   in_pos;
-    char  buff[128];
-    char  input[128];
-} LineParser;
-
-static int
-line_parser_init( LineParser*  p, const char*  path )
-{
-    p->rpos     = 0;
-    p->len      = (int)sizeof(p->buff);
-    p->overflow = 0;
-
-    p->in_len   = 0;
-    p->in_pos   = 0;
-    p->fd       = open( path, O_RDONLY );
-
-    return p->fd;
-}
-
-
-static int
-line_parser_addc( LineParser*  p, int  c )
-{
-    if (p->overflow) {
-        p->overflow = (c == '\n');
-        return 0;
-    }
-    if (p->rpos >= p->len) {
-        p->overflow = 1;
-        return 0;
-    }
-    if (c == '\n') {
-        p->buff[p->rpos] = 0;
-        p->rpos = 0;
-        return 1;
-    }
-    p->buff[p->rpos++] = (char) c;
-    return 0;
-}
-
-static int
-line_parser_getc( LineParser*  p )
-{
-    if (p->in_pos >= p->in_len) {
-        int  ret;
-
-        p->in_len = p->in_pos = 0;
-        do {
-            ret = read(p->fd, p->input, sizeof(p->input));
-        } while (ret < 0 && errno == EINTR);
-
-        if (ret <= 0)
-            return -1;
-
-        p->in_len = ret;
-    }
-    return p->input[ p->in_pos++ ];
-}
-
-static const char*
-line_parser_gets( LineParser*  p )
-{
-    for (;;) {
-        for (;;) {
-            int  c = line_parser_getc(p);
-
-            if (c < 0) {
-                close(p->fd);
-                p->fd = -1;
-                return NULL;
-             }
-             if (line_parser_addc(p, c))
-                return p->buff;
-        }
-    }
-}
-
-static void
-line_parser_done( LineParser* p )
-{
-    if (p->fd >= 0) {
-        close(p->fd);
-        p->fd = -1;
-    }
-}
-
-static int
-__get_nproc_conf(void)
-{
-    LineParser   parser[1];
-    const char*  p;
-    int          count = 0;
-
-    if (line_parser_init(parser, "/proc/cpuinfo") < 0)
-        return 1;
-
-    while ((p = line_parser_gets(parser))) {
-        if ( !memcmp(p, "processor", 9) )
-            count += 1;
-    }
-    return (count < 1) ? 1 : count;
-}
-
-
-static int
-__get_nproc_onln(void)
-{
-    LineParser   parser[1];
-    const char*  p;
-    int          count = 0;
-
-    if (line_parser_init(parser, "/proc/stat") < 0)
-        return 1;
-
-    while ((p = line_parser_gets(parser))) {
-        if ( !memcmp(p, "cpu", 3) && isdigit(p[3]) )
-            count += 1;
-    }
-    return (count < 1) ? 1 : count;
-}
-
-static int
-__get_phys_pages(void)
-{
-    LineParser   parser[1];
-    const char*  p;
-
-    if (line_parser_init(parser, "/proc/meminfo") < 0)
-        return -2;  /* what ? */
-
-    while ((p = line_parser_gets(parser))) {
-        long  total;
-        if ( sscanf(p, "MemTotal: %ld kB", &total) == 1 ) {
-            line_parser_done(parser);
-            return (int) (total / (PAGE_SIZE/1024));
-        }
-    }
-    return -3;
-}
-
-static int
-__get_avphys_pages(void)
-{
-    LineParser   parser[1];
-    const char*  p;
-
-    if (line_parser_init(parser, "/proc/meminfo") < 0)
-        return -1;  /* what ? */
-
-    while ((p = line_parser_gets(parser))) {
-        long  total;
-        if ( sscanf(p, "MemFree: %ld kB", &total) == 1 ) {
-            line_parser_done(parser);
-            return (int) (total / (PAGE_SIZE/1024));
-        }
-    }
-    return -1;
 }
