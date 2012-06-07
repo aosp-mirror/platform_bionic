@@ -207,6 +207,7 @@ libc_common_src_files := \
 	string/strxfrm.c \
 	string/__memcpy_chk.c \
 	string/__memmove_chk.c \
+	string/__memset_chk.c \
 	string/__strcat_chk.c \
 	string/__strcpy_chk.c \
 	string/__strncat_chk.c \
