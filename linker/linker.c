@@ -347,7 +347,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
     for (si = solist; si != 0; si = si->next){
         if ((addr >= si->base) && (addr < (si->base + si->size))) {
             *pcount = si->ARM_exidx_count;
-            return (_Unwind_Ptr)(si->base + (unsigned long)si->ARM_exidx);
+            return (_Unwind_Ptr)si->ARM_exidx;
         }
     }
    *pcount = 0;
@@ -423,7 +423,7 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-_do_lookup(soinfo *si, const char *name, unsigned *base)
+_do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
 {
     unsigned elf_hash = elfhash(name);
     Elf32_Sym *s;
@@ -486,9 +486,11 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
 done:
     if(s != NULL) {
         TRACE_TYPE(LOOKUP, "%5d si %s sym %s s->st_value = 0x%08x, "
-                   "found in %s, base = 0x%08x\n",
-                   pid, si->name, name, s->st_value, lsi->name, lsi->base);
+                   "found in %s, base = 0x%08x, load offset = 0x%08x\n",
+                   pid, si->name, name, s->st_value,
+                   lsi->name, lsi->base, lsi->load_offset);
         *base = lsi->base;
+        *offset = lsi->load_offset;
         return s;
     }
 
@@ -866,7 +868,8 @@ load_segments(int fd, void *header, soinfo *si)
 {
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *)header;
     Elf32_Phdr *phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
-    Elf32_Addr base = (Elf32_Addr) si->base;
+    Elf32_Phdr *phdr0 = 0;  /* program header for the first LOAD segment */
+    Elf32_Addr base;
     int cnt;
     unsigned len;
     Elf32_Addr tmp;
@@ -880,8 +883,27 @@ load_segments(int fd, void *header, soinfo *si)
 
     TRACE("[ %5d - Begin loading segments for '%s' @ 0x%08x ]\n",
           pid, si->name, (unsigned)si->base);
+
+    for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
+        if (phdr->p_type == PT_LOAD) {
+            phdr0 = phdr;
+            /*
+             * ELF specification section 2-2.
+             *
+             * PT_LOAD: "Loadable segment entries in the program
+             * header table appear in ascending order, sorted on the
+             * p_vaddr member."
+             */
+            si->load_offset = phdr->p_vaddr & (~PAGE_MASK);
+            break;
+        }
+    }
+    /* "base" might wrap around UINT32_MAX. */
+    base = (Elf32_Addr)(si->base - si->load_offset);
+
     /* Now go through all the PT_LOAD segments and map them into memory
      * at the appropriate locations. */
+    phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
     for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
         if (phdr->p_type == PT_LOAD) {
             DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
@@ -991,9 +1013,9 @@ load_segments(int fd, void *header, soinfo *si)
             /* this segment contains the dynamic linking information */
             si->dynamic = (unsigned *)(base + phdr->p_vaddr);
         } else if (phdr->p_type == PT_GNU_RELRO) {
-            if ((phdr->p_vaddr >= si->size)
-                    || ((phdr->p_vaddr + phdr->p_memsz) > si->size)
-                    || ((base + phdr->p_vaddr + phdr->p_memsz) < base)) {
+            if (((base + phdr->p_vaddr) >= si->base + si->size)
+                    || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
+                    || ((base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
                 DL_ERR("%d invalid GNU_RELRO in '%s' "
                        "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
                        phdr->p_vaddr, phdr->p_memsz);
@@ -1007,7 +1029,7 @@ load_segments(int fd, void *header, soinfo *si)
                 DEBUG_DUMP_PHDR(phdr, "PT_ARM_EXIDX", pid);
                 /* exidx entries (used for stack unwinding) are 8 bytes each.
                  */
-                si->ARM_exidx = (unsigned *)phdr->p_vaddr;
+                si->ARM_exidx = (unsigned *)(base + phdr->p_vaddr);
                 si->ARM_exidx_count = phdr->p_memsz / 8;
             }
 #endif
@@ -1022,6 +1044,21 @@ load_segments(int fd, void *header, soinfo *si)
               pid, total_sz, si->name, si->size);
         goto fail;
     }
+
+    /* vaddr    : Real virtual address in process' address space.
+     * p_vaddr  : Relative virtual address in ELF object
+     * p_offset : File offset in ELF object
+     *
+     * vaddr        p_vaddr                         p_offset
+     * -----        ------------                    --------
+     * base         0
+     * si->base     phdr0->p_vaddr & ~PAGE_MASK
+     *              phdr0->p_vaddr                  phdr0->p_offset
+     * phdr                                         ehdr->e_phoff
+     */
+    si->phdr = (Elf32_Phdr *)(base + phdr0->p_vaddr +
+                              ehdr->e_phoff - phdr0->p_offset);
+    si->phnum = ehdr->e_phnum;
 
     TRACE("[ %5d - Finish loading segments for '%s' @ 0x%08x. "
           "Total memory footprint: 0x%08x bytes ]\n", pid, si->name,
@@ -1142,9 +1179,6 @@ load_library(const char *name)
     if (load_segments(fd, hdr, si) < 0) {
         goto fail;
     }
-
-    si->phdr = (Elf32_Phdr *)((unsigned char *)si->base + hdr->e_phoff);
-    si->phnum = hdr->e_phnum;
 
     munmap(hdr, sb.st_size);
     close(fd);
@@ -1282,13 +1316,14 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
     const char *strtab = si->strtab;
     Elf32_Sym *s;
     unsigned base;
+    Elf32_Addr offset;
     Elf32_Rel *start = rel;
     unsigned idx;
 
     for (idx = 0; idx < count; ++idx) {
         unsigned type = ELF32_R_TYPE(rel->r_info);
         unsigned sym = ELF32_R_SYM(rel->r_info);
-        unsigned reloc = (unsigned)(rel->r_offset + si->base);
+        unsigned reloc = (unsigned)(rel->r_offset + si->base - si->load_offset);
         unsigned sym_addr = 0;
         char *sym_name = NULL;
 
@@ -1296,7 +1331,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
               si->name, idx);
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = _do_lookup(si, sym_name, &base);
+            s = _do_lookup(si, sym_name, &base, &offset);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1363,7 +1398,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
 #endif
-                sym_addr = (unsigned)(s->st_value + base);
+                sym_addr = (unsigned)(s->st_value + base - offset);
 	    }
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
@@ -1668,6 +1703,8 @@ static int nullify_closed_stdio (void)
 static int link_image(soinfo *si, unsigned wr_offset)
 {
     unsigned *d;
+    /* "base" might wrap around UINT32_MAX. */
+    Elf32_Addr base = si->base - si->load_offset;
     Elf32_Phdr *phdr = si->phdr;
     int phnum = si->phnum;
 
@@ -1703,7 +1740,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
                    We use the range [si->base, si->base + si->size) to
                    determine whether a PC value falls within the executable
                    section. Of course, if a value is between si->base and
-                   (si->base + phdr->p_vaddr), it's not in the executable
+                   (base + phdr->p_vaddr), it's not in the executable
                    section, but a) we shouldn't be asking for such a value
                    anyway, and b) if we have to provide an EXIDX for such a
                    value, then the executable's EXIDX is probably the better
@@ -1717,9 +1754,9 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 if (!(phdr->p_flags & PF_W)) {
                     unsigned _end;
 
-                    if (si->base + phdr->p_vaddr < si->wrprotect_start)
-                        si->wrprotect_start = si->base + phdr->p_vaddr;
-                    _end = (((si->base + phdr->p_vaddr + phdr->p_memsz + PAGE_SIZE - 1) &
+                    if (base + phdr->p_vaddr < si->wrprotect_start)
+                        si->wrprotect_start = base + phdr->p_vaddr;
+                    _end = (((base + phdr->p_vaddr + phdr->p_memsz + PAGE_SIZE - 1) &
                              (~PAGE_MASK)));
                     if (_end > si->wrprotect_end)
                         si->wrprotect_end = _end;
@@ -1728,7 +1765,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
                      * However, we will remember what range of addresses
                      * should be write protected.
                      */
-                    mprotect((void *) (si->base + phdr->p_vaddr),
+                    mprotect((void *) (base + phdr->p_vaddr),
                              phdr->p_memsz,
                              PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
                 }
@@ -1736,22 +1773,22 @@ static int link_image(soinfo *si, unsigned wr_offset)
                 if (si->dynamic != (unsigned *)-1) {
                     DL_ERR("%5d multiple PT_DYNAMIC segments found in '%s'. "
                           "Segment at 0x%08x, previously one found at 0x%08x",
-                          pid, si->name, si->base + phdr->p_vaddr,
+                          pid, si->name, base + phdr->p_vaddr,
                           (unsigned)si->dynamic);
                     goto fail;
                 }
                 DEBUG_DUMP_PHDR(phdr, "PT_DYNAMIC", pid);
-                si->dynamic = (unsigned *) (si->base + phdr->p_vaddr);
+                si->dynamic = (unsigned *) (base + phdr->p_vaddr);
             } else if (phdr->p_type == PT_GNU_RELRO) {
-                if ((phdr->p_vaddr >= si->size)
-                        || ((phdr->p_vaddr + phdr->p_memsz) > si->size)
-                        || ((si->base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
+                if ((base + phdr->p_vaddr >= si->base + si->size)
+                        || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
+                        || ((base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
                     DL_ERR("%d invalid GNU_RELRO in '%s' "
                            "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
                            phdr->p_vaddr, phdr->p_memsz);
                     goto fail;
                 }
-                si->gnu_relro_start = (Elf32_Addr) (si->base + phdr->p_vaddr);
+                si->gnu_relro_start = (Elf32_Addr) (base + phdr->p_vaddr);
                 si->gnu_relro_len = (unsigned) phdr->p_memsz;
             }
         }
@@ -1769,16 +1806,16 @@ static int link_image(soinfo *si, unsigned wr_offset)
         DEBUG("%5d d = %p, d[0] = 0x%08x d[1] = 0x%08x\n", pid, d, d[0], d[1]);
         switch(*d++){
         case DT_HASH:
-            si->nbucket = ((unsigned *) (si->base + *d))[0];
-            si->nchain = ((unsigned *) (si->base + *d))[1];
-            si->bucket = (unsigned *) (si->base + *d + 8);
-            si->chain = (unsigned *) (si->base + *d + 8 + si->nbucket * 4);
+            si->nbucket = ((unsigned *) (base + *d))[0];
+            si->nchain = ((unsigned *) (base + *d))[1];
+            si->bucket = (unsigned *) (base + *d + 8);
+            si->chain = (unsigned *) (base + *d + 8 + si->nbucket * 4);
             break;
         case DT_STRTAB:
-            si->strtab = (const char *) (si->base + *d);
+            si->strtab = (const char *) (base + *d);
             break;
         case DT_SYMTAB:
-            si->symtab = (Elf32_Sym *) (si->base + *d);
+            si->symtab = (Elf32_Sym *) (base + *d);
             break;
         case DT_PLTREL:
             if(*d != DT_REL) {
@@ -1787,20 +1824,20 @@ static int link_image(soinfo *si, unsigned wr_offset)
             }
             break;
         case DT_JMPREL:
-            si->plt_rel = (Elf32_Rel*) (si->base + *d);
+            si->plt_rel = (Elf32_Rel*) (base + *d);
             break;
         case DT_PLTRELSZ:
             si->plt_rel_count = *d / 8;
             break;
         case DT_REL:
-            si->rel = (Elf32_Rel*) (si->base + *d);
+            si->rel = (Elf32_Rel*) (base + *d);
             break;
         case DT_RELSZ:
             si->rel_count = *d / 8;
             break;
         case DT_PLTGOT:
             /* Save this in case we decide to do lazy binding. We don't yet. */
-            si->plt_got = (unsigned *)(si->base + *d);
+            si->plt_got = (unsigned *)(base + *d);
             break;
         case DT_DEBUG:
             // Set the DT_DEBUG entry to the addres of _r_debug for GDB
@@ -1810,17 +1847,17 @@ static int link_image(soinfo *si, unsigned wr_offset)
             DL_ERR("%5d DT_RELA not supported", pid);
             goto fail;
         case DT_INIT:
-            si->init_func = (void (*)(void))(si->base + *d);
+            si->init_func = (void (*)(void))(base + *d);
             DEBUG("%5d %s constructors (init func) found at %p\n",
                   pid, si->name, si->init_func);
             break;
         case DT_FINI:
-            si->fini_func = (void (*)(void))(si->base + *d);
+            si->fini_func = (void (*)(void))(base + *d);
             DEBUG("%5d %s destructors (fini func) found at %p\n",
                   pid, si->name, si->fini_func);
             break;
         case DT_INIT_ARRAY:
-            si->init_array = (unsigned *)(si->base + *d);
+            si->init_array = (unsigned *)(base + *d);
             DEBUG("%5d %s constructors (init_array) found at %p\n",
                   pid, si->name, si->init_array);
             break;
@@ -1828,7 +1865,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
             si->init_array_count = ((unsigned)*d) / sizeof(Elf32_Addr);
             break;
         case DT_FINI_ARRAY:
-            si->fini_array = (unsigned *)(si->base + *d);
+            si->fini_array = (unsigned *)(base + *d);
             DEBUG("%5d %s destructors (fini_array) found at %p\n",
                   pid, si->name, si->fini_array);
             break;
@@ -1836,7 +1873,7 @@ static int link_image(soinfo *si, unsigned wr_offset)
             si->fini_array_count = ((unsigned)*d) / sizeof(Elf32_Addr);
             break;
         case DT_PREINIT_ARRAY:
-            si->preinit_array = (unsigned *)(si->base + *d);
+            si->preinit_array = (unsigned *)(base + *d);
             DEBUG("%5d %s constructors (preinit_array) found at %p\n",
                   pid, si->name, si->preinit_array);
             break;
@@ -2150,6 +2187,7 @@ sanitize:
             break;
         }
     }
+    si->load_offset = 0;
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
@@ -2267,6 +2305,7 @@ unsigned __linker_init(unsigned **elfdata) {
     memset(&linker_so, 0, sizeof(soinfo));
 
     linker_so.base = linker_addr;
+    linker_so.load_offset = 0;
     linker_so.dynamic = (unsigned *) -1;
     linker_so.phdr = phdr;
     linker_so.phnum = elf_hdr->e_phnum;
