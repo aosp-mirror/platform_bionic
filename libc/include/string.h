@@ -85,27 +85,21 @@ extern char*  strsignal(int  sig);
 extern int    strcoll(const char *, const char *) __purefunc;
 extern size_t strxfrm(char *, const char *, size_t);
 
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
-
-#define __BIONIC_FORTIFY_INLINE \
-    extern inline \
-    __attribute__ ((always_inline)) \
-    __attribute__ ((gnu_inline)) \
-    __attribute__ ((artificial))
+#if defined(__BIONIC_FORTIFY_INLINE)
 
 __BIONIC_FORTIFY_INLINE
 void *memcpy (void *dest, const void *src, size_t len) {
-    return __builtin___memcpy_chk (dest, src, len, __builtin_object_size (dest, 0));
+    return __builtin___memcpy_chk(dest, src, len, __builtin_object_size (dest, 0));
 }
 
 __BIONIC_FORTIFY_INLINE
 void *memmove (void *dest, const void *src, size_t len) {
-    return __builtin___memmove_chk (dest, src, len, __builtin_object_size (dest, 0));
+    return __builtin___memmove_chk(dest, src, len, __builtin_object_size (dest, 0));
 }
 
 __BIONIC_FORTIFY_INLINE
 char *strcpy(char *dest, const char *src) {
-    return __builtin___strcpy_chk (dest, src, __builtin_object_size (dest, 0));
+    return __builtin___strcpy_chk(dest, src, __builtin_object_size (dest, 0));
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -115,7 +109,7 @@ char *strncpy(char *dest, const char *src, size_t n) {
 
 __BIONIC_FORTIFY_INLINE
 char *strcat(char *dest, const char *src) {
-    return __builtin___strcat_chk (dest, src, __builtin_object_size (dest, 0));
+    return __builtin___strcat_chk(dest, src, __builtin_object_size (dest, 0));
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -123,8 +117,12 @@ char *strncat(char *dest, const char *src, size_t n) {
     return __builtin___strncat_chk(dest, src, n, __builtin_object_size (dest, 0));
 }
 
-#undef __BIONIC_FORTIFY_INLINE
-#endif
+__BIONIC_FORTIFY_INLINE
+void *memset (void *s, int c, size_t n) {
+    return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
+}
+
+#endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
 __END_DECLS
 
