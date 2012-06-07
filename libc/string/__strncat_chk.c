@@ -29,6 +29,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <private/logd.h>
+#include <safe_iop.h>
 
 /*
  * Runtime implementation of __builtin____strncat_chk.
@@ -51,7 +52,11 @@ char *__strncat_chk (char *dest, const char *src,
         src_len = len;
     }
 
-    if (dest_len + src_len + 1 > dest_buf_size) {
+    size_t sum;
+    // sum = src_len + dest_len + 1 (with overflow protection)
+    if (!safe_add3(&sum, src_len, dest_len, 1U)) abort();
+
+    if (sum > dest_buf_size) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** strncat buffer overflow detected ***\n");
         abort();
