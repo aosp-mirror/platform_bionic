@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGXn///5Q\u003d",
+        "filename": "libc/netbsd/net/getnameinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "I think we should allow native apps to specify an interface.  If you accept that here and pass it through the netd link it may be null and then you look it up by pid.\n\nSymmetric to you getaddrinfo change.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///vk\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1658,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "do we need a second variable for this?",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///vs\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "this function doesn\u0027t return a cache.  it seems an act of desperation - how about _find_any_iface_name_locked.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///us\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "I was planning to have a single list of pid-\u003eiface pairs that I could scan rather than a list of pids for each iface.  DNS lookup needs to be fast, and the majority of DNS lookups will use the default - the list of specified pid\u0027s will be small.  I\u0027d rather scan a list of 3-5 pids looking for mine than scan each interface\u0027s list of pids.  We may have 3-7 or more ifaces, so already that\u0027s longer than a single pid-\u003eiface list.\n\nThoughts?  Please push back if appropriate - you\u0027ve put more time/thought into this than I.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///uo\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "I think it would be better to back fill so that we can short-circuit the lookup process.  MAX_NUMBER_OF_ATTACHED_PIDS needs to be high enough we don\u0027t hit it, so we don\u0027t want to have to search that in it\u0027s entirety each time.\n\nI think the search will happen much more often than a detach.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///uk\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "see above - we need to be able to short-cut out of this search when we hit a 0.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///uQ\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2190,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "the fact that the locked and unlocked versions of this function do different things is somewhat confusing..  This uses _find_first_* if the default isn\u0027t set.  Do we have callers of _get_default_iface_locked that don\u0027t want to find_first_* if the default isn\u0027t set?",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGUH///sk\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "it seems we should only do one of these copies for a given ai, but it\u0027s not an else-if..  are there cases where we\u0027d want to copy to both?",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGXn///5o\u003d",
+        "filename": "libc/netbsd/resolv/res_state.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-06-07T18:59:49Z",
+      "side": 1,
+      "message": "does this get called for every dns query?  I think it might - the thread is created each time in system/netd/DnsProxyListener.  That means every query will call res_initfromcache.\n\nCould we instead have a global table of res_state per interface and just select from that in this function?  We\u0027d have to work out synchronization issues (lock around the lookup, copy the pointer on lookup and alloc a new structure when things change, so we can do a simple locked ptr swap).\n\nThis code has been made inefficient, not by your change, but by the impl of the dnsproxy.  Your change makes it worse but I think we can fix it.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
