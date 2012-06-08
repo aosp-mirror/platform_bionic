@@ -47,6 +47,7 @@ void *__memcpy_chk (void *dest, const void *src,
     if (len > dest_len) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** memcpy buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
         abort();
     }
 

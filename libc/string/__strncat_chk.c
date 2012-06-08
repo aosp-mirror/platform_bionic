@@ -54,11 +54,17 @@ char *__strncat_chk (char *dest, const char *src,
 
     size_t sum;
     // sum = src_len + dest_len + 1 (with overflow protection)
-    if (!safe_add3(&sum, src_len, dest_len, 1U)) abort();
+    if (!safe_add3(&sum, src_len, dest_len, 1U)) {
+        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+            "*** strncat integer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_STRNCAT_INTEGER_OVERFLOW);
+        abort();
+    }
 
     if (sum > dest_buf_size) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** strncat buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW);
         abort();
     }
 

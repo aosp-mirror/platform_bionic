@@ -47,6 +47,7 @@ void *__memmove_chk (void *dest, const void *src,
     if (len > dest_len) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** memmove buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
         abort();
     }
 
