@@ -64,6 +64,7 @@ typedef enum {
     LOG_ID_NONE = 0,
     LOG_ID_MAIN,
     LOG_ID_RADIO,
+    LOG_ID_EVENTS,
     LOG_ID_MAX
 } log_id_t;
 
@@ -84,7 +85,8 @@ static pthread_mutex_t log_init_lock = PTHREAD_MUTEX_INITIALIZER;
 static log_channel_t log_channels[LOG_ID_MAX] = {
     { __write_to_log_null, -1, NULL },
     { __write_to_log_init, -1, "/dev/"LOGGER_LOG_MAIN },
-    { __write_to_log_init, -1, "/dev/"LOGGER_LOG_RADIO }
+    { __write_to_log_init, -1, "/dev/"LOGGER_LOG_RADIO },
+    { __write_to_log_init, -1, "/dev/"LOGGER_LOG_EVENTS }
 };
 
 /* Important: see technical note at start of source file */
@@ -206,4 +208,42 @@ int __libc_android_log_assert(const char *cond, const char *tag,
     exit(1);
 
     return -1;
+}
+
+/*
+ * Event logging.
+ */
+
+// must be kept in sync with frameworks/base/core/java/android/util/EventLog.java
+typedef enum {
+    EVENT_TYPE_INT      = 0,
+    EVENT_TYPE_LONG     = 1,
+    EVENT_TYPE_STRING   = 2,
+    EVENT_TYPE_LIST     = 3,
+} AndroidEventLogType;
+
+static int __libc_android_log_btwrite(int32_t tag, char type, const void *payload, size_t len)
+{
+    struct iovec vec[3];
+
+    vec[0].iov_base = &tag;
+    vec[0].iov_len = sizeof(tag);
+    vec[1].iov_base = &type;
+    vec[1].iov_len = sizeof(type);
+    vec[2].iov_base = (void*)payload;
+    vec[2].iov_len = len;
+
+    return log_channels[LOG_ID_EVENTS].logger(LOG_ID_EVENTS, vec);
+}
+
+__LIBC_HIDDEN__
+void __libc_android_log_event_int(int32_t tag, int value)
+{
+    __libc_android_log_btwrite(tag, EVENT_TYPE_INT, &value, sizeof(value));
+}
+
+__LIBC_HIDDEN__
+void __libc_android_log_event_uid(int32_t tag)
+{
+    __libc_android_log_event_int(tag, getuid());
 }
