@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGbX///6A\u003d",
+        "filename": "libaprof/libaprof_jni_runtime.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-06-08T19:13:42Z",
+      "side": 1,
+      "message": "We\u0027re now using ALOG* instead of LOG*, which is deprecated. Please use ALOG* everywhere instead of LOG*",
+      "revId": "ddacac440e61d625a4f1165bfa210cd49eaaf3eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGbH///5w\u003d",
+        "filename": "libaprof/libaprof_jni_runtime.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000660
+      },
+      "writtenOn": "2012-06-08T19:13:42Z",
+      "side": 1,
+      "message": "Inconsistent indentation",
+      "revId": "ddacac440e61d625a4f1165bfa210cd49eaaf3eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
