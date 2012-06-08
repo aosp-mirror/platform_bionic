@@ -44,6 +44,23 @@ extern int tgkill(int tgid, int tid, int sig);
 
 void notify_gdb_of_libraries();
 
+#define DEBUGGER_SOCKET_NAME "android:debuggerd"
+
+typedef enum {
+    // dump a crash
+    DEBUGGER_ACTION_CRASH,
+    // dump a tombstone file
+    DEBUGGER_ACTION_DUMP_TOMBSTONE,
+    // dump a backtrace only back to the socket
+    DEBUGGER_ACTION_DUMP_BACKTRACE,
+} debugger_action_t;
+
+/* message sent over the socket */
+typedef struct {
+    debugger_action_t action;
+    pid_t tid;
+} debugger_msg_t;
+
 #define  RETRY_ON_EINTR(ret,cond) \
     do { \
         ret = (cond); \
@@ -146,7 +163,7 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused)
     logSignalSummary(n, info);
 
     tid = gettid();
-    s = socket_abstract_client("android:debuggerd", SOCK_STREAM);
+    s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
 
     if (s >= 0) {
         /* debugger knows our pid from the credentials on the
@@ -155,9 +172,11 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused)
          * that's actually in our process
          */
         int  ret;
-
-        RETRY_ON_EINTR(ret, write(s, &tid, sizeof(unsigned)));
-        if (ret == sizeof(unsigned)) {
+        debugger_msg_t msg;
+        msg.action = DEBUGGER_ACTION_CRASH;
+        msg.tid = tid;
+        RETRY_ON_EINTR(ret, write(s, &msg, sizeof(msg)));
+        if (ret == sizeof(msg)) {
             /* if the write failed, there is no point to read on
              * the file descriptor. */
             RETRY_ON_EINTR(ret, read(s, &tid, 1));
