@@ -75,8 +75,13 @@ inet_ntop4(const u_char *src, char *dst, size_t size)
 	char tmp[sizeof "255.255.255.255"];
 	int l;
 
+#if defined(ANDROID_CHANGES)
+	l = snprintf(tmp, sizeof(tmp), fmt, src[0], src[1], src[2], src[3]);
+	if (l <= 0 || (size_t)l >= size || (size_t)l >= sizeof(tmp)) {
+#else
 	l = snprintf(tmp, size, fmt, src[0], src[1], src[2], src[3]);
 	if (l <= 0 || (size_t)l >= size) {
+#endif
 		errno = ENOSPC;
 		return (NULL);
 	}
