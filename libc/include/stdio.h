@@ -458,4 +458,32 @@ int vfdprintf(int, const char*, __va_list);
 __END_DECLS
 #endif /* _GNU_SOURCE */
 
+#if defined(__BIONIC_FORTIFY_INLINE)
+
+__BIONIC_FORTIFY_INLINE
+__attribute__((__format__ (printf, 3, 0)))
+__attribute__((__nonnull__ (3)))
+int vsnprintf(char *str, size_t size, const char *format, __va_list ap)
+{
+    return __builtin___vsnprintf_chk(str, size, 0, __builtin_object_size(str, 0), format, ap);
+}
+
+# if !defined(__clang__)
+/*
+ * Clang doesn't have support for __builtin_va_arg_pack()
+ * http://clang.llvm.org/docs/UsersManual.html#c_unimpl_gcc
+ */
+
+__BIONIC_FORTIFY_INLINE
+__attribute__((__format__ (printf, 3, 4)))
+__attribute__((__nonnull__ (3)))
+int snprintf(char *str, size_t size, const char *format, ...)
+{
+    return __builtin___snprintf_chk(str, size, 0, __builtin_object_size(str, 0), format, __builtin_va_arg_pack());
+}
+
+# endif /* !defined(__clang__) */
+
+#endif /* defined(__BIONIC_FORTIFY_INLINE) */
+
 #endif /* _STDIO_H_ */
