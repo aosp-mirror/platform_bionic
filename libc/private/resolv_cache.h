@@ -95,4 +95,10 @@ _resolv_cache_add( struct resolv_cache*  cache,
                    const void*           answer,
                    int                   answerlen );
 
+/* Notify the cache a request failed */
+extern void
+_resolv_cache_query_failed( struct resolv_cache* cache,
+                   const void* query,
+                   int         querylen);
+
 #endif /* _RESOLV_CACHE_H_ */
