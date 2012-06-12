@@ -60,7 +60,7 @@ void *dlopen(const char *filename, int flag)
     if (unlikely(ret == NULL)) {
         set_dlerror(DL_ERR_CANNOT_LOAD_LIBRARY);
     } else {
-        call_constructors_recursive(ret);
+        soinfo_call_constructors(ret);
         ret->refcount++;
     }
     pthread_mutex_unlock(&dl_lock);
@@ -103,7 +103,7 @@ void *dlsym(void *handle, const char *symbol)
         }
     } else {
         found = (soinfo*)handle;
-        sym = lookup_in_library(found, symbol);
+        sym = soinfo_lookup(found, symbol);
     }
 
     if(likely(sym != 0)) {
@@ -141,7 +141,7 @@ int dladdr(const void *addr, Dl_info *info)
         info->dli_fbase = (void*)si->base;
 
         /* Determine if any symbol in the library contains the specified address */
-        Elf32_Sym *sym = find_containing_symbol(addr, si);
+        Elf32_Sym *sym = soinfo_find_symbol(si, addr);
 
         if(sym != NULL) {
             info->dli_sname = si->strtab + sym->st_name;
@@ -159,7 +159,7 @@ int dladdr(const void *addr, Dl_info *info)
 int dlclose(void *handle)
 {
     pthread_mutex_lock(&dl_lock);
-    (void)unload_library((soinfo*)handle);
+    (void)soinfo_unload((soinfo*)handle);
     pthread_mutex_unlock(&dl_lock);
     return 0;
 }

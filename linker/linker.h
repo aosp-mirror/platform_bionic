@@ -206,13 +206,14 @@ extern soinfo libdl_info;
 #endif
 
 soinfo *find_library(const char *name);
-unsigned unload_library(soinfo *si);
-Elf32_Sym *lookup_in_library(soinfo *si, const char *name);
 Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start);
 soinfo *find_containing_library(const void *addr);
-Elf32_Sym *find_containing_symbol(const void *addr, soinfo *si);
 const char *linker_get_error(void);
-void call_constructors_recursive(soinfo *si);
+
+unsigned soinfo_unload(soinfo *si);
+Elf32_Sym *soinfo_find_symbol(soinfo* si, const void *addr);
+Elf32_Sym *soinfo_lookup(soinfo *si, const char *name);
+void soinfo_call_constructors(soinfo *si);
 
 #ifdef ANDROID_ARM_LINKER 
 typedef long unsigned int *_Unwind_Ptr;

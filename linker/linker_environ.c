@@ -192,13 +192,11 @@ linker_env_secure(void)
         "TZDIR",
         "LD_AOUT_LIBRARY_PATH",
         "LD_AOUT_PRELOAD",
+        NULL
     };
 
-    const char* const* cp   = unsec_vars;
-    const char* const* endp = cp + sizeof(unsec_vars)/sizeof(unsec_vars[0]);
-
-    while (cp < endp) {
-        linker_env_unset(*cp);
-        cp++;
+    int count;
+    for (count = 0; unsec_vars[count] != NULL; count++) {
+        linker_env_unset(unsec_vars[count]);
     }
 }
