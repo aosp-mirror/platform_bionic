@@ -35,7 +35,7 @@ __BEGIN_DECLS
 
 extern __mallocfunc void*  malloc(size_t);
 extern __mallocfunc void*  calloc(size_t, size_t);
-extern __mallocfunc void*  realloc(void *, size_t);
+extern void*  realloc(void *, size_t);
 extern                void   free(void *);
 
 extern void*   memalign(size_t  alignment, size_t  bytesize);
