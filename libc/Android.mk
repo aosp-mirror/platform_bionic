@@ -214,6 +214,8 @@ libc_common_src_files := \
 	string/__memset_chk.c \
 	string/__strcat_chk.c \
 	string/__strcpy_chk.c \
+	string/__strlcat_chk.c \
+	string/__strlcpy_chk.c \
 	string/__strncat_chk.c \
 	string/__strncpy_chk.c \
 	wchar/wcpcpy.c \
