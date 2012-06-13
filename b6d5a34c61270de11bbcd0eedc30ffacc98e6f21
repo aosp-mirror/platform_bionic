@@ -16,6 +16,24 @@
       "revId": "b6d5a34c61270de11bbcd0eedc30ffacc98e6f21",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGg3///8c\u003d",
+        "filename": "libc/stdlib/strtod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1002068
+      },
+      "writtenOn": "2012-06-13T18:05:07Z",
+      "side": 1,
+      "message": "I don\u0027t see how strtoll being more flexible than needed (by accepting +/- and the optional 0x prefix) is an issue here. Currently, this if branch is executed if we know s points to something starting with \"0x\" or \"0X\", and strtoll should be able to decode that just fine (as long as there isn\u0027t any decimal part). If the string passed to strtod started with a + or a -, it is parsed out before this code block, and the sign is stored in a local variable, and the s pointer is incremented.\n\nstrtod should support hex strings, currently it doesn\u0027t. With this patch, it supports some of them (only integer hex strings, not float ones), by piggybacking on strtoll for doing the hexstring-\u003einteger conversion. (In the newer NetBSD strtod implementation, the amount of code for handling this completely seemed nontrivial.) Sure, this is not complete, but at least fixes my particular use case, and is a small step in the right direction.",
+      "parentUuid": "AAAGhn///9I\u003d",
+      "revId": "b6d5a34c61270de11bbcd0eedc30ffacc98e6f21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
