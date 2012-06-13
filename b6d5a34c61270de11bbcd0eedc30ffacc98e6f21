@@ -34,6 +34,24 @@
       "revId": "b6d5a34c61270de11bbcd0eedc30ffacc98e6f21",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGhn///9A\u003d",
+        "filename": "libc/stdlib/strtod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-06-13T19:23:17Z",
+      "side": 1,
+      "message": "ah sorry, my bad, I assumed you were passing s+2 as the first parameter, don\u0027t know why. I think this is good enough, I\u0027ll remove my -2.",
+      "parentUuid": "AAAGg3///8c\u003d",
+      "revId": "b6d5a34c61270de11bbcd0eedc30ffacc98e6f21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
