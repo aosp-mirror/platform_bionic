@@ -231,12 +231,16 @@ int	 fgetc(FILE *);
 int	 fgetpos(FILE *, fpos_t *);
 char	*fgets(char *, int, FILE *);
 FILE	*fopen(const char *, const char *);
-int	 fprintf(FILE *, const char *, ...);
+int	 fprintf(FILE *, const char *, ...)
+		__attribute__((__format__ (printf, 2, 3)))
+		__attribute__((__nonnull__ (2)));
 int	 fputc(int, FILE *);
 int	 fputs(const char *, FILE *);
 size_t	 fread(void *, size_t, size_t, FILE *);
 FILE	*freopen(const char *, const char *, FILE *);
-int	 fscanf(FILE *, const char *, ...);
+int	 fscanf(FILE *, const char *, ...)
+		__attribute__ ((__format__ (scanf, 2, 3)))
+		__attribute__ ((__nonnull__ (2)));
 int	 fseek(FILE *, long, int);
 int	 fseeko(FILE *, off_t, int);
 int	 fsetpos(FILE *, const fpos_t *);
@@ -253,24 +257,38 @@ extern int sys_nerr;			/* perror(3) external variables */
 extern char *sys_errlist[];
 #endif
 void	 perror(const char *);
-int	 printf(const char *, ...);
+int	 printf(const char *, ...)
+		__attribute__((__format__ (printf, 1, 2)))
+		__attribute__((__nonnull__ (1)));
 int	 putc(int, FILE *);
 int	 putchar(int);
 int	 puts(const char *);
 int	 remove(const char *);
 int	 rename(const char *, const char *);
 void	 rewind(FILE *);
-int	 scanf(const char *, ...);
+int	 scanf(const char *, ...)
+		__attribute__ ((__format__ (scanf, 1, 2)))
+		__attribute__ ((__nonnull__ (1)));
 void	 setbuf(FILE *, char *);
 int	 setvbuf(FILE *, char *, int, size_t);
-int	 sprintf(char *, const char *, ...);
-int	 sscanf(const char *, const char *, ...);
+int	 sprintf(char *, const char *, ...)
+		__attribute__((__format__ (printf, 2, 3)))
+		__attribute__((__nonnull__ (2)));
+int	 sscanf(const char *, const char *, ...)
+		__attribute__ ((__format__ (scanf, 2, 3)))
+		__attribute__ ((__nonnull__ (2)));
 FILE	*tmpfile(void);
 char	*tmpnam(char *);
 int	 ungetc(int, FILE *);
-int	 vfprintf(FILE *, const char *, __va_list);
-int	 vprintf(const char *, __va_list);
-int	 vsprintf(char *, const char *, __va_list);
+int	 vfprintf(FILE *, const char *, __va_list)
+		__attribute__((__format__ (printf, 2, 0)))
+		__attribute__((__nonnull__ (2)));
+int	 vprintf(const char *, __va_list)
+		__attribute__((__format__ (printf, 1, 0)))
+		__attribute__((__nonnull__ (1)));
+int	 vsprintf(char *, const char *, __va_list)
+		__attribute__((__format__ (printf, 2, 0)))
+		__attribute__((__nonnull__ (2)));
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char *, size_t, const char *, ...)
@@ -453,8 +471,12 @@ extern	int __isthreaded;
  * #define fdprintf dprintf for compatibility
  */
 __BEGIN_DECLS
-int fdprintf(int, const char*, ...);
-int vfdprintf(int, const char*, __va_list);
+int fdprintf(int, const char*, ...)
+		__attribute__((__format__ (printf, 2, 3)))
+		__attribute__((__nonnull__ (2)));
+int vfdprintf(int, const char*, __va_list)
+		__attribute__((__format__ (printf, 2, 0)))
+		__attribute__((__nonnull__ (2)));
 __END_DECLS
 #endif /* _GNU_SOURCE */
 
@@ -463,10 +485,21 @@ __END_DECLS
 __BIONIC_FORTIFY_INLINE
 __attribute__((__format__ (printf, 3, 0)))
 __attribute__((__nonnull__ (3)))
-int vsnprintf(char *str, size_t size, const char *format, __va_list ap)
+int vsnprintf(char *dest, size_t size, const char *format, __va_list ap)
 {
-    return __builtin___vsnprintf_chk(str, size, 0, __builtin_object_size(str, 0), format, ap);
+    return __builtin___vsnprintf_chk(dest, size, 0,
+        __builtin_object_size(dest, 0), format, ap);
 }
+
+__BIONIC_FORTIFY_INLINE
+__attribute__((__format__ (printf, 2, 0)))
+__attribute__((__nonnull__ (2)))
+int vsprintf(char *dest, const char *format, __va_list ap)
+{
+    return __builtin___vsprintf_chk(dest, 0,
+        __builtin_object_size(dest, 0), format, ap);
+}
+
 
 # if !defined(__clang__)
 /*
@@ -479,7 +512,17 @@ __attribute__((__format__ (printf, 3, 4)))
 __attribute__((__nonnull__ (3)))
 int snprintf(char *str, size_t size, const char *format, ...)
 {
-    return __builtin___snprintf_chk(str, size, 0, __builtin_object_size(str, 0), format, __builtin_va_arg_pack());
+    return __builtin___snprintf_chk(str, size, 0,
+        __builtin_object_size(str, 0), format, __builtin_va_arg_pack());
+}
+
+__BIONIC_FORTIFY_INLINE
+__attribute__((__format__ (printf, 2, 3)))
+__attribute__((__nonnull__ (2)))
+int sprintf(char *dest, const char *format, ...)
+{
+    return __builtin___sprintf_chk(dest, 0,
+        __builtin_object_size(dest, 0), format, __builtin_va_arg_pack());
 }
 
 # endif /* !defined(__clang__) */
