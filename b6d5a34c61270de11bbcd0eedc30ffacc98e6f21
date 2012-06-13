@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGhn///9I\u003d",
+        "filename": "libc/stdlib/strtod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-06-13T15:46:16Z",
+      "side": 1,
+      "message": "strtoll can take an arbitrary amount of whitespace followed by + or -, it also accepts a prefix of 0x if the base is 0 or 16.\n\nI don\u0027t think that\u0027s the function you want to use here!",
+      "revId": "b6d5a34c61270de11bbcd0eedc30ffacc98e6f21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
