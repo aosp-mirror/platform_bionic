@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGj3////s\u003d",
+        "filename": "libc/netbsd/net/getnameinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "Agree iface support will be added",
+      "parentUuid": "AAAGXn///5Q\u003d",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUH///vk\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGj3////o\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "Agree your English is better",
+      "parentUuid": "AAAGUH///vs\u003d",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUH///us\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2012-06-07T18:59:49Z",
       "side": 1,
       "message": "I was planning to have a single list of pid-\u003eiface pairs that I could scan rather than a list of pids for each iface.  DNS lookup needs to be fast, and the majority of DNS lookups will use the default - the list of specified pid\u0027s will be small.  I\u0027d rather scan a list of 3-5 pids looking for mine than scan each interface\u0027s list of pids.  We may have 3-7 or more ifaces, so already that\u0027s longer than a single pid-\u003eiface list.\n\nThoughts?  Please push back if appropriate - you\u0027ve put more time/thought into this than I.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGj3////k\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "To me it was more intuitive to have the attached pid:s as a part of the cache_info structure. To be honest I didn\u0027t thought of the performance since such a small list.\n\nBut let me measure the difference.",
+      "parentUuid": "AAAGUH///us\u003d",
       "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGj3////g\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "Agree",
+      "parentUuid": "AAAGUH///uo\u003d",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUH///uk\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 1
@@ -98,6 +170,24 @@
       "writtenOn": "2012-06-07T18:59:49Z",
       "side": 1,
       "message": "see above - we need to be able to short-cut out of this search when we hit a 0.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGj3////c\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "Agree",
+      "parentUuid": "AAAGUH///uk\u003d",
       "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGj3////Y\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2190,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "I\u0027ll update. There is no caller that doesn\u0027t want to find the first cache with an iface if default isn\u0027t set. There are some functions but they\u0027e not used. \n\nIt\u0027ll save some code as well since the code to find iface if default isn\u0027t set is duplicated.",
+      "parentUuid": "AAAGUH///uQ\u003d",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUH///sk\u003d",
         "filename": "libc/netbsd/resolv/res_cache.c",
         "patchSetId": 1
@@ -138,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGj3////U\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "No there\u0027s no need to copy to both\n\nThe first if statement would be enough wouldn\u0027t it?",
+      "parentUuid": "AAAGUH///sk\u003d",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGXn///5o\u003d",
         "filename": "libc/netbsd/resolv/res_state.c",
         "patchSetId": 1
@@ -149,6 +275,24 @@
       "writtenOn": "2012-06-07T18:59:49Z",
       "side": 1,
       "message": "does this get called for every dns query?  I think it might - the thread is created each time in system/netd/DnsProxyListener.  That means every query will call res_initfromcache.\n\nCould we instead have a global table of res_state per interface and just select from that in this function?  We\u0027d have to work out synchronization issues (lock around the lookup, copy the pointer on lookup and alloc a new structure when things change, so we can do a simple locked ptr swap).\n\nThis code has been made inefficient, not by your change, but by the impl of the dnsproxy.  Your change makes it worse but I think we can fix it.",
+      "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGj3////Q\u003d",
+        "filename": "libc/netbsd/resolv/res_state.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1004783
+      },
+      "writtenOn": "2012-06-13T22:17:11Z",
+      "side": 1,
+      "message": "Yes it\u0027ll be called for every dns query. \n\nLet\u0027s try a global table first. \n\nI\u0027m also thinking using worker threads in dnsproxy. (I had a patch for that in the old gerrit/android review). Each of the worker threads would keep its res_state and only initialize if query on different iface or settings change for current iface",
+      "parentUuid": "AAAGXn///5o\u003d",
       "revId": "50d8802a1a5806c044fec37f60dac2bf7895160d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
