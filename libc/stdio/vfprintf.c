@@ -827,6 +827,7 @@ error:
 		munmap(argtable, argtablesiz);
 		argtable = NULL;
 	}
+        va_end(orgap);
 	return (__sferror(fp) ? EOF : ret);
 	/* NOTREACHED */
 }
