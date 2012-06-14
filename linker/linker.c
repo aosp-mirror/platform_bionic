@@ -82,7 +82,7 @@
 */
 
 
-static int link_image(soinfo *si, unsigned wr_offset);
+static int soinfo_link_image(soinfo *si, unsigned wr_offset);
 
 static int socount = 0;
 static soinfo sopool[SO_MAX];
@@ -254,7 +254,7 @@ void notify_gdb_of_libraries()
     rtld_db_dlactivity();
 }
 
-static soinfo *alloc_info(const char *name)
+static soinfo *soinfo_alloc(const char *name)
 {
     soinfo *si;
 
@@ -263,7 +263,7 @@ static soinfo *alloc_info(const char *name)
         return NULL;
     }
 
-    /* The freelist is populated when we call free_info(), which in turn is
+    /* The freelist is populated when we call soinfo_free(), which in turn is
        done only by dlclose(), which is not likely to be used.
     */
     if (!freelist) {
@@ -290,7 +290,7 @@ static soinfo *alloc_info(const char *name)
     return si;
 }
 
-static void free_info(soinfo *si)
+static void soinfo_free(soinfo *si)
 {
     soinfo *prev = NULL, *trav;
 
@@ -377,7 +377,7 @@ dl_iterate_phdr(int (*cb)(struct dl_phdr_info *info, size_t size, void *data),
 }
 #endif
 
-static Elf32_Sym *_elf_lookup(soinfo *si, unsigned hash, const char *name)
+static Elf32_Sym *soinfo_elf_lookup(soinfo *si, unsigned hash, const char *name)
 {
     Elf32_Sym *s;
     Elf32_Sym *symtab = si->symtab;
@@ -423,7 +423,7 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-_do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
+soinfo_do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
 {
     unsigned elf_hash = elfhash(name);
     Elf32_Sym *s;
@@ -441,14 +441,14 @@ _do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
      * and some the first non-weak definition.   This is system dependent.
      * Here we return the first definition found for simplicity.  */
 
-    s = _elf_lookup(si, elf_hash, name);
+    s = soinfo_elf_lookup(si, elf_hash, name);
     if(s != NULL)
         goto done;
 
     /* Next, look for it in the preloads list */
     for(i = 0; preloads[i] != NULL; i++) {
         lsi = preloads[i];
-        s = _elf_lookup(lsi, elf_hash, name);
+        s = soinfo_elf_lookup(lsi, elf_hash, name);
         if(s != NULL)
             goto done;
     }
@@ -464,7 +464,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
 
             DEBUG("%5d %s: looking up %s in %s\n",
                   pid, si->name, name, lsi->name);
-            s = _elf_lookup(lsi, elf_hash, name);
+            s = soinfo_elf_lookup(lsi, elf_hash, name);
             if ((s != NULL) && (s->st_shndx != SHN_UNDEF))
                 goto done;
         }
@@ -479,7 +479,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
         lsi = somain;
         DEBUG("%5d %s: looking up %s in executable %s\n",
               pid, si->name, name, lsi->name);
-        s = _elf_lookup(lsi, elf_hash, name);
+        s = soinfo_elf_lookup(lsi, elf_hash, name);
     }
 #endif
 
@@ -500,9 +500,9 @@ done:
 /* This is used by dl_sym().  It performs symbol lookup only within the
    specified soinfo object and not in any of its dependencies.
  */
-Elf32_Sym *lookup_in_library(soinfo *si, const char *name)
+Elf32_Sym *soinfo_lookup(soinfo *si, const char *name)
 {
-    return _elf_lookup(si, elfhash(name), name);
+    return soinfo_elf_lookup(si, elfhash(name), name);
 }
 
 /* This is used by dl_sym().  It performs a global symbol lookup.
@@ -521,7 +521,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start)
     {
         if(si->flags & FLAG_ERROR)
             continue;
-        s = _elf_lookup(si, elf_hash, name);
+        s = soinfo_elf_lookup(si, elf_hash, name);
         if (s != NULL) {
             *found = si;
             break;
@@ -551,7 +551,7 @@ soinfo *find_containing_library(const void *addr)
     return NULL;
 }
 
-Elf32_Sym *find_containing_symbol(const void *addr, soinfo *si)
+Elf32_Sym *soinfo_find_symbol(soinfo* si, const void *addr)
 {
     unsigned int i;
     unsigned soaddr = (unsigned)addr - si->base;
@@ -586,7 +586,7 @@ static void dump(soinfo *si)
 }
 #endif
 
-static const char *sopaths[] = {
+static const char * const sopaths[] = {
     "/vendor/lib",
     "/system/lib",
     0
@@ -598,7 +598,7 @@ static int _open_lib(const char *name)
     struct stat filestat;
 
     if ((stat(name, &filestat) >= 0) && S_ISREG(filestat.st_mode)) {
-        if ((fd = open(name, O_RDONLY)) >= 0)
+        if ((fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY))) >= 0)
             return fd;
     }
 
@@ -609,7 +609,7 @@ static int open_library(const char *name)
 {
     int fd;
     char buf[512];
-    const char **path;
+    const char * const*path;
     int n;
 
     TRACE("[ %5d opening %s ]\n", pid, name);
@@ -661,12 +661,12 @@ is_prelinked(int fd, const char *name)
         return 0;
     }
 
-    if (read(fd, &info, sizeof(info)) != sizeof(info)) {
+    if (TEMP_FAILURE_RETRY(read(fd, &info, sizeof(info)) != sizeof(info))) {
         WARN("Could not read prelink_info_t structure for `%s`\n", name);
         return 0;
     }
 
-    if (strncmp(info.tag, "PRE ", 4)) {
+    if (memcmp(info.tag, "PRE ", 4)) {
         WARN("`%s` is not a prelinked library\n", name);
         return 0;
     }
@@ -674,8 +674,8 @@ is_prelinked(int fd, const char *name)
     return (unsigned long)info.mmap_addr;
 }
 
-/* verify_elf_object
- *      Verifies if the object @ base is a valid ELF object
+/* verify_elf_header
+ *      Verifies the content of an ELF header.
  *
  * Args:
  *
@@ -684,10 +684,8 @@ is_prelinked(int fd, const char *name)
  *      -1 if no valid ELF object is found @ base.
  */
 static int
-verify_elf_object(void *base, const char *name)
+verify_elf_header(const Elf32_Ehdr* hdr)
 {
-    Elf32_Ehdr *hdr = (Elf32_Ehdr *) base;
-
     if (hdr->e_ident[EI_MAG0] != ELFMAG0) return -1;
     if (hdr->e_ident[EI_MAG1] != ELFMAG1) return -1;
     if (hdr->e_ident[EI_MAG2] != ELFMAG2) return -1;
@@ -736,7 +734,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
     int cnt;
 
     TRACE("[ %5d Computing extents for '%s'. ]\n", pid, name);
-    if (verify_elf_object(_hdr, name) < 0) {
+    if (verify_elf_header(ehdr) < 0) {
         DL_ERR("%5d - %s is not a valid ELF object", pid, name);
         return (unsigned)-1;
     }
@@ -778,7 +776,6 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
     *total_sz = (max_vaddr - min_vaddr);
     return (unsigned)req_base;
 }
-
 /* reserve_mem_region
  *
  *     This function reserves a chunk of memory to be used for mapping in
@@ -795,7 +792,7 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
  *     the virtual address at which the library will be mapped.
  */
 
-static int reserve_mem_region(soinfo *si)
+static int soinfo_reserve_mem_region(soinfo *si)
 {
     void *base = mmap((void *)si->base, si->size, PROT_NONE,
                       MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -815,11 +812,11 @@ static int reserve_mem_region(soinfo *si)
     return 0;
 }
 
-static int alloc_mem_region(soinfo *si)
+static int soinfo_alloc_mem_region(soinfo *si)
 {
     if (si->base) {
         /* Attempt to mmap a prelinked library. */
-        return reserve_mem_region(si);
+        return soinfo_reserve_mem_region(si);
     }
 
     /* This is not a prelinked library, so we use the kernel's default
@@ -864,7 +861,7 @@ err:
  *     0 on success, -1 on failure.
  */
 static int
-load_segments(int fd, void *header, soinfo *si)
+soinfo_load_segments(soinfo* si, int fd, void* header)
 {
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *)header;
     Elf32_Phdr *phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
@@ -885,6 +882,7 @@ load_segments(int fd, void *header, soinfo *si)
           pid, si->name, (unsigned)si->base);
 
     for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
+
         if (phdr->p_type == PT_LOAD) {
             phdr0 = phdr;
             /*
@@ -898,6 +896,7 @@ load_segments(int fd, void *header, soinfo *si)
             break;
         }
     }
+
     /* "base" might wrap around UINT32_MAX. */
     base = (Elf32_Addr)(si->base - si->load_offset);
 
@@ -1149,6 +1148,7 @@ load_library(const char *name)
     req_base = get_lib_extents(fd, name, hdr, &ext_sz);
     if (req_base == (unsigned)-1)
         goto fail;
+
     TRACE("[ %5d - '%s' (%s) wants base=0x%08x sz=0x%08x ]\n", pid, name,
           (req_base ? "prelinked" : "not pre-linked"), req_base, ext_sz);
 
@@ -1158,7 +1158,7 @@ load_library(const char *name)
      * soinfo struct here is a lot more convenient.
      */
     bname = strrchr(name, '/');
-    si = alloc_info(bname ? bname + 1 : name);
+    si = soinfo_alloc(bname ? bname + 1 : name);
     if (si == NULL)
         goto fail;
 
@@ -1169,14 +1169,14 @@ load_library(const char *name)
     si->flags = 0;
     si->entry = 0;
     si->dynamic = (unsigned *)-1;
-    if (alloc_mem_region(si) < 0)
+    if (soinfo_alloc_mem_region(si) < 0)
         goto fail;
 
     TRACE("[ %5d allocated memory for %s @ %p (0x%08x) ]\n",
           pid, name, (void *)si->base, (unsigned) ext_sz);
 
     /* Now actually load the library's segments into right places in memory */
-    if (load_segments(fd, hdr, si) < 0) {
+    if (soinfo_load_segments(si, fd, hdr) < 0) {
         goto fail;
     }
 
@@ -1185,7 +1185,7 @@ load_library(const char *name)
     return si;
 
 fail:
-    if (si) free_info(si);
+    if (si) soinfo_free(si);
     if (hdr != MAP_FAILED) munmap(hdr, sb.st_size);
     close(fd);
     return NULL;
@@ -1201,7 +1201,7 @@ init_library(soinfo *si)
     TRACE("[ %5d init_library base=0x%08x sz=0x%08x name='%s') ]\n",
           pid, si->base, si->size, si->name);
 
-    if(link_image(si, wr_offset)) {
+    if(soinfo_link_image(si, wr_offset)) {
             /* We failed to link.  However, we can only restore libbase
             ** if no additional libraries have moved it since we updated it.
             */
@@ -1252,7 +1252,7 @@ soinfo *find_library(const char *name)
  *   for non-prelinked libraries, find a way to decrement libbase
  */
 static void call_destructors(soinfo *si);
-unsigned unload_library(soinfo *si)
+unsigned soinfo_unload(soinfo *si)
 {
     unsigned *d;
     if (si->refcount == 1) {
@@ -1261,7 +1261,7 @@ unsigned unload_library(soinfo *si)
 
         /*
          * Make sure that we undo the PT_GNU_RELRO protections we added
-         * in link_image. This is needed to undo the DT_NEEDED hack below.
+         * in soinfo_link_image. This is needed to undo the DT_NEEDED hack below.
          */
         if ((si->gnu_relro_start != 0) && (si->gnu_relro_len != 0)) {
             Elf32_Addr start = (si->gnu_relro_start & ~PAGE_MASK);
@@ -1279,13 +1279,13 @@ unsigned unload_library(soinfo *si)
 
                 // The next line will segfault if the we don't undo the
                 // PT_GNU_RELRO protections (see comments above and in
-                // link_image().
+                // soinfo_link_image().
                 d[1] = 0;
 
                 if (validate_soinfo(lsi)) {
                     TRACE("%5d %s needs to unload %s\n", pid,
                           si->name, lsi->name);
-                    unload_library(lsi);
+                    soinfo_unload(lsi);
                 }
                 else
                     DL_ERR("%5d %s: could not unload dependent library",
@@ -1295,7 +1295,7 @@ unsigned unload_library(soinfo *si)
 
         munmap((char *)si->base, si->size);
         notify_gdb_of_unload(si);
-        free_info(si);
+        soinfo_free(si);
         si->refcount = 0;
     }
     else {
@@ -1310,7 +1310,7 @@ unsigned unload_library(soinfo *si)
  * ideal. They should probably be either uint32_t, Elf32_Addr, or unsigned
  * long.
  */
-static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
+static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 {
     Elf32_Sym *symtab = si->symtab;
     const char *strtab = si->strtab;
@@ -1331,7 +1331,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
               si->name, idx);
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = _do_lookup(si, sym_name, &base, &offset);
+            s = soinfo_do_lookup(si, sym_name, &base, &offset);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1550,7 +1550,7 @@ static void call_array(unsigned *ctor, int count, int reverse)
     }
 }
 
-void call_constructors_recursive(soinfo *si)
+void soinfo_call_constructors(soinfo *si)
 {
     if (si->constructors_called)
         return;
@@ -1561,9 +1561,9 @@ void call_constructors_recursive(soinfo *si)
     // libc_malloc_debug_leak.so:
     // 1. The program depends on libc, so libc's constructor is called here.
     // 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.
-    // 3. dlopen() calls call_constructors_recursive() with the newly created
+    // 3. dlopen() calls soinfo_call_constructors() with the newly created
     //    soinfo for libc_malloc_debug_leak.so.
-    // 4. The debug so depends on libc, so call_constructors_recursive() is
+    // 4. The debug so depends on libc, so soinfo_call_constructors() is
     //    called again with the libc soinfo. If it doesn't trigger the early-
     //    out above, the libc constructor will be called again (recursively!).
     si->constructors_called = 1;
@@ -1591,7 +1591,7 @@ void call_constructors_recursive(soinfo *si)
                     DL_ERR("%5d bad DT_NEEDED pointer in %s",
                            pid, si->name);
                 } else {
-                    call_constructors_recursive(lsi);
+                    soinfo_call_constructors(lsi);
                 }
             }
         }
@@ -1637,7 +1637,7 @@ static int nullify_closed_stdio (void)
     int dev_null, i, status;
     int return_value = 0;
 
-    dev_null = open("/dev/null", O_RDWR);
+    dev_null = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
     if (dev_null < 0) {
         DL_ERR("Cannot open /dev/null.");
         return -1;
@@ -1700,7 +1700,7 @@ static int nullify_closed_stdio (void)
     return return_value;
 }
 
-static int link_image(soinfo *si, unsigned wr_offset)
+static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 {
     unsigned *d;
     /* "base" might wrap around UINT32_MAX. */
@@ -1941,12 +1941,12 @@ static int link_image(soinfo *si, unsigned wr_offset)
 
     if(si->plt_rel) {
         DEBUG("[ %5d relocating %s plt ]\n", pid, si->name );
-        if(reloc_library(si, si->plt_rel, si->plt_rel_count))
+        if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count))
             goto fail;
     }
     if(si->rel) {
         DEBUG("[ %5d relocating %s ]\n", pid, si->name );
-        if(reloc_library(si, si->rel, si->rel_count))
+        if(soinfo_relocate(si, si->rel, si->rel_count))
             goto fail;
     }
 
@@ -2131,7 +2131,7 @@ sanitize:
     INFO("[ android linker & debugger ]\n");
     DEBUG("%5d elfdata @ 0x%08x\n", pid, (unsigned)elfdata);
 
-    si = alloc_info(argv[0]);
+    si = soinfo_alloc(argv[0]);
     if(si == 0) {
         exit(-1);
     }
@@ -2151,7 +2151,7 @@ sanitize:
         /* gdb expects the linker to be in the debug shared object list,
          * and we need to make sure that the reported load address is zero.
          * Without this, gdb gets the wrong idea of where rtld_db_dlactivity()
-         * is.  Don't use alloc_info(), because the linker shouldn't
+         * is.  Don't use soinfo_alloc(), because the linker shouldn't
          * be on the soinfo list.
          */
     strlcpy((char*) linker_soinfo.name, "/system/bin/linker", sizeof linker_soinfo.name);
@@ -2203,14 +2203,14 @@ sanitize:
         parse_preloads(ldpreload_env, " :");
     }
 
-    if(link_image(si, 0)) {
+    if(soinfo_link_image(si, 0)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
 
-    call_constructors_recursive(si);
+    soinfo_call_constructors(si);
 
 #if ALLOW_SYMBOLS_FROM_MAIN
     /* Set somain after we've loaded all the libraries in order to prevent
@@ -2315,7 +2315,7 @@ unsigned __linker_init(unsigned **elfdata) {
     linker_so.gnu_relro_start = 0;
     linker_so.gnu_relro_len = 0;
 
-    if (link_image(&linker_so, 0)) {
+    if (soinfo_link_image(&linker_so, 0)) {
         // It would be nice to print an error message, but if the linker
         // can't link itself, there's no guarantee that we'll be able to
         // call write() (because it involves a GOT reference).
