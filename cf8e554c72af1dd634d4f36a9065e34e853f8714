@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGln///xc\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 0,
+      "message": "Removed Weak Symbol handling on MIPS. It is no longer needed for MIPS",
+      "revId": "cf8e554c72af1dd634d4f36a9065e34e853f8714",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

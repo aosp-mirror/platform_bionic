@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///xk\u003d",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "This is no more required for MIPS. Hence removed it in Patch Set 3",
+      "parentUuid": "AAAFZn///3c\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///3Y\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-05-16T17:47:32Z",
       "side": 1,
       "message": "this is a non-trivial functionality change that doesn\u0027t seem strictly related to MIPS. care to explain why it is needed?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGln///xM\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "This is no longer required for MIPS. Removed it in PS 4.",
+      "parentUuid": "AAAFZn///3Y\u003d",
       "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///xg\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "Removed this workaround in PS 4.",
+      "parentUuid": "AAAFZn///3U\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///3Q\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2012-05-16T17:47:32Z",
       "side": 1,
       "message": "Again, that seems to exhibit radically different behaviour compared to other platforms. I would like to understand why you need this. I\u0027m pretty skeptical about these platform-specific oddities.",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGln///xY\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "The dynamic section in the current MIPS compiler is writable, so MIPS does not require this  exception now.",
+      "parentUuid": "AAAFZn///3Q\u003d",
       "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///xU\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1224,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "As per you advise, we moved to init/fini. So this routine is no longer required and is removed in PS 4",
+      "parentUuid": "AAAFZn///3M\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///3I\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///xQ\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1326,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "Removed code for prelinking in PS 4",
+      "parentUuid": "AAAFZn///3I\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///3E\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -115,6 +223,24 @@
       "writtenOn": "2012-05-16T17:47:32Z",
       "side": 1,
       "message": "As far as I know, these are static relocations, and should never appear in shared libraries / executables. Is there a problem with the toolchain?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGln///xI\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "ARM_NONE is handled below too. So, this code attempts to handle all XXX_NONE at the same place.",
+      "parentUuid": "AAAFZn///3E\u003d",
       "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///xE\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1816,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "Removed them now in PS 4",
+      "parentUuid": "AAAFZn///28\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///24\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -172,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "AAAGln///w8\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "The MIPS linker script is now fixed and the dynamic section is writable. So I removed this code in PS 4",
+      "parentUuid": "AAAFZn///24\u003d",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFZn///20\u003d",
         "filename": "linker/linker.c",
         "patchSetId": 2
@@ -183,6 +345,24 @@
       "writtenOn": "2012-05-16T17:47:32Z",
       "side": 1,
       "message": "this is a drastic functionality change, per the comment above. What is the motivation for it?",
+      "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGln///w4\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2475,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-06-15T06:35:45Z",
+      "side": 1,
+      "message": "I removed this in PS 4.",
+      "parentUuid": "AAAFZn///20\u003d",
       "revId": "1493ec209efc2c307aee04091fca3aec7dab2784",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
