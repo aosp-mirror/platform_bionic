@@ -86,6 +86,24 @@
       "revId": "f0d6a176e5f3685922e2c72c9dcceda28f7f9c52",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGs3///9w\u003d",
+        "filename": "libc/bionic/crtbrand.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-06-18T21:29:46Z",
+      "side": 1,
+      "message": "this has not been addressed",
+      "parentUuid": "AAAGUX///1I\u003d",
+      "revId": "f0d6a176e5f3685922e2c72c9dcceda28f7f9c52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
