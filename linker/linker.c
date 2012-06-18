@@ -126,10 +126,6 @@ struct _link_stats linker_stats;
 unsigned bitmask[4096];
 #endif
 
-#ifndef PT_ARM_EXIDX
-#define PT_ARM_EXIDX    0x70000001      /* .ARM.exidx segment */
-#endif
-
 #define HOODLUM(name, ret, ...)                                               \
     ret name __VA_ARGS__                                                      \
     {                                                                         \
@@ -924,10 +920,6 @@ soinfo_load_segments(soinfo* si, int fd, const Elf32_Phdr* phdr_table, int phdr_
                 mprotect(pbase, len,
                          PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
             }
-        } else if (phdr->p_type == PT_DYNAMIC) {
-            DEBUG_DUMP_PHDR(phdr, "PT_DYNAMIC", pid);
-            /* this segment contains the dynamic linking information */
-            si->dynamic = (unsigned *)(base + phdr->p_vaddr);
         } else if (phdr->p_type == PT_GNU_RELRO) {
             if (((base + phdr->p_vaddr) >= si->base + si->size)
                     || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
@@ -939,16 +931,6 @@ soinfo_load_segments(soinfo* si, int fd, const Elf32_Phdr* phdr_table, int phdr_
             }
             si->gnu_relro_start = (Elf32_Addr) (base + phdr->p_vaddr);
             si->gnu_relro_len = (unsigned) phdr->p_memsz;
-        } else {
-#ifdef ANDROID_ARM_LINKER
-            if (phdr->p_type == PT_ARM_EXIDX) {
-                DEBUG_DUMP_PHDR(phdr, "PT_ARM_EXIDX", pid);
-                /* exidx entries (used for stack unwinding) are 8 bytes each.
-                 */
-                si->ARM_exidx = (unsigned *)(base + phdr->p_vaddr);
-                si->ARM_exidx_count = phdr->p_memsz / 8;
-            }
-#endif
         }
 
     }
@@ -1659,6 +1641,20 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     DEBUG("%5d si->base = 0x%08x si->flags = 0x%08x\n", pid,
           si->base, si->flags);
 
+    /* Extract dynamic section */
+    si->dynamic = phdr_table_get_dynamic_section(phdr, phnum, base);
+    if (si->dynamic == NULL) {
+        DL_ERR("%5d missing PT_DYNAMIC?!", pid);
+        goto fail;
+    } else {
+        DEBUG("%5d dynamic = %p\n", pid, si->dynamic);
+    }
+
+#ifdef ANDROID_ARM_LINKER
+    (void) phdr_table_get_arm_exidx(phdr, phnum, base,
+                                    &si->ARM_exidx, &si->ARM_exidx_count);
+#endif
+
     if (si->flags & (FLAG_EXE | FLAG_LINKER)) {
         /* Locate the needed program segments (DYNAMIC/ARM_EXIDX) for
          * linkage info if this is the executable or the linker itself.
@@ -1670,14 +1666,6 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
          */
         si->size = 0;
         for(; phnum > 0; --phnum, ++phdr) {
-#ifdef ANDROID_ARM_LINKER
-            if(phdr->p_type == PT_ARM_EXIDX) {
-                /* exidx entries (used for stack unwinding) are 8 bytes each.
-                 */
-                si->ARM_exidx = (unsigned *)(base + phdr->p_vaddr);
-                si->ARM_exidx_count = phdr->p_memsz / 8;
-            }
-#endif
             if (phdr->p_type == PT_LOAD) {
                 /* For the executable, we use the si->size field only in
                    dl_unwind_find_exidx(), so the meaning of si->size
@@ -1715,16 +1703,6 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
                              phdr->p_memsz,
                              PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
                 }
-            } else if (phdr->p_type == PT_DYNAMIC) {
-                if (si->dynamic != (unsigned *)-1) {
-                    DL_ERR("%5d multiple PT_DYNAMIC segments found in '%s'. "
-                          "Segment at 0x%08x, previously one found at 0x%08x",
-                          pid, si->name, base + phdr->p_vaddr,
-                          (unsigned)si->dynamic);
-                    goto fail;
-                }
-                DEBUG_DUMP_PHDR(phdr, "PT_DYNAMIC", pid);
-                si->dynamic = (unsigned *) (base + phdr->p_vaddr);
             } else if (phdr->p_type == PT_GNU_RELRO) {
                 if ((base + phdr->p_vaddr >= si->base + si->size)
                         || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
@@ -1739,13 +1717,6 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             }
         }
     }
-
-    if (si->dynamic == (unsigned *)-1) {
-        DL_ERR("%5d missing PT_DYNAMIC?!", pid);
-        goto fail;
-    }
-
-    DEBUG("%5d dynamic = %p\n", pid, si->dynamic);
 
     /* extract useful information from dynamic section */
     for(d = si->dynamic; *d; d++){
