@@ -107,7 +107,7 @@ typedef struct soinfo soinfo;
 struct soinfo
 {
     const char name[SOINFO_NAME_LEN];
-    Elf32_Phdr *phdr;
+    const Elf32_Phdr *phdr;
     int phnum;
     unsigned entry;
     unsigned base;
@@ -117,8 +117,8 @@ struct soinfo
 
     unsigned *dynamic;
 
-    unsigned wrprotect_start;
-    unsigned wrprotect_end;
+    unsigned unused2; // DO NOT USE, maintained for compatibility
+    unsigned unused3; // DO NOT USE, maintained for compatibility
 
     soinfo *next;
     unsigned flags;
@@ -160,9 +160,6 @@ struct soinfo
     struct link_map linkmap;
 
     int constructors_called;
-
-    Elf32_Addr gnu_relro_start;
-    unsigned gnu_relro_len;
 
     /* When you read a virtual address from the ELF file, add this
      * value to get the corresponding address in the process' address space */

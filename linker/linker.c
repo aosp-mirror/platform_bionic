@@ -697,319 +697,6 @@ verify_elf_header(const Elf32_Ehdr* hdr)
 }
 
 
-/* reserve_mem_region
- *
- *     This function reserves a chunk of memory to be used for mapping in
- *     a prelinked shared library. We reserve the entire memory region here, and
- *     then the rest of the linker will relocate the individual loadable
- *     segments into the correct locations within this memory range.
- *
- * Args:
- *     si->base: The requested base of the allocation.
- *     si->size: The size of the allocation.
- *
- * Returns:
- *     -1 on failure, and 0 on success.  On success, si->base will contain
- *     the virtual address at which the library will be mapped.
- */
-
-static int soinfo_reserve_mem_region(soinfo *si)
-{
-    void *base = mmap((void *)si->base, si->size, PROT_NONE,
-                      MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    if (base == MAP_FAILED) {
-        DL_ERR("%5d can NOT map (%sprelinked) library '%s' at 0x%08x "
-              "as requested, will try general pool: %d (%s)",
-              pid, (si->base ? "" : "non-"), si->name, si->base,
-              errno, strerror(errno));
-        return -1;
-    } else if (base != (void *)si->base) {
-        DL_ERR("OOPS: %5d %sprelinked library '%s' mapped at 0x%08x, "
-              "not at 0x%08x", pid, (si->base ? "" : "non-"),
-              si->name, (unsigned)base, si->base);
-        munmap(base, si->size);
-        return -1;
-    }
-    return 0;
-}
-
-static int soinfo_alloc_mem_region(soinfo *si)
-{
-    if (si->base) {
-        /* Attempt to mmap a prelinked library. */
-        return soinfo_reserve_mem_region(si);
-    }
-
-    /* This is not a prelinked library, so we use the kernel's default
-       allocator.
-    */
-
-    void *base = mmap(NULL, si->size, PROT_NONE,
-                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    if (base == MAP_FAILED) {
-        DL_ERR("%5d mmap of library '%s' failed (%d bytes): %d (%s)\n",
-              pid, si->name, si->size,
-              errno, strerror(errno));
-        return -1;
-    }
-    si->base = (unsigned) base;
-    PRINT("%5d mapped library '%s' to %08x via kernel allocator.\n",
-          pid, si->name, si->base);
-    return 0;
-}
-
-#define MAYBE_MAP_FLAG(x,from,to)    (((x) & (from)) ? (to) : 0)
-#define PFLAGS_TO_PROT(x)            (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | \
-                                      MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
-                                      MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
-/* load_segments
- *
- *     This function loads all the loadable (PT_LOAD) segments into memory
- *     at their appropriate memory offsets off the base address.
- *
- * Args:
- *     fd: Open file descriptor to the library to load.
- *     header: Pointer to a header page that contains the ELF header.
- *             This is needed since we haven't mapped in the real file yet.
- *     si: ptr to soinfo struct describing the shared object.
- *
- * Returns:
- *     0 on success, -1 on failure.
- */
-static int
-soinfo_load_segments(soinfo* si, int fd, const Elf32_Phdr* phdr_table, int phdr_count, Elf32_Addr ehdr_phoff)
-{
-    const Elf32_Phdr *phdr = phdr_table;
-    const Elf32_Phdr *phdr0 = 0;  /* program header for the first LOAD segment */
-    Elf32_Addr base;
-    int cnt;
-    unsigned len;
-    Elf32_Addr tmp;
-    unsigned char *pbase;
-    unsigned char *extra_base;
-    unsigned extra_len;
-    unsigned total_sz = 0;
-
-    si->wrprotect_start = 0xffffffff;
-    si->wrprotect_end = 0;
-
-    TRACE("[ %5d - Begin loading segments for '%s' @ 0x%08x ]\n",
-          pid, si->name, (unsigned)si->base);
-
-    for (cnt = 0; cnt < phdr_count; ++cnt, ++phdr) {
-
-        if (phdr->p_type == PT_LOAD) {
-            phdr0 = phdr;
-            /*
-             * ELF specification section 2-2.
-             *
-             * PT_LOAD: "Loadable segment entries in the program
-             * header table appear in ascending order, sorted on the
-             * p_vaddr member."
-             */
-            si->load_bias = si->base - PAGE_START(phdr->p_vaddr);
-            break;
-        }
-    }
-
-    /* "base" might wrap around UINT32_MAX. */
-    base = si->load_bias;
-
-    /* Now go through all the PT_LOAD segments and map them into memory
-     * at the appropriate locations. */
-    phdr = phdr_table;
-    for (cnt = 0; cnt < phdr_count; ++cnt, ++phdr) {
-        if (phdr->p_type == PT_LOAD) {
-            DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
-            /* we want to map in the segment on a page boundary */
-            tmp = base + PAGE_START(phdr->p_vaddr);
-            /* add the # of bytes we masked off above to the total length. */
-            len = phdr->p_filesz + PAGE_OFFSET(phdr->p_vaddr);
-
-            TRACE("[ %d - Trying to load segment from '%s' @ 0x%08x "
-                  "(0x%08x). p_vaddr=0x%08x p_offset=0x%08x ]\n", pid, si->name,
-                  (unsigned)tmp, len, phdr->p_vaddr, phdr->p_offset);
-            pbase = mmap((void *)tmp, len, PFLAGS_TO_PROT(phdr->p_flags),
-                         MAP_PRIVATE | MAP_FIXED, fd,
-                         PAGE_START(phdr->p_offset));
-            if (pbase == MAP_FAILED) {
-                DL_ERR("%d failed to map segment from '%s' @ 0x%08x (0x%08x). "
-                      "p_vaddr=0x%08x p_offset=0x%08x", pid, si->name,
-                      (unsigned)tmp, len, phdr->p_vaddr, phdr->p_offset);
-                goto fail;
-            }
-
-            /* If 'len' didn't end on page boundary, and it's a writable
-             * segment, zero-fill the rest. */
-            if (PAGE_OFFSET(len) > 0 && (phdr->p_flags & PF_W) != 0)
-                memset((void *)(pbase + len), 0, PAGE_SIZE - PAGE_OFFSET(len));
-
-            /* Check to see if we need to extend the map for this segment to
-             * cover the diff between filesz and memsz (i.e. for bss).
-             *
-             *  base           _+---------------------+  page boundary
-             *                  .                     .
-             *                  |                     |
-             *                  .                     .
-             *  pbase          _+---------------------+  page boundary
-             *                  |                     |
-             *                  .                     .
-             *  base + p_vaddr _|                     |
-             *                  . \          \        .
-             *                  . | filesz   |        .
-             *  pbase + len    _| /          |        |
-             *     <0 pad>      .            .        .
-             *  extra_base     _+------------|--------+  page boundary
-             *               /  .            .        .
-             *               |  .            .        .
-             *               |  +------------|--------+  page boundary
-             *  extra_len->  |  |            |        |
-             *               |  .            | memsz  .
-             *               |  .            |        .
-             *               \ _|            /        |
-             *                  .                     .
-             *                  |                     |
-             *                 _+---------------------+  page boundary
-             */
-            tmp = (Elf32_Addr)PAGE_END((unsigned)pbase + len);
-            if (tmp < (base + phdr->p_vaddr + phdr->p_memsz)) {
-                extra_len = base + phdr->p_vaddr + phdr->p_memsz - tmp;
-                TRACE("[ %5d - Need to extend segment from '%s' @ 0x%08x "
-                      "(0x%08x) ]\n", pid, si->name, (unsigned)tmp, extra_len);
-                /* map in the extra page(s) as anonymous into the range.
-                 * This is probably not necessary as we already mapped in
-                 * the entire region previously, but we just want to be
-                 * sure. This will also set the right flags on the region
-                 * (though we can probably accomplish the same thing with
-                 * mprotect).
-                 */
-                extra_base = mmap((void *)tmp, extra_len,
-                                  PFLAGS_TO_PROT(phdr->p_flags),
-                                  MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS,
-                                  -1, 0);
-                if (extra_base == MAP_FAILED) {
-                    DL_ERR("[ %5d - failed to extend segment from '%s' @ 0x%08x"
-                           " (0x%08x) ]", pid, si->name, (unsigned)tmp,
-                          extra_len);
-                    goto fail;
-                }
-                /* TODO: Check if we need to memset-0 this region.
-                 * Anonymous mappings are zero-filled copy-on-writes, so we
-                 * shouldn't need to. */
-                TRACE("[ %5d - Segment from '%s' extended @ 0x%08x "
-                      "(0x%08x)\n", pid, si->name, (unsigned)extra_base,
-                      extra_len);
-            }
-            /* set the len here to show the full extent of the segment we
-             * just loaded, mostly for debugging */
-            len = PAGE_END((unsigned)base + phdr->p_vaddr + phdr->p_memsz) - (unsigned)pbase;
-            TRACE("[ %5d - Successfully loaded segment from '%s' @ 0x%08x "
-                  "(0x%08x). p_vaddr=0x%08x p_offset=0x%08x\n", pid, si->name,
-                  (unsigned)pbase, len, phdr->p_vaddr, phdr->p_offset);
-            total_sz += len;
-            /* Make the section writable just in case we'll have to write to
-             * it during relocation (i.e. text segment). However, we will
-             * remember what range of addresses should be write protected.
-             *
-             */
-            if (!(phdr->p_flags & PF_W)) {
-                if ((unsigned)pbase < si->wrprotect_start)
-                    si->wrprotect_start = (unsigned)pbase;
-                if (((unsigned)pbase + len) > si->wrprotect_end)
-                    si->wrprotect_end = (unsigned)pbase + len;
-                mprotect(pbase, len,
-                         PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
-            }
-        } else if (phdr->p_type == PT_GNU_RELRO) {
-            if (((base + phdr->p_vaddr) >= si->base + si->size)
-                    || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
-                    || ((base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
-                DL_ERR("%d invalid GNU_RELRO in '%s' "
-                       "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
-                       phdr->p_vaddr, phdr->p_memsz);
-                goto fail;
-            }
-            si->gnu_relro_start = (Elf32_Addr) (base + phdr->p_vaddr);
-            si->gnu_relro_len = (unsigned) phdr->p_memsz;
-        }
-
-    }
-
-    /* Sanity check */
-    if (total_sz > si->size) {
-        DL_ERR("%5d - Total length (0x%08x) of mapped segments from '%s' is "
-              "greater than what was allocated (0x%08x). THIS IS BAD!",
-              pid, total_sz, si->name, si->size);
-        goto fail;
-    }
-
-    /* vaddr    : Real virtual address in process' address space.
-     * p_vaddr  : Relative virtual address in ELF object
-     * p_offset : File offset in ELF object
-     *
-     * vaddr        p_vaddr                         p_offset
-     * -----        ------------                    --------
-     * base         0
-     * si->base     PAGE_START(phdr0->p_vaddr)
-     *              phdr0->p_vaddr                  phdr0->p_offset
-     * phdr                                         ehdr->e_phoff
-     */
-    si->phdr = (Elf32_Phdr *)(base + phdr0->p_vaddr +
-                              ehdr_phoff - phdr0->p_offset);
-    si->phnum = phdr_count;
-
-    TRACE("[ %5d - Finish loading segments for '%s' @ 0x%08x. "
-          "Total memory footprint: 0x%08x bytes ]\n", pid, si->name,
-          (unsigned)si->base, si->size);
-    return 0;
-
-fail:
-    /* We can just blindly unmap the entire region even though some things
-     * were mapped in originally with anonymous and others could have been
-     * been mapped in from the file before we failed. The kernel will unmap
-     * all the pages in the range, irrespective of how they got there.
-     */
-    munmap((void *)si->base, si->size);
-    si->flags |= FLAG_ERROR;
-    return -1;
-}
-
-/* TODO: Implement this to take care of the fact that Android ARM
- * ELF objects shove everything into a single loadable segment that has the
- * write bit set. wr_offset is then used to set non-(data|bss) pages to be
- * non-writable.
- */
-#if 0
-static unsigned
-get_wr_offset(int fd, const char *name, Elf32_Ehdr *ehdr)
-{
-    Elf32_Shdr *shdr_start;
-    Elf32_Shdr *shdr;
-    int shdr_sz = ehdr->e_shnum * sizeof(Elf32_Shdr);
-    int cnt;
-    unsigned wr_offset = 0xffffffff;
-
-    shdr_start = mmap(0, shdr_sz, PROT_READ, MAP_PRIVATE, fd,
-                      PAGE_START(ehdr->e_shoff));
-    if (shdr_start == MAP_FAILED) {
-        WARN("%5d - Could not read section header info from '%s'. Will not "
-             "not be able to determine write-protect offset.\n", pid, name);
-        return (unsigned)-1;
-    }
-
-    for(cnt = 0, shdr = shdr_start; cnt < ehdr->e_shnum; ++cnt, ++shdr) {
-        if ((shdr->sh_type != SHT_NULL) && (shdr->sh_flags & SHF_WRITE) &&
-            (shdr->sh_addr < wr_offset)) {
-            wr_offset = shdr->sh_addr;
-        }
-    }
-
-    munmap(shdr_start, shdr_sz);
-    return wr_offset;
-}
-#endif
-
-
 static soinfo *
 load_library(const char *name)
 {
@@ -1025,6 +712,10 @@ load_library(const char *name)
     void*       phdr_mmap = NULL;
     Elf32_Addr  phdr_size;
     const Elf32_Phdr* phdr_table;
+
+    void*       load_start = NULL;
+    Elf32_Addr  load_size = 0;
+    Elf32_Addr  load_bias = 0;
 
     if (fd == -1) {
         DL_ERR("Library '%s' not found", name);
@@ -1089,21 +780,60 @@ load_library(const char *name)
     if (si == NULL)
         goto fail;
 
-    /* Carve out a chunk of memory where we will map in the individual
-     * segments */
-    si->base = req_base;
-    si->size = ext_sz;
+    /* Reserve address space for all loadable segments */
+    ret = phdr_table_reserve_memory(phdr_table,
+                                    phdr_count,
+                                    req_base,
+                                    &load_start,
+                                    &load_size,
+                                    &load_bias);
+    if (ret < 0) {
+        DL_ERR("%5d Can't reserve %d bytes from 0x%08x in address space for %s: %s",
+               pid, ext_sz, req_base, name, strerror(errno));
+        goto fail;
+    }
+
+    TRACE("[ %5d allocated memory for %s @ %p (0x%08x) ]\n",
+          pid, name, load_start, load_size);
+
+    /* Map all the segments in our address space with default protections */
+    ret = phdr_table_load_segments(phdr_table,
+                                   phdr_count,
+                                   load_start,
+                                   load_size,
+                                   load_bias,
+                                   fd);
+    if (ret < 0) {
+        DL_ERR("%5d Can't map loadable segments for %s: %s",
+               pid, name, strerror(errno));
+        goto fail;
+    }
+
+    /* Unprotect the segments, i.e. make them writable, to allow
+     * relocations to work properly. We will later call
+     * phdr_table_protect_segments() after all of them are applied
+     * and all constructors are run.
+     */
+    ret = phdr_table_unprotect_segments(phdr_table,
+                                        phdr_count,
+                                        load_bias);
+    if (ret < 0) {
+        DL_ERR("%5d Can't unprotect loadable segments for %s: %s",
+               pid, name, strerror(errno));
+        goto fail;
+    }
+
+    si->base = (Elf32_Addr) load_start;
+    si->size = load_size;
+    si->load_bias = load_bias;
     si->flags = 0;
     si->entry = 0;
     si->dynamic = (unsigned *)-1;
-    if (soinfo_alloc_mem_region(si) < 0)
-        goto fail;
-
-    TRACE("[ %5d allocated memory for %s @ %p (0x%08x) ]\n",
-          pid, name, (void *)si->base, (unsigned) ext_sz);
-
-    /* Now actually load the library's segments into right places in memory */
-    if (soinfo_load_segments(si, fd, phdr_table, phdr_count, header->e_phoff) < 0) {
+    si->phnum = phdr_count;
+    si->phdr = phdr_table_get_loaded_phdr(phdr_table, phdr_count, load_bias);
+    if (si->phdr == NULL) {
+        DL_ERR("%5d Can't find loaded PHDR for %s",
+               pid, name);
         goto fail;
     }
 
@@ -1192,14 +922,11 @@ unsigned soinfo_unload(soinfo *si)
          * Make sure that we undo the PT_GNU_RELRO protections we added
          * in soinfo_link_image. This is needed to undo the DT_NEEDED hack below.
          */
-        if ((si->gnu_relro_start != 0) && (si->gnu_relro_len != 0)) {
-            Elf32_Addr start = PAGE_START(si->gnu_relro_start);
-            unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
-            if (mprotect((void *) start, len, PROT_READ | PROT_WRITE) < 0)
-                DL_ERR("%5d %s: could not undo GNU_RELRO protections. "
-                       "Expect a crash soon. errno=%d (%s)",
-                       pid, si->name, errno, strerror(errno));
-
+        if (phdr_table_unprotect_gnu_relro(si->phdr, si->phnum,
+                                           si->load_bias) < 0) {
+            DL_ERR("%5d %s: could not undo GNU_RELRO protections. "
+                    "Expect a crash soon. errno=%d (%s)",
+                    pid, si->name, errno, strerror(errno));
         }
 
         for(d = si->dynamic; *d; d += 2) {
@@ -1634,20 +1361,28 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     unsigned *d;
     /* "base" might wrap around UINT32_MAX. */
     Elf32_Addr base = si->load_bias;
-    Elf32_Phdr *phdr = si->phdr;
+    const Elf32_Phdr *phdr = si->phdr;
     int phnum = si->phnum;
+    int relocating_linker = (si->flags & FLAG_LINKER) != 0;
 
-    INFO("[ %5d linking %s ]\n", pid, si->name);
-    DEBUG("%5d si->base = 0x%08x si->flags = 0x%08x\n", pid,
-          si->base, si->flags);
+    /* We can't debug anything until the linker is relocated */
+    if (!relocating_linker) {
+        INFO("[ %5d linking %s ]\n", pid, si->name);
+        DEBUG("%5d si->base = 0x%08x si->flags = 0x%08x\n", pid,
+            si->base, si->flags);
+    }
 
     /* Extract dynamic section */
     si->dynamic = phdr_table_get_dynamic_section(phdr, phnum, base);
     if (si->dynamic == NULL) {
-        DL_ERR("%5d missing PT_DYNAMIC?!", pid);
+        if (!relocating_linker) {
+            DL_ERR("%5d missing PT_DYNAMIC?!", pid);
+        }
         goto fail;
     } else {
-        DEBUG("%5d dynamic = %p\n", pid, si->dynamic);
+        if (!relocating_linker) {
+            DEBUG("%5d dynamic = %p\n", pid, si->dynamic);
+        }
     }
 
 #ifdef ANDROID_ARM_LINKER
@@ -1656,65 +1391,16 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 #endif
 
     if (si->flags & (FLAG_EXE | FLAG_LINKER)) {
-        /* Locate the needed program segments (DYNAMIC/ARM_EXIDX) for
-         * linkage info if this is the executable or the linker itself.
-         * If this was a dynamic lib, that would have been done at load time.
-         *
-         * TODO: It's unfortunate that small pieces of this are
-         * repeated from the load_library routine. Refactor this just
-         * slightly to reuse these bits.
-         */
-        si->size = 0;
-        for(; phnum > 0; --phnum, ++phdr) {
-            if (phdr->p_type == PT_LOAD) {
-                /* For the executable, we use the si->size field only in
-                   dl_unwind_find_exidx(), so the meaning of si->size
-                   is not the size of the executable; it is the distance
-                   between the load location of the executable and the last
-                   address of the loadable part of the executable.
-                   We use the range [si->base, si->base + si->size) to
-                   determine whether a PC value falls within the executable
-                   section. Of course, if a value is between si->base and
-                   (base + phdr->p_vaddr), it's not in the executable
-                   section, but a) we shouldn't be asking for such a value
-                   anyway, and b) if we have to provide an EXIDX for such a
-                   value, then the executable's EXIDX is probably the better
-                   choice.
-                */
-                DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
-                if (phdr->p_vaddr + phdr->p_memsz > si->size)
-                    si->size = phdr->p_vaddr + phdr->p_memsz;
-                /* try to remember what range of addresses should be write
-                 * protected */
-                if (!(phdr->p_flags & PF_W)) {
-                    unsigned _end;
-
-                    if (base + phdr->p_vaddr < si->wrprotect_start)
-                        si->wrprotect_start = base + phdr->p_vaddr;
-                    _end = PAGE_END(base + phdr->p_vaddr + phdr->p_memsz);
-                    if (_end > si->wrprotect_end)
-                        si->wrprotect_end = _end;
-                    /* Make the section writable just in case we'll have to
-                     * write to it during relocation (i.e. text segment).
-                     * However, we will remember what range of addresses
-                     * should be write protected.
-                     */
-                    mprotect((void *) (base + phdr->p_vaddr),
-                             phdr->p_memsz,
-                             PFLAGS_TO_PROT(phdr->p_flags) | PROT_WRITE);
-                }
-            } else if (phdr->p_type == PT_GNU_RELRO) {
-                if ((base + phdr->p_vaddr >= si->base + si->size)
-                        || ((base + phdr->p_vaddr + phdr->p_memsz) > si->base + si->size)
-                        || ((base + phdr->p_vaddr + phdr->p_memsz) < si->base)) {
-                    DL_ERR("%d invalid GNU_RELRO in '%s' "
-                           "p_vaddr=0x%08x p_memsz=0x%08x", pid, si->name,
-                           phdr->p_vaddr, phdr->p_memsz);
-                    goto fail;
-                }
-                si->gnu_relro_start = (Elf32_Addr) (base + phdr->p_vaddr);
-                si->gnu_relro_len = (unsigned) phdr->p_memsz;
+        if (phdr_table_unprotect_segments(si->phdr,
+                                          si->phnum,
+                                          si->load_bias) < 0) {
+            /* We can't call DL_ERR if the linker's relocations haven't
+             * been performed yet */
+            if (!relocating_linker) {
+                DL_ERR("%5d Can't unprotect segments for %s: %s",
+                       pid, si->name, strerror(errno));
             }
+            goto fail;
         }
     }
 
@@ -1870,40 +1556,19 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     si->flags |= FLAG_LINKED;
     DEBUG("[ %5d finished linking %s ]\n", pid, si->name);
 
-#if 0
-    /* This is the way that the old dynamic linker did protection of
-     * non-writable areas. It would scan section headers and find where
-     * .text ended (rather where .data/.bss began) and assume that this is
-     * the upper range of the non-writable area. This is too coarse,
-     * and is kept here for reference until we fully move away from single
-     * segment elf objects. See the code in get_wr_offset (also #if'd 0)
-     * that made this possible.
-     */
-    if(wr_offset < 0xffffffff){
-        mprotect((void*) si->base, wr_offset, PROT_READ | PROT_EXEC);
+    /* All relocations are done, we can protect our segments back to
+     * read-only. */
+    if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
+        DL_ERR("%5d Can't protect segments for %s: %s",
+               pid, si->name, strerror(errno));
+        goto fail;
     }
-#else
-    /* TODO: Verify that this does the right thing in all cases, as it
-     * presently probably does not. It is possible that an ELF image will
-     * come with multiple read-only segments. What we ought to do is scan
-     * the program headers again and mprotect all the read-only segments.
-     * To prevent re-scanning the program header, we would have to build a
-     * list of loadable segments in si, and then scan that instead. */
-    if (si->wrprotect_start != 0xffffffff && si->wrprotect_end != 0) {
-        mprotect((void *)si->wrprotect_start,
-                 si->wrprotect_end - si->wrprotect_start,
-                 PROT_READ | PROT_EXEC);
-    }
-#endif
 
-    if (si->gnu_relro_start != 0 && si->gnu_relro_len != 0) {
-        Elf32_Addr start = PAGE_START(si->gnu_relro_start);
-        unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
-        if (mprotect((void *) start, len, PROT_READ) < 0) {
-            DL_ERR("%5d GNU_RELRO mprotect of library '%s' failed: %d (%s)\n",
-                   pid, si->name, errno, strerror(errno));
-            goto fail;
-        }
+    /* We can also turn on GNU RELRO protection */
+    if (phdr_table_protect_gnu_relro(si->phdr, si->phnum, si->load_bias) < 0) {
+        DL_ERR("%5d Can't enable GNU RELRO protection for %s: %s",
+               pid, si->name, strerror(errno));
+        goto fail;
     }
 
     /* If this is a SET?ID program, dup /dev/null to opened stdin,
@@ -2098,6 +1763,7 @@ sanitize:
      */
     int nn;
     si->base = 0;
+    si->size = phdr_table_get_load_size(si->phdr, si->phnum);
     si->load_bias = 0;
     for ( nn = 0; nn < si->phnum; nn++ ) {
         if (si->phdr[nn].p_type == PT_PHDR) {
@@ -2107,11 +1773,7 @@ sanitize:
         }
     }
     si->dynamic = (unsigned *)-1;
-    si->wrprotect_start = 0xffffffff;
-    si->wrprotect_end = 0;
     si->refcount = 1;
-    si->gnu_relro_start = 0;
-    si->gnu_relro_len = 0;
 
         /* Use LD_LIBRARY_PATH if we aren't setuid/setgid */
     if (ldpath_env)
@@ -2249,15 +1911,12 @@ unsigned __linker_init(unsigned **elfdata) {
     memset(&linker_so, 0, sizeof(soinfo));
 
     linker_so.base = linker_addr;
+    linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
     linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
     linker_so.dynamic = (unsigned *) -1;
     linker_so.phdr = phdr;
     linker_so.phnum = elf_hdr->e_phnum;
     linker_so.flags |= FLAG_LINKER;
-    linker_so.wrprotect_start = 0xffffffff;
-    linker_so.wrprotect_end = 0;
-    linker_so.gnu_relro_start = 0;
-    linker_so.gnu_relro_len = 0;
 
     if (soinfo_link_image(&linker_so, 0)) {
         // It would be nice to print an error message, but if the linker
