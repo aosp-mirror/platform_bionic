@@ -768,10 +768,10 @@ get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
     }
 
     /* truncate min_vaddr down to page boundary */
-    min_vaddr &= ~PAGE_MASK;
+    min_vaddr = PAGE_START(min_vaddr);
 
     /* round max_vaddr up to the next page */
-    max_vaddr = (max_vaddr + PAGE_SIZE - 1) & ~PAGE_MASK;
+    max_vaddr = PAGE_END(max_vaddr);
 
     *total_sz = (max_vaddr - min_vaddr);
     return (unsigned)req_base;
@@ -892,7 +892,7 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
              * header table appear in ascending order, sorted on the
              * p_vaddr member."
              */
-            si->load_offset = phdr->p_vaddr & (~PAGE_MASK);
+            si->load_offset = PAGE_START(phdr->p_vaddr);
             break;
         }
     }
@@ -907,16 +907,16 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
         if (phdr->p_type == PT_LOAD) {
             DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
             /* we want to map in the segment on a page boundary */
-            tmp = base + (phdr->p_vaddr & (~PAGE_MASK));
+            tmp = base + PAGE_START(phdr->p_vaddr);
             /* add the # of bytes we masked off above to the total length. */
-            len = phdr->p_filesz + (phdr->p_vaddr & PAGE_MASK);
+            len = phdr->p_filesz + PAGE_OFFSET(phdr->p_vaddr);
 
             TRACE("[ %d - Trying to load segment from '%s' @ 0x%08x "
                   "(0x%08x). p_vaddr=0x%08x p_offset=0x%08x ]\n", pid, si->name,
                   (unsigned)tmp, len, phdr->p_vaddr, phdr->p_offset);
             pbase = mmap((void *)tmp, len, PFLAGS_TO_PROT(phdr->p_flags),
                          MAP_PRIVATE | MAP_FIXED, fd,
-                         phdr->p_offset & (~PAGE_MASK));
+                         PAGE_START(phdr->p_offset));
             if (pbase == MAP_FAILED) {
                 DL_ERR("%d failed to map segment from '%s' @ 0x%08x (0x%08x). "
                       "p_vaddr=0x%08x p_offset=0x%08x", pid, si->name,
@@ -926,8 +926,8 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
 
             /* If 'len' didn't end on page boundary, and it's a writable
              * segment, zero-fill the rest. */
-            if ((len & PAGE_MASK) && (phdr->p_flags & PF_W))
-                memset((void *)(pbase + len), 0, PAGE_SIZE - (len & PAGE_MASK));
+            if (PAGE_OFFSET(len) > 0 && (phdr->p_flags & PF_W) != 0)
+                memset((void *)(pbase + len), 0, PAGE_SIZE - PAGE_OFFSET(len));
 
             /* Check to see if we need to extend the map for this segment to
              * cover the diff between filesz and memsz (i.e. for bss).
@@ -956,8 +956,7 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
              *                  |                     |
              *                 _+---------------------+  page boundary
              */
-            tmp = (Elf32_Addr)(((unsigned)pbase + len + PAGE_SIZE - 1) &
-                                    (~PAGE_MASK));
+            tmp = (Elf32_Addr)PAGE_END((unsigned)pbase + len);
             if (tmp < (base + phdr->p_vaddr + phdr->p_memsz)) {
                 extra_len = base + phdr->p_vaddr + phdr->p_memsz - tmp;
                 TRACE("[ %5d - Need to extend segment from '%s' @ 0x%08x "
@@ -988,8 +987,7 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
             }
             /* set the len here to show the full extent of the segment we
              * just loaded, mostly for debugging */
-            len = (((unsigned)base + phdr->p_vaddr + phdr->p_memsz +
-                    PAGE_SIZE - 1) & (~PAGE_MASK)) - (unsigned)pbase;
+            len = PAGE_END((unsigned)base + phdr->p_vaddr + phdr->p_memsz) - (unsigned)pbase;
             TRACE("[ %5d - Successfully loaded segment from '%s' @ 0x%08x "
                   "(0x%08x). p_vaddr=0x%08x p_offset=0x%08x\n", pid, si->name,
                   (unsigned)pbase, len, phdr->p_vaddr, phdr->p_offset);
@@ -1051,7 +1049,7 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
      * vaddr        p_vaddr                         p_offset
      * -----        ------------                    --------
      * base         0
-     * si->base     phdr0->p_vaddr & ~PAGE_MASK
+     * si->base     PAGE_START(phdr0->p_vaddr)
      *              phdr0->p_vaddr                  phdr0->p_offset
      * phdr                                         ehdr->e_phoff
      */
@@ -1091,7 +1089,7 @@ get_wr_offset(int fd, const char *name, Elf32_Ehdr *ehdr)
     unsigned wr_offset = 0xffffffff;
 
     shdr_start = mmap(0, shdr_sz, PROT_READ, MAP_PRIVATE, fd,
-                      ehdr->e_shoff & (~PAGE_MASK));
+                      PAGE_START(ehdr->e_shoff));
     if (shdr_start == MAP_FAILED) {
         WARN("%5d - Could not read section header info from '%s'. Will not "
              "not be able to determine write-protect offset.\n", pid, name);
@@ -1264,7 +1262,7 @@ unsigned soinfo_unload(soinfo *si)
          * in soinfo_link_image. This is needed to undo the DT_NEEDED hack below.
          */
         if ((si->gnu_relro_start != 0) && (si->gnu_relro_len != 0)) {
-            Elf32_Addr start = (si->gnu_relro_start & ~PAGE_MASK);
+            Elf32_Addr start = PAGE_START(si->gnu_relro_start);
             unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
             if (mprotect((void *) start, len, PROT_READ | PROT_WRITE) < 0)
                 DL_ERR("%5d %s: could not undo GNU_RELRO protections. "
@@ -1756,8 +1754,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 
                     if (base + phdr->p_vaddr < si->wrprotect_start)
                         si->wrprotect_start = base + phdr->p_vaddr;
-                    _end = (((base + phdr->p_vaddr + phdr->p_memsz + PAGE_SIZE - 1) &
-                             (~PAGE_MASK)));
+                    _end = PAGE_END(base + phdr->p_vaddr + phdr->p_memsz);
                     if (_end > si->wrprotect_end)
                         si->wrprotect_end = _end;
                     /* Make the section writable just in case we'll have to
@@ -1980,7 +1977,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 #endif
 
     if (si->gnu_relro_start != 0 && si->gnu_relro_len != 0) {
-        Elf32_Addr start = (si->gnu_relro_start & ~PAGE_MASK);
+        Elf32_Addr start = PAGE_START(si->gnu_relro_start);
         unsigned len = (si->gnu_relro_start - start) + si->gnu_relro_len;
         if (mprotect((void *) start, len, PROT_READ) < 0) {
             DL_ERR("%5d GNU_RELRO mprotect of library '%s' failed: %d (%s)\n",
