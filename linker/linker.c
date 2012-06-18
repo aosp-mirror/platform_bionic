@@ -50,6 +50,7 @@
 #include "linker_debug.h"
 #include "linker_environ.h"
 #include "linker_format.h"
+#include "linker_phdr.h"
 
 #define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 128
@@ -701,81 +702,6 @@ verify_elf_header(const Elf32_Ehdr* hdr)
 }
 
 
-/* get_lib_extents
- *      Retrieves the base (*base) address where the ELF object should be
- *      mapped and its overall memory size (*total_sz).
- *
- * Args:
- *      fd: Opened file descriptor for the library
- *      name: The name of the library
- *      _hdr: Pointer to the header page of the library
- *      total_sz: Total size of the memory that should be allocated for
- *                this library
- *
- * Returns:
- *      -1 if there was an error while trying to get the lib extents.
- *         The possible reasons are:
- *             - Could not determine if the library was prelinked.
- *             - The library provided is not a valid ELF object
- *       0 if the library did not request a specific base offset (normal
- *         for non-prelinked libs)
- *     > 0 if the library requests a specific address to be mapped to.
- *         This indicates a pre-linked library.
- */
-static unsigned
-get_lib_extents(int fd, const char *name, void *__hdr, unsigned *total_sz)
-{
-    unsigned req_base;
-    unsigned min_vaddr = 0xffffffff;
-    unsigned max_vaddr = 0;
-    unsigned char *_hdr = (unsigned char *)__hdr;
-    Elf32_Ehdr *ehdr = (Elf32_Ehdr *)_hdr;
-    Elf32_Phdr *phdr;
-    int cnt;
-
-    TRACE("[ %5d Computing extents for '%s'. ]\n", pid, name);
-    if (verify_elf_header(ehdr) < 0) {
-        DL_ERR("%5d - %s is not a valid ELF object", pid, name);
-        return (unsigned)-1;
-    }
-
-    req_base = (unsigned) is_prelinked(fd, name);
-    if (req_base == (unsigned)-1)
-        return -1;
-    else if (req_base != 0) {
-        TRACE("[ %5d - Prelinked library '%s' requesting base @ 0x%08x ]\n",
-              pid, name, req_base);
-    } else {
-        TRACE("[ %5d - Non-prelinked library '%s' found. ]\n", pid, name);
-    }
-
-    phdr = (Elf32_Phdr *)(_hdr + ehdr->e_phoff);
-
-    /* find the min/max p_vaddrs from all the PT_LOAD segments so we can
-     * get the range. */
-    for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
-        if (phdr->p_type == PT_LOAD) {
-            if ((phdr->p_vaddr + phdr->p_memsz) > max_vaddr)
-                max_vaddr = phdr->p_vaddr + phdr->p_memsz;
-            if (phdr->p_vaddr < min_vaddr)
-                min_vaddr = phdr->p_vaddr;
-        }
-    }
-
-    if ((min_vaddr == 0xffffffff) && (max_vaddr == 0)) {
-        DL_ERR("%5d - No loadable segments found in %s.", pid, name);
-        return (unsigned)-1;
-    }
-
-    /* truncate min_vaddr down to page boundary */
-    min_vaddr = PAGE_START(min_vaddr);
-
-    /* round max_vaddr up to the next page */
-    max_vaddr = PAGE_END(max_vaddr);
-
-    *total_sz = (max_vaddr - min_vaddr);
-    return (unsigned)req_base;
-}
 /* reserve_mem_region
  *
  *     This function reserves a chunk of memory to be used for mapping in
@@ -826,20 +752,15 @@ static int soinfo_alloc_mem_region(soinfo *si)
     void *base = mmap(NULL, si->size, PROT_NONE,
                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (base == MAP_FAILED) {
-        DL_ERR("%5d mmap of library '%s' failed: %d (%s)\n",
-              pid, si->name,
+        DL_ERR("%5d mmap of library '%s' failed (%d bytes): %d (%s)\n",
+              pid, si->name, si->size,
               errno, strerror(errno));
-        goto err;
+        return -1;
     }
     si->base = (unsigned) base;
     PRINT("%5d mapped library '%s' to %08x via kernel allocator.\n",
           pid, si->name, si->base);
     return 0;
-
-err:
-    DL_ERR("OOPS: %5d cannot map library '%s'. no vspace available.",
-          pid, si->name);
-    return -1;
 }
 
 #define MAYBE_MAP_FLAG(x,from,to)    (((x) & (from)) ? (to) : 0)
@@ -861,11 +782,10 @@ err:
  *     0 on success, -1 on failure.
  */
 static int
-soinfo_load_segments(soinfo* si, int fd, void* header)
+soinfo_load_segments(soinfo* si, int fd, const Elf32_Phdr* phdr_table, int phdr_count, Elf32_Addr ehdr_phoff)
 {
-    Elf32_Ehdr *ehdr = (Elf32_Ehdr *)header;
-    Elf32_Phdr *phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
-    Elf32_Phdr *phdr0 = 0;  /* program header for the first LOAD segment */
+    const Elf32_Phdr *phdr = phdr_table;
+    const Elf32_Phdr *phdr0 = 0;  /* program header for the first LOAD segment */
     Elf32_Addr base;
     int cnt;
     unsigned len;
@@ -881,7 +801,7 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
     TRACE("[ %5d - Begin loading segments for '%s' @ 0x%08x ]\n",
           pid, si->name, (unsigned)si->base);
 
-    for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
+    for (cnt = 0; cnt < phdr_count; ++cnt, ++phdr) {
 
         if (phdr->p_type == PT_LOAD) {
             phdr0 = phdr;
@@ -902,8 +822,8 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
 
     /* Now go through all the PT_LOAD segments and map them into memory
      * at the appropriate locations. */
-    phdr = (Elf32_Phdr *)((unsigned char *)header + ehdr->e_phoff);
-    for (cnt = 0; cnt < ehdr->e_phnum; ++cnt, ++phdr) {
+    phdr = phdr_table;
+    for (cnt = 0; cnt < phdr_count; ++cnt, ++phdr) {
         if (phdr->p_type == PT_LOAD) {
             DEBUG_DUMP_PHDR(phdr, "PT_LOAD", pid);
             /* we want to map in the segment on a page boundary */
@@ -1054,8 +974,8 @@ soinfo_load_segments(soinfo* si, int fd, void* header)
      * phdr                                         ehdr->e_phoff
      */
     si->phdr = (Elf32_Phdr *)(base + phdr0->p_vaddr +
-                              ehdr->e_phoff - phdr0->p_offset);
-    si->phnum = ehdr->e_phnum;
+                              ehdr_phoff - phdr0->p_offset);
+    si->phnum = phdr_count;
 
     TRACE("[ %5d - Finish loading segments for '%s' @ 0x%08x. "
           "Total memory footprint: 0x%08x bytes ]\n", pid, si->name,
@@ -1108,44 +1028,72 @@ get_wr_offset(int fd, const char *name, Elf32_Ehdr *ehdr)
 }
 #endif
 
+
 static soinfo *
 load_library(const char *name)
 {
     int fd = open_library(name);
-    int cnt;
+    int ret, cnt;
     unsigned ext_sz;
     unsigned req_base;
     const char *bname;
     struct stat sb;
     soinfo *si = NULL;
-    Elf32_Ehdr *hdr = MAP_FAILED;
+    Elf32_Ehdr  header[1];
+    int         phdr_count;
+    void*       phdr_mmap = NULL;
+    Elf32_Addr  phdr_size;
+    const Elf32_Phdr* phdr_table;
 
     if (fd == -1) {
         DL_ERR("Library '%s' not found", name);
         return NULL;
     }
 
-    /* We have to read the ELF header to figure out what to do with this image.
-     * Map entire file for this.  There won't be much difference in physical
-     * memory usage or performance.
-     */
-    if (fstat(fd, &sb) < 0) {
-        DL_ERR("%5d fstat() failed! (%s)", pid, strerror(errno));
+    /* Read the ELF header first */
+    ret = TEMP_FAILURE_RETRY(read(fd, (void*)header, sizeof(header)));
+    if (ret < 0) {
+        DL_ERR("%5d can't read file %s: %s", pid, name, strerror(errno));
+        goto fail;
+    }
+    if (ret != (int)sizeof(header)) {
+        DL_ERR("%5d too small to be an ELF executable: %s", pid, name);
+        goto fail;
+    }
+    if (verify_elf_header(header) < 0) {
+        DL_ERR("%5d not a valid ELF executable: %s", pid, name);
         goto fail;
     }
 
-    hdr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    if (hdr == MAP_FAILED) {
-        DL_ERR("%5d failed to mmap() header of '%s' (%s)",
-               pid, name, strerror(errno));
+    /* Then read the program header table */
+    ret = phdr_table_load(fd, header->e_phoff, header->e_phnum,
+                          &phdr_mmap, &phdr_size, &phdr_table);
+    if (ret < 0) {
+        DL_ERR("%5d can't load program header table: %s: %s", pid,
+               name, strerror(errno));
+        goto fail;
+    }
+    phdr_count = header->e_phnum;
+
+    /* Get the load extents and the prelinked load address, if any */
+    ext_sz = phdr_table_get_load_size(phdr_table, phdr_count);
+    if (ext_sz == 0) {
+        DL_ERR("%5d no loadable segments in file: %s", pid, name);
         goto fail;
     }
 
-    /* Parse the ELF header and get the size of the memory footprint for
-     * the library */
-    req_base = get_lib_extents(fd, name, hdr, &ext_sz);
-    if (req_base == (unsigned)-1)
+    req_base = (unsigned) is_prelinked(fd, name);
+    if (req_base == (unsigned)-1) {
+        DL_ERR("%5d can't read end of library: %s: %s", pid, name,
+               strerror(errno));
         goto fail;
+    }
+    if (req_base != 0) {
+        TRACE("[ %5d - Prelinked library '%s' requesting base @ 0x%08x ]\n",
+              pid, name, req_base);
+    } else {
+        TRACE("[ %5d - Non-prelinked library '%s' found. ]\n", pid, name);
+    }
 
     TRACE("[ %5d - '%s' (%s) wants base=0x%08x sz=0x%08x ]\n", pid, name,
           (req_base ? "prelinked" : "not pre-linked"), req_base, ext_sz);
@@ -1174,17 +1122,19 @@ load_library(const char *name)
           pid, name, (void *)si->base, (unsigned) ext_sz);
 
     /* Now actually load the library's segments into right places in memory */
-    if (soinfo_load_segments(si, fd, hdr) < 0) {
+    if (soinfo_load_segments(si, fd, phdr_table, phdr_count, header->e_phoff) < 0) {
         goto fail;
     }
 
-    munmap(hdr, sb.st_size);
+    phdr_table_unload(phdr_mmap, phdr_size);
     close(fd);
     return si;
 
 fail:
     if (si) soinfo_free(si);
-    if (hdr != MAP_FAILED) munmap(hdr, sb.st_size);
+    if (phdr_mmap != NULL) {
+        phdr_table_unload(phdr_mmap, phdr_size);
+    }
     close(fd);
     return NULL;
 }
