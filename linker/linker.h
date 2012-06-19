@@ -37,7 +37,23 @@
 #undef PAGE_MASK
 #undef PAGE_SIZE
 #define PAGE_SIZE 4096
-#define PAGE_MASK 4095
+#define PAGE_MASK (PAGE_SIZE-1)
+
+/* Convenience macros to make page address/offset computations more explicit */
+
+/* Returns the address of the page starting at address 'x' */
+#define PAGE_START(x)  ((x) & ~PAGE_MASK)
+
+/* Returns the offset of address 'x' in its memory page, i.e. this is the
+ * same than 'x' - PAGE_START(x) */
+#define PAGE_OFFSET(x) ((x) & PAGE_MASK)
+
+/* Returns the address of the next page after address 'x', unless 'x' is
+ * itself at the start of a page. Equivalent to:
+ *
+ *  (x == PAGE_START(x)) ? x : PAGE_START(x)+PAGE_SIZE
+ */
+#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
 void debugger_init();
 const char *addr_to_name(unsigned addr);
