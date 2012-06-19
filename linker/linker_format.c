@@ -172,6 +172,21 @@ vsnprintf(char *buff, size_t bufsize, const char *format, va_list args)
     return format_buffer(buff, bufsize, format, args);
 }
 
+/* The pthread implementation uses snprintf(). If we define it here, we
+ * avoid pulling the stdio vfprintf() implementation into the linker
+ * saving about 19KB of machine code.
+ */
+int
+snprintf(char* buff, size_t bufsize, const char* format, ...)
+{
+    va_list args;
+    int ret;
+    va_start(args, format);
+    ret = vsnprintf(buff, bufsize, format, args);
+    va_end(args);
+    return ret;
+}
+
 #if LINKER_DEBUG
 
 #if !LINKER_DEBUG_TO_LOG
