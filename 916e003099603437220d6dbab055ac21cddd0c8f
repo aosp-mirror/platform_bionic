@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAGyX////Q\u003d",
+        "filename": "linker/arch/x86/begin.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-06-20T11:15:19Z",
+      "side": 1,
+      "message": "I think it\u0027s pretty bad to do this. What about having a copy of __stack_chk_fail_local.S here instead? I doubt the content will change much over time.",
+      "revId": "916e003099603437220d6dbab055ac21cddd0c8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
