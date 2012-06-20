@@ -644,6 +644,11 @@ res_nsend(res_state statp,
 			errno = ETIMEDOUT;	/* no answer obtained */
 	} else
 		errno = terrno;
+
+#if USE_RESOLV_CACHE
+        _resolv_cache_query_failed(cache, buf, buflen);
+#endif
+
 	return (-1);
  fail:
 #if USE_RESOLV_CACHE
