@@ -34,6 +34,24 @@
       "revId": "916e003099603437220d6dbab055ac21cddd0c8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAGyn///8A\u003d",
+        "filename": "linker/arch/x86/begin.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2012-06-21T01:27:04Z",
+      "side": 1,
+      "message": "Will do in next patch set.  Thanks!",
+      "parentUuid": "AAAGxH///w0\u003d",
+      "revId": "916e003099603437220d6dbab055ac21cddd0c8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
