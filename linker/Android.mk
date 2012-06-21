@@ -26,7 +26,9 @@ LOCAL_CFLAGS += -DLINKER_DEBUG=0
 ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
     LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
 endif
-LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/private
+LOCAL_CFLAGS += \
+    -I$(LOCAL_PATH)/../libc/private \
+    -I$(LOCAL_PATH)/../libc/arch-$(TARGET_ARCH)/bionic
 
 ifeq ($(TARGET_ARCH),arm)
 LOCAL_CFLAGS += -DANDROID_ARM_LINKER
