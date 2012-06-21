@@ -44,3 +44,4 @@ _start:
         popl   %esp
         jmp    *%eax
 
+#include "__stack_chk_fail_local.S"
