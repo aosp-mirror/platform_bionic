@@ -1727,7 +1727,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             if(phdr->p_type == PT_ARM_EXIDX) {
                 /* exidx entries (used for stack unwinding) are 8 bytes each.
                  */
-                si->ARM_exidx = (unsigned *)phdr->p_vaddr;
+                si->ARM_exidx = (unsigned *)(base + phdr->p_vaddr);
                 si->ARM_exidx_count = phdr->p_memsz / 8;
             }
 #endif
