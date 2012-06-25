@@ -54,7 +54,6 @@ libm_common_src_files:= \
 	src/e_sinh.c \
 	src/e_sinhf.c \
 	src/e_sqrt.c \
-	src/e_sqrtf.c \
 	src/k_cos.c \
 	src/k_cosf.c \
 	src/k_rem_pio2.c \
@@ -160,7 +159,8 @@ ifeq ($(TARGET_ARCH),arm)
 	src/e_ldexpf.c \
 	src/s_scalbln.c \
 	src/s_scalbn.c \
-	src/s_scalbnf.c
+	src/s_scalbnf.c \
+	src/e_sqrtf.c
 
   libm_common_includes = $(LOCAL_PATH)/arm
 endif
@@ -170,7 +170,8 @@ ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
 	i387/fenv.c \
 	i387/s_scalbnl.S \
 	i387/s_scalbn.S \
-	i387/s_scalbnf.S
+	i387/s_scalbnf.S \
+	i387/e_sqrtf.S
 
   libm_common_includes = $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
 endif
@@ -180,7 +181,8 @@ ifeq ($(TARGET_ARCH),mips)
 	src/e_ldexpf.c \
 	src/s_scalbln.c \
 	src/s_scalbn.c \
-	src/s_scalbnf.c
+	src/s_scalbnf.c \
+	src/e_sqrtf.c
 
   libm_common_includes = $(LOCAL_PATH)/mips
   # Need to build *rint* functions
