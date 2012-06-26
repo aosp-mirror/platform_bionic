@@ -6,6 +6,7 @@ LOCAL_SRC_FILES:= \
 	linker.c \
 	linker_environ.c \
 	linker_format.c \
+	linker_phdr.c \
 	rt.c \
 	dlfcn.c \
 	debugger.c
