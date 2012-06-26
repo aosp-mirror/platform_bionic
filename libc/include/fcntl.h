@@ -49,6 +49,46 @@ extern int  unlinkat(int dirfd, const char *pathname, int flags);
 extern int  fcntl(int   fd, int   command, ...);
 extern int  creat(const char*  path, mode_t  mode);
 
+#if defined(__BIONIC_FORTIFY_INLINE)
+
+# if !defined(__clang__)
+/*
+ * Clang doesn't have support for __builtin_va_arg_pack()
+ * and __builtin_va_arg_pack_len()
+ *
+ * http://clang.llvm.org/docs/UsersManual.html#c_unimpl_gcc
+ */
+
+extern void __open_creat_error()
+    __attribute__((__error__ ("open called with O_CREAT, but missing mode")));
+extern void __open_toomanyargs_error()
+    __attribute__((__error__ ("open called with too many arguments")));
+extern int __open_real(const char *pathname, int flags, ...)
+    __asm__(__USER_LABEL_PREFIX__ "open");
+extern int __open_2(const char *, int);
+
+__BIONIC_FORTIFY_INLINE
+int open(const char *pathname, int flags, ...) {
+    if (__builtin_constant_p(flags)) {
+        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+            __open_creat_error();  // compile time error
+        }
+    }
+
+    if (__builtin_va_arg_pack_len() > 1) {
+        __open_toomanyargs_error();  // compile time error
+    }
+
+    if (__builtin_va_arg_pack_len() == 0) {
+        return __open_2(pathname, flags);
+    }
+
+    return __open_real(pathname, flags, __builtin_va_arg_pack());
+}
+
+#endif /* !defined(__clang__) */
+#endif /* defined(__BIONIC_FORTIFY_INLINE) */
+
 __END_DECLS
 
 #endif /* _FCNTL_H */
