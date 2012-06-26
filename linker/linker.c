@@ -424,7 +424,7 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-soinfo_do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offset)
+soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset)
 {
     unsigned elf_hash = elfhash(name);
     Elf32_Sym *s;
@@ -487,11 +487,10 @@ soinfo_do_lookup(soinfo *si, const char *name, unsigned *base, Elf32_Addr *offse
 done:
     if(s != NULL) {
         TRACE_TYPE(LOOKUP, "%5d si %s sym %s s->st_value = 0x%08x, "
-                   "found in %s, base = 0x%08x, load offset = 0x%08x\n",
+                   "found in %s, base = 0x%08x, load bias = 0x%08x\n",
                    pid, si->name, name, s->st_value,
-                   lsi->name, lsi->base, lsi->load_offset);
-        *base = lsi->base;
-        *offset = lsi->load_offset;
+                   lsi->name, lsi->base, lsi->load_bias);
+        *offset = lsi->load_bias;
         return s;
     }
 
@@ -812,13 +811,13 @@ soinfo_load_segments(soinfo* si, int fd, const Elf32_Phdr* phdr_table, int phdr_
              * header table appear in ascending order, sorted on the
              * p_vaddr member."
              */
-            si->load_offset = PAGE_START(phdr->p_vaddr);
+            si->load_bias = si->base - PAGE_START(phdr->p_vaddr);
             break;
         }
     }
 
     /* "base" might wrap around UINT32_MAX. */
-    base = (Elf32_Addr)(si->base - si->load_offset);
+    base = si->load_bias;
 
     /* Now go through all the PT_LOAD segments and map them into memory
      * at the appropriate locations. */
@@ -1271,7 +1270,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
     for (idx = 0; idx < count; ++idx) {
         unsigned type = ELF32_R_TYPE(rel->r_info);
         unsigned sym = ELF32_R_SYM(rel->r_info);
-        unsigned reloc = (unsigned)(rel->r_offset + si->base - si->load_offset);
+        unsigned reloc = (unsigned)(rel->r_offset + si->load_bias);
         unsigned sym_addr = 0;
         char *sym_name = NULL;
 
@@ -1279,7 +1278,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
               si->name, idx);
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = soinfo_do_lookup(si, sym_name, &base, &offset);
+            s = soinfo_do_lookup(si, sym_name, &offset);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1346,7 +1345,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
 #endif
-                sym_addr = (unsigned)(s->st_value + base - offset);
+                sym_addr = (unsigned)(s->st_value + offset);
 	    }
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
@@ -1652,7 +1651,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 {
     unsigned *d;
     /* "base" might wrap around UINT32_MAX. */
-    Elf32_Addr base = si->base - si->load_offset;
+    Elf32_Addr base = si->load_bias;
     Elf32_Phdr *phdr = si->phdr;
     int phnum = si->phnum;
 
@@ -2128,13 +2127,14 @@ sanitize:
      */
     int nn;
     si->base = 0;
+    si->load_bias = 0;
     for ( nn = 0; nn < si->phnum; nn++ ) {
         if (si->phdr[nn].p_type == PT_PHDR) {
-            si->base = (Elf32_Addr) si->phdr - si->phdr[nn].p_vaddr;
+            si->load_bias = (Elf32_Addr)si->phdr - si->phdr[nn].p_vaddr;
+            si->base = (Elf32_Addr) si->phdr - si->phdr[nn].p_offset;
             break;
         }
     }
-    si->load_offset = 0;
     si->dynamic = (unsigned *)-1;
     si->wrprotect_start = 0xffffffff;
     si->wrprotect_end = 0;
@@ -2233,6 +2233,32 @@ static unsigned find_linker_base(unsigned **elfdata) {
     return 0; // should never happen
 }
 
+/* Compute the load-bias of an existing executable. This shall only
+ * be used to compute the load bias of an executable or shared library
+ * that was loaded by the kernel itself.
+ *
+ * Input:
+ *    elf    -> address of ELF header, assumed to be at the start of the file.
+ * Return:
+ *    load bias, i.e. add the value of any p_vaddr in the file to get
+ *    the corresponding address in memory.
+ */
+static Elf32_Addr
+get_elf_exec_load_bias(const Elf32_Ehdr* elf)
+{
+    Elf32_Addr        offset     = elf->e_phoff;
+    const Elf32_Phdr* phdr_table = (const Elf32_Phdr*)((char*)elf + offset);
+    const Elf32_Phdr* phdr_end   = phdr_table + elf->e_phnum;
+    const Elf32_Phdr* phdr;
+
+    for (phdr = phdr_table; phdr < phdr_end; phdr++) {
+        if (phdr->p_type == PT_LOAD) {
+            return (Elf32_Addr)elf + phdr->p_offset - phdr->p_vaddr;
+        }
+    }
+    return 0;
+}
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -2252,7 +2278,7 @@ unsigned __linker_init(unsigned **elfdata) {
     memset(&linker_so, 0, sizeof(soinfo));
 
     linker_so.base = linker_addr;
-    linker_so.load_offset = 0;
+    linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
     linker_so.dynamic = (unsigned *) -1;
     linker_so.phdr = phdr;
     linker_so.phnum = elf_hdr->e_phnum;

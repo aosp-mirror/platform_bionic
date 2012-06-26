@@ -164,10 +164,9 @@ struct soinfo
     Elf32_Addr gnu_relro_start;
     unsigned gnu_relro_len;
 
-    /* When you read a virtual address from the ELF file, add the load
-     * address (= "base" field) minus this value (= "load_offset") to get the
-     * real, corresponding address in the process' address space */
-    Elf32_Addr load_offset;
+    /* When you read a virtual address from the ELF file, add this
+     * value to get the corresponding address in the process' address space */
+    Elf32_Addr load_bias;
 };
 
 
