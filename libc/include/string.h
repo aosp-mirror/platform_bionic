@@ -122,10 +122,10 @@ void *memset (void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
 }
 
-extern size_t strlcpy_real(char *, const char *, size_t)
+extern size_t __strlcpy_real(char *, const char *, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
 extern void __strlcpy_error()
-    __attribute__((error ("strlcpy called with size bigger than buffer")));
+    __attribute__((__error__("strlcpy called with size bigger than buffer")));
 extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
@@ -134,13 +134,13 @@ size_t strlcpy(char *dest, const char *src, size_t size) {
 
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
     if (bos == (size_t) -1) {
-        return strlcpy_real(dest, src, size);
+        return __strlcpy_real(dest, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
     // is always <= the actual object size. Don't call __strlcpy_chk
     if (__builtin_constant_p(size) && (size <= bos)) {
-        return strlcpy_real(dest, src, size);
+        return __strlcpy_real(dest, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
@@ -152,10 +152,10 @@ size_t strlcpy(char *dest, const char *src, size_t size) {
     return __strlcpy_chk(dest, src, size, bos);
 }
 
-extern size_t strlcat_real(char *, const char *, size_t)
+extern size_t __strlcat_real(char *, const char *, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcat");
 extern void __strlcat_error()
-    __attribute__((error ("strlcat called with size bigger than buffer")));
+    __attribute__((__error__("strlcat called with size bigger than buffer")));
 extern size_t __strlcat_chk(char *, const char *, size_t, size_t);
 
 
@@ -165,13 +165,13 @@ size_t strlcat(char *dest, const char *src, size_t size) {
 
     // Compiler doesn't know destination size. Don't call __strlcat_chk
     if (bos == (size_t) -1) {
-        return strlcat_real(dest, src, size);
+        return __strlcat_real(dest, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
     // is always <= the actual object size. Don't call __strlcat_chk
     if (__builtin_constant_p(size) && (size <= bos)) {
-        return strlcat_real(dest, src, size);
+        return __strlcat_real(dest, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
