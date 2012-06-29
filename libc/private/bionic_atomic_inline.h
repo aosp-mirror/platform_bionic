@@ -53,6 +53,8 @@ extern "C" {
 #  include <bionic_atomic_arm.h>
 #elif defined(__i386__)
 #  include <bionic_atomic_x86.h>
+#elif defined(__mips__)
+#  include <bionic_atomic_mips.h>
 #else
 #  include <bionic_atomic_gcc_builtin.h>
 #endif
