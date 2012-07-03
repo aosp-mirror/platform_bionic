@@ -140,6 +140,7 @@ libc_common_src_files := \
 	stdio/vsscanf.c \
 	stdio/wbuf.c \
 	stdio/wsetup.c \
+	stdio/__fgets_chk.c \
 	stdio/__snprintf_chk.c \
 	stdio/__sprintf_chk.c \
 	stdio/__vsnprintf_chk.c \

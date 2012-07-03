@@ -527,6 +527,45 @@ int sprintf(char *dest, const char *format, ...)
 
 # endif /* !defined(__clang__) */
 
+extern char *__fgets_real(char *, int, FILE *)
+    __asm__(__USER_LABEL_PREFIX__ "fgets");
+extern void __fgets_too_big_error()
+    __attribute__((__error__("fgets called with size bigger than buffer")));
+extern void __fgets_too_small_error()
+    __attribute__((__error__("fgets called with size less than zero")));
+extern char *__fgets_chk(char *, int, FILE *, size_t);
+
+__BIONIC_FORTIFY_INLINE
+char *fgets(char *dest, int size, FILE *stream)
+{
+    size_t bos = __builtin_object_size(dest, 0);
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always negative. Force a compiler error.
+    if (__builtin_constant_p(size) && (size < 0)) {
+        __fgets_too_small_error();
+    }
+
+    // Compiler doesn't know destination size. Don't call __fgets_chk
+    if (bos == (size_t) -1) {
+        return __fgets_real(dest, size, stream);
+    }
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always <= the actual object size. Don't call __fgets_chk
+    if (__builtin_constant_p(size) && (size <= bos)) {
+        return __fgets_real(dest, size, stream);
+    }
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always > the actual object size. Force a compiler error.
+    if (__builtin_constant_p(size) && (size > bos)) {
+        __fgets_too_big_error();
+    }
+
+    return __fgets_chk(dest, size, stream, bos);
+}
+
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
 #endif /* _STDIO_H_ */
