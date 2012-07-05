@@ -393,8 +393,8 @@ static Elf32_Sym *soinfo_elf_lookup(soinfo *si, unsigned hash, const char *name)
         switch(ELF32_ST_BIND(s->st_info)){
         case STB_GLOBAL:
         case STB_WEAK:
-                /* no section == undefined */
-            if(s->st_shndx == 0) continue;
+            if(s->st_shndx == SHN_UNDEF)
+                continue;
 
             TRACE_TYPE(LOOKUP, "%5d FOUND %s in %s (%08x) %d\n", pid,
                        name, si->name, s->st_value, s->st_size);
