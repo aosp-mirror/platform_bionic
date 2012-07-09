@@ -159,7 +159,7 @@ const char *linker_get_error(void)
  * This function is an empty stub where GDB locates a breakpoint to get notified
  * about linker activity.
  */
-extern void __attribute__((noinline)) rtld_db_dlactivity(void);
+extern void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity(void);
 
 static struct r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
                                   RT_CONSISTENT, 0};
