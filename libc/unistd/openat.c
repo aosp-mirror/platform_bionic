@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <private/logd.h>
 
 extern int  __openat(int, const char*, int, int);
 
@@ -47,5 +49,18 @@ int openat(int fd, const char *pathname, int flags, ...)
     }
 
     return __openat(fd, pathname, flags, mode);
+}
+
+int __openat_2(int fd, const char *pathname, int flags)
+{
+    if (flags & O_CREAT) {
+        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+            "*** openat(O_CREAT) called without specifying a mode ***\n");
+        abort();
+    }
+
+    flags |= O_LARGEFILE;
+
+    return __openat(fd, pathname, flags, 0);
 }
 
