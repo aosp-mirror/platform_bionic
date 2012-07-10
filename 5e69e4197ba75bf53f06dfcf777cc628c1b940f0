@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAHJH///lk\u003d",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-10T16:11:53Z",
+      "side": 1,
+      "message": "i think it\u0027s time we got closer to upstream. this bug was fixed a long time ago in both NetBSD and FreeBSD. (i don\u0027t have a copy of the OpenBSD source, from which this file came.)",
+      "parentUuid": "AAAHJX///hU\u003d",
+      "revId": "5e69e4197ba75bf53f06dfcf777cc628c1b940f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAHJX///hQ\u003d",
         "filename": "libc/stdio/vfprintf.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-07-10T15:57:54Z",
       "side": 1,
       "message": "argtable is an out argument, by adding va_end here argtable will reference a va_copy-ed va_list that has been va_ended, it seems it should be the callers responsibility to call va_end.",
+      "revId": "5e69e4197ba75bf53f06dfcf777cc628c1b940f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHJH///lg\u003d",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-10T16:11:53Z",
+      "side": 1,
+      "message": "yeah, this would introduce a bug. the only caller is __vfprintf.",
+      "parentUuid": "AAAHJX///hQ\u003d",
       "revId": "5e69e4197ba75bf53f06dfcf777cc628c1b940f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
