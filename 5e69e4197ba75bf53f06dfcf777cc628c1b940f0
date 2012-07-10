@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHJX///hU\u003d",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-07-10T15:57:54Z",
+      "side": 1,
+      "message": "+1",
+      "revId": "5e69e4197ba75bf53f06dfcf777cc628c1b940f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHJX///hQ\u003d",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-07-10T15:57:54Z",
+      "side": 1,
+      "message": "argtable is an out argument, by adding va_end here argtable will reference a va_copy-ed va_list that has been va_ended, it seems it should be the callers responsibility to call va_end.",
+      "revId": "5e69e4197ba75bf53f06dfcf777cc628c1b940f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
