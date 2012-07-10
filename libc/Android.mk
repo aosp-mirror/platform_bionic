@@ -292,7 +292,6 @@ libc_common_src_files := \
 	bionic/sched_cpucount.c \
 	bionic/semaphore.c \
 	bionic/sha1.c \
-	bionic/ssp.c \
 	bionic/stubs.c \
 	bionic/system_properties.c \
 	bionic/tdelete.c \
@@ -619,6 +618,25 @@ ALL_GENERATED_SOURCES += $(GEN)
 WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 
 # ========================================================
+# libbionic_ssp.a - stack protector code
+# ========================================================
+#
+# The stack protector code needs to be compiled
+# with -fno-stack-protector, since it modifies the
+# stack canary.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := bionic/ssp.c
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libbionic_ssp
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_common.a
 # ========================================================
 include $(CLEAR_VARS)
@@ -630,6 +648,7 @@ LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
 endif
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
+LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
