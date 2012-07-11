@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHJH///a0\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-07-11T05:14:15Z",
+      "side": 1,
+      "message": "s/if/is/",
+      "revId": "fcc911e6b43d66aaa2351fbcb06d1c6c8b91d1dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHJH///aw\u003d",
+        "filename": "linker/rt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-07-11T05:14:15Z",
+      "side": 1,
+      "message": "It cannot be inlined away and cannot be hidden.",
+      "revId": "fcc911e6b43d66aaa2351fbcb06d1c6c8b91d1dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
