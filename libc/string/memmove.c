@@ -32,10 +32,11 @@ void *memmove(void *dst, const void *src, size_t n)
 {
   const char *p = src;
   char *q = dst;
-  /* We can use the optimized memcpy if the destination is below the
-   * source (i.e. q < p), or if it is completely over it (i.e. q >= p+n).
+  /* We can use the optimized memcpy if the source and destination
+   * don't overlap.
    */
-  if (__builtin_expect((q < p) || ((size_t)(q - p) >= n), 1)) {
+  if (__builtin_expect(((q < p) && ((size_t)(p - q) >= n))
+                    || ((p < q) && ((size_t)(q - p) >= n)), 1)) {
     return memcpy(dst, src, n);
   } else {
     bcopy(src, dst, n);
