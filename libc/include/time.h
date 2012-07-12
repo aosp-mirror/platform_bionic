@@ -30,10 +30,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
-
-#define __ARCH_SI_UID_T __kernel_uid32_t
-#include <asm/siginfo.h>
-#undef __ARCH_SI_UID_T
+#include <machine/signal.h>  /* for struct sigevent */
 
 __BEGIN_DECLS
 
