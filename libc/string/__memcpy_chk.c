@@ -26,12 +26,13 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
 #include <string.h>
 #include <stdlib.h>
 #include <private/logd.h>
 
 /*
- * Runtime implementation of __builtin____memcpy_chk.
+ * Runtime implementation of __memcpy_chk2.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
@@ -41,15 +42,31 @@
  * This memcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-void *__memcpy_chk (void *dest, const void *src,
-              size_t len, size_t dest_len)
+void *__memcpy_chk2(void *dest, const void *src,
+              size_t copy_amount, size_t dest_len, size_t src_len)
 {
-    if (len > dest_len) {
+    char *d = (char *) dest;
+    const char *s = (const char *) src;
+
+    if (__builtin_expect(copy_amount > dest_len, 0)) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** memcpy buffer overflow detected ***\n");
         __libc_android_log_event_uid(BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
         abort();
     }
 
-    return memcpy(dest, src, len);
+    if (__builtin_expect(copy_amount > src_len, 0)) {
+        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+            "*** memcpy read overflow detected ***\n");
+        abort();
+    }
+
+    if (__builtin_expect(((d <= s) && ((size_t)(s - d) < copy_amount))
+                      || ((d >= s) && ((size_t)(d - s) < copy_amount)), 0)) {
+        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+            "*** memcpy memory overlap detected ***\n");
+        abort();
+    }
+
+    return memcpy(dest, src, copy_amount);
 }

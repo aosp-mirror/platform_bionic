@@ -87,9 +87,42 @@ extern size_t strxfrm(char *, const char *, size_t);
 
 #if defined(__BIONIC_FORTIFY_INLINE)
 
+extern void __memcpy_dest_size_error()
+    __attribute__((__error__("memcpy called with size bigger than destination")));
+extern void __memcpy_src_size_error()
+    __attribute__((__error__("memcpy called with size bigger than source")));
+extern void __memcpy_overlap_error()
+    __attribute__((__error__("memcpy called with overlapping regions")));
+extern void *__memcpy_real(void *, const void *, size_t)
+    __asm__(__USER_LABEL_PREFIX__ "memcpy");
+extern void *__memcpy_chk2(void *, const void *, size_t, size_t, size_t);
+
+
 __BIONIC_FORTIFY_INLINE
-void *memcpy (void *dest, const void *src, size_t len) {
-    return __builtin___memcpy_chk(dest, src, len, __builtin_object_size (dest, 0));
+void *memcpy (void *dest, const void *src, size_t copy_amount) {
+    char *d = (char *) dest;
+    const char *s = (const char *) src;
+    size_t s_len = __builtin_object_size(s, 0);
+    size_t d_len = __builtin_object_size(d, 0);
+
+    if (__builtin_constant_p(copy_amount) && (copy_amount > d_len)) {
+        __memcpy_dest_size_error();
+    }
+
+    if (__builtin_constant_p(copy_amount) && (copy_amount > s_len)) {
+        __memcpy_src_size_error();
+    }
+
+    if (__builtin_constant_p(d - s) && __builtin_constant_p(copy_amount)
+            && (((size_t)(d - s) < copy_amount) || ((size_t)(s - d) < copy_amount))) {
+        __memcpy_overlap_error();
+    }
+
+    if (__builtin_constant_p(copy_amount) && __builtin_constant_p(d - s)) {
+         return __memcpy_real(dest, src, copy_amount);
+    }
+
+    return __memcpy_chk2(dest, src, copy_amount, d_len, s_len);
 }
 
 __BIONIC_FORTIFY_INLINE
