@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHOn///6I\u003d",
+        "filename": "libc/string/__memcpy_chk.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-07-13T20:51:05Z",
+      "side": 1,
+      "message": "fixed \"memmove\" spelling.",
+      "revId": "fc94dd4c3ce49c2a36962aa6dae7f47738125c3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
