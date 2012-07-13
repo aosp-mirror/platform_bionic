@@ -547,7 +547,7 @@ char *fgets(char *dest, int size, FILE *stream)
     }
 
     // Compiler doesn't know destination size. Don't call __fgets_chk
-    if (bos == (size_t) -1) {
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __fgets_real(dest, size, stream);
     }
 
