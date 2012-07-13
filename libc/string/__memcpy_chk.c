@@ -70,3 +70,13 @@ void *__memcpy_chk2(void *dest, const void *src,
 
     return memcpy(dest, src, copy_amount);
 }
+
+/*
+ * GCC can create references to __memcpy_chk when using
+ * __builtin__memmove_chk().
+ */
+void *__memcpy_chk(void *dest, const void *src,
+              size_t copy_amount, size_t dest_len)
+{
+    return __memcpy_chk2(dest, src, copy_amount, dest_len, (size_t) -1);
+}
