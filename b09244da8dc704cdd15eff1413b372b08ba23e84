@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHOn///54\u003d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-13T20:52:50Z",
+      "side": 1,
+      "message": "i wonder if we should have a __BIONIC_FORTIFY_UNKNOWN_SIZE constant or somesuch?",
+      "revId": "b09244da8dc704cdd15eff1413b372b08ba23e84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
