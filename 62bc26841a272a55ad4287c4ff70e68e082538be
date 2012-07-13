@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHOn///84\u003d",
+        "filename": "libc/arch-arm/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-13T17:34:52Z",
+      "side": 1,
+      "message": "see internal bug 3038348, where you say that defining _NSIG would be a bad idea.\n\nsee also fadden\u0027s comment, suggesting our interpretation of _NSIG is different from glibc\u0027s.",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHOn///80\u003d",
+        "filename": "libc/arch-arm/include/machine/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-13T17:34:52Z",
+      "side": 1,
+      "message": "(should be \"either ... or\", given the earlier \"not\". alternatively, \"matches neither ... nor\", but i think \"does not match ... either ... or\" is clearer.)",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHOn///8w\u003d",
+        "filename": "libc/arch-mips/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-13T17:34:52Z",
+      "side": 1,
+      "message": "bummer. that makes life even more confusing.",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHOn///8s\u003d",
+        "filename": "libc/arch-x86/include/machine/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-13T17:34:52Z",
+      "side": 1,
+      "message": "still a missing space here.",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
