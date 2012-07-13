@@ -70,6 +70,24 @@
       "revId": "b09244da8dc704cdd15eff1413b372b08ba23e84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHSH////w\u003d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-07-13T21:50:26Z",
+      "side": 1,
+      "message": "Added in https://android-review.googlesource.com/#/c/39121/",
+      "parentUuid": "AAAHO3///64\u003d",
+      "revId": "b09244da8dc704cdd15eff1413b372b08ba23e84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
