@@ -16,6 +16,24 @@
       "revId": "b09244da8dc704cdd15eff1413b372b08ba23e84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHOn///5o\u003d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-07-13T20:56:39Z",
+      "side": 1,
+      "message": "Personally, I think the current -1 is more readable.  Perhaps adding a comment would be better? For example:\n\nif (bos \u003d\u003d (size_t) -1) {\n    // We don\u0027t know the object size, call the real strlen.\n    return __strlen_real(s);\n}",
+      "parentUuid": "AAAHOn///54\u003d",
+      "revId": "b09244da8dc704cdd15eff1413b372b08ba23e84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
