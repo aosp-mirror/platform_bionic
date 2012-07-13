@@ -166,7 +166,7 @@ size_t strlcpy(char *dest, const char *src, size_t size) {
     size_t bos = __builtin_object_size(dest, 0);
 
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
-    if (bos == (size_t) -1) {
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcpy_real(dest, src, size);
     }
 
@@ -197,7 +197,7 @@ size_t strlcat(char *dest, const char *src, size_t size) {
     size_t bos = __builtin_object_size(dest, 0);
 
     // Compiler doesn't know destination size. Don't call __strlcat_chk
-    if (bos == (size_t) -1) {
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcat_real(dest, src, size);
     }
 
@@ -223,9 +223,12 @@ extern size_t __strlen_chk(const char *, size_t);
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
     size_t bos = __builtin_object_size(s, 0);
-    if (bos == (size_t) -1) {
+
+    // Compiler doesn't know destination size. Don't call __strlen_chk
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlen_real(s);
     }
+
     return __strlen_chk(s, bos);
 }
 

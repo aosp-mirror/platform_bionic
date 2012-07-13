@@ -507,6 +507,7 @@
     __attribute__ ((always_inline)) \
     __attribute__ ((gnu_inline)) \
     __attribute__ ((artificial))
+#define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 #endif
 
 #endif /* !_SYS_CDEFS_H_ */
