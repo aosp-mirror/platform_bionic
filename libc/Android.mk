@@ -217,6 +217,7 @@ libc_common_src_files := \
 	string/__strcpy_chk.c \
 	string/__strlcat_chk.c \
 	string/__strlcpy_chk.c \
+	string/__strlen_chk.c \
 	string/__strncat_chk.c \
 	string/__strncpy_chk.c \
 	wchar/wcpcpy.c \

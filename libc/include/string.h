@@ -216,6 +216,19 @@ size_t strlcat(char *dest, const char *src, size_t size) {
     return __strlcat_chk(dest, src, size, bos);
 }
 
+__purefunc extern size_t __strlen_real(const char *)
+    __asm__(__USER_LABEL_PREFIX__ "strlen");
+extern size_t __strlen_chk(const char *, size_t);
+
+__BIONIC_FORTIFY_INLINE
+size_t strlen(const char *s) {
+    size_t bos = __builtin_object_size(s, 0);
+    if (bos == (size_t) -1) {
+        return __strlen_real(s);
+    }
+    return __strlen_chk(s, bos);
+}
+
 
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
