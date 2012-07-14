@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAHSn////U\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1797,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-07-14T16:46:37Z",
+      "side": 1,
+      "message": "No need for the temp variable. Simplify to:\n\n  soinfo_call_constructors(preloads[i]);\n\nand delete line 1652",
+      "revId": "5efde227ac7f7fd8cf6f9c8aa983b7619713e346",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
