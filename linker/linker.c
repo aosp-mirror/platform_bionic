@@ -1640,7 +1640,7 @@ static void parse_preloads(const char *path, char *delim)
  * fixed it's own GOT. It is safe to make references to externs
  * and other non-local data at this point.
  */
-static unsigned __linker_init_post_relocation(unsigned **elfdata)
+static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linker_base)
 {
     static soinfo linker_soinfo;
 
@@ -1730,15 +1730,16 @@ sanitize:
     _r_debug.r_map = map;
     r_debug_tail = map;
 
-        /* gdb expects the linker to be in the debug shared object list,
-         * and we need to make sure that the reported load address is zero.
-         * Without this, gdb gets the wrong idea of where rtld_db_dlactivity()
-         * is.  Don't use soinfo_alloc(), because the linker shouldn't
+        /* gdb expects the linker to be in the debug shared object list.
+         * Without this, gdb has trouble locating the linker's ".text"
+         * and ".plt" sections. Gdb could also potentially use this to
+         * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
+         * Don't use soinfo_alloc(), because the linker shouldn't
          * be on the soinfo list.
          */
     strlcpy((char*) linker_soinfo.name, "/system/bin/linker", sizeof linker_soinfo.name);
     linker_soinfo.flags = 0;
-    linker_soinfo.base = 0;     // This is the important part; must be zero.
+    linker_soinfo.base = linker_base;
     insert_soinfo_into_debug_map(&linker_soinfo);
 
         /* extract information passed from the kernel */
@@ -1930,5 +1931,5 @@ unsigned __linker_init(unsigned **elfdata) {
 
     // We have successfully fixed our own relocations. It's safe to run
     // the main part of the linker now.
-    return __linker_init_post_relocation(elfdata);
+    return __linker_init_post_relocation(elfdata, linker_addr);
 }
