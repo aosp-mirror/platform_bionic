@@ -15,7 +15,8 @@ LOCAL_LDFLAGS := -shared
 
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
-        -fvisibility=hidden
+        -fvisibility=hidden \
+        -std=gnu99
 
 # Set LINKER_DEBUG to either 1 or 0
 #
