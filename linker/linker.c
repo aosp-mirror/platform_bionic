@@ -1649,6 +1649,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     unsigned *vecs = (unsigned*) (argv + argc + 1);
     unsigned *v;
     soinfo *si;
+    int i;
     struct link_map * map;
     const char *ldpath_env = NULL;
     const char *ldpreload_env = NULL;
@@ -1789,6 +1790,10 @@ sanitize:
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
+    }
+
+    for(i = 0; preloads[i] != NULL; i++) {
+        soinfo_call_constructors(preloads[i]);
     }
 
     soinfo_call_constructors(si);
