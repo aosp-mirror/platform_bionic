@@ -103,6 +103,7 @@ extern int clock_gettime(int, struct timespec *);
 #define CLOCK_THREAD_CPUTIME_ID    3
 #define CLOCK_REALTIME_HR          4
 #define CLOCK_MONOTONIC_HR         5
+#define CLOCK_BOOTTIME             7
 
 extern int  timer_create(int, struct sigevent*, timer_t*);
 extern int  timer_delete(timer_t);
