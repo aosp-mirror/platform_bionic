@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAHr3///tI\u003d",
+        "filename": "libc/arch-arm/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-07-24T08:26:57Z",
+      "side": 1,
+      "message": "The script in bionic always creates 32 bit definition for _NSIG. Using 32 bit definition for user space (!__KERNEL__) is just for libc5 previous compatibility.\n\nThis macro should be defined as 64-bit definitely. Which makes rt signal support possible in bionic.\n\nI don\u0027t understand why _NSIG in bionic should be different from glibc. License issue?",
+      "parentUuid": "AAAHOn///84\u003d",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAHOn///80\u003d",
         "filename": "libc/arch-arm/include/machine/ucontext.h",
         "patchSetId": 2
@@ -64,6 +82,23 @@
       "writtenOn": "2012-07-13T17:34:52Z",
       "side": 1,
       "message": "still a missing space here.",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAHr3///sc\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2107,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-07-24T08:26:57Z",
+      "side": 1,
+      "message": "If _NSIG is defined as 64 bit, can we define a 64 bit sigset_t in signal.h? So we don\u0027t need do wrap in this function. And it\u0027s possible to support the rt signal as well.",
       "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
