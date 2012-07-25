@@ -559,7 +559,7 @@ reswitch:	switch (ch) {
 #endif /* FLOATING_POINT */
 /* the Android security team suggests removing support for %n
  * since it has no real practical value, and could lead to
- * running malicious code (for really bugy programs that
+ * running malicious code (for really buggy programs that
  * send to printf() user-generated formatting strings).
  */
 #if 0
