@@ -79,7 +79,12 @@ abort(void)
 
     /* temporary, for bug hunting */
     /* seg fault seems to produce better debuggerd results than SIGABRT */
+#ifdef __mips__
+    /* An access that will generate SIGSEGV rather than SIGBUS. */
+    *((char*)0xdeadc0c0) = 39;
+#else
     *((char*)0xdeadbaad) = 39;
+#endif
     /* -- */
 
 	(void)kill(getpid(), SIGABRT);
