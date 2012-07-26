@@ -1,26 +1,67 @@
 LOCAL_PATH:= $(call my-dir)
+
+############################################
 include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo.dat
+LOCAL_SRC_FILES := $(LOCAL_MODULE)
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
 
-ALL_PREBUILT += $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.dat
-$(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.dat : $(LOCAL_PATH)/zoneinfo.dat | $(ACP)
-	$(transform-prebuilt-to-target)
+############################################
+include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo.idx
+LOCAL_SRC_FILES := $(LOCAL_MODULE)
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
 
-ALL_PREBUILT += $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.idx
-$(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.idx : $(LOCAL_PATH)/zoneinfo.idx | $(ACP)
-	$(transform-prebuilt-to-target)
+############################################
+include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo.version
+LOCAL_SRC_FILES := $(LOCAL_MODULE)
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
 
-ALL_PREBUILT += $(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.version
-$(TARGET_OUT)/usr/share/zoneinfo/zoneinfo.version : $(LOCAL_PATH)/zoneinfo.version | $(ACP)
-	$(transform-prebuilt-to-target)
 
 # The host build doesn't use bionic, but it does use bionic's zoneinfo data
 ifeq ($(WITH_HOST_DALVIK),true)
-    ALL_PREBUILT += $(HOST_OUT)/usr/share/zoneinfo/zoneinfo.dat
-    $(eval $(call copy-one-file,$(LOCAL_PATH)/zoneinfo.dat,$(HOST_OUT)/usr/share/zoneinfo/zoneinfo.dat))
 
-    ALL_PREBUILT += $(HOST_OUT)/usr/share/zoneinfo/zoneinfo.idx
-    $(eval $(call copy-one-file,$(LOCAL_PATH)/zoneinfo.idx,$(HOST_OUT)/usr/share/zoneinfo/zoneinfo.idx))
+############################################
+include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo-host.dat
+LOCAL_IS_HOST_MODULE := true
+LOCAL_SRC_FILES := zoneinfo.dat
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_STEM := $(LOCAL_SRC_FILES)
+LOCAL_MODULE_PATH := $(HOST_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
 
-    ALL_PREBUILT += $(HOST_OUT)/usr/share/zoneinfo/zoneinfo.version
-    $(eval $(call copy-one-file,$(LOCAL_PATH)/zoneinfo.version,$(HOST_OUT)/usr/share/zoneinfo/zoneinfo.version))
+############################################
+include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo-host.idx
+LOCAL_IS_HOST_MODULE := true
+LOCAL_SRC_FILES := zoneinfo.idx
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_STEM := $(LOCAL_SRC_FILES)
+LOCAL_MODULE_PATH := $(HOST_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
+
+############################################
+include $(CLEAR_VARS)
+LOCAL_MODULE := zoneinfo-host.version
+LOCAL_IS_HOST_MODULE := true
+LOCAL_SRC_FILES := zoneinfo.version
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_STEM := $(LOCAL_SRC_FILES)
+LOCAL_MODULE_PATH := $(HOST_OUT)/usr/share/zoneinfo
+include $(BUILD_PREBUILT)
+
 endif
