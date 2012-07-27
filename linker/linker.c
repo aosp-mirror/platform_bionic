@@ -648,16 +648,15 @@ typedef struct {
 static unsigned long
 is_prelinked(int fd, const char *name)
 {
-    off_t sz;
-    prelink_info_t info;
-
-    sz = lseek(fd, -sizeof(prelink_info_t), SEEK_END);
+    off_t sz = lseek(fd, -sizeof(prelink_info_t), SEEK_END);
     if (sz < 0) {
         DL_ERR("lseek() failed!");
         return 0;
     }
 
-    if (TEMP_FAILURE_RETRY(read(fd, &info, sizeof(info)) != sizeof(info))) {
+    prelink_info_t info;
+    int rc = TEMP_FAILURE_RETRY(read(fd, &info, sizeof(info)));
+    if (rc != sizeof(info)) {
         WARN("Could not read prelink_info_t structure for `%s`\n", name);
         return 0;
     }
