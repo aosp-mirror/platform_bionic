@@ -176,7 +176,7 @@ static int send_prop_msg(prop_msg *msg)
     addr.sun_family = AF_LOCAL;
     alen = namelen + offsetof(struct sockaddr_un, sun_path) + 1;
 
-    if(TEMP_FAILURE_RETRY(connect(s, (struct sockaddr *) &addr, alen) < 0)) {
+    if(TEMP_FAILURE_RETRY(connect(s, (struct sockaddr *) &addr, alen)) < 0) {
         close(s);
         return result;
     }
