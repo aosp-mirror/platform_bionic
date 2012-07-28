@@ -11,8 +11,8 @@
 #include <stddef.h>
 #include <sys/atomics.h>
 #include <endian.h>
-#include <bionic_futex.h>
-#include <bionic_atomic_inline.h>
+#include <private/bionic_futex.h>
+#include <private/bionic_atomic_inline.h>
 
 // ARM C++ ABI and Itanium/x86 C++ ABI has different definition for
 // one time construction:

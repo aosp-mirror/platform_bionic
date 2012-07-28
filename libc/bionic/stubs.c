@@ -25,17 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <grp.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <pwd.h>
-#include <netdb.h>
-#include <mntent.h>
-#include <private/android_filesystem_config.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <errno.h>
+
 #include <ctype.h>
+#include <errno.h>
+#include <grp.h>
+#include <mntent.h>
+#include <netdb.h>
+#include <private/android_filesystem_config.h>
+#include <private/logd.h>
+#include <pthread.h>
+#include <pwd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 static int do_getpw_r(int by_name, const char* name, uid_t uid,
         struct passwd* dst, char* buf, size_t byte_count, struct passwd** result)
@@ -438,65 +440,62 @@ getgrnam(const char *name)
     return app_id_to_group( app_id_from_name(name), state );
 }
 
-
-struct netent* getnetbyname(const char *name)
-{
-    fprintf(stderr, "FIX ME! implement getgrnam() %s:%d\n", __FILE__, __LINE__);
-    return NULL;
+static void unimplemented_stub(const char* function) {
+  const char* fmt = "%s(3) is not implemented on Android\n";
+  __libc_android_log_print(ANDROID_LOG_WARN, "libc", fmt, function);
+  fprintf(stderr, fmt, function);
 }
 
-void endpwent(void)
-{
+#define UNIMPLEMENTED unimplemented_stub(__PRETTY_FUNCTION__)
+
+struct netent* getnetbyname(const char* name) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-struct mntent* getmntent(FILE* f)
-{
-    fprintf(stderr, "FIX ME! implement getmntent() %s:%d\n", __FILE__, __LINE__);
-    return NULL;
+void endpwent(void) {
+  UNIMPLEMENTED;
 }
 
-char* ttyname(int fd)
-{
-    fprintf(stderr, "FIX ME! implement ttyname() %s:%d\n", __FILE__, __LINE__);
-    return NULL;
+struct mntent* getmntent(FILE* f) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-int ttyname_r(int fd, char *buf, size_t buflen)
-{
-    fprintf(stderr, "FIX ME! implement ttyname_r() %s:%d\n", __FILE__, __LINE__);
-    return -ERANGE;
+char* ttyname(int fd) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-struct netent *getnetbyaddr(uint32_t net, int type)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
-    return NULL;
+int ttyname_r(int fd, char* buf, size_t buflen) {
+  UNIMPLEMENTED;
+  return -ERANGE;
 }
 
-struct protoent *getprotobyname(const char *name)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
-    return NULL;
+struct netent* getnetbyaddr(uint32_t net, int type) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-struct protoent *getprotobynumber(int proto)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
-    return NULL;
+struct protoent* getprotobyname(const char* name) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-char* getusershell(void)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
-    return NULL;
+struct protoent* getprotobynumber(int proto) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-void setusershell(void)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
+char* getusershell(void) {
+  UNIMPLEMENTED;
+  return NULL;
 }
 
-void endusershell(void)
-{
-    fprintf(stderr, "FIX ME! implement %s() %s:%d\n", __FUNCTION__, __FILE__, __LINE__);
+void setusershell(void) {
+  UNIMPLEMENTED;
+}
+
+void endusershell(void) {
+  UNIMPLEMENTED;
 }
