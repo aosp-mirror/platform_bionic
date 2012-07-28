@@ -32,23 +32,23 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <private/logd.h>
 
-void
-__assert(const char *file, int line, const char *failedexpr)
-{
-	(void)fprintf(stderr,
-	    "assertion \"%s\" failed: file \"%s\", line %d\n",
-	    failedexpr, file, line);
-	abort();
-	/* NOTREACHED */
+// We log to stderr for the benefit of "adb shell" users, and the log for the benefit
+// of regular app developers who want to see their asserts.
+
+void __assert(const char* file, int line, const char* failed_expression) {
+  const char* fmt = "%s:%d: assertion \"%s\" failed\n";
+  __libc_android_log_print(ANDROID_LOG_FATAL, "libc", fmt, file, line, failed_expression);
+  fprintf(stderr, fmt, file, line, failed_expression);
+  abort();
+  /* NOTREACHED */
 }
 
-void
-__assert2(const char *file, int line, const char *func, const char *failedexpr)
-{
-	(void)fprintf(stderr,
-	    "assertion \"%s\" failed: file \"%s\", line %d, function \"%s\"\n",
-	    failedexpr, file, line, func);
-	abort();
-	/* NOTREACHED */
+void __assert2(const char* file, int line, const char* function, const char* failed_expression) {
+  const char* fmt = "%s:%d: %s: assertion \"%s\" failed\n";
+  __libc_android_log_print(ANDROID_LOG_FATAL, "libc", fmt, file, line, function, failed_expression);
+  fprintf(stderr, fmt, file, line, function, failed_expression);
+  abort();
+  /* NOTREACHED */
 }

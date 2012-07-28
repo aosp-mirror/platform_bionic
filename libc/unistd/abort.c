@@ -34,11 +34,6 @@
 #include "thread_private.h"
 #include "atexit.h"
 
-/* temporary, for bug hunting */
-#include "logd.h"
-#define debug_log(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, "libc-abort", (format), ##__VA_ARGS__ )
-
 #ifdef __arm__
 __LIBC_HIDDEN__ void
 __libc_android_abort(void)
@@ -51,7 +46,7 @@ abort(void)
 	static int cleanup_called = 0;
 	sigset_t mask;
 
-  
+
 	sigfillset(&mask);
 	/*
 	 * don't block SIGABRT to give any handler a chance; we ignore
