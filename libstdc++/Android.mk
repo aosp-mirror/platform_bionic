@@ -3,7 +3,7 @@ LOCAL_PATH:= $(call my-dir)
 # Common C++ flags to build this library.
 # Note that we need to access private Bionic headers
 # and define ANDROID_SMP accordingly.
-libstdc++_cflags := -Ibionic/libc/private
+libstdc++_cflags := -Ibionic/libc/
 ifeq ($(TARGET_CPU_SMP),true)
     libstdc++_cflags += -DANDROID_SMP=1
 else
