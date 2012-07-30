@@ -589,6 +589,18 @@ $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtbegin_so.o
+$(GEN): $(libc_crt_target_crtstart_so_file)
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtend_so.o
+$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
 endif # TARGET_ARCH == x86 || TARGET_ARCH == arm
 
 
