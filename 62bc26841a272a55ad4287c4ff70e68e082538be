@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAH63///6E\u003d",
+        "filename": "libc/arch-arm/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-07-30T16:06:34Z",
+      "side": 1,
+      "message": "We inherited this definition of _NSIG from the (broken) kernel headers themselves. We cannot change it now without breaking ABI compatibility, which is why sigset_t will also remain 32-bit. If we really want to support real-time signals, it\u0027s probably better to define a new datatype and functions for it (e.g. android_sigset_t or some such) instead.",
+      "parentUuid": "AAAHr3///tI\u003d",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAHOn///80\u003d",
         "filename": "libc/arch-arm/include/machine/ucontext.h",
         "patchSetId": 2
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "AAAH63///6A\u003d",
+        "filename": "libc/arch-arm/include/machine/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-07-30T16:06:34Z",
+      "side": 1,
+      "message": "ok, will fix.",
+      "parentUuid": "AAAHOn///80\u003d",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAHOn///8w\u003d",
         "filename": "libc/arch-mips/include/machine/signal.h",
         "patchSetId": 2
@@ -65,6 +101,24 @@
       "writtenOn": "2012-07-13T17:34:52Z",
       "side": 1,
       "message": "bummer. that makes life even more confusing.",
+      "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH63///58\u003d",
+        "filename": "libc/arch-mips/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-07-30T16:06:34Z",
+      "side": 1,
+      "message": "Yes, the only reason we keep this is for client code. We used to use _NSIG directly in pthread.c, but this is no longer the case.",
+      "parentUuid": "AAAHOn///8w\u003d",
       "revId": "62bc26841a272a55ad4287c4ff70e68e082538be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
