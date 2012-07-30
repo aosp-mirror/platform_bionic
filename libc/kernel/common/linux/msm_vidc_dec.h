@@ -39,92 +39,112 @@
 #define VDEC_S_ENOTSUPP (VDEC_S_BASE + 11)
 #define VDEC_S_ENOTIMPL (VDEC_S_BASE + 12)
 #define VDEC_S_BUSY (VDEC_S_BASE + 13)
-#define VDEC_INTF_VER 1
+#define VDEC_S_INPUT_BITSTREAM_ERR (VDEC_S_BASE + 14)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_INTF_VER 1
 #define VDEC_MSG_BASE 0x0000000
 #define VDEC_MSG_INVALID (VDEC_MSG_BASE + 0)
 #define VDEC_MSG_RESP_INPUT_BUFFER_DONE (VDEC_MSG_BASE + 1)
-#define VDEC_MSG_RESP_OUTPUT_BUFFER_DONE (VDEC_MSG_BASE + 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_MSG_RESP_OUTPUT_BUFFER_DONE (VDEC_MSG_BASE + 2)
 #define VDEC_MSG_RESP_INPUT_FLUSHED (VDEC_MSG_BASE + 3)
 #define VDEC_MSG_RESP_OUTPUT_FLUSHED (VDEC_MSG_BASE + 4)
 #define VDEC_MSG_RESP_FLUSH_INPUT_DONE (VDEC_MSG_BASE + 5)
-#define VDEC_MSG_RESP_FLUSH_OUTPUT_DONE (VDEC_MSG_BASE + 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_MSG_RESP_FLUSH_OUTPUT_DONE (VDEC_MSG_BASE + 6)
 #define VDEC_MSG_RESP_START_DONE (VDEC_MSG_BASE + 7)
 #define VDEC_MSG_RESP_STOP_DONE (VDEC_MSG_BASE + 8)
 #define VDEC_MSG_RESP_PAUSE_DONE (VDEC_MSG_BASE + 9)
-#define VDEC_MSG_RESP_RESUME_DONE (VDEC_MSG_BASE + 10)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_MSG_RESP_RESUME_DONE (VDEC_MSG_BASE + 10)
 #define VDEC_MSG_RESP_RESOURCE_LOADED (VDEC_MSG_BASE + 11)
 #define VDEC_EVT_RESOURCES_LOST (VDEC_MSG_BASE + 12)
 #define VDEC_MSG_EVT_CONFIG_CHANGED (VDEC_MSG_BASE + 13)
-#define VDEC_MSG_EVT_HW_ERROR (VDEC_MSG_BASE + 14)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_MSG_EVT_HW_ERROR (VDEC_MSG_BASE + 14)
+#define VDEC_MSG_EVT_INFO_CONFIG_CHANGED (VDEC_MSG_BASE + 15)
+#define VDEC_MSG_EVT_INFO_FIELD_DROPPED (VDEC_MSG_BASE + 16)
 #define VDEC_BUFFERFLAG_EOS 0x00000001
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VDEC_BUFFERFLAG_DECODEONLY 0x00000004
 #define VDEC_BUFFERFLAG_DATACORRUPT 0x00000008
 #define VDEC_BUFFERFLAG_ENDOFFRAME 0x00000010
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VDEC_BUFFERFLAG_SYNCFRAME 0x00000020
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VDEC_BUFFERFLAG_EXTRADATA 0x00000040
 #define VDEC_BUFFERFLAG_CODECCONFIG 0x00000080
-#define VDEC_EXTRADATA_QP 0x00000001
+#define VDEC_EXTRADATA_NONE 0x001
+#define VDEC_EXTRADATA_QP 0x004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VDEC_EXTRADATA_SEI 0x00000002
-#define VDEC_EXTRADATA_VUI 0x00000004
-#define VDEC_EXTRADATA_MB_ERROR_MAP 0x00000008
+#define VDEC_EXTRADATA_MB_ERROR_MAP 0x008
+#define VDEC_EXTRADATA_SEI 0x010
+#define VDEC_EXTRADATA_VUI 0x020
+#define VDEC_EXTRADATA_VC1 0x040
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VDEC_CMDBASE 0x800
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VDEC_CMD_SET_INTF_VERSION (VDEC_CMDBASE)
 #define VDEC_IOCTL_MAGIC 'v'
 struct vdec_ioctl_msg {
- void *inputparam;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void *outputparam;
+ void __user *in;
+ void __user *out;
 };
 #define VDEC_IOCTL_GET_PROFILE_LEVEL_SUPPORTED   _IOWR(VDEC_IOCTL_MAGIC, 0, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_GET_INTERLACE_FORMAT   _IOR(VDEC_IOCTL_MAGIC, 1, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_GET_INTERLACE_FORMAT   _IOR(VDEC_IOCTL_MAGIC, 1, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_GET_CURRENT_PROFILE_LEVEL   _IOWR(VDEC_IOCTL_MAGIC, 2, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_SET_OUTPUT_FORMAT   _IOWR(VDEC_IOCTL_MAGIC, 3, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_GET_OUTPUT_FORMAT   _IOWR(VDEC_IOCTL_MAGIC, 4, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_SET_CODEC   _IOW(VDEC_IOCTL_MAGIC, 5, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_SET_CODEC   _IOW(VDEC_IOCTL_MAGIC, 5, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_GET_CODEC   _IOR(VDEC_IOCTL_MAGIC, 6, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_SET_PICRES   _IOW(VDEC_IOCTL_MAGIC, 7, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_GET_PICRES   _IOR(VDEC_IOCTL_MAGIC, 8, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_SET_EXTRADATA   _IOW(VDEC_IOCTL_MAGIC, 9, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_SET_EXTRADATA   _IOW(VDEC_IOCTL_MAGIC, 9, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_GET_EXTRADATA   _IOR(VDEC_IOCTL_MAGIC, 10, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_SET_SEQUENCE_HEADER   _IOW(VDEC_IOCTL_MAGIC, 11, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_SET_BUFFER_REQ   _IOW(VDEC_IOCTL_MAGIC, 12, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_GET_BUFFER_REQ   _IOR(VDEC_IOCTL_MAGIC, 13, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_GET_BUFFER_REQ   _IOR(VDEC_IOCTL_MAGIC, 13, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_ALLOCATE_BUFFER   _IOWR(VDEC_IOCTL_MAGIC, 14, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_FREE_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 15, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_SET_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 16, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_FILL_OUTPUT_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 17, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_FILL_OUTPUT_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 17, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_DECODE_FRAME   _IOW(VDEC_IOCTL_MAGIC, 18, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_LOAD_RESOURCES _IO(VDEC_IOCTL_MAGIC, 19)
 #define VDEC_IOCTL_CMD_START _IO(VDEC_IOCTL_MAGIC, 20)
-#define VDEC_IOCTL_CMD_STOP _IO(VDEC_IOCTL_MAGIC, 21)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_CMD_STOP _IO(VDEC_IOCTL_MAGIC, 21)
 #define VDEC_IOCTL_CMD_PAUSE _IO(VDEC_IOCTL_MAGIC, 22)
 #define VDEC_IOCTL_CMD_RESUME _IO(VDEC_IOCTL_MAGIC, 23)
 #define VDEC_IOCTL_CMD_FLUSH _IOW(VDEC_IOCTL_MAGIC, 24, struct vdec_ioctl_msg)
-#define VDEC_IOCTL_GET_NEXT_MSG   _IOR(VDEC_IOCTL_MAGIC, 25, struct vdec_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_GET_NEXT_MSG   _IOR(VDEC_IOCTL_MAGIC, 25, struct vdec_ioctl_msg)
 #define VDEC_IOCTL_STOP_NEXT_MSG _IO(VDEC_IOCTL_MAGIC, 26)
 #define VDEC_IOCTL_GET_NUMBER_INSTANCES   _IOR(VDEC_IOCTL_MAGIC, 27, struct vdec_ioctl_msg)
+#define VDEC_IOCTL_SET_PICTURE_ORDER   _IOW(VDEC_IOCTL_MAGIC, 28, struct vdec_ioctl_msg)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_SET_FRAME_RATE   _IOW(VDEC_IOCTL_MAGIC, 29, struct vdec_ioctl_msg)
+#define VDEC_IOCTL_SET_H264_MV_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 30, struct vdec_ioctl_msg)
+#define VDEC_IOCTL_FREE_H264_MV_BUFFER   _IOW(VDEC_IOCTL_MAGIC, 31, struct vdec_ioctl_msg)
+#define VDEC_IOCTL_GET_MV_BUFFER_SIZE   _IOR(VDEC_IOCTL_MAGIC, 32, struct vdec_ioctl_msg)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_SET_IDR_ONLY_DECODING   _IO(VDEC_IOCTL_MAGIC, 33)
+#define VDEC_IOCTL_SET_CONT_ON_RECONFIG   _IO(VDEC_IOCTL_MAGIC, 34)
+#define VDEC_IOCTL_SET_DISABLE_DMX   _IOW(VDEC_IOCTL_MAGIC, 35, struct vdec_ioctl_msg)
+#define VDEC_IOCTL_GET_DISABLE_DMX   _IOR(VDEC_IOCTL_MAGIC, 36, struct vdec_ioctl_msg)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VDEC_IOCTL_GET_DISABLE_DMX_SUPPORT   _IOR(VDEC_IOCTL_MAGIC, 37, struct vdec_ioctl_msg)
 enum vdec_picture {
  PICTURE_TYPE_I,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  PICTURE_TYPE_P,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  PICTURE_TYPE_B,
  PICTURE_TYPE_BI,
  PICTURE_TYPE_SKIP,
+ PICTURE_TYPE_IDR,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  PICTURE_TYPE_UNKNOWN
 };
@@ -139,19 +159,19 @@ struct vdec_allocatorproperty {
  uint32_t mincount;
  uint32_t maxcount;
  uint32_t actualcount;
- uint32_t buffer_size;
+ size_t buffer_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  uint32_t alignment;
  uint32_t buf_poolid;
 };
 struct vdec_bufferpayload {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t *bufferaddr;
- uint32_t buffer_len;
+ void __user *bufferaddr;
+ size_t buffer_len;
  int pmem_fd;
- uint32_t offset;
+ size_t offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t mmaped_size;
+ size_t mmaped_size;
 };
 struct vdec_setbuffer_cmd {
  enum vdec_buffer buffer_type;
@@ -413,6 +433,11 @@ enum vdec_output_fromat {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  VDEC_YUV_FORMAT_TILE_4x2 = 0x2
 };
+enum vdec_output_order {
+ VDEC_ORDER_DISPLAY = 0x1,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ VDEC_ORDER_DECODE = 0x2
+};
 struct vdec_picsize {
  uint32_t frame_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -422,62 +447,94 @@ struct vdec_picsize {
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct vdec_seqheader {
- uint8_t *ptr_seqheader;
- uint32_t seq_header_len;
+ void __user *ptr_seqheader;
+ size_t seq_header_len;
  int pmem_fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t pmem_offset;
+ size_t pmem_offset;
 };
 struct vdec_mberror {
- uint8_t *ptr_errormap;
+ void __user *ptr_errormap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t err_mapsize;
+ size_t err_mapsize;
 };
 struct vdec_input_frameinfo {
- uint8_t *bufferaddr;
+ void __user *bufferaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t offset;
- uint32_t datalen;
+ size_t offset;
+ size_t datalen;
  uint32_t flags;
  int64_t timestamp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  void *client_data;
  int pmem_fd;
- uint32_t pmem_offset;
+ size_t pmem_offset;
+ void __user *desc_addr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ uint32_t desc_size;
+};
+struct vdec_framesize {
+ uint32_t left;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ uint32_t top;
+ uint32_t right;
+ uint32_t bottom;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct vdec_framesize {
- uint32_t n_left;
- uint32_t n_top;
- uint32_t n_right;
+struct vdec_aspectratioinfo {
+ uint32_t aspect_ratio;
+ uint32_t par_width;
+ uint32_t par_height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t n_bottom;
 };
 struct vdec_output_frameinfo {
- uint8_t *phy_addr;
+ void __user *bufferaddr;
+ size_t offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t *bufferaddr;
- uint32_t offset;
- uint32_t len;
+ size_t len;
  uint32_t flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  int64_t time_stamp;
+ enum vdec_picture pic_type;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  void *client_data;
  void *input_frame_clientdata;
  struct vdec_framesize framesize;
+ enum vdec_interlaced_format interlaced_format;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct vdec_aspectratioinfo aspect_ratio_info;
 };
 union vdec_msgdata {
  struct vdec_output_frameinfo output_frame;
- void *input_frame_clientdata;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ void *input_frame_clientdata;
 };
 struct vdec_msginfo {
  uint32_t status_code;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  uint32_t msgcode;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  union vdec_msgdata msgdata;
- uint32_t msgdatasize;
+ size_t msgdatasize;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct vdec_framerate {
+ unsigned long fps_denominator;
+ unsigned long fps_numerator;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct vdec_h264_mv{
+ size_t size;
+ int count;
+ int pmem_fd;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ int offset;
+};
+struct vdec_mv_buff_size{
+ int width;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ int height;
+ int size;
+ int alignment;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
+
