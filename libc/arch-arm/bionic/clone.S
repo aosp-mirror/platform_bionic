@@ -30,8 +30,7 @@
 
 ENTRY(__pthread_clone)
     @ insert the args onto the new stack
-    str     r0, [r1, #-4]
-    str     r3, [r1, #-8]
+    stmdb r1!, {r0, r3}
 
     @ do the system call
     @ get flags
@@ -60,8 +59,7 @@ ENTRY(__pthread_clone)
     @ to the C __thread_entry function which does some setup and then
     @ calls the thread's start function
 
-    ldr     r0, [sp, #-4]
-    ldr     r1, [sp, #-8]
+    pop     {r0, r1}
     mov     r2, sp			@ __thread_entry needs the TLS pointer
     b       __thread_entry
 
