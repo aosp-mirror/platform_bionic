@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAH7n///kA\u003d",
+        "filename": "libc/arch-mips/bionic/cacheflush.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-31T23:53:46Z",
+      "side": 1,
+      "message": "copyright header? where did this come from?",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///j0\u003d",
+        "filename": "libc/arch-mips/include/_vfs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-31T23:53:46Z",
+      "side": 1,
+      "message": "copyright?\n\nwhat needs this?",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///jc\u003d",
+        "filename": "libc/arch-mips/include/machine/_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-31T23:53:46Z",
+      "side": 1,
+      "message": "why do you need this? i don\u0027t see any use of this in Android. oh, i see... you just pulled this file from OpenBSD.",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///jU\u003d",
+        "filename": "libc/include/sys/cachectl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-07-31T23:53:46Z",
+      "side": 1,
+      "message": "copyright header?\n\nwhat uses this?",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
