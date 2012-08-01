@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAH93///+c\u003d",
+        "filename": "libc/arch-mips/bionic/atomics_mips.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-01T18:26:24Z",
+      "side": 1,
+      "message": "Please do not define the __atomic_xxx functions, they are deprecated and should not exit, except on ARM for backwards-compatibility reason\n\n(for more details, see comments inside \u003csys/atomics.h\u003e and arch-arm/bionic/atomics.c)\n\nThanks.\n\nI\u0027d suggest only keeping the futex functions and renaming this file to futex_mips.S",
+      "revId": "f7ed1807d3952f89ef4532f00b70a0ac4fe0b2c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH93///+Y\u003d",
+        "filename": "libc/arch-mips/include/machine/signal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-01T18:26:24Z",
+      "side": 1,
+      "message": "do not use ANDROID_CHANGES in headers that will be exposed through the NDK.\n\nA better macro is to use __ANDROID__, since it is defined by the Android toolchain automatically, not requiring explicitely setting it at compile time with -D\n\nThis applies to all the other headers in this patch set.",
+      "revId": "f7ed1807d3952f89ef4532f00b70a0ac4fe0b2c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
