@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAH7n///f8\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-01T00:35:59Z",
+      "side": 1,
+      "message": "is that a bug? what happens if we remove the #include \u003clinux/types.h\u003e?",
+      "parentUuid": "AAAGVn///9o\u003d",
+      "revId": "f0d6a176e5f3685922e2c72c9dcceda28f7f9c52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAGUH///1s\u003d",
         "filename": "libc/Android.mk",
         "patchSetId": 1
