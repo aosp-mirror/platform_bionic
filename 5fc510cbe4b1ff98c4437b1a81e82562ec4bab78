@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAH7n///ik\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-01T00:12:20Z",
+      "side": 1,
+      "message": "isn\u0027t all this stuff already #defined in elf.h?",
+      "revId": "5fc510cbe4b1ff98c4437b1a81e82562ec4bab78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///hs\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-01T00:12:20Z",
+      "side": 1,
+      "message": "you may as well write (type \u003d\u003d R_ARM_NONE || type \u003d\u003d R_MIPS_NONE || type \u003d\u003d R_386_NONE) ... gcc optimizes that to a single test anyway, and then you don\u0027t need the comment. annoying that there are three separate constants, all 0.",
+      "revId": "5fc510cbe4b1ff98c4437b1a81e82562ec4bab78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///hk\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-01T00:12:20Z",
+      "side": 1,
+      "message": "did digit\u0027s question about this get answered?\n\n\"I\u0027m surprised by this. Where is the spec that describes how this function works and why it is needed. Please also provide the corresponding support code in ld/gold if possible so we can check it. thanks.\"",
+      "revId": "5fc510cbe4b1ff98c4437b1a81e82562ec4bab78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
