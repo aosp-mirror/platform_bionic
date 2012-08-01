@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAH7H//+48\u003d",
+        "filename": "libc/arch-mips/bionic/cacheflush.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-01T17:20:58Z",
+      "side": 1,
+      "message": "During the build, I found that external/llvm/lib/Support/Memory.cpp  uses sys/cachectl.h. So I will only add copyright header to this.",
+      "parentUuid": "AAAH7H///F4\u003d",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAH7n///j0\u003d",
         "filename": "libc/arch-mips/include/_vfs.h",
         "patchSetId": 2
@@ -118,6 +136,24 @@
       "side": 1,
       "message": "As per the earlier comment, I will remove this file in the next patch. The extern declarations can be added to cacheflush.c",
       "parentUuid": "AAAH7n///jU\u003d",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7H//+40\u003d",
+        "filename": "libc/include/sys/cachectl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-01T17:20:58Z",
+      "side": 1,
+      "message": "During the build without this file, I found that external/llvm/lib/Support/Memory.cpp requires this one. I will keep the file as is and add the copyright in the next patch.",
+      "parentUuid": "AAAH7H///E8\u003d",
       "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
