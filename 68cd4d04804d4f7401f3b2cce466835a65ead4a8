@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAH7H///F4\u003d",
+        "filename": "libc/arch-mips/bionic/cacheflush.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-01T01:50:21Z",
+      "side": 1,
+      "message": "Will add the copyright. The routine cacheflush on MIPS is historically used as below\nint cacheflush(char *addr, int nbytes, int cache); \n\nSee \"man cacheflush\".\n\nHowever cacheflush on Android is defined as \n\nint cacheflush(long start, long end, long flags)\n\nThis file is written by Chris to handle cacheflush the right way for MIPS on Android.\nWhile discussing with Chris, I found that the include sys/cachectl.h could be asm/cachectl.h and sys/cachectl.h can be removed for MIPS. Will include change too in the next patch.",
+      "parentUuid": "AAAH7n///kA\u003d",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAH7n///j0\u003d",
         "filename": "libc/arch-mips/include/_vfs.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-07-31T23:53:46Z",
       "side": 1,
       "message": "copyright?\n\nwhat needs this?",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7H///FE\u003d",
+        "filename": "libc/arch-mips/include/_vfs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-01T01:50:21Z",
+      "side": 1,
+      "message": "This file is not necessary in the current Android builds. I will remove this in the next patch.",
+      "parentUuid": "AAAH7n///j0\u003d",
       "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -64,6 +100,24 @@
       "writtenOn": "2012-07-31T23:53:46Z",
       "side": 1,
       "message": "copyright header?\n\nwhat uses this?",
+      "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7H///E8\u003d",
+        "filename": "libc/include/sys/cachectl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-01T01:50:21Z",
+      "side": 1,
+      "message": "As per the earlier comment, I will remove this file in the next patch. The extern declarations can be added to cacheflush.c",
+      "parentUuid": "AAAH7n///jU\u003d",
       "revId": "68cd4d04804d4f7401f3b2cce466835a65ead4a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
