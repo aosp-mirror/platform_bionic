@@ -50,6 +50,24 @@
       "revId": "5fc510cbe4b1ff98c4437b1a81e82562ec4bab78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH7n///ck\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1226,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2012-08-01T01:18:42Z",
+      "side": 1,
+      "message": "The original documentation for handling the GOT is the MIPS SYSV ABI supplement\nhttp://www.uclibc.org/docs/psABI-mips.pdf\npp 5-8 \"Global Offset Table\"\n\nThere isn\u0027t a particular place I can point you to in the bfd code that  deals with the MIPS GOT. Most of the code is in elfxx-mips.c and you will see references to local_gotno which is used to track the split between local/global symbols in the GOT\n\nThe NetBSD dynamic loader has similar code for relocating the MIPS GOT\nSee _rtld_relocate_nonplt_self function in \nhttp://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev\u003d1.62\u0026content-type\u003dtext/x-cvsweb-markup\u0026only_with_tag\u003dMAIN",
+      "parentUuid": "AAAH7n///hk\u003d",
+      "revId": "5fc510cbe4b1ff98c4437b1a81e82562ec4bab78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
