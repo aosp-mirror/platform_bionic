@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAH/X///YM\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-02T21:43:54Z",
+      "side": 1,
+      "message": "sadly, we only have one of the three constants defined at any given time, so my idea didn\u0027t build.",
+      "revId": "d7daacb46372132ae3f0121647074936c304b572",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAH/X///YA\u003d",
+        "filename": "linker/linker.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-02T21:43:54Z",
+      "side": 1,
+      "message": "i changed linker.h to not redefine any of the constants that are already available, but there\u0027s still a bunch of stuff missing for ARM. the other two architectures are better though.\n\ntested on ARM and x86. we\u0027re still missing stuff from build/ for me to even build MIPS. soon...",
+      "revId": "d7daacb46372132ae3f0121647074936c304b572",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
