@@ -441,9 +441,8 @@ libc_common_src_files += \
 libc_static_common_src_files += \
         bionic/pthread.c \
 
-# this is needed for static versions of libc
 libc_arch_static_src_files := \
-	arch-x86/bionic/dl_iterate_phdr_static.c
+	bionic/dl_iterate_phdr_static.c
 
 libc_arch_dynamic_src_files :=
 else # !x86
