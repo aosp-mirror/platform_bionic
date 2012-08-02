@@ -413,20 +413,6 @@ format_integer(char *buffer, size_t buffsize, uint64_t value, int base, int isSi
     format_number(buffer, buffsize, value, base, "0123456789");
 }
 
-/* Write an octal into a buffer, assumes buffsize > 2 */
-static void
-format_octal(char *buffer, size_t buffsize, uint64_t value, int isSigned)
-{
-    format_integer(buffer, buffsize, value, 8, isSigned);
-}
-
-/* Write a decimal into a buffer, assumes buffsize > 2 */
-static void
-format_decimal(char *buffer, size_t buffsize, uint64_t value, int isSigned)
-{
-    format_integer(buffer, buffsize, value, 10, isSigned);
-}
-
 /* Write an hexadecimal into a buffer, isCap is true for capital alphas.
  * Assumes bufsize > 2 */
 static void

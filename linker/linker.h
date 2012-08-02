@@ -150,11 +150,19 @@ struct soinfo
     void (*init_func)(void);
     void (*fini_func)(void);
 
-#ifdef ANDROID_ARM_LINKER
+#if defined(ANDROID_ARM_LINKER)
     /* ARM EABI section used for stack unwinding. */
     unsigned *ARM_exidx;
     unsigned ARM_exidx_count;
+#elif defined(ANDROID_MIPS_LINKER)
+#if 0
+     /* not yet */
+     unsigned *mips_pltgot
 #endif
+     unsigned mips_symtabno;
+     unsigned mips_local_gotno;
+     unsigned mips_gotsym;
+#endif /* ANDROID_*_LINKER */
 
     unsigned refcount;
     struct link_map linkmap;
@@ -169,29 +177,31 @@ struct soinfo
 
 extern soinfo libdl_info;
 
-#ifdef ANDROID_ARM_LINKER
 
+#include <asm/elf.h>
+
+#if defined(ANDROID_ARM_LINKER)
+
+// These aren't defined in <arch-arm/asm/elf.h>.
+#define R_ARM_REL32      3
 #define R_ARM_COPY       20
 #define R_ARM_GLOB_DAT   21
 #define R_ARM_JUMP_SLOT  22
 #define R_ARM_RELATIVE   23
 
-/* According to the AAPCS specification, we only
- * need the above relocations. However, in practice,
- * the following ones turn up from time to time.
- */
-#define R_ARM_ABS32      2
-#define R_ARM_REL32      3
+#elif defined(ANDROID_MIPS_LINKER)
+
+// These aren't defined in <arch-arm/mips/elf.h>.
+#define R_MIPS_JUMP_SLOT       127
+
+#define DT_MIPS_PLTGOT         0x70000032
+#define DT_MIPS_RWPLT          0x70000034
 
 #elif defined(ANDROID_X86_LINKER)
 
-#define R_386_32         1
-#define R_386_PC32       2
-#define R_386_GLOB_DAT   6
-#define R_386_JUMP_SLOT  7
-#define R_386_RELATIVE   8
+// x86 has everything it needs in <arch-arm/x86/elf.h>.
 
-#endif
+#endif /* ANDROID_*_LINKER */
 
 #ifndef DT_INIT_ARRAY
 #define DT_INIT_ARRAY      25
@@ -227,10 +237,10 @@ Elf32_Sym *soinfo_find_symbol(soinfo* si, const void *addr);
 Elf32_Sym *soinfo_lookup(soinfo *si, const char *name);
 void soinfo_call_constructors(soinfo *si);
 
-#ifdef ANDROID_ARM_LINKER 
+#if defined(ANDROID_ARM_LINKER)
 typedef long unsigned int *_Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount);
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info *, size_t, void *), void *);
 #endif
 

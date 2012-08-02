@@ -16,7 +16,8 @@ LOCAL_LDFLAGS := -shared
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
         -fvisibility=hidden \
-        -std=gnu99
+        -std=gnu99 \
+        -Wall -Wextra
 
 # Set LINKER_DEBUG to either 1 or 0
 #
@@ -33,11 +34,15 @@ LOCAL_CFLAGS += \
     -I$(LOCAL_PATH)/../libc/arch-$(TARGET_ARCH)/bionic
 
 ifeq ($(TARGET_ARCH),arm)
-LOCAL_CFLAGS += -DANDROID_ARM_LINKER
-else
-  ifeq ($(TARGET_ARCH),x86)
+    LOCAL_CFLAGS += -DANDROID_ARM_LINKER
+endif
+
+ifeq ($(TARGET_ARCH),x86)
     LOCAL_CFLAGS += -DANDROID_X86_LINKER
-  endif
+endif
+
+ifeq ($(TARGET_ARCH),mips)
+    LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
 
 LOCAL_MODULE:= linker
