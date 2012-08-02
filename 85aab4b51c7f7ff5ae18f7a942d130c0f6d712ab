@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAACdn////Y\u003d",
+        "filename": "libc/arch-mips/include/machine/kernel.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-02T23:33:56Z",
+      "side": 1,
+      "message": "oops",
+      "revId": "85aab4b51c7f7ff5ae18f7a942d130c0f6d712ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
