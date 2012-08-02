@@ -142,9 +142,9 @@ static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 #define DL_ERR(fmt, x...)                                                     \
     do {                                                                      \
-        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),            \
+        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),       \
                  "%s[%d]: " fmt, __func__, __LINE__, ##x);                    \
-        ERROR(fmt "\n", ##x);                                                      \
+        ERROR(fmt "\n", ##x);                                                 \
     } while(0)
 
 const char *linker_get_error(void)
@@ -350,7 +350,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
    *pcount = 0;
     return NULL;
 }
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
@@ -455,7 +455,7 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset)
             lsi = (soinfo *)d[1];
             if (!validate_soinfo(lsi)) {
                 DL_ERR("%5d bad DT_NEEDED pointer in %s",
-                       pid, si->name);
+                       pid, lsi->name);
                 return NULL;
             }
 
@@ -691,6 +691,8 @@ verify_elf_header(const Elf32_Ehdr* hdr)
     if (hdr->e_machine != EM_ARM) return -1;
 #elif defined(ANDROID_X86_LINKER)
     if (hdr->e_machine != EM_386) return -1;
+#elif defined(ANDROID_MIPS_LINKER)
+    if (hdr->e_machine != EM_MIPS) return -1;
 #endif
     return 0;
 }
@@ -975,7 +977,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
     Elf32_Rel *start = rel;
     unsigned idx;
 
-    for (idx = 0; idx < count; ++idx) {
+    for (idx = 0; idx < count; ++idx, ++rel) {
         unsigned type = ELF32_R_TYPE(rel->r_info);
         unsigned sym = ELF32_R_SYM(rel->r_info);
         unsigned reloc = (unsigned)(rel->r_offset + si->load_bias);
@@ -984,6 +986,9 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 
         DEBUG("%5d Processing '%s' relocation at index %d\n", pid,
               si->name, idx);
+        if (type == 0) { // R_*_NONE
+            continue;
+        }
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
             s = soinfo_do_lookup(si, sym_name, &offset);
@@ -1015,9 +1020,8 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                 case R_ARM_GLOB_DAT:
                 case R_ARM_ABS32:
                 case R_ARM_RELATIVE:    /* Don't care. */
-                case R_ARM_NONE:        /* Don't care. */
 #elif defined(ANDROID_X86_LINKER)
-                case R_386_JUMP_SLOT:
+                case R_386_JMP_SLOT:
                 case R_386_GLOB_DAT:
                 case R_386_32:
                 case R_386_RELATIVE:    /* Dont' care. */
@@ -1046,15 +1050,15 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
             } else {
                 /* We got a definition.  */
 #if 0
-            if((base == 0) && (si->base != 0)){
-                    /* linking from libraries to main image is bad */
-                DL_ERR("%5d cannot locate '%s'...",
-                       pid, strtab + symtab[sym].st_name);
-                return -1;
-            }
+                if((base == 0) && (si->base != 0)){
+                        /* linking from libraries to main image is bad */
+                    DL_ERR("%5d cannot locate '%s'...",
+                           pid, strtab + symtab[sym].st_name);
+                    return -1;
+                }
 #endif
                 sym_addr = (unsigned)(s->st_value + offset);
-	    }
+            }
             COUNT_RELOC(RELOC_SYMBOL);
         } else {
             s = NULL;
@@ -1094,7 +1098,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
             *((unsigned*)reloc) += sym_addr - rel->r_offset;
             break;
 #elif defined(ANDROID_X86_LINKER)
-        case R_386_JUMP_SLOT:
+        case R_386_JMP_SLOT:
             COUNT_RELOC(RELOC_ABSOLUTE);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
@@ -1107,6 +1111,25 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
             TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
+            break;
+#elif defined(ANDROID_MIPS_LINKER)
+    case R_MIPS_JUMP_SLOT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+    case R_MIPS_REL32:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO REL32 %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, (sym_name) ? sym_name : "*SECTIONHDR*");
+            if (s) {
+                *((unsigned*)reloc) += sym_addr;
+            } else {
+                *((unsigned*)reloc) += si->base;
+            }
             break;
 #endif /* ANDROID_*_LINKER */
 
@@ -1154,8 +1177,6 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                        reloc, s->st_size, sym_addr, sym_name);
             memcpy((void*)reloc, (void*)sym_addr, s->st_size);
             break;
-        case R_ARM_NONE:
-            break;
 #endif /* ANDROID_ARM_LINKER */
 
         default:
@@ -1163,10 +1184,78 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                   pid, type, rel, (int) (rel - start));
             return -1;
         }
-        rel++;
     }
     return 0;
 }
+
+#ifdef ANDROID_MIPS_LINKER
+int mips_relocate_got(struct soinfo *si)
+{
+    unsigned *got;
+    unsigned local_gotno, gotsym, symtabno;
+    Elf32_Sym *symtab, *sym;
+    unsigned g;
+
+    got = si->plt_got;
+    local_gotno = si->mips_local_gotno;
+    gotsym = si->mips_gotsym;
+    symtabno = si->mips_symtabno;
+    symtab = si->symtab;
+
+    /*
+     * got[0] is address of lazy resolver function
+     * got[1] may be used for a GNU extension
+     * set it to a recognisable address in case someone calls it
+     * (should be _rtld_bind_start)
+     * FIXME: maybe this should be in a separate routine
+     */
+
+    if ((si->flags & FLAG_LINKER) == 0) {
+        g = 0;
+        got[g++] = 0xdeadbeef;
+        if (got[g] & 0x80000000) {
+            got[g++] = 0xdeadfeed;
+        }
+        /*
+         * Relocate the local GOT entries need to be relocated
+         */
+        for (; g < local_gotno; g++) {
+            got[g] += si->load_bias;
+        }
+    }
+
+    /* Now for the global GOT entries */
+    sym = symtab + gotsym;
+    got = si->plt_got + local_gotno;
+    for (g = gotsym; g < symtabno; g++, sym++, got++) {
+        const char *sym_name;
+        unsigned base;
+        Elf32_Sym *s;
+
+        /* This is an undefined reference... try to locate it */
+        sym_name = si->strtab + sym->st_name;
+        s = soinfo_do_lookup(si, sym_name, &base);
+        if (s == NULL) {
+            /* We only allow an undefined symbol if this is a weak
+               reference..   */
+            s = &symtab[g];
+            if (ELF32_ST_BIND(s->st_info) != STB_WEAK) {
+                DL_ERR("%5d cannot locate '%s'...\n", pid, sym_name);
+                return -1;
+            }
+            *got = 0;
+        }
+        else {
+            /* FIXME: is this sufficient?
+             * For reference see NetBSD link loader
+             * http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
+             */
+             *got = base + s->st_value;
+        }
+    }
+    return 0;
+}
+#endif
 
 /* Please read the "Initialization and Termination functions" functions.
  * of the linker design note in bionic/linker/README.TXT to understand
@@ -1442,8 +1531,10 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             si->plt_got = (unsigned *)(base + *d);
             break;
         case DT_DEBUG:
+#if !defined(ANDROID_MIPS_LINKER)
             // Set the DT_DEBUG entry to the addres of _r_debug for GDB
             *d = (int) &_r_debug;
+#endif
             break;
          case DT_RELA:
             DL_ERR("%5d DT_RELA not supported", pid);
@@ -1491,6 +1582,50 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             DEBUG("%5d Text segment should be writable during relocation.\n",
                   pid);
             break;
+#if defined(ANDROID_MIPS_LINKER)
+        case DT_NEEDED:
+        case DT_STRSZ:
+        case DT_SYMENT:
+        case DT_RELENT:
+             break;
+        case DT_MIPS_RLD_MAP:
+            /* Set the DT_MIPS_RLD_MAP entry to the addres of _r_debug for GDB */
+            {
+              struct r_debug **dp = (struct r_debug **)*d;
+              *dp = &_r_debug;
+            }
+            break;
+        case DT_MIPS_RLD_VERSION:
+        case DT_MIPS_FLAGS:
+        case DT_MIPS_BASE_ADDRESS:
+        case DT_MIPS_UNREFEXTNO:
+        case DT_MIPS_RWPLT:
+            break;
+
+        case DT_MIPS_PLTGOT:
+#if 0
+            /* not yet... */
+            si->mips_pltgot = (unsigned *)(si->base + *d);
+#endif
+            break;
+
+        case DT_MIPS_SYMTABNO:
+            si->mips_symtabno = *d;
+            break;
+
+        case DT_MIPS_LOCAL_GOTNO:
+            si->mips_local_gotno = *d;
+            break;
+
+        case DT_MIPS_GOTSYM:
+            si->mips_gotsym = *d;
+            break;
+
+        default:
+            DEBUG("%5d Unused DT entry: type 0x%08x arg 0x%08x\n",
+                  pid, d[-1], d[0]);
+            break;
+#endif
         }
     }
 
@@ -1551,6 +1686,12 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
         if(soinfo_relocate(si, si->rel, si->rel_count))
             goto fail;
     }
+
+#ifdef ANDROID_MIPS_LINKER
+    if(mips_relocate_got(si)) {
+        goto fail;
+    }
+#endif
 
     si->flags |= FLAG_LINKED;
     DEBUG("[ %5d finished linking %s ]\n", pid, si->name);
