@@ -502,11 +502,18 @@
 #include <android/api-level.h>
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
+#if defined(__clang__)
+#define __BIONIC_FORTIFY_INLINE \
+    extern inline \
+    __attribute__ ((always_inline)) \
+    __attribute__ ((artificial))
+#else
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \
     __attribute__ ((always_inline)) \
     __attribute__ ((gnu_inline)) \
     __attribute__ ((artificial))
+#endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 #endif
 
