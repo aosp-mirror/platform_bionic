@@ -1,15 +1,13 @@
 /*
  * Generic syscall call.
- * Upon entry
- *	%eax: system call number
- *	%ebx: arg0 to system call
- *	%ecx: arg..
- *	%edx: arg..
- *	%esi: arg..
- *	%edi: arg..
- * We push these (to save them) load them up with the
- * values from the calling frame (not all will actually be valid)
- * and make the syscall.
+ * Upon entry:
+ *	%eax: system call number  - caller save
+ *	%ebx: arg0 to system call -   callee save
+ *	%ecx: arg1                - caller save
+ *	%edx: arg2                - caller save
+ *	%esi: arg3                -   callee save
+ *	%edi: arg4                -   callee save
+ *	%ebp: arg5                -   callee save
  */
 
 #include <sys/linux-syscalls.h>
@@ -20,26 +18,37 @@
     .align 4
 
 syscall:
+    # Push the callee save registers.
     push    %ebx
     push    %esi
     push    %edi
-    mov     16(%esp),%eax
-    mov     20(%esp),%ebx
-    mov     24(%esp),%ecx
-    mov     28(%esp),%edx
-    mov     32(%esp),%esi
-    mov     36(%esp),%edi
+    push    %ebp
 
+    # Load all the arguments from the calling frame.
+    # (Not all will be valid, depending on the syscall.)
+    mov     20(%esp),%eax
+    mov     24(%esp),%ebx
+    mov     28(%esp),%ecx
+    mov     32(%esp),%edx
+    mov     36(%esp),%esi
+    mov     40(%esp),%edi
+    mov     44(%esp),%ebp
+
+    # Make the system call.
     int     $0x80
 
+    # Error?
     cmpl    $-4095, %eax
     jb      1f
+    # Yes, so set errno.
     negl    %eax
     pushl   %eax
     call    __set_errno
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    # Restore the callee save registers.
+    pop    %ebp
     pop    %edi
     pop    %esi
     pop    %ebx
