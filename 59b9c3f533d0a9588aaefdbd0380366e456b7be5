@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIA3///6w\u003d",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-03T11:28:30Z",
+      "side": 1,
+      "message": "I\u0027d rather keep the UNKNOWN_SIZE definition outside of the __clang__ #ifdef.\n\nYou can also add a comment to explain that gnu_inline is not supported by Clang.",
+      "revId": "59b9c3f533d0a9588aaefdbd0380366e456b7be5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
