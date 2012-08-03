@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAIA3///6o\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-03T11:29:27Z",
+      "side": 1,
+      "message": "This is not very helpful, unfortunately, what about something like:\n\n\"Fix the clang build: this compiler doesn\u0027t support the gnu_inline function attribute\"",
+      "revId": "59b9c3f533d0a9588aaefdbd0380366e456b7be5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAIA3///6w\u003d",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 2
