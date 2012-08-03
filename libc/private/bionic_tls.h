@@ -127,9 +127,20 @@ extern int __set_tls(void *ptr);
 #      define __get_tls() ( *((volatile void **) 0xffff0ff0) )
 #    endif
 #  endif /* !LIBC_STATIC */
-#else /* !ARM */
+#elif defined(__mips__)
+#    define __get_tls() \
+    ({ register unsigned int __val asm("v1");   \
+        asm (                                   \
+            "   .set    push\n"                 \
+            "   .set    mips32r2\n"             \
+            "   rdhwr   %0,$29\n"               \
+            "   .set    pop\n"                  \
+            : "=r"(__val)                       \
+            );                                  \
+        (volatile void*)__val; })
+#else
 extern void*  __get_tls( void );
-#endif /* !ARM */
+#endif
 
 /* return the stack base and size, used by our malloc debugger */
 extern void*  __get_stack_base(int  *p_stack_size);
