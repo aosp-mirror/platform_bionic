@@ -208,6 +208,7 @@ size_t strlcat(char *dest, const char *src, size_t size) {
     return __strlcat_chk(dest, src, size, bos);
 }
 
+#if !defined(__clang__)
 __purefunc extern size_t __strlen_real(const char *)
     __asm__(__USER_LABEL_PREFIX__ "strlen");
 extern size_t __strlen_chk(const char *, size_t);
@@ -223,6 +224,7 @@ size_t strlen(const char *s) {
 
     return __strlen_chk(s, bos);
 }
+#endif  /* !defined(__clang__) */
 
 
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
