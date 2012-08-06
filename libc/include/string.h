@@ -147,6 +147,7 @@ void *memset (void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
 }
 
+#if !defined(__clang__)
 extern size_t __strlcpy_real(char *, const char *, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
 extern void __strlcpy_error()
@@ -208,7 +209,6 @@ size_t strlcat(char *dest, const char *src, size_t size) {
     return __strlcat_chk(dest, src, size, bos);
 }
 
-#if !defined(__clang__)
 __purefunc extern size_t __strlen_real(const char *)
     __asm__(__USER_LABEL_PREFIX__ "strlen");
 extern size_t __strlen_chk(const char *, size_t);
