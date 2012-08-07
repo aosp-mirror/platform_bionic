@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIGH///9g\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-07T11:41:20Z",
+      "side": 1,
+      "message": "Hummm.... I\u0027m pretty sure this is incorrect. phdr_size is reference in the code after the fail: label that you can goto before reaching this point. The compiler should warn you about the variable being un-initialized then.",
+      "revId": "54e6af55214524022b20e1923f0a47e8eaa8f1aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
