@@ -16,6 +16,24 @@
       "revId": "c164f2a9694fa8c373ec72d237ee16b412aa5c53",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIAH///rM\u003d",
+        "filename": "libc/arch-x86/bionic/syscall.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-08-07T01:29:31Z",
+      "side": 1,
+      "message": "I don\u0027t think generic syscall has 16byte alignment requirement.\n\nWhat I know is: there is only one case which is for RS which need new thread stack is 16 byte aligned (And it is for SIMD instruction which need operand 16 byte aligned).\n\nOr did I miss anything here?",
+      "parentUuid": "AAAH/H//+mo\u003d",
+      "revId": "c164f2a9694fa8c373ec72d237ee16b412aa5c53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
