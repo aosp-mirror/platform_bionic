@@ -16,6 +16,24 @@
       "revId": "4688279db5dcc4004941e7f133c4a1c3617d842c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIG3///xM\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-08T22:12:44Z",
+      "side": 1,
+      "message": "IIRC, our prelinked libraries always have all their internal relocations removed (only the PLT ones are kept). This also means that they cannot be relocated to a different address, i.e. this is not a \"hint\" at all, unlike the technique used on Linux/GLibc.\n\nAnd the reason we did this was to reduce the size of the libraries significantly, and thus speedup their load-time by requiring less pages from the disk (in addition to avoiding any relocation fixups).",
+      "parentUuid": "AAAIEX//+yo\u003d",
+      "revId": "4688279db5dcc4004941e7f133c4a1c3617d842c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
