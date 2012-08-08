@@ -44,4 +44,4 @@ _start:
         popl   %esp
         jmp    *%eax
 
-#include "__stack_chk_fail_local.S"
+#include "arch-x86/bionic/__stack_chk_fail_local.S"
