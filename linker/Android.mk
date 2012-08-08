@@ -3,13 +3,13 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
 	arch/$(TARGET_ARCH)/begin.S \
-	linker.c \
+	debugger.c \
+	dlfcn.c \
+	linker.cpp \
 	linker_environ.c \
 	linker_format.c \
 	linker_phdr.c \
-	rt.c \
-	dlfcn.c \
-	debugger.c
+	rt.c
 
 LOCAL_LDFLAGS := -shared
 
@@ -23,15 +23,14 @@ LOCAL_CFLAGS += -fno-stack-protector \
 #
 LOCAL_CFLAGS += -DLINKER_DEBUG=0
 
-# we need to access the Bionic private header <bionic_tls.h>
-# in the linker; duplicate the HAVE_ARM_TLS_REGISTER definition
-# from the libc build
+# We need to access Bionic private headers in the linker...
+LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
+
+# ...one of which is <private/bionic_tls.h>, for which we
+# need HAVE_ARM_TLS_REGISTER.
 ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
     LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
 endif
-LOCAL_CFLAGS += \
-    -I$(LOCAL_PATH)/../libc/private \
-    -I$(LOCAL_PATH)/../libc/arch-$(TARGET_ARCH)/bionic
 
 ifeq ($(TARGET_ARCH),arm)
     LOCAL_CFLAGS += -DANDROID_ARM_LINKER

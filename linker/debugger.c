@@ -156,7 +156,7 @@ static void logSignalSummary(int signum, const siginfo_t* info)
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
-void debugger_signal_handler(int n, siginfo_t* info, void* unused)
+void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__((unused)))
 {
     char msgbuf[128];
     unsigned tid;

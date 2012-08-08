@@ -37,6 +37,10 @@
 
 #include "linker.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* See linker_phdr.c for all usage documentation */
 
 int
@@ -52,21 +56,18 @@ phdr_table_unload(void* phdr_mmap, Elf32_Addr phdr_memsize);
 
 Elf32_Addr
 phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
-                         int               phdr_count);
+                         size_t phdr_count);
 
 int
 phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
-                          int               phdr_count,
-                          Elf32_Addr        required_base,
-                          void**            load_start,
-                          Elf32_Addr*       load_size,
-                          Elf32_Addr*       load_bias);
+                          size_t phdr_count,
+                          void** load_start,
+                          Elf32_Addr* load_size,
+                          Elf32_Addr* load_bias);
 
 int
 phdr_table_load_segments(const Elf32_Phdr* phdr_table,
                          int               phdr_count,
-                         void*             load_start,
-                         Elf32_Addr        load_size,
                          Elf32_Addr        load_bias,
                          int               fd);
 
@@ -108,5 +109,9 @@ Elf32_Addr*
 phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                int               phdr_count,
                                Elf32_Addr        load_bias);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif /* LINKER_PHDR_H */
