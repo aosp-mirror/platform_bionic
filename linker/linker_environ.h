@@ -28,6 +28,10 @@
 #ifndef LINKER_ENVIRON_H
 #define LINKER_ENVIRON_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Call this function before anything else. 'vecs' must be the pointer
  * to the environment block in the ELF data block. The function returns
  * the start of the aux vectors after the env block.
@@ -47,8 +51,12 @@ extern void        linker_env_unset(const char* name);
  * after this function. */
 extern const char* linker_env_get(const char* name);
 
-/* Remove unsecure environment variables. This should be used when
+/* Remove insecure environment variables. This should be used when
  * running setuid programs. */
 extern void        linker_env_secure(void);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif /* LINKER_ENVIRON_H */
