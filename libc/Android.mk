@@ -529,18 +529,13 @@ else
     libc_common_cflags += -DANDROID_SMP=0
 endif
 
-# Needed to access private/__dso_handle.h from
-# crtbegin_xxx.c and crtend_xxx.c
-#
-libc_crt_target_cflags += -I$(LOCAL_PATH)/private  \
-		-I$(LOCAL_PATH)/include  \
-		-I$(LOCAL_PATH)/kernel/common  \
-		-I$(LOCAL_PATH)/kernel/arch-$(TARGET_ARCH)  \
-		-I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include  \
-		-DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
+# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+libc_crt_target_cflags += \
+    -I$(LOCAL_PATH)/include  \
+    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
 
 ifeq ($(TARGET_ARCH),arm)
-libc_crt_target_cflags += -DCRT_LEGACY_WORKAROUND
+    libc_crt_target_cflags += -DCRT_LEGACY_WORKAROUND
 endif
 
 # Define some common includes
@@ -553,8 +548,9 @@ libc_common_c_includes := \
 
 # Needed to access private/__dso_handle.h from
 # crtbegin_xxx.S and crtend_xxx.S
-#
-libc_crt_target_cflags += -I$(LOCAL_PATH)/private -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include
+libc_crt_target_cflags += \
+    -I$(LOCAL_PATH)/private \
+    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include
 
 # Define the libc run-time (crt) support object files that must be built,
 # which are needed to build all other objects (shared/static libs and
