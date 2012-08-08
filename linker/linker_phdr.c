@@ -180,24 +180,25 @@ void phdr_table_unload(void* phdr_mmap, Elf32_Addr phdr_memsize)
  * This returns 0 if there are no loadable segments.
  */
 Elf32_Addr phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
-                                    int               phdr_count)
+                                    size_t phdr_count)
 {
-    int nn;
-
     Elf32_Addr min_vaddr = 0xFFFFFFFFU;
     Elf32_Addr max_vaddr = 0x00000000U;
 
-    for (nn = 0; nn < phdr_count; nn++) {
-        const Elf32_Phdr* phdr = &phdr_table[nn];
+    for (size_t i = 0; i < phdr_count; ++i) {
+        const Elf32_Phdr* phdr = &phdr_table[i];
 
-        if (phdr->p_type != PT_LOAD)
+        if (phdr->p_type != PT_LOAD) {
             continue;
+        }
 
-        if (phdr->p_vaddr < min_vaddr)
+        if (phdr->p_vaddr < min_vaddr) {
             min_vaddr = phdr->p_vaddr;
+        }
 
-        if (phdr->p_vaddr + phdr->p_memsz > max_vaddr)
+        if (phdr->p_vaddr + phdr->p_memsz > max_vaddr) {
             max_vaddr = phdr->p_vaddr + phdr->p_memsz;
+        }
     }
 
     if (min_vaddr > max_vaddr) {
@@ -217,8 +218,6 @@ Elf32_Addr phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
  * Input:
  *   phdr_table    -> program header table
  *   phdr_count    -> number of entries in the tables
- *   required_base -> for prelinked libraries, mandatory load address
- *                    of the first loadable segment. 0 otherwise.
  * Output:
  *   load_start    -> first page of reserved address space range
  *   load_size     -> size in bytes of reserved address space range
@@ -229,26 +228,19 @@ Elf32_Addr phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
  */
 int
 phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
-                          int               phdr_count,
-                          Elf32_Addr        required_base,
-                          void**            load_start,
-                          Elf32_Addr*       load_size,
-                          Elf32_Addr*       load_bias)
+                          size_t phdr_count,
+                          void** load_start,
+                          Elf32_Addr* load_size,
+                          Elf32_Addr* load_bias)
 {
     Elf32_Addr size = phdr_table_get_load_size(phdr_table, phdr_count);
-    void*      start;
-    int        nn, mmap_flags;
-
     if (size == 0) {
         errno = EINVAL;
         return -1;
     }
 
-    mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-    if (required_base != 0)
-        mmap_flags |= MAP_FIXED;
-
-    start = mmap((void*)required_base, size, PROT_NONE, mmap_flags, -1, 0);
+    int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
+    void* start = mmap(NULL, size, PROT_NONE, mmap_flags, -1, 0);
     if (start == MAP_FAILED) {
         return -1;
     }
@@ -257,8 +249,8 @@ phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
     *load_size  = size;
     *load_bias  = 0;
 
-    for (nn = 0; nn < phdr_count; nn++) {
-        const Elf32_Phdr* phdr = &phdr_table[nn];
+    for (size_t i = 0; i < phdr_count; ++i) {
+        const Elf32_Phdr* phdr = &phdr_table[i];
         if (phdr->p_type == PT_LOAD) {
             *load_bias = (Elf32_Addr)start - PAGE_START(phdr->p_vaddr);
             break;
@@ -274,8 +266,6 @@ phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
  * Input:
  *   phdr_table    -> program header table
  *   phdr_count    -> number of entries in the table
- *   load_start    -> start address of reserved memory range.
- *   load_size     -> size of reserved memory range.
  *   load_bias     -> load offset.
  *   fd            -> input file descriptor.
  *
@@ -285,8 +275,6 @@ phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
 int
 phdr_table_load_segments(const Elf32_Phdr* phdr_table,
                          int               phdr_count,
-                         void*             load_start,
-                         Elf32_Addr        load_size,
                          Elf32_Addr        load_bias,
                          int               fd)
 {
