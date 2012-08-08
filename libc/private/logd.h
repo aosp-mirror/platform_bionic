@@ -59,11 +59,19 @@ enum  {
     ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int __libc_android_log_write(int prio, const char* tag, const char* buffer);
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...);
 int __libc_android_log_vprint(int prio, const char *tag, const char *fmt, va_list ap);
 
 void __libc_android_log_event_int(int32_t tag, int value);
 void __libc_android_log_event_uid(int32_t tag);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif /* _ANDROID_BIONIC_LOGD_H */

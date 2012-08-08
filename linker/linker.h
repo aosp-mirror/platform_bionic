@@ -34,6 +34,10 @@
 #include <elf.h>
 #include <sys/exec_elf.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #undef PAGE_MASK
 #undef PAGE_SIZE
 #define PAGE_SIZE 4096
@@ -106,7 +110,7 @@ typedef struct soinfo soinfo;
 
 struct soinfo
 {
-    const char name[SOINFO_NAME_LEN];
+    char name[SOINFO_NAME_LEN];
     const Elf32_Phdr *phdr;
     int phnum;
     unsigned entry;
@@ -242,6 +246,10 @@ typedef long unsigned int *_Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount);
 #elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info *, size_t, void *), void *);
+#endif
+
+#ifdef __cplusplus
+};
 #endif
 
 #endif
