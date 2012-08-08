@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIEX//+yo\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-08T20:58:22Z",
+      "side": 1,
+      "message": "I don\u0027t think we should be failing if there was a prelink hint. even when supporting prelinking, the address is just a hint and doesn\u0027t always work I thought and it is supposed to fail gracefully.",
+      "revId": "4688279db5dcc4004941e7f133c4a1c3617d842c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
