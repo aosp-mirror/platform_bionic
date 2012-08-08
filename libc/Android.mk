@@ -532,7 +532,12 @@ endif
 # Needed to access private/__dso_handle.h from
 # crtbegin_xxx.c and crtend_xxx.c
 #
-libc_crt_target_cflags += -I$(LOCAL_PATH)/private
+libc_crt_target_cflags += -I$(LOCAL_PATH)/private  \
+		-I$(LOCAL_PATH)/include  \
+		-I$(LOCAL_PATH)/kernel/common  \
+		-I$(LOCAL_PATH)/kernel/arch-$(TARGET_ARCH)  \
+		-I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include  \
+		-DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
 
 ifeq ($(TARGET_ARCH),arm)
 libc_crt_target_cflags += -DCRT_LEGACY_WORKAROUND
@@ -577,6 +582,22 @@ ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_crtstart_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.S
     libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
 endif
+
+# See the comment in crtbrand.c for the reason why we need to generate
+# crtbrand.s before generating crtbrand.o.
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
+$(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_so_cflags) -S -o $@ $<
+	sed -i -e '/\.note\.ABI-tag/s/progbits/note/' $@
+ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
+$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
 $(GEN): $(libc_crt_target_crtstart_so_file)
 	@mkdir -p $(dir $@)
@@ -603,18 +624,29 @@ ALL_GENERATED_SOURCES += $(GEN)
 endif # TARGET_ARCH == x86 || TARGET_ARCH == arm
 
 
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o
+$(GEN): $(libc_crt_target_crtstart_file)
+	@mkdir -p $(dir $@)
+	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+ALL_GENERATED_SOURCES += $(GEN)
+
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
+$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
+	@mkdir -p $(dir $@)
+	$(TARGET_LD) -r -o $@ $^
+ALL_GENERATED_SOURCES += $(GEN)
+
+GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o
 $(GEN): $(libc_crt_target_crtstart_file)
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
-$(GEN): $(libc_crt_target_crtstart_file)
+$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+	$(TARGET_LD) -r -o $@ $^
 ALL_GENERATED_SOURCES += $(GEN)
-
 
 # We rename crtend.o to crtend_android.o to avoid a
 # name clash between gcc and bionic.
