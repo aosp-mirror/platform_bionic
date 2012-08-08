@@ -312,7 +312,7 @@ static int log_vprint(int prio, const char *tag, const char *fmt, va_list  args)
 
 #else /* !CUSTOM_LOG_VPRINT */
 
-extern int __libc_android_log_vprint(int  prio, const char* tag, const char*  format, va_list ap);
+extern "C" int __libc_android_log_vprint(int  prio, const char* tag, const char*  format, va_list ap);
 
 #endif /* !CUSTOM_LOG_VPRINT */
 
