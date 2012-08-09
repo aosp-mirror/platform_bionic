@@ -41,15 +41,45 @@ __BIONIC_SIGDEF(QUIT,3,"Quit")
 __BIONIC_SIGDEF(ILL,4,"Illegal instruction")
 __BIONIC_SIGDEF(TRAP,5,"Trap")
 __BIONIC_SIGDEF(ABRT,6,"Aborted")
+#ifdef __mips__
+__BIONIC_SIGDEF(EMT,7,"EMT")
+#else
 __BIONIC_SIGDEF(BUS,7,"Bus error")
+#endif
 __BIONIC_SIGDEF(FPE,8,"Floating point exception")
 __BIONIC_SIGDEF(KILL,9,"Killed")
+#ifdef __mips__
+__BIONIC_SIGDEF(BUS,10,"Bus error")
+#else
 __BIONIC_SIGDEF(USR1,10,"User signal 1")
+#endif
 __BIONIC_SIGDEF(SEGV,11,"Segmentation fault")
+#ifdef __mips__
+__BIONIC_SIGDEF(SYS,12,"Bad system call")
+#else
 __BIONIC_SIGDEF(USR2,12,"User signal 2")
+#endif
 __BIONIC_SIGDEF(PIPE,13,"Broken pipe")
 __BIONIC_SIGDEF(ALRM,14,"Alarm clock")
 __BIONIC_SIGDEF(TERM,15,"Terminated")
+#ifdef __mips__
+__BIONIC_SIGDEF(USR1,16,"User signal 1")
+__BIONIC_SIGDEF(USR2,17,"User signal 2")
+__BIONIC_SIGDEF(CHLD,18,"Child exited")
+__BIONIC_SIGDEF(PWR,19,"Power failure")
+__BIONIC_SIGDEF(WINCH,20,"Window size changed")
+__BIONIC_SIGDEF(URG,21,"Urgent I/O condition")
+__BIONIC_SIGDEF(IO,22,"I/O possible")
+__BIONIC_SIGDEF(STOP,23,"Stopped (signal)")
+__BIONIC_SIGDEF(TSTP,24,"Stopped")
+__BIONIC_SIGDEF(CONT,25,"Continue")
+__BIONIC_SIGDEF(TTIN,26,"Stopped (tty input)")
+__BIONIC_SIGDEF(TTOU,27,"Stopped (tty output)")
+__BIONIC_SIGDEF(VTALRM,28,"Virtual timer expired")
+__BIONIC_SIGDEF(PROF,29,"Profiling timer expired")
+__BIONIC_SIGDEF(XCPU,30,"CPU time limit exceeded")
+__BIONIC_SIGDEF(XFSZ,31,"File size limit exceeded")
+#else
 __BIONIC_SIGDEF(STKFLT,16,"Stack fault")
 __BIONIC_SIGDEF(CHLD,17,"Child exited")
 __BIONIC_SIGDEF(CONT,18,"Continue")
@@ -66,5 +96,6 @@ __BIONIC_SIGDEF(WINCH,28,"Window size changed")
 __BIONIC_SIGDEF(IO,29,"I/O possible")
 __BIONIC_SIGDEF(PWR,30,"Power failure")
 __BIONIC_SIGDEF(SYS,31,"Bad system call")
+#endif
 
 #undef __BIONIC_SIGDEF
