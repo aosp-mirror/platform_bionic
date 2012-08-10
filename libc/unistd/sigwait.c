@@ -47,6 +47,14 @@ int __rt_sigtimedwait(const sigset_t *uthese, siginfo_t *uinfo, const struct tim
 int sigwait(const sigset_t *set, int *sig)
 {
     int  ret;
+#ifdef __mips__
+    /* use a union to get rid of aliasing warnings. On MIPS sigset_t is 128 bits */
+    union {
+      sigset_t       kernel_sigset;
+      sigset_t       dummy_sigset;
+    } u;
+    u.dummy_sigset = *set;
+#else
     /* use a union to get rid of aliasing warnings */
     union {
       unsigned long  kernel_sigset[2];
@@ -55,6 +63,7 @@ int sigwait(const sigset_t *set, int *sig)
 
     u.kernel_sigset[0] = *set;
     u.kernel_sigset[1] = 0;  /* no real-time signals supported ? */
+#endif
     for (;;)
     {
      /* __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
