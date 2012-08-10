@@ -125,6 +125,7 @@ syscall_src += arch-x86/syscalls/llistxattr.S
 syscall_src += arch-x86/syscalls/removexattr.S
 syscall_src += arch-x86/syscalls/lremovexattr.S
 syscall_src += arch-x86/syscalls/__statfs64.S
+syscall_src += arch-x86/syscalls/unshare.S
 syscall_src += arch-x86/syscalls/pause.S
 syscall_src += arch-x86/syscalls/gettimeofday.S
 syscall_src += arch-x86/syscalls/settimeofday.S
