@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIM3///Ks\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-08-10T22:55:27Z",
+      "side": 1,
+      "message": "This condition evaluates as false for mips and is always evaluating as false probably.",
+      "revId": "099392bd20234c1503768e4ab4fb30ac22092c65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
