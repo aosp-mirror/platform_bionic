@@ -1860,6 +1860,17 @@ sanitize:
     strlcpy((char*) linker_soinfo.name, "/system/bin/linker", sizeof linker_soinfo.name);
     linker_soinfo.flags = 0;
     linker_soinfo.base = linker_base;
+    /*
+     * Set the dynamic field in the link map otherwise gdb will complain with
+     * the following:
+     *   warning: .dynamic section for "/system/bin/linker" is not at the
+     *   expected address (wrong library or version mismatch?)
+     */
+    Elf32_Ehdr *elf_hdr = (Elf32_Ehdr *) linker_base;
+    Elf32_Phdr *phdr =
+        (Elf32_Phdr *)((unsigned char *) linker_base + elf_hdr->e_phoff);
+    linker_soinfo.dynamic =
+        phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base);
     insert_soinfo_into_debug_map(&linker_soinfo);
 
         /* extract information passed from the kernel */
