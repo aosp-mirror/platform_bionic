@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAINH///hI\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-10T22:18:05Z",
+      "side": 1,
+      "message": "i wonder if we should just lose the condition since all supported architectures need this. what architecture wouldn\u0027t?",
+      "revId": "2b27cbd9df823fe594cfbb899abd3f88e044d603",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAINH///hM\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-10T22:18:05Z",
+      "side": 1,
+      "message": "you broke ARM here by flipping the sense. i\u0027m assuming from the existence of .S files that MIPS is like x86, and you didn\u0027t actually want to flip the sense here.",
+      "revId": "2b27cbd9df823fe594cfbb899abd3f88e044d603",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
