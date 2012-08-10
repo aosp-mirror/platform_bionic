@@ -1,6 +1,6 @@
 # this file is used to list all the syscalls that will be supported by
 # the Bionic C library. It is used to automatically generate the syscall
-# stubs, the list of syscall constants (__NR_xxxx) and the content of <linux/_unitsd.h>
+# stubs, the list of syscall constants (__NR_xxxx) and the content of <linux/_unistd.h>
 #
 # each non comment line has the following format:
 #
@@ -191,6 +191,7 @@ ssize_t llistxattr(const char *, char *, size_t) 233,233,231
 int     removexattr(const char *, const char *) 235,235,233
 int     lremovexattr(const char *, const char *) 236,236,234
 int     __statfs64:statfs64(const char *, size_t, struct statfs *)  266,268,255
+long    unshare(unsigned long)  337,310,303
 
 # time
 int           pause ()                       29
