@@ -26,12 +26,18 @@
  * SUCH DAMAGE.
  */
 #include <signal.h>
-
+#ifdef __mips__
+extern int __sigsuspend(const sigset_t *);
+#else
 extern int __sigsuspend(int, int, unsigned int);
+#endif
 
 int sigsuspend(const sigset_t *_mask)
 {
-    unsigned int    mask = (unsigned int)*_mask;
-
-	return __sigsuspend(0, 0, mask);
+#ifdef __mips__
+        return __sigsuspend(_mask);
+#else
+        unsigned int    mask = (unsigned int)*_mask;
+        return __sigsuspend(0, 0, mask);
+#endif
 }
