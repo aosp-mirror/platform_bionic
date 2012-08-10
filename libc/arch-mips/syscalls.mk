@@ -124,6 +124,7 @@ syscall_src += arch-mips/syscalls/llistxattr.S
 syscall_src += arch-mips/syscalls/removexattr.S
 syscall_src += arch-mips/syscalls/lremovexattr.S
 syscall_src += arch-mips/syscalls/__statfs64.S
+syscall_src += arch-mips/syscalls/unshare.S
 syscall_src += arch-mips/syscalls/pause.S
 syscall_src += arch-mips/syscalls/gettimeofday.S
 syscall_src += arch-mips/syscalls/settimeofday.S
