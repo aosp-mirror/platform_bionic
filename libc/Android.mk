@@ -209,7 +209,6 @@ libc_common_src_files := \
 	string/strstr.c \
 	string/strtok.c \
 	string/strtotimeval.c \
-	string/strxfrm.c \
 	string/__memcpy_chk.c \
 	string/__memmove_chk.c \
 	string/__memset_chk.c \
@@ -337,6 +336,7 @@ libc_common_src_files := \
 	regex/regerror.c \
 	regex/regexec.c \
 	regex/regfree.c \
+	upstream-netbsd/libc/string/strxfrm.c \
 
 # The following files are common, but must be compiled
 # with different C flags when building a static C library.
@@ -466,6 +466,9 @@ libc_common_cflags := \
     -DPOSIX_MISTAKE \
     -DLOG_ON_HEAP_ERROR \
     -std=gnu99
+
+libc_common_cflags += \
+    -include upstream-netbsd/netbsd-compat.h
 
 # these macro definitions are required to implement the
 # 'timezone' and 'daylight' global variables, as well as
