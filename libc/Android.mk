@@ -209,7 +209,6 @@ libc_common_src_files := \
 	string/strstr.c \
 	string/strtok.c \
 	string/strtotimeval.c \
-	string/strxfrm.c \
 	string/__memcpy_chk.c \
 	string/__memmove_chk.c \
 	string/__memset_chk.c \
@@ -337,6 +336,9 @@ libc_common_src_files := \
 	regex/regerror.c \
 	regex/regexec.c \
 	regex/regfree.c \
+
+libc_upstream_netbsd_src_files := \
+	upstream-netbsd/libc/string/strxfrm.c \
 
 # The following files are common, but must be compiled
 # with different C flags when building a static C library.
@@ -677,18 +679,39 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_netbsd.a - upstream NetBSD C library code
+# ========================================================
+#
+# These files are built with the netbsd-compat.h header file
+# automatically included.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -include upstream-netbsd/netbsd-compat.h
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_netbsd
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_common.a
 # ========================================================
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags)
 ifeq ($(TARGET_ARCH),arm)
-LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
+    LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
 endif
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
-LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp
+LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
