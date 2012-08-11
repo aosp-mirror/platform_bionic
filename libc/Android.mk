@@ -410,7 +410,7 @@ libc_arch_static_src_files := \
 
 libc_arch_dynamic_src_files := \
 	arch-arm/bionic/exidx_dynamic.c
-else # !arm
+endif # arm
 
 ifeq ($(TARGET_ARCH),x86)
 libc_common_src_files += \
@@ -447,10 +447,54 @@ libc_arch_static_src_files := \
 	bionic/dl_iterate_phdr_static.c
 
 libc_arch_dynamic_src_files :=
-else # !x86
+endif # x86
 
-endif # !x86
-endif # !arm
+ifeq ($(TARGET_ARCH),mips)
+libc_common_src_files += \
+	bionic/bionic_clone.c \
+	arch-mips/bionic/__get_sp.S \
+	arch-mips/bionic/__get_tls.c \
+	arch-mips/bionic/__set_tls.c \
+	arch-mips/bionic/_exit_with_stack_teardown.S \
+	arch-mips/bionic/_setjmp.S \
+	arch-mips/bionic/futex_mips.S \
+	arch-mips/bionic/bzero.S \
+	arch-mips/bionic/cacheflush.c \
+	arch-mips/bionic/clone.S \
+	arch-mips/bionic/ffs.S \
+	arch-mips/bionic/memcmp16.S \
+	arch-mips/bionic/memmove.c \
+	arch-mips/bionic/pipe.S \
+	arch-mips/bionic/setjmp.S \
+	arch-mips/bionic/sigsetjmp.S \
+	arch-mips/bionic/vfork.S
+
+libc_common_src_files += \
+	arch-mips/string/memset.S \
+	arch-mips/string/memcpy.S \
+	arch-mips/string/mips_strlen.c
+
+libc_common_src_files += \
+	string/bcopy.c \
+	string/memcmp.c \
+	string/strcmp.c \
+	string/strcpy.c \
+	string/strncmp.c
+
+libc_common_src_files += \
+	bionic/pthread-atfork.c \
+	bionic/pthread-rwlocks.c \
+	bionic/pthread-timers.c \
+	bionic/ptrace.c
+
+libc_static_common_src_files += \
+	bionic/pthread.c
+
+libc_arch_static_src_files := \
+	bionic/dl_iterate_phdr_static.c
+
+libc_arch_dynamic_src_files :=
+endif # mips
 
 # Define some common cflags
 # ========================================================
@@ -460,7 +504,6 @@ libc_common_cflags := \
     -DUSE_LOCKS \
     -DREALLOC_ZERO_BYTES_FREES \
     -D_LIBC=1 \
-    -DSOFTFLOAT \
     -DFLOATING_POINT \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
@@ -489,6 +532,7 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
 endif
 
 ifeq ($(TARGET_ARCH),arm)
+  libc_common_cflags += -DSOFTFLOAT
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := -mthumb-interwork
   #
@@ -512,17 +556,26 @@ ifeq ($(TARGET_ARCH),arm)
   ifeq ($(ARCH_ARM_USE_NON_NEON_MEMCPY),true)
     libc_common_cflags += -DARCH_ARM_USE_NON_NEON_MEMCPY
   endif
-else # !arm
-  ifeq ($(TARGET_ARCH),x86)
-    libc_crt_target_cflags :=
-    ifeq ($(ARCH_X86_HAVE_SSE2),true)
-        libc_crt_target_cflags += -DUSE_SSE2=1
-    endif
-    ifeq ($(ARCH_X86_HAVE_SSSE3),true)
-        libc_crt_target_cflags += -DUSE_SSSE3=1
-    endif
-  endif # x86
 endif # !arm
+
+ifeq ($(TARGET_ARCH),x86)
+  libc_common_cflags += -DSOFTFLOAT
+  libc_crt_target_cflags :=
+  ifeq ($(ARCH_X86_HAVE_SSE2),true)
+      libc_crt_target_cflags += -DUSE_SSE2=1
+  endif
+  ifeq ($(ARCH_X86_HAVE_SSSE3),true)
+      libc_crt_target_cflags += -DUSE_SSSE3=1
+  endif
+endif # x86
+
+ifeq ($(TARGET_ARCH),mips)
+  ifneq ($(ARCH_MIPS_HAS_FPU),true)
+    libc_common_cflags += -DSOFTFLOAT
+  endif
+  libc_common_cflags += -fstrict-aliasing
+  libc_crt_target_cflags := $(TARGET_GLOBAL_CFLAGS)
+endif # mips
 
 # Define ANDROID_SMP appropriately.
 ifeq ($(TARGET_CPU_SMP),true)
@@ -558,28 +611,34 @@ libc_crt_target_cflags += \
 # which are needed to build all other objects (shared/static libs and
 # executables)
 # ==========================================================================
-
-ifneq ($(filter arm x86,$(TARGET_ARCH)),)
-# ARM and x86 need crtbegin_so/crtend_so.
+# ARM, MIPS, and x86 all need crtbegin_so/crtend_so.
 #
 # For x86, the .init section must point to a function that calls all
 # entries in the .ctors section. (on ARM this is done through the
 # .init_array section instead).
 #
-# For both platforms, the .fini_array section must point to a function
+# For all the platforms, the .fini_array section must point to a function
 # that will call __cxa_finalize(&__dso_handle) in order to ensure that
 # static C++ destructors are properly called on dlclose().
 #
-
-libc_crt_target_so_cflags := $(libc_crt_target_cflags)
-libc_crt_target_crtstart_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
-libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.c
-ifeq ($(TARGET_ARCH),x86)
-    # This flag must be added for x86 targets, but not for ARM
-    libc_crt_target_so_cflags += -fPIC
-    libc_crt_target_crtstart_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.S
-    libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.S
+ifeq ($(TARGET_ARCH),arm)
+    libc_crtstart_extension := c
+    libc_crt_target_so_cflags :=
 endif
+ifeq ($(TARGET_ARCH),mips)
+    libc_crtstart_extension := S
+    libc_crt_target_so_cflags := -fPIC
+endif
+ifeq ($(TARGET_ARCH),x86)
+    libc_crtstart_extension := S
+    libc_crt_target_so_cflags := -fPIC
+endif
+ifeq ($(libc_crtstart_extension),)
+    $(error $(TARGET_ARCH) not supported)
+endif
+libc_crt_target_so_cflags += $(libc_crt_target_cflags)
+libc_crt_target_crtstart_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.$(libc_crtstart_extension)
+libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.$(libc_crtstart_extension)
 
 # See the comment in crtbrand.c for the reason why we need to generate
 # crtbrand.s before generating crtbrand.o.
@@ -619,7 +678,6 @@ $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
 	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
-endif # TARGET_ARCH == x86 || TARGET_ARCH == arm
 
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o
