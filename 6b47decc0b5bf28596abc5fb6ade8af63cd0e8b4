@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAISH///+M\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-11T17:13:24Z",
+      "side": 1,
+      "message": "thanks. that was our one remaining warning in here, but i hadn\u0027t had time to investigate whether it was _supposed_ to be used.",
+      "revId": "6b47decc0b5bf28596abc5fb6ade8af63cd0e8b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAISH///+I\u003d",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-11T17:13:24Z",
+      "side": 1,
+      "message": "gah. i need to switch the other files over to C++ too. i\u0027ll try to do that this week. (i want to go over the non-static stuff more carefully too, seeing what i can make static and whether i missed any extern \"C\"s.)\n\nmaybe \"has_textrel\" or \"has_text_relocations\"?",
+      "revId": "6b47decc0b5bf28596abc5fb6ade8af63cd0e8b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
