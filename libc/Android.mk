@@ -714,6 +714,9 @@ LOCAL_MODULE := libc_common
 LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+# TODO: split out the asflags.
+LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
+
 include $(BUILD_STATIC_LIBRARY)
 
 

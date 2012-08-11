@@ -65,6 +65,9 @@ LOCAL_MODULE_SUFFIX := $(TARGET_EXECUTABLE_SUFFIX)
 # just for this module
 LOCAL_NO_CRT := true
 
+# TODO: split out the asflags.
+LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
+
 include $(BUILD_SYSTEM)/dynamic_binary.mk
 
 $(linked_module): $(TARGET_CRTBEGIN_STATIC_O) $(all_objects) $(all_libraries) $(TARGET_CRTEND_O)
