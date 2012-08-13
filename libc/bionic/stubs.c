@@ -245,31 +245,43 @@ android_name_to_group( struct group *gr, const char *name )
     return NULL;
 }
 
-/* translate a user/group name like app_1234 into the
- * corresponding user/group id (AID_APP + 1234)
+/* translate a user/group name to the corresponding user/group id.
+ * u0_a1234 -> 0 * AID_USER + AID_APP + 1234
+ * u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
+ * u1_system -> 1 * AID_USER + android_ids['system']
  * returns 0 and sets errno to ENOENT in case of error
  */
 static unsigned
 app_id_from_name( const char*  name )
 {
     unsigned long  userid;
-    unsigned long  appid;
+    unsigned long  appid = 0;
     char*          end;
 
     if (name[0] != 'u' || !isdigit(name[1]))
         goto FAIL;
 
     userid = strtoul(name+1, &end, 10);
-    if (end[0] != '_' || end[1] == 0 || !isdigit(end[2]))
+    if (end[0] != '_' || end[1] == 0)
         goto FAIL;
 
-    if (end[1] == 'a')
+    if (end[1] == 'a' && isdigit(end[2])) {
+        /* end will point to \0 if the strtoul below succeeds. */
         appid = strtoul(end+2, &end, 10) + AID_APP;
-    else if (end[1] == 'i')
+    } else if (end[1] == 'i' && isdigit(end[2])) {
+        /* end will point to \0 if the strtoul below succeeds. */
         appid = strtoul(end+2, &end, 10) + AID_ISOLATED_START;
-    else
-        goto FAIL;
+    } else {
+        for (size_t n = 0; n < android_id_count; n++) {
+            if (!strcmp(android_ids[n].name, end + 1)) {
+                appid = android_ids[n].aid;
+                /* move the end pointer to the null terminator */
+                end += 1 + strlen(android_ids[n].name);
+            }
+        }
+    }
 
+    /* check if the entire string was consumed by the 3 cases above */
     if (end[0] != 0)
         goto FAIL;
 
@@ -278,7 +290,7 @@ app_id_from_name( const char*  name )
         goto FAIL;
 
     /* check that app id is within range */
-    if (appid < AID_APP || appid >= AID_USER)
+    if (appid >= AID_USER)
         goto FAIL;
 
     return (unsigned)(appid + userid*AID_USER);
@@ -298,14 +310,26 @@ print_app_uid_name(uid_t  uid, char* buffer, int bufferlen)
     userid = uid / AID_USER;
 
     if (appid < AID_ISOLATED_START) {
+        if (appid < AID_APP) {
+            for (size_t n = 0; n < android_id_count; n++) {
+                if (android_ids[n].aid == appid) {
+                    snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
+                    return;
+                }
+            }
+        }
         snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
     } else {
         snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
     }
 }
 
-/* translate a uid into the corresponding app_<uid>
- * passwd structure (sets errno to ENOENT on failure)
+/* translate a uid into the corresponding name.
+ * 0 to AID_APP-1                   -> "system", "radio", etc.
+ * AID_APP to AID_ISOLATED_START-1  -> u0_a1234
+ * AID_ISOLATED_START to AID_USER-1 -> u0_i1234
+ * AID_USER+                        -> u1_radio, u1_a1234, u2_i1234, etc.
+ * returns a passwd structure (sets errno to ENOENT on failure)
  */
 static struct passwd*
 app_id_to_passwd(uid_t  uid, stubs_state_t*  state)
