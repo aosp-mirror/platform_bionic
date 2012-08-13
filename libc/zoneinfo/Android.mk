@@ -3,6 +3,7 @@ LOCAL_PATH:= $(call my-dir)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo.dat
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_TAGS := optional
@@ -12,6 +13,7 @@ include $(BUILD_PREBUILT)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo.idx
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_TAGS := optional
@@ -21,6 +23,7 @@ include $(BUILD_PREBUILT)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo.version
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_TAGS := optional
@@ -34,6 +37,7 @@ ifeq ($(WITH_HOST_DALVIK),true)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo-host.dat
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_IS_HOST_MODULE := true
 LOCAL_SRC_FILES := zoneinfo.dat
 LOCAL_MODULE_CLASS := ETC
@@ -45,6 +49,7 @@ include $(BUILD_PREBUILT)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo-host.idx
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_IS_HOST_MODULE := true
 LOCAL_SRC_FILES := zoneinfo.idx
 LOCAL_MODULE_CLASS := ETC
@@ -56,6 +61,7 @@ include $(BUILD_PREBUILT)
 ############################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := zoneinfo-host.version
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_IS_HOST_MODULE := true
 LOCAL_SRC_FILES := zoneinfo.version
 LOCAL_MODULE_CLASS := ETC
