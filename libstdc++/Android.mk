@@ -19,6 +19,7 @@ LOCAL_SRC_FILES:= \
 	src/typeinfo.cpp
 
 LOCAL_MODULE:= libstdc++
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CFLAGS := $(libstdc++_cflags)
 
@@ -37,6 +38,7 @@ LOCAL_SRC_FILES:= \
 LOCAL_CFLAGS := $(libstdc++_cflags)
 
 LOCAL_MODULE:= libstdc++
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
