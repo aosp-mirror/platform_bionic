@@ -292,7 +292,7 @@ libc_common_src_files := \
 	bionic/sched_cpucount.c \
 	bionic/semaphore.c \
 	bionic/sha1.c \
-	bionic/stubs.c \
+	bionic/stubs.cpp \
 	bionic/system_properties.c \
 	bionic/tdelete.c \
 	bionic/tdestroy.c \
