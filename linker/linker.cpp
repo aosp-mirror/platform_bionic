@@ -81,7 +81,7 @@
  */
 
 
-static int soinfo_link_image(soinfo *si, unsigned wr_offset);
+static int soinfo_link_image(soinfo *si);
 
 static int socount = 0;
 static soinfo sopool[SO_MAX];
@@ -817,20 +817,6 @@ static soinfo* load_library(const char* name)
         return NULL;
     }
 
-    /* Unprotect the segments, i.e. make them writable, to allow
-     * relocations to work properly. We will later call
-     * phdr_table_protect_segments() after all of them are applied
-     * and all constructors are run.
-     */
-    ret = phdr_table_unprotect_segments(phdr_table,
-                                        phdr_count,
-                                        load_bias);
-    if (ret < 0) {
-        DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-               name, strerror(errno));
-        return NULL;
-    }
-
     soinfo_ptr si(name);
     if (si.ptr == NULL) {
         return NULL;
@@ -855,14 +841,12 @@ static soinfo* load_library(const char* name)
 static soinfo *
 init_library(soinfo *si)
 {
-    unsigned wr_offset = 0xffffffff;
-
     /* At this point we know that whatever is loaded @ base is a valid ELF
      * shared library whose segments are properly mapped in. */
     TRACE("[ %5d init_library base=0x%08x sz=0x%08x name='%s') ]\n",
           pid, si->base, si->size, si->name);
 
-    if(soinfo_link_image(si, wr_offset)) {
+    if(soinfo_link_image(si)) {
             /* We failed to link.  However, we can only restore libbase
             ** if no additional libraries have moved it since we updated it.
             */
@@ -1432,7 +1416,7 @@ static int nullify_closed_stdio (void)
     return return_value;
 }
 
-static int soinfo_link_image(soinfo *si, unsigned wr_offset)
+static int soinfo_link_image(soinfo *si)
 {
     unsigned *d;
     /* "base" might wrap around UINT32_MAX. */
@@ -1465,20 +1449,6 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     (void) phdr_table_get_arm_exidx(phdr, phnum, base,
                                     &si->ARM_exidx, &si->ARM_exidx_count);
 #endif
-
-    if (si->flags & (FLAG_EXE | FLAG_LINKER)) {
-        if (phdr_table_unprotect_segments(si->phdr,
-                                          si->phnum,
-                                          si->load_bias) < 0) {
-            /* We can't call DL_ERR if the linker's relocations haven't
-             * been performed yet */
-            if (!relocating_linker) {
-                DL_ERR("can't unprotect segments for \"%s\": %s",
-                       si->name, strerror(errno));
-            }
-            goto fail;
-        }
-    }
 
     /* extract useful information from dynamic section */
     for(d = si->dynamic; *d; d++){
@@ -1562,13 +1532,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             si->preinit_array_count = ((unsigned)*d) / sizeof(Elf32_Addr);
             break;
         case DT_TEXTREL:
-            /* TODO: make use of this. */
-            /* this means that we might have to write into where the text
-             * segment was loaded during relocation... Do something with
-             * it.
-             */
-            DEBUG("%5d Text segment should be writable during relocation.\n",
-                  pid);
+            si->has_text_relocations = true;
             break;
 #if defined(ANDROID_MIPS_LINKER)
         case DT_NEEDED:
@@ -1664,6 +1628,19 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
         }
     }
 
+    if (si->has_text_relocations) {
+        /* Unprotect the segments, i.e. make them writable, to allow
+         * text relocations to work properly. We will later call
+         * phdr_table_protect_segments() after all of them are applied
+         * and all constructors are run.
+         */
+        if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
+            DL_ERR("can't unprotect loadable segments for \"%s\": %s",
+                   si->name, strerror(errno));
+            goto fail;
+        }
+    }
+
     if(si->plt_rel) {
         DEBUG("[ %5d relocating %s plt ]\n", pid, si->name );
         if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count))
@@ -1684,12 +1661,14 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     si->flags |= FLAG_LINKED;
     DEBUG("[ %5d finished linking %s ]\n", pid, si->name);
 
-    /* All relocations are done, we can protect our segments back to
-     * read-only. */
-    if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
-        DL_ERR("can't protect segments for \"%s\": %s",
-               si->name, strerror(errno));
-        goto fail;
+    if (si->has_text_relocations) {
+        /* All relocations are done, we can protect our segments back to
+         * read-only. */
+        if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
+            DL_ERR("can't protect segments for \"%s\": %s",
+                   si->name, strerror(errno));
+            goto fail;
+        }
     }
 
     /* We can also turn on GNU RELRO protection */
@@ -1911,7 +1890,7 @@ sanitize:
     parse_LD_LIBRARY_PATH(ldpath_env);
     parse_LD_PRELOAD(ldpreload_env);
 
-    if(soinfo_link_image(si, 0)) {
+    if(soinfo_link_image(si)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
         write(2, errmsg, sizeof(errmsg));
@@ -2050,7 +2029,7 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
     linker_so.phnum = elf_hdr->e_phnum;
     linker_so.flags |= FLAG_LINKER;
 
-    if (soinfo_link_image(&linker_so, 0)) {
+    if (soinfo_link_image(&linker_so)) {
         // It would be nice to print an error message, but if the linker
         // can't link itself, there's no guarantee that we'll be able to
         // call write() (because it involves a GOT reference).
