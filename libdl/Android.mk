@@ -6,11 +6,11 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-# NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from 
+# NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
 # libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
 # a) pull symbols from libgcc.a and b) depend on libdl.so will not rely on libdl.so
 # to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
-# we use this property to make sure libc.so has its own copy of the code from 
+# we use this property to make sure libc.so has its own copy of the code from
 # libgcc.a it uses.
 #
 # DO NOT REMOVE --exclude-libs!
@@ -25,6 +25,7 @@ endif
 LOCAL_SRC_FILES:= libdl.c
 
 LOCAL_MODULE:= libdl
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 # NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
 # few symbols from libc. Using --no-undefined here results in having to link
@@ -32,7 +33,7 @@ LOCAL_MODULE:= libdl
 # with missing symbols. Since this library is just a bunch of stubs, we set
 # LOCAL_ALLOW_UNDEFINED_SYMBOLS to remove --no-undefined from the linker flags.
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
-LOCAL_SYSTEM_SHARED_LIBRARIES := 
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -47,7 +48,8 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= dltest.c
 
-LOCAL_MODULE:= dltest 
+LOCAL_MODULE:= dltest
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_SHARED_LIBRARIES := libdl
 

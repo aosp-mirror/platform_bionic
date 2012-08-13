@@ -45,6 +45,7 @@ ifeq ($(TARGET_ARCH),mips)
 endif
 
 LOCAL_MODULE:= linker
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc
 
