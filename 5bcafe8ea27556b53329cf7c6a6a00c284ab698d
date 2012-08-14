@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIXH///z8\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "While you\u0027re here, can you please add a TODO at this point:\n\n// TODO: don\u0027t use basename only for determining libraries\n\n// http://code.google.com/p/android/issues/detail?id\u003d6670",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///0c\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "si !\u003d NULL",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///1o\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1598,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "More spaces please:\n\n(soinfo**) alloca((1 + dynamic_count) * sizeof(soinfo*));",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///0w\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1614,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "*pneeded \u003d NULL;",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///40\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "Please split line to avoid exceeding 100 cols.",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///zY\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "If you return \"void\" (see below), please fix the docs.",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///2A\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "The return value is never checked. Change this to a void function?",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///1w\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "size_t*",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///zU\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "please use braces for if statement.",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///10\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "please use braces for if statement.",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///14\u003d",
+        "filename": "linker/linker_phdr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-14T17:22:53Z",
+      "side": 1,
+      "message": "please use braces for if statement.",
+      "revId": "5bcafe8ea27556b53329cf7c6a6a00c284ab698d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
