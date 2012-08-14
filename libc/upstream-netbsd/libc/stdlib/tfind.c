@@ -1,4 +1,4 @@
-/*	$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $	*/
+/*	$NetBSD: tfind.c,v 1.7 2012/06/25 22:32:45 abs Exp $	*/
 
 /*
  * Tree search generalized from Knuth (6.2.2) Algorithm T just like
@@ -12,25 +12,24 @@
  */
 
 #include <sys/cdefs.h>
-#if 0
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $");
+__RCSID("$NetBSD: tfind.c,v 1.7 2012/06/25 22:32:45 abs Exp $");
 #endif /* LIBC_SCCS and not lint */
-#endif
-__FBSDID("$FreeBSD: release/9.0.0/lib/libc/stdlib/tfind.c 108694 2003-01-05 02:43:18Z tjr $");
 
+#include <assert.h>
 #define _SEARCH_PRIVATE
 #include <stdlib.h>
 #include <search.h>
 
-/* find a node, or return 0 */
+/* find a node by key "vkey" in tree "vrootp", or return 0 */
 void *
-tfind(vkey, vrootp, compar)
-	const void *vkey;		/* key to be found */
-	void * const *vrootp;		/* address of the tree root */
-	int (*compar)(const void *, const void *);
+tfind(const void *vkey, void * const *vrootp,
+    int (*compar)(const void *, const void *))
 {
-	node_t **rootp = (node_t **)vrootp;
+	node_t * const *rootp = (node_t * const*)vrootp;
+
+	_DIAGASSERT(vkey != NULL);
+	_DIAGASSERT(compar != NULL);
 
 	if (rootp == NULL)
 		return NULL;
