@@ -31,7 +31,6 @@ libc_common_src_files := \
 	unistd/killpg.c \
 	unistd/lseek64.c \
 	unistd/mmap.c \
-	unistd/nice.c \
 	unistd/open.c \
 	unistd/openat.c \
 	unistd/opendir.c \
@@ -338,6 +337,7 @@ libc_common_src_files := \
 	regex/regfree.c \
 
 libc_upstream_netbsd_src_files := \
+	upstream-netbsd/libc/gen/nice.c \
 	upstream-netbsd/libc/string/strxfrm.c \
 
 # The following files are common, but must be compiled
@@ -749,6 +749,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -I$(LOCAL_PATH)/upstream-netbsd \
     -include upstream-netbsd/netbsd-compat.h
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_netbsd
