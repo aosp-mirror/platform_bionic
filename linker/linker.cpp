@@ -108,14 +108,39 @@ int debug_verbosity;
 static int pid;
 
 /* This boolean is set if the program being loaded is setuid */
-static int program_is_setuid;
+static bool program_is_setuid;
+
+enum RelocationKind {
+    kRelocAbsolute = 0,
+    kRelocRelative,
+    kRelocCopy,
+    kRelocSymbol,
+    kRelocMax
+};
 
 #if STATS
-struct _link_stats linker_stats;
+struct linker_stats_t {
+    int count[kRelocMax];
+};
+
+static linker_stats_t linker_stats;
+
+static void count_relocation(RelocationKind kind) {
+    ++linker_stats.count[kind];
+}
+#else
+static void count_relocation(RelocationKind) {
+}
 #endif
 
 #if COUNT_PAGES
-unsigned bitmask[4096];
+static unsigned bitmask[4096];
+#define MARK(offset) \
+    do { \
+        bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
+    } while(0)
+#else
+#define MARK(x) do {} while (0)
 #endif
 
 // You shouldn't try to call memory-allocating functions in the dynamic linker.
@@ -156,19 +181,15 @@ const char *linker_get_error(void)
  */
 extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity(void);
 
-static struct r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
+static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
                                   RT_CONSISTENT, 0};
-static struct link_map *r_debug_tail = 0;
+static link_map* r_debug_tail = 0;
 
 static pthread_mutex_t _r_debug_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static void insert_soinfo_into_debug_map(soinfo * info)
-{
-    struct link_map * map;
-
-    /* Copy the necessary fields into the debug structure.
-     */
-    map = &(info->linkmap);
+static void insert_soinfo_into_debug_map(soinfo * info) {
+    // Copy the necessary fields into the debug structure.
+    link_map* map = &(info->linkmap);
     map->l_addr = info->base;
     map->l_name = (char*) info->name;
     map->l_ld = (uintptr_t)info->dynamic;
@@ -190,19 +211,22 @@ static void insert_soinfo_into_debug_map(soinfo * info)
     r_debug_tail = map;
 }
 
-static void remove_soinfo_from_debug_map(soinfo * info)
-{
-    struct link_map * map = &(info->linkmap);
+static void remove_soinfo_from_debug_map(soinfo* info) {
+    link_map* map = &(info->linkmap);
 
-    if (r_debug_tail == map)
+    if (r_debug_tail == map) {
         r_debug_tail = map->l_prev;
+    }
 
-    if (map->l_prev) map->l_prev->l_next = map->l_next;
-    if (map->l_next) map->l_next->l_prev = map->l_prev;
+    if (map->l_prev) {
+        map->l_prev->l_next = map->l_next;
+    }
+    if (map->l_next) {
+        map->l_next->l_prev = map->l_prev;
+    }
 }
 
-void notify_gdb_of_load(soinfo * info)
-{
+static void notify_gdb_of_load(soinfo* info) {
     if (info->flags & FLAG_EXE) {
         // GDB already knows about the main executable
         return;
@@ -221,8 +245,7 @@ void notify_gdb_of_load(soinfo * info)
     pthread_mutex_unlock(&_r_debug_lock);
 }
 
-void notify_gdb_of_unload(soinfo * info)
-{
+static void notify_gdb_of_unload(soinfo* info) {
     if (info->flags & FLAG_EXE) {
         // GDB already knows about the main executable
         return;
@@ -313,16 +336,6 @@ static void soinfo_free(soinfo* si)
     freelist = si;
 }
 
-const char *addr_to_name(unsigned addr)
-{
-    for (soinfo* si = solist; si != 0; si = si->next) {
-        if ((addr >= si->base) && (addr < (si->base + si->size))) {
-            return si->name;
-        }
-    }
-    return "";
-}
-
 #ifdef ANDROID_ARM_LINKER
 
 /* For a given PC, find the .so that it belongs to.
@@ -354,21 +367,20 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
-dl_iterate_phdr(int (*cb)(struct dl_phdr_info *info, size_t size, void *data),
+dl_iterate_phdr(int (*cb)(dl_phdr_info *info, size_t size, void *data),
                 void *data)
 {
-    soinfo *si;
-    struct dl_phdr_info dl_info;
     int rv = 0;
-
-    for (si = solist; si != NULL; si = si->next) {
+    for (soinfo* si = solist; si != NULL; si = si->next) {
+        dl_phdr_info dl_info;
         dl_info.dlpi_addr = si->linkmap.l_addr;
         dl_info.dlpi_name = si->linkmap.l_name;
         dl_info.dlpi_phdr = si->phdr;
         dl_info.dlpi_phnum = si->phnum;
-        rv = cb(&dl_info, sizeof (struct dl_phdr_info), data);
-        if (rv != 0)
+        rv = cb(&dl_info, sizeof(dl_phdr_info), data);
+        if (rv != 0) {
             break;
+        }
     }
     return rv;
 }
@@ -434,7 +446,7 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
      * reason.
      *
      * Notes on weak symbols:
-     * The ELF specs are ambigious about treatment of weak definitions in
+     * The ELF specs are ambiguous about treatment of weak definitions in
      * dynamic linking.  Some systems return the first definition found
      * and some the first non-weak definition.   This is system dependent.
      * Here we return the first definition found for simplicity.  */
@@ -581,17 +593,13 @@ static const char * const sopaths[] = {
     0
 };
 
-static int _open_lib(const char *name)
-{
-    int fd;
-    struct stat filestat;
-
-    if ((stat(name, &filestat) >= 0) && S_ISREG(filestat.st_mode)) {
-        if ((fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY))) >= 0)
-            return fd;
+static int _open_lib(const char* name) {
+    // TODO: why not just call open?
+    struct stat sb;
+    if (stat(name, &sb) == -1 || !S_ISREG(sb.st_mode)) {
+        return -1;
     }
-
-    return -1;
+    return TEMP_FAILURE_RETRY(open(name, O_RDONLY));
 }
 
 static int open_library(const char *name)
@@ -640,13 +648,13 @@ static bool is_prelinked(int fd, const char* name)
         char tag[4]; // "PRE ".
     };
 
-    off_t sz = lseek(fd, -sizeof(struct prelink_info_t), SEEK_END);
+    off_t sz = lseek(fd, -sizeof(prelink_info_t), SEEK_END);
     if (sz < 0) {
         DL_ERR("lseek failed: %s", strerror(errno));
         return true;
     }
 
-    struct prelink_info_t info;
+    prelink_info_t info;
     int rc = TEMP_FAILURE_RETRY(read(fd, &info, sizeof(info)));
     if (rc != sizeof(info)) {
         DL_ERR("could not read prelink_info_t structure for \"%s\":", name, strerror(errno));
@@ -834,9 +842,6 @@ init_library(soinfo *si)
           pid, si->base, si->size, si->name);
 
     if(soinfo_link_image(si)) {
-            /* We failed to link.  However, we can only restore libbase
-            ** if no additional libraries have moved it since we updated it.
-            */
         munmap((void *)si->base, si->size);
         return NULL;
     }
@@ -893,29 +898,25 @@ soinfo *find_library(const char *name)
     return init_library(si);
 }
 
-/* TODO:
- *   find a way to decrement libbase
- */
 static void call_destructors(soinfo *si);
-unsigned soinfo_unload(soinfo *si)
-{
-    unsigned *d;
+
+int soinfo_unload(soinfo* si) {
     if (si->refcount == 1) {
         TRACE("%5d unloading '%s'\n", pid, si->name);
         call_destructors(si);
 
-        for(d = si->dynamic; *d; d += 2) {
+        for (unsigned* d = si->dynamic; *d; d += 2) {
             if(d[0] == DT_NEEDED){
                 soinfo *lsi = find_loaded_library(si->strtab + d[1]);
-
                 if (lsi) {
                     TRACE("%5d %s needs to unload %s\n", pid,
                           si->name, lsi->name);
                     soinfo_unload(lsi);
-                }
-                else
+                } else {
+                    // TODO: should we return -1 in this case?
                     DL_ERR("\"%s\": could not unload dependent library",
                            si->name);
+                }
             }
         }
 
@@ -923,13 +924,12 @@ unsigned soinfo_unload(soinfo *si)
         notify_gdb_of_unload(si);
         soinfo_free(si);
         si->refcount = 0;
-    }
-    else {
+    } else {
         si->refcount--;
         PRINT("%5d not unloading '%s', decrementing refcount to %d\n",
               pid, si->name, si->refcount);
     }
-    return si->refcount;
+    return 0;
 }
 
 /* TODO: don't use unsigned for addrs below. It works, but is not
@@ -978,7 +978,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
                    During linking, the value of an undefined weak reference is:
                    - Zero if the relocation type is absolute
                    - The address of the place if the relocation is pc-relative
-                   - The address of nominial base address if the relocation
+                   - The address of nominal base address if the relocation
                      type is base-relative.
                   */
 
@@ -1027,7 +1027,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 #endif
                 sym_addr = (unsigned)(s->st_value + offset);
             }
-            COUNT_RELOC(RELOC_SYMBOL);
+            count_relocation(kRelocSymbol);
         } else {
             s = NULL;
         }
@@ -1038,28 +1038,28 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
         switch(type){
 #if defined(ANDROID_ARM_LINKER)
         case R_ARM_JUMP_SLOT:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
             break;
         case R_ARM_GLOB_DAT:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
             break;
         case R_ARM_ABS32:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO ABS %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) += sym_addr;
             break;
         case R_ARM_REL32:
-            COUNT_RELOC(RELOC_RELATIVE);
+            count_relocation(kRelocRelative);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO REL32 %08x <- %08x - %08x %s\n", pid,
                        reloc, sym_addr, rel->r_offset, sym_name);
@@ -1067,14 +1067,14 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
             break;
 #elif defined(ANDROID_X86_LINKER)
         case R_386_JMP_SLOT:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
             break;
         case R_386_GLOB_DAT:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
@@ -1082,14 +1082,14 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
             break;
 #elif defined(ANDROID_MIPS_LINKER)
     case R_MIPS_JUMP_SLOT:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO JMP_SLOT %08x <- %08x %s\n", pid,
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
             break;
     case R_MIPS_REL32:
-            COUNT_RELOC(RELOC_ABSOLUTE);
+            count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO REL32 %08x <- %08x %s\n", pid,
                        reloc, sym_addr, (sym_name) ? sym_name : "*SECTIONHDR*");
@@ -1106,7 +1106,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 #elif defined(ANDROID_X86_LINKER)
         case R_386_RELATIVE:
 #endif /* ANDROID_*_LINKER */
-            COUNT_RELOC(RELOC_RELATIVE);
+            count_relocation(kRelocRelative);
             MARK(rel->r_offset);
             if (sym) {
                 DL_ERR("odd RELATIVE form...", pid);
@@ -1119,7 +1119,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 
 #if defined(ANDROID_X86_LINKER)
         case R_386_32:
-            COUNT_RELOC(RELOC_RELATIVE);
+            count_relocation(kRelocRelative);
             MARK(rel->r_offset);
 
             TRACE_TYPE(RELO, "%5d RELO R_386_32 %08x <- +%08x %s\n", pid,
@@ -1128,7 +1128,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
             break;
 
         case R_386_PC32:
-            COUNT_RELOC(RELOC_RELATIVE);
+            count_relocation(kRelocRelative);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO R_386_PC32 %08x <- "
                        "+%08x (%08x - %08x) %s\n", pid, reloc,
@@ -1139,7 +1139,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 
 #ifdef ANDROID_ARM_LINKER
         case R_ARM_COPY:
-            COUNT_RELOC(RELOC_COPY);
+            count_relocation(kRelocCopy);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO %08x <- %d @ %08x %s\n", pid,
                        reloc, s->st_size, sym_addr, sym_name);
@@ -1157,8 +1157,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 }
 
 #ifdef ANDROID_MIPS_LINKER
-int mips_relocate_got(struct soinfo *si, soinfo *needed[])
-{
+static int mips_relocate_got(soinfo* si, soinfo* needed[]) {
     unsigned *got;
     unsigned local_gotno, gotsym, symtabno;
     Elf32_Sym *symtab, *sym;
@@ -1173,7 +1172,7 @@ int mips_relocate_got(struct soinfo *si, soinfo *needed[])
     /*
      * got[0] is address of lazy resolver function
      * got[1] may be used for a GNU extension
-     * set it to a recognisable address in case someone calls it
+     * set it to a recognizable address in case someone calls it
      * (should be _rtld_bind_start)
      * FIXME: maybe this should be in a separate routine
      */
@@ -1481,7 +1480,7 @@ static int soinfo_link_image(soinfo *si)
             break;
         case DT_DEBUG:
 #if !defined(ANDROID_MIPS_LINKER)
-            // Set the DT_DEBUG entry to the addres of _r_debug for GDB
+            // Set the DT_DEBUG entry to the address of _r_debug for GDB
             *d = (int) &_r_debug;
 #endif
             break;
@@ -1532,9 +1531,9 @@ static int soinfo_link_image(soinfo *si)
         case DT_RELENT:
              break;
         case DT_MIPS_RLD_MAP:
-            /* Set the DT_MIPS_RLD_MAP entry to the addres of _r_debug for GDB */
+            // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
             {
-              struct r_debug **dp = (struct r_debug **)*d;
+              r_debug** dp = (r_debug**) *d;
               *dp = &_r_debug;
             }
             break;
@@ -1736,7 +1735,6 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     unsigned *v;
     soinfo *si;
     int i;
-    struct link_map * map;
     const char *ldpath_env = NULL;
     const char *ldpreload_env = NULL;
 
@@ -1775,8 +1773,9 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
 
 sanitize:
     /* Sanitize environment if we're loading a setuid program */
-    if (program_is_setuid)
+    if (program_is_setuid) {
         linker_env_secure();
+    }
 
     debugger_init();
 
@@ -1807,7 +1806,7 @@ sanitize:
 
         /* bootstrap the link map, the main exe always needs to be first */
     si->flags |= FLAG_EXE;
-    map = &(si->linkmap);
+    link_map* map = &(si->linkmap);
 
     map->l_addr = 0;
     map->l_name = argv[0];
@@ -1910,10 +1909,10 @@ sanitize:
 #endif
 #if STATS
     PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol\n", argv[0],
-           linker_stats.reloc[RELOC_ABSOLUTE],
-           linker_stats.reloc[RELOC_RELATIVE],
-           linker_stats.reloc[RELOC_COPY],
-           linker_stats.reloc[RELOC_SYMBOL]);
+           linker_stats.count[kRelocAbsolute],
+           linker_stats.count[kRelocRelative],
+           linker_stats.count[kRelocCopy],
+           linker_stats.count[kRelocSymbol]);
 #endif
 #if COUNT_PAGES
     {

@@ -55,10 +55,6 @@
 
 
 /*********************************************************************/
-#undef TRUE
-#undef FALSE
-#define TRUE                 1
-#define FALSE                0
 
 /* Only use printf() during debugging.  We have seen occasional memory
  * corruption when the linker uses printf().
@@ -68,13 +64,13 @@
 extern int debug_verbosity;
 #if LINKER_DEBUG_TO_LOG
 extern int format_log(int, const char *, const char *, ...);
-#define _PRINTVF(v,f,x...)                                        \
+#define _PRINTVF(v,x...)                                        \
     do {                                                          \
         if (debug_verbosity > (v)) format_log(5-(v),"linker",x);  \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
 extern int format_fd(int, const char *, ...);
-#define _PRINTVF(v,f,x...)                           \
+#define _PRINTVF(v,x...)                           \
     do {                                             \
         if (debug_verbosity > (v)) format_fd(1, x);  \
     } while (0)
@@ -83,17 +79,17 @@ extern int format_fd(int, const char *, ...);
 #define _PRINTVF(v,f,x...)   do {} while(0)
 #endif /* LINKER_DEBUG */
 
-#define PRINT(x...)          _PRINTVF(-1, FALSE, x)
-#define INFO(x...)           _PRINTVF(0, TRUE, x)
-#define TRACE(x...)          _PRINTVF(1, TRUE, x)
+#define PRINT(x...)          _PRINTVF(-1, x)
+#define INFO(x...)           _PRINTVF(0, x)
+#define TRACE(x...)          _PRINTVF(1, x)
 #define WARN(fmt,args...)    \
-        _PRINTVF(-1, TRUE, "%s:%d| WARNING: " fmt, __FILE__, __LINE__, ## args)
+        _PRINTVF(-1, "%s:%d| WARNING: " fmt, __FILE__, __LINE__, ## args)
 #define ERROR(fmt,args...)    \
-        _PRINTVF(-1, TRUE, "%s:%d| ERROR: " fmt, __FILE__, __LINE__, ## args)
+        _PRINTVF(-1, "%s:%d| ERROR: " fmt, __FILE__, __LINE__, ## args)
 
 
 #if TRACE_DEBUG
-#define DEBUG(x...)          _PRINTVF(2, TRUE, "DEBUG: " x)
+#define DEBUG(x...)          _PRINTVF(2, "DEBUG: " x)
 #else /* !TRACE_DEBUG */
 #define DEBUG(x...)          do {} while (0)
 #endif /* TRACE_DEBUG */
@@ -104,42 +100,10 @@ extern int format_fd(int, const char *, ...);
 #define TRACE_TYPE(t,x...)   do {} while (0)
 #endif /* LINKER_DEBUG */
 
-#if STATS
-#define RELOC_ABSOLUTE        0
-#define RELOC_RELATIVE        1
-#define RELOC_COPY            2
-#define RELOC_SYMBOL          3
-#define NUM_RELOC_STATS       4
-
-struct _link_stats {
-    int reloc[NUM_RELOC_STATS];
-};
-extern struct _link_stats linker_stats;
-
-#define COUNT_RELOC(type)                                 \
-        do { if (type >= 0 && type < NUM_RELOC_STATS) {   \
-                linker_stats.reloc[type] += 1;            \
-             } else  {                                    \
-                PRINT("Unknown reloc stat requested\n");  \
-             }                                            \
-           } while(0)
-#else /* !STATS */
-#define COUNT_RELOC(type)     do {} while(0)
-#endif /* STATS */
-
 #if TIMING
 #undef WARN
 #define WARN(x...)           do {} while (0)
 #endif /* TIMING */
-
-#if COUNT_PAGES
-extern unsigned bitmask[];
-#define MARK(offset)         do {                                        \
-        bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
-    } while(0)
-#else
-#define MARK(x)              do {} while (0)
-#endif
 
 #define DEBUG_DUMP_PHDR(phdr, name, pid) do { \
         DEBUG("%5d %s (phdr = 0x%08x)\n", (pid), (name), (unsigned)(phdr));   \
