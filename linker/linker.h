@@ -60,7 +60,6 @@ extern "C" {
 #define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
 void debugger_init();
-const char *addr_to_name(unsigned addr);
 
 /* magic shared structures that GDB knows about */
 
@@ -237,7 +236,7 @@ Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start);
 soinfo *find_containing_library(const void *addr);
 const char *linker_get_error(void);
 
-unsigned soinfo_unload(soinfo *si);
+int soinfo_unload(soinfo* si);
 Elf32_Sym *soinfo_find_symbol(soinfo* si, const void *addr);
 Elf32_Sym *soinfo_lookup(soinfo *si, const char *name);
 void soinfo_call_constructors(soinfo *si);
