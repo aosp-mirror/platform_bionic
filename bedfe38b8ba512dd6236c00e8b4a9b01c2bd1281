@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIXH///cA\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-14T21:35:40Z",
+      "side": 1,
+      "message": "does this always return 0? if so, why not void?",
+      "revId": "bedfe38b8ba512dd6236c00e8b4a9b01c2bd1281",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///b8\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-14T21:35:40Z",
+      "side": 1,
+      "message": "unsigned*?",
+      "revId": "bedfe38b8ba512dd6236c00e8b4a9b01c2bd1281",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
