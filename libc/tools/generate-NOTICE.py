@@ -34,9 +34,16 @@ copyrights = set()
 def ExtractCopyrightAt(lines, i):
     hash = lines[i].startswith("#")
 
+    # Do we need to back up to find the start of the copyright header?
+    start = i
+    if not hash:
+        while start > 0:
+            if "/*" in lines[start - 1]:
+                break
+            start -= 1
+
     # Read comment lines until we hit something that terminates a
     # copyright header.
-    start = i
     while i < len(lines):
         if "*/" in lines[i]:
             break
@@ -138,7 +145,7 @@ for arg in args:
 
             #print path
 
-for copyright in copyrights:
+for copyright in sorted(copyrights):
     print copyright.encode('utf-8')
     print
     print '-------------------------------------------------------------------'
