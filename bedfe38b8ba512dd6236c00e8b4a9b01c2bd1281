@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAIXH///bw\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-14T21:44:26Z",
+      "side": 1,
+      "message": "see the TODO i added below.",
+      "parentUuid": "AAAIXH///cA\u003d",
+      "revId": "bedfe38b8ba512dd6236c00e8b4a9b01c2bd1281",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAIXH///b8\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2012-08-14T21:35:40Z",
       "side": 1,
       "message": "unsigned*?",
+      "revId": "bedfe38b8ba512dd6236c00e8b4a9b01c2bd1281",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIXH///bM\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-14T21:44:26Z",
+      "side": 1,
+      "message": "that\u0027s what it currently is in the .h file.",
+      "parentUuid": "AAAIXH///b8\u003d",
       "revId": "bedfe38b8ba512dd6236c00e8b4a9b01c2bd1281",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
