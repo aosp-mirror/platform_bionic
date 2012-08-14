@@ -293,12 +293,9 @@ libc_common_src_files := \
 	bionic/sha1.c \
 	bionic/stubs.cpp \
 	bionic/system_properties.c \
-	bionic/tdelete.c \
 	bionic/tdestroy.c \
 	bionic/time64.c \
-	bionic/tfind.c \
 	bionic/thread_atexit.c \
-	bionic/tsearch.c \
 	bionic/utime.c \
 	bionic/utmp.c \
 	netbsd/gethnamaddr.c \
@@ -338,6 +335,9 @@ libc_common_src_files := \
 
 libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/gen/nice.c \
+	upstream-netbsd/libc/stdlib/tdelete.c \
+	upstream-netbsd/libc/stdlib/tfind.c \
+	upstream-netbsd/libc/stdlib/tsearch.c \
 	upstream-netbsd/libc/string/strxfrm.c \
 
 # The following files are common, but must be compiled
