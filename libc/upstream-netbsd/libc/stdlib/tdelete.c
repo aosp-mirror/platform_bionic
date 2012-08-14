@@ -1,4 +1,4 @@
-/*	$NetBSD: tdelete.c,v 1.2 1999/09/16 11:45:37 lukem Exp $	*/
+/*	$NetBSD: tdelete.c,v 1.6 2012/06/25 22:32:45 abs Exp $	*/
 
 /*
  * Tree search generalized from Knuth (6.2.2) Algorithm T just like
@@ -12,32 +12,27 @@
  */
 
 #include <sys/cdefs.h>
-#if 0
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: tdelete.c,v 1.2 1999/09/16 11:45:37 lukem Exp $");
+__RCSID("$NetBSD: tdelete.c,v 1.6 2012/06/25 22:32:45 abs Exp $");
 #endif /* LIBC_SCCS and not lint */
-#endif
-__FBSDID("$FreeBSD: release/9.0.0/lib/libc/stdlib/tdelete.c 108694 2003-01-05 02:43:18Z tjr $");
 
+#include <assert.h>
 #define _SEARCH_PRIVATE
 #include <search.h>
 #include <stdlib.h>
 
 
-/*
- * delete node with given key
- *
- * vkey:   key to be deleted
- * vrootp: address of the root of the tree
- * compar: function to carry out node comparisons
- */
+/* find a node with key "vkey" in tree "vrootp" */
 void *
-tdelete(const void * __restrict vkey, void ** __restrict vrootp,
+tdelete(const void *vkey, void **vrootp,
     int (*compar)(const void *, const void *))
 {
 	node_t **rootp = (node_t **)vrootp;
 	node_t *p, *q, *r;
-	int cmp;
+	int  cmp;
+
+	_DIAGASSERT(vkey != NULL);
+	_DIAGASSERT(compar != NULL);
 
 	if (rootp == NULL || (p = *rootp) == NULL)
 		return NULL;
@@ -65,7 +60,8 @@ tdelete(const void * __restrict vkey, void ** __restrict vrootp,
 			q->rlink = (*rootp)->rlink;
 		}
 	}
-	free(*rootp);				/* D4: Free node */
+	if (p != *rootp)
+		free(*rootp);			/* D4: Free node */
 	*rootp = q;				/* link parent to new node */
 	return p;
 }
