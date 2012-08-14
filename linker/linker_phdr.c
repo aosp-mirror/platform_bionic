@@ -468,11 +468,9 @@ _phdr_table_set_gnu_relro_prot(const Elf32_Phdr* phdr_table,
  * specified by one or more PT_GNU_RELRO segments. This must be always
  * performed after relocations.
  *
- * NOTE: One must call phdr_table_unprotect_gnu_relro() before calling
- *        the library's destructors, in order to ensure that the .dynamic
- *        section is writable (as well as the .data.relro section that
- *        might contain the content of static constant C++ objects that
- *        needs to be destroyed).
+ * The areas typically covered are .got and .data.rel.ro, these are
+ * read-only from the program's POV, but contain absolute addresses
+ * that need to be relocated before use.
  *
  * Input:
  *   phdr_table  -> program header table
@@ -490,27 +488,6 @@ phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
                                           phdr_count,
                                           load_bias,
                                           PROT_READ);
-}
-
-/* Un-apply GNU relro protection if specified by the program header.
- * See comment for phdr_table_protect_gnu_relro.
- *
- * Input:
- *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
- *   load_bias   -> load bias
- * Return:
- *   0 on error, -1 on failure (error code in errno).
- */
-int
-phdr_table_unprotect_gnu_relro(const Elf32_Phdr* phdr_table,
-                               int               phdr_count,
-                               Elf32_Addr        load_bias)
-{
-    return _phdr_table_set_gnu_relro_prot(phdr_table,
-                                          phdr_count,
-                                          load_bias,
-                                          PROT_READ|PROT_WRITE);
 }
 
 #ifdef ANDROID_ARM_LINKER
@@ -556,30 +533,44 @@ phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
 }
 #endif /* ANDROID_ARM_LINKER */
 
-/* Return the address of the ELF file's .dynamic section in memory,
+/* Return the address and size of the ELF file's .dynamic section in memory,
  * or NULL if missing.
  *
  * Input:
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entires in tables
  *   load_bias   -> load bias
+ * Output:
+ *   dynamic       -> address of table in memory (NULL on failure).
+ *   dynamic_count -> number of items in table (0 on failure).
  * Return:
- *   0 on error, -1 on failure (_no_ error code in errno)
+ *   void
  */
-Elf32_Addr*
+void
 phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                int               phdr_count,
-                               Elf32_Addr        load_bias)
+                               Elf32_Addr        load_bias,
+                               Elf32_Addr**      dynamic,
+                               size_t*           dynamic_count)
 {
     const Elf32_Phdr* phdr = phdr_table;
     const Elf32_Phdr* phdr_limit = phdr + phdr_count;
 
     for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
-        if (phdr->p_type == PT_DYNAMIC) {
-            return (Elf32_Addr*)(load_bias + phdr->p_vaddr);
+        if (phdr->p_type != PT_DYNAMIC) {
+            continue;
         }
+
+        *dynamic = (Elf32_Addr*)(load_bias + phdr->p_vaddr);
+        if (dynamic_count) {
+            *dynamic_count = (unsigned)(phdr->p_memsz / 8);
+        }
+        return;
     }
-    return NULL;
+    *dynamic = NULL;
+    if (dynamic_count) {
+        *dynamic_count = 0;
+    }
 }
 
 /* Return the address of the program header table as it appears in the loaded

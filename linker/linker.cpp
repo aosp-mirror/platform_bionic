@@ -93,12 +93,6 @@ static soinfo *somain; /* main process, always the one after libdl_info */
 #endif
 
 
-static inline int validate_soinfo(soinfo *si)
-{
-    return (si >= sopool && si < sopool + SO_MAX) ||
-        si == &libdl_info;
-}
-
 static char ldpaths_buf[LDPATH_BUFSIZE];
 static const char *ldpaths[LDPATH_MAX + 1];
 
@@ -427,11 +421,11 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset)
+soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
+                 soinfo *needed[])
 {
     unsigned elf_hash = elfhash(name);
     Elf32_Sym *s;
-    unsigned *d;
     soinfo *lsi = si;
     int i;
 
@@ -457,20 +451,13 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset)
             goto done;
     }
 
-    for(d = si->dynamic; *d; d += 2) {
-        if(d[0] == DT_NEEDED){
-            lsi = (soinfo *)d[1];
-            if (!validate_soinfo(lsi)) {
-                DL_ERR("bad DT_NEEDED pointer in \"%s\"", lsi->name);
-                return NULL;
-            }
-
-            DEBUG("%5d %s: looking up %s in %s\n",
-                  pid, si->name, name, lsi->name);
-            s = soinfo_elf_lookup(lsi, elf_hash, name);
-            if (s != NULL)
-                goto done;
-        }
+    for(i = 0; needed[i] != NULL; i++) {
+        lsi = needed[i];
+        DEBUG("%5d %s: looking up %s in %s\n",
+              pid, si->name, name, lsi->name);
+        s = soinfo_elf_lookup(lsi, elf_hash, name);
+        if (s != NULL)
+            goto done;
     }
 
 #if ALLOW_SYMBOLS_FROM_MAIN
@@ -857,10 +844,28 @@ init_library(soinfo *si)
     return si;
 }
 
-soinfo *find_library(const char *name)
+static soinfo *find_loaded_library(const char *name)
 {
     soinfo *si;
     const char *bname;
+
+    // TODO: don't use basename only for determining libraries
+    // http://code.google.com/p/android/issues/detail?id=6670
+
+    bname = strrchr(name, '/');
+    bname = bname ? bname + 1 : name;
+
+    for(si = solist; si != NULL; si = si->next){
+        if(!strcmp(bname, si->name)) {
+            return si;
+        }
+    }
+    return NULL;
+}
+
+soinfo *find_library(const char *name)
+{
+    soinfo *si;
 
 #if ALLOW_SYMBOLS_FROM_MAIN
     if (name == NULL)
@@ -870,19 +875,15 @@ soinfo *find_library(const char *name)
         return NULL;
 #endif
 
-    bname = strrchr(name, '/');
-    bname = bname ? bname + 1 : name;
-
-    for(si = solist; si != 0; si = si->next){
-        if(!strcmp(bname, si->name)) {
-            if(si->flags & FLAG_ERROR) {
-                DL_ERR("\"%s\" failed to load previously", bname);
-                return NULL;
-            }
-            if(si->flags & FLAG_LINKED) return si;
-            DL_ERR("OOPS: recursive link to \"%s\"", si->name);
+    si = find_loaded_library(name);
+    if (si != NULL) {
+        if(si->flags & FLAG_ERROR) {
+            DL_ERR("\"%s\" failed to load previously", name);
             return NULL;
         }
+        if(si->flags & FLAG_LINKED) return si;
+        DL_ERR("OOPS: recursive link to \"%s\"", si->name);
+        return NULL;
     }
 
     TRACE("[ %5d '%s' has not been loaded yet.  Locating...]\n", pid, name);
@@ -903,27 +904,11 @@ unsigned soinfo_unload(soinfo *si)
         TRACE("%5d unloading '%s'\n", pid, si->name);
         call_destructors(si);
 
-        /*
-         * Make sure that we undo the PT_GNU_RELRO protections we added
-         * in soinfo_link_image. This is needed to undo the DT_NEEDED hack below.
-         */
-        if (phdr_table_unprotect_gnu_relro(si->phdr, si->phnum,
-                                           si->load_bias) < 0) {
-            DL_ERR("%s: could not undo GNU_RELRO protections. "
-                    "Expect a crash soon. errno=%d (%s)",
-                    si->name, errno, strerror(errno));
-        }
-
         for(d = si->dynamic; *d; d += 2) {
             if(d[0] == DT_NEEDED){
-                soinfo *lsi = (soinfo *)d[1];
+                soinfo *lsi = find_loaded_library(si->strtab + d[1]);
 
-                // The next line will segfault if the we don't undo the
-                // PT_GNU_RELRO protections (see comments above and in
-                // soinfo_link_image().
-                d[1] = 0;
-
-                if (validate_soinfo(lsi)) {
+                if (lsi) {
                     TRACE("%5d %s needs to unload %s\n", pid,
                           si->name, lsi->name);
                     soinfo_unload(lsi);
@@ -951,7 +936,8 @@ unsigned soinfo_unload(soinfo *si)
  * ideal. They should probably be either uint32_t, Elf32_Addr, or unsigned
  * long.
  */
-static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
+static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
+                           soinfo *needed[])
 {
     Elf32_Sym *symtab = si->symtab;
     const char *strtab = si->strtab;
@@ -973,7 +959,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
         }
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = soinfo_do_lookup(si, sym_name, &offset);
+            s = soinfo_do_lookup(si, sym_name, &offset, needed);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1171,7 +1157,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 }
 
 #ifdef ANDROID_MIPS_LINKER
-int mips_relocate_got(struct soinfo *si)
+int mips_relocate_got(struct soinfo *si, soinfo *needed[])
 {
     unsigned *got;
     unsigned local_gotno, gotsym, symtabno;
@@ -1216,7 +1202,7 @@ int mips_relocate_got(struct soinfo *si)
 
         /* This is an undefined reference... try to locate it */
         sym_name = si->strtab + sym->st_name;
-        s = soinfo_do_lookup(si, sym_name, &base);
+        s = soinfo_do_lookup(si, sym_name, &base, needed);
         if (s == NULL) {
             /* We only allow an undefined symbol if this is a weak
                reference..   */
@@ -1312,9 +1298,10 @@ void soinfo_call_constructors(soinfo *si)
         unsigned *d;
         for(d = si->dynamic; *d; d += 2) {
             if(d[0] == DT_NEEDED){
-                soinfo* lsi = (soinfo *)d[1];
-                if (!validate_soinfo(lsi)) {
-                    DL_ERR("bad DT_NEEDED pointer in \"%s\"", si->name);
+                soinfo* lsi = find_loaded_library(si->strtab + d[1]);
+                if (!lsi) {
+                    DL_ERR("\"%s\": could not initialize dependent library",
+                           si->name);
                 } else {
                     soinfo_call_constructors(lsi);
                 }
@@ -1425,6 +1412,8 @@ static int soinfo_link_image(soinfo *si)
     const Elf32_Phdr *phdr = si->phdr;
     int phnum = si->phnum;
     int relocating_linker = (si->flags & FLAG_LINKER) != 0;
+    soinfo **needed, **pneeded;
+    size_t dynamic_count;
 
     /* We can't debug anything until the linker is relocated */
     if (!relocating_linker) {
@@ -1434,7 +1423,8 @@ static int soinfo_link_image(soinfo *si)
     }
 
     /* Extract dynamic section */
-    si->dynamic = phdr_table_get_dynamic_section(phdr, phnum, base);
+    phdr_table_get_dynamic_section(phdr, phnum, base, &si->dynamic,
+                                   &dynamic_count);
     if (si->dynamic == NULL) {
         if (!relocating_linker) {
             DL_ERR("missing PT_DYNAMIC?!");
@@ -1607,6 +1597,9 @@ static int soinfo_link_image(soinfo *si)
         }
     }
 
+    /* dynamic_count is an upper bound for the number of needed libs */
+    pneeded = needed = (soinfo**) alloca((1 + dynamic_count) * sizeof(soinfo*));
+
     for(d = si->dynamic; *d; d += 2) {
         if(d[0] == DT_NEEDED){
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
@@ -1617,17 +1610,11 @@ static int soinfo_link_image(soinfo *si)
                        si->strtab + d[1], si->name, tmp_err_buf);
                 goto fail;
             }
-            /* Save the soinfo of the loaded DT_NEEDED library in the payload
-               of the DT_NEEDED entry itself, so that we can retrieve the
-               soinfo directly later from the dynamic segment.  This is a hack,
-               but it allows us to map from DT_NEEDED to soinfo efficiently
-               later on when we resolve relocations, trying to look up a symbol
-               with dlsym().
-            */
-            d[1] = (unsigned)lsi;
+            *pneeded++ = lsi;
             lsi->refcount++;
         }
     }
+    *pneeded = NULL;
 
     if (si->has_text_relocations) {
         /* Unprotect the segments, i.e. make them writable, to allow
@@ -1644,17 +1631,17 @@ static int soinfo_link_image(soinfo *si)
 
     if(si->plt_rel) {
         DEBUG("[ %5d relocating %s plt ]\n", pid, si->name );
-        if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count))
+        if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed))
             goto fail;
     }
     if(si->rel) {
         DEBUG("[ %5d relocating %s ]\n", pid, si->name );
-        if(soinfo_relocate(si, si->rel, si->rel_count))
+        if(soinfo_relocate(si, si->rel, si->rel_count, needed))
             goto fail;
     }
 
 #ifdef ANDROID_MIPS_LINKER
-    if(mips_relocate_got(si)) {
+    if(mips_relocate_got(si, needed)) {
         goto fail;
     }
 #endif
@@ -1849,8 +1836,8 @@ sanitize:
     Elf32_Ehdr *elf_hdr = (Elf32_Ehdr *) linker_base;
     Elf32_Phdr *phdr =
         (Elf32_Phdr *)((unsigned char *) linker_base + elf_hdr->e_phoff);
-    linker_soinfo.dynamic =
-        phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base);
+    phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
+                                   &linker_soinfo.dynamic, NULL);
     insert_soinfo_into_debug_map(&linker_soinfo);
 
         /* extract information passed from the kernel */
