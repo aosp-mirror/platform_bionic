@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,19 @@
 #include <search.h>
 #include <stdlib.h>
 
-/* destroy a tree and free all allocated resources */
-void
-tdestroy(void *root, void (*destroy_func)(void *))
-{
-    node_t *root_node = (node_t *) root;
-    if (root_node == NULL) return;
-    if (root_node->llink)
-        tdestroy(root_node->llink, destroy_func);
-    if (root_node->rlink)
-        tdestroy(root_node->rlink, destroy_func);
-    (*destroy_func)(root_node->key);
-    free(root);
+// Destroy a tree and free all allocated resources.
+// This is a GNU extension, not available from NetBSD.
+void tdestroy(void* root, void (*destroy_func)(void*)) {
+  node_t* root_node = (node_t*) root;
+  if (root_node == NULL) {
+    return;
+  }
+  if (root_node->llink) {
+    tdestroy(root_node->llink, destroy_func);
+  }
+  if (root_node->rlink) {
+    tdestroy(root_node->rlink, destroy_func);
+  }
+  (*destroy_func)(root_node->key);
+  free(root);
 }
