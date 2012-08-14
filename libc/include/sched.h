@@ -71,6 +71,7 @@ extern int sched_rr_get_interval(pid_t pid, struct timespec *tp);
 
 #ifdef _GNU_SOURCE
 extern int clone(int (*fn)(void *), void *child_stack, int flags, void*  arg, ...);
+extern int unshare(int);
 #endif
 
 /* Support for cpu thread affinity */
