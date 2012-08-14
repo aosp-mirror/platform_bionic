@@ -82,7 +82,7 @@ void *dlsym(void *handle, const char *symbol)
 
     pthread_mutex_lock(&dl_lock);
 
-    if(unlikely(handle == 0)) { 
+    if(unlikely(handle == 0)) {
         set_dlerror(DL_ERR_INVALID_LIBRARY_HANDLE);
         goto err;
     }
@@ -156,12 +156,11 @@ int dladdr(const void *addr, Dl_info *info)
     return ret;
 }
 
-int dlclose(void *handle)
-{
+int dlclose(void* handle) {
     pthread_mutex_lock(&dl_lock);
-    (void)soinfo_unload((soinfo*)handle);
+    int result = soinfo_unload((soinfo*)handle);
     pthread_mutex_unlock(&dl_lock);
-    return 0;
+    return result;
 }
 
 #if defined(ANDROID_ARM_LINKER)
@@ -261,4 +260,3 @@ soinfo libdl_info = {
     bucket: libdl_buckets,
     chain: libdl_chains,
 };
-    
