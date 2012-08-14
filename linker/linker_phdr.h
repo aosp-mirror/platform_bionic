@@ -86,11 +86,6 @@ phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
                              int               phdr_count,
                              Elf32_Addr        load_bias);
 
-int
-phdr_table_unprotect_gnu_relro(const Elf32_Phdr* phdr_table,
-                               int               phdr_count,
-                               Elf32_Addr        load_bias);
-
 const Elf32_Phdr*
 phdr_table_get_loaded_phdr(const Elf32_Phdr*   phdr_table,
                            int                 phdr_count,
@@ -105,10 +100,12 @@ phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
                          unsigned*         arm_exidix_count);
 #endif
 
-Elf32_Addr*
+void
 phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                int               phdr_count,
-                               Elf32_Addr        load_bias);
+                               Elf32_Addr        load_bias,
+                               Elf32_Addr**      dynamic,
+                               size_t*           dynamic_count);
 
 #ifdef __cplusplus
 };
