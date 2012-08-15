@@ -1,11 +1,8 @@
-/*	$OpenBSD: regfree.c,v 1.7 2005/08/05 13:03:00 espie Exp $ */
-/*-
- * Copyright (c) 1992, 1993, 1994 Henry Spencer.
- * Copyright (c) 1992, 1993, 1994
+/*	$NetBSD: creat.c,v 1.10 2003/08/07 16:42:39 agc Exp $	*/
+
+/*
+ * Copyright (c) 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Henry Spencer.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,42 +27,26 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *	@(#)regfree.c	8.3 (Berkeley) 3/20/94
  */
 
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <regex.h>
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)creat.c	8.1 (Berkeley) 6/2/93";
+#else
+__RCSID("$NetBSD: creat.c,v 1.10 2003/08/07 16:42:39 agc Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
-#include "utils.h"
-#include "regex2.h"
+#include <assert.h>
+#include <errno.h>
+#include <fcntl.h>
 
-/*
- - regfree - free everything
- */
-void
-regfree(regex_t *preg)
+int
+creat(const char *path, mode_t mode)
 {
-	struct re_guts *g;
 
-	if (preg->re_magic != MAGIC1)	/* oops */
-		return;			/* nice to complain, but hard */
+	_DIAGASSERT(path != NULL);
 
-	g = preg->re_g;
-	if (g == NULL || g->magic != MAGIC2)	/* oops again */
-		return;
-	preg->re_magic = 0;		/* mark it invalid */
-	g->magic = 0;			/* mark it invalid */
-
-	if (g->strip != NULL)
-		free((char *)g->strip);
-	if (g->sets != NULL)
-		free((char *)g->sets);
-	if (g->setbits != NULL)
-		free((char *)g->setbits);
-	if (g->must != NULL)
-		free(g->must);
-	free((char *)g);
+	return(open(path, O_WRONLY|O_CREAT|O_TRUNC, mode));
 }
