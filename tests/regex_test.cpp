@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_NETBSD_COMPAT_H_included
-#define _BIONIC_NETBSD_COMPAT_H_included
+#include <gtest/gtest.h>
 
-// NetBSD uses _DIAGASSERT to null-check arguments and the like.
-#include <assert.h>
-#define _DIAGASSERT(e) ((e) ? (void) 0 : __assert2(__FILE__, __LINE__, __func__, #e))
+#include <sys/types.h>
+#include <regex.h>
 
-// TODO: update our <sys/cdefs.h> to support this properly.
-#define __type_fit(t, a) (0 == 0)
+TEST(regex, smoke) {
+  // A quick test of all the regex functions.
+  regex_t re;
+  ASSERT_EQ(0, regcomp(&re, "ab*c", 0));
+  ASSERT_EQ(0, regexec(&re, "abbbc", 0, NULL, 0));
+  ASSERT_EQ(REG_NOMATCH, regexec(&re, "foo", 0, NULL, 0));
 
+  char buf[80];
+  regerror(REG_NOMATCH, &re, buf, sizeof(buf));
+#if __BIONIC__
+  ASSERT_STREQ("regexec() failed to match", buf);
+#else
+  ASSERT_STREQ("No match", buf);
 #endif
+
+  regfree(&re);
+}
