@@ -9,7 +9,6 @@ libc_common_src_files := \
 	unistd/abort.c \
 	unistd/alarm.c \
 	unistd/brk.c \
-	unistd/creat.c \
 	unistd/daemon.c \
 	unistd/eventfd.c \
 	unistd/exec.c \
@@ -328,13 +327,14 @@ libc_common_src_files := \
 	netbsd/nameser/ns_netint.c \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c \
-	regex/regcomp.c \
-	regex/regerror.c \
-	regex/regexec.c \
-	regex/regfree.c \
 
 libc_upstream_netbsd_src_files := \
+	upstream-netbsd/libc/compat-43/creat.c \
 	upstream-netbsd/libc/gen/nice.c \
+	upstream-netbsd/libc/regex/regcomp.c \
+	upstream-netbsd/libc/regex/regerror.c \
+	upstream-netbsd/libc/regex/regexec.c \
+	upstream-netbsd/libc/regex/regfree.c \
 	upstream-netbsd/libc/stdlib/tdelete.c \
 	upstream-netbsd/libc/stdlib/tfind.c \
 	upstream-netbsd/libc/stdlib/tsearch.c \
