@@ -31,9 +31,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-/* WARNING: AT THE MOMENT, THIS IS ONLY SUPPORTED ON ARM
- */
-
 extern int  __bionic_clone(unsigned long   clone_flags,
                            void*           newsp,
                            int            *parent_tidptr,
