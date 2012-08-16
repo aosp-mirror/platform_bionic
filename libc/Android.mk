@@ -261,6 +261,7 @@ libc_common_src_files := \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
 	bionic/__set_errno.c \
+	bionic/bionic_clone.c \
 	bionic/cpuacct.c \
 	bionic/arc4random.c \
 	bionic/basename.c \
@@ -361,7 +362,6 @@ libc_static_common_src_files := \
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
-	bionic/bionic_clone.c \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
 	arch-arm/bionic/_exit_with_stack_teardown.S \
@@ -451,7 +451,6 @@ endif # x86
 
 ifeq ($(TARGET_ARCH),mips)
 libc_common_src_files += \
-	bionic/bionic_clone.c \
 	arch-mips/bionic/__get_sp.S \
 	arch-mips/bionic/__get_tls.c \
 	arch-mips/bionic/__set_tls.c \
