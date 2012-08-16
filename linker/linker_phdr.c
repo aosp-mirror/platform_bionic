@@ -342,7 +342,7 @@ phdr_table_load_segments(const Elf32_Phdr* phdr_table,
     return 0;
 }
 
-/* Used internally. Used to set the protection bits of all loaded segmments
+/* Used internally. Used to set the protection bits of all loaded segments
  * with optional extra flags (i.e. really PROT_WRITE). Used by
  * phdr_table_protect_segments and phdr_table_unprotect_segments.
  */
@@ -378,7 +378,7 @@ _phdr_table_set_load_prot(const Elf32_Phdr* phdr_table,
  *
  * Input:
  *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
+ *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
  *   0 on error, -1 on failure (error code in errno).
@@ -403,7 +403,7 @@ phdr_table_protect_segments(const Elf32_Phdr* phdr_table,
  *
  * Input:
  *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
+ *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
  *   0 on error, -1 on failure (error code in errno).
@@ -474,7 +474,7 @@ _phdr_table_set_gnu_relro_prot(const Elf32_Phdr* phdr_table,
  *
  * Input:
  *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
+ *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
  *   0 on error, -1 on failure (error code in errno).
@@ -501,7 +501,7 @@ phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
  *
  * Input:
  *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
+ *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Output:
  *   arm_exidx       -> address of table in memory (NULL on failure).
@@ -538,7 +538,7 @@ phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
  *
  * Input:
  *   phdr_table  -> program header table
- *   phdr_count  -> number of entires in tables
+ *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Output:
  *   dynamic       -> address of table in memory (NULL on failure).
