@@ -16,9 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-test_module = bionic-unit-tests
-test_tags = eng tests
-
 test_src_files = \
     getcwd_test.cpp \
     regex_test.cpp \
@@ -26,9 +23,7 @@ test_src_files = \
 # Build for the device (with bionic). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 include $(CLEAR_VARS)
-LOCAL_MODULE := $(test_module)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_MODULE_TAGS := $(test_tags)
+LOCAL_MODULE := bionic-unit-tests
 LOCAL_SRC_FILES := $(test_src_files)
 include $(BUILD_NATIVE_TEST)
 
@@ -37,8 +32,6 @@ include $(BUILD_NATIVE_TEST)
 # bionic's implementation, but it does let you use glibc as a reference
 # implementation for testing the tests themselves.
 include $(CLEAR_VARS)
-LOCAL_MODULE := $(test_module)-glibc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_MODULE_TAGS := $(test_tags)
+LOCAL_MODULE := bionic-unit-tests-glibc
 LOCAL_SRC_FILES := $(test_src_files)
 include $(BUILD_HOST_NATIVE_TEST)
