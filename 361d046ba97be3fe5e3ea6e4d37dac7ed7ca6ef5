@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAInH///+A\u003d",
+        "filename": "libc/arch-arm/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-17T09:58:43Z",
+      "side": 1,
+      "message": "This is lacking a guard variable, as in\n\n  #ifndef _ARCH_ARM_INCLUDE_LINK_H\n  #define _ARCH_ARM_INCLUDE_LINK_H\n\n   ...\n\n  #endif _ARCH_ARM_INCLUDE_LINK_H",
+      "revId": "361d046ba97be3fe5e3ea6e4d37dac7ed7ca6ef5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAInH///+E\u003d",
+        "filename": "libc/arch-arm/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-17T09:58:43Z",
+      "side": 1,
+      "message": "Please add __BEGIN_DECLS after the #includes, and __END_DECLS at the end of the file.\n\nThey are used to translate to \u0027extern \"C\"\u0027 when the header is included from C++",
+      "revId": "361d046ba97be3fe5e3ea6e4d37dac7ed7ca6ef5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAInH///98\u003d",
+        "filename": "libc/arch-mips/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-17T09:58:43Z",
+      "side": 1,
+      "message": "Same here, please add guard macros + __BEGIN_DECLS .. __END_DECLS.",
+      "revId": "361d046ba97be3fe5e3ea6e4d37dac7ed7ca6ef5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAInH///9s\u003d",
+        "filename": "libc/arch-x86/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-17T09:58:43Z",
+      "side": 1,
+      "message": "macros here too",
+      "revId": "361d046ba97be3fe5e3ea6e4d37dac7ed7ca6ef5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAInH///9w\u003d",
+        "filename": "libc/arch-x86/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-17T09:58:43Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer you merge these three headers files in a single one, under bionic/libc/include/link.h, and use a simple #ifdef __arm__ ... #else ... #endif to deal with the ARM special case.\n\nAlso ElfW() should be defined for all platforms.",
+      "revId": "361d046ba97be3fe5e3ea6e4d37dac7ed7ca6ef5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
