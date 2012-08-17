@@ -20,6 +20,7 @@ test_module = bionic-unit-tests
 test_tags = eng tests
 
 test_src_files = \
+    getcwd_test.cpp \
     regex_test.cpp \
 
 # Build for the device (with bionic). Run with:

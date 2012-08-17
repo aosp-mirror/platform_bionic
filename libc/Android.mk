@@ -17,7 +17,6 @@ libc_common_src_files := \
 	unistd/fstatfs.c \
 	unistd/ftime.c \
 	unistd/ftok.c \
-	unistd/getcwd.c \
 	unistd/getdtablesize.c \
 	unistd/gethostname.c \
 	unistd/getopt_long.c \
@@ -275,6 +274,7 @@ libc_common_src_files := \
 	bionic/fdprintf.c \
 	bionic/fork.c \
 	bionic/fts.c \
+	bionic/getcwd.cpp \
 	bionic/if_nametoindex.c \
 	bionic/if_indextoname.c \
 	bionic/ioctl.c \
