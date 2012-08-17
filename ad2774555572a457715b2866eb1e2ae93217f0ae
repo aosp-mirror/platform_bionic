@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIlH///10\u003d",
+        "filename": "libc/include/link.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2012-08-17T15:33:28Z",
+      "side": 1,
+      "message": "__x86_64__ is wrong since x86-64 can be 32-bit. \nSince Bionic is a 32-bit library,\n\n#define ElfW(type)  Elf32_##type\n\nshould work everywhere.",
+      "revId": "ad2774555572a457715b2866eb1e2ae93217f0ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
