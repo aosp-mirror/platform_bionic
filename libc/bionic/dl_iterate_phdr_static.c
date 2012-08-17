@@ -28,16 +28,7 @@
 
 #include <sys/types.h>
 #include <linux/elf.h>
-
-/* TODO: Move this into a header that linker.h can also pull it in.
- * Silly to have same struct in 2 places. This is temporary. */
-struct dl_phdr_info
-{
-    Elf32_Addr dlpi_addr;
-    const char *dlpi_name;
-    const Elf32_Phdr *dlpi_phdr;
-    Elf32_Half dlpi_phnum;
-};
+#include <link.h>
 
 /* Dynamic binaries get this from the dynamic linker (system/linker), which
  * we don't pull in for static bins. We also don't have a list of so's to
