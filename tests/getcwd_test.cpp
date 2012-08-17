@@ -1,0 +1,85 @@
+/*
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <gtest/gtest.h>
+
+#include <errno.h>
+#include <limits.h>
+#include <unistd.h>
+
+TEST(getcwd, auto_full) {
+  // If we let the library do all the work, everything's fine.
+  errno = 0;
+  char* cwd = getcwd(NULL, 0);
+  ASSERT_TRUE(cwd != NULL);
+  ASSERT_EQ(errno, 0);
+  ASSERT_GE(strlen(cwd), 1U);
+  free(cwd);
+}
+
+TEST(getcwd, auto_reasonable) {
+  // If we ask the library to allocate a reasonable buffer, everything's fine.
+  errno = 0;
+  char* cwd = getcwd(NULL, PATH_MAX);
+  ASSERT_TRUE(cwd != NULL);
+  ASSERT_EQ(errno, 0);
+  ASSERT_GE(strlen(cwd), 1U);
+  free(cwd);
+}
+
+TEST(getcwd, auto_too_small) {
+  // If we ask the library to allocate a too-small buffer, ERANGE.
+  errno = 0;
+  char* cwd = getcwd(NULL, 1);
+  ASSERT_TRUE(cwd == NULL);
+  ASSERT_EQ(errno, ERANGE);
+}
+
+TEST(getcwd, auto_too_large) {
+  // If we ask the library to allocate an unreasonably large buffer, ERANGE.
+  errno = 0;
+  char* cwd = getcwd(NULL, static_cast<size_t>(-1));
+  ASSERT_TRUE(cwd == NULL);
+  ASSERT_EQ(errno, ENOMEM);
+}
+
+TEST(getcwd, manual_too_small) {
+  // If we allocate a too-small buffer, ERANGE.
+  char tiny_buf[1];
+  errno = 0;
+  char* cwd = getcwd(tiny_buf, sizeof(tiny_buf));
+  ASSERT_TRUE(cwd == NULL);
+  ASSERT_EQ(errno, ERANGE);
+}
+
+TEST(getcwd, manual_zero) {
+  // If we allocate a zero-length buffer, EINVAL.
+  char tiny_buf[1];
+  errno = 0;
+  char* cwd = getcwd(tiny_buf, 0);
+  ASSERT_TRUE(cwd == NULL);
+  ASSERT_EQ(errno, EINVAL);
+}
+
+TEST(getcwd, manual_path_max) {
+  char* buf = new char[PATH_MAX];
+  errno = 0;
+  char* cwd = getcwd(buf, PATH_MAX);
+  ASSERT_TRUE(cwd == buf);
+  ASSERT_EQ(errno, 0);
+  ASSERT_GE(strlen(cwd), 1U);
+  delete[] cwd;
+}
