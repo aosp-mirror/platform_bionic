@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,22 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifndef _LINK_H_
+#define _LINK_H_
 
-#include <link.h>
+#include <sys/types.h>
+#include <elf.h>
 
-/* Find the .ARM.exidx section (which in the case of a static executable
- * can be identified through its start and end symbols), and return its
- * beginning and numbe of entries to the caller.  Note that for static
- * executables we do not need to use the value of the PC to find the
- * EXIDX section.
- */
+__BEGIN_DECLS
 
-extern unsigned __exidx_end;
-extern unsigned __exidx_start;
+/* bionic is currently only 32-bit. */
+#define ElfW(type) Elf32_##type
 
-_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __attribute__((unused)), 
-                                    int *pcount)
-{
-	*pcount = (__exidx_end-__exidx_start)/8;
-	return (_Unwind_Ptr)__exidx_start;
-}
+struct dl_phdr_info {
+  ElfW(Addr) dlpi_addr;
+  const char* dlpi_name;
+  const ElfW(Phdr)* dlpi_phdr;
+  ElfW(Half) dlpi_phnum;
+};
+
+#ifdef __arm__
+typedef long unsigned int* _Unwind_Ptr;
+_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount);
+#else
+int dl_iterate_phdr(int (*cb)(struct dl_phdr_info*, size_t, void*), void*);
+#endif
+
+__END_DECLS
+
+#endif /* _LINK_H_ */

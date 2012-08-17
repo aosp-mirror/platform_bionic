@@ -37,6 +37,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <link.h>
 
 #undef PAGE_MASK
 #undef PAGE_SIZE
@@ -71,16 +72,6 @@ struct link_map
     struct link_map * l_next;
     struct link_map * l_prev;
 };
-
-/* needed for dl_iterate_phdr to be passed to the callbacks provided */
-struct dl_phdr_info
-{
-    Elf32_Addr dlpi_addr;
-    const char *dlpi_name;
-    const Elf32_Phdr *dlpi_phdr;
-    Elf32_Half dlpi_phnum;
-};
-
 
 // Values for r_debug->state
 enum {
@@ -240,13 +231,6 @@ int soinfo_unload(soinfo* si);
 Elf32_Sym *soinfo_find_symbol(soinfo* si, const void *addr);
 Elf32_Sym *soinfo_lookup(soinfo *si, const char *name);
 void soinfo_call_constructors(soinfo *si);
-
-#if defined(ANDROID_ARM_LINKER)
-typedef long unsigned int *_Unwind_Ptr;
-_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount);
-#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
-int dl_iterate_phdr(int (*cb)(struct dl_phdr_info *, size_t, void *), void *);
-#endif
 
 #ifdef __cplusplus
 };
