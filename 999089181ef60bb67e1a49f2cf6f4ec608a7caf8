@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAIu3///XA\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2012-08-20T22:07:58Z",
+      "side": 1,
+      "message": "Do you get any compiler warnings about missing prototypes by placing the error handling routines after the usage? Maybe you can place them above the include to keep the compiler happy and you don\u0027t need to declare the prototypes.",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAIrn///cQ\u003d",
         "filename": "libc/upstream-dlmalloc/malloc.c",
         "patchSetId": 2
