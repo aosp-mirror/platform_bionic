@@ -34,6 +34,24 @@
       "revId": "c164f2a9694fa8c373ec72d237ee16b412aa5c53",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIrn///JY\u003d",
+        "filename": "libc/arch-x86/bionic/syscall.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-20T23:31:51Z",
+      "side": 1,
+      "message": "I didn\u0027t realize the system call conventions didn\u0027t require 16 byte alignment. In general x86 32bit has been trying to keep 16 byte alignment in user mode.",
+      "parentUuid": "AAAIAH///rM\u003d",
+      "revId": "c164f2a9694fa8c373ec72d237ee16b412aa5c53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
