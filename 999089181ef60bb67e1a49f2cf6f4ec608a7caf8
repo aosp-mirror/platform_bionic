@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIrn///cQ\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4297,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-20T21:20:18Z",
+      "side": 1,
+      "message": "newsize is unused in some expansions of CALL_MUNMAP in our world?",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIrn///cY\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 5469,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-20T21:20:18Z",
+      "side": 1,
+      "message": "base is unused in some expansions of CALL_MUNMAP in our world?",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
