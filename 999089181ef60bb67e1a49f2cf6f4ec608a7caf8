@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAIrn///To\u003d",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-20T22:11:59Z",
+      "side": 1,
+      "message": "I\u0027m intentionally trying to keep the #include of malloc.c from upstream-dlmalloc at the top of the file to stop it getting buried as in the previous code. There are no compiler warnings with this code.",
+      "parentUuid": "AAAIu3///XA\u003d",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAIrn///cQ\u003d",
         "filename": "libc/upstream-dlmalloc/malloc.c",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAIrn///Us\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4297,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-20T22:11:59Z",
+      "side": 1,
+      "message": "yes, in Dalvik we don\u0027t allow MMAP and so the macros below expand to failures.",
+      "parentUuid": "AAAIrn///cQ\u003d",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAIrn///cY\u003d",
         "filename": "libc/upstream-dlmalloc/malloc.c",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2012-08-20T21:20:18Z",
       "side": 1,
       "message": "base is unused in some expansions of CALL_MUNMAP in our world?",
+      "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIrn///UU\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 5469,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-20T22:11:59Z",
+      "side": 1,
+      "message": "Yes, if you don\u0027t specify USE_MMAP, such as in Dalvik, the macro expansion below mean this is an unused variable.",
+      "parentUuid": "AAAIrn///cY\u003d",
       "revId": "999089181ef60bb67e1a49f2cf6f4ec608a7caf8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
