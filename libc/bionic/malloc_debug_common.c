@@ -210,6 +210,11 @@ void* pvalloc(size_t bytes)
     return dlpvalloc(bytes);
 }
 
+int posix_memalign(void** memptr, size_t alignment, size_t size)
+{
+    return dlposix_memalign(memptr, alignment, size);
+}
+
 /* Support for malloc debugging.
  * Note that if USE_DL_PREFIX is not defined, it's assumed that memory
  * allocation routines are implemented somewhere else, so all our custom
