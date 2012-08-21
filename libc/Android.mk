@@ -584,10 +584,6 @@ libc_crt_target_cflags += \
     -I$(LOCAL_PATH)/include  \
     -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
 
-ifeq ($(TARGET_ARCH),arm)
-    libc_crt_target_cflags += -DCRT_LEGACY_WORKAROUND
-endif
-
 # Define some common includes
 # ========================================================
 libc_common_c_includes := \
@@ -762,9 +758,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags)
-ifeq ($(TARGET_ARCH),arm)
-    LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
-endif
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -847,6 +840,17 @@ LOCAL_SRC_FILES := \
 	bionic/malloc_debug_common.c \
 	bionic/pthread_debug.c \
 	bionic/libc_init_dynamic.c
+
+ifeq ($(TARGET_ARCH),arm)
+	LOCAL_NO_CRT := true
+	LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
+
+	LOCAL_SRC_FILES := \
+		arch-arm/bionic/crtbegin_so.c \
+		arch-arm/bionic/atexit_legacy.c \
+		$(LOCAL_SRC_FILES) \
+		arch-arm/bionic/crtend_so.S
+endif
 
 LOCAL_MODULE:= libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk

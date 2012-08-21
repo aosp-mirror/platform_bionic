@@ -29,4 +29,4 @@
 
 __attribute__ ((visibility ("hidden")))
 __attribute__ ((section (".data")))
-void *__dso_handle;
+void *__dso_handle = &__dso_handle;

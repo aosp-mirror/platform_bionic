@@ -26,23 +26,6 @@
  * SUCH DAMAGE.
  */
 
-/* CRT_LEGACY_WORKAROUND should only be defined when building
- * this file as part of the platform's C library.
- *
- * The C library already defines a function named 'atexit()'
- * for backwards compatibility with older NDK-generated binaries.
- *
- * For newer ones, 'atexit' is actually embedded in the C
- * runtime objects that are linked into the final ELF
- * binary (shared library or executable), and will call
- * __cxa_atexit() in order to un-register any atexit()
- * handler when a library is unloaded.
- *
- * This function must be global *and* hidden. Only the
- * code inside the same ELF binary should be able to access it.
- */
-
-#ifndef CRT_LEGACY_WORKAROUND
 extern void *__dso_handle;
 
 __attribute__ ((visibility ("hidden")))
@@ -50,4 +33,3 @@ int atexit(void (*func)(void))
 {
   return (__cxa_atexit((void (*)(void *))func, (void *)0, &__dso_handle));
 }
-#endif
