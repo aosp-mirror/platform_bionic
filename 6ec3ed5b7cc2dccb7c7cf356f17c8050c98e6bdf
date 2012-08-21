@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIsH///BQ\u003d",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "should the first param be const void * to match gethostbyaddr above?\n\nAlso, tab instead of spaces between hostent and *gethostbyaddrforiface",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIsH//+4U\u003d",
+        "filename": "libc/netbsd/gethnamaddr.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "const void *addr to match gethostbyaddr above?",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIsH//+1o\u003d",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1978,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "if we want to pass the iface through this state, we should probably make a new function call to set the iface.  setting the iface as a byproduct of getting the state is weird.",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIsH//+1c\u003d",
+        "filename": "libc/netbsd/net/getnameinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "use tabs instead of spaces in C files",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIw3///xQ\u003d",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "for safety, should this run through the entire list removing all entries for this pid?  Or should our add code check if it\u0027s there already so we enforce only 1 entry?",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIw3///44\u003d",
+        "filename": "libc/netbsd/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "should this just be else (no if)?  what cases are not being handled if it\u0027s not FOUND or NOTFOUND?  If you want else-if here, we should add a final else with at least a comment explaining how we might get there..",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAIw3///6A\u003d",
+        "filename": "libc/netbsd/resolv/res_state.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2012-08-21T18:31:33Z",
+      "side": 1,
+      "message": "setting the iface should probably be a separate call.",
+      "revId": "6ec3ed5b7cc2dccb7c7cf356f17c8050c98e6bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
