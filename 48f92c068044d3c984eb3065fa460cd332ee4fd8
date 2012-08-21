@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAIwn///sA\u003d",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2012-08-21T21:13:46Z",
+      "side": 1,
+      "message": "There must be a change in the build project too?",
+      "revId": "48f92c068044d3c984eb3065fa460cd332ee4fd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
