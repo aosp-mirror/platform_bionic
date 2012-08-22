@@ -195,19 +195,9 @@ struct mallinfo mallinfo()
     return dlmallinfo();
 }
 
-size_t malloc_usable_size(void* mem)
-{
-    return dlmalloc_usable_size(mem);
-}
-
-void* valloc(size_t bytes)
-{
-    return dlvalloc(bytes);
-}
-
-void* pvalloc(size_t bytes)
-{
-    return dlpvalloc(bytes);
+void* valloc(size_t bytes) {
+    /* assume page size of 4096 bytes */
+    return memalign( getpagesize(), bytes );
 }
 
 /* Support for malloc debugging.
