@@ -16,6 +16,24 @@
       "revId": "5f35b32edcd1f156799077fd48a8bf600a55e377",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5H///1k\u003d",
+        "filename": "linker/linker.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1309,
+      "author": {
+        "id": 1013762
+      },
+      "writtenOn": "2012-08-23T21:07:00Z",
+      "side": 1,
+      "message": "From memory, I was looking at:\nhttp://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf\n\nSection 4.7.1.10 \"Dynamic relocations\"\n\nQuoted:\n\"R_ARM_COPY may only appear in executable objects where e_type is set to ET_EXEC.  The effect is to cause the \ndynamic linker to locate the target symbol in a shared library object and then to copy the number of bytes \nspecified by the st_size field to the place.\"",
+      "parentUuid": "AAAHJ3///kw\u003d",
+      "revId": "5f35b32edcd1f156799077fd48a8bf600a55e377",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
