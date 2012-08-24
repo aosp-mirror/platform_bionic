@@ -434,26 +434,28 @@ static unsigned elfhash(const char *_name)
 
 static Elf32_Sym *
 soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
-                 soinfo *needed[])
+                 soinfo *needed[], bool ignore_local)
 {
     unsigned elf_hash = elfhash(name);
-    Elf32_Sym *s;
+    Elf32_Sym *s = NULL;
     soinfo *lsi = si;
     int i;
 
-    /* Look for symbols in the local scope (the object who is
-     * searching). This happens with C++ templates on i386 for some
-     * reason.
-     *
-     * Notes on weak symbols:
-     * The ELF specs are ambiguous about treatment of weak definitions in
-     * dynamic linking.  Some systems return the first definition found
-     * and some the first non-weak definition.   This is system dependent.
-     * Here we return the first definition found for simplicity.  */
+    if (!ignore_local) {
+        /* Look for symbols in the local scope (the object who is
+         * searching). This happens with C++ templates on i386 for some
+         * reason.
+         *
+         * Notes on weak symbols:
+         * The ELF specs are ambiguous about treatment of weak definitions in
+         * dynamic linking.  Some systems return the first definition found
+         * and some the first non-weak definition.   This is system dependent.
+         * Here we return the first definition found for simplicity.  */
 
-    s = soinfo_elf_lookup(si, elf_hash, name);
-    if(s != NULL)
-        goto done;
+        s = soinfo_elf_lookup(si, elf_hash, name);
+        if(s != NULL)
+            goto done;
+    }
 
     /* Next, look for it in the preloads list */
     for(i = 0; preloads[i] != NULL; i++) {
@@ -684,6 +686,7 @@ verify_elf_header(const Elf32_Ehdr* hdr)
     if (hdr->e_ident[EI_MAG1] != ELFMAG1) return -1;
     if (hdr->e_ident[EI_MAG2] != ELFMAG2) return -1;
     if (hdr->e_ident[EI_MAG3] != ELFMAG3) return -1;
+    if (hdr->e_type != ET_DYN) return -1;
 
     /* TODO: Should we verify anything else in the header? */
 #ifdef ANDROID_ARM_LINKER
@@ -959,7 +962,11 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
         }
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = soinfo_do_lookup(si, sym_name, &offset, needed);
+            bool ignore_local = false;
+#if defined(ANDROID_ARM_LINKER)
+            ignore_local = (type == R_ARM_COPY);
+#endif
+            s = soinfo_do_lookup(si, sym_name, &offset, needed, ignore_local);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1139,10 +1146,29 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
 
 #ifdef ANDROID_ARM_LINKER
         case R_ARM_COPY:
+            if ((si->flags & FLAG_EXE) == 0) {
+                /*
+                 * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+                 *
+                 * Section 4.7.1.10 "Dynamic relocations"
+                 * R_ARM_COPY may only appear in executable objects where e_type is
+                 * set to ET_EXEC.
+                 *
+                 * TODO: FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
+                 * We should explicitly disallow ET_DYN executables from having
+                 * R_ARM_COPY relocations.
+                 */
+                DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", si->name);
+                return -1;
+            }
             count_relocation(kRelocCopy);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO %08x <- %d @ %08x %s\n", pid,
                        reloc, s->st_size, sym_addr, sym_name);
+            if (reloc == sym_addr) {
+                DL_ERR("Internal linker error detected. reloc == symaddr");
+                return -1;
+            }
             memcpy((void*)reloc, (void*)sym_addr, s->st_size);
             break;
 #endif /* ANDROID_ARM_LINKER */
@@ -1201,7 +1227,7 @@ static int mips_relocate_got(soinfo* si, soinfo* needed[]) {
 
         /* This is an undefined reference... try to locate it */
         sym_name = si->strtab + sym->st_name;
-        s = soinfo_do_lookup(si, sym_name, &base, needed);
+        s = soinfo_do_lookup(si, sym_name, &base, needed, false);
         if (s == NULL) {
             /* We only allow an undefined symbol if this is a weak
                reference..   */
@@ -1804,7 +1830,7 @@ sanitize:
         exit(-1);
     }
 
-        /* bootstrap the link map, the main exe always needs to be first */
+    /* bootstrap the link map, the main exe always needs to be first */
     si->flags |= FLAG_EXE;
     link_map* map = &(si->linkmap);
 
@@ -1839,7 +1865,7 @@ sanitize:
                                    &linker_soinfo.dynamic, NULL);
     insert_soinfo_into_debug_map(&linker_soinfo);
 
-        /* extract information passed from the kernel */
+    /* extract information passed from the kernel */
     while(vecs[0] != 0){
         switch(vecs[0]){
         case AT_PHDR:
