@@ -1,0 +1,429 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI13//9s4\u003d",
+        "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "does placing lea here break branch fusion between the test and the jnz?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9s0\u003d",
+        "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sw\u003d",
+        "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9ss\u003d",
+        "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sg\u003d",
+        "filename": "libc/arch-x86/string/sse2-strrchr-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sY\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sU\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sQ\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sM\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9sE\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "this test seems unnecessary as ZF is set by the shl above",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9rw\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1682,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "if the values are equal shouldn\u0027t eax \u003d\u003d 0?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9r0\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1689,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9rs\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1698,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9ro\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1705,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9rc\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "the pattern:\n\ncmp a, b\nset-greater reg1\nset-less reg2\nresult \u003d reg1 - reg2\n\ncould avoid branches here.",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qw\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qo\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qc\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qI\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 3539,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qE\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 3572,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9qA\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcat-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "branch fusion",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9p4\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9p0\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9ps\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI13//9po\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-08-24T18:29:25Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
