@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI5n///nU\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T08:16:33Z",
+      "side": 1,
+      "message": "Please remove tabs.",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///nQ\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T08:16:33Z",
+      "side": 1,
+      "message": "Nope, nope, nope, don\u0027t rely on that \"coincidence\", it could change anytime.",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///nM\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T08:16:33Z",
+      "side": 1,
+      "message": "Generally speaking, this is changing the behaviour of atexit() for existing \"legacy\" binaries that haven\u0027t been recompiled against a more recent version of the NDK.\n\nThe end result in unpredictable, and you can\u0027t exclude the potential for crashes. I don\u0027t think there is *any* benefit in implementing this change. Developers who care about this issue just need to rebuild with a recent version of the NDK.",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
