@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI5n///lA\u003d",
+        "filename": "libc/arch-arm/bionic/atexit_legacy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T14:54:05Z",
+      "side": 1,
+      "message": "A comment explaining the purpose of this file would be nice, e.g.:\n\n\"\"\"\nThis source file should only be included by libc.so, its purpose is to support legacy ARM binaries by exporting a publicly visible implementations of atexit().\n\"\"\"",
+      "revId": "1dfce7b9fae31a99d29fde36c236fcd3782a85f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
