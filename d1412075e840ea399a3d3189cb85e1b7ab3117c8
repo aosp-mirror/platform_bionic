@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X///J4\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-27T22:56:38Z",
+      "side": 1,
+      "message": "DL_ERR adds the \\n itself (and we don\u0027t want it in the buffer because we concatenate failures in a poor man\u0027s simulation of chained exceptions).",
+      "revId": "d1412075e840ea399a3d3189cb85e1b7ab3117c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X///J0\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-27T22:56:38Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "d1412075e840ea399a3d3189cb85e1b7ab3117c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
