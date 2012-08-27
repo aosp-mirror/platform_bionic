@@ -86,6 +86,24 @@
       "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///nE\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T08:43:50Z",
+      "side": 1,
+      "message": "Let me be clearer:\n\n1/ the legacy behaviour, i.e. the one that the Android libc.so always exposed through its publicly visible atexit() is broken: i.e. the corresponding handlers are never called when a library is unloaded. This may result in resource leaks, but at least no crash. This may result in a crash when the application exits (but _many_ never call exit() and are simply automatically killed by the system).\n\n2/ there *is* existing native code here that is probably buggy but just happens to work due to 1/. And some of this code is never going to be recompiled (if it were, it would be against a newer NDK, and the new code wouldn\u0027t have this problem).\n\n3/ Your patch changes the system\u0027s behaviour for this legacy code. The end result is not predictable and may results in crashes. We don\u0027t want to this chance.\n\nIn other words, the risks/benefit ratio for this patch is just too damn high.",
+      "parentUuid": "AAAI5H///qY\u003d",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
