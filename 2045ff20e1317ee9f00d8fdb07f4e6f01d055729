@@ -33,6 +33,24 @@
       "revId": "2045ff20e1317ee9f00d8fdb07f4e6f01d055729",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X///K8\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-27T22:47:05Z",
+      "side": 1,
+      "message": "(see the implementation of assert, which i changed recently for the same reason.)",
+      "parentUuid": "AAAI5n///lg\u003d",
+      "revId": "2045ff20e1317ee9f00d8fdb07f4e6f01d055729",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
