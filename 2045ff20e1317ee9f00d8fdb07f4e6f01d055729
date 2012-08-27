@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI5n///lc\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T14:01:02Z",
+      "side": 1,
+      "message": "I think that cleaning up this is a good idea. Can I suggest that instead this function be moved to libc/arch-arm/bionic/atexit_legacy.c instead.",
+      "revId": "2045ff20e1317ee9f00d8fdb07f4e6f01d055729",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///lg\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-08-27T14:01:02Z",
+      "side": 1,
+      "message": "not sure this is going to be useful for applications, which send stderr to /dev/null by default.",
+      "revId": "2045ff20e1317ee9f00d8fdb07f4e6f01d055729",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
