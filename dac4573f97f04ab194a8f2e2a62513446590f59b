@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5H///qc\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-08-27T08:31:26Z",
+      "side": 1,
+      "message": "Agreed. However, as it is part of fixup code that is hopefully removed asap (i.e., when the changes in the dependent patch make it into the oldest supported version of the NDK), it is still defendable imo.",
+      "parentUuid": "AAAI5n///nQ\u003d",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI5n///nM\u003d",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2012-08-27T08:16:33Z",
       "side": 1,
       "message": "Generally speaking, this is changing the behaviour of atexit() for existing \"legacy\" binaries that haven\u0027t been recompiled against a more recent version of the NDK.\n\nThe end result in unpredictable, and you can\u0027t exclude the potential for crashes. I don\u0027t think there is *any* benefit in implementing this change. Developers who care about this issue just need to rebuild with a recent version of the NDK.",
+      "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5H///qY\u003d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-08-27T08:31:26Z",
+      "side": 1,
+      "message": "This is exactly the point. The legacy behavior is to queue a function pointer for invocation when the function itself may have been unmapped, which will cause a crash. The fixup makes sure the function pointer is dereferenced at dlclose() time.",
+      "parentUuid": "AAAI5n///nM\u003d",
       "revId": "dac4573f97f04ab194a8f2e2a62513446590f59b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
