@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X//+ao\u003d",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-28T21:58:52Z",
+      "side": 1,
+      "message": "can\u0027t these be marked extern \"C\" in the declaration? just wondering about all the \u0027extern \"C\"\u0027 noise",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
