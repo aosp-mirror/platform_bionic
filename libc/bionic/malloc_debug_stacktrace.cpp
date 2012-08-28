@@ -32,11 +32,10 @@
 // stack trace functions
 // =============================================================================
 
-typedef struct
-{
+struct stack_crawl_state_t {
     size_t count;
     intptr_t* addrs;
-} stack_crawl_state_t;
+};
 
 
 /* depends how the system includes define this */
@@ -46,9 +45,8 @@ typedef struct _Unwind_Context __unwind_context;
 typedef _Unwind_Context __unwind_context;
 #endif
 
-static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
-{
-    stack_crawl_state_t* state = (stack_crawl_state_t*)arg;
+static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
+    stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
     if (state->count) {
         intptr_t ip = (intptr_t)_Unwind_GetIP(context);
         if (ip) {
@@ -65,12 +63,10 @@ static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
     return _URC_END_OF_STACK;
 }
 
-__LIBC_HIDDEN__
-int get_backtrace(intptr_t* addrs, size_t max_entries)
-{
+__LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries) {
     stack_crawl_state_t state;
     state.count = max_entries;
-    state.addrs = (intptr_t*)addrs;
-    _Unwind_Backtrace(trace_function, (void*)&state);
+    state.addrs = addrs;
+    _Unwind_Backtrace(trace_function, &state);
     return max_entries - state.count;
 }

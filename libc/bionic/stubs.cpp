@@ -115,7 +115,7 @@ int getpwuid_r(uid_t uid, passwd* pwd,
 }
 
 static stubs_state_t* stubs_state_alloc() {
-  stubs_state_t*  s = reinterpret_cast<stubs_state_t*>(calloc(1, sizeof(*s)));
+  stubs_state_t*  s = static_cast<stubs_state_t*>(calloc(1, sizeof(*s)));
   if (s != NULL) {
     s->group_.gr_mem = s->group_members_;
   }
@@ -123,7 +123,7 @@ static stubs_state_t* stubs_state_alloc() {
 }
 
 static void stubs_state_free(void* ptr) {
-  stubs_state_t* state = reinterpret_cast<stubs_state_t*>(ptr);
+  stubs_state_t* state = static_cast<stubs_state_t*>(ptr);
   free(state);
 }
 
@@ -133,8 +133,7 @@ static void __stubs_key_init() {
 
 static stubs_state_t* __stubs_state() {
   pthread_once(&stubs_once, __stubs_key_init);
-  stubs_state_t* s =
-      reinterpret_cast<stubs_state_t*>(pthread_getspecific(stubs_key));
+  stubs_state_t* s = static_cast<stubs_state_t*>(pthread_getspecific(stubs_key));
   if (s == NULL) {
     s = stubs_state_alloc();
     if (s == NULL) {
