@@ -70,8 +70,6 @@ _start:
 1:	.long	__PREINIT_ARRAY__
 	.long	__INIT_ARRAY__
 	.long	__FINI_ARRAY__
-	.long	__CTOR_LIST__
-	.long	__DTOR_LIST__
 
 	.section .preinit_array, "aw"
 	.type __PREINIT_ARRAY__, @object
@@ -91,18 +89,6 @@ __INIT_ARRAY__:
 __FINI_ARRAY__:
 	.long -1
 	.long __do_global_dtors_aux
-
-	.section .ctors, "aw"
-	.type __CTOR_LIST__, @object
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
-
-	.section .dtors, "aw"
-	.type __DTOR_LIST__, @object
-	.globl __DTOR_LIST__
-__DTOR_LIST__:
-	.long -1
 
 	.abicalls
 	.text
