@@ -35,13 +35,3 @@
 	.section .fini_array, "aw"
 	.long 0
 
-	.section .ctors, "aw"
-	.type __CTOR_END__, @object
-__CTOR_END__:
-	.long 0
-
-	.section .dtors, "aw"
-	.type __DTOR_END__, @object
-__DTOR_END__:
-	.long 0
-
