@@ -27,6 +27,8 @@
  */
 
 #include <sys/types.h>
+#include <private/logd.h>
+#include <stdio.h>
 
 /*
  * This source file should only be included by libc.so, its purpose is
@@ -42,5 +44,17 @@ extern int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
 int
 atexit(void (*func)(void))
 {
+    /*
+     * Exit functions queued by this version of atexit will not be called
+     * on dlclose(), and when they are called (at program exit), the
+     * calling library may have been dlclose()'d, causing the program to
+     * crash.
+     */
+    static char const warning[] =
+        "WARNING: generic atexit() called from legacy shared library\n";
+
+    __libc_android_log_print(ANDROID_LOG_WARN, "libc", warning);
+    fprintf(stderr, warning);
+
     return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
 }
