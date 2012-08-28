@@ -29,7 +29,7 @@
 extern void __cxa_finalize(void *);
 extern void *__dso_handle;
 
-__attribute__((visbility("hidden")))
+__attribute__((visibility("hidden"),destructor))
 void __on_dlclose() {
   __cxa_finalize(&__dso_handle);
 }
