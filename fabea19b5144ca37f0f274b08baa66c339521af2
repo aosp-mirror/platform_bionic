@@ -16,6 +16,24 @@
       "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X//+aI\u003d",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-28T22:03:19Z",
+      "side": 1,
+      "message": "they could, but i\u0027m trying to make sure that we always either say extern or static, so accidental externs stand out like sore thumbs.",
+      "parentUuid": "AAAI6X//+ao\u003d",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
