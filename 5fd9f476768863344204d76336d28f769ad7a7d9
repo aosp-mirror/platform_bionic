@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///jI\u003d",
+        "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I can swap lea and test everywhere. Will be done in next revision.",
+      "parentUuid": "AAAI13//9s4\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9s0\u003d",
         "filename": "libc/arch-x86/string/sse2-strlen-atom.S",
         "patchSetId": 2
@@ -87,6 +105,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///jE\u003d",
+        "filename": "libc/arch-x86/string/sse2-strrchr-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I can swap cmp and pshufd. Will be done in next revision.",
+      "parentUuid": "AAAI13//9sg\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9sY\u003d",
         "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
         "patchSetId": 2
@@ -98,6 +134,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///jA\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I can swap test and lea. Will be done in next revision.",
+      "parentUuid": "AAAI13//9sY\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +175,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///i8\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Lea and test will be swapped in next revision",
+      "parentUuid": "AAAI13//9sU\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9sQ\u003d",
         "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
         "patchSetId": 2
@@ -132,6 +204,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///i4\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Lea and test will be swapped in next revision",
+      "parentUuid": "AAAI13//9sQ\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +245,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///i0\u003d",
+        "filename": "libc/arch-x86/string/sse2-wcslen-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Lea and test will be swapped in next revision",
+      "parentUuid": "AAAI13//9sM\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9sE\u003d",
         "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
         "patchSetId": 2
@@ -172,6 +280,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///is\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Right. Will be removed in next revision.",
+      "parentUuid": "AAAI13//9sE\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9rw\u003d",
         "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
         "patchSetId": 2
@@ -183,6 +309,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "if the values are equal shouldn\u0027t eax \u003d\u003d 0?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///ik\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1682,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Right, a bug here. I will rename eax to ecx in mov and cmp command and the same in three next labels.",
+      "parentUuid": "AAAI13//9rw\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -257,6 +401,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///ig\u003d",
+        "filename": "libc/arch-x86/string/ssse3-memcmp-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I\u0027m not sure that sub works here because comparison shall be sighed for wmemcmp as opposed to memcmp.",
+      "parentUuid": "AAAI13//9rc\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9qw\u003d",
         "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
         "patchSetId": 2
@@ -268,6 +430,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///iY\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Possible to swap test and palignr.",
+      "parentUuid": "AAAI13//9qw\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -291,6 +471,24 @@
     },
     {
       "key": {
+        "uuid": "AAAI5n///iU\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "Will be fixed in next revision",
+      "parentUuid": "AAAI13//9qo\u003d",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI13//9qc\u003d",
         "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
         "patchSetId": 2
@@ -302,6 +500,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "branch fusion?",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///iQ\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strcpy-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I can swap palignr and test",
+      "parentUuid": "AAAI13//9qc\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -353,6 +569,24 @@
       "writtenOn": "2012-08-24T18:29:25Z",
       "side": 1,
       "message": "branch fusion",
+      "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n///iI\u003d",
+        "filename": "libc/arch-x86/string/ssse3-strlcat-atom.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-08-28T09:36:51Z",
+      "side": 1,
+      "message": "I can swap lea and test",
+      "parentUuid": "AAAI13//9qA\u003d",
       "revId": "5fd9f476768863344204d76336d28f769ad7a7d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
