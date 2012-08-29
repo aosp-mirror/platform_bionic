@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __LINUX_MSM_ION_H__
 #define __LINUX_MSM_ION_H__
-#include <linux/ion.h>
+#include <linux/legacy_ion.h>
 enum msm_ion_heap_types {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  ION_HEAP_TYPE_IOMMU = ION_HEAP_TYPE_CUSTOM + 1,
