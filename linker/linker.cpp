@@ -162,12 +162,12 @@ DISALLOW_ALLOCATION(void*, calloc, (size_t u1 UNUSED, size_t u2 UNUSED));
 static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 #define BASENAME(s) (strrchr(s, '/') != NULL ? strrchr(s, '/') + 1 : s)
-#define DL_ERR(fmt, x...)                                                     \
-    do {                                                                      \
-        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),       \
-            "(%s:%d, pid %d) %s: " fmt,                                       \
-            BASENAME(__FILE__), __LINE__, pid, __func__, ##x);                \
-        ERROR(fmt "\n", ##x);                                                 \
+#define DL_ERR(fmt, x...) \
+    do { \
+        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), \
+                      "%s(%s:%d): " fmt, \
+                      __FUNCTION__, BASENAME(__FILE__), __LINE__, ##x); \
+        ERROR(fmt "\n", ##x); \
     } while(0)
 
 const char *linker_get_error(void)
@@ -972,7 +972,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
                    reference..   */
                 s = &symtab[sym];
                 if (ELF32_ST_BIND(s->st_info) != STB_WEAK) {
-                    DL_ERR("cannot locate \"%s\"...", sym_name);
+                    DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, si->name);
                     return -1;
                 }
 
