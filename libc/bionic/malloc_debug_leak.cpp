@@ -75,18 +75,21 @@ extern HashTable gHashTable;
 // =============================================================================
 // Structures
 // =============================================================================
-typedef struct AllocationEntry AllocationEntry;
+
 struct AllocationEntry {
     HashEntry* entry;
     uint32_t guard;
 };
 
+static AllocationEntry* to_header(void* mem) {
+  return reinterpret_cast<AllocationEntry*>(mem) - 1;
+}
 
 // =============================================================================
 // Hash Table functions
 // =============================================================================
-static uint32_t get_hash(intptr_t* backtrace, size_t numEntries)
-{
+
+static uint32_t get_hash(intptr_t* backtrace, size_t numEntries) {
     if (backtrace == NULL) return 0;
 
     int hash = 0;
@@ -99,8 +102,7 @@ static uint32_t get_hash(intptr_t* backtrace, size_t numEntries)
 }
 
 static HashEntry* find_entry(HashTable* table, int slot,
-        intptr_t* backtrace, size_t numEntries, size_t size)
-{
+        intptr_t* backtrace, size_t numEntries, size_t size) {
     HashEntry* entry = table->slots[slot];
     while (entry != NULL) {
         //debug_log("backtrace: %p, entry: %p entry->backtrace: %p\n",
@@ -120,8 +122,7 @@ static HashEntry* find_entry(HashTable* table, int slot,
     return NULL;
 }
 
-static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_t size)
-{
+static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_t size) {
     size_t hash = get_hash(backtrace, numEntries);
     size_t slot = hash % HASHTABLE_SIZE;
 
@@ -130,8 +131,9 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
         abort();
     }
 
-    if (gMallocLeakZygoteChild)
+    if (gMallocLeakZygoteChild) {
         size |= SIZE_FLAG_ZYGOTE_CHILD;
+    }
 
     HashEntry* entry = find_entry(&gHashTable, slot, backtrace, numEntries, size);
 
@@ -139,9 +141,10 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
         entry->allocations++;
     } else {
         // create a new entry
-        entry = (HashEntry*)dlmalloc(sizeof(HashEntry) + numEntries*sizeof(intptr_t));
-        if (!entry)
+        entry = static_cast<HashEntry*>(dlmalloc(sizeof(HashEntry) + numEntries*sizeof(intptr_t)));
+        if (!entry) {
             return NULL;
+        }
         entry->allocations = 1;
         entry->slot = slot;
         entry->prev = NULL;
@@ -164,8 +167,7 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
     return entry;
 }
 
-static int is_valid_entry(HashEntry* entry)
-{
+static int is_valid_entry(HashEntry* entry) {
     if (entry != NULL) {
         int i;
         for (i = 0 ; i < HASHTABLE_SIZE ; i++) {
@@ -184,8 +186,7 @@ static int is_valid_entry(HashEntry* entry)
     return 0;
 }
 
-static void remove_entry(HashEntry* entry)
-{
+static void remove_entry(HashEntry* entry) {
     HashEntry* prev = entry->prev;
     HashEntry* next = entry->next;
 
@@ -206,10 +207,13 @@ static void remove_entry(HashEntry* entry)
 // =============================================================================
 
 #define CHK_FILL_FREE           0xef
-#define CHK_SENTINEL_VALUE      (char)0xeb
+#define CHK_SENTINEL_VALUE      0xeb
 
-void* fill_malloc(size_t bytes)
-{
+extern "C" void* fill_calloc(size_t n_elements, size_t elem_size) {
+    return dlcalloc(n_elements, elem_size);
+}
+
+extern "C" void* fill_malloc(size_t bytes) {
     void* buffer = dlmalloc(bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
@@ -217,15 +221,13 @@ void* fill_malloc(size_t bytes)
     return buffer;
 }
 
-void  fill_free(void* mem)
-{
+extern "C" void fill_free(void* mem) {
     size_t bytes = dlmalloc_usable_size(mem);
     memset(mem, CHK_FILL_FREE, bytes);
     dlfree(mem);
 }
 
-void* fill_realloc(void* mem, size_t bytes)
-{
+extern "C" void* fill_realloc(void* mem, size_t bytes) {
     void* buffer = fill_malloc(bytes);
     if (mem == NULL) {
         return buffer;
@@ -239,8 +241,7 @@ void* fill_realloc(void* mem, size_t bytes)
     return buffer;
 }
 
-void* fill_memalign(size_t alignment, size_t bytes)
-{
+extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
     void* buffer = dlmemalign(alignment, bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
@@ -252,13 +253,11 @@ void* fill_memalign(size_t alignment, size_t bytes)
 // malloc leak functions
 // =============================================================================
 
-#define MEMALIGN_GUARD  ((void*)0xA1A41520)
+static void* MEMALIGN_GUARD = reinterpret_cast<void*>(0xA1A41520);
 
-extern __LIBC_HIDDEN__
-int get_backtrace(intptr_t* addrs, size_t max_entries);
+extern __LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries);
 
-void* leak_malloc(size_t bytes)
-{
+extern "C" void* leak_malloc(size_t bytes) {
     // allocate enough space infront of the allocation to store the pointer for
     // the alloc structure. This will making free'ing the structer really fast!
 
@@ -272,38 +271,35 @@ void* leak_malloc(size_t bytes)
 
     void* base = dlmalloc(size);
     if (base != NULL) {
-        pthread_mutex_lock(&gAllocationsMutex);
+        ScopedPthreadMutexLocker locker(&gAllocationsMutex);
 
-            intptr_t backtrace[BACKTRACE_SIZE];
-            size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
+        intptr_t backtrace[BACKTRACE_SIZE];
+        size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
 
-            AllocationEntry* header = (AllocationEntry*)base;
-            header->entry = record_backtrace(backtrace, numEntries, bytes);
-            header->guard = GUARD;
+        AllocationEntry* header = reinterpret_cast<AllocationEntry*>(base);
+        header->entry = record_backtrace(backtrace, numEntries, bytes);
+        header->guard = GUARD;
 
-            // now increment base to point to after our header.
-            // this should just work since our header is 8 bytes.
-            base = (AllocationEntry*)base + 1;
-
-        pthread_mutex_unlock(&gAllocationsMutex);
+        // now increment base to point to after our header.
+        // this should just work since our header is 8 bytes.
+        base = reinterpret_cast<AllocationEntry*>(base) + 1;
     }
 
     return base;
 }
 
-void leak_free(void* mem)
-{
+extern "C" void leak_free(void* mem) {
     if (mem != NULL) {
-        pthread_mutex_lock(&gAllocationsMutex);
+        ScopedPthreadMutexLocker locker(&gAllocationsMutex);
 
         // check the guard to make sure it is valid
-        AllocationEntry* header = (AllocationEntry*)mem - 1;
+        AllocationEntry* header = to_header(mem);
 
         if (header->guard != GUARD) {
             // could be a memaligned block
-            if (((void**)mem)[-1] == MEMALIGN_GUARD) {
-                mem = ((void**)mem)[-2];
-                header = (AllocationEntry*)mem - 1;
+            if (reinterpret_cast<void**>(mem)[-1] == MEMALIGN_GUARD) {
+                mem = reinterpret_cast<void**>(mem)[-2];
+                header = to_header(mem);
             }
         }
 
@@ -322,36 +318,29 @@ void leak_free(void* mem)
             debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
                     header->guard, header->entry);
         }
-
-        pthread_mutex_unlock(&gAllocationsMutex);
     }
 }
 
-void* leak_calloc(size_t n_elements, size_t elem_size)
-{
-    size_t  size;
-    void*   ptr;
-
+extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
     /* Fail on overflow - just to be safe even though this code runs only
      * within the debugging C library, not the production one */
     if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
         return NULL;
     }
-    size = n_elements * elem_size;
-    ptr  = leak_malloc(size);
+    size_t size = n_elements * elem_size;
+    void* ptr  = leak_malloc(size);
     if (ptr != NULL) {
         memset(ptr, 0, size);
     }
     return ptr;
 }
 
-void* leak_realloc(void* oldMem, size_t bytes)
-{
+extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
     if (oldMem == NULL) {
         return leak_malloc(bytes);
     }
     void* newMem = NULL;
-    AllocationEntry* header = (AllocationEntry*)oldMem - 1;
+    AllocationEntry* header = to_header(oldMem);
     if (header && header->guard == GUARD) {
         size_t oldSize = header->entry->size & ~SIZE_FLAG_MASK;
         newMem = leak_malloc(bytes);
@@ -366,15 +355,16 @@ void* leak_realloc(void* oldMem, size_t bytes)
     return newMem;
 }
 
-void* leak_memalign(size_t alignment, size_t bytes)
-{
+extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
     // we can just use malloc
-    if (alignment <= MALLOC_ALIGNMENT)
+    if (alignment <= MALLOC_ALIGNMENT) {
         return leak_malloc(bytes);
+    }
 
     // need to make sure it's a power of two
-    if (alignment & (alignment-1))
+    if (alignment & (alignment-1)) {
         alignment = 1L << (31 - __builtin_clz(alignment));
+    }
 
     // here, aligment is at least MALLOC_ALIGNMENT<<1 bytes
     // we will align by at least MALLOC_ALIGNMENT bytes
@@ -386,18 +376,19 @@ void* leak_memalign(size_t alignment, size_t bytes)
 
     void* base = leak_malloc(size);
     if (base != NULL) {
-        intptr_t ptr = (intptr_t)base;
-        if ((ptr % alignment) == 0)
+        intptr_t ptr = reinterpret_cast<intptr_t>(base);
+        if ((ptr % alignment) == 0) {
             return base;
+        }
 
         // align the pointer
         ptr += ((-ptr) % alignment);
 
         // there is always enough space for the base pointer and the guard
-        ((void**)ptr)[-1] = MEMALIGN_GUARD;
-        ((void**)ptr)[-2] = base;
+        reinterpret_cast<void**>(ptr)[-1] = MEMALIGN_GUARD;
+        reinterpret_cast<void**>(ptr)[-2] = base;
 
-        return (void*)ptr;
+        return reinterpret_cast<void*>(ptr);
     }
     return base;
 }
