@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X//9hM\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-29T21:28:35Z",
+      "side": 1,
+      "message": "interesting. we have this copy \u0026 pasted all over the place, sadly.",
+      "revId": "dcf0ffbe23b6507218cfad65b2a953124cc17081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X//9hI\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1261,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-08-29T21:28:35Z",
+      "side": 1,
+      "message": "he\u0027s adding cv bugs as fast as we\u0027re removing them...",
+      "revId": "dcf0ffbe23b6507218cfad65b2a953124cc17081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
