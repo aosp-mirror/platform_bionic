@@ -501,7 +501,7 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0 && !defined(__clang__)
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \
     __attribute__ ((always_inline)) \
