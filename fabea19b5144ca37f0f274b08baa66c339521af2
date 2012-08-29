@@ -2,6 +2,108 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAI63//+Eo\u003d",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "Use static_cast when casting from void*.",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI63//+EY\u003d",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "Use static_cast instead since dlmalloc() returns void*.",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI63//+EU\u003d",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "Another opportunity to use static_cast.",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI63//+EQ\u003d",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "static_cast.",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI63//+EM\u003d",
+        "filename": "libc/bionic/malloc_debug_check_mapinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "static_cast",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI63//+EE\u003d",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1010717
+      },
+      "writtenOn": "2012-08-29T15:42:48Z",
+      "side": 1,
+      "message": "static_cast.",
+      "revId": "fabea19b5144ca37f0f274b08baa66c339521af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAI6X//+ao\u003d",
         "filename": "libc/bionic/malloc_debug_common.cpp",
         "patchSetId": 1
