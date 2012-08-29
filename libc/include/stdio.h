@@ -500,13 +500,6 @@ int vsprintf(char *dest, const char *format, __va_list ap)
         __builtin_object_size(dest, 0), format, ap);
 }
 
-
-# if !defined(__clang__)
-/*
- * Clang doesn't have support for __builtin_va_arg_pack()
- * http://clang.llvm.org/docs/UsersManual.html#c_unimpl_gcc
- */
-
 __BIONIC_FORTIFY_INLINE
 __attribute__((__format__ (printf, 3, 4)))
 __attribute__((__nonnull__ (3)))
@@ -524,8 +517,6 @@ int sprintf(char *dest, const char *format, ...)
     return __builtin___sprintf_chk(dest, 0,
         __builtin_object_size(dest, 0), format, __builtin_va_arg_pack());
 }
-
-# endif /* !defined(__clang__) */
 
 extern char *__fgets_real(char *, int, FILE *)
     __asm__(__USER_LABEL_PREFIX__ "fgets");
