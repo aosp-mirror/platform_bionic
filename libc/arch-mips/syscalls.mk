@@ -19,6 +19,7 @@ syscall_src += arch-mips/syscalls/readahead.S
 syscall_src += arch-mips/syscalls/getgroups.S
 syscall_src += arch-mips/syscalls/getpgid.S
 syscall_src += arch-mips/syscalls/getppid.S
+syscall_src += arch-mips/syscalls/getsid.S
 syscall_src += arch-mips/syscalls/setsid.S
 syscall_src += arch-mips/syscalls/setgid.S
 syscall_src += arch-mips/syscalls/__setreuid.S

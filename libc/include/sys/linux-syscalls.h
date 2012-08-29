@@ -83,6 +83,7 @@
 #define __NR_msync                        (__NR_SYSCALL_BASE + 144)
 #define __NR_readv                        (__NR_SYSCALL_BASE + 145)
 #define __NR_writev                       (__NR_SYSCALL_BASE + 146)
+#define __NR_getsid                       (__NR_SYSCALL_BASE + 147)
 #define __NR_perf_event_open              (__NR_SYSCALL_BASE + 364)
 
 #ifdef __arm__
