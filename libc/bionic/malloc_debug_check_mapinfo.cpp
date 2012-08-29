@@ -37,19 +37,17 @@
 // 012345678901234567890123456789012345678901234567890123456789
 // 0         1         2         3         4         5
 
-static mapinfo *parse_maps_line(char *line)
-{
-    mapinfo *mi;
+static mapinfo* parse_maps_line(char* line) {
     int len = strlen(line);
 
-    if(len < 1) return 0;
+    if (len < 1) return 0;
     line[--len] = 0;
 
-    if(len < 50) return 0;
-    if(line[20] != 'x') return 0;
+    if (len < 50) return 0;
+    if (line[20] != 'x') return 0;
 
-    mi = dlmalloc(sizeof(mapinfo) + (len - 47));
-    if(mi == 0) return 0;
+    mapinfo* mi = static_cast<mapinfo*>(dlmalloc(sizeof(mapinfo) + (len - 47)));
+    if (mi == 0) return 0;
 
     mi->start = strtoul(line, 0, 16);
     mi->end = strtoul(line + 9, 0, 16);
@@ -63,16 +61,15 @@ static mapinfo *parse_maps_line(char *line)
 }
 
 __LIBC_HIDDEN__
-mapinfo *init_mapinfo(int pid)
-{
+mapinfo *init_mapinfo(int pid) {
     struct mapinfo *milist = NULL;
-    char data[1024];
-    sprintf(data, "/proc/%d/maps", pid);
+    char data[1024]; // Used to read lines as well as to construct the filename.
+    snprintf(data, sizeof(data), "/proc/%d/maps", pid);
     FILE *fp = fopen(data, "r");
-    if(fp) {
-        while(fgets(data, sizeof(data), fp)) {
+    if (fp) {
+        while (fgets(data, sizeof(data), fp)) {
             mapinfo *mi = parse_maps_line(data);
-            if(mi) {
+            if (mi) {
                 mi->next = milist;
                 milist = mi;
             }
@@ -84,22 +81,20 @@ mapinfo *init_mapinfo(int pid)
 }
 
 __LIBC_HIDDEN__
-void deinit_mapinfo(mapinfo *mi)
-{
-   mapinfo *del;
-   while(mi) {
-       del = mi;
-       mi = mi->next;
-       dlfree(del);
-   }
+void deinit_mapinfo(mapinfo *mi) {
+    mapinfo *del;
+    while (mi) {
+        del = mi;
+        mi = mi->next;
+        dlfree(del);
+    }
 }
 
 /* Map a pc address to the name of the containing ELF file */
 __LIBC_HIDDEN__
-const char *map_to_name(mapinfo *mi, unsigned pc, const char* def)
-{
-    while(mi) {
-        if((pc >= mi->start) && (pc < mi->end)){
+const char *map_to_name(mapinfo *mi, unsigned pc, const char* def) {
+    while (mi) {
+        if ((pc >= mi->start) && (pc < mi->end)) {
             return mi->name;
         }
         mi = mi->next;
@@ -109,11 +104,10 @@ const char *map_to_name(mapinfo *mi, unsigned pc, const char* def)
 
 /* Find the containing map info for the pc */
 __LIBC_HIDDEN__
-const mapinfo *pc_to_mapinfo(mapinfo *mi, unsigned pc, unsigned *rel_pc)
-{
+const mapinfo *pc_to_mapinfo(mapinfo *mi, unsigned pc, unsigned *rel_pc) {
     *rel_pc = pc;
-    while(mi) {
-        if((pc >= mi->start) && (pc < mi->end)){
+    while (mi) {
+        if ((pc >= mi->start) && (pc < mi->end)) {
             // Only calculate the relative offset for shared libraries
             if (strstr(mi->name, ".so")) {
                 *rel_pc -= mi->start;

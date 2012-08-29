@@ -67,33 +67,27 @@ extern unsigned int malloc_double_free_backlog;
 #define REAR_GUARD          0xbb
 #define REAR_GUARD_LEN      (1<<5)
 
-static void print_backtrace(const intptr_t *bt, unsigned int depth);
-
-static void log_message(const char* format, ...)
-{
-    extern pthread_mutex_t gAllocationsMutex;
+static void log_message(const char* format, ...) {
     extern const MallocDebug __libc_malloc_default_dispatch;
     extern const MallocDebug* __libc_malloc_dispatch;
+    extern pthread_mutex_t gAllocationsMutex;
 
-    va_list  args;
-
-    pthread_mutex_lock(&gAllocationsMutex);
+    va_list args;
     {
+        ScopedPthreadMutexLocker locker(&gAllocationsMutex);
         const MallocDebug* current_dispatch = __libc_malloc_dispatch;
         __libc_malloc_dispatch = &__libc_malloc_default_dispatch;
         va_start(args, format);
-        __libc_android_log_vprint(ANDROID_LOG_ERROR, "libc",
-                                format, args);
+        __libc_android_log_vprint(ANDROID_LOG_ERROR, "libc", format, args);
         va_end(args);
         __libc_malloc_dispatch = current_dispatch;
     }
-    pthread_mutex_unlock(&gAllocationsMutex);
 }
 
-struct hdr {
+struct hdr_t {
     uint32_t tag;
-    struct hdr *prev;
-    struct hdr *next;
+    hdr_t* prev;
+    hdr_t* next;
     intptr_t bt[MAX_BACKTRACE_DEPTH];
     int bt_depth;
     intptr_t freed_bt[MAX_BACKTRACE_DEPTH];
@@ -102,43 +96,35 @@ struct hdr {
     char front_guard[FRONT_GUARD_LEN];
 } __attribute__((packed));
 
-struct ftr {
+struct ftr_t {
     char rear_guard[REAR_GUARD_LEN];
 } __attribute__((packed));
 
-static inline struct ftr * to_ftr(struct hdr *hdr)
-{
-    return (struct ftr *)(((char *)(hdr + 1)) + hdr->size);
+static inline ftr_t* to_ftr(hdr_t* hdr) {
+    return reinterpret_cast<ftr_t*>(reinterpret_cast<char*>(hdr + 1) + hdr->size);
 }
 
-static inline void *user(struct hdr *hdr)
-{
+static inline void* user(hdr_t* hdr) {
     return hdr + 1;
 }
 
-static inline struct hdr *meta(void *user)
-{
-    return ((struct hdr *)user) - 1;
+static inline hdr_t* meta(void* user) {
+    return reinterpret_cast<hdr_t*>(user) - 1;
 }
 
-/* Call this on exit() to get leaked memory */
-void free_leaked_memory(void);
-
 static unsigned num;
-static struct hdr *tail;
-static struct hdr *head;
+static hdr_t *tail;
+static hdr_t *head;
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 static unsigned backlog_num;
-static struct hdr *backlog_tail;
-static struct hdr *backlog_head;
+static hdr_t *backlog_tail;
+static hdr_t *backlog_head;
 static pthread_mutex_t backlog_lock = PTHREAD_MUTEX_INITIALIZER;
 
-extern __LIBC_HIDDEN__
-int get_backtrace(intptr_t* addrs, size_t max_entries);
+extern __LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries);
 
-static void print_backtrace(const intptr_t *bt, unsigned int depth)
-{
+static void print_backtrace(const intptr_t *bt, unsigned int depth) {
     const mapinfo *mi;
     unsigned int cnt;
     unsigned int rel_pc;
@@ -158,39 +144,35 @@ static void print_backtrace(const intptr_t *bt, unsigned int depth)
     }
 }
 
-static inline void init_front_guard(struct hdr *hdr)
-{
+static inline void init_front_guard(hdr_t *hdr) {
     memset(hdr->front_guard, FRONT_GUARD, FRONT_GUARD_LEN);
 }
 
-static inline bool is_front_guard_valid(struct hdr *hdr)
-{
-    unsigned i;
-    for (i = 0; i < FRONT_GUARD_LEN; i++)
-        if (hdr->front_guard[i] != FRONT_GUARD)
+static inline bool is_front_guard_valid(hdr_t *hdr) {
+    for (size_t i = 0; i < FRONT_GUARD_LEN; i++) {
+        if (hdr->front_guard[i] != FRONT_GUARD) {
             return 0;
+        }
+    }
     return 1;
 }
 
-static inline void init_rear_guard(struct hdr *hdr)
-{
-    struct ftr *ftr = to_ftr(hdr);
+static inline void init_rear_guard(hdr_t *hdr) {
+    ftr_t* ftr = to_ftr(hdr);
     memset(ftr->rear_guard, REAR_GUARD, REAR_GUARD_LEN);
 }
 
-static inline bool is_rear_guard_valid(struct hdr *hdr)
-{
+static inline bool is_rear_guard_valid(hdr_t *hdr) {
     unsigned i;
     int valid = 1;
     int first_mismatch = -1;
-    struct ftr *ftr = to_ftr(hdr);
+    ftr_t* ftr = to_ftr(hdr);
     for (i = 0; i < REAR_GUARD_LEN; i++) {
         if (ftr->rear_guard[i] != REAR_GUARD) {
             if (first_mismatch < 0)
                 first_mismatch = i;
             valid = 0;
-        }
-        else if (first_mismatch >= 0) {
+        } else if (first_mismatch >= 0) {
             log_message("+++ REAR GUARD MISMATCH [%d, %d)\n", first_mismatch, i);
             first_mismatch = -1;
         }
@@ -201,8 +183,7 @@ static inline bool is_rear_guard_valid(struct hdr *hdr)
     return valid;
 }
 
-static inline void add_locked(struct hdr *hdr, struct hdr **tail, struct hdr **head)
-{
+static inline void add_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
     hdr->prev = NULL;
     hdr->next = *head;
     if (*head)
@@ -212,50 +193,46 @@ static inline void add_locked(struct hdr *hdr, struct hdr **tail, struct hdr **h
     *head = hdr;
 }
 
-static inline int del_locked(struct hdr *hdr, struct hdr **tail, struct hdr **head)
-{
-    if (hdr->prev)
+static inline int del_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
+    if (hdr->prev) {
         hdr->prev->next = hdr->next;
-    else
+    } else {
         *head = hdr->next;
-    if (hdr->next)
+    }
+    if (hdr->next) {
         hdr->next->prev = hdr->prev;
-    else
+    } else {
         *tail = hdr->prev;
+    }
     return 0;
 }
 
-static inline void add(struct hdr *hdr, size_t size)
-{
-    pthread_mutex_lock(&lock);
+static inline void add(hdr_t *hdr, size_t size) {
+    ScopedPthreadMutexLocker locker(&lock);
     hdr->tag = ALLOCATION_TAG;
     hdr->size = size;
     init_front_guard(hdr);
     init_rear_guard(hdr);
     num++;
     add_locked(hdr, &tail, &head);
-    pthread_mutex_unlock(&lock);
 }
 
-static inline int del(struct hdr *hdr)
-{
-    if (hdr->tag != ALLOCATION_TAG)
+static inline int del(hdr_t *hdr) {
+    if (hdr->tag != ALLOCATION_TAG) {
         return -1;
+    }
 
-    pthread_mutex_lock(&lock);
+    ScopedPthreadMutexLocker locker(&lock);
     del_locked(hdr, &tail, &head);
     num--;
-    pthread_mutex_unlock(&lock);
     return 0;
 }
 
-static inline void poison(struct hdr *hdr)
-{
+static inline void poison(hdr_t *hdr) {
     memset(user(hdr), FREE_POISON, hdr->size);
 }
 
-static int was_used_after_free(struct hdr *hdr)
-{
+static int was_used_after_free(hdr_t *hdr) {
     unsigned i;
     const char *data = (const char *)user(hdr);
     for (i = 0; i < hdr->size; i++)
@@ -265,8 +242,7 @@ static int was_used_after_free(struct hdr *hdr)
 }
 
 /* returns 1 if valid, *safe == 1 if safe to dump stack */
-static inline int check_guards(struct hdr *hdr, int *safe)
-{
+static inline int check_guards(hdr_t *hdr, int *safe) {
     *safe = 1;
     if (!is_front_guard_valid(hdr)) {
         if (hdr->front_guard[0] == FRONT_GUARD) {
@@ -291,17 +267,15 @@ static inline int check_guards(struct hdr *hdr, int *safe)
 }
 
 /* returns 1 if valid, *safe == 1 if safe to dump stack */
-static inline int check_allocation_locked(struct hdr *hdr, int *safe)
-{
+static inline int check_allocation_locked(hdr_t *hdr, int *safe) {
     int valid = 1;
     *safe = 1;
 
     if (hdr->tag != ALLOCATION_TAG && hdr->tag != BACKLOG_TAG) {
         log_message("+++ ALLOCATION %p HAS INVALID TAG %08x (NOT DUMPING STACKTRACE)\n",
                    user(hdr), hdr->tag);
-	/* Allocation header is probably corrupt, do not dequeue or dump stack
-         * trace.
-         */
+        // Allocation header is probably corrupt, do not dequeue or dump stack
+        // trace.
         *safe = 0;
         return 0;
     }
@@ -310,11 +284,11 @@ static inline int check_allocation_locked(struct hdr *hdr, int *safe)
         log_message("+++ ALLOCATION %p SIZE %d WAS USED AFTER BEING FREED\n",
                    user(hdr), hdr->size);
         valid = 0;
-	/* check the guards to see if it's safe to dump a stack trace */
-        (void)check_guards(hdr, safe);
-    }
-    else
+        /* check the guards to see if it's safe to dump a stack trace */
+        check_guards(hdr, safe);
+    } else {
         valid = check_guards(hdr, safe);
+    }
 
     if (!valid && *safe) {
         log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
@@ -330,12 +304,10 @@ static inline int check_allocation_locked(struct hdr *hdr, int *safe)
     return valid;
 }
 
-static inline int del_and_check_locked(struct hdr *hdr,
-                                   struct hdr **tail, struct hdr **head, unsigned *cnt,
-                                   int *safe)
-{
-    int valid;
-    valid = check_allocation_locked(hdr, safe);
+static inline int del_and_check_locked(hdr_t *hdr,
+                                       hdr_t **tail, hdr_t **head, unsigned *cnt,
+                                       int *safe) {
+    int valid = check_allocation_locked(hdr, safe);
     if (safe) {
         (*cnt)--;
         del_locked(hdr, tail, head);
@@ -343,56 +315,42 @@ static inline int del_and_check_locked(struct hdr *hdr,
     return valid;
 }
 
-static inline void del_from_backlog_locked(struct hdr *hdr)
-{
-        int safe;
-        (void)del_and_check_locked(hdr,
-                              &backlog_tail, &backlog_head, &backlog_num,
-                              &safe);
-        hdr->tag = 0; /* clear the tag */
+static inline void del_from_backlog_locked(hdr_t *hdr) {
+    int safe;
+    del_and_check_locked(hdr,
+                         &backlog_tail, &backlog_head, &backlog_num,
+                         &safe);
+    hdr->tag = 0; /* clear the tag */
 }
 
-static inline void del_from_backlog(struct hdr *hdr)
-{
-    pthread_mutex_lock(&backlog_lock);
+static inline void del_from_backlog(hdr_t *hdr) {
+    ScopedPthreadMutexLocker locker(&backlog_lock);
     del_from_backlog_locked(hdr);
-    pthread_mutex_unlock(&backlog_lock);
 }
 
-static inline int del_leak(struct hdr *hdr, int *safe)
-{
-    int valid;
-    pthread_mutex_lock(&lock);
-    valid = del_and_check_locked(hdr,
-                            &tail, &head, &num,
-                            safe);
-    pthread_mutex_unlock(&lock);
-    return valid;
+static inline int del_leak(hdr_t *hdr, int *safe) {
+    ScopedPthreadMutexLocker locker(&lock);
+    return del_and_check_locked(hdr, &tail, &head, &num, safe);
 }
 
-static inline void add_to_backlog(struct hdr *hdr)
-{
-    pthread_mutex_lock(&backlog_lock);
+static inline void add_to_backlog(hdr_t *hdr) {
+    ScopedPthreadMutexLocker locker(&backlog_lock);
     hdr->tag = BACKLOG_TAG;
     backlog_num++;
     add_locked(hdr, &backlog_tail, &backlog_head);
     poison(hdr);
     /* If we've exceeded the maximum backlog, clear it up */
     while (backlog_num > malloc_double_free_backlog) {
-        struct hdr *gone = backlog_tail;
+        hdr_t *gone = backlog_tail;
         del_from_backlog_locked(gone);
         dlfree(gone);
     }
-    pthread_mutex_unlock(&backlog_lock);
 }
 
-void* chk_malloc(size_t size)
-{
-    struct hdr *hdr;
-
+extern "C" void* chk_malloc(size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
-    hdr = dlmalloc(sizeof(struct hdr) + size + sizeof(struct ftr));
+    hdr_t* hdr = static_cast<hdr_t*>(dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t)));
     if (hdr) {
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
         add(hdr, size);
@@ -401,23 +359,19 @@ void* chk_malloc(size_t size)
     return NULL;
 }
 
-void* chk_memalign(size_t alignment, size_t bytes)
-{
+extern "C" void* chk_memalign(size_t, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     // XXX: it's better to use malloc, than being wrong
     return chk_malloc(bytes);
 }
 
-void chk_free(void *ptr)
-{
-    struct hdr *hdr;
-
+extern "C" void chk_free(void *ptr) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
     if (!ptr) /* ignore free(NULL) */
         return;
 
-    hdr = meta(ptr);
+    hdr_t* hdr = meta(ptr);
 
     if (del(hdr) < 0) {
         intptr_t bt[MAX_BACKTRACE_DEPTH];
@@ -436,26 +390,21 @@ void chk_free(void *ptr)
             log_message("+++ ALLOCATION %p SIZE %d NOW BEING FREED HERE:\n",
                        user(hdr), hdr->size);
             print_backtrace(bt, depth);
-        }
-        else {
+        } else {
             log_message("+++ ALLOCATION %p IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr));
             print_backtrace(bt, depth);
             /* Leak here so that we do not crash */
             //dlfree(user(hdr));
         }
-    }
-    else {
+    } else {
         hdr->freed_bt_depth = get_backtrace(hdr->freed_bt,
                                       MAX_BACKTRACE_DEPTH);
         add_to_backlog(hdr);
     }
 }
 
-void *chk_realloc(void *ptr, size_t size)
-{
-    struct hdr *hdr;
-
+extern "C" void *chk_realloc(void *ptr, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
     if (!size) {
@@ -463,10 +412,11 @@ void *chk_realloc(void *ptr, size_t size)
         return NULL;
     }
 
-    if (!ptr)
+    if (!ptr) {
         return chk_malloc(size);
+    }
 
-    hdr = meta(ptr);
+    hdr_t* hdr = meta(ptr);
 
     if (del(hdr) < 0) {
         intptr_t bt[MAX_BACKTRACE_DEPTH];
@@ -491,8 +441,7 @@ void *chk_realloc(void *ptr, size_t size)
              * can default to this behavior.
              */
             del_from_backlog(hdr);
-        }
-        else {
+        } else {
             log_message("+++ REALLOCATION %p SIZE %d IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr), size);
             print_backtrace(bt, depth);
@@ -502,7 +451,7 @@ void *chk_realloc(void *ptr, size_t size)
         }
     }
 
-    hdr = dlrealloc(hdr, sizeof(struct hdr) + size + sizeof(struct ftr));
+    hdr = static_cast<hdr_t*>(dlrealloc(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
     if (hdr) {
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
         add(hdr, size);
@@ -512,12 +461,10 @@ void *chk_realloc(void *ptr, size_t size)
     return NULL;
 }
 
-void *chk_calloc(int nmemb, size_t size)
-{
+extern "C" void *chk_calloc(int nmemb, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
-    struct hdr *hdr;
     size_t total_size = nmemb * size;
-    hdr = dlcalloc(1, sizeof(struct hdr) + total_size + sizeof(struct ftr));
+    hdr_t* hdr = static_cast<hdr_t*>(dlcalloc(1, sizeof(hdr_t) + total_size + sizeof(ftr_t)));
     if (hdr) {
         hdr->bt_depth = get_backtrace(
                             hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -527,13 +474,12 @@ void *chk_calloc(int nmemb, size_t size)
     return NULL;
 }
 
-static void heaptracker_free_leaked_memory(void)
-{
-    struct hdr *del; int cnt;
-
-    if (num)
+static void heaptracker_free_leaked_memory() {
+    if (num) {
         log_message("+++ THERE ARE %d LEAKED ALLOCATIONS\n", num);
+    }
 
+    hdr_t *del = NULL;
     while (head) {
         int safe;
         del = head;
@@ -550,7 +496,7 @@ static void heaptracker_free_leaked_memory(void)
 
 //  log_message("+++ DELETING %d BACKLOGGED ALLOCATIONS\n", backlog_num);
     while (backlog_head) {
-	del = backlog_tail;
+        del = backlog_tail;
         del_from_backlog(del);
         dlfree(del);
     }
@@ -559,16 +505,14 @@ static void heaptracker_free_leaked_memory(void)
 /* Initializes malloc debugging framework.
  * See comments on MallocDebugInit in malloc_debug_common.h
  */
-int malloc_debug_initialize(void)
-{
+extern "C" int malloc_debug_initialize() {
     if (!malloc_double_free_backlog)
         malloc_double_free_backlog = BACKLOG_DEFAULT_LEN;
     milist = init_mapinfo(getpid());
     return 0;
 }
 
-void malloc_debug_finalize(void)
-{
+extern "C" void malloc_debug_finalize() {
     heaptracker_free_leaked_memory();
     deinit_mapinfo(milist);
 }

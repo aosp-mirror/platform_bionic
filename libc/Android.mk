@@ -505,7 +505,8 @@ libc_common_cflags := \
     -I$(LOCAL_PATH)/private \
     -DPOSIX_MISTAKE \
     -DLOG_ON_HEAP_ERROR \
-    -std=gnu99
+    -std=gnu99 \
+    -Wall -Wextra
 
 # these macro definitions are required to implement the
 # 'timezone' and 'daylight' global variables, as well as
@@ -815,7 +816,7 @@ LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
-	bionic/malloc_debug_common.c \
+	bionic/malloc_debug_common.cpp \
 	bionic/libc_init_static.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
@@ -847,7 +848,7 @@ LOCAL_SRC_FILES := \
 	$(libc_arch_dynamic_src_files) \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
-	bionic/malloc_debug_common.c \
+	bionic/malloc_debug_common.cpp \
 	bionic/pthread_debug.c \
 	bionic/libc_init_dynamic.c
 
@@ -889,10 +890,10 @@ LOCAL_CFLAGS := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	bionic/malloc_debug_leak.c \
-	bionic/malloc_debug_check.c \
-	bionic/malloc_debug_check_mapinfo.c \
-	bionic/malloc_debug_stacktrace.c
+	bionic/malloc_debug_leak.cpp \
+	bionic/malloc_debug_check.cpp \
+	bionic/malloc_debug_check_mapinfo.cpp \
+	bionic/malloc_debug_stacktrace.cpp
 
 LOCAL_MODULE:= libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -920,7 +921,7 @@ LOCAL_CFLAGS := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	bionic/malloc_debug_qemu.c
+	bionic/malloc_debug_qemu.cpp
 
 LOCAL_MODULE:= libc_malloc_debug_qemu
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
