@@ -47,7 +47,7 @@ char* getcwd(char* buf, size_t size) {
       // TODO: if we need to support paths longer than that, we'll have to walk the tree ourselves.
       size = getpagesize();
     }
-    buf = allocated_buf = reinterpret_cast<char*>(malloc(allocated_size));
+    buf = allocated_buf = static_cast<char*>(malloc(allocated_size));
     if (buf == NULL) {
       // malloc set errno.
       return NULL;
