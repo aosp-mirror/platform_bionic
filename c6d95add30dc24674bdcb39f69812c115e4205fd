@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI5n///WE\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3158,
+      "author": {
+        "id": 1014213
+      },
+      "writtenOn": "2012-08-30T15:31:08Z",
+      "side": 1,
+      "message": "Bionic\u0027s pthread_atfork() uses malloc. \"pthread_atfork(\u0026pre_fork, \u0026post_fork_parent, \u0026post_fork_child);\" should be called after mparams.magic is set, otherwise we will get recursive init_mparams() calls.\n\npthread_atfork() should be called after RELEASE_MALLOC_GLOBAL_LOCK()",
+      "revId": "c6d95add30dc24674bdcb39f69812c115e4205fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
