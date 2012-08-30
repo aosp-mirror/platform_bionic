@@ -160,7 +160,9 @@ struct soinfo {
     /* When you read a virtual address from the ELF file, add this
      * value to get the corresponding address in the process' address space */
     Elf32_Addr load_bias;
-    int has_text_relocations;
+
+    bool has_text_relocations;
+    bool has_DT_SYMBOLIC;
 };
 
 

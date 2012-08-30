@@ -236,5 +236,7 @@ soinfo libdl_info = {
 
     refcount: 0,
     { l_addr: 0, l_name: 0, l_ld: 0, l_next: 0, l_prev: 0, },
-    constructors_called: 0, load_bias: 0, has_text_relocations: 0,
+    constructors_called: 0, load_bias: 0,
+    has_text_relocations: false,
+    has_DT_SYMBOLIC: true,
 };
