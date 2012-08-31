@@ -518,7 +518,7 @@ void  dlmalloc_stats(void);
   p = malloc(n);
   assert(malloc_usable_size(p) >= 256);
 */
-size_t dlmalloc_usable_size(void*);
+size_t dlmalloc_usable_size(const void*);
 
 #if MSPACES
 
@@ -601,9 +601,7 @@ void** mspace_independent_calloc(mspace msp, size_t n_elements,
 void** mspace_independent_comalloc(mspace msp, size_t n_elements,
                                    size_t sizes[], void* chunks[]);
 size_t mspace_bulk_free(mspace msp, void**, size_t n_elements);
-// BEGIN android-changed: added const
 size_t mspace_usable_size(const void* mem);
-// END android-changed
 void mspace_malloc_stats(mspace msp);
 int mspace_trim(mspace msp, size_t pad);
 size_t mspace_footprint(mspace msp);

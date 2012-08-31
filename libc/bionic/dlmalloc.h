@@ -20,7 +20,6 @@
 /* Configure dlmalloc. */
 #define HAVE_GETPAGESIZE 1
 #define MALLOC_INSPECT_ALL 1
-#define MORECORE_CONTIGUOUS 0
 #define MSPACES 0
 #define REALLOC_ZERO_BYTES_FREES 1
 #define USE_DL_PREFIX 1
