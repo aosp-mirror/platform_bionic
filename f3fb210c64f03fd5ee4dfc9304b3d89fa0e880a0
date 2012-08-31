@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X//8Ms\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-31T17:30:28Z",
+      "side": 1,
+      "message": "not LOCK_AT_FORK per se, right? but the implementation of pthread_atfork used by LOCK_AT_FORK",
+      "revId": "f3fb210c64f03fd5ee4dfc9304b3d89fa0e880a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X//8MY\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3102,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-31T17:30:28Z",
+      "side": 1,
+      "message": "i guess I didn\u0027t notice before, but historically there are android-added, android-changed, and android-removed, and these all seem to be \"android-added\"",
+      "revId": "f3fb210c64f03fd5ee4dfc9304b3d89fa0e880a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI6X//8Mc\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3115,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-08-31T17:30:28Z",
+      "side": 1,
+      "message": "it might be useful to use the same descroption such as \": added first_run\" to be able to understand what changes are related. (but perhaps a better description then)",
+      "revId": "f3fb210c64f03fd5ee4dfc9304b3d89fa0e880a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
