@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6n//8kM\u003d",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-08-31T22:07:42Z",
+      "side": 1,
+      "message": "\"man psignal\" says this is suppose to be an int, not an unsigned int.",
+      "revId": "7e35a9961da5030c4f6fe73b0ea6ac81652f6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
