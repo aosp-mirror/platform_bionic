@@ -4,8 +4,7 @@
   http://creativecommons.org/publicdomain/zero/1.0/ Send questions,
   comments, complaints, performance data, etc to dl@cs.oswego.edu
 
-* Version 2.8.5 Sun May 22 10:26:02 2011  Doug Lea  (dl at gee)
-
+* Version 2.8.6 Wed Aug 29 06:57:58 2012  Doug Lea
    Note: There may be an updated version of this malloc obtainable at
            ftp://gee.cs.oswego.edu/pub/misc/malloc.c
          Check before installing!
@@ -19,7 +18,7 @@
   compile-time and dynamic tuning options.
 
   For convenience, an include file for code using this malloc is at:
-     ftp://gee.cs.oswego.edu/pub/misc/malloc-2.8.5.h
+     ftp://gee.cs.oswego.edu/pub/misc/malloc-2.8.6.h
   You don't really need this .h file unless you call functions not
   defined in your system include files.  The .h file contains only the
   excerpts from this file needed for using this malloc on ANSI C/C++
@@ -41,7 +40,7 @@
        than pointers, you can use a previous release of this malloc
        (e.g. 2.7.2) supporting these.)
 
-  Alignment:                                     8 bytes (default)
+  Alignment:                                     8 bytes (minimum)
        This suffices for nearly all current machines and C compilers.
        However, you can define MALLOC_ALIGNMENT to be wider than this
        if necessary (up to 128bytes), at the expense of using more space.
@@ -242,11 +241,11 @@ WIN32                    default: defined if _WIN32 defined
 DLMALLOC_EXPORT       default: extern
   Defines how public APIs are declared. If you want to export via a
   Windows DLL, you might define this as
-    #define DLMALLOC_EXPORT extern  __declspace(dllexport)
+    #define DLMALLOC_EXPORT extern  __declspec(dllexport)
   If you want a POSIX ELF shared object, you might use
     #define DLMALLOC_EXPORT extern __attribute__((visibility("default")))
 
-MALLOC_ALIGNMENT         default: (size_t)8
+MALLOC_ALIGNMENT         default: (size_t)(2 * sizeof(void *))
   Controls the minimum alignment for malloc'ed chunks.  It must be a
   power of two and at least 8, even on machines for which smaller
   alignments would suffice. It may be defined as larger than this
@@ -278,6 +277,12 @@ USE_RECURSIVE_LOCKS      default: not defined
   If defined nonzero, uses recursive (aka reentrant) locks, otherwise
   uses plain mutexes. This is not required for malloc proper, but may
   be needed for layered allocators such as nedmalloc.
+
+LOCK_AT_FORK            default: not defined
+  If defined nonzero, performs pthread_atfork upon initialization
+  to initialize child lock while holding parent lock. The implementation
+  assumes that pthread locks (not custom locks) are being used. In other
+  cases, you may need to customize the implementation.
 
 FOOTERS                  default: 0
   If true, provide extra checking and dispatching by placing
@@ -518,7 +523,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 
 /* Version identifier to allow people to support multiple versions */
 #ifndef DLMALLOC_VERSION
-#define DLMALLOC_VERSION 20805
+#define DLMALLOC_VERSION 20806
 #endif /* DLMALLOC_VERSION */
 
 #ifndef DLMALLOC_EXPORT
@@ -610,7 +615,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #endif  /* ONLY_MSPACES */
 #endif  /* MSPACES */
 #ifndef MALLOC_ALIGNMENT
-#define MALLOC_ALIGNMENT ((size_t)8U)
+#define MALLOC_ALIGNMENT ((size_t)(2 * sizeof(void *)))
 #endif  /* MALLOC_ALIGNMENT */
 #ifndef FOOTERS
 #define FOOTERS 0
@@ -1238,8 +1243,6 @@ DLMALLOC_EXPORT int  dlmalloc_trim(size_t);
 */
 DLMALLOC_EXPORT void  dlmalloc_stats(void);
 
-#endif /* ONLY_MSPACES */
-
 /*
   malloc_usable_size(void* p);
 
@@ -1254,7 +1257,11 @@ DLMALLOC_EXPORT void  dlmalloc_stats(void);
   p = malloc(n);
   assert(malloc_usable_size(p) >= 256);
 */
-size_t dlmalloc_usable_size(void*);
+/* BEGIN android-changed: added const */
+size_t dlmalloc_usable_size(const void*);
+/* END android-change */
+
+#endif /* ONLY_MSPACES */
 
 #if MSPACES
 
@@ -1387,9 +1394,7 @@ DLMALLOC_EXPORT struct mallinfo mspace_mallinfo(mspace msp);
 /*
   malloc_usable_size(void* p) behaves the same as malloc_usable_size;
 */
-// BEGIN android-changed: added const
 DLMALLOC_EXPORT size_t mspace_usable_size(const void* mem);
-// END android-changed
 
 /*
   mspace_malloc_stats behaves as malloc_stats, but reports
@@ -1516,11 +1521,16 @@ LONG __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value);
 #define interlockedcompareexchange(a, b, c) __sync_val_compare_and_swap(a, c, b)
 #define interlockedexchange __sync_lock_test_and_set
 #endif /* Win32 */
+#else /* USE_LOCKS */
 #endif /* USE_LOCKS */
+
+#ifndef LOCK_AT_FORK
+#define LOCK_AT_FORK 0
+#endif
 
 /* Declarations for bit scanning on win32 */
 #if defined(_MSC_VER) && _MSC_VER>=1300
-#ifndef BitScanForward	/* Try to avoid pulling in WinNT.h */
+#ifndef BitScanForward /* Try to avoid pulling in WinNT.h */
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -1845,8 +1855,8 @@ static FORCEINLINE void x86_clear_lock(int* sl) {
 #define CLEAR_LOCK(sl)   x86_clear_lock(sl)
 
 #else /* Win32 MSC */
-#define CAS_LOCK(sl)     interlockedexchange(sl, 1)
-#define CLEAR_LOCK(sl)   interlockedexchange (sl, 0)
+#define CAS_LOCK(sl)     interlockedexchange(sl, (LONG)1)
+#define CLEAR_LOCK(sl)   interlockedexchange (sl, (LONG)0)
 
 #endif /* ... gcc spins locks ... */
 
@@ -1970,7 +1980,7 @@ static FORCEINLINE int recursive_try_lock(MLOCK_T *lk) {
 #define NEED_GLOBAL_LOCK_INIT
 
 static MLOCK_T malloc_global_mutex;
-static volatile long malloc_global_mutex_status;
+static volatile LONG malloc_global_mutex_status;
 
 /* Use spin loop to initialize global lock */
 static void init_malloc_global_mutex() {
@@ -1980,9 +1990,9 @@ static void init_malloc_global_mutex() {
       return;
     /* transition to < 0 while initializing, then to > 0) */
     if (stat == 0 &&
-        interlockedcompareexchange(&malloc_global_mutex_status, -1, 0) == 0) {
+        interlockedcompareexchange(&malloc_global_mutex_status, (LONG)-1, (LONG)0) == 0) {
       InitializeCriticalSection(&malloc_global_mutex);
-      interlockedexchange(&malloc_global_mutex_status,1);
+      interlockedexchange(&malloc_global_mutex_status, (LONG)1);
       return;
     }
     SleepEx(0, FALSE);
@@ -2001,7 +2011,7 @@ static void init_malloc_global_mutex() {
 /* Cope with old-style linux recursive lock initialization by adding */
 /* skipped internal declaration from pthread.h */
 extern int pthread_mutexattr_setkind_np __P ((pthread_mutexattr_t *__attr,
-					   int __kind));
+                                              int __kind));
 #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
 #define pthread_mutexattr_settype(x,y) pthread_mutexattr_setkind_np(x,y)
 #endif /* USE_RECURSIVE_LOCKS ... */
@@ -2817,7 +2827,9 @@ static size_t traverse_and_check(mstate m);
 #define MIN_SMALL_INDEX     (small_index(MIN_CHUNK_SIZE))
 
 /* addressing by index. See above about smallbin repositioning */
-#define smallbin_at(M, i)   ((sbinptr)((char*)&((M)->smallbins[(i)<<1])))
+/* BEGIN android-changed: strict aliasing change: char* cast to void* */
+#define smallbin_at(M, i)   ((sbinptr)((void*)&((M)->smallbins[(i)<<1])))
+/* END android-changed */
 #define treebin_at(M,i)     (&((M)->treebins[i]))
 
 /* assign tree index for size S to variable I. Use x86 asm if possible  */
@@ -3079,6 +3091,12 @@ static size_t traverse_and_check(mstate m);
 
 /* ---------------------------- setting mparams -------------------------- */
 
+#if LOCK_AT_FORK
+static void pre_fork(void)         { ACQUIRE_LOCK(&(gm)->mutex); }
+static void post_fork_parent(void) { RELEASE_LOCK(&(gm)->mutex); }
+static void post_fork_child(void)  { INITIAL_LOCK(&(gm)->mutex); }
+#endif /* LOCK_AT_FORK */
+
 /* Initialize mparams */
 static int init_mparams(void) {
 #ifdef NEED_GLOBAL_LOCK_INIT
@@ -3120,7 +3138,6 @@ static int init_mparams(void) {
         ((gsize            & (gsize-SIZE_T_ONE))            != 0) ||
         ((psize            & (psize-SIZE_T_ONE))            != 0))
       ABORT;
-
     mparams.granularity = gsize;
     mparams.page_size = psize;
     mparams.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
@@ -3136,6 +3153,9 @@ static int init_mparams(void) {
     gm->mflags = mparams.default_mflags;
     (void)INITIAL_LOCK(&gm->mutex);
 #endif
+#if LOCK_AT_FORK
+    pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
+#endif
 
     {
 #if USE_DEV_RANDOM
@@ -3150,11 +3170,11 @@ static int init_mparams(void) {
       else
 #endif /* USE_DEV_RANDOM */
 #ifdef WIN32
-        magic = (size_t)(GetTickCount() ^ (size_t)0x55555555U);
+      magic = (size_t)(GetTickCount() ^ (size_t)0x55555555U);
 #elif defined(LACKS_TIME_H)
       magic = (size_t)&magic ^ (size_t)0x55555555U;
 #else
-        magic = (size_t)(time(0) ^ (size_t)0x55555555U);
+      magic = (size_t)(time(0) ^ (size_t)0x55555555U);
 #endif
       magic |= (size_t)8U;    /* ensure nonzero */
       magic &= ~(size_t)7U;   /* improve chances of fault for bad values */
@@ -3836,9 +3856,7 @@ static void* mmap_alloc(mstate m, size_t nb) {
 /* Realloc using mmap */
 static mchunkptr mmap_resize(mstate m, mchunkptr oldp, size_t nb, int flags) {
   size_t oldsize = chunksize(oldp);
-  // BEGIN android-changed: avoid self assignment
   (void)flags; /* placate people compiling -Wunused */
-  // END android-changed
   if (is_small(nb)) /* Can't shrink mmap regions below small size */
     return 0;
   /* Keep old chunk if big enough but not too big */
@@ -4063,6 +4081,7 @@ static void* sys_alloc(mstate m, size_t nb) {
 
   if (MORECORE_CONTIGUOUS && !use_noncontiguous(m)) {
     char* br = CMFAIL;
+    size_t ssize = asize; /* sbrk call size */
     msegmentptr ss = (m->top == 0)? 0 : segment_holding(m, (char*)m->top);
     ACQUIRE_MALLOC_GLOBAL_LOCK();
 
@@ -4072,39 +4091,39 @@ static void* sys_alloc(mstate m, size_t nb) {
         size_t fp;
         /* Adjust to end on a page boundary */
         if (!is_page_aligned(base))
-          asize += (page_align((size_t)base) - (size_t)base);
-        fp = m->footprint + asize; /* recheck limits */
-        if (asize > nb && asize < HALF_MAX_SIZE_T &&
+          ssize += (page_align((size_t)base) - (size_t)base);
+        fp = m->footprint + ssize; /* recheck limits */
+        if (ssize > nb && ssize < HALF_MAX_SIZE_T &&
             (m->footprint_limit == 0 ||
              (fp > m->footprint && fp <= m->footprint_limit)) &&
-            (br = (char*)(CALL_MORECORE(asize))) == base) {
+            (br = (char*)(CALL_MORECORE(ssize))) == base) {
           tbase = base;
-          tsize = asize;
+          tsize = ssize;
         }
       }
     }
     else {
       /* Subtract out existing available top space from MORECORE request. */
-      asize = granularity_align(nb - m->topsize + SYS_ALLOC_PADDING);
+      ssize = granularity_align(nb - m->topsize + SYS_ALLOC_PADDING);
       /* Use mem here only if it did continuously extend old space */
-      if (asize < HALF_MAX_SIZE_T &&
-          (br = (char*)(CALL_MORECORE(asize))) == ss->base+ss->size) {
+      if (ssize < HALF_MAX_SIZE_T &&
+          (br = (char*)(CALL_MORECORE(ssize))) == ss->base+ss->size) {
         tbase = br;
-        tsize = asize;
+        tsize = ssize;
       }
     }
 
     if (tbase == CMFAIL) {    /* Cope with partial failure */
       if (br != CMFAIL) {    /* Try to use/extend the space we did get */
-        if (asize < HALF_MAX_SIZE_T &&
-            asize < nb + SYS_ALLOC_PADDING) {
-          size_t esize = granularity_align(nb + SYS_ALLOC_PADDING - asize);
+        if (ssize < HALF_MAX_SIZE_T &&
+            ssize < nb + SYS_ALLOC_PADDING) {
+          size_t esize = granularity_align(nb + SYS_ALLOC_PADDING - ssize);
           if (esize < HALF_MAX_SIZE_T) {
             char* end = (char*)CALL_MORECORE(esize);
             if (end != CMFAIL)
-              asize += esize;
+              ssize += esize;
             else {            /* Can't use; try to release */
-              (void) CALL_MORECORE(-asize);
+              (void) CALL_MORECORE(-ssize);
               br = CMFAIL;
             }
           }
@@ -4112,7 +4131,7 @@ static void* sys_alloc(mstate m, size_t nb) {
       }
       if (br != CMFAIL) {    /* Use the space we did get */
         tbase = br;
-        tsize = asize;
+        tsize = ssize;
       }
       else
         disable_contiguous(m); /* Don't try contiguous path in the future */
@@ -4267,10 +4286,8 @@ static size_t release_unused_segments(mstate m) {
     sp = next;
   }
   /* Reset check counter */
-  // BEGIN android-changed: signed/unsigned mismatches
   m->release_checks = (((size_t) nsegs > (size_t) MAX_RELEASE_CHECK_RATE)?
-      (size_t) nsegs : (size_t) MAX_RELEASE_CHECK_RATE);
-  // END android-changed
+                       (size_t) nsegs : (size_t) MAX_RELEASE_CHECK_RATE);
   return released;
 }
 
@@ -4293,9 +4310,7 @@ static int sys_trim(mstate m, size_t pad) {
               sp->size >= extra &&
               !has_segment_link(m, sp)) { /* can't shrink if pinned */
             size_t newsize = sp->size - extra;
-            // BEGIN android-changed
             (void)newsize; /* placate people compiling -Wunused-variable */
-            // END android-changed
             /* Prefer mremap, fall back to munmap */
             if ((CALL_MREMAP(sp->base, sp->size, newsize, 0) != MFAIL) ||
                 (CALL_MUNMAP(sp->base + newsize, extra) == 0)) {
@@ -4866,9 +4881,7 @@ static mchunkptr try_realloc_chunk(mstate m, mchunkptr p, size_t nb,
     }
   }
   else {
-    // BEGIN android-changed: s/oldmem/chunk2mem(p)/
     USAGE_ERROR_ACTION(m, chunk2mem(p));
-    // END android-changed
   }
   return newp;
 }
@@ -5147,14 +5160,10 @@ static void internal_inspect_all(mstate m,
         else {
           used = 0;
           if (is_small(sz)) {     /* offset by possible bookkeeping */
-            // BEGIN android-changed: added struct
             start = (void*)((char*)q + sizeof(struct malloc_chunk));
-            // END android-changed
           }
           else {
-            // BEGIN android-changed: added struct
             start = (void*)((char*)q + sizeof(struct malloc_tree_chunk));
-            // END android-changed
           }
         }
         if (start < (void*)next)  /* skip if all space is bookkeeping */
@@ -5264,7 +5273,7 @@ int dlposix_memalign(void** pp, size_t alignment, size_t bytes) {
     size_t r = alignment % sizeof(void*);
     if (r != 0 || d == 0 || (d & (d-SIZE_T_ONE)) != 0)
       return EINVAL;
-    else if (bytes >= MAX_REQUEST - alignment) {
+    else if (bytes <= MAX_REQUEST - alignment) {
       if (alignment <  MIN_CHUNK_SIZE)
         alignment = MIN_CHUNK_SIZE;
       mem = internal_memalign(gm, alignment, bytes);
@@ -5371,7 +5380,9 @@ int dlmallopt(int param_number, int value) {
   return change_mparam(param_number, value);
 }
 
-size_t dlmalloc_usable_size(void* mem) {
+/* BEGIN android-changed: added const */
+size_t dlmalloc_usable_size(const void* mem) {
+/* END android-change */
   if (mem != 0) {
     mchunkptr p = mem2chunk(mem);
     if (is_inuse(p))
@@ -5446,12 +5457,14 @@ int mspace_track_large_chunks(mspace msp, int enable) {
   int ret = 0;
   mstate ms = (mstate)msp;
   if (!PREACTION(ms)) {
-    if (!use_mmap(ms))
+    if (!use_mmap(ms)) {
       ret = 1;
-    if (!enable)
+    }
+    if (!enable) {
       enable_mmap(ms);
-    else
+    } else {
       disable_mmap(ms);
+    }
     POSTACTION(ms);
   }
   return ret;
@@ -5465,11 +5478,9 @@ size_t destroy_mspace(mspace msp) {
     (void)DESTROY_LOCK(&ms->mutex); /* destroy before unmapped */
     while (sp != 0) {
       char* base = sp->base;
-      // BEGIN android-changed
-      (void)base; /* placate people compiling -Wunused-variable */
-      // END android-changed
       size_t size = sp->size;
       flag_t flag = sp->sflags;
+      (void)base; /* placate people compiling -Wunused-variable */
       sp = sp->next;
       if ((flag & USE_MMAP_BIT) && !(flag & EXTERN_BIT) &&
           CALL_MUNMAP(base, size) == 0)
@@ -5606,7 +5617,7 @@ void mspace_free(mspace msp, void* mem) {
     mchunkptr p  = mem2chunk(mem);
 #if FOOTERS
     mstate fm = get_mstate_for(p);
-    msp = msp; /* placate people compiling -Wunused */
+    (void)msp; /* placate people compiling -Wunused */
 #else /* FOOTERS */
     mstate fm = (mstate)msp;
 #endif /* FOOTERS */
@@ -5780,7 +5791,7 @@ void* mspace_realloc_in_place(mspace msp, void* oldmem, size_t bytes) {
       mstate m = (mstate)msp;
 #else /* FOOTERS */
       mstate m = get_mstate_for(oldp);
-      msp = msp; /* placate people compiling -Wunused */
+      (void)msp; /* placate people compiling -Wunused */
       if (!ok_magic(m)) {
         USAGE_ERROR_ACTION(m, oldmem);
         return 0;
@@ -5947,9 +5958,7 @@ struct mallinfo mspace_mallinfo(mspace msp) {
 }
 #endif /* NO_MALLINFO */
 
-// BEGIN android-changed: added const
 size_t mspace_usable_size(const void* mem) {
-// END android-changed
   if (mem != 0) {
     mchunkptr p = mem2chunk(mem);
     if (is_inuse(p))
@@ -6059,6 +6068,12 @@ int mspace_mallopt(int param_number, int value) {
 
 /* -----------------------------------------------------------------------
 History:
+    v2.8.6 Wed Aug 29 06:57:58 2012  Doug Lea
+      * fix bad comparison in dlposix_memalign
+      * don't reuse adjusted asize in sys_alloc
+      * add LOCK_AT_FORK -- thanks to Kirill Artamonov for the suggestion
+      * reduce compiler warnings -- thanks to all who reported/suggested these
+
     v2.8.5 Sun May 22 10:26:02 2011  Doug Lea  (dl at gee)
       * Always perform unlink checks unless INSECURE
       * Add posix_memalign.
@@ -6269,4 +6284,3 @@ History:
          structure of old version,  but most details differ.)
 
 */
-
