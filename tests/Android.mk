@@ -12,7 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# Copyright The Android Open Source Project
+#
+
+ifneq ($(BUILD_TINY_ANDROID), true)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -35,3 +37,5 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-glibc
 LOCAL_SRC_FILES := $(test_src_files)
 include $(BUILD_HOST_NATIVE_TEST)
+
+endif # !BUILD_TINY_ANDROID
