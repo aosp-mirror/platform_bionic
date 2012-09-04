@@ -4049,12 +4049,20 @@ static void* sys_alloc(mstate m, size_t nb) {
   }
 
   asize = granularity_align(nb + SYS_ALLOC_PADDING);
-  if (asize <= nb)
+  if (asize <= nb) {
+    /* BEGIN android-added: set errno */
+    MALLOC_FAILURE_ACTION;
+    /* END android-added */
     return 0; /* wraparound */
+  }
   if (m->footprint_limit != 0) {
     size_t fp = m->footprint + asize;
-    if (fp <= m->footprint || fp > m->footprint_limit)
+    if (fp <= m->footprint || fp > m->footprint_limit) {
+      /* BEGIN android-added: set errno */
+      MALLOC_FAILURE_ACTION;
+      /* END android-added */
       return 0;
+    }
   }
 
   /*
