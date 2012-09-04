@@ -19,6 +19,7 @@ syscall_src += arch-x86/syscalls/readahead.S
 syscall_src += arch-x86/syscalls/getgroups.S
 syscall_src += arch-x86/syscalls/getpgid.S
 syscall_src += arch-x86/syscalls/getppid.S
+syscall_src += arch-x86/syscalls/getsid.S
 syscall_src += arch-x86/syscalls/setsid.S
 syscall_src += arch-x86/syscalls/setgid.S
 syscall_src += arch-x86/syscalls/__setreuid.S
