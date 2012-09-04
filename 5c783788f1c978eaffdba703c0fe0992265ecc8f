@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X//61U\u003d",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-04T22:55:28Z",
+      "side": 1,
+      "message": "hang on... limits.h should #define PAGESIZE to PAGE_SIZE and #include \u003casm/page.h\u003e. and i can\u0027t reproduce your compilation error myself. can you elaborate?",
+      "revId": "5c783788f1c978eaffdba703c0fe0992265ecc8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
