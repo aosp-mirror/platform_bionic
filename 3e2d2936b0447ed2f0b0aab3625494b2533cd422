@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6X//6zg\u003d",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-04T23:08:40Z",
+      "side": 1,
+      "message": "is there a reason we don\u0027t use pthread_once(3)?",
+      "revId": "3e2d2936b0447ed2f0b0aab3625494b2533cd422",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
