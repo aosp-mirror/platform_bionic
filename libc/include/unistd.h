@@ -60,6 +60,7 @@ extern int    setpgid(pid_t, pid_t);
 extern pid_t  getppid(void);
 extern pid_t  getpgrp(void);
 extern int    setpgrp(void);
+extern pid_t  getsid(pid_t);
 extern pid_t  setsid(void);
 
 extern int execv(const char *, char * const *);
@@ -192,7 +193,6 @@ extern pid_t tcgetpgrp(int fd);
 extern int   tcsetpgrp(int fd, pid_t _pid);
 
 #if 0 /* MISSING FROM BIONIC */
-extern pid_t  getsid(pid_t);
 extern int execvpe(const char *, char * const *, char * const *);
 extern int execlpe(const char *, const char *, ...);
 extern int getfsuid(uid_t);
