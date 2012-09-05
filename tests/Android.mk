@@ -26,6 +26,7 @@ test_src_files = \
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := $(test_src_files)
 include $(BUILD_NATIVE_TEST)
 
@@ -35,6 +36,7 @@ include $(BUILD_NATIVE_TEST)
 # implementation for testing the tests themselves.
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-glibc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := $(test_src_files)
 include $(BUILD_HOST_NATIVE_TEST)
 
