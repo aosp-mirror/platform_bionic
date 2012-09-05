@@ -66,6 +66,11 @@ static __inline__ int tcflush(int fd, int __queue)
     return ioctl(fd, TCFLSH, (void *)(intptr_t)__queue);
 }
 
+static __inline__ int tcdrain(int fd)
+{
+    return ioctl(fd, TCSBRK, (void *)(intptr_t)1);
+}
+
 static __inline__ pid_t tcgetsid(int fd)
 {
     pid_t _pid;
