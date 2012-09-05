@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (c) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,21 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/types.h>
 
-__attribute__ ((visibility ("hidden")))
-__attribute__ ((section (".data")))
-void *__dso_handle = &__dso_handle;
+/*
+ * This source file should only be included by libc.so, its purpose is
+ * to support legacy ARM binaries by exporting a publicly visible
+ * implementation of atexit().
+ */
+
+extern int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
+
+/*
+ * Register a function to be performed at exit.
+ */
+int
+atexit(void (*func)(void))
+{
+    return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
+}

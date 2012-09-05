@@ -30,22 +30,6 @@
 
 extern int  __cxa_atexit(void (*)(void*), void*, void* );
 
-/* Temporary hack: this variable should not be part of the C library
- * itself, but placed in the .bss section of each executable or
- * shared library instead.
- *
- * We keep it here temporarily until the build system has been
- * modified properly to use crtbegin_so.S and crtend_so.S when
- * generating shared libraries.
- *
- * It must be a 'weak' symbol to avoid conflicts with the definitions
- * that have been moved to crtbegin_static.S and crtbegin_dynamic.S
- *
- * For the record, it is used for static C++ object construction
- * and destruction. See http://www.codesourcery.com/public/cxx-abi/abi.html#dso-dtor
- */
-void* __attribute__((weak)) __dso_handle;
-
 /* The "C++ ABI for ARM" document states that static C++ constructors,
  * which are called from the .init_array, should manually call
  * __aeabi_atexit() to register static destructors explicitely.
