@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI6n//7e4\u003d",
+        "filename": "libc/arch-x86/string/sse2-memrchr-atom.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2012-09-05T15:30:31Z",
+      "side": 1,
+      "message": "It still strikes me as odd every time I see the pattern of using lea to perform an add immediate. Looking at the Intel software optimization manual this pattern matches that in section 13.3.3.4 although is ecx holding an address here? Some comments would be useful.",
+      "revId": "edd8200366848309662fdb5f159e38ea975aca9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
