@@ -24,6 +24,7 @@
 #define REALLOC_ZERO_BYTES_FREES 1
 #define USE_DL_PREFIX 1
 #define USE_LOCKS 1
+#define LOCK_AT_FORK 1
 #define USE_RECURSIVE_LOCK 0
 #define USE_SPIN_LOCKS 0
 
