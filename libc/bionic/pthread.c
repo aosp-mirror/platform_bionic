@@ -117,8 +117,8 @@ _pthread_internal_free(pthread_internal_t* thread)
 static void
 _pthread_internal_remove_locked( pthread_internal_t*  thread )
 {
-    thread->next->pref = thread->pref;
-    thread->pref[0]    = thread->next;
+    thread->next->prev = thread->prev;
+    thread->prev[0]    = thread->next;
 }
 
 static void
@@ -130,14 +130,17 @@ _pthread_internal_remove( pthread_internal_t*  thread )
 }
 
 __LIBC_ABI_PRIVATE__ void
-_pthread_internal_add( pthread_internal_t*  thread )
+_pthread_internal_add(pthread_internal_t* thread)
 {
     pthread_mutex_lock(&gThreadListLock);
-    thread->pref = &gThreadList;
-    thread->next = thread->pref[0];
-    if (thread->next)
-        thread->next->pref = &thread->next;
-    thread->pref[0] = thread;
+
+    thread->prev = &gThreadList;
+    thread->next = *(thread->prev);
+    if (thread->next != NULL) {
+        thread->next->prev = &thread->next;
+    }
+    *(thread->prev) = thread;
+
     pthread_mutex_unlock(&gThreadListLock);
 }
 
@@ -203,7 +206,8 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 }
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
+int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
+                 void* stack_base, bool add_to_thread_list)
 {
     int error = 0;
 
@@ -231,10 +235,12 @@ int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * 
 
     pthread_cond_init(&thread->join_cond, NULL);
     thread->join_count = 0;
-
     thread->cleanup_stack = NULL;
 
-    _pthread_internal_add(thread);
+    if (add_to_thread_list) {
+        _pthread_internal_add(thread);
+    }
+
     return error;
 }
 
@@ -348,7 +354,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         return clone_errno;
     }
 
-    int init_errno = _init_thread(thread, tid, (pthread_attr_t*) attr, stack);
+    int init_errno = _init_thread(thread, tid, (pthread_attr_t*) attr, stack, true);
     if (init_errno != 0) {
         // Mark the thread detached and let its __thread_entry run to
         // completion. (It'll just exit immediately, cleaning up its resources.)
@@ -1919,8 +1925,8 @@ int pthread_key_create(pthread_key_t *key, void (*destructor_function)(void *))
 
 /* This deletes a pthread_key_t. note that the standard mandates that this does
  * not call the destructor of non-NULL key values. Instead, it is the
- * responsability of the caller to properly dispose of the corresponding data
- * and resources, using any mean it finds suitable.
+ * responsibility of the caller to properly dispose of the corresponding data
+ * and resources, using any means it finds suitable.
  *
  * On the other hand, this function will clear the corresponding key data
  * values in all known threads. this prevents later (invalid) calls to
@@ -2184,7 +2190,7 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
     for (;;) {
         /* Try to atomically set the INITIALIZING flag.
          * This requires a cmpxchg loop, and we may need
-         * to exit prematurely if we detect that 
+         * to exit prematurely if we detect that
          * COMPLETED is now set.
          */
         int32_t  oldval, newval;
