@@ -29,13 +29,14 @@
 #define _PTHREAD_INTERNAL_H_
 
 #include <pthread.h>
+#include <stdbool.h>
 
 __BEGIN_DECLS
 
 typedef struct pthread_internal_t
 {
     struct pthread_internal_t*  next;
-    struct pthread_internal_t** pref;
+    struct pthread_internal_t** prev;
     pthread_attr_t              attr;
     pid_t                       kernel_id;
     pthread_cond_t              join_cond;
@@ -46,7 +47,8 @@ typedef struct pthread_internal_t
     void**                      tls;         /* thread-local storage area */
 } pthread_internal_t;
 
-extern int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
+                 void* stack_base, bool add_to_thread_list);
 void _pthread_internal_add( pthread_internal_t*  thread );
 pthread_internal_t* __get_thread(void);
 
@@ -100,9 +102,9 @@ static  __inline__ int timespec_cmp0( const struct timespec*  a )
     return 0;
 }
 
-extern int  __pthread_cond_timedwait(pthread_cond_t*, 
+extern int  __pthread_cond_timedwait(pthread_cond_t*,
                                      pthread_mutex_t*,
-                                     const struct timespec*, 
+                                     const struct timespec*,
                                      clockid_t);
 
 extern int  __pthread_cond_timedwait_relative(pthread_cond_t*,
