@@ -67,9 +67,6 @@ __noreturn void __libc_init(uintptr_t *elfdata,
 
     __libc_init_tls(NULL);
 
-    /* get the initial thread from TLS and add it to gThreadList */
-    _pthread_internal_add(__get_thread());
-
     /* Initialize the C runtime environment */
     __libc_init_common(elfdata);
 

@@ -76,7 +76,7 @@ void __libc_init_tls(unsigned** elfdata)
 
     pthread_attr_init(&thread_attr);
     pthread_attr_setstack(&thread_attr, (void*)stackbottom, stacksize);
-    _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom);
+    _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom, false);
     __init_tls(tls_area, &thread);
 
     tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
