@@ -96,10 +96,10 @@ struct ion_flag_data {
  unsigned long flags;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ION_IOC_CLEAN_CACHES _IOWR(ION_IOC_MAGIC, 7,   struct ion_flush_data)
-#define ION_IOC_INV_CACHES _IOWR(ION_IOC_MAGIC, 8,   struct ion_flush_data)
-#define ION_IOC_CLEAN_INV_CACHES _IOWR(ION_IOC_MAGIC, 9,   struct ion_flush_data)
-#define ION_IOC_GET_FLAGS _IOWR(ION_IOC_MAGIC, 10,   struct ion_flag_data)
+#define ION_IOC_CLEAN_CACHES _IOWR(ION_IOC_MAGIC, 20,   struct ion_flush_data)
+#define ION_IOC_INV_CACHES _IOWR(ION_IOC_MAGIC, 21,   struct ion_flush_data)
+#define ION_IOC_CLEAN_INV_CACHES _IOWR(ION_IOC_MAGIC, 22,   struct ion_flush_data)
+#define ION_IOC_GET_FLAGS _IOWR(ION_IOC_MAGIC, 23,   struct ion_flag_data)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 
