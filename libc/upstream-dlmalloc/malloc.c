@@ -3193,11 +3193,11 @@ static int init_mparams(void) {
 
   RELEASE_MALLOC_GLOBAL_LOCK();
   /* BEGIN android-added: move pthread_atfork outside of lock */
-#if LOCK_AT_FORK
   if (first_run != 0) {
+#if LOCK_AT_FORK
     pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
-  }
 #endif
+  }
   /* END android-added */
   return 1;
 }
