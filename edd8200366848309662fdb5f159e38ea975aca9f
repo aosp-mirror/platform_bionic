@@ -16,6 +16,24 @@
       "revId": "edd8200366848309662fdb5f159e38ea975aca9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI5n//+1c\u003d",
+        "filename": "libc/arch-x86/string/sse2-memrchr-atom.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1014243
+      },
+      "writtenOn": "2012-09-07T10:31:25Z",
+      "side": 1,
+      "message": "The choice of instruction depends on further usage of its result and producer of its arguments. A simple rule may be to not use lea if its result is consumed later by ALU and use lea otherwise (to avoid AGU-\u003eALU transfer). If consumer is quite far away (more than 3 ticks) then it does not matter what to use.",
+      "parentUuid": "AAAI6n//7e4\u003d",
+      "revId": "edd8200366848309662fdb5f159e38ea975aca9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
