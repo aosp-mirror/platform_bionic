@@ -23,7 +23,7 @@
 #        a relevant C stub
 #
 #      - additionally, if the syscall number is different amoung ARM, and x86, MIPS use:
-#        return_type funcname[:syscall_name](parameters) arm_number,x86_number, mips_number
+#        return_type funcname[:syscall_name](parameters) arm_number,x86_number,mips_number
 #
 # the file is processed by a python script named gensyscalls.py
 #
@@ -123,6 +123,8 @@ int         mprotect(const void *, size_t, int)  125
 int         madvise(const void *, size_t, int)  220,219,218
 int         mlock(const void *addr, size_t len)    150,150,154
 int         munlock(const void *addr, size_t len)   151,151,155
+int         mlockall(int flags)   152,152,156
+int         munlockall()   153,153,157
 int         mincore(void*  start, size_t  length, unsigned char*  vec)   219,218,217
 int         __ioctl:ioctl(int, int, void *)  54
 int         readv(int, const struct iovec *, int)   145
