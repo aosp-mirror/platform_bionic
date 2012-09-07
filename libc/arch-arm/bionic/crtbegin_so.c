@@ -53,6 +53,6 @@ void __on_dlclose() {
 #ifdef CRT_LEGACY_WORKAROUND
 #include "__dso_handle.h"
 #else
-#include "__dso_handle_so.c"
+#include "__dso_handle_so.h"
 #include "atexit.h"
 #endif
