@@ -637,63 +637,77 @@ libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crt
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
 $(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -S -o $@ $<
-	sed -i -e '/\.note\.ABI-tag/s/progbits/note/' $@
+	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) -S \
+		-MD -MF $(@:%.s=%.d) -o $@ $<
+	$(hide) sed -i -e '/\.note\.ABI-tag/s/progbits/note/' $@
+	$(call transform-d-to-p-args,$(@:%.s=%.d),$(@:%.s=%.P))
+-include $(GEN:%.s=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
 $(GEN): $(libc_crt_target_crtstart_so_file)
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
+# The following two are installed to device
 GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtbegin_so.o
-$(GEN): $(libc_crt_target_crtstart_so_file)
-	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
+	$(hide) mkdir -p $(dir $@) && cp -f $< $@
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtend_so.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
-	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
+$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
+	$(hide) mkdir -p $(dir $@) && cp -f $< $@
 ALL_GENERATED_SOURCES += $(GEN)
 
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o
 $(GEN): $(libc_crt_target_crtstart_file)
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
 $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 	@mkdir -p $(dir $@)
-	$(TARGET_LD) -r -o $@ $^
+	$(hide) $(TARGET_LD) -r -o $@ $^
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o
 $(GEN): $(libc_crt_target_crtstart_file)
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
 $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 	@mkdir -p $(dir $@)
-	$(TARGET_LD) -r -o $@ $^
+	$(hide) $(TARGET_LD) -r -o $@ $^
 ALL_GENERATED_SOURCES += $(GEN)
 
 # We rename crtend.o to crtend_android.o to avoid a
@@ -701,7 +715,10 @@ ALL_GENERATED_SOURCES += $(GEN)
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_android.o
 $(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
 	@mkdir -p $(dir $@)
-	$(TARGET_CC) $(libc_crt_target_cflags) -o $@ -c $<
+	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 ALL_GENERATED_SOURCES += $(GEN)
 
 
