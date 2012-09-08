@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI73///xY\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-09-08T12:01:36Z",
+      "side": 1,
+      "message": "This is incorrect: you are copying the versions built with CRT_LEGACY_WORKAROUND defined. For archs other than ARM, it likely breaks the build, as the cp source is probably not even there.",
+      "revId": "cf464878efda7652b0a7eb636e45944eda6b6f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
