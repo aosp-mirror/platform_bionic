@@ -16,6 +16,24 @@
       "revId": "cf464878efda7652b0a7eb636e45944eda6b6f2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI9n//+3U\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-09-08T12:46:19Z",
+      "side": 1,
+      "message": "Never mind, they are built correctly a couple of lines up.\n\nI still wonder why these copies are made, though. The comment suggests that they end up on the target, but I don\u0027t think that makes any sense.",
+      "parentUuid": "AAAI73///xY\u003d",
+      "revId": "cf464878efda7652b0a7eb636e45944eda6b6f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
