@@ -37,4 +37,6 @@
 #define ALIGNBYTES  3
 #define ALIGN(p)    (((unsigned int)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
+#define powerof2(x) ((((x)-1)&(x))==0)
+
 #endif /* _SYS_PARAM_H_ */
