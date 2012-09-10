@@ -34,6 +34,24 @@
       "revId": "cf464878efda7652b0a7eb636e45944eda6b6f2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI+n///zg\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2012-09-10T16:48:15Z",
+      "side": 1,
+      "message": "They were introduced in this commit:\ncommit fc0725ec5cc51053c06bf2c67755a5a57a5da621\nAuthor: Shih-wei Liao \u003csliao@google.com\u003e\nDate:   Sat Jul 28 00:33:28 2012 -0700\n\n    Install crt(begin|end)_so.o to target library path.\n    \n    BUG\u003d6886348.",
+      "parentUuid": "AAAI9n//+3U\u003d",
+      "revId": "cf464878efda7652b0a7eb636e45944eda6b6f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
