@@ -26,6 +26,12 @@
  * SUCH DAMAGE.
  */
 
+/*
+ * The MIPS pipe syscall returns results in two registers, which
+ * we have to copy into the supplied array. This prevents us from
+ * using an auto-generated stub.
+ */
+
 #include <asm/unistd.h>
 
 	.text
@@ -38,12 +44,17 @@
 	.ent	pipe
 pipe:
 	.set	noreorder
-
+	.cpload	$t9
 	li	$v0,__NR_pipe
 	syscall			/* syscall returns results in v0,v1 */
-
-	sw	$v0,0($a0)
-	sw	$v1,4($a0)
+	bnez	$a3, 1f		/* check errno */
+	 nop
+	sw	$v0, 0($a0)
+	sw	$v1, 4($a0)
 	j	$ra
-	 move	$v0,$zero
+	 move	$v0, $zero
+1:
+	la	$t9, __set_errno
+	j	$t9
+	 move    $a0, $v0	/* delay slot, prepare args for __set_errno */
 	.end	pipe
