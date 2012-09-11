@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI83//9/c\u003d",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-11T16:24:22Z",
+      "side": 1,
+      "message": "has_symbolic_relocations.",
+      "revId": "6888a55918e55d18906c3d2d7a28dbe18bfe647f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
