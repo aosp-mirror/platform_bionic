@@ -614,23 +614,23 @@ libc_crt_target_cflags += \
 # static C++ destructors are properly called on dlclose().
 #
 ifeq ($(TARGET_ARCH),arm)
-    libc_crtstart_extension := c
+    libc_crtbegin_extension := c
     libc_crt_target_so_cflags :=
 endif
 ifeq ($(TARGET_ARCH),mips)
-    libc_crtstart_extension := S
+    libc_crtbegin_extension := S
     libc_crt_target_so_cflags := -fPIC
 endif
 ifeq ($(TARGET_ARCH),x86)
-    libc_crtstart_extension := S
+    libc_crtbegin_extension := S
     libc_crt_target_so_cflags := -fPIC
 endif
-ifeq ($(libc_crtstart_extension),)
+ifeq ($(libc_crtbegin_extension),)
     $(error $(TARGET_ARCH) not supported)
 endif
 libc_crt_target_so_cflags += $(libc_crt_target_cflags)
-libc_crt_target_crtstart_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.$(libc_crtstart_extension)
-libc_crt_target_crtstart_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.$(libc_crtstart_extension)
+libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.$(libc_crtbegin_extension)
+libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.$(libc_crtbegin_extension)
 
 # See the comment in crtbrand.c for the reason why we need to generate
 # crtbrand.s before generating crtbrand.o.
@@ -651,7 +651,7 @@ $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
-$(GEN): $(libc_crt_target_crtstart_so_file)
+$(GEN): $(libc_crt_target_crtbegin_so_file)
 	@mkdir -p $(dir $@)
 	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
@@ -681,7 +681,7 @@ ALL_GENERATED_SOURCES += $(GEN)
 
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o
-$(GEN): $(libc_crt_target_crtstart_file)
+$(GEN): $(libc_crt_target_crtbegin_file)
 	@mkdir -p $(dir $@)
 	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
@@ -696,7 +696,7 @@ $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o $(TARGET_OUT_INT
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o
-$(GEN): $(libc_crt_target_crtstart_file)
+$(GEN): $(libc_crt_target_crtbegin_file)
 	@mkdir -p $(dir $@)
 	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
