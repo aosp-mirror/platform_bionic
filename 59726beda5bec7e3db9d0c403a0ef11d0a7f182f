@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAI83//9UA\u003d",
+        "filename": "libc/arch-mips/bionic/pipe.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-11T23:32:16Z",
+      "side": 0,
+      "message": "ah, this is what i\u0027m missing, isn\u0027t it? why we need custom assembler.",
+      "revId": "59726beda5bec7e3db9d0c403a0ef11d0a7f182f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
