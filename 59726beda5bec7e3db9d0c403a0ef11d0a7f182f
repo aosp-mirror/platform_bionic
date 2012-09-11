@@ -16,6 +16,24 @@
       "revId": "59726beda5bec7e3db9d0c403a0ef11d0a7f182f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAI83//9Rc\u003d",
+        "filename": "libc/arch-mips/bionic/pipe.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-09-11T23:53:12Z",
+      "side": 0,
+      "message": "Yes. The value is returned in two registers. Thanks for adding the comments in the other patch.",
+      "parentUuid": "AAAI83//9UA\u003d",
+      "revId": "59726beda5bec7e3db9d0c403a0ef11d0a7f182f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
