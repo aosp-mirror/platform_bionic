@@ -29,7 +29,7 @@
 #define _NETINET_IN_H_
 
 #include <endian.h>
-#include <linux/socket.h>
+#include <sys/socket.h>
 #include <linux/in.h>
 #include <linux/in6.h>
 #include <linux/ipv6.h>
