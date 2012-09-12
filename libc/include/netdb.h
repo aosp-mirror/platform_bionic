@@ -206,7 +206,7 @@ void endnetgrent(void);
 void endprotoent(void);
 void endservent(void);
 void freehostent(struct hostent *);
-struct hostent	*gethostbyaddr(const void *, int, int);
+struct hostent	*gethostbyaddr(const void *, socklen_t, int);
 int gethostbyaddr_r(const void *, int, int, struct hostent *, char *, size_t, struct hostent **, int *);
 struct hostent	*gethostbyname(const char *);
 int gethostbyname_r(const char *, struct hostent *, char *, size_t, struct hostent **, int *);
