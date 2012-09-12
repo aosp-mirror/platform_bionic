@@ -16,15 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_SOCKET_H
-#define _LINUX_SOCKET_H
-#define _K_SS_MAXSIZE 128  
-#define _K_SS_ALIGNSIZE (__alignof__ (struct sockaddr *))
+#ifndef CAN_RAW_H
+#define CAN_RAW_H
+#include <linux/can.h>
+#define SOL_CAN_RAW (SOL_CAN_BASE + CAN_RAW)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef unsigned short __kernel_sa_family_t;
-struct __kernel_sockaddr_storage {
- __kernel_sa_family_t ss_family;
- char __data[_K_SS_MAXSIZE - sizeof(unsigned short)];
+enum {
+ CAN_RAW_FILTER = 1,
+ CAN_RAW_ERR_FILTER,
+ CAN_RAW_LOOPBACK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((aligned(_K_SS_ALIGNSIZE)));
+ CAN_RAW_RECV_OWN_MSGS
+};
 #endif

@@ -25,6 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <sys/socket.h>
 #include <linux/if.h>
 #include <sys/cdefs.h>
 #ifndef IF_NAMESIZE
