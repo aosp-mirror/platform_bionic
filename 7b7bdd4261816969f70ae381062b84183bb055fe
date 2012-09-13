@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAJA3///l4\u003d",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2012-09-13T22:21:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAJBH///gE\u003d",
+      "revId": "7b7bdd4261816969f70ae381062b84183bb055fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJBH///f4\u003d",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-09-13T21:49:01Z",
       "side": 1,
       "message": "i\u0027m guessing you need #if __BIONIC__ around most of this file (everything except this individual test, actually, though i probably wouldn\u0027t bother making an exception of this one). i build the tests with glibc too, so i can use that to compare bionic\u0027s behavior against a high-quality reference implementation. try \"bionic-unit-tests-glibc\" on the host.",
+      "revId": "7b7bdd4261816969f70ae381062b84183bb055fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJA3///l0\u003d",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2012-09-13T22:21:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAJBH///f4\u003d",
       "revId": "7b7bdd4261816969f70ae381062b84183bb055fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
