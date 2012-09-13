@@ -266,18 +266,19 @@ static unsigned app_id_from_name(const char* name) {
 
 static void print_app_name_from_appid_userid(const uid_t appid,
     const uid_t userid, char* buffer, const int bufferlen) {
-  if (appid < AID_ISOLATED_START) {
-    if (appid < AID_APP) {
-      for (size_t n = 0; n < android_id_count; n++) {
-        if (android_ids[n].aid == appid) {
-          snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
-          return;
-        }
+  if (appid >= AID_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+  } else if (userid == 0 && appid >= AID_SHARED_GID_START) {
+    snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
+  } else if (appid < AID_APP) {
+    for (size_t n = 0; n < android_id_count; n++) {
+      if (android_ids[n].aid == appid) {
+        snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
+        return;
       }
     }
-    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
   } else {
-    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
   }
 }
 

@@ -68,6 +68,14 @@ TEST(getpwnam, app_id_nobody) {
   CHECK_GETPWNAM_FOR("nobody", 9999, TYPE_SYSTEM);
 }
 
+TEST(getpwnam, app_id_all_a0) {
+  CHECK_GETPWNAM_FOR("all_a0", 50000, TYPE_APP);
+}
+
+TEST(getpwnam, app_id_u1_a40000) {
+  CHECK_GETPWNAM_FOR("u1_a40000", 150000, TYPE_APP);
+}
+
 TEST(getpwnam, app_id_u0_a0) {
   CHECK_GETPWNAM_FOR("u0_a0", 10000, TYPE_APP);
 }
