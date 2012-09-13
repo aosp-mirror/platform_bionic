@@ -16,6 +16,24 @@
       "revId": "0cf6c5534694b258c7b40c3e29c4ff2990d5c1ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJBH///6M\u003d",
+        "filename": "tests/dlopen_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-13T02:20:16Z",
+      "side": 1,
+      "message": "because casting void* to function pointers isn\u0027t defined in C99. but, yeah, this is C++, where it\u0027s sort-of defined.",
+      "parentUuid": "AAAJCX////8\u003d",
+      "revId": "0cf6c5534694b258c7b40c3e29c4ff2990d5c1ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
