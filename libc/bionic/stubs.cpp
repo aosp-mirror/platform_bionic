@@ -264,10 +264,8 @@ static unsigned app_id_from_name(const char* name) {
   return (unsigned)(appid + userid*AID_USER);
 }
 
-static void print_app_uid_name(uid_t  uid, char* buffer, int bufferlen) {
-  uid_t appid = uid % AID_USER;
-  uid_t userid = uid / AID_USER;
-
+static void print_app_name_from_appid_userid(const uid_t appid,
+    const uid_t userid, char* buffer, const int bufferlen) {
   if (appid < AID_ISOLATED_START) {
     if (appid < AID_APP) {
       for (size_t n = 0; n < android_id_count; n++) {
@@ -281,6 +279,12 @@ static void print_app_uid_name(uid_t  uid, char* buffer, int bufferlen) {
   } else {
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
   }
+}
+
+static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
+  const uid_t appid = uid % AID_USER;
+  const uid_t userid = uid / AID_USER;
+  return print_app_name_from_appid_userid(appid, userid, buffer, bufferlen);
 }
 
 // Translate a uid into the corresponding name.
@@ -297,10 +301,18 @@ static passwd* app_id_to_passwd(uid_t uid, stubs_state_t* state) {
     return NULL;
   }
 
-  print_app_uid_name(uid, state->app_name_buffer_,
-                     sizeof(state->app_name_buffer_));
+  const uid_t appid = uid % AID_USER;
+  const uid_t userid = uid / AID_USER;
 
-  snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/data");
+  print_app_name_from_appid_userid(appid, userid, state->app_name_buffer_,
+                                   sizeof(state->app_name_buffer_));
+
+  if (appid < AID_APP) {
+      snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
+  } else {
+      snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/data");
+  }
+
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
   pw->pw_name  = state->app_name_buffer_;
@@ -320,8 +332,8 @@ static group* app_id_to_group(gid_t gid, stubs_state_t* state) {
     return NULL;
   }
 
-  print_app_uid_name(gid, state->group_name_buffer_,
-                     sizeof(state->group_name_buffer_));
+  print_app_name_from_uid(gid, state->group_name_buffer_,
+                          sizeof(state->group_name_buffer_));
 
   group* gr = &state->group_;
   gr->gr_name   = state->group_name_buffer_;
