@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,14 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
-#include <string.h>
 
-char*
-strsignal(int  sig)
-{
-    if ((unsigned)sig < NSIG)
-        return (char*) sys_siglist[sig];
-    else
-        return "Invalid signal number";
+#include <string.h>
+#include "ThreadLocalBuffer.h"
+
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(strerror);
+
+char* strerror(int error_number) {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strerror, NL_TEXTMAX);
+  strerror_r(error_number, strerror_buffer, strerror_buffer_size);
+  return strerror_buffer;
 }

@@ -125,6 +125,8 @@ extern int kill(pid_t, int);
 extern int killpg(int pgrp, int sig);
 extern int sigaltstack(const stack_t *ss, stack_t *oss);
 
+extern void psiginfo(const siginfo_t* si, const char* message);
+extern void psignal(int signal_number, const char* message);
 
 __END_DECLS
 
