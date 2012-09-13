@@ -51,6 +51,7 @@ include $(BUILD_NATIVE_TEST)
 # Note that this will build against glibc, so it's not useful for testing
 # bionic's implementation, but it does let you use glibc as a reference
 # implementation for testing the tests themselves.
+ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-glibc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -58,5 +59,6 @@ LOCAL_LDFLAGS += -lpthread -ldl
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
 include $(BUILD_HOST_NATIVE_TEST)
+endif
 
 endif # !BUILD_TINY_ANDROID
