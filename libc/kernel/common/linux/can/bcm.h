@@ -16,36 +16,51 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_SYNC_H
-#define _LINUX_SYNC_H
+#ifndef CAN_BCM_H
+#define CAN_BCM_H
 #include <linux/types.h>
-struct sync_merge_data {
+#include <linux/can.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 fd2;
- char name[32];
- __s32 fence;
+struct bcm_msg_head {
+ __u32 opcode;
+ __u32 flags;
+ __u32 count;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct timeval ival1, ival2;
+ canid_t can_id;
+ __u32 nframes;
+ struct can_frame frames[0];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+enum {
+ TX_SETUP = 1,
+ TX_DELETE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct sync_pt_info {
- __u32 len;
- char obj_name[32];
- char driver_name[32];
+ TX_READ,
+ TX_SEND,
+ RX_SETUP,
+ RX_DELETE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 status;
- __u64 timestamp_ns;
- __u8 driver_data[0];
+ RX_READ,
+ TX_STATUS,
+ TX_EXPIRED,
+ RX_STATUS,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ RX_TIMEOUT,
+ RX_CHANGED
 };
+#define SETTIMER 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct sync_fence_info_data {
- __u32 len;
- char name[32];
- __s32 status;
+#define STARTTIMER 0x0002
+#define TX_COUNTEVT 0x0004
+#define TX_ANNOUNCE 0x0008
+#define TX_CP_CAN_ID 0x0010
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 pt_info[0];
-};
-#define SYNC_IOC_MAGIC '>'
-#define SYNC_IOC_WAIT _IOW(SYNC_IOC_MAGIC, 0, __s32)
+#define RX_FILTER_ID 0x0020
+#define RX_CHECK_DLC 0x0040
+#define RX_NO_AUTOTIMER 0x0080
+#define RX_ANNOUNCE_RESUME 0x0100
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 1, struct sync_merge_data)
-#define SYNC_IOC_FENCE_INFO _IOWR(SYNC_IOC_MAGIC, 2,  struct sync_fence_info_data)
+#define TX_RESET_MULTI_IDX 0x0200
+#define RX_RTR_FRAME 0x0400
 #endif
