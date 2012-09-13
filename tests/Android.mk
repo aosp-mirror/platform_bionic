@@ -22,6 +22,7 @@ test_src_files = \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    string_test.cpp \
 
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
