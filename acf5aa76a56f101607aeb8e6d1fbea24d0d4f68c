@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJCX////Y\u003d",
+        "filename": "tests/dlopen_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-09-13T03:57:43Z",
+      "side": 1,
+      "message": "even better!",
+      "revId": "acf5aa76a56f101607aeb8e6d1fbea24d0d4f68c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
