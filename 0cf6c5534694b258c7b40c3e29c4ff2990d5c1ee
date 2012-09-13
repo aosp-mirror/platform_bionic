@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJCX////8\u003d",
+        "filename": "tests/dlopen_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-09-13T02:12:34Z",
+      "side": 1,
+      "message": "why not\n\nvoid (*function)(void) \u003d (void(*)(void))sym \n\n??",
+      "revId": "0cf6c5534694b258c7b40c3e29c4ff2990d5c1ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
