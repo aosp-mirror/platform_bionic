@@ -61,7 +61,6 @@ libc_common_src_files := \
 	unistd/sigwait.c \
 	unistd/sleep.c \
 	unistd/statfs.c \
-	unistd/strsignal.c \
 	unistd/syslog.c \
 	unistd/system.c \
 	unistd/tcgetpgrp.c \
@@ -191,8 +190,6 @@ libc_common_src_files := \
 	string/strcoll.c \
 	string/strcspn.c \
 	string/strdup.c \
-	string/strerror.c \
-	string/strerror_r.c \
 	string/strlcat.c \
 	string/strlcpy.c \
 	string/strncat.c \
@@ -291,6 +288,9 @@ libc_common_src_files := \
 	bionic/sched_cpucount.c \
 	bionic/semaphore.c \
 	bionic/sha1.c \
+	bionic/strerror.cpp \
+	bionic/strerror_r.cpp \
+	bionic/strsignal.cpp \
 	bionic/stubs.cpp \
 	bionic/system_properties.c \
 	bionic/tdestroy.c \
@@ -332,6 +332,7 @@ libc_common_src_files := \
 libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/compat-43/creat.c \
 	upstream-netbsd/libc/gen/nice.c \
+	upstream-netbsd/libc/gen/psignal.c \
 	upstream-netbsd/libc/regex/regcomp.c \
 	upstream-netbsd/libc/regex/regerror.c \
 	upstream-netbsd/libc/regex/regexec.c \

@@ -1,7 +1,8 @@
-/*	$OpenBSD: strerror.c,v 1.7 2005/08/08 08:05:37 espie Exp $ */
+/*	$NetBSD: psignal.c,v 1.23 2012/03/13 21:13:36 christos Exp $	*/
+
 /*
- * Copyright (c) 1988 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1983, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,14 +29,57 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)psignal.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: psignal.c,v 1.23 2012/03/13 21:13:36 christos Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
+
+#include <sys/types.h>
+#include <sys/uio.h>
+
 #include <limits.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
 
-char *
-strerror(int num)
+#include "extern.h"
+
+#ifdef __weak_alias
+__weak_alias(psignal,_psignal)
+#endif
+
+void
+psignal(int sig, const char *s)
 {
-	static char buf[256];
+	struct iovec *v;
+	struct iovec iov[4];
+	char buf[NL_TEXTMAX];
 
-	(void)strerror_r(num, buf, sizeof(buf));
-	return (buf);
+	v = iov;
+	if (s && *s) {
+		v->iov_base = __UNCONST(s);
+		v->iov_len = strlen(s);
+		v++;
+		v->iov_base = __UNCONST(": ");
+		v->iov_len = 2;
+		v++;
+	}
+	v->iov_base = __UNCONST(__strsignal((int)sig, buf, sizeof(buf)));
+	v->iov_len = strlen(v->iov_base);
+	v++;
+	v->iov_base = __UNCONST("\n");
+	v->iov_len = 1;
+	(void)writev(STDERR_FILENO, iov, (int)((v - iov) + 1));
+}
+
+void
+psiginfo(const siginfo_t *si, const char *s)
+{
+	psignal(si->si_signo, s);
 }
