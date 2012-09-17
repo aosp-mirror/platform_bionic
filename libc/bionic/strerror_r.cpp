@@ -27,11 +27,25 @@ static const Pair _sys_error_strings[] = {
   { 0, NULL }
 };
 
+extern "C" const char* __strerror_lookup(int error_number) {
+  return __code_string_lookup(_sys_error_strings, error_number);
+}
+
+static const Pair _sys_signal_strings[] = {
+#define  __BIONIC_SIGDEF(x,y,z)  { y, z },
+#include <sys/_sigdefs.h>
+  { 0, NULL }
+};
+
+extern "C" const char* __strsignal_lookup(int signal_number) {
+  return __code_string_lookup(_sys_signal_strings, signal_number);
+}
+
 int strerror_r(int error_number, char* buf, size_t buf_len) {
   int saved_errno = errno;
   size_t length;
 
-  const char* error_name = __code_string_lookup(_sys_error_strings, error_number);
+  const char* error_name = __strerror_lookup(error_number);
   if (error_name != NULL) {
     length = snprintf(buf, buf_len, "%s", error_name);
   } else {
@@ -46,14 +60,8 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
   return 0;
 }
 
-static const Pair _sys_signal_strings[] = {
-#define  __BIONIC_SIGDEF(x,y,z)  { y, z },
-#include <sys/_sigdefs.h>
-  { 0, NULL }
-};
-
 extern "C" const char* __strsignal(int signal_number, char* buf, size_t buf_len) {
-  const char* signal_name = __code_string_lookup(_sys_signal_strings, signal_number);
+  const char* signal_name = __strsignal_lookup(signal_number);
   if (signal_name != NULL) {
     return signal_name;
   }
