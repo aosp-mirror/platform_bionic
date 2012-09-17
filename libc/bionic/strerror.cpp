@@ -29,9 +29,17 @@
 #include <string.h>
 #include "ThreadLocalBuffer.h"
 
+extern "C" const char* __strerror_lookup(int);
+
 GLOBAL_INIT_THREAD_LOCAL_BUFFER(strerror);
 
 char* strerror(int error_number) {
+  // Just return the original constant in the easy cases.
+  char* result = const_cast<char*>(__strerror_lookup(error_number));
+  if (result != NULL) {
+    return result;
+  }
+
   LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strerror, NL_TEXTMAX);
   strerror_r(error_number, strerror_buffer, strerror_buffer_size);
   return strerror_buffer;
