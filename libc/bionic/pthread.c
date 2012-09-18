@@ -205,6 +205,8 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
     pthread_exit((void*) result);
 }
 
+#include <private/logd.h>
+
 __LIBC_ABI_PRIVATE__
 int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
                  void* stack_base, bool add_to_thread_list)
@@ -229,7 +231,9 @@ int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* at
         struct sched_param param;
         param.sched_priority = thread->attr.sched_priority;
         if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param) == -1) {
-            error = errno;
+            // For back compat reasons, we just warn about possible invalid sched_policy
+            const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
+            __libc_android_log_print(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
         }
     }
 
