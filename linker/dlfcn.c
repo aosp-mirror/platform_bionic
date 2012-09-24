@@ -110,7 +110,7 @@ void *dlsym(void *handle, const char *symbol)
         bind = ELF32_ST_BIND(sym->st_info);
 
         if(likely((bind == STB_GLOBAL) && (sym->st_shndx != 0))) {
-            unsigned ret = sym->st_value + found->base;
+            unsigned ret = sym->st_value + found->load_bias;
             pthread_mutex_unlock(&dl_lock);
             return (void*)ret;
         }
@@ -138,14 +138,14 @@ int dladdr(const void *addr, Dl_info *info)
         memset(info, 0, sizeof(Dl_info));
 
         info->dli_fname = si->name;
-        info->dli_fbase = (void*)si->base;
+        info->dli_fbase = (void*)si->load_bias;
 
         /* Determine if any symbol in the library contains the specified address */
         Elf32_Sym *sym = soinfo_find_symbol(si, addr);
 
         if(sym != NULL) {
             info->dli_sname = si->strtab + sym->st_name;
-            info->dli_saddr = (void*)(si->base + sym->st_value);
+            info->dli_saddr = (void*)(si->load_bias + sym->st_value);
         }
 
         ret = 1;
