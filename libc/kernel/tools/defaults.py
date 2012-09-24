@@ -45,6 +45,7 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {},
     "x86": {"__i386__": "1", "CONFIG_X86_32": "1"},
+    "mips": {"CONFIG_32BIT":"1"},
     }
 
 # Replace tokens in the output according to this mapping
