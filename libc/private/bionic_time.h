@@ -49,12 +49,7 @@ struct strftime_locale {
     const char *  date_fmt;
 };
 
-/*
- * Note: you should consider these extensions deprecated and use managed code or icu4c instead.
- */
-extern size_t strftime_tz(char* s, size_t max, const char* format, const struct tm* tm, const struct strftime_locale* lc);
-extern time_t mktime_tz(struct tm* const tmp, char const* tz);
-extern void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz);
+extern size_t      strftime_tz(char *s, size_t max, const char *format, const struct tm *tm, const struct strftime_locale*  lc);
 
 #endif /* _BIONIC_STRFTIME_TZ_DECLARED */
 
