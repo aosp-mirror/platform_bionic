@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJaX///6Y\u003d",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-09-25T01:10:04Z",
+      "side": 1,
+      "message": "check you can write something?\n\ncan you get the fd and then fstat to see if the permissions are sane? (others can\u0027t read?)",
+      "revId": "5858c94767e9ed62a923b7663a56e451504e0d8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
