@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJZn///74\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-09-25T06:52:38Z",
+      "side": 1,
+      "message": "Actually, on second thought, I think this particular instance should be reverted: as load_bias \u003d\u003d base - p_vaddr, it will typically point into the address space of an adjacent shared library, which is arguably not what you would expect.",
+      "revId": "c1993cac4072e2d0c48cd9b55e3861d879ada224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
