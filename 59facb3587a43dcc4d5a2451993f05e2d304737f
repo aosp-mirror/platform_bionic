@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJaX///5Q\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-09-25T01:20:10Z",
+      "side": 1,
+      "message": "before this never worked due to dependency on /tmp. but now it could return a pointer to shared storage which may not have permissions to make the file only readable by the calling process",
+      "revId": "59facb3587a43dcc4d5a2451993f05e2d304737f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
