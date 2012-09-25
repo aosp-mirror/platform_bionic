@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJan///GI\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-09-25T23:40:34Z",
+      "side": 1,
+      "message": "Please check return value.\n\nint ret \u003d snprintf(buf, sizeof(buf), \"%s/tmp.XXXXXXXXXX\", tmp_dir);\nif (ret \u003e\u003d sizeof(buf)) {\n    return NULL;\n}\n\nalternatively, perhaps we should be using asprintf and not deal with fixed buffer sizes?",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJan///GQ\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-09-25T23:40:34Z",
+      "side": 1,
+      "message": "Is this construct (creating a stack variable but not doing anything with it) guaranteed to work? I\u0027ve never seen this construct before.",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJan///F4\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-09-25T23:40:34Z",
+      "side": 1,
+      "message": "nit: space after \"rc\"",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
