@@ -16,6 +16,24 @@
       "revId": "c1993cac4072e2d0c48cd9b55e3861d879ada224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJan///Kk\u003d",
+        "filename": "linker/dlfcn.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2012-09-25T22:38:51Z",
+      "side": 1,
+      "message": "I think you are right since dli_fbase is the address at which the shared library is loaded as per comments in dlfcn.h. Will submit another patch for this change.",
+      "parentUuid": "AAAJZn///74\u003d",
+      "revId": "c1993cac4072e2d0c48cd9b55e3861d879ada224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
