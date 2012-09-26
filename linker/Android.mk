@@ -71,6 +71,14 @@ LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 
 include $(BUILD_SYSTEM)/dynamic_binary.mk
 
+# See build/core/executable.mk
+$(linked_module): PRIVATE_TARGET_GLOBAL_LD_DIRS := $(TARGET_GLOBAL_LD_DIRS)
+$(linked_module): PRIVATE_TARGET_GLOBAL_LDFLAGS := $(TARGET_GLOBAL_LDFLAGS)
+$(linked_module): PRIVATE_TARGET_FDO_LIB := $(TARGET_FDO_LIB)
+$(linked_module): PRIVATE_TARGET_LIBGCC := $(TARGET_LIBGCC)
+$(linked_module): PRIVATE_TARGET_CRTBEGIN_DYNAMIC_O := $(TARGET_CRTBEGIN_DYNAMIC_O)
+$(linked_module): PRIVATE_TARGET_CRTBEGIN_STATIC_O := $(TARGET_CRTBEGIN_STATIC_O)
+$(linked_module): PRIVATE_TARGET_CRTEND_O := $(TARGET_CRTEND_O)
 $(linked_module): $(TARGET_CRTBEGIN_STATIC_O) $(all_objects) $(all_libraries) $(TARGET_CRTEND_O)
 	$(transform-o-to-static-executable)
 	@echo "target PrefixSymbols: $(PRIVATE_MODULE) ($@)"
