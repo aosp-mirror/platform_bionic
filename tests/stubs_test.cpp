@@ -34,7 +34,7 @@ typedef enum {
   TYPE_APP
 } uid_type_t;
 
-static void check_getpwnam(const char* username, int uid, uid_type_t uid_type) {
+static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
   errno = 0;
   passwd* pwd = getpwuid(uid);
   ASSERT_TRUE(pwd != NULL);
