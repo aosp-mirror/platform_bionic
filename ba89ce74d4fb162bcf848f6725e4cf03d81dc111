@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAJan///Aw\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-26T00:21:12Z",
+      "side": 1,
+      "message": "i\u0027ll check the return value for now, and come back later and do a big asprintf cleanup. i\u0027ve raised a bug for that.",
+      "parentUuid": "AAAJan///GI\u003d",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJan///GQ\u003d",
         "filename": "libc/bionic/tmpfile.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAJan///BQ\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-26T00:21:12Z",
+      "side": 1,
+      "message": "it\u0027s a common consequence of http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization",
+      "parentUuid": "AAAJan///GQ\u003d",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJan///F4\u003d",
         "filename": "libc/bionic/tmpfile.cpp",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2012-09-25T23:40:34Z",
       "side": 1,
       "message": "nit: space after \"rc\"",
+      "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJan///As\u003d",
+        "filename": "libc/bionic/tmpfile.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-26T00:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAJan///F4\u003d",
       "revId": "ba89ce74d4fb162bcf848f6725e4cf03d81dc111",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
