@@ -27,7 +27,7 @@ struct ucontext {
  struct sigcontext uc_mcontext;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  sigset_t uc_sigmask;
- int __unused[32 - (sizeof (sigset_t) / sizeof (int))];
+ int __linux_unused[32 - (sizeof (sigset_t) / sizeof (int))];
  unsigned long uc_regspace[128] __attribute__((__aligned__(8)));
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
