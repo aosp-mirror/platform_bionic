@@ -57,7 +57,7 @@ class ScopedSignalBlocker {
 static FILE* __tmpfile_dir(const char* tmp_dir) {
   char buf[PATH_MAX];
   int path_length = snprintf(buf, sizeof(buf), "%s/tmp.XXXXXXXXXX", tmp_dir);
-  if (path_length >= sizeof(buf)) {
+  if (path_length >= static_cast<int>(sizeof(buf))) {
     return NULL;
   }
 
