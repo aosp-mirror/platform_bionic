@@ -257,6 +257,7 @@ libc_common_src_files := \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
 	bionic/__set_errno.c \
+	bionic/__umask_chk.c \
 	bionic/bionic_clone.c \
 	bionic/cpuacct.c \
 	bionic/arc4random.c \
