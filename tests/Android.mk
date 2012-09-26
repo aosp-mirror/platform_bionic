@@ -22,6 +22,7 @@ test_src_files = \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    stdio_test.cpp \
     string_test.cpp \
     stubs_test.cpp \
 
