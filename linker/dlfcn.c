@@ -138,7 +138,8 @@ int dladdr(const void *addr, Dl_info *info)
         memset(info, 0, sizeof(Dl_info));
 
         info->dli_fname = si->name;
-        info->dli_fbase = (void*)si->load_bias;
+        /* Address at which the shared object is loaded */
+        info->dli_fbase = (void*)si->base;
 
         /* Determine if any symbol in the library contains the specified address */
         Elf32_Sym *sym = soinfo_find_symbol(si, addr);
