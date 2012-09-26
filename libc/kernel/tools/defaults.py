@@ -51,6 +51,7 @@ kernel_default_arch_macros = {
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
     "asm": "__asm__",
+    "__unused": "__linux_unused", # The kernel usage of __unused conflicts with the macro defined in sys/cdefs.h
     }
 
 # this is the set of known static inline functions that we want to keep
