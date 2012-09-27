@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJjX////4\u003d",
+        "filename": "libc/include/sys/param.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-27T18:43:14Z",
+      "side": 1,
+      "message": "this is in glibc too, so i\u0027m fine with adding it.",
+      "revId": "eac9eb462ed6f7fcfb791e7a08b4011fcca47829",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJjX////0\u003d",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-09-27T18:43:14Z",
+      "side": 1,
+      "message": "i fleshed out the tests a bit.",
+      "revId": "eac9eb462ed6f7fcfb791e7a08b4011fcca47829",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
