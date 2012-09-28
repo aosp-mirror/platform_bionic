@@ -46,3 +46,126 @@ TEST(stdio, tmpfile_fileno_fprintf_rewind_fgets) {
 
   fclose(fp);
 }
+
+TEST(stdio, getdelim) {
+  FILE* fp = tmpfile();
+  ASSERT_TRUE(fp != NULL);
+
+  const char* line_written = "This  is a test";
+  int rc = fprintf(fp, "%s", line_written);
+  ASSERT_EQ(rc, static_cast<int>(strlen(line_written)));
+
+  rewind(fp);
+
+  char* word_read = NULL;
+  size_t allocated_length = 0;
+
+  const char* expected[] = { "This ", " ", "is ", "a ", "test" };
+  for (size_t i = 0; i < 5; ++i) {
+    ASSERT_FALSE(feof(fp));
+    ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), static_cast<int>(strlen(expected[i])));
+    ASSERT_GE(allocated_length, strlen(expected[i]));
+    ASSERT_STREQ(word_read, expected[i]);
+  }
+  // The last read should have set the end-of-file indicator for the stream.
+  ASSERT_TRUE(feof(fp));
+  clearerr(fp);
+
+  // getdelim returns -1 but doesn't set errno if we're already at EOF.
+  // It should set the end-of-file indicator for the stream, though.
+  errno = 0;
+  ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), -1);
+  ASSERT_EQ(errno, 0);
+  ASSERT_TRUE(feof(fp));
+
+  free(word_read);
+  fclose(fp);
+}
+
+TEST(stdio, getdelim_invalid) {
+  FILE* fp = tmpfile();
+
+  char* buffer = NULL;
+  size_t buffer_length = 0;
+
+  // The first argument can't be NULL.
+  errno = 0;
+  ASSERT_EQ(getdelim(NULL, &buffer_length, ' ', fp), -1);
+  ASSERT_EQ(errno, EINVAL);
+
+  // The second argument can't be NULL.
+  errno = 0;
+  ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
+  ASSERT_EQ(errno, EINVAL);
+
+  // The stream can't be closed.
+  fclose(fp);
+  errno = 0;
+  ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
+  ASSERT_EQ(errno, EBADF);
+}
+
+TEST(stdio, getline) {
+  FILE* fp = tmpfile();
+  ASSERT_TRUE(fp != NULL);
+
+  const char* line_written = "This is a test for getline\n";
+  const size_t line_count = 5;
+
+  for (size_t i = 0; i < line_count; ++i) {
+    int rc = fprintf(fp, "%s", line_written);
+    ASSERT_EQ(rc, static_cast<int>(strlen(line_written)));
+  }
+
+  rewind(fp);
+
+  char* line_read = NULL;
+  size_t allocated_length = 0;
+
+  size_t read_line_count = 0;
+  ssize_t read_char_count;
+  while ((read_char_count = getline(&line_read, &allocated_length, fp)) != -1) {
+    ASSERT_EQ(read_char_count, static_cast<int>(strlen(line_written)));
+    ASSERT_GE(allocated_length, strlen(line_written));
+    ASSERT_STREQ(line_read, line_written);
+    ++read_line_count;
+  }
+  ASSERT_EQ(read_line_count, line_count);
+
+  // The last read should have set the end-of-file indicator for the stream.
+  ASSERT_TRUE(feof(fp));
+  clearerr(fp);
+
+  // getline returns -1 but doesn't set errno if we're already at EOF.
+  // It should set the end-of-file indicator for the stream, though.
+  errno = 0;
+  ASSERT_EQ(getline(&line_read, &allocated_length, fp), -1);
+  ASSERT_EQ(errno, 0);
+  ASSERT_TRUE(feof(fp));
+
+  free(line_read);
+  fclose(fp);
+}
+
+TEST(stdio, getline_invalid) {
+  FILE* fp = tmpfile();
+
+  char* buffer = NULL;
+  size_t buffer_length = 0;
+
+  // The first argument can't be NULL.
+  errno = 0;
+  ASSERT_EQ(getline(NULL, &buffer_length, fp), -1);
+  ASSERT_EQ(errno, EINVAL);
+
+  // The second argument can't be NULL.
+  errno = 0;
+  ASSERT_EQ(getline(&buffer, NULL, fp), -1);
+  ASSERT_EQ(errno, EINVAL);
+
+  // The stream can't be closed.
+  fclose(fp);
+  errno = 0;
+  ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
+  ASSERT_EQ(errno, EBADF);
+}
