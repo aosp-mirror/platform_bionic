@@ -340,6 +340,8 @@ libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/regex/regerror.c \
 	upstream-netbsd/libc/regex/regexec.c \
 	upstream-netbsd/libc/regex/regfree.c \
+	upstream-netbsd/libc/stdio/getdelim.c \
+	upstream-netbsd/libc/stdio/getline.c \
 	upstream-netbsd/libc/stdlib/tdelete.c \
 	upstream-netbsd/libc/stdlib/tfind.c \
 	upstream-netbsd/libc/stdlib/tsearch.c \
