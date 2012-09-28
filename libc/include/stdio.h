@@ -60,6 +60,11 @@
 typedef	unsigned long    size_t;
 #endif
 
+#ifndef _SSIZE_T_DEFINED_
+#define _SSIZE_T_DEFINED_
+typedef long int  ssize_t;
+#endif
+
 #ifndef	_OFF_T_DEFINED_
 #define	_OFF_T_DEFINED_
 typedef	long    off_t;
