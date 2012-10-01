@@ -1,4 +1,5 @@
-/*	$OpenBSD: seed48.c,v 1.3 2005/08/08 08:05:37 espie Exp $ */
+/*	$NetBSD: seed48.c,v 1.8 2005/06/12 05:21:28 lukem Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -12,16 +13,27 @@
  * to anyone/anything when using this software.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: seed48.c,v 1.8 2005/06/12 05:21:28 lukem Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
+
+#include <assert.h>
+
 #include "rand48.h"
 
-extern unsigned short __rand48_seed[3];
-extern unsigned short __rand48_mult[3];
-extern unsigned short __rand48_add;
+#ifdef __weak_alias
+__weak_alias(seed48,_seed48)
+#endif
 
 unsigned short *
 seed48(unsigned short xseed[3])
 {
 	static unsigned short sseed[3];
+
+	_DIAGASSERT(xseed != NULL);
 
 	sseed[0] = __rand48_seed[0];
 	sseed[1] = __rand48_seed[1];
