@@ -1,4 +1,5 @@
-/*	$OpenBSD: _rand48.c,v 1.3 2005/08/08 08:05:36 espie Exp $ */
+/*	$NetBSD: _rand48.c,v 1.7 2005/06/12 05:21:27 lukem Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -11,6 +12,13 @@
  * of any kind. I shall in no event be liable for anything that happens
  * to anyone/anything when using this software.
  */
+
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: _rand48.c,v 1.7 2005/06/12 05:21:27 lukem Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include <assert.h>
 
 #include "rand48.h"
 
@@ -31,6 +39,8 @@ __dorand48(unsigned short xseed[3])
 {
 	unsigned long accu;
 	unsigned short temp[2];
+
+	_DIAGASSERT(xseed != NULL);
 
 	accu = (unsigned long) __rand48_mult[0] * (unsigned long) xseed[0] +
 	 (unsigned long) __rand48_add;
