@@ -155,7 +155,6 @@ libc_common_src_files := \
 	stdlib/locale.c \
 	stdlib/putenv.c \
 	stdlib/qsort.c \
-	stdlib/seed48.c \
 	stdlib/setenv.c \
 	stdlib/setjmperr.c \
 	stdlib/strntoimax.c \
@@ -341,6 +340,7 @@ libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/stdlib/mrand48.c \
 	upstream-netbsd/libc/stdlib/nrand48.c \
 	upstream-netbsd/libc/stdlib/_rand48.c \
+	upstream-netbsd/libc/stdlib/seed48.c \
 	upstream-netbsd/libc/stdlib/srand48.c \
 	upstream-netbsd/libc/stdlib/tdelete.c \
 	upstream-netbsd/libc/stdlib/tfind.c \
