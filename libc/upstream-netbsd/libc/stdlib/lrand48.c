@@ -1,3 +1,5 @@
+/*	$NetBSD: lrand48.c,v 1.8 2005/06/12 05:21:28 lukem Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -12,13 +14,21 @@
  */
 
 #include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: lrand48.c,v 1.8 2005/06/12 05:21:28 lukem Exp $");
+#endif /* LIBC_SCCS and not lint */
 
+#include "namespace.h"
 #include "rand48.h"
 
-extern unsigned short __rand48_seed[3];
+#ifdef __weak_alias
+__weak_alias(lrand48,_lrand48)
+#endif
 
-double
-drand48(void)
+long
+lrand48(void)
 {
-	return erand48(__rand48_seed);
+	__dorand48(__rand48_seed);
+	return (long)((unsigned long) __rand48_seed[2] << 15) +
+	    ((unsigned long) __rand48_seed[1] >> 1);
 }
