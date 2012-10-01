@@ -28,8 +28,6 @@
 #ifndef _SYS_TYPES_H_
 #define _SYS_TYPES_H_
 
-#define __need_size_t
-#define __need_ptrdiff_t
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -45,7 +43,7 @@ typedef __u32    __kernel_dev_t;
  * these are defined as 16-bit for legacy reason, but
  * the kernel uses 32-bits instead.
  *
- * 32-bit valuea are required for Android, so use
+ * 32-bit values are required for Android, so use
  * __kernel_uid32_t and __kernel_gid32_t
  */
 
@@ -90,7 +88,6 @@ typedef  .... pthread_t;
 typedef unsigned int  size_t;
 #endif
 
-/* size_t is defined by the GCC-specific <stddef.h> */
 #ifndef _SSIZE_T_DEFINED_
 #define _SSIZE_T_DEFINED_
 typedef long int  ssize_t;
