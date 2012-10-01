@@ -1,4 +1,5 @@
-/*	$OpenBSD: srand48.c,v 1.3 2005/08/08 08:05:37 espie Exp $ */
+/*	$NetBSD: srand48.c,v 1.7 2005/06/12 05:21:28 lukem Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -12,18 +13,24 @@
  * to anyone/anything when using this software.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: srand48.c,v 1.7 2005/06/12 05:21:28 lukem Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
 #include "rand48.h"
 
-extern unsigned short __rand48_seed[3];
-extern unsigned short __rand48_mult[3];
-extern unsigned short __rand48_add;
+#ifdef __weak_alias
+__weak_alias(srand48,_srand48)
+#endif
 
 void
 srand48(long seed)
 {
 	__rand48_seed[0] = RAND48_SEED_0;
 	__rand48_seed[1] = (unsigned short) seed;
-	__rand48_seed[2] = (unsigned short) (seed >> 16);
+	__rand48_seed[2] = (unsigned short) ((unsigned long)seed >> 16);
 	__rand48_mult[0] = RAND48_MULT_0;
 	__rand48_mult[1] = RAND48_MULT_1;
 	__rand48_mult[2] = RAND48_MULT_2;
