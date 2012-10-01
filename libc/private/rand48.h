@@ -1,3 +1,5 @@
+/*	$NetBSD: rand48.h,v 1.6 2011/05/18 19:36:36 dsl Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -9,17 +11,17 @@
  * This software is provided ``as is'', and comes with no warranties
  * of any kind. I shall in no event be liable for anything that happens
  * to anyone/anything when using this software.
- *
- *	$OpenBSD: rand48.h,v 1.3 2002/02/16 21:27:24 millert Exp $
  */
 
 #ifndef _RAND48_H_
 #define _RAND48_H_
 
-#include <math.h>
 #include <stdlib.h>
 
-void		__dorand48(unsigned short[3]);
+extern void		__dorand48(unsigned short[3]);
+extern unsigned short	__rand48_seed[3];
+extern unsigned short	__rand48_mult[3];
+extern unsigned short	__rand48_add;
 
 #define	RAND48_SEED_0	(0x330e)
 #define	RAND48_SEED_1	(0xabcd)

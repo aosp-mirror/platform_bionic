@@ -1,4 +1,5 @@
-/*	$OpenBSD: mrand48.c,v 1.3 2005/08/08 08:05:37 espie Exp $ */
+/*	$NetBSD: mrand48.c,v 1.7 2005/06/12 05:21:28 lukem Exp $	*/
+
 /*
  * Copyright (c) 1993 Martin Birgmeier
  * All rights reserved.
@@ -12,9 +13,17 @@
  * to anyone/anything when using this software.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: mrand48.c,v 1.7 2005/06/12 05:21:28 lukem Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
 #include "rand48.h"
 
-extern unsigned short __rand48_seed[3];
+#ifdef __weak_alias
+__weak_alias(mrand48,_mrand48)
+#endif
 
 long
 mrand48(void)
