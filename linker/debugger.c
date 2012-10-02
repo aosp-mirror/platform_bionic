@@ -29,14 +29,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ctype.h>
+#include <stdbool.h>
 #include <signal.h>
-#include <sys/mman.h>
 #include <sys/prctl.h>
 #include <errno.h>
-
-#include "linker.h"
-
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -113,11 +109,15 @@ static int socket_abstract_client(const char *name, int type)
 #include <../libc/private/logd.h>
 
 /*
- * Writes a summary of the signal to the log file.
+ * Writes a summary of the signal to the log file.  We do this so that, if
+ * for some reason we're not able to contact debuggerd, there is still some
+ * indication of the failure in the log.
  *
  * We could be here as a result of native heap corruption, or while a
  * mutex is being held, so we don't want to use any libc functions that
  * could allocate memory or hold a lock.
+ *
+ * "info" will be NULL if the siginfo_t information was not available.
  */
 static void logSignalSummary(int signum, const siginfo_t* info)
 {
@@ -145,11 +145,43 @@ static void logSignalSummary(int signum, const siginfo_t* info)
         // implies that 16 byte names are not.
         threadname[MAX_TASK_NAME_LEN] = 0;
     }
-    format_buffer(buffer, sizeof(buffer),
-        "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
-        signum, signame, info->si_addr, info->si_code, gettid(), threadname);
+    if (info != NULL) {
+        format_buffer(buffer, sizeof(buffer),
+            "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
+            signum, signame, info->si_addr, info->si_code, gettid(), threadname);
+    } else {
+        format_buffer(buffer, sizeof(buffer),
+            "Fatal signal %d (%s), thread %d (%s)",
+            signum, signame, gettid(), threadname);
+    }
 
     __libc_android_log_write(ANDROID_LOG_FATAL, "libc", buffer);
+}
+
+/*
+ * Returns true if the handler for signal "signum" has SA_SIGINFO set.
+ */
+static bool haveSiginfo(int signum)
+{
+    struct sigaction oldact, newact;
+
+    memset(&newact, 0, sizeof(newact));
+    newact.sa_handler = SIG_DFL;
+    newact.sa_flags = SA_RESTART;
+    sigemptyset(&newact.sa_mask);
+
+    if (sigaction(signum, &newact, &oldact) < 0) {
+        __libc_android_log_write(ANDROID_LOG_FATAL, "libc",
+            "Failed testing for SA_SIGINFO");
+        return 0;
+    }
+    bool ret = (oldact.sa_flags & SA_SIGINFO) != 0;
+
+    if (sigaction(signum, &oldact, NULL) < 0) {
+        __libc_android_log_write(ANDROID_LOG_FATAL, "libc",
+            "Restore failed in test for SA_SIGINFO");
+    }
+    return ret;
 }
 
 /*
@@ -161,6 +193,14 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__(
     char msgbuf[128];
     unsigned tid;
     int s;
+
+    /*
+     * It's possible somebody cleared the SA_SIGINFO flag, which would mean
+     * our "info" arg holds an undefined value.
+     */
+    if (!haveSiginfo(n)) {
+        info = NULL;
+    }
 
     logSignalSummary(n, info);
 
