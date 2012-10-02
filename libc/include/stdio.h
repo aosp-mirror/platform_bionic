@@ -63,13 +63,8 @@ typedef long int  ssize_t;
 typedef	long    off_t;
 #endif
 
-#ifndef NULL
-#ifdef 	__GNUG__
-#define	NULL	__null
-#else
-#define	NULL	0L
-#endif
-#endif
+#define __need_NULL
+#include <stddef.h>
 
 #define	_FSTDIO			/* Define for new stdio with functions. */
 
