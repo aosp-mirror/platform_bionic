@@ -259,171 +259,172 @@ struct venc_ioctl_msg{
 #define VEN_IOCTL_SET_EXTRADATA   _IOW(VEN_IOCTLBASE_ENC, 48, struct venc_ioctl_msg)
 #define VEN_IOCTL_GET_EXTRADATA   _IOR(VEN_IOCTLBASE_ENC, 49, struct venc_ioctl_msg)
 #define VEN_IOCTL_SET_SLICE_DELIVERY_MODE   _IO(VEN_IOCTLBASE_ENC, 50)
-struct venc_switch{
+#define VEN_IOCTL_SET_SPS_PPS_FOR_IDR   _IOW(VEN_IOCTLBASE_ENC, 51, struct venc_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_switch{
  unsigned char status;
 };
 struct venc_allocatorproperty{
- unsigned long mincount;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long mincount;
  unsigned long maxcount;
  unsigned long actualcount;
  unsigned long datasize;
- unsigned long suffixsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long suffixsize;
  unsigned long alignment;
  unsigned long bufpoolid;
 };
-struct venc_bufferpayload{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_bufferpayload{
  unsigned char *pbuffer;
  size_t sz;
  int fd;
- unsigned int offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned int offset;
  unsigned int maped_size;
  unsigned long filled_len;
 };
-struct venc_buffer{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_buffer{
  unsigned char *ptrbuffer;
  unsigned long sz;
  unsigned long len;
- unsigned long offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long offset;
  long long timestamp;
  unsigned long flags;
  void *clientdata;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_basecfg{
  unsigned long input_width;
  unsigned long input_height;
- unsigned long dvs_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long dvs_width;
  unsigned long dvs_height;
  unsigned long codectype;
  unsigned long fps_num;
- unsigned long fps_den;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long fps_den;
  unsigned long targetbitrate;
  unsigned long inputformat;
 };
-struct venc_profile{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_profile{
  unsigned long profile;
 };
 struct ven_profilelevel{
- unsigned long level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long level;
 };
 struct venc_sessionqp{
  unsigned long iframeqp;
- unsigned long pframqp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long pframqp;
 };
 struct venc_qprange{
  unsigned long maxqp;
- unsigned long minqp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long minqp;
 };
 struct venc_intraperiod{
  unsigned long num_pframes;
- unsigned long num_bframes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long num_bframes;
 };
 struct venc_seqheader{
  unsigned char *hdrbufptr;
- unsigned long bufsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long bufsize;
  unsigned long hdrlen;
 };
 struct venc_capability{
- unsigned long codec_types;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long codec_types;
  unsigned long maxframe_width;
  unsigned long maxframe_height;
  unsigned long maxtarget_bitrate;
- unsigned long maxframe_rate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long maxframe_rate;
  unsigned long input_formats;
  unsigned char dvs;
 };
-struct venc_entropycfg{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_entropycfg{
  unsigned longentropysel;
  unsigned long cabacmodel;
 };
-struct venc_dbcfg{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_dbcfg{
  unsigned long db_mode;
  unsigned long slicealpha_offset;
  unsigned long slicebeta_offset;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_intrarefresh{
  unsigned long irmode;
  unsigned long mbcount;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_multiclicecfg{
  unsigned long mslice_mode;
  unsigned long mslice_size;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_bufferflush{
  unsigned long flush_mode;
 };
-struct venc_ratectrlcfg{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_ratectrlcfg{
  unsigned long rcmode;
 };
 struct venc_voptimingcfg{
- unsigned long voptime_resolution;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long voptime_resolution;
 };
 struct venc_framerate{
  unsigned long fps_denominator;
- unsigned long fps_numerator;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long fps_numerator;
 };
 struct venc_targetbitrate{
  unsigned long target_bitrate;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_rotation{
  unsigned long rotation;
 };
-struct venc_timeout{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_timeout{
  unsigned long millisec;
 };
 struct venc_headerextension{
- unsigned long header_extension;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long header_extension;
 };
 struct venc_msg{
  unsigned long statuscode;
- unsigned long msgcode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long msgcode;
  struct venc_buffer buf;
  unsigned long msgdata_size;
 };
-struct venc_recon_addr{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_recon_addr{
  unsigned char *pbuffer;
  unsigned long buffer_size;
  unsigned long pmem_fd;
- unsigned long offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long offset;
 };
 struct venc_recon_buff_size{
  int width;
- int height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ int height;
  int size;
  int alignment;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
 
