@@ -16,6 +16,24 @@
       "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJyH//+F0\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-03T18:30:37Z",
+      "side": 1,
+      "message": "It is just a random value I made up. I tried reading from /dev/urandom here, but it always caused segfaults. I assumed that since libc is not mapped, it is not possible to do disk I/O here.",
+      "parentUuid": "AAAJxn//+zw\u003d",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
