@@ -51,6 +51,24 @@
       "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ63//9rE\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-09T14:51:39Z",
+      "side": 1,
+      "message": "GCC looks specifically at gs:%20 for stack canary, which is the sixth slot in tls map. Also, when I was testing, OPENGL* has to be 3 and 4. Changing these causes problems with graphics.",
+      "parentUuid": "AAAJ9X///3A\u003d",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
