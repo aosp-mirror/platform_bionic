@@ -37,6 +37,41 @@
     },
     {
       "key": {
+        "uuid": "AAAJ7H//9ns\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-09T19:18:38Z",
+      "side": 1,
+      "message": "sounds like this ought to be fixable though?",
+      "parentUuid": "AAAJyH//+F0\u003d",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ7H//9no\u003d",
+        "filename": "libc/bionic/ssp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-09T19:18:38Z",
+      "side": 1,
+      "message": "we might want to keep the global anyway, so we can support binaries built with either x86 GCC configuration.",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJ9X///3A\u003d",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 1
@@ -66,6 +101,24 @@
       "side": 1,
       "message": "GCC looks specifically at gs:%20 for stack canary, which is the sixth slot in tls map. Also, when I was testing, OPENGL* has to be 3 and 4. Changing these causes problems with graphics.",
       "parentUuid": "AAAJ9X///3A\u003d",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ7H//9nw\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-09T19:18:38Z",
+      "side": 1,
+      "message": "how about we just \"waste\" a slot on other architectures? i\u0027d rather keep things simple and avoid all the conditionals.",
+      "parentUuid": "AAAJ63//9rE\u003d",
       "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
