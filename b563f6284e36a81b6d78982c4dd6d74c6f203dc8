@@ -34,6 +34,23 @@
       "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ9X///3A\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-10-09T07:35:30Z",
+      "side": 1,
+      "message": "What about change this as:\n#define TLS_SLOT_SELF               0\n\n#define TLS_SLOT_THREAD_ID          (TLS_SLOT_SELF + 1)\n\n\n#ifdef THREAD_HAS_STACK_GUARD_X86\n\n  #define TLS_SLOT_X86_STACK_GUARD    (TLS_SLOT_THREAD_ID + 1)\n\n#else\n\n  #define TLS_SLOT_X86_STACK_GUARD    (TLS_SLOT_THREAD_ID)\n\n#endif\n\n#define TLS_SLOT_ERRNO          \t(TLS_SLOT_X86_STACK_GUARD + 1)\n\n#define TLS_SLOT_OPENGL_API         (TLS_SLOT_ERRNO + 1)\n\n#define TLS_SLOT_OPENGL             (TLS_SLOT_OPENGL_API + 1)\n\n#define TLS_SLOT_PREALLOC_MAX\t\t(TLS_SLOT_OPENGL + 1)\n\n\n\n#define TLS_DEFAULT_ALLOC_MAP\t\t(1 \u003c\u003c TLS_SLOT_PREALLOC_MAX - 1)\n\nAnd remove the change in TLSMAP?",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
