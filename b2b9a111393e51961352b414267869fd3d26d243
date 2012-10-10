@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKDH///0o\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-10-10T16:17:27Z",
+      "side": 1,
+      "message": "This is unnecessary. Get\u0027s redefined below",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKDH///0k\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-10-10T16:17:27Z",
+      "side": 1,
+      "message": "tmp use can be removed as well.",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKDH///0c\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-10-10T16:17:27Z",
+      "side": 1,
+      "message": "This is the core of randomness here. Since depends on time I see now different values in each thread. Though it would be better to figure out how to read /dev/urandom when possible.",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKDH///0s\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-10-10T16:17:27Z",
+      "side": 1,
+      "message": "This code seems useless here. As far as I understand each thread when born defines tls[TLS_SLOT_X86_STACK_GUARD] in __init_tls. That\u0027s why I\u0027ve seen repeating value per thread on the first patch.",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
