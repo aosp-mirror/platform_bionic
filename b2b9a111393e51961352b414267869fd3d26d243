@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "AAAJ/3///cw\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-10T18:22:36Z",
+      "side": 1,
+      "message": "This part of code is usually executed when a program first starts, where reading from /dev/urandom is not possible. When the program creates new threads, the code in pthread_create() generates new stack canary from /dev/urandom instead. This if-block probably only runs once in the entire life-time of a program.",
+      "parentUuid": "AAAKDH///0c\u003d",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAKDH///0s\u003d",
         "filename": "libc/bionic/pthread.c",
         "patchSetId": 2
@@ -64,6 +82,24 @@
       "writtenOn": "2012-10-10T16:17:27Z",
       "side": 1,
       "message": "This code seems useless here. As far as I understand each thread when born defines tls[TLS_SLOT_X86_STACK_GUARD] in __init_tls. That\u0027s why I\u0027ve seen repeating value per thread on the first patch.",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3///c8\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-10T18:22:36Z",
+      "side": 1,
+      "message": "This code gets the values from /dev/urandom. When it is set here, __init_tls() will not overwrite the value. This gives us more \u0027randomness\u0027 on the stack canary.",
+      "parentUuid": "AAAKDH///0s\u003d",
       "revId": "b2b9a111393e51961352b414267869fd3d26d243",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
