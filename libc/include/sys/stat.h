@@ -112,6 +112,13 @@ struct stat {
 #define  st_mtimensec  st_mtime_nsec
 #define  st_ctimensec  st_ctime_nsec
 
+#ifdef __USE_BSD
+/* Permission macros provided by glibc for compatibility with BSDs. */
+#define ACCESSPERMS (S_IRWXU | S_IRWXG | S_IRWXO) /* 0777 */
+#define ALLPERMS    (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO) /* 07777 */
+#define DEFFILEMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) /* 0666 */
+#endif
+
 extern int    chmod(const char *, mode_t);
 extern int    fchmod(int, mode_t);
 extern int    mkdir(const char *, mode_t);
