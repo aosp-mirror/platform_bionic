@@ -122,6 +122,24 @@
       "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKBX////8\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-10-10T01:15:46Z",
+      "side": 1,
+      "message": "Sounds good. We may need one more slot for x86 sysenter/sysexit in the near future. :).",
+      "parentUuid": "AAAJ7H//9nw\u003d",
+      "revId": "b563f6284e36a81b6d78982c4dd6d74c6f203dc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
