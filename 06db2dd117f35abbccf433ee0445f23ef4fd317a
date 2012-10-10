@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJ/3///5Y\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-10T00:13:40Z",
+      "side": 1,
+      "message": "i\u0027ve rewritten this to just use public pthreads API. adding non-portable pthread API is not okay, and doesn\u0027t seem necessary.",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3///5U\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-10T00:13:40Z",
+      "side": 1,
+      "message": "is this the best way to do it? should we just use a recursive mutex instead?",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3///5Q\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-10T00:13:40Z",
+      "side": 1,
+      "message": "looks good.",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3///5M\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-10T00:13:40Z",
+      "side": 1,
+      "message": "looks good.",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
