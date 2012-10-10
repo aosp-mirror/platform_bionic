@@ -366,7 +366,7 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
         alignment = 1L << (31 - __builtin_clz(alignment));
     }
 
-    // here, aligment is at least MALLOC_ALIGNMENT<<1 bytes
+    // here, alignment is at least MALLOC_ALIGNMENT<<1 bytes
     // we will align by at least MALLOC_ALIGNMENT bytes
     // and at most alignment-MALLOC_ALIGNMENT bytes
     size_t size = (alignment-MALLOC_ALIGNMENT) + bytes;

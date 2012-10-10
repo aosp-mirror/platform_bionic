@@ -376,7 +376,7 @@ static void malloc_init_impl() {
         }
     }
 
-    // Lets see which .so must be loaded for the requested debug level
+    // Choose the appropriate .so for the requested debug level.
     switch (debug_level) {
         case 1:
         case 5:
