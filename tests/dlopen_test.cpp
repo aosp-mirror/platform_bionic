@@ -88,7 +88,7 @@ TEST(dlopen, dladdr) {
     uintptr_t start = strtoul(line, 0, 16);
     line[strlen(line) - 1] = '\0'; // Chomp the '\n'.
     char* path = strchr(line, '/');
-    if (strcmp(executable_path, path) == 0) {
+    if (path != NULL && strcmp(executable_path, path) == 0) {
       base_address = reinterpret_cast<void*>(start);
       break;
     }

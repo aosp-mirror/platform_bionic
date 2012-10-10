@@ -40,22 +40,23 @@ char* getcwd(char* buf, size_t size) {
 
   // Allocate a buffer if necessary.
   char* allocated_buf = NULL;
+  size_t allocated_size = size;
   if (buf == NULL) {
-    size_t allocated_size = size;
     if (size == 0) {
       // The Linux kernel won't return more than a page, so translate size 0 to 4KiB.
       // TODO: if we need to support paths longer than that, we'll have to walk the tree ourselves.
-      size = getpagesize();
+      allocated_size = getpagesize();
     }
     buf = allocated_buf = static_cast<char*>(malloc(allocated_size));
     if (buf == NULL) {
-      // malloc set errno.
+      // malloc should set errno, but valgrind's malloc wrapper doesn't.
+      errno = ENOMEM;
       return NULL;
     }
   }
 
   // Ask the kernel to fill our buffer.
-  int rc = __getcwd(buf, size);
+  int rc = __getcwd(buf, allocated_size);
   if (rc == -1) {
     free(allocated_buf);
     // __getcwd set errno.
