@@ -288,7 +288,7 @@ int     delete_module(const char*, unsigned int)   129
 int     klogctl:syslog(int, char *, int)   103
 int     sysinfo(struct sysinfo *)  116
 int     personality(unsigned long)  136
-long    perf_event_open(struct perf_event_attr *attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) 364
+long    perf_event_open(struct perf_event_attr *attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) 364,336,333
 
 # futex
 int	futex(void *, int, int, void *, void *, int) 240,240,238

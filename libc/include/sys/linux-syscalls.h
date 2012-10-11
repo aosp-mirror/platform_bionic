@@ -84,7 +84,6 @@
 #define __NR_readv                        (__NR_SYSCALL_BASE + 145)
 #define __NR_writev                       (__NR_SYSCALL_BASE + 146)
 #define __NR_getsid                       (__NR_SYSCALL_BASE + 147)
-#define __NR_perf_event_open              (__NR_SYSCALL_BASE + 364)
 
 #ifdef __arm__
 #define __NR_exit_group                   (__NR_SYSCALL_BASE + 248)
@@ -202,6 +201,7 @@
 #define __NR_getcpu                       (__NR_SYSCALL_BASE + 345)
 #define __NR_ioprio_set                   (__NR_SYSCALL_BASE + 314)
 #define __NR_ioprio_get                   (__NR_SYSCALL_BASE + 315)
+#define __NR_perf_event_open              (__NR_SYSCALL_BASE + 364)
 #define __NR_futex                        (__NR_SYSCALL_BASE + 240)
 #define __NR_epoll_create                 (__NR_SYSCALL_BASE + 250)
 #define __NR_epoll_ctl                    (__NR_SYSCALL_BASE + 251)
@@ -330,6 +330,7 @@
 #define __NR_utimensat                    (__NR_SYSCALL_BASE + 320)
 #define __NR_eventfd2                     (__NR_SYSCALL_BASE + 328)
 #define __NR_pipe2                        (__NR_SYSCALL_BASE + 331)
+#define __NR_perf_event_open              (__NR_SYSCALL_BASE + 336)
 #endif
 
 #ifdef __mips__
@@ -462,6 +463,7 @@
 #define __NR_utimensat                    (__NR_SYSCALL_BASE + 316)
 #define __NR_eventfd2                     (__NR_SYSCALL_BASE + 325)
 #define __NR_pipe2                        (__NR_SYSCALL_BASE + 328)
+#define __NR_perf_event_open              (__NR_SYSCALL_BASE + 333)
 #endif
 
 #endif
