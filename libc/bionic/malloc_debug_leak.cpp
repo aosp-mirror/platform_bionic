@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <arpa/inet.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -36,19 +37,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <unwind.h>
-
-#include <arpa/inet.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/system_properties.h>
 #include <sys/types.h>
 #include <sys/un.h>
+#include <unistd.h>
+#include <unwind.h>
 
 #include "dlmalloc.h"
 #include "logd.h"
 #include "malloc_debug_common.h"
+#include "ScopedPthreadMutexLocker.h"
 
 // This file should be included into the build only when
 // MALLOC_LEAK_CHECK, or MALLOC_QEMU_INSTRUMENT, or both

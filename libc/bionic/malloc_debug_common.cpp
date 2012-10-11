@@ -40,11 +40,14 @@
  * or static (libc.a) linking.
  */
 
-#include <stdlib.h>
-#include <pthread.h>
-#include <unistd.h>
-#include "dlmalloc.h"
 #include "malloc_debug_common.h"
+
+#include <pthread.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "dlmalloc.h"
+#include "ScopedPthreadMutexLocker.h"
 
 /*
  * In a VM process, this is set to 1 after fork()ing out of zygote.
