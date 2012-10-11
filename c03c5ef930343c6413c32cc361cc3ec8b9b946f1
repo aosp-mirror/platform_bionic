@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKFn///fE\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-11T23:46:02Z",
+      "side": 1,
+      "message": "I am not familiar with the Android linker. I tried to pass the random value from linker to libc via TLS (similar to BIONIC_PREINIT). However, I always got 0 back. Could you give me some pointers on where to start?",
+      "parentUuid": "AAAJ/3//+ZU\u003d",
+      "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJ/3//+Y4\u003d",
         "filename": "libc/private/bionic_ssp.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2012-10-11T16:06:24Z",
       "side": 1,
       "message": "please combine with previous line.",
+      "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKFn////s\u003d",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-11T23:46:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAJ/3//+Y4\u003d",
       "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
