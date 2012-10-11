@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAJ/3//+ZU\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-11T16:06:24Z",
+      "side": 1,
+      "message": "Have you considered using AT_RANDOM value passed from the kernel instead?  You could avoid one system call, and have a number which is better randomized than the current time.",
+      "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3//+Y4\u003d",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-11T16:06:24Z",
+      "side": 1,
+      "message": "please combine with previous line.",
+      "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
