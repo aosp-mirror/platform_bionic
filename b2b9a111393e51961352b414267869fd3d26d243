@@ -103,6 +103,57 @@
       "revId": "b2b9a111393e51961352b414267869fd3d26d243",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3//+oE\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1870,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-11T01:21:29Z",
+      "side": 1,
+      "message": "seems cleaner to just add the new entry to the reserved range? (see my bionic_tls.h comment.)",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3//+nM\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1942,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-11T01:21:29Z",
+      "side": 1,
+      "message": "(we could lose this too, in that case.)",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAJ/3//+oU\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-11T01:21:29Z",
+      "side": 1,
+      "message": "should we have this below TLS_SLOT_MAX_WELL_KNOWN (i.e. \u003c TLS_SLOT_ERRNO) so callers can\u0027t use pthread_setspecific?",
+      "revId": "b2b9a111393e51961352b414267869fd3d26d243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
