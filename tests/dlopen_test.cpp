@@ -24,14 +24,19 @@
 
 #include <string>
 
+#define ASSERT_SUBSTR(needle, haystack) \
+    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
+
 static bool gCalled = false;
 extern "C" void DlSymTestFunction() {
   gCalled = true;
 }
 
 TEST(dlopen, dlsym_in_self) {
+  dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
+  ASSERT_TRUE(dlerror() == NULL);
 
   void* sym = dlsym(self, "DlSymTestFunction");
   ASSERT_TRUE(sym != NULL);
@@ -43,9 +48,52 @@ TEST(dlopen, dlsym_in_self) {
   ASSERT_TRUE(gCalled);
 }
 
-TEST(dlopen, dladdr) {
+TEST(dlopen, dlopen_failure) {
+  void* self = dlopen("/does/not/exist", RTLD_NOW);
+  ASSERT_TRUE(self == NULL);
+#if __BIONIC__
+  ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found", dlerror());
+#else
+  ASSERT_STREQ("/does/not/exist: cannot open shared object file: No such file or directory", dlerror());
+#endif
+}
+
+TEST(dlopen, dlsym_failures) {
+  dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
+  ASSERT_TRUE(dlerror() == NULL);
+
+  void* sym;
+
+  // NULL handle.
+  sym = dlsym(NULL, "test");
+  ASSERT_TRUE(sym == NULL);
+#if __BIONIC__
+  ASSERT_SUBSTR("dlsym library handle is null", dlerror());
+#else
+  ASSERT_SUBSTR("undefined symbol: test", dlerror()); // glibc isn't specific about the failure.
+#endif
+
+  // NULL symbol name.
+#if __BIONIC__
+  // glibc marks this parameter non-null and SEGVs if you cheat.
+  sym = dlsym(self, NULL);
+  ASSERT_TRUE(sym == NULL);
+  ASSERT_SUBSTR("", dlerror());
+#endif
+
+  // Symbol that doesn't exist.
+  sym = dlsym(self, "ThisSymbolDoesNotExist");
+  ASSERT_TRUE(sym == NULL);
+  ASSERT_SUBSTR("undefined symbol: ThisSymbolDoesNotExist", dlerror());
+}
+
+TEST(dlopen, dladdr) {
+  dlerror(); // Clear any pending errors.
+  void* self = dlopen(NULL, RTLD_NOW);
+  ASSERT_TRUE(self != NULL);
+  ASSERT_TRUE(dlerror() == NULL);
 
   void* sym = dlsym(self, "DlSymTestFunction");
   ASSERT_TRUE(sym != NULL);
@@ -102,9 +150,13 @@ TEST(dlopen, dladdr) {
 TEST(dlopen, dladdr_invalid) {
   Dl_info info;
 
+  dlerror(); // Clear any pending errors.
+
   // No symbol corresponding to NULL.
   ASSERT_EQ(dladdr(NULL, &info), 0); // Zero on error, non-zero on success.
+  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
 
   // No symbol corresponding to a stack address.
   ASSERT_EQ(dladdr(&info, &info), 0); // Zero on error, non-zero on success.
+  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
 }
