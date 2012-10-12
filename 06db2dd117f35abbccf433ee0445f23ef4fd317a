@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKIH////s\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1013446
+      },
+      "writtenOn": "2012-10-12T03:34:55Z",
+      "side": 1,
+      "message": "Agree on not adding non-portable pthread API. But there is a corner case with using locks/gIsLogging here: \n\nIf one thread is calling log_message() and setting gIsLogging \u003d true, then other threads will be unable to use log_message and directly return from it in this short period of time.\n\nIn this case some of the logs will be missed.",
+      "parentUuid": "AAAJ/3///5Y\u003d",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJ/3///5U\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-10-10T00:13:40Z",
       "side": 1,
       "message": "is this the best way to do it? should we just use a recursive mutex instead?",
+      "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKIH////o\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1013446
+      },
+      "writtenOn": "2012-10-12T03:34:55Z",
+      "side": 1,
+      "message": "If use recursive mutex instead, the same backlog list will have chance to be modified (adding/removing items) during traveling it. \n\ne.g. in add_to_backlog()\n\nwhile (backlog_num \u003e malloc_double_free_backlog) {\n    hdr_t *gone \u003d backlog_tail;\n    del_from_backlog_locked(gone); \u003c--------Here may call log_message and call chk_malloc() again, a new item will be added to backlog list.\n    dlfree(gone);\n}\n\nThen it may be not safe though seems no critical issue will occur with recursive mutex in current code.",
+      "parentUuid": "AAAJ/3///5U\u003d",
       "revId": "06db2dd117f35abbccf433ee0445f23ef4fd317a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
