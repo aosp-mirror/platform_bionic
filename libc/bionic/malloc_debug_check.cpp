@@ -26,31 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <pthread.h>
-#include <time.h>
-#include <stdio.h>
 #include <arpa/inet.h>
-#include <sys/socket.h>
+#include <dlfcn.h>
+#include <errno.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdarg.h>
-#include <fcntl.h>
-#include <unwind.h>
-#include <dlfcn.h>
-#include <stdbool.h>
-
-#include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/system_properties.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
+#include <unwind.h>
 
 #include "dlmalloc.h"
 #include "logd.h"
-
-#include "malloc_debug_common.h"
 #include "malloc_debug_check_mapinfo.h"
+#include "malloc_debug_common.h"
+#include "ScopedPthreadMutexLocker.h"
 
 static mapinfo *milist;
 

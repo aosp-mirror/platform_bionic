@@ -43,6 +43,7 @@
 // Private C library headers.
 #include <private/bionic_tls.h>
 #include <private/logd.h>
+#include <private/ScopedPthreadMutexLocker.h>
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -161,12 +162,9 @@ DISALLOW_ALLOCATION(void*, calloc, (size_t u1 UNUSED, size_t u2 UNUSED));
 
 static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
-#define BASENAME(s) (strrchr(s, '/') != NULL ? strrchr(s, '/') + 1 : s)
 #define DL_ERR(fmt, x...) \
     do { \
-        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), \
-                      "%s(%s:%d): " fmt, \
-                      __FUNCTION__, BASENAME(__FILE__), __LINE__, ##x); \
+        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), fmt, ##x); \
         ERROR(fmt "\n", ##x); \
     } while(0)
 
@@ -185,7 +183,7 @@ static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
                                   RT_CONSISTENT, 0};
 static link_map* r_debug_tail = 0;
 
-static pthread_mutex_t _r_debug_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t gDebugMutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void insert_soinfo_into_debug_map(soinfo * info) {
     // Copy the necessary fields into the debug structure.
@@ -232,7 +230,7 @@ static void notify_gdb_of_load(soinfo* info) {
         return;
     }
 
-    pthread_mutex_lock(&_r_debug_lock);
+    ScopedPthreadMutexLocker locker(&gDebugMutex);
 
     _r_debug.r_state = RT_ADD;
     rtld_db_dlactivity();
@@ -241,8 +239,6 @@ static void notify_gdb_of_load(soinfo* info) {
 
     _r_debug.r_state = RT_CONSISTENT;
     rtld_db_dlactivity();
-
-    pthread_mutex_unlock(&_r_debug_lock);
 }
 
 static void notify_gdb_of_unload(soinfo* info) {
@@ -251,7 +247,7 @@ static void notify_gdb_of_unload(soinfo* info) {
         return;
     }
 
-    pthread_mutex_lock(&_r_debug_lock);
+    ScopedPthreadMutexLocker locker(&gDebugMutex);
 
     _r_debug.r_state = RT_DELETE;
     rtld_db_dlactivity();
@@ -260,8 +256,6 @@ static void notify_gdb_of_unload(soinfo* info) {
 
     _r_debug.r_state = RT_CONSISTENT;
     rtld_db_dlactivity();
-
-    pthread_mutex_unlock(&_r_debug_lock);
 }
 
 extern "C" void notify_gdb_of_libraries()
@@ -345,7 +339,7 @@ static void soinfo_free(soinfo* si)
  *
  * Intended to be called by libc's __gnu_Unwind_Find_exidx().
  *
- * This function is exposed via dlfcn.c and libdl.so.
+ * This function is exposed via dlfcn.cpp and libdl.so.
  */
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
 {
