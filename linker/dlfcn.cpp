@@ -31,7 +31,7 @@ static const char* dl_err_str;
 #define likely(expr)   __builtin_expect (expr, 1)
 #define unlikely(expr) __builtin_expect (expr, 0)
 
-pthread_mutex_t dl_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+static pthread_mutex_t gDlMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 static void set_dlerror(const char* msg, const char* detail) {
   if (detail != NULL) {
@@ -43,7 +43,7 @@ static void set_dlerror(const char* msg, const char* detail) {
 }
 
 void *dlopen(const char* filename, int flag) {
-  ScopedPthreadMutexLocker locker(&dl_lock);
+  ScopedPthreadMutexLocker locker(&gDlMutex);
   soinfo* result = find_library(filename);
   if (result == NULL) {
     set_dlerror("dlopen failed", linker_get_error());
@@ -61,7 +61,7 @@ const char* dlerror() {
 }
 
 void* dlsym(void* handle, const char* symbol) {
-  ScopedPthreadMutexLocker locker(&dl_lock);
+  ScopedPthreadMutexLocker locker(&gDlMutex);
 
   if (unlikely(handle == 0)) {
     set_dlerror("dlsym library handle is null", NULL);
@@ -106,7 +106,7 @@ void* dlsym(void* handle, const char* symbol) {
 }
 
 int dladdr(const void* addr, Dl_info* info) {
-  ScopedPthreadMutexLocker locker(&dl_lock);
+  ScopedPthreadMutexLocker locker(&gDlMutex);
 
   // Determine if this address can be found in any library currently mapped.
   soinfo* si = find_containing_library(addr);
@@ -131,7 +131,7 @@ int dladdr(const void* addr, Dl_info* info) {
 }
 
 int dlclose(void* handle) {
-  ScopedPthreadMutexLocker locker(&dl_lock);
+  ScopedPthreadMutexLocker locker(&gDlMutex);
   return soinfo_unload((soinfo*) handle);
 }
 
@@ -177,28 +177,28 @@ static Elf32_Sym libdl_symtab[] = {
 #endif
 };
 
-/* Fake out a hash table with a single bucket.
- * A search of the hash table will look through
- * libdl_symtab starting with index [1], then
- * use libdl_chains to find the next index to
- * look at.  libdl_chains should be set up to
- * walk through every element in libdl_symtab,
- * and then end with 0 (sentinel value).
- *
- * I.e., libdl_chains should look like
- * { 0, 2, 3, ... N, 0 } where N is the number
- * of actual symbols, or nelems(libdl_symtab)-1
- * (since the first element of libdl_symtab is not
- * a real symbol).
- *
- * (see _elf_lookup())
- *
- * Note that adding any new symbols here requires
- * stubbing them out in libdl.
- */
+// Fake out a hash table with a single bucket.
+// A search of the hash table will look through
+// libdl_symtab starting with index [1], then
+// use libdl_chains to find the next index to
+// look at.  libdl_chains should be set up to
+// walk through every element in libdl_symtab,
+// and then end with 0 (sentinel value).
+//
+// That is, libdl_chains should look like
+// { 0, 2, 3, ... N, 0 } where N is the number
+// of actual symbols, or nelems(libdl_symtab)-1
+// (since the first element of libdl_symtab is not
+// a real symbol).
+//
+// (see soinfo_elf_lookup())
+//
+// Note that adding any new symbols here requires
+// stubbing them out in libdl.
 static unsigned libdl_buckets[1] = { 1 };
 static unsigned libdl_chains[7] = { 0, 2, 3, 4, 5, 6, 0 };
 
+// This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo libdl_info = {
     name: "libdl.so",
 
