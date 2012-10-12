@@ -33,6 +33,8 @@
 #ifndef MALLOC_DEBUG_COMMON_H
 #define MALLOC_DEBUG_COMMON_H
 
+#include <stdlib.h>
+
 #define HASHTABLE_SIZE      1543
 #define BACKTRACE_SIZE      32
 /* flag definitions, currently sharing storage with "size" */
@@ -100,19 +102,5 @@ typedef void (*MallocDebugFini)();
     __libc_android_log_print(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__ )
 #define info_log(format, ...)  \
     __libc_android_log_print(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__ )
-
-class ScopedPthreadMutexLocker {
- public:
-  explicit ScopedPthreadMutexLocker(pthread_mutex_t* mu) : mu_(mu) {
-    pthread_mutex_lock(mu_);
-  }
-
-  ~ScopedPthreadMutexLocker() {
-    pthread_mutex_unlock(mu_);
-  }
-
- private:
-  pthread_mutex_t* mu_;
-};
 
 #endif  // MALLOC_DEBUG_COMMON_H

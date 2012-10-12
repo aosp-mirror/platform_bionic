@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= \
 	arch/$(TARGET_ARCH)/begin.S \
 	debugger.c \
-	dlfcn.c \
+	dlfcn.cpp \
 	linker.cpp \
 	linker_environ.c \
 	linker_format.c \
