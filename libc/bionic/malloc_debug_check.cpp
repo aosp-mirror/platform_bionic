@@ -406,14 +406,16 @@ extern "C" void chk_free(void *ptr) {
 extern "C" void *chk_realloc(void *ptr, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
+    if (!ptr) {
+        return chk_malloc(size);
+    }
+
+#ifdef REALLOC_ZERO_BYTES_FREE
     if (!size) {
         chk_free(ptr);
         return NULL;
     }
-
-    if (!ptr) {
-        return chk_malloc(size);
-    }
+#endif
 
     hdr_t* hdr = meta(ptr);
 
