@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKKn////M\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-15T17:09:01Z",
+      "side": 1,
+      "message": "You might want to take look at the code in bionic/linker/linker.cpp function find_linker_base().\n\nWhen the kernel calls an executable, it places it\u0027s AT_* variables at the end of the argc / argv / env section.  \n\nUnfortunately, I\u0027m not sure what it would take to plumb this information through to libc.  I\u0027m fine with submitting the code as-is and adding this as a TODO if it\u0027s too hard.",
+      "parentUuid": "AAAKFn///fE\u003d",
+      "revId": "c03c5ef930343c6413c32cc361cc3ec8b9b946f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAJ/3//+Y4\u003d",
         "filename": "libc/private/bionic_ssp.h",
         "patchSetId": 3
