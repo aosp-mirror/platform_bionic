@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKcn///kw\u003d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-16T23:41:51Z",
+      "side": 1,
+      "message": "this is the bit i don\u0027t like about this change, but the alternative isn\u0027t a whole lot better --- if i make the TLS slot a pointer to a struct dlerror_state_t or whatever, then i need something in pthread.c to clean that up on thread exit. so i\u0027m not sure that\u0027s actually preferable. the pthread implementation loses the dlerror _data_ but gains some dlerror _code_, which seems arguably worse.",
+      "revId": "88b4069265c95a2d235e63dc32f9e97c2fb3ba85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
