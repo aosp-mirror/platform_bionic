@@ -510,12 +510,4 @@
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 #endif
 
-/* Indicates to client code that <signal.h> now defines 'struct sigcontext'
- * properly. See comments in <signal.h> */
-#define __BIONIC_HAVE_STRUCT_SIGCONTEXT  1
-
-/* Indicates to client code that <signal.h> now defines 'ucontext_t' */
-/* NOTE: That does not mean that <ucontext.h> is available! */
-#define __BIONIC_HAVE_UCONTEXT_T  1
-
 #endif /* !_SYS_CDEFS_H_ */
