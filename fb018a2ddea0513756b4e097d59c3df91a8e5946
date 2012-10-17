@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKd3///t4\u003d",
+        "filename": "libc/tools/zoneinfo/generate-single-file",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010138
+      },
+      "writtenOn": "2012-10-17T21:36:18Z",
+      "side": 1,
+      "message": "env, please",
+      "revId": "fb018a2ddea0513756b4e097d59c3df91a8e5946",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKd3///tw\u003d",
+        "filename": "libc/tools/zoneinfo/generate-single-file",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1010138
+      },
+      "writtenOn": "2012-10-17T21:36:18Z",
+      "side": 1,
+      "message": "please __main__ guard",
+      "revId": "fb018a2ddea0513756b4e097d59c3df91a8e5946",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKd3///to\u003d",
+        "filename": "libc/tools/zoneinfo/generate-single-file",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1010138
+      },
+      "writtenOn": "2012-10-17T21:36:18Z",
+      "side": 1,
+      "message": "nit- mostly harmless",
+      "revId": "fb018a2ddea0513756b4e097d59c3df91a8e5946",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
