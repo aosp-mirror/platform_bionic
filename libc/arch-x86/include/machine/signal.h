@@ -25,32 +25,43 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifndef _ARCH_X86_MACHINE_SIGNAL_H_
+#define _ARCH_X86_MACHINE_SIGNAL_H_
 
-#ifndef _ARCH_MIPS_MACHINE_SETJMP_H_
-#define _ARCH_MIPS_MACHINE_SETJMP_H_
+#include <stddef.h>
+#include <sys/types.h>
+#include <sys/cdefs.h>
 
-#define _JBLEN          157    /* size, in longs, of a jmp_buf */
+__BEGIN_DECLS
 
-#define SC_REGMASK      (0*REGSZ)
-#define SC_STATUS       (1*REGSZ)
-#define SC_PC           (2*REGSZ)
-#define SC_REGS         (SC_PC+8)
-#define SC_FPREGS       (SC_REGS+32*8)
-#define SC_ACX          (SC_FPREGS+32*REGSZ_FP)
-#define SC_FPC_CSR      (SC_ACX+1*REGSZ)
-#define SC_FPC_EIR      (SC_ACX+2*REGSZ)
-#define SC_USED_MATH    (SC_ACX+3*REGSZ)
-#define SC_DSP          (SC_ACX+4*REGSZ)
-#define SC_MDHI         (SC_ACX+5*REGSZ)
-#define SC_MDLO         (SC_MDHI+8)
-#define SC_HI1          (SC_MDLO+8)
-#define SC_LO1          (SC_HI1+1*REGSZ)
-#define SC_HI2          (SC_HI1+2*REGSZ)
-#define SC_LO2          (SC_HI1+3*REGSZ)
-#define SC_HI3          (SC_HI1+4*REGSZ)
-#define SC_LO3          (SC_HI1+5*REGSZ)
-/* OpenBSD compatibility */
-#define SC_MASK         SC_REGMASK
-#define SC_FPUSED       SC_USED_MATH
+#include <asm/signal.h>
+#include <asm/sigcontext.h>
 
-#endif /* !_ARCH_MIPS_INCLUDE_MACHINE_SETJMP_H_ */
+#ifdef _ASM_GENERIC_SIGINFO_H
+#error "You cannot include <asm/siginfo.h> before <signal.h>!"
+#endif
+#define __ARCH_SI_UID_T __kernel_uid32_t
+#include <asm/siginfo.h>
+#undef __ARCH_SI_UID_T
+
+#include <stdint.h>
+
+/* See comment in arch-arm/include/machine/signal.h.
+ * The x86 kernel also uses 64-bit signal masks while defining sigset-t
+ * as a 32-bit type.
+ */
+typedef unsigned long __kernel_sigset_t[2];
+
+/* _NSIG is used by the SIGRTMAX definition under <asm/signal.h>, however
+ * its definition is part of a #if __KERNEL__ .. #endif block in the original
+ * kernel headers and is thus not part of our cleaned-up versions.
+ *
+ * Looking at the current kernel sources, it is defined as 64 for x86.
+ */
+#ifndef _NSIG
+#  define _NSIG  64
+#endif
+
+__END_DECLS
+
+#endif /* _ARCH_X86_MACHINE_SIGNAL_H_ */
