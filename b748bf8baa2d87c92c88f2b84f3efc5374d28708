@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKbH///5Q\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1014784
+      },
+      "writtenOn": "2012-10-17T18:14:10Z",
+      "side": 1,
+      "message": "Unfortunately, the elf.h used by the linker appears to be incomplete. Refer to external/elfutils to see what is missing.",
+      "revId": "b748bf8baa2d87c92c88f2b84f3efc5374d28708",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
