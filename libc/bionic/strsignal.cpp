@@ -42,5 +42,5 @@ char* strsignal(int signal_number) {
   }
 
   LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strsignal, NL_TEXTMAX);
-  return const_cast<char*>(__strsignal(signal_number, strsignal_buffer, strsignal_buffer_size));
+  return const_cast<char*>(__strsignal(signal_number, strsignal_tls_buffer, strsignal_tls_buffer_size));
 }

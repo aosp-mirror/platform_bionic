@@ -168,16 +168,15 @@ static char __linker_dl_err_buf[768];
         ERROR(fmt "\n", ##x); \
     } while(0)
 
-const char *linker_get_error(void)
-{
-    return (const char *)&__linker_dl_err_buf[0];
+const char* linker_get_error() {
+  return &__linker_dl_err_buf[0];
 }
 
 /*
  * This function is an empty stub where GDB locates a breakpoint to get notified
  * about linker activity.
  */
-extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity(void);
+extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
 
 static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
                                   RT_CONSISTENT, 0};
@@ -1363,8 +1362,7 @@ static void call_destructors(soinfo *si)
 
 /* Force any of the closed stdin, stdout and stderr to be associated with
    /dev/null. */
-static int nullify_closed_stdio (void)
-{
+static int nullify_closed_stdio() {
     int dev_null, i, status;
     int return_value = 0;
 
@@ -2056,5 +2054,8 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
 
     // We have successfully fixed our own relocations. It's safe to run
     // the main part of the linker now.
-    return __linker_init_post_relocation(elfdata, linker_addr);
+    unsigned start_address = __linker_init_post_relocation(elfdata, linker_addr);
+
+    // Return the address that the calling assembly stub should jump to.
+    return start_address;
 }
