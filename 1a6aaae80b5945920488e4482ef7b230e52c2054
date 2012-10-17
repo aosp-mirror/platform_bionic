@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKdn///4Y\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-17T18:09:08Z",
+      "side": 1,
+      "message": "i still don\u0027t understand why we need a special case here. the linker reads files, right? also, at least on ARM the kernel does pass AT_RANDOM, so it seems like that would be the obvious fallback.",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKdn///5E\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-17T18:09:08Z",
+      "side": 1,
+      "message": "i stole slot 5 to fix dlerror(3) --- https://android-review.googlesource.com/#/c/44844/.",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKdn///4s\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-17T18:09:08Z",
+      "side": 1,
+      "message": "i changed this too.",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
