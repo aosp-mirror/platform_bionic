@@ -1,0 +1,77 @@
+#!/usr/bin/python
+# Run with no arguments from any directory, with no special setup required.
+
+import ftplib
+import hashlib
+import os
+import re
+import shutil
+import string
+import struct
+import subprocess
+import sys
+import tarfile
+import tempfile
+
+# Find the bionic directory, searching upward from this script.
+bionic_libc_tools_zoneinfo_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
+bionic_libc_tools_dir = os.path.dirname(bionic_libc_tools_zoneinfo_dir)
+bionic_libc_dir = os.path.dirname(bionic_libc_tools_dir)
+bionic_dir = os.path.dirname(bionic_libc_dir)
+bionic_libc_zoneinfo_dir = '%s/libc/zoneinfo' % bionic_dir
+if not os.path.isdir(bionic_libc_tools_zoneinfo_dir) or not os.path.isdir(bionic_libc_zoneinfo_dir):
+  print "Couldn't find bionic/libc/tools/zoneinfo!"
+  sys.exit(1)
+
+
+
+
+def current_tzdata_version():
+  return open('%s/zoneinfo.version' % bionic_libc_zoneinfo_dir).readline().rstrip('\n')
+
+
+# TODO: make the regular "generate" script just output this format directly.
+
+# Open the output file.
+f = open('%s/tzdata' % bionic_libc_zoneinfo_dir, 'wb+')
+
+#  -- header
+# char[12] tzdata_version          -- 'tzdata2012f\0'
+# u32 file_format_version          -- probably won't need this, but just in case
+# u32 index_offset                 -- likewise
+# u32 data_offset
+# u32 zonetab_offset
+header_format = "! 12s i i i i"
+header_size = struct.calcsize(header_format)
+
+index_offset = header_size
+index_bytes = open('%s/zoneinfo.idx' % bionic_libc_zoneinfo_dir, "rb").read()
+index_size = len(index_bytes)
+
+data_offset = index_offset + index_size
+data_bytes = open('%s/zoneinfo.dat' % bionic_libc_zoneinfo_dir).read()
+data_size = len(data_bytes)
+
+zonetab_offset = 0 # TODO: data_offset + data_size
+
+tzdata_version = current_tzdata_version()
+file_format_version = 1
+
+header = struct.pack(header_format, 'tzdata%s' % tzdata_version, file_format_version, index_offset, data_offset, zonetab_offset)
+f.write(header)
+
+# -- index (@index_offset)
+# u8* index_bytes
+f.write(index_bytes)
+
+# -- data (@data_offset)
+# u8* data_bytes
+f.write(data_bytes)
+
+# TODO: zonetab
+# -- zonetab (@zonetab_offset)
+# u8* zonetab_bytes
+
+f.close()
+
+sys.exit(0)
