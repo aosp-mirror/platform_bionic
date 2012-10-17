@@ -37,8 +37,7 @@ static char elsieid[] = "@(#)localtime.c    8.3";
 #define TZ_ABBR_ERR_CHAR    '_'
 #endif /* !defined TZ_ABBR_ERR_CHAR */
 
-#define INDEXFILE "/system/usr/share/zoneinfo/zoneinfo.idx"
-#define DATAFILE "/system/usr/share/zoneinfo/zoneinfo.dat"
+#define TZDATA_PATH "/system/usr/share/zoneinfo/tzdata"
 #define NAMELEN 40
 #define INTLEN 4
 #define READLEN (NAMELEN + 3 * INTLEN)
@@ -205,6 +204,7 @@ struct rule {
 
 /* NOTE: all internal functions assume that _tzLock() was already called */
 
+static int __bionic_open_tzdata(const char*, int*);
 static long     detzcode P((const char * codep));
 static time_t   detzcode64 P((const char * codep));
 static int      differ_by_repeat P((time_t t1, time_t t0));
@@ -470,44 +470,8 @@ register const int      doextend;
             return -1;
         }
         if ((fid = open(name, OPEN_MODE)) == -1) {
-            char buf[READLEN];
-            char name[NAMELEN + 1];
-            int fidix = open(INDEXFILE, OPEN_MODE);
-            int off = -1;
-
-            XLOG(( "tzload: could not open '%s', trying '%s'\n", fullname, INDEXFILE ));
-            if (fidix < 0) {
-                XLOG(( "tzload: could not find '%s'\n", INDEXFILE ));
-                return -1;
-            }
-
-            while (read(fidix, buf, sizeof(buf)) == sizeof(buf)) {
-                memcpy(name, buf, NAMELEN);
-                name[NAMELEN] = '\0';
-
-                if (strcmp(name, origname) == 0) {
-                    off = toint((unsigned char *) buf + NAMELEN);
-                    toread = toint((unsigned char *) buf + NAMELEN + INTLEN);
-                    break;
-                }
-            }
-
-            close(fidix);
-
-            if (off < 0) {
-                XLOG(( "tzload: invalid offset (%d)\n", off ));
-                return -1;
-            }
-
-            fid = open(DATAFILE, OPEN_MODE);
-
+            fid = __bionic_open_tzdata(origname, &toread);
             if (fid < 0) {
-                XLOG(( "tzload: could not open '%s'\n", DATAFILE ));
-                return -1;
-            }
-
-            if (lseek(fid, off, SEEK_SET) < 0) {
-                XLOG(( "tzload: could not seek to %d in '%s'\n", off, DATAFILE ));
                 return -1;
             }
         }
@@ -2275,3 +2239,85 @@ time_t  t;
 }
 
 #endif /* defined STD_INSPIRED */
+
+#include <stdint.h>
+#include <sys/endian.h>
+
+static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
+  int fd = TEMP_FAILURE_RETRY(open(TZDATA_PATH, OPEN_MODE));
+  if (fd == -1) {
+    fprintf(stderr, "__bionic_open_tzdata: could not open \"%s\": %s\n", TZDATA_PATH, strerror(errno));
+    return -1;
+  }
+
+  // byte[12] tzdata_version  -- "tzdata2012f\0"
+  // int file_format_version  -- 1
+  // int index_offset
+  // int data_offset
+  // int zonetab_offset
+  struct bionic_tzdata_header {
+    char tzdata_version[12];
+    int32_t file_format_version;
+    int32_t index_offset;
+    int32_t data_offset;
+    int32_t zonetab_offset;
+  } header;
+  if (TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header))) != sizeof(header)) {
+    fprintf(stderr, "__bionic_open_tzdata: could not read header: %s\n", strerror(errno));
+    close(fd);
+    return -1;
+  }
+
+  if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
+    fprintf(stderr, "__bionic_open_tzdata: bad magic: %s\n", header.tzdata_version);
+    close(fd);
+    return -1;
+  }
+  if (ntohl(header.file_format_version) != 1) {
+    fprintf(stderr, "__bionic_open_tzdata: bad file format version: %d\n", header.file_format_version);
+    close(fd);
+    return -1;
+  }
+
+#if 0
+  fprintf(stderr, "version: %s (%d)\n", header.tzdata_version, ntohl(header.file_format_version));
+  fprintf(stderr, "index_offset = %d\n", ntohl(header.index_offset));
+  fprintf(stderr, "data_offset = %d\n", ntohl(header.data_offset));
+  fprintf(stderr, "zonetab_offset = %d\n", ntohl(header.zonetab_offset));
+#endif
+
+  if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
+    fprintf(stderr, "__bionic_open_tzdata: couldn't seek to index: %s\n", strerror(errno));
+    close(fd);
+    return -1;
+  }
+
+  off_t specific_zone_offset = -1;
+
+  unsigned char buf[READLEN];
+  while (read(fd, buf, sizeof(buf)) == sizeof(buf)) {
+    char this_id[NAMELEN + 1];
+    memcpy(this_id, buf, NAMELEN);
+    this_id[NAMELEN] = '\0';
+
+    if (strcmp(this_id, olson_id) == 0) {
+      specific_zone_offset = toint(buf + NAMELEN) + ntohl(header.data_offset);
+      *data_size = toint(buf + NAMELEN + INTLEN);
+      break;
+    }
+  }
+
+  if (specific_zone_offset == -1) {
+    XLOG(("__bionic_open_tzdata: couldn't find zone \"%s\"\n", olson_id));
+    close(fd);
+    return -1;
+  }
+
+  if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
+    fprintf(stderr, "__bionic_open_tzdata: could not seek to %ld: %s\n", specific_zone_offset, strerror(errno));
+    close(fd);
+    return -1;
+  }
+
+  return fd;
+}
