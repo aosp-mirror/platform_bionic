@@ -31,7 +31,7 @@
 
 #include <machine/asm.h>
 #include <machine/regnum.h>
-#include <machine/setjmp.h>
+#include <machine/signal.h>
 
 /*
  * setjmp, longjmp implementation for libc. this code depends

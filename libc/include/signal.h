@@ -29,61 +29,29 @@
 #define _SIGNAL_H_
 
 #include <sys/cdefs.h>
+#include <limits.h>		/* For LONG_BIT */
+#include <string.h>		/* For memset() */
 #include <sys/types.h>
-#include <machine/signal.h>
-#include <machine/ucontext.h>
+#include <asm/signal.h>
 
-#include <limits.h>             /* For LONG_BIT */
-#include <string.h>             /* For memset() */
+#define __ARCH_SI_UID_T __kernel_uid32_t
+#include <asm/siginfo.h>
+#undef __ARCH_SI_UID_T
 
 __BEGIN_DECLS
 
-/* Previous versions of <signal.h> didn't define 'struct sigcontext'. This
- * has led client code to redefine the structure, sometimes in a custom and
- * incompatible way.
- *
- * The __BIONIC_HAVE_STRUCT_SIGCONTEXT macro is defined in <sys/cdefs.h>
- * to indicate that <signal.h> does indeed define the structure. For
- * maximum source compatibility, client code should follow these guidelines:
- *
- *  - If client code is guaranteed to build against a recent NDK/platform
- *    version, just include <signal.h> as usual, and use the
- *    'struct sigcontext'.
- *
- *  - If client code wants to build against older NDK/platform versions,
- *    and only uses 'struct sigcontext' without accessing _any_
- *    of its fields, just always include <asm/sigcontext.h> on Android
- *    to ensure maximum portability (i.e. to old platform/NDK releases).
- *    As in:
- *
- *        #include <signal.h>
- *        #ifdef __BIONIC__
- *        #include <asm/sigcontext.h>
- *        #endif
- *
- *  - Otherwise, if the client has a custom sigcontext definition and wants to
- *    keep it to minimize source changes, use a macro trick as below to avoid
- *    naming conflicts:
- *
- *        #include <signal.h>
- *        #ifdef __BIONIC__
- *        #  include <asm/sigcontext.h>
- *        #  ifdef __BIONIC_HAVE_STRUCT_SIGCONTEXT
- *        #    undef sigcontext
- *        #    define sigcontext  my_custom_sigcontext
- *        #  endif
- *        #endif
- */
-
-/* Similarly, previous versions of the C library didn't define ucontext_t
- * and mcontext_t in <signal.h>, or <sys/ucontext.h>. Client code can check
- * against the macro __BIONIC_HAVE_UCONTEXT_T to determine if it does.
- *
- * Beware, that does _not_ mean that <ucontext.h> and related functions are
- * available.
- */
-
 typedef int sig_atomic_t;
+
+/* _NSIG is used by the SIGRTMAX definition under <asm/signal.h>, however
+ * its definition is part of a #if __KERNEL__ .. #endif block in the original
+ * kernel headers and is thus not part of our cleaned-up versions.
+ *
+ * Looking at the current kernel sources, it is defined as 64 for all
+ * architectures except for the 'mips' one which set it to 128.
+ */
+#ifndef _NSIG
+#  define _NSIG  64
+#endif
 
 extern const char * const sys_siglist[];
 extern const char * const sys_signame[];
