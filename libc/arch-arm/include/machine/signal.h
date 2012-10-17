@@ -25,13 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _ARCH_MIPS_MACHINE_SIGNAL_H_
-#define _ARCH_MIPS_MACHINE_SIGNAL_H_
+#ifndef _ARCH_ARM_MACHINE_SIGNAL_H_
+#define _ARCH_ARM_MACHINE_SIGNAL_H_
 
+#include <stddef.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
+/* Include the kernel-specific definitions */
+#include <asm/posix_types.h>
 #include <asm/signal.h>
 #include <asm/sigcontext.h>
 
@@ -44,15 +48,32 @@ __BEGIN_DECLS
 
 #include <stdint.h>
 
-/* See comment in arch-arm/include/machine/signal.h.
- * The MIPS kernel also uses 128-bit signal masks while defining sigset-t
- * as a 32-bit type.
+/* Despite the fact that <linux/types.h> defines sigset_t as a 32-bit type,
+ * the ARM kernel *really* expects a 64-bit signal set type during syscalls.
+ *
+ * The reason for this is that the kernel headers have a different definition
+ * for sigset_t depending on the value of the __KERNEL__ macro. When we cleanup
+ * the headers, before placing them under bionic/libc/kernel/, this macro is
+ * optimized as undefined, to the 32-bit definition stays.
+ *
+ * Ironically, the reason the kernel headers do this is to accomodate old
+ * versions of GLibc. More recent versions provide complete wrappers for the
+ * corresponding kernel types so don't have this problem (their sigset_t can
+ * always hold up to 1024 signals, independent of the platform).
  */
-typedef unsigned long __kernel_sigset_t[4];
+typedef unsigned long __kernel_sigset_t[2];
 
-/* Note: Unlike ARM and x86, the MIPS <asm/signal.h> properly defines _NSIG
- * and thus SIGRTMAX. */
+/* _NSIG is used by the SIGRTMAX definition under <asm/signal.h>, however
+ * its definition is part of a #if __KERNEL__ .. #endif block in the original
+ * kernel headers and is thus not part of our cleaned-up versions.
+ *
+ * Looking at the current kernel sources, it is defined as 64 for ARM.
+ */
+#ifndef _NSIG
+#  define _NSIG  64
+#endif
+
 
 __END_DECLS
 
-#endif /* _ARCH_MIPS_MACHINE_SIGNAL_H_ */
+#endif /* _ARCH_ARM_MACHINE_SIGNAL_H_ */

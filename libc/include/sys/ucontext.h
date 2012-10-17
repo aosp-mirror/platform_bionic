@@ -25,32 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifndef _SYS_UCONTEXT_H_
+#define _SYS_UCONTEXT_H_
 
-#ifndef _ARCH_MIPS_MACHINE_SETJMP_H_
-#define _ARCH_MIPS_MACHINE_SETJMP_H_
+/* While not standard, this header is typically provided by GLibc and the
+ * BSD C library to provide for the definition of ucontext_t and mcontext_t,
+ * without the declarations of the deprecated *context() functions in
+ * <ucontext.h>.
+ *
+ * Client code that directly includes this file exists. Note that
+ * the better, POSIX-compliant, way to get these declarations is to include
+ * <signal.h>.
+ */
 
-#define _JBLEN          157    /* size, in longs, of a jmp_buf */
+#include <machine/ucontext.h>
 
-#define SC_REGMASK      (0*REGSZ)
-#define SC_STATUS       (1*REGSZ)
-#define SC_PC           (2*REGSZ)
-#define SC_REGS         (SC_PC+8)
-#define SC_FPREGS       (SC_REGS+32*8)
-#define SC_ACX          (SC_FPREGS+32*REGSZ_FP)
-#define SC_FPC_CSR      (SC_ACX+1*REGSZ)
-#define SC_FPC_EIR      (SC_ACX+2*REGSZ)
-#define SC_USED_MATH    (SC_ACX+3*REGSZ)
-#define SC_DSP          (SC_ACX+4*REGSZ)
-#define SC_MDHI         (SC_ACX+5*REGSZ)
-#define SC_MDLO         (SC_MDHI+8)
-#define SC_HI1          (SC_MDLO+8)
-#define SC_LO1          (SC_HI1+1*REGSZ)
-#define SC_HI2          (SC_HI1+2*REGSZ)
-#define SC_LO2          (SC_HI1+3*REGSZ)
-#define SC_HI3          (SC_HI1+4*REGSZ)
-#define SC_LO3          (SC_HI1+5*REGSZ)
-/* OpenBSD compatibility */
-#define SC_MASK         SC_REGMASK
-#define SC_FPUSED       SC_USED_MATH
-
-#endif /* !_ARCH_MIPS_INCLUDE_MACHINE_SETJMP_H_ */
+#endif /* _SYS_UCONTEXT_H_ */
