@@ -58,6 +58,27 @@ TEST(dlopen, dlopen_failure) {
 #endif
 }
 
+static void* ConcurrentDlErrorFn(void* arg) {
+  dlopen("/child/thread", RTLD_NOW);
+  return reinterpret_cast<void*>(strdup(dlerror()));
+}
+
+TEST(dlopen, dlerror_concurrent) {
+  dlopen("/main/thread", RTLD_NOW);
+  const char* main_thread_error = dlerror();
+  ASSERT_SUBSTR("/main/thread", main_thread_error);
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, ConcurrentDlErrorFn, NULL));
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
+  char* child_thread_error = static_cast<char*>(result);
+  ASSERT_SUBSTR("/child/thread", child_thread_error);
+  free(child_thread_error);
+
+  ASSERT_SUBSTR("/main/thread", main_thread_error);
+}
+
 TEST(dlopen, dlsym_failures) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);

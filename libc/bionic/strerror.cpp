@@ -41,6 +41,6 @@ char* strerror(int error_number) {
   }
 
   LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strerror, NL_TEXTMAX);
-  strerror_r(error_number, strerror_buffer, strerror_buffer_size);
-  return strerror_buffer;
+  strerror_r(error_number, strerror_tls_buffer, strerror_tls_buffer_size);
+  return strerror_tls_buffer;
 }

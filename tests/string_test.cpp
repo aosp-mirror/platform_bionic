@@ -29,7 +29,7 @@ TEST(string, strerror) {
   ASSERT_STREQ("Unknown error 1234", strerror(1234));
 }
 
-void* ConcurrentStrErrorFn(void* arg) {
+static void* ConcurrentStrErrorFn(void* arg) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
@@ -88,7 +88,7 @@ TEST(string, strsignal) {
   ASSERT_STREQ("Unknown signal 1234", strsignal(1234)); // Too large.
 }
 
-void* ConcurrentStrSignalFn(void* arg) {
+static void* ConcurrentStrSignalFn(void* arg) {
   bool equal = (strcmp("Unknown signal 2002", strsignal(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }

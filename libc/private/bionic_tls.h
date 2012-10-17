@@ -52,7 +52,7 @@ __BEGIN_DECLS
  * thread-specific segment descriptor...
  */
 
-/* Well known TLS slots */
+/* Well-known TLS slots. */
 #define TLS_SLOT_SELF               0
 #define TLS_SLOT_THREAD_ID          1
 #define TLS_SLOT_ERRNO              2
@@ -60,23 +60,16 @@ __BEGIN_DECLS
 #define TLS_SLOT_OPENGL_API         3
 #define TLS_SLOT_OPENGL             4
 
-/* this slot is only used to pass information from the dynamic linker to
+#define TLS_SLOT_DLERROR            5
+
+#define TLS_SLOT_MAX_WELL_KNOWN     TLS_SLOT_DLERROR
+
+/* This slot is only used to pass information from the dynamic linker to
  * libc.so when the C library is loaded in to memory. The C runtime init
  * function will then clear it. Since its use is extremely temporary,
  * we reuse an existing location.
  */
-#define  TLS_SLOT_BIONIC_PREINIT    (TLS_SLOT_ERRNO+1)
-
-/* small technical note: it is not possible to call pthread_setspecific
- * on keys that are <= TLS_SLOT_MAX_WELL_KNOWN, which is why it is set to
- * TLS_SLOT_ERRNO.
- *
- * later slots like TLS_SLOT_OPENGL are pre-allocated through the use of
- * TLS_DEFAULT_ALLOC_MAP. this means that there is no need to use
- * pthread_key_create() to initialize them. on the other hand, there is
- * no destructor associated to them (we might need to implement this later)
- */
-#define TLS_SLOT_MAX_WELL_KNOWN     TLS_SLOT_ERRNO
+#define  TLS_SLOT_BIONIC_PREINIT    TLS_SLOT_OPENGL_API
 
 #define TLS_DEFAULT_ALLOC_MAP       0x0000001F
 
