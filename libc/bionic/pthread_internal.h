@@ -45,6 +45,13 @@ typedef struct pthread_internal_t
     int                         internal_flags;
     __pthread_cleanup_t*        cleanup_stack;
     void**                      tls;         /* thread-local storage area */
+
+    /*
+     * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
+     * per-thread buffer by simply using malloc(3) and free(3).
+     */
+#define __BIONIC_DLERROR_BUFFER_SIZE 512
+    char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 } pthread_internal_t;
 
 int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,

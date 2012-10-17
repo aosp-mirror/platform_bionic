@@ -14,39 +14,52 @@
  * limitations under the License.
  */
 
+#include "linker.h"
+
 #include <dlfcn.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
+#include <bionic/pthread_internal.h>
+#include <private/bionic_tls.h>
 #include <private/ScopedPthreadMutexLocker.h>
-
-#include "linker.h"
-#include "linker_format.h"
+#include <private/ThreadLocalBuffer.h>
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
-static char dl_err_buf[1024];
-static const char* dl_err_str;
-
-#define likely(expr)   __builtin_expect (expr, 1)
-#define unlikely(expr) __builtin_expect (expr, 0)
-
 static pthread_mutex_t gDlMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
-static void set_dlerror(const char* msg, const char* detail) {
-  if (detail != NULL) {
-    format_buffer(dl_err_buf, sizeof(dl_err_buf), "%s: %s", msg, detail);
-  } else {
-    format_buffer(dl_err_buf, sizeof(dl_err_buf), "%s", msg);
-  }
-  dl_err_str = (const char*) &dl_err_buf[0];
+static const char* __bionic_set_dlerror(char* new_value) {
+  void* tls = const_cast<void*>(__get_tls());
+  char** dlerror_slot = &reinterpret_cast<char**>(tls)[TLS_SLOT_DLERROR];
+
+  const char* old_value = *dlerror_slot;
+  *dlerror_slot = new_value;
+  return old_value;
 }
 
-void *dlopen(const char* filename, int flag) {
+static void __bionic_format_dlerror(const char* msg, const char* detail) {
+  char* buffer = __get_thread()->dlerror_buffer;
+  strlcpy(buffer, msg, __BIONIC_DLERROR_BUFFER_SIZE);
+  if (detail != NULL) {
+    strlcat(buffer, ": ", __BIONIC_DLERROR_BUFFER_SIZE);
+    strlcat(buffer, detail, __BIONIC_DLERROR_BUFFER_SIZE);
+  }
+
+  __bionic_set_dlerror(buffer);
+}
+
+const char* dlerror() {
+  const char* old_value = __bionic_set_dlerror(NULL);
+  return old_value;
+}
+
+void* dlopen(const char* filename, int flag) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
   soinfo* result = find_library(filename);
   if (result == NULL) {
-    set_dlerror("dlopen failed", linker_get_error());
+    __bionic_format_dlerror("dlopen failed", linker_get_error());
     return NULL;
   }
   soinfo_call_constructors(result);
@@ -54,21 +67,15 @@ void *dlopen(const char* filename, int flag) {
   return result;
 }
 
-const char* dlerror() {
-  const char* old_value = dl_err_str;
-  dl_err_str = NULL;
-  return (const char*) old_value;
-}
-
 void* dlsym(void* handle, const char* symbol) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
 
-  if (unlikely(handle == 0)) {
-    set_dlerror("dlsym library handle is null", NULL);
+  if (handle == NULL) {
+    __bionic_format_dlerror("dlsym library handle is null", NULL);
     return NULL;
   }
-  if (unlikely(symbol == 0)) {
-    set_dlerror("dlsym symbol name is null", NULL);
+  if (symbol == NULL) {
+    __bionic_format_dlerror("dlsym symbol name is null", NULL);
     return NULL;
   }
 
@@ -89,18 +96,18 @@ void* dlsym(void* handle, const char* symbol) {
     sym = soinfo_lookup(found, symbol);
   }
 
-  if (likely(sym != 0)) {
+  if (sym != NULL) {
     unsigned bind = ELF32_ST_BIND(sym->st_info);
 
-    if (likely((bind == STB_GLOBAL) && (sym->st_shndx != 0))) {
+    if (bind == STB_GLOBAL && sym->st_shndx != 0) {
       unsigned ret = sym->st_value + found->load_bias;
       return (void*) ret;
     }
 
-    set_dlerror("symbol found but not global", symbol);
+    __bionic_format_dlerror("symbol found but not global", symbol);
     return NULL;
   } else {
-    set_dlerror("undefined symbol", symbol);
+    __bionic_format_dlerror("undefined symbol", symbol);
     return NULL;
   }
 }
@@ -159,7 +166,7 @@ int dlclose(void* handle) {
       /* st_other */ 0, \
       shndx }
 
-static Elf32_Sym libdl_symtab[] = {
+static Elf32_Sym gLibDlSymtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
@@ -179,24 +186,24 @@ static Elf32_Sym libdl_symtab[] = {
 
 // Fake out a hash table with a single bucket.
 // A search of the hash table will look through
-// libdl_symtab starting with index [1], then
-// use libdl_chains to find the next index to
-// look at.  libdl_chains should be set up to
-// walk through every element in libdl_symtab,
+// gLibDlSymtab starting with index [1], then
+// use gLibDlChains to find the next index to
+// look at.  gLibDlChains should be set up to
+// walk through every element in gLibDlSymtab,
 // and then end with 0 (sentinel value).
 //
-// That is, libdl_chains should look like
+// That is, gLibDlChains should look like
 // { 0, 2, 3, ... N, 0 } where N is the number
-// of actual symbols, or nelems(libdl_symtab)-1
-// (since the first element of libdl_symtab is not
+// of actual symbols, or nelems(gLibDlSymtab)-1
+// (since the first element of gLibDlSymtab is not
 // a real symbol).
 //
 // (see soinfo_elf_lookup())
 //
 // Note that adding any new symbols here requires
 // stubbing them out in libdl.
-static unsigned libdl_buckets[1] = { 1 };
-static unsigned libdl_chains[7] = { 0, 2, 3, 4, 5, 6, 0 };
+static unsigned gLibDlBuckets[1] = { 1 };
+static unsigned gLibDlChains[7] = { 0, 2, 3, 4, 5, 6, 0 };
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo libdl_info = {
@@ -210,12 +217,12 @@ soinfo libdl_info = {
     flags: FLAG_LINKED,
 
     strtab: ANDROID_LIBDL_STRTAB,
-    symtab: libdl_symtab,
+    symtab: gLibDlSymtab,
 
     nbucket: 1,
     nchain: 7,
-    bucket: libdl_buckets,
-    chain: libdl_chains,
+    bucket: gLibDlBuckets,
+    chain: gLibDlChains,
 
     plt_got: 0, plt_rel: 0, plt_rel_count: 0, rel: 0, rel_count: 0,
     preinit_array: 0, preinit_array_count: 0, init_array: 0, init_array_count: 0,

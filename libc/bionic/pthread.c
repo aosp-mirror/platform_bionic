@@ -163,20 +163,20 @@ __get_stack_base(int  *p_stack_size)
 }
 
 
-void  __init_tls(void**  tls, void*  thread)
-{
-    int  nn;
+void  __init_tls(void** tls, void* thread) {
+  ((pthread_internal_t*) thread)->tls = tls;
 
-    ((pthread_internal_t*)thread)->tls = tls;
+  // Zero-initialize all the slots.
+  for (size_t i = 0; i < BIONIC_TLS_SLOTS; ++i) {
+    tls[i] = NULL;
+  }
 
-    // slot 0 must point to the tls area, this is required by the implementation
-    // of the x86 Linux kernel thread-local-storage
-    tls[TLS_SLOT_SELF]      = (void*)tls;
-    tls[TLS_SLOT_THREAD_ID] = thread;
-    for (nn = TLS_SLOT_ERRNO; nn < BIONIC_TLS_SLOTS; nn++)
-       tls[nn] = 0;
+  // Slot 0 must point to the tls area, this is required by the implementation
+  // of the x86 Linux kernel thread-local-storage.
+  tls[TLS_SLOT_SELF]      = (void*) tls;
+  tls[TLS_SLOT_THREAD_ID] = thread;
 
-    __set_tls( (void*)tls );
+  __set_tls((void*) tls);
 }
 
 
