@@ -2106,8 +2106,8 @@ int pthread_kill(pthread_t tid, int sig)
  * the C library ABI, so perform a little runtime translation here.
  */
 typedef union {
-    sigset_t           bionic;
-    __kernel_sigset_t  kernel;
+    sigset_t   bionic;
+    uint32_t   kernel[2];
 } kernel_sigset_t;
 
 /* this is a private syscall stub */
@@ -2124,8 +2124,8 @@ int pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
     kernel_sigset_t  in_set, *in_set_ptr;
     kernel_sigset_t  out_set;
 
-    memset(&in_set.kernel, 0, sizeof(in_set.kernel));
-    memset(&out_set.kernel, 0, sizeof(out_set.kernel));
+    in_set.kernel[0] = in_set.kernel[1] = 0;
+    out_set.kernel[0] = out_set.kernel[1] = 0;
 
     /* 'in_set_ptr' is the second parameter to __rt_sigprocmask. It must be NULL
      * if 'set' is NULL to ensure correct semantics (which in this case would

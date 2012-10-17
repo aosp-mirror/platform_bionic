@@ -31,7 +31,7 @@
 
 #include <machine/asm.h>
 #include <machine/regnum.h>
-#include <machine/setjmp.h>
+#include <machine/signal.h>
 
 /*
  * _setjmp, _longjmp (not restoring signal state)
