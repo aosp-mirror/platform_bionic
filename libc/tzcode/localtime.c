@@ -2241,7 +2241,7 @@ time_t  t;
 #endif /* defined STD_INSPIRED */
 
 #include <stdint.h>
-#include <sys/endian.h>
+#include <arpa/inet.h> // For ntohl(3).
 
 static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
   int fd = TEMP_FAILURE_RETRY(open(TZDATA_PATH, OPEN_MODE));
