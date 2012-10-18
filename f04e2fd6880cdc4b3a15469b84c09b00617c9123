@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKd3//+t0\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2012-10-18T18:45:53Z",
+      "side": 1,
+      "message": "In the build system \"tzdata\" will be turned into a phony target, usually it\u0027s bad idea to have a file target depend on phony target.\nCould you change it to the corresponding file target? such as $(TARGET_OUT)/usr/share/zoneinfo/tzdata.\nHow tzdata is used to build libc_common?\nIf there is no build time dependency, I\u0027d like move the dependency to libc with \"LOCAL_REQUIRED_MODULES :\u003d tzdata\", which makes sure whenever libc gets installed, tzdata will be installed as well.",
+      "revId": "f04e2fd6880cdc4b3a15469b84c09b00617c9123",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
