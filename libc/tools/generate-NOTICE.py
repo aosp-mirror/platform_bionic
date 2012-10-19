@@ -20,7 +20,7 @@ def IsUninteresting(path):
         return True
     if path.endswith("/notice") or path.endswith("/readme") or path.endswith("/caveats"):
         return True
-    if path.endswith("/zoneinfo.dat") or path.endswith("/zoneinfo.idx") or path.endswith("/zoneinfo.version") or path.endswith("/zoneinfo/generate"):
+    if path.endswith("/tzdata") or path.endswith("/zoneinfo/generate"):
         return True
     return False
 
