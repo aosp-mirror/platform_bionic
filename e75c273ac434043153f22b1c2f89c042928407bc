@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKgH///44\u003d",
+        "filename": "libc/tools/zoneinfo/generate",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-19T22:47:27Z",
+      "side": 0,
+      "message": "the maintainer is using GPG signatures rather than MD5s now.",
+      "revId": "e75c273ac434043153f22b1c2f89c042928407bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
