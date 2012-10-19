@@ -89,9 +89,11 @@ def upgrade_to(ftp, filename):
   setup.close()
 
   print 'Calling ZoneCompactor...'
+  libcore_src_dir = '%s/../libcore/luni/src/main/java/' % bionic_dir
   subprocess.check_call(['javac', '-d', '.',
                          '%s/ZoneCompactor.java' % bionic_libc_tools_zoneinfo_dir,
-                         '%s/ZoneInfo.java' % bionic_libc_tools_zoneinfo_dir])
+                         '%s/libcore/util/ZoneInfo.java' % libcore_src_dir,
+                         '%s/libcore/io/BufferIterator.java' % libcore_src_dir])
   subprocess.check_call(['java', 'ZoneCompactor', 'setup', 'data'])
 
   print 'Updating bionic from %s to %s...' % (current_tzdata_version(), version)

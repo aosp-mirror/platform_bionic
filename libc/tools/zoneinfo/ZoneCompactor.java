@@ -1,6 +1,9 @@
 
 import java.io.*;
+import java.nio.ByteOrder;
 import java.util.*;
+import libcore.io.BufferIterator;
+import libcore.util.ZoneInfo;
 
 // usage: java ZoneCompiler <setup file> <top-level directory>
 //
@@ -30,27 +33,66 @@ import java.util.*;
 //     <produces zoneinfo.dat and zoneinfo.idx>
 
 public class ZoneCompactor {
+    public static class ByteArrayBufferIteratorBE extends BufferIterator {
+        private final byte[] bytes;
+        private int offset = 0;
 
-    // Zone name synonyms
-    Map<String,String> links = new HashMap<String,String>();
+        public ByteArrayBufferIteratorBE(byte[] bytes) {
+            this.bytes = bytes;
+            this.offset = 0;
+        }
 
-    // File starting bytes by zone name
-    Map<String,Integer> starts = new HashMap<String,Integer>();
+        public void seek(int offset) {
+            this.offset = offset;
+        }
 
-    // File lengths by zone name
-    Map<String,Integer> lengths = new HashMap<String,Integer>();
+        public void skip(int byteCount) {
+            this.offset += byteCount;
+        }
 
-    // Raw GMT offsets by zone name
-    Map<String,Integer> offsets = new HashMap<String,Integer>();
-    int start = 0;
+        public void readByteArray(byte[] dst, int dstOffset, int byteCount) {
+            System.arraycopy(bytes, offset, dst, dstOffset, byteCount);
+            offset += byteCount;
+        }
+
+        public byte readByte() {
+            return bytes[offset++];
+        }
+
+        public int readInt() {
+            return ((readByte() & 0xff) << 24) | ((readByte() & 0xff) << 16) | ((readByte() & 0xff) << 8) | (readByte() & 0xff);
+        }
+
+        public void readIntArray(int[] dst, int dstOffset, int intCount) {
+            for (int i = 0; i < intCount; ++i) {
+                dst[dstOffset++] = readInt();
+            }
+        }
+
+        public short readShort() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
     // Maximum number of characters in a zone name, including '\0' terminator
     private static final int MAXNAME = 40;
 
+    // Zone name synonyms
+    private Map<String,String> links = new HashMap<String,String>();
+
+    // File starting bytes by zone name
+    private Map<String,Integer> starts = new HashMap<String,Integer>();
+
+    // File lengths by zone name
+    private Map<String,Integer> lengths = new HashMap<String,Integer>();
+
+    // Raw GMT offsets by zone name
+    private Map<String,Integer> offsets = new HashMap<String,Integer>();
+    private int start = 0;
+
     // Concatenate the contents of 'inFile' onto 'out'
     // and return the contents as a byte array.
-    private static byte[] copyFile(File inFile, OutputStream out)
-        throws Exception {
+    private static byte[] copyFile(File inFile, OutputStream out) throws Exception {
         byte[] ret = new byte[0];
 
         InputStream in = new FileInputStream(inFile);
@@ -70,7 +112,7 @@ public class ZoneCompactor {
         out.flush();
         return ret;
     }
-    
+
     // Write a 32-bit integer in network byte order
     private void writeInt(OutputStream os, int x) throws IOException {
         os.write((x >> 24) & 0xff);
@@ -79,14 +121,13 @@ public class ZoneCompactor {
         os.write( x        & 0xff);
     }
 
-    public ZoneCompactor(String setupFilename, String dirName)
-        throws Exception {
+    public ZoneCompactor(String setupFilename, String dirName) throws Exception {
         File zoneInfoFile = new File("zoneinfo.dat");
         zoneInfoFile.delete();
         OutputStream zoneInfo = new FileOutputStream(zoneInfoFile);
 
         BufferedReader rdr = new BufferedReader(new FileReader(setupFilename));
-    
+
         String s;
         while ((s = rdr.readLine()) != null) {
             s = s.trim();
@@ -107,7 +148,8 @@ public class ZoneCompactor {
                     start += length;
                     byte[] data = copyFile(f, zoneInfo);
 
-                    TimeZone tz = ZoneInfo.make(s, data);
+                    BufferIterator it = new ByteArrayBufferIteratorBE(data);
+                    TimeZone tz = ZoneInfo.makeTimeZone(s, it);
                     int gmtOffset = tz.getRawOffset();
                     offsets.put(s, new Integer(gmtOffset));
                 }
@@ -162,5 +204,4 @@ public class ZoneCompactor {
         }
         new ZoneCompactor(args[0], args[1]);
     }
-
 }
