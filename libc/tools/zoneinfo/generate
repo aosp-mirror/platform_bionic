@@ -88,24 +88,13 @@ def upgrade_to(ftp, filename):
     setup.write('%s\n' % zone)
   setup.close()
 
-  print 'Calling ZoneCompactor...'
+  print 'Calling ZoneCompactor to update bionic from %s to %s...' % (current_tzdata_version(), version)
   libcore_src_dir = '%s/../libcore/luni/src/main/java/' % bionic_dir
   subprocess.check_call(['javac', '-d', '.',
                          '%s/ZoneCompactor.java' % bionic_libc_tools_zoneinfo_dir,
                          '%s/libcore/util/ZoneInfo.java' % libcore_src_dir,
                          '%s/libcore/io/BufferIterator.java' % libcore_src_dir])
-  subprocess.check_call(['java', 'ZoneCompactor', 'setup', 'data'])
-
-  print 'Updating bionic from %s to %s...' % (current_tzdata_version(), version)
-  # Move the .dat and .idx files...
-  os.remove('%s/zoneinfo.dat' % bionic_libc_zoneinfo_dir)
-  shutil.move('zoneinfo.dat', bionic_libc_zoneinfo_dir)
-  os.remove('%s/zoneinfo.idx' % bionic_libc_zoneinfo_dir)
-  shutil.move('zoneinfo.idx', bionic_libc_zoneinfo_dir)
-  # Write the .version file...
-  zoneinfo_version = open('%s/zoneinfo.version' % bionic_libc_zoneinfo_dir, 'wb+')
-  zoneinfo_version.write('%s\n' % version)
-  zoneinfo_version.close()
+  subprocess.check_call(['java', 'ZoneCompactor', 'setup', 'data', bionic_libc_zoneinfo_dir, version])
 
 
 # URL from "Sources for Time Zone and Daylight Saving Time Data"

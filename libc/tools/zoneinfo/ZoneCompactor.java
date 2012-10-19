@@ -5,7 +5,7 @@ import java.util.*;
 import libcore.io.BufferIterator;
 import libcore.util.ZoneInfo;
 
-// usage: java ZoneCompiler <setup file> <top-level directory>
+// usage: java ZoneCompiler <setup file> <data directory> <output directory> <tzdata version>
 //
 // Compile a set of tzfile-formatted files into a single file plus
 // an index file.
@@ -121,12 +121,12 @@ public class ZoneCompactor {
         os.write( x        & 0xff);
     }
 
-    public ZoneCompactor(String setupFilename, String dirName) throws Exception {
-        File zoneInfoFile = new File("zoneinfo.dat");
+    public ZoneCompactor(String setupFile, String dataDirectory, String outputDirectory, String version) throws Exception {
+        File zoneInfoFile = new File(outputDirectory, "zoneinfo.dat");
         zoneInfoFile.delete();
         OutputStream zoneInfo = new FileOutputStream(zoneInfoFile);
 
-        BufferedReader rdr = new BufferedReader(new FileReader(setupFilename));
+        BufferedReader rdr = new BufferedReader(new FileReader(setupFile));
 
         String s;
         while ((s = rdr.readLine()) != null) {
@@ -140,7 +140,7 @@ public class ZoneCompactor {
             } else {
                 String link = links.get(s);
                 if (link == null) {
-                    File f = new File(dirName, s);
+                    File f = new File(dataDirectory, s);
                     long length = f.length();
                     starts.put(s, new Integer(start));
                     lengths.put(s, new Integer((int)length));
@@ -168,7 +168,7 @@ public class ZoneCompactor {
             offsets.put(from, offsets.get(to));
         }
 
-        File idxFile = new File("zoneinfo.idx");
+        File idxFile = new File(outputDirectory, "zoneinfo.idx");
         idxFile.delete();
         FileOutputStream idx = new FileOutputStream(idxFile);
 
@@ -194,14 +194,19 @@ public class ZoneCompactor {
         }
         idx.close();
 
+        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(outputDirectory, "zoneinfo.version")), "US-ASCII");
+        writer.write(version);
+        writer.write('\n');
+        writer.close();
+
         // System.out.println("maxLength = " + maxLength);
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.err.println("usage: java ZoneCompactor <setup> <data dir>");
+        if (args.length != 4) {
+            System.err.println("usage: java ZoneCompactor <setup file> <data directory> <output directory> <tzdata version>");
             System.exit(0);
         }
-        new ZoneCompactor(args[0], args[1]);
+        new ZoneCompactor(args[0], args[1], args[2], args[3]);
     }
 }
