@@ -1,12 +1,10 @@
 #!/usr/bin/python
-# Run with no arguments from any directory, with no special setup required.
+
+"""Updates the tzdata file."""
 
 import ftplib
-import hashlib
 import os
 import re
-import shutil
-import string
 import subprocess
 import sys
 import tarfile
@@ -18,41 +16,58 @@ bionic_libc_tools_dir = os.path.dirname(bionic_libc_tools_zoneinfo_dir)
 bionic_libc_dir = os.path.dirname(bionic_libc_tools_dir)
 bionic_dir = os.path.dirname(bionic_libc_dir)
 bionic_libc_zoneinfo_dir = '%s/libc/zoneinfo' % bionic_dir
-if not os.path.isdir(bionic_libc_tools_zoneinfo_dir) or not os.path.isdir(bionic_libc_zoneinfo_dir):
+
+if not os.path.isdir(bionic_libc_tools_zoneinfo_dir):
   print "Couldn't find bionic/libc/tools/zoneinfo!"
   sys.exit(1)
+if not os.path.isdir(bionic_libc_zoneinfo_dir):
+  print "Couldn't find bionic/libc/zoneinfo!"
+  sys.exit(1)
+
 print 'Found bionic in %s...' % bionic_dir
 
 
-regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward', 'etcetera', 'europe', 'northamerica', 'southamerica']
+regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward',
+           'etcetera', 'europe', 'northamerica', 'southamerica']
 
 
-def current_tzdata_version():
-  return open('%s/zoneinfo.version' % bionic_libc_zoneinfo_dir).readline().rstrip('\n')
+def GetCurrentTzDataVersion():
+  return open('%s/tzdata' % bionic_libc_zoneinfo_dir).read().split('\0', 1)[0]
 
 
-def md5_file(filename):
-  md5 = hashlib.md5()
-  f = open(filename, 'rb')
-  while True:
-    data = f.read(8192)
-    if not data:
-      break
-    md5.update(data)
-  return md5.hexdigest()
+def WriteSetupFile():
+  links = []
+  zones = []
+  for region in regions:
+    for line in open('extracted/%s' % region):
+      fields = line.split()
+      if len(fields) == 0:
+        continue
+      elif fields[0] == 'Link':
+        links.append('%s %s %s\n' % (fields[0], fields[1], fields[2]))
+        zones.append(fields[2])
+      elif fields[0] == 'Zone':
+        zones.append(fields[1])
+  zones.sort()
+
+  setup = open('setup', 'w')
+  for link in links:
+    setup.write(link)
+  for zone in zones:
+    setup.write('%s\n' % zone)
+  setup.close()
 
 
-def upgrade_to(ftp, filename):
-  version = re.search('tzdata(.+)\.tar\.gz', filename).group(1)
+def UpgradeTo(ftp, filename):
+  new_version = re.search('(tzdata.+)\.tar\.gz', filename).group(1)
 
   # Switch to a temporary directory.
   tmp_dir = tempfile.mkdtemp('-tzdata')
   os.chdir(tmp_dir)
   print 'Created temporary directory "%s"...' % tmp_dir
 
-  print 'Downloading %s...' % filename
+  print 'Downloading...'
   ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
-  print 'MD5: %s' % md5_file(filename)
 
   print 'Extracting...'
   os.mkdir('extracted')
@@ -65,58 +80,46 @@ def upgrade_to(ftp, filename):
     if region != 'backward':
       subprocess.check_call(['zic', '-d', 'data', 'extracted/%s' % region])
 
-  # Collect the data ZoneCompactor needs.
-  links = []
-  zones = []
-  for region in regions:
-    for line in open('extracted/%s' % region).readlines():
-      fields = string.split(line)
-      if len(fields) == 0:
-        continue
-      elif fields[0] == 'Link':
-        links.append('%s %s %s\n' % (fields[0], fields[1], fields[2]))
-        zones.append(fields[2])
-      elif fields[0] == 'Zone':
-        zones.append(fields[1])
-  zones.sort()
+  WriteSetupFile()
 
-  # Write it into the "setup" file.
-  setup = open('setup', 'w')
-  for link in links:
-    setup.write(link)
-  for zone in zones:
-    setup.write('%s\n' % zone)
-  setup.close()
-
-  print 'Calling ZoneCompactor to update bionic from %s to %s...' % (current_tzdata_version(), version)
+  print 'Calling ZoneCompactor to update bionic to %s...' % new_version
   libcore_src_dir = '%s/../libcore/luni/src/main/java/' % bionic_dir
   subprocess.check_call(['javac', '-d', '.',
                          '%s/ZoneCompactor.java' % bionic_libc_tools_zoneinfo_dir,
                          '%s/libcore/util/ZoneInfo.java' % libcore_src_dir,
                          '%s/libcore/io/BufferIterator.java' % libcore_src_dir])
-  subprocess.check_call(['java', 'ZoneCompactor', 'setup', 'data', bionic_libc_zoneinfo_dir, version])
+  subprocess.check_call(['java', 'ZoneCompactor',
+                         'setup', 'data', bionic_libc_zoneinfo_dir, new_version])
 
 
-# URL from "Sources for Time Zone and Daylight Saving Time Data"
-# http://www.twinsun.com/tz/tz-link.htm
+# Run with no arguments from any directory, with no special setup required.
+def main():
+  # URL from "Sources for Time Zone and Daylight Saving Time Data"
+  # http://www.twinsun.com/tz/tz-link.htm
 
-print 'Looking for new tzdata...'
-ftp = ftplib.FTP('ftp.iana.org')
-ftp.login()
-ftp.cwd('tz/releases')
-tzdata_filenames = []
-for filename in ftp.nlst():
-  if filename.startswith('tzdata20'):
-    tzdata_filenames.append(filename)
-tzdata_filenames.sort()
+  print 'Looking for new tzdata...'
+  ftp = ftplib.FTP('ftp.iana.org')
+  ftp.login()
+  ftp.cwd('tz/releases')
+  tzdata_filenames = []
+  for filename in ftp.nlst():
+    if filename.startswith('tzdata20'):
+      tzdata_filenames.append(filename)
+  tzdata_filenames.sort()
 
-# If you're several releases behind, we'll walk you through the upgrades one by one.
-current_version = current_tzdata_version()
-current_filename = 'tzdata%s.tar.gz' % current_version
-for filename in tzdata_filenames:
-  if filename > current_filename:
-    upgrade_to(ftp, filename)
-    sys.exit(0)
+  # If you're several releases behind, we'll walk you through the upgrades
+  # one by one.
+  current_version = GetCurrentTzDataVersion()
+  current_filename = '%s.tar.gz' % current_version
+  for filename in tzdata_filenames:
+    if filename > current_filename:
+      print 'Found new tzdata: %s' % filename
+      UpgradeTo(ftp, filename)
+      sys.exit(0)
 
-print 'You already have the latest tzdata (%s)!' % current_version
-sys.exit(0)
+  print 'You already have the latest tzdata (%s)!' % current_version
+  sys.exit(0)
+
+
+if __name__ == '__main__':
+  main()
