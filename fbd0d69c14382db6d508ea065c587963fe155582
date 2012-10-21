@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKgn///Zc\u003d",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2322,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-21T03:37:52Z",
+      "side": 1,
+      "message": "use ANDROID_DATA?",
+      "revId": "fbd0d69c14382db6d508ea065c587963fe155582",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKgn///ZY\u003d",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2324,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-21T03:37:52Z",
+      "side": 1,
+      "message": "use ANDROID_ROOT?",
+      "revId": "fbd0d69c14382db6d508ea065c587963fe155582",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
