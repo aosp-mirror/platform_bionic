@@ -178,7 +178,7 @@ libc_common_src_files := \
 	bionic/eventfd.c \
 	bionic/fcntl.c \
 	bionic/fdprintf.c \
-	bionic/__fgets_chk.c \
+	bionic/__fgets_chk.cpp \
 	bionic/flockfile.c \
 	bionic/fork.c \
 	bionic/fstatfs.c \
@@ -205,12 +205,12 @@ libc_common_src_files := \
 	bionic/md5.c \
 	bionic/memccpy.c \
 	bionic/memchr.c \
-	bionic/__memcpy_chk.c \
+	bionic/__memcpy_chk.cpp \
 	bionic/memmem.c \
-	bionic/__memmove_chk.c \
+	bionic/__memmove_chk.cpp \
 	bionic/memmove_words.c \
 	bionic/memrchr.c \
-	bionic/__memset_chk.c \
+	bionic/__memset_chk.cpp \
 	bionic/memswap.c \
 	bionic/mmap.c \
 	bionic/openat.c \
@@ -252,19 +252,17 @@ libc_common_src_files := \
 	bionic/sigsuspend.c \
 	bionic/sigwait.c \
 	bionic/sleep.c \
-	bionic/__snprintf_chk.c \
-	bionic/__sprintf_chk.c \
 	bionic/statfs.c \
-	bionic/__strcat_chk.c \
+	bionic/__strcat_chk.cpp \
 	bionic/strcoll.c \
-	bionic/__strcpy_chk.c \
+	bionic/__strcpy_chk.cpp \
 	bionic/strerror.cpp \
 	bionic/strerror_r.cpp \
-	bionic/__strlcat_chk.c \
-	bionic/__strlcpy_chk.c \
-	bionic/__strlen_chk.c \
-	bionic/__strncat_chk.c \
-	bionic/__strncpy_chk.c \
+	bionic/__strlcat_chk.cpp \
+	bionic/__strlcpy_chk.cpp \
+	bionic/__strlen_chk.cpp \
+	bionic/__strncat_chk.cpp \
+	bionic/__strncpy_chk.cpp \
 	bionic/strndup.c \
 	bionic/strnlen.c \
 	bionic/strntoimax.c \
@@ -279,14 +277,14 @@ libc_common_src_files := \
 	bionic/thread_atexit.c \
 	bionic/time64.c \
 	bionic/tmpfile.cpp \
-	bionic/__umask_chk.c \
+	bionic/__umask_chk.cpp \
 	bionic/umount.c \
 	bionic/unlockpt.c \
 	bionic/usleep.c \
 	bionic/utime.c \
 	bionic/utmp.c \
-	bionic/__vsnprintf_chk.c \
-	bionic/__vsprintf_chk.c \
+	bionic/__vsnprintf_chk.cpp \
+	bionic/__vsprintf_chk.cpp \
 	bionic/wait.c \
 	bionic/wchar.c \
 	bionic/wcscoll.c \

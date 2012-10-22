@@ -26,36 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#undef _FORTIFY_SOURCE
+
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <private/logd.h>
+#include <stdlib.h>
 
 /*
- * Runtime implementation of __builtin____vsprintf_chk.
+ * Runtime implementation of __umask_chk.
  *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
+ * Validate that umask is called with sane mode.
  *
- * This vsprintf check is called if _FORTIFY_SOURCE is defined and
+ * This umask check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-int __vsprintf_chk(
-        char *dest,
-        int flags,
-        size_t dest_len_from_compiler,
-        const char *format,
-        va_list va)
-{
-    int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
-
-    if ((size_t) ret >= dest_len_from_compiler) {
+extern "C" mode_t __umask_chk(mode_t mode) {
+    if ((mode & 0777) != mode) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** vsprintf buffer overflow detected ***\n");
+            "*** FORTIFY_SOURCE: umask called with invalid mask ***\n");
         abort();
     }
 
-    return ret;
+    return umask(mode);
 }
