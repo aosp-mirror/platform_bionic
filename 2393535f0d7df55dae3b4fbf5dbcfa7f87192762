@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKnX///1k\u003d",
+        "filename": "libc/tools/zoneinfo/ZoneCompactor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-22T21:53:38Z",
+      "side": 1,
+      "message": "try/finally?",
+      "revId": "2393535f0d7df55dae3b4fbf5dbcfa7f87192762",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
