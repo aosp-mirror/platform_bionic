@@ -107,7 +107,7 @@ public class ZoneCompactor {
     return ret;
   }
 
-  public ZoneCompactor(String setupFile, String dataDirectory, String outputDirectory, String version) throws Exception {
+  public ZoneCompactor(String setupFile, String dataDirectory, String zoneTabFile, String outputDirectory, String version) throws Exception {
     // Read the setup file, and concatenate all the data.
     ByteArrayOutputStream allData = new ByteArrayOutputStream();
     BufferedReader reader = new BufferedReader(new FileReader(setupFile));
@@ -138,6 +138,7 @@ public class ZoneCompactor {
         }
       }
     }
+    reader.close();
 
     // Fill in fields for links.
     Iterator<String> it = links.keySet().iterator();
@@ -156,17 +157,13 @@ public class ZoneCompactor {
 
     // Write the header.
 
-    // byte[12] tzdata_version          -- 'tzdata2012f\0'
-    // int file_format_version          -- probably won't need this, but just in case
-    // int index_offset                 -- likewise
+    // byte[12] tzdata_version -- 'tzdata2012f\0'
+    // int index_offset -- so we can slip in extra header fields in a backwards-compatible way
     // int data_offset
     // int zonetab_offset
 
     // tzdata_version
     f.write(toAscii(new byte[12], version));
-
-    // file_format_version
-    f.writeInt(1);
 
     // Write dummy values for the three offsets, and remember where we need to seek back to later
     // when we have the real values.
@@ -201,8 +198,17 @@ public class ZoneCompactor {
     // Write the data.
     f.write(allData.toByteArray());
 
-    // TODO: append the zonetab.
-    int zonetab_offset = 0;
+    // Copy the zone.tab.
+    reader = new BufferedReader(new FileReader(zoneTabFile));
+    while ((s = reader.readLine()) != null) {
+      if (!s.startsWith("#")) {
+        f.writeBytes(s);
+        f.write('\n');
+      }
+    }
+    reader.close();
+
+    int zonetab_offset = (int) f.getFilePointer();
 
     // Go back and fix up the offsets in the header.
     f.seek(index_offset_offset);
@@ -226,10 +232,10 @@ public class ZoneCompactor {
   }
 
   public static void main(String[] args) throws Exception {
-    if (args.length != 4) {
-      System.err.println("usage: java ZoneCompactor <setup file> <data directory> <output directory> <tzdata version>");
+    if (args.length != 5) {
+      System.err.println("usage: java ZoneCompactor <setup file> <data directory> <zone.tab file> <output directory> <tzdata version>");
       System.exit(0);
     }
-    new ZoneCompactor(args[0], args[1], args[2], args[3]);
+    new ZoneCompactor(args[0], args[1], args[2], args[3], args[4]);
   }
 }
