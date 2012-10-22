@@ -478,6 +478,8 @@ __END_DECLS
 
 #if defined(__BIONIC_FORTIFY_INLINE)
 
+__BEGIN_DECLS
+
 __BIONIC_FORTIFY_INLINE
 __attribute__((__format__ (printf, 3, 0)))
 __attribute__((__nonnull__ (3)))
@@ -552,6 +554,8 @@ char *fgets(char *dest, int size, FILE *stream)
 
     return __fgets_chk(dest, size, stream, bos);
 }
+
+__END_DECLS
 
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
