@@ -16,6 +16,24 @@
       "revId": "2393535f0d7df55dae3b4fbf5dbcfa7f87192762",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKnX///1Q\u003d",
+        "filename": "libc/tools/zoneinfo/ZoneCompactor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-22T21:56:31Z",
+      "side": 1,
+      "message": "since we\u0027re writing in the \"throws Exception\" style here, i couldn\u0027t be bothered with the extra indentation.\n\nif this wasn\u0027t run on the RI, i\u0027d have just used IoUtils to read it all into one string (below too) :-(",
+      "parentUuid": "AAAKnX///1k\u003d",
+      "revId": "2393535f0d7df55dae3b4fbf5dbcfa7f87192762",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
