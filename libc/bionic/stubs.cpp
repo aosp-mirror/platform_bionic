@@ -371,7 +371,8 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   return app_id_to_passwd(app_id_from_name(login), state);
 }
 
-int getgrouplist(const char* user, gid_t group, gid_t* groups, int* ngroups) {
+// All users are in just one group, the one passed in.
+int getgrouplist(const char* /*user*/, gid_t group, gid_t* groups, int* ngroups) {
     if (*ngroups < 1) {
         *ngroups = 1;
         return -1;
@@ -412,6 +413,26 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
   return app_id_to_group(app_id_from_name(name), state);
 }
 
+// We don't have an /etc/networks, so all inputs return NULL.
+netent* getnetbyname(const char* /*name*/) {
+  return NULL;
+}
+
+// We don't have an /etc/networks, so all inputs return NULL.
+netent* getnetbyaddr(uint32_t /*net*/, int /*type*/) {
+  return NULL;
+}
+
+// We don't have an /etc/protocols, so all inputs return NULL.
+protoent* getprotobyname(const char* /*name*/) {
+  return NULL;
+}
+
+// We don't have an /etc/protocols, so all inputs return NULL.
+protoent* getprotobynumber(int /*proto*/) {
+  return NULL;
+}
+
 static void unimplemented_stub(const char* function) {
   const char* fmt = "%s(3) is not implemented on Android\n";
   __libc_android_log_print(ANDROID_LOG_WARN, "libc", fmt, function);
@@ -420,43 +441,23 @@ static void unimplemented_stub(const char* function) {
 
 #define UNIMPLEMENTED unimplemented_stub(__PRETTY_FUNCTION__)
 
-netent* getnetbyname(const char* name) {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
 void endpwent() {
   UNIMPLEMENTED;
 }
 
-mntent* getmntent(FILE* f) {
+mntent* getmntent(FILE* /*f*/) {
   UNIMPLEMENTED;
   return NULL;
 }
 
-char* ttyname(int fd) { // NOLINT: implementing bad function.
+char* ttyname(int /*fd*/) { // NOLINT: implementing bad function.
   UNIMPLEMENTED;
   return NULL;
 }
 
-int ttyname_r(int fd, char* buf, size_t buflen) {
+int ttyname_r(int /*fd*/, char* /*buf*/, size_t /*buflen*/) {
   UNIMPLEMENTED;
   return -ERANGE;
-}
-
-netent* getnetbyaddr(uint32_t net, int type) {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-protoent* getprotobyname(const char* name) {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-protoent* getprotobynumber(int proto) {
-  UNIMPLEMENTED;
-  return NULL;
 }
 
 char* getusershell() {
