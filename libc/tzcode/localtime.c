@@ -2200,13 +2200,11 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
   }
 
   // byte[12] tzdata_version  -- "tzdata2012f\0"
-  // int file_format_version  -- 1
   // int index_offset
   // int data_offset
   // int zonetab_offset
   struct bionic_tzdata_header {
     char tzdata_version[12];
-    int32_t file_format_version;
     int32_t index_offset;
     int32_t data_offset;
     int32_t zonetab_offset;
@@ -2222,14 +2220,9 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
     close(fd);
     return -1;
   }
-  if (ntohl(header.file_format_version) != 1) {
-    fprintf(stderr, "%s: bad file format version: %d\n", __FUNCTION__, header.file_format_version);
-    close(fd);
-    return -1;
-  }
 
 #if 0
-  fprintf(stderr, "version: %s (%d)\n", header.tzdata_version, ntohl(header.file_format_version));
+  fprintf(stderr, "version: %s\n", header.tzdata_version);
   fprintf(stderr, "index_offset = %d\n", ntohl(header.index_offset));
   fprintf(stderr, "data_offset = %d\n", ntohl(header.data_offset));
   fprintf(stderr, "zonetab_offset = %d\n", ntohl(header.zonetab_offset));
