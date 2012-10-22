@@ -26,35 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <private/logd.h>
 
 /*
- * __fgets_chk. Called in place of fgets() when we know the
- * size of the buffer we're writing into.
+ * Runtime implementation of __builtin____memmove_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+ *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This fgets check is called if _FORTIFY_SOURCE is defined and
+ * This memmove check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-char *__fgets_chk(char *dest, int supplied_size,
-                  FILE *stream, size_t dest_len_from_compiler)
+extern "C" void *__memmove_chk (void *dest, const void *src,
+              size_t len, size_t dest_len)
 {
-    if (supplied_size < 0) {
+    if (len > dest_len) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** fgets buffer size less than 0 ***\n");
+            "*** memmove buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
         abort();
     }
 
-    if (((size_t) supplied_size) > dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** fgets buffer overflow detected ***\n");
-        abort();
-    }
-
-    return fgets(dest, supplied_size, stream);
+    return memmove(dest, src, len);
 }
