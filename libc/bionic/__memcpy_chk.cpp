@@ -26,33 +26,31 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <stdarg.h>
+#undef _FORTIFY_SOURCE
+#include <string.h>
+#include <stdlib.h>
+#include <private/logd.h>
 
 /*
- * Runtime implementation of __builtin____sprintf_chk.
+ * Runtime implementation of __memcpy_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
  *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This sprintf check is called if _FORTIFY_SOURCE is defined and
+ * This memcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-int __sprintf_chk(
-        char *dest,
-        int flags,
-        size_t dest_len_from_compiler,
-        const char *format, ...)
+extern "C" void *__memcpy_chk(void *dest, const void *src,
+              size_t copy_amount, size_t dest_len)
 {
-    va_list va;
-    int retval;
+    if (__builtin_expect(copy_amount > dest_len, 0)) {
+        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+            "*** memcpy buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
+        abort();
+    }
 
-    va_start(va, format);
-    retval = __vsprintf_chk(dest, flags,
-                             dest_len_from_compiler, format, va);
-    va_end(va);
-
-    return retval;
+    return memcpy(dest, src, copy_amount);
 }

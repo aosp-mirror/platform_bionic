@@ -26,29 +26,64 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <private/logd.h>
 
 /*
- * Runtime implementation of __builtin____memset_chk.
+ * Runtime implementation of __builtin____vsprintf_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
  *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This memset check is called if _FORTIFY_SOURCE is defined and
+ * This vsprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-void *__memset_chk (void *dest, int c, size_t n, size_t dest_len)
+extern "C" int __vsprintf_chk(
+        char *dest,
+        int /*flags*/,
+        size_t dest_len_from_compiler,
+        const char *format,
+        va_list va)
 {
-    if (n > dest_len) {
+    int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
+
+    if ((size_t) ret >= dest_len_from_compiler) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** memset buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
+            "*** vsprintf buffer overflow detected ***\n");
         abort();
     }
 
-    return memset(dest, c, n);
+    return ret;
+}
+
+/*
+ * Runtime implementation of __builtin____sprintf_chk.
+ *
+ * See
+ *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+ *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
+ * for details.
+ *
+ * This sprintf check is called if _FORTIFY_SOURCE is defined and
+ * greater than 0.
+ */
+extern "C" int __sprintf_chk(
+        char *dest,
+        int flags,
+        size_t dest_len_from_compiler,
+        const char *format, ...)
+{
+    va_list va;
+    int retval;
+
+    va_start(va, format);
+    retval = __vsprintf_chk(dest, flags,
+                             dest_len_from_compiler, format, va);
+    va_end(va);
+
+    return retval;
 }

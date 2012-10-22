@@ -26,30 +26,64 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <private/logd.h>
 
 /*
- * __strlcpy_chk. Called in place of strlcpy() when we know the
- * size of the buffer we're writing into.
+ * Runtime implementation of __builtin____vsnprintf_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
  *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This strlcpy check is called if _FORTIFY_SOURCE is defined and
+ * This vsnprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-size_t __strlcpy_chk(char *dest, const char *src,
-              size_t supplied_size, size_t dest_len_from_compiler)
+extern "C" int __vsnprintf_chk(
+        char *dest,
+        size_t supplied_size,
+        int /*flags*/,
+        size_t dest_len_from_compiler,
+        const char *format,
+        va_list va)
 {
     if (supplied_size > dest_len_from_compiler) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strlcpy buffer overflow detected ***\n");
+            "*** vsnprintf buffer overflow detected ***\n");
         abort();
     }
 
-    return strlcpy(dest, src, supplied_size);
+    return vsnprintf(dest, supplied_size, format, va);
+}
+
+/*
+ * Runtime implementation of __builtin____snprintf_chk.
+ *
+ * See
+ *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+ *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
+ * for details.
+ *
+ * This snprintf check is called if _FORTIFY_SOURCE is defined and
+ * greater than 0.
+ */
+extern "C" int __snprintf_chk(
+        char *dest,
+        size_t supplied_size,
+        int flags,
+        size_t dest_len_from_compiler,
+        const char *format, ...)
+{
+    va_list va;
+    int retval;
+
+    va_start(va, format);
+    retval = __vsnprintf_chk(dest, supplied_size, flags,
+                             dest_len_from_compiler, format, va);
+    va_end(va);
+
+    return retval;
 }
