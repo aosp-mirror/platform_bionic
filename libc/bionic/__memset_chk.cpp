@@ -26,28 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <private/logd.h>
+#include <string.h>
 #include <stdlib.h>
+#include <private/logd.h>
 
 /*
- * Runtime implementation of __umask_chk.
+ * Runtime implementation of __builtin____memset_chk.
  *
- * Validate that umask is called with sane mode.
+ * See
+ *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+ *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
+ * for details.
  *
- * This umask check is called if _FORTIFY_SOURCE is defined and
+ * This memset check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-mode_t __umask_chk(mode_t mode)
-{
-    if ((mode & 0777) != mode) {
+extern "C" void *__memset_chk (void *dest, int c, size_t n, size_t dest_len) {
+    if (n > dest_len) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** FORTIFY_SOURCE: umask called with invalid mask ***\n");
+            "*** memset buffer overflow detected ***\n");
+        __libc_android_log_event_uid(BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
         abort();
     }
 
-    return umask(mode);
+    return memset(dest, c, n);
 }

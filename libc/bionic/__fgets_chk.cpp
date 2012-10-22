@@ -26,43 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <private/logd.h>
-#include <safe_iop.h>
 
 /*
- * Runtime implementation of __builtin____strcat_chk.
+ * __fgets_chk. Called in place of fgets() when we know the
+ * size of the buffer we're writing into.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This strcat check is called if _FORTIFY_SOURCE is defined and
+ * This fgets check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-char *__strcat_chk (char *dest, const char *src, size_t dest_buf_size)
+extern "C" char *__fgets_chk(char *dest, int supplied_size,
+                  FILE *stream, size_t dest_len_from_compiler)
 {
-    // TODO: optimize so we don't scan src/dest twice.
-    size_t src_len  = strlen(src);
-    size_t dest_len = strlen(dest);
-    size_t sum;
-
-    // sum = src_len + dest_len + 1 (with overflow protection)
-    if (!safe_add3(&sum, src_len, dest_len, 1U)) {
+    if (supplied_size < 0) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strcat integer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_STRCAT_INTEGER_OVERFLOW);
+            "*** fgets buffer size less than 0 ***\n");
         abort();
     }
 
-    if (sum > dest_buf_size) {
+    if (((size_t) supplied_size) > dest_len_from_compiler) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strcat buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW);
+            "*** fgets buffer overflow detected ***\n");
         abort();
     }
 
-    return strcat(dest, src);
+    return fgets(dest, supplied_size, stream);
 }
