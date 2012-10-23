@@ -1,4 +1,4 @@
-/*	$NetBSD: ev_streams.c,v 1.2 2004/05/20 19:52:31 christos Exp $	*/
+/*	$NetBSD: ev_streams.c,v 1.6 2009/04/12 17:07:17 christos Exp $	*/
 
 /*
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
@@ -24,11 +24,14 @@
 #include <sys/cdefs.h>
 #if !defined(LINT) && !defined(CODECENTER) && !defined(lint)
 #ifdef notdef
-static const char rcsid[] = "Id: ev_streams.c,v 1.2.206.2 2004/03/17 00:29:51 marka Exp";
+static const char rcsid[] = "Id: ev_streams.c,v 1.5 2005/04/27 04:56:36 sra Exp";
 #else
-__RCSID("$NetBSD: ev_streams.c,v 1.2 2004/05/20 19:52:31 christos Exp $");
+__RCSID("$NetBSD: ev_streams.c,v 1.6 2009/04/12 17:07:17 christos Exp $");
 #endif
 #endif
+
+#include "port_before.h"
+#include "fd_setsize.h"
 
 #include <sys/types.h>
 #include <sys/uio.h>
@@ -36,7 +39,10 @@ __RCSID("$NetBSD: ev_streams.c,v 1.2 2004/05/20 19:52:31 christos Exp $");
 #include <errno.h>
 
 #include <isc/eventlib.h>
+#include <isc/assertions.h>
 #include "eventlib_p.h"
+
+#include "port_after.h"
 
 #ifndef _LIBC
 static int	copyvec(evStream *str, const struct iovec *iov, int iocnt);
@@ -309,3 +315,5 @@ readable(evContext opaqueCtx, void *uap, int fd, int evmask) {
 		done(opaqueCtx, str);
 }
 #endif
+
+/*! \file */
