@@ -178,14 +178,12 @@ libc_common_src_files := \
 	bionic/eventfd.c \
 	bionic/fcntl.c \
 	bionic/fdprintf.c \
-	bionic/__fgets_chk.cpp \
 	bionic/flockfile.c \
 	bionic/fork.c \
 	bionic/fstatfs.c \
 	bionic/ftime.c \
 	bionic/ftok.c \
 	bionic/fts.c \
-	bionic/getcwd.cpp \
 	bionic/getdtablesize.c \
 	bionic/gethostname.c \
 	bionic/getpgrp.c \
@@ -199,18 +197,14 @@ libc_common_src_files := \
 	bionic/issetugid.c \
 	bionic/ldexp.c \
 	bionic/libc_init_common.c \
-	bionic/locale.c \
 	bionic/logd_write.c \
 	bionic/lseek64.c \
 	bionic/md5.c \
 	bionic/memccpy.c \
 	bionic/memchr.c \
-	bionic/__memcpy_chk.cpp \
 	bionic/memmem.c \
-	bionic/__memmove_chk.cpp \
 	bionic/memmove_words.c \
 	bionic/memrchr.c \
-	bionic/__memset_chk.cpp \
 	bionic/memswap.c \
 	bionic/mmap.c \
 	bionic/openat.c \
@@ -253,40 +247,24 @@ libc_common_src_files := \
 	bionic/sigwait.c \
 	bionic/sleep.c \
 	bionic/statfs.c \
-	bionic/__strcat_chk.cpp \
 	bionic/strcoll.c \
-	bionic/__strcpy_chk.cpp \
-	bionic/strerror.cpp \
-	bionic/strerror_r.cpp \
-	bionic/__strlcat_chk.cpp \
-	bionic/__strlcpy_chk.cpp \
-	bionic/__strlen_chk.cpp \
-	bionic/__strncat_chk.cpp \
-	bionic/__strncpy_chk.cpp \
 	bionic/strndup.c \
 	bionic/strnlen.c \
 	bionic/strntoimax.c \
 	bionic/strntoumax.c \
-	bionic/strsignal.cpp \
 	bionic/strtotimeval.c \
-	bionic/stubs.cpp \
 	bionic/system_properties.c \
 	bionic/tcgetpgrp.c \
 	bionic/tcsetpgrp.c \
 	bionic/tdestroy.c \
 	bionic/thread_atexit.c \
 	bionic/time64.c \
-	bionic/tmpfile.cpp \
-	bionic/__umask_chk.cpp \
 	bionic/umount.c \
 	bionic/unlockpt.c \
 	bionic/usleep.c \
 	bionic/utime.c \
 	bionic/utmp.c \
-	bionic/__vsnprintf_chk.cpp \
-	bionic/__vsprintf_chk.cpp \
 	bionic/wait.c \
-	bionic/wchar.c \
 	bionic/wcscoll.c \
 	netbsd/gethnamaddr.c \
 	netbsd/isc/ev_timers.c \
@@ -318,6 +296,30 @@ libc_common_src_files := \
 	netbsd/nameser/ns_netint.c \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c \
+
+libc_bionic_src_files := \
+	bionic/__fgets_chk.cpp \
+	bionic/getcwd.cpp \
+	bionic/__memcpy_chk.cpp \
+	bionic/__memmove_chk.cpp \
+	bionic/__memset_chk.cpp \
+	bionic/setlocale.cpp \
+	bionic/__strcat_chk.cpp \
+	bionic/__strcpy_chk.cpp \
+	bionic/strerror.cpp \
+	bionic/strerror_r.cpp \
+	bionic/__strlcat_chk.cpp \
+	bionic/__strlcpy_chk.cpp \
+	bionic/__strlen_chk.cpp \
+	bionic/__strncat_chk.cpp \
+	bionic/__strncpy_chk.cpp \
+	bionic/strsignal.cpp \
+	bionic/stubs.cpp \
+	bionic/tmpfile.cpp \
+	bionic/__umask_chk.cpp \
+	bionic/__vsnprintf_chk.cpp \
+	bionic/__vsprintf_chk.cpp \
+	bionic/wchar.cpp \
 
 libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/compat-43/creat.c \
@@ -509,7 +511,6 @@ libc_common_cflags := \
     -I$(LOCAL_PATH)/private \
     -DPOSIX_MISTAKE \
     -DLOG_ON_HEAP_ERROR \
-    -std=gnu99 \
     -Wall -Wextra
 
 # these macro definitions are required to implement the
@@ -773,17 +774,33 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_bionic.a - home-grown C library code
+# ========================================================
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_bionic_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) -Werror
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_bionic
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_common.a
 # ========================================================
 
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_CFLAGS := $(libc_common_cflags) -std=gnu99
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_netbsd
+LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_bionic libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -808,7 +825,8 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
-                -DLIBC_STATIC
+                -DLIBC_STATIC \
+                -std=gnu99
 
 LOCAL_MODULE := libc_nomalloc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -831,7 +849,8 @@ LOCAL_SRC_FILES := \
 	bionic/libc_init_static.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
-                -DLIBC_STATIC
+                -DLIBC_STATIC \
+                -std=gnu99
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -852,7 +871,7 @@ include $(CLEAR_VARS)
 # Since this code is experimental it is disabled by default.
 # see libc/bionic/pthread_debug.c for details
 
-LOCAL_CFLAGS := $(libc_common_cflags) -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
+LOCAL_CFLAGS := $(libc_common_cflags) -std=gnu99 -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
