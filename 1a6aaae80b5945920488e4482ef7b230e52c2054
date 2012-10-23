@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKvX///4A\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-23T23:22:54Z",
+      "side": 1,
+      "message": "can you show us a crash? (on the mailing list thread if you prefer.) it seems like this ought to work, no? it seems to work for me on ARM.",
+      "parentUuid": "AAAKsn///sw\u003d",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAKdn///5E\u003d",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 4
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "The stack canary has to be at slot 5 since GCC looks at %gs + 20 (4 bytes * 5, which is the fifth slot). Would it be possible to move the dlerror to slot 6?",
       "parentUuid": "AAAKdn///5E\u003d",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKvX///4I\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-23T23:22:54Z",
+      "side": 1,
+      "message": "oh, crap. sorry. i\u0027ll send out another change...",
+      "parentUuid": "AAAKsn///tk\u003d",
       "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
