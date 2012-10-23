@@ -1,4 +1,4 @@
-/*	$NetBSD: list.h,v 1.2 2004/05/20 19:51:55 christos Exp $	*/
+/*	$NetBSD: list.h,v 1.5 2009/04/12 17:07:16 christos Exp $	*/
 
 /*
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
@@ -33,7 +33,8 @@
 	} while (/*CONSTCOND*/0)
 #define INIT_LINK(elt, link) \
 	INIT_LINK_TYPE(elt, link, void)
-#define LINKED(elt, link) ((void *)((elt)->link.prev) != (void *)(-1))
+#define LINKED(elt, link) ((void *)((elt)->link.prev) != (void *)(-1) && \
+			   (void *)((elt)->link.next) != (void *)(-1))
 
 #define HEAD(list) ((list).head)
 #define TAIL(list) ((list).tail)
@@ -68,12 +69,16 @@
 		INSIST(LINKED(elt, link));\
 		if ((elt)->link.next != NULL) \
 			(elt)->link.next->link.prev = (elt)->link.prev; \
-		else \
+		else { \
+			INSIST((list).tail == (elt)); \
 			(list).tail = (elt)->link.prev; \
+		} \
 		if ((elt)->link.prev != NULL) \
 			(elt)->link.prev->link.next = (elt)->link.next; \
-		else \
+		else { \
+			INSIST((list).head == (elt)); \
 			(list).head = (elt)->link.next; \
+		} \
 		INIT_LINK_TYPE(elt, link, type); \
 	} while (/*CONSTCOND*/0)
 #define UNLINK(list, elt, link) \
@@ -112,3 +117,4 @@
 #define DEQUEUE(list, elt, link) UNLINK(list, elt, link)
 
 #endif /* LIST_H */
+/*! \file */

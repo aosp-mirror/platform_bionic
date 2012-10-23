@@ -1,4 +1,5 @@
-/*	$OpenBSD: setjmperr.c,v 1.5 2005/08/08 08:05:34 espie Exp $ */
+/*	$NetBSD: setjmperr.c,v 1.8 2012/06/24 15:26:03 christos Exp $	*/
+
 /*
  * Copyright (c) 1980, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -27,6 +28,15 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)setjmperr.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: setjmperr.c,v 1.8 2012/06/24 15:26:03 christos Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
 /*
  * This routine is called from longjmp() when an error occurs.
