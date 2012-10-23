@@ -1,7 +1,11 @@
-/*	$OpenBSD: inet_ntoa.c,v 1.6 2005/08/06 20:30:03 espie Exp $ */
-/*
- * Copyright (c) 1983, 1993
+/*	$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $	*/
+
+/*-
+ * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,24 +32,38 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
+#include <assert.h>
+#include <ctype.h>
+#include <string.h>
+
 /*
- * Convert network-format internet address
- * to base 256 d.d.d.d representation.
+ * Find the first occurrence of find in s, ignore case.
  */
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-
 char *
-inet_ntoa(struct in_addr in)
+strcasestr(const char *s, const char *find)
 {
-	static char b[18];
-	char *p;
+	char c, sc;
+	size_t len;
 
-	p = (char *)&in;
-#define	UC(b)	(((int)b)&0xff)
-	(void)snprintf(b, sizeof(b),
-	    "%u.%u.%u.%u", UC(p[0]), UC(p[1]), UC(p[2]), UC(p[3]));
-	return (b);
+	_DIAGASSERT(s != NULL);
+	_DIAGASSERT(find != NULL);
+
+	if ((c = *find++) != 0) {
+		c = tolower((unsigned char)c);
+		len = strlen(find);
+		do {
+			do {
+				if ((sc = *s++) == 0)
+					return (NULL);
+			} while ((char)tolower((unsigned char)sc) != c);
+		} while (strncasecmp(s, find, len) != 0);
+		s--;
+	}
+	return __UNCONST(s);
 }

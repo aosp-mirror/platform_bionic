@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _SHA1_H_
-#define _SHA1_H_
-
-#warning "include <sys/sha1.h> instead for better portability"
-#include <sys/sha1.h>
+#ifndef _BIONIC_NETBSD_PORT_BEFORE_H_included
+#define _BIONIC_NETBSD_PORT_BEFORE_H_included
 
 #endif
