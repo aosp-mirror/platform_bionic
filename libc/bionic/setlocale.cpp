@@ -25,10 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <locale.h>
 
-char* setlocale (int category, char const *locale)
-{
-    /* INTENTIONAL: there is no locale support in Bionic */
-    return 0;
+#include <locale.h>
+#include <stdlib.h>
+
+// setlocale(3) always fails on bionic.
+char* setlocale(int /*category*/, char const* /*locale*/) {
+    return NULL;
 }
