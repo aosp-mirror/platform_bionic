@@ -104,7 +104,6 @@ libc_common_src_files := \
 	stdlib/toupper_.c \
 	string/index.c \
 	string/strcasecmp.c \
-	string/strcasestr.c \
 	string/strcat.c \
 	string/strchr.c \
 	string/strcspn.c \
@@ -148,11 +147,6 @@ libc_common_src_files := \
 	wchar/wmemcpy.c \
 	wchar/wmemmove.c \
 	wchar/wmemset.c \
-	inet/inet_addr.c \
-	inet/inet_aton.c \
-	inet/inet_ntoa.c \
-	inet/inet_ntop.c \
-	inet/inet_pton.c \
 	tzcode/asctime.c \
 	tzcode/difftime.c \
 	tzcode/localtime.c \
@@ -236,7 +230,6 @@ libc_common_src_files := \
 	bionic/setresuid.c \
 	bionic/setreuid.c \
 	bionic/setuid.c \
-	bionic/sha1.c \
 	bionic/sigblock.c \
 	bionic/siginterrupt.c \
 	bionic/siglist.c \
@@ -256,13 +249,11 @@ libc_common_src_files := \
 	bionic/system_properties.c \
 	bionic/tcgetpgrp.c \
 	bionic/tcsetpgrp.c \
-	bionic/tdestroy.c \
 	bionic/thread_atexit.c \
 	bionic/time64.c \
 	bionic/umount.c \
 	bionic/unlockpt.c \
 	bionic/usleep.c \
-	bionic/utime.c \
 	bionic/utmp.c \
 	bionic/wait.c \
 	bionic/wcscoll.c \
@@ -315,6 +306,7 @@ libc_bionic_src_files := \
 	bionic/__strncpy_chk.cpp \
 	bionic/strsignal.cpp \
 	bionic/stubs.cpp \
+	bionic/tdestroy.cpp \
 	bionic/tmpfile.cpp \
 	bionic/__umask_chk.cpp \
 	bionic/__vsnprintf_chk.cpp \
@@ -322,30 +314,37 @@ libc_bionic_src_files := \
 	bionic/wchar.cpp \
 
 libc_upstream_netbsd_src_files := \
-	upstream-netbsd/libc/compat-43/creat.c \
-	upstream-netbsd/libc/gen/ftw.c \
-	upstream-netbsd/libc/gen/nftw.c \
-	upstream-netbsd/libc/gen/nice.c \
-	upstream-netbsd/libc/gen/psignal.c \
-	upstream-netbsd/libc/regex/regcomp.c \
-	upstream-netbsd/libc/regex/regerror.c \
-	upstream-netbsd/libc/regex/regexec.c \
-	upstream-netbsd/libc/regex/regfree.c \
-	upstream-netbsd/libc/stdio/getdelim.c \
-	upstream-netbsd/libc/stdio/getline.c \
-	upstream-netbsd/libc/stdlib/drand48.c \
-	upstream-netbsd/libc/stdlib/erand48.c \
-	upstream-netbsd/libc/stdlib/jrand48.c \
-	upstream-netbsd/libc/stdlib/lrand48.c \
-	upstream-netbsd/libc/stdlib/mrand48.c \
-	upstream-netbsd/libc/stdlib/nrand48.c \
-	upstream-netbsd/libc/stdlib/_rand48.c \
-	upstream-netbsd/libc/stdlib/seed48.c \
-	upstream-netbsd/libc/stdlib/srand48.c \
-	upstream-netbsd/libc/stdlib/tdelete.c \
-	upstream-netbsd/libc/stdlib/tfind.c \
-	upstream-netbsd/libc/stdlib/tsearch.c \
-	upstream-netbsd/libc/string/strxfrm.c \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+    upstream-netbsd/common/lib/libc/inet/inet_addr.c \
+    upstream-netbsd/libc/compat-43/creat.c \
+    upstream-netbsd/libc/gen/ftw.c \
+    upstream-netbsd/libc/gen/nftw.c \
+    upstream-netbsd/libc/gen/nice.c \
+    upstream-netbsd/libc/gen/psignal.c \
+    upstream-netbsd/libc/gen/utime.c \
+    upstream-netbsd/libc/inet/inet_ntoa.c \
+    upstream-netbsd/libc/inet/inet_ntop.c \
+    upstream-netbsd/libc/inet/inet_pton.c \
+    upstream-netbsd/libc/regex/regcomp.c \
+    upstream-netbsd/libc/regex/regerror.c \
+    upstream-netbsd/libc/regex/regexec.c \
+    upstream-netbsd/libc/regex/regfree.c \
+    upstream-netbsd/libc/stdio/getdelim.c \
+    upstream-netbsd/libc/stdio/getline.c \
+    upstream-netbsd/libc/stdlib/drand48.c \
+    upstream-netbsd/libc/stdlib/erand48.c \
+    upstream-netbsd/libc/stdlib/jrand48.c \
+    upstream-netbsd/libc/stdlib/lrand48.c \
+    upstream-netbsd/libc/stdlib/mrand48.c \
+    upstream-netbsd/libc/stdlib/nrand48.c \
+    upstream-netbsd/libc/stdlib/_rand48.c \
+    upstream-netbsd/libc/stdlib/seed48.c \
+    upstream-netbsd/libc/stdlib/srand48.c \
+    upstream-netbsd/libc/stdlib/tdelete.c \
+    upstream-netbsd/libc/stdlib/tfind.c \
+    upstream-netbsd/libc/stdlib/tsearch.c \
+    upstream-netbsd/libc/string/strcasestr.c \
+    upstream-netbsd/libc/string/strxfrm.c \
 
 # The following files are common, but must be compiled
 # with different C flags when building a static C library.

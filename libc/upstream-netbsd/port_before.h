@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef _SHA1_H_
-#define _SHA1_H_
+#ifndef _BIONIC_NETBSD_PORT_BEFORE_H_included
+#define _BIONIC_NETBSD_PORT_BEFORE_H_included
 
-#warning "include <sys/sha1.h> instead for better portability"
-#include <sys/sha1.h>
+#include "namespace.h"
+#include <sys/cdefs.h>
+#include <arpa_nameser.h>
 
 #endif

@@ -1,5 +1,7 @@
-/*-
- * Copyright (c) 1990, 1993
+/*	$NetBSD: inet_ntoa.c,v 1.2 2012/03/13 21:13:38 christos Exp $	*/
+
+/*
+ * Copyright (c) 1983, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 4. Neither the name of the University nor the names of its contributors
+ * 3. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -27,29 +29,36 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)utime.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-//__FBSDID("$FreeBSD: /repoman/r/ncvs/src/lib/libc/gen/utime.c,v 1.3 2007/01/09 00:27:56 imp Exp $");
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)inet_ntoa.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: inet_ntoa.c,v 1.2 2012/03/13 21:13:38 christos Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
-#include <sys/time.h>
+#include "namespace.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
 
-#include <utime.h>
+#ifdef __weak_alias
+__weak_alias(inet_ntoa,_inet_ntoa)
+#endif
 
-int
-utime(path, times)
-	const char *path;
-	const struct utimbuf *times;
-{
-	struct timeval tv[2], *tvp;
+/*
+ * Convert network-format internet address
+ * to base 256 d.d.d.d representation.
+ */
+/*const*/ char *
+inet_ntoa(struct in_addr in) {
+	static char ret[18];
 
-	if (times) {
-		tv[0].tv_sec = times->actime;
-		tv[1].tv_sec = times->modtime;
-		tv[0].tv_usec = tv[1].tv_usec = 0;
-		tvp = tv;
-	} else
-		tvp = NULL;
-	return (utimes(path, tvp));
+	strlcpy(ret, "[inet_ntoa error]", sizeof(ret));
+	(void) inet_ntop(AF_INET, &in, ret, (socklen_t)sizeof ret);
+	return ret;
 }

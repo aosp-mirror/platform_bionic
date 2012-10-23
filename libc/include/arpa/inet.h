@@ -42,7 +42,7 @@ extern int           inet_aton(const char *, struct in_addr *);
 extern char*         inet_ntoa(struct in_addr);
 
 extern int           inet_pton(int, const char *, void *);
-extern const char*   inet_ntop(int, const void *, char *, size_t);
+extern const char*   inet_ntop(int, const void *, char *, socklen_t);
 
 extern unsigned int  inet_nsap_addr(const char *, unsigned char *, int);
 extern char*         inet_nsap_ntoa(int, const unsigned char *, char *);
