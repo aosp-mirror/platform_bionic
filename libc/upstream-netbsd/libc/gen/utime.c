@@ -1,12 +1,8 @@
-/*	$OpenBSD: strcasestr.c,v 1.3 2006/03/31 05:34:55 deraadt Exp $	*/
-/*	$NetBSD: strcasestr.c,v 1.2 2005/02/09 21:35:47 kleink Exp $	*/
+/*	$NetBSD: utime.c,v 1.14 2012/06/25 22:32:44 abs Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,28 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
-#include <string.h>
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)utime.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: utime.c,v 1.14 2012/06/25 22:32:44 abs Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
-/*
- * Find the first occurrence of find in s, ignore case.
- */
-char *
-strcasestr(const char *s, const char *find)
+#include "namespace.h"
+#include <sys/time.h>
+
+#include <assert.h>
+#include <errno.h>
+#include <stddef.h>
+#include <utime.h>
+
+int
+utime(const char *path, const struct utimbuf *times)
 {
-	char c, sc;
-	size_t len;
+	struct timeval tv[2], *tvp;
 
-	if ((c = *find++) != 0) {
-		c = (char)tolower((unsigned char)c);
-		len = strlen(find);
-		do {
-			do {
-				if ((sc = *s++) == 0)
-					return (NULL);
-			} while ((char)tolower((unsigned char)sc) != c);
-		} while (strncasecmp(s, find, len) != 0);
-		s--;
+	_DIAGASSERT(path != NULL);
+
+	if (times == (struct utimbuf *) NULL)
+		tvp = NULL;
+	else {
+		tv[0].tv_sec = times->actime;
+		tv[1].tv_sec = times->modtime;
+		tv[0].tv_usec = tv[1].tv_usec = 0;
+		tvp = tv;
 	}
-	return ((char *)s);
+	return (utimes(path, tvp));
 }
