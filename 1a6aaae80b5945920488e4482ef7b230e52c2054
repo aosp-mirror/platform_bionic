@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKsn///Hs\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-24T05:52:16Z",
+      "side": 1,
+      "message": "I tried to call __generate_stack_chk_guard() here, but init segfaults very early. There is not stack trace. Kernel just said \"init[1] general protection ip:8072780 sp:bfbbe988 error:0 in init[8048000+49000]\"",
+      "parentUuid": "AAAKvX///4A\u003d",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAKdn///5E\u003d",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 4
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "oh, crap. sorry. i\u0027ll send out another change...",
       "parentUuid": "AAAKsn///tk\u003d",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKsn///Ho\u003d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1012356
+      },
+      "writtenOn": "2012-10-24T05:52:16Z",
+      "side": 1,
+      "message": "Thanks for changing the dlerror slot.",
+      "parentUuid": "AAAKvX///4I\u003d",
       "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
