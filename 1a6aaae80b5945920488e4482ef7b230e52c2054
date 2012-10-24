@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "AAAKun////c\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-10-24T06:01:05Z",
+      "side": 1,
+      "message": "No. You can\u0027t access gs here because tls is not set yet.",
+      "parentUuid": "AAAKsn///Hs\u003d",
+      "revId": "1a6aaae80b5945920488e4482ef7b230e52c2054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAKdn///5E\u003d",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 4
