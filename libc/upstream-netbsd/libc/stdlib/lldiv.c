@@ -1,6 +1,11 @@
+/*	$NetBSD: lldiv.c,v 1.4 2012/06/25 22:32:45 abs Exp $	*/
+
 /*
- * Copyright (c) 1989 The Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,19 +32,35 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <signal.h>
-#include <errno.h>
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "from: @(#)ldiv.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: lldiv.c,v 1.4 2012/06/25 22:32:45 abs Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
-/*
- * Backwards-compatible killpg().
- */
-int
-killpg(pid_t pgid, int sig)
+#include "namespace.h"
+#include <stdlib.h>		/* lldiv_t */
+
+#ifdef __weak_alias
+__weak_alias(lldiv, _lldiv)
+#endif
+
+/* LONGLONG */
+lldiv_t
+lldiv(long long int num, long long int denom)
 {
-	if (pgid == 1) {
-		errno = ESRCH;
-		return (-1);
+	lldiv_t r;
+
+	/* see div.c for comments */
+
+	r.quot = num / denom;
+	r.rem = num % denom;
+	if (num >= 0 && r.rem < 0) {
+		r.quot++;
+		r.rem -= denom;
 	}
-	return (kill(-pgid, sig));
+	return (r);
 }

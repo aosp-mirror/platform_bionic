@@ -1,10 +1,8 @@
-/*	$OpenBSD: lldiv.c,v 1.1 2006/01/13 17:58:09 millert Exp $	*/
+/*	$NetBSD: killpg.c,v 1.8 2003/08/07 16:42:39 agc Exp $	*/
+
 /*
- * Copyright (c) 1990 Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
+ * Copyright (c) 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,20 +29,28 @@
  * SUCH DAMAGE.
  */
 
-#include <stdlib.h>		/* lldiv_t */
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)killpg.c	8.1 (Berkeley) 6/2/93";
+#else
+__RCSID("$NetBSD: killpg.c,v 1.8 2003/08/07 16:42:39 agc Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
 
-lldiv_t
-lldiv(long long num, long long denom)
+#include <sys/types.h>
+#include <signal.h>
+#include <errno.h>
+
+/*
+ * Backwards-compatible killpg().
+ */
+int
+killpg(pid_t pgid, int sig)
 {
-	lldiv_t r;
-
-	/* see div.c for comments */
-
-	r.quot = num / denom;
-	r.rem = num % denom;
-	if (num >= 0 && r.rem < 0) {
-		r.quot++;
-		r.rem -= denom;
+	if (pgid == 1) {
+		errno = ESRCH;
+		return (-1);
 	}
-	return (r);
+	return (kill(-pgid, sig));
 }

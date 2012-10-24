@@ -1,4 +1,4 @@
-/*	$NetBSD: ev_timers.c,v 1.2 2004/05/20 19:52:31 christos Exp $	*/
+/*	$NetBSD: ev_timers.c,v 1.11 2012/03/21 00:34:54 christos Exp $	*/
 
 /*
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
@@ -24,20 +24,24 @@
 #include <sys/cdefs.h>
 #if !defined(LINT) && !defined(CODECENTER) && !defined(lint)
 #ifdef notdef
-static const char rcsid[] = "Id: ev_timers.c,v 1.2.2.1.4.5 2004/03/17 02:39:13 marka Exp";
+static const char rcsid[] = "Id: ev_timers.c,v 1.6 2005/04/27 04:56:36 sra Exp";
 #else
-__RCSID("$NetBSD: ev_timers.c,v 1.2 2004/05/20 19:52:31 christos Exp $");
+__RCSID("$NetBSD: ev_timers.c,v 1.11 2012/03/21 00:34:54 christos Exp $");
 #endif
 #endif
 
 /* Import. */
 
+#include "port_before.h"
+#include "fd_setsize.h"
+
 #include <errno.h>
-#include <time.h>
 
 #include <isc/assertions.h>
 #include <isc/eventlib.h>
 #include "eventlib_p.h"
+
+#include "port_after.h"
 
 /* Constants. */
 
@@ -104,29 +108,36 @@ evSubTime(struct timespec minuend, struct timespec subtrahend) {
 
 int
 evCmpTime(struct timespec a, struct timespec b) {
-	long x = a.tv_sec - b.tv_sec;
+#define SGN(x) ((x) < 0 ? (-1) : (x) > 0 ? (1) : (0));
+	time_t s = a.tv_sec - b.tv_sec;
+	long n;
 
-	if (x == 0L)
-		x = a.tv_nsec - b.tv_nsec;
-	return (x < 0L ? (-1) : x > 0L ? (1) : (0));
+	if (s != 0)
+		return SGN(s);
+
+	n = a.tv_nsec - b.tv_nsec;
+	return SGN(n);
 }
 
 struct timespec
-evNowTime() {
+evNowTime(void)
+{
 	struct timeval now;
 #ifdef CLOCK_REALTIME
 	struct timespec tsnow;
 	int m = CLOCK_REALTIME;
 
 #ifdef CLOCK_MONOTONIC
+#ifndef _LIBC
 	if (__evOptMonoTime)
 		m = CLOCK_MONOTONIC;
+#endif
 #endif
 	if (clock_gettime(m, &tsnow) == 0)
 		return (tsnow);
 #endif
 	if (gettimeofday(&now, NULL) < 0)
-		return (evConsTime(0L, 0L));
+		return (evConsTime((time_t)0, 0L));
 	return (evTimeSpec(now));
 }
 
@@ -139,7 +150,7 @@ evUTCTime(void) {
 		return (tsnow);
 #endif
 	if (gettimeofday(&now, NULL) < 0)
-		return (evConsTime(0L, 0L));
+		return (evConsTime((time_t)0, 0L));
 	return (evTimeSpec(now));
 }
 
@@ -166,7 +177,7 @@ evTimeVal(struct timespec ts) {
 	struct timeval tv;
 
 	tv.tv_sec = ts.tv_sec;
-	tv.tv_usec = ts.tv_nsec / 1000;
+	tv.tv_usec = (suseconds_t)(ts.tv_nsec / 1000);
 	return (tv);
 }
 
@@ -182,7 +193,8 @@ evSetTimer(evContext opaqueCtx,
 	evContext_p *ctx = opaqueCtx.opaque;
 	evTimer *id;
 
-	printf("evSetTimer(ctx %p, func %p, uap %p, due %ld.%09ld, inter %ld.%09ld)\n",
+	evPrintf(ctx, 1,
+"evSetTimer(ctx %p, func %p, uap %p, due %ld.%09ld, inter %ld.%09ld)\n",
 		 ctx, func, uap,
 		 (long)due.tv_sec, due.tv_nsec,
 		 (long)inter.tv_sec, inter.tv_nsec);
@@ -223,7 +235,7 @@ evSetTimer(evContext opaqueCtx,
 		opaqueID->opaque = id;
 
 	if (ctx->debug > 7) {
-		printf("timers after evSetTimer:\n");
+		evPrintf(ctx, 7, "timers after evSetTimer:\n");
 		(void) heap_for_each(ctx->timers, print_timer, (void *)ctx);
 	}
 
@@ -238,7 +250,7 @@ evClearTimer(evContext opaqueCtx, evTimerID id) {
 	if (ctx->cur != NULL &&
 	    ctx->cur->type == Timer &&
 	    ctx->cur->u.timer.this == del) {
-		printf("deferring delete of timer (executing)\n");
+		evPrintf(ctx, 8, "deferring delete of timer (executing)\n");
 		/*
 		 * Setting the interval to zero ensures that evDrop() will
 		 * clean up the timer.
@@ -255,7 +267,7 @@ evClearTimer(evContext opaqueCtx, evTimerID id) {
 	FREE(del);
 
 	if (ctx->debug > 7) {
-		printf("timers after evClearTimer:\n");
+		evPrintf(ctx, 7, "timers after evClearTimer:\n");
 		(void) heap_for_each(ctx->timers, print_timer, (void *)ctx);
 	}
 
@@ -340,7 +352,7 @@ evResetTimer(evContext opaqueCtx,
 	}
 
 	if (ctx->debug > 7) {
-		printf("timers after evResetTimer:\n");
+		evPrintf(ctx, 7, "timers after evResetTimer:\n");
 		(void) heap_for_each(ctx->timers, print_timer, (void *)ctx);
 	}
 
@@ -503,3 +515,5 @@ idle_timeout(evContext opaqueCtx,
 	}
 }
 #endif
+
+/*! \file */

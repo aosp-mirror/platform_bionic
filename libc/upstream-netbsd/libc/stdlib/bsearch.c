@@ -1,6 +1,8 @@
+/*	$NetBSD: bsearch.c,v 1.15 2012/03/04 20:01:45 christos Exp $	*/
+
 /*
- * Copyright (c) 1990 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,6 +29,17 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)bsearch.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: bsearch.c,v 1.15 2012/03/04 20:01:45 christos Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
+
+#include <assert.h>
+#include <errno.h>
 #include <stdlib.h>
 
 /*
@@ -50,18 +63,23 @@ bsearch(const void *key, const void *base0, size_t nmemb, size_t size,
     int (*compar)(const void *, const void *))
 {
 	const char *base = base0;
-	int lim, cmp;
+	size_t lim;
+	int cmp;
 	const void *p;
+
+	_DIAGASSERT(key != NULL);
+	_DIAGASSERT(base0 != NULL || nmemb == 0);
+	_DIAGASSERT(compar != NULL);
 
 	for (lim = nmemb; lim != 0; lim >>= 1) {
 		p = base + (lim >> 1) * size;
 		cmp = (*compar)(key, p);
+		if (cmp == 0)
+			return __UNCONST(p);
 		if (cmp > 0) {	/* key > p: move right */
-			base = (char *)p + size;
+			base = (const char *)p + size;
 			lim--;
-		} else if (cmp == 0) {
-			return ((void *)p);
-		} /* else move left */
+		}		/* else move left */
 	}
 	return (NULL);
 }
