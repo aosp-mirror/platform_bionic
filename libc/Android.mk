@@ -11,7 +11,6 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fnmatch.c \
 	unistd/getopt_long.c \
-	unistd/killpg.c \
 	unistd/popen.c \
 	unistd/syslog.c \
 	unistd/system.c \
@@ -80,19 +79,13 @@ libc_common_src_files := \
 	stdio/vsscanf.c \
 	stdio/wbuf.c \
 	stdio/wsetup.c \
-	stdlib/assert.c \
 	stdlib/atexit.c \
-	stdlib/bsearch.c \
 	stdlib/ctype_.c \
-	stdlib/div.c \
 	stdlib/exit.c \
 	stdlib/getenv.c \
-	stdlib/ldiv.c \
-	stdlib/lldiv.c \
 	stdlib/putenv.c \
 	stdlib/qsort.c \
 	stdlib/setenv.c \
-	stdlib/setjmperr.c \
 	stdlib/strtod.c \
 	stdlib/strtoimax.c \
 	stdlib/strtol.c \
@@ -169,7 +162,6 @@ libc_common_src_files := \
 	bionic/err.c \
 	bionic/ether_aton.c \
 	bionic/ether_ntoa.c \
-	bionic/eventfd.c \
 	bionic/fcntl.c \
 	bionic/fdprintf.c \
 	bionic/flockfile.c \
@@ -258,8 +250,6 @@ libc_common_src_files := \
 	bionic/wait.c \
 	bionic/wcscoll.c \
 	netbsd/gethnamaddr.c \
-	netbsd/isc/ev_timers.c \
-	netbsd/isc/ev_streams.c \
 	netbsd/inet/nsap_addr.c \
 	netbsd/resolv/__dn_comp.c \
 	netbsd/resolv/__res_close.c \
@@ -289,6 +279,8 @@ libc_common_src_files := \
 	netbsd/nameser/ns_samedomain.c \
 
 libc_bionic_src_files := \
+	bionic/assert.cpp \
+	bionic/eventfd.cpp \
 	bionic/__fgets_chk.cpp \
 	bionic/getcwd.cpp \
 	bionic/__memcpy_chk.cpp \
@@ -321,19 +313,26 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/gen/nftw.c \
     upstream-netbsd/libc/gen/nice.c \
     upstream-netbsd/libc/gen/psignal.c \
+    upstream-netbsd/libc/gen/setjmperr.c \
     upstream-netbsd/libc/gen/utime.c \
     upstream-netbsd/libc/inet/inet_ntoa.c \
     upstream-netbsd/libc/inet/inet_ntop.c \
     upstream-netbsd/libc/inet/inet_pton.c \
+    upstream-netbsd/libc/isc/ev_streams.c \
+    upstream-netbsd/libc/isc/ev_timers.c \
     upstream-netbsd/libc/regex/regcomp.c \
     upstream-netbsd/libc/regex/regerror.c \
     upstream-netbsd/libc/regex/regexec.c \
     upstream-netbsd/libc/regex/regfree.c \
     upstream-netbsd/libc/stdio/getdelim.c \
     upstream-netbsd/libc/stdio/getline.c \
+    upstream-netbsd/libc/stdlib/bsearch.c \
+    upstream-netbsd/libc/stdlib/div.c \
     upstream-netbsd/libc/stdlib/drand48.c \
     upstream-netbsd/libc/stdlib/erand48.c \
     upstream-netbsd/libc/stdlib/jrand48.c \
+    upstream-netbsd/libc/stdlib/ldiv.c \
+    upstream-netbsd/libc/stdlib/lldiv.c \
     upstream-netbsd/libc/stdlib/lrand48.c \
     upstream-netbsd/libc/stdlib/mrand48.c \
     upstream-netbsd/libc/stdlib/nrand48.c \
@@ -345,6 +344,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/stdlib/tsearch.c \
     upstream-netbsd/libc/string/strcasestr.c \
     upstream-netbsd/libc/string/strxfrm.c \
+    upstream-netbsd/libc/unistd/killpg.c \
 
 # The following files are common, but must be compiled
 # with different C flags when building a static C library.
@@ -763,6 +763,7 @@ LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -I$(LOCAL_PATH)/upstream-netbsd \
+    -I$(LOCAL_PATH)/upstream-netbsd/libc/include \
     -include upstream-netbsd/netbsd-compat.h
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_netbsd
@@ -795,7 +796,9 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags) -std=gnu99
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -std=gnu99 \
+    -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for netbsd private headers
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
