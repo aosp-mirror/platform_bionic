@@ -207,7 +207,7 @@ static unsigned gLibDlChains[7] = { 0, 2, 3, 4, 5, 6, 0 };
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo libdl_info = {
-    name: "libdl.so",
+    "libdl.so",
 
     phdr: 0, phnum: 0,
     entry: 0, base: 0, size: 0,
