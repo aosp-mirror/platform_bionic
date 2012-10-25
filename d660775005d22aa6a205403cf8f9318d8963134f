@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAK0n///8Y\u003d",
+        "filename": "tests/lockf_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-10-25T15:33:59Z",
+      "side": 1,
+      "message": "Changing this to ASSERT_TRUE(fp !\u003d NULL) and comparing with the expansion of a similar line in stdio_test.cpp shows that the output is completely identical.\n\nAt this point I suspect the issue is because the macro is being used inside a standalone function, instead of a TEST(...) { ... } block.\n\nHowever, this doesn\u0027t seem correct either. E.g. plenty of Breakpad unit tests do call these macros in such functions without a problem. I\u0027m still puzzled.",
+      "revId": "d660775005d22aa6a205403cf8f9318d8963134f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
