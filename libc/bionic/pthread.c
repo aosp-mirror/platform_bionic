@@ -48,6 +48,7 @@
 #include "bionic_atomic_inline.h"
 #include "bionic_futex.h"
 #include "bionic_pthread.h"
+#include "bionic_ssp.h"
 #include "bionic_tls.h"
 #include "pthread_internal.h"
 #include "thread_private.h"
@@ -171,12 +172,14 @@ void  __init_tls(void** tls, void* thread) {
     tls[i] = NULL;
   }
 
-  // Slot 0 must point to the tls area, this is required by the implementation
-  // of the x86 Linux kernel thread-local-storage.
+  // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   tls[TLS_SLOT_SELF]      = (void*) tls;
   tls[TLS_SLOT_THREAD_ID] = thread;
 
+  // Stack guard generation may make system calls, and those system calls may fail.
+  // If they do, they'll try to set errno, so we can only do this after calling __set_tls.
   __set_tls((void*) tls);
+  tls[TLS_SLOT_STACK_GUARD] = __generate_stack_chk_guard();
 }
 
 
