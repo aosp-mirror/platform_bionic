@@ -2318,7 +2318,9 @@ static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
   if (fd < 0) {
     fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata", olson_id, data_size);
     if (fd == -2) {
-      __assert2(__FILE__, __LINE__, __func__, "couldn't find any tzdata!");
+      // The first thing that 'recovery' does is try to format the current time. It doesn't have
+      // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
+      fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
     }
   }
   return fd;
