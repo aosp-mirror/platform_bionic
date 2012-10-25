@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAK0n///88\u003d",
+        "filename": "tests/lockf_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-10-25T15:32:26Z",
+      "side": 1,
+      "message": "So, after preprocessor expansion, this line, which refuses to compile, becomes:\n\n  switch (0) case 0: default: if (const ::testing::AssertionResult gtest_ar \u003d (::testing::internal::CmpHelperNE(\"fp\", \"__null\", fp, __null))) ; else return ::testing::internal::AssertHelper(::testing::TestPartResult::kFatalFailure, \"bionic/tests/lockf_test.cpp\", 32, gtest_ar.failure_message()) \u003d ::testing::Message();\n\nThe error message references column 317 which corresponds to the last parenthesis.\n\nThe compiler\u0027s own stddef.h defines NULL to __null. This seems to be a special \"node\" for the compiler. There is an interesting comment in gcc-4.6/gcc/c-family/c-common.c:\n\n         /* Although __null (in C++) is only an integer we allow it\n             nevertheless, as we are guaranteed that it\u0027s exactly\n             as wide as a pointer, and we don\u0027t want to force\n             users to cast the NULL they have written there.\n             We warn with -Wstrict-null-sentinel, though.  */\n\nSo __null is really an integer, and the code is trying to compare a pointer with an integer, which is why it complains about the template, and probably the whole thing.\n\nWhat puzzles me is that different files like stdio_test.cpp do use similar macros without a hitch. I suspect this is related to the order of inclusion of the headers above. Will experiment to verify this.",
+      "revId": "1e6d69867eafac2258ae44241910501b5bcf9c2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
