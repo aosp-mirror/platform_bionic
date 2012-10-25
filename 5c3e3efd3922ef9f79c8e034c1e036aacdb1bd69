@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAKwX///l0\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-25T03:16:06Z",
+      "side": 1,
+      "message": "i wonder if this is the key? if the open, read, or close in __generate_stack_chk_guard fail, even with EINTR, we\u0027ll jump to __set_errno and dereference the tls...",
+      "revId": "5c3e3efd3922ef9f79c8e034c1e036aacdb1bd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKwX///lw\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-25T03:16:06Z",
+      "side": 1,
+      "message": "...which we don\u0027t set until here.\n\ni\u0027ll test in the morning by deliberately injecting errors, then i\u0027ll flip these two lines and re-test.",
+      "revId": "5c3e3efd3922ef9f79c8e034c1e036aacdb1bd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
