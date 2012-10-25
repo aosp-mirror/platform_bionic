@@ -740,7 +740,7 @@ WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := bionic/ssp.c
+LOCAL_SRC_FILES := bionic/ssp.cpp
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libbionic_ssp

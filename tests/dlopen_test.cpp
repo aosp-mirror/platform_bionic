@@ -58,7 +58,7 @@ TEST(dlopen, dlopen_failure) {
 #endif
 }
 
-static void* ConcurrentDlErrorFn(void* arg) {
+static void* ConcurrentDlErrorFn(void*) {
   dlopen("/child/thread", RTLD_NOW);
   return reinterpret_cast<void*>(strdup(dlerror()));
 }
