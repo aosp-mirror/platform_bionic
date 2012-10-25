@@ -69,6 +69,24 @@
       "revId": "5c3e3efd3922ef9f79c8e034c1e036aacdb1bd69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAKy3///+w\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2012-10-25T05:06:33Z",
+      "side": 1,
+      "message": "There are different path to __init_tls. We need to make sure no one broken.",
+      "parentUuid": "AAAKwn///IU\u003d",
+      "revId": "5c3e3efd3922ef9f79c8e034c1e036aacdb1bd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
