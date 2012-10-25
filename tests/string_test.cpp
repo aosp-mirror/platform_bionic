@@ -29,12 +29,13 @@ TEST(string, strerror) {
   ASSERT_STREQ("Unknown error 1234", strerror(1234));
 }
 
-static void* ConcurrentStrErrorFn(void* arg) {
+#if __BIONIC__ // glibc's strerror isn't thread safe, only its strsignal.
+
+static void* ConcurrentStrErrorFn(void*) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
 
-#if __BIONIC__ // glibc's strerror isn't thread safe, only its strsignal.
 TEST(string, strerror_concurrent) {
   const char* strerror1001 = strerror(1001);
   ASSERT_STREQ("Unknown error 1001", strerror1001);
@@ -47,6 +48,7 @@ TEST(string, strerror_concurrent) {
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 }
+
 #endif
 
 #if __BIONIC__ // glibc's strerror_r doesn't even have the same signature as the POSIX one.
@@ -88,7 +90,7 @@ TEST(string, strsignal) {
   ASSERT_STREQ("Unknown signal 1234", strsignal(1234)); // Too large.
 }
 
-static void* ConcurrentStrSignalFn(void* arg) {
+static void* ConcurrentStrSignalFn(void*) {
   bool equal = (strcmp("Unknown signal 2002", strsignal(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
