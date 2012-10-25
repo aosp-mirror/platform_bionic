@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAK2X///3c\u003d",
+        "filename": "tests/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-25T18:58:46Z",
+      "side": 1,
+      "message": "move to some local_cflags and use it in all 3 cases (not just 2)?",
+      "revId": "9513a9e70d58aa02357164ecefa8c07d1ba4ffdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
