@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAK6n///dc\u003d",
+        "filename": "libc/bionic/opendir.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-26T23:17:29Z",
+      "side": 1,
+      "message": "_locked",
+      "revId": "ebf25e5806953736f61b5eb100f19ed10eee5459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
