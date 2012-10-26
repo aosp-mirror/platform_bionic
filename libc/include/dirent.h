@@ -45,34 +45,30 @@ __BEGIN_DECLS
 #define  DT_WHT         14
 #endif
 
-/* the following structure is really called dirent64 by the kernel
- * headers. They also define a struct dirent, but the latter lack
- * the d_type field which is required by some libraries (e.g. hotplug)
- * who assume to be able to access it directly. sad...
- */
 struct dirent {
-    uint64_t         d_ino;
-    int64_t          d_off;
-    unsigned short   d_reclen;
-    unsigned char    d_type;
-    char             d_name[256];
+  uint64_t         d_ino;
+  int64_t          d_off;
+  unsigned short   d_reclen;
+  unsigned char    d_type;
+  char             d_name[256];
 };
 
-typedef struct DIR  DIR;
+typedef struct DIR DIR;
+
+extern  DIR*             opendir(const char* dirpath);
+extern  DIR*             fdopendir(int fd);
+extern  struct dirent*   readdir(DIR* dirp);
+extern  int              readdir_r(DIR*  dirp, struct dirent* entry, struct dirent** result);
+extern  int              closedir(DIR* dirp);
+extern  void             rewinddir(DIR* dirp);
+extern  int              dirfd(DIR* dirp);
+extern  int              alphasort(const void* a, const void* b);
+extern  int              scandir(const char* dir, struct dirent*** namelist,
+                                 int(*filter)(const struct dirent*),
+                                 int(*compar)(const struct dirent**,
+                                              const struct dirent**));
 
 extern  int              getdents(unsigned int, struct dirent*, unsigned int);
-extern  DIR*             opendir(const char*  dirpath);
-extern  DIR*             fdopendir(int fd);
-extern  struct dirent*   readdir(DIR*  dirp);
-extern  int              readdir_r(DIR*  dirp, struct dirent *entry, struct dirent **result);
-extern  int              closedir(DIR*  dirp);
-extern  void             rewinddir(DIR *dirp);
-extern  int              dirfd(DIR* dirp);
-extern  int              alphasort(const void *a, const void *b);
-extern  int              scandir(const char *dir, struct dirent ***namelist,
-                                 int(*filter)(const struct dirent *),
-                                 int(*compar)(const struct dirent **, 
-                                              const struct dirent **));
 
 __END_DECLS
 
