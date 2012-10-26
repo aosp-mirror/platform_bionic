@@ -37,8 +37,24 @@ static void* SleepFn(void* arg) {
   return NULL;
 }
 
+static void* SpinFn(void* arg) {
+  volatile bool* b = reinterpret_cast<volatile bool*>(arg);
+  while (!*b) {
+  }
+  return NULL;
+}
+
 static void* JoinFn(void* arg) {
   return reinterpret_cast<void*>(pthread_join(reinterpret_cast<pthread_t>(arg), NULL));
+}
+
+static void AssertDetached(pthread_t t, bool is_detached) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_getattr_np(t, &attr));
+  int detach_state;
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &detach_state));
+  pthread_attr_destroy(&attr);
+  ASSERT_EQ(is_detached, (detach_state == PTHREAD_CREATE_DETACHED));
 }
 
 TEST(pthread, pthread_create) {
@@ -58,6 +74,7 @@ TEST(pthread, pthread_no_join_after_detach) {
 
   // After a pthread_detach...
   ASSERT_EQ(0, pthread_detach(t1));
+  AssertDetached(t1, true);
 
   // ...pthread_join should fail.
   void* result;
@@ -65,20 +82,27 @@ TEST(pthread, pthread_no_join_after_detach) {
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
+  bool done = false;
+
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(1)));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
 
   // If thread 2 is already waiting to join thread 1...
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
 
-  // ...a call to pthread_detach on thread 1 will "succeed"...
-  ASSERT_EQ(0, pthread_detach(t1));
+  sleep(1); // (Give t2 a chance to call pthread_join.)
 
-  // ...but the join still goes ahead.
+  // ...a call to pthread_detach on thread 1 will "succeed" (silently fail)...
+  ASSERT_EQ(0, pthread_detach(t1));
+  AssertDetached(t1, false);
+
+  done = true;
+
+  // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
-  ASSERT_EQ(EINVAL, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
 }
 
 TEST(pthread, pthread_join_self) {
