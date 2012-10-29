@@ -28,12 +28,6 @@
 #include <set>
 #include <string>
 
-#ifdef __BIONIC__
-static int my_alphasort(const dirent** lhs, const dirent** rhs) {
-  return alphasort(lhs, rhs);
-}
-#endif
-
 static void CheckProcSelf(std::set<std::string>& names) {
   // We have a good idea of what should be in /proc/self.
   ASSERT_TRUE(names.find(".") != names.end());
@@ -46,11 +40,7 @@ static void CheckProcSelf(std::set<std::string>& names) {
 TEST(dirent, scandir) {
   // Get everything from /proc/self...
   dirent** entries;
-#ifdef __BIONIC__
-  int entry_count = scandir("/proc/self", &entries, NULL, my_alphasort);
-#else
   int entry_count = scandir("/proc/self", &entries, NULL, alphasort);
-#endif
   ASSERT_GE(entry_count, 0);
 
   // Turn the directory entries into a set and vector of the names.
