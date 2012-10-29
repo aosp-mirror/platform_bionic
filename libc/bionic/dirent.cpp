@@ -190,3 +190,7 @@ int scandir(const char* path, dirent*** namelist,
   *namelist = de_list;
   return n_elem;
 }
+
+int alphasort(const struct dirent** a, const struct dirent** b) {
+  return strcoll((*a)->d_name, (*b)->d_name);
+}
