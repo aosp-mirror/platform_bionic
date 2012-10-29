@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALFX///4Q\u003d",
+        "filename": "linker/linker.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-29T22:00:37Z",
+      "side": 1,
+      "message": "is there a better name for this? aiui, it means \"built with -Bsymbolic\", which in turn means \"globals resolve within this library itself\". i\u0027m not sure how i\u0027d know that if i hadn\u0027t been following this thread. searching the web for \"symbolic relocations\" wasn\u0027t particularly helpful either. i feel like even built_with_Bsymbolic would be slightly less unhelpful. but maybe \"symbolic_relocations\" would be obvious if i knew more about dynamic linkers? (even then, i feel like it should be \"uses_symbolic_relocations\"...)",
+      "revId": "213f35e362a23a308f57845f94e8b019db0b8c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
