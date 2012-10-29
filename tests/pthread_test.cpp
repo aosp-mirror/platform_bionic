@@ -80,3 +80,8 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   ASSERT_EQ(0, pthread_join(t2, &join_result));
   ASSERT_EQ(EINVAL, reinterpret_cast<int>(join_result));
 }
+
+TEST(pthread, pthread_join_self) {
+  void* result;
+  ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), &result));
+}
