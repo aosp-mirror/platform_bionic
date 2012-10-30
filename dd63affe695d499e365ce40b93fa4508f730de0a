@@ -51,6 +51,24 @@
       "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH///ZM\u003d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T01:41:42Z",
+      "side": 1,
+      "message": "to be clear: i\u0027m not asking about mmap(2). i know about that, and i could read the man page if i didn\u0027t :-)\n\nmy question is what the ELF specification says. are your mapped-in segments supposed to be rounded? or is L304 just foolish consistency that should be deleted?",
+      "parentUuid": "AAALG3///5M\u003d",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

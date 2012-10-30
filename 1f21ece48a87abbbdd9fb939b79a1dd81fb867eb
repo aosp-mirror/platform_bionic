@@ -16,6 +16,24 @@
       "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH///ZU\u003d",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T01:41:42Z",
+      "side": 0,
+      "message": "no, that was dumb. this is not their API. it\u0027s a signal handler. we have man pages for that. it\u0027s more useful next to the code that actually uses the information.",
+      "parentUuid": "AAALG3///60\u003d",
+      "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
