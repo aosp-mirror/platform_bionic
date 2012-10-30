@@ -69,6 +69,24 @@
       "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///1c\u003d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T06:31:37Z",
+      "side": 1,
+      "message": "well, I read the man page and the opengroup docs and still am unclear about mmap.\n\nin any case, in this code, before we load, we reserve the memory with phdr_table_reserve_memory, and that computes how much space to reserve with  phdr_table_get_load_size. looks like it doesn\u0027t care about page boundaries\n\nlooking at the spec, p_align can have a say in things but we say \"We will ignore the p_paddr and p_align fields of Elf32_Phdr for now.\"\n\nthat comment above is followed with:\n\n  - ranges do not necessarily start or end at page boundaries. Two distinct\n    segments can have their start and end on the same page. In this case, the\n    page inherits the mapping flags of the latter segment.\n\nfun fun. arm\u0027s processor supplement seems pretty lax about the alignment, x86 doesn\u0027t really talk about it, mips seems like historically they might have been pickier about these things.\n\ni think we are relying on code that cares to do the right when it creates the tables if it needs things on different pages? it seems clear from the comment that we expect this to happen. i bet the code might have been based on more particular code that might have had to support more architectures where it would have been a problem.",
+      "parentUuid": "AAALFH///ZM\u003d",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
