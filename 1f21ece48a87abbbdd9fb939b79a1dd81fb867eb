@@ -34,6 +34,23 @@
       "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///zQ\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T16:51:01Z",
+      "side": 0,
+      "message": "was removing the documentation here intentional? Clearing environment variables for setuid programs is an important security protection.",
+      "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
