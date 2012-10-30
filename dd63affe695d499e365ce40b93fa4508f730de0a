@@ -33,6 +33,24 @@
       "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///5M\u003d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T01:25:36Z",
+      "side": 1,
+      "message": "yes, this seems odd. I\u0027m pretty sure that length doesn\u0027t have to be page aligned, because I think you can put in a file length from  stating a file. however, i\u0027m not sure what the semantics are if that length is in the middle of a file.",
+      "parentUuid": "AAALFX///m0\u003d",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
