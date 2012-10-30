@@ -85,9 +85,8 @@ static int __get_nproc_conf(void) {
   }
 
   int result = 0;
-  struct dirent de;
   struct dirent* e;
-  while (!readdir_r(d, &de, &e) && e != NULL) {
+  while ((e = readdir(d)) != NULL) {
     if (e->d_type == DT_DIR && __matches_cpuN(e->d_name)) {
       ++result;
     }

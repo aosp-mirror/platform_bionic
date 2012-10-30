@@ -25,6 +25,7 @@ test_c_flags = \
     -Werror \
 
 test_src_files = \
+    dirent_test.cpp \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
