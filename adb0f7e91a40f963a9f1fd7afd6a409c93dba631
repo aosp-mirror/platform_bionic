@@ -68,6 +68,24 @@
       "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH//+eU\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T23:00:31Z",
+      "side": 1,
+      "message": "perhaps call the argument envp_and_vectors or something, to make it clear that you are trying to setup the two separate variables for _envp and aux_vectors?",
+      "parentUuid": "AAALG3///lw\u003d",
+      "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
