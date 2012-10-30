@@ -51,6 +51,24 @@
       "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFX///Tw\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T17:10:34Z",
+      "side": 0,
+      "message": "the same comment is in the .h file. i don\u0027t care whether it\u0027s there or here, but i don\u0027t want to duplicate comments. i tend to prefer the comment being with the code, but here all the functions have comments in the header file and only this one was duplicated with the code.\n\ni\u0027ll rename this to something like remove_insecure_environment_variables in ps2.",
+      "parentUuid": "AAALG3///zQ\u003d",
+      "revId": "1f21ece48a87abbbdd9fb939b79a1dd81fb867eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

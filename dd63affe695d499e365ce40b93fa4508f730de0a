@@ -87,6 +87,24 @@
       "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFX///T0\u003d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T17:10:34Z",
+      "side": 1,
+      "message": "thanks! empirically, we seem to be getting away with the present behavior, and none of us can think why we\u0027d need this, and you couldn\u0027t find a reason in the ELF spec, so i\u0027ll remove it in ps2...",
+      "parentUuid": "AAALG3///1c\u003d",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
