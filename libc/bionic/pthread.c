@@ -211,18 +211,14 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 #include <private/logd.h>
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
+int _init_thread(pthread_internal_t* thread, pid_t kernel_id, const pthread_attr_t* attr,
                  void* stack_base, bool add_to_thread_list)
 {
     int error = 0;
 
-    if (attr == NULL) {
-        thread->attr = gDefaultPthreadAttr;
-    } else {
-        thread->attr = *attr;
-    }
+    thread->attr = *attr;
     thread->attr.stack_base = stack_base;
-    thread->kernel_id       = kernel_id;
+    thread->kernel_id = kernel_id;
 
     // Make a note of whether the user supplied this stack (so we know whether or not to free it).
     if (attr->stack_base == stack_base) {
@@ -234,7 +230,8 @@ int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* at
         struct sched_param param;
         param.sched_priority = thread->attr.sched_priority;
         if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param) == -1) {
-            // For back compat reasons, we just warn about possible invalid sched_policy
+            // For backwards compatibility reasons, we just warn about failures here.
+            // error = errno;
             const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
             __libc_android_log_print(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
         }
@@ -361,7 +358,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         return clone_errno;
     }
 
-    int init_errno = _init_thread(thread, tid, (pthread_attr_t*) attr, stack, true);
+    int init_errno = _init_thread(thread, tid, attr, stack, true);
     if (init_errno != 0) {
         // Mark the thread detached and let its __thread_entry run to
         // completion. (It'll just exit immediately, cleaning up its resources.)

@@ -54,7 +54,7 @@ typedef struct pthread_internal_t
     char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 } pthread_internal_t;
 
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
+int _init_thread(pthread_internal_t* thread, pid_t kernel_id, const pthread_attr_t* attr,
                  void* stack_base, bool add_to_thread_list);
 void _pthread_internal_add( pthread_internal_t*  thread );
 pthread_internal_t* __get_thread(void);
