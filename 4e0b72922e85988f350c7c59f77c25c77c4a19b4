@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALG3///rc\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "Can you please default this to \"true\", so that if we fail to set the value, it defaults to a safe value?",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///r4\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "Can we separate this into two functions? At first glance, it looks like you\u0027re passing this as an argument to linker_env_init, not that you\u0027re passing a reference and expecting it to get set. (this freaked me out at first)\n\nSomething like:\n\nprogram_is_setuid \u003d linker_get_AT_SECURE();\n\nvecs \u003d linker_env_init(vecs);\n\nAlso, I\u0027m thinking we should rename this variable to program_is_secure. The kernel should always supply an AT_SECURE variable, and I\u0027d prefer if we rely on it exclusively.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///rQ\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "I don\u0027t know how feasible this is, but in the linker code, it would be great if we could avoid relying on static variables.  This may be too hard to do in this change, but something to keep in mind.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///rk\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "\"insecure\" -\u003e \"unsafe\"",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///rg\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "\"INSECURE\" -\u003e \"UNSAFE\"",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///rw\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "As I mentioned in an earlier comment, this is essentially dead code. I\u0027m not aware of any kernel which doesn\u0027t supply AT_SECURE. \n\nIMHO, we should delete this code, and fail hard if AT_SECURE doesn\u0027t exist.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///rM\u003d",
+        "filename": "linker/linker_environ.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T20:35:23Z",
+      "side": 1,
+      "message": "If you decide to pass is_setuid by reference, then you need to update the documentation.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
