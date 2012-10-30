@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAALG3///l0\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T22:54:48Z",
+      "side": 1,
+      "message": "Indenting in this entire file is inconsistent.  Some places indent 2, some places indent 4.",
+      "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALFH//+iI\u003d",
         "filename": "linker/linker_environ.cpp",
         "patchSetId": 3
@@ -13,6 +30,41 @@
       "writtenOn": "2012-10-30T22:40:31Z",
       "side": 1,
       "message": "-1? EXIT_FAILURE? or does that have some special meaning to the kernel if linking fails?",
+      "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///lk\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T22:54:48Z",
+      "side": 1,
+      "message": "From the kernel\u0027s point of view, there\u0027s no difference between the linker running, and the main executable running. The kernel is out of the picture by the time this code gets executed.  \n\nAny non-zero return value here is fine with me.",
+      "parentUuid": "AAALFH//+iI\u003d",
+      "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALG3///lw\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T22:54:48Z",
+      "side": 1,
+      "message": "aux_vectors is a redundent variable at this point.  You can just use it as-is below without introducing aux_vectors.",
       "revId": "adb0f7e91a40f963a9f1fd7afd6a409c93dba631",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
