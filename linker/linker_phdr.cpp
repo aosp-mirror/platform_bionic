@@ -301,7 +301,6 @@ phdr_table_load_segments(const Elf32_Phdr* phdr_table,
         Elf32_Addr file_end   = file_start + phdr->p_filesz;
 
         Elf32_Addr file_page_start = PAGE_START(file_start);
-        Elf32_Addr file_page_end   = PAGE_END(file_end);
 
         seg_addr = mmap((void*)seg_page_start,
                         file_end - file_page_start,

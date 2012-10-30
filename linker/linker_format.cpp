@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
@@ -43,14 +44,12 @@
 /*** Generic output sink
  ***/
 
-typedef struct {
-    void *opaque;
-    void (*send)(void *opaque, const char *data, int len);
-} Out;
+struct Out {
+  void *opaque;
+  void (*send)(void *opaque, const char *data, int len);
+};
 
-static void
-out_send(Out *o, const void *data, size_t len)
-{
+static void out_send(Out *o, const char *data, size_t len) {
     o->send(o->opaque, data, (int)len);
 }
 
@@ -72,27 +71,25 @@ out_send_repeat(Out *o, char ch, int count)
 }
 
 /* forward declaration */
-static void
-out_vformat(Out *o, const char *format, va_list args);
+static void out_vformat(Out* o, const char* format, va_list args);
 
 /*** Bounded buffer output
  ***/
 
-typedef struct {
-    Out out[1];
-    char *buffer;
-    char *pos;
-    char *end;
-    int total;
-} BufOut;
+struct BufOut {
+  Out out[1];
+  char *buffer;
+  char *pos;
+  char *end;
+  int total;
+};
 
-static void
-buf_out_send(void *opaque, const char *data, int len)
-{
-    BufOut *bo = opaque;
+static void buf_out_send(void *opaque, const char *data, int len) {
+    BufOut *bo = reinterpret_cast<BufOut*>(opaque);
 
-    if (len < 0)
+    if (len < 0) {
         len = strlen(data);
+    }
 
     bo->total += len;
 
@@ -194,11 +191,11 @@ snprintf(char* buff, size_t bufsize, const char* format, ...)
 /*** File descriptor output
  ***/
 
-typedef struct {
-    Out out[1];
-    int fd;
-    int total;
-} FdOut;
+struct FdOut {
+  Out out[1];
+  int fd;
+  int total;
+};
 
 static void
 fd_out_send(void *opaque, const char *data, int len)
@@ -592,6 +589,10 @@ out_vformat(Out *o, const char *format, va_list args)
          * outputted. handle padding and alignment now */
 
         slen = strlen(str);
+
+        if (sign != '\0' || prec != -1) {
+            __assert(__FILE__, __LINE__, "sign/precision unsupported");
+        }
 
         if (slen < width && !padLeft) {
             char padChar = padZero ? '0' : ' ';

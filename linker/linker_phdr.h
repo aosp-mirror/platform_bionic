@@ -37,12 +37,6 @@
 
 #include "linker.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* See linker_phdr.c for all usage documentation */
-
 int
 phdr_table_load(int                fd,
                 Elf32_Addr         phdr_offset,
@@ -106,9 +100,5 @@ phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                Elf32_Addr        load_bias,
                                Elf32_Addr**      dynamic,
                                size_t*           dynamic_count);
-
-#ifdef __cplusplus
-};
-#endif
 
 #endif /* LINKER_PHDR_H */
