@@ -26,6 +26,9 @@
  * SUCH DAMAGE.
  */
 
+#include "linker.h"
+#include "linker_format.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,45 +39,35 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-extern int tgkill(int tgid, int tid, int sig);
+#include <private/logd.h>
 
-void notify_gdb_of_libraries();
+extern "C" int tgkill(int tgid, int tid, int sig);
 
 #define DEBUGGER_SOCKET_NAME "android:debuggerd"
 
-typedef enum {
+enum debugger_action_t {
     // dump a crash
     DEBUGGER_ACTION_CRASH,
     // dump a tombstone file
     DEBUGGER_ACTION_DUMP_TOMBSTONE,
     // dump a backtrace only back to the socket
     DEBUGGER_ACTION_DUMP_BACKTRACE,
-} debugger_action_t;
+};
 
 /* message sent over the socket */
-typedef struct {
+struct debugger_msg_t {
     debugger_action_t action;
     pid_t tid;
-} debugger_msg_t;
-
-#define  RETRY_ON_EINTR(ret,cond) \
-    do { \
-        ret = (cond); \
-    } while (ret < 0 && errno == EINTR)
+};
 
 // see man(2) prctl, specifically the section about PR_GET_NAME
 #define MAX_TASK_NAME_LEN (16)
 
-static int socket_abstract_client(const char *name, int type)
-{
-    struct sockaddr_un addr;
-    size_t namelen;
-    socklen_t alen;
-    int s, err;
-
-    namelen  = strlen(name);
+static int socket_abstract_client(const char* name, int type) {
+    sockaddr_un addr;
 
     // Test with length +1 for the *initial* '\0'.
+    size_t namelen = strlen(name);
     if ((namelen + 1) > sizeof(addr.sun_path)) {
         errno = EINVAL;
         return -1;
@@ -86,27 +79,26 @@ static int socket_abstract_client(const char *name, int type)
      * Note: The path in this case is *not* supposed to be
      * '\0'-terminated. ("man 7 unix" for the gory details.)
      */
-    memset (&addr, 0, sizeof addr);
+    memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_LOCAL;
     addr.sun_path[0] = 0;
     memcpy(addr.sun_path + 1, name, namelen);
 
-    alen = namelen + offsetof(struct sockaddr_un, sun_path) + 1;
+    socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
-    s = socket(AF_LOCAL, type, 0);
-    if(s < 0) return -1;
+    int s = socket(AF_LOCAL, type, 0);
+    if (s == -1) {
+        return -1;
+    }
 
-    RETRY_ON_EINTR(err,connect(s, (struct sockaddr *) &addr, alen));
-    if (err < 0) {
+    int err = TEMP_FAILURE_RETRY(connect(s, (sockaddr*) &addr, alen));
+    if (err == -1) {
         close(s);
         s = -1;
     }
 
     return s;
 }
-
-#include "linker_format.h"
-#include <../libc/private/logd.h>
 
 /*
  * Writes a summary of the signal to the log file.  We do this so that, if
@@ -116,15 +108,9 @@ static int socket_abstract_client(const char *name, int type)
  * We could be here as a result of native heap corruption, or while a
  * mutex is being held, so we don't want to use any libc functions that
  * could allocate memory or hold a lock.
- *
- * "info" will be NULL if the siginfo_t information was not available.
  */
-static void logSignalSummary(int signum, const siginfo_t* info)
-{
-    char buffer[128];
-    char threadname[MAX_TASK_NAME_LEN + 1]; // one more for termination
-
-    char* signame;
+static void logSignalSummary(int signum, const siginfo_t* info) {
+    const char* signame;
     switch (signum) {
         case SIGILL:    signame = "SIGILL";     break;
         case SIGABRT:   signame = "SIGABRT";    break;
@@ -138,6 +124,7 @@ static void logSignalSummary(int signum, const siginfo_t* info)
         default:        signame = "???";        break;
     }
 
+    char threadname[MAX_TASK_NAME_LEN + 1]; // one more for termination
     if (prctl(PR_GET_NAME, (unsigned long)threadname, 0, 0, 0) != 0) {
         strcpy(threadname, "<name unknown>");
     } else {
@@ -145,6 +132,9 @@ static void logSignalSummary(int signum, const siginfo_t* info)
         // implies that 16 byte names are not.
         threadname[MAX_TASK_NAME_LEN] = 0;
     }
+
+    char buffer[128];
+    // "info" will be NULL if the siginfo_t information was not available.
     if (info != NULL) {
         format_buffer(buffer, sizeof(buffer),
             "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
@@ -161,8 +151,7 @@ static void logSignalSummary(int signum, const siginfo_t* info)
 /*
  * Returns true if the handler for signal "signum" has SA_SIGINFO set.
  */
-static bool haveSiginfo(int signum)
-{
+static bool haveSiginfo(int signum) {
     struct sigaction oldact, newact;
 
     memset(&newact, 0, sizeof(newact));
@@ -188,11 +177,8 @@ static bool haveSiginfo(int signum)
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
-void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__((unused)))
-{
+void debugger_signal_handler(int n, siginfo_t* info, void*) {
     char msgbuf[128];
-    unsigned tid;
-    int s;
 
     /*
      * It's possible somebody cleared the SA_SIGINFO flag, which would mean
@@ -204,8 +190,8 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__(
 
     logSignalSummary(n, info);
 
-    tid = gettid();
-    s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
+    pid_t tid = gettid();
+    int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
 
     if (s >= 0) {
         /* debugger knows our pid from the credentials on the
@@ -217,14 +203,14 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__(
         debugger_msg_t msg;
         msg.action = DEBUGGER_ACTION_CRASH;
         msg.tid = tid;
-        RETRY_ON_EINTR(ret, write(s, &msg, sizeof(msg)));
+        ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
         if (ret == sizeof(msg)) {
             /* if the write failed, there is no point to read on
              * the file descriptor. */
-            RETRY_ON_EINTR(ret, read(s, &tid, 1));
-            int savedErrno = errno;
+            ret = TEMP_FAILURE_RETRY(read(s, &tid, 1));
+            int saved_errno = errno;
             notify_gdb_of_libraries();
-            errno = savedErrno;
+            errno = saved_errno;
         }
 
         if (ret < 0) {
@@ -266,8 +252,7 @@ void debugger_signal_handler(int n, siginfo_t* info, void* unused __attribute__(
     }
 }
 
-void debugger_init()
-{
+void debugger_init() {
     struct sigaction act;
     memset(&act, 0, sizeof(act));
     act.sa_sigaction = debugger_signal_handler;

@@ -3,20 +3,19 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
 	arch/$(TARGET_ARCH)/begin.S \
-	debugger.c \
+	debugger.cpp \
 	dlfcn.cpp \
 	linker.cpp \
-	linker_environ.c \
-	linker_format.c \
-	linker_phdr.c \
-	rt.c
+	linker_environ.cpp \
+	linker_format.cpp \
+	linker_phdr.cpp \
+	rt.cpp
 
 LOCAL_LDFLAGS := -shared
 
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
         -fvisibility=hidden \
-        -std=gnu99 \
         -Wall -Wextra
 
 # Set LINKER_DEBUG to either 1 or 0
