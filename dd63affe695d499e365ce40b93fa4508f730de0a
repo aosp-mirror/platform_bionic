@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALFX///mg\u003d",
+        "filename": "linker/linker_format.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T00:44:18Z",
+      "side": 1,
+      "message": "the compiler doesn\u0027t like this style:\n\n  warning: assuming pointer wraparound does not occur when comparing P +- C1 with P +- C2 [-Wstrict-overflow]\n\ni\u0027m assuming that i\u0027ll pull this code out into its own library so i can reuse it in the malloc debugging code, and i\u0027ll \"fix\" it by not compiling that with -Wstrict-overflow\u003d5 :-)",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFX///m0\u003d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-10-30T00:44:18Z",
+      "side": 1,
+      "message": "this is unused, which upsets the compiler. should we be using it, or should we remove it? are we supposed to be mapping whole pages in the mmap call below?",
+      "revId": "dd63affe695d499e365ce40b93fa4508f730de0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
