@@ -195,7 +195,6 @@ libc_common_src_files := \
 	bionic/mmap.c \
 	bionic/openat.c \
 	bionic/open.c \
-	bionic/opendir.c \
 	bionic/pathconf.c \
 	bionic/perror.c \
 	bionic/pread.c \
@@ -279,36 +278,38 @@ libc_common_src_files := \
 	netbsd/nameser/ns_samedomain.c \
 
 libc_bionic_src_files := \
-	bionic/assert.cpp \
-	bionic/eventfd.cpp \
-	bionic/__fgets_chk.cpp \
-	bionic/getcwd.cpp \
-	bionic/__memcpy_chk.cpp \
-	bionic/__memmove_chk.cpp \
-	bionic/__memset_chk.cpp \
-	bionic/setlocale.cpp \
-	bionic/__strcat_chk.cpp \
-	bionic/__strcpy_chk.cpp \
-	bionic/strerror.cpp \
-	bionic/strerror_r.cpp \
-	bionic/__strlcat_chk.cpp \
-	bionic/__strlcpy_chk.cpp \
-	bionic/__strlen_chk.cpp \
-	bionic/__strncat_chk.cpp \
-	bionic/__strncpy_chk.cpp \
-	bionic/strsignal.cpp \
-	bionic/stubs.cpp \
-	bionic/tdestroy.cpp \
-	bionic/tmpfile.cpp \
-	bionic/__umask_chk.cpp \
-	bionic/__vsnprintf_chk.cpp \
-	bionic/__vsprintf_chk.cpp \
-	bionic/wchar.cpp \
+    bionic/assert.cpp \
+    bionic/eventfd.cpp \
+    bionic/__fgets_chk.cpp \
+    bionic/getcwd.cpp \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memmove_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/opendir.cpp \
+    bionic/setlocale.cpp \
+    bionic/__strcat_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/strerror.cpp \
+    bionic/strerror_r.cpp \
+    bionic/__strlcat_chk.cpp \
+    bionic/__strlcpy_chk.cpp \
+    bionic/__strlen_chk.cpp \
+    bionic/__strncat_chk.cpp \
+    bionic/__strncpy_chk.cpp \
+    bionic/strsignal.cpp \
+    bionic/stubs.cpp \
+    bionic/tdestroy.cpp \
+    bionic/tmpfile.cpp \
+    bionic/__umask_chk.cpp \
+    bionic/__vsnprintf_chk.cpp \
+    bionic/__vsprintf_chk.cpp \
+    bionic/wchar.cpp \
 
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
     upstream-netbsd/common/lib/libc/inet/inet_addr.c \
     upstream-netbsd/libc/compat-43/creat.c \
+    upstream-netbsd/libc/gen/alphasort.c \
     upstream-netbsd/libc/gen/ftw.c \
     upstream-netbsd/libc/gen/nftw.c \
     upstream-netbsd/libc/gen/nice.c \
