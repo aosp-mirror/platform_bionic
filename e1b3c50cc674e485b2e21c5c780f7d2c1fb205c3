@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALFH//+bc\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T23:26:20Z",
+      "side": 1,
+      "message": "the \"too larger\" part is done earlier when invalidating bad values",
+      "revId": "e1b3c50cc674e485b2e21c5c780f7d2c1fb205c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
