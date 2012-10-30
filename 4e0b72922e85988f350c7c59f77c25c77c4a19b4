@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "AAALFH//+u4\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T21:03:33Z",
+      "side": 1,
+      "message": "it seems odd this is file scope",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALG3///r4\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -36,6 +53,40 @@
     },
     {
       "key": {
+        "uuid": "AAALFH//+t4\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1781,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T21:03:33Z",
+      "side": 1,
+      "message": "go ahead and change to LD_DEBUG? because that is what we filter",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH//+u0\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T21:03:33Z",
+      "side": 1,
+      "message": "linker_env_secure? out of date comment?",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALG3///rQ\u003d",
         "filename": "linker/linker_environ.cpp",
         "patchSetId": 2
@@ -47,6 +98,24 @@
       "writtenOn": "2012-10-30T20:35:23Z",
       "side": 1,
       "message": "I don\u0027t know how feasible this is, but in the linker code, it would be great if we could avoid relying on static variables.  This may be too hard to do in this change, but something to keep in mind.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH//+uo\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T21:03:33Z",
+      "side": 1,
+      "message": "hey, that is what I was thinking in the last file.",
+      "parentUuid": "AAALG3///rQ\u003d",
       "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -98,6 +167,24 @@
       "writtenOn": "2012-10-30T20:35:23Z",
       "side": 1,
       "message": "As I mentioned in an earlier comment, this is essentially dead code. I\u0027m not aware of any kernel which doesn\u0027t supply AT_SECURE. \n\nIMHO, we should delete this code, and fail hard if AT_SECURE doesn\u0027t exist.",
+      "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALFH//+uM\u003d",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-30T21:03:33Z",
+      "side": 1,
+      "message": "my only worry with that is relatively ancient emulator kernels. do you think those are modern enough? if so, yes, we should drop this in a followup CL",
+      "parentUuid": "AAALG3///rw\u003d",
       "revId": "4e0b72922e85988f350c7c59f77c25c77c4a19b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
