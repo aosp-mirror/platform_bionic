@@ -582,7 +582,7 @@ void pthread_exit(void * retval)
     pthread_key_clean_all();
 
     // if the thread is detached, destroy the pthread_internal_t
-    // otherwise, keep it in memory and signal any joiners
+    // otherwise, keep it in memory and signal any joiners.
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
         _pthread_internal_remove(thread);
         _pthread_internal_free(thread);
@@ -668,8 +668,9 @@ FoundIt:
         pthread_cond_wait( &thread->join_cond, &gThreadListLock );
         count = --thread->join_count;
     }
-    if (ret_val)
+    if (ret_val) {
         *ret_val = thread->return_value;
+    }
 
     /* remove thread descriptor when we're the last joiner or when the
      * thread was already a zombie.
@@ -686,28 +687,30 @@ int  pthread_detach( pthread_t  thid )
 {
     pthread_internal_t*  thread;
     int                  result = 0;
-    int                  flags;
 
     pthread_mutex_lock(&gThreadListLock);
-    for (thread = gThreadList; thread != NULL; thread = thread->next)
-        if (thread == (pthread_internal_t*)thid)
+    for (thread = gThreadList; thread != NULL; thread = thread->next) {
+        if (thread == (pthread_internal_t*)thid) {
             goto FoundIt;
+        }
+    }
 
     result = ESRCH;
     goto Exit;
 
 FoundIt:
-    do {
-        flags = thread->attr.flags;
-
-        if ( flags & PTHREAD_ATTR_FLAG_DETACHED ) {
-            /* thread is not joinable ! */
-            result = EINVAL;
-            goto Exit;
-        }
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
+        result = EINVAL; // Already detached.
+        goto Exit;
     }
-    while ( __bionic_cmpxchg( flags, flags | PTHREAD_ATTR_FLAG_DETACHED,
-                              (volatile int*)&thread->attr.flags ) != 0 );
+
+    if (thread->join_count > 0) {
+        result = 0; // Already being joined; silently do nothing, like glibc.
+        goto Exit;
+    }
+
+    thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+
 Exit:
     pthread_mutex_unlock(&gThreadListLock);
     return result;
