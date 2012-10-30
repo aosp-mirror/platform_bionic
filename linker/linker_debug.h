@@ -62,10 +62,6 @@
 #if LINKER_DEBUG
 #include "linker_format.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int debug_verbosity;
 #if LINKER_DEBUG_TO_LOG
 extern int format_log(int, const char *, const char *, ...);
@@ -80,10 +76,6 @@ extern int format_fd(int, const char *, ...);
         if (debug_verbosity > (v)) format_fd(1, x);  \
     } while (0)
 #endif /* !LINKER_DEBUG_TO_LOG */
-
-#ifdef __cplusplus
-};
-#endif
 
 #else /* !LINKER_DEBUG */
 #define _PRINTVF(v,f,x...)   do {} while(0)

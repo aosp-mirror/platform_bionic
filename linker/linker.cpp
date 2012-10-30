@@ -93,7 +93,6 @@ static soinfo *sonext = &libdl_info;
 static soinfo *somain; /* main process, always the one after libdl_info */
 #endif
 
-
 static char ldpaths_buf[LDPATH_BUFSIZE];
 static const char *ldpaths[LDPATH_MAX + 1];
 
@@ -107,9 +106,6 @@ int debug_verbosity;
 #endif
 
 static int pid;
-
-/* This boolean is set if the program being loaded is setuid */
-static bool program_is_setuid;
 
 enum RelocationKind {
     kRelocAbsolute = 0,
@@ -257,8 +253,7 @@ static void notify_gdb_of_unload(soinfo* info) {
     rtld_db_dlactivity();
 }
 
-extern "C" void notify_gdb_of_libraries()
-{
+void notify_gdb_of_libraries() {
     _r_debug.r_state = RT_ADD;
     rtld_db_dlactivity();
     _r_debug.r_state = RT_CONSISTENT;
@@ -1689,7 +1684,7 @@ static int soinfo_link_image(soinfo *si)
     ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
 
      */
-    if (program_is_setuid) {
+    if (get_AT_SECURE()) {
         nullify_closed_stdio();
     }
     notify_gdb_of_load(si);
@@ -1750,11 +1745,6 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
     unsigned *vecs = (unsigned*) (argv + argc + 1);
-    unsigned *v;
-    soinfo *si;
-    int i;
-    const char *ldpath_env = NULL;
-    const char *ldpreload_env = NULL;
 
     /* NOTE: we store the elfdata pointer on a special location
      *       of the temporary TLS area in order to pass it to
@@ -1773,53 +1763,36 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     gettimeofday(&t0, 0);
 #endif
 
-    /* Initialize environment functions, and get to the ELF aux vectors table */
+    // Initialize environment functions, and get to the ELF aux vectors table.
     vecs = linker_env_init(vecs);
-
-    /* Check auxv for AT_SECURE first to see if program is setuid, setgid,
-       has file caps, or caused a SELinux/AppArmor domain transition. */
-    for (v = vecs; v[0]; v += 2) {
-        if (v[0] == AT_SECURE) {
-            /* kernel told us whether to enable secure mode */
-            program_is_setuid = v[1];
-            goto sanitize;
-        }
-    }
-
-    /* Kernel did not provide AT_SECURE - fall back on legacy test. */
-    program_is_setuid = (getuid() != geteuid()) || (getgid() != getegid());
-
-sanitize:
-    /* Sanitize environment if we're loading a setuid program */
-    if (program_is_setuid) {
-        linker_env_secure();
-    }
 
     debugger_init();
 
-    /* Get a few environment variables */
-    {
+    // Get a few environment variables.
 #if LINKER_DEBUG
-        const char* env;
-        env = linker_env_get("DEBUG"); /* XXX: TODO: Change to LD_DEBUG */
-        if (env)
+    {
+        const char* env = linker_env_get("LD_DEBUG");
+        if (env != NULL) {
             debug_verbosity = atoi(env);
+        }
+    }
 #endif
 
-        /* Normally, these are cleaned by linker_env_secure, but the test
-         * against program_is_setuid doesn't cost us anything */
-        if (!program_is_setuid) {
-            ldpath_env = linker_env_get("LD_LIBRARY_PATH");
-            ldpreload_env = linker_env_get("LD_PRELOAD");
-        }
+    // Normally, these are cleaned by linker_env_init, but the test
+    // doesn't cost us anything.
+    const char* ldpath_env = NULL;
+    const char* ldpreload_env = NULL;
+    if (!get_AT_SECURE()) {
+      ldpath_env = linker_env_get("LD_LIBRARY_PATH");
+      ldpreload_env = linker_env_get("LD_PRELOAD");
     }
 
     INFO("[ android linker & debugger ]\n");
     DEBUG("%5d elfdata @ 0x%08x\n", pid, (unsigned)elfdata);
 
-    si = soinfo_alloc(argv[0]);
-    if(si == 0) {
-        exit(-1);
+    soinfo* si = soinfo_alloc(argv[0]);
+    if (si == NULL) {
+        exit(EXIT_FAILURE);
     }
 
     /* bootstrap the link map, the main exe always needs to be first */
@@ -1858,7 +1831,7 @@ sanitize:
     insert_soinfo_into_debug_map(&linker_soinfo);
 
     /* extract information passed from the kernel */
-    while(vecs[0] != 0){
+    while (vecs[0] != 0){
         switch(vecs[0]){
         case AT_PHDR:
             si->phdr = (Elf32_Phdr*) vecs[1];
@@ -1899,12 +1872,12 @@ sanitize:
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
         write(2, errmsg, sizeof(errmsg));
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     soinfo_call_preinit_constructors(si);
 
-    for(i = 0; preloads[i] != NULL; i++) {
+    for (size_t i = 0; preloads[i] != NULL; ++i) {
         soinfo_call_constructors(preloads[i]);
     }
 
@@ -2049,7 +2022,7 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
         //
         // This situation should never occur unless the linker itself
         // is corrupt.
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     // We have successfully fixed our own relocations. It's safe to run
