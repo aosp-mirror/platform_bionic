@@ -149,16 +149,12 @@ libc_common_src_files := \
 	bionic/atoi.c \
 	bionic/atol.c \
 	bionic/atoll.c \
-	bionic/basename.c \
-	bionic/basename_r.c \
 	bionic/bindresvport.c \
 	bionic/bionic_clone.c \
 	bionic/brk.c \
 	bionic/clearenv.c \
 	bionic/cpuacct.c \
 	bionic/daemon.c \
-	bionic/dirname.c \
-	bionic/dirname_r.c \
 	bionic/err.c \
 	bionic/ether_aton.c \
 	bionic/ether_ntoa.c \
@@ -283,6 +279,7 @@ libc_bionic_src_files := \
     bionic/eventfd.cpp \
     bionic/__fgets_chk.cpp \
     bionic/getcwd.cpp \
+    bionic/libgen.cpp \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
