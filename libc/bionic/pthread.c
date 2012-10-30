@@ -633,14 +633,18 @@ void pthread_exit(void * retval)
 int pthread_join(pthread_t thid, void ** ret_val)
 {
     pthread_internal_t*  thread = (pthread_internal_t*)thid;
-    int                  count;
+    if (thid == pthread_self()) {
+        return EDEADLK;
+    }
 
     // check that the thread still exists and is not detached
     pthread_mutex_lock(&gThreadListLock);
 
-    for (thread = gThreadList; thread != NULL; thread = thread->next)
-        if (thread == (pthread_internal_t*)thid)
+    for (thread = gThreadList; thread != NULL; thread = thread->next) {
+        if (thread == (pthread_internal_t*)thid) {
             goto FoundIt;
+        }
+    }
 
     pthread_mutex_unlock(&gThreadListLock);
     return ESRCH;
@@ -658,7 +662,7 @@ FoundIt:
     *
     * otherwise, we need to increment 'join-count' and wait to be signaled
     */
-   count = thread->join_count;
+    int count = thread->join_count;
     if (count >= 0) {
         thread->join_count += 1;
         pthread_cond_wait( &thread->join_cond, &gThreadListLock );
