@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAALG3///0M\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1165,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-10-30T15:53:24Z",
+      "side": 1,
+      "message": "How about:\n\n\"%s invalid R_ARM_COPY relocation against DT_SYMBOLIC shared library %s (built with -Bsymbolic?)\"\n\nI\u0027m hoping we can mention DT_SYMBOLIC somewhere in the description, in addition to mentioning the -Bsymbolic command line option. Hopefully this will make it easier for someone to use Google and figure out what the hell is going on when this inevitably breaks.",
+      "revId": "213f35e362a23a308f57845f94e8b019db0b8c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALFX///4Q\u003d",
         "filename": "linker/linker.h",
         "patchSetId": 4
