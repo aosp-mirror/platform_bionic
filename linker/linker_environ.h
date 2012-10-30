@@ -25,38 +25,27 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef LINKER_ENVIRON_H
 #define LINKER_ENVIRON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// Call this function before anything else. 'environment_and_aux_vectors'
+// must point to the environment block in the ELF data block. The function
+// returns the start of the aux vectors after the environment block.
+extern unsigned* linker_env_init(unsigned* environment_and_aux_vectors);
 
-/* Call this function before anything else. 'vecs' must be the pointer
- * to the environment block in the ELF data block. The function returns
- * the start of the aux vectors after the env block.
- */
-extern unsigned*   linker_env_init(unsigned* vecs);
+// Unset a given environment variable. In case the variable is defined
+// multiple times, unset all instances. This modifies the environment
+// block, so any pointer returned by linker_env_get() after this call
+// might become invalid.
+extern void linker_env_unset(const char* name);
 
-/* Unset a given environment variable. In case the variable is defined
- * multiple times, unset all instances. This modifies the environment
- * block, so any pointer returned by linker_env_get() after this call
- * might become invalid */
-extern void        linker_env_unset(const char* name);
-
-
-/* Returns the value of environment variable 'name' if defined and not
- * empty, or NULL otherwise. Note that the returned pointer may become
- * invalid if linker_env_unset() or linker_env_secure() are called
- * after this function. */
+// Returns the value of environment variable 'name' if defined and not
+// empty, or NULL otherwise. Note that the returned pointer may become
+// invalid if linker_env_unset() is called after this function.
 extern const char* linker_env_get(const char* name);
 
-/* Remove insecure environment variables. This should be used when
- * running setuid programs. */
-extern void        linker_env_secure(void);
-
-#ifdef __cplusplus
-};
-#endif
+// Returns the value of this program's AT_SECURE variable.
+extern bool get_AT_SECURE();
 
 #endif /* LINKER_ENVIRON_H */
