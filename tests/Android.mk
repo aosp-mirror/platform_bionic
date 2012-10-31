@@ -62,6 +62,21 @@ LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
+
+
+
+# Build no-elf-hash-table-library.so to test dlopen(3) on a library that
+# only has a GNU-style hash table.
+include $(CLEAR_VARS)
+LOCAL_MODULE := no-elf-hash-table-library
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SRC_FILES := empty.cpp
+LOCAL_LDFLAGS := -Wl,--hash-style=gnu
+include $(BUILD_SHARED_LIBRARY)
+
+
+
+
 # Build for the host (with glibc).
 # Note that this will build against glibc, so it's not useful for testing
 # bionic's implementation, but it does let you use glibc as a reference

@@ -81,7 +81,7 @@
  */
 
 
-static int soinfo_link_image(soinfo *si);
+static bool soinfo_link_image(soinfo* si);
 
 static int socount = 0;
 static soinfo sopool[SO_MAX];
@@ -90,11 +90,17 @@ static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
 static soinfo *somain; /* main process, always the one after libdl_info */
 
-static char ldpaths_buf[LDPATH_BUFSIZE];
-static const char *ldpaths[LDPATH_MAX + 1];
+static const char* const gSoPaths[] = {
+  "/vendor/lib",
+  "/system/lib",
+  NULL
+};
 
-static char ldpreloads_buf[LDPRELOAD_BUFSIZE];
-static const char *ldpreload_names[LDPRELOAD_MAX + 1];
+static char gLdPathsBuffer[LDPATH_BUFSIZE];
+static const char* gLdPaths[LDPATH_MAX + 1];
+
+static char gLdPreloadsBuffer[LDPRELOAD_BUFSIZE];
+static const char* gLdPreloadNames[LDPRELOAD_MAX + 1];
 
 static soinfo *preloads[LDPRELOAD_MAX + 1];
 
@@ -580,56 +586,36 @@ static void dump(soinfo *si)
 }
 #endif
 
-static const char * const sopaths[] = {
-    "/vendor/lib",
-    "/system/lib",
-    0
-};
-
-static int _open_lib(const char* name) {
-    // TODO: why not just call open?
-    struct stat sb;
-    if (stat(name, &sb) == -1 || !S_ISREG(sb.st_mode)) {
-        return -1;
+static int open_library_on_path(const char* name, const char* const paths[]) {
+  char buf[512];
+  for (size_t i = 0; paths[i] != NULL; ++i) {
+    int n = format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
+    if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
+      WARN("Ignoring very long library path: %s/%s\n", paths[i], name);
+      continue;
     }
-    return TEMP_FAILURE_RETRY(open(name, O_RDONLY));
+    int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+    if (fd != -1) {
+      return fd;
+    }
+  }
+  return -1;
 }
 
-static int open_library(const char *name)
-{
-    int fd;
-    char buf[512];
-    const char * const*path;
-    int n;
+static int open_library(const char* name) {
+  TRACE("[ %5d opening %s ]\n", pid, name);
 
-    TRACE("[ %5d opening %s ]\n", pid, name);
+  // If the name contains a slash, we should attempt to open it directly and not search the paths.
+  if (strchr(name, '/') != NULL) {
+    return TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
+  }
 
-    if(name == 0) return -1;
-    if(strlen(name) > 256) return -1;
-
-    if ((name[0] == '/') && ((fd = _open_lib(name)) >= 0))
-        return fd;
-
-    for (path = ldpaths; *path; path++) {
-        n = format_buffer(buf, sizeof(buf), "%s/%s", *path, name);
-        if (n < 0 || n >= (int)sizeof(buf)) {
-            WARN("Ignoring very long library path: %s/%s\n", *path, name);
-            continue;
-        }
-        if ((fd = _open_lib(buf)) >= 0)
-            return fd;
-    }
-    for (path = sopaths; *path; path++) {
-        n = format_buffer(buf, sizeof(buf), "%s/%s", *path, name);
-        if (n < 0 || n >= (int)sizeof(buf)) {
-            WARN("Ignoring very long library path: %s/%s\n", *path, name);
-            continue;
-        }
-        if ((fd = _open_lib(buf)) >= 0)
-            return fd;
-    }
-
-    return -1;
+  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
+  int fd = open_library_on_path(name, gLdPaths);
+  if (fd == -1) {
+    fd = open_library_on_path(name, gSoPaths);
+  }
+  return fd;
 }
 
 // Returns 'true' if the library is prelinked or on failure so we error out
@@ -727,8 +713,7 @@ struct phdr_ptr {
     Elf32_Addr phdr_size;
 };
 
-static soinfo* load_library(const char* name)
-{
+static soinfo* load_library(const char* name) {
     // Open the file.
     scoped_fd fd;
     fd.fd = open_library(name);
@@ -835,7 +820,7 @@ init_library(soinfo *si)
     TRACE("[ %5d init_library base=0x%08x sz=0x%08x name='%s') ]\n",
           pid, si->base, si->size, si->name);
 
-    if(soinfo_link_image(si)) {
+    if (!soinfo_link_image(si)) {
         munmap((void *)si->base, si->size);
         return NULL;
     }
@@ -882,7 +867,7 @@ soinfo *find_library(const char *name)
 
     TRACE("[ %5d '%s' has not been loaded yet.  Locating...]\n", pid, name);
     si = load_library(name);
-    if(si == NULL)
+    if (si == NULL)
         return NULL;
     return init_library(si);
 }
@@ -1427,16 +1412,15 @@ static int nullify_closed_stdio() {
     return return_value;
 }
 
-static int soinfo_link_image(soinfo *si)
-{
-    unsigned *d;
+static bool soinfo_link_image(soinfo* si) {
+    si->flags |= FLAG_ERROR;
+
     /* "base" might wrap around UINT32_MAX. */
     Elf32_Addr base = si->load_bias;
     const Elf32_Phdr *phdr = si->phdr;
     int phnum = si->phnum;
     int relocating_linker = (si->flags & FLAG_LINKER) != 0;
     soinfo **needed, **pneeded;
-    size_t dynamic_count;
 
     /* We can't debug anything until the linker is relocated */
     if (!relocating_linker) {
@@ -1446,13 +1430,14 @@ static int soinfo_link_image(soinfo *si)
     }
 
     /* Extract dynamic section */
+    size_t dynamic_count;
     phdr_table_get_dynamic_section(phdr, phnum, base, &si->dynamic,
                                    &dynamic_count);
     if (si->dynamic == NULL) {
         if (!relocating_linker) {
-            DL_ERR("missing PT_DYNAMIC?!");
+            DL_ERR("missing PT_DYNAMIC in \"%s\"", si->name);
         }
-        goto fail;
+        return false;
     } else {
         if (!relocating_linker) {
             DEBUG("%5d dynamic = %p\n", pid, si->dynamic);
@@ -1465,7 +1450,7 @@ static int soinfo_link_image(soinfo *si)
 #endif
 
     /* extract useful information from dynamic section */
-    for(d = si->dynamic; *d; d++){
+    for (unsigned* d = si->dynamic; *d; ++d) {
         DEBUG("%5d d = %p, d[0] = 0x%08x d[1] = 0x%08x\n", pid, d, d[0], d[1]);
         switch(*d++){
         case DT_HASH:
@@ -1482,8 +1467,8 @@ static int soinfo_link_image(soinfo *si)
             break;
         case DT_PLTREL:
             if(*d != DT_REL) {
-                DL_ERR("DT_RELA not supported");
-                goto fail;
+                DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
+                return false;
             }
             break;
         case DT_JMPREL:
@@ -1509,8 +1494,8 @@ static int soinfo_link_image(soinfo *si)
 #endif
             break;
          case DT_RELA:
-            DL_ERR("DT_RELA not supported");
-            goto fail;
+            DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
+            return false;
         case DT_INIT:
             si->init_func = (void (*)(void))(base + *d);
             DEBUG("%5d %s constructors (init func) found at %p\n",
@@ -1611,22 +1596,31 @@ static int soinfo_link_image(soinfo *si)
     DEBUG("%5d si->base = 0x%08x, si->strtab = %p, si->symtab = %p\n",
            pid, si->base, si->strtab, si->symtab);
 
-    if((si->strtab == 0) || (si->symtab == 0)) {
-        DL_ERR("missing essential tables");
-        goto fail;
+    // Sanity checks.
+    if (si->nbucket == 0) {
+        DL_ERR("empty/missing DT_HASH in \"%s\" (built with --hash-style=gnu?)", si->name);
+        return false;
+    }
+    if (si->strtab == 0) {
+        DL_ERR("empty/missing DT_STRTAB in \"%s\"", si->name);
+        return false;
+    }
+    if (si->symtab == 0) {
+        DL_ERR("empty/missing DT_SYMTAB in \"%s\"", si->name);
+        return false;
     }
 
     /* if this is the main executable, then load all of the preloads now */
     if(si->flags & FLAG_EXE) {
         int i;
         memset(preloads, 0, sizeof(preloads));
-        for(i = 0; ldpreload_names[i] != NULL; i++) {
-            soinfo *lsi = find_library(ldpreload_names[i]);
+        for(i = 0; gLdPreloadNames[i] != NULL; i++) {
+            soinfo *lsi = find_library(gLdPreloadNames[i]);
             if(lsi == 0) {
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
-                       ldpreload_names[i], si->name, tmp_err_buf);
-                goto fail;
+                       gLdPreloadNames[i], si->name, tmp_err_buf);
+                return false;
             }
             lsi->refcount++;
             preloads[i] = lsi;
@@ -1636,7 +1630,7 @@ static int soinfo_link_image(soinfo *si)
     /* dynamic_count is an upper bound for the number of needed libs */
     pneeded = needed = (soinfo**) alloca((1 + dynamic_count) * sizeof(soinfo*));
 
-    for(d = si->dynamic; *d; d += 2) {
+    for (unsigned* d = si->dynamic; *d; d += 2) {
         if(d[0] == DT_NEEDED){
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
             soinfo *lsi = find_library(si->strtab + d[1]);
@@ -1644,7 +1638,7 @@ static int soinfo_link_image(soinfo *si)
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        si->strtab + d[1], si->name, tmp_err_buf);
-                goto fail;
+                return false;
             }
             *pneeded++ = lsi;
             lsi->refcount++;
@@ -1661,24 +1655,26 @@ static int soinfo_link_image(soinfo *si)
         if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
             DL_ERR("can't unprotect loadable segments for \"%s\": %s",
                    si->name, strerror(errno));
-            goto fail;
+            return false;
         }
     }
 
-    if(si->plt_rel) {
+    if (si->plt_rel) {
         DEBUG("[ %5d relocating %s plt ]\n", pid, si->name );
-        if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed))
-            goto fail;
+        if(soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed)) {
+            return false;
+        }
     }
-    if(si->rel) {
+    if (si->rel) {
         DEBUG("[ %5d relocating %s ]\n", pid, si->name );
-        if(soinfo_relocate(si, si->rel, si->rel_count, needed))
-            goto fail;
+        if(soinfo_relocate(si, si->rel, si->rel_count, needed)) {
+            return false;
+        }
     }
 
 #ifdef ANDROID_MIPS_LINKER
-    if(mips_relocate_got(si, needed)) {
-        goto fail;
+    if (mips_relocate_got(si, needed)) {
+        return false;
     }
 #endif
 
@@ -1691,7 +1687,7 @@ static int soinfo_link_image(soinfo *si)
         if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
             DL_ERR("can't protect segments for \"%s\": %s",
                    si->name, strerror(errno));
-            goto fail;
+            return false;
         }
     }
 
@@ -1699,25 +1695,17 @@ static int soinfo_link_image(soinfo *si)
     if (phdr_table_protect_gnu_relro(si->phdr, si->phnum, si->load_bias) < 0) {
         DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
                si->name, strerror(errno));
-        goto fail;
+        return false;
     }
 
-    /* If this is a SET?ID program, dup /dev/null to opened stdin,
-       stdout and stderr to close a security hole described in:
-
-    ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
-
-     */
+    // If this is a setuid/setgid program, close the security hole described in
+    // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
     if (get_AT_SECURE()) {
         nullify_closed_stdio();
     }
     notify_gdb_of_load(si);
-    return 0;
-
-fail:
-    ERROR("failed to link %s\n", si->name);
-    si->flags |= FLAG_ERROR;
-    return -1;
+    si->flags &= ~FLAG_ERROR;
+    return true;
 }
 
 static void parse_path(const char* path, const char* delimiters,
@@ -1747,14 +1735,14 @@ static void parse_path(const char* path, const char* delimiters,
 }
 
 static void parse_LD_LIBRARY_PATH(const char* path) {
-    parse_path(path, ":", ldpaths,
-               ldpaths_buf, sizeof(ldpaths_buf), LDPATH_MAX);
+    parse_path(path, ":", gLdPaths,
+               gLdPathsBuffer, sizeof(gLdPathsBuffer), LDPATH_MAX);
 }
 
 static void parse_LD_PRELOAD(const char* path) {
     // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-    parse_path(path, " :", ldpreload_names,
-               ldpreloads_buf, sizeof(ldpreloads_buf), LDPRELOAD_MAX);
+    parse_path(path, " :", gLdPreloadNames,
+               gLdPreloadsBuffer, sizeof(gLdPreloadsBuffer), LDPRELOAD_MAX);
 }
 
 /*
@@ -1894,7 +1882,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
 
     somain = si;
 
-    if(soinfo_link_image(si)) {
+    if (!soinfo_link_image(si)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
         write(2, errmsg, sizeof(errmsg));
@@ -2033,7 +2021,7 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
     linker_so.phnum = elf_hdr->e_phnum;
     linker_so.flags |= FLAG_LINKER;
 
-    if (soinfo_link_image(&linker_so)) {
+    if (!soinfo_link_image(&linker_so)) {
         // It would be nice to print an error message, but if the linker
         // can't link itself, there's no guarantee that we'll be able to
         // call write() (because it involves a GOT reference).
