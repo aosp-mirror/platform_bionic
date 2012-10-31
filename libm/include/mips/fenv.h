@@ -29,7 +29,9 @@
 #ifndef	_FENV_H_
 #define	_FENV_H_
 
-#include <sys/_types.h>
+#include <sys/types.h>
+
+__BEGIN_DECLS
 
 typedef	__uint32_t	fenv_t;
 typedef	__uint32_t	fexcept_t;
@@ -50,7 +52,6 @@ typedef	__uint32_t	fexcept_t;
 #define	FE_DOWNWARD	0x0003
 #define	_ROUND_MASK	(FE_TONEAREST | FE_DOWNWARD | \
 			 FE_UPWARD | FE_TOWARDZERO)
-__BEGIN_DECLS
 
 /* Default floating-point environment */
 extern const fenv_t	__fe_dfl_env;
