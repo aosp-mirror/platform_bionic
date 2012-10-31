@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALMH///mg\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-10-31T22:01:34Z",
+      "side": 1,
+      "message": "I\u0027m not sure we should even search a fall back path if LD_LIBRARY_PATH is set. but i bet we need to have the built in  one for environments like recovery.",
+      "revId": "124fae9eabd7a25d80dfa8c3b56bed0f0fba16f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
