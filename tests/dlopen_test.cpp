@@ -181,3 +181,13 @@ TEST(dlopen, dladdr_invalid) {
   ASSERT_EQ(dladdr(&info, &info), 0); // Zero on error, non-zero on success.
   ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
 }
+
+#if __BIONIC__
+// Our dynamic linker doesn't support GNU hash tables.
+TEST(dlopen, library_with_only_gnu_hash) {
+  dlerror(); // Clear any pending errors.
+  void* handle = dlopen("empty-library.so", RTLD_NOW);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"empty-library.so\" (built with --hash-style=gnu?)", dlerror());
+}
+#endif
