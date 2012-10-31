@@ -425,38 +425,68 @@ soinfo_do_lookup(soinfo *si, const char *name, soinfo **lsi,
     Elf32_Sym *s = NULL;
     int i;
 
-    if (si != NULL) {
+    if (si != NULL && somain != NULL) {
 
         /*
-         * If this object was built with symbolic relocations disabled, the
-         * first place to look to resolve external references is the main
-         * executable.
+         * Local scope is executable scope. Just start looking into it right away
+         * for the shortcut.
          */
 
-        if (!si->has_DT_SYMBOLIC) {
-            DEBUG("%5d %s: looking up %s in executable %s\n",
-                  pid, si->name, name, somain->name);
-            s = soinfo_elf_lookup(somain, elf_hash, name);
+        if (si == somain) {
+            s = soinfo_elf_lookup(si, elf_hash, name);
             if (s != NULL) {
-                *lsi = somain;
+                *lsi = si;
                 goto done;
             }
-        }
+        } else {
+            /* Order of symbol lookup is controlled by DT_SYMBOLIC flag */
 
-        /* Look for symbols in the local scope (the object who is
-         * searching). This happens with C++ templates on i386 for some
-         * reason.
-         *
-         * Notes on weak symbols:
-         * The ELF specs are ambiguous about treatment of weak definitions in
-         * dynamic linking.  Some systems return the first definition found
-         * and some the first non-weak definition.   This is system dependent.
-         * Here we return the first definition found for simplicity.  */
+            /*
+             * If this object was built with symbolic relocations disabled, the
+             * first place to look to resolve external references is the main
+             * executable.
+             */
 
-        s = soinfo_elf_lookup(si, elf_hash, name);
-        if (s != NULL) {
-            *lsi = si;
-            goto done;
+            if (!si->has_DT_SYMBOLIC) {
+                DEBUG("%5d %s: looking up %s in executable %s\n",
+                      pid, si->name, name, somain->name);
+                s = soinfo_elf_lookup(somain, elf_hash, name);
+                if (s != NULL) {
+                    *lsi = somain;
+                    goto done;
+                }
+            }
+
+            /* Look for symbols in the local scope (the object who is
+             * searching). This happens with C++ templates on i386 for some
+             * reason.
+             *
+             * Notes on weak symbols:
+             * The ELF specs are ambiguous about treatment of weak definitions in
+             * dynamic linking.  Some systems return the first definition found
+             * and some the first non-weak definition.   This is system dependent.
+             * Here we return the first definition found for simplicity.  */
+
+            s = soinfo_elf_lookup(si, elf_hash, name);
+            if (s != NULL) {
+                *lsi = si;
+                goto done;
+            }
+
+            /*
+             * If this object was built with -Bsymbolic and symbol is not found
+             * in the local scope, try to find the symbol in the main executable.
+             */
+
+            if (si->has_DT_SYMBOLIC) {
+                DEBUG("%5d %s: looking up %s in executable %s after local scope\n",
+                      pid, si->name, name, somain->name);
+                s = soinfo_elf_lookup(somain, elf_hash, name);
+                if (s != NULL) {
+                    *lsi = somain;
+                    goto done;
+                }
+            }
         }
     }
 
