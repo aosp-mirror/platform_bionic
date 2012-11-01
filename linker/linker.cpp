@@ -31,7 +31,6 @@
 #include <fcntl.h>
 #include <linux/auxvec.h>
 #include <pthread.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,7 +72,6 @@
  * - after linking, set as much stuff as possible to READONLY
  *   and NOEXEC
  */
-
 
 static bool soinfo_link_image(soinfo* si);
 
@@ -291,6 +289,14 @@ static bool ensure_free_list_non_empty() {
   }
 
   return true;
+}
+
+static void set_soinfo_pool_protection(int protection) {
+  for (soinfo_pool_t* p = gSoInfoPools; p != NULL; p = p->next) {
+    if (mprotect(p, sizeof(*p), protection) == -1) {
+      abort(); // Can't happen.
+    }
+  }
 }
 
 static soinfo* soinfo_alloc(const char* name) {
@@ -833,20 +839,18 @@ static soinfo* load_library(const char* name) {
     return si.release();
 }
 
-static soinfo *
-init_library(soinfo *si)
-{
-    /* At this point we know that whatever is loaded @ base is a valid ELF
-     * shared library whose segments are properly mapped in. */
-    TRACE("[ %5d init_library base=0x%08x sz=0x%08x name='%s') ]\n",
-          pid, si->base, si->size, si->name);
+static soinfo* init_library(soinfo* si) {
+  // At this point we know that whatever is loaded @ base is a valid ELF
+  // shared library whose segments are properly mapped in.
+  TRACE("[ %5d init_library base=0x%08x sz=0x%08x name='%s') ]\n",
+        pid, si->base, si->size, si->name);
 
-    if (!soinfo_link_image(si)) {
-        munmap((void *)si->base, si->size);
-        return NULL;
-    }
+  if (!soinfo_link_image(si)) {
+    munmap((void *)si->base, si->size);
+    return NULL;
+  }
 
-    return si;
+  return si;
 }
 
 static soinfo *find_loaded_library(const char *name)
@@ -868,63 +872,86 @@ static soinfo *find_loaded_library(const char *name)
     return NULL;
 }
 
-soinfo *find_library(const char *name)
-{
-    soinfo *si;
+static soinfo* find_library_internal(const char* name) {
+  if (name == NULL) {
+    return somain;
+  }
 
-    if (name == NULL)
-        return somain;
-
-    si = find_loaded_library(name);
-    if (si != NULL) {
-        if(si->flags & FLAG_ERROR) {
-            DL_ERR("\"%s\" failed to load previously", name);
-            return NULL;
-        }
-        if(si->flags & FLAG_LINKED) return si;
-        DL_ERR("OOPS: recursive link to \"%s\"", si->name);
-        return NULL;
+  soinfo* si = find_loaded_library(name);
+  if (si != NULL) {
+    if (si->flags & FLAG_ERROR) {
+      DL_ERR("\"%s\" failed to load previously", name);
+      return NULL;
     }
+    if (si->flags & FLAG_LINKED) {
+      return si;
+    }
+    DL_ERR("OOPS: recursive link to \"%s\"", si->name);
+    return NULL;
+  }
 
-    TRACE("[ %5d '%s' has not been loaded yet.  Locating...]\n", pid, name);
-    si = load_library(name);
-    if (si == NULL)
-        return NULL;
-    return init_library(si);
+  TRACE("[ %5d '%s' has not been loaded yet.  Locating...]\n", pid, name);
+  si = load_library(name);
+  if (si != NULL) {
+    si = init_library(si);
+  }
+
+  return si;
 }
 
-static void call_destructors(soinfo *si);
+static soinfo* find_library(const char* name) {
+  soinfo* si = find_library_internal(name);
+  if (si != NULL) {
+    si->refcount++;
+  }
+  return si;
+}
 
-int soinfo_unload(soinfo* si) {
-    if (si->refcount == 1) {
-        TRACE("%5d unloading '%s'\n", pid, si->name);
-        call_destructors(si);
+static int soinfo_unload(soinfo* si) {
+  if (si->refcount == 1) {
+    TRACE("%5d unloading '%s'\n", pid, si->name);
+    si->CallDestructors();
 
-        for (unsigned* d = si->dynamic; *d; d += 2) {
-            if(d[0] == DT_NEEDED){
-                soinfo *lsi = find_loaded_library(si->strtab + d[1]);
-                if (lsi) {
-                    TRACE("%5d %s needs to unload %s\n", pid,
-                          si->name, lsi->name);
-                    soinfo_unload(lsi);
-                } else {
-                    // TODO: should we return -1 in this case?
-                    DL_ERR("\"%s\": could not unload dependent library",
-                           si->name);
-                }
-            }
+    for (unsigned* d = si->dynamic; *d; d += 2) {
+      if (d[0] == DT_NEEDED) {
+        soinfo* lsi = find_loaded_library(si->strtab + d[1]);
+        if (lsi != NULL) {
+          TRACE("%5d %s needs to unload %s\n", pid, si->name, lsi->name);
+          soinfo_unload(lsi);
+        } else {
+          // TODO: should we return -1 in this case?
+          DL_ERR("\"%s\": could not unload dependent library", si->name);
         }
-
-        munmap((char *)si->base, si->size);
-        notify_gdb_of_unload(si);
-        soinfo_free(si);
-        si->refcount = 0;
-    } else {
-        si->refcount--;
-        PRINT("%5d not unloading '%s', decrementing refcount to %d\n",
-              pid, si->name, si->refcount);
+      }
     }
-    return 0;
+
+    munmap(reinterpret_cast<void*>(si->base), si->size);
+    notify_gdb_of_unload(si);
+    soinfo_free(si);
+    si->refcount = 0;
+  } else {
+    si->refcount--;
+    PRINT("%5d not unloading '%s', decrementing refcount to %d\n",
+          pid, si->name, si->refcount);
+  }
+  return 0;
+}
+
+soinfo* do_dlopen(const char* name) {
+  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
+  soinfo* si = find_library(name);
+  if (si != NULL) {
+    si->CallConstructors();
+  }
+  set_soinfo_pool_protection(PROT_READ);
+  return si;
+}
+
+int do_dlclose(soinfo* si) {
+  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
+  int result = soinfo_unload(si);
+  set_soinfo_pool_protection(PROT_READ);
+  return result;
 }
 
 /* TODO: don't use unsigned for addrs below. It works, but is not
@@ -1270,106 +1297,89 @@ static int mips_relocate_got(soinfo* si, soinfo* needed[]) {
  *
  *   DT_FINI_ARRAY must be parsed in reverse order.
  */
+void soinfo::CallArray(const char* array_name UNUSED, unsigned* array, int count, bool reverse) {
+  if (array == NULL) {
+    return;
+  }
 
-static void call_array(unsigned *ctor, int count, int reverse)
-{
-    int n, inc = 1;
+  int step = 1;
+  if (reverse) {
+    array += (count-1);
+    step = -1;
+  }
 
-    if (reverse) {
-        ctor += (count-1);
-        inc   = -1;
+  TRACE("[ %5d Calling %s @ %p [%d] for '%s' ]\n", pid, array_name, array, count, name);
+
+  for (int n = count; n > 0; n--) {
+    TRACE("[ %5d Looking at %s[%d] *%p == 0x%08x ]\n", pid, array_name, n, array, *array);
+    void (*func)() = (void (*)()) *array;
+    array += step;
+    if (((int) func == 0) || ((int) func == -1)) {
+      continue;
     }
+    TRACE("[ %5d Calling func @ %p ]\n", pid, func);
+    func();
+  }
 
-    for(n = count; n > 0; n--) {
-        TRACE("[ %5d Looking at %s *0x%08x == 0x%08x ]\n", pid,
-              reverse ? "dtor" : "ctor",
-              (unsigned)ctor, (unsigned)*ctor);
-        void (*func)() = (void (*)()) *ctor;
-        ctor += inc;
-        if(((int) func == 0) || ((int) func == -1)) continue;
-        TRACE("[ %5d Calling func @ 0x%08x ]\n", pid, (unsigned)func);
-        func();
-    }
+  TRACE("[ %5d Done calling %s for '%s' ]\n", pid, array_name, name);
 }
 
-static void soinfo_call_preinit_constructors(soinfo *si)
-{
-  TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
-      pid, (unsigned)si->preinit_array, si->preinit_array_count,
-      si->name);
-  call_array(si->preinit_array, si->preinit_array_count, 0);
-  TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
+void soinfo::CallFunction(const char* function_name UNUSED, void (*function)()) {
+  if (function == NULL) {
+    return;
+  }
+
+  TRACE("[ %5d Calling %s @ %p for '%s' ]\n", pid, function_name, function, name);
+  function();
+  TRACE("[ %5d Done calling %s for '%s' ]\n", pid, function_name, name);
 }
 
-void soinfo_call_constructors(soinfo *si)
-{
-    if (si->constructors_called)
-        return;
+void soinfo::CallPreInitConstructors() {
+  CallArray("DT_PREINIT_ARRAY", preinit_array, preinit_array_count, false);
+}
 
-    // Set this before actually calling the constructors, otherwise it doesn't
-    // protect against recursive constructor calls. One simple example of
-    // constructor recursion is the libc debug malloc, which is implemented in
-    // libc_malloc_debug_leak.so:
-    // 1. The program depends on libc, so libc's constructor is called here.
-    // 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.
-    // 3. dlopen() calls soinfo_call_constructors() with the newly created
-    //    soinfo for libc_malloc_debug_leak.so.
-    // 4. The debug so depends on libc, so soinfo_call_constructors() is
-    //    called again with the libc soinfo. If it doesn't trigger the early-
-    //    out above, the libc constructor will be called again (recursively!).
-    si->constructors_called = 1;
+void soinfo::CallConstructors() {
+  if (constructors_called) {
+    return;
+  }
 
-    if (!(si->flags & FLAG_EXE) && si->preinit_array) {
-      DL_ERR("shared library \"%s\" has a preinit_array table @ 0x%08x. "
-          "This is INVALID.", si->name, (unsigned) si->preinit_array);
-    }
+  // We set constructors_called before actually calling the constructors, otherwise it doesn't
+  // protect against recursive constructor calls. One simple example of constructor recursion
+  // is the libc debug malloc, which is implemented in libc_malloc_debug_leak.so:
+  // 1. The program depends on libc, so libc's constructor is called here.
+  // 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.
+  // 3. dlopen() calls the constructors on the newly created
+  //    soinfo for libc_malloc_debug_leak.so.
+  // 4. The debug .so depends on libc, so CallConstructors is
+  //    called again with the libc soinfo. If it doesn't trigger the early-
+  //    out above, the libc constructor will be called again (recursively!).
+  constructors_called = true;
 
-    if (si->dynamic) {
-        unsigned *d;
-        for(d = si->dynamic; *d; d += 2) {
-            if(d[0] == DT_NEEDED){
-                soinfo* lsi = find_loaded_library(si->strtab + d[1]);
-                if (!lsi) {
-                    DL_ERR("\"%s\": could not initialize dependent library",
-                           si->name);
-                } else {
-                    soinfo_call_constructors(lsi);
-                }
-            }
+  if (!(flags & FLAG_EXE) && preinit_array) {
+    DL_ERR("shared library \"%s\" has a preinit_array table @ %p", name, preinit_array);
+    return;
+  }
+
+  if (dynamic) {
+    for (unsigned* d = dynamic; *d; d += 2) {
+      if (d[0] == DT_NEEDED) {
+        soinfo* lsi = find_loaded_library(strtab + d[1]);
+        if (lsi == NULL) {
+          DL_ERR("\"%s\": could not initialize dependent library", name);
+        } else {
+          lsi->CallConstructors();
         }
+      }
     }
+  }
 
-    if (si->init_func) {
-        TRACE("[ %5d Calling init_func @ 0x%08x for '%s' ]\n", pid,
-              (unsigned)si->init_func, si->name);
-        si->init_func();
-        TRACE("[ %5d Done calling init_func for '%s' ]\n", pid, si->name);
-    }
-
-    if (si->init_array) {
-        TRACE("[ %5d Calling init_array @ 0x%08x [%d] for '%s' ]\n", pid,
-              (unsigned)si->init_array, si->init_array_count, si->name);
-        call_array(si->init_array, si->init_array_count, 0);
-        TRACE("[ %5d Done calling init_array for '%s' ]\n", pid, si->name);
-    }
-
+  CallFunction("DT_INIT", init_func);
+  CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
 }
 
-static void call_destructors(soinfo *si)
-{
-    if (si->fini_array) {
-        TRACE("[ %5d Calling fini_array @ 0x%08x [%d] for '%s' ]\n", pid,
-              (unsigned)si->fini_array, si->fini_array_count, si->name);
-        call_array(si->fini_array, si->fini_array_count, 1);
-        TRACE("[ %5d Done calling fini_array for '%s' ]\n", pid, si->name);
-    }
-
-    if (si->fini_func) {
-        TRACE("[ %5d Calling fini_func @ 0x%08x for '%s' ]\n", pid,
-              (unsigned)si->fini_func, si->name);
-        si->fini_func();
-        TRACE("[ %5d Done calling fini_func for '%s' ]\n", pid, si->name);
-    }
+void soinfo::CallDestructors() {
+  CallArray("DT_FINI_ARRAY", fini_array, fini_array_count, true);
+  CallFunction("DT_FINI", fini_func);
 }
 
 /* Force any of the closed stdin, stdout and stderr to be associated with
@@ -1632,18 +1642,16 @@ static bool soinfo_link_image(soinfo* si) {
     }
 
     /* if this is the main executable, then load all of the preloads now */
-    if(si->flags & FLAG_EXE) {
-        int i;
+    if (si->flags & FLAG_EXE) {
         memset(preloads, 0, sizeof(preloads));
-        for(i = 0; gLdPreloadNames[i] != NULL; i++) {
-            soinfo *lsi = find_library(gLdPreloadNames[i]);
-            if(lsi == 0) {
+        for (size_t i = 0; gLdPreloadNames[i] != NULL; i++) {
+            soinfo* lsi = find_library(gLdPreloadNames[i]);
+            if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        gLdPreloadNames[i], si->name, tmp_err_buf);
                 return false;
             }
-            lsi->refcount++;
             preloads[i] = lsi;
         }
     }
@@ -1652,17 +1660,16 @@ static bool soinfo_link_image(soinfo* si) {
     pneeded = needed = (soinfo**) alloca((1 + dynamic_count) * sizeof(soinfo*));
 
     for (unsigned* d = si->dynamic; *d; d += 2) {
-        if(d[0] == DT_NEEDED){
+        if (d[0] == DT_NEEDED) {
             DEBUG("%5d %s needs %s\n", pid, si->name, si->strtab + d[1]);
-            soinfo *lsi = find_library(si->strtab + d[1]);
-            if(lsi == 0) {
+            soinfo* lsi = find_library(si->strtab + d[1]);
+            if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        si->strtab + d[1], si->name, tmp_err_buf);
                 return false;
             }
             *pneeded++ = lsi;
-            lsi->refcount++;
         }
     }
     *pneeded = NULL;
@@ -1910,10 +1917,10 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
         exit(EXIT_FAILURE);
     }
 
-    soinfo_call_preinit_constructors(si);
+    si->CallPreInitConstructors();
 
     for (size_t i = 0; preloads[i] != NULL; ++i) {
-        soinfo_call_constructors(preloads[i]);
+        preloads[i]->CallConstructors();
     }
 
     /*After the link_image, the si->base is initialized.
@@ -1922,7 +1929,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
      *for some arch like x86 could work correctly within so exe.
      */
     map->l_addr = si->base;
-    soinfo_call_constructors(si);
+    si->CallConstructors();
 
 #if TIMING
     gettimeofday(&t1,NULL);
@@ -2055,6 +2062,8 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
     // We have successfully fixed our own relocations. It's safe to run
     // the main part of the linker now.
     unsigned start_address = __linker_init_post_relocation(elfdata, linker_addr);
+
+    set_soinfo_pool_protection(PROT_READ);
 
     // Return the address that the calling assembly stub should jump to.
     return start_address;
