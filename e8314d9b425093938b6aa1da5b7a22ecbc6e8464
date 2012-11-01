@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAALOn///4s\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1002951
+      },
+      "writtenOn": "2012-11-01T17:57:15Z",
+      "side": 1,
+      "message": "The old Sony Ericsson style was two spaces and I was just getting used to four.. oh well. Is the new style the new android style also?",
+      "parentUuid": "AAALOH///1g\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5w\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
