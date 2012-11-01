@@ -72,8 +72,6 @@
  * - cleaner error reporting
  * - after linking, set as much stuff as possible to READONLY
  *   and NOEXEC
- * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
- *   headers provide versions that are negative...
  */
 
 

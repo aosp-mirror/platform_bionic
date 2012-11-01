@@ -46,6 +46,8 @@ TEST(dlopen, dlsym_in_self) {
   gCalled = false;
   function();
   ASSERT_TRUE(gCalled);
+
+  ASSERT_EQ(0, dlclose(self));
 }
 
 TEST(dlopen, dlopen_failure) {
@@ -108,6 +110,8 @@ TEST(dlopen, dlsym_failures) {
   sym = dlsym(self, "ThisSymbolDoesNotExist");
   ASSERT_TRUE(sym == NULL);
   ASSERT_SUBSTR("undefined symbol: ThisSymbolDoesNotExist", dlerror());
+
+  ASSERT_EQ(0, dlclose(self));
 }
 
 TEST(dlopen, dladdr) {
@@ -166,6 +170,8 @@ TEST(dlopen, dladdr) {
 
   // The base address should be the address we were loaded at.
   ASSERT_EQ(info.dli_fbase, base_address);
+
+  ASSERT_EQ(0, dlclose(self));
 }
 
 TEST(dlopen, dladdr_invalid) {
