@@ -16,6 +16,23 @@
       "revId": "8c602077bf4a5fc42d7e249293a21be03d3a6bca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALP3///r4\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T23:27:37Z",
+      "side": 1,
+      "message": "check return value?",
+      "revId": "8c602077bf4a5fc42d7e249293a21be03d3a6bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
