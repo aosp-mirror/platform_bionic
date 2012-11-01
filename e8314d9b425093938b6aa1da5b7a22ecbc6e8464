@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALP3///5k\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T16:41:42Z",
+      "side": 1,
+      "message": "indentation is inconsistent in this file.  4 spaces above, 2 spaces here.  Please fix.",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALP3///5w\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T16:41:42Z",
+      "side": 1,
+      "message": "\"mmap(NULL\" instead of \"mmap(0\"",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALP3///5s\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T16:41:42Z",
+      "side": 1,
+      "message": "When linking is complete, can we mark this pool as read-only? This prevents other programs from (intentionally or otherwise) tweaking with this pool.",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALP3///5g\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T16:41:42Z",
+      "side": 1,
+      "message": "The return value of ptr is not being checked here.  If soinfo_alloc is going to return NULL on error, we need to always check the return value.",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
