@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "AAALOH///1E\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T17:34:53Z",
+      "side": 1,
+      "message": "actually, it breaks dlopen(3) too :-)\n\none possibility would be to protect the pool pages used while linking, empty the free list, and insist that dlopen uses new pool pages...\n\n...except that won\u0027t work either because the soinfo structs form an intrusive linked list _and_ contain reference counts. so we wouldn\u0027t be able to dlopen a new .so without keeping two lists, and we wouldn\u0027t be able to dlopen an existing .so without keeping the reference counts in some other structure.",
+      "parentUuid": "AAALOH///1o\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5g\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
