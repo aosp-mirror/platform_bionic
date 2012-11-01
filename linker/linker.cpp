@@ -51,8 +51,6 @@
 #include "linker_format.h"
 #include "linker_phdr.h"
 
-#define SO_MAX 128
-
 /* Assume average path length of 64 and max 8 paths */
 #define LDPATH_BUFSIZE 512
 #define LDPATH_MAX 8
@@ -76,16 +74,22 @@
  *   and NOEXEC
  * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
  *   headers provide versions that are negative...
- * - allocate space for soinfo structs dynamically instead of
- *   having a hard limit (SO_MAX)
  */
 
 
 static bool soinfo_link_image(soinfo* si);
 
-static int socount = 0;
-static soinfo sopool[SO_MAX];
-static soinfo *freelist = NULL;
+// We can't use malloc(3) in the dynamic linker. We use a linked list of anonymous
+// maps, each a single page in size. The pages are broken up into as many struct soinfo
+// objects as will fit, and they're all threaded together on a free list.
+#define SOINFO_PER_POOL ((PAGE_SIZE - sizeof(soinfo_pool_t*)) / sizeof(soinfo))
+struct soinfo_pool_t {
+  soinfo_pool_t* next;
+  soinfo info[SOINFO_PER_POOL];
+};
+static struct soinfo_pool_t* gSoInfoPools = NULL;
+static soinfo* gSoInfoFreeList = NULL;
+
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
 static soinfo *somain; /* main process, always the one after libdl_info */
@@ -263,38 +267,57 @@ void notify_gdb_of_libraries() {
     rtld_db_dlactivity();
 }
 
-static soinfo *soinfo_alloc(const char *name)
-{
-    if (strlen(name) >= SOINFO_NAME_LEN) {
-        DL_ERR("library name \"%s\" too long", name);
-        return NULL;
-    }
+static bool ensure_free_list_non_empty() {
+  if (gSoInfoFreeList != NULL) {
+    return true;
+  }
 
-    /* The freelist is populated when we call soinfo_free(), which in turn is
-       done only by dlclose(), which is not likely to be used.
-    */
-    if (!freelist) {
-        if (socount == SO_MAX) {
-            DL_ERR("too many libraries when loading \"%s\"", name);
-            return NULL;
-        }
-        freelist = sopool + socount++;
-        freelist->next = NULL;
-    }
+  // Allocate a new pool.
+  soinfo_pool_t* pool = reinterpret_cast<soinfo_pool_t*>(mmap(NULL, sizeof(*pool),
+                                                              PROT_READ|PROT_WRITE,
+                                                              MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+  if (pool == MAP_FAILED) {
+    return false;
+  }
 
-    soinfo* si = freelist;
-    freelist = freelist->next;
+  // Add the pool to our list of pools.
+  pool->next = gSoInfoPools;
+  gSoInfoPools = pool;
 
-    /* Make sure we get a clean block of soinfo */
-    memset(si, 0, sizeof(soinfo));
-    strlcpy((char*) si->name, name, sizeof(si->name));
-    sonext->next = si;
-    si->next = NULL;
-    si->refcount = 0;
-    sonext = si;
+  // Chain the entries in the new pool onto the free list.
+  gSoInfoFreeList = &pool->info[0];
+  soinfo* next = NULL;
+  for (int i = SOINFO_PER_POOL - 1; i >= 0; --i) {
+    pool->info[i].next = next;
+    next = &pool->info[i];
+  }
 
-    TRACE("%5d name %s: allocated soinfo @ %p\n", pid, name, si);
-    return si;
+  return true;
+}
+
+static soinfo* soinfo_alloc(const char* name) {
+  if (strlen(name) >= SOINFO_NAME_LEN) {
+    DL_ERR("library name \"%s\" too long", name);
+    return NULL;
+  }
+
+  if (!ensure_free_list_non_empty()) {
+    DL_ERR("out of memory when loading \"%s\"", name);
+    return NULL;
+  }
+
+  // Take the head element off the free list.
+  soinfo* si = gSoInfoFreeList;
+  gSoInfoFreeList = gSoInfoFreeList->next;
+
+  // Initialize the new element.
+  memset(si, 0, sizeof(soinfo));
+  strlcpy(si->name, name, sizeof(si->name));
+  sonext->next = si;
+  sonext = si;
+
+  TRACE("%5d name %s: allocated soinfo @ %p\n", pid, name, si);
+  return si;
 }
 
 static void soinfo_free(soinfo* si)
@@ -323,8 +346,8 @@ static void soinfo_free(soinfo* si)
     */
     prev->next = si->next;
     if (si == sonext) sonext = prev;
-    si->next = freelist;
-    freelist = si;
+    si->next = gSoInfoFreeList;
+    gSoInfoFreeList = si;
 }
 
 #ifdef ANDROID_ARM_LINKER

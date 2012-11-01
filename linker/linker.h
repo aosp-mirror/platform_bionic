@@ -165,7 +165,6 @@ struct soinfo {
     bool has_DT_SYMBOLIC;
 };
 
-
 extern soinfo libdl_info;
 
 
