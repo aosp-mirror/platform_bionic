@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "AAALP3///3k\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-01T17:37:47Z",
+      "side": 1,
+      "message": "Could we keep it read-only the majority of the time, and mark it read-write when we need to (i.e., when dlopen() is modifying the data structure)?",
+      "parentUuid": "AAALOH///1E\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5g\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
