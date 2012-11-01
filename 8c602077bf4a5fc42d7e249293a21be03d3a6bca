@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALOH///zE\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T22:24:18Z",
+      "side": 1,
+      "message": "i\u0027ve left this TODO here for now, because if we wanted we could anonymous mmap and protect gLdPathsBuffer, gLdPreloadsBuffer, and \"preloads\" too.",
+      "revId": "8c602077bf4a5fc42d7e249293a21be03d3a6bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
