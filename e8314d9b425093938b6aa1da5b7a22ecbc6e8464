@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAALOH///1g\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T17:26:50Z",
+      "side": 1,
+      "message": "i\u0027m making code google3 style as i touch it, but if a majority would prefer i touch every line in every file, i can have one big reformatting change.",
+      "parentUuid": "AAALP3///5k\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5w\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2012-11-01T16:41:42Z",
       "side": 1,
       "message": "\"mmap(NULL\" instead of \"mmap(0\"",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALOH///1k\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T17:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAALP3///5w\u003d",
       "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAALOH///1o\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T17:26:50Z",
+      "side": 1,
+      "message": "i fear this desire may be in conflict with your desire to keep firefox and libmono-based apps running, but i\u0027ll give it a go...",
+      "parentUuid": "AAALP3///5s\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5g\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2012-11-01T16:41:42Z",
       "side": 1,
       "message": "The return value of ptr is not being checked here.  If soinfo_alloc is going to return NULL on error, we need to always check the return value.",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALOH///1U\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T17:26:50Z",
+      "side": 1,
+      "message": "no, this is a smart pointer. it\u0027s up to the smart pointer\u0027s users to perform null checks. and they already do.",
+      "parentUuid": "AAALP3///5g\u003d",
       "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
