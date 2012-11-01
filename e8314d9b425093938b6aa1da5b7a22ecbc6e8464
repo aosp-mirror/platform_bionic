@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "AAALOH///00\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T18:35:07Z",
+      "side": 1,
+      "message": "no, it\u0027s the google3 style. that\u0027s what our group is using. Chrome too. but not the frameworks/base guys.",
+      "parentUuid": "AAALOn///4s\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALP3///5w\u003d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -155,6 +173,24 @@
       "side": 1,
       "message": "Could we keep it read-only the majority of the time, and mark it read-write when we need to (i.e., when dlopen() is modifying the data structure)?",
       "parentUuid": "AAALOH///1E\u003d",
+      "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALOH///04\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-01T18:35:07Z",
+      "side": 1,
+      "message": "yeah, i\u0027ll look into that in a separate patch. (since it\u0027s not going to be as trivial as we\u0027d hoped.)",
+      "parentUuid": "AAALP3///3k\u003d",
       "revId": "e8314d9b425093938b6aa1da5b7a22ecbc6e8464",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
