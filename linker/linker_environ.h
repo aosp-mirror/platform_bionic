@@ -34,15 +34,8 @@
 // returns the start of the aux vectors after the environment block.
 extern unsigned* linker_env_init(unsigned* environment_and_aux_vectors);
 
-// Unset a given environment variable. In case the variable is defined
-// multiple times, unset all instances. This modifies the environment
-// block, so any pointer returned by linker_env_get() after this call
-// might become invalid.
-extern void linker_env_unset(const char* name);
-
 // Returns the value of environment variable 'name' if defined and not
-// empty, or NULL otherwise. Note that the returned pointer may become
-// invalid if linker_env_unset() is called after this function.
+// empty, or NULL otherwise.
 extern const char* linker_env_get(const char* name);
 
 // Returns the value of this program's AT_SECURE variable.
