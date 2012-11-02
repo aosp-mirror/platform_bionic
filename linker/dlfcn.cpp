@@ -57,13 +57,11 @@ const char* dlerror() {
 
 void* dlopen(const char* filename, int flag) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
-  soinfo* result = find_library(filename);
+  soinfo* result = do_dlopen(filename);
   if (result == NULL) {
     __bionic_format_dlerror("dlopen failed", linker_get_error());
     return NULL;
   }
-  soinfo_call_constructors(result);
-  result->refcount++;
   return result;
 }
 
@@ -139,7 +137,7 @@ int dladdr(const void* addr, Dl_info* info) {
 
 int dlclose(void* handle) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
-  return soinfo_unload((soinfo*) handle);
+  return do_dlclose(reinterpret_cast<soinfo*>(handle));
 }
 
 #if defined(ANDROID_ARM_LINKER)
@@ -236,7 +234,8 @@ soinfo libdl_info = {
 
     refcount: 0,
     { l_addr: 0, l_name: 0, l_ld: 0, l_next: 0, l_prev: 0, },
-    constructors_called: 0, load_bias: 0,
+    constructors_called: false,
+    load_bias: 0,
     has_text_relocations: false,
     has_DT_SYMBOLIC: true,
 };
