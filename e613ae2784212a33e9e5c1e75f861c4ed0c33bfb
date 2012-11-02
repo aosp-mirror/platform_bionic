@@ -16,6 +16,24 @@
       "revId": "e613ae2784212a33e9e5c1e75f861c4ed0c33bfb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALOH///yw\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-02T00:21:02Z",
+      "side": 1,
+      "message": "it\u0027s BSS. i can make it explicit though. yeah, i think it\u0027s a bit clearer that way, and it means that grep for allocated_on_heap is a bit more meaningful.",
+      "parentUuid": "AAALP3///p4\u003d",
+      "revId": "e613ae2784212a33e9e5c1e75f861c4ed0c33bfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
