@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALP3///p4\u003d",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-11-02T00:08:27Z",
+      "side": 1,
+      "message": "how are we sure this is false in main thread case? some memset somewhere?",
+      "revId": "e613ae2784212a33e9e5c1e75f861c4ed0c33bfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
