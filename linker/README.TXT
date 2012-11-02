@@ -79,24 +79,6 @@ are in charge of calling them explicitly.
 Debugging:
 ----------
 
-It is possible to enable debug output in the dynamic linker. To do so,
-follow these steps:
-
-1/ Modify the line in Android.mk that says:
-
-    LOCAL_CFLAGS += -DLINKER_DEBUG=0
-
-  Into the following:
-
-    LOCAL_CFLAGS += -DLINKER_DEBUG=1
-
-2/ Force-rebuild the dynamic linker:
-
-    cd bionic/linker
-    mm -B
-
-3/ Rebuild a new system image.
-
 You can increase the verbosity of debug traces by defining the DEBUG
 environment variable to a numeric value from 0 to 2. This will only
 affect new processes being launched.

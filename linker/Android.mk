@@ -18,10 +18,6 @@ LOCAL_CFLAGS += -fno-stack-protector \
         -fvisibility=hidden \
         -Wall -Wextra
 
-# Set LINKER_DEBUG to either 1 or 0
-#
-LOCAL_CFLAGS += -DLINKER_DEBUG=0
-
 # We need to access Bionic private headers in the linker...
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
