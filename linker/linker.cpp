@@ -634,7 +634,11 @@ static int open_library(const char* name) {
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != NULL) {
-    return TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
+    int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
+    if (fd != -1) {
+      return fd;
+    }
+    // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
