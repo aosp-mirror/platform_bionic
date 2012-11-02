@@ -40,10 +40,10 @@
 #include <errno.h>
 
 extern unsigned __get_sp(void);
-extern pid_t    gettid(void);
+extern pid_t gettid(void);
 
 char*  __progname;
-char **environ;
+char** environ;
 
 /* from asm/page.h */
 unsigned int __page_size = PAGE_SIZE;
@@ -60,48 +60,42 @@ int __system_properties_init(void);
  * stores the pointer in TLS, but does not add it to pthread's gThreadList. This
  * has to be done later from libc itself (see __libc_init_common).
  *
- * This function also stores elfdata argument in a specific TLS slot to be later
+ * This function also stores the elf_data argument in a specific TLS slot to be later
  * picked up by the libc constructor.
  */
-void __libc_init_tls(unsigned** elfdata)
-{
-    pthread_attr_t             thread_attr;
-    static pthread_internal_t  thread;
-    static void*               tls_area[BIONIC_TLS_SLOTS];
+void __libc_init_tls(unsigned** elf_data) {
+  unsigned stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
+  unsigned stack_size = 128 * 1024;
+  unsigned stack_bottom = stack_top - stack_size;
 
-    /* setup pthread runtime and main thread descriptor */
-    unsigned stacktop = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-    unsigned stacksize = 128 * 1024;
-    unsigned stackbottom = stacktop - stacksize;
+  pthread_attr_t thread_attr;
+  pthread_attr_init(&thread_attr);
+  pthread_attr_setstack(&thread_attr, (void*) stack_bottom, stack_size);
 
-    pthread_attr_init(&thread_attr);
-    pthread_attr_setstack(&thread_attr, (void*)stackbottom, stacksize);
-    _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom, false);
-    __init_tls(tls_area, &thread);
+  static pthread_internal_t thread;
+  _init_thread(&thread, gettid(), &thread_attr, (void*) stack_bottom, false);
 
-    tls_area[TLS_SLOT_BIONIC_PREINIT] = elfdata;
+  static void* tls_area[BIONIC_TLS_SLOTS];
+  __init_tls(tls_area, &thread);
+  tls_area[TLS_SLOT_BIONIC_PREINIT] = elf_data;
 }
 
-void __libc_init_common(uintptr_t *elfdata)
-{
-    int     argc = *elfdata;
-    char**  argv = (char**)(elfdata + 1);
-    char**  envp = argv + argc + 1;
+void __libc_init_common(uintptr_t* elf_data) {
+  int argc = *elf_data;
+  char** argv = (char**) (elf_data + 1);
+  char** envp = argv + argc + 1;
 
-    /* get the initial thread from TLS and add it to gThreadList */
-    _pthread_internal_add(__get_thread());
+  // Get the main thread from TLS and add it to the thread list.
+  pthread_internal_t* main_thread = __get_thread();
+  main_thread->allocated_on_heap = false;
+  _pthread_internal_add(main_thread);
 
-    /* clear errno */
-    errno = 0;
+  // Set various globals.
+  errno = 0;
+  __progname = argv[0] ? argv[0] : "<unknown>";
+  environ = envp;
 
-    /* set program name */
-    __progname = argv[0] ? argv[0] : "<unknown>";
-
-    /* setup environment pointer */
-    environ = envp;
-
-    /* setup system properties - requires environment */
-    __system_properties_init();
+  __system_properties_init(); // Requires 'environ'.
 }
 
 /* This function will be called during normal program termination
@@ -111,39 +105,42 @@ void __libc_init_common(uintptr_t *elfdata)
  * 'fini_array' points to a list of function addresses. The first
  * entry in the list has value -1, the last one has value 0.
  */
-void __libc_fini(void* array)
-{
-    int count;
-    void** fini_array = array;
-    const size_t  minus1 = ~(size_t)0; /* ensure proper sign extension */
+void __libc_fini(void* array) {
+  void** fini_array = array;
+  const size_t minus1 = ~(size_t)0; /* ensure proper sign extension */
 
-    /* Sanity check - first entry must be -1 */
-    if (array == NULL || (size_t)fini_array[0] != minus1) {
-        return;
+  /* Sanity check - first entry must be -1 */
+  if (array == NULL || (size_t)fini_array[0] != minus1) {
+    return;
+  }
+
+  /* skip over it */
+  fini_array += 1;
+
+  /* Count the number of destructors. */
+  int count = 0;
+  while (fini_array[count] != NULL) {
+    ++count;
+  }
+
+  /* Now call each destructor in reverse order. */
+  while (count > 0) {
+    void (*func)() = (void (*)) fini_array[--count];
+
+    /* Sanity check, any -1 in the list is ignored */
+    if ((size_t)func == minus1) {
+      continue;
     }
 
-    /* skip over it */
-    fini_array += 1;
-
-    /* Count the number of destructors. */
-    for (count = 0; fini_array[count] != NULL; count++);
-
-    /* Now call each destructor in reverse order. */
-    while (count > 0) {
-        void (*func)() = (void (*)) fini_array[--count];
-
-        /* Sanity check, any -1 in the list is ignored */
-        if ((size_t)func == minus1)
-            continue;
-
-        func();
-    }
+    func();
+  }
 
 #ifndef LIBC_STATIC
-    {
-        extern void __libc_postfini(void) __attribute__((weak));
-        if (__libc_postfini)
-            __libc_postfini();
+  {
+    extern void __libc_postfini(void) __attribute__((weak));
+    if (__libc_postfini) {
+      __libc_postfini();
     }
+  }
 #endif
 }

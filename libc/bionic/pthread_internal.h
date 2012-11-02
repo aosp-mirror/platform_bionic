@@ -36,9 +36,10 @@ __BEGIN_DECLS
 typedef struct pthread_internal_t
 {
     struct pthread_internal_t*  next;
-    struct pthread_internal_t** prev;
+    struct pthread_internal_t*  prev;
     pthread_attr_t              attr;
     pid_t                       kernel_id;
+    bool                        allocated_on_heap;
     pthread_cond_t              join_cond;
     int                         join_count;
     void*                       return_value;
