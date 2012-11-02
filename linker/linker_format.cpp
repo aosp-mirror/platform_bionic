@@ -184,8 +184,6 @@ snprintf(char* buff, size_t bufsize, const char* format, ...)
     return ret;
 }
 
-#if LINKER_DEBUG
-
 #if !LINKER_DEBUG_TO_LOG
 
 /*** File descriptor output
@@ -325,8 +323,6 @@ format_log(int prio, const char *tag, const char *format, ...)
 }
 
 #endif /* LINKER_DEBUG_TO_LOG */
-
-#endif /* LINKER_DEBUG */
 
 /*** formatted output implementation
  ***/
