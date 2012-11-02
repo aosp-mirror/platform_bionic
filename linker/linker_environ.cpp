@@ -40,45 +40,6 @@ bool get_AT_SECURE() {
   return _AT_SECURE_value;
 }
 
-/* Returns 1 if 'str' points to a valid environment variable definition.
- * For now, we check that:
- *  - It is smaller than MAX_ENV_LEN (to detect non-zero terminated strings)
- *  - It contains at least one equal sign that is not the first character
- */
-static int _is_valid_definition(const char* str) {
-  int pos = 0;
-  int first_equal_pos = -1;
-
-  // According to its sources, the kernel uses 32*PAGE_SIZE by default
-  // as the maximum size for an env. variable definition.
-  const int MAX_ENV_LEN = 32*4096;
-
-  if (str == NULL) {
-    return 0;
-  }
-
-  // Parse the string, looking for the first '=' there, and its size.
-  while (pos < MAX_ENV_LEN) {
-    if (str[pos] == '\0') {
-      break;
-    }
-    if (str[pos] == '=' && first_equal_pos < 0) {
-      first_equal_pos = pos;
-    }
-    pos++;
-  }
-
-  if (pos >= MAX_ENV_LEN) {
-    return 0; // Too large.
-  }
-
-  if (first_equal_pos < 1) {
-    return 0; // No equals sign, or it's the first character.
-  }
-
-  return 1;
-}
-
 static void __init_AT_SECURE(unsigned* auxv) {
   // Check auxv for AT_SECURE first to see if program is setuid, setgid,
   // has file caps, or caused a SELinux/AppArmor domain transition.
@@ -96,7 +57,59 @@ static void __init_AT_SECURE(unsigned* auxv) {
   exit(EXIT_FAILURE);
 }
 
-static void __remove_unsafe_environment_variables() {
+// Check if the environment variable definition at 'envstr'
+// starts with '<name>=', and if so return the address of the
+// first character after the equal sign. Otherwise return NULL.
+static const char* env_match(const char* envstr, const char* name) {
+  size_t i = 0;
+
+  while (envstr[i] == name[i] && name[i] != '\0') {
+    ++i;
+  }
+
+  if (name[i] == '\0' && envstr[i] == '=') {
+    return envstr + i + 1;
+  }
+
+  return NULL;
+}
+
+static bool __is_valid_environment_variable(const char* name) {
+  // According to its sources, the kernel uses 32*PAGE_SIZE by default
+  // as the maximum size for an env. variable definition.
+  const int MAX_ENV_LEN = 32*4096;
+
+  if (name == NULL) {
+    return false;
+  }
+
+  // Parse the string, looking for the first '=' there, and its size.
+  int pos = 0;
+  int first_equal_pos = -1;
+  while (pos < MAX_ENV_LEN) {
+    if (name[pos] == '\0') {
+      break;
+    }
+    if (name[pos] == '=' && first_equal_pos < 0) {
+      first_equal_pos = pos;
+    }
+    pos++;
+  }
+
+  // Check that it's smaller than MAX_ENV_LEN (to detect non-zero terminated strings).
+  if (pos >= MAX_ENV_LEN) {
+    return false;
+  }
+
+  // Check that it contains at least one equal sign that is not the first character
+  if (first_equal_pos < 1) {
+    return false;
+  }
+
+  return true;
+}
+
+static bool __is_unsafe_environment_variable(const char* name) {
   // None of these should be allowed in setuid programs.
   static const char* const UNSAFE_VARIABLE_NAMES[] = {
       "GCONV_PATH",
@@ -127,16 +140,23 @@ static void __remove_unsafe_environment_variables() {
       NULL
   };
   for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != NULL; ++i) {
-    linker_env_unset(UNSAFE_VARIABLE_NAMES[i]);
+    if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != NULL) {
+      return true;
+    }
   }
+  return false;
 }
 
-static void __remove_invalid_environment_variables() {
+static void __sanitize_environment_variables() {
   char** src  = _envp;
   char** dst = _envp;
   for (; src[0] != NULL; ++src) {
-    if (!_is_valid_definition(src[0])) {
+    if (!__is_valid_environment_variable(src[0])) {
       continue;
+    }
+    // Remove various unsafe environment variables if we're loading a setuid program.
+    if (get_AT_SECURE() && __is_unsafe_environment_variable(src[0])) {
+        continue;
     }
     dst[0] = src[0];
     ++dst;
@@ -156,33 +176,10 @@ unsigned* linker_env_init(unsigned* environment_and_aux_vectors) {
   }
   ++aux_vectors;
 
-  __remove_invalid_environment_variables();
   __init_AT_SECURE(aux_vectors);
-
-  // Sanitize environment if we're loading a setuid program.
-  if (get_AT_SECURE()) {
-    __remove_unsafe_environment_variables();
-  }
+  __sanitize_environment_variables();
 
   return aux_vectors;
-}
-
-/* Check if the environment variable definition at 'envstr'
- * starts with '<name>=', and if so return the address of the
- * first character after the equal sign. Otherwise return NULL.
- */
-static char* env_match(char* envstr, const char* name) {
-  size_t i = 0;
-
-  while (envstr[i] == name[i] && name[i] != '\0') {
-    ++i;
-  }
-
-  if (name[i] == '\0' && envstr[i] == '=') {
-    return envstr + i + 1;
-  }
-
-  return NULL;
 }
 
 const char* linker_env_get(const char* name) {
@@ -191,7 +188,7 @@ const char* linker_env_get(const char* name) {
   }
 
   for (char** p = _envp; p[0] != NULL; ++p) {
-    char* val = env_match(p[0], name);
+    const char* val = env_match(p[0], name);
     if (val != NULL) {
       if (val[0] == '\0') {
         return NULL; // Return NULL for empty strings.
@@ -200,23 +197,4 @@ const char* linker_env_get(const char* name) {
     }
   }
   return NULL;
-}
-
-void linker_env_unset(const char* name) {
-  char** readp = _envp;
-  char** writep = readp;
-
-  if (name == NULL || name[0] == '\0') {
-    return;
-  }
-
-  for ( ; readp[0] != NULL; readp++ ) {
-    if (env_match(readp[0], name)) {
-      continue;
-    }
-    writep[0] = readp[0];
-    writep++;
-  }
-  /* end list with a NULL */
-  writep[0] = NULL;
 }
