@@ -36,6 +36,7 @@
 // We want to avoid dragging the whole C library fprintf()
 // implementation into the dynamic linker since this creates
 // issues (it uses malloc()/free()) and increases code size.
-int format_buffer(char *buffer, size_t bufsize, const char *format, ...);
+int format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
+    __attribute__((__format__(printf, 3, 4)));
 
 #endif /* _LINKER_FORMAT_H */
