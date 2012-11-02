@@ -105,44 +105,41 @@ static pthread_internal_t* gThreadList = NULL;
 static pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
-
-static void
-_pthread_internal_free(pthread_internal_t* thread)
-{
-    if (thread != NULL) {
-        free(thread);
-    }
-}
-
-
-static void
-_pthread_internal_remove_locked( pthread_internal_t*  thread )
-{
+static void _pthread_internal_remove_locked(pthread_internal_t* thread) {
+  if (thread->next != NULL) {
     thread->next->prev = thread->prev;
-    thread->prev[0]    = thread->next;
+  }
+  if (thread->prev != NULL) {
+    thread->prev->next = thread->next;
+  } else {
+    gThreadList = thread->next;
+  }
+
+  // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
+  // and __libc_init_common for the point where it's added to the thread list.
+  if (thread->allocated_on_heap) {
+    free(thread);
+  }
 }
 
-static void
-_pthread_internal_remove( pthread_internal_t*  thread )
-{
-    pthread_mutex_lock(&gThreadListLock);
-    _pthread_internal_remove_locked(thread);
-    pthread_mutex_unlock(&gThreadListLock);
+static void _pthread_internal_remove(pthread_internal_t* thread) {
+  pthread_mutex_lock(&gThreadListLock);
+  _pthread_internal_remove_locked(thread);
+  pthread_mutex_unlock(&gThreadListLock);
 }
 
-__LIBC_ABI_PRIVATE__ void
-_pthread_internal_add(pthread_internal_t* thread)
-{
-    pthread_mutex_lock(&gThreadListLock);
+__LIBC_ABI_PRIVATE__ void _pthread_internal_add(pthread_internal_t* thread) {
+  pthread_mutex_lock(&gThreadListLock);
 
-    thread->prev = &gThreadList;
-    thread->next = *(thread->prev);
-    if (thread->next != NULL) {
-        thread->next->prev = &thread->next;
-    }
-    *(thread->prev) = thread;
+  // We insert at the head.
+  thread->next = gThreadList;
+  thread->prev = NULL;
+  if (thread->next != NULL) {
+    thread->next->prev = thread;
+  }
+  gThreadList = thread;
 
-    pthread_mutex_unlock(&gThreadListLock);
+  pthread_mutex_unlock(&gThreadListLock);
 }
 
 __LIBC_ABI_PRIVATE__ pthread_internal_t*
@@ -312,6 +309,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     if (thread == NULL) {
         return ENOMEM;
     }
+    thread->allocated_on_heap = true;
 
     if (attr == NULL) {
         attr = &gDefaultPthreadAttr;
@@ -323,7 +321,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     if (stack == NULL) {
         stack = mkstack(stack_size, attr->guard_size);
         if (stack == NULL) {
-            _pthread_internal_free(thread);
+            free(thread);
             return ENOMEM;
         }
     }
@@ -353,7 +351,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         if (stack != attr->stack_base) {
             munmap(stack, stack_size);
         }
-        _pthread_internal_free(thread);
+        free(thread);
         errno = old_errno;
         return clone_errno;
     }
@@ -585,7 +583,6 @@ void pthread_exit(void * retval)
     // otherwise, keep it in memory and signal any joiners.
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
         _pthread_internal_remove(thread);
-        _pthread_internal_free(thread);
     } else {
         pthread_mutex_lock(&gThreadListLock);
 
@@ -677,7 +674,6 @@ FoundIt:
      */
     if (count <= 0) {
         _pthread_internal_remove_locked(thread);
-        _pthread_internal_free(thread);
     }
     pthread_mutex_unlock(&gThreadListLock);
     return 0;
