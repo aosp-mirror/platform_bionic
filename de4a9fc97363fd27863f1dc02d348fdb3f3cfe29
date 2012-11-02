@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALKX///s0\u003d",
+        "filename": "linker/linker_debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-02T19:54:17Z",
+      "side": 1,
+      "message": "can you please add the following annotation to this function:\n\n__attribute__((__format__ (printf, 3, 4)))\n\nto the declaration of this function. This should add compile time detection for format-string vulnerabilities.",
+      "revId": "de4a9fc97363fd27863f1dc02d348fdb3f3cfe29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALKX///sw\u003d",
+        "filename": "linker/linker_debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-02T19:54:17Z",
+      "side": 1,
+      "message": "can you please add the following annotation to this function:\n\n__attribute__((__format__ (printf, 2, 3)))\n\nto the declaration of this function. This should add compile time detection for format-string vulnerabilities.",
+      "revId": "de4a9fc97363fd27863f1dc02d348fdb3f3cfe29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
