@@ -71,8 +71,6 @@ extern int format_fd(int, const char *, ...) __attribute__((__format__(printf, 2
 #define PRINT(x...)          _PRINTVF(-1, x)
 #define INFO(x...)           _PRINTVF(0, x)
 #define TRACE(x...)          _PRINTVF(1, x)
-#define WARN(fmt,args...)    _PRINTVF(-1, "%s:%d| WARNING: " fmt, __FILE__, __LINE__, ## args)
-#define ERROR(fmt,args...)   _PRINTVF(-1, "%s:%d| ERROR: " fmt, __FILE__, __LINE__, ## args)
 
 #if TRACE_DEBUG
 #define DEBUG(x...)          _PRINTVF(2, "DEBUG: " x)
@@ -81,10 +79,5 @@ extern int format_fd(int, const char *, ...) __attribute__((__format__(printf, 2
 #endif /* TRACE_DEBUG */
 
 #define TRACE_TYPE(t,x...)   do { if (DO_TRACE_##t) { TRACE(x); } } while (0)
-
-#if TIMING
-#undef WARN
-#define WARN(x...)           do {} while (0)
-#endif /* TIMING */
 
 #endif /* _LINKER_DEBUG_H_ */
