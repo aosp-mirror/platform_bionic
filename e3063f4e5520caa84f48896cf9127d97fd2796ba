@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALMX///u0\u003d",
+        "filename": "libc/tools/zoneinfo/generate",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1017124
+      },
+      "writtenOn": "2012-11-05T22:37:07Z",
+      "side": 1,
+      "message": "Release 2012i is the only release to use \u0027.sign\u0027 as an extension. Future releases will use the standard \u0027.asc\u0027 extension.\n\n    signature_extension \u003d \u0027asc\u0027 if new_version !\u003d \u0027tzdata2012i\u0027 else \u0027sign\u0027\n    signature_filename \u003d \u0027%s.%s\u0027 % (data_filename, signature_extension)\n\n(assuming a new enough version of Python for if/else ternary)",
+      "revId": "e3063f4e5520caa84f48896cf9127d97fd2796ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
