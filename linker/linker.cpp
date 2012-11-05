@@ -160,7 +160,8 @@ static char __linker_dl_err_buf[768];
 #define DL_ERR(fmt, x...) \
     do { \
         format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), fmt, ##x); \
-        ERROR(fmt "\n", ##x); \
+        /* If LD_DEBUG is set high enough, send every dlerror(3) message to the log. */ \
+        DEBUG(fmt "\n", ##x); \
     } while(0)
 
 const char* linker_get_error() {
@@ -644,7 +645,7 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
   for (size_t i = 0; paths[i] != NULL; ++i) {
     int n = format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
-      WARN("Ignoring very long library path: %s/%s\n", paths[i], name);
+      PRINT("Warning: ignoring very long library path: %s/%s\n", paths[i], name);
       continue;
     }
     int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
@@ -960,7 +961,7 @@ static int soinfo_unload(soinfo* si) {
     si->refcount = 0;
   } else {
     si->refcount--;
-    PRINT("not unloading '%s', decrementing refcount to %d\n", si->name, si->refcount);
+    TRACE("not unloading '%s', decrementing refcount to %d\n", si->name, si->refcount);
   }
   return 0;
 }
