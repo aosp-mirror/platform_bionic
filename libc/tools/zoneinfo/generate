@@ -32,22 +32,22 @@ regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward',
 
 
 def GetCurrentTzDataVersion():
-  return open('%s/tzdata' % bionic_libc_zoneinfo_dir).read().split('\0', 1)[0]
+  return open('%s/tzdata' % bionic_libc_zoneinfo_dir).read().split('\x00', 1)[0]
 
 
 def WriteSetupFile():
+  """Writes the list of zones that ZoneCompactor should process."""
   links = []
   zones = []
   for region in regions:
     for line in open('extracted/%s' % region):
       fields = line.split()
-      if len(fields) == 0:
-        continue
-      elif fields[0] == 'Link':
-        links.append('%s %s %s\n' % (fields[0], fields[1], fields[2]))
-        zones.append(fields[2])
-      elif fields[0] == 'Zone':
-        zones.append(fields[1])
+      if fields:
+        if fields[0] == 'Link':
+          links.append('%s %s %s\n' % (fields[0], fields[1], fields[2]))
+          zones.append(fields[2])
+        elif fields[0] == 'Zone':
+          zones.append(fields[1])
   zones.sort()
 
   setup = open('setup', 'w')
@@ -58,20 +58,34 @@ def WriteSetupFile():
   setup.close()
 
 
-def UpgradeTo(ftp, filename):
-  new_version = re.search('(tzdata.+)\.tar\.gz', filename).group(1)
+def Retrieve(ftp, filename):
+  ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
+
+
+def UpgradeTo(ftp, data_filename):
+  """Downloads and repackages the given data from the given FTP server."""
+
+  new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
+  signature_filename = '%s.sign' % data_filename
 
   # Switch to a temporary directory.
   tmp_dir = tempfile.mkdtemp('-tzdata')
   os.chdir(tmp_dir)
   print 'Created temporary directory "%s"...' % tmp_dir
 
-  print 'Downloading...'
-  ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
+  print 'Downloading data and signature...'
+  Retrieve(ftp, data_filename)
+  Retrieve(ftp, signature_filename)
+
+  print 'Verifying signature...'
+  # If this fails for you, you probably need to import Paul Eggert's public key:
+  # gpg --recv-keys ED97E90E62AA7E34
+  subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34',
+                         '--verify', signature_filename, data_filename])
 
   print 'Extracting...'
   os.mkdir('extracted')
-  tar = tarfile.open(filename, 'r')
+  tar = tarfile.open(data_filename, 'r')
   tar.extractall('extracted')
 
   print 'Calling zic(1)...'
@@ -94,17 +108,15 @@ def UpgradeTo(ftp, filename):
 
 
 # Run with no arguments from any directory, with no special setup required.
+# See http://www.iana.org/time-zones/ for more about the source of this data.
 def main():
-  # URL from "Sources for Time Zone and Daylight Saving Time Data"
-  # http://www.twinsun.com/tz/tz-link.htm
-
   print 'Looking for new tzdata...'
   ftp = ftplib.FTP('ftp.iana.org')
   ftp.login()
   ftp.cwd('tz/releases')
   tzdata_filenames = []
   for filename in ftp.nlst():
-    if filename.startswith('tzdata20'):
+    if filename.startswith('tzdata20') and filename.endswith('.tar.gz'):
       tzdata_filenames.append(filename)
   tzdata_filenames.sort()
 
