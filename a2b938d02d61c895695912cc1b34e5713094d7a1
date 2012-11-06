@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALLn//+2U\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-06T22:27:29Z",
+      "side": 1,
+      "message": "this leads to multiple definitions of memmove_words.",
+      "revId": "a2b938d02d61c895695912cc1b34e5713094d7a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALLn//+2M\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-06T22:27:29Z",
+      "side": 1,
+      "message": "this leads to multiple definitions of memmove.",
+      "revId": "a2b938d02d61c895695912cc1b34e5713094d7a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALLn//+2Q\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-06T22:27:29Z",
+      "side": 1,
+      "message": "this leads to multiple definitions of bcopy.",
+      "revId": "a2b938d02d61c895695912cc1b34e5713094d7a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
