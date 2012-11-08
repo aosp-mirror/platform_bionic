@@ -18,6 +18,34 @@ ifneq ($(BUILD_TINY_ANDROID), true)
 
 LOCAL_PATH := $(call my-dir)
 
+# -----------------------------------------------------------------------------
+# Benchmarks.
+# -----------------------------------------------------------------------------
+
+benchmark_c_flags = \
+    -O2 \
+    -Wall -Wextra \
+    -Werror \
+
+benchmark_src_files = \
+    benchmark_main.cpp \
+    string_benchmark.cpp \
+
+# Build benchmarks for the device (with bionic's .so). Run with:
+#   adb shell bionic-benchmarks
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-benchmarks
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += $(benchmark_c_flags)
+LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
+LOCAL_SHARED_LIBRARIES += libstlport
+LOCAL_SRC_FILES := $(benchmark_src_files)
+include $(BUILD_EXECUTABLE)
+
+# -----------------------------------------------------------------------------
+# Unit tests.
+# -----------------------------------------------------------------------------
+
 test_c_flags = \
     -fstack-protector \
     -g \
@@ -41,7 +69,7 @@ test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
     dlopen_test.cpp \
 
-# Build for the device (with bionic's .so). Run with:
+# Build tests for the device (with bionic's .so). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests
@@ -52,7 +80,7 @@ LOCAL_SHARED_LIBRARIES += libdl
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
 include $(BUILD_NATIVE_TEST)
 
-# Build for the device (with bionic's .a). Run with:
+# Build tests for the device (with bionic's .a). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-static
@@ -63,8 +91,9 @@ LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
-
-
+# -----------------------------------------------------------------------------
+# Test library for the unit tests.
+# -----------------------------------------------------------------------------
 
 # Build no-elf-hash-table-library.so to test dlopen(3) on a library that
 # only has a GNU-style hash table.
@@ -75,10 +104,11 @@ LOCAL_SRC_FILES := empty.cpp
 LOCAL_LDFLAGS := -Wl,--hash-style=gnu
 include $(BUILD_SHARED_LIBRARY)
 
+# -----------------------------------------------------------------------------
+# Unit tests built against glibc.
+# -----------------------------------------------------------------------------
 
-
-
-# Build for the host (with glibc).
+# Build tests for the host (with glibc).
 # Note that this will build against glibc, so it's not useful for testing
 # bionic's implementation, but it does let you use glibc as a reference
 # implementation for testing the tests themselves.
