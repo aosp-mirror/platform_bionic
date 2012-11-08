@@ -192,8 +192,8 @@ TEST(dlopen, dladdr_invalid) {
 // Our dynamic linker doesn't support GNU hash tables.
 TEST(dlopen, library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
-  void* handle = dlopen("empty-library.so", RTLD_NOW);
+  void* handle = dlopen("no-elf-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle == NULL);
-  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"empty-library.so\" (built with --hash-style=gnu?)", dlerror());
+  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
 }
 #endif
