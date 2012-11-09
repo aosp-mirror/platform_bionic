@@ -29,43 +29,92 @@
 #include <machine/cpu-features.h>
 #include <machine/asm.h>
 
+
+#ifdef HAVE_32_BYTE_CACHE_LINE
+#define CACHE_LINE_SIZE     32
+#else
+#define CACHE_LINE_SIZE     64
+#endif
+
 /*
- * Optimized memcmp() for ARM9.
- * This would not be optimal on XScale or ARM11, where more prefetching
- * and use of PLD will be needed.
- * The 2 major optimzations here are
- * (1) The main loop compares 16 bytes at a time
- * (2) The loads are scheduled in a way they won't stall
+ * Optimized memcmp() for Cortex-A9.
  */
 
 ENTRY(memcmp)
-        PLD         (r0, #0)
-        PLD         (r1, #0)
+        pld         [r0, #(CACHE_LINE_SIZE * 0)]
+        pld         [r0, #(CACHE_LINE_SIZE * 1)]
 
         /* take of the case where length is 0 or the buffers are the same */
         cmp         r0, r1
-        cmpne       r2, #0
         moveq       r0, #0
         bxeq        lr
+
+        pld         [r1, #(CACHE_LINE_SIZE * 0)]
+        pld         [r1, #(CACHE_LINE_SIZE * 1)]
+
+        /* make sure we have at least 8+4 bytes, this simplify things below
+         * and avoid some overhead for small blocks
+         */
+        cmp        r2, #(8+4)
+        bmi        10f
+/*
+ * Neon optimization
+ * Comparing 32 bytes at a time
+ */
+#if defined(__ARM_NEON__) && defined(NEON_UNALIGNED_ACCESS)
+        subs        r2, r2, #32
+        blo         3f
+
+        /* preload all the cache lines we need. */
+        pld         [r0, #(CACHE_LINE_SIZE * 2)]
+        pld         [r1, #(CACHE_LINE_SIZE * 2)]
+
+1:      /* The main loop compares 32 bytes at a time */
+        vld1.8      {d0 - d3}, [r0]!
+        pld         [r0, #(CACHE_LINE_SIZE * 2)]
+        vld1.8      {d4 - d7}, [r1]!
+        pld         [r1, #(CACHE_LINE_SIZE * 2)]
+
+        /* Start subtracting the values and merge results */
+        vsub.i8     q0, q2
+        vsub.i8     q1, q3
+        vorr        q2, q0, q1
+        vorr        d4, d5
+        vmov        r3, ip, d4
+        /* Check if there are any differences among the 32 bytes */
+        orrs        r3, ip
+        bne         2f
+        subs        r2, r2, #32
+        bhs         1b
+        b           3f
+2:
+        /* Check if the difference was in the first or last 16 bytes */
+        sub         r0, #32
+        vorr        d0, d1
+        sub         r1, #32
+        vmov        r3, ip, d0
+        orrs        r3, ip
+        /* if the first 16 bytes are equal, we only have to rewind 16 bytes */
+        ittt        eq
+        subeq       r2, #16
+        addeq       r0, #16
+        addeq       r1, #16
+
+3:      /* fix-up the remaining count */
+        add         r2, r2, #32
+
+        cmp        r2, #(8+4)
+        bmi        10f
+#endif
 
         .save {r4, lr}
         /* save registers */
         stmfd       sp!, {r4, lr}
-        
-        PLD         (r0, #32)
-        PLD         (r1, #32)
 
         /* since r0 hold the result, move the first source
          * pointer somewhere else
          */
-         
          mov        r4, r0
-         
-         /* make sure we have at least 8+4 bytes, this simplify things below
-          * and avoid some overhead for small blocks
-          */
-         cmp        r2, #(8+4)
-         bmi        8f
         
         /* align first pointer to word boundary
          * offset = -src & 3
@@ -103,8 +152,8 @@ ENTRY(memcmp)
         subs        r2, r2, #(32 + 4)
         bmi         1f
         
-0:      PLD         (r4, #64)
-        PLD         (r1, #64)
+0:      pld         [r4, #(CACHE_LINE_SIZE * 2)]
+        pld         [r1, #(CACHE_LINE_SIZE * 2)]
         ldr         r0, [r4], #4
         ldr         lr, [r1, #4]!
         eors        r0, r0, ip
@@ -170,9 +219,21 @@ ENTRY(memcmp)
 9:      /* restore registers and return */
         ldmfd       sp!, {r4, lr}
         bx          lr
+
+10:     /* process less than 12 bytes */
+        cmp         r2, #0
+        moveq       r0, #0
+        bxeq        lr
+        mov         r3, r0
+11:
+        ldrb        r0, [r3], #1
+        ldrb        ip, [r1], #1
+        subs        r0, ip
+        bxne        lr
+        subs        r2, r2, #1
+        bne         11b
+        bx          lr
 END(memcmp)
-
-
 
 
 
@@ -192,8 +253,8 @@ END(memcmp)
         bic         r1, r1, #3
         ldr         lr, [r1], #4
 
-6:      PLD         (r1, #64)
-        PLD         (r4, #64)
+6:      pld         [r1, #(CACHE_LINE_SIZE * 2)]
+        pld         [r4, #(CACHE_LINE_SIZE * 2)]
         mov         ip, lr, lsr #16
         ldr         lr, [r1], #4
         ldr         r0, [r4], #4
