@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALLn//9zo\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T00:46:38Z",
+      "side": 1,
+      "message": "i think we need to come up with something better than this. i\u0027d like to have a system where we have a default C implementation that\u0027s in the big list at the top.\n\nthen i\u0027d like to say for every file path/f.ext, if there\u0027s an arch-specific f.c or f.S, remove path/f.ext and add the arch-specific file.\n\ndoes that sound like it would work for you guys?",
+      "revId": "2ff8e415896ac4031e9e6908cb65d6de70b195a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALLn//9zk\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T00:46:38Z",
+      "side": 1,
+      "message": "...because this kind of thing is pretty unintelligible.\n\nand the ARM world is even worse --- we\u0027ll need to worry about which specific vendor\u0027s chip we\u0027re using.",
+      "revId": "2ff8e415896ac4031e9e6908cb65d6de70b195a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALLn//9z0\u003d",
+        "filename": "libc/string/rindex.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T00:46:38Z",
+      "side": 1,
+      "message": "if we\u0027re going to add rindex, that should probably be a separate change.\n\ni wonder for these BSD-compatibility functions if we shouldn\u0027t just have portable stubs that call the standard functions. index -\u003e strchr, rindex -\u003estrrchr, et cetera.",
+      "revId": "2ff8e415896ac4031e9e6908cb65d6de70b195a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALLn//9zs\u003d",
+        "filename": "libc/string/strnlen.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T00:46:38Z",
+      "side": 1,
+      "message": "i don\u0027t want to move Android-original files out of bionic. i want Android-original files moved _into_ the bionic directory, and upstream netbsd (or whatever) files in the upstream-whatever directory.",
+      "revId": "2ff8e415896ac4031e9e6908cb65d6de70b195a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
