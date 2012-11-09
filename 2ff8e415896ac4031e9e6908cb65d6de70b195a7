@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAALUX///Wo\u003d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T17:45:21Z",
+      "side": 1,
+      "message": "i wonder if there\u0027s a cunning hack here for the \u003cstring.h\u003e stuff... could we take the upstream-netbsd versions and add them to the libc_netbsd.a but as weak symbols. then anyone who has a platform-specific optimized version can just add the file somewhere else, and we let the linker favor the strong symbols?\n\nthat might let us avoid a lot of this makefile crap.\n\nalso, i wanted to point out that i\u0027m not trying to say \"you must solve my configuration problem for me before i let this change in\", which is what my previous comment may have sounded like. for now, feel free to ignore my comments on the makefile; that\u0027s just me thinking out loud about where i think we should be going. with intel, mips, and a bunch of different arm vendors all wanting their own optimized \u003cstring.h\u003e functions, i don\u0027t think this makefile mess scales. it\u0027s already unreadable. but we don\u0027t have to fix everything all at once.",
+      "parentUuid": "AAALLn//9zo\u003d",
+      "revId": "2ff8e415896ac4031e9e6908cb65d6de70b195a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAALLn//9zk\u003d",
         "filename": "libc/Android.mk",
         "patchSetId": 4
