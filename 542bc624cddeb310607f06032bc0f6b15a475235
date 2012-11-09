@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALUX///Xw\u003d",
+        "filename": "libc/arch-arm/bionic/memcpy.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T17:32:29Z",
+      "side": 1,
+      "message": "can we combine this with the existing 32-byte cache line macro, and maybe even combine this memcpy implementation with the next one down in the file?\n\napart from the ordering/number of plds and the \"the main loop copies 64 bytes\"/\"the main loop copies 128 bytes\", this memcpy and the next one are the same. would everyone be better off with this? how does this compare to the STE A9 memcpy rewrite?\n\nARM: this is exactly the kind of thing we need help with --- combining all the vendor-specific variants of code like this into something parameterized, preferably in a way that makes it easy for OEMs to get the right settings. how many millions of A9 devices have shipped without the right cache line length configured, for example?\n\n  #define kernel bionic\n  #include \u003clinus_arm_kernel_rant.h\u003e",
+      "revId": "542bc624cddeb310607f06032bc0f6b15a475235",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
