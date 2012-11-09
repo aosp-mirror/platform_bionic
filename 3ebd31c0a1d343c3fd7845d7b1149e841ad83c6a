@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALLn//9xI\u003d",
+        "filename": "libc/arch-arm/bionic/memcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T01:48:18Z",
+      "side": 1,
+      "message": "can you give me some guidance on setting NEON_UNALIGNED_ACCESS? i take it there are armv7-a-neon devices that don\u0027t support unaligned neon accesses?",
+      "revId": "3ebd31c0a1d343c3fd7845d7b1149e841ad83c6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
