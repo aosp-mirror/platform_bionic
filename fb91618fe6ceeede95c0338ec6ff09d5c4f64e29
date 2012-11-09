@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALLn//9wo\u003d",
+        "filename": "libc/arch-arm/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-09T02:01:52Z",
+      "side": 1,
+      "message": "how about this? what should this be set to? for which targets?",
+      "revId": "fb91618fe6ceeede95c0338ec6ff09d5c4f64e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
