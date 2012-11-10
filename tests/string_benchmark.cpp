@@ -62,6 +62,22 @@ static void BM_memcpy(int iters, int nbytes) {
 }
 BENCHMARK(BM_memcpy)->AT_COMMON_SIZES;
 
+static void BM_memmove(int iters, int nbytes) {
+  StopBenchmarkTiming();
+  char* buf = new char[nbytes + 64];
+  memset(buf, 'x', nbytes + 64);
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; i++) {
+    memmove(buf, buf + 1, nbytes); // Worst-case overlap.
+  }
+
+  StopBenchmarkTiming();
+  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  delete[] buf;
+}
+BENCHMARK(BM_memmove)->AT_COMMON_SIZES;
+
 static void BM_memset(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* dst = new char[nbytes];
