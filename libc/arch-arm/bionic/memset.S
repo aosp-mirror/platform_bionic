@@ -26,23 +26,113 @@
  * SUCH DAMAGE.
  */
 
+#include <machine/cpu-features.h>
 #include <machine/asm.h>
-	
+
 		/*
 		 * Optimized memset() for ARM.
          *
          * memset() returns its first argument.
 		 */
-	
+
+#if defined(__ARM_NEON__)
+    .fpu    neon
+#endif
+
 ENTRY(bzero)
         mov     r2, r1
         mov     r1, #0
 END(bzero)
 
 ENTRY(memset)
+#if defined(__ARM_NEON__)
+
+#ifdef  NEON_MEMSET_DIVIDER
+        cmp         r2, #NEON_MEMSET_DIVIDER
+        bhi         11f
+#endif
+        .save       {r0}
+        stmfd       sp!, {r0}
+
+        vdup.8      q0, r1
+
+#ifndef NEON_UNALIGNED_ACCESS
+        /* do we have at least 16-bytes to write (needed for alignment below) */
+        cmp         r2, #16
+        blo         3f
+
+        /* align destination to 16 bytes for the write-buffer */
+        rsb         r3, r0, #0
+        ands        r3, r3, #0xF
+        beq         2f
+
+        /* write up to 15-bytes (count in r3) */
+        sub         r2, r2, r3
+        movs        ip, r3, lsl #31
+        strmib      r1, [r0], #1
+        strcsb      r1, [r0], #1
+        strcsb      r1, [r0], #1
+        movs        ip, r3, lsl #29
+        bge         1f
+
+        // writes 4 bytes, 32-bits aligned
+        vst1.32     {d0[0]}, [r0, :32]!
+1:      bcc         2f
+
+        // writes 8 bytes, 64-bits aligned
+        vst1.8      {d0}, [r0, :64]!
+2:
+#endif
+        /* make sure we have at least 32 bytes to write */
+        subs        r2, r2, #32
+        blo         2f
+        vmov        q1, q0
+
+1:      /* The main loop writes 32 bytes at a time */
+        subs        r2, r2, #32
+#ifndef NEON_UNALIGNED_ACCESS
+        vst1.8      {d0 - d3}, [r0, :128]!
+#else
+        vst1.8      {d0 - d3}, [r0]!
+#endif
+        bhs         1b
+
+2:      /* less than 32 left */
+        add         r2, r2, #32
+        tst         r2, #0x10
+        beq         3f
+
+        // writes 16 bytes, 128-bits aligned
+#ifndef NEON_UNALIGNED_ACCESS
+        vst1.8      {d0, d1}, [r0, :128]!
+#else
+        vst1.8      {d0, d1}, [r0]!
+#endif
+3:      /* write up to 15-bytes (count in r2) */
+        movs        ip, r2, lsl #29
+        bcc         1f
+        vst1.8      {d0}, [r0]!
+1:      bge         2f
+        vst1.32     {d0[0]}, [r0]!
+2:      movs        ip, r2, lsl #31
+        strmib      r1, [r0], #1
+        strcsb      r1, [r0], #1
+        strcsb      r1, [r0], #1
+        ldmfd       sp!, {r0}
+        bx          lr
+11:
+#endif
+
+        /*
+         * Optimized memset() for ARM.
+         *
+         * memset() returns its first argument.
+         */
+
 		/* compute the offset to align the destination
 		 * offset = (4-(src&3))&3 = -src & 3
 		 */
+
         .save       {r0, r4-r7, lr}
 		stmfd		sp!, {r0, r4-r7, lr}
 		rsb			r3, r0, #0
@@ -70,7 +160,7 @@ ENTRY(memset)
         mov         r5, r1
         mov         r6, r1
         mov         r7, r1
-        
+
 		rsb         r3, r0, #0
 		ands		r3, r3, #0x1C
 		beq         3f
@@ -78,7 +168,7 @@ ENTRY(memset)
 		andhi		r3, r2, #0x1C
 		sub         r2, r2, r3
 
-		/* conditionnaly writes 0 to 7 words (length in r3) */
+		/* conditionally writes 0 to 7 words (length in r3) */
 		movs		r3, r3, lsl #28
 		stmcsia		r0!, {r1, lr}
 		stmcsia		r0!, {r1, lr}
@@ -95,7 +185,7 @@ ENTRY(memset)
         bhs         1b
 2:      add         r2, r2, #32
 
-		/* conditionnaly stores 0 to 31 bytes */
+		/* conditionally stores 0 to 31 bytes */
 		movs		r2, r2, lsl #28
 		stmcsia		r0!, {r1,r3,r12,lr}
 		stmmiia		r0!, {r1, lr}
