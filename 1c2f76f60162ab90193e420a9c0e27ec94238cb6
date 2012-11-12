@@ -16,6 +16,24 @@
       "revId": "1c2f76f60162ab90193e420a9c0e27ec94238cb6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALb3///+U\u003d",
+        "filename": "libc/arch-arm/bionic/memset.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1017245
+      },
+      "writtenOn": "2012-11-12T14:25:08Z",
+      "side": 1,
+      "message": "I\u0027m using this in BoardConfig.mk for A9:\n\n# Sets the upper size limit for NEON implementation of memset.\n# For sizes larger than this, the ARM version of memset is used.\nBIONIC_MEMSET_NEON_DIVIDER :\u003d 132\n\nand then set the define in bionic/libc/Android.mk with\n  #\n  # Define MEMSET_NEON_DIVIDER to set a size limit for the NEON version\n  # Only sizes below this limit uses the Neon version.\n  #\n  ifneq ($(strip $(BIONIC_MEMSET_NEON_DIVIDER)),)\n    libc_common_cflags +\u003d -DMEMSET_NEON_DIVIDER\u003d$(strip $(BIONIC_MEMSET_NEON_DIVIDER))\n  endif",
+      "parentUuid": "AAALWn///uI\u003d",
+      "revId": "1c2f76f60162ab90193e420a9c0e27ec94238cb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
