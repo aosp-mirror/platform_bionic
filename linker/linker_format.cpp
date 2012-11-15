@@ -26,6 +26,10 @@
  * SUCH DAMAGE.
  */
 
+// Temporarily disable _FORTIFY_SOURCE to get this code to
+// compile under GCC 4.7
+#undef _FORTIFY_SOURCE
+
 #include <assert.h>
 #include <stdarg.h>
 #include <string.h>
