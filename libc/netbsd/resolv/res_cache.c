@@ -1197,6 +1197,7 @@ typedef struct resolv_cache_info {
     struct resolv_cache_info*   next;
     char*                       nameservers[MAXNS +1];
     struct addrinfo*            nsaddrinfo[MAXNS + 1];
+    char*                       domains;
 } CacheInfo;
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
@@ -1989,7 +1990,8 @@ _resolv_set_default_iface(const char* ifname)
 }
 
 void
-_resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers)
+_resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers,
+        const char *domains)
 {
     int i, rt, index;
     struct addrinfo hints;
@@ -2023,6 +2025,7 @@ _resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numser
                 cache_info->nsaddrinfo[index] = NULL;
             }
         }
+        cache_info->domains = strdup(domains);
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
