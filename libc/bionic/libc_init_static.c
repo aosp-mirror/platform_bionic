@@ -48,12 +48,56 @@
 
 #include <bionic_tls.h>
 #include <errno.h>
+#include <sys/mman.h>
+
+// Returns the address of the page containing address 'x'.
+#define PAGE_START(x)  ((x) & PAGE_MASK)
+
+// Returns the address of the next page after address 'x', unless 'x' is
+// itself at the start of a page.
+#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
 static void call_array(void(**list)())
 {
     // First element is -1, list is null-terminated
     while (*++list) {
         (*list)();
+    }
+}
+
+/*
+ * Find the value of the AT_* variable passed to us by the kernel.
+ */
+static unsigned find_aux(unsigned *vecs, unsigned type) {
+    while (vecs[0]) {
+        if (vecs[0] == type) {
+            return vecs[1];
+        }
+        vecs += 2;
+    }
+
+    return 0; // should never happen
+}
+
+static void apply_gnu_relro(unsigned *vecs) {
+    Elf32_Phdr *phdr_start;
+    unsigned phdr_ct;
+    Elf32_Phdr *phdr;
+
+    phdr_start = (Elf32_Phdr *) find_aux(vecs, AT_PHDR);
+    phdr_ct    = find_aux(vecs, AT_PHNUM);
+
+    for (phdr = phdr_start; phdr < (phdr_start + phdr_ct); phdr++) {
+        if (phdr->p_type != PT_GNU_RELRO)
+            continue;
+
+        Elf32_Addr seg_page_start = PAGE_START(phdr->p_vaddr);
+        Elf32_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz);
+
+        // Check return value here? What do we do if we fail?
+        mprotect((void *) seg_page_start,
+                 seg_page_end - seg_page_start,
+                 PROT_READ);
     }
 }
 
@@ -64,6 +108,7 @@ __noreturn void __libc_init(uintptr_t *elfdata,
 {
     int  argc;
     char **argv, **envp;
+    unsigned *vecs;
 
     __libc_init_tls(NULL);
 
@@ -84,6 +129,14 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     argv = (char**)(elfdata + 1);
     envp = argv + argc + 1;
 
+    // The auxiliary vector is at the end of the environment block
+    vecs = (unsigned *) envp;
+    while (vecs[0] != 0) {
+        vecs++;
+    }
+    /* The end of the environment block is marked by two NULL pointers */
+    vecs++;
+
     /* The executable may have its own destructors listed in its .fini_array
      * so we need to ensure that these are called when the program exits
      * normally.
@@ -91,5 +144,6 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     if (structors->fini_array)
         __cxa_atexit(__libc_fini,structors->fini_array,NULL);
 
+    apply_gnu_relro(vecs);
     exit(slingshot(argc, argv, envp));
 }
