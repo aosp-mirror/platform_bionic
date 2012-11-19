@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALr3///24\u003d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1931,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2012-11-19T08:41:25Z",
+      "side": 1,
+      "message": "si-\u003ebase reference in comment should be edited as well.",
+      "revId": "5122df62795604d345160b3946c89e5ad8a4622e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
