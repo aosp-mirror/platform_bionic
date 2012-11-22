@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALx3///ec\u003d",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2012-11-22T11:45:08Z",
+      "side": 1,
+      "message": "why not use __WINT_TYPE__ directly instead?",
+      "revId": "1d23ac70f1521c32d5fee7aad61d434ed3d50691",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
