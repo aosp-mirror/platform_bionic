@@ -16,6 +16,24 @@
       "revId": "e3063f4e5520caa84f48896cf9127d97fd2796ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAALuX//+SU\u003d",
+        "filename": "libc/tools/zoneinfo/generate",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-26T22:54:30Z",
+      "side": 1,
+      "message": "thanks. fixed in https://android-review.googlesource.com/46855, though i don\u0027t try to be as clever --- i assume that if you need to get as far as the first .asc file you can just cherry-pick the AOSP change. after that, we\u0027ll just fail hard if there\u0027s no .asc signature file on the server.",
+      "parentUuid": "AAALMX///u0\u003d",
+      "revId": "e3063f4e5520caa84f48896cf9127d97fd2796ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
