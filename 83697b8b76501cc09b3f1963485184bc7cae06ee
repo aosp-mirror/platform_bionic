@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALuX//+Lw\u003d",
+        "filename": "linker/linker_format.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-26T23:51:09Z",
+      "side": 1,
+      "message": "if this is temporary, what\u0027s the long-term plan?",
+      "revId": "83697b8b76501cc09b3f1963485184bc7cae06ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
