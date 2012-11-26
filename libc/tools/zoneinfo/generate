@@ -66,22 +66,24 @@ def UpgradeTo(ftp, data_filename):
   """Downloads and repackages the given data from the given FTP server."""
 
   new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
-  signature_filename = '%s.sign' % data_filename
 
   # Switch to a temporary directory.
   tmp_dir = tempfile.mkdtemp('-tzdata')
   os.chdir(tmp_dir)
   print 'Created temporary directory "%s"...' % tmp_dir
 
-  print 'Downloading data and signature...'
+  print 'Downloading data...'
   Retrieve(ftp, data_filename)
+
+  print 'Downloading signature...'
+  signature_filename = '%s.asc' % data_filename
   Retrieve(ftp, signature_filename)
 
   print 'Verifying signature...'
   # If this fails for you, you probably need to import Paul Eggert's public key:
   # gpg --recv-keys ED97E90E62AA7E34
-  subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34',
-                         '--verify', signature_filename, data_filename])
+  subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34', '--verify',
+                         signature_filename, data_filename])
 
   print 'Extracting...'
   os.mkdir('extracted')
