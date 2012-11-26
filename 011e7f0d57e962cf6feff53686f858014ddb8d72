@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAALu3//+fE\u003d",
+        "filename": "libc/tools/zoneinfo/generate",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2012-11-26T22:49:48Z",
+      "side": 1,
+      "message": "why not die?",
+      "revId": "011e7f0d57e962cf6feff53686f858014ddb8d72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
