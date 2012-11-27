@@ -29,17 +29,6 @@
 #ifndef _MIPS64_ENDIAN_H_
 #define _MIPS64_ENDIAN_H_
 
-#if defined(__MIPSEL__)
-#define _BYTE_ORDER _LITTLE_ENDIAN
-#endif
-#if defined(__MIPSEB__)
-#define _BYTE_ORDER _BIG_ENDIAN
-#endif
-
-#if !defined(_BYTE_ORDER) && !defined(lint)
-#error "__MIPSEL__ or __MIPSEB__ must be defined to define BYTE_ORDER!!!"
-#endif
-
 #ifdef __GNUC__
 
 #if defined(__mips_isa_rev) && (__mips_isa_rev >= 2)
@@ -69,9 +58,13 @@
 #endif  /* __mips32r2__ */
 #endif  /* __GNUC__ */
 
-
+#if defined(__MIPSEB__)
+#define _BYTE_ORDER _BIG_ENDIAN
+#else
+#define _BYTE_ORDER _LITTLE_ENDIAN
+#endif
+#define __STRICT_ALIGNMENT
+#include <sys/types.h>
 #include <sys/endian.h>
-
-#define	__STRICT_ALIGNMENT
 
 #endif /* _MIPS64_ENDIAN_H_ */
