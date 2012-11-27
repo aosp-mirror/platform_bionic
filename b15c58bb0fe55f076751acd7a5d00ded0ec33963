@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAL/H///70\u003d",
+        "filename": "libc/arch-x86/include/endian.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-27T22:24:14Z",
+      "side": 1,
+      "message": "for consistency with arm and mips, both of which pull this in. we shouldn\u0027t #define _STRICT_ALIGNMENT for x86.",
+      "revId": "b15c58bb0fe55f076751acd7a5d00ded0ec33963",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
