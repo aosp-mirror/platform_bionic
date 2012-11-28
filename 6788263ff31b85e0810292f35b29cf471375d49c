@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAL/X///Ss\u003d",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-28T19:07:21Z",
+      "side": 1,
+      "message": "spelling: \"compatibility\"\n\nAlso, glibc wraps these in an \"#ifdef  __USE_BSD\" block.  Do we want to do the same thing?",
+      "revId": "6788263ff31b85e0810292f35b29cf471375d49c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
