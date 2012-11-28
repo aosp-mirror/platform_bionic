@@ -77,7 +77,7 @@
 #endif  /* __ARM_ARCH__ */
 #endif  /* __GNUC__ */
 
-#ifdef __ARMEB__
+#if defined(__ARMEB__)
 #define _BYTE_ORDER _BIG_ENDIAN
 #else
 #define _BYTE_ORDER _LITTLE_ENDIAN
