@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,30 @@
  * SUCH DAMAGE.
  */
 
-# The __dso_handle global variable is used by static
-# C++ constructors and destructors in the binary.
-# See http://www.codesourcery.com/public/cxx-abi/abi.html#dso-dtor
-#
-        .section .bss
-        .align 4
+extern unsigned __linker_init(unsigned int *elfdata);
 
-#ifndef CRT_LEGACY_WORKAROUND
-	.hidden __dso_handle
-#endif
+__attribute__((visibility("hidden")))
+void _start() {
+  void *elfdata;
+  void (*start)(void);
 
-        .globl __dso_handle
-__dso_handle:
-        .long 0
+  elfdata = __builtin_frame_address(0) + sizeof(void *);
+  start = (void(*)(void))__linker_init(elfdata);
+
+  /* linker init returns (%eax) the _entry address in the main image */
+  /* entry point expects sp to point to elfdata */
+
+  __asm__ (
+     "mov %0, %%esp\n\t"
+     "jmp *%1\n\t"
+     : : "r"(elfdata), "r"(start) :
+  );
+
+  /* Unreachable */
+}
+
+/* Since linker has its own version of crtbegin (this file) it should have */
+/* own version of __stack_chk_fail_local for the case when it's built with */
+/* stack protector feature */
+
+#include "arch-x86/bionic/__stack_chk_fail_local.h"
