@@ -62,7 +62,7 @@ int     getgroups:getgroups32(int, gid_t *)    205,205,-1
 int     getgroups:getgroups(int, gid_t *)      -1,-1,80
 pid_t   getpgid(pid_t)             132
 pid_t   getppid()                  64
-pid_t   getsid(pid_t)              147
+pid_t   getsid(pid_t)              147,147,151
 pid_t   setsid()                   66
 int     setgid:setgid32(gid_t)     214,214,-1
 int     setgid:setgid(gid_t)       -1,-1,46
