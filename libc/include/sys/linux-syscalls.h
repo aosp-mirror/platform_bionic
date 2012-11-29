@@ -83,7 +83,6 @@
 #define __NR_msync                        (__NR_SYSCALL_BASE + 144)
 #define __NR_readv                        (__NR_SYSCALL_BASE + 145)
 #define __NR_writev                       (__NR_SYSCALL_BASE + 146)
-#define __NR_getsid                       (__NR_SYSCALL_BASE + 147)
 
 #ifdef __arm__
 #define __NR_exit_group                   (__NR_SYSCALL_BASE + 248)
@@ -98,6 +97,7 @@
 #define __NR_gettid                       (__NR_SYSCALL_BASE + 224)
 #define __NR_readahead                    (__NR_SYSCALL_BASE + 225)
 #define __NR_getgroups32                  (__NR_SYSCALL_BASE + 205)
+#define __NR_getsid                       (__NR_SYSCALL_BASE + 147)
 #define __NR_setgid32                     (__NR_SYSCALL_BASE + 214)
 #define __NR_setreuid32                   (__NR_SYSCALL_BASE + 203)
 #define __NR_setresuid32                  (__NR_SYSCALL_BASE + 208)
@@ -221,6 +221,7 @@
 #define __NR_pipe                         (__NR_SYSCALL_BASE + 42)
 #define __NR_sigsuspend                   (__NR_SYSCALL_BASE + 72)
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
+#define __NR_getsid                       (__NR_SYSCALL_BASE + 147)
 #define __NR_fdatasync                    (__NR_SYSCALL_BASE + 148)
 #define __NR_mlock                        (__NR_SYSCALL_BASE + 150)
 #define __NR_munlock                      (__NR_SYSCALL_BASE + 151)
@@ -352,6 +353,7 @@
 #define __NR_setgroups                    (__NR_SYSCALL_BASE + 81)
 #define __NR_fchown                       (__NR_SYSCALL_BASE + 95)
 #define __NR_cacheflush                   (__NR_SYSCALL_BASE + 147)
+#define __NR_getsid                       (__NR_SYSCALL_BASE + 151)
 #define __NR_fdatasync                    (__NR_SYSCALL_BASE + 152)
 #define __NR_mlock                        (__NR_SYSCALL_BASE + 154)
 #define __NR_munlock                      (__NR_SYSCALL_BASE + 155)
