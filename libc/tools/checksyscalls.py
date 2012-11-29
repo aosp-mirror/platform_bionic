@@ -2,7 +2,7 @@
 #
 # this tool is used to check that the syscall numbers that are in
 # SYSCALLS.TXT correspond to those found in the Linux kernel sources
-# for the arm and i386 architectures
+# for the arm, i386 and mips architectures
 #
 
 import sys, re, string, os, commands
@@ -167,12 +167,11 @@ def check_syscalls(archname, idname, arch_dict):
     for sc in syscalls:
         sc_name = sc["name"]
         sc_id   = sc[idname]
+        if sc_id == -1:
+            sc_id = sc["common"]
         if sc_id >= 0:
             if not arch_dict.has_key(sc_name):
                 print "error: %s syscall %s not defined, should be %d" % (archname, sc_name, sc_id)
-                errors += 1
-            elif not arch_dict.has_key(sc_name):
-                print "error: %s syscall %s is not implemented" % (archname, sc_name)
                 errors += 1
             elif arch_dict[sc_name] != sc_id:
                 print "error: %s syscall %s should be %d instead of %d" % (archname, sc_name, arch_dict[sc_name], sc_id)
