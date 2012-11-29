@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "MJJ5EnbU",
+        "filename": "libc/arch-x86/bionic/crtbegin.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2012-11-29T14:18:54Z",
+      "side": 1,
+      "message": "Do we need to align the stack to 16-byte?",
+      "revId": "a4024eaf85711b931d8d86f715db9f67f68973d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
