@@ -35,10 +35,6 @@
 #include "wcio.h"
 #include "fileext.h"
 
-#ifndef DEFFILEMODE
-#define DEFFILEMODE  (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-#endif
-
 
 /*
  * Information local to this implementation of stdio,
