@@ -39,29 +39,10 @@
 #define	_STDIO_H_
 
 #include <sys/cdefs.h>
-#include <sys/_types.h>
+#include <sys/types.h>
 
 #include <stdarg.h>
 #include <stddef.h>
-
-#if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
-#include <sys/types.h>	/* XXX should be removed */
-#endif
-
-#ifndef _SIZE_T_DEFINED_
-#define _SIZE_T_DEFINED_
-typedef unsigned int  size_t;
-#endif
-
-#ifndef _SSIZE_T_DEFINED_
-#define _SSIZE_T_DEFINED_
-typedef long int  ssize_t;
-#endif
-
-#ifndef	_OFF_T_DEFINED_
-#define	_OFF_T_DEFINED_
-typedef	long    off_t;
-#endif
 
 #define __need_NULL
 #include <stddef.h>
