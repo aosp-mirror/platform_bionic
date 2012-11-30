@@ -224,6 +224,23 @@ size_t strlen(const char *s) {
     return __strlen_chk(s, bos);
 }
 
+__purefunc extern char* __strchr_real(const char *, int)
+    __asm__(__USER_LABEL_PREFIX__ "strchr");
+extern char* __strchr_chk(const char *, int, size_t);
+
+__BIONIC_FORTIFY_INLINE
+char* strchr(const char *s, int c) {
+    size_t bos = __builtin_object_size(s, 0);
+
+    // Compiler doesn't know destination size. Don't call __strchr_chk
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __strchr_real(s, c);
+    }
+
+    return __strchr_chk(s, c, bos);
+}
+
+
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
 __END_DECLS
