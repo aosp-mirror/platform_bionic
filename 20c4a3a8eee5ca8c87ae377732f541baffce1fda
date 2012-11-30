@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "MP8z8o68",
+        "filename": "libc/arch-x86/bionic/crtbegin_so.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2012-11-30T16:53:49Z",
+      "side": 1,
+      "message": "Do we really need the CRT_LEGACY_WORKAROUND ifdefs for x86?  For ARM I can sorta understand, but there shouldn\u0027t be any x86 programs out there which have this bug.",
+      "revId": "20c4a3a8eee5ca8c87ae377732f541baffce1fda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
