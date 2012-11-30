@@ -59,7 +59,6 @@ extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
-extern int  __set_errno(int);
 
 int  __futex_wake_ex(volatile void *ftx, int pshared, int val)
 {
