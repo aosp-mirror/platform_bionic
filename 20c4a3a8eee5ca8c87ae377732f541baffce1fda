@@ -16,6 +16,24 @@
       "revId": "20c4a3a8eee5ca8c87ae377732f541baffce1fda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "MPTlQFwQ",
+        "filename": "libc/arch-x86/bionic/crtbegin_so.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-30T17:59:47Z",
+      "side": 1,
+      "message": "arm, mips, and x86 all currently have this, but it\u0027s only #defined for arm. the plan -- if we don\u0027t need find problems with this and need to revert it -- is to share the same files between arm and x86 (and maybe one day mips too).",
+      "parentUuid": "MP8z8o68",
+      "revId": "20c4a3a8eee5ca8c87ae377732f541baffce1fda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
