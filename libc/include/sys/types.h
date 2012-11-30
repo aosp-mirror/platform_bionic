@@ -83,11 +83,6 @@ typedef  .... pthread_rwlock_attr_t;
 typedef  .... pthread_t;
 #endif
 
-#ifndef _SIZE_T_DEFINED_
-#define _SIZE_T_DEFINED_
-typedef unsigned int  size_t;
-#endif
-
 #ifndef _SSIZE_T_DEFINED_
 #define _SSIZE_T_DEFINED_
 typedef long int  ssize_t;
