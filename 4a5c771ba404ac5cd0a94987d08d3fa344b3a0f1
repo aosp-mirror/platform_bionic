@@ -16,6 +16,24 @@
       "revId": "4a5c771ba404ac5cd0a94987d08d3fa344b3a0f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "MVVBKMiU",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-30T20:07:33Z",
+      "side": 1,
+      "message": "actually, i\u0027m a bit confused... unlike __set_errno, __set_syscall_errno is already hidden, but it\u0027s in the NDK\u0027s list of symbols too.\n\ndoes that mean i can hide __set_errno and still pass the NDK\u0027s test? is that deliberate or a bug in the test?",
+      "parentUuid": "MPTRKXiU",
+      "revId": "4a5c771ba404ac5cd0a94987d08d3fa344b3a0f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
