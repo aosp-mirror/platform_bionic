@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,42 +25,46 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
-	.p2align 4,,15
-	.globl	atexit
-	.hidden	atexit
-	.type	atexit, @function
-atexit:
-	pushl	%ebp
-	movl	%esp, %ebp
-	pushl	%ebx
-	call	__x86.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
-	subl	$20, %esp
-	movl	$0, 4(%esp)
-	movl	__dso_handle@GOTOFF(%ebx), %eax
-	movl	%eax, 8(%esp)
-	movl	8(%ebp), %eax
-	movl	%eax, (%esp)
-	call	__cxa_atexit@PLT
-	addl	$20, %esp
-	popl	%ebx
-	popl	%ebp
-	ret
-	.size	atexit, .-atexit
 
-	.section	.text.__x86.get_pc_thunk.bx,"axG",@progbits,__x86.get_pc_thunk.bx,comdat
-	.globl	__x86.get_pc_thunk.bx
-	.hidden	__x86.get_pc_thunk.bx
-	.type	__x86.get_pc_thunk.bx, @function
-__x86.get_pc_thunk.bx:
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	movl	(%esp), %ebx
-	ret
+typedef struct
+{
+    void (**preinit_array)(void);
+    void (**init_array)(void);
+    void (**fini_array)(void);
+} structors_array_t;
+
+extern int main(int argc, char **argv, char **env);
+
+extern void __libc_init(
+  unsigned int *elfdata,
+  void (*onexit)(void),
+  int (*slingshot)(int, char**, char**),
+  structors_array_t const * const structors
+);
+
+__attribute__ ((section (".preinit_array")))
+void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".init_array")))
+void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__((visibility("hidden")))
+__attribute__((force_align_arg_pointer))
+void _start() {
+  structors_array_t array;
+  void *elfdata;
+
+  array.preinit_array = &__PREINIT_ARRAY__;
+  array.init_array =    &__INIT_ARRAY__;
+  array.fini_array =    &__FINI_ARRAY__;
+
+  elfdata = __builtin_frame_address(0) + sizeof(void *);
+  __libc_init(elfdata, (void *) 0, &main, &array);
+}
+
+#include "__dso_handle.h"
+#include "atexit.h"
+#include "__stack_chk_fail_local.h"
