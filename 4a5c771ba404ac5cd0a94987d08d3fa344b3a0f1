@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "MPTRKXiU",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-11-30T20:00:25Z",
+      "side": 1,
+      "message": "andrewhsieh: can we remove symbols from the NDK? this should never have been exposed.",
+      "revId": "4a5c771ba404ac5cd0a94987d08d3fa344b3a0f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
