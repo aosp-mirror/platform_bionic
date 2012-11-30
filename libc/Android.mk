@@ -211,7 +211,6 @@ libc_common_src_files := \
 	bionic/semaphore.c \
 	bionic/send.c \
 	bionic/setegid.c \
-	bionic/__set_errno.c \
 	bionic/seteuid.c \
 	bionic/setpgrp.c \
 	bionic/setresuid.c \
@@ -283,6 +282,7 @@ libc_bionic_src_files := \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strcpy_chk.cpp \
