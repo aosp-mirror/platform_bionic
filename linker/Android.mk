@@ -1,8 +1,14 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
+ifeq ($(TARGET_ARCH),x86)
+    linker_begin_extension := c
+else
+    linker_begin_extension := S
+endif
+
 LOCAL_SRC_FILES:= \
-	arch/$(TARGET_ARCH)/begin.S \
+	arch/$(TARGET_ARCH)/begin.$(linker_begin_extension) \
 	debugger.cpp \
 	dlfcn.cpp \
 	linker.cpp \
