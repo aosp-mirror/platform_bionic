@@ -28,6 +28,7 @@
 #ifndef _SIGNAL_H_
 #define _SIGNAL_H_
 
+#include <errno.h>
 #include <sys/cdefs.h>
 #include <limits.h>		/* For LONG_BIT */
 #include <string.h>		/* For memset() */
@@ -53,45 +54,57 @@ typedef int sig_atomic_t;
 #  define _NSIG  64
 #endif
 
-extern const char * const sys_siglist[];
-extern const char * const sys_signame[];
+extern const char* const sys_siglist[];
+extern const char* const sys_signame[];
 
-static __inline__ int sigismember(sigset_t *set, int signum)
-{
-    unsigned long *local_set = (unsigned long *)set;
-    signum--;
-    return (int)((local_set[signum/LONG_BIT] >> (signum%LONG_BIT)) & 1);
+static __inline__ int sigismember(sigset_t* set, int signum) {
+  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+    errno = EINVAL;
+    return -1;
+  }
+  unsigned long* local_set = (unsigned long*) set;
+  signum--;
+  return (int) ((local_set[signum/LONG_BIT] >> (signum%LONG_BIT)) & 1);
 }
 
-
-static __inline__ int sigaddset(sigset_t *set, int signum)
-{
-    unsigned long *local_set = (unsigned long *)set;
-    signum--;
-    local_set[signum/LONG_BIT] |= 1UL << (signum%LONG_BIT);
-    return 0;
+static __inline__ int sigaddset(sigset_t* set, int signum) {
+  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+    errno = EINVAL;
+    return -1;
+  }
+  unsigned long* local_set = (unsigned long*) set;
+  signum--;
+  local_set[signum/LONG_BIT] |= 1UL << (signum%LONG_BIT);
+  return 0;
 }
 
-
-static __inline__ int sigdelset(sigset_t *set, int signum)
-{
-    unsigned long *local_set = (unsigned long *)set;
-    signum--;
-    local_set[signum/LONG_BIT] &= ~(1UL << (signum%LONG_BIT));
-    return 0;
+static __inline__ int sigdelset(sigset_t* set, int signum) {
+  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+    errno = EINVAL;
+    return -1;
+  }
+  unsigned long* local_set = (unsigned long*) set;
+  signum--;
+  local_set[signum/LONG_BIT] &= ~(1UL << (signum%LONG_BIT));
+  return 0;
 }
 
-
-static __inline__ int sigemptyset(sigset_t *set)
-{
-    memset(set, 0, sizeof *set);
-    return 0;
+static __inline__ int sigemptyset(sigset_t* set) {
+  if (set == NULL) {
+    errno = EINVAL;
+    return -1;
+  }
+  memset(set, 0, sizeof *set);
+  return 0;
 }
 
-static __inline__ int sigfillset(sigset_t *set)
-{
-    memset(set, ~0, sizeof *set);
-    return 0;
+static __inline__ int sigfillset(sigset_t* set) {
+  if (set == NULL) {
+    errno = EINVAL;
+    return -1;
+  }
+  memset(set, ~0, sizeof *set);
+  return 0;
 }
 
 

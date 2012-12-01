@@ -59,6 +59,7 @@ test_src_files = \
     libgen_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    signal_test.cpp \
     stack_protector_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
