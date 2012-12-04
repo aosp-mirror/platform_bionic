@@ -35,11 +35,8 @@ char *
 __strchr_chk(const char *p, int ch, size_t s_len)
 {
 	for (;; ++p, s_len--) {
-		if (s_len == 0) {
-			__libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-				"*** FORTIFY_SOURCE strchr read beyond buffer ***\n");
-			abort();
-		}
+		if (s_len == 0)
+			__fortify_chk_fail("strchr read beyond buffer", 0);
 		if (*p == (char) ch)
 			return((char *)p);
 		if (!*p)

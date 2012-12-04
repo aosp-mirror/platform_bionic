@@ -46,9 +46,7 @@ extern "C" size_t __strlcpy_chk(char *dest, const char *src,
               size_t supplied_size, size_t dest_len_from_compiler)
 {
     if (supplied_size > dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strlcpy buffer overflow detected ***\n");
-        abort();
+        __fortify_chk_fail("strlcpy buffer overflow", 0);
     }
 
     return strlcpy(dest, src, supplied_size);

@@ -57,9 +57,7 @@ extern "C" size_t __strlen_chk(const char *s, size_t s_len) {
     size_t ret = strlen(s);
 
     if (__builtin_expect(ret >= s_len, 0)) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strlen read overflow detected ***\n");
-        abort();
+        __fortify_chk_fail("strlen read overflow", 0);
     }
 
     return ret;
