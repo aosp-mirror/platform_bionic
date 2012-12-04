@@ -240,6 +240,22 @@ char* strchr(const char *s, int c) {
     return __strchr_chk(s, c, bos);
 }
 
+__purefunc extern char* __strrchr_real(const char *, int)
+    __asm__(__USER_LABEL_PREFIX__ "strrchr");
+extern char* __strrchr_chk(const char *, int, size_t);
+
+__BIONIC_FORTIFY_INLINE
+char* strrchr(const char *s, int c) {
+    size_t bos = __builtin_object_size(s, 0);
+
+    // Compiler doesn't know destination size. Don't call __strrchr_chk
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __strrchr_real(s, c);
+    }
+
+    return __strrchr_chk(s, c, bos);
+}
+
 
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
