@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "MkBV-tgc",
+        "filename": "libc/bionic/__fgets_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-04T22:44:22Z",
+      "side": 1,
+      "message": "__fortify_chk_fail, by analogy with __stack_chk_fail?",
+      "revId": "5e4992ebd27b30655530828c1adba0f0e53acf96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
