@@ -52,9 +52,7 @@ extern "C" int __vsprintf_chk(
     int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
 
     if ((size_t) ret >= dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** vsprintf buffer overflow detected ***\n");
-        abort();
+        __fortify_chk_fail("vsprintf buffer overflow", 0);
     }
 
     return ret;

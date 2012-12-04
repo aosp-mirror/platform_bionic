@@ -71,6 +71,8 @@ int __libc_android_log_vprint(int prio, const char *tag, const char *fmt, va_lis
 void __libc_android_log_event_int(int32_t tag, int value);
 void __libc_android_log_event_uid(int32_t tag);
 
+__noreturn extern void __fortify_chk_fail(const char *, uint32_t);
+
 #ifdef __cplusplus
 };
 #endif

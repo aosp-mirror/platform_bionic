@@ -46,10 +46,8 @@ extern "C" void *__memcpy_chk(void *dest, const void *src,
               size_t copy_amount, size_t dest_len)
 {
     if (__builtin_expect(copy_amount > dest_len, 0)) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** memcpy buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
-        abort();
+        __fortify_chk_fail("memcpy buffer overflow",
+                             BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
     }
 
     return memcpy(dest, src, copy_amount);
