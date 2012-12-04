@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Mf4brrJo",
+        "filename": "libc/arch-arm/include/machine/_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2012-12-04T15:12:23Z",
+      "side": 0,
+      "message": "With the removal __BYTE_ORDER can\u0027t be resolved with \u003csys/endian.h\u003e alone, which is in conflict with comment # 1 http://code.google.com/p/android/issues/detail?id\u003d39824.  Is this intended?",
+      "revId": "f2de6b0f6e873f9cb28682b8fc6764b0ab41c6ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
