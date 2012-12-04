@@ -45,10 +45,8 @@ extern "C" char *__strncpy_chk (char *dest, const char *src,
               size_t len, size_t dest_len)
 {
     if (len > dest_len) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strncpy buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
-        abort();
+        __fortify_chk_fail("strncpy buffer overflow",
+                             BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
     }
 
     return strncpy(dest, src, len);

@@ -43,9 +43,7 @@
  */
 extern "C" mode_t __umask_chk(mode_t mode) {
     if ((mode & 0777) != mode) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** FORTIFY_SOURCE: umask called with invalid mask ***\n");
-        abort();
+        __fortify_chk_fail("umask called with invalid mask", 0);
     }
 
     return umask(mode);
