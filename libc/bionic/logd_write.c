@@ -247,3 +247,14 @@ void __libc_android_log_event_uid(int32_t tag)
 {
     __libc_android_log_event_int(tag, getuid());
 }
+
+__LIBC_HIDDEN__
+void __fortify_chk_fail(const char *msg, uint32_t tag) {
+    __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+                             "FORTIFY_SOURCE: %s. Calling abort().\n",
+                             msg);
+    if (tag != 0) {
+        __libc_android_log_event_uid(tag);
+    }
+    abort();
+}

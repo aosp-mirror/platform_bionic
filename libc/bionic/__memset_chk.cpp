@@ -43,10 +43,8 @@
  */
 extern "C" void *__memset_chk (void *dest, int c, size_t n, size_t dest_len) {
     if (n > dest_len) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** memset buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
-        abort();
+        __fortify_chk_fail("memset buffer overflow",
+                             BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
     }
 
     return memset(dest, c, n);
