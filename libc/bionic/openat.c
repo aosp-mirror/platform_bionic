@@ -54,9 +54,7 @@ int openat(int fd, const char *pathname, int flags, ...)
 int __openat_2(int fd, const char *pathname, int flags)
 {
     if (flags & O_CREAT) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** openat(O_CREAT) called without specifying a mode ***\n");
-        abort();
+        __fortify_chk_fail("openat(O_CREAT) called without specifying a mode", 0);
     }
 
     flags |= O_LARGEFILE;
