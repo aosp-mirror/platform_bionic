@@ -53,9 +53,7 @@ int open(const char *pathname, int flags, ...)
 
 int __open_2(const char *pathname, int flags) {
     if (flags & O_CREAT) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** open(O_CREAT) called without specifying a mode ***\n");
-        abort();
+        __fortify_chk_fail("open(O_CREAT) called without specifying a mode", 0);
     }
 
     flags |= O_LARGEFILE;
