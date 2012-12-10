@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "M1L8-WIs",
+        "filename": "libc/unistd/abort.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-10T23:33:54Z",
+      "side": 1,
+      "message": "i think the right way forward is to make abort(3) actually, you know, abort :-)\n\ni\u0027ve been meaning to get round to this for a long time, and i\u0027ve finally started making some progress: http://code.google.com/p/android/issues/detail?id\u003d16672",
+      "revId": "76d3cb583c837929d9a14cc943f3538a57ee61cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
