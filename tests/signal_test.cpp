@@ -95,3 +95,9 @@ TEST(signal, sigemptyset_invalid) {
 TEST(signal, sigfillset_invalid) {
   TestSigSet1(sigfillset);
 }
+
+TEST(signal, raise_invalid) {
+  errno = 0;
+  ASSERT_EQ(-1, raise(-1));
+  ASSERT_EQ(EINVAL, errno);
+}

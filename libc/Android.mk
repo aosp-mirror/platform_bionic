@@ -199,7 +199,6 @@ libc_common_src_files := \
 	bionic/ptsname_r.c \
 	bionic/pututline.c \
 	bionic/pwrite.c \
-	bionic/raise.c \
 	bionic/realpath.c \
 	bionic/reboot.c \
 	bionic/recv.c \
@@ -282,6 +281,7 @@ libc_bionic_src_files := \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/raise.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/__strcat_chk.cpp \
