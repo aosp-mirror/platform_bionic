@@ -25,10 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <signal.h>
 
-int raise(int signum)
-{
-    return kill(gettid(), signum);
+#include <pthread.h>
+
+int raise(int sig) {
+  int rc = pthread_kill(pthread_self(), sig);
+  if (rc != 0) {
+    errno = rc;
+    return -1;
+  }
+  return 0;
 }
