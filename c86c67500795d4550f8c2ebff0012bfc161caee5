@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "M5NmTVGM",
+        "filename": "libc/bionic/__raise.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-11T18:05:03Z",
+      "side": 1,
+      "message": "this is obsolete now raise calls pthread_kill(pthread_self(), sig)...",
+      "revId": "c86c67500795d4550f8c2ebff0012bfc161caee5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "M5PmHMBM",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-11T18:05:03Z",
+      "side": 1,
+      "message": "can you explain when we need this? when isn\u0027t getpid() sufficient? unit test?",
+      "revId": "c86c67500795d4550f8c2ebff0012bfc161caee5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
