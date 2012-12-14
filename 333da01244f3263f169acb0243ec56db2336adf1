@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "M1LUuRqg",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-14T02:16:13Z",
+      "side": 1,
+      "message": "this is the bit i\u0027m stuck on at the moment... how do i translate the target-specific \"BUILD_EXECUTABLE hack\" above into the equivalent for the host? if i look at dynamic_binary.mk, it says it\u0027s not for use on the host.\n\ni think the only active ingredient in here is the --prefix-symbols, but i\u0027m not sure.",
+      "revId": "333da01244f3263f169acb0243ec56db2336adf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
