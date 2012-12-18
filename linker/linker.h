@@ -207,7 +207,7 @@ extern soinfo libdl_info;
 #define DT_PREINIT_ARRAYSZ 33
 #endif
 
-soinfo* do_dlopen(const char* name);
+soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
 
 Elf32_Sym* lookup(const char* name, soinfo** found, soinfo* start);
