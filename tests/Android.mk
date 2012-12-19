@@ -68,7 +68,7 @@ test_src_files = \
 
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
-    dlopen_test.cpp \
+    dlfcn_test.cpp \
 
 # Build tests for the device (with bionic's .so). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
