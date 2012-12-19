@@ -966,7 +966,11 @@ static int soinfo_unload(soinfo* si) {
   return 0;
 }
 
-soinfo* do_dlopen(const char* name) {
+soinfo* do_dlopen(const char* name, int flags) {
+  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL)) != 0) {
+    DL_ERR("invalid flags to dlopen: %x", flags);
+    return NULL;
+  }
   set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name);
   if (si != NULL) {
