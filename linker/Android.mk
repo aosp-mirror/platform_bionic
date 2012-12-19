@@ -8,21 +8,21 @@ else
 endif
 
 LOCAL_SRC_FILES:= \
-	arch/$(TARGET_ARCH)/begin.$(linker_begin_extension) \
-	debugger.cpp \
-	dlfcn.cpp \
-	linker.cpp \
-	linker_environ.cpp \
-	linker_format.cpp \
-	linker_phdr.cpp \
-	rt.cpp
+    arch/$(TARGET_ARCH)/begin.$(linker_begin_extension) \
+    debugger.cpp \
+    dlfcn.cpp \
+    linker.cpp \
+    linker_environ.cpp \
+    linker_format.cpp \
+    linker_phdr.cpp \
+    rt.cpp
 
 LOCAL_LDFLAGS := -shared
 
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
         -fvisibility=hidden \
-        -Wall -Wextra
+        -Wall -Wextra -Werror
 
 # We need to access Bionic private headers in the linker...
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/

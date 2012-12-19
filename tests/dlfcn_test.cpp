@@ -32,7 +32,7 @@ extern "C" void DlSymTestFunction() {
   gCalled = true;
 }
 
-TEST(dlopen, dlsym_in_self) {
+TEST(dlfcn, dlsym_in_self) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -50,7 +50,7 @@ TEST(dlopen, dlsym_in_self) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-TEST(dlopen, dlopen_failure) {
+TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
 #if __BIONIC__
@@ -65,7 +65,7 @@ static void* ConcurrentDlErrorFn(void*) {
   return reinterpret_cast<void*>(strdup(dlerror()));
 }
 
-TEST(dlopen, dlerror_concurrent) {
+TEST(dlfcn, dlerror_concurrent) {
   dlopen("/main/thread", RTLD_NOW);
   const char* main_thread_error = dlerror();
   ASSERT_SUBSTR("/main/thread", main_thread_error);
@@ -81,7 +81,7 @@ TEST(dlopen, dlerror_concurrent) {
   ASSERT_SUBSTR("/main/thread", main_thread_error);
 }
 
-TEST(dlopen, dlsym_failures) {
+TEST(dlfcn, dlsym_failures) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -114,7 +114,7 @@ TEST(dlopen, dlsym_failures) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-TEST(dlopen, dladdr) {
+TEST(dlfcn, dladdr) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -174,7 +174,7 @@ TEST(dlopen, dladdr) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-TEST(dlopen, dladdr_invalid) {
+TEST(dlfcn, dladdr_invalid) {
   Dl_info info;
 
   dlerror(); // Clear any pending errors.
@@ -190,10 +190,31 @@ TEST(dlopen, dladdr_invalid) {
 
 #if __BIONIC__
 // Our dynamic linker doesn't support GNU hash tables.
-TEST(dlopen, library_with_only_gnu_hash) {
+TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("no-elf-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle == NULL);
   ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
 }
 #endif
+
+TEST(dlfcn, dlopen_bad_flags) {
+  dlerror(); // Clear any pending errors.
+  void* handle;
+
+#ifdef __GLIBC__
+  // glibc was smart enough not to define RTLD_NOW as 0, so it can detect missing flags.
+  handle = dlopen(NULL, 0);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_SUBSTR("invalid", dlerror());
+#endif
+
+  handle = dlopen(NULL, 0xffffffff);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_SUBSTR("invalid", dlerror());
+
+  // glibc actually allows you to choose both RTLD_NOW and RTLD_LAZY at the same time, and so do we.
+  handle = dlopen(NULL, RTLD_NOW|RTLD_LAZY);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_SUBSTR(NULL, dlerror());
+}
