@@ -371,14 +371,14 @@ format_number(char *buffer, size_t bufsize, uint64_t value, int base, const char
     while (value) {
         unsigned d = value % base;
         value /= base;
-        if (pos < end) {
+        if (pos != end) {
             *pos++ = digits[d];
         }
     }
 
     /* special case for 0 */
     if (pos == buffer) {
-        if (pos < end) {
+        if (pos != end) {
             *pos++ = '0';
         }
     }
@@ -387,7 +387,7 @@ format_number(char *buffer, size_t bufsize, uint64_t value, int base, const char
     /* now reverse digit string in-place */
     end = pos - 1;
     pos = buffer;
-    while (pos < end) {
+    while (pos != end) {
         int ch = pos[0];
         pos[0] = end[0];
         end[0] = (char) ch;
