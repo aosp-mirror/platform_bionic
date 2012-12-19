@@ -26,14 +26,15 @@
  * SUCH DAMAGE.
  */
 
+#include <stdint.h>
+
 extern unsigned __linker_init(unsigned int *elfdata);
 
 __attribute__((visibility("hidden")))
 void _start() {
-  void *elfdata;
   void (*start)(void);
 
-  elfdata = __builtin_frame_address(0) + sizeof(void *);
+  void* elfdata = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
   start = (void(*)(void))__linker_init(elfdata);
 
   /* linker init returns (%eax) the _entry address in the main image */
