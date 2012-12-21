@@ -30,14 +30,16 @@
 // compile under GCC 4.7
 #undef _FORTIFY_SOURCE
 
-#include <assert.h>
-#include <stdarg.h>
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <stddef.h>
 #include "linker_format.h"
+
+#include <assert.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "linker_debug.h"
 
 /* define UNIT_TESTS to build this file as a single executable that runs
@@ -357,49 +359,49 @@ parse_decimal(const char *format, int *ppos)
     return result;
 }
 
-/* write an octal/decimal/number into a bounded buffer.
- * assumes that bufsize > 0, and 'digits' is a string of
- * digits of at least 'base' values.
- */
-static void
-format_number(char *buffer, size_t bufsize, uint64_t value, int base, const char *digits)
-{
-    char *pos = buffer;
-    char *end = buffer + bufsize - 1;
+// Writes number 'value' in base 'base' into buffer 'buf' of size 'buf_size' bytes.
+// Assumes that buf_size > 0.
+static void format_number(char* buf, size_t buf_size, uint64_t value, int base, bool caps) {
+  char* p = buf;
+  char* end = buf + buf_size - 1;
 
-    /* generate digit string in reverse order */
-    while (value) {
-        unsigned d = value % base;
-        value /= base;
-        if (pos != end) {
-            *pos++ = digits[d];
-        }
+  // Generate digit string in reverse order.
+  while (value) {
+    unsigned d = value % base;
+    value /= base;
+    if (p != end) {
+      char ch;
+      if (d < 10) {
+        ch = '0' + d;
+      } else {
+        ch = (caps ? 'A' : 'a') + (d - 10);
+      }
+      *p++ = ch;
     }
+  }
 
-    /* special case for 0 */
-    if (pos == buffer) {
-        if (pos != end) {
-            *pos++ = '0';
-        }
+  // Special case for 0.
+  if (p == buf) {
+    if (p != end) {
+      *p++ = '0';
     }
-    pos[0] = '\0';
+  }
+  *p = '\0';
 
-    /* now reverse digit string in-place */
-    end = pos - 1;
-    pos = buffer;
-    while (pos != end) {
-        int ch = pos[0];
-        pos[0] = end[0];
-        end[0] = (char) ch;
-        pos++;
-        end--;
-    }
+  // Reverse digit string in-place.
+  size_t length = p - buf;
+  for (size_t i = 0, j = length - 1; i < j; ++i, --j) {
+    char ch = buf[i];
+    buf[i] = buf[j];
+    buf[j] = ch;
+  }
 }
 
 /* Write an integer (octal or decimal) into a buffer, assumes buffsize > 2 */
 static void
 format_integer(char *buffer, size_t buffsize, uint64_t value, int base, int isSigned)
 {
+    // TODO: this is incorrect for MIN_INT.
     if (isSigned && (int64_t)value < 0) {
         buffer[0] = '-';
         buffer += 1;
@@ -407,17 +409,12 @@ format_integer(char *buffer, size_t buffsize, uint64_t value, int base, int isSi
         value = (uint64_t)(-(int64_t)value);
     }
 
-    format_number(buffer, buffsize, value, base, "0123456789");
+    format_number(buffer, buffsize, value, base, false);
 }
 
-/* Write an hexadecimal into a buffer, isCap is true for capital alphas.
- * Assumes bufsize > 2 */
-static void
-format_hex(char *buffer, size_t buffsize, uint64_t value, int isCap)
-{
-    const char *digits = isCap ? "0123456789ABCDEF" : "0123456789abcdef";
-
-    format_number(buffer, buffsize, value, 16, digits);
+// Assumes buf_size > 2.
+static void format_hex(char* buf, size_t buf_size, uint64_t value, bool caps) {
+  format_number(buf, buf_size, value, 16, caps);
 }
 
 
@@ -543,7 +540,7 @@ out_vformat(Out *o, const char *format, va_list args)
             uint64_t  value = (uintptr_t) va_arg(args, void*);
             buffer[0] = '0';
             buffer[1] = 'x';
-            format_hex(buffer + 2, sizeof buffer-2, value, 0);
+            format_hex(buffer + 2, sizeof buffer-2, value, false);
             str = buffer;
         } else {
             /* integers - first read value from stack */
