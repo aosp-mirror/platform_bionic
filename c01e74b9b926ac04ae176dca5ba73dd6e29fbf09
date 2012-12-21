@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "NFrKWJqw",
+        "filename": "libm/include/mips/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-21T18:24:04Z",
+      "side": 1,
+      "message": "this is clearly still wrong.",
+      "revId": "c01e74b9b926ac04ae176dca5ba73dd6e29fbf09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "NFpKbKtM",
+        "filename": "libm/include/mips/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-21T18:24:04Z",
+      "side": 1,
+      "message": "is this right?\n\ni fixed the ARM version of this file recently, but i think the MIPS version is still utter crap. (the x86 was always fine.)\n\ni told MIPS about this at the time, but haven\u0027t heard anything from them since.",
+      "revId": "c01e74b9b926ac04ae176dca5ba73dd6e29fbf09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "NFhKnOhA",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2012-12-21T18:24:04Z",
+      "side": 1,
+      "message": "this fixes the _build_ but presumably we still fail the _test_ on MIPS...",
+      "revId": "c01e74b9b926ac04ae176dca5ba73dd6e29fbf09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
