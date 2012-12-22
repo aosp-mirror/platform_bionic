@@ -351,6 +351,43 @@ static void soinfo_free(soinfo* si)
     gSoInfoFreeList = si;
 }
 
+
+static void parse_path(const char* path, const char* delimiters,
+                       const char** array, char* buf, size_t buf_size, size_t max_count) {
+  if (path == NULL) {
+    return;
+  }
+
+  size_t len = strlcpy(buf, path, buf_size);
+
+  size_t i = 0;
+  char* buf_p = buf;
+  while (i < max_count && (array[i] = strsep(&buf_p, delimiters))) {
+    if (*array[i] != '\0') {
+      ++i;
+    }
+  }
+
+  // Forget the last path if we had to truncate; this occurs if the 2nd to
+  // last char isn't '\0' (i.e. wasn't originally a delimiter).
+  if (i > 0 && len >= buf_size && buf[buf_size - 2] != '\0') {
+    array[i - 1] = NULL;
+  } else {
+    array[i] = NULL;
+  }
+}
+
+static void parse_LD_LIBRARY_PATH(const char* path) {
+  parse_path(path, ":", gLdPaths,
+             gLdPathsBuffer, sizeof(gLdPathsBuffer), LDPATH_MAX);
+}
+
+static void parse_LD_PRELOAD(const char* path) {
+  // We have historically supported ':' as well as ' ' in LD_PRELOAD.
+  parse_path(path, " :", gLdPreloadNames,
+             gLdPreloadsBuffer, sizeof(gLdPreloadsBuffer), LDPRELOAD_MAX);
+}
+
 #ifdef ANDROID_ARM_LINKER
 
 /* For a given PC, find the .so that it belongs to.
@@ -561,34 +598,28 @@ Elf32_Sym *soinfo_lookup(soinfo *si, const char *name)
 
 /* This is used by dl_sym().  It performs a global symbol lookup.
  */
-Elf32_Sym *lookup(const char *name, soinfo **found, soinfo *start)
-{
-    unsigned elf_hash = elfhash(name);
-    Elf32_Sym *s = NULL;
-    soinfo *si;
+Elf32_Sym* lookup(const char* name, soinfo** found, soinfo* start) {
+  unsigned elf_hash = elfhash(name);
 
-    if(start == NULL) {
-        start = solist;
+  if (start == NULL) {
+    start = solist;
+  }
+
+  Elf32_Sym* s = NULL;
+  for (soinfo* si = start; (s == NULL) && (si != NULL); si = si->next) {
+    s = soinfo_elf_lookup(si, elf_hash, name);
+    if (s != NULL) {
+      *found = si;
+      break;
     }
+  }
 
-    for(si = start; (s == NULL) && (si != NULL); si = si->next)
-    {
-        if(si->flags & FLAG_ERROR)
-            continue;
-        s = soinfo_elf_lookup(si, elf_hash, name);
-        if (s != NULL) {
-            *found = si;
-            break;
-        }
-    }
+  if (s != NULL) {
+    TRACE_TYPE(LOOKUP, "%s s->st_value = 0x%08x, found->base = 0x%08x\n",
+               name, s->st_value, (*found)->base);
+  }
 
-    if(s != NULL) {
-        TRACE_TYPE(LOOKUP, "%s s->st_value = 0x%08x, si->base = 0x%08x\n",
-                   name, s->st_value, si->base);
-        return s;
-    }
-
-    return NULL;
+  return s;
 }
 
 soinfo *find_containing_library(const void *addr)
@@ -869,20 +900,6 @@ static soinfo* load_library(const char* name) {
     return si.release();
 }
 
-static soinfo* init_library(soinfo* si) {
-  // At this point we know that whatever is loaded @ base is a valid ELF
-  // shared library whose segments are properly mapped in.
-  TRACE("[ init_library base=0x%08x sz=0x%08x name='%s') ]\n",
-        si->base, si->size, si->name);
-
-  if (!soinfo_link_image(si)) {
-    munmap((void *)si->base, si->size);
-    return NULL;
-  }
-
-  return si;
-}
-
 static soinfo *find_loaded_library(const char *name)
 {
     soinfo *si;
@@ -909,10 +926,6 @@ static soinfo* find_library_internal(const char* name) {
 
   soinfo* si = find_loaded_library(name);
   if (si != NULL) {
-    if (si->flags & FLAG_ERROR) {
-      DL_ERR("\"%s\" failed to load previously", name);
-      return NULL;
-    }
     if (si->flags & FLAG_LINKED) {
       return si;
     }
@@ -922,8 +935,19 @@ static soinfo* find_library_internal(const char* name) {
 
   TRACE("[ '%s' has not been loaded yet.  Locating...]\n", name);
   si = load_library(name);
-  if (si != NULL) {
-    si = init_library(si);
+  if (si == NULL) {
+    return NULL;
+  }
+
+  // At this point we know that whatever is loaded @ base is a valid ELF
+  // shared library whose segments are properly mapped in.
+  TRACE("[ init_library base=0x%08x sz=0x%08x name='%s') ]\n",
+        si->base, si->size, si->name);
+
+  if (!soinfo_link_image(si)) {
+    munmap(reinterpret_cast<void*>(si->base), si->size);
+    soinfo_free(si);
+    return NULL;
   }
 
   return si;
@@ -964,6 +988,12 @@ static int soinfo_unload(soinfo* si) {
     TRACE("not unloading '%s', decrementing refcount to %d\n", si->name, si->refcount);
   }
   return 0;
+}
+
+void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
+  if (!get_AT_SECURE()) {
+    parse_LD_LIBRARY_PATH(ld_library_path);
+  }
 }
 
 soinfo* do_dlopen(const char* name, int flags) {
@@ -1466,8 +1496,6 @@ static int nullify_closed_stdio() {
 }
 
 static bool soinfo_link_image(soinfo* si) {
-    si->flags |= FLAG_ERROR;
-
     /* "base" might wrap around UINT32_MAX. */
     Elf32_Addr base = si->load_bias;
     const Elf32_Phdr *phdr = si->phdr;
@@ -1747,45 +1775,7 @@ static bool soinfo_link_image(soinfo* si) {
         nullify_closed_stdio();
     }
     notify_gdb_of_load(si);
-    si->flags &= ~FLAG_ERROR;
     return true;
-}
-
-static void parse_path(const char* path, const char* delimiters,
-                       const char** array, char* buf, size_t buf_size, size_t max_count)
-{
-    if (path == NULL) {
-        return;
-    }
-
-    size_t len = strlcpy(buf, path, buf_size);
-
-    size_t i = 0;
-    char* buf_p = buf;
-    while (i < max_count && (array[i] = strsep(&buf_p, delimiters))) {
-        if (*array[i] != '\0') {
-            ++i;
-        }
-    }
-
-    // Forget the last path if we had to truncate; this occurs if the 2nd to
-    // last char isn't '\0' (i.e. wasn't originally a delimiter).
-    if (i > 0 && len >= buf_size && buf[buf_size - 2] != '\0') {
-        array[i - 1] = NULL;
-    } else {
-        array[i] = NULL;
-    }
-}
-
-static void parse_LD_LIBRARY_PATH(const char* path) {
-    parse_path(path, ":", gLdPaths,
-               gLdPathsBuffer, sizeof(gLdPathsBuffer), LDPATH_MAX);
-}
-
-static void parse_LD_PRELOAD(const char* path) {
-    // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-    parse_path(path, " :", gLdPreloadNames,
-               gLdPreloadsBuffer, sizeof(gLdPreloadsBuffer), LDPRELOAD_MAX);
 }
 
 /*
