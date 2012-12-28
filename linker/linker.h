@@ -72,7 +72,6 @@ struct r_debug {
 };
 
 #define FLAG_LINKED     0x00000001
-#define FLAG_ERROR      0x00000002
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
 
@@ -207,6 +206,7 @@ extern soinfo libdl_info;
 #define DT_PREINIT_ARRAYSZ 33
 #endif
 
+void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
 
