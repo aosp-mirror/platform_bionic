@@ -65,6 +65,7 @@ test_src_files = \
     stdlib_test.cpp \
     string_test.cpp \
     stubs_test.cpp \
+    unistd_test.cpp \
 
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
