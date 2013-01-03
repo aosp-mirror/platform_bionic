@@ -242,7 +242,7 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
     return __libc_malloc_dispatch->memalign(alignment, bytes);
 }
 
-/* We implement malloc debugging only in libc.so, so code bellow
+/* We implement malloc debugging only in libc.so, so code below
  * must be excluded if we compile this file for static libc.a
  */
 #ifndef LIBC_STATIC
@@ -280,13 +280,10 @@ extern char* __progname;
  */
 static void* libc_malloc_impl_handle = NULL;
 
-/* Make sure we have MALLOC_ALIGNMENT that matches the one that is
- * used in dlmalloc. Emulator's memchecker needs this value to properly
- * align its guarding zones.
- */
+// This must match the alignment used by dlmalloc.
 #ifndef MALLOC_ALIGNMENT
-#define MALLOC_ALIGNMENT ((size_t)8U)
-#endif  /* MALLOC_ALIGNMENT */
+#define MALLOC_ALIGNMENT ((size_t)(2 * sizeof(void *)))
+#endif
 
 /* This variable is set to the value of property libc.debug.malloc.backlog,
  * when the value of libc.debug.malloc = 10.  It determines the size of the
@@ -449,6 +446,7 @@ static void malloc_init_impl() {
             dlclose(libc_malloc_impl_handle);
             return;
         }
+
         if (memcheck_initialize(MALLOC_ALIGNMENT, memcheck_tracing)) {
             dlclose(libc_malloc_impl_handle);
             return;
@@ -513,17 +511,17 @@ extern "C" void malloc_debug_init() {
     /* We need to initialize malloc iff we implement here custom
      * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so */
 #if defined(USE_DL_PREFIX) && !defined(LIBC_STATIC)
-  if (pthread_once(&malloc_init_once_ctl, malloc_init_impl)) {
+    if (pthread_once(&malloc_init_once_ctl, malloc_init_impl)) {
         error_log("Unable to initialize malloc_debug component.");
     }
 #endif  // USE_DL_PREFIX && !LIBC_STATIC
 }
 
 extern "C" void malloc_debug_fini() {
-  /* We need to finalize malloc iff we implement here custom
+    /* We need to finalize malloc iff we implement here custom
      * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so */
 #if defined(USE_DL_PREFIX) && !defined(LIBC_STATIC)
-  if (pthread_once(&malloc_fini_once_ctl, malloc_fini_impl)) {
+    if (pthread_once(&malloc_fini_once_ctl, malloc_fini_impl)) {
         error_log("Unable to finalize malloc_debug component.");
     }
 #endif  // USE_DL_PREFIX && !LIBC_STATIC
