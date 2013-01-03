@@ -358,7 +358,7 @@ libc_upstream_netbsd_src_files := \
 #
 libc_static_common_src_files := \
         bionic/__errno.c \
-        bionic/sysconf.c \
+        bionic/sysconf.cpp \
 
 # Architecture specific source files go here
 # =========================================================
