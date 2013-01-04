@@ -16,6 +16,24 @@
       "revId": "db492b3ca753c4ef688d0daf648294de0c89145e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Nom8l3V0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1386,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-04T00:20:00Z",
+      "side": 1,
+      "message": "yeah, i\u0027d like to have the access control more fine-grained but at the moment it\u0027s basically writable during initial linking, made read-only before we call main, and then dlopen and dlclose both make it writable again while they\u0027re running.\n\nthe problem is that there\u0027s no syscall to read the protections, so dlopen and dlclose can\u0027t \"put things back how they were\" --- they just assume they were read-only.",
+      "parentUuid": "No44io1U",
+      "revId": "db492b3ca753c4ef688d0daf648294de0c89145e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
