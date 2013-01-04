@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "No44io1U",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1386,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-01-04T00:16:07Z",
+      "side": 1,
+      "message": "i was surprised the fix was this simple. it is clear there is a state machine with callers to set_soinfo_pool_protection, but as a reviewer it isn\u0027t clear what the big picture is just from this comment.",
+      "revId": "db492b3ca753c4ef688d0daf648294de0c89145e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
