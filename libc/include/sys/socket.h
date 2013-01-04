@@ -160,14 +160,22 @@ struct ucred {
 #define AF_ASH 18
 #define AF_ECONET 19
 #define AF_ATMSVC 20
+#define AF_RDS 21
 #define AF_SNA 22
 #define AF_IRDA 23
 #define AF_PPPOX 24
 #define AF_WANPIPE 25
 #define AF_LLC 26
+#define AF_CAN 29
 #define AF_TIPC 30
 #define AF_BLUETOOTH 31
-#define AF_CAIF 38
+#define AF_IUCV 32
+#define AF_RXRPC 33
+#define AF_ISDN 34
+#define AF_PHONET 35
+#define AF_IEEE802154 36
+#define AF_CAIF 37
+#define AF_ALG 38
 #define AF_MAX 39
 
 #define PF_UNSPEC AF_UNSPEC
@@ -193,14 +201,22 @@ struct ucred {
 #define PF_ASH AF_ASH
 #define PF_ECONET AF_ECONET
 #define PF_ATMSVC AF_ATMSVC
+#define PF_RDS AF_RDS
 #define PF_SNA AF_SNA
 #define PF_IRDA AF_IRDA
 #define PF_PPPOX AF_PPPOX
 #define PF_WANPIPE AF_WANPIPE
 #define PF_LLC AF_LLC
+#define PF_CAN AF_CAN
 #define PF_TIPC AF_TIPC
 #define PF_BLUETOOTH AF_BLUETOOTH
+#define PF_IUCV AF_IUCV
+#define PF_RXRPC AF_RXRPC
+#define PF_ISDN AF_ISDN
+#define PF_PHONET AF_PHONET
+#define PF_IEEE802154 AF_IEEE802154
 #define PF_CAIF AF_CAIF
+#define PF_ALG AF_ALG
 #define PF_MAX AF_MAX
 
 #define SOMAXCONN 128
