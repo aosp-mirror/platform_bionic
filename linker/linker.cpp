@@ -1366,24 +1366,24 @@ void soinfo::CallArray(const char* array_name UNUSED, unsigned* array, int count
     TRACE("[ Looking at %s[%d] *%p == 0x%08x ]\n", array_name, n, array, *array);
     void (*func)() = (void (*)()) *array;
     array += step;
-    if (((int) func == 0) || ((int) func == -1)) {
-      continue;
-    }
-    TRACE("[ Calling func @ %p ]\n", func);
-    func();
+    CallFunction("function", func);
   }
 
   TRACE("[ Done calling %s for '%s' ]\n", array_name, name);
 }
 
 void soinfo::CallFunction(const char* function_name UNUSED, void (*function)()) {
-  if (function == NULL) {
+  if (function == NULL || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
     return;
   }
 
   TRACE("[ Calling %s @ %p for '%s' ]\n", function_name, function, name);
   function();
   TRACE("[ Done calling %s for '%s' ]\n", function_name, name);
+
+  // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
+  // are still writable. This happens with our debug malloc (see http://b/7941716).
+  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
 }
 
 void soinfo::CallPreInitConstructors() {
