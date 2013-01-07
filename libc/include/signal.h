@@ -58,34 +58,34 @@ extern const char* const sys_siglist[];
 extern const char* const sys_signame[];
 
 static __inline__ int sigismember(sigset_t* set, int signum) {
-  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
     errno = EINVAL;
     return -1;
   }
   unsigned long* local_set = (unsigned long*) set;
-  signum--;
-  return (int) ((local_set[signum/LONG_BIT] >> (signum%LONG_BIT)) & 1);
+  return (int) ((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
 }
 
 static __inline__ int sigaddset(sigset_t* set, int signum) {
-  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
     errno = EINVAL;
     return -1;
   }
   unsigned long* local_set = (unsigned long*) set;
-  signum--;
-  local_set[signum/LONG_BIT] |= 1UL << (signum%LONG_BIT);
+  local_set[bit / LONG_BIT] |= 1UL << (bit % LONG_BIT);
   return 0;
 }
 
 static __inline__ int sigdelset(sigset_t* set, int signum) {
-  if (set == NULL || signum < 1 || signum >= 8*sizeof(sigset_t)) {
+  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
     errno = EINVAL;
     return -1;
   }
   unsigned long* local_set = (unsigned long*) set;
-  signum--;
-  local_set[signum/LONG_BIT] &= ~(1UL << (signum%LONG_BIT));
+  local_set[bit / LONG_BIT] &= ~(1UL << (bit % LONG_BIT));
   return 0;
 }
 
