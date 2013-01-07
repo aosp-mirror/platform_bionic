@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "N79xcIew",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-01-07T22:35:04Z",
+      "side": 1,
+      "message": "Isn\u0027t it that it \"doesn\u0027t\" generate them, not that it \"won\u0027t\" generate them? It is just another elf section, I presume you could even generate the gnu hash from original one.",
+      "revId": "6c2669e908fb0ca694449a34f0f29625b9f66e00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
