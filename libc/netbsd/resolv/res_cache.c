@@ -572,8 +572,6 @@ _dnsPacket_checkQName( DnsPacket*  packet )
 static int
 _dnsPacket_checkQR( DnsPacket*  packet )
 {
-    int  len;
-
     if (!_dnsPacket_checkQName(packet))
         return 0;
 
@@ -832,8 +830,6 @@ _dnsPacket_hashQName( DnsPacket*  packet, unsigned  hash )
 static unsigned
 _dnsPacket_hashQR( DnsPacket*  packet, unsigned  hash )
 {
-    int   len;
-
     hash = _dnsPacket_hashQName(packet, hash);
     hash = _dnsPacket_hashBytes(packet, 4, hash); /* TYPE and CLASS */
     return hash;
@@ -1020,8 +1016,58 @@ typedef struct Entry {
 } Entry;
 
 /**
- * Parse the answer records and find the smallest
- * TTL among the answer records.
+ * Find the TTL for a negative DNS result.  This is defined as the minimum
+ * of the SOA records TTL and the MINIMUM-TTL field (RFC-2308).
+ *
+ * Return 0 if not found.
+ */
+static u_long
+answer_getNegativeTTL(ns_msg handle) {
+    int n, nscount;
+    u_long result = 0;
+    ns_rr rr;
+
+    nscount = ns_msg_count(handle, ns_s_ns);
+    for (n = 0; n < nscount; n++) {
+        if ((ns_parserr(&handle, ns_s_ns, n, &rr) == 0) && (ns_rr_type(rr) == ns_t_soa)) {
+            const u_char *rdata = ns_rr_rdata(rr); // find the data
+            const u_char *edata = rdata + ns_rr_rdlen(rr); // add the len to find the end
+            int len;
+            u_long ttl, rec_result = ns_rr_ttl(rr);
+
+            // find the MINIMUM-TTL field from the blob of binary data for this record
+            // skip the server name
+            len = dn_skipname(rdata, edata);
+            if (len == -1) continue; // error skipping
+            rdata += len;
+
+            // skip the admin name
+            len = dn_skipname(rdata, edata);
+            if (len == -1) continue; // error skipping
+            rdata += len;
+
+            if (edata - rdata != 5*NS_INT32SZ) continue;
+            // skip: serial number + refresh interval + retry interval + expiry
+            rdata += NS_INT32SZ * 4;
+            // finally read the MINIMUM TTL
+            ttl = ns_get32(rdata);
+            if (ttl < rec_result) {
+                rec_result = ttl;
+            }
+            // Now that the record is read successfully, apply the new min TTL
+            if (n == 0 || rec_result < result) {
+                result = rec_result;
+            }
+        }
+    }
+    return result;
+}
+
+/**
+ * Parse the answer records and find the appropriate
+ * smallest TTL among the records.  This might be from
+ * the answer records if found or from the SOA record
+ * if it's a negative result.
  *
  * The returned TTL is the number of seconds to
  * keep the answer in the cache.
@@ -1041,14 +1087,20 @@ answer_getTTL(const void* answer, int answerlen)
     if (ns_initparse(answer, answerlen, &handle) >= 0) {
         // get number of answer records
         ancount = ns_msg_count(handle, ns_s_an);
-        for (n = 0; n < ancount; n++) {
-            if (ns_parserr(&handle, ns_s_an, n, &rr) == 0) {
-                ttl = ns_rr_ttl(rr);
-                if (n == 0 || ttl < result) {
-                    result = ttl;
+
+        if (ancount == 0) {
+            // a response with no answers?  Cache this negative result.
+            result = answer_getNegativeTTL(handle);
+        } else {
+            for (n = 0; n < ancount; n++) {
+                if (ns_parserr(&handle, ns_s_an, n, &rr) == 0) {
+                    ttl = ns_rr_ttl(rr);
+                    if (n == 0 || ttl < result) {
+                        result = ttl;
+                    }
+                } else {
+                    XLOG("ns_parserr failed ancount no = %d. errno = %s\n", n, strerror(errno));
                 }
-            } else {
-                XLOG("ns_parserr failed ancount no = %d. errno = %s\n", n, strerror(errno));
             }
         }
     } else {
@@ -1253,7 +1305,7 @@ _cache_check_pending_request_locked( struct resolv_cache* cache, Entry* key )
         } else {
             struct timespec ts = {0,0};
             ts.tv_sec = _time_now() + PENDING_REQUEST_TIMEOUT;
-            int rv = pthread_cond_timedwait(&ri->cond, &cache->lock, &ts);
+            pthread_cond_timedwait(&ri->cond, &cache->lock, &ts);
         }
     }
 
@@ -1307,7 +1359,6 @@ static void
 _cache_flush_locked( Cache*  cache )
 {
     int     nn;
-    time_t  now = _time_now();
 
     for (nn = 0; nn < cache->max_entries; nn++)
     {
@@ -1443,6 +1494,7 @@ _dump_answer(const void* answer, int answerlen)
         remove("/data/reslog.txt");
     }
     else {
+        errno = 0; // else debug is introducing error signals
         XLOG("_dump_answer: can't open file\n");
     }
 }
@@ -1578,9 +1630,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
                       int                   answersize,
                       int                  *answerlen )
 {
-    DnsPacket  pack[1];
     Entry      key[1];
-    int        index;
     Entry**    lookup;
     Entry*     e;
     time_t     now;
@@ -1753,8 +1803,6 @@ static struct resolv_cache_info* _create_cache_info( void );
 static struct resolv_cache* _find_named_cache_locked(const char* ifname);
 /* gets a resolv_cache_info associated with an interface name, or NULL if not found */
 static struct resolv_cache_info* _find_cache_info_locked(const char* ifname);
-/* free dns name server list of a resolv_cache_info structure */
-static void _free_nameservers(struct resolv_cache_info* cache_info);
 /* look up the named cache, and creates one if needed */
 static struct resolv_cache* _get_res_cache_for_iface_locked(const char* ifname);
 /* empty the named cache */
