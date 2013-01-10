@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "N88fLVEI",
+        "filename": "libc/bionic/signalfd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-10T21:17:26Z",
+      "side": 1,
+      "message": "this is now the same as the pthread.c copy. i\u0027ll come back and clean up all three callers.",
+      "revId": "a4b2dc016fa62bd172a73c3f8971c805700ffb0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
