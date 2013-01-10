@@ -284,7 +284,6 @@ libc_bionic_src_files := \
     bionic/raise.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
-    bionic/signalfd.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/strerror.cpp \

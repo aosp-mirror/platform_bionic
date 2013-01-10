@@ -153,7 +153,6 @@ syscall_src += arch-mips/syscalls/__rt_sigaction.S
 syscall_src += arch-mips/syscalls/__rt_sigprocmask.S
 syscall_src += arch-mips/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-mips/syscalls/sigpending.S
-syscall_src += arch-mips/syscalls/signalfd4.S
 syscall_src += arch-mips/syscalls/socket.S
 syscall_src += arch-mips/syscalls/socketpair.S
 syscall_src += arch-mips/syscalls/bind.S

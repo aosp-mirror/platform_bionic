@@ -150,7 +150,6 @@ syscall_src += arch-arm/syscalls/__rt_sigaction.S
 syscall_src += arch-arm/syscalls/__rt_sigprocmask.S
 syscall_src += arch-arm/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-arm/syscalls/sigpending.S
-syscall_src += arch-arm/syscalls/signalfd4.S
 syscall_src += arch-arm/syscalls/socket.S
 syscall_src += arch-arm/syscalls/socketpair.S
 syscall_src += arch-arm/syscalls/bind.S
