@@ -101,3 +101,27 @@ TEST(signal, raise_invalid) {
   ASSERT_EQ(-1, raise(-1));
   ASSERT_EQ(EINVAL, errno);
 }
+
+static void HandleSIGALRM(int signal_number) {
+  ASSERT_EQ(SIGALRM, signal_number);
+}
+
+TEST(signal, sigwait) {
+  struct sigaction action;
+  sigemptyset(&action.sa_mask);
+  action.sa_flags = 0;
+  action.sa_handler = HandleSIGALRM;
+  sigaction(SIGALRM, &action, NULL);
+
+  sigset_t wait_set;
+  sigemptyset(&wait_set);
+  sigaddset(&wait_set, SIGALRM);
+
+  alarm(1);
+
+  int received_signal;
+  errno = 0;
+  ASSERT_EQ(0, sigwait(&wait_set, &received_signal));
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(SIGALRM, received_signal);
+}

@@ -126,3 +126,31 @@ TEST(pthread_DeathTest, pthread_bug_37410) {
   EXPECT_EXIT(TestBug37410(), ::testing::ExitedWithCode(0), "");
 }
 #endif
+
+static void* SignalHandlerFn(void* arg) {
+  sigset_t wait_set;
+  sigfillset(&wait_set);
+  return reinterpret_cast<void*>(sigwait(&wait_set, reinterpret_cast<int*>(arg)));
+}
+
+TEST(pthread, pthread_sigmask) {
+  // Block SIGUSR1.
+  sigset_t set;
+  sigemptyset(&set);
+  sigaddset(&set, SIGUSR1);
+  ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, &set, NULL));
+
+  // Spawn a thread that calls sigwait and tells us what it received.
+  pthread_t signal_thread;
+  int received_signal = -1;
+  ASSERT_EQ(0, pthread_create(&signal_thread, NULL, SignalHandlerFn, &received_signal));
+
+  // Send that thread SIGUSR1.
+  pthread_kill(signal_thread, SIGUSR1);
+
+  // See what it got.
+  void* join_result;
+  ASSERT_EQ(0, pthread_join(signal_thread, &join_result));
+  ASSERT_EQ(SIGUSR1, received_signal);
+  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+}
