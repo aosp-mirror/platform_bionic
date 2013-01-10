@@ -222,7 +222,6 @@ libc_common_src_files := \
 	bionic/signame.c \
 	bionic/sigsetmask.c \
 	bionic/sigsuspend.c \
-	bionic/sigwait.c \
 	bionic/sleep.c \
 	bionic/statfs.c \
 	bionic/strcoll.c \
@@ -281,10 +280,12 @@ libc_bionic_src_files := \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
+    bionic/sigwait.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/strerror.cpp \
