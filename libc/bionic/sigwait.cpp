@@ -25,59 +25,29 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
 #include <time.h>
 
-int __rt_sigtimedwait(const sigset_t *uthese, siginfo_t *uinfo, const struct timespec *uts, size_t sigsetsize);
+#include <private/kernel_sigset_t.h>
 
-/* ok, this is really subtle: <asm/signal.h> defines sigset_t differently
- * when you're in the kernel or in the C library.
- *
- * in the kernel, this is an array of 2 32-bit unsigned longs
- * in the C library, this is a single 32-bit unsigned long
- *
- * moreover, the kernel implementation of rt_sigtimedwait doesn't
- * accept anything except kernel-sized signal sets (probably a bug !)
- *
- * we thus need to create a fake kernel sigset !!
- */
+extern "C" int __rt_sigtimedwait(const sigset_t* uthese, siginfo_t* uinfo, const struct timespec* uts, size_t sigsetsize);
 
-int sigwait(const sigset_t *set, int *sig)
-{
-    int  ret;
-#ifdef __mips__
-    /* use a union to get rid of aliasing warnings. On MIPS sigset_t is 128 bits */
-    union {
-      sigset_t       kernel_sigset;
-      sigset_t       dummy_sigset;
-    } u;
-    u.dummy_sigset = *set;
-#else
-    /* use a union to get rid of aliasing warnings */
-    union {
-      unsigned long  kernel_sigset[2];
-      sigset_t       dummy_sigset;
-    } u;
-
-    u.kernel_sigset[0] = *set;
-    u.kernel_sigset[1] = 0;  /* no real-time signals supported ? */
-#endif
-    for (;;)
-    {
-     /* __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
-      * around them since sigwait is only allowed to return EINVAL
-      */
-      ret = __rt_sigtimedwait ( &u.dummy_sigset, NULL, NULL, sizeof(u.kernel_sigset));
-      if (ret >= 0)
-        break;
-
-      if (errno != EAGAIN && errno != EINTR)
-        return errno;
+int sigwait(const sigset_t* set, int* sig) {
+  kernel_sigset_t sigset(set);
+  while (true) {
+    // __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
+    // around them since sigwait is only allowed to return EINVAL.
+    int result = __rt_sigtimedwait(sigset.get(), NULL, NULL, sizeof(sigset));
+    if (result >= 0) {
+      *sig = result;
+      return 0;
     }
 
-    *sig = ret;
-    return 0;
+    if (errno != EAGAIN && errno != EINTR) {
+      return errno;
+    }
+  }
 }
-

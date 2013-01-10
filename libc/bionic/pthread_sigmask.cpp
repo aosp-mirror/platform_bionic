@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,13 +26,37 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/signalfd.h>
+#include <errno.h>
+#include <pthread.h>
+#include <signal.h>
 
 #include <private/kernel_sigset_t.h>
 
-extern "C" int signalfd4(int fd, kernel_sigset_t* mask, size_t sizemask, int flags);
+extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
 
-int signalfd(int fd, const sigset_t* mask, int flags) {
-  kernel_sigset_t in_set(mask);
-  return signalfd4(fd, &in_set, sizeof(in_set), flags);
+int pthread_sigmask(int how, const sigset_t* iset, sigset_t* oset) {
+  int old_errno = errno;
+
+  // 'in_set_ptr' is the second parameter to __rt_sigprocmask. It must be NULL
+  // if 'set' is NULL to ensure correct semantics (which in this case would
+  // be to ignore 'how' and return the current signal set into 'oset').
+  kernel_sigset_t in_set;
+  kernel_sigset_t* in_set_ptr = NULL;
+  if (iset != NULL) {
+    in_set.set(iset);
+    in_set_ptr = &in_set;
+  }
+
+  kernel_sigset_t out_set;
+  int result = __rt_sigprocmask(how, in_set_ptr, &out_set, sizeof(out_set));
+  if (result < 0) {
+    result = errno;
+  }
+
+  if (oset != NULL) {
+    *oset = out_set.bionic;
+  }
+
+  errno = old_errno;
+  return result;
 }
