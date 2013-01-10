@@ -154,6 +154,7 @@ syscall_src += arch-x86/syscalls/__rt_sigaction.S
 syscall_src += arch-x86/syscalls/__rt_sigprocmask.S
 syscall_src += arch-x86/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-x86/syscalls/sigpending.S
+syscall_src += arch-x86/syscalls/signalfd4.S
 syscall_src += arch-x86/syscalls/socket.S
 syscall_src += arch-x86/syscalls/bind.S
 syscall_src += arch-x86/syscalls/connect.S
