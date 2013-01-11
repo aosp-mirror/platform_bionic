@@ -305,6 +305,19 @@ TEST(string, strcpy) {
   }
 }
 
+
+#if __BIONIC__
+// We have to say "DeathTest" here so gtest knows to run this test (which exits)
+// in its own process.
+TEST(string_DeathTest, strcpy_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  char *orig = strdup("0123456789");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+#endif
+
 #if __BIONIC__
 TEST(string, strlcat) {
   StringTestState state(SMALL);

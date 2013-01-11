@@ -47,7 +47,7 @@ include $(BUILD_EXECUTABLE)
 # -----------------------------------------------------------------------------
 
 test_c_flags = \
-    -fstack-protector \
+    -fstack-protector-all \
     -g \
     -Wall -Wextra \
     -Werror \
