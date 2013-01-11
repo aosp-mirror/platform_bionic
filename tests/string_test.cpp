@@ -39,7 +39,7 @@ TEST(string, strerror) {
   ASSERT_STREQ("Operation not permitted", strerror(1));
 
   // Invalid.
-  ASSERT_STREQ("Unknown error 4294967295", strerror(-1));
+  ASSERT_STREQ("Unknown error -1", strerror(-1));
   ASSERT_STREQ("Unknown error 1234", strerror(1234));
 }
 

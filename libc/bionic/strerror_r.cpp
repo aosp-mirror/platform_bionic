@@ -49,7 +49,7 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
   if (error_name != NULL) {
     length = snprintf(buf, buf_len, "%s", error_name);
   } else {
-    length = snprintf(buf, buf_len, "Unknown error %u", error_number);
+    length = snprintf(buf, buf_len, "Unknown error %d", error_number);
   }
   if (length >= buf_len) {
     errno = ERANGE;
