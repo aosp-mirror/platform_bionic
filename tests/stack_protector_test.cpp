@@ -114,4 +114,24 @@ TEST(stack_protector, global_guard) {
   ASSERT_NE(0U, reinterpret_cast<uintptr_t>(__stack_chk_guard));
 }
 
+/*
+ * When this function returns, the stack canary will be inconsistent
+ * with the previous value, which will generate a call to __stack_chk_fail(),
+ * eventually resulting in a SIGABRT.
+ *
+ * This must be marked with "__attribute__ ((noinline))", to ensure the
+ * compiler generates the proper stack guards around this function.
+ */
+__attribute__ ((noinline))
+static void do_modify_stack_chk_guard() {
+  __stack_chk_guard = (void *) 0x12345678;
+}
+
+// We have to say "DeathTest" here so gtest knows to run this test (which exits)
+// in its own process.
+TEST(stack_protector_DeathTest, modify_stack_protector) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+}
+
 #endif
