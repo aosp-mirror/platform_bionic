@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "N8zXf5gY",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-11T01:16:34Z",
+      "side": 1,
+      "message": "oops, forgot to free this memory. Let me fix this.",
+      "revId": "3a02f3051042b3a37e987b69c5cc468cc84843fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
