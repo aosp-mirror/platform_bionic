@@ -101,6 +101,8 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* Initialize the C runtime environment */
     __libc_init_common(elfdata);
 
+    apply_gnu_relro();
+
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
@@ -122,6 +124,5 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     if (structors->fini_array)
         __cxa_atexit(__libc_fini,structors->fini_array,NULL);
 
-    apply_gnu_relro();
     exit(slingshot(argc, argv, envp));
 }
