@@ -104,6 +104,24 @@
       "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODYl3qfo",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-12T01:41:11Z",
+      "side": 1,
+      "message": "actually mmap is a fall back for when morecore fails, so \"libc  malloc\" is probably best.",
+      "parentUuid": "ODWnYzR0",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
