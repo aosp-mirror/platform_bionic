@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ODWkqDe4",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-12T01:35:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ODkgSr10",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ODmhIy18",
         "filename": "libc/bionic/dlmalloc.c",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "ODWmtbYs",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-12T01:35:01Z",
+      "side": 1,
+      "message": "the code is from libcutils/ashmem, I couldn\u0027t bring myself to live with the goto though",
+      "parentUuid": "ODmhIy18",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ODkhk790",
         "filename": "libc/bionic/dlmalloc.c",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2013-01-12T00:51:39Z",
       "side": 1,
       "message": "so what\u0027s covered by /proc/.../maps\u0027 [heap] sbrk region and what goes in this/these anonymous regions?\n\n 317                if (vma-\u003evm_start \u003c\u003d mm-\u003ebrk \u0026\u0026\n 318                    vma-\u003evm_end \u003e\u003d mm-\u003estart_brk) {\n 319                        name \u003d \"[heap]\";\n 320                        goto done;\n 321                }",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODWnYzR0",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-12T01:35:01Z",
+      "side": 1,
+      "message": "dlmalloc calls mmap for large allocations (256kb iirc) and so this names those anonymous allocations. The brk initially points to the end of .bss and MORECORE will extend brk/.bss, so the \"[heap]\" is labeling that. I will change this to say \"libc large malloc\" which is a bit more revealing and less confusing than just \"libc malloc\".",
+      "parentUuid": "ODkhk790",
       "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
