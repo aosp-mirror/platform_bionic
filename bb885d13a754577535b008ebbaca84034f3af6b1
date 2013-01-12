@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ODEr7wwU",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-12T00:32:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ODjq8WWw",
+      "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ODvq1wX4",
         "filename": "libc/bionic/getauxval.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-01-11T23:14:08Z",
       "side": 1,
       "message": "\"type*\" rather than \"type *\" here and elsewhere.\n\nis this really the best type? either Elf32_auxv_t or uint32_t seem like better choices?",
+      "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODMoOsz8",
+        "filename": "libc/bionic/getauxval.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-12T00:32:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ODvq1wX4",
       "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ODKoLdy0",
+        "filename": "libc/bionic/getauxval.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-12T00:32:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ODtqyBZU",
+      "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ODjpOmZQ",
         "filename": "libc/private/bionic_auxv.h",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2013-01-11T23:14:08Z",
       "side": 1,
       "message": "is this the name glibc uses? otherwise i\u0027d prefer something a bit more like __libc_auxv.",
+      "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODOooT4k",
+        "filename": "libc/private/bionic_auxv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-12T00:32:22Z",
+      "side": 1,
+      "message": "I\u0027m not sure how glibc implements this. AFAIK, there\u0027s no documented way via glibc to access the aux vectors.\n\nThis particular variable is not exported to other apps (__LIBC_HIDDEN__), so we can name it anything.  I renamed it to __libc_auxv per your request.",
+      "parentUuid": "ODjpOmZQ",
       "revId": "bb885d13a754577535b008ebbaca84034f3af6b1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
