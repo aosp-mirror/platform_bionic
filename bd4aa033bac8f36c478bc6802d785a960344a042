@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ODkgSr10",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-12T00:51:39Z",
+      "side": 1,
+      "message": "void*",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODmhIy18",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-12T00:51:39Z",
+      "side": 1,
+      "message": "oh, is this copy \u0026 pasted from somewhere? we should say so if it is or write it in our usual style if not.",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODkhk790",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-12T00:51:39Z",
+      "side": 1,
+      "message": "so what\u0027s covered by /proc/.../maps\u0027 [heap] sbrk region and what goes in this/these anonymous regions?\n\n 317                if (vma-\u003evm_start \u003c\u003d mm-\u003ebrk \u0026\u0026\n 318                    vma-\u003evm_end \u003e\u003d mm-\u003estart_brk) {\n 319                        name \u003d \"[heap]\";\n 320                        goto done;\n 321                }",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
