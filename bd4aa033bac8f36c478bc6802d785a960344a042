@@ -140,6 +140,24 @@
       "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ODUmlEVk",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-12T01:56:28Z",
+      "side": 1,
+      "message": "So some of the mmaps are 4 or 8kb, not particularly large. I think the bracket as a clue to the kernel being the origin of the name isn\u0027t something we should willfully confuse.",
+      "parentUuid": "ODqibg2s",
+      "revId": "bd4aa033bac8f36c478bc6802d785a960344a042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
