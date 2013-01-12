@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,26 +25,24 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _ELF_H
-#define _ELF_H
 
-#include <stdint.h>
-#include <linux/auxvec.h>
-#include <sys/exec_elf.h>
+#include <stddef.h>
+#include <sys/cdefs.h>
+#include <sys/auxv.h>
+#include <private/bionic_auxv.h>
+#include <elf.h>
 
-typedef struct {
-  uint32_t a_type;
-  union {
-    uint32_t a_val;
-  } a_un;
-} Elf32_auxv_t;
+__LIBC_HIDDEN__
+Elf32_auxv_t* __libc_auxv = NULL;
 
-typedef struct {
-  uint64_t a_type;
-  union {
-    uint64_t a_val;
-  } a_un;
-} Elf64_auxv_t;
+extern "C" unsigned long int getauxval(unsigned long int type) {
+  Elf32_auxv_t* v;
 
-#endif /* _ELF_H */
+  for (v = __libc_auxv; v->a_type != AT_NULL; v++) {
+    if (v->a_type == type) {
+      return v->a_un.a_val;
+    }
+  }
 
+  return 0;
+}

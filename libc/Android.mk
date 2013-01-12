@@ -275,6 +275,7 @@ libc_bionic_src_files := \
     bionic/dirent.cpp \
     bionic/eventfd.cpp \
     bionic/__fgets_chk.cpp \
+    bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/libgen.cpp \
     bionic/__memcpy_chk.cpp \
