@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "OKaVE6Ws",
+        "filename": "libc/kernel/common/asm-generic/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-14T18:00:00Z",
+      "side": 0,
+      "message": "how had we got out of sync, and why so many whitespace differences?",
+      "revId": "2c5153b043b44e9935a334ae9b2d5a4bc5258b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OKUUgbbE",
+        "filename": "libc/kernel/common/linux/msm_ion.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-14T18:00:00Z",
+      "side": 0,
+      "message": "so where does this widely-used file come from now? can you still build the internal master without this?",
+      "revId": "2c5153b043b44e9935a334ae9b2d5a4bc5258b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "OKYU-Zds",
+        "filename": "libc/kernel/common/media/msm_mercury.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-14T18:00:00Z",
+      "side": 1,
+      "message": "they trimmed some of the trailing whitespace but not all?\n\nwhy don\u0027t we fix the script to do this?",
+      "revId": "44d5e8b380235b717fc2d1a52271f60dbf884145",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
