@@ -1571,8 +1571,9 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_DEBUG:
             // Set the DT_DEBUG entry to the address of _r_debug for GDB
             // if the dynamic table is writable
-            if (dynamic_flags & PF_W)
+            if ((dynamic_flags & PF_W) != 0) {
                 *d = (int) &_r_debug;
+            }
             break;
          case DT_RELA:
             DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
