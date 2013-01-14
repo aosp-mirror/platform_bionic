@@ -1511,8 +1511,9 @@ static bool soinfo_link_image(soinfo* si) {
 
     /* Extract dynamic section */
     size_t dynamic_count;
+    Elf32_Word dynamic_flags;
     phdr_table_get_dynamic_section(phdr, phnum, base, &si->dynamic,
-                                   &dynamic_count);
+                                   &dynamic_count, &dynamic_flags);
     if (si->dynamic == NULL) {
         if (!relocating_linker) {
             DL_ERR("missing PT_DYNAMIC in \"%s\"", si->name);
@@ -1568,10 +1569,10 @@ static bool soinfo_link_image(soinfo* si) {
             si->plt_got = (unsigned *)(base + *d);
             break;
         case DT_DEBUG:
-#if !defined(ANDROID_MIPS_LINKER)
             // Set the DT_DEBUG entry to the address of _r_debug for GDB
-            *d = (int) &_r_debug;
-#endif
+            // if the dynamic table is writable
+            if (dynamic_flags & PF_W)
+                *d = (int) &_r_debug;
             break;
          case DT_RELA:
             DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
@@ -1866,7 +1867,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     Elf32_Phdr *phdr =
         (Elf32_Phdr *)((unsigned char *) linker_base + elf_hdr->e_phoff);
     phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                   &linker_soinfo.dynamic, NULL);
+                                   &linker_soinfo.dynamic, NULL, NULL);
     insert_soinfo_into_debug_map(&linker_soinfo);
 
     /* extract information passed from the kernel */
