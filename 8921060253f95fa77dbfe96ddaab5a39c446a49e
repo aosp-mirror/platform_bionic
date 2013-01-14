@@ -34,6 +34,24 @@
       "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OIwG8obk",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2013-01-14T20:55:33Z",
+      "side": 1,
+      "message": "That\u0027s fair, your point is well taken that the performance impact would likely be minimal (would love to see the distribution of allocations in malloc across the framework and apps, though).\n\nI\u0027m just generally conscious of doing extra work unnecessarily. We could easily save the fd and reuse it on subsequent calls. Are there any downsides to doing that? Do you want to have the allocations to be \"separate regions\" purpose? Won\u0027t ashmem just name multiple allocations after the region name anyway (don\u0027t remember)?",
+      "parentUuid": "OI6GBNVw",
+      "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
