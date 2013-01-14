@@ -542,6 +542,7 @@ phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
  * Output:
  *   dynamic       -> address of table in memory (NULL on failure).
  *   dynamic_count -> number of items in table (0 on failure).
+ *   dynamic_flags -> protection flags for section (unset on failure)
  * Return:
  *   void
  */
@@ -550,7 +551,8 @@ phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                int               phdr_count,
                                Elf32_Addr        load_bias,
                                Elf32_Addr**      dynamic,
-                               size_t*           dynamic_count)
+                               size_t*           dynamic_count,
+                               Elf32_Word*       dynamic_flags)
 {
     const Elf32_Phdr* phdr = phdr_table;
     const Elf32_Phdr* phdr_limit = phdr + phdr_count;
@@ -563,6 +565,9 @@ phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
         *dynamic = (Elf32_Addr*)(load_bias + phdr->p_vaddr);
         if (dynamic_count) {
             *dynamic_count = (unsigned)(phdr->p_memsz / 8);
+        }
+        if (dynamic_flags) {
+            *dynamic_flags = phdr->p_flags;
         }
         return;
     }
