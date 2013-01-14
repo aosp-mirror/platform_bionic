@@ -16,6 +16,24 @@
       "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OI6GBNVw",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-14T19:55:54Z",
+      "side": 1,
+      "message": "Not sure I follow your comments Dima. The named_anonymous_mmap is only called either for large mallocs (\u003e256kb) which should be rare and therefore not performance critical, or for when the heap is fragmented and morecore (brk) allocations fail (\"[heap]\" in /proc/pid/maps). The allocations for the fragmented case will be recycled by dlmalloc\u0027s free lists and so we\u0027d only be doing a large number of allocations/ashmem creates if we were leaking memory.",
+      "parentUuid": "OI35UKCI",
+      "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
