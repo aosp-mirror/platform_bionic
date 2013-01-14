@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "OI35UKCI",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000413
+      },
+      "writtenOn": "2013-01-14T19:30:35Z",
+      "side": 1,
+      "message": "sorry for the late response, but this seems suboptimal to always open a new file every time. Doing the region create every time could make malloc performance unpredictable. Is it possible to do multiple allocations with the same ashmem region? If so, it would be good to only open it once and then reuse the fd.",
+      "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
