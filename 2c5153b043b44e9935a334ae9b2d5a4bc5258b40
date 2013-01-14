@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "OI-6ieK8",
+        "filename": "libc/kernel/common/asm-generic/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-14T19:01:17Z",
+      "side": 0,
+      "message": "I don\u0027t see any obvious cause for this whitespace change... Maybe something is different with my python version?  Not sure...",
+      "parentUuid": "OKaVE6Ws",
+      "revId": "2c5153b043b44e9935a334ae9b2d5a4bc5258b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "OKUUgbbE",
         "filename": "libc/kernel/common/linux/msm_ion.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-01-14T18:00:00Z",
       "side": 0,
       "message": "so where does this widely-used file come from now? can you still build the internal master without this?",
+      "revId": "2c5153b043b44e9935a334ae9b2d5a4bc5258b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OI-6JGDE",
+        "filename": "libc/kernel/common/linux/msm_ion.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-14T19:01:17Z",
+      "side": 0,
+      "message": "I didn\u0027t build all the targets. \n\nAfter grepping through the code I agree this is a bad change.",
+      "parentUuid": "OKUUgbbE",
       "revId": "2c5153b043b44e9935a334ae9b2d5a4bc5258b40",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
