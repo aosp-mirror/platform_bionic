@@ -110,6 +110,7 @@
     XX(__aeabi_fsub)         \
     XX(__aeabi_i2d)          \
     XX(__aeabi_i2f)          \
+    XX(__aeabi_idiv)         \
     XX(__aeabi_l2d)          \
     XX(__aeabi_l2f)          \
     XX(__aeabi_lmul)         \
