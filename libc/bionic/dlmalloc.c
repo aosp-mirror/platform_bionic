@@ -24,6 +24,10 @@ static void __bionic_heap_error(const char* msg, const char* function, void* p);
 #define USAGE_ERROR_ACTION(m,p) \
     __bionic_heap_error("ARGUMENT IS INVALID HEAP ADDRESS", __FUNCTION__, p)
 
+/* Bionic named anonymous memory declarations */
+static void* named_anonymous_mmap(size_t length);
+#define MMAP(s) named_anonymous_mmap(s)
+
 /*
  * Ugly inclusion of C file so that bionic specific #defines configure
  * dlmalloc.
@@ -73,4 +77,41 @@ static void __bionic_heap_error(const char* msg, const char* function, void* p)
 
     /* So that we can get a memory dump around p */
     *((int **) 0xdeadbaad) = (int *) p;
+}
+
+/* Bionic named anonymous memory definitions */
+#include <linux/ashmem.h>
+static int __ashmem_create_region(const char* name, size_t size)
+{
+    int fd, ret;
+    fd = open("/dev/ashmem", O_RDWR);
+    if (fd < 0)
+        return fd;
+    if (name != NULL) {
+        char buf[ASHMEM_NAME_LEN];
+
+        strlcpy(buf, name, sizeof(buf));
+        ret = ioctl(fd, ASHMEM_SET_NAME, buf);
+        if (ret < 0) {  /* error */
+            close(fd);
+            return ret;
+        }
+    }
+    ret = ioctl(fd, ASHMEM_SET_SIZE, size);
+    if (ret < 0) {  /* error */
+        close(fd);
+        return ret;
+    }
+    return fd;
+}
+
+static void* named_anonymous_mmap(size_t length)
+{
+    void* ret;
+    int fd = __ashmem_create_region("libc malloc", length);
+    if (fd < 0)
+        return MAP_FAILED;
+    ret = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);
+    close (fd);
+    return ret;
 }
