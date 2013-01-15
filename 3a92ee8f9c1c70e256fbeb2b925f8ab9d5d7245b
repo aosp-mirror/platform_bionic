@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "OOC00WUo",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-15T00:58:59Z",
+      "side": 1,
+      "message": "Ugh. Sorry to keep sending you these badly formatted CLs.  Fixed.",
+      "parentUuid": "OOA1ate0",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "OOM1zPXE",
         "filename": "libc/private/bionic_ssp.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-01-15T00:27:36Z",
       "side": 1,
       "message": "s/retval/result/",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOM04HUE",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-15T00:58:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "OOM1zPXE",
       "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "OOG0R8bc",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-15T00:58:59Z",
+      "side": 1,
+      "message": "I\u0027ll remove this before I send you the next version of this CL.",
+      "parentUuid": "OOK1qiXQ",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "OOE0LzeU",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "OOA0GNYM",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-15T00:58:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "OOE0LzeU",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "OOG0QEQ0",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2013-01-15T00:27:36Z",
       "side": 1,
       "message": "uintptr_t*",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOC0L.Ys",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2035,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-15T00:58:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "OOG0QEQ0",
       "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
