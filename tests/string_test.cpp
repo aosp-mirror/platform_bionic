@@ -77,7 +77,7 @@ TEST(string, strerror_r) {
 
   // Invalid.
   ASSERT_EQ(0, strerror_r(-1, buf, sizeof(buf)));
-  ASSERT_STREQ("Unknown error 4294967295", buf);
+  ASSERT_STREQ("Unknown error -1", buf);
   ASSERT_EQ(0, strerror_r(1234, buf, sizeof(buf)));
   ASSERT_STREQ("Unknown error 1234", buf);
 
