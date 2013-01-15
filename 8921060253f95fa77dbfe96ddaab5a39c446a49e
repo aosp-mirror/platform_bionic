@@ -52,6 +52,24 @@
       "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ONy4aBy0",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-01-15T00:36:26Z",
+      "side": 1,
+      "message": "There would be a rather minimal downside in holding a file descriptor live, possibly impacting the numbering of file descriptors (should you be making assumptions about file descriptor numbering beside the usual 1,2, 3 for in, out, err). I don\u0027t know about the ashmem impact of recycling the file descriptor. A similar change to this was original proposed by Iliyan, and he has more experience, so I\u0027m happy to leave it to his or others taste. The main reason the original code wasn\u0027t merged was due to my upgrading/re-organizing dlmalloc.",
+      "parentUuid": "OIwG8obk",
+      "revId": "8921060253f95fa77dbfe96ddaab5a39c446a49e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
