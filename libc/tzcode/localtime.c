@@ -212,9 +212,9 @@ static const char * getoffset P((const char * strp, long * offsetp));
 static const char * getrule P((const char * strp, struct rule * rulep));
 static void     gmtload P((struct state * sp));
 static struct tm *  gmtsub P((const time_t * timep, long offset,
-                struct tm * tmp));
+                struct tm * tmp, const struct state * sp)); // android-changed: added sp.
 static struct tm *  localsub P((const time_t * timep, long offset,
-                struct tm * tmp));
+                struct tm * tmp, const struct state * sp)); // android-changed: added sp.
 static int      increment_overflow P((int * number, int delta));
 static int      leaps_thru_end_of P((int y));
 static int      long_increment_overflow P((long * number, int delta));
@@ -225,16 +225,16 @@ static int      normalize_overflow P((int * tensptr, int * unitsptr,
 static void     settzname P((void));
 static time_t       time1 P((struct tm * tmp,
                 struct tm * (*funcp) P((const time_t *,
-                long, struct tm *)),
-                long offset));
+                long, struct tm *, const struct state *)), // android-changed: added state*.
+                long offset, const struct state * sp)); // android-changed: added sp.
 static time_t       time2 P((struct tm *tmp,
                 struct tm * (*funcp) P((const time_t *,
-                long, struct tm*)),
-                long offset, int * okayp));
+                long, struct tm*, const struct state *)), // android-changed: added state*.
+                long offset, int * okayp, const struct state * sp)); // android-changed: added sp.
 static time_t       time2sub P((struct tm *tmp,
                 struct tm * (*funcp) P((const time_t *,
-                long, struct tm*)),
-                long offset, int * okayp, int do_norm_secs));
+                long, struct tm*, const struct state *)), // android-changed: added state*.
+                long offset, int * okayp, int do_norm_secs, const struct state * sp)); // android-change: added sp.
 static struct tm *  timesub P((const time_t * timep, long offset,
                 const struct state * sp, struct tm * tmp));
 static int      tmcomp P((const struct tm * atmp,
@@ -1290,21 +1290,25 @@ tzset P((void))
 
 /*ARGSUSED*/
 static struct tm *
-localsub(timep, offset, tmp)
+localsub(timep, offset, tmp, sp) // android-changed: added sp.
 const time_t * const    timep;
 const long      offset;
 struct tm * const   tmp;
+const struct state * sp; // android-added: added sp.
 {
-    register struct state *     sp;
     register const struct ttinfo *  ttisp;
     register int            i;
     register struct tm *        result;
     const time_t            t = *timep;
 
-    sp = lclptr;
+    // BEGIN android-changed: support user-supplied sp.
+    if (sp == NULL) {
+        sp = lclptr;
+    }
+    // END android-changed
 #ifdef ALL_STATE
     if (sp == NULL)
-        return gmtsub(timep, offset, tmp);
+        return gmtsub(timep, offset, tmp, sp); // android-changed: added sp.
 #endif /* defined ALL_STATE */
     if ((sp->goback && t < sp->ats[0]) ||
         (sp->goahead && t > sp->ats[sp->timecnt - 1])) {
@@ -1331,7 +1335,7 @@ struct tm * const   tmp;
             if (newt < sp->ats[0] ||
                 newt > sp->ats[sp->timecnt - 1])
                     return NULL;    /* "cannot happen" */
-            result = localsub(&newt, offset, tmp);
+            result = localsub(&newt, offset, tmp, sp); // android-changed: added sp.
             if (result == tmp) {
                 register time_t newy;
 
@@ -1401,7 +1405,7 @@ struct tm *     tmp;
 
     _tzLock();
     tzset_locked();
-    result = localsub(timep, 0L, tmp);
+    result = localsub(timep, 0L, tmp, NULL); // android-changed: extra parameter.
     _tzUnlock();
 
     return result;
@@ -1412,12 +1416,15 @@ struct tm *     tmp;
 */
 
 static struct tm *
-gmtsub(timep, offset, tmp)
+gmtsub(timep, offset, tmp, sp) // android-changed: added sp.
 const time_t * const    timep;
 const long      offset;
 struct tm * const   tmp;
+const struct state * sp; // android-changed: added sp.
 {
     register struct tm *    result;
+
+    (void) sp; // android-added: unused.
 
     if (!gmt_is_set) {
         gmt_is_set = TRUE;
@@ -1469,7 +1476,7 @@ struct tm *     tmp;
     struct tm*  result;
 
     _tzLock();
-    result = gmtsub(timep, 0L, tmp);
+    result = gmtsub(timep, 0L, tmp, NULL); // android-changed: extra parameter.
     _tzUnlock();
 
     return result;
@@ -1482,7 +1489,7 @@ offtime(timep, offset)
 const time_t * const    timep;
 const long      offset;
 {
-    return gmtsub(timep, offset, &tmGlobal);
+    return gmtsub(timep, offset, &tmGlobal, NULL); // android-changed: extra parameter.
 }
 #endif /* 0 */
 #endif /* defined STD_INSPIRED */
@@ -1755,14 +1762,14 @@ register const struct tm * const btmp;
 }
 
 static time_t
-time2sub(tmp, funcp, offset, okayp, do_norm_secs)
+time2sub(tmp, funcp, offset, okayp, do_norm_secs, sp) // android-changed: added sp
 struct tm * const   tmp;
-struct tm * (* const    funcp) P((const time_t*, long, struct tm*));
+struct tm * (* const    funcp) P((const time_t*, long, struct tm*, const struct state*)); // android-changed: added state*
 const long      offset;
 int * const     okayp;
 const int       do_norm_secs;
+const struct state * sp; // android-changed: added sp
 {
-    register const struct state *   sp;
     register int            dir;
     register int            i, j;
     register int            saved_seconds;
@@ -1864,7 +1871,7 @@ const int       do_norm_secs;
             t = lo;
         else if (t > hi)
             t = hi;
-        if ((*funcp)(&t, offset, &mytm) == NULL) {
+        if ((*funcp)(&t, offset, &mytm, sp) == NULL) { // android-changed: added sp.
             /*
             ** Assume that t is too extreme to be represented in
             ** a struct tm; arrange things so that it is less
@@ -1902,9 +1909,13 @@ const int       do_norm_secs;
         /*
         ** The (void *) casts are the benefit of SunOS 3.3 on Sun 2's.
         */
-        sp = (const struct state *)
-            (((void *) funcp == (void *) localsub) ?
-            lclptr : gmtptr);
+        // BEGIN android-changed: support user-supplied sp
+        if (sp == NULL) {
+            sp = (const struct state *)
+                (((void *) funcp == (void *) localsub) ?
+                lclptr : gmtptr);
+        }
+        // END android-changed
 #ifdef ALL_STATE
         if (sp == NULL)
             return WRONG;
@@ -1917,7 +1928,7 @@ const int       do_norm_secs;
                     continue;
                 newt = t + sp->ttis[j].tt_gmtoff -
                     sp->ttis[i].tt_gmtoff;
-                if ((*funcp)(&newt, offset, &mytm) == NULL)
+                if ((*funcp)(&newt, offset, &mytm, sp) == NULL) // android-changed: added sp.
                     continue;
                 if (tmcomp(&mytm, &yourtm) != 0)
                     continue;
@@ -1937,17 +1948,19 @@ label:
     if ((newt < t) != (saved_seconds < 0))
         return WRONG;
     t = newt;
-    if ((*funcp)(&t, offset, tmp))
+    if ((*funcp)(&t, offset, tmp, sp)) // android-changed: added sp.
         *okayp = TRUE;
     return t;
 }
 
+// BEGIN android-changed: added sp.
 static time_t
-time2(tmp, funcp, offset, okayp)
+time2(tmp, funcp, offset, okayp, sp)
 struct tm * const   tmp;
-struct tm * (* const    funcp) P((const time_t*, long, struct tm*));
+struct tm * (* const    funcp) P((const time_t*, long, struct tm*, const struct state*));
 const long      offset;
 int * const     okayp;
+const struct state * sp;
 {
     time_t  t;
 
@@ -1956,18 +1969,19 @@ int * const     okayp;
     ** (in case tm_sec contains a value associated with a leap second).
     ** If that fails, try with normalization of seconds.
     */
-    t = time2sub(tmp, funcp, offset, okayp, FALSE);
-    return *okayp ? t : time2sub(tmp, funcp, offset, okayp, TRUE);
+    t = time2sub(tmp, funcp, offset, okayp, FALSE, sp);
+    return *okayp ? t : time2sub(tmp, funcp, offset, okayp, TRUE, sp);
 }
+// END android-changed
 
 static time_t
-time1(tmp, funcp, offset)
+time1(tmp, funcp, offset, sp) // android-changed: added sp.
 struct tm * const   tmp;
-struct tm * (* const    funcp) P((const time_t *, long, struct tm *));
+struct tm * (* const    funcp) P((const time_t *, long, struct tm *, const struct state *));
 const long      offset;
+const struct state * sp; // android-changed: added sp.
 {
     register time_t         t;
-    register const struct state *   sp;
     register int            samei, otheri;
     register int            sameind, otherind;
     register int            i;
@@ -1978,7 +1992,7 @@ const long      offset;
 
     if (tmp->tm_isdst > 1)
         tmp->tm_isdst = 1;
-    t = time2(tmp, funcp, offset, &okay);
+    t = time2(tmp, funcp, offset, &okay, sp); // android-changed: added sp.
 #ifdef PCTS
     /*
     ** PCTS code courtesy Grant Sullivan.
@@ -2001,8 +2015,12 @@ const long      offset;
     /*
     ** The (void *) casts are the benefit of SunOS 3.3 on Sun 2's.
     */
-    sp = (const struct state *) (((void *) funcp == (void *) localsub) ?
-        lclptr : gmtptr);
+    // BEGIN android-changed: support user-supplied sp.
+    if (sp == NULL) {
+        sp = (const struct state *) (((void *) funcp == (void *) localsub) ?
+            lclptr : gmtptr);
+    }
+    // BEGIN android-changed
 #ifdef ALL_STATE
     if (sp == NULL)
         return WRONG;
@@ -2026,7 +2044,7 @@ const long      offset;
             tmp->tm_sec += sp->ttis[otheri].tt_gmtoff -
                     sp->ttis[samei].tt_gmtoff;
             tmp->tm_isdst = !tmp->tm_isdst;
-            t = time2(tmp, funcp, offset, &okay);
+            t = time2(tmp, funcp, offset, &okay, sp); // android-changed: added sp.
             if (okay)
                 return t;
             tmp->tm_sec -= sp->ttis[otheri].tt_gmtoff -
@@ -2044,10 +2062,39 @@ struct tm * const   tmp;
     time_t  result;
     _tzLock();
     tzset_locked();
-    result = time1(tmp, localsub, 0L);
+    result = time1(tmp, localsub, 0L, NULL); // android-changed: extra parameter.
     _tzUnlock();
     return result;
 }
+
+// BEGIN android-added
+time_t
+mktime_tz(tmp, tz)
+struct tm * const tmp;
+char const * tz;
+{
+    struct state st;
+    if (tzload(tz, &st, TRUE) != 0) {
+        // TODO: not sure what's best here, but for now, we fall back to gmt.
+        gmtload(&st);
+    }
+    return time1(tmp, localsub, 0L, &st);
+}
+
+void
+localtime_tz(timep, tmp, tz)
+const time_t * const timep;
+struct tm * tmp;
+const char* tz;
+{
+    struct state st;
+    if (tzload(tz, &st, TRUE) != 0) {
+        // TODO: not sure what's best here, but for now, we fall back to gmt.
+        gmtload(&st);
+    }
+    localsub(timep, 0L, tmp, &st);
+}
+// END android-added
 
 #ifdef STD_INSPIRED
 
@@ -2067,7 +2114,7 @@ struct tm * const   tmp;
 
     tmp->tm_isdst = 0;
     _tzLock();
-    result = time1(tmp, gmtsub, 0L);
+    result = time1(tmp, gmtsub, 0L, NULL); // android-changed: extra parameter.
     _tzUnlock();
 
     return result;
@@ -2083,7 +2130,7 @@ const long      offset;
 
     tmp->tm_isdst = 0;
     _tzLock();
-    result = time1(tmp, gmtsub, offset);
+    result = time1(tmp, gmtsub, offset, NULL); // android-changed: extra parameter.
     _tzUnlock();
 
     return result;
