@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "OOA1ate0",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-15T00:27:36Z",
+      "side": 1,
+      "message": "void*",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOM1zPXE",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-15T00:27:36Z",
+      "side": 1,
+      "message": "s/retval/result/",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOK1qiXQ",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-15T00:27:36Z",
+      "side": 1,
+      "message": "or just give up. glibc doesn\u0027t bother, and it\u0027s not obviously useful, and it\u0027s only a possibility on x86 anyway.",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOE0LzeU",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-15T00:27:36Z",
+      "side": 1,
+      "message": "uintptr_t*",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OOG0QEQ0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2035,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-15T00:27:36Z",
+      "side": 1,
+      "message": "uintptr_t*",
+      "revId": "3a92ee8f9c1c70e256fbeb2b925f8ab9d5d7245b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
