@@ -1785,7 +1785,7 @@ static bool soinfo_link_image(soinfo* si) {
  * fixed it's own GOT. It is safe to make references to externs
  * and other non-local data at this point.
  */
-static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linker_base)
+static unsigned __linker_init_post_relocation(uintptr_t* elfdata, unsigned linker_base)
 {
     static soinfo linker_soinfo;
 
@@ -1976,7 +1976,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
  * Find the value of AT_BASE passed to us by the kernel. This is the load
  * location of the linker.
  */
-static unsigned find_linker_base(unsigned **elfdata) {
+static unsigned find_linker_base(uintptr_t* elfdata) {
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
     unsigned *vecs = (unsigned*) (argv + argc + 1);
@@ -2032,8 +2032,8 @@ get_elf_exec_load_bias(const Elf32_Ehdr* elf)
  * relocations, any attempt to reference an extern variable, extern
  * function, or other GOT reference will generate a segfault.
  */
-extern "C" unsigned __linker_init(unsigned **elfdata) {
-    unsigned linker_addr = find_linker_base(elfdata);
+extern "C" unsigned __linker_init(uintptr_t* elfdata) {
+    uintptr_t linker_addr = find_linker_base(elfdata);
     Elf32_Ehdr *elf_hdr = (Elf32_Ehdr *) linker_addr;
     Elf32_Phdr *phdr =
         (Elf32_Phdr *)((unsigned char *) linker_addr + elf_hdr->e_phoff);
