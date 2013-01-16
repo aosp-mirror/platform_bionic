@@ -56,7 +56,13 @@ struct stack_protector_checker {
 
     // Duplicate tid. gettid(2) bug? Seeing this would be very upsetting.
     ASSERT_TRUE(tids.find(tid) == tids.end());
-
+#ifdef __GLIBC__
+    // glibc uses the same guard for every thread. bionic uses a different guard for each one.
+#else
+    // Duplicate guard. Our bug. Note this is potentially flaky; we _could_ get the
+    // same guard for two threads, but it should be vanishingly unlikely.
+    ASSERT_TRUE(guards.find(guard) == guards.end());
+#endif
     // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_ get
     // four random zero bytes, but it should be vanishingly unlikely.
     ASSERT_NE(guard, 0U);
@@ -72,7 +78,7 @@ static void* ThreadGuardHelper(void* arg) {
   return NULL;
 }
 
-TEST(stack_protector, same_guard_per_thread) {
+TEST(stack_protector, guard_per_thread) {
   stack_protector_checker checker;
   size_t thread_count = 10;
   for (size_t i = 0; i < thread_count; ++i) {
@@ -84,8 +90,12 @@ TEST(stack_protector, same_guard_per_thread) {
   }
   ASSERT_EQ(thread_count, checker.tids.size());
 
-  // bionic x86 and glibc uses the same guard for every thread.
+  // glibc uses the same guard for every thread. bionic uses a different guard for each one.
+#ifdef __BIONIC__
+  ASSERT_EQ(thread_count, checker.guards.size());
+#else
   ASSERT_EQ(1U, checker.guards.size());
+#endif
 }
 
 #endif

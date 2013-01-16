@@ -96,7 +96,7 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     int  argc;
     char **argv, **envp;
 
-    __libc_init_tls(elfdata);
+    __libc_init_tls(NULL);
 
     /* Initialize the C runtime environment */
     __libc_init_common(elfdata);
