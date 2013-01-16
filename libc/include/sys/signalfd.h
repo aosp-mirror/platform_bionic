@@ -25,17 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_SIGNALFD_H_
 #define _SYS_SIGNALFD_H_
 
-#include <linux/signalfd.h>
-#include <sys/cdefs.h>
 #include <signal.h>
+#include <linux/signalfd.h>
 
 __BEGIN_DECLS
 
-/* Compatibility with GLibc */
-extern int signalfd(int fd, const sigset_t *mask, int flags);
+extern int signalfd(int fd, const sigset_t* mask, int flags) __attribute__((__nonnull__(2)));
 
 __END_DECLS
 
