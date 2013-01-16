@@ -53,22 +53,6 @@ unsigned int __page_shift = PAGE_SHIFT;
 
 int __system_properties_init(void);
 
-static Elf32_auxv_t* get_aux_from_elfdata(uintptr_t* elf_data) {
-  int argc = *elf_data;
-  char** argv = (char**) (elf_data + 1);
-  char** envp = argv + argc + 1;
-
-  // The auxiliary vector is at the end of the environment block
-  while(*envp != NULL) {
-    envp++;
-  }
-  /* The end of the environment block is marked by two NULL pointers */
-  envp++;
-
-  return (Elf32_auxv_t*) envp;
-}
-
-
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
  * apply to linker-private copies and will not be visible from libc later on.
@@ -80,7 +64,7 @@ static Elf32_auxv_t* get_aux_from_elfdata(uintptr_t* elf_data) {
  * This function also stores the elf_data argument in a specific TLS slot to be later
  * picked up by the libc constructor.
  */
-void __libc_init_tls(uintptr_t* elf_data) {
+void __libc_init_tls(unsigned** elf_data) {
   unsigned stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
   unsigned stack_size = 128 * 1024;
   unsigned stack_bottom = stack_top - stack_size;
@@ -93,7 +77,6 @@ void __libc_init_tls(uintptr_t* elf_data) {
   _init_thread(&thread, gettid(), &thread_attr, (void*) stack_bottom, false);
 
   static void* tls_area[BIONIC_TLS_SLOTS];
-  __libc_auxv = get_aux_from_elfdata(elf_data);
   __init_tls(tls_area, &thread);
   tls_area[TLS_SLOT_BIONIC_PREINIT] = elf_data;
 }
@@ -113,7 +96,14 @@ void __libc_init_common(uintptr_t* elf_data) {
   __progname = argv[0] ? argv[0] : "<unknown>";
   environ = envp;
 
-  __libc_auxv = get_aux_from_elfdata(elf_data);
+  // The auxiliary vector is at the end of the environment block
+  while(*envp != NULL) {
+    envp++;
+  }
+  /* The end of the environment block is marked by two NULL pointers */
+  envp++;
+
+  __libc_auxv = (Elf32_auxv_t*) envp;
 
   __system_properties_init(); // Requires 'environ'.
 }
