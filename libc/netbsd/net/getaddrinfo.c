@@ -214,7 +214,7 @@ struct res_target {
 
 static int str2number(const char *);
 static int explore_fqdn(const struct addrinfo *, const char *,
-	const char *, struct addrinfo **);
+	const char *, struct addrinfo **, const char *iface);
 static int explore_null(const struct addrinfo *,
 	const char *, struct addrinfo **);
 static int explore_numeric(const struct addrinfo *, const char *,
@@ -402,17 +402,15 @@ _have_ipv4() {
         return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
 }
 
-// Returns 0 on success, else returns non-zero on error (in which case
-// getaddrinfo should continue as normal)
+// Returns 0 on success, else returns on error.
 static int
 android_getaddrinfo_proxy(
     const char *hostname, const char *servname,
-    const struct addrinfo *hints, struct addrinfo **res)
+    const struct addrinfo *hints, struct addrinfo **res, const char *iface)
 {
 	int sock;
 	const int one = 1;
 	struct sockaddr_un proxy_addr;
-	const char* cache_mode = getenv("ANDROID_DNS_MODE");
 	FILE* proxy = NULL;
 	int success = 0;
 
@@ -421,33 +419,17 @@ android_getaddrinfo_proxy(
 	// allocated in the process (before failing).
 	*res = NULL;
 
-	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
-		// Don't use the proxy in local mode.  This is used by the
-		// proxy itself.
-		return -1;
-	}
-
-	// Temporary cautious hack to disable the DNS proxy for processes
-	// requesting special treatment.  Ideally the DNS proxy should
-	// accomodate these apps, though.
-	char propname[PROP_NAME_MAX];
-	char propvalue[PROP_VALUE_MAX];
-	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
-	if (__system_property_get(propname, propvalue) > 0) {
-		return -1;
-	}
-
-	// Bogus things we can't serialize.  Don't use the proxy.
+	// Bogus things we can't serialize.  Don't use the proxy.  These will fail - let them.
 	if ((hostname != NULL &&
 	     strcspn(hostname, " \n\r\t^'\"") != strlen(hostname)) ||
 	    (servname != NULL &&
 	     strcspn(servname, " \n\r\t^'\"") != strlen(servname))) {
-		return -1;
+		return EAI_NODATA;
 	}
 
 	sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0) {
-		return -1;
+		return EAI_NODATA;
 	}
 
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
@@ -459,18 +441,20 @@ android_getaddrinfo_proxy(
 				       (const struct sockaddr*) &proxy_addr,
 				       sizeof(proxy_addr))) != 0) {
 		close(sock);
-		return -1;
+		return EAI_NODATA;
 	}
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
-	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d",
+	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %s %d",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
 		    hints == NULL ? -1 : hints->ai_flags,
 		    hints == NULL ? -1 : hints->ai_family,
 		    hints == NULL ? -1 : hints->ai_socktype,
-		    hints == NULL ? -1 : hints->ai_protocol) < 0) {
+		    hints == NULL ? -1 : hints->ai_protocol,
+		    iface == NULL ? "^" : iface,
+		    getpid()) < 0) {
 		goto exit;
 	}
 	// literal NULL byte at end, required by FrameworkListener
@@ -580,19 +564,25 @@ exit:
 		return 0;
 	}
 
-	// Proxy failed; fall through to local
-	// resolver case.  But first clean up any
-	// memory we might've allocated.
+	// Proxy failed;
+	// clean up memory we might've allocated.
 	if (*res) {
 		freeaddrinfo(*res);
 		*res = NULL;
 	}
-	return -1;
+	return EAI_NODATA;
 }
 
 int
 getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
+{
+	return android_getaddrinfoforiface(hostname, servname, hints, NULL, res);
+}
+
+int
+android_getaddrinfoforiface(const char *hostname, const char *servname,
+    const struct addrinfo *hints, const char *iface, struct addrinfo **res)
 {
 	struct addrinfo sentinel;
 	struct addrinfo *cur;
@@ -601,12 +591,12 @@ getaddrinfo(const char *hostname, const char *servname,
 	struct addrinfo ai0;
 	struct addrinfo *pai;
 	const struct explore *ex;
+	const char* cache_mode = getenv("ANDROID_DNS_MODE");
 
 	/* hostname is allowed to be NULL */
 	/* servname is allowed to be NULL */
 	/* hints is allowed to be NULL */
 	assert(res != NULL);
-
 	memset(&sentinel, 0, sizeof(sentinel));
 	cur = &sentinel;
 	pai = &ai;
@@ -739,9 +729,10 @@ getaddrinfo(const char *hostname, const char *servname,
         /*
          * BEGIN ANDROID CHANGES; proxying to the cache
          */
-        if (android_getaddrinfo_proxy(hostname, servname, hints, res) == 0) {
-            return 0;
-        }
+	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
+		// we're not the proxy - pass the request to them
+		return android_getaddrinfo_proxy(hostname, servname, hints, res, iface);
+	}
 
 	/*
 	 * hostname as alphabetical name.
@@ -770,7 +761,7 @@ getaddrinfo(const char *hostname, const char *servname,
 			pai->ai_protocol = ex->e_protocol;
 
 		error = explore_fqdn(pai, hostname, servname,
-			&cur->ai_next);
+			&cur->ai_next, iface);
 
 		while (cur && cur->ai_next)
 			cur = cur->ai_next;
@@ -803,7 +794,7 @@ getaddrinfo(const char *hostname, const char *servname,
  */
 static int
 explore_fqdn(const struct addrinfo *pai, const char *hostname,
-    const char *servname, struct addrinfo **res)
+    const char *servname, struct addrinfo **res, const char *iface)
 {
 	struct addrinfo *result;
 	struct addrinfo *cur;
@@ -829,7 +820,7 @@ explore_fqdn(const struct addrinfo *pai, const char *hostname,
 		return 0;
 
 	switch (nsdispatch(&result, dtab, NSDB_HOSTS, "getaddrinfo",
-			default_dns_files, hostname, pai)) {
+			default_dns_files, hostname, pai, iface)) {
 	case NS_TRYAGAIN:
 		error = EAI_AGAIN;
 		goto free;
@@ -1897,9 +1888,11 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct res_target q, q2;
 	res_state res;
+	const char* iface;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
+	iface = va_arg(ap, char *);
 	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
@@ -1981,6 +1974,12 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		return NS_NOTFOUND;
 	}
 
+	/* this just sets our iface val in the thread private data so we don't have to
+	 * modify the api's all the way down to res_send.c's res_nsend.  We could
+	 * fully populate the thread private data here, but if we get down there
+	 * and have a cache hit that would be wasted, so we do the rest there on miss
+	 */
+	res_setiface(res, iface);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
 		free(buf);

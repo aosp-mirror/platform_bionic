@@ -50,7 +50,7 @@
 #endif
 
 static pthread_key_t   _res_key;
-static pthread_once_t  _res_once;
+static pthread_once_t  _res_once = PTHREAD_ONCE_INIT;
 
 typedef struct {
     int                  _h_errno;
