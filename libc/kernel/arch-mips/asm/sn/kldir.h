@@ -79,7 +79,7 @@
 #ifndef __ASSEMBLY__
 typedef struct kldir_ent_s {
  u64 magic;
- off_t offset;
+ __kernel_off_t offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long pointer;
  size_t size;
