@@ -17,7 +17,7 @@ LOCAL_SRC_FILES:= \
     linker_phdr.cpp \
     rt.cpp
 
-LOCAL_LDFLAGS := -shared
+LOCAL_LDFLAGS := -shared -Wl,--exclude-libs,ALL
 
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
