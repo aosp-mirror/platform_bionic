@@ -31,6 +31,7 @@
 #include <stddef.h>
 #include <errno.h>
 #include <poll.h>
+#include <fcntl.h>
 
 #include <sys/mman.h>
 
@@ -38,6 +39,7 @@
 #include <sys/un.h>
 #include <sys/select.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
@@ -55,33 +57,34 @@ prop_area *__system_property_area__ = (void*) &dummy_props;
 int __system_properties_init(void)
 {
     prop_area *pa;
-    int s, fd;
-    unsigned sz;
-    char *env;
+    int fd;
+    struct stat fd_stat;
 
     if(__system_property_area__ != ((void*) &dummy_props)) {
         return 0;
     }
 
-    env = getenv("ANDROID_PROPERTY_WORKSPACE");
-    if (!env) {
+    fd = open(PROP_FILENAME, O_RDONLY | O_NOFOLLOW);
+
+    if (fd < 0) {
         return -1;
     }
-    fd = atoi(env);
-    env = strchr(env, ',');
-    if (!env) {
+
+    if (fstat(fd, &fd_stat) < 0) {
+        close(fd);
         return -1;
     }
-    sz = atoi(env + 1);
-    
-    pa = mmap(0, sz, PROT_READ, MAP_SHARED, fd, 0);
+
+    pa = mmap(0, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
+
+    close(fd);
     
     if(pa == MAP_FAILED) {
         return -1;
     }
 
     if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
-        munmap(pa, sz);
+        munmap(pa, fd_stat.st_size);
         return -1;
     }
 
@@ -218,8 +221,6 @@ static int send_prop_msg(prop_msg *msg)
 int __system_property_set(const char *key, const char *value)
 {
     int err;
-    int tries = 0;
-    int update_seen = 0;
     prop_msg msg;
 
     if(key == 0) return -1;
