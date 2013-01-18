@@ -48,6 +48,11 @@ kernel_default_arch_macros = {
     "mips": {"CONFIG_32BIT":"1"},
     }
 
+kernel_arch_token_replacements = {
+    "arm": {},
+    "x86": {},
+    "mips": {"off_t":"__kernel_off_t"},
+    }
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
     "asm": "__asm__",
