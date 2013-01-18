@@ -66,6 +66,9 @@ def  cleanupFile( path, original_path):
     if arch and arch in kernel_default_arch_macros:
         macros.update(kernel_default_arch_macros[arch])
 
+    if arch and arch in kernel_arch_token_replacements:
+        blocks.replaceTokens( kernel_arch_token_replacements[arch] )
+
     blocks.optimizeMacros( macros )
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs( statics )
