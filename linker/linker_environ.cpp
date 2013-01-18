@@ -112,7 +112,6 @@ static bool __is_valid_environment_variable(const char* name) {
 static bool __is_unsafe_environment_variable(const char* name) {
   // None of these should be allowed in setuid programs.
   static const char* const UNSAFE_VARIABLE_NAMES[] = {
-      "ANDROID_PROPERTY_WORKSPACE",
       "GCONV_PATH",
       "GETCONF_DIR",
       "HOSTALIASES",
