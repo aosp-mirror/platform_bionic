@@ -34,7 +34,7 @@ struct stat {
  gid_t st_gid;
  unsigned st_rdev;
  long st_pad2[2];
- off_t st_size;
+ __kernel_off_t st_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  long st_pad3;
  time_t st_atime;
@@ -91,7 +91,7 @@ struct stat {
  unsigned int st_rdev;
  unsigned int st_pad1[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- off_t st_size;
+ __kernel_off_t st_size;
  unsigned int st_atime;
  unsigned int st_atime_nsec;
  unsigned int st_mtime;
