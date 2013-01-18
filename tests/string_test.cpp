@@ -316,6 +316,27 @@ TEST(string_DeathTest, strcpy_fortified) {
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
   free(orig);
 }
+
+TEST(string_DeathTest, strlen_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  memcpy(buf, "0123456789", sizeof(buf));
+  ASSERT_EXIT(printf("%d", strlen(buf)), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(string_DeathTest, strchr_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  memcpy(buf, "0123456789", sizeof(buf));
+  ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(string_DeathTest, strrchr_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  memcpy(buf, "0123456789", sizeof(buf));
+  ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
+}
 #endif
 
 #if __BIONIC__
