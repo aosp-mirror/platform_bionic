@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_FORMAT_H
-#define _LINKER_FORMAT_H
+#ifndef DEBUG_STACKTRACE_H
+#define DEBUG_STACKTRACE_H
 
-#include <stdarg.h>
-#include <stddef.h>
+#include <stdint.h>
+#include <sys/cdefs.h>
 
-// Formatting routines for the dynamic linker's debug traces
-// We want to avoid dragging the whole C library fprintf()
-// implementation into the dynamic linker since this creates
-// issues (it uses malloc()/free()) and increases code size.
-int format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+struct stack_crawl_state_t {
+  size_t count;
+  intptr_t* addrs;
+};
 
-#endif /* _LINKER_FORMAT_H */
+struct mapinfo_t;
+
+__LIBC_HIDDEN__ int get_backtrace(intptr_t* stack_frames, size_t max_entries);
+__LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, intptr_t* stack_frames, size_t frame_count);
+
+#endif /* DEBUG_STACKTRACE_H */
