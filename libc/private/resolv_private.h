@@ -56,7 +56,6 @@
 
 #include <resolv.h>
 #include "resolv_static.h"
-#include <net/if.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
@@ -140,7 +139,6 @@ struct res_sym {
 struct __res_state_ext;
 
 struct __res_state {
-	char	iface[IF_NAMESIZE+1];
 	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
 #ifdef sun
@@ -493,7 +491,7 @@ void		res_setservers(res_state,
 int		res_getservers(res_state,
 				    union res_sockaddr_union *, int);
 
-void res_setiface();
+int res_get_dns_changed();
 u_int  res_randomid(void);
 
 __END_DECLS

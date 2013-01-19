@@ -60,21 +60,6 @@ extern void _resolv_flush_cache_for_default_iface();
 /* flush the cache associated with a certain interface */
 extern void _resolv_flush_cache_for_iface(const char* ifname);
 
-/* set a pid to use the name servers of the specified interface */
-extern void _resolv_set_iface_for_pid(const char* ifname, int pid);
-
-/* clear pid from being associated with an interface */
-extern void _resolv_clear_iface_for_pid(int pid);
-
-/** Gets the name of the interface to which the pid is attached.
- *  On error, -1 is returned.
- *  If no interface is found, 0 is returned and buff is set to empty ('\0').
- *  If an interface is found, the name is copied to buff and the length of the name is returned.
- *  Arguments:   pid The pid to find an interface for
- *               buff A buffer to copy the result to
- *               buffLen Length of buff. An interface is at most IF_NAMESIZE in length */
-extern int _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen);
-
 #endif /* _BIONIC_RESOLV_IFACE_FUNCTIONS_DECLARED */
 
 __END_DECLS
