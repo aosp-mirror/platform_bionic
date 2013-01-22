@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_AUXV_H_
-#define _SYS_AUXV_H_
+#ifndef _PRIVATE_BIONIC_AUXV_H_
+#define _PRIVATE_BIONIC_AUXV_H_
 
 #include <elf.h>
 
@@ -36,4 +36,4 @@ extern Elf32_auxv_t* __libc_auxv;
 
 __END_DECLS
 
-#endif /* _SYS_AUXV_H_ */
+#endif /* _PRIVATE_BIONIC_AUXV_H_ */
