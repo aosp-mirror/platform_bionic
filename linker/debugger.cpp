@@ -109,43 +109,40 @@ static int socket_abstract_client(const char* name, int type) {
  * could allocate memory or hold a lock.
  */
 static void logSignalSummary(int signum, const siginfo_t* info) {
-    const char* signame;
+    const char* signal_name;
     switch (signum) {
-        case SIGILL:    signame = "SIGILL";     break;
-        case SIGABRT:   signame = "SIGABRT";    break;
-        case SIGBUS:    signame = "SIGBUS";     break;
-        case SIGFPE:    signame = "SIGFPE";     break;
-        case SIGSEGV:   signame = "SIGSEGV";    break;
+        case SIGILL:    signal_name = "SIGILL";     break;
+        case SIGABRT:   signal_name = "SIGABRT";    break;
+        case SIGBUS:    signal_name = "SIGBUS";     break;
+        case SIGFPE:    signal_name = "SIGFPE";     break;
+        case SIGSEGV:   signal_name = "SIGSEGV";    break;
 #if defined(SIGSTKFLT)
-        case SIGSTKFLT: signame = "SIGSTKFLT";  break;
+        case SIGSTKFLT: signal_name = "SIGSTKFLT";  break;
 #endif
-        case SIGPIPE:   signame = "SIGPIPE";    break;
-        default:        signame = "???";        break;
+        case SIGPIPE:   signal_name = "SIGPIPE";    break;
+        default:        signal_name = "???";        break;
     }
 
-    char threadname[MAX_TASK_NAME_LEN + 1]; // one more for termination
-    if (prctl(PR_GET_NAME, (unsigned long)threadname, 0, 0, 0) != 0) {
-        strcpy(threadname, "<name unknown>");
+    char thread_name[MAX_TASK_NAME_LEN + 1]; // one more for termination
+    if (prctl(PR_GET_NAME, (unsigned long)thread_name, 0, 0, 0) != 0) {
+        strcpy(thread_name, "<name unknown>");
     } else {
-        // short names are null terminated by prctl, but the manpage
+        // short names are null terminated by prctl, but the man page
         // implies that 16 byte names are not.
-        threadname[MAX_TASK_NAME_LEN] = 0;
+        thread_name[MAX_TASK_NAME_LEN] = 0;
     }
 
-    char buffer[128];
     // "info" will be NULL if the siginfo_t information was not available.
     if (info != NULL) {
-        __libc_format_buffer(buffer, sizeof(buffer),
-                      "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
-                      signum, signame, reinterpret_cast<uintptr_t>(info->si_addr),
-                      info->si_code, gettid(), threadname);
+        __libc_format_log(ANDROID_LOG_FATAL, "libc",
+                          "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
+                          signum, signal_name, reinterpret_cast<uintptr_t>(info->si_addr),
+                          info->si_code, gettid(), thread_name);
     } else {
-        __libc_format_buffer(buffer, sizeof(buffer),
-            "Fatal signal %d (%s), thread %d (%s)",
-            signum, signame, gettid(), threadname);
+        __libc_format_log(ANDROID_LOG_FATAL, "libc",
+                          "Fatal signal %d (%s), thread %d (%s)",
+                          signum, signal_name, gettid(), thread_name);
     }
-
-    __libc_android_log_write(ANDROID_LOG_FATAL, "libc", buffer);
 }
 
 /*
@@ -178,8 +175,6 @@ static bool haveSiginfo(int signum) {
  * we crash.
  */
 void debugger_signal_handler(int n, siginfo_t* info, void*) {
-    char msgbuf[128];
-
     /*
      * It's possible somebody cleared the SA_SIGINFO flag, which would mean
      * our "info" arg holds an undefined value.
@@ -215,17 +210,15 @@ void debugger_signal_handler(int n, siginfo_t* info, void*) {
 
         if (ret < 0) {
             /* read or write failed -- broken connection? */
-            __libc_format_buffer(msgbuf, sizeof(msgbuf),
-                "Failed while talking to debuggerd: %s", strerror(errno));
-            __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
+            __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
+                              strerror(errno));
         }
 
         close(s);
     } else {
         /* socket failed; maybe process ran out of fds */
-        __libc_format_buffer(msgbuf, sizeof(msgbuf),
-            "Unable to open connection to debuggerd: %s", strerror(errno));
-        __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
+        __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
+                          strerror(errno));
     }
 
     /* remove our net so we fault for real when we return */
