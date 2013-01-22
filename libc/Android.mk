@@ -223,7 +223,6 @@ libc_common_src_files := \
 	bionic/sigsuspend.c \
 	bionic/sleep.c \
 	bionic/statfs.c \
-	bionic/strcoll.c \
 	bionic/strndup.c \
 	bionic/strnlen.c \
 	bionic/strntoimax.c \
@@ -344,6 +343,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/stdlib/tsearch.c \
     upstream-netbsd/libc/string/memccpy.c \
     upstream-netbsd/libc/string/strcasestr.c \
+    upstream-netbsd/libc/string/strcoll.c \
     upstream-netbsd/libc/string/strxfrm.c \
     upstream-netbsd/libc/unistd/killpg.c \
 
