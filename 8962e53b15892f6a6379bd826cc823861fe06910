@@ -16,6 +16,24 @@
       "revId": "8962e53b15892f6a6379bd826cc823861fe06910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "OvQtuoYs",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-22T22:26:11Z",
+      "side": 1,
+      "message": "i don\u0027t think it\u0027s clear either way, because it still just looks like a #include. having it at the top also means we need to forward-declare all the bionic helpers. but i don\u0027t care much either way.",
+      "parentUuid": "Ouy3imSY",
+      "revId": "8962e53b15892f6a6379bd826cc823861fe06910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
