@@ -41,13 +41,13 @@
 
 // Private C library headers.
 #include <private/bionic_tls.h>
+#include <private/debug_format.h>
 #include <private/logd.h>
 #include <private/ScopedPthreadMutexLocker.h>
 
 #include "linker.h"
 #include "linker_debug.h"
 #include "linker_environ.h"
-#include "linker_format.h"
 #include "linker_phdr.h"
 
 /* Assume average path length of 64 and max 8 paths */
@@ -159,7 +159,7 @@ static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 #define DL_ERR(fmt, x...) \
     do { \
-        format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), fmt, ##x); \
+        __libc_format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), fmt, ##x); \
         /* If LD_DEBUG is set high enough, send every dlerror(3) message to the log. */ \
         DEBUG(fmt "\n", ##x); \
     } while(0)
@@ -674,7 +674,7 @@ static void dump(soinfo *si)
 static int open_library_on_path(const char* name, const char* const paths[]) {
   char buf[512];
   for (size_t i = 0; paths[i] != NULL; ++i) {
-    int n = format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
+    int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
       PRINT("Warning: ignoring very long library path: %s/%s\n", paths[i], name);
       continue;

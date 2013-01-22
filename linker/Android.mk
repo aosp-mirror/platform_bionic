@@ -13,7 +13,6 @@ LOCAL_SRC_FILES:= \
     dlfcn.cpp \
     linker.cpp \
     linker_environ.cpp \
-    linker_format.cpp \
     linker_phdr.cpp \
     rt.cpp
 

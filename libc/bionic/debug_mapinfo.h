@@ -26,21 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_CHECK_MAPINFO_H
-#define MALLOC_DEBUG_CHECK_MAPINFO_H
+#ifndef DEBUG_MAPINFO_H
+#define DEBUG_MAPINFO_H
 
 #include <sys/cdefs.h>
 
-struct mapinfo {
-  struct mapinfo* next;
+struct mapinfo_t {
+  struct mapinfo_t* next;
   unsigned start;
   unsigned end;
   char name[];
 };
 
-__LIBC_HIDDEN__ mapinfo *init_mapinfo(int pid);
-__LIBC_HIDDEN__ void deinit_mapinfo(mapinfo *mi);
-__LIBC_HIDDEN__ const char *map_to_name(mapinfo *mi, unsigned pc, const char* def);
-__LIBC_HIDDEN__ const mapinfo *pc_to_mapinfo(mapinfo *mi, unsigned pc, unsigned *rel_pc);
+__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(int pid);
+__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
+__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, unsigned pc, unsigned* rel_pc);
 
-#endif /*MALLOC_DEBUG_CHECK_MAPINFO_H*/
+#endif /* DEBUG_MAPINFO_H */

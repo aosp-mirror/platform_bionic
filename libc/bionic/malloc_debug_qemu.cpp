@@ -257,8 +257,8 @@ static void dump_malloc_descriptor(char* str,
                              INFO_TRACING_ENABLED)
 
 /* Prints a string to the emulator's stdout.
- * In early stages of system loading, logging mesages via
- * __libc_android_log_print API is not available, because ADB API has not been
+ * In early stages of system loading, logging messages to logcat
+ * is not available, because ADB API has not been
  * hooked up yet. So, in order to see such messages we need to print them to
  * the emulator's stdout.
  * Parameters passed to this macro are the same as parameters for printf
@@ -289,8 +289,7 @@ static void dump_malloc_descriptor(char* str,
  */
 #define qemu_debug_log(format, ...)                                         \
     do {                                                                    \
-        __libc_android_log_print(ANDROID_LOG_DEBUG, "memcheck",             \
-                                 (format), ##__VA_ARGS__);                  \
+        __libc_format_log(ANDROID_LOG_DEBUG, "memcheck", (format), ##__VA_ARGS__); \
         if (tracing_flags & DEBUG_TRACING_ENABLED) {                        \
             qemu_log(ANDROID_LOG_DEBUG, (format), ##__VA_ARGS__);           \
         }                                                                   \
@@ -298,8 +297,7 @@ static void dump_malloc_descriptor(char* str,
 
 #define qemu_error_log(format, ...)                                         \
     do {                                                                    \
-        __libc_android_log_print(ANDROID_LOG_ERROR, "memcheck",             \
-                                 (format), ##__VA_ARGS__);                  \
+        __libc_format_log(ANDROID_LOG_ERROR, "memcheck", (format), ##__VA_ARGS__); \
         if (tracing_flags & ERROR_TRACING_ENABLED) {                        \
             qemu_log(ANDROID_LOG_ERROR, (format), ##__VA_ARGS__);           \
         }                                                                   \
@@ -307,8 +305,7 @@ static void dump_malloc_descriptor(char* str,
 
 #define qemu_info_log(format, ...)                                          \
     do {                                                                    \
-        __libc_android_log_print(ANDROID_LOG_INFO, "memcheck",              \
-                                 (format), ##__VA_ARGS__);                  \
+        __libc_format_log(ANDROID_LOG_INFO, "memcheck", (format), ##__VA_ARGS__); \
         if (tracing_flags & INFO_TRACING_ENABLED) {                         \
             qemu_log(ANDROID_LOG_INFO, (format), ##__VA_ARGS__);            \
         }                                                                   \
@@ -318,20 +315,19 @@ static void dump_malloc_descriptor(char* str,
  * Param:
  *  type - Message type: debug, error, or info
  *  desc - MallocDesc instance to dump.
- *  frmt + rest - Formats message preceding dumped descriptor.
+ *  fmt + rest - Formats message preceding dumped descriptor.
 */
-#define log_mdesc(type, desc, frmt, ...)                                    \
+#define log_mdesc(type, desc, fmt, ...)                                    \
     do {                                                                    \
         if (tracing_enabled(type)) {                                        \
             char log_str[4096];                                             \
-            size_t str_len;                                                 \
-            snprintf(log_str, sizeof(log_str), frmt, ##__VA_ARGS__);        \
+            __libc_format_buffer(log_str, sizeof(log_str), fmt, ##__VA_ARGS__); \
             log_str[sizeof(log_str) - 1] = '\0';                            \
-            str_len = strlen(log_str);                                      \
+            size_t str_len = strlen(log_str);                               \
             dump_malloc_descriptor(log_str + str_len,                       \
                                    sizeof(log_str) - str_len,               \
                                    (desc));                                 \
-            type##_log(log_str);                                            \
+            type##_log("%s", log_str);                                      \
         }                                                                   \
     } while (0)
 

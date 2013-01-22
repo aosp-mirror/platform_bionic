@@ -45,6 +45,7 @@
 #include <unistd.h>
 #include <unwind.h>
 
+#include "debug_stacktrace.h"
 #include "dlmalloc.h"
 #include "logd.h"
 #include "malloc_debug_common.h"
@@ -254,8 +255,6 @@ extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
 // =============================================================================
 
 static void* MEMALIGN_GUARD = reinterpret_cast<void*>(0xA1A41520);
-
-extern __LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries);
 
 extern "C" void* leak_malloc(size_t bytes) {
     // allocate enough space infront of the allocation to store the pointer for

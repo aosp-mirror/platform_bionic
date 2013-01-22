@@ -31,9 +31,7 @@
 #include <sys/system_properties.h>
 #include <sys/mman.h>
 
-#if HAVE_DLADDR
-#include <dlfcn.h>
-#endif
+//#include <dlfcn.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,8 +40,12 @@
 #include <unwind.h>
 #include <unistd.h>
 
-#include "logd.h"
 #include "bionic_tls.h"
+#include "debug_mapinfo.h"
+#include "debug_stacktrace.h"
+#include "logd.h"
+
+#include <private/debug_format.h>
 
 /*
  * ===========================================================================
@@ -97,20 +99,16 @@ the lock has been acquired.
 // =============================================================================
 
 #define LOGD(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_DEBUG, \
-            "pthread_debug", (format), ##__VA_ARGS__ )
+    __libc_format_log(ANDROID_LOG_DEBUG, "pthread_debug", (format), ##__VA_ARGS__ )
 
 #define LOGW(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_WARN, \
-            "pthread_debug", (format), ##__VA_ARGS__ )
+    __libc_format_log(ANDROID_LOG_WARN, "pthread_debug", (format), ##__VA_ARGS__ )
 
 #define LOGE(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_ERROR, \
-            "pthread_debug", (format), ##__VA_ARGS__ )
+    __libc_format_log(ANDROID_LOG_ERROR, "pthread_debug", (format), ##__VA_ARGS__ )
 
 #define LOGI(format, ...)  \
-    __libc_android_log_print(ANDROID_LOG_INFO, \
-            "pthread_debug", (format), ##__VA_ARGS__ )
+    __libc_format_log(ANDROID_LOG_INFO, "pthread_debug", (format), ##__VA_ARGS__ )
 
 static const char* const kStartBanner =
         "===============================================================";
@@ -120,185 +118,9 @@ static const char* const kEndBanner =
 
 extern char* __progname;
 
-// =============================================================================
-// map info functions
-// =============================================================================
-
-typedef struct mapinfo {
-    struct mapinfo *next;
-    unsigned start;
-    unsigned end;
-    char name[];
-} mapinfo;
-
-static mapinfo* sMapInfo = NULL;
-
-static mapinfo *parse_maps_line(char *line)
-{
-    mapinfo *mi;
-    int len = strlen(line);
-
-    if(len < 1) return 0;
-    line[--len] = 0;
-
-    if(len < 50) return 0;
-    if(line[20] != 'x') return 0;
-
-    mi = malloc(sizeof(mapinfo) + (len - 47));
-    if(mi == 0) return 0;
-
-    mi->start = strtoul(line, 0, 16);
-    mi->end = strtoul(line + 9, 0, 16);
-    /* To be filled in parse_elf_info if the mapped section starts with
-     * elf_header
-     */
-    mi->next = 0;
-    strcpy(mi->name, line + 49);
-
-    return mi;
-}
-
-static mapinfo *init_mapinfo(int pid)
-{
-    struct mapinfo *milist = NULL;
-    char data[1024];
-    sprintf(data, "/proc/%d/maps", pid);
-    FILE *fp = fopen(data, "r");
-    if(fp) {
-        while(fgets(data, sizeof(data), fp)) {
-            mapinfo *mi = parse_maps_line(data);
-            if(mi) {
-                mi->next = milist;
-                milist = mi;
-            }
-        }
-        fclose(fp);
-    }
-
-    return milist;
-}
-
-static void deinit_mapinfo(mapinfo *mi)
-{
-   mapinfo *del;
-   while(mi) {
-       del = mi;
-       mi = mi->next;
-       free(del);
-   }
-}
-
-/* Find the containing map info for the pc */
-static const mapinfo *pc_to_mapinfo(mapinfo *mi, unsigned pc, unsigned *rel_pc)
-{
-    *rel_pc = pc;
-    while(mi) {
-        if((pc >= mi->start) && (pc < mi->end)){
-            // Only calculate the relative offset for shared libraries
-            if (strstr(mi->name, ".so")) {
-                *rel_pc -= mi->start;
-            }
-            return mi;
-        }
-        mi = mi->next;
-    }
-    return NULL;
-}
-
-// =============================================================================
-// stack trace functions
-// =============================================================================
-
 #define STACK_TRACE_DEPTH 16
 
-typedef struct
-{
-    size_t count;
-    intptr_t* addrs;
-} stack_crawl_state_t;
-
-/* depends how the system includes define this */
-#ifdef HAVE_UNWIND_CONTEXT_STRUCT
-typedef struct _Unwind_Context __unwind_context;
-#else
-typedef _Unwind_Context __unwind_context;
-#endif
-
-static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg)
-{
-    stack_crawl_state_t* state = (stack_crawl_state_t*)arg;
-    if (state->count) {
-        intptr_t ip = (intptr_t)_Unwind_GetIP(context);
-        if (ip) {
-            state->addrs[0] = ip;
-            state->addrs++;
-            state->count--;
-            return _URC_NO_REASON;
-        }
-    }
-    /*
-     * If we run out of space to record the address or 0 has been seen, stop
-     * unwinding the stack.
-     */
-    return _URC_END_OF_STACK;
-}
-
-static inline
-int get_backtrace(intptr_t* addrs, size_t max_entries)
-{
-    stack_crawl_state_t state;
-    state.count = max_entries;
-    state.addrs = (intptr_t*)addrs;
-    _Unwind_Backtrace(trace_function, (void*)&state);
-    return max_entries - state.count;
-}
-
-static void log_backtrace(intptr_t* addrs, size_t c)
-{
-    int index = 0;
-    size_t i;
-    for (i=0 ; i<c; i++) {
-        unsigned int relpc;
-        void* offset = 0;
-        const char* symbol = NULL;
-
-#if HAVE_DLADDR
-        Dl_info info;
-        if (dladdr((void*)addrs[i], &info)) {
-            offset = info.dli_saddr;
-            symbol = info.dli_sname;
-        }
-#endif
-
-        if (symbol || index>0 || !HAVE_DLADDR) {
-            /*
-             * this test is a bit sketchy, but it allows us to skip the
-             * stack trace entries due to this debugging code. it works
-             * because those don't have a symbol (they're not exported)
-             */
-            mapinfo const* mi = pc_to_mapinfo(sMapInfo, addrs[i], &relpc);
-            char const* soname = mi ? mi->name : NULL;
-#if HAVE_DLADDR
-            if (!soname)
-                soname = info.dli_fname;
-#endif
-            if (!soname)
-                soname = "unknown";
-
-            if (symbol) {
-                LOGW("          "
-                     "#%02d  pc %08lx  %s (%s+0x%x)",
-                     index, relpc, soname, symbol,
-                     addrs[i] - (intptr_t)offset);
-            } else {
-                LOGW("          "
-                     "#%02d  pc %08lx  %s",
-                     index, relpc, soname);
-            }
-            index++;
-        }
-    }
-}
+static mapinfo_t* gMapInfo;
 
 /****************************************************************************/
 
@@ -322,18 +144,21 @@ static pthread_mutex_t sDbgLock = PTHREAD_MUTEX_INITIALIZER;
 static size_t sDbgAllocOffset = DBG_ALLOC_BLOCK_SIZE;
 static char* sDbgAllocPtr = NULL;
 
-static void* DbgAllocLocked(size_t size) {
+template <typename T>
+static T* DbgAllocLocked(size_t count = 1) {
+    size_t size = sizeof(T) * count;
     if ((sDbgAllocOffset + size) > DBG_ALLOC_BLOCK_SIZE) {
         sDbgAllocOffset = 0;
-        sDbgAllocPtr = mmap(NULL, DBG_ALLOC_BLOCK_SIZE, PROT_READ|PROT_WRITE,
-                MAP_ANON | MAP_PRIVATE, 0, 0);
+        sDbgAllocPtr = reinterpret_cast<char*>(mmap(NULL, DBG_ALLOC_BLOCK_SIZE,
+                                                    PROT_READ|PROT_WRITE,
+                                                    MAP_ANON | MAP_PRIVATE, 0, 0));
         if (sDbgAllocPtr == MAP_FAILED) {
             return NULL;
         }
     }
     void* addr = sDbgAllocPtr + sDbgAllocOffset;
     sDbgAllocOffset += size;
-    return addr;
+    return reinterpret_cast<T*>(addr);
 }
 
 static void* debug_realloc(void *ptr, size_t size, size_t old_size) {
@@ -460,9 +285,9 @@ static int pthread_mutex_unlock_unchecked(pthread_mutex_t *mutex) {
 
 /****************************************************************************/
 
-static void dup_backtrace(CallStack* stack, int count, intptr_t const* addrs) {
+static void dup_backtrace(CallStack* stack, size_t count, intptr_t const* addrs) {
     stack->depth = count;
-    stack->addrs = DbgAllocLocked(count * sizeof(intptr_t));
+    stack->addrs = DbgAllocLocked<intptr_t>(count);
     memcpy(stack->addrs, addrs, count * sizeof(intptr_t));
 }
 
@@ -545,9 +370,9 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
         /* Turn off prediction temporarily in this thread while logging */
         sPthreadDebugDisabledThread = gettid();
 
-        if (sMapInfo == NULL) {
-            // note: we're protected by sDbgLock
-            sMapInfo = init_mapinfo(getpid());
+        if (gMapInfo == NULL) {
+            // note: we're protected by sDbgLock.
+            gMapInfo = mapinfo_create(getpid());
         }
 
         LOGW("%s\n", kStartBanner);
@@ -555,7 +380,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
         LOGW("Illegal lock attempt:\n");
         LOGW("--- pthread_mutex_t at %p\n", obj->mutex);
         stackDepth = get_backtrace(addrs, STACK_TRACE_DEPTH);
-        log_backtrace(addrs, stackDepth);
+        log_backtrace(gMapInfo, addrs, stackDepth);
 
         LOGW("+++ Currently held locks in this thread (in reverse order):");
         MutexInfo* cur = obj;
@@ -566,7 +391,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
             if (parent->owner == ourtid) {
                 LOGW("--- pthread_mutex_t at %p\n", parent->mutex);
                 if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
-                    log_backtrace(parent->stackTrace, parent->stackDepth);
+                    log_backtrace(gMapInfo, parent->stackTrace, parent->stackDepth);
                 }
                 cur = parent;
                 break;
@@ -589,13 +414,13 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
             if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
                 int index = historyListHas(&obj->parents, objParent);
                 if ((size_t)index < (size_t)obj->stacks.count) {
-                    log_backtrace(
-                            obj->stacks.stack[index].addrs,
-                            obj->stacks.stack[index].depth);
+                    log_backtrace(gMapInfo,
+                                  obj->stacks.stack[index].addrs,
+                                  obj->stacks.stack[index].depth);
                 } else {
-                    log_backtrace(
-                            obj->stackTrace,
-                            obj->stackDepth);
+                    log_backtrace(gMapInfo,
+                                  obj->stackTrace,
+                                  obj->stackDepth);
                 }
             }
             result = 0;
@@ -640,8 +465,8 @@ static void mutex_lock_checked(MutexInfo* mrl, MutexInfo* object)
 
     linkParentToChild(mrl, object);
     if (!traverseTree(object, mrl)) {
-        deinit_mapinfo(sMapInfo);
-        sMapInfo = NULL;
+        mapinfo_destroy(gMapInfo);
+        gMapInfo = NULL;
         LOGW("%s\n", kEndBanner);
         unlinkParentFromChild(mrl, object);
         // reenable pthread debugging for this thread
@@ -758,7 +583,7 @@ static HashEntry* hashmap_lookup(HashTable* table,
 
     if (entry == NULL) {
         // create a new entry
-        entry = (HashEntry*)DbgAllocLocked(sizeof(HashEntry));
+        entry = DbgAllocLocked<HashEntry>();
         entry->data = NULL;
         entry->slot = slot;
         entry->prev = NULL;
@@ -785,8 +610,9 @@ static MutexInfo* get_mutex_info(pthread_mutex_t *mutex)
             &mutex, sizeof(mutex),
             &MutexInfo_equals);
     if (entry->data == NULL) {
-        entry->data = (MutexInfo*)DbgAllocLocked(sizeof(MutexInfo));
-        initMutexInfo(entry->data, mutex);
+        MutexInfo* mutex_info = DbgAllocLocked<MutexInfo>();
+        entry->data = mutex_info;
+        initMutexInfo(mutex_info, mutex);
     }
 
     pthread_mutex_unlock_unchecked(&sDbgLock);
@@ -808,8 +634,9 @@ static ThreadInfo* get_thread_info(pid_t pid)
             &pid, sizeof(pid),
             &ThreadInfo_equals);
     if (entry->data == NULL) {
-        entry->data = (ThreadInfo*)DbgAllocLocked(sizeof(ThreadInfo));
-        initThreadInfo(entry->data, pid);
+        ThreadInfo* thread_info = DbgAllocLocked<ThreadInfo>();
+        entry->data = thread_info;
+        initThreadInfo(thread_info, pid);
     }
 
     pthread_mutex_unlock_unchecked(&sDbgLock);
@@ -848,8 +675,7 @@ static MutexInfo* get_most_recently_locked() {
  * after system properties have been initialized
  */
 
-__LIBC_HIDDEN__
-void pthread_debug_init(void) {
+extern "C" __LIBC_HIDDEN__ void pthread_debug_init() {
     char env[PROP_VALUE_MAX];
     if (__system_property_get("debug.libc.pthread", env)) {
         int level = atoi(env);
@@ -872,8 +698,7 @@ void pthread_debug_init(void) {
  * the checks before the lock is held.)
  */
 
-__LIBC_HIDDEN__
-void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex)
+extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex)
 {
     if (sPthreadDebugLevel == 0) return;
     // prediction disabled for this thread
@@ -890,8 +715,7 @@ void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex)
  * still held (ie: before calling the real unlock)
  */
 
-__LIBC_HIDDEN__
-void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex)
+extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex)
 {
     if (sPthreadDebugLevel == 0) return;
     // prediction disabled for this thread

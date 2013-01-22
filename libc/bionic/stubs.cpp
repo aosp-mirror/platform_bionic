@@ -32,6 +32,7 @@
 #include <mntent.h>
 #include <netdb.h>
 #include <private/android_filesystem_config.h>
+#include <private/debug_format.h>
 #include <private/logd.h>
 #include <pthread.h>
 #include <pwd.h>
@@ -435,7 +436,7 @@ protoent* getprotobynumber(int /*proto*/) {
 
 static void unimplemented_stub(const char* function) {
   const char* fmt = "%s(3) is not implemented on Android\n";
-  __libc_android_log_print(ANDROID_LOG_WARN, "libc", fmt, function);
+  __libc_format_log(ANDROID_LOG_WARN, "libc", fmt, function);
   fprintf(stderr, fmt, function);
 }
 
