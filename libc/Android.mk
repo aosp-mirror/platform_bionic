@@ -182,7 +182,6 @@ libc_common_src_files := \
 	bionic/logd_write.c \
 	bionic/lseek64.c \
 	bionic/md5.c \
-	bionic/memccpy.c \
 	bionic/memchr.c \
 	bionic/memmem.c \
 	bionic/memmove_words.c \
@@ -343,6 +342,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/stdlib/tdelete.c \
     upstream-netbsd/libc/stdlib/tfind.c \
     upstream-netbsd/libc/stdlib/tsearch.c \
+    upstream-netbsd/libc/string/memccpy.c \
     upstream-netbsd/libc/string/strcasestr.c \
     upstream-netbsd/libc/string/strxfrm.c \
     upstream-netbsd/libc/unistd/killpg.c \
