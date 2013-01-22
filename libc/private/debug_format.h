@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,48 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unwind.h>
-#include <sys/types.h>
 
-// =============================================================================
-// stack trace functions
-// =============================================================================
+#ifndef _DEBUG_FORMAT_H
+#define _DEBUG_FORMAT_H
 
-struct stack_crawl_state_t {
-    size_t count;
-    intptr_t* addrs;
-};
+#include <sys/cdefs.h>
+#include <stdarg.h>
+#include <stddef.h>
 
+__BEGIN_DECLS
 
-/* depends how the system includes define this */
-#ifdef HAVE_UNWIND_CONTEXT_STRUCT
-typedef struct _Unwind_Context __unwind_context;
-#else
-typedef _Unwind_Context __unwind_context;
-#endif
+// Formatting routines for the C library's internal debugging.
+// Unlike the usual alternatives, these don't allocate.
 
-static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
-    stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
-    if (state->count) {
-        intptr_t ip = (intptr_t)_Unwind_GetIP(context);
-        if (ip) {
-            state->addrs[0] = ip;
-            state->addrs++;
-            state->count--;
-            return _URC_NO_REASON;
-        }
-    }
-    /*
-     * If we run out of space to record the address or 0 has been seen, stop
-     * unwinding the stack.
-     */
-    return _URC_END_OF_STACK;
-}
+__LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
+    __attribute__((__format__(printf, 3, 4)));
 
-__LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries) {
-    stack_crawl_state_t state;
-    state.count = max_entries;
-    state.addrs = addrs;
-    _Unwind_Backtrace(trace_function, &state);
-    return max_entries - state.count;
-}
+__LIBC_HIDDEN__ int __libc_format_fd(int fd, const char* format, ...)
+    __attribute__((__format__(printf, 2, 3)));
+
+__LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char* format, ...)
+    __attribute__((__format__(printf, 3, 4)));
+
+__LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
+                                              va_list ap);
+
+__END_DECLS
+
+#endif /* _DEBUG_FORMAT_H */

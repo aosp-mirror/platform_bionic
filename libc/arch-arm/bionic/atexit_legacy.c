@@ -50,10 +50,9 @@ atexit(void (*func)(void))
      * calling library may have been dlclose()'d, causing the program to
      * crash.
      */
-    static char const warning[] =
-        "WARNING: generic atexit() called from legacy shared library\n";
+    static char const warning[] = "WARNING: generic atexit() called from legacy shared library\n";
 
-    __libc_android_log_print(ANDROID_LOG_WARN, "libc", warning);
+    __libc_android_log_write(ANDROID_LOG_WARN, "libc", warning);
     fprintf(stderr, warning);
 
     return (__cxa_atexit((void (*)(void *))func, NULL, NULL));

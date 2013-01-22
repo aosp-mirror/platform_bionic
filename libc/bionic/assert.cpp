@@ -32,6 +32,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <private/debug_format.h>
 #include <private/logd.h>
 
 // We log to stderr for the benefit of "adb shell" users, and the log for the benefit
@@ -39,7 +40,7 @@
 
 void __assert(const char* file, int line, const char* failed_expression) {
   const char* fmt = "%s:%d: assertion \"%s\" failed\n";
-  __libc_android_log_print(ANDROID_LOG_FATAL, "libc", fmt, file, line, failed_expression);
+  __libc_format_log(ANDROID_LOG_FATAL, "libc", fmt, file, line, failed_expression);
   fprintf(stderr, fmt, file, line, failed_expression);
   abort();
   /* NOTREACHED */
@@ -47,7 +48,7 @@ void __assert(const char* file, int line, const char* failed_expression) {
 
 void __assert2(const char* file, int line, const char* function, const char* failed_expression) {
   const char* fmt = "%s:%d: %s: assertion \"%s\" failed\n";
-  __libc_android_log_print(ANDROID_LOG_FATAL, "libc", fmt, file, line, function, failed_expression);
+  __libc_format_log(ANDROID_LOG_FATAL, "libc", fmt, file, line, function, failed_expression);
   fprintf(stderr, fmt, file, line, function, failed_expression);
   abort();
   /* NOTREACHED */
