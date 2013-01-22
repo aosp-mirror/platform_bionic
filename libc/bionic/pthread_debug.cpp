@@ -272,8 +272,8 @@ static void mutex_unlock_checked(MutexInfo* object);
 
 /****************************************************************************/
 
-extern int pthread_mutex_lock_impl(pthread_mutex_t *mutex);
-extern int pthread_mutex_unlock_impl(pthread_mutex_t *mutex);
+extern "C" int pthread_mutex_lock_impl(pthread_mutex_t *mutex);
+extern "C" int pthread_mutex_unlock_impl(pthread_mutex_t *mutex);
 
 static int pthread_mutex_lock_unchecked(pthread_mutex_t *mutex) {
     return pthread_mutex_lock_impl(mutex);
