@@ -27,7 +27,6 @@
  */
 
 #include "linker.h"
-#include "linker_format.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +37,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+#include <private/debug_format.h>
 #include <private/logd.h>
 
 extern "C" int tgkill(int tgid, int tid, int sig);
@@ -135,12 +135,12 @@ static void logSignalSummary(int signum, const siginfo_t* info) {
     char buffer[128];
     // "info" will be NULL if the siginfo_t information was not available.
     if (info != NULL) {
-        format_buffer(buffer, sizeof(buffer),
+        __libc_format_buffer(buffer, sizeof(buffer),
                       "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
                       signum, signame, reinterpret_cast<uintptr_t>(info->si_addr),
                       info->si_code, gettid(), threadname);
     } else {
-        format_buffer(buffer, sizeof(buffer),
+        __libc_format_buffer(buffer, sizeof(buffer),
             "Fatal signal %d (%s), thread %d (%s)",
             signum, signame, gettid(), threadname);
     }
@@ -215,7 +215,7 @@ void debugger_signal_handler(int n, siginfo_t* info, void*) {
 
         if (ret < 0) {
             /* read or write failed -- broken connection? */
-            format_buffer(msgbuf, sizeof(msgbuf),
+            __libc_format_buffer(msgbuf, sizeof(msgbuf),
                 "Failed while talking to debuggerd: %s", strerror(errno));
             __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
         }
@@ -223,7 +223,7 @@ void debugger_signal_handler(int n, siginfo_t* info, void*) {
         close(s);
     } else {
         /* socket failed; maybe process ran out of fds */
-        format_buffer(msgbuf, sizeof(msgbuf),
+        __libc_format_buffer(msgbuf, sizeof(msgbuf),
             "Unable to open connection to debuggerd: %s", strerror(errno));
         __libc_android_log_write(ANDROID_LOG_FATAL, "libc", msgbuf);
     }

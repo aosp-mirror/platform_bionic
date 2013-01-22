@@ -52,19 +52,17 @@
 
 /*********************************************************************/
 
-#include "linker_format.h"
+#include <private/debug_format.h>
 
 #if LINKER_DEBUG_TO_LOG
-extern int format_log(int, const char*, const char*, ...) __attribute__((__format__(printf, 3, 4)));
 #define _PRINTVF(v,x...)                                        \
     do {                                                          \
-        if (debug_verbosity > (v)) format_log(5-(v),"linker",x);  \
+        if (debug_verbosity > (v)) __libc_format_log(5-(v),"linker",x);  \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
-extern int format_fd(int, const char *, ...) __attribute__((__format__(printf, 2, 3)));
 #define _PRINTVF(v,x...)                           \
     do {                                             \
-        if (debug_verbosity > (v)) format_fd(1, x);  \
+        if (debug_verbosity > (v)) __libc_format_fd(1, x);  \
     } while (0)
 #endif /* !LINKER_DEBUG_TO_LOG */
 

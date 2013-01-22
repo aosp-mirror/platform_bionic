@@ -294,8 +294,8 @@ static void* libc_malloc_impl_handle = NULL;
 unsigned int malloc_double_free_backlog;
 
 static void InitMalloc(MallocDebug* table, int debug_level, const char* prefix) {
-  __libc_android_log_print(ANDROID_LOG_INFO, "libc", "%s: using libc.debug.malloc %d (%s)\n",
-                           __progname, debug_level, prefix);
+  __libc_format_log(ANDROID_LOG_INFO, "libc", "%s: using libc.debug.malloc %d (%s)\n",
+                    __progname, debug_level, prefix);
 
   char symbol[128];
 
@@ -429,7 +429,7 @@ static void malloc_init_impl() {
         dlclose(libc_malloc_impl_handle);
         return;
     }
-    if (malloc_debug_initialize()) {
+    if (malloc_debug_initialize() == -1) {
         dlclose(libc_malloc_impl_handle);
         return;
     }
@@ -487,11 +487,19 @@ static void malloc_init_impl() {
 }
 
 static void malloc_fini_impl() {
-    if (libc_malloc_impl_handle) {
+    // Our BSD stdio implementation doesn't close the standard streams, it only flushes them.
+    // And it doesn't do that until its atexit handler (_cleanup) is run, and we run first!
+    // It's great that other unclosed FILE*s show up as malloc leaks, but we need to manually
+    // clean up the standard streams ourselves.
+    fclose(stdin);
+    fclose(stdout);
+    fclose(stderr);
+
+    if (libc_malloc_impl_handle != NULL) {
         MallocDebugFini malloc_debug_finalize =
             reinterpret_cast<MallocDebugFini>(dlsym(libc_malloc_impl_handle,
                                                     "malloc_debug_finalize"));
-        if (malloc_debug_finalize) {
+        if (malloc_debug_finalize != NULL) {
             malloc_debug_finalize();
         }
     }

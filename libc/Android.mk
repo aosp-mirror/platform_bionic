@@ -272,6 +272,7 @@ libc_common_src_files := \
 
 libc_bionic_src_files := \
     bionic/assert.cpp \
+    bionic/debug_format.cpp \
     bionic/dirent.cpp \
     bionic/eventfd.cpp \
     bionic/__fgets_chk.cpp \
@@ -884,7 +885,7 @@ LOCAL_SRC_FILES := \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
-	bionic/pthread_debug.c \
+	bionic/pthread_debug.cpp \
 	bionic/libc_init_dynamic.c
 
 ifeq ($(TARGET_ARCH),arm)
@@ -937,10 +938,10 @@ LOCAL_CFLAGS := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
+	bionic/debug_mapinfo.cpp \
+	bionic/debug_stacktrace.cpp \
 	bionic/malloc_debug_leak.cpp \
 	bionic/malloc_debug_check.cpp \
-	bionic/malloc_debug_check_mapinfo.cpp \
-	bionic/malloc_debug_stacktrace.cpp
 
 LOCAL_MODULE:= libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
