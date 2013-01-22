@@ -50,6 +50,7 @@
 #include "bionic_pthread.h"
 #include "bionic_ssp.h"
 #include "bionic_tls.h"
+#include "debug_format.h"
 #include "pthread_internal.h"
 #include "thread_private.h"
 
@@ -229,7 +230,7 @@ int _init_thread(pthread_internal_t* thread, pid_t kernel_id, const pthread_attr
             // For backwards compatibility reasons, we just warn about failures here.
             // error = errno;
             const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
-            __libc_android_log_print(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
+            __libc_format_log(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
         }
     }
 

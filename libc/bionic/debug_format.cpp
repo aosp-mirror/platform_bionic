@@ -30,7 +30,7 @@
 // compile under GCC 4.7
 #undef _FORTIFY_SOURCE
 
-#include "linker_format.h"
+#include "debug_format.h"
 
 #include <assert.h>
 #include <errno.h>
@@ -39,8 +39,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "linker_debug.h"
 
 /* define UNIT_TESTS to build this file as a single executable that runs
  * the formatter's unit tests
@@ -150,47 +148,14 @@ vformat_buffer(char *buff, size_t buffsize, const char *format, va_list args)
     return buf_out_length(&bo);
 }
 
-int
-format_buffer(char *buff, size_t buffsize, const char *format, ...)
-{
-    va_list args;
-    int ret;
-
-    va_start(args, format);
-    ret = vformat_buffer(buff, buffsize, format, args);
-    va_end(args);
-
-    return ret;
+int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  int result = vformat_buffer(buffer, buffer_size, format, args);
+  va_end(args);
+  return result;
 }
 
-/* The __stack_chk_fail() function calls __libc_android_log_print()
- * which calls vsnprintf().
- *
- * We define our version of the function here to avoid dragging
- * about 25 KB of C library routines related to formatting.
- */
-int
-vsnprintf(char *buff, size_t bufsize, const char *format, va_list args)
-{
-    return format_buffer(buff, bufsize, format, args);
-}
-
-/* The pthread implementation uses snprintf(). If we define it here, we
- * avoid pulling the stdio vfprintf() implementation into the linker
- * saving about 19KB of machine code.
- */
-int
-snprintf(char* buff, size_t bufsize, const char* format, ...)
-{
-    va_list args;
-    int ret;
-    va_start(args, format);
-    ret = vsnprintf(buff, bufsize, format, args);
-    va_end(args);
-    return ret;
-}
-
-#if !LINKER_DEBUG_TO_LOG
 
 /*** File descriptor output
  ***/
@@ -204,7 +169,7 @@ struct FdOut {
 static void
 fd_out_send(void *opaque, const char *data, int len)
 {
-    FdOut *fdo = opaque;
+    FdOut *fdo = reinterpret_cast<FdOut*>(opaque);
 
     if (len < 0)
         len = strlen(data);
@@ -240,95 +205,60 @@ fd_out_length(FdOut *fdo)
 }
 
 
-int
-format_fd(int fd, const char *format, ...)
-{
-    FdOut fdo;
-    Out* out;
-    va_list args;
+int __libc_format_fd(int fd, const char* format, ...) {
+  FdOut fdo;
+  Out* out = fd_out_init(&fdo, fd);
+  if (out == NULL) {
+    return 0;
+  }
 
-    out = fd_out_init(&fdo, fd);
-    if (out == NULL)
-        return 0;
+  va_list args;
+  va_start(args, format);
+  out_vformat(out, format, args);
+  va_end(args);
 
-    va_start(args, format);
-    out_vformat(out, format, args);
-    va_end(args);
-
-    return fd_out_length(&fdo);
+  return fd_out_length(&fdo);
 }
-
-#else /* LINKER_DEBUG_TO_LOG */
 
 /*** Log output
  ***/
-
-/* We need our own version of __libc_android_log_vprint, otherwise
- * the log output is completely broken. Probably due to the fact
- * that the C library is not initialized yet.
- *
- * You can test that by setting CUSTOM_LOG_VPRINT to 0
- */
-#define  CUSTOM_LOG_VPRINT  1
-
-#if CUSTOM_LOG_VPRINT
 
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/uio.h>
 
-static int log_vprint(int prio, const char *tag, const char *fmt, va_list  args)
-{
-    char buf[1024];
-    int result;
-    static int log_fd = -1;
+int __libc_format_log_va_list(int priority, const char* tag, const char* fmt, va_list args) {
+  char buf[1024];
+  int result = vformat_buffer(buf, sizeof buf, fmt, args);
 
-    result = vformat_buffer(buf, sizeof buf, fmt, args);
-
-    if (log_fd < 0) {
-        log_fd = open("/dev/log/main", O_WRONLY);
-        if (log_fd < 0)
-            return result;
+  static int log_fd = -1;
+  if (log_fd == -1) {
+    log_fd = open("/dev/log/main", O_WRONLY);
+    if (log_fd == -1) {
+      return result;
     }
+  }
 
-    {
-        ssize_t ret;
-        struct iovec vec[3];
+  struct iovec vec[3];
+  vec[0].iov_base = (unsigned char *) &priority;
+  vec[0].iov_len = 1;
+  vec[1].iov_base = (void *) tag;
+  vec[1].iov_len = strlen(tag) + 1;
+  vec[2].iov_base = (void *) buf;
+  vec[2].iov_len = strlen(buf) + 1;
 
-        vec[0].iov_base = (unsigned char *) &prio;
-        vec[0].iov_len = 1;
-        vec[1].iov_base = (void *) tag;
-        vec[1].iov_len = strlen(tag) + 1;
-        vec[2].iov_base = (void *) buf;
-        vec[2].iov_len = strlen(buf) + 1;
+  TEMP_FAILURE_RETRY(writev(log_fd, vec, 3));
 
-        do {
-            ret = writev(log_fd, vec, 3);
-        } while ((ret < 0) && (errno == EINTR));
-    }
-    return result;
+  return result;
 }
 
-#define  __libc_android_log_vprint  log_vprint
-
-#else /* !CUSTOM_LOG_VPRINT */
-
-extern "C" int __libc_android_log_vprint(int  prio, const char* tag, const char*  format, va_list ap);
-
-#endif /* !CUSTOM_LOG_VPRINT */
-
-int
-format_log(int prio, const char *tag, const char *format, ...)
-{
-    int ret;
-    va_list  args;
-    va_start(args, format);
-    ret = __libc_android_log_vprint(prio, tag, format, args);
-    va_end(args);
-    return ret;
+int __libc_format_log(int priority, const char* tag, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  int result = __libc_format_log_va_list(priority, tag, format, args);
+  va_end(args);
+  return result;
 }
-
-#endif /* LINKER_DEBUG_TO_LOG */
 
 /*** formatted output implementation
  ***/

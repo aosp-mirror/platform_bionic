@@ -63,8 +63,8 @@ void __stack_chk_fail() {
     path[count] = '\0';
   }
 
-  // Do a best effort at logging. This ends up calling writev(2).
-  __libc_android_log_print(ANDROID_LOG_FATAL, path, "stack corruption detected: aborted");
+  // Do a best effort at logging.
+  __libc_android_log_write(ANDROID_LOG_FATAL, path, "stack corruption detected: aborted");
 
   // Make sure there is no default action for SIGABRT.
   struct sigaction sa;
