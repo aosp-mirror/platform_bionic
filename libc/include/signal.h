@@ -57,13 +57,13 @@ typedef int sig_atomic_t;
 extern const char* const sys_siglist[];
 extern const char* const sys_signame[];
 
-static __inline__ int sigismember(sigset_t* set, int signum) {
+static __inline__ int sigismember(const sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
   if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
     errno = EINVAL;
     return -1;
   }
-  unsigned long* local_set = (unsigned long*) set;
+  const unsigned long* local_set = (const unsigned long*) set;
   return (int) ((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
 }
 
