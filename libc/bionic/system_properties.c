@@ -31,12 +31,15 @@
 #include <stddef.h>
 #include <errno.h>
 #include <poll.h>
+#include <fcntl.h>
+#include <stdbool.h>
 
 #include <sys/mman.h>
 
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/select.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -52,36 +55,62 @@ static unsigned dummy_props = 0;
 
 prop_area *__system_property_area__ = (void*) &dummy_props;
 
+static int get_fd_from_env(void)
+{
+    char *env = getenv("ANDROID_PROPERTY_WORKSPACE");
+
+    if (!env) {
+        return -1;
+    }
+
+    return atoi(env);
+}
+
 int __system_properties_init(void)
 {
-    prop_area *pa;
-    int s, fd;
-    unsigned sz;
-    char *env;
+    bool fromFile = true;
 
     if(__system_property_area__ != ((void*) &dummy_props)) {
         return 0;
     }
 
-    env = getenv("ANDROID_PROPERTY_WORKSPACE");
-    if (!env) {
+    int fd = open(PROP_FILENAME, O_RDONLY | O_NOFOLLOW);
+
+    if ((fd < 0) && (errno == ENOENT)) {
+        /*
+         * For backwards compatibility, if the file doesn't
+         * exist, we use the environment to get the file descriptor.
+         * For security reasons, we only use this backup if the kernel
+         * returns ENOENT. We don't want to use the backup if the kernel
+         * returns other errors such as ENOMEM or ENFILE, since it
+         * might be possible for an external program to trigger this
+         * condition.
+         */
+        fd = get_fd_from_env();
+        fromFile = false;
+    }
+
+    if (fd < 0) {
         return -1;
     }
-    fd = atoi(env);
-    env = strchr(env, ',');
-    if (!env) {
+
+    struct stat fd_stat;
+    if (fstat(fd, &fd_stat) < 0) {
         return -1;
     }
-    sz = atoi(env + 1);
-    
-    pa = mmap(0, sz, PROT_READ, MAP_SHARED, fd, 0);
-    
-    if(pa == MAP_FAILED) {
+
+    prop_area *pa = mmap(0, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
+
+    if (fromFile) {
+        close(fd);
+    }
+
+    if (pa == MAP_FAILED) {
         return -1;
     }
 
     if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
-        munmap(pa, sz);
+        munmap(pa, fd_stat.st_size);
         return -1;
     }
 
@@ -218,8 +247,6 @@ static int send_prop_msg(prop_msg *msg)
 int __system_property_set(const char *key, const char *value)
 {
     int err;
-    int tries = 0;
-    int update_seen = 0;
     prop_msg msg;
 
     if(key == 0) return -1;
