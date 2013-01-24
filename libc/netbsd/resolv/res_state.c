@@ -71,7 +71,7 @@ _res_thread_alloc(void)
         rt->_serial = 0;
         rt->_pi = (struct prop_info*) __system_property_find("net.change");
         if (rt->_pi) {
-            rt->_serial = rt->_pi->serial;
+            rt->_serial = __system_property_serial(rt->_pi);
         }
         memset(rt->_rstatic, 0, sizeof rt->_rstatic);
     }
@@ -135,14 +135,14 @@ _res_thread_get(void)
                 return rt;
             }
         }
-        if (rt->_serial == rt->_pi->serial) {
+        if (rt->_serial == __system_property_serial(rt->_pi)) {
             /* Nothing changed, so return the current state */
             D("%s: tid=%d rt=%p nothing changed, returning",
               __FUNCTION__, gettid(), rt);
             return rt;
         }
         /* Update the recorded serial number, and go reset the state */
-        rt->_serial = rt->_pi->serial;
+        rt->_serial = __system_property_serial(rt->_pi);
         goto RESET_STATE;
     }
 
