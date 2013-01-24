@@ -34,7 +34,6 @@
 #else
 #include <sys/system_properties.h>
 
-typedef struct prop_area prop_area;
 typedef struct prop_msg prop_msg;
 
 #define PROP_AREA_MAGIC   0x504f5250
@@ -43,29 +42,20 @@ typedef struct prop_msg prop_msg;
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
 
-/* #define PROP_MAX_ENTRIES 247 */
-/* 247 -> 32620 bytes (<32768) */
+/* (8 header words + 247 toc words) = 1020 bytes */
+/* 1024 bytes header and toc + 247 prop_infos @ 128 bytes = 32640 bytes */
+
+#define PA_COUNT_MAX  247
+#define PA_INFO_START 1024
+#define PA_SIZE       32768
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
 #define TOC_TO_INFO(area, toc)  ((prop_info*) (((char*) area) + ((toc) & 0xFFFFFF)))
 
-struct prop_area {
-    unsigned volatile count;
-    unsigned volatile serial;
-    unsigned magic;
-    unsigned version;
-    unsigned reserved[4];
-    unsigned toc[1];
-};
-
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
 
-struct prop_info {
-    char name[PROP_NAME_MAX];
-    unsigned volatile serial;
-    char value[PROP_VALUE_MAX];
-};
+__BEGIN_DECLS
 
 struct prop_msg 
 {
@@ -105,6 +95,48 @@ struct prop_msg
 #define PROP_PATH_SYSTEM_DEFAULT   "/system/default.prop"
 #define PROP_PATH_LOCAL_OVERRIDE   "/data/local.prop"
 #define PROP_PATH_FACTORY          "/factory/factory.prop"
+
+/*
+** Initialize the area to be used to store properties.  Can
+** only be done by a single process that has write access to
+** the property area.
+*/
+void __system_property_area_init(void *data);
+
+/* Add a new system property.  Can only be done by a single
+** process that has write access to the property area, and
+** that process must handle sequencing to ensure the property
+** does not already exist and that only one property is added
+** or updated at a time.
+**
+** Returns 0 on success, -1 if the property area is full.
+*/
+int __system_property_add(const char *name, unsigned int namelen,
+			const char *value, unsigned int valuelen);
+
+/* Update the value of a system property returned by
+** __system_property_find.  Can only be done by a single process
+** that has write access to the property area, and that process
+** must handle sequencing to ensure that only one property is
+** updated at a time.
+**
+** Returns 0 on success, -1 if the parameters are incorrect.
+*/
+int __system_property_update(prop_info *pi, const char *value, unsigned int len);
+
+/* Read the serial number of a system property returned by
+** __system_property_find.
+**
+** Returns the serial number on success, -1 on error.
+*/
+unsigned int __system_property_serial(const prop_info *pi);
+
+/* Wait for any system property to be updated.  Caller must pass
+** in 0 the first time, and the previous return value on each
+** successive call. */
+unsigned int __system_property_wait_any(unsigned int serial);
+
+__END_DECLS
 
 #endif
 #endif

@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stddef.h>
@@ -49,6 +50,25 @@
 
 #include <sys/atomics.h>
 
+struct prop_area {
+    unsigned volatile count;
+    unsigned volatile serial;
+    unsigned magic;
+    unsigned version;
+    unsigned reserved[4];
+    unsigned toc[1];
+};
+
+typedef struct prop_area prop_area;
+
+struct prop_info {
+    char name[PROP_NAME_MAX];
+    unsigned volatile serial;
+    char value[PROP_VALUE_MAX];
+};
+
+typedef struct prop_info prop_info;
+
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
 static unsigned dummy_props = 0;
@@ -64,6 +84,17 @@ static int get_fd_from_env(void)
     }
 
     return atoi(env);
+}
+
+void __system_property_area_init(void *data)
+{
+    prop_area *pa = data;
+    memset(pa, 0, PA_SIZE);
+    pa->magic = PROP_AREA_MAGIC;
+    pa->version = PROP_AREA_VERSION;
+
+    /* plug into the lib property services */
+    __system_property_area__ = pa;
 }
 
 int __system_properties_init(void)
@@ -146,6 +177,11 @@ const prop_info *__system_property_find(const char *name)
     unsigned *toc = pa->toc;
     unsigned len = strlen(name);
     prop_info *pi;
+
+    if (len >= PROP_NAME_MAX)
+        return 0;
+    if (len < 1)
+        return 0;
 
     while(count--) {
         unsigned entry = *toc++;
@@ -293,4 +329,69 @@ int __system_property_wait(const prop_info *pi)
         } while(n == pi->serial);
     }
     return 0;
+}
+
+int __system_property_update(prop_info *pi, const char *value, unsigned int len)
+{
+    prop_area *pa = __system_property_area__;
+
+    if (len >= PROP_VALUE_MAX)
+        return -1;
+
+    pi->serial = pi->serial | 1;
+    memcpy(pi->value, value, len + 1);
+    pi->serial = (len << 24) | ((pi->serial + 1) & 0xffffff);
+    __futex_wake(&pi->serial, INT32_MAX);
+
+    pa->serial++;
+    __futex_wake(&pa->serial, INT32_MAX);
+
+    return 0;
+}
+
+int __system_property_add(const char *name, unsigned int namelen,
+            const char *value, unsigned int valuelen)
+{
+    prop_area *pa = __system_property_area__;
+    prop_info *pa_info_array = (void*) (((char*) pa) + PA_INFO_START);
+    prop_info *pi;
+
+    if (pa->count == PA_COUNT_MAX)
+        return -1;
+    if (namelen >= PROP_NAME_MAX)
+        return -1;
+    if (valuelen >= PROP_VALUE_MAX)
+        return -1;
+    if (namelen < 1)
+        return -1;
+
+    pi = pa_info_array + pa->count;
+    pi->serial = (valuelen << 24);
+    memcpy(pi->name, name, namelen + 1);
+    memcpy(pi->value, value, valuelen + 1);
+
+    pa->toc[pa->count] =
+        (namelen << 24) | (((unsigned) pi) - ((unsigned) pa));
+
+    pa->count++;
+    pa->serial++;
+    __futex_wake(&pa->serial, INT32_MAX);
+
+    return 0;
+}
+
+unsigned int __system_property_serial(const prop_info *pi)
+{
+    return pi->serial;
+}
+
+unsigned int __system_property_wait_any(unsigned int serial)
+{
+    prop_area *pa = __system_property_area__;
+
+    do {
+        __futex_wait(&pa->serial, serial, 0);
+    } while(pa->serial == serial);
+
+    return pa->serial;
 }
