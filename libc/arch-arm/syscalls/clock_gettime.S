@@ -3,11 +3,10 @@
 #include <sys/linux-syscalls.h>
 
 ENTRY(clock_gettime)
-    .save   {r4, r7}
-    stmfd   sp!, {r4, r7}
+    mov     ip, r7
     ldr     r7, =__NR_clock_gettime
     swi     #0
-    ldmfd   sp!, {r4, r7}
+    mov     r7, ip
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
