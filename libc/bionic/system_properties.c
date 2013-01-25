@@ -69,6 +69,7 @@ static int get_fd_from_env(void)
 int __system_properties_init(void)
 {
     bool fromFile = true;
+    int result = -1;
 
     if(__system_property_area__ != ((void*) &dummy_props)) {
         return 0;
@@ -96,26 +97,35 @@ int __system_properties_init(void)
 
     struct stat fd_stat;
     if (fstat(fd, &fd_stat) < 0) {
-        return -1;
+        goto cleanup;
+    }
+
+    if ((fd_stat.st_uid != 0)
+            || (fd_stat.st_gid != 0)
+            || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)) {
+        goto cleanup;
     }
 
     prop_area *pa = mmap(0, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
 
-    if (fromFile) {
-        close(fd);
-    }
-
     if (pa == MAP_FAILED) {
-        return -1;
+        goto cleanup;
     }
 
     if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
         munmap(pa, fd_stat.st_size);
-        return -1;
+        goto cleanup;
     }
 
     __system_property_area__ = pa;
-    return 0;
+    result = 0;
+
+cleanup:
+    if (fromFile) {
+        close(fd);
+    }
+
+    return result;
 }
 
 const prop_info *__system_property_find_nth(unsigned n)
