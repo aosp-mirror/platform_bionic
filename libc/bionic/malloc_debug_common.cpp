@@ -148,7 +148,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     }
 
     // XXX: the protocol doesn't allow variable size for the stack trace (yet)
-    *infoSize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * BACKTRACE_SIZE);
+    *infoSize = (sizeof(size_t) * 2) + (sizeof(uintptr_t) * BACKTRACE_SIZE);
     *overallSize = *infoSize * gHashTable.count;
     *backtraceSize = BACKTRACE_SIZE;
 
@@ -167,7 +167,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     const int count = gHashTable.count;
     for (int i = 0 ; i < count ; ++i) {
         HashEntry* entry = list[i];
-        size_t entrySize = (sizeof(size_t) * 2) + (sizeof(intptr_t) * entry->numEntries);
+        size_t entrySize = (sizeof(size_t) * 2) + (sizeof(uintptr_t) * entry->numEntries);
         if (entrySize < *infoSize) {
             /* we're writing less than a full entry, clear out the rest */
             memset(head + entrySize, 0, *infoSize - entrySize);
@@ -377,8 +377,10 @@ static void malloc_init_impl() {
     }
 
     // mksh is way too leaky. http://b/7291287.
-    if (debug_level >= 10 && strcmp(__progname, "sh") == 0) {
-        return;
+    if (debug_level >= 10) {
+        if (strcmp(__progname, "sh") == 0 || strcmp(__progname, "/system/bin/sh") == 0) {
+            return;
+        }
     }
 
     // Choose the appropriate .so for the requested debug level.

@@ -180,8 +180,8 @@ static void* debug_realloc(void *ptr, size_t size, size_t old_size) {
 struct MutexInfo;
 
 typedef struct CallStack {
-    intptr_t    depth;
-    intptr_t*   addrs;
+    uintptr_t    depth;
+    uintptr_t*   addrs;
 } CallStack;
 
 typedef struct MutexInfo* MutexInfoListEntry;
@@ -222,7 +222,7 @@ typedef struct MutexInfo {
     CallStackList       stacks;
     // call stack when this lock was acquired last
     int                 stackDepth;
-    intptr_t            stackTrace[STACK_TRACE_DEPTH];
+    uintptr_t           stackTrace[STACK_TRACE_DEPTH];
 } MutexInfo;
 
 static void growingListInit(GrowingList* list) {
@@ -285,10 +285,10 @@ static int pthread_mutex_unlock_unchecked(pthread_mutex_t *mutex) {
 
 /****************************************************************************/
 
-static void dup_backtrace(CallStack* stack, size_t count, intptr_t const* addrs) {
+static void dup_backtrace(CallStack* stack, size_t count, uintptr_t const* addrs) {
     stack->depth = count;
-    stack->addrs = DbgAllocLocked<intptr_t>(count);
-    memcpy(stack->addrs, addrs, count * sizeof(intptr_t));
+    stack->addrs = DbgAllocLocked<uintptr_t>(count);
+    memcpy(stack->addrs, addrs, count * sizeof(uintptr_t));
 }
 
 /****************************************************************************/
@@ -343,7 +343,7 @@ static void unlinkParentFromChild(MutexInfo* parent, MutexInfo* child) {
 /****************************************************************************/
 
 static void callstackListAdd(CallStackList* pList,
-        int count, intptr_t const* addrs) {
+        int count, uintptr_t const* addrs) {
     growingListAdd(pList, sizeof(CallStackListEntry));
     dup_backtrace(&pList->stack[pList->count - 1], count, addrs);
 }
@@ -365,7 +365,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
      */
     if (obj->historyMark) {
         int stackDepth;
-        intptr_t addrs[STACK_TRACE_DEPTH];
+        uintptr_t addrs[STACK_TRACE_DEPTH];
 
         /* Turn off prediction temporarily in this thread while logging */
         sPthreadDebugDisabledThread = gettid();
