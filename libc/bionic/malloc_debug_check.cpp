@@ -78,9 +78,9 @@ struct hdr_t {
     uint32_t tag;
     hdr_t* prev;
     hdr_t* next;
-    intptr_t bt[MAX_BACKTRACE_DEPTH];
+    uintptr_t bt[MAX_BACKTRACE_DEPTH];
     int bt_depth;
-    intptr_t freed_bt[MAX_BACKTRACE_DEPTH];
+    uintptr_t freed_bt[MAX_BACKTRACE_DEPTH];
     int freed_bt_depth;
     size_t size;
     char front_guard[FRONT_GUARD_LEN];
@@ -102,7 +102,7 @@ static inline hdr_t* meta(void* user) {
     return reinterpret_cast<hdr_t*>(user) - 1;
 }
 
-static unsigned num;
+static unsigned gAllocatedBlockCount;
 static hdr_t *tail;
 static hdr_t *head;
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -181,7 +181,7 @@ static inline void add(hdr_t *hdr, size_t size) {
     hdr->size = size;
     init_front_guard(hdr);
     init_rear_guard(hdr);
-    num++;
+    ++gAllocatedBlockCount;
     add_locked(hdr, &tail, &head);
 }
 
@@ -192,7 +192,7 @@ static inline int del(hdr_t *hdr) {
 
     ScopedPthreadMutexLocker locker(&lock);
     del_locked(hdr, &tail, &head);
-    num--;
+    --gAllocatedBlockCount;
     return 0;
 }
 
@@ -298,7 +298,7 @@ static inline void del_from_backlog(hdr_t *hdr) {
 
 static inline int del_leak(hdr_t *hdr, int *safe) {
     ScopedPthreadMutexLocker locker(&lock);
-    return del_and_check_locked(hdr, &tail, &head, &num, safe);
+    return del_and_check_locked(hdr, &tail, &head, &gAllocatedBlockCount, safe);
 }
 
 static inline void add_to_backlog(hdr_t *hdr) {
@@ -342,7 +342,7 @@ extern "C" void chk_free(void *ptr) {
     hdr_t* hdr = meta(ptr);
 
     if (del(hdr) < 0) {
-        intptr_t bt[MAX_BACKTRACE_DEPTH];
+        uintptr_t bt[MAX_BACKTRACE_DEPTH];
         int depth;
         depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
         if (hdr->tag == BACKLOG_TAG) {
@@ -387,7 +387,7 @@ extern "C" void *chk_realloc(void *ptr, size_t size) {
     hdr_t* hdr = meta(ptr);
 
     if (del(hdr) < 0) {
-        intptr_t bt[MAX_BACKTRACE_DEPTH];
+        uintptr_t bt[MAX_BACKTRACE_DEPTH];
         int depth;
         depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
         if (hdr->tag == BACKLOG_TAG) {
@@ -442,28 +442,36 @@ extern "C" void *chk_calloc(int nmemb, size_t size) {
 }
 
 static void heaptracker_free_leaked_memory() {
-    size_t total = num;
-    if (num) {
-        log_message("+++ Leaked allocations: %d\n", num);
-    }
+  if (gAllocatedBlockCount == 0) {
+    return;
+  }
 
-    hdr_t *del = NULL;
-    while (head) {
-        int safe;
-        del = head;
-        log_message("+++ Leaked block of size %d at %p (leak %d of %d)\n",
-                del->size, user(del), 1 + total - num, total);
-        if (del_leak(del, &safe)) {
-            /* safe == 1, because the allocation is valid */
-            log_backtrace(gMapInfo, del->bt, del->bt_depth);
-        }
-    }
+  // Use /proc/self/exe link to obtain the program name for logging
+  // purposes. If it's not available, we set it to "<unknown>".
+  char exe[PATH_MAX];
+  int count;
+  if ((count = readlink("/proc/self/exe", exe, sizeof(exe) - 1)) == -1) {
+    strlcpy(exe, "<unknown>", sizeof(exe));
+  } else {
+    exe[count] = '\0';
+  }
 
-//  log_message("+++ DELETING %d BACKLOGGED ALLOCATIONS\n", backlog_num);
-    while (backlog_head) {
-        del = backlog_tail;
-        del_from_backlog(del);
+  size_t index = 1;
+  const size_t total = gAllocatedBlockCount;
+  while (head != NULL) {
+    int safe;
+    hdr_t* block = head;
+    log_message("+++ %s leaked block of size %d at %p (leak %d of %d)",
+                exe, block->size, user(block), index++, total);
+    if (del_leak(block, &safe)) {
+      /* safe == 1, because the allocation is valid */
+      log_backtrace(gMapInfo, block->bt, block->bt_depth);
     }
+  }
+
+  while (backlog_head != NULL) {
+    del_from_backlog(backlog_tail);
+  }
 }
 
 /* Initializes malloc debugging framework.

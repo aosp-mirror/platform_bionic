@@ -90,7 +90,7 @@ static AllocationEntry* to_header(void* mem) {
 // Hash Table functions
 // =============================================================================
 
-static uint32_t get_hash(intptr_t* backtrace, size_t numEntries) {
+static uint32_t get_hash(uintptr_t* backtrace, size_t numEntries) {
     if (backtrace == NULL) return 0;
 
     int hash = 0;
@@ -103,7 +103,7 @@ static uint32_t get_hash(intptr_t* backtrace, size_t numEntries) {
 }
 
 static HashEntry* find_entry(HashTable* table, int slot,
-        intptr_t* backtrace, size_t numEntries, size_t size) {
+                             uintptr_t* backtrace, size_t numEntries, size_t size) {
     HashEntry* entry = table->slots[slot];
     while (entry != NULL) {
         //debug_log("backtrace: %p, entry: %p entry->backtrace: %p\n",
@@ -113,7 +113,7 @@ static HashEntry* find_entry(HashTable* table, int slot,
          * including the flag bits.
          */
         if (entry->size == size && entry->numEntries == numEntries &&
-                !memcmp(backtrace, entry->backtrace, numEntries * sizeof(intptr_t))) {
+                !memcmp(backtrace, entry->backtrace, numEntries * sizeof(uintptr_t))) {
             return entry;
         }
 
@@ -123,7 +123,7 @@ static HashEntry* find_entry(HashTable* table, int slot,
     return NULL;
 }
 
-static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_t size) {
+static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size_t size) {
     size_t hash = get_hash(backtrace, numEntries);
     size_t slot = hash % HASHTABLE_SIZE;
 
@@ -142,7 +142,7 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
         entry->allocations++;
     } else {
         // create a new entry
-        entry = static_cast<HashEntry*>(dlmalloc(sizeof(HashEntry) + numEntries*sizeof(intptr_t)));
+        entry = static_cast<HashEntry*>(dlmalloc(sizeof(HashEntry) + numEntries*sizeof(uintptr_t)));
         if (!entry) {
             return NULL;
         }
@@ -153,7 +153,7 @@ static HashEntry* record_backtrace(intptr_t* backtrace, size_t numEntries, size_
         entry->numEntries = numEntries;
         entry->size = size;
 
-        memcpy(entry->backtrace, backtrace, numEntries * sizeof(intptr_t));
+        memcpy(entry->backtrace, backtrace, numEntries * sizeof(uintptr_t));
 
         gHashTable.slots[slot] = entry;
 
@@ -272,7 +272,7 @@ extern "C" void* leak_malloc(size_t bytes) {
     if (base != NULL) {
         ScopedPthreadMutexLocker locker(&gAllocationsMutex);
 
-        intptr_t backtrace[BACKTRACE_SIZE];
+        uintptr_t backtrace[BACKTRACE_SIZE];
         size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
 
         AllocationEntry* header = reinterpret_cast<AllocationEntry*>(base);

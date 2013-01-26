@@ -47,7 +47,7 @@ typedef _Unwind_Context __unwind_context;
 static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
   stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
   if (state->count) {
-    intptr_t ip = (intptr_t)_Unwind_GetIP(context);
+    uintptr_t ip = _Unwind_GetIP(context);
     if (ip) {
       state->addrs[0] = ip;
       state->addrs++;
@@ -60,7 +60,7 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   return _URC_END_OF_STACK;
 }
 
-__LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries) {
+__LIBC_HIDDEN__ int get_backtrace(uintptr_t* addrs, size_t max_entries) {
   stack_crawl_state_t state;
   state.count = max_entries;
   state.addrs = addrs;
@@ -68,8 +68,8 @@ __LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries) {
   return max_entries - state.count;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, intptr_t* addrs, size_t c) {
-  intptr_t self_bt[16];
+__LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, uintptr_t* addrs, size_t c) {
+  uintptr_t self_bt[16];
   if (addrs == NULL) {
     c = get_backtrace(self_bt, 16);
     addrs = self_bt;
@@ -101,7 +101,7 @@ __LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, intptr_t* addrs, size_t 
       }
       if (symbol) {
         __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s (%s+0x%x)",
-                          index, rel_pc, soname, symbol, addrs[i] - (intptr_t)offset);
+                          index, rel_pc, soname, symbol, addrs[i] - (uintptr_t) offset);
       } else {
         __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s",
                           index, rel_pc, soname);

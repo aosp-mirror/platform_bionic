@@ -57,7 +57,7 @@ struct HashEntry {
     // fields above "size" are NOT sent to the host
     size_t size;
     size_t allocations;
-    intptr_t backtrace[0];
+    uintptr_t backtrace[0];
 };
 
 struct HashTable {
