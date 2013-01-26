@@ -460,6 +460,9 @@ out_vformat(Out *o, const char *format, va_list args)
         if (c == 's') {
             /* string */
             str = va_arg(args, const char*);
+            if (str == NULL) {
+                str = "(null)";
+            }
         } else if (c == 'c') {
             /* character */
             /* NOTE: char is promoted to int when passed through the stack */
