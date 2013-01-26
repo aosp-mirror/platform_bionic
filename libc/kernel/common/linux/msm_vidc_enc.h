@@ -261,170 +261,171 @@ struct venc_ioctl_msg{
 #define VEN_IOCTL_SET_SLICE_DELIVERY_MODE   _IO(VEN_IOCTLBASE_ENC, 50)
 #define VEN_IOCTL_SET_SPS_PPS_FOR_IDR   _IOW(VEN_IOCTLBASE_ENC, 51, struct venc_ioctl_msg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VEN_IOCTL_SET_VUI_BITSTREAM_RESTRICT_FLAG   _IO(VEN_IOCTLBASE_ENC, 52)
 struct venc_switch{
  unsigned char status;
 };
-struct venc_allocatorproperty{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_allocatorproperty{
  unsigned long mincount;
  unsigned long maxcount;
  unsigned long actualcount;
- unsigned long datasize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long datasize;
  unsigned long suffixsize;
  unsigned long alignment;
  unsigned long bufpoolid;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_bufferpayload{
  unsigned char *pbuffer;
  size_t sz;
- int fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ int fd;
  unsigned int offset;
  unsigned int maped_size;
  unsigned long filled_len;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_buffer{
  unsigned char *ptrbuffer;
  unsigned long sz;
- unsigned long len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long len;
  unsigned long offset;
  long long timestamp;
  unsigned long flags;
- void *clientdata;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ void *clientdata;
 };
 struct venc_basecfg{
  unsigned long input_width;
- unsigned long input_height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long input_height;
  unsigned long dvs_width;
  unsigned long dvs_height;
  unsigned long codectype;
- unsigned long fps_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long fps_num;
  unsigned long fps_den;
  unsigned long targetbitrate;
  unsigned long inputformat;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_profile{
  unsigned long profile;
 };
-struct ven_profilelevel{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ven_profilelevel{
  unsigned long level;
 };
 struct venc_sessionqp{
- unsigned long iframeqp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long iframeqp;
  unsigned long pframqp;
 };
 struct venc_qprange{
- unsigned long maxqp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long maxqp;
  unsigned long minqp;
 };
 struct venc_intraperiod{
- unsigned long num_pframes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long num_pframes;
  unsigned long num_bframes;
 };
 struct venc_seqheader{
- unsigned char *hdrbufptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned char *hdrbufptr;
  unsigned long bufsize;
  unsigned long hdrlen;
 };
-struct venc_capability{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_capability{
  unsigned long codec_types;
  unsigned long maxframe_width;
  unsigned long maxframe_height;
- unsigned long maxtarget_bitrate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long maxtarget_bitrate;
  unsigned long maxframe_rate;
  unsigned long input_formats;
  unsigned char dvs;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_entropycfg{
  unsigned longentropysel;
  unsigned long cabacmodel;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_dbcfg{
  unsigned long db_mode;
  unsigned long slicealpha_offset;
- unsigned long slicebeta_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long slicebeta_offset;
 };
 struct venc_intrarefresh{
  unsigned long irmode;
- unsigned long mbcount;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long mbcount;
 };
 struct venc_multiclicecfg{
  unsigned long mslice_mode;
- unsigned long mslice_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long mslice_size;
 };
 struct venc_bufferflush{
  unsigned long flush_mode;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_ratectrlcfg{
  unsigned long rcmode;
 };
-struct venc_voptimingcfg{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_voptimingcfg{
  unsigned long voptime_resolution;
 };
 struct venc_framerate{
- unsigned long fps_denominator;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long fps_denominator;
  unsigned long fps_numerator;
 };
 struct venc_targetbitrate{
- unsigned long target_bitrate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long target_bitrate;
 };
 struct venc_rotation{
  unsigned long rotation;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_timeout{
  unsigned long millisec;
 };
-struct venc_headerextension{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct venc_headerextension{
  unsigned long header_extension;
 };
 struct venc_msg{
- unsigned long statuscode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long statuscode;
  unsigned long msgcode;
  struct venc_buffer buf;
  unsigned long msgdata_size;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct venc_recon_addr{
  unsigned char *pbuffer;
  unsigned long buffer_size;
- unsigned long pmem_fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long pmem_fd;
  unsigned long offset;
 };
 struct venc_recon_buff_size{
- int width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ int width;
  int height;
  int size;
  int alignment;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
 
