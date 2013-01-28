@@ -26,11 +26,7 @@
  * SUCH DAMAGE.
  */
 
-// Temporarily disable _FORTIFY_SOURCE to get this code to
-// compile under GCC 4.7
-#undef _FORTIFY_SOURCE
-
-#include "debug_format.h"
+#include <../private/debug_format.h> // Relative path so we can #include this for testing.
 
 #include <assert.h>
 #include <errno.h>
@@ -39,11 +35,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
-
-/* define UNIT_TESTS to build this file as a single executable that runs
- * the formatter's unit tests
- */
-#define xxUNIT_TESTS
 
 /*** Generic output sink
  ***/
@@ -134,12 +125,12 @@ buf_out_length(BufOut *bo)
 }
 
 static int
-vformat_buffer(char *buff, size_t buffsize, const char *format, va_list args)
+vformat_buffer(char *buff, size_t buf_size, const char *format, va_list args)
 {
     BufOut bo;
     Out *out;
 
-    out = buf_out_init(&bo, buff, buffsize);
+    out = buf_out_init(&bo, buff, buf_size);
     if (out == NULL)
         return 0;
 
@@ -291,7 +282,7 @@ parse_decimal(const char *format, int *ppos)
 
 // Writes number 'value' in base 'base' into buffer 'buf' of size 'buf_size' bytes.
 // Assumes that buf_size > 0.
-static void format_number(char* buf, size_t buf_size, uint64_t value, int base, bool caps) {
+static void format_unsigned(char* buf, size_t buf_size, uint64_t value, int base, bool caps) {
   char* p = buf;
   char* end = buf + buf_size - 1;
 
@@ -327,26 +318,25 @@ static void format_number(char* buf, size_t buf_size, uint64_t value, int base, 
   }
 }
 
-/* Write an integer (octal or decimal) into a buffer, assumes buffsize > 2 */
-static void
-format_integer(char *buffer, size_t buffsize, uint64_t value, int base, int isSigned)
-{
-    // TODO: this is incorrect for MIN_INT.
-    if (isSigned && (int64_t)value < 0) {
-        buffer[0] = '-';
-        buffer += 1;
-        buffsize -= 1;
-        value = (uint64_t)(-(int64_t)value);
-    }
+static void format_integer(char* buf, size_t buf_size, uint64_t value, char conversion) {
+  // Decode the conversion specifier.
+  int is_signed = (conversion == 'd' || conversion == 'i' || conversion == 'o');
+  int base = 10;
+  if (conversion == 'x' || conversion == 'X') {
+    base = 16;
+  } else if (conversion == 'o') {
+    base = 8;
+  }
+  bool caps = (conversion == 'X');
 
-    format_number(buffer, buffsize, value, base, false);
+  if (is_signed && static_cast<int64_t>(value) < 0) {
+    buf[0] = '-';
+    buf += 1;
+    buf_size -= 1;
+    value = static_cast<uint64_t>(-static_cast<int64_t>(value));
+  }
+  format_unsigned(buf, buf_size, value, base, caps);
 }
-
-// Assumes buf_size > 2.
-static void format_hex(char* buf, size_t buf_size, uint64_t value, bool caps) {
-  format_number(buf, buf_size, value, 16, caps);
-}
-
 
 /* Perform formatted output to an output target 'o' */
 static void
@@ -362,7 +352,6 @@ out_vformat(Out *o, const char *format, va_list args)
         int width = -1;
         int prec  = -1;
         size_t bytelen = sizeof(int);
-        const char*  str;
         int slen;
         char buffer[32];  /* temporary buffer used to format numbers */
 
@@ -457,6 +446,7 @@ out_vformat(Out *o, const char *format, va_list args)
         }
 
         /* conversion specifier */
+        const char* str = buffer;
         if (c == 's') {
             /* string */
             str = va_arg(args, const char*);
@@ -468,17 +458,15 @@ out_vformat(Out *o, const char *format, va_list args)
             /* NOTE: char is promoted to int when passed through the stack */
             buffer[0] = (char) va_arg(args, int);
             buffer[1] = '\0';
-            str = buffer;
         } else if (c == 'p') {
             uint64_t  value = (uintptr_t) va_arg(args, void*);
             buffer[0] = '0';
             buffer[1] = 'x';
-            format_hex(buffer + 2, sizeof buffer-2, value, false);
-            str = buffer;
-        } else {
+            format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
+        } else if (c == 'd' || c == 'i' || c == 'o' || c == 'x' || c == 'X') {
             /* integers - first read value from stack */
             uint64_t value;
-            int isSigned = (c == 'd' || c == 'i' || c == 'o');
+            int is_signed = (c == 'd' || c == 'i' || c == 'o');
 
             /* NOTE: int8_t and int16_t are promoted to int when passed
              *       through the stack
@@ -492,27 +480,18 @@ out_vformat(Out *o, const char *format, va_list args)
             }
 
             /* sign extension, if needed */
-            if (isSigned) {
+            if (is_signed) {
                 int shift = 64 - 8*bytelen;
                 value = (uint64_t)(((int64_t)(value << shift)) >> shift);
             }
 
             /* format the number properly into our buffer */
-            switch (c) {
-            case 'i': case 'd':
-                format_integer(buffer, sizeof buffer, value, 10, isSigned);
-                break;
-            case 'o':
-                format_integer(buffer, sizeof buffer, value, 8, isSigned);
-                break;
-            case 'x': case 'X':
-                format_hex(buffer, sizeof buffer, value, (c == 'X'));
-                break;
-            default:
-                buffer[0] = '\0';
-            }
-            /* then point to it */
-            str = buffer;
+            format_integer(buffer, sizeof(buffer), value, c);
+        } else if (c == '%') {
+            buffer[0] = '%';
+            buffer[1] = '\0';
+        } else {
+            __assert(__FILE__, __LINE__, "conversion specifier unsupported");
         }
 
         /* if we are here, 'str' points to the content that must be
@@ -537,101 +516,3 @@ out_vformat(Out *o, const char *format, va_list args)
         }
     }
 }
-
-
-#ifdef UNIT_TESTS
-
-#include <stdio.h>
-
-static int   gFails = 0;
-
-#define  MARGIN  40
-
-#define  UTEST_CHECK(condition,message) \
-    printf("Checking %-*s: ", MARGIN, message); fflush(stdout); \
-    if (!(condition)) { \
-        printf("KO\n"); \
-        gFails += 1; \
-    } else { \
-        printf("ok\n"); \
-    }
-
-static void
-utest_BufOut(void)
-{
-    char buffer[16];
-    BufOut bo[1];
-    Out* out;
-    int ret;
-
-    buffer[0] = '1';
-    out = buf_out_init(bo, buffer, sizeof buffer);
-    UTEST_CHECK(buffer[0] == '\0', "buf_out_init clears initial byte");
-    out_send(out, "abc", 3);
-    UTEST_CHECK(!memcmp(buffer, "abc", 4), "out_send() works with BufOut");
-    out_send_repeat(out, 'X', 4);
-    UTEST_CHECK(!memcmp(buffer, "abcXXXX", 8), "out_send_repeat() works with BufOut");
-    buffer[sizeof buffer-1] = 'x';
-    out_send_repeat(out, 'Y', 2*sizeof(buffer));
-    UTEST_CHECK(buffer[sizeof buffer-1] == '\0', "overflows always zero-terminates");
-
-    out = buf_out_init(bo, buffer, sizeof buffer);
-    out_send_repeat(out, 'X', 2*sizeof(buffer));
-    ret = buf_out_length(bo);
-    UTEST_CHECK(ret == 2*sizeof(buffer), "correct size returned on overflow");
-}
-
-static void
-utest_expect(const char*  result, const char*  format, ...)
-{
-    va_list args;
-    BufOut bo[1];
-    char buffer[256];
-    Out* out = buf_out_init(bo, buffer, sizeof buffer);
-
-    printf("Checking %-*s: ", MARGIN, format); fflush(stdout);
-    va_start(args, format);
-    out_vformat(out, format, args);
-    va_end(args);
-
-    if (strcmp(result, buffer)) {
-        printf("KO. got '%s' expecting '%s'\n", buffer, result);
-        gFails += 1;
-    } else {
-        printf("ok. got '%s'\n", result);
-    }
-}
-
-int  main(void)
-{
-    utest_BufOut();
-    utest_expect("", "");
-    utest_expect("a", "a");
-    utest_expect("01234", "01234", "");
-    utest_expect("01234", "%s", "01234");
-    utest_expect("aabbcc", "aa%scc", "bb");
-    utest_expect("a", "%c", 'a');
-    utest_expect("1234", "%d", 1234);
-    utest_expect("-8123", "%d", -8123);
-    utest_expect("16", "%hd", 0x7fff0010);
-    utest_expect("16", "%hhd", 0x7fffff10);
-    utest_expect("68719476736", "%lld", 0x1000000000LL);
-    utest_expect("70000", "%ld", 70000);
-    utest_expect("0xb0001234", "%p", (void*)0xb0001234);
-    utest_expect("12ab", "%x", 0x12ab);
-    utest_expect("12AB", "%X", 0x12ab);
-    utest_expect("00123456", "%08x", 0x123456);
-    utest_expect("01234", "0%d", 1234);
-    utest_expect(" 1234", "%5d", 1234);
-    utest_expect("01234", "%05d", 1234);
-    utest_expect("    1234", "%8d", 1234);
-    utest_expect("1234    ", "%-8d", 1234);
-    utest_expect("abcdef     ", "%-11s", "abcdef");
-    utest_expect("something:1234", "%s:%d", "something", 1234);
-    utest_expect("005:5:05", "%03d:%d:%02d", 5, 5, 5);
-    utest_expect("5,0x0", "%d,%p", 5, NULL);
-    utest_expect("68719476736,6,7,8", "%lld,%d,%d,%d", 0x1000000000LL, 6, 7, 8);
-    return gFails != 0;
-}
-
-#endif /* UNIT_TESTS */
