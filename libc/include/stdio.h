@@ -523,13 +523,13 @@ char *fgets(char *dest, int size, FILE *stream)
 
     // Compiler can prove, at compile time, that the passed in size
     // is always <= the actual object size. Don't call __fgets_chk
-    if (__builtin_constant_p(size) && (size <= bos)) {
+    if (__builtin_constant_p(size) && (size <= (int) bos)) {
         return __fgets_real(dest, size, stream);
     }
 
     // Compiler can prove, at compile time, that the passed in size
     // is always > the actual object size. Force a compiler error.
-    if (__builtin_constant_p(size) && (size > bos)) {
+    if (__builtin_constant_p(size) && (size > (int) bos)) {
         __fgets_too_big_error();
     }
 

@@ -59,7 +59,7 @@ extern const char* const sys_signame[];
 
 static __inline__ int sigismember(const sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
+  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }
@@ -69,7 +69,7 @@ static __inline__ int sigismember(const sigset_t* set, int signum) {
 
 static __inline__ int sigaddset(sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
+  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }
@@ -80,7 +80,7 @@ static __inline__ int sigaddset(sigset_t* set, int signum) {
 
 static __inline__ int sigdelset(sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  if (set == NULL || bit < 0 || bit >= 8*sizeof(sigset_t)) {
+  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }

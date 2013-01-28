@@ -53,6 +53,7 @@ test_c_flags = \
     -Werror \
 
 test_src_files = \
+    debug_format_test.cpp \
     dirent_test.cpp \
     fenv_test.cpp \
     getauxval_test.cpp \
