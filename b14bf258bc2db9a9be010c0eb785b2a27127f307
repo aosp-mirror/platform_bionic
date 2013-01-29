@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "O9C45XEM",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-29T17:13:40Z",
+      "side": 1,
+      "message": "can you please put a space between \"libm_upstream_freebsd_src_files\" and \"+\u003d\"",
+      "revId": "b14bf258bc2db9a9be010c0eb785b2a27127f307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "O9E42qFI",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-29T17:13:40Z",
+      "side": 1,
+      "message": "space before \"+\u003d\"",
+      "revId": "b14bf258bc2db9a9be010c0eb785b2a27127f307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
