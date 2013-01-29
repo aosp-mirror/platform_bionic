@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "O8tf0604",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-01-29T18:11:26Z",
+      "side": 1,
+      "message": "return symbol? seems simpler than dealing with it in the caller.",
+      "revId": "35b621c5f4c79959cd36fec0153c2c9c43ebe5f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
