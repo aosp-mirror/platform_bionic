@@ -120,8 +120,6 @@ extern char* __progname;
 
 #define STACK_TRACE_DEPTH 16
 
-static mapinfo_t* gMapInfo;
-
 /****************************************************************************/
 
 /*
@@ -370,17 +368,14 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
         /* Turn off prediction temporarily in this thread while logging */
         sPthreadDebugDisabledThread = gettid();
 
-        if (gMapInfo == NULL) {
-            // note: we're protected by sDbgLock.
-            gMapInfo = mapinfo_create(getpid());
-        }
+        backtrace_startup();
 
         LOGW("%s\n", kStartBanner);
         LOGW("pid: %d, tid: %d >>> %s <<<", getpid(), gettid(), __progname);
         LOGW("Illegal lock attempt:\n");
         LOGW("--- pthread_mutex_t at %p\n", obj->mutex);
         stackDepth = get_backtrace(addrs, STACK_TRACE_DEPTH);
-        log_backtrace(gMapInfo, addrs, stackDepth);
+        log_backtrace(addrs, stackDepth);
 
         LOGW("+++ Currently held locks in this thread (in reverse order):");
         MutexInfo* cur = obj;
@@ -391,7 +386,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
             if (parent->owner == ourtid) {
                 LOGW("--- pthread_mutex_t at %p\n", parent->mutex);
                 if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
-                    log_backtrace(gMapInfo, parent->stackTrace, parent->stackDepth);
+                    log_backtrace(parent->stackTrace, parent->stackDepth);
                 }
                 cur = parent;
                 break;
@@ -414,13 +409,9 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
             if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
                 int index = historyListHas(&obj->parents, objParent);
                 if ((size_t)index < (size_t)obj->stacks.count) {
-                    log_backtrace(gMapInfo,
-                                  obj->stacks.stack[index].addrs,
-                                  obj->stacks.stack[index].depth);
+                    log_backtrace(obj->stacks.stack[index].addrs, obj->stacks.stack[index].depth);
                 } else {
-                    log_backtrace(gMapInfo,
-                                  obj->stackTrace,
-                                  obj->stackDepth);
+                    log_backtrace(obj->stackTrace, obj->stackDepth);
                 }
             }
             result = 0;
@@ -465,8 +456,7 @@ static void mutex_lock_checked(MutexInfo* mrl, MutexInfo* object)
 
     linkParentToChild(mrl, object);
     if (!traverseTree(object, mrl)) {
-        mapinfo_destroy(gMapInfo);
-        gMapInfo = NULL;
+        backtrace_shutdown();
         LOGW("%s\n", kEndBanner);
         unlinkParentFromChild(mrl, object);
         // reenable pthread debugging for this thread

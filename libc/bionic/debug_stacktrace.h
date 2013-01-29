@@ -32,14 +32,9 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
-struct stack_crawl_state_t {
-  size_t count;
-  uintptr_t* addrs;
-};
-
-struct mapinfo_t;
-
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_entries);
-__LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, uintptr_t* stack_frames, size_t frame_count);
+__LIBC_HIDDEN__ void backtrace_startup();
+__LIBC_HIDDEN__ void backtrace_shutdown();
+__LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
 
 #endif /* DEBUG_STACKTRACE_H */
