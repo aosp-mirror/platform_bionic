@@ -44,69 +44,102 @@ typedef struct _Unwind_Context __unwind_context;
 typedef _Unwind_Context __unwind_context;
 #endif
 
+static mapinfo_t* gMapInfo = NULL;
+static void* gDemangler;
+typedef char* (*DemanglerFn)(const char*, char*, size_t*, int*);
+static DemanglerFn gDemanglerFn = NULL;
+
+__LIBC_HIDDEN__ void backtrace_startup() {
+  gMapInfo = mapinfo_create(getpid());
+  gDemangler = dlopen("libgccdemangle.so", RTLD_NOW);
+  if (gDemangler != NULL) {
+    void* sym = dlsym(gDemangler, "__cxa_demangle");
+    gDemanglerFn = reinterpret_cast<DemanglerFn>(sym);
+  }
+}
+
+__LIBC_HIDDEN__ void backtrace_shutdown() {
+  mapinfo_destroy(gMapInfo);
+  dlclose(gDemangler);
+}
+
+static char* demangle(const char* symbol) {
+  if (gDemanglerFn == NULL) {
+    return NULL;
+  }
+  return (*gDemanglerFn)(symbol, NULL, NULL, NULL);
+}
+
+struct stack_crawl_state_t {
+  uintptr_t* frames;
+  size_t frame_count;
+  size_t max_depth;
+  bool have_skipped_self;
+
+  stack_crawl_state_t(uintptr_t* frames, size_t max_depth)
+      : frames(frames), frame_count(0), max_depth(max_depth), have_skipped_self(false) {
+  }
+};
+
 static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
   stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
-  if (state->count) {
-    uintptr_t ip = _Unwind_GetIP(context);
-    if (ip) {
-      state->addrs[0] = ip;
-      state->addrs++;
-      state->count--;
-      return _URC_NO_REASON;
-    }
+
+  uintptr_t ip = _Unwind_GetIP(context);
+
+  // The first stack frame is get_backtrace itself. Skip it.
+  if (ip != 0 && !state->have_skipped_self) {
+    state->have_skipped_self = true;
+    return _URC_NO_REASON;
   }
-  // If we run out of space to record the address or 0 has been seen, stop
-  // unwinding the stack.
-  return _URC_END_OF_STACK;
+
+  state->frames[state->frame_count++] = ip;
+  return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
 }
 
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* addrs, size_t max_entries) {
-  stack_crawl_state_t state;
-  state.count = max_entries;
-  state.addrs = addrs;
+__LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
+  stack_crawl_state_t state(frames, max_depth);
   _Unwind_Backtrace(trace_function, &state);
-  return max_entries - state.count;
+  return state.frame_count;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(mapinfo_t* map_info, uintptr_t* addrs, size_t c) {
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
   uintptr_t self_bt[16];
-  if (addrs == NULL) {
-    c = get_backtrace(self_bt, 16);
-    addrs = self_bt;
+  if (frames == NULL) {
+    frame_count = get_backtrace(self_bt, 16);
+    frames = self_bt;
   }
 
   __libc_format_log(ANDROID_LOG_ERROR, "libc",
                     "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 
-  int index = 0;
-  for (size_t i = 0 ; i < c; ++i) {
+  for (size_t i = 0 ; i < frame_count; ++i) {
     void* offset = 0;
     const char* symbol = NULL;
 
     Dl_info info;
-    if (dladdr((void*) addrs[i], &info) != 0) {
+    if (dladdr((void*) frames[i], &info) != 0) {
       offset = info.dli_saddr;
       symbol = info.dli_sname;
     }
 
-    // This test is a bit sketchy, but it allows us to skip the
-    // stack trace entries due to this debugging code. it works
-    // because those don't have a symbol (they're not exported).
-    if (symbol != NULL || index > 0) {
-      unsigned int rel_pc;
-      const mapinfo_t* mi = mapinfo_find(map_info, addrs[i], &rel_pc);
-      const char* soname = mi ? mi->name : info.dli_fname;
-      if (soname == NULL) {
-        soname = "unknown";
-      }
-      if (symbol) {
-        __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s (%s+0x%x)",
-                          index, rel_pc, soname, symbol, addrs[i] - (uintptr_t) offset);
-      } else {
-        __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s",
-                          index, rel_pc, soname);
-      }
-      ++index;
+    uintptr_t rel_pc;
+    const mapinfo_t* mi = (gMapInfo != NULL) ? mapinfo_find(gMapInfo, frames[i], &rel_pc) : NULL;
+    const char* soname = (mi != NULL) ? mi->name : info.dli_fname;
+    if (soname == NULL) {
+      soname = "<unknown>";
+    }
+    if (symbol != NULL) {
+      // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
+      char* demangled_symbol = demangle(symbol);
+      const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
+
+      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s (%s+0x%x)",
+                        i, rel_pc, soname, best_name, frames[i] - (uintptr_t) offset);
+
+      free(demangled_symbol);
+    } else {
+      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s",
+                        i, rel_pc, soname);
     }
   }
 }

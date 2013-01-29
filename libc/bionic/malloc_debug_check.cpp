@@ -52,8 +52,6 @@
 #include "malloc_debug_common.h"
 #include "ScopedPthreadMutexLocker.h"
 
-static mapinfo_t* gMapInfo;
-
 /* libc.debug.malloc.backlog */
 extern unsigned int malloc_double_free_backlog;
 
@@ -261,11 +259,11 @@ static inline int check_allocation_locked(hdr_t *hdr, int *safe) {
     if (!valid && *safe) {
         log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                         user(hdr), hdr->size);
-        log_backtrace(gMapInfo, hdr->bt, hdr->bt_depth);
+        log_backtrace(hdr->bt, hdr->bt_depth);
         if (hdr->tag == BACKLOG_TAG) {
             log_message("+++ ALLOCATION %p SIZE %d FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
         }
     }
 
@@ -343,29 +341,27 @@ extern "C" void chk_free(void *ptr) {
 
     if (del(hdr) < 0) {
         uintptr_t bt[MAX_BACKTRACE_DEPTH];
-        int depth;
-        depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
+        int depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
         if (hdr->tag == BACKLOG_TAG) {
             log_message("+++ ALLOCATION %p SIZE %d BYTES MULTIPLY FREED!\n",
                        user(hdr), hdr->size);
             log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, hdr->bt, hdr->bt_depth);
+            log_backtrace(hdr->bt, hdr->bt_depth);
             /* hdr->freed_bt_depth should be nonzero here */
             log_message("+++ ALLOCATION %p SIZE %d FIRST FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
             log_message("+++ ALLOCATION %p SIZE %d NOW BEING FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, bt, depth);
+            log_backtrace(bt, depth);
         } else {
             log_message("+++ ALLOCATION %p IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr));
-            log_backtrace(gMapInfo, bt, depth);
+            log_backtrace(bt, depth);
         }
     } else {
-        hdr->freed_bt_depth = get_backtrace(hdr->freed_bt,
-                                      MAX_BACKTRACE_DEPTH);
+        hdr->freed_bt_depth = get_backtrace(hdr->freed_bt, MAX_BACKTRACE_DEPTH);
         add_to_backlog(hdr);
     }
 }
@@ -388,21 +384,20 @@ extern "C" void *chk_realloc(void *ptr, size_t size) {
 
     if (del(hdr) < 0) {
         uintptr_t bt[MAX_BACKTRACE_DEPTH];
-        int depth;
-        depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
+        int depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
         if (hdr->tag == BACKLOG_TAG) {
             log_message("+++ REALLOCATION %p SIZE %d OF FREED MEMORY!\n",
                        user(hdr), size, hdr->size);
             log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, hdr->bt, hdr->bt_depth);
+            log_backtrace(hdr->bt, hdr->bt_depth);
             /* hdr->freed_bt_depth should be nonzero here */
             log_message("+++ ALLOCATION %p SIZE %d FIRST FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
             log_message("+++ ALLOCATION %p SIZE %d NOW BEING REALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(gMapInfo, bt, depth);
+            log_backtrace(bt, depth);
 
              /* We take the memory out of the backlog and fall through so the
              * reallocation below succeeds.  Since we didn't really free it, we
@@ -412,7 +407,7 @@ extern "C" void *chk_realloc(void *ptr, size_t size) {
         } else {
             log_message("+++ REALLOCATION %p SIZE %d IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr), size);
-            log_backtrace(gMapInfo, bt, depth);
+            log_backtrace(bt, depth);
             // just get a whole new allocation and leak the old one
             return dlrealloc(0, size);
             // return dlrealloc(user(hdr), size); // assuming it was allocated externally
@@ -465,7 +460,7 @@ static void heaptracker_free_leaked_memory() {
                 exe, block->size, user(block), index++, total);
     if (del_leak(block, &safe)) {
       /* safe == 1, because the allocation is valid */
-      log_backtrace(gMapInfo, block->bt, block->bt_depth);
+      log_backtrace(block->bt, block->bt_depth);
     }
   }
 
@@ -474,18 +469,15 @@ static void heaptracker_free_leaked_memory() {
   }
 }
 
-/* Initializes malloc debugging framework.
- * See comments on MallocDebugInit in malloc_debug_common.h
- */
 extern "C" int malloc_debug_initialize() {
   if (!malloc_double_free_backlog) {
     malloc_double_free_backlog = BACKLOG_DEFAULT_LEN;
   }
-  gMapInfo = mapinfo_create(getpid());
+  backtrace_startup();
   return 0;
 }
 
 extern "C" void malloc_debug_finalize() {
   heaptracker_free_leaked_memory();
-  mapinfo_destroy(gMapInfo);
+  backtrace_shutdown();
 }
