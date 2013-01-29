@@ -16,6 +16,24 @@
       "revId": "e41eb855092b90acdf26741c392d6fffbbc873db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "O8rfSB-0",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-29T17:52:05Z",
+      "side": 1,
+      "message": "duh, yes. L128 is not sufficient.",
+      "parentUuid": "O8nPkOqE",
+      "revId": "e41eb855092b90acdf26741c392d6fffbbc873db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
