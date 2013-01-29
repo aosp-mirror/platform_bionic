@@ -57,7 +57,7 @@ static mapinfo_t* parse_maps_line(char* line) {
   return mi;
 }
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(int pid) {
+__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
   struct mapinfo_t* milist = NULL;
   char data[1024]; // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
@@ -76,7 +76,7 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(int pid) {
 }
 
 __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
-  while (mi) {
+  while (mi != NULL) {
     mapinfo_t* del = mi;
     mi = mi->next;
     dlfree(del);
@@ -84,13 +84,13 @@ __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
 }
 
 // Find the containing map info for the PC.
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, unsigned pc, unsigned* rel_pc) {
-  *rel_pc = pc;
+__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc) {
   for (; mi != NULL; mi = mi->next) {
     if ((pc >= mi->start) && (pc < mi->end)) {
-      *rel_pc -= mi->start;
+      *rel_pc = pc - mi->start;
       return mi;
     }
   }
+  *rel_pc = pc;
   return NULL;
 }
