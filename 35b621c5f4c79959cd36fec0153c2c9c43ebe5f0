@@ -16,6 +16,24 @@
       "revId": "35b621c5f4c79959cd36fec0153c2c9c43ebe5f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "O8i1eyg8",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-29T19:59:30Z",
+      "side": 1,
+      "message": "if __cxa_demangle returns non-null, it\u0027s newly-allocated memory that you need to free. i could strdup(3), but as the TODO on L132 says, i\u0027m not sure i won\u0027t be back here avoiding allocation (for callers that might want to talk about corrupt heaps).",
+      "parentUuid": "O8tf0604",
+      "revId": "35b621c5f4c79959cd36fec0153c2c9c43ebe5f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
