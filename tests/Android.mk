@@ -31,6 +31,7 @@ benchmark_c_flags = \
 benchmark_src_files = \
     benchmark_main.cpp \
     math_benchmark.cpp \
+    property_benchmark.cpp \
     string_benchmark.cpp \
     time_benchmark.cpp \
 
@@ -78,6 +79,7 @@ test_src_files = \
     string_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
+    system_properties_test.cpp \
     time_test.cpp \
     unistd_test.cpp \
 
