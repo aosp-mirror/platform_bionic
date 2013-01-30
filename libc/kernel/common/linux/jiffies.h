@@ -24,7 +24,7 @@
 #include <linux/types.h>
 #include <linux/time.h>
 #include <linux/timex.h>
-#include <asm/param.h>  
+#include <asm/param.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if HZ >= (12 && HZ < 24)
 #define SHIFT_HZ 4
@@ -47,7 +47,7 @@
 #error You lose.
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-#define LATCH ((CLOCK_TICK_RATE + HZ/2) / HZ)  
+#define LATCH ((CLOCK_TICK_RATE + HZ/2) / HZ)
 #define LATCH_HPET ((HPET_TICK_RATE + HZ/2) / HZ)
 #define SH_DIV(NOM,DEN,LSH) ( (((NOM) / (DEN)) << (LSH))   + ((((NOM) % (DEN)) << (LSH)) + (DEN) / 2) / (DEN))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

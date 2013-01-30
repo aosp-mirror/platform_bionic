@@ -43,4 +43,3 @@ struct genlock_lock {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define GENLOCK_IOC_DREADLOCK _IOW(GENLOCK_IOC_MAGIC, 6,   struct genlock_lock)
 #endif
-

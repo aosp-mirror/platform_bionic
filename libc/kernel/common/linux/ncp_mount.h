@@ -21,17 +21,17 @@
 #include <linux/types.h>
 #include <linux/ncp.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NCP_MOUNT_VERSION 3  
+#define NCP_MOUNT_VERSION 3
 #define NCP_MOUNT_SOFT 0x0001
 #define NCP_MOUNT_INTR 0x0002
-#define NCP_MOUNT_STRONG 0x0004  
+#define NCP_MOUNT_STRONG 0x0004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NCP_MOUNT_NO_OS2 0x0008  
-#define NCP_MOUNT_NO_NFS 0x0010  
+#define NCP_MOUNT_NO_OS2 0x0008
+#define NCP_MOUNT_NO_NFS 0x0010
 #define NCP_MOUNT_EXTRAS 0x0020
-#define NCP_MOUNT_SYMLINKS 0x0040  
+#define NCP_MOUNT_SYMLINKS 0x0040
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NCP_MOUNT_NFS_EXTRAS 0x0080  
+#define NCP_MOUNT_NFS_EXTRAS 0x0080
 struct ncp_mount_data {
  int version;
  unsigned int ncp_fd;
@@ -49,7 +49,7 @@ struct ncp_mount_data {
  __kernel_mode_t file_mode;
  __kernel_mode_t dir_mode;
 };
-#define NCP_MOUNT_VERSION_V4 (4)  
+#define NCP_MOUNT_VERSION_V4 (4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ncp_mount_data_v4 {
  int version;
@@ -67,5 +67,5 @@ struct ncp_mount_data_v4 {
  unsigned long dir_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define NCP_MOUNT_VERSION_V5 (5)  
+#define NCP_MOUNT_VERSION_V5 (5)
 #endif

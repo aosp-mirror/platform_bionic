@@ -31,7 +31,7 @@ struct efs_dentry {
 #define EFS_MAXNAMELEN ((1 << (sizeof(char) * 8)) - 1)
 #define EFS_DIRBLK_HEADERSIZE 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define EFS_DIRBLK_MAGIC 0xbeef  
+#define EFS_DIRBLK_MAGIC 0xbeef
 struct efs_dir {
  __be16 magic;
  unsigned char firstused;

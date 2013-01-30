@@ -67,12 +67,12 @@ struct mmc_card {
  unsigned int rca;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned int state;
-#define MMC_STATE_PRESENT (1<<0)  
-#define MMC_STATE_DEAD (1<<1)  
-#define MMC_STATE_BAD (1<<2)  
+#define MMC_STATE_PRESENT (1<<0)
+#define MMC_STATE_DEAD (1<<1)
+#define MMC_STATE_BAD (1<<2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MMC_STATE_SDCARD (1<<3)  
-#define MMC_STATE_READONLY (1<<4)  
+#define MMC_STATE_SDCARD (1<<3)
+#define MMC_STATE_READONLY (1<<4)
  u32 raw_cid[4];
  u32 raw_csd[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

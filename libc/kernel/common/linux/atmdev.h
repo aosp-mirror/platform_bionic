@@ -28,7 +28,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATM_OC12_PCR (622080000/1080*1040/8/53)
 #define ATM_DS3_PCR (8000*12)
-#define __AAL_STAT_ITEMS   __HANDLE_ITEM(tx);     __HANDLE_ITEM(tx_err);     __HANDLE_ITEM(rx);     __HANDLE_ITEM(rx_err);     __HANDLE_ITEM(rx_drop);  
+#define __AAL_STAT_ITEMS   __HANDLE_ITEM(tx);     __HANDLE_ITEM(tx_err);     __HANDLE_ITEM(rx);     __HANDLE_ITEM(rx_err);     __HANDLE_ITEM(rx_drop);
 struct atm_aal_stats {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __HANDLE_ITEM(i) int i
@@ -73,23 +73,23 @@ struct atm_dev_stats {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATM_ADDPARTY _IOW('a', ATMIOC_SPECIAL+4,struct atm_iobuf)
 #define ATM_DROPPARTY _IOW('a', ATMIOC_SPECIAL+5,int)
-#define ATM_BACKEND_RAW 0 
-#define ATM_BACKEND_PPP 1  
+#define ATM_BACKEND_RAW 0
+#define ATM_BACKEND_PPP 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_BACKEND_BR2684 2  
-#define ATM_ITFTYP_LEN 8  
-#define __ATM_LM_NONE 0  
-#define __ATM_LM_AAL 1  
+#define ATM_BACKEND_BR2684 2
+#define ATM_ITFTYP_LEN 8
+#define __ATM_LM_NONE 0
+#define __ATM_LM_AAL 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __ATM_LM_ATM 2  
-#define __ATM_LM_PHY 8  
-#define __ATM_LM_ANALOG 16  
-#define __ATM_LM_MKLOC(n) ((n))  
+#define __ATM_LM_ATM 2
+#define __ATM_LM_PHY 8
+#define __ATM_LM_ANALOG 16
+#define __ATM_LM_MKLOC(n) ((n))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __ATM_LM_MKRMT(n) ((n) << 8)  
+#define __ATM_LM_MKRMT(n) ((n) << 8)
 #define __ATM_LM_XTLOC(n) ((n) & 0xff)
 #define __ATM_LM_XTRMT(n) (((n) >> 8) & 0xff)
-#define ATM_LM_NONE 0  
+#define ATM_LM_NONE 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATM_LM_LOC_AAL __ATM_LM_MKLOC(__ATM_LM_AAL)
 #define ATM_LM_LOC_ATM __ATM_LM_MKLOC(__ATM_LM_ATM)
@@ -106,32 +106,32 @@ struct atm_iobuf {
  void __user *buffer;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_CI_MAX -1  
+#define ATM_CI_MAX -1
 struct atm_cirange {
  signed char vpi_bits;
  signed char vci_bits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define ATM_SC_RX 1024  
-#define ATM_SC_TX 2048  
-#define ATM_BACKLOG_DEFAULT 32  
+#define ATM_SC_RX 1024
+#define ATM_SC_TX 2048
+#define ATM_BACKLOG_DEFAULT 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_MF_IMMED 1  
-#define ATM_MF_INC_RSV 2  
-#define ATM_MF_INC_SHP 4  
-#define ATM_MF_DEC_RSV 8  
+#define ATM_MF_IMMED 1
+#define ATM_MF_INC_RSV 2
+#define ATM_MF_INC_SHP 4
+#define ATM_MF_DEC_RSV 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_MF_DEC_SHP 16  
-#define ATM_MF_BWD 32  
+#define ATM_MF_DEC_SHP 16
+#define ATM_MF_BWD 32
 #define ATM_MF_SET (ATM_MF_INC_RSV | ATM_MF_INC_SHP | ATM_MF_DEC_RSV |   ATM_MF_DEC_SHP | ATM_MF_BWD)
-#define ATM_VS_IDLE 0  
+#define ATM_VS_IDLE 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_VS_CONNECTED 1  
-#define ATM_VS_CLOSING 2  
-#define ATM_VS_LISTEN 3  
-#define ATM_VS_INUSE 4  
+#define ATM_VS_CONNECTED 1
+#define ATM_VS_CLOSING 2
+#define ATM_VS_LISTEN 3
+#define ATM_VS_INUSE 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATM_VS_BOUND 5  
+#define ATM_VS_BOUND 5
 #define ATM_VS2TXT_MAP   "IDLE", "CONNECTED", "CLOSING", "LISTEN", "INUSE", "BOUND"
 #define ATM_VF2TXT_MAP   "ADDR", "READY", "PARTIAL", "REGIS",   "RELEASED", "HASQOS", "LISTEN", "META",   "256", "512", "1024", "2048",   "SESSION", "HASSAP", "BOUND", "CLOSE"
 #endif

@@ -524,9 +524,9 @@ struct outputCfg {
 #define MCTL_NODE 1
 #define OUTPUT_1 0
 #define OUTPUT_2 1
-#define OUTPUT_1_AND_2 2  
+#define OUTPUT_1_AND_2 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define OUTPUT_1_AND_3 3  
+#define OUTPUT_1_AND_3 3
 #define CAMIF_TO_AXI_VIA_OUTPUT_2 4
 #define OUTPUT_1_AND_CAMIF_TO_AXI_VIA_OUTPUT_2 5
 #define OUTPUT_2_AND_CAMIF_TO_AXI_VIA_OUTPUT_1 6
@@ -914,7 +914,7 @@ struct msm_snapshot_pp_status {
 #define CAMERA_SHARPNESS_LV10 30
 #define CAMERA_SETAE_AVERAGE 0
 #define CAMERA_SETAE_CENWEIGHT 1
-#define CAMERA_WB_AUTO 1  
+#define CAMERA_WB_AUTO 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAMERA_WB_CUSTOM 2
 #define CAMERA_WB_INCANDESCENT 3
@@ -1868,4 +1868,3 @@ struct msm_ver_num_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SET_VIDEO_INST_IDX(handle, data)   (handle |= (0x1 << 7) | (data & 0x7F))
 #endif
-

@@ -123,4 +123,3 @@ struct media_links_enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MEDIA_IOC_SETUP_LINK _IOWR('|', 0x03, struct media_link_desc)
 #endif
-

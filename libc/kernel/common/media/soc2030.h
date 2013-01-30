@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __SOC2030_H__
 #define __SOC2030_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define SOC2030_IOCTL_SET_MODE _IOWR('o', 1, struct soc2030_mode)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SOC2030_IOCTL_GET_STATUS _IOC(_IOC_READ, 'o', 2, 10)

@@ -88,7 +88,7 @@ struct _xt_align
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_STANDARD_TARGET ""
 #define XT_ERROR_TARGET "ERROR"
-#define XT_BASE_CTL 64  
+#define XT_BASE_CTL 64
 #define XT_SO_SET_REPLACE (XT_BASE_CTL)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_SO_SET_ADD_COUNTERS (XT_BASE_CTL + 1)
@@ -114,6 +114,6 @@ struct xt_counters_info
  unsigned int num_counters;
  struct xt_counters counters[0];
 };
-#define XT_INV_PROTO 0x40  
+#define XT_INV_PROTO 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

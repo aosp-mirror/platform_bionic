@@ -22,11 +22,11 @@
 #include <linux/mtd/blktrans.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <mtd/nftl-user.h>
-#define BLOCK_NIL 0xffff  
-#define BLOCK_FREE 0xfffe  
-#define BLOCK_NOTEXPLORED 0xfffd  
+#define BLOCK_NIL 0xffff
+#define BLOCK_FREE 0xfffe
+#define BLOCK_NOTEXPLORED 0xfffd
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BLOCK_RESERVED 0xfffc  
+#define BLOCK_RESERVED 0xfffc
 struct NFTLrecord {
  struct mtd_blktrans_dev mbd;
  __u16 MediaUnit, SpareMediaUnit;

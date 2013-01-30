@@ -26,7 +26,7 @@
 #ifndef RTC_PORT
 #define RTC_PORT(x) (0x70 + (x))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RTC_ALWAYS_BCD 1  
+#define RTC_ALWAYS_BCD 1
 #endif
 #ifdef __HAVE_ARCH_CMPXCHG
 #include <linux/smp.h>

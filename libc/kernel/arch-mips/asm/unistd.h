@@ -193,7 +193,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sysfs (__NR_Linux + 135)
 #define __NR_personality (__NR_Linux + 136)
-#define __NR_afs_syscall (__NR_Linux + 137)  
+#define __NR_afs_syscall (__NR_Linux + 137)
 #define __NR_setfsuid (__NR_Linux + 138)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_setfsgid (__NR_Linux + 139)

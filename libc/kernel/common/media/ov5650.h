@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __OV5650_H__
 #define __OV5650_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define OV5650_IOCTL_SET_MODE _IOW('o', 1, struct ov5650_mode)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OV5650_IOCTL_SET_FRAME_LENGTH _IOW('o', 2, __u32)

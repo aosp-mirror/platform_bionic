@@ -39,10 +39,10 @@ struct in6_ifreq {
  __u32 ifr6_prefixlen;
  int ifr6_ifindex;
 };
-#define IPV6_SRCRT_STRICT 0x01  
+#define IPV6_SRCRT_STRICT 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPV6_SRCRT_TYPE_0 0  
-#define IPV6_SRCRT_TYPE_2 2  
+#define IPV6_SRCRT_TYPE_0 0
+#define IPV6_SRCRT_TYPE_2 2
 struct ipv6_rt_hdr {
  __u8 nexthdr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

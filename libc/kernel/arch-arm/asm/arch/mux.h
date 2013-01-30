@@ -18,8 +18,8 @@
  ****************************************************************************/
 #ifndef __ASM_ARCH_MUX_H
 #define __ASM_ARCH_MUX_H
-#define PU_PD_SEL_NA 0  
-#define PULL_DWN_CTRL_NA 0  
+#define PU_PD_SEL_NA 0
+#define PULL_DWN_CTRL_NA 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MUX_REG(reg, mode_offset, mode) .mux_reg = FUNC_MUX_CTRL_##reg,   .mask_offset = mode_offset,   .mask = mode,
 #define PULL_REG(reg, bit, status) .pull_reg = PULL_DWN_CTRL_##reg,   .pull_bit = bit,   .pull_val = status,

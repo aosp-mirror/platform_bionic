@@ -77,4 +77,3 @@ struct msm_audio_aac_enc_config {
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-

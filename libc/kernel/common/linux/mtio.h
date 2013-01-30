@@ -27,46 +27,46 @@ struct mtop {
  int mt_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define MTRESET 0  
-#define MTFSF 1  
-#define MTBSF 2  
+#define MTRESET 0
+#define MTFSF 1
+#define MTBSF 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTFSR 3  
-#define MTBSR 4  
-#define MTWEOF 5  
-#define MTREW 6  
+#define MTFSR 3
+#define MTBSR 4
+#define MTWEOF 5
+#define MTREW 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTOFFL 7  
-#define MTNOP 8  
-#define MTRETEN 9  
-#define MTBSFM 10  
+#define MTOFFL 7
+#define MTNOP 8
+#define MTRETEN 9
+#define MTBSFM 10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTFSFM 11  
-#define MTEOM 12  
-#define MTERASE 13  
-#define MTRAS1 14  
+#define MTFSFM 11
+#define MTEOM 12
+#define MTERASE 13
+#define MTRAS1 14
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTRAS2 15  
-#define MTRAS3 16  
-#define MTSETBLK 20  
-#define MTSETDENSITY 21  
+#define MTRAS2 15
+#define MTRAS3 16
+#define MTSETBLK 20
+#define MTSETDENSITY 21
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTSEEK 22  
-#define MTTELL 23  
-#define MTSETDRVBUFFER 24  
-#define MTFSS 25  
+#define MTSEEK 22
+#define MTTELL 23
+#define MTSETDRVBUFFER 24
+#define MTFSS 25
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTBSS 26  
-#define MTWSM 27  
-#define MTLOCK 28  
-#define MTUNLOCK 29  
+#define MTBSS 26
+#define MTWSM 27
+#define MTLOCK 28
+#define MTUNLOCK 29
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTLOAD 30  
-#define MTUNLOAD 31  
-#define MTCOMPRESSION 32 
-#define MTSETPART 33  
+#define MTLOAD 30
+#define MTUNLOAD 31
+#define MTCOMPRESSION 32
+#define MTSETPART 33
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTMKPART 34  
+#define MTMKPART 34
 struct mtget {
  long mt_type;
  long mt_resid;
@@ -79,30 +79,30 @@ struct mtget {
  __kernel_daddr_t mt_blkno;
 };
 #define MT_ISUNKNOWN 0x01
-#define MT_ISQIC02 0x02  
+#define MT_ISQIC02 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_ISWT5150 0x03  
-#define MT_ISARCHIVE_5945L2 0x04  
-#define MT_ISCMSJ500 0x05  
-#define MT_ISTDC3610 0x06  
+#define MT_ISWT5150 0x03
+#define MT_ISARCHIVE_5945L2 0x04
+#define MT_ISCMSJ500 0x05
+#define MT_ISTDC3610 0x06
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_ISARCHIVE_VP60I 0x07  
-#define MT_ISARCHIVE_2150L 0x08  
-#define MT_ISARCHIVE_2060L 0x09  
-#define MT_ISARCHIVESC499 0x0A  
+#define MT_ISARCHIVE_VP60I 0x07
+#define MT_ISARCHIVE_2150L 0x08
+#define MT_ISARCHIVE_2060L 0x09
+#define MT_ISARCHIVESC499 0x0A
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_ISQIC02_ALL_FEATURES 0x0F  
-#define MT_ISWT5099EEN24 0x11  
-#define MT_ISTEAC_MT2ST 0x12  
-#define MT_ISEVEREX_FT40A 0x32  
+#define MT_ISQIC02_ALL_FEATURES 0x0F
+#define MT_ISWT5099EEN24 0x11
+#define MT_ISTEAC_MT2ST 0x12
+#define MT_ISEVEREX_FT40A 0x32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_ISDDS1 0x51  
-#define MT_ISDDS2 0x52  
-#define MT_ISONSTREAM_SC 0x61  
-#define MT_ISSCSI1 0x71  
+#define MT_ISDDS1 0x51
+#define MT_ISDDS2 0x52
+#define MT_ISONSTREAM_SC 0x61
+#define MT_ISSCSI1 0x71
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_ISSCSI2 0x72  
-#define MT_ISFTAPE_UNKNOWN 0x800000  
+#define MT_ISSCSI2 0x72
+#define MT_ISFTAPE_UNKNOWN 0x800000
 #define MT_ISFTAPE_FLAG 0x800000
 struct mt_tape_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -126,10 +126,10 @@ struct mtvolinfo {
 #define MT_FT_RD_SINGLE 0
 #define MT_FT_RD_AHEAD 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MT_FT_WR_ASYNC 0  
-#define MT_FT_WR_MULTI 1  
-#define MT_FT_WR_SINGLE 2  
-#define MT_FT_WR_DELETE 3  
+#define MT_FT_WR_ASYNC 0
+#define MT_FT_WR_MULTI 1
+#define MT_FT_WR_SINGLE 2
+#define MT_FT_WR_DELETE 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mtftseg
 {
@@ -144,12 +144,12 @@ struct mttapesize {
  unsigned long mt_capacity;
  unsigned long mt_used;
 };
-#define FTFMT_SET_PARMS 1  
+#define FTFMT_SET_PARMS 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FTFMT_GET_PARMS 2  
-#define FTFMT_FORMAT_TRACK 3  
-#define FTFMT_STATUS 4  
-#define FTFMT_VERIFY 5  
+#define FTFMT_GET_PARMS 2
+#define FTFMT_FORMAT_TRACK 3
+#define FTFMT_STATUS 4
+#define FTFMT_VERIFY 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ftfmtparms {
  unsigned char ft_qicstd;
@@ -199,26 +199,26 @@ struct mtftcmd {
  int ft_status;
  int ft_error;
 };
-#define MTIOCTOP _IOW('m', 1, struct mtop)  
+#define MTIOCTOP _IOW('m', 1, struct mtop)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTIOCGET _IOR('m', 2, struct mtget)  
-#define MTIOCPOS _IOR('m', 3, struct mtpos)  
-#define MTIOCGETCONFIG _IOR('m', 4, struct mtconfiginfo)  
-#define MTIOCSETCONFIG _IOW('m', 5, struct mtconfiginfo)  
+#define MTIOCGET _IOR('m', 2, struct mtget)
+#define MTIOCPOS _IOR('m', 3, struct mtpos)
+#define MTIOCGETCONFIG _IOR('m', 4, struct mtconfiginfo)
+#define MTIOCSETCONFIG _IOW('m', 5, struct mtconfiginfo)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTIOCRDFTSEG _IOWR('m', 6, struct mtftseg)  
-#define MTIOCWRFTSEG _IOWR('m', 7, struct mtftseg)  
-#define MTIOCVOLINFO _IOR('m', 8, struct mtvolinfo)  
-#define MTIOCGETSIZE _IOR('m', 9, struct mttapesize) 
+#define MTIOCRDFTSEG _IOWR('m', 6, struct mtftseg)
+#define MTIOCWRFTSEG _IOWR('m', 7, struct mtftseg)
+#define MTIOCVOLINFO _IOR('m', 8, struct mtvolinfo)
+#define MTIOCGETSIZE _IOR('m', 9, struct mttapesize)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTIOCFTFORMAT _IOWR('m', 10, struct mtftformat)  
-#define MTIOCFTCMD _IOWR('m', 11, struct mtftcmd)  
+#define MTIOCFTFORMAT _IOWR('m', 10, struct mtftformat)
+#define MTIOCFTCMD _IOWR('m', 11, struct mtftcmd)
 #define GMT_EOF(x) ((x) & 0x80000000)
 #define GMT_BOT(x) ((x) & 0x40000000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define GMT_EOT(x) ((x) & 0x20000000)
-#define GMT_SM(x) ((x) & 0x10000000)  
-#define GMT_EOD(x) ((x) & 0x08000000)  
+#define GMT_SM(x) ((x) & 0x10000000)
+#define GMT_EOD(x) ((x) & 0x08000000)
 #define GMT_WR_PROT(x) ((x) & 0x04000000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define GMT_ONLINE(x) ((x) & 0x01000000)
@@ -226,9 +226,9 @@ struct mtftcmd {
 #define GMT_D_1600(x) ((x) & 0x00400000)
 #define GMT_D_800(x) ((x) & 0x00200000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define GMT_DR_OPEN(x) ((x) & 0x00040000)  
-#define GMT_IM_REP_EN(x) ((x) & 0x00010000)  
-#define GMT_CLN(x) ((x) & 0x00008000)  
+#define GMT_DR_OPEN(x) ((x) & 0x00040000)
+#define GMT_IM_REP_EN(x) ((x) & 0x00010000)
+#define GMT_CLN(x) ((x) & 0x00008000)
 #define MT_ST_BLKSIZE_SHIFT 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MT_ST_BLKSIZE_MASK 0xffffff

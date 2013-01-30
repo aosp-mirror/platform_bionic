@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _XT_SECMARK_H_target
 #define _XT_SECMARK_H_target
-#define SECMARK_MODE_SEL 0x01  
+#define SECMARK_MODE_SEL 0x01
 #define SECMARK_SELCTX_MAX 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_secmark_target_selinux_info {

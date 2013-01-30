@@ -89,25 +89,25 @@
 #define CP0_S1_DERRADDR0 $26
 #define CP0_S1_DERRADDR1 $27
 #define CP0_S1_INTCONTROL $20
-#define CP0_S2_SRSCTL $12  
+#define CP0_S2_SRSCTL $12
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CP0_S3_SRSMAP $12  
+#define CP0_S3_SRSMAP $12
 #define CP0_TX39_CACHE $7
 #define CP1_REVISION $0
 #define CP1_STATUS $31
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FPU_CSR_FLUSH 0x01000000  
-#define FPU_CSR_COND 0x00800000  
-#define FPU_CSR_COND0 0x00800000  
-#define FPU_CSR_COND1 0x02000000  
+#define FPU_CSR_FLUSH 0x01000000
+#define FPU_CSR_COND 0x00800000
+#define FPU_CSR_COND0 0x00800000
+#define FPU_CSR_COND1 0x02000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FPU_CSR_COND2 0x04000000  
-#define FPU_CSR_COND3 0x08000000  
-#define FPU_CSR_COND4 0x10000000  
-#define FPU_CSR_COND5 0x20000000  
+#define FPU_CSR_COND2 0x04000000
+#define FPU_CSR_COND3 0x08000000
+#define FPU_CSR_COND4 0x10000000
+#define FPU_CSR_COND5 0x20000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FPU_CSR_COND6 0x40000000  
-#define FPU_CSR_COND7 0x80000000  
+#define FPU_CSR_COND6 0x40000000
+#define FPU_CSR_COND7 0x80000000
 #define FPU_CSR_ALL_X 0x0003f000
 #define FPU_CSR_UNI_X 0x00020000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -132,11 +132,11 @@
 #define FPU_CSR_UDF_S 0x00000008
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FPU_CSR_INE_S 0x00000004
-#define FPU_CSR_RN 0x0  
-#define FPU_CSR_RZ 0x1  
-#define FPU_CSR_RU 0x2  
+#define FPU_CSR_RN 0x0
+#define FPU_CSR_RZ 0x1
+#define FPU_CSR_RU 0x2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FPU_CSR_RD 0x3  
+#define FPU_CSR_RD 0x3
 #define PM_4K 0x00000000
 #define PM_16K 0x00006000
 #define PM_64K 0x0001e000
@@ -302,7 +302,7 @@
 #define ST0_CU2 0x40000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ST0_CU3 0x80000000
-#define ST0_XX 0x80000000  
+#define ST0_XX 0x80000000
 #define CAUSEB_EXCCODE 2
 #define CAUSEF_EXCCODE (_ULCAST_(31) << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -411,7 +411,7 @@
 #define R30XX_CONF_LOCK (_ULCAST_(1) << 31)
 #define TX49_CONF_DC (_ULCAST_(1) << 16)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define TX49_CONF_IC (_ULCAST_(1) << 17)  
+#define TX49_CONF_IC (_ULCAST_(1) << 17)
 #define TX49_CONF_HALT (_ULCAST_(1) << 18)
 #define TX49_CONF_CWFON (_ULCAST_(1) << 27)
 #define MIPS_CONF_MT (_ULCAST_(7) << 7)
@@ -512,27 +512,27 @@
 #define write_c0_wired(val) __write_32bit_c0_register($6, 0, val)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define read_c0_info() __read_32bit_c0_register($7, 0)
-#define read_c0_cache() __read_32bit_c0_register($7, 0)  
+#define read_c0_cache() __read_32bit_c0_register($7, 0)
 #define write_c0_cache(val) __write_32bit_c0_register($7, 0, val)
 #define read_c0_badvaddr() __read_ulong_c0_register($8, 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define write_c0_badvaddr(val) __write_ulong_c0_register($8, 0, val)
 #define read_c0_count() __read_32bit_c0_register($9, 0)
 #define write_c0_count(val) __write_32bit_c0_register($9, 0, val)
-#define read_c0_count2() __read_32bit_c0_register($9, 6)  
+#define read_c0_count2() __read_32bit_c0_register($9, 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define write_c0_count2(val) __write_32bit_c0_register($9, 6, val)
-#define read_c0_count3() __read_32bit_c0_register($9, 7)  
+#define read_c0_count3() __read_32bit_c0_register($9, 7)
 #define write_c0_count3(val) __write_32bit_c0_register($9, 7, val)
 #define read_c0_entryhi() __read_ulong_c0_register($10, 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define write_c0_entryhi(val) __write_ulong_c0_register($10, 0, val)
 #define read_c0_compare() __read_32bit_c0_register($11, 0)
 #define write_c0_compare(val) __write_32bit_c0_register($11, 0, val)
-#define read_c0_compare2() __read_32bit_c0_register($11, 6)  
+#define read_c0_compare2() __read_32bit_c0_register($11, 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define write_c0_compare2(val) __write_32bit_c0_register($11, 6, val)
-#define read_c0_compare3() __read_32bit_c0_register($11, 7)  
+#define read_c0_compare3() __read_32bit_c0_register($11, 7)
 #define write_c0_compare3(val) __write_32bit_c0_register($11, 7, val)
 #define read_c0_status() __read_32bit_c0_register($12, 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

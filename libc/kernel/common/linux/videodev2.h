@@ -26,23 +26,23 @@
 #define VIDEO_MAX_FRAME 32
 #define VIDEO_MAX_PLANES 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VID_TYPE_CAPTURE 1  
-#define VID_TYPE_TUNER 2  
-#define VID_TYPE_TELETEXT 4  
-#define VID_TYPE_OVERLAY 8  
+#define VID_TYPE_CAPTURE 1
+#define VID_TYPE_TUNER 2
+#define VID_TYPE_TELETEXT 4
+#define VID_TYPE_OVERLAY 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VID_TYPE_CHROMAKEY 16  
-#define VID_TYPE_CLIPPING 32  
-#define VID_TYPE_FRAMERAM 64  
-#define VID_TYPE_SCALES 128  
+#define VID_TYPE_CHROMAKEY 16
+#define VID_TYPE_CLIPPING 32
+#define VID_TYPE_FRAMERAM 64
+#define VID_TYPE_SCALES 128
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VID_TYPE_MONOCHROME 256  
-#define VID_TYPE_SUBCAPTURE 512  
-#define VID_TYPE_MPEG_DECODER 1024  
-#define VID_TYPE_MPEG_ENCODER 2048  
+#define VID_TYPE_MONOCHROME 256
+#define VID_TYPE_SUBCAPTURE 512
+#define VID_TYPE_MPEG_DECODER 1024
+#define VID_TYPE_MPEG_ENCODER 2048
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VID_TYPE_MJPEG_DECODER 4096  
-#define VID_TYPE_MJPEG_ENCODER 8192  
+#define VID_TYPE_MJPEG_DECODER 4096
+#define VID_TYPE_MJPEG_ENCODER 8192
 #define v4l2_fourcc(a, b, c, d)  ((__u32)(a) | ((__u32)(b) << 8) | ((__u32)(c) << 16) | ((__u32)(d) << 24))
 enum v4l2_field {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -139,32 +139,32 @@ struct v4l2_capability {
  __u32 device_caps;
  __u32 reserved[3];
 };
-#define V4L2_CAP_VIDEO_CAPTURE 0x00000001  
+#define V4L2_CAP_VIDEO_CAPTURE 0x00000001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CAP_VIDEO_OUTPUT 0x00000002  
-#define V4L2_CAP_VIDEO_OVERLAY 0x00000004  
-#define V4L2_CAP_VBI_CAPTURE 0x00000010  
-#define V4L2_CAP_VBI_OUTPUT 0x00000020  
+#define V4L2_CAP_VIDEO_OUTPUT 0x00000002
+#define V4L2_CAP_VIDEO_OVERLAY 0x00000004
+#define V4L2_CAP_VBI_CAPTURE 0x00000010
+#define V4L2_CAP_VBI_OUTPUT 0x00000020
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CAP_SLICED_VBI_CAPTURE 0x00000040  
-#define V4L2_CAP_SLICED_VBI_OUTPUT 0x00000080  
-#define V4L2_CAP_RDS_CAPTURE 0x00000100  
-#define V4L2_CAP_VIDEO_OUTPUT_OVERLAY 0x00000200  
+#define V4L2_CAP_SLICED_VBI_CAPTURE 0x00000040
+#define V4L2_CAP_SLICED_VBI_OUTPUT 0x00000080
+#define V4L2_CAP_RDS_CAPTURE 0x00000100
+#define V4L2_CAP_VIDEO_OUTPUT_OVERLAY 0x00000200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CAP_HW_FREQ_SEEK 0x00000400  
-#define V4L2_CAP_RDS_OUTPUT 0x00000800  
+#define V4L2_CAP_HW_FREQ_SEEK 0x00000400
+#define V4L2_CAP_RDS_OUTPUT 0x00000800
 #define V4L2_CAP_VIDEO_CAPTURE_MPLANE 0x00001000
 #define V4L2_CAP_VIDEO_OUTPUT_MPLANE 0x00002000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CAP_TUNER 0x00010000  
-#define V4L2_CAP_AUDIO 0x00020000  
-#define V4L2_CAP_RADIO 0x00040000  
-#define V4L2_CAP_MODULATOR 0x00080000  
+#define V4L2_CAP_TUNER 0x00010000
+#define V4L2_CAP_AUDIO 0x00020000
+#define V4L2_CAP_RADIO 0x00040000
+#define V4L2_CAP_MODULATOR 0x00080000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CAP_READWRITE 0x01000000  
-#define V4L2_CAP_ASYNCIO 0x02000000  
-#define V4L2_CAP_STREAMING 0x04000000  
-#define V4L2_CAP_DEVICE_CAPS 0x80000000  
+#define V4L2_CAP_READWRITE 0x01000000
+#define V4L2_CAP_ASYNCIO 0x02000000
+#define V4L2_CAP_STREAMING 0x04000000
+#define V4L2_CAP_DEVICE_CAPS 0x80000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_pix_format {
  __u32 width;
@@ -178,132 +178,132 @@ struct v4l2_pix_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 priv;
 };
-#define V4L2_PIX_FMT_RGB332 v4l2_fourcc('R', 'G', 'B', '1')  
-#define V4L2_PIX_FMT_RGB444 v4l2_fourcc('R', '4', '4', '4')  
+#define V4L2_PIX_FMT_RGB332 v4l2_fourcc('R', 'G', 'B', '1')
+#define V4L2_PIX_FMT_RGB444 v4l2_fourcc('R', '4', '4', '4')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_RGB555 v4l2_fourcc('R', 'G', 'B', 'O')  
-#define V4L2_PIX_FMT_RGB565 v4l2_fourcc('R', 'G', 'B', 'P')  
-#define V4L2_PIX_FMT_RGB555X v4l2_fourcc('R', 'G', 'B', 'Q')  
-#define V4L2_PIX_FMT_RGB565X v4l2_fourcc('R', 'G', 'B', 'R')  
+#define V4L2_PIX_FMT_RGB555 v4l2_fourcc('R', 'G', 'B', 'O')
+#define V4L2_PIX_FMT_RGB565 v4l2_fourcc('R', 'G', 'B', 'P')
+#define V4L2_PIX_FMT_RGB555X v4l2_fourcc('R', 'G', 'B', 'Q')
+#define V4L2_PIX_FMT_RGB565X v4l2_fourcc('R', 'G', 'B', 'R')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_BGR666 v4l2_fourcc('B', 'G', 'R', 'H')  
-#define V4L2_PIX_FMT_BGR24 v4l2_fourcc('B', 'G', 'R', '3')  
-#define V4L2_PIX_FMT_RGB24 v4l2_fourcc('R', 'G', 'B', '3')  
-#define V4L2_PIX_FMT_BGR32 v4l2_fourcc('B', 'G', 'R', '4')  
+#define V4L2_PIX_FMT_BGR666 v4l2_fourcc('B', 'G', 'R', 'H')
+#define V4L2_PIX_FMT_BGR24 v4l2_fourcc('B', 'G', 'R', '3')
+#define V4L2_PIX_FMT_RGB24 v4l2_fourcc('R', 'G', 'B', '3')
+#define V4L2_PIX_FMT_BGR32 v4l2_fourcc('B', 'G', 'R', '4')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_RGB32 v4l2_fourcc('R', 'G', 'B', '4')  
-#define V4L2_PIX_FMT_GREY v4l2_fourcc('G', 'R', 'E', 'Y')  
-#define V4L2_PIX_FMT_Y4 v4l2_fourcc('Y', '0', '4', ' ')  
-#define V4L2_PIX_FMT_Y6 v4l2_fourcc('Y', '0', '6', ' ')  
+#define V4L2_PIX_FMT_RGB32 v4l2_fourcc('R', 'G', 'B', '4')
+#define V4L2_PIX_FMT_GREY v4l2_fourcc('G', 'R', 'E', 'Y')
+#define V4L2_PIX_FMT_Y4 v4l2_fourcc('Y', '0', '4', ' ')
+#define V4L2_PIX_FMT_Y6 v4l2_fourcc('Y', '0', '6', ' ')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_Y10 v4l2_fourcc('Y', '1', '0', ' ')  
-#define V4L2_PIX_FMT_Y12 v4l2_fourcc('Y', '1', '2', ' ')  
-#define V4L2_PIX_FMT_Y16 v4l2_fourcc('Y', '1', '6', ' ')  
-#define V4L2_PIX_FMT_Y10BPACK v4l2_fourcc('Y', '1', '0', 'B')  
+#define V4L2_PIX_FMT_Y10 v4l2_fourcc('Y', '1', '0', ' ')
+#define V4L2_PIX_FMT_Y12 v4l2_fourcc('Y', '1', '2', ' ')
+#define V4L2_PIX_FMT_Y16 v4l2_fourcc('Y', '1', '6', ' ')
+#define V4L2_PIX_FMT_Y10BPACK v4l2_fourcc('Y', '1', '0', 'B')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_PAL8 v4l2_fourcc('P', 'A', 'L', '8')  
-#define V4L2_PIX_FMT_YVU410 v4l2_fourcc('Y', 'V', 'U', '9')  
-#define V4L2_PIX_FMT_YVU420 v4l2_fourcc('Y', 'V', '1', '2')  
-#define V4L2_PIX_FMT_YUYV v4l2_fourcc('Y', 'U', 'Y', 'V')  
+#define V4L2_PIX_FMT_PAL8 v4l2_fourcc('P', 'A', 'L', '8')
+#define V4L2_PIX_FMT_YVU410 v4l2_fourcc('Y', 'V', 'U', '9')
+#define V4L2_PIX_FMT_YVU420 v4l2_fourcc('Y', 'V', '1', '2')
+#define V4L2_PIX_FMT_YUYV v4l2_fourcc('Y', 'U', 'Y', 'V')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YYUV v4l2_fourcc('Y', 'Y', 'U', 'V')  
-#define V4L2_PIX_FMT_YVYU v4l2_fourcc('Y', 'V', 'Y', 'U')  
-#define V4L2_PIX_FMT_UYVY v4l2_fourcc('U', 'Y', 'V', 'Y')  
-#define V4L2_PIX_FMT_VYUY v4l2_fourcc('V', 'Y', 'U', 'Y')  
+#define V4L2_PIX_FMT_YYUV v4l2_fourcc('Y', 'Y', 'U', 'V')
+#define V4L2_PIX_FMT_YVYU v4l2_fourcc('Y', 'V', 'Y', 'U')
+#define V4L2_PIX_FMT_UYVY v4l2_fourcc('U', 'Y', 'V', 'Y')
+#define V4L2_PIX_FMT_VYUY v4l2_fourcc('V', 'Y', 'U', 'Y')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV422P v4l2_fourcc('4', '2', '2', 'P')  
-#define V4L2_PIX_FMT_YUV411P v4l2_fourcc('4', '1', '1', 'P')  
-#define V4L2_PIX_FMT_Y41P v4l2_fourcc('Y', '4', '1', 'P')  
-#define V4L2_PIX_FMT_YUV444 v4l2_fourcc('Y', '4', '4', '4')  
+#define V4L2_PIX_FMT_YUV422P v4l2_fourcc('4', '2', '2', 'P')
+#define V4L2_PIX_FMT_YUV411P v4l2_fourcc('4', '1', '1', 'P')
+#define V4L2_PIX_FMT_Y41P v4l2_fourcc('Y', '4', '1', 'P')
+#define V4L2_PIX_FMT_YUV444 v4l2_fourcc('Y', '4', '4', '4')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV555 v4l2_fourcc('Y', 'U', 'V', 'O')  
-#define V4L2_PIX_FMT_YUV565 v4l2_fourcc('Y', 'U', 'V', 'P')  
-#define V4L2_PIX_FMT_YUV32 v4l2_fourcc('Y', 'U', 'V', '4')  
-#define V4L2_PIX_FMT_YUV410 v4l2_fourcc('Y', 'U', 'V', '9')  
+#define V4L2_PIX_FMT_YUV555 v4l2_fourcc('Y', 'U', 'V', 'O')
+#define V4L2_PIX_FMT_YUV565 v4l2_fourcc('Y', 'U', 'V', 'P')
+#define V4L2_PIX_FMT_YUV32 v4l2_fourcc('Y', 'U', 'V', '4')
+#define V4L2_PIX_FMT_YUV410 v4l2_fourcc('Y', 'U', 'V', '9')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV420 v4l2_fourcc('Y', 'U', '1', '2')  
-#define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')  
-#define V4L2_PIX_FMT_HM12 v4l2_fourcc('H', 'M', '1', '2')  
-#define V4L2_PIX_FMT_M420 v4l2_fourcc('M', '4', '2', '0')  
+#define V4L2_PIX_FMT_YUV420 v4l2_fourcc('Y', 'U', '1', '2')
+#define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')
+#define V4L2_PIX_FMT_HM12 v4l2_fourcc('H', 'M', '1', '2')
+#define V4L2_PIX_FMT_M420 v4l2_fourcc('M', '4', '2', '0')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_NV12 v4l2_fourcc('N', 'V', '1', '2')  
-#define V4L2_PIX_FMT_NV21 v4l2_fourcc('N', 'V', '2', '1')  
-#define V4L2_PIX_FMT_NV16 v4l2_fourcc('N', 'V', '1', '6')  
-#define V4L2_PIX_FMT_NV61 v4l2_fourcc('N', 'V', '6', '1')  
+#define V4L2_PIX_FMT_NV12 v4l2_fourcc('N', 'V', '1', '2')
+#define V4L2_PIX_FMT_NV21 v4l2_fourcc('N', 'V', '2', '1')
+#define V4L2_PIX_FMT_NV16 v4l2_fourcc('N', 'V', '1', '6')
+#define V4L2_PIX_FMT_NV61 v4l2_fourcc('N', 'V', '6', '1')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_NV24 v4l2_fourcc('N', 'V', '2', '4')  
-#define V4L2_PIX_FMT_NV42 v4l2_fourcc('N', 'V', '4', '2')  
-#define V4L2_PIX_FMT_NV12M v4l2_fourcc('N', 'M', '1', '2')  
-#define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')  
+#define V4L2_PIX_FMT_NV24 v4l2_fourcc('N', 'V', '2', '4')
+#define V4L2_PIX_FMT_NV42 v4l2_fourcc('N', 'V', '4', '2')
+#define V4L2_PIX_FMT_NV12M v4l2_fourcc('N', 'M', '1', '2')
+#define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV420M v4l2_fourcc('Y', 'M', '1', '2')  
-#define V4L2_PIX_FMT_SBGGR8 v4l2_fourcc('B', 'A', '8', '1')  
-#define V4L2_PIX_FMT_SGBRG8 v4l2_fourcc('G', 'B', 'R', 'G')  
-#define V4L2_PIX_FMT_SGRBG8 v4l2_fourcc('G', 'R', 'B', 'G')  
+#define V4L2_PIX_FMT_YUV420M v4l2_fourcc('Y', 'M', '1', '2')
+#define V4L2_PIX_FMT_SBGGR8 v4l2_fourcc('B', 'A', '8', '1')
+#define V4L2_PIX_FMT_SGBRG8 v4l2_fourcc('G', 'B', 'R', 'G')
+#define V4L2_PIX_FMT_SGRBG8 v4l2_fourcc('G', 'R', 'B', 'G')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_SRGGB8 v4l2_fourcc('R', 'G', 'G', 'B')  
-#define V4L2_PIX_FMT_SBGGR10 v4l2_fourcc('B', 'G', '1', '0')  
-#define V4L2_PIX_FMT_SGBRG10 v4l2_fourcc('G', 'B', '1', '0')  
-#define V4L2_PIX_FMT_SGRBG10 v4l2_fourcc('B', 'A', '1', '0')  
+#define V4L2_PIX_FMT_SRGGB8 v4l2_fourcc('R', 'G', 'G', 'B')
+#define V4L2_PIX_FMT_SBGGR10 v4l2_fourcc('B', 'G', '1', '0')
+#define V4L2_PIX_FMT_SGBRG10 v4l2_fourcc('G', 'B', '1', '0')
+#define V4L2_PIX_FMT_SGRBG10 v4l2_fourcc('B', 'A', '1', '0')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_SRGGB10 v4l2_fourcc('R', 'G', '1', '0')  
-#define V4L2_PIX_FMT_SBGGR12 v4l2_fourcc('B', 'G', '1', '2')  
-#define V4L2_PIX_FMT_SGBRG12 v4l2_fourcc('G', 'B', '1', '2')  
-#define V4L2_PIX_FMT_SGRBG12 v4l2_fourcc('B', 'A', '1', '2')  
+#define V4L2_PIX_FMT_SRGGB10 v4l2_fourcc('R', 'G', '1', '0')
+#define V4L2_PIX_FMT_SBGGR12 v4l2_fourcc('B', 'G', '1', '2')
+#define V4L2_PIX_FMT_SGBRG12 v4l2_fourcc('G', 'B', '1', '2')
+#define V4L2_PIX_FMT_SGRBG12 v4l2_fourcc('B', 'A', '1', '2')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_SRGGB12 v4l2_fourcc('R', 'G', '1', '2')  
+#define V4L2_PIX_FMT_SRGGB12 v4l2_fourcc('R', 'G', '1', '2')
 #define V4L2_PIX_FMT_SGRBG10DPCM8 v4l2_fourcc('B', 'D', '1', '0')
-#define V4L2_PIX_FMT_SBGGR16 v4l2_fourcc('B', 'Y', 'R', '2')  
-#define V4L2_PIX_FMT_MJPEG v4l2_fourcc('M', 'J', 'P', 'G')  
+#define V4L2_PIX_FMT_SBGGR16 v4l2_fourcc('B', 'Y', 'R', '2')
+#define V4L2_PIX_FMT_MJPEG v4l2_fourcc('M', 'J', 'P', 'G')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_JPEG v4l2_fourcc('J', 'P', 'E', 'G')  
-#define V4L2_PIX_FMT_DV v4l2_fourcc('d', 'v', 's', 'd')  
-#define V4L2_PIX_FMT_MPEG v4l2_fourcc('M', 'P', 'E', 'G')  
-#define V4L2_PIX_FMT_H264 v4l2_fourcc('H', '2', '6', '4')  
+#define V4L2_PIX_FMT_JPEG v4l2_fourcc('J', 'P', 'E', 'G')
+#define V4L2_PIX_FMT_DV v4l2_fourcc('d', 'v', 's', 'd')
+#define V4L2_PIX_FMT_MPEG v4l2_fourcc('M', 'P', 'E', 'G')
+#define V4L2_PIX_FMT_H264 v4l2_fourcc('H', '2', '6', '4')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_H264_NO_SC v4l2_fourcc('A', 'V', 'C', '1')  
-#define V4L2_PIX_FMT_H263 v4l2_fourcc('H', '2', '6', '3')  
-#define V4L2_PIX_FMT_MPEG1 v4l2_fourcc('M', 'P', 'G', '1')  
-#define V4L2_PIX_FMT_MPEG2 v4l2_fourcc('M', 'P', 'G', '2')  
+#define V4L2_PIX_FMT_H264_NO_SC v4l2_fourcc('A', 'V', 'C', '1')
+#define V4L2_PIX_FMT_H263 v4l2_fourcc('H', '2', '6', '3')
+#define V4L2_PIX_FMT_MPEG1 v4l2_fourcc('M', 'P', 'G', '1')
+#define V4L2_PIX_FMT_MPEG2 v4l2_fourcc('M', 'P', 'G', '2')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_MPEG4 v4l2_fourcc('M', 'P', 'G', '4')  
-#define V4L2_PIX_FMT_XVID v4l2_fourcc('X', 'V', 'I', 'D')  
-#define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G')  
-#define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L')  
+#define V4L2_PIX_FMT_MPEG4 v4l2_fourcc('M', 'P', 'G', '4')
+#define V4L2_PIX_FMT_XVID v4l2_fourcc('X', 'V', 'I', 'D')
+#define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G')
+#define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_DIVX_311 v4l2_fourcc('D', 'I', 'V', '3')  
-#define V4L2_PIX_FMT_DIVX v4l2_fourcc('D', 'I', 'V', 'X')  
-#define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')  
-#define V4L2_PIX_FMT_CPIA1 v4l2_fourcc('C', 'P', 'I', 'A')  
+#define V4L2_PIX_FMT_DIVX_311 v4l2_fourcc('D', 'I', 'V', '3')
+#define V4L2_PIX_FMT_DIVX v4l2_fourcc('D', 'I', 'V', 'X')
+#define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')
+#define V4L2_PIX_FMT_CPIA1 v4l2_fourcc('C', 'P', 'I', 'A')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_WNVA v4l2_fourcc('W', 'N', 'V', 'A')  
-#define V4L2_PIX_FMT_SN9C10X v4l2_fourcc('S', '9', '1', '0')  
-#define V4L2_PIX_FMT_SN9C20X_I420 v4l2_fourcc('S', '9', '2', '0')  
-#define V4L2_PIX_FMT_PWC1 v4l2_fourcc('P', 'W', 'C', '1')  
+#define V4L2_PIX_FMT_WNVA v4l2_fourcc('W', 'N', 'V', 'A')
+#define V4L2_PIX_FMT_SN9C10X v4l2_fourcc('S', '9', '1', '0')
+#define V4L2_PIX_FMT_SN9C20X_I420 v4l2_fourcc('S', '9', '2', '0')
+#define V4L2_PIX_FMT_PWC1 v4l2_fourcc('P', 'W', 'C', '1')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_PWC2 v4l2_fourcc('P', 'W', 'C', '2')  
-#define V4L2_PIX_FMT_ET61X251 v4l2_fourcc('E', '6', '2', '5')  
-#define V4L2_PIX_FMT_SPCA501 v4l2_fourcc('S', '5', '0', '1')  
-#define V4L2_PIX_FMT_SPCA505 v4l2_fourcc('S', '5', '0', '5')  
+#define V4L2_PIX_FMT_PWC2 v4l2_fourcc('P', 'W', 'C', '2')
+#define V4L2_PIX_FMT_ET61X251 v4l2_fourcc('E', '6', '2', '5')
+#define V4L2_PIX_FMT_SPCA501 v4l2_fourcc('S', '5', '0', '1')
+#define V4L2_PIX_FMT_SPCA505 v4l2_fourcc('S', '5', '0', '5')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_SPCA508 v4l2_fourcc('S', '5', '0', '8')  
-#define V4L2_PIX_FMT_SPCA561 v4l2_fourcc('S', '5', '6', '1')  
-#define V4L2_PIX_FMT_PAC207 v4l2_fourcc('P', '2', '0', '7')  
-#define V4L2_PIX_FMT_MR97310A v4l2_fourcc('M', '3', '1', '0')  
+#define V4L2_PIX_FMT_SPCA508 v4l2_fourcc('S', '5', '0', '8')
+#define V4L2_PIX_FMT_SPCA561 v4l2_fourcc('S', '5', '6', '1')
+#define V4L2_PIX_FMT_PAC207 v4l2_fourcc('P', '2', '0', '7')
+#define V4L2_PIX_FMT_MR97310A v4l2_fourcc('M', '3', '1', '0')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_JL2005BCD v4l2_fourcc('J', 'L', '2', '0')  
-#define V4L2_PIX_FMT_SN9C2028 v4l2_fourcc('S', 'O', 'N', 'X')  
-#define V4L2_PIX_FMT_SQ905C v4l2_fourcc('9', '0', '5', 'C')  
-#define V4L2_PIX_FMT_PJPG v4l2_fourcc('P', 'J', 'P', 'G')  
+#define V4L2_PIX_FMT_JL2005BCD v4l2_fourcc('J', 'L', '2', '0')
+#define V4L2_PIX_FMT_SN9C2028 v4l2_fourcc('S', 'O', 'N', 'X')
+#define V4L2_PIX_FMT_SQ905C v4l2_fourcc('9', '0', '5', 'C')
+#define V4L2_PIX_FMT_PJPG v4l2_fourcc('P', 'J', 'P', 'G')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_OV511 v4l2_fourcc('O', '5', '1', '1')  
-#define V4L2_PIX_FMT_OV518 v4l2_fourcc('O', '5', '1', '8')  
-#define V4L2_PIX_FMT_STV0680 v4l2_fourcc('S', '6', '8', '0')  
-#define V4L2_PIX_FMT_TM6000 v4l2_fourcc('T', 'M', '6', '0')  
+#define V4L2_PIX_FMT_OV511 v4l2_fourcc('O', '5', '1', '1')
+#define V4L2_PIX_FMT_OV518 v4l2_fourcc('O', '5', '1', '8')
+#define V4L2_PIX_FMT_STV0680 v4l2_fourcc('S', '6', '8', '0')
+#define V4L2_PIX_FMT_TM6000 v4l2_fourcc('T', 'M', '6', '0')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_CIT_YYVYUY v4l2_fourcc('C', 'I', 'T', 'V')  
-#define V4L2_PIX_FMT_KONICA420 v4l2_fourcc('K', 'O', 'N', 'I')  
-#define V4L2_PIX_FMT_JPGL v4l2_fourcc('J', 'P', 'G', 'L')  
+#define V4L2_PIX_FMT_CIT_YYVYUY v4l2_fourcc('C', 'I', 'T', 'V')
+#define V4L2_PIX_FMT_KONICA420 v4l2_fourcc('K', 'O', 'N', 'I')
+#define V4L2_PIX_FMT_JPGL v4l2_fourcc('J', 'P', 'G', 'L')
 #define V4L2_PIX_FMT_SE401 v4l2_fourcc('S', '4', '0', '1')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_STATS_COMB v4l2_fourcc('S', 'T', 'C', 'M')
@@ -409,7 +409,7 @@ struct v4l2_timecode {
 #define V4L2_TC_TYPE_30FPS 3
 #define V4L2_TC_TYPE_50FPS 4
 #define V4L2_TC_TYPE_60FPS 5
-#define V4L2_TC_FLAG_DROPFRAME 0x0001  
+#define V4L2_TC_FLAG_DROPFRAME 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_TC_FLAG_COLORFRAME 0x0002
 #define V4L2_TC_USERBITS_field 0x000C
@@ -426,12 +426,12 @@ struct v4l2_jpegcompression {
  char COM_data[60];
  __u32 jpeg_markers;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_JPEG_MARKER_DHT (1<<3)  
-#define V4L2_JPEG_MARKER_DQT (1<<4)  
-#define V4L2_JPEG_MARKER_DRI (1<<5)  
-#define V4L2_JPEG_MARKER_COM (1<<6)  
+#define V4L2_JPEG_MARKER_DHT (1<<3)
+#define V4L2_JPEG_MARKER_DQT (1<<4)
+#define V4L2_JPEG_MARKER_DRI (1<<5)
+#define V4L2_JPEG_MARKER_COM (1<<6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_JPEG_MARKER_APP (1<<7)  
+#define V4L2_JPEG_MARKER_APP (1<<7)
 };
 struct v4l2_requestbuffers {
  __u32 count;
@@ -477,18 +477,18 @@ struct v4l2_buffer {
  __u32 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define V4L2_BUF_FLAG_MAPPED 0x0001  
-#define V4L2_BUF_FLAG_QUEUED 0x0002  
-#define V4L2_BUF_FLAG_DONE 0x0004  
+#define V4L2_BUF_FLAG_MAPPED 0x0001
+#define V4L2_BUF_FLAG_QUEUED 0x0002
+#define V4L2_BUF_FLAG_DONE 0x0004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_BUF_FLAG_KEYFRAME 0x0008  
-#define V4L2_BUF_FLAG_PFRAME 0x0010  
-#define V4L2_BUF_FLAG_BFRAME 0x0020  
+#define V4L2_BUF_FLAG_KEYFRAME 0x0008
+#define V4L2_BUF_FLAG_PFRAME 0x0010
+#define V4L2_BUF_FLAG_BFRAME 0x0020
 #define V4L2_BUF_FLAG_ERROR 0x0040
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_BUF_FLAG_TIMECODE 0x0100  
-#define V4L2_BUF_FLAG_INPUT 0x0200  
-#define V4L2_BUF_FLAG_PREPARED 0x0400  
+#define V4L2_BUF_FLAG_TIMECODE 0x0100
+#define V4L2_BUF_FLAG_INPUT 0x0200
+#define V4L2_BUF_FLAG_PREPARED 0x0400
 #define V4L2_BUF_FLAG_NO_CACHE_INVALIDATE 0x0800
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_BUF_FLAG_NO_CACHE_CLEAN 0x1000
@@ -546,9 +546,9 @@ struct v4l2_captureparm {
  __u32 reserved[4];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_MODE_HIGHQUALITY 0x0001  
-#define V4L2_CAP_TIMEPERFRAME 0x1000  
-#define V4L2_CAP_QCOM_FRAMESKIP 0x2000  
+#define V4L2_MODE_HIGHQUALITY 0x0001
+#define V4L2_CAP_TIMEPERFRAME 0x1000
+#define V4L2_CAP_QCOM_FRAMESKIP 0x2000
 struct v4l2_qcom_frameskip {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u64 maxframeinterval;
@@ -612,11 +612,11 @@ typedef __u64 v4l2_std_id;
 #define V4L2_STD_PAL_Nc ((v4l2_std_id)0x00000400)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_STD_PAL_60 ((v4l2_std_id)0x00000800)
-#define V4L2_STD_NTSC_M ((v4l2_std_id)0x00001000)  
-#define V4L2_STD_NTSC_M_JP ((v4l2_std_id)0x00002000)  
+#define V4L2_STD_NTSC_M ((v4l2_std_id)0x00001000)
+#define V4L2_STD_NTSC_M_JP ((v4l2_std_id)0x00002000)
 #define V4L2_STD_NTSC_443 ((v4l2_std_id)0x00004000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_NTSC_M_KR ((v4l2_std_id)0x00008000)  
+#define V4L2_STD_NTSC_M_KR ((v4l2_std_id)0x00008000)
 #define V4L2_STD_SECAM_B ((v4l2_std_id)0x00010000)
 #define V4L2_STD_SECAM_D ((v4l2_std_id)0x00020000)
 #define V4L2_STD_SECAM_G ((v4l2_std_id)0x00040000)
@@ -681,28 +681,28 @@ struct v4l2_dv_enum_preset {
 };
 #define V4L2_DV_INVALID 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_480P59_94 1  
-#define V4L2_DV_576P50 2  
-#define V4L2_DV_720P24 3  
-#define V4L2_DV_720P25 4  
+#define V4L2_DV_480P59_94 1
+#define V4L2_DV_576P50 2
+#define V4L2_DV_720P24 3
+#define V4L2_DV_720P25 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_720P30 5  
-#define V4L2_DV_720P50 6  
-#define V4L2_DV_720P59_94 7  
-#define V4L2_DV_720P60 8  
+#define V4L2_DV_720P30 5
+#define V4L2_DV_720P50 6
+#define V4L2_DV_720P59_94 7
+#define V4L2_DV_720P60 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_1080I29_97 9  
-#define V4L2_DV_1080I30 10  
-#define V4L2_DV_1080I25 11  
-#define V4L2_DV_1080I50 12  
+#define V4L2_DV_1080I29_97 9
+#define V4L2_DV_1080I30 10
+#define V4L2_DV_1080I25 11
+#define V4L2_DV_1080I50 12
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_1080I60 13  
-#define V4L2_DV_1080P24 14  
-#define V4L2_DV_1080P25 15  
-#define V4L2_DV_1080P30 16  
+#define V4L2_DV_1080I60 13
+#define V4L2_DV_1080P24 14
+#define V4L2_DV_1080P25 15
+#define V4L2_DV_1080P30 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_1080P50 17  
-#define V4L2_DV_1080P60 18  
+#define V4L2_DV_1080P50 17
+#define V4L2_DV_1080P60 18
 struct v4l2_bt_timings {
  __u32 width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -738,7 +738,7 @@ struct v4l2_dv_timings {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  };
 } __attribute__ ((packed));
-#define V4L2_DV_BT_656_1120 0  
+#define V4L2_DV_BT_656_1120 0
 struct v4l2_input {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 index;
@@ -756,25 +756,25 @@ struct v4l2_input {
 #define V4L2_INPUT_TYPE_TUNER 1
 #define V4L2_INPUT_TYPE_CAMERA 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_IN_ST_NO_POWER 0x00000001  
+#define V4L2_IN_ST_NO_POWER 0x00000001
 #define V4L2_IN_ST_NO_SIGNAL 0x00000002
 #define V4L2_IN_ST_NO_COLOR 0x00000004
-#define V4L2_IN_ST_HFLIP 0x00000010  
+#define V4L2_IN_ST_HFLIP 0x00000010
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_IN_ST_VFLIP 0x00000020  
-#define V4L2_IN_ST_NO_H_LOCK 0x00000100  
-#define V4L2_IN_ST_COLOR_KILL 0x00000200  
-#define V4L2_IN_ST_NO_SYNC 0x00010000  
+#define V4L2_IN_ST_VFLIP 0x00000020
+#define V4L2_IN_ST_NO_H_LOCK 0x00000100
+#define V4L2_IN_ST_COLOR_KILL 0x00000200
+#define V4L2_IN_ST_NO_SYNC 0x00010000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_IN_ST_NO_EQU 0x00020000  
-#define V4L2_IN_ST_NO_CARRIER 0x00040000  
-#define V4L2_IN_ST_MACROVISION 0x01000000  
-#define V4L2_IN_ST_NO_ACCESS 0x02000000  
+#define V4L2_IN_ST_NO_EQU 0x00020000
+#define V4L2_IN_ST_NO_CARRIER 0x00040000
+#define V4L2_IN_ST_MACROVISION 0x01000000
+#define V4L2_IN_ST_NO_ACCESS 0x02000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_IN_ST_VTR 0x04000000  
-#define V4L2_IN_CAP_PRESETS 0x00000001  
-#define V4L2_IN_CAP_CUSTOM_TIMINGS 0x00000002  
-#define V4L2_IN_CAP_STD 0x00000004  
+#define V4L2_IN_ST_VTR 0x04000000
+#define V4L2_IN_CAP_PRESETS 0x00000001
+#define V4L2_IN_CAP_CUSTOM_TIMINGS 0x00000002
+#define V4L2_IN_CAP_STD 0x00000004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_output {
  __u32 index;
@@ -792,9 +792,9 @@ struct v4l2_output {
 #define V4L2_OUTPUT_TYPE_ANALOG 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_OUTPUT_TYPE_ANALOGVGAOVERLAY 3
-#define V4L2_OUT_CAP_PRESETS 0x00000001  
-#define V4L2_OUT_CAP_CUSTOM_TIMINGS 0x00000002  
-#define V4L2_OUT_CAP_STD 0x00000004  
+#define V4L2_OUT_CAP_PRESETS 0x00000001
+#define V4L2_OUT_CAP_CUSTOM_TIMINGS 0x00000002
+#define V4L2_OUT_CAP_STD 0x00000004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_control {
  __u32 id;
@@ -822,13 +822,13 @@ struct v4l2_ext_controls {
  struct v4l2_ext_control *controls;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define V4L2_CTRL_CLASS_USER 0x00980000  
-#define V4L2_CTRL_CLASS_MPEG 0x00990000  
-#define V4L2_CTRL_CLASS_CAMERA 0x009a0000  
+#define V4L2_CTRL_CLASS_USER 0x00980000
+#define V4L2_CTRL_CLASS_MPEG 0x00990000
+#define V4L2_CTRL_CLASS_CAMERA 0x009a0000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CTRL_CLASS_FM_TX 0x009b0000  
-#define V4L2_CTRL_CLASS_FLASH 0x009c0000  
-#define V4L2_CTRL_CLASS_JPEG 0x009d0000  
+#define V4L2_CTRL_CLASS_FM_TX 0x009b0000
+#define V4L2_CTRL_CLASS_FLASH 0x009c0000
+#define V4L2_CTRL_CLASS_JPEG 0x009d0000
 #define V4L2_CTRL_ID_MASK (0x0fffffff)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CTRL_ID2CLASS(id) ((id) & 0x0fff0000UL)
@@ -897,14 +897,14 @@ struct v4l2_querymenu {
 #define V4L2_CID_AUDIO_MUTE (V4L2_CID_BASE+9)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CID_AUDIO_LOUDNESS (V4L2_CID_BASE+10)
-#define V4L2_CID_BLACK_LEVEL (V4L2_CID_BASE+11)  
+#define V4L2_CID_BLACK_LEVEL (V4L2_CID_BASE+11)
 #define V4L2_CID_AUTO_WHITE_BALANCE (V4L2_CID_BASE+12)
 #define V4L2_CID_DO_WHITE_BALANCE (V4L2_CID_BASE+13)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CID_RED_BALANCE (V4L2_CID_BASE+14)
 #define V4L2_CID_BLUE_BALANCE (V4L2_CID_BASE+15)
 #define V4L2_CID_GAMMA (V4L2_CID_BASE+16)
-#define V4L2_CID_WHITENESS (V4L2_CID_GAMMA)  
+#define V4L2_CID_WHITENESS (V4L2_CID_GAMMA)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CID_EXPOSURE (V4L2_CID_BASE+17)
 #define V4L2_CID_AUTOGAIN (V4L2_CID_BASE+18)
@@ -2041,10 +2041,10 @@ struct v4l2_event_subscription {
  __u32 reserved[5];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_CHIP_MATCH_HOST 0  
-#define V4L2_CHIP_MATCH_I2C_DRIVER 1  
-#define V4L2_CHIP_MATCH_I2C_ADDR 2  
-#define V4L2_CHIP_MATCH_AC97 3  
+#define V4L2_CHIP_MATCH_HOST 0
+#define V4L2_CHIP_MATCH_I2C_DRIVER 1
+#define V4L2_CHIP_MATCH_I2C_ADDR 2
+#define V4L2_CHIP_MATCH_AC97 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_dbg_match {
  __u32 type;
@@ -2176,6 +2176,5 @@ struct v4l2_create_buffers {
 #define VIDIOC_DECODER_CMD _IOWR('V', 96, struct v4l2_decoder_cmd)
 #define VIDIOC_TRY_DECODER_CMD _IOWR('V', 97, struct v4l2_decoder_cmd)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BASE_VIDIOC_PRIVATE 192  
+#define BASE_VIDIOC_PRIVATE 192
 #endif
-

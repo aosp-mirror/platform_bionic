@@ -184,17 +184,6 @@ class SysCallsTxtParser:
         fp.close()
 
 
-class Output:
-    def  __init__(self,out=sys.stdout):
-        self.out = out
-
-    def write(self,msg):
-        self.out.write(msg)
-
-    def writeln(self,msg):
-        self.out.write(msg)
-        self.out.write("\n")
-
 class StringOutput:
     def __init__(self):
         self.line = ""
@@ -202,10 +191,6 @@ class StringOutput:
     def write(self,msg):
         self.line += msg
         D2("write '%s'" % msg)
-
-    def writeln(self,msg):
-        self.line += msg + '\n'
-        D2("write '%s\\n'"% msg)
 
     def get(self):
         return self.line
@@ -356,11 +341,9 @@ class BatchFileUpdater:
 
         return (adds, deletes, edits)
 
-    def _writeFile(self,dst,data=None):
+    def _writeFile(self,dst):
         if not os.path.exists(os.path.dirname(dst)):
             create_file_path(dst)
-        if data == None:
-            data = self.new_data[dst]
         f = open(dst, "w")
         f.write(self.new_data[dst])
         f.close()
@@ -376,34 +359,6 @@ class BatchFileUpdater:
 
         for dst in sorted(deletes):
             os.remove(dst)
-
-    def updateP4Files(self):
-        adds, deletes, edits = self.getChanges()
-
-        if len(adds):
-            files = string.join(sorted(adds)," ")
-            D( "%d new files will be p4 add-ed" % len(adds) )
-            for dst in adds:
-                self._writeFile(dst)
-            D2("P4 ADDS: %s" % files)
-            o = commands.getoutput( "p4 add " + files )
-            D2( o )
-
-        if len(edits):
-            files = string.join(sorted(edits)," ")
-            D( "%d files will be p4 edit-ed" % len(edits) )
-            D2("P4 EDITS: %s" % files)
-            o = commands.getoutput( "p4 edit " + files )
-            D2( o )
-            for dst in edits:
-                self._writeFile(dst)
-
-        if len(deletes):
-            files = string.join(sorted(deletes)," ")
-            D( "%d files will be p4 delete-d" % len(deletes) )
-            D2("P4 DELETES: %s" % files)
-            o = commands.getoutput( "p4 delete " + files )
-            D2( o )
 
     def updateGitFiles(self):
         adds, deletes, edits = self.getChanges()

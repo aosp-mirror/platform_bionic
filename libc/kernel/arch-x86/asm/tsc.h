@@ -19,8 +19,8 @@
 #ifndef _ASM_X86_TSC_H
 #define _ASM_X86_TSC_H
 #include <asm/processor.h>
-#define NS_SCALE 10  
+#define NS_SCALE 10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define US_SCALE 32  
+#define US_SCALE 32
 typedef unsigned long long cycles_t;
 #endif
