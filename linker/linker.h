@@ -159,16 +159,7 @@ struct soinfo {
 
 extern soinfo libdl_info;
 
-#if defined(ANDROID_ARM_LINKER)
-
-// These aren't defined in <arch-arm/asm/elf.h>.
-#define R_ARM_REL32      3
-#define R_ARM_COPY       20
-#define R_ARM_GLOB_DAT   21
-#define R_ARM_JUMP_SLOT  22
-#define R_ARM_RELATIVE   23
-
-#elif defined(ANDROID_MIPS_LINKER)
+#if defined(ANDROID_MIPS_LINKER)
 
 // These aren't defined in <arch-arm/mips/elf.h>.
 #define R_MIPS_JUMP_SLOT       127
@@ -176,32 +167,12 @@ extern soinfo libdl_info;
 #define DT_MIPS_PLTGOT         0x70000032
 #define DT_MIPS_RWPLT          0x70000034
 
-#elif defined(ANDROID_X86_LINKER)
-
-// x86 has everything it needs in <arch-arm/x86/elf.h>.
-
-#endif /* ANDROID_*_LINKER */
-
-#ifndef DT_INIT_ARRAY
-#define DT_INIT_ARRAY      25
 #endif
 
-#ifndef DT_FINI_ARRAY
-#define DT_FINI_ARRAY      26
-#endif
-
-#ifndef DT_INIT_ARRAYSZ
-#define DT_INIT_ARRAYSZ    27
-#endif
-
-#ifndef DT_FINI_ARRAYSZ
-#define DT_FINI_ARRAYSZ    28
-#endif
-
+// These aren't defined in <sys/exec_elf.h>.
 #ifndef DT_PREINIT_ARRAY
 #define DT_PREINIT_ARRAY   32
 #endif
-
 #ifndef DT_PREINIT_ARRAYSZ
 #define DT_PREINIT_ARRAYSZ 33
 #endif
