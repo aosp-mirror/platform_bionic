@@ -21,7 +21,7 @@
 #include <linux/types.h>
 #include <linux/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MSM_MERCURY_HW_VERSION_REG 0x0004  
+#define MSM_MERCURY_HW_VERSION_REG 0x0004
 #define OUTPUT_H2V1 0
 #define OUTPUT_H2V2 1
 #define OUTPUT_BYTE 6

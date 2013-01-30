@@ -60,13 +60,6 @@ the tools you can use are:
     'external/kernel-headers/original'. this is the script you're likely going to
     run whenever you update the original headers.
 
-NOTE:
-  if ANDROID_PRODUCT_OUT is defined in your environment, both 'clean_header.py'
-  and 'update_all.py' will automatically issue "p4 add/edit/delete" commands
-  appropriately to reflect the changes being made.
-
-  you will need to "p4 submit" manually though...
-
 
 HOW TO BUILD BIONIC AND OTHER PROGRAMS WITH THE CLEAN HEADERS:
 ==============================================================

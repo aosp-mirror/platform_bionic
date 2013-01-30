@@ -84,17 +84,17 @@ struct termio {
 #define N_PPP 3
 #define N_STRIP 4
 #define N_AX25 5
-#define N_X25 6  
+#define N_X25 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define N_6PACK 7
-#define N_MASC 8  
-#define N_R3964 9  
-#define N_PROFIBUS_FDL 10  
+#define N_MASC 8
+#define N_R3964 9
+#define N_PROFIBUS_FDL 10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define N_IRDA 11  
-#define N_SMSBLOCK 12  
-#define N_HDLC 13  
+#define N_IRDA 11
+#define N_SMSBLOCK 12
+#define N_HDLC 13
 #define N_SYNC_PPP 14
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define N_HCI 15  
+#define N_HCI 15
 #endif

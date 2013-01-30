@@ -47,21 +47,21 @@ struct ip6t_ip6 {
 #define ip6t_standard_target xt_standard_target
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ip6t_counters xt_counters
-#define IP6T_F_PROTO 0x01  
-#define IP6T_F_TOS 0x02  
-#define IP6T_F_GOTO 0x04  
+#define IP6T_F_PROTO 0x01
+#define IP6T_F_TOS 0x02
+#define IP6T_F_GOTO 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IP6T_F_MASK 0x07  
-#define IP6T_INV_VIA_IN 0x01  
-#define IP6T_INV_VIA_OUT 0x02  
-#define IP6T_INV_TOS 0x04  
+#define IP6T_F_MASK 0x07
+#define IP6T_INV_VIA_IN 0x01
+#define IP6T_INV_VIA_OUT 0x02
+#define IP6T_INV_TOS 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IP6T_INV_SRCIP 0x08  
-#define IP6T_INV_DSTIP 0x10  
-#define IP6T_INV_FRAG 0x20  
+#define IP6T_INV_SRCIP 0x08
+#define IP6T_INV_DSTIP 0x10
+#define IP6T_INV_FRAG 0x20
 #define IP6T_INV_PROTO XT_INV_PROTO
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IP6T_INV_MASK 0x7F  
+#define IP6T_INV_MASK 0x7F
 struct ip6t_entry
 {
  struct ip6t_ip6 ipv6;
@@ -109,7 +109,7 @@ struct ip6t_icmp
  u_int8_t code[2];
  u_int8_t invflags;
 };
-#define IP6T_ICMP_INV 0x01  
+#define IP6T_ICMP_INV 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ip6t_getinfo
 {

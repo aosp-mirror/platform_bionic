@@ -33,8 +33,8 @@ enum ion_heap_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ION_HEAP_SYSTEM_CONTIG_MASK (1 << ION_HEAP_TYPE_SYSTEM_CONTIG)
 #define ION_HEAP_CARVEOUT_MASK (1 << ION_HEAP_TYPE_CARVEOUT)
-#define ION_FLAG_CACHED 1  
-#define ION_FLAG_CACHED_NEEDS_SYNC 2  
+#define ION_FLAG_CACHED 1
+#define ION_FLAG_CACHED_NEEDS_SYNC 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ion_allocation_data {
  size_t len;
@@ -69,4 +69,3 @@ struct ion_custom_data {
 #define ION_IOC_SYNC _IOWR(ION_IOC_MAGIC, 7, struct ion_fd_data)
 #define ION_IOC_CUSTOM _IOWR(ION_IOC_MAGIC, 6, struct ion_custom_data)
 #endif
-

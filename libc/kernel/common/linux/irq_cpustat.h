@@ -23,6 +23,6 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #define local_softirq_pending()   __IRQ_STAT(smp_processor_id(), __softirq_pending)
-#define nmi_count(cpu) __IRQ_STAT((cpu), __nmi_count)  
+#define nmi_count(cpu) __IRQ_STAT((cpu), __nmi_count)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

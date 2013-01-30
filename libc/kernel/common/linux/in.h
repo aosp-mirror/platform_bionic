@@ -76,9 +76,9 @@ struct in_addr {
 #define IP_PASSSEC 18
 #define IP_RECVRETOPTS IP_RETOPTS
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IP_PMTUDISC_DONT 0  
-#define IP_PMTUDISC_WANT 1  
-#define IP_PMTUDISC_DO 2  
+#define IP_PMTUDISC_DONT 0
+#define IP_PMTUDISC_WANT 1
+#define IP_PMTUDISC_DO 2
 #define IP_MULTICAST_IF 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IP_MULTICAST_TTL 33
@@ -168,7 +168,7 @@ struct in_pktinfo
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct in_addr ipi_addr;
 };
-#define __SOCK_SIZE__ 16  
+#define __SOCK_SIZE__ 16
 struct sockaddr_in {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  sa_family_t sin_family;
@@ -178,7 +178,7 @@ struct sockaddr_in {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  sizeof(unsigned short int) - sizeof(struct in_addr)];
 };
-#define sin_zero __pad  
+#define sin_zero __pad
 #define IN_CLASSA(a) ((((long int) (a)) & 0x80000000) == 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IN_CLASSA_NET 0xff000000
@@ -208,13 +208,13 @@ struct sockaddr_in {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INADDR_NONE ((unsigned long int) 0xffffffff)
 #define IN_LOOPBACKNET 127
-#define INADDR_LOOPBACK 0x7f000001  
+#define INADDR_LOOPBACK 0x7f000001
 #define IN_LOOPBACK(a) ((((long int) (a)) & 0xff000000) == 0x7f000000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define INADDR_UNSPEC_GROUP 0xe0000000U  
-#define INADDR_ALLHOSTS_GROUP 0xe0000001U  
-#define INADDR_ALLRTRS_GROUP 0xe0000002U  
-#define INADDR_MAX_LOCAL_GROUP 0xe00000ffU  
+#define INADDR_UNSPEC_GROUP 0xe0000000U
+#define INADDR_ALLHOSTS_GROUP 0xe0000001U
+#define INADDR_ALLRTRS_GROUP 0xe0000002U
+#define INADDR_MAX_LOCAL_GROUP 0xe00000ffU
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <asm/byteorder.h> 
+#include <asm/byteorder.h>
 #endif

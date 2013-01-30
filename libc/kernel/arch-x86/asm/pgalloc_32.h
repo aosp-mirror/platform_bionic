@@ -19,7 +19,7 @@
 #ifndef _I386_PGALLOC_H
 #define _I386_PGALLOC_H
 #include <linux/threads.h>
-#include <linux/mm.h>  
+#include <linux/mm.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define paravirt_alloc_pt(mm, pfn) do { } while (0)
 #define paravirt_alloc_pd(pfn) do { } while (0)

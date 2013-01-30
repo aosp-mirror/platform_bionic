@@ -27,7 +27,7 @@ typedef struct {
  unsigned int local_timer_irqs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } ____cacheline_aligned irq_cpustat_t;
-#include <linux/irq_cpustat.h>  
+#include <linux/irq_cpustat.h>
 #if NR_IRQS > 256
 #define HARDIRQ_BITS 9
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

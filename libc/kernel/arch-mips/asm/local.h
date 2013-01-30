@@ -57,7 +57,7 @@ typedef struct
 #define __local_sub(i, l) ((l)->a.counter-=(i))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define cpu_local_wrap_v(l)   ({ local_t res__;   preempt_disable();   res__ = (l);   preempt_enable();   res__; })
-#define cpu_local_wrap(l)   ({ preempt_disable();   l;   preempt_enable(); })  
+#define cpu_local_wrap(l)   ({ preempt_disable();   l;   preempt_enable(); })
 #define cpu_local_read(l) cpu_local_wrap_v(local_read(&__get_cpu_var(l)))
 #define cpu_local_set(l, i) cpu_local_wrap(local_set(&__get_cpu_var(l), (i)))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

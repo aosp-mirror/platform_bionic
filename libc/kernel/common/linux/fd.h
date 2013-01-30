@@ -47,9 +47,9 @@ struct floppy_struct {
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FDCLRPRM _IO(2, 0x41)
-#define FDSETPRM _IOW(2, 0x42, struct floppy_struct) 
+#define FDSETPRM _IOW(2, 0x42, struct floppy_struct)
 #define FDSETMEDIAPRM FDSETPRM
-#define FDDEFPRM _IOW(2, 0x43, struct floppy_struct) 
+#define FDDEFPRM _IOW(2, 0x43, struct floppy_struct)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FDGETPRM _IOR(2, 0x04, struct floppy_struct)
 #define FDDEFMEDIAPRM FDDEFPRM
@@ -57,7 +57,7 @@ struct floppy_struct {
 #define FDMSGON _IO(2,0x45)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FDMSGOFF _IO(2,0x46)
-#define FD_FILL_BYTE 0xF6  
+#define FD_FILL_BYTE 0xF6
 struct format_descr {
  unsigned int device,head,track;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -108,7 +108,7 @@ struct floppy_drive_params {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FD_DEBUG 0x02
 #define FD_SILENT_DCL_CLEAR 0x4
-#define FD_INVERTED_DCL 0x80  
+#define FD_INVERTED_DCL 0x80
  char read_track;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  short autodetect[8];
@@ -207,21 +207,21 @@ struct floppy_raw_cmd {
 #define FD_RAW_WRITE 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FD_RAW_NO_MOTOR 4
-#define FD_RAW_DISK_CHANGE 4  
-#define FD_RAW_INTR 8  
-#define FD_RAW_SPIN 0x10  
+#define FD_RAW_DISK_CHANGE 4
+#define FD_RAW_INTR 8
+#define FD_RAW_SPIN 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FD_RAW_NO_MOTOR_AFTER 0x20  
-#define FD_RAW_NEED_DISK 0x40  
-#define FD_RAW_NEED_SEEK 0x80  
-#define FD_RAW_MORE 0x100  
+#define FD_RAW_NO_MOTOR_AFTER 0x20
+#define FD_RAW_NEED_DISK 0x40
+#define FD_RAW_NEED_SEEK 0x80
+#define FD_RAW_MORE 0x100
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FD_RAW_STOP_IF_FAILURE 0x200  
-#define FD_RAW_STOP_IF_SUCCESS 0x400  
-#define FD_RAW_SOFTFAILURE 0x800  
-#define FD_RAW_FAILURE 0x10000  
+#define FD_RAW_STOP_IF_FAILURE 0x200
+#define FD_RAW_STOP_IF_SUCCESS 0x400
+#define FD_RAW_SOFTFAILURE 0x800
+#define FD_RAW_FAILURE 0x10000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FD_RAW_HARDFAILURE 0x20000  
+#define FD_RAW_HARDFAILURE 0x20000
  void __user *data;
  char *kernel_data;
  struct floppy_raw_cmd *next;

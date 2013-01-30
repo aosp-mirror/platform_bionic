@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __LIS331DLH_H__
 #define __LIS331DLH_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define LIS331DLH_IOCTL_BASE 77
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define LIS331DLH_IOCTL_SET_DELAY _IOW(LIS331DLH_IOCTL_BASE, 0, int)

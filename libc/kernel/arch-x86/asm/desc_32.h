@@ -38,15 +38,15 @@ struct gdt_page
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct desc_struct gdt[GDT_ENTRIES];
 } __attribute__((aligned(PAGE_SIZE)));
-#define DESCTYPE_LDT 0x82  
-#define DESCTYPE_TSS 0x89  
+#define DESCTYPE_LDT 0x82
+#define DESCTYPE_TSS 0x89
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DESCTYPE_TASK 0x85  
-#define DESCTYPE_INT 0x8e  
-#define DESCTYPE_TRAP 0x8f  
-#define DESCTYPE_DPL3 0x60  
+#define DESCTYPE_TASK 0x85
+#define DESCTYPE_INT 0x8e
+#define DESCTYPE_TRAP 0x8f
+#define DESCTYPE_DPL3 0x60
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DESCTYPE_S 0x10  
+#define DESCTYPE_S 0x10
 #define load_TR_desc() native_load_tr_desc()
 #define load_gdt(dtr) native_load_gdt(dtr)
 #define load_idt(dtr) native_load_idt(dtr)

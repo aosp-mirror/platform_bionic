@@ -18,10 +18,10 @@
  ****************************************************************************/
 #ifndef __ASM_E820_H
 #define __ASM_E820_H
-#define E820MAP 0x2d0  
-#define E820MAX 128  
+#define E820MAP 0x2d0
+#define E820MAX 128
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define E820NR 0x1e8  
+#define E820NR 0x1e8
 #define E820_RAM 1
 #define E820_RESERVED 2
 #define E820_ACPI 3

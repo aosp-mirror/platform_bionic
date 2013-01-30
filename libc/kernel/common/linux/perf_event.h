@@ -112,7 +112,7 @@ enum perf_event_read_format {
  PERF_FORMAT_MAX = 1U << 4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define PERF_ATTR_SIZE_VER0 64  
+#define PERF_ATTR_SIZE_VER0 64
 struct perf_event_attr {
  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

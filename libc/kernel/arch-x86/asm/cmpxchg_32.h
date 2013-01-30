@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_CMPXCHG_H
 #define __ASM_CMPXCHG_H
-#include <linux/bitops.h>  
+#include <linux/bitops.h>
 #define xchg(ptr,v) ((__typeof__(*(ptr)))__xchg((unsigned long)(v),(ptr),sizeof(*(ptr))))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct __xchg_dummy { unsigned long a[100]; };

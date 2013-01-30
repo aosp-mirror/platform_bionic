@@ -23,7 +23,7 @@ struct task_struct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RUSAGE_SELF 0
 #define RUSAGE_CHILDREN (-1)
-#define RUSAGE_BOTH (-2)  
+#define RUSAGE_BOTH (-2)
 struct rusage {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct timeval ru_utime;

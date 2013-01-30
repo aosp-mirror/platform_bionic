@@ -83,22 +83,22 @@ struct bio {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  bio_destructor_t *bi_destructor;
 };
-#define BIO_UPTODATE 0  
-#define BIO_RW_BLOCK 1  
+#define BIO_UPTODATE 0
+#define BIO_RW_BLOCK 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BIO_EOF 2  
-#define BIO_SEG_VALID 3  
-#define BIO_CLONED 4  
-#define BIO_BOUNCED 5  
+#define BIO_EOF 2
+#define BIO_SEG_VALID 3
+#define BIO_CLONED 4
+#define BIO_BOUNCED 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BIO_USER_MAPPED 6  
-#define BIO_EOPNOTSUPP 7  
+#define BIO_USER_MAPPED 6
+#define BIO_EOPNOTSUPP 7
 #define bio_flagged(bio, flag) ((bio)->bi_flags & (1 << (flag)))
 #define BIO_POOL_BITS (4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BIO_POOL_OFFSET (BITS_PER_LONG - BIO_POOL_BITS)
 #define BIO_POOL_MASK (1UL << BIO_POOL_OFFSET)
-#define BIO_POOL_IDX(bio) ((bio)->bi_flags >> BIO_POOL_OFFSET) 
+#define BIO_POOL_IDX(bio) ((bio)->bi_flags >> BIO_POOL_OFFSET)
 #define BIO_RW 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BIO_RW_AHEAD 1

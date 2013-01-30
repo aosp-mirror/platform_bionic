@@ -28,7 +28,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define safe_smp_processor_id() 0
 #define cpu_physical_id(cpu) boot_cpu_physical_apicid
-#define NO_PROC_ID 0xFF  
+#define NO_PROC_ID 0xFF
 #ifndef __ASSEMBLY__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define hard_smp_processor_id() 0

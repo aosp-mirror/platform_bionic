@@ -537,4 +537,3 @@ struct vdec_mv_buff_size{
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-

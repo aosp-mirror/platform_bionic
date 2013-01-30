@@ -77,7 +77,7 @@
 #define __BUILD_IOPORT_SINGLE(pfx, bwlq, type, p, slow)    static inline void pfx##out##bwlq##p(type val, unsigned long port)  {   volatile type *__addr;   type __val;     __addr = (void *)__swizzle_addr_##bwlq(mips_io_port_base + port);     __val = pfx##ioswab##bwlq(__addr, val);         BUILD_BUG_ON(sizeof(type) > sizeof(unsigned long));     *__addr = __val;   slow;  }    static inline type pfx##in##bwlq##p(unsigned long port)  {   volatile type *__addr;   type __val;     __addr = (void *)__swizzle_addr_##bwlq(mips_io_port_base + port);     BUILD_BUG_ON(sizeof(type) > sizeof(unsigned long));     __val = *__addr;   slow;     return pfx##ioswab##bwlq(__addr, __val);  }
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __BUILD_MEMORY_PFX(bus, bwlq, type)    __BUILD_MEMORY_SINGLE(bus, bwlq, type, 1)
-#define BUILDIO_MEM(bwlq, type)    __BUILD_MEMORY_PFX(__raw_, bwlq, type)  __BUILD_MEMORY_PFX(, bwlq, type)  __BUILD_MEMORY_PFX(__mem_, bwlq, type)  
+#define BUILDIO_MEM(bwlq, type)    __BUILD_MEMORY_PFX(__raw_, bwlq, type)  __BUILD_MEMORY_PFX(, bwlq, type)  __BUILD_MEMORY_PFX(__mem_, bwlq, type)
 #define __BUILD_IOPORT_PFX(bus, bwlq, type)   __BUILD_IOPORT_SINGLE(bus, bwlq, type, ,)   __BUILD_IOPORT_SINGLE(bus, bwlq, type, _p, SLOW_DOWN_IO)
 #define BUILDIO_IOPORT(bwlq, type)   __BUILD_IOPORT_PFX(, bwlq, type)   __BUILD_IOPORT_PFX(__mem_, bwlq, type)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

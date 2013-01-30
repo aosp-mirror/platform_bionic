@@ -31,7 +31,7 @@
 #include <asm/atomic.h>
 #define DEVICE_NAME_SIZE 50
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DEVICE_NAME_HALF __stringify(20)  
+#define DEVICE_NAME_HALF __stringify(20)
 #define DEVICE_ID_SIZE 32
 #define BUS_ID_SIZE KOBJ_NAME_LEN
 struct device;
@@ -127,7 +127,7 @@ struct class_attribute {
  ssize_t (*store)(struct class *, const char * buf, size_t count);
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define CLASS_ATTR(_name,_mode,_show,_store)  struct class_attribute class_attr_##_name = __ATTR(_name,_mode,_show,_store) 
+#define CLASS_ATTR(_name,_mode,_show,_store)  struct class_attribute class_attr_##_name = __ATTR(_name,_mode,_show,_store)
 struct class_device_attribute {
  struct attribute attr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

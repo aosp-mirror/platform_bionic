@@ -142,10 +142,10 @@ struct mtd_notifier {
  struct list_head list;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define MTD_DEBUG_LEVEL0 (0)  
-#define MTD_DEBUG_LEVEL1 (1)  
-#define MTD_DEBUG_LEVEL2 (2)  
+#define MTD_DEBUG_LEVEL0 (0)
+#define MTD_DEBUG_LEVEL1 (1)
+#define MTD_DEBUG_LEVEL2 (2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTD_DEBUG_LEVEL3 (3)  
+#define MTD_DEBUG_LEVEL3 (3)
 #define DEBUG(n, args...) do { } while(0)
 #endif

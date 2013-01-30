@@ -26,12 +26,12 @@
 #undef JBD_PARANOID_IOFAIL
 #define JBD_DEFAULT_MAX_COMMIT_AGE 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define jbd_debug(f, a...)  
+#define jbd_debug(f, a...)
 #define jbd_kmalloc(size, flags)   __jbd_kmalloc(__FUNCTION__, (size), (flags), journal_oom_retry)
 #define jbd_rep_kmalloc(size, flags)   __jbd_kmalloc(__FUNCTION__, (size), (flags), 1)
 #define JFS_MIN_JOURNAL_BLOCKS 1024
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define JFS_MAGIC_NUMBER 0xc03b3998U  
+#define JFS_MAGIC_NUMBER 0xc03b3998U
 #define JFS_DESCRIPTOR_BLOCK 1
 #define JFS_COMMIT_BLOCK 2
 #define JFS_SUPERBLOCK_V1 3
@@ -58,11 +58,11 @@ typedef struct journal_revoke_header_s
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __be32 r_count;
 } journal_revoke_header_t;
-#define JFS_FLAG_ESCAPE 1  
-#define JFS_FLAG_SAME_UUID 2  
+#define JFS_FLAG_ESCAPE 1
+#define JFS_FLAG_SAME_UUID 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define JFS_FLAG_DELETED 4  
-#define JFS_FLAG_LAST_TAG 8  
+#define JFS_FLAG_DELETED 4
+#define JFS_FLAG_LAST_TAG 8
 typedef struct journal_superblock_s
 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -97,17 +97,17 @@ typedef struct journal_superblock_s
 #define JFS_KNOWN_ROCOMPAT_FEATURES 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define JFS_KNOWN_INCOMPAT_FEATURES JFS_FEATURE_INCOMPAT_REVOKE
-#define BJ_None 0  
-#define BJ_SyncData 1  
-#define BJ_Metadata 2  
+#define BJ_None 0
+#define BJ_SyncData 1
+#define BJ_Metadata 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BJ_Forget 3  
-#define BJ_IO 4  
-#define BJ_Shadow 5  
-#define BJ_LogCtl 6  
+#define BJ_Forget 3
+#define BJ_IO 4
+#define BJ_Shadow 5
+#define BJ_LogCtl 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BJ_Reserved 7  
-#define BJ_Locked 8  
+#define BJ_Reserved 7
+#define BJ_Locked 8
 #define BJ_Types 9
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

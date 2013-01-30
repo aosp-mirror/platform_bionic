@@ -19,7 +19,7 @@
 #ifndef _LINUX_IPC_H
 #define _LINUX_IPC_H
 #include <linux/types.h>
-#define IPC_PRIVATE ((__kernel_key_t) 0) 
+#define IPC_PRIVATE ((__kernel_key_t) 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ipc_perm
 {
@@ -34,18 +34,18 @@ struct ipc_perm
  unsigned short seq;
 };
 #include <asm/ipcbuf.h>
-#define IPC_CREAT 00001000  
+#define IPC_CREAT 00001000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPC_EXCL 00002000  
-#define IPC_NOWAIT 00004000  
-#define IPC_DIPC 00010000  
-#define IPC_OWN 00020000  
+#define IPC_EXCL 00002000
+#define IPC_NOWAIT 00004000
+#define IPC_DIPC 00010000
+#define IPC_OWN 00020000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPC_RMID 0  
-#define IPC_SET 1  
-#define IPC_STAT 2  
-#define IPC_INFO 3  
+#define IPC_RMID 0
+#define IPC_SET 1
+#define IPC_STAT 2
+#define IPC_INFO 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPC_OLD 0  
-#define IPC_64 0x0100  
+#define IPC_OLD 0
+#define IPC_64 0x0100
 #endif

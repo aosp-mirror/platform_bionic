@@ -29,12 +29,12 @@ struct xt_tcp
  u_int8_t flg_cmp;
  u_int8_t invflags;
 };
-#define XT_TCP_INV_SRCPT 0x01  
+#define XT_TCP_INV_SRCPT 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define XT_TCP_INV_DSTPT 0x02  
-#define XT_TCP_INV_FLAGS 0x04  
-#define XT_TCP_INV_OPTION 0x08  
-#define XT_TCP_INV_MASK 0x0F  
+#define XT_TCP_INV_DSTPT 0x02
+#define XT_TCP_INV_FLAGS 0x04
+#define XT_TCP_INV_OPTION 0x08
+#define XT_TCP_INV_MASK 0x0F
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_udp
 {
@@ -43,8 +43,8 @@ struct xt_udp
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  u_int8_t invflags;
 };
-#define XT_UDP_INV_SRCPT 0x01  
-#define XT_UDP_INV_DSTPT 0x02  
+#define XT_UDP_INV_SRCPT 0x01
+#define XT_UDP_INV_DSTPT 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define XT_UDP_INV_MASK 0x03  
+#define XT_UDP_INV_MASK 0x03
 #endif
