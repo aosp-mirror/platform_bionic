@@ -437,10 +437,6 @@ extern "C" void *chk_calloc(int nmemb, size_t size) {
 }
 
 static void heaptracker_free_leaked_memory() {
-  if (gAllocatedBlockCount == 0) {
-    return;
-  }
-
   // Use /proc/self/exe link to obtain the program name for logging
   // purposes. If it's not available, we set it to "<unknown>".
   char exe[PATH_MAX];
@@ -449,6 +445,11 @@ static void heaptracker_free_leaked_memory() {
     strlcpy(exe, "<unknown>", sizeof(exe));
   } else {
     exe[count] = '\0';
+  }
+
+  if (gAllocatedBlockCount == 0) {
+    log_message("+++ %s did not leak", exe);
+    return;
   }
 
   size_t index = 1;
