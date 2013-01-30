@@ -24,6 +24,6 @@
 typedef struct {
  unsigned int __softirq_pending;
 } ____cacheline_aligned irq_cpustat_t;
-#include <linux/irq_cpustat.h>  
+#include <linux/irq_cpustat.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

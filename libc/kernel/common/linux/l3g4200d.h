@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __L3G4200D_H__
 #define __L3G4200D_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define L3G4200D_NAME "l3g4200d"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define L3G4200D_IOCTL_BASE 77

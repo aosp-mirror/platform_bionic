@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_ARM_DELAY_H
 #define __ASM_ARM_DELAY_H
-#include <asm/param.h>  
+#include <asm/param.h>
 #define MAX_UDELAY_MS 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define udelay(n)   (__builtin_constant_p(n) ?   ((n) > (MAX_UDELAY_MS * 1000) ? __bad_udelay() :   __const_udelay((n) * ((2199023U*HZ)>>11))) :   __udelay(n))

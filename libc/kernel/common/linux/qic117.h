@@ -87,16 +87,16 @@ struct qic117_command_table {
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define QIC117_COMMANDS {         {NULL, 0x00, 0x00, mode, 0, discretional},   {"soft reset", 0x00, 0x00, motion, 1, required},   {"report next bit", 0x00, 0x00, report, 0, required},   {"pause", 0x36, 0x24, motion, 1, required},   {"micro step pause", 0x36, 0x24, motion, 1, required},   {"alternate command timeout", 0x00, 0x00, mode, 0, required},   {"report drive status", 0x00, 0x00, report, 0, required},   {"report error code", 0x01, 0x01, report, 0, required},   {"report drive configuration",0x00, 0x00, report, 0, required},   {"report rom version", 0x00, 0x00, report, 0, required},   {"logical forward", 0x37, 0x25, motion, 0, required},   {"physical reverse", 0x17, 0x05, motion, 0, required},   {"physical forward", 0x17, 0x05, motion, 0, required},   {"seek head to track", 0x37, 0x25, motion, 0, required},   {"seek load point", 0x17, 0x05, motion, 1, required},   {"enter format mode", 0x1f, 0x05, mode, 0, required},   {"write reference burst", 0x1f, 0x05, motion, 1, required},   {"enter verify mode", 0x37, 0x25, mode, 0, required},   {"stop tape", 0x00, 0x00, motion, 1, required},   {"reserved (19)", 0x00, 0x00, unused, 0, discretional},   {"reserved (20)", 0x00, 0x00, unused, 0, discretional},   {"micro step head up", 0x02, 0x00, motion, 0, required},   {"micro step head down", 0x02, 0x00, motion, 0, required},   {"soft select", 0x00, 0x00, mode, 0, discretional},   {"soft deselect", 0x00, 0x00, mode, 0, discretional},   {"skip segments reverse", 0x36, 0x24, motion, 1, required},   {"skip segments forward", 0x36, 0x24, motion, 1, required},   {"select rate or format", 0x03, 0x01, mode, 0, required  },   {"enter diag mode 1", 0x00, 0x00, mode, 0, discretional},   {"enter diag mode 2", 0x00, 0x00, mode, 0, discretional},   {"enter primary mode", 0x00, 0x00, mode, 0, required},   {"vendor unique (31)", 0x00, 0x00, unused, 0, discretional},   {"report vendor id", 0x00, 0x00, report, 0, required},   {"report tape status", 0x04, 0x04, report, 0, ccs1},   {"skip extended reverse", 0x36, 0x24, motion, 1, ccs1},   {"skip extended forward", 0x36, 0x24, motion, 1, ccs1},   {"calibrate tape length", 0x17, 0x05, motion, 1, ccs2},   {"report format segments", 0x17, 0x05, report, 0, ccs2},   {"set format segments", 0x17, 0x05, mode, 0, ccs2},   {"reserved (39)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (40)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (41)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (42)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (43)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (44)", 0x00, 0x00, unused, 0, discretional},   {"vendor unique (45)", 0x00, 0x00, unused, 0, discretional},   {"phantom select", 0x00, 0x00, mode, 0, discretional},   {"phantom deselect", 0x00, 0x00, mode, 0, discretional}, }
-#define QIC_STATUS_READY 0x01  
-#define QIC_STATUS_ERROR 0x02  
-#define QIC_STATUS_CARTRIDGE_PRESENT 0x04  
+#define QIC_STATUS_READY 0x01
+#define QIC_STATUS_ERROR 0x02
+#define QIC_STATUS_CARTRIDGE_PRESENT 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define QIC_STATUS_WRITE_PROTECT 0x08  
-#define QIC_STATUS_NEW_CARTRIDGE 0x10  
-#define QIC_STATUS_REFERENCED 0x20  
-#define QIC_STATUS_AT_BOT 0x40  
+#define QIC_STATUS_WRITE_PROTECT 0x08
+#define QIC_STATUS_NEW_CARTRIDGE 0x10
+#define QIC_STATUS_REFERENCED 0x20
+#define QIC_STATUS_AT_BOT 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define QIC_STATUS_AT_EOT 0x80  
+#define QIC_STATUS_AT_EOT 0x80
 #define QIC_CONFIG_RATE_MASK 0x18
 #define QIC_CONFIG_RATE_SHIFT 3
 #define QIC_CONFIG_RATE_250 0
@@ -104,10 +104,10 @@ struct qic117_command_table {
 #define QIC_CONFIG_RATE_500 2
 #define QIC_CONFIG_RATE_1000 3
 #define QIC_CONFIG_RATE_2000 1
-#define QIC_CONFIG_RATE_4000 0  
+#define QIC_CONFIG_RATE_4000 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define QIC_CONFIG_LONG 0x40  
-#define QIC_CONFIG_80 0x80  
+#define QIC_CONFIG_LONG 0x40
+#define QIC_CONFIG_80 0x80
 #define QIC_TAPE_STD_MASK 0x0f
 #define QIC_TAPE_QIC40 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -38,4 +38,3 @@ struct msm_audio_wmapro_config {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
-

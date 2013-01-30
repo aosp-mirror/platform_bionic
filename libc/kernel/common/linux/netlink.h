@@ -18,36 +18,36 @@
  ****************************************************************************/
 #ifndef __LINUX_NETLINK_H
 #define __LINUX_NETLINK_H
-#include <linux/socket.h>  
+#include <linux/socket.h>
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NETLINK_ROUTE 0  
-#define NETLINK_UNUSED 1  
-#define NETLINK_USERSOCK 2  
-#define NETLINK_FIREWALL 3  
+#define NETLINK_ROUTE 0
+#define NETLINK_UNUSED 1
+#define NETLINK_USERSOCK 2
+#define NETLINK_FIREWALL 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NETLINK_INET_DIAG 4  
-#define NETLINK_NFLOG 5  
-#define NETLINK_XFRM 6  
-#define NETLINK_SELINUX 7  
+#define NETLINK_INET_DIAG 4
+#define NETLINK_NFLOG 5
+#define NETLINK_XFRM 6
+#define NETLINK_SELINUX 7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NETLINK_ISCSI 8  
-#define NETLINK_AUDIT 9  
-#define NETLINK_FIB_LOOKUP 10 
+#define NETLINK_ISCSI 8
+#define NETLINK_AUDIT 9
+#define NETLINK_FIB_LOOKUP 10
 #define NETLINK_CONNECTOR 11
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NETLINK_NETFILTER 12  
+#define NETLINK_NETFILTER 12
 #define NETLINK_IP6_FW 13
-#define NETLINK_DNRTMSG 14  
-#define NETLINK_KOBJECT_UEVENT 15  
+#define NETLINK_DNRTMSG 14
+#define NETLINK_KOBJECT_UEVENT 15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NETLINK_GENERIC 16
-#define NETLINK_SCSITRANSPORT 18  
+#define NETLINK_SCSITRANSPORT 18
 #define NETLINK_ECRYPTFS 19
 #define NETLINK_RDMA 20
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NETLINK_IDLETIMER 21
-#define MAX_LINKS 32 
+#define MAX_LINKS 32
 struct sockaddr_nl {
  sa_family_t nl_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -64,21 +64,21 @@ struct nlmsghdr {
  __u32 nlmsg_seq;
  __u32 nlmsg_pid;
 };
-#define NLM_F_REQUEST 1  
+#define NLM_F_REQUEST 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLM_F_MULTI 2  
-#define NLM_F_ACK 4  
-#define NLM_F_ECHO 8  
-#define NLM_F_ROOT 0x100  
+#define NLM_F_MULTI 2
+#define NLM_F_ACK 4
+#define NLM_F_ECHO 8
+#define NLM_F_ROOT 0x100
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLM_F_MATCH 0x200  
-#define NLM_F_ATOMIC 0x400  
+#define NLM_F_MATCH 0x200
+#define NLM_F_ATOMIC 0x400
 #define NLM_F_DUMP (NLM_F_ROOT|NLM_F_MATCH)
-#define NLM_F_REPLACE 0x100  
+#define NLM_F_REPLACE 0x100
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLM_F_EXCL 0x200  
-#define NLM_F_CREATE 0x400  
-#define NLM_F_APPEND 0x800  
+#define NLM_F_EXCL 0x200
+#define NLM_F_CREATE 0x400
+#define NLM_F_APPEND 0x800
 #define NLMSG_ALIGNTO 4U
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NLMSG_ALIGN(len) ( ((len)+NLMSG_ALIGNTO-1) & ~(NLMSG_ALIGNTO-1) )
@@ -91,12 +91,12 @@ struct nlmsghdr {
 #define NLMSG_OK(nlh,len) ((len) >= (int)sizeof(struct nlmsghdr) &&   (nlh)->nlmsg_len >= sizeof(struct nlmsghdr) &&   (nlh)->nlmsg_len <= (len))
 #define NLMSG_PAYLOAD(nlh,len) ((nlh)->nlmsg_len - NLMSG_SPACE((len)))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLMSG_NOOP 0x1  
-#define NLMSG_ERROR 0x2  
-#define NLMSG_DONE 0x3  
-#define NLMSG_OVERRUN 0x4  
+#define NLMSG_NOOP 0x1
+#define NLMSG_ERROR 0x2
+#define NLMSG_DONE 0x3
+#define NLMSG_OVERRUN 0x4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLMSG_MIN_TYPE 0x10  
+#define NLMSG_MIN_TYPE 0x10
 struct nlmsgerr {
  int error;
  struct nlmsghdr msg;
@@ -112,7 +112,7 @@ struct nl_pktinfo {
  __u32 group;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define NET_MAJOR 36  
+#define NET_MAJOR 36
 enum {
  NETLINK_UNCONNECTED = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

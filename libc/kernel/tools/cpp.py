@@ -1676,7 +1676,7 @@ class Block:
             return left_count
 
         if self.directive:
-            out.write(str(self) + "\n")
+            out.write(str(self).rstrip() + "\n")
             left_count -= 1
             if left_count == 0:
                 out.write(warning)
@@ -1756,7 +1756,7 @@ class BlockList:
         for b in self.blocks:
             result += str(b)
             if b.isDirective():
-                result += '\n'
+                result = result.rstrip() + '\n'
         return result
 
     def  optimizeIf01(self):

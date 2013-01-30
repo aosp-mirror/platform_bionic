@@ -29,7 +29,7 @@
 #define MD_THREAD_NAME_MAX 14
 typedef struct mddev_s mddev_t;
 typedef struct mdk_rdev_s mdk_rdev_t;
-#define MAX_MD_DEVS 256  
+#define MAX_MD_DEVS 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MAX_CHUNK_SIZE (1<<30)
 struct mdk_rdev_s
@@ -52,11 +52,11 @@ struct mdk_rdev_s
  struct kobject kobj;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long flags;
-#define Faulty 1  
-#define In_sync 2  
-#define WriteMostly 4  
+#define Faulty 1
+#define In_sync 2
+#define WriteMostly 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BarriersNotsupp 5  
+#define BarriersNotsupp 5
  int desc_nr;
  int raid_disk;
  int saved_raid_disk;

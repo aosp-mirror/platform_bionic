@@ -193,12 +193,12 @@ struct nlist {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #define N_INDR 0xa
-#define N_SETA 0x14  
-#define N_SETT 0x16  
+#define N_SETA 0x14
+#define N_SETT 0x16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define N_SETD 0x18  
-#define N_SETB 0x1A  
-#define N_SETV 0x1C  
+#define N_SETD 0x18
+#define N_SETB 0x1A
+#define N_SETV 0x1C
 #ifndef N_RELOCATION_INFO_DECLARED
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct relocation_info

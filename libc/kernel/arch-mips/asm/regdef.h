@@ -21,17 +21,17 @@
 #include <asm/sgidefs.h>
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define zero $0  
-#define AT $1  
-#define v0 $2  
+#define zero $0
+#define AT $1
+#define v0 $2
 #define v1 $3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define a0 $4  
+#define a0 $4
 #define a1 $5
 #define a2 $6
 #define a3 $7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define t0 $8  
+#define t0 $8
 #define t1 $9
 #define t2 $10
 #define t3 $11
@@ -41,7 +41,7 @@
 #define t6 $14
 #define t7 $15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define s0 $16  
+#define s0 $16
 #define s1 $17
 #define s2 $18
 #define s3 $19
@@ -51,32 +51,32 @@
 #define s6 $22
 #define s7 $23
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define t8 $24  
+#define t8 $24
 #define t9 $25
-#define jp $25  
-#define k0 $26  
+#define jp $25
+#define k0 $26
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define k1 $27
-#define gp $28  
-#define sp $29  
-#define fp $30  
+#define gp $28
+#define sp $29
+#define fp $30
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define s8 $30  
-#define ra $31  
+#define s8 $30
+#define ra $31
 #endif
 #if _MIPS_SIM == _MIPS_SIM_ABI64 || _MIPS_SIM == _MIPS_SIM_NABI32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define zero $0  
-#define AT $at  
-#define v0 $2  
+#define zero $0
+#define AT $at
+#define v0 $2
 #define v1 $3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define a0 $4  
+#define a0 $4
 #define a1 $5
 #define a2 $6
 #define a3 $7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define a4 $8  
+#define a4 $8
 #define ta0 $8
 #define a5 $9
 #define ta1 $9
@@ -86,12 +86,12 @@
 #define a7 $11
 #define ta3 $11
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define t0 $12  
+#define t0 $12
 #define t1 $13
 #define t2 $14
 #define t3 $15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define s0 $16  
+#define s0 $16
 #define s1 $17
 #define s2 $18
 #define s3 $19
@@ -101,18 +101,18 @@
 #define s6 $22
 #define s7 $23
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define t8 $24  
-#define t9 $25  
-#define jp $25  
-#define k0 $26  
+#define t8 $24
+#define t9 $25
+#define jp $25
+#define k0 $26
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define k1 $27
-#define gp $28  
-#define sp $29  
-#define fp $30  
+#define gp $28
+#define sp $29
+#define fp $30
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define s8 $30  
-#define ra $31  
+#define s8 $30
+#define ra $31
 #endif
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

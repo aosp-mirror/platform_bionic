@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_CRIME_H__
 #define __ASM_CRIME_H__
-#define CRIME_BASE 0x14000000  
+#define CRIME_BASE 0x14000000
 struct sgi_crime {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long id;
@@ -108,13 +108,13 @@ struct sgi_crime {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CRIME_DOG_VALUE 0x00007fff
  volatile unsigned long timer;
-#define CRIME_MASTER_FREQ 66666500  
-#define CRIME_NS_PER_TICK 15  
+#define CRIME_MASTER_FREQ 66666500
+#define CRIME_NS_PER_TICK 15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long cpu_error_addr;
 #define CRIME_CPU_ERROR_ADDR_MASK 0x3ffffffff
  volatile unsigned long cpu_error_stat;
-#define CRIME_CPU_ERROR_MASK 0x7  
+#define CRIME_CPU_ERROR_MASK 0x7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CRIME_CPU_ERROR_CPU_ILL_ADDR 0x4
 #define CRIME_CPU_ERROR_VICE_WRT_PRTY 0x2
@@ -123,16 +123,16 @@ struct sgi_crime {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long mc_ctrl;
  volatile unsigned long bank_ctrl[8];
-#define CRIME_MEM_BANK_CONTROL_MASK 0x11f  
+#define CRIME_MEM_BANK_CONTROL_MASK 0x11f
 #define CRIME_MEM_BANK_CONTROL_ADDR 0x01f
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CRIME_MEM_BANK_CONTROL_SDRAM_SIZE 0x100
 #define CRIME_MAXBANKS 8
  volatile unsigned long mem_ref_counter;
-#define CRIME_MEM_REF_COUNTER_MASK 0x3ff  
+#define CRIME_MEM_REF_COUNTER_MASK 0x3ff
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long mem_error_stat;
-#define CRIME_MEM_ERROR_STAT_MASK 0x0ff7ffff  
+#define CRIME_MEM_ERROR_STAT_MASK 0x0ff7ffff
 #define CRIME_MEM_ERROR_MACE_ID 0x0000007f
 #define CRIME_MEM_ERROR_MACE_ACCESS 0x00000080
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -167,5 +167,5 @@ struct sgi_crime {
 #define CRIME_MEM_ERROR_ECC_REPL_MASK 0xffffffff
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define CRIME_HI_MEM_BASE 0x40000000  
+#define CRIME_HI_MEM_BASE 0x40000000
 #endif

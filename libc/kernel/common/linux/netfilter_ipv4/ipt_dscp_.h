@@ -18,10 +18,10 @@
  ****************************************************************************/
 #ifndef _IPT_DSCP_H
 #define _IPT_DSCP_H
-#define IPT_DSCP_MASK 0xfc  
+#define IPT_DSCP_MASK 0xfc
 #define IPT_DSCP_SHIFT 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPT_DSCP_MAX 0x3f  
+#define IPT_DSCP_MAX 0x3f
 struct ipt_dscp_info {
  u_int8_t dscp;
  u_int8_t invert;

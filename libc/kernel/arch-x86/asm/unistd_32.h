@@ -113,7 +113,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sethostname 74
 #define __NR_setrlimit 75
-#define __NR_getrlimit 76  
+#define __NR_getrlimit 76
 #define __NR_getrusage 77
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_gettimeofday 78
@@ -189,7 +189,7 @@
 #define __NR_bdflush 134
 #define __NR_sysfs 135
 #define __NR_personality 136
-#define __NR_afs_syscall 137  
+#define __NR_afs_syscall 137
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_setfsuid 138
 #define __NR_setfsgid 139
@@ -253,11 +253,11 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sigaltstack 186
 #define __NR_sendfile 187
-#define __NR_getpmsg 188  
-#define __NR_putpmsg 189  
+#define __NR_getpmsg 188
+#define __NR_putpmsg 189
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_vfork 190
-#define __NR_ugetrlimit 191  
+#define __NR_ugetrlimit 191
 #define __NR_mmap2 192
 #define __NR_truncate64 193
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -293,7 +293,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_mincore 218
 #define __NR_madvise 219
-#define __NR_madvise1 219  
+#define __NR_madvise1 219
 #define __NR_getdents64 220
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_fcntl64 221

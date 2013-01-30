@@ -26,8 +26,8 @@ enum {
  LO_FLAGS_USE_AOPS = 2,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <asm/posix_types.h>  
-#include <asm/types.h>  
+#include <asm/posix_types.h>
+#include <asm/types.h>
 struct loop_info {
  int lo_number;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -68,7 +68,7 @@ struct loop_info64 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define LO_CRYPT_XOR 1
 #define LO_CRYPT_DES 2
-#define LO_CRYPT_FISH2 3  
+#define LO_CRYPT_FISH2 3
 #define LO_CRYPT_BLOW 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define LO_CRYPT_CAST128 5

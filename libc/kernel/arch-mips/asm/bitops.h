@@ -28,7 +28,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <asm/barrier.h>
 #include <asm/bug.h>
-#include <asm/byteorder.h>  
+#include <asm/byteorder.h>
 #include <asm/cpu-features.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <asm/sgidefs.h>

@@ -102,7 +102,7 @@
 #define __NR_sethostname (__NR_SYSCALL_BASE+ 74)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_setrlimit (__NR_SYSCALL_BASE+ 75)
-#define __NR_getrlimit (__NR_SYSCALL_BASE+ 76)  
+#define __NR_getrlimit (__NR_SYSCALL_BASE+ 76)
 #define __NR_getrusage (__NR_SYSCALL_BASE+ 77)
 #define __NR_gettimeofday (__NR_SYSCALL_BASE+ 78)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -141,7 +141,7 @@
 #define __NR_fstat (__NR_SYSCALL_BASE+108)
 #define __NR_vhangup (__NR_SYSCALL_BASE+111)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __NR_syscall (__NR_SYSCALL_BASE+113)  
+#define __NR_syscall (__NR_SYSCALL_BASE+113)
 #define __NR_wait4 (__NR_SYSCALL_BASE+114)
 #define __NR_swapoff (__NR_SYSCALL_BASE+115)
 #define __NR_sysinfo (__NR_SYSCALL_BASE+116)
@@ -228,7 +228,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sendfile (__NR_SYSCALL_BASE+187)
 #define __NR_vfork (__NR_SYSCALL_BASE+190)
-#define __NR_ugetrlimit (__NR_SYSCALL_BASE+191)  
+#define __NR_ugetrlimit (__NR_SYSCALL_BASE+191)
 #define __NR_mmap2 (__NR_SYSCALL_BASE+192)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_truncate64 (__NR_SYSCALL_BASE+193)

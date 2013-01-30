@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _LINUX_SOCKET_H
 #define _LINUX_SOCKET_H
-#define _K_SS_MAXSIZE 128  
+#define _K_SS_MAXSIZE 128
 #define _K_SS_ALIGNSIZE (__alignof__ (struct sockaddr *))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef unsigned short __kernel_sa_family_t;

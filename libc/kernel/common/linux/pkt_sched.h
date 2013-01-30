@@ -229,7 +229,7 @@ struct tc_gred_sopt
 };
 #define TC_HTB_NUMPRIO 8
 #define TC_HTB_MAXDEPTH 8
-#define TC_HTB_PROTOVER 3  
+#define TC_HTB_PROTOVER 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tc_htb_opt
 {
