@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "PD9w-nLM",
+        "filename": "libc/kernel/common/linux/icmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-30T18:12:33Z",
+      "side": 1,
+      "message": "yeah, this was why i was running the script in the first place. unfortunately, we got a bunch of random whitespace changes too. i\u0027m still not sure why, because i don\u0027t remember there having been that maybe updates to external/kernel-headers recently, but the script changes here should prevent such things in future.",
+      "parentUuid": "PDTu9f2g",
+      "revId": "ccd7904346197e210767895eda07c63860e8248f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "PDfvu56s",
         "filename": "libc/kernel/tools/utils.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-01-30T07:27:21Z",
       "side": 1,
       "message": "remove?",
+      "revId": "ccd7904346197e210767895eda07c63860e8248f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PD1xlzNk",
+        "filename": "libc/kernel/tools/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-01-30T18:12:33Z",
+      "side": 1,
+      "message": "i was curious what nnk (as the second most frequent user of this script) thinks. personally, i don\u0027t find this very useful normally, and it\u0027s an active pain in the ass when you\u0027re just trying things out.\n\ni\u0027m especially conflicted because (so far) the fact that the syscall stub generator does the same thing hasn\u0027t bothered me. (though it\u0027s even less useful in practice. \"git commit -a\" is all i\u0027d ever have needed there so far.)\n\n(note that that is done by the near-duplicate in bionic_utils.py, not this copy in utils.py. ugh.)",
+      "parentUuid": "PDfvu56s",
       "revId": "ccd7904346197e210767895eda07c63860e8248f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
