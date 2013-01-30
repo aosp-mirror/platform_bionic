@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PDTu9f2g",
+        "filename": "libc/kernel/common/linux/icmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-01-30T07:27:21Z",
+      "side": 1,
+      "message": "nonwhitespace change... just calling it out, nothing wrong with it.",
+      "revId": "ccd7904346197e210767895eda07c63860e8248f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PDfvu56s",
+        "filename": "libc/kernel/tools/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-01-30T07:27:21Z",
+      "side": 1,
+      "message": "remove?",
+      "revId": "ccd7904346197e210767895eda07c63860e8248f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
