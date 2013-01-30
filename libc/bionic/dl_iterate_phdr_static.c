@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#include <elf.h>
 #include <sys/types.h>
-#include <linux/elf.h>
 #include <link.h>
 
 /* Dynamic binaries get this from the dynamic linker (system/linker), which
