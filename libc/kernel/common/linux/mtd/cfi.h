@@ -232,7 +232,7 @@ struct cfi_fixup {
 #define CFI_MFR_AMD 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CFI_MFR_ATMEL 0x001F
-#define CFI_MFR_ST 0x0020  
+#define CFI_MFR_ST 0x0020
 typedef int (*varsize_frob_t)(struct map_info *map, struct flchip *chip,
  unsigned long adr, int len, void *thunk);
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -92,7 +92,7 @@ struct mmc_host {
  u32 ocr_avail;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long caps;
-#define MMC_CAP_4_BIT_DATA (1 << 0)  
+#define MMC_CAP_4_BIT_DATA (1 << 0)
  unsigned int max_seg_size;
  unsigned short max_hw_segs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

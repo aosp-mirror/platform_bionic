@@ -29,49 +29,49 @@ typedef struct {
  unsigned long sig[_NSIG_WORDS];
 } sigset_t;
 typedef unsigned long old_sigset_t;
-#define SIGHUP 1  
+#define SIGHUP 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGINT 2  
-#define SIGQUIT 3  
-#define SIGILL 4  
-#define SIGTRAP 5  
+#define SIGINT 2
+#define SIGQUIT 3
+#define SIGILL 4
+#define SIGTRAP 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGIOT 6  
-#define SIGABRT SIGIOT  
+#define SIGIOT 6
+#define SIGABRT SIGIOT
 #define SIGEMT 7
-#define SIGFPE 8  
+#define SIGFPE 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGKILL 9  
-#define SIGBUS 10  
-#define SIGSEGV 11  
+#define SIGKILL 9
+#define SIGBUS 10
+#define SIGSEGV 11
 #define SIGSYS 12
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGPIPE 13  
-#define SIGALRM 14  
-#define SIGTERM 15  
-#define SIGUSR1 16  
+#define SIGPIPE 13
+#define SIGALRM 14
+#define SIGTERM 15
+#define SIGUSR1 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGUSR2 17  
-#define SIGCHLD 18  
-#define SIGCLD SIGCHLD  
-#define SIGPWR 19  
+#define SIGUSR2 17
+#define SIGCHLD 18
+#define SIGCLD SIGCHLD
+#define SIGPWR 19
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGWINCH 20  
-#define SIGURG 21  
-#define SIGIO 22  
-#define SIGPOLL SIGIO  
+#define SIGWINCH 20
+#define SIGURG 21
+#define SIGIO 22
+#define SIGPOLL SIGIO
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGSTOP 23  
-#define SIGTSTP 24  
-#define SIGCONT 25  
-#define SIGTTIN 26  
+#define SIGSTOP 23
+#define SIGTSTP 24
+#define SIGCONT 25
+#define SIGTTIN 26
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGTTOU 27  
-#define SIGVTALRM 28  
-#define SIGPROF 29  
-#define SIGXCPU 30  
+#define SIGTTOU 27
+#define SIGVTALRM 28
+#define SIGPROF 29
+#define SIGXCPU 30
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIGXFSZ 31  
+#define SIGXFSZ 31
 #define SIGRTMIN 32
 #define SIGRTMAX _NSIG
 #define SA_ONSTACK 0x08000000
@@ -86,17 +86,17 @@ typedef unsigned long old_sigset_t;
 #define SA_NOMASK SA_NODEFER
 #define SA_ONESHOT SA_RESETHAND
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SA_RESTORER 0x04000000  
+#define SA_RESTORER 0x04000000
 #define SS_ONSTACK 1
 #define SS_DISABLE 2
 #define MINSIGSTKSZ 2048
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIGSTKSZ 8192
 struct siginfo;
-#define SIG_BLOCK 1  
-#define SIG_UNBLOCK 2  
+#define SIG_BLOCK 1
+#define SIG_UNBLOCK 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SIG_SETMASK 3  
+#define SIG_SETMASK 3
 #include <asm-generic/signal.h>
 struct sigaction {
  unsigned int sa_flags;

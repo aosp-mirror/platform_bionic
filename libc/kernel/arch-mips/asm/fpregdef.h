@@ -21,17 +21,17 @@
 #include <asm/sgidefs.h>
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define fv0 $f0  
+#define fv0 $f0
 #define fv0f $f1
 #define fv1 $f2
 #define fv1f $f3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define fa0 $f12  
+#define fa0 $f12
 #define fa0f $f13
 #define fa1 $f14
 #define fa1f $f15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ft0 $f4  
+#define ft0 $f4
 #define ft0f $f5
 #define ft1 $f6
 #define ft1f $f7
@@ -46,7 +46,7 @@
 #define ft5 $f18
 #define ft5f $f19
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define fs0 $f20  
+#define fs0 $f20
 #define fs0f $f21
 #define fs1 $f22
 #define fs1f $f23
@@ -61,13 +61,13 @@
 #define fs5 $f30
 #define fs5f $f31
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define fcr31 $31  
+#define fcr31 $31
 #endif
 #if _MIPS_SIM == _MIPS_SIM_ABI64 || _MIPS_SIM == _MIPS_SIM_NABI32
-#define fv0 $f0  
+#define fv0 $f0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define fv1 $f2
-#define fa0 $f12  
+#define fa0 $f12
 #define fa1 $f13
 #define fa2 $f14
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -77,7 +77,7 @@
 #define fa6 $f18
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define fa7 $f19
-#define ft0 $f4  
+#define ft0 $f4
 #define ft1 $f5
 #define ft2 $f6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -94,7 +94,7 @@
 #define ft11 $f23
 #define ft12 $f1
 #define ft13 $f3
-#define fs0 $f24  
+#define fs0 $f24
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define fs1 $f25
 #define fs2 $f26

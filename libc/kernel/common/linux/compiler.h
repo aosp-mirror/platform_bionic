@@ -39,7 +39,7 @@
 #define __cond_lock(x) (x)
 #endif
 #ifndef __attribute_const__
-#define __attribute_const__  
+#define __attribute_const__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #endif

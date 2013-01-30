@@ -24,7 +24,7 @@
 #include <linux/compiler.h>
 struct file;
 struct completion;
-#define CTL_MAXNAME 10  
+#define CTL_MAXNAME 10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct __sysctl_args {
  int __user *name;

@@ -19,9 +19,9 @@
 #ifndef _MC146818RTC_H
 #define _MC146818RTC_H
 #include <asm/io.h>
-#include <linux/rtc.h>  
+#include <linux/rtc.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <asm/mc146818rtc.h>  
+#include <asm/mc146818rtc.h>
 #define RTC_SECONDS 0
 #define RTC_SECONDS_ALARM 1
 #define RTC_MINUTES 2
@@ -53,28 +53,28 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RTC_RATE_SELECT 0x0F
 #define RTC_CONTROL RTC_REG_B
-#define RTC_SET 0x80  
-#define RTC_PIE 0x40  
+#define RTC_SET 0x80
+#define RTC_PIE 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RTC_AIE 0x20  
-#define RTC_UIE 0x10  
-#define RTC_SQWE 0x08  
-#define RTC_DM_BINARY 0x04  
+#define RTC_AIE 0x20
+#define RTC_UIE 0x10
+#define RTC_SQWE 0x08
+#define RTC_DM_BINARY 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RTC_24H 0x02  
-#define RTC_DST_EN 0x01  
+#define RTC_24H 0x02
+#define RTC_DST_EN 0x01
 #define RTC_INTR_FLAGS RTC_REG_C
-#define RTC_IRQF 0x80  
+#define RTC_IRQF 0x80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RTC_PF 0x40
 #define RTC_AF 0x20
 #define RTC_UF 0x10
 #define RTC_VALID RTC_REG_D
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RTC_VRT 0x80  
+#define RTC_VRT 0x80
 #ifndef ARCH_RTC_LOCATION
 #define RTC_IO_EXTENT 0x8
-#define RTC_IOMAPPED 1  
+#define RTC_IOMAPPED 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #endif

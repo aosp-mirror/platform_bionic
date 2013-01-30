@@ -46,12 +46,12 @@
 #define MD_SB_RESERVED_WORDS (1024 - MD_SB_GENERIC_WORDS - MD_SB_PERSONALITY_WORDS - MD_SB_DISKS_WORDS - MD_SB_DESCRIPTOR_WORDS)
 #define MD_SB_EQUAL_WORDS (MD_SB_GENERIC_WORDS + MD_SB_PERSONALITY_WORDS + MD_SB_DISKS_WORDS)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MD_DISK_FAULTY 0  
-#define MD_DISK_ACTIVE 1  
-#define MD_DISK_SYNC 2  
-#define MD_DISK_REMOVED 3  
+#define MD_DISK_FAULTY 0
+#define MD_DISK_ACTIVE 1
+#define MD_DISK_SYNC 2
+#define MD_DISK_REMOVED 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MD_DISK_WRITEMOSTLY 9  
+#define MD_DISK_WRITEMOSTLY 9
 typedef struct mdp_device_descriptor_s {
  __u32 number;
  __u32 major;
@@ -66,7 +66,7 @@ typedef struct mdp_device_descriptor_s {
 #define MD_SB_CLEAN 0
 #define MD_SB_ERRORS 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MD_SB_BITMAP_PRESENT 8  
+#define MD_SB_BITMAP_PRESENT 8
 typedef struct mdp_superblock_s {
  __u32 md_magic;
  __u32 major_version;
@@ -167,7 +167,7 @@ struct mdp_superblock_1 {
  __u8 device_uuid[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 devflags;
-#define WriteMostly1 1  
+#define WriteMostly1 1
  __u8 pad2[64-57];
  __u64 utime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -181,7 +181,7 @@ struct mdp_superblock_1 {
 };
 #define MD_FEATURE_BITMAP_OFFSET 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MD_FEATURE_RECOVERY_OFFSET 2  
+#define MD_FEATURE_RECOVERY_OFFSET 2
 #define MD_FEATURE_RESHAPE_ACTIVE 4
 #define MD_FEATURE_ALL (1|2|4)
 #endif

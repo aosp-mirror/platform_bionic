@@ -18,8 +18,8 @@
  ****************************************************************************/
 #ifndef __KERNELCAPI_H__
 #define __KERNELCAPI_H__
-#define CAPI_MAXAPPL 240  
-#define CAPI_MAXCONTR 32  
+#define CAPI_MAXAPPL 240
+#define CAPI_MAXCONTR 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAPI_MAXDATAWINDOW 8
 typedef struct kcapi_flagdef {
@@ -37,7 +37,7 @@ typedef struct kcapi_carddef {
 } kcapi_carddef;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KCAPI_CMD_TRACE 10
-#define KCAPI_CMD_ADDCARD 11  
+#define KCAPI_CMD_ADDCARD 11
 #define KCAPI_TRACE_OFF 0
 #define KCAPI_TRACE_SHORT_NO_DATA 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

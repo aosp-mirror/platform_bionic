@@ -36,9 +36,9 @@ struct ipt_sctp_info {
  u_int16_t spts[2];
  u_int32_t chunkmap[256 / sizeof (u_int32_t)];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SCTP_CHUNK_MATCH_ANY 0x01  
-#define SCTP_CHUNK_MATCH_ALL 0x02  
-#define SCTP_CHUNK_MATCH_ONLY 0x04  
+#define SCTP_CHUNK_MATCH_ANY 0x01
+#define SCTP_CHUNK_MATCH_ALL 0x02
+#define SCTP_CHUNK_MATCH_ONLY 0x04
  u_int32_t chunk_match_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct ipt_sctp_flag_info flag_info[IPT_NUM_SCTP_FLAGS];

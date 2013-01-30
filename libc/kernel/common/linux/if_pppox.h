@@ -42,8 +42,8 @@ struct pptp_addr {
  struct in_addr sin_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define PX_PROTO_OE 0  
-#define PX_PROTO_OL2TP 1  
+#define PX_PROTO_OE 0
+#define PX_PROTO_OL2TP 1
 #define PX_PROTO_PPTP 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PX_PROTO_OLAC 3

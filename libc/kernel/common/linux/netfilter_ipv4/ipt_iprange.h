@@ -18,11 +18,11 @@
  ****************************************************************************/
 #ifndef _IPT_IPRANGE_H
 #define _IPT_IPRANGE_H
-#define IPRANGE_SRC 0x01  
-#define IPRANGE_DST 0x02  
+#define IPRANGE_SRC 0x01
+#define IPRANGE_DST 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPRANGE_SRC_INV 0x10  
-#define IPRANGE_DST_INV 0x20  
+#define IPRANGE_SRC_INV 0x10
+#define IPRANGE_DST_INV 0x20
 struct ipt_iprange {
  u_int32_t min_ip, max_ip;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

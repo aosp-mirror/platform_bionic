@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __BMP085_H__
 #define __BMP085_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define BMP085_NAME "bmp085"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BMP085_IOCTL_BASE 78

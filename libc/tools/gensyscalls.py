@@ -533,12 +533,6 @@ class State:
             D( "creating %s" % bionic_temp )
             make_dir( bionic_temp )
 
-#        D( "p4 editing source files" )
-#        for arch in all_archs:
-#            commands.getoutput( "p4 edit " + arch + "/syscalls/*.S " )
-#            commands.getoutput( "p4 edit " + arch + "/syscalls.mk" )
-#        commands.getoutput( "p4 edit " + bionic_root + "include/sys/linux-syscalls.h" )
-
         D( "re-generating stubs and support files" )
 
         self.gen_linux_syscalls_h()

@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_MACE_H__
 #define __ASM_MACE_H__
-#define MACE_BASE 0x1f000000  
+#define MACE_BASE 0x1f000000
 struct mace_pci {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned int error_addr;
@@ -182,13 +182,13 @@ struct mace_isactrl {
 #define MACEISA_RINGBUFFERS_SIZE (8 * 4096)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long misc;
-#define MACEISA_FLASH_WE BIT(0)  
-#define MACEISA_PWD_CLEAR BIT(1)  
+#define MACEISA_FLASH_WE BIT(0)
+#define MACEISA_PWD_CLEAR BIT(1)
 #define MACEISA_NIC_DEASSERT BIT(2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MACEISA_NIC_DATA BIT(3)
-#define MACEISA_LED_RED BIT(4)  
-#define MACEISA_LED_GREEN BIT(5)  
+#define MACEISA_LED_RED BIT(4)
+#define MACEISA_LED_GREEN BIT(5)
 #define MACEISA_DP_RAM_ENABLE BIT(6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  volatile unsigned long istat;

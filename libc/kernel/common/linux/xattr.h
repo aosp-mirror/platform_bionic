@@ -18,8 +18,8 @@
  ****************************************************************************/
 #ifndef _LINUX_XATTR_H
 #define _LINUX_XATTR_H
-#define XATTR_CREATE 0x1  
-#define XATTR_REPLACE 0x2  
+#define XATTR_CREATE 0x1
+#define XATTR_REPLACE 0x2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XATTR_OS2_PREFIX "os2."
 #define XATTR_OS2_PREFIX_LEN (sizeof (XATTR_OS2_PREFIX) - 1)

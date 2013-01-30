@@ -68,7 +68,7 @@ union tcp_word_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 words[5];
 };
-#define tcp_flag_word(tp) ( ((union tcp_word_hdr *)(tp))->words [3]) 
+#define tcp_flag_word(tp) ( ((union tcp_word_hdr *)(tp))->words [3])
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  TCP_FLAG_CWR = __constant_htonl(0x00800000),
@@ -84,22 +84,22 @@ enum {
  TCP_RESERVED_BITS = __constant_htonl(0x0F000000),
  TCP_DATA_OFFSET = __constant_htonl(0xF0000000)
 };
-#define TCP_NODELAY 1  
+#define TCP_NODELAY 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define TCP_MAXSEG 2  
-#define TCP_CORK 3  
-#define TCP_KEEPIDLE 4  
-#define TCP_KEEPINTVL 5  
+#define TCP_MAXSEG 2
+#define TCP_CORK 3
+#define TCP_KEEPIDLE 4
+#define TCP_KEEPINTVL 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define TCP_KEEPCNT 6  
-#define TCP_SYNCNT 7  
-#define TCP_LINGER2 8  
-#define TCP_DEFER_ACCEPT 9  
+#define TCP_KEEPCNT 6
+#define TCP_SYNCNT 7
+#define TCP_LINGER2 8
+#define TCP_DEFER_ACCEPT 9
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define TCP_WINDOW_CLAMP 10  
-#define TCP_INFO 11  
-#define TCP_QUICKACK 12  
-#define TCP_CONGESTION 13  
+#define TCP_WINDOW_CLAMP 10
+#define TCP_INFO 11
+#define TCP_QUICKACK 12
+#define TCP_CONGESTION 13
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TCPI_OPT_TIMESTAMPS 1
 #define TCPI_OPT_SACK 2

@@ -41,13 +41,13 @@ typedef struct z_stream_s {
 typedef z_stream *z_streamp;
 #define Z_NO_FLUSH 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define Z_PARTIAL_FLUSH 1  
+#define Z_PARTIAL_FLUSH 1
 #define Z_PACKET_FLUSH 2
 #define Z_SYNC_FLUSH 3
 #define Z_FULL_FLUSH 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define Z_FINISH 5
-#define Z_BLOCK 6  
+#define Z_BLOCK 6
 #define Z_OK 0
 #define Z_STREAM_END 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

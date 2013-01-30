@@ -16,11 +16,6 @@ def usage():
 
       - the clean headers will be placed in '../arch-<arch>/asm',
         '../common/linux', '../common/asm-generic', etc..
-
-      - if ANDROID_PRODUCT_OUT is defined in your environment, you're
-        using the Android build system, and the program will issue
-        p4 add / edit / delete commands to update the depot for you.
-        (you'll need to p4 submit manually though)
 """ % { "progname" : os.path.basename(sys.argv[0]) }
     sys.exit(0)
 

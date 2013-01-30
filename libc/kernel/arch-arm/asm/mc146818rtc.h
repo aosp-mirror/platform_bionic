@@ -23,7 +23,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifndef RTC_PORT
 #define RTC_PORT(x) (0x70 + (x))
-#define RTC_ALWAYS_BCD 1  
+#define RTC_ALWAYS_BCD 1
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CMOS_READ(addr) ({  outb_p((addr),RTC_PORT(0));  inb_p(RTC_PORT(1));  })

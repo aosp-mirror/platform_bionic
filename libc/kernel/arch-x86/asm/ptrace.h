@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _ASM_X86_PTRACE_H
 #define _ASM_X86_PTRACE_H
-#include <linux/compiler.h>  
+#include <linux/compiler.h>
 #include <asm/ptrace-abi.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifndef __ASSEMBLY__

@@ -22,7 +22,7 @@
 #include <asm/mipsmtregs.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <irq.h>
-#define irq_canonicalize(irq) (irq)  
+#define irq_canonicalize(irq) (irq)
 #define IRQ_AFFINITY_HOOK(irq) do { } while (0)
 #define __DO_IRQ_SMTC_HOOK(irq)  do {   IRQ_AFFINITY_HOOK(irq);  } while (0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

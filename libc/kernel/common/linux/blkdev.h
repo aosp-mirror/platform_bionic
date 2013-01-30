@@ -44,7 +44,7 @@ typedef struct elevator_queue elevator_t;
 struct request_pm_state;
 struct blk_trace;
 #define BLKDEV_MIN_RQ 4
-#define BLKDEV_MAX_RQ 128  
+#define BLKDEV_MAX_RQ 128
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct as_io_context {
  spinlock_t lock;
@@ -354,17 +354,17 @@ struct request_queue
 };
 #define RQ_INACTIVE (-1)
 #define RQ_ACTIVE 1
-#define QUEUE_FLAG_CLUSTER 0  
+#define QUEUE_FLAG_CLUSTER 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define QUEUE_FLAG_QUEUED 1  
-#define QUEUE_FLAG_STOPPED 2  
-#define QUEUE_FLAG_READFULL 3  
-#define QUEUE_FLAG_WRITEFULL 4  
+#define QUEUE_FLAG_QUEUED 1
+#define QUEUE_FLAG_STOPPED 2
+#define QUEUE_FLAG_READFULL 3
+#define QUEUE_FLAG_WRITEFULL 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define QUEUE_FLAG_DEAD 5  
-#define QUEUE_FLAG_REENTER 6  
-#define QUEUE_FLAG_PLUGGED 7  
-#define QUEUE_FLAG_ELVSWITCH 8  
+#define QUEUE_FLAG_DEAD 5
+#define QUEUE_FLAG_REENTER 6
+#define QUEUE_FLAG_PLUGGED 7
+#define QUEUE_FLAG_ELVSWITCH 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
  QUEUE_ORDERED_NONE = 0x00,
@@ -418,10 +418,10 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define rq_mergeable(rq)   (!((rq)->flags & RQ_NOMERGE_FLAGS) && blk_fs_request((rq)))
 #define blk_queue_headactive(q, head_active)
-#define BLKPREP_OK 0  
-#define BLKPREP_KILL 1  
+#define BLKPREP_OK 0
+#define BLKPREP_KILL 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BLKPREP_DEFER 2  
+#define BLKPREP_DEFER 2
 #define BLK_BOUNCE_HIGH ((u64)blk_max_low_pfn << PAGE_SHIFT)
 #define BLK_BOUNCE_ANY ((u64)blk_max_pfn << PAGE_SHIFT)
 #define BLK_BOUNCE_ISA (ISA_DMA_THRESHOLD)
