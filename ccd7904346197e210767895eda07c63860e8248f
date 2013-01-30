@@ -69,6 +69,24 @@
       "revId": "ccd7904346197e210767895eda07c63860e8248f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PD3zr6Ac",
+        "filename": "libc/kernel/tools/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-01-30T18:17:21Z",
+      "side": 1,
+      "message": "I agree with Elliott.  I find the \"git add\" portion annoying, because it (mildly) breaks my ability to do a \"git diff\" and see what changed. \n\nI\u0027d just remove these lines, as bdc suggested.",
+      "parentUuid": "PD1xlzNk",
+      "revId": "ccd7904346197e210767895eda07c63860e8248f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
