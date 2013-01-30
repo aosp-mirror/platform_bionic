@@ -22,11 +22,11 @@
 #include <linux/if_ether.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/if_packet.h>
-#define MAX_ADDR_LEN 32  
-#define NETDEV_TX_OK 0  
-#define NETDEV_TX_BUSY 1  
+#define MAX_ADDR_LEN 32
+#define NETDEV_TX_OK 0
+#define NETDEV_TX_BUSY 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NETDEV_TX_LOCKED -1  
+#define NETDEV_TX_LOCKED -1
 #define LL_MAX_HEADER 32
 #define MAX_HEADER LL_MAX_HEADER
 struct net_device_stats

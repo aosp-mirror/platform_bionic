@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef __KXTF9_H__
 #define __KXTF9_H__
-#include <linux/ioctl.h>  
+#include <linux/ioctl.h>
 #define KXTF9_IOCTL_BASE 77
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KXTF9_IOCTL_SET_DELAY _IOW(KXTF9_IOCTL_BASE, 0, int)
@@ -39,31 +39,31 @@
 #define KXTF9_G_2G 0x00
 #define KXTF9_G_4G 0x08
 #define KXTF9_G_8G 0x10
-#define TPE 0x01  
+#define TPE 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define WUFE 0x02  
-#define TDTE 0x04  
-#define OTP1_6 0x00  
+#define WUFE 0x02
+#define TDTE 0x04
+#define OTP1_6 0x00
 #define OTP6_3 0x20
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OTP12_5 0x40
 #define OTP50 0x60
-#define OWUF25 0x00  
+#define OWUF25 0x00
 #define OWUF50 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OWUF100 0x02
 #define OWUF200 0x03
-#define OTDT50 0x00  
+#define OTDT50 0x00
 #define OTDT100 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OTDT200 0x08
 #define OTDT400 0x0C
-#define IEN 0x20  
-#define IEA 0x10  
+#define IEN 0x20
+#define IEA 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IEL 0x08  
-#define IEU 0x04  
-#define ODR800 0x06  
+#define IEL 0x08
+#define IEU 0x04
+#define ODR800 0x06
 #define ODR400 0x05
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ODR200 0x04

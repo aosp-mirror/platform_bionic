@@ -39,12 +39,12 @@
 #define RRDY 0x0002
 #define RFULL 0x0004
 #define RSYNC_ERR 0x0008
-#define RINTM(value) ((value)<<4)  
+#define RINTM(value) ((value)<<4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ABIS 0x0040
 #define DXENA 0x0080
-#define CLKSTP(value) ((value)<<11)  
-#define RJUST(value) ((value)<<13)  
+#define CLKSTP(value) ((value)<<11)
+#define RJUST(value) ((value)<<13)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DLB 0x8000
 #define XRST 0x0001
@@ -52,7 +52,7 @@
 #define XEMPTY 0x0004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XSYNC_ERR 0x0008
-#define XINTM(value) ((value)<<4)  
+#define XINTM(value) ((value)<<4)
 #define GRST 0x0040
 #define FRST 0x0080
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -77,29 +77,29 @@
 #define XIOEN 0x2000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IDLE_EN 0x4000
-#define RWDLEN1(value) ((value)<<5)  
-#define RFRLEN1(value) ((value)<<8)  
-#define XWDLEN1(value) ((value)<<5)  
+#define RWDLEN1(value) ((value)<<5)
+#define RFRLEN1(value) ((value)<<8)
+#define XWDLEN1(value) ((value)<<5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define XFRLEN1(value) ((value)<<8)  
-#define RDATDLY(value) (value)  
+#define XFRLEN1(value) ((value)<<8)
+#define RDATDLY(value) (value)
 #define RFIG 0x0004
-#define RCOMPAND(value) ((value)<<3)  
+#define RCOMPAND(value) ((value)<<3)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RWDLEN2(value) ((value)<<5)  
-#define RFRLEN2(value) ((value)<<8)  
+#define RWDLEN2(value) ((value)<<5)
+#define RFRLEN2(value) ((value)<<8)
 #define RPHASE 0x8000
-#define XDATDLY(value) (value)  
+#define XDATDLY(value) (value)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XFIG 0x0004
-#define XCOMPAND(value) ((value)<<3)  
-#define XWDLEN2(value) ((value)<<5)  
-#define XFRLEN2(value) ((value)<<8)  
+#define XCOMPAND(value) ((value)<<3)
+#define XWDLEN2(value) ((value)<<5)
+#define XFRLEN2(value) ((value)<<8)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XPHASE 0x8000
-#define CLKGDV(value) (value)  
-#define FWID(value) ((value)<<8)  
-#define FPER(value) (value)  
+#define CLKGDV(value) (value)
+#define FWID(value) ((value)<<8)
+#define FPER(value) (value)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FSGM 0x1000
 #define CLKSM 0x2000
@@ -107,14 +107,14 @@
 #define GSYNC 0x8000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RMCM 0x0001
-#define RCBLK(value) ((value)<<2)  
-#define RPABLK(value) ((value)<<5)  
-#define RPBBLK(value) ((value)<<7)  
+#define RCBLK(value) ((value)<<2)
+#define RPABLK(value) ((value)<<5)
+#define RPBBLK(value) ((value)<<7)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define XMCM(value) (value)  
-#define XCBLK(value) ((value)<<2)  
-#define XPABLK(value) ((value)<<5)  
-#define XPBBLK(value) ((value)<<7)  
+#define XMCM(value) (value)
+#define XCBLK(value) ((value)<<2)
+#define XPABLK(value) ((value)<<5)
+#define XPBBLK(value) ((value)<<7)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omap_mcbsp_reg_cfg {
  u16 spcr2;

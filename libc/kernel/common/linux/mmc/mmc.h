@@ -33,12 +33,12 @@ struct mmc_command {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned int flags;
 #define MMC_RSP_PRESENT (1 << 0)
-#define MMC_RSP_136 (1 << 1)  
-#define MMC_RSP_CRC (1 << 2)  
+#define MMC_RSP_136 (1 << 1)
+#define MMC_RSP_CRC (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MMC_RSP_BUSY (1 << 3)  
-#define MMC_RSP_OPCODE (1 << 4)  
-#define MMC_CMD_MASK (3 << 5)  
+#define MMC_RSP_BUSY (1 << 3)
+#define MMC_RSP_OPCODE (1 << 4)
+#define MMC_CMD_MASK (3 << 5)
 #define MMC_CMD_AC (0 << 5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MMC_CMD_ADTC (1 << 5)

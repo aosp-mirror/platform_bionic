@@ -46,20 +46,20 @@ struct robust_list_head {
 #define FUTEX_TID_MASK 0x3fffffff
 #define ROBUST_LIST_LIMIT 2048
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FUTEX_OP_SET 0  
-#define FUTEX_OP_ADD 1  
-#define FUTEX_OP_OR 2  
-#define FUTEX_OP_ANDN 3  
+#define FUTEX_OP_SET 0
+#define FUTEX_OP_ADD 1
+#define FUTEX_OP_OR 2
+#define FUTEX_OP_ANDN 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FUTEX_OP_XOR 4  
-#define FUTEX_OP_OPARG_SHIFT 8  
-#define FUTEX_OP_CMP_EQ 0  
-#define FUTEX_OP_CMP_NE 1  
+#define FUTEX_OP_XOR 4
+#define FUTEX_OP_OPARG_SHIFT 8
+#define FUTEX_OP_CMP_EQ 0
+#define FUTEX_OP_CMP_NE 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define FUTEX_OP_CMP_LT 2  
-#define FUTEX_OP_CMP_LE 3  
-#define FUTEX_OP_CMP_GT 4  
-#define FUTEX_OP_CMP_GE 5  
+#define FUTEX_OP_CMP_LT 2
+#define FUTEX_OP_CMP_LE 3
+#define FUTEX_OP_CMP_GT 4
+#define FUTEX_OP_CMP_GE 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FUTEX_OP(op, oparg, cmp, cmparg)   (((op & 0xf) << 28) | ((cmp & 0xf) << 24)   | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
 #endif

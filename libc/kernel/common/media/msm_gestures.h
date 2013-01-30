@@ -59,4 +59,3 @@ struct msm_ges_evt {
  int evt_len;
 };
 #endif
-

@@ -31,7 +31,7 @@
 #define cpu_logical_map(cpu) __cpu_logical_map[cpu]
 #define NO_PROC_ID (-1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SMP_RESCHEDULE_YOURSELF 0x1  
+#define SMP_RESCHEDULE_YOURSELF 0x1
 #define SMP_CALL_FUNCTION 0x2
 #define cpu_possible_map phys_cpu_present_map
 #endif

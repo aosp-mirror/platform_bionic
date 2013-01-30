@@ -1378,4 +1378,3 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TABLA_CODEC_UNPACK_ENTRY(packed, reg, mask, val)   do {   ((reg) = ((packed >> 16) & (0xffff)));   ((mask) = ((packed >> 8) & (0xff)));   ((val) = ((packed) & (0xff)));   } while (0);
 #endif
-

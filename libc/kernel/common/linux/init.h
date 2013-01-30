@@ -87,11 +87,11 @@ struct obs_kernel_param {
 #define module_init(initfn)   static inline initcall_t __inittest(void)   { return initfn; }   int init_module(void) __attribute__((alias(#initfn)));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define module_exit(exitfn)   static inline exitcall_t __exittest(void)   { return exitfn; }   void cleanup_module(void) __attribute__((alias(#exitfn)));
-#define __setup_param(str, unique_id, fn)  
-#define __setup_null_param(str, unique_id)  
-#define __setup(str, func)  
+#define __setup_param(str, unique_id, fn)
+#define __setup_null_param(str, unique_id)
+#define __setup(str, func)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __obsolete_setup(str)  
+#define __obsolete_setup(str)
 #endif
 #define __nosavedata __attribute__ ((__section__ (".data.nosave")))
 #define __init_or_module __init

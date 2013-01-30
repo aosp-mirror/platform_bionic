@@ -18,6 +18,6 @@
  ****************************************************************************/
 #ifndef _LINUX_TTY_H
 #define _LINUX_TTY_H
-#define N_CAIF 20  
+#define N_CAIF 20
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -63,7 +63,7 @@ struct mp_config_table
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MP_INTSRC 3
 #define MP_LINTSRC 4
-#define MP_TRANSLATION 192  
+#define MP_TRANSLATION 192
 struct mpc_config_processor
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 {
@@ -72,8 +72,8 @@ struct mpc_config_processor
  unsigned char mpc_apicver;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned char mpc_cpuflag;
-#define CPU_ENABLED 1  
-#define CPU_BOOTPROCESSOR 2  
+#define CPU_ENABLED 1
+#define CPU_BOOTPROCESSOR 2
  unsigned long mpc_cpufeature;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CPU_STEPPING_MASK 0x0F
@@ -93,10 +93,10 @@ struct mpc_config_bus
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BUSTYPE_EISA "EISA"
 #define BUSTYPE_ISA "ISA"
-#define BUSTYPE_INTERN "INTERN"  
+#define BUSTYPE_INTERN "INTERN"
 #define BUSTYPE_MCA "MCA"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define BUSTYPE_VL "VL"  
+#define BUSTYPE_VL "VL"
 #define BUSTYPE_PCI "PCI"
 #define BUSTYPE_PCMCIA "PCMCIA"
 #define BUSTYPE_CBUS "CBUS"

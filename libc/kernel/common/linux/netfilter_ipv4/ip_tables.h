@@ -46,19 +46,19 @@ struct ipt_ip {
 #define ipt_standard_target xt_standard_target
 #define ipt_counters xt_counters
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPT_F_FRAG 0x01  
-#define IPT_F_GOTO 0x02  
-#define IPT_F_MASK 0x03  
-#define IPT_INV_VIA_IN 0x01  
+#define IPT_F_FRAG 0x01
+#define IPT_F_GOTO 0x02
+#define IPT_F_MASK 0x03
+#define IPT_INV_VIA_IN 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPT_INV_VIA_OUT 0x02  
-#define IPT_INV_TOS 0x04  
-#define IPT_INV_SRCIP 0x08  
-#define IPT_INV_DSTIP 0x10  
+#define IPT_INV_VIA_OUT 0x02
+#define IPT_INV_TOS 0x04
+#define IPT_INV_SRCIP 0x08
+#define IPT_INV_DSTIP 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPT_INV_FRAG 0x20  
+#define IPT_INV_FRAG 0x20
 #define IPT_INV_PROTO XT_INV_PROTO
-#define IPT_INV_MASK 0x7F  
+#define IPT_INV_MASK 0x7F
 struct ipt_entry
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 {
@@ -107,7 +107,7 @@ struct ipt_icmp
  u_int8_t invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define IPT_ICMP_INV 0x01  
+#define IPT_ICMP_INV 0x01
 struct ipt_getinfo
 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

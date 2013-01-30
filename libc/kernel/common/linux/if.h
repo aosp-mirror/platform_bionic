@@ -18,83 +18,83 @@
  ****************************************************************************/
 #ifndef _LINUX_IF_H
 #define _LINUX_IF_H
-#include <linux/types.h>  
-#include <linux/socket.h>  
+#include <linux/types.h>
+#include <linux/socket.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <linux/compiler.h>  
+#include <linux/compiler.h>
 #define IFNAMSIZ 16
 #define IFALIASZ 256
 #include <linux/hdlc/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_UP 0x1  
-#define IFF_BROADCAST 0x2  
-#define IFF_DEBUG 0x4  
-#define IFF_LOOPBACK 0x8  
+#define IFF_UP 0x1
+#define IFF_BROADCAST 0x2
+#define IFF_DEBUG 0x4
+#define IFF_LOOPBACK 0x8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_POINTOPOINT 0x10  
-#define IFF_NOTRAILERS 0x20  
-#define IFF_RUNNING 0x40  
-#define IFF_NOARP 0x80  
+#define IFF_POINTOPOINT 0x10
+#define IFF_NOTRAILERS 0x20
+#define IFF_RUNNING 0x40
+#define IFF_NOARP 0x80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_PROMISC 0x100  
-#define IFF_ALLMULTI 0x200  
-#define IFF_MASTER 0x400  
-#define IFF_SLAVE 0x800  
+#define IFF_PROMISC 0x100
+#define IFF_ALLMULTI 0x200
+#define IFF_MASTER 0x400
+#define IFF_SLAVE 0x800
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_MULTICAST 0x1000  
-#define IFF_PORTSEL 0x2000  
-#define IFF_AUTOMEDIA 0x4000  
-#define IFF_DYNAMIC 0x8000  
+#define IFF_MULTICAST 0x1000
+#define IFF_PORTSEL 0x2000
+#define IFF_AUTOMEDIA 0x4000
+#define IFF_DYNAMIC 0x8000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_LOWER_UP 0x10000  
-#define IFF_DORMANT 0x20000  
-#define IFF_ECHO 0x40000  
+#define IFF_LOWER_UP 0x10000
+#define IFF_DORMANT 0x20000
+#define IFF_ECHO 0x40000
 #define IFF_VOLATILE (IFF_LOOPBACK|IFF_POINTOPOINT|IFF_BROADCAST|IFF_ECHO|  IFF_MASTER|IFF_SLAVE|IFF_RUNNING|IFF_LOWER_UP|IFF_DORMANT)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_802_1Q_VLAN 0x1  
-#define IFF_EBRIDGE 0x2  
-#define IFF_SLAVE_INACTIVE 0x4  
-#define IFF_MASTER_8023AD 0x8  
+#define IFF_802_1Q_VLAN 0x1
+#define IFF_EBRIDGE 0x2
+#define IFF_SLAVE_INACTIVE 0x4
+#define IFF_MASTER_8023AD 0x8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_MASTER_ALB 0x10  
-#define IFF_BONDING 0x20  
-#define IFF_SLAVE_NEEDARP 0x40  
-#define IFF_ISATAP 0x80  
+#define IFF_MASTER_ALB 0x10
+#define IFF_BONDING 0x20
+#define IFF_SLAVE_NEEDARP 0x40
+#define IFF_ISATAP 0x80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_MASTER_ARPMON 0x100  
-#define IFF_WAN_HDLC 0x200  
-#define IFF_XMIT_DST_RELEASE 0x400  
-#define IFF_DONT_BRIDGE 0x800  
+#define IFF_MASTER_ARPMON 0x100
+#define IFF_WAN_HDLC 0x200
+#define IFF_XMIT_DST_RELEASE 0x400
+#define IFF_DONT_BRIDGE 0x800
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IFF_IN_NETPOLL 0x1000  
-#define IFF_DISABLE_NETPOLL 0x2000  
-#define IF_GET_IFACE 0x0001  
+#define IFF_IN_NETPOLL 0x1000
+#define IFF_DISABLE_NETPOLL 0x2000
+#define IF_GET_IFACE 0x0001
 #define IF_GET_PROTO 0x0002
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IF_IFACE_V35 0x1000  
-#define IF_IFACE_V24 0x1001  
-#define IF_IFACE_X21 0x1002  
-#define IF_IFACE_T1 0x1003  
+#define IF_IFACE_V35 0x1000
+#define IF_IFACE_V24 0x1001
+#define IF_IFACE_X21 0x1002
+#define IF_IFACE_T1 0x1003
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IF_IFACE_E1 0x1004  
-#define IF_IFACE_SYNC_SERIAL 0x1005  
-#define IF_IFACE_X21D 0x1006  
-#define IF_PROTO_HDLC 0x2000  
+#define IF_IFACE_E1 0x1004
+#define IF_IFACE_SYNC_SERIAL 0x1005
+#define IF_IFACE_X21D 0x1006
+#define IF_PROTO_HDLC 0x2000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IF_PROTO_PPP 0x2001  
-#define IF_PROTO_CISCO 0x2002  
-#define IF_PROTO_FR 0x2003  
-#define IF_PROTO_FR_ADD_PVC 0x2004  
+#define IF_PROTO_PPP 0x2001
+#define IF_PROTO_CISCO 0x2002
+#define IF_PROTO_FR 0x2003
+#define IF_PROTO_FR_ADD_PVC 0x2004
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IF_PROTO_FR_DEL_PVC 0x2005  
-#define IF_PROTO_X25 0x2006  
-#define IF_PROTO_HDLC_ETH 0x2007  
-#define IF_PROTO_FR_ADD_ETH_PVC 0x2008  
+#define IF_PROTO_FR_DEL_PVC 0x2005
+#define IF_PROTO_X25 0x2006
+#define IF_PROTO_HDLC_ETH 0x2007
+#define IF_PROTO_FR_ADD_ETH_PVC 0x2008
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IF_PROTO_FR_DEL_ETH_PVC 0x2009  
-#define IF_PROTO_FR_PVC 0x200A  
+#define IF_PROTO_FR_DEL_ETH_PVC 0x2009
+#define IF_PROTO_FR_PVC 0x200A
 #define IF_PROTO_FR_ETH_PVC 0x200B
-#define IF_PROTO_RAW 0x200C  
+#define IF_PROTO_RAW 0x200C
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
  IF_OPER_UNKNOWN,
@@ -166,27 +166,27 @@ struct ifreq {
  } ifr_ifru;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifr_name ifr_ifrn.ifrn_name  
-#define ifr_hwaddr ifr_ifru.ifru_hwaddr  
-#define ifr_addr ifr_ifru.ifru_addr  
-#define ifr_dstaddr ifr_ifru.ifru_dstaddr  
+#define ifr_name ifr_ifrn.ifrn_name
+#define ifr_hwaddr ifr_ifru.ifru_hwaddr
+#define ifr_addr ifr_ifru.ifru_addr
+#define ifr_dstaddr ifr_ifru.ifru_dstaddr
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifr_broadaddr ifr_ifru.ifru_broadaddr  
-#define ifr_netmask ifr_ifru.ifru_netmask  
-#define ifr_flags ifr_ifru.ifru_flags  
-#define ifr_metric ifr_ifru.ifru_ivalue  
+#define ifr_broadaddr ifr_ifru.ifru_broadaddr
+#define ifr_netmask ifr_ifru.ifru_netmask
+#define ifr_flags ifr_ifru.ifru_flags
+#define ifr_metric ifr_ifru.ifru_ivalue
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifr_mtu ifr_ifru.ifru_mtu  
-#define ifr_map ifr_ifru.ifru_map  
-#define ifr_slave ifr_ifru.ifru_slave  
-#define ifr_data ifr_ifru.ifru_data  
+#define ifr_mtu ifr_ifru.ifru_mtu
+#define ifr_map ifr_ifru.ifru_map
+#define ifr_slave ifr_ifru.ifru_slave
+#define ifr_data ifr_ifru.ifru_data
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifr_ifindex ifr_ifru.ifru_ivalue  
-#define ifr_bandwidth ifr_ifru.ifru_ivalue  
-#define ifr_qlen ifr_ifru.ifru_ivalue  
-#define ifr_newname ifr_ifru.ifru_newname  
+#define ifr_ifindex ifr_ifru.ifru_ivalue
+#define ifr_bandwidth ifr_ifru.ifru_ivalue
+#define ifr_qlen ifr_ifru.ifru_ivalue
+#define ifr_newname ifr_ifru.ifru_newname
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifr_settings ifr_ifru.ifru_settings  
+#define ifr_settings ifr_ifru.ifru_settings
 struct ifconf {
  int ifc_len;
  union {
@@ -196,6 +196,6 @@ struct ifconf {
  } ifc_ifcu;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ifc_buf ifc_ifcu.ifcu_buf  
-#define ifc_req ifc_ifcu.ifcu_req  
+#define ifc_buf ifc_ifcu.ifcu_buf
+#define ifc_req ifc_ifcu.ifcu_req
 #endif

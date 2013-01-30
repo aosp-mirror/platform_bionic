@@ -41,9 +41,9 @@ typedef enum {
  ANDROID_ALARM_TIME_CHANGE_MASK = 1U << 16
 } android_alarm_return_flags_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ANDROID_ALARM_CLEAR(type) _IO('a', 0 | ((type) << 4)) 
-#define ANDROID_ALARM_WAIT _IO('a', 1) 
-#define ANDROID_ALARM_SET(type) _IOW('a', 2 | ((type) << 4), struct timespec) 
+#define ANDROID_ALARM_CLEAR(type) _IO('a', 0 | ((type) << 4))
+#define ANDROID_ALARM_WAIT _IO('a', 1)
+#define ANDROID_ALARM_SET(type) _IOW('a', 2 | ((type) << 4), struct timespec)
 #define ANDROID_ALARM_SET_AND_WAIT(type) _IOW('a', 3 | ((type) << 4), struct timespec)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ANDROID_ALARM_GET_TIME(type) _IOW('a', 4 | ((type) << 4), struct timespec)

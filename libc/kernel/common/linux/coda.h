@@ -98,12 +98,12 @@ typedef unsigned int u_int32_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define C_M_READ 00400
 #define C_M_WRITE 00200
-#define C_A_C_OK 8  
-#define C_A_R_OK 4  
+#define C_A_C_OK 8
+#define C_A_R_OK 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define C_A_W_OK 2  
-#define C_A_X_OK 1  
-#define C_A_F_OK 0  
+#define C_A_W_OK 2
+#define C_A_X_OK 1
+#define C_A_F_OK 0
 #ifndef _VENUS_DIRENT_T_
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define _VENUS_DIRENT_T_ 1
@@ -206,13 +206,13 @@ struct coda_statfs {
 #define CODA_VGET 22
 #define CODA_SIGNAL 23
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CODA_REPLACE 24  
-#define CODA_FLUSH 25  
-#define CODA_PURGEUSER 26  
-#define CODA_ZAPFILE 27  
+#define CODA_REPLACE 24
+#define CODA_FLUSH 25
+#define CODA_PURGEUSER 26
+#define CODA_ZAPFILE 27
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CODA_ZAPDIR 28  
-#define CODA_PURGEFID 30  
+#define CODA_ZAPDIR 28
+#define CODA_PURGEFID 30
 #define CODA_OPEN_BY_PATH 31
 #define CODA_RESOLVE 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -224,10 +224,10 @@ struct coda_statfs {
 #define CODA_NCALLS 37
 #define DOWNCALL(opcode) (opcode >= CODA_REPLACE && opcode <= CODA_PURGEFID)
 #define VC_MAXDATASIZE 8192
-#define VC_MAXMSGSIZE sizeof(union inputArgs)+sizeof(union outputArgs) +  VC_MAXDATASIZE 
+#define VC_MAXMSGSIZE sizeof(union inputArgs)+sizeof(union outputArgs) +  VC_MAXDATASIZE
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CIOC_KERNEL_VERSION _IOWR('c', 10, size_t)
-#define CODA_KERNEL_VERSION 3  
+#define CODA_KERNEL_VERSION 3
 struct coda_in_hdr {
  u_int32_t opcode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

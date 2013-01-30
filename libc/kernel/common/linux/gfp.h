@@ -27,29 +27,29 @@ struct vm_area_struct;
 #define __GFP_HIGHMEM ((__force gfp_t)0x02u)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if BITS_PER_LONG < 64
-#define __GFP_DMA32 ((__force gfp_t)0x00)  
+#define __GFP_DMA32 ((__force gfp_t)0x00)
 #else
-#define __GFP_DMA32 ((__force gfp_t)0x04)  
+#define __GFP_DMA32 ((__force gfp_t)0x04)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-#define __GFP_WAIT ((__force gfp_t)0x10u)  
-#define __GFP_HIGH ((__force gfp_t)0x20u)  
-#define __GFP_IO ((__force gfp_t)0x40u)  
+#define __GFP_WAIT ((__force gfp_t)0x10u)
+#define __GFP_HIGH ((__force gfp_t)0x20u)
+#define __GFP_IO ((__force gfp_t)0x40u)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __GFP_FS ((__force gfp_t)0x80u)  
-#define __GFP_COLD ((__force gfp_t)0x100u)  
-#define __GFP_NOWARN ((__force gfp_t)0x200u)  
-#define __GFP_REPEAT ((__force gfp_t)0x400u)  
+#define __GFP_FS ((__force gfp_t)0x80u)
+#define __GFP_COLD ((__force gfp_t)0x100u)
+#define __GFP_NOWARN ((__force gfp_t)0x200u)
+#define __GFP_REPEAT ((__force gfp_t)0x400u)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __GFP_NOFAIL ((__force gfp_t)0x800u)  
-#define __GFP_NORETRY ((__force gfp_t)0x1000u) 
-#define __GFP_NO_GROW ((__force gfp_t)0x2000u) 
-#define __GFP_COMP ((__force gfp_t)0x4000u) 
+#define __GFP_NOFAIL ((__force gfp_t)0x800u)
+#define __GFP_NORETRY ((__force gfp_t)0x1000u)
+#define __GFP_NO_GROW ((__force gfp_t)0x2000u)
+#define __GFP_COMP ((__force gfp_t)0x4000u)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __GFP_ZERO ((__force gfp_t)0x8000u) 
-#define __GFP_NOMEMALLOC ((__force gfp_t)0x10000u)  
-#define __GFP_HARDWALL ((__force gfp_t)0x20000u)  
-#define __GFP_BITS_SHIFT 20  
+#define __GFP_ZERO ((__force gfp_t)0x8000u)
+#define __GFP_NOMEMALLOC ((__force gfp_t)0x10000u)
+#define __GFP_HARDWALL ((__force gfp_t)0x20000u)
+#define __GFP_BITS_SHIFT 20
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __GFP_BITS_MASK ((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1))
 #define GFP_LEVEL_MASK (__GFP_WAIT|__GFP_HIGH|__GFP_IO|__GFP_FS|   __GFP_COLD|__GFP_NOWARN|__GFP_REPEAT|   __GFP_NOFAIL|__GFP_NORETRY|__GFP_NO_GROW|__GFP_COMP|   __GFP_NOMEMALLOC|__GFP_HARDWALL)

@@ -62,4 +62,3 @@ struct v4l2_mbus_config {
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-

@@ -34,7 +34,7 @@ struct __old_kernel_stat {
  unsigned long st_mtime;
  unsigned long st_ctime;
 };
-#define STAT_HAVE_NSEC 
+#define STAT_HAVE_NSEC
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct stat {
 #ifdef __ARMEB__

@@ -29,9 +29,9 @@ typedef unsigned int autofs_wqt_t;
 #else
 typedef unsigned long autofs_wqt_t;
 #endif
-#define autofs_ptype_missing 0  
+#define autofs_ptype_missing 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define autofs_ptype_expire 1  
+#define autofs_ptype_expire 1
 struct autofs_packet_hdr {
  int proto_version;
  int type;

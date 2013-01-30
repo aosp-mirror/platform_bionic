@@ -31,7 +31,7 @@ typedef struct capi_register_params {
 #define CAPI_REGISTER _IOW('C',0x01,struct capi_register_params)
 #define CAPI_MANUFACTURER_LEN 64
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CAPI_GET_MANUFACTURER _IOWR('C',0x06,int)  
+#define CAPI_GET_MANUFACTURER _IOWR('C',0x06,int)
 typedef struct capi_version {
  __u32 majorversion;
  __u32 minorversion;
@@ -42,7 +42,7 @@ typedef struct capi_version {
 #define CAPI_GET_VERSION _IOWR('C',0x07,struct capi_version)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAPI_SERIAL_LEN 8
-#define CAPI_GET_SERIAL _IOWR('C',0x08,int)  
+#define CAPI_GET_SERIAL _IOWR('C',0x08,int)
 typedef struct capi_profile {
  __u16 ncontroller;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
