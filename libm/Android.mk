@@ -1,229 +1,254 @@
 LOCAL_PATH:= $(call my-dir)
 
-libm_common_src_files:= \
-	isinf.c  \
-	fpclassify.c \
-	sincos.c \
-	bsdsrc/b_exp.c \
-	bsdsrc/b_log.c \
-	bsdsrc/b_tgamma.c \
-	src/e_acos.c \
-	src/e_acosf.c \
-	src/e_acosh.c \
-	src/e_acoshf.c \
-	src/e_asin.c \
-	src/e_asinf.c \
-	src/e_atan2.c \
-	src/e_atan2f.c \
-	src/e_atanh.c \
-	src/e_atanhf.c \
-	src/e_cosh.c \
-	src/e_coshf.c \
-	src/e_exp.c \
-	src/e_expf.c \
-	src/e_fmod.c \
-	src/e_fmodf.c \
-	src/e_gamma.c \
-	src/e_gamma_r.c \
-	src/e_gammaf.c \
-	src/e_gammaf_r.c \
-	src/e_hypot.c \
-	src/e_hypotf.c \
-	src/e_j0.c \
-	src/e_j0f.c \
-	src/e_j1.c \
-	src/e_j1f.c \
-	src/e_jn.c \
-	src/e_jnf.c \
-	src/e_lgamma.c \
-	src/e_lgamma_r.c \
-	src/e_lgammaf.c \
-	src/e_lgammaf_r.c \
-	src/e_log.c \
-	src/e_log10.c \
-	src/e_log10f.c \
-	src/e_logf.c \
-	src/e_pow.c \
-	src/e_powf.c \
-	src/e_rem_pio2.c \
-	src/e_rem_pio2f.c \
-	src/e_remainder.c \
-	src/e_remainderf.c \
-	src/e_scalb.c \
-	src/e_scalbf.c \
-	src/e_sinh.c \
-	src/e_sinhf.c \
-	src/e_sqrt.c \
-	src/k_cos.c \
-	src/k_cosf.c \
-	src/k_rem_pio2.c \
-	src/k_sin.c \
-	src/k_sinf.c \
-	src/k_tan.c \
-	src/k_tanf.c \
-	src/s_asinh.c \
-	src/s_asinhf.c \
-	src/s_atan.c \
-	src/s_atanf.c \
-	src/s_cbrt.c \
-	src/s_cbrtf.c \
-	src/s_ceil.c \
-	src/s_ceilf.c \
-	src/s_ceill.c \
-	src/s_copysign.c \
-	src/s_copysignf.c \
-	src/s_cos.c \
-	src/s_cosf.c \
-	src/s_erf.c \
-	src/s_erff.c \
-	src/s_exp2.c \
-	src/s_exp2f.c \
-	src/s_expm1.c \
-	src/s_expm1f.c \
-	src/s_fabsf.c \
-	src/s_fdim.c \
-	src/s_finite.c \
-	src/s_finitef.c \
-	src/s_floor.c \
-	src/s_floorf.c \
-	src/s_floorl.c \
-	src/s_fma.c \
-	src/s_fmaf.c \
-	src/s_fmax.c \
-	src/s_fmaxf.c \
-	src/s_fmaxl.c \
-	src/s_fmin.c \
-	src/s_fminf.c \
-	src/s_fminl.c \
-	src/s_frexpf.c \
-	src/s_ilogb.c \
-	src/s_ilogbf.c \
-	src/s_ilogbl.c \
-	src/s_isfinite.c \
-	src/s_isnormal.c \
-	src/s_llrint.c \
-	src/s_llrintf.c \
-	src/s_llround.c \
-	src/s_llroundf.c \
-	src/s_llroundl.c \
-	src/s_log1p.c \
-	src/s_log1pf.c \
-	src/s_logb.c \
-	src/s_logbf.c \
-	src/s_lrint.c \
-	src/s_lrintf.c \
-	src/s_lround.c \
-	src/s_lroundf.c \
-	src/s_lroundl.c \
-	src/s_modff.c \
-	src/s_nan.c \
-	src/s_nearbyint.c \
-	src/s_nextafter.c \
-	src/s_nextafterf.c \
-	src/s_nexttowardf.c \
-	src/s_remquo.c \
-	src/s_remquof.c \
-	src/s_rint.c \
-	src/s_rintf.c \
-	src/s_round.c \
-	src/s_roundf.c \
-	src/s_roundl.c \
-	src/s_signbit.c \
-	src/s_signgam.c \
-	src/s_significand.c \
-	src/s_significandf.c \
-	src/s_sin.c \
-	src/s_sinf.c \
-	src/s_tan.c \
-	src/s_tanf.c \
-	src/s_tanh.c \
-	src/s_tanhf.c \
-	src/s_tgammaf.c \
-	src/s_trunc.c \
-	src/s_truncf.c \
-	src/s_truncl.c \
-	src/w_drem.c \
-	src/w_dremf.c \
-	src/s_copysignl.c \
-	src/s_fabsl.c \
-	src/s_fabs.c \
-	src/s_frexp.c \
-	src/s_isnan.c \
-	src/s_modf.c
+# TODO: these come from from upstream's libc, not libm!
+libm_common_src_files := \
+    digittoint.c  \
+    fpclassify.c \
+    isinf.c  \
 
-libm_common_cflags :=
+# TODO: this is not in the BSDs.
+libm_common_src_files += \
+    sincos.c \
 
-ifeq ($(TARGET_ARCH),arm)
-  libm_common_src_files += \
-	arm/fenv.c \
-	src/e_ldexpf.c \
-	src/s_scalbln.c \
-	src/s_scalbn.c \
-	src/s_scalbnf.c \
-	src/e_sqrtf.c
+libm_common_src_files += \
+    upstream-freebsd/lib/msun/bsdsrc/b_exp.c \
+    upstream-freebsd/lib/msun/bsdsrc/b_log.c \
+    upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c \
+    upstream-freebsd/lib/msun/src/e_acos.c \
+    upstream-freebsd/lib/msun/src/e_acosf.c \
+    upstream-freebsd/lib/msun/src/e_acosh.c \
+    upstream-freebsd/lib/msun/src/e_acoshf.c \
+    upstream-freebsd/lib/msun/src/e_asin.c \
+    upstream-freebsd/lib/msun/src/e_asinf.c \
+    upstream-freebsd/lib/msun/src/e_atan2.c \
+    upstream-freebsd/lib/msun/src/e_atan2f.c \
+    upstream-freebsd/lib/msun/src/e_atanh.c \
+    upstream-freebsd/lib/msun/src/e_atanhf.c \
+    upstream-freebsd/lib/msun/src/e_cosh.c \
+    upstream-freebsd/lib/msun/src/e_coshf.c \
+    upstream-freebsd/lib/msun/src/e_exp.c \
+    upstream-freebsd/lib/msun/src/e_expf.c \
+    upstream-freebsd/lib/msun/src/e_fmod.c \
+    upstream-freebsd/lib/msun/src/e_fmodf.c \
+    upstream-freebsd/lib/msun/src/e_gamma.c \
+    upstream-freebsd/lib/msun/src/e_gammaf.c \
+    upstream-freebsd/lib/msun/src/e_gammaf_r.c \
+    upstream-freebsd/lib/msun/src/e_gamma_r.c \
+    upstream-freebsd/lib/msun/src/e_hypot.c \
+    upstream-freebsd/lib/msun/src/e_hypotf.c \
+    upstream-freebsd/lib/msun/src/e_j0.c \
+    upstream-freebsd/lib/msun/src/e_j0f.c \
+    upstream-freebsd/lib/msun/src/e_j1.c \
+    upstream-freebsd/lib/msun/src/e_j1f.c \
+    upstream-freebsd/lib/msun/src/e_jn.c \
+    upstream-freebsd/lib/msun/src/e_jnf.c \
+    upstream-freebsd/lib/msun/src/e_lgamma.c \
+    upstream-freebsd/lib/msun/src/e_lgammaf.c \
+    upstream-freebsd/lib/msun/src/e_lgammaf_r.c \
+    upstream-freebsd/lib/msun/src/e_lgamma_r.c \
+    upstream-freebsd/lib/msun/src/e_log10.c \
+    upstream-freebsd/lib/msun/src/e_log10f.c \
+    upstream-freebsd/lib/msun/src/e_log2.c \
+    upstream-freebsd/lib/msun/src/e_log2f.c \
+    upstream-freebsd/lib/msun/src/e_log.c \
+    upstream-freebsd/lib/msun/src/e_logf.c \
+    upstream-freebsd/lib/msun/src/e_pow.c \
+    upstream-freebsd/lib/msun/src/e_powf.c \
+    upstream-freebsd/lib/msun/src/e_remainder.c \
+    upstream-freebsd/lib/msun/src/e_remainderf.c \
+    upstream-freebsd/lib/msun/src/e_rem_pio2.c \
+    upstream-freebsd/lib/msun/src/e_rem_pio2f.c \
+    upstream-freebsd/lib/msun/src/e_scalb.c \
+    upstream-freebsd/lib/msun/src/e_scalbf.c \
+    upstream-freebsd/lib/msun/src/e_sinh.c \
+    upstream-freebsd/lib/msun/src/e_sinhf.c \
+    upstream-freebsd/lib/msun/src/e_sqrt.c \
+    upstream-freebsd/lib/msun/src/e_sqrtf.c \
+    upstream-freebsd/lib/msun/src/k_cos.c \
+    upstream-freebsd/lib/msun/src/k_cosf.c \
+    upstream-freebsd/lib/msun/src/k_exp.c \
+    upstream-freebsd/lib/msun/src/k_expf.c \
+    upstream-freebsd/lib/msun/src/k_rem_pio2.c \
+    upstream-freebsd/lib/msun/src/k_sin.c \
+    upstream-freebsd/lib/msun/src/k_sinf.c \
+    upstream-freebsd/lib/msun/src/k_tan.c \
+    upstream-freebsd/lib/msun/src/k_tanf.c \
+    upstream-freebsd/lib/msun/src/s_asinh.c \
+    upstream-freebsd/lib/msun/src/s_asinhf.c \
+    upstream-freebsd/lib/msun/src/s_atan.c \
+    upstream-freebsd/lib/msun/src/s_atanf.c \
+    upstream-freebsd/lib/msun/src/s_carg.c \
+    upstream-freebsd/lib/msun/src/s_cargf.c \
+    upstream-freebsd/lib/msun/src/s_cbrt.c \
+    upstream-freebsd/lib/msun/src/s_cbrtf.c \
+    upstream-freebsd/lib/msun/src/s_ccosh.c \
+    upstream-freebsd/lib/msun/src/s_ccoshf.c \
+    upstream-freebsd/lib/msun/src/s_ceil.c \
+    upstream-freebsd/lib/msun/src/s_ceilf.c \
+    upstream-freebsd/lib/msun/src/s_cexp.c \
+    upstream-freebsd/lib/msun/src/s_cexpf.c \
+    upstream-freebsd/lib/msun/src/s_cimag.c \
+    upstream-freebsd/lib/msun/src/s_cimagf.c \
+    upstream-freebsd/lib/msun/src/s_conj.c \
+    upstream-freebsd/lib/msun/src/s_conjf.c \
+    upstream-freebsd/lib/msun/src/s_copysign.c \
+    upstream-freebsd/lib/msun/src/s_copysignf.c \
+    upstream-freebsd/lib/msun/src/s_cos.c \
+    upstream-freebsd/lib/msun/src/s_cosf.c \
+    upstream-freebsd/lib/msun/src/s_cproj.c \
+    upstream-freebsd/lib/msun/src/s_cprojf.c \
+    upstream-freebsd/lib/msun/src/s_creal.c \
+    upstream-freebsd/lib/msun/src/s_crealf.c \
+    upstream-freebsd/lib/msun/src/s_csinh.c \
+    upstream-freebsd/lib/msun/src/s_csinhf.c \
+    upstream-freebsd/lib/msun/src/s_csqrt.c \
+    upstream-freebsd/lib/msun/src/s_csqrtf.c \
+    upstream-freebsd/lib/msun/src/s_ctanh.c \
+    upstream-freebsd/lib/msun/src/s_ctanhf.c \
+    upstream-freebsd/lib/msun/src/s_erf.c \
+    upstream-freebsd/lib/msun/src/s_erff.c \
+    upstream-freebsd/lib/msun/src/s_exp2.c \
+    upstream-freebsd/lib/msun/src/s_exp2f.c \
+    upstream-freebsd/lib/msun/src/s_expm1.c \
+    upstream-freebsd/lib/msun/src/s_expm1f.c \
+    upstream-freebsd/lib/msun/src/s_fabs.c \
+    upstream-freebsd/lib/msun/src/s_fabsf.c \
+    upstream-freebsd/lib/msun/src/s_fdim.c \
+    upstream-freebsd/lib/msun/src/s_finite.c \
+    upstream-freebsd/lib/msun/src/s_finitef.c \
+    upstream-freebsd/lib/msun/src/s_floor.c \
+    upstream-freebsd/lib/msun/src/s_floorf.c \
+    upstream-freebsd/lib/msun/src/s_fma.c \
+    upstream-freebsd/lib/msun/src/s_fmaf.c \
+    upstream-freebsd/lib/msun/src/s_fmax.c \
+    upstream-freebsd/lib/msun/src/s_fmaxf.c \
+    upstream-freebsd/lib/msun/src/s_fmin.c \
+    upstream-freebsd/lib/msun/src/s_fminf.c \
+    upstream-freebsd/lib/msun/src/s_frexp.c \
+    upstream-freebsd/lib/msun/src/s_frexpf.c \
+    upstream-freebsd/lib/msun/src/s_ilogb.c \
+    upstream-freebsd/lib/msun/src/s_ilogbf.c \
+    upstream-freebsd/lib/msun/src/s_isfinite.c \
+    upstream-freebsd/lib/msun/src/s_isnan.c \
+    upstream-freebsd/lib/msun/src/s_isnormal.c \
+    upstream-freebsd/lib/msun/src/s_llrint.c \
+    upstream-freebsd/lib/msun/src/s_llrintf.c \
+    upstream-freebsd/lib/msun/src/s_llround.c \
+    upstream-freebsd/lib/msun/src/s_llroundf.c \
+    upstream-freebsd/lib/msun/src/s_log1p.c \
+    upstream-freebsd/lib/msun/src/s_log1pf.c \
+    upstream-freebsd/lib/msun/src/s_logb.c \
+    upstream-freebsd/lib/msun/src/s_logbf.c \
+    upstream-freebsd/lib/msun/src/s_lrint.c \
+    upstream-freebsd/lib/msun/src/s_lrintf.c \
+    upstream-freebsd/lib/msun/src/s_lround.c \
+    upstream-freebsd/lib/msun/src/s_lroundf.c \
+    upstream-freebsd/lib/msun/src/s_modf.c \
+    upstream-freebsd/lib/msun/src/s_modff.c \
+    upstream-freebsd/lib/msun/src/s_nan.c \
+    upstream-freebsd/lib/msun/src/s_nearbyint.c \
+    upstream-freebsd/lib/msun/src/s_nextafter.c \
+    upstream-freebsd/lib/msun/src/s_nextafterf.c \
+    upstream-freebsd/lib/msun/src/s_nexttowardf.c \
+    upstream-freebsd/lib/msun/src/s_remquo.c \
+    upstream-freebsd/lib/msun/src/s_remquof.c \
+    upstream-freebsd/lib/msun/src/s_rint.c \
+    upstream-freebsd/lib/msun/src/s_rintf.c \
+    upstream-freebsd/lib/msun/src/s_round.c \
+    upstream-freebsd/lib/msun/src/s_roundf.c \
+    upstream-freebsd/lib/msun/src/s_scalbln.c \
+    upstream-freebsd/lib/msun/src/s_scalbn.c \
+    upstream-freebsd/lib/msun/src/s_scalbnf.c \
+    upstream-freebsd/lib/msun/src/s_signbit.c \
+    upstream-freebsd/lib/msun/src/s_signgam.c \
+    upstream-freebsd/lib/msun/src/s_significand.c \
+    upstream-freebsd/lib/msun/src/s_significandf.c \
+    upstream-freebsd/lib/msun/src/s_sin.c \
+    upstream-freebsd/lib/msun/src/s_sinf.c \
+    upstream-freebsd/lib/msun/src/s_tan.c \
+    upstream-freebsd/lib/msun/src/s_tanf.c \
+    upstream-freebsd/lib/msun/src/s_tanh.c \
+    upstream-freebsd/lib/msun/src/s_tanhf.c \
+    upstream-freebsd/lib/msun/src/s_tgammaf.c \
+    upstream-freebsd/lib/msun/src/s_trunc.c \
+    upstream-freebsd/lib/msun/src/s_truncf.c \
+    upstream-freebsd/lib/msun/src/w_cabs.c \
+    upstream-freebsd/lib/msun/src/w_cabsf.c \
+    upstream-freebsd/lib/msun/src/w_drem.c \
+    upstream-freebsd/lib/msun/src/w_dremf.c \
 
-  libm_common_includes = $(LOCAL_PATH)/arm
-endif
+libm_common_src_files += fake_long_double.c
 
-ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
-  libm_common_src_files += \
-	i387/fenv.c \
-	i387/s_scalbnl.S \
-	i387/s_scalbn.S \
-	i387/s_scalbnf.S \
-	i387/e_sqrtf.S
+# TODO: on Android, "long double" is "double".
+#    upstream-freebsd/lib/msun/src/e_acosl.c \
+#    upstream-freebsd/lib/msun/src/e_asinl.c \
+#    upstream-freebsd/lib/msun/src/e_atan2l.c \
+#    upstream-freebsd/lib/msun/src/e_fmodl.c \
+#    upstream-freebsd/lib/msun/src/e_hypotl.c \
+#    upstream-freebsd/lib/msun/src/e_remainderl.c \
+#    upstream-freebsd/lib/msun/src/e_sqrtl.c \
+#    upstream-freebsd/lib/msun/src/s_atanl.c \
+#    upstream-freebsd/lib/msun/src/s_cbrtl.c \
+#    upstream-freebsd/lib/msun/src/s_ceill.c \
+#    upstream-freebsd/lib/msun/src/s_copysignl.c \
+#    upstream-freebsd/lib/msun/src/s_cosl.c \
+#    upstream-freebsd/lib/msun/src/s_fabsl.c \
+#    upstream-freebsd/lib/msun/src/s_floorl.c \
+#    upstream-freebsd/lib/msun/src/s_fmal.c \
+#    upstream-freebsd/lib/msun/src/s_fmaxl.c \
+#    upstream-freebsd/lib/msun/src/s_fminl.c \
+#    upstream-freebsd/lib/msun/src/s_frexpl.c \
+#    upstream-freebsd/lib/msun/src/s_ilogbl.c \
+#    upstream-freebsd/lib/msun/src/s_llrintl.c \
+#    upstream-freebsd/lib/msun/src/s_llroundl.c \
+#    upstream-freebsd/lib/msun/src/s_logbl.c \
+#    upstream-freebsd/lib/msun/src/s_lrintl.c \
+#    upstream-freebsd/lib/msun/src/s_lroundl.c \
+#    upstream-freebsd/lib/msun/src/s_modfl.c \
+#    upstream-freebsd/lib/msun/src/s_nextafterl.c \
+#    upstream-freebsd/lib/msun/src/s_nexttoward.c \
+#    upstream-freebsd/lib/msun/src/s_remquol.c \
+#    upstream-freebsd/lib/msun/src/s_rintl.c \
+#    upstream-freebsd/lib/msun/src/s_roundl.c \
+#    upstream-freebsd/lib/msun/src/s_scalbnl.c \
+#    upstream-freebsd/lib/msun/src/s_sinl.c \
+#    upstream-freebsd/lib/msun/src/s_tanl.c \
+#    upstream-freebsd/lib/msun/src/s_truncl.c \
 
-  libm_common_includes = $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
-endif
-ifeq ($(TARGET_ARCH),mips)
-  libm_common_src_files += \
-	mips/fenv.c \
-	src/e_ldexpf.c \
-	src/s_scalbln.c \
-	src/s_scalbn.c \
-	src/s_scalbnf.c \
-	src/e_sqrtf.c
+# TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
-  libm_common_includes = $(LOCAL_PATH)/mips
-  # Need to build *rint* functions
-  libm_common_cflags += -fno-builtin-rintf -fno-builtin-rint
-endif
+libm_common_cflags := -DFLT_EVAL_METHOD=0
+libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
-# libm.a
-# ========================================================
+libm_arm_includes := $(LOCAL_PATH)/arm
+libm_arm_src_files := arm/fenv.c
 
+libm_x86_includes := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
+libm_x86_src_files := i387/fenv.c
+
+libm_mips_cflags := -fno-builtin-rintf -fno-builtin-rint
+libm_mips_includes := $(LOCAL_PATH)/mips
+libm_mips_src_files := mips/fenv.c
+
+#
+# libm.a for target.
+#
 include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := \
-    $(libm_common_src_files)
-
-LOCAL_ARM_MODE := arm
-LOCAL_C_INCLUDES += $(libm_common_includes)
-LOCAL_CFLAGS := $(libm_common_cflags)
-
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-
+LOCAL_ARM_MODE := arm
+LOCAL_CFLAGS := $(libm_common_cflags) $(libm_$(TARGET_ARCH)_cflags)
+LOCAL_C_INCLUDES += $(libm_common_includes) $(libm_$(TARGET_ARCH)_includes)
+LOCAL_SRC_FILES := $(libm_common_src_files) $(libm_$(TARGET_ARCH)_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
-
 include $(BUILD_STATIC_LIBRARY)
 
-# libm.so
-# ========================================================
-
+#
+# libm.so for target.
+#
 include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := \
-    $(libm_common_src_files)
-
-LOCAL_ARM_MODE := arm
-
-LOCAL_C_INCLUDES += $(libm_common_includes)
-LOCAL_CFLAGS := $(libm_common_cflags)
-
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
-
+LOCAL_WHOLE_STATIC_LIBRARIES := libm
 include $(BUILD_SHARED_LIBRARY)

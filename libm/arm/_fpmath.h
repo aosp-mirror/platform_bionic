@@ -23,18 +23,29 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: src/lib/libc/arm/_fpmath.h,v 1.4 2005/03/20 00:53:52 cognet Exp $
+ * $FreeBSD$
  */
+
+#if defined(__VFP_FP__)
+#define	_IEEE_WORD_ORDER	_BYTE_ORDER
+#else
+#define	_IEEE_WORD_ORDER	_BIG_ENDIAN
+#endif
 
 union IEEEl2bits {
 	long double	e;
 	struct {
-#ifndef __ARMEB__
+#if _BYTE_ORDER == _LITTLE_ENDIAN
+#if _IEEE_WORD_ORDER == _LITTLE_ENDIAN
 		unsigned int	manl	:32;
+#endif
 		unsigned int	manh	:20;
 		unsigned int	exp	:11;
 		unsigned int	sign	:1;
-#else
+#if _IEEE_WORD_ORDER == _BIG_ENDIAN
+		unsigned int	manl	:32;
+#endif
+#else	/* _BYTE_ORDER == _LITTLE_ENDIAN */
 		unsigned int		sign	:1;
 		unsigned int		exp	:11;
 		unsigned int		manh	:20;
@@ -44,9 +55,10 @@ union IEEEl2bits {
 };
 
 #define	LDBL_NBIT	0
+#define	LDBL_IMPLICIT_NBIT
 #define	mask_nbit_l(u)	((void)0)
 
-#define	LDBL_MANH_SIZE	32
+#define	LDBL_MANH_SIZE	20
 #define	LDBL_MANL_SIZE	32
 
 #define	LDBL_TO_ARRAY32(u, a) do {			\

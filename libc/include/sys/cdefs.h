@@ -177,6 +177,8 @@
 #define	__unused	/* delete */
 #endif
 
+#define __pure2 __attribute__((__const__)) /* Android-added: used by FreeBSD libm */
+
 #if __GNUC_PREREQ__(3, 1)
 #define	__used		__attribute__((__used__))
 #else
@@ -311,6 +313,12 @@
 #define __noreturn
 #define __mallocfunc
 #define __purefunc
+#endif
+
+#if __GNUC_PREREQ__(3, 1)
+#define __always_inline __attribute__((__always_inline__))
+#else
+#define __always_inline
 #endif
 
 /*
@@ -509,5 +517,12 @@
     __attribute__ ((artificial))
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 #endif
+
+/* Android-added: for FreeBSD's libm. */
+#define __weak_reference(sym,alias) \
+    __asm__(".weak " #alias); \
+    __asm__(".equ "  #alias ", " #sym)
+#define __strong_reference(sym,aliassym) \
+    extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
 
 #endif /* !_SYS_CDEFS_H_ */
