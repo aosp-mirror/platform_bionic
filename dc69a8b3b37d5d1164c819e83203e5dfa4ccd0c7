@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "PD.84OIo",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-01T22:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "PDzSVZeg",
+      "revId": "dc69a8b3b37d5d1164c819e83203e5dfa4ccd0c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "PD3QYfYg",
         "filename": "libm/upstream-freebsd/lib/msun/src/e_acos.c",
         "patchSetId": 9
@@ -30,6 +48,24 @@
       "writtenOn": "2013-02-01T22:32:02Z",
       "side": 1,
       "message": "volatile? for just this one?",
+      "revId": "dc69a8b3b37d5d1164c819e83203e5dfa4ccd0c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PDy8FEMo",
+        "filename": "libm/upstream-freebsd/lib/msun/src/e_acos.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-01T22:50:56Z",
+      "side": 1,
+      "message": "they\u0027ve done it in various places to work around compiler optimizations that assume no-one cares about floating point rounding mode and/or exceptions.",
+      "parentUuid": "PD3QYfYg",
       "revId": "dc69a8b3b37d5d1164c819e83203e5dfa4ccd0c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
