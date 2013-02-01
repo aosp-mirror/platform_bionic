@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PDzSVZeg",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-01T22:32:02Z",
+      "side": 1,
+      "message": "copyright",
+      "revId": "dc69a8b3b37d5d1164c819e83203e5dfa4ccd0c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PD3QYfYg",
+        "filename": "libm/upstream-freebsd/lib/msun/src/e_acos.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-01T22:32:02Z",
+      "side": 1,
+      "message": "volatile? for just this one?",
+      "revId": "dc69a8b3b37d5d1164c819e83203e5dfa4ccd0c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
