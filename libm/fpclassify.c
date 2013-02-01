@@ -32,7 +32,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "src/fpmath.h"
+#include "fpmath.h"
 
 int
 __fpclassifyf(float f)

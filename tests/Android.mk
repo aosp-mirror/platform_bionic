@@ -51,6 +51,7 @@ test_c_flags = \
     -g \
     -Wall -Wextra \
     -Werror \
+    -fno-builtin \
 
 test_src_files = \
     debug_format_test.cpp \
@@ -59,6 +60,7 @@ test_src_files = \
     getauxval_test.cpp \
     getcwd_test.cpp \
     libgen_test.cpp \
+    math_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
     signal_test.cpp \
