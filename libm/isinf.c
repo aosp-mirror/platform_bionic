@@ -28,7 +28,7 @@
 
 #include <math.h>
 #include <sys/cdefs.h>
-#include "src/fpmath.h"
+#include "fpmath.h"
 
 /*
  * XXX These routines belong in libm, but they must remain in libc for
@@ -66,4 +66,3 @@ __isinfl(long double e)
 	return (u.bits.exp == 2047 && u.bits.manl == 0 && u.bits.manh == 0);
 #endif
 }
-
