@@ -288,14 +288,17 @@ static void* libc_malloc_impl_handle = NULL;
 /* This variable is set to the value of property libc.debug.malloc.backlog,
  * when the value of libc.debug.malloc = 10.  It determines the size of the
  * backlog we use to detect multiple frees.  If the property is not set, the
- * backlog length defaults to an internal constant defined in
- * malloc_debug_check.cpp.
+ * backlog length defaults to BACKLOG_DEFAULT_LEN.
  */
-unsigned int malloc_double_free_backlog;
+unsigned int gMallocDebugBacklog;
+#define BACKLOG_DEFAULT_LEN 100
 
-static void InitMalloc(MallocDebug* table, int debug_level, const char* prefix) {
+/* The value of libc.debug.malloc. */
+int gMallocDebugLevel;
+
+static void InitMalloc(MallocDebug* table, const char* prefix) {
   __libc_format_log(ANDROID_LOG_INFO, "libc", "%s: using libc.debug.malloc %d (%s)\n",
-                    __progname, debug_level, prefix);
+                    __progname, gMallocDebugLevel, prefix);
 
   char symbol[128];
 
@@ -335,7 +338,6 @@ static void malloc_init_impl() {
     const char* so_name = NULL;
     MallocDebugInit malloc_debug_initialize = NULL;
     unsigned int qemu_running = 0;
-    unsigned int debug_level = 0;
     unsigned int memcheck_enabled = 0;
     char env[PROP_VALUE_MAX];
     char memcheck_tracing[PROP_VALUE_MAX];
@@ -349,7 +351,7 @@ static void malloc_init_impl() {
         if (__system_property_get("ro.kernel.memcheck", memcheck_tracing)) {
             if (memcheck_tracing[0] != '0') {
                 // Emulator has started with memory tracing enabled. Enforce it.
-                debug_level = 20;
+                gMallocDebugLevel = 20;
                 memcheck_enabled = 1;
             }
         }
@@ -357,13 +359,13 @@ static void malloc_init_impl() {
 
     /* If debug level has not been set by memcheck option in the emulator,
      * lets grab it from libc.debug.malloc system property. */
-    if (debug_level == 0 && __system_property_get("libc.debug.malloc", env)) {
-        debug_level = atoi(env);
+    if (gMallocDebugLevel == 0 && __system_property_get("libc.debug.malloc", env)) {
+        gMallocDebugLevel = atoi(env);
     }
 
     /* Debug level 0 means that we should use dlxxx allocation
      * routines (default). */
-    if (debug_level == 0) {
+    if (gMallocDebugLevel == 0) {
         return;
     }
 
@@ -377,24 +379,25 @@ static void malloc_init_impl() {
     }
 
     // mksh is way too leaky. http://b/7291287.
-    if (debug_level >= 10) {
+    if (gMallocDebugLevel >= 10) {
         if (strcmp(__progname, "sh") == 0 || strcmp(__progname, "/system/bin/sh") == 0) {
             return;
         }
     }
 
     // Choose the appropriate .so for the requested debug level.
-    switch (debug_level) {
+    switch (gMallocDebugLevel) {
         case 1:
         case 5:
         case 10: {
             char debug_backlog[PROP_VALUE_MAX];
             if (__system_property_get("libc.debug.malloc.backlog", debug_backlog)) {
-                malloc_double_free_backlog = atoi(debug_backlog);
-                info_log("%s: setting backlog length to %d\n",
-                         __progname, malloc_double_free_backlog);
+                gMallocDebugBacklog = atoi(debug_backlog);
+                info_log("%s: setting backlog length to %d\n", __progname, gMallocDebugBacklog);
             }
-
+            if (gMallocDebugBacklog == 0) {
+                gMallocDebugBacklog = BACKLOG_DEFAULT_LEN;
+            }
             so_name = "/system/lib/libc_malloc_debug_leak.so";
             break;
         }
@@ -402,7 +405,7 @@ static void malloc_init_impl() {
             // Quick check: debug level 20 can only be handled in emulator.
             if (!qemu_running) {
                 error_log("%s: Debug level %d can only be set in emulator\n",
-                          __progname, debug_level);
+                          __progname, gMallocDebugLevel);
                 return;
             }
             // Make sure that memory checking has been enabled in emulator.
@@ -414,8 +417,7 @@ static void malloc_init_impl() {
             so_name = "/system/lib/libc_malloc_debug_qemu.so";
             break;
         default:
-            error_log("%s: Debug level %d is unknown\n",
-                      __progname, debug_level);
+            error_log("%s: Debug level %d is unknown\n", __progname, gMallocDebugLevel);
             return;
     }
 
@@ -423,7 +425,7 @@ static void malloc_init_impl() {
     libc_malloc_impl_handle = dlopen(so_name, RTLD_LAZY);
     if (libc_malloc_impl_handle == NULL) {
         error_log("%s: Missing module %s required for malloc debug level %d: %s",
-                  __progname, so_name, debug_level, dlerror());
+                  __progname, so_name, gMallocDebugLevel, dlerror());
         return;
     }
 
@@ -441,7 +443,7 @@ static void malloc_init_impl() {
         return;
     }
 
-    if (debug_level == 20) {
+    if (gMallocDebugLevel == 20) {
         // For memory checker we need to do extra initialization.
         typedef int (*MemCheckInit)(int, const char*);
         MemCheckInit memcheck_initialize =
@@ -461,18 +463,18 @@ static void malloc_init_impl() {
     }
 
     // Initialize malloc dispatch table with appropriate routines.
-    switch (debug_level) {
+    switch (gMallocDebugLevel) {
         case 1:
-            InitMalloc(&gMallocUse, debug_level, "leak");
+            InitMalloc(&gMallocUse, "leak");
             break;
         case 5:
-            InitMalloc(&gMallocUse, debug_level, "fill");
+            InitMalloc(&gMallocUse, "fill");
             break;
         case 10:
-            InitMalloc(&gMallocUse, debug_level, "chk");
+            InitMalloc(&gMallocUse, "chk");
             break;
         case 20:
-            InitMalloc(&gMallocUse, debug_level, "qemu_instrumented");
+            InitMalloc(&gMallocUse, "qemu_instrumented");
             break;
         default:
             break;
@@ -485,7 +487,7 @@ static void malloc_init_impl() {
         (gMallocUse.realloc == NULL) ||
         (gMallocUse.memalign == NULL)) {
         error_log("%s: some symbols for libc.debug.malloc level %d were not found (see above)",
-                  __progname, debug_level);
+                  __progname, gMallocDebugLevel);
         dlclose(libc_malloc_impl_handle);
         libc_malloc_impl_handle = NULL;
     } else {
