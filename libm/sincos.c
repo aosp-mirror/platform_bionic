@@ -35,20 +35,17 @@
 // Thus we just enforce -O0 when compiling this file.
 #pragma GCC optimize ("O0")
 
-void  sincos(double x, double *psin, double *pcos)
-{
-    *psin = sin(x);
-    *pcos = cos(x);
+void sincos(double x, double* p_sin, double* p_cos) {
+  *p_sin = sin(x);
+  *p_cos = cos(x);
 }
 
-void  sincosf(float x, float *psin, float *pcos)
-{
-    *psin = sinf(x);
-    *pcos = cosf(x);
+void sincosf(float x, float* p_sinf, float* p_cosf) {
+  *p_sinf = sinf(x);
+  *p_cosf = cosf(x);
 }
 
-void  sincosl(long double x, long double *psin, long double *pcos)
-{
-    *psin = sin(x);
-    *pcos = cos(x);
+void sincosl(long double x, long double* p_sinl, long double* p_cosl) {
+  *p_sinl = sinl(x);
+  *p_cosl = cosl(x);
 }
