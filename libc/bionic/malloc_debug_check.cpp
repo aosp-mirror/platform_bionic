@@ -53,13 +53,13 @@
 #include "ScopedPthreadMutexLocker.h"
 
 /* libc.debug.malloc.backlog */
-extern unsigned int malloc_double_free_backlog;
+extern unsigned int gMallocDebugBacklog;
+extern int gMallocDebugLevel;
 
 #define MAX_BACKTRACE_DEPTH 16
 #define ALLOCATION_TAG      0x1ee7d00d
 #define BACKLOG_TAG         0xbabecafe
 #define FREE_POISON         0xa5
-#define BACKLOG_DEFAULT_LEN 100
 #define FRONT_GUARD         0xaa
 #define FRONT_GUARD_LEN     (1<<5)
 #define REAR_GUARD          0xbb
@@ -306,7 +306,7 @@ static inline void add_to_backlog(hdr_t *hdr) {
     add_locked(hdr, &backlog_tail, &backlog_head);
     poison(hdr);
     /* If we've exceeded the maximum backlog, clear it up */
-    while (backlog_num > malloc_double_free_backlog) {
+    while (backlog_num > gMallocDebugBacklog) {
         hdr_t *gone = backlog_tail;
         del_from_backlog_locked(gone);
         dlfree(gone);
@@ -436,7 +436,12 @@ extern "C" void *chk_calloc(int nmemb, size_t size) {
     return NULL;
 }
 
-static void heaptracker_free_leaked_memory() {
+static void ReportMemoryLeaks() {
+  // We only track leaks at level 10.
+  if (gMallocDebugLevel != 10) {
+    return;
+  }
+
   // Use /proc/self/exe link to obtain the program name for logging
   // purposes. If it's not available, we set it to "<unknown>".
   char exe[PATH_MAX];
@@ -471,14 +476,11 @@ static void heaptracker_free_leaked_memory() {
 }
 
 extern "C" int malloc_debug_initialize() {
-  if (!malloc_double_free_backlog) {
-    malloc_double_free_backlog = BACKLOG_DEFAULT_LEN;
-  }
   backtrace_startup();
   return 0;
 }
 
 extern "C" void malloc_debug_finalize() {
-  heaptracker_free_leaked_memory();
+  ReportMemoryLeaks();
   backtrace_shutdown();
 }
