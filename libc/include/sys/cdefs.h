@@ -321,6 +321,12 @@
 #define __always_inline
 #endif
 
+#if __GNUC_PREREQ__(3, 4)
+#define __wur __attribute__((__warn_unused_result__))
+#else
+#define __wur
+#endif
+
 /*
  * Macros for manipulating "link sets".  Link sets are arrays of pointers
  * to objects, which are gathered up by the linker.
