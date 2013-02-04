@@ -87,6 +87,8 @@ typedef unsigned long		__psize_t;
 /* Standard system types */
 typedef int			__clock_t;
 typedef int			__clockid_t;
+typedef double			__double_t;
+typedef float			__float_t;
 typedef long			__ptrdiff_t;
 typedef	int			__time_t;
 typedef int			__timer_t;

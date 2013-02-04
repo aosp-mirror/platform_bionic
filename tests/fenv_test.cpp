@@ -79,3 +79,7 @@ TEST(fenv, feclearexcept_fetestexcept) {
   feclearexcept(FE_DIVBYZERO);
   ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
 }
+
+TEST(fenv, FE_DFL_ENV_macro) {
+  ASSERT_EQ(0, fesetenv(FE_DFL_ENV));
+}
