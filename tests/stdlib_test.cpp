@@ -16,6 +16,8 @@
 
 #include <gtest/gtest.h>
 
+#include <errno.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 TEST(stdlib, drand48) {
@@ -56,4 +58,15 @@ TEST(stdlib, mrand48) {
   EXPECT_EQ(795539493, mrand48());
   EXPECT_EQ(1804534249, mrand48());
   EXPECT_EQ(264732262, mrand48());
+}
+
+TEST(stdlib, posix_memalign) {
+  void* p;
+
+  ASSERT_EQ(0, posix_memalign(&p, 512, 128));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(p) % 512);
+  free(p);
+
+  // Can't align to a non-power of 2.
+  ASSERT_EQ(EINVAL, posix_memalign(&p, 81, 128));
 }
