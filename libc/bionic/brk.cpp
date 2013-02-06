@@ -25,36 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <unistd.h>
-#include <errno.h>
 
+/* Shared with sbrk.c. */
+extern "C" void* __bionic_brk; // TODO: should be __LIBC_HIDDEN__ but accidentally exported by NDK :-(
 
-#define  SBRK_ALIGN  32
-
-/* shared with brk() implementation */
-char*   __bionic_brk;
-
-void *sbrk(ptrdiff_t increment)
-{
-    char*  start;
-    char*  end;
-    char*  new_brk;
-  
-    if ( !__bionic_brk)
-        __bionic_brk = __brk((void*)0);
-
-    start = (char*)(((long)__bionic_brk + SBRK_ALIGN-1) & ~(SBRK_ALIGN-1));
-  end   = start + increment;
-
-  new_brk = __brk(end);
-    if (new_brk == (void*)-1)
-        return new_brk;
-    else if (new_brk < end)
-    {
-    errno = ENOMEM;
-        return (void*)-1;
+int brk(void* end_data) {
+  void* new_brk = __brk(end_data);
+  if (new_brk != end_data) {
+    return -1;
   }
-
-    __bionic_brk = new_brk;
-  return start;
+  __bionic_brk = new_brk;
+  return 0;
 }
