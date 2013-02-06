@@ -59,6 +59,10 @@ Benchmark* Benchmark::Arg(int arg) {
   return this;
 }
 
+const char* Benchmark::Name() {
+  return name_;
+}
+
 bool Benchmark::ShouldRun(int argc, char* argv[]) {
   if (argc == 1) {
     return true;  // With no arguments, we run all benchmarks.
@@ -94,12 +98,16 @@ void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int
 }
 
 void Benchmark::Run() {
-  if (args_.empty()) {
-    fprintf(stderr, "%s: no args!\n", name_);
-    exit(EXIT_FAILURE);
-  }
-  for (size_t i = 0; i < args_.size(); ++i) {
-    RunWithArg(args_[i]);
+  if (fn_ != NULL) {
+    RunWithArg(0);
+  } else {
+    if (args_.empty()) {
+      fprintf(stderr, "%s: no args!\n", name_);
+      exit(EXIT_FAILURE);
+    }
+    for (size_t i = 0; i < args_.size(); ++i) {
+      RunWithArg(args_[i]);
+    }
   }
 }
 
@@ -180,18 +188,31 @@ void StartBenchmarkTiming() {
 
 int main(int argc, char* argv[]) {
   if (gBenchmarks.empty()) {
-    fprintf(stderr, "no benchmarks!\n");
+    fprintf(stderr, "No benchmarks registered!\n");
     exit(EXIT_FAILURE);
   }
 
-  printf("%-20s %10s %10s\n", "", "iterations", "ns/op");
-  fflush(stdout);
-
+  bool need_header = true;
   for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
     ::testing::Benchmark* b = it->second;
     if (b->ShouldRun(argc, argv)) {
+      if (need_header) {
+        printf("%-20s %10s %10s\n", "", "iterations", "ns/op");
+        fflush(stdout);
+        need_header = false;
+      }
       b->Run();
     }
   }
+
+  if (need_header) {
+    fprintf(stderr, "No matching benchmarks!\n");
+    fprintf(stderr, "Available benchmarks:\n");
+    for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
+      fprintf(stderr, "  %s\n", it->second->Name());
+    }
+    exit(EXIT_FAILURE);
+  }
+
   return 0;
 }
