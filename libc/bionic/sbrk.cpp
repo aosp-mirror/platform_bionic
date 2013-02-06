@@ -25,21 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <stddef.h>
+
 #include <unistd.h>
-#include <sys/types.h>
+#include <errno.h>
 
-/* shared with sbrk.c */
-char *__bionic_brk;
+/* Shared with brk.c. */
+extern "C" {
+  void* __bionic_brk; // TODO: should be __LIBC_HIDDEN__ but accidentally exported by NDK :-(
+}
 
-int brk(void*  end_data)
-{
-    char*  new_brk = __brk( end_data );
+void* sbrk(ptrdiff_t increment) {
+  if (__bionic_brk == NULL) {
+    __bionic_brk = __brk(NULL);
+  }
 
-    if (new_brk != end_data)
-        return -1;
+  void* original_brk = __bionic_brk;
+  void* desired_brk = (void*) ((uintptr_t) original_brk + increment);
 
-    __bionic_brk = new_brk;
-  
-  return 0;
+  void* new_brk = __brk(desired_brk);
+  if (new_brk == (void*) -1) {
+    return new_brk;
+  } else if (new_brk < desired_brk) {
+    errno = ENOMEM;
+    return (void*) -1;
+  }
+
+  __bionic_brk = new_brk;
+  return original_brk;
 }
