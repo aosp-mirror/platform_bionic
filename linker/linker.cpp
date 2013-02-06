@@ -1160,12 +1160,6 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
             *((unsigned*)reloc) = sym_addr;
             break;
 #elif defined(ANDROID_MIPS_LINKER)
-    case R_MIPS_JUMP_SLOT:
-            count_relocation(kRelocAbsolute);
-            MARK(rel->r_offset);
-            TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s\n", reloc, sym_addr, sym_name);
-            *((unsigned*)reloc) = sym_addr;
-            break;
     case R_MIPS_REL32:
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
@@ -1640,14 +1634,6 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_MIPS_FLAGS:
         case DT_MIPS_BASE_ADDRESS:
         case DT_MIPS_UNREFEXTNO:
-        case DT_MIPS_RWPLT:
-            break;
-
-        case DT_MIPS_PLTGOT:
-#if 0
-            /* not yet... */
-            si->mips_pltgot = (unsigned *)(si->base + *d);
-#endif
             break;
 
         case DT_MIPS_SYMTABNO:
