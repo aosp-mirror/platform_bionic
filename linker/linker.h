@@ -127,10 +127,6 @@ struct soinfo {
   unsigned* ARM_exidx;
   unsigned ARM_exidx_count;
 #elif defined(ANDROID_MIPS_LINKER)
-#if 0
-  // Not yet.
-  unsigned* mips_pltgot
-#endif
   unsigned mips_symtabno;
   unsigned mips_local_gotno;
   unsigned mips_gotsym;
@@ -158,16 +154,6 @@ struct soinfo {
 };
 
 extern soinfo libdl_info;
-
-#if defined(ANDROID_MIPS_LINKER)
-
-// These aren't defined in <arch-arm/mips/elf.h>.
-#define R_MIPS_JUMP_SLOT       127
-
-#define DT_MIPS_PLTGOT         0x70000032
-#define DT_MIPS_RWPLT          0x70000034
-
-#endif
 
 // These aren't defined in <sys/exec_elf.h>.
 #ifndef DT_PREINIT_ARRAY
