@@ -151,7 +151,6 @@ libc_common_src_files := \
 	bionic/atoll.c \
 	bionic/bindresvport.c \
 	bionic/bionic_clone.c \
-	bionic/brk.c \
 	bionic/clearenv.c \
 	bionic/cpuacct.c \
 	bionic/daemon.c \
@@ -201,7 +200,6 @@ libc_common_src_files := \
 	bionic/realpath.c \
 	bionic/reboot.c \
 	bionic/recv.c \
-	bionic/sbrk.c \
 	bionic/sched_cpualloc.c \
 	bionic/sched_cpucount.c \
 	bionic/sched_getaffinity.c \
@@ -270,6 +268,7 @@ libc_common_src_files := \
 
 libc_bionic_src_files := \
     bionic/assert.cpp \
+    bionic/brk.cpp \
     bionic/debug_format.cpp \
     bionic/dirent.cpp \
     bionic/eventfd.cpp \
@@ -282,6 +281,7 @@ libc_bionic_src_files := \
     bionic/__memset_chk.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
+    bionic/sbrk.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
