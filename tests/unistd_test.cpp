@@ -16,8 +16,19 @@
 
 #include <gtest/gtest.h>
 
+#include <stdint.h>
 #include <unistd.h>
 
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
+}
+
+TEST(unistd, sbrk) {
+  void* initial_break = sbrk(0);
+
+  void* new_break = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(initial_break) + 2000);
+  ASSERT_EQ(0, brk(new_break));
+
+  void* final_break = sbrk(0);
+  ASSERT_EQ(final_break, new_break);
 }
