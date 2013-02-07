@@ -26,9 +26,11 @@ benchmark_c_flags = \
     -O2 \
     -Wall -Wextra \
     -Werror \
+    -fno-builtin \
 
 benchmark_src_files = \
     benchmark_main.cpp \
+    math_benchmark.cpp \
     string_benchmark.cpp \
 
 # Build benchmarks for the device (with bionic's .so). Run with:
