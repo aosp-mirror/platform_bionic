@@ -52,6 +52,7 @@ long long llrintl(long double a1) { return llrint(a1); }
 long double log10l(long double a1) { return log10(a1); }
 long double log1pl(long double a1) { return log1p(a1); }
 long double log2l(long double a1) { return log2(a1); }
+long double logbl(long double a1) { return logb(a1); }
 long double logl(long double a1) { return log(a1); }
 long lrintl(long double a1) { return lrint(a1); }
 long long llroundl(long double a1) { return llround(a1); }
