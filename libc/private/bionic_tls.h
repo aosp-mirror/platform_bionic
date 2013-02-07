@@ -134,7 +134,7 @@ extern void*  __get_tls( void );
 extern void*  __get_stack_base(int  *p_stack_size);
 
 /* Initialize the TLS. */
-extern void __libc_init_tls(unsigned** elfdata);
+extern void __libc_init_tls(void* kernel_argument_block);
 
 __END_DECLS
 

@@ -44,8 +44,12 @@ struct atexit {
 	} fns[1];			/* the table itself */
 };
 
+__BEGIN_DECLS
+
 extern int __atexit_invalid;
 extern struct atexit *__atexit;		/* points to head of LIFO stack */
 
 int	__cxa_atexit(void (*)(void *), void *, void *);
 void	__cxa_finalize(void *);
+
+__END_DECLS
