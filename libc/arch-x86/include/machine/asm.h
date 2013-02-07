@@ -1,5 +1,4 @@
-/*	$OpenBSD: asm.h,v 1.8 2004/06/13 21:49:16 niklas Exp $	*/
-/*	$NetBSD: asm.h,v 1.7 1994/10/27 04:15:56 cgd Exp $	*/
+/*	$NetBSD: asm.h,v 1.40 2011/06/16 13:16:20 joerg Exp $	*/
 
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,24 +37,17 @@
 #ifndef _I386_ASM_H_
 #define _I386_ASM_H_
 
-/* This is borrowed from FreeBSD /src/sys/i386/include/asmacros.h v1.27 */
-/*
- * CNAME and HIDENAME manage the relationship between symbol names in C
- * and the equivalent assembly language names.  CNAME is given a name as
- * it would be used in a C program.  It expands to the equivalent assembly
- * language name.  HIDENAME is given an assembly-language name, and expands
- * to a possibly-modified form that will be invisible to C programs.
- */
-#define CNAME(csym)             csym
-#define HIDENAME(asmsym)        .asmsym
+#ifdef _KERNEL_OPT
+#include "opt_multiprocessor.h"
+#endif
 
 #ifdef PIC
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
-	call	666f;	\
-666:			\
+	call	1f;	\
+1:			\
 	popl	%ebx;	\
-	addl	$_C_LABEL(_GLOBAL_OFFSET_TABLE_)+[.-666b], %ebx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx
 #define PIC_EPILOGUE	\
 	popl	%ebx
 #define PIC_PLT(x)	x@PLT
@@ -69,10 +61,18 @@
 #define PIC_GOTOFF(x)	x
 #endif
 
-#define _C_LABEL(name)	name
+#ifdef __ELF__
+# define _C_LABEL(x)	x
+#else
+# ifdef __STDC__
+#  define _C_LABEL(x)	_ ## x
+# else
+#  define _C_LABEL(x)	_/**/x
+# endif
+#endif
 #define	_ASM_LABEL(x)	x
 
-#define CVAROFF(x, y)	_C_LABEL(x) + y
+#define CVAROFF(x, y)		_C_LABEL(x) + y
 
 #ifdef __STDC__
 # define __CONCAT(x,y)	x ## y
@@ -82,53 +82,137 @@
 # define __STRING(x)	"x"
 #endif
 
-/*
- * WEAK ALIAS: create a weak alias
- */
-#define WEAK_ALIAS(alias,sym) \
-	.weak alias; \
-	alias = sym
-
-/*
- * WARN_REFERENCES: create a warning if the specified symbol is referenced
- */
-#define WARN_REFERENCES(_sym,_msg)	\
-	.section .gnu.warning. ## _sym ; .ascii _msg ; .text
-
 /* let kernels and others override entrypoint alignment */
-#ifndef _ALIGN_TEXT
-# define _ALIGN_TEXT .align 2, 0x90
+#if !defined(_ALIGN_TEXT) && !defined(_KERNEL)
+# ifdef _STANDALONE
+#  define _ALIGN_TEXT .align 1
+# elif defined __ELF__
+#  define _ALIGN_TEXT .align 16
+# else
+#  define _ALIGN_TEXT .align 4
+# endif
 #endif
 
 #define _ENTRY(x) \
 	.text; _ALIGN_TEXT; .globl x; .type x,@function; x:
+#define _LABEL(x) \
+	.globl x; x:
 
-#define _ASM_SIZE(x)    .size x, .-x;
+#ifdef _KERNEL
 
-#define _END(x) \
-	.fnend; \
-	_ASM_SIZE(x)
+#define CPUVAR(off) %fs:__CONCAT(CPU_INFO_,off)
+
+/* XXX Can't use __CONCAT() here, as it would be evaluated incorrectly. */
+#ifdef __ELF__
+#ifdef __STDC__
+#define	IDTVEC(name) \
+	ALIGN_TEXT; .globl X ## name; .type X ## name,@function; X ## name:
+#define	IDTVEC_END(name) \
+	.size X ## name, . - X ## name
+#else 
+#define	IDTVEC(name) \
+	ALIGN_TEXT; .globl X/**/name; .type X/**/name,@function; X/**/name:
+#define	IDTVEC_END(name) \
+	.size X/**/name, . - X/**/name
+#endif /* __STDC__ */ 
+#else 
+#ifdef __STDC__
+#define	IDTVEC(name) \
+	ALIGN_TEXT; .globl _X ## name; .type _X ## name,@function; _X ## name: 
+#define	IDTVEC_END(name) \
+	.size _X ## name, . - _X ## name
+#else
+#define	IDTVEC(name) \
+	ALIGN_TEXT; .globl _X/**/name; .type _X/**/name,@function; _X/**/name:
+#define	IDTVEC_END(name) \
+	.size _X/**/name, . - _X/**/name
+#endif /* __STDC__ */
+#endif /* __ELF__ */
+
+#ifdef _STANDALONE
+#define ALIGN_DATA	.align	4
+#define ALIGN_TEXT	.align	4	/* 4-byte boundaries */
+#define SUPERALIGN_TEXT	.align	16	/* 15-byte boundaries */
+#elif defined __ELF__
+#define ALIGN_DATA	.align	4
+#define ALIGN_TEXT	.align	16	/* 16-byte boundaries */
+#define SUPERALIGN_TEXT	.align	16	/* 16-byte boundaries */
+#else
+#define ALIGN_DATA	.align	2
+#define ALIGN_TEXT	.align	4	/* 16-byte boundaries */
+#define SUPERALIGN_TEXT	.align	4	/* 16-byte boundaries */
+#endif /* __ELF__ */
+
+#define _ALIGN_TEXT ALIGN_TEXT
 
 #ifdef GPROF
-# define _PROF_PROLOGUE	\
+#ifdef __ELF__
+#define	MCOUNT_ASM	call	_C_LABEL(__mcount)
+#else /* __ELF__ */
+#define	MCOUNT_ASM	call	_C_LABEL(mcount)
+#endif /* __ELF__ */
+#else /* GPROF */
+#define	MCOUNT_ASM	/* nothing */
+#endif /* GPROF */
+
+#endif /* _KERNEL */
+
+
+
+#ifdef GPROF
+# ifdef __ELF__
+#  define _PROF_PROLOGUE	\
+	pushl %ebp; movl %esp,%ebp; call PIC_PLT(__mcount); popl %ebp
+# else 
+#  define _PROF_PROLOGUE	\
 	pushl %ebp; movl %esp,%ebp; call PIC_PLT(mcount); popl %ebp
+# endif
 #else
 # define _PROF_PROLOGUE
 #endif
 
 #define	ENTRY(y)	_ENTRY(_C_LABEL(y)); _PROF_PROLOGUE
 #define	NENTRY(y)	_ENTRY(_C_LABEL(y))
-#define	END(y)		_END(_C_LABEL(y))
 #define	ASENTRY(y)	_ENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
-
-#define ENTRY_PRIVATE(y)  ENTRY(y); .hidden _C_LABEL(y)
-
-
-#define	ALTENTRY(name)	.globl _C_LABEL(name); _C_LABEL(name):
+#define	LABEL(y)	_LABEL(_C_LABEL(y))
+#define	END(y)		.size y, . - y
 
 #define	ASMSTR		.asciz
 
+#ifdef __ELF__
+#define RCSID(x)	.pushsection ".ident"; .asciz x; .popsection
+#else
 #define RCSID(x)	.text; .asciz x
-#define __FBSDID(x)     RCSID(x)
+#endif
+
+#ifdef NO_KERNEL_RCSIDS
+#define	__KERNEL_RCSID(_n, _s)	/* nothing */
+#else
+#define	__KERNEL_RCSID(_n, _s)	RCSID(_s)
+#endif
+
+#ifdef __ELF__
+#define	WEAK_ALIAS(alias,sym)						\
+	.weak alias;							\
+	alias = sym
+#endif
+/*
+ * STRONG_ALIAS: create a strong alias.
+ */
+#define STRONG_ALIAS(alias,sym)						\
+	.globl alias;							\
+	alias = sym
+
+#ifdef __STDC__
+#define	WARN_REFERENCES(sym,msg)					\
+	.pushsection .gnu.warning. ## sym;				\
+	.ascii msg;							\
+	.popsection
+#else
+#define	WARN_REFERENCES(sym,msg)					\
+	.pushsection .gnu.warning./**/sym;				\
+	.ascii msg;							\
+	.popsection
+#endif /* __STDC__ */
 
 #endif /* !_I386_ASM_H_ */
