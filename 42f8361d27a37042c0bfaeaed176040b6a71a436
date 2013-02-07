@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "PksX5eA0",
+        "filename": "libc/private/ElfData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-07T19:24:00Z",
+      "side": 1,
+      "message": "the trouble is that it\u0027s argc, argv, envp, and auxv. there really isn\u0027t a good name. (i toyed with \"environment\", but decided that sounds too much like it\u0027s just envp.) the kernel calls it \"elf_info\" when it\u0027s building it and -- believe it or not -- \"p\" when it\u0027s ready to pass it to us. neither seemed like much of an improvement over the \"elf_data\" we\u0027d been using historically.\n\nmaybe KernelArgs?",
+      "parentUuid": "PkBnmzEE",
+      "revId": "42f8361d27a37042c0bfaeaed176040b6a71a436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "PkHnXGEs",
         "filename": "linker/linker_environ.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-02-07T19:05:00Z",
       "side": 1,
       "message": "sounds like getauxval needs an optional out argument to tell you?",
+      "revId": "42f8361d27a37042c0bfaeaed176040b6a71a436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PkgVC4EE",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-07T19:24:00Z",
+      "side": 1,
+      "message": "yeah, i considered that but wanted to keep this close to the regular C library function. i\u0027m coming round to that being useless consistency, though.",
+      "parentUuid": "PkHnXGEs",
       "revId": "42f8361d27a37042c0bfaeaed176040b6a71a436",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
