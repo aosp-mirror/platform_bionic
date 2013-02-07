@@ -28,16 +28,29 @@
 #ifndef LIBC_INIT_COMMON_H
 #define LIBC_INIT_COMMON_H
 
-#include <stdint.h>
+#include <sys/cdefs.h>
 
-typedef struct
-{
-    void (**preinit_array)(void);
-    void (**init_array)(void);
-    void (**fini_array)(void);
+typedef struct {
+  void (**preinit_array)(void);
+  void (**init_array)(void);
+  void (**fini_array)(void);
 } structors_array_t;
 
-extern void __libc_init_common(uintptr_t *elfdata);
-extern void __libc_fini(void* finit_array);
+__BEGIN_DECLS
+
+extern int main(int argc, char** argv, char** env);
+
+__noreturn void __libc_init(void* raw_args,
+                            void (*onexit)(void),
+                            int (*slingshot)(int, char**, char**),
+                            structors_array_t const * const structors);
+void __libc_fini(void* finit_array);
+
+__END_DECLS
+
+#if defined(__cplusplus)
+struct KernelArgumentBlock;
+void __libc_init_common(KernelArgumentBlock& args);
+#endif
 
 #endif

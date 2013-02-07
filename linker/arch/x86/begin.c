@@ -26,24 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <stdint.h>
+#include <sys/cdefs.h>
 
-extern unsigned __linker_init(unsigned int *elfdata);
+extern unsigned __linker_init(void* raw_args);
 
-__attribute__((visibility("hidden")))
-void _start() {
+__LIBC_HIDDEN__ void _start() {
   void (*start)(void);
 
-  void* elfdata = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-  start = (void(*)(void))__linker_init(elfdata);
+  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
+  start = (void(*)(void))__linker_init(raw_args);
 
   /* linker init returns (%eax) the _entry address in the main image */
-  /* entry point expects sp to point to elfdata */
+  /* entry point expects sp to point to raw_args */
 
   __asm__ (
      "mov %0, %%esp\n\t"
      "jmp *%1\n\t"
-     : : "r"(elfdata), "r"(start) :
+     : : "r"(raw_args), "r"(start) :
   );
 
   /* Unreachable */
