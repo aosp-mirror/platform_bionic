@@ -42,6 +42,7 @@
 // Private C library headers.
 #include <private/bionic_tls.h>
 #include <private/debug_format.h>
+#include <private/KernelArgumentBlock.h>
 #include <private/logd.h>
 #include <private/ScopedPthreadMutexLocker.h>
 
@@ -1771,15 +1772,8 @@ static bool soinfo_link_image(soinfo* si) {
  * fixed it's own GOT. It is safe to make references to externs
  * and other non-local data at this point.
  */
-static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linker_base)
-{
-    static soinfo linker_soinfo;
-
-    int argc = (int) *elfdata;
-    char **argv = (char**) (elfdata + 1);
-    unsigned *vecs = (unsigned*) (argv + argc + 1);
-
-    /* NOTE: we store the elfdata pointer on a special location
+static unsigned __linker_init_post_relocation(KernelArgumentBlock& args, unsigned linker_base) {
+    /* NOTE: we store the args pointer on a special location
      *       of the temporary TLS area in order to pass it to
      *       the C Library's runtime initializer.
      *
@@ -1787,7 +1781,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
      *       to point to a different location to ensure that no other
      *       shared library constructor can access it.
      */
-    __libc_init_tls(elfdata);
+  __libc_init_tls(&args);
 
 #if TIMING
     struct timeval t0, t1;
@@ -1795,7 +1789,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
 #endif
 
     // Initialize environment functions, and get to the ELF aux vectors table.
-    vecs = linker_env_init(vecs);
+    linker_env_init(args);
 
     debugger_init();
 
@@ -1815,9 +1809,8 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     }
 
     INFO("[ android linker & debugger ]\n");
-    DEBUG("elfdata @ 0x%08x\n", (unsigned)elfdata);
 
-    soinfo* si = soinfo_alloc(argv[0]);
+    soinfo* si = soinfo_alloc(args.argv[0]);
     if (si == NULL) {
         exit(EXIT_FAILURE);
     }
@@ -1827,7 +1820,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     link_map* map = &(si->linkmap);
 
     map->l_addr = 0;
-    map->l_name = argv[0];
+    map->l_name = args.argv[0];
     map->l_prev = NULL;
     map->l_next = NULL;
 
@@ -1841,9 +1834,11 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
          * Don't use soinfo_alloc(), because the linker shouldn't
          * be on the soinfo list.
          */
-    strlcpy((char*) linker_soinfo.name, "/system/bin/linker", sizeof linker_soinfo.name);
+    static soinfo linker_soinfo;
+    strlcpy(linker_soinfo.name, "/system/bin/linker", sizeof(linker_soinfo.name));
     linker_soinfo.flags = 0;
     linker_soinfo.base = linker_base;
+
     /*
      * Set the dynamic field in the link map otherwise gdb will complain with
      * the following:
@@ -1851,42 +1846,29 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
      *   expected address (wrong library or version mismatch?)
      */
     Elf32_Ehdr *elf_hdr = (Elf32_Ehdr *) linker_base;
-    Elf32_Phdr *phdr =
-        (Elf32_Phdr *)((unsigned char *) linker_base + elf_hdr->e_phoff);
+    Elf32_Phdr *phdr = (Elf32_Phdr*)((unsigned char*) linker_base + elf_hdr->e_phoff);
     phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
                                    &linker_soinfo.dynamic, NULL, NULL);
     insert_soinfo_into_debug_map(&linker_soinfo);
 
-    /* extract information passed from the kernel */
-    while (vecs[0] != 0){
-        switch(vecs[0]){
-        case AT_PHDR:
-            si->phdr = (Elf32_Phdr*) vecs[1];
-            break;
-        case AT_PHNUM:
-            si->phnum = (int) vecs[1];
-            break;
-        case AT_ENTRY:
-            si->entry = vecs[1];
-            break;
-        }
-        vecs += 2;
-    }
+    // Extract information passed from the kernel.
+    si->phdr = reinterpret_cast<Elf32_Phdr*>(args.getauxval(AT_PHDR));
+    si->phnum = args.getauxval(AT_PHNUM);
+    si->entry = args.getauxval(AT_ENTRY);
 
     /* Compute the value of si->base. We can't rely on the fact that
      * the first entry is the PHDR because this will not be true
      * for certain executables (e.g. some in the NDK unit test suite)
      */
-    int nn;
     si->base = 0;
     si->size = phdr_table_get_load_size(si->phdr, si->phnum);
     si->load_bias = 0;
-    for ( nn = 0; nn < si->phnum; nn++ ) {
-        if (si->phdr[nn].p_type == PT_PHDR) {
-            si->load_bias = (Elf32_Addr)si->phdr - si->phdr[nn].p_vaddr;
-            si->base = (Elf32_Addr) si->phdr - si->phdr[nn].p_offset;
-            break;
-        }
+    for (int i = 0; i < si->phnum; ++i) {
+      if (si->phdr[i].p_type == PT_PHDR) {
+        si->load_bias = reinterpret_cast<Elf32_Addr>(si->phdr) - si->phdr[i].p_vaddr;
+        si->base = reinterpret_cast<Elf32_Addr>(si->phdr) - si->phdr[i].p_offset;
+        break;
+      }
     }
     si->dynamic = (unsigned *)-1;
     si->refcount = 1;
@@ -1920,13 +1902,13 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
 
 #if TIMING
     gettimeofday(&t1,NULL);
-    PRINT("LINKER TIME: %s: %d microseconds\n", argv[0], (int) (
+    PRINT("LINKER TIME: %s: %d microseconds\n", e.argv[0], (int) (
                (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
                (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)
                ));
 #endif
 #if STATS
-    PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol\n", argv[0],
+    PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol\n", e.argv[0],
            linker_stats.count[kRelocAbsolute],
            linker_stats.count[kRelocRelative],
            linker_stats.count[kRelocCopy],
@@ -1946,7 +1928,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
                 }
             }
         }
-        PRINT("PAGES MODIFIED: %s: %d (%dKB)\n", argv[0], count, count * 4);
+        PRINT("PAGES MODIFIED: %s: %d (%dKB)\n", e.argv[0], count, count * 4);
     }
 #endif
 
@@ -1956,31 +1938,6 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
 
     TRACE("[ Ready to execute '%s' @ 0x%08x ]\n", si->name, si->entry);
     return si->entry;
-}
-
-/*
- * Find the value of AT_BASE passed to us by the kernel. This is the load
- * location of the linker.
- */
-static unsigned find_linker_base(unsigned **elfdata) {
-    int argc = (int) *elfdata;
-    char **argv = (char**) (elfdata + 1);
-    unsigned *vecs = (unsigned*) (argv + argc + 1);
-    while (vecs[0] != 0) {
-        vecs++;
-    }
-
-    /* The end of the environment block is marked by two NULL pointers */
-    vecs++;
-
-    while(vecs[0]) {
-        if (vecs[0] == AT_BASE) {
-            return vecs[1];
-        }
-        vecs += 2;
-    }
-
-    return 0; // should never happen
 }
 
 /* Compute the load-bias of an existing executable. This shall only
@@ -2018,39 +1975,41 @@ get_elf_exec_load_bias(const Elf32_Ehdr* elf)
  * relocations, any attempt to reference an extern variable, extern
  * function, or other GOT reference will generate a segfault.
  */
-extern "C" unsigned __linker_init(unsigned **elfdata) {
-    unsigned linker_addr = find_linker_base(elfdata);
-    Elf32_Ehdr *elf_hdr = (Elf32_Ehdr *) linker_addr;
-    Elf32_Phdr *phdr =
-        (Elf32_Phdr *)((unsigned char *) linker_addr + elf_hdr->e_phoff);
+extern "C" unsigned __linker_init(void* raw_args) {
+  KernelArgumentBlock args(raw_args);
 
-    soinfo linker_so;
-    memset(&linker_so, 0, sizeof(soinfo));
+  unsigned linker_addr = args.getauxval(AT_BASE);
 
-    linker_so.base = linker_addr;
-    linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
-    linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
-    linker_so.dynamic = (unsigned *) -1;
-    linker_so.phdr = phdr;
-    linker_so.phnum = elf_hdr->e_phnum;
-    linker_so.flags |= FLAG_LINKER;
+  Elf32_Ehdr *elf_hdr = (Elf32_Ehdr*) linker_addr;
+  Elf32_Phdr *phdr = (Elf32_Phdr*)((unsigned char*) linker_addr + elf_hdr->e_phoff);
 
-    if (!soinfo_link_image(&linker_so)) {
-        // It would be nice to print an error message, but if the linker
-        // can't link itself, there's no guarantee that we'll be able to
-        // call write() (because it involves a GOT reference).
-        //
-        // This situation should never occur unless the linker itself
-        // is corrupt.
-        exit(EXIT_FAILURE);
-    }
+  soinfo linker_so;
+  memset(&linker_so, 0, sizeof(soinfo));
 
-    // We have successfully fixed our own relocations. It's safe to run
-    // the main part of the linker now.
-    unsigned start_address = __linker_init_post_relocation(elfdata, linker_addr);
+  linker_so.base = linker_addr;
+  linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
+  linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
+  linker_so.dynamic = (unsigned*) -1;
+  linker_so.phdr = phdr;
+  linker_so.phnum = elf_hdr->e_phnum;
+  linker_so.flags |= FLAG_LINKER;
 
-    set_soinfo_pool_protection(PROT_READ);
+  if (!soinfo_link_image(&linker_so)) {
+    // It would be nice to print an error message, but if the linker
+    // can't link itself, there's no guarantee that we'll be able to
+    // call write() (because it involves a GOT reference).
+    //
+    // This situation should never occur unless the linker itself
+    // is corrupt.
+    exit(EXIT_FAILURE);
+  }
 
-    // Return the address that the calling assembly stub should jump to.
-    return start_address;
+  // We have successfully fixed our own relocations. It's safe to run
+  // the main part of the linker now.
+  unsigned start_address = __linker_init_post_relocation(args, linker_addr);
+
+  set_soinfo_pool_protection(PROT_READ);
+
+  // Return the address that the calling assembly stub should jump to.
+  return start_address;
 }

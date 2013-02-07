@@ -177,7 +177,6 @@ libc_common_src_files := \
 	bionic/isatty.c \
 	bionic/issetugid.c \
 	bionic/ldexp.c \
-	bionic/libc_init_common.c \
 	bionic/logd_write.c \
 	bionic/lseek64.c \
 	bionic/md5.c \
@@ -275,6 +274,7 @@ libc_bionic_src_files := \
     bionic/__fgets_chk.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
+    bionic/libc_init_common.cpp \
     bionic/libgen.cpp \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
@@ -827,7 +827,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
 	$(libc_static_common_src_files) \
-	bionic/libc_init_static.c
+	bionic/libc_init_static.cpp
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
@@ -852,7 +852,7 @@ LOCAL_SRC_FILES := \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
-	bionic/libc_init_static.c
+	bionic/libc_init_static.cpp
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC \
@@ -886,7 +886,7 @@ LOCAL_SRC_FILES := \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
 	bionic/pthread_debug.cpp \
-	bionic/libc_init_dynamic.c
+	bionic/libc_init_dynamic.cpp
 
 ifeq ($(TARGET_ARCH),arm)
 	LOCAL_NO_CRT := true
