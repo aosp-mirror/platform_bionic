@@ -32,6 +32,8 @@ class Benchmark {
 
   Benchmark* Arg(int x);
 
+  const char* Name();
+
   bool ShouldRun(int argc, char* argv[]);
   void Run();
 
