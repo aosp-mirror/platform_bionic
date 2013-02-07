@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 
 extern unsigned __linker_init(void* raw_args);
