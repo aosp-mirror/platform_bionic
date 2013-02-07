@@ -256,7 +256,7 @@ static MallocDebug gMallocUse __attribute__((aligned(32))) = {
     dlmalloc, dlfree, dlcalloc, dlrealloc, dlmemalign
 };
 
-extern char* __progname;
+extern const char* __progname;
 
 /* Handle to shared library where actual memory allocation is implemented.
  * This library is loaded and memory allocation calls are redirected there

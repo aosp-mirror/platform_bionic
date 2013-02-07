@@ -116,7 +116,7 @@ static const char* const kStartBanner =
 static const char* const kEndBanner =
         "===============================================================";
 
-extern char* __progname;
+extern const char* __progname;
 
 #define STACK_TRACE_DEPTH 16
 

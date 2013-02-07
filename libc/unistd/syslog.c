@@ -46,7 +46,7 @@
 
 static struct syslog_data sdata = SYSLOG_DATA_INIT;
 
-extern char	*__progname;		/* Program name, from crt0. */
+extern const char	*__progname;		/* Program name, from crt0. */
 
 static void	disconnectlog_r(struct syslog_data *);	/* disconnect from syslogd */
 static void	connectlog_r(struct syslog_data *);	/* (re)connect to syslogd */
