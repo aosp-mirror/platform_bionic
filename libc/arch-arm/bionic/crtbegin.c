@@ -28,6 +28,7 @@
 
 #include "../../bionic/libc_init_common.h"
 #include <stddef.h>
+#include <stdint.h>
 
 __attribute__ ((section (".preinit_array")))
 void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
@@ -44,7 +45,7 @@ __LIBC_HIDDEN__ void _start() {
   array.init_array = &__INIT_ARRAY__;
   array.fini_array = &__FINI_ARRAY__;
 
-  void* raw_args = __builtin_frame_address(0) + sizeof(void*);
+  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
   __libc_init(raw_args, NULL, &main, &array);
 }
 
