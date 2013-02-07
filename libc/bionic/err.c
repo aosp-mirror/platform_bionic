@@ -34,7 +34,7 @@
 #include <stdarg.h>
 #include <errno.h>
 
-extern char *__progname;
+extern const char* __progname;
 
 __noreturn void
 err(int eval, const char *fmt, ...)

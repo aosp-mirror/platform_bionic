@@ -46,7 +46,7 @@ extern "C" unsigned __get_sp(void);
 extern "C" int __system_properties_init(void);
 
 // Not public, but well-known in the BSDs.
-char* __progname;
+const char* __progname;
 
 // Declared in <unistd.h>
 char** environ;
@@ -88,7 +88,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
   environ = args.envp;
   errno = 0;
   __libc_auxv = args.auxv;
-  __progname = args.argv[0] ? args.argv[0] : const_cast<char*>("<unknown>");
+  __progname = args.argv[0] ? args.argv[0] : "<unknown>";
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
