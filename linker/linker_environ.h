@@ -29,10 +29,10 @@
 #ifndef LINKER_ENVIRON_H
 #define LINKER_ENVIRON_H
 
-// Call this function before anything else. 'environment_and_aux_vectors'
-// must point to the environment block in the ELF data block. The function
-// returns the start of the aux vectors after the environment block.
-extern unsigned* linker_env_init(unsigned* environment_and_aux_vectors);
+struct KernelArgumentBlock;
+
+// Call this function before any of the other functions in this header file.
+extern void linker_env_init(KernelArgumentBlock& args);
 
 // Returns the value of environment variable 'name' if defined and not
 // empty, or NULL otherwise.
@@ -41,4 +41,4 @@ extern const char* linker_env_get(const char* name);
 // Returns the value of this program's AT_SECURE variable.
 extern bool get_AT_SECURE();
 
-#endif /* LINKER_ENVIRON_H */
+#endif // LINKER_ENVIRON_H

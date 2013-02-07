@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <private/KernelArgumentBlock.h>
+
 static char** _envp;
 static bool _AT_SECURE_value = true;
 
@@ -40,21 +42,18 @@ bool get_AT_SECURE() {
   return _AT_SECURE_value;
 }
 
-static void __init_AT_SECURE(unsigned* auxv) {
+static void __init_AT_SECURE(KernelArgumentBlock& args) {
   // Check auxv for AT_SECURE first to see if program is setuid, setgid,
   // has file caps, or caused a SELinux/AppArmor domain transition.
-  for (unsigned* v = auxv; v[0]; v += 2) {
-    if (v[0] == AT_SECURE) {
-      // Kernel told us whether to enable secure mode.
-      _AT_SECURE_value = v[1];
-      return;
-    }
-  }
+  bool kernel_supplied_AT_SECURE;
+  _AT_SECURE_value = args.getauxval(AT_SECURE, &kernel_supplied_AT_SECURE);
 
   // We don't support ancient kernels.
-  const char* msg = "FATAL: kernel did not supply AT_SECURE\n";
-  write(2, msg, strlen(msg));
-  exit(EXIT_FAILURE);
+  if (!kernel_supplied_AT_SECURE) {
+    const char* msg = "FATAL: kernel did not supply AT_SECURE\n";
+    write(2, msg, strlen(msg));
+    exit(EXIT_FAILURE);
+  }
 }
 
 // Check if the environment variable definition at 'envstr'
@@ -164,22 +163,12 @@ static void __sanitize_environment_variables() {
   dst[0] = NULL;
 }
 
-unsigned* linker_env_init(unsigned* environment_and_aux_vectors) {
+void linker_env_init(KernelArgumentBlock& args) {
   // Store environment pointer - can't be NULL.
-  _envp = reinterpret_cast<char**>(environment_and_aux_vectors);
+  _envp = args.envp;
 
-  // Skip over all environment variable definitions.
-  // The end of the environment block is marked by two NULL pointers.
-  unsigned* aux_vectors = environment_and_aux_vectors;
-  while (aux_vectors[0] != 0) {
-    ++aux_vectors;
-  }
-  ++aux_vectors;
-
-  __init_AT_SECURE(aux_vectors);
+  __init_AT_SECURE(args);
   __sanitize_environment_variables();
-
-  return aux_vectors;
 }
 
 const char* linker_env_get(const char* name) {

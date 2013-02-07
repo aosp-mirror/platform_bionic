@@ -30,28 +30,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <elf.h>
 #include <asm/page.h>
 #include "pthread_internal.h"
 #include "atexit.h"
+#include "KernelArgumentBlock.h"
 #include "libc_init_common.h"
 
 #include <bionic_tls.h>
 #include <errno.h>
 #include <private/bionic_auxv.h>
 
-extern unsigned __get_sp(void);
-extern pid_t gettid(void);
+extern "C" unsigned __get_sp(void);
+extern "C" int __system_properties_init(void);
 
-char*  __progname;
+// Not public, but well-known in the BSDs.
+char* __progname;
+
+// Declared in <unistd.h>
 char** environ;
 
-/* from asm/page.h */
+// Declared in <asm/page.h>.
 unsigned int __page_size = PAGE_SIZE;
 unsigned int __page_shift = PAGE_SHIFT;
-
-
-int __system_properties_init(void);
 
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
@@ -61,10 +63,10 @@ int __system_properties_init(void);
  * stores the pointer in TLS, but does not add it to pthread's gThreadList. This
  * has to be done later from libc itself (see __libc_init_common).
  *
- * This function also stores the elf_data argument in a specific TLS slot to be later
+ * This function also stores a pointer to the kernel argument block in a TLS slot to be
  * picked up by the libc constructor.
  */
-void __libc_init_tls(unsigned** elf_data) {
+extern "C" void __libc_init_tls(void* kernel_argument_block) {
   unsigned stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
   unsigned stack_size = 128 * 1024;
   unsigned stack_bottom = stack_top - stack_size;
@@ -78,32 +80,20 @@ void __libc_init_tls(unsigned** elf_data) {
 
   static void* tls_area[BIONIC_TLS_SLOTS];
   __init_tls(tls_area, &thread);
-  tls_area[TLS_SLOT_BIONIC_PREINIT] = elf_data;
+  tls_area[TLS_SLOT_BIONIC_PREINIT] = kernel_argument_block;
 }
 
-void __libc_init_common(uintptr_t* elf_data) {
-  int argc = *elf_data;
-  char** argv = (char**) (elf_data + 1);
-  char** envp = argv + argc + 1;
+void __libc_init_common(KernelArgumentBlock& args) {
+  // Initialize various globals.
+  environ = args.envp;
+  errno = 0;
+  __libc_auxv = args.auxv;
+  __progname = args.argv[0] ? args.argv[0] : const_cast<char*>("<unknown>");
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
   main_thread->allocated_on_heap = false;
   _pthread_internal_add(main_thread);
-
-  // Set various globals.
-  errno = 0;
-  __progname = argv[0] ? argv[0] : "<unknown>";
-  environ = envp;
-
-  // The auxiliary vector is at the end of the environment block
-  while(*envp != NULL) {
-    envp++;
-  }
-  /* The end of the environment block is marked by two NULL pointers */
-  envp++;
-
-  __libc_auxv = (Elf32_auxv_t*) envp;
 
   __system_properties_init(); // Requires 'environ'.
 }
@@ -116,7 +106,7 @@ void __libc_init_common(uintptr_t* elf_data) {
  * entry in the list has value -1, the last one has value 0.
  */
 void __libc_fini(void* array) {
-  void** fini_array = array;
+  void** fini_array = reinterpret_cast<void**>(array);
   const size_t minus1 = ~(size_t)0; /* ensure proper sign extension */
 
   /* Sanity check - first entry must be -1 */
@@ -135,7 +125,7 @@ void __libc_fini(void* array) {
 
   /* Now call each destructor in reverse order. */
   while (count > 0) {
-    void (*func)() = (void (*)) fini_array[--count];
+    void (*func)() = (void (*)()) fini_array[--count];
 
     /* Sanity check, any -1 in the list is ignored */
     if ((size_t)func == minus1) {
