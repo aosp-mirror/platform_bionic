@@ -98,8 +98,14 @@ struct sockinet {
 	u_short	si_port;
 };
 
+#if defined(ANDROID_CHANGES)
+static int getnameinfo_inet __P((const struct sockaddr *, socklen_t, char *,
+    socklen_t, char *, socklen_t, int, const char*));
+#else
 static int getnameinfo_inet __P((const struct sockaddr *, socklen_t, char *,
     socklen_t, char *, socklen_t, int));
+#endif
+
 #ifdef INET6
 static int ip6_parsenumeric __P((const struct sockaddr *, const char *, char *,
 				 socklen_t, int));
@@ -122,15 +128,26 @@ static const int DnsProxyQueryResult = 222;
  */
 int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen, char* serv, size_t servlen, int flags)
 {
+#ifdef ANDROID_CHANGES
+	return android_getnameinfoforiface(sa, salen, host, hostlen, serv, servlen, flags, NULL);
+}
+
+int android_getnameinfoforiface(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen, char* serv, size_t servlen, int flags, const char* iface)
+{
+#endif /* ANDROID_CHANGES */
 	switch (sa->sa_family) {
 	case AF_INET:
 	case AF_INET6:
 		return getnameinfo_inet(sa, salen, host, hostlen,
+#ifdef ANDROID_CHANGES
+				serv, servlen, flags, iface);
+#else
 		    serv, servlen, flags);
+#endif
 #if defined(ANDROID_CHANGES) && defined(AF_LINK)
 	case AF_LINK:
 		return getnameinfo_link(sa, salen, host, hostlen,
-		    serv, servlen, flags);
+				serv, servlen, flags);
 #endif
 	default:
 		return EAI_FAMILY;
@@ -143,108 +160,35 @@ int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t h
  * the address. On failure -1 is returned in which case
  * normal execution flow shall continue. */
 static int
-android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, socklen_t addrLen, int addrFamily) {
+android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, socklen_t addrLen, int addrFamily, const char* iface)
+{
+	struct hostent *hostResult =
+			android_gethostbyaddrforiface_proxy(addr, addrLen, addrFamily, iface);
 
-	int sock;
-	const int one = 1;
-	struct sockaddr_un proxy_addr;
-	const char* cache_mode = getenv("ANDROID_DNS_MODE");
-	FILE* proxy = NULL;
-	int result = -1;
+	if (hostResult == NULL) return 0;
 
-	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
-		// Don't use the proxy in local mode.  This is used by the
-		// proxy itself.
-		return -1;
-	}
+	int lengthResult = strlen(hostResult->h_name);
 
-	// Temporary cautious hack to disable the DNS proxy for processes
-	// requesting special treatment.  Ideally the DNS proxy should
-	// accomodate these apps, though.
-	char propname[PROP_NAME_MAX];
-	char propvalue[PROP_VALUE_MAX];
-	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
-	if (__system_property_get(propname, propvalue) > 0) {
-		return -1;
-	}
-	// create socket
-	sock = socket(AF_UNIX, SOCK_STREAM, 0);
-	if (sock < 0) {
-		return -1;
-	}
-
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-	memset(&proxy_addr, 0, sizeof(proxy_addr));
-	proxy_addr.sun_family = AF_UNIX;
-	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
-			sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock, (const struct sockaddr*) (void*) &proxy_addr,
-							sizeof(proxy_addr))) != 0) {
-		close(sock);
-		return -1;
-	}
-
-	// send request to DnsProxyListener
-	proxy = fdopen(sock,"r+");
-	if (proxy == NULL) {
-		goto exit;
-	}
-
-	char buf[INET6_ADDRSTRLEN]; // big enough for IPv4 and IPv6
-	const char* addrStr = inet_ntop(addrFamily, addr, buf, sizeof(buf));
-	if (addrStr == NULL) {
-		goto exit;
-	}
-	if (fprintf(proxy, "gethostbyaddr %s %d %d", addrStr, addrLen, addrFamily) < 0) {
-		goto exit;
-	}
-
-	// literal NULL byte at end, required by FrameworkListener
-	if (fputc(0, proxy) == EOF || fflush(proxy) != 0) {
-		goto exit;
-	}
-
-	result = 0;
-	char msg_buf[4];
-	// read result code for gethostbyaddr
-	if (fread(msg_buf, 1, sizeof(msg_buf), proxy) != sizeof(msg_buf)) {
-		goto exit;
-	}
-
-	int result_code = (int)strtol(msg_buf, NULL, 10);
-	// verify the code itself
-	if (result_code != DnsProxyQueryResult) {
-		goto exit;
-	}
-
-	uint32_t name_len;
-	if (fread(&name_len, sizeof(name_len), 1, proxy) != 1) {
-		goto exit;
-	}
-
-	name_len = ntohl(name_len);
-	if (name_len <= 0 || name_len >= nameBufLen) {
-		goto exit;
-	}
-
-	if (fread(nameBuf, name_len, 1, proxy) != 1) {
-		goto exit;
-	}
-
-	result = name_len;
-
- exit:
-	if (proxy != NULL) {
-		fclose(proxy);
-	}
-
-	return result;
+	if (nameBuf) strncpy(nameBuf, hostResult->h_name, nameBufLen);
+	return lengthResult;
 }
 #endif
 /*
  * getnameinfo_inet():
  * Format an IPv4 or IPv6 sockaddr into a printable string.
  */
+#ifdef ANDROID_CHANGES
+static int
+getnameinfo_inet(sa, salen, host, hostlen, serv, servlen, flags, iface)
+	const struct sockaddr *sa;
+	socklen_t salen;
+	char *host;
+	socklen_t hostlen;
+	char *serv;
+	socklen_t servlen;
+	int flags;
+	const char* iface;
+#else
 static int
 getnameinfo_inet(sa, salen, host, hostlen, serv, servlen, flags)
 	const struct sockaddr *sa;
@@ -254,6 +198,7 @@ getnameinfo_inet(sa, salen, host, hostlen, serv, servlen, flags)
 	char *serv;
 	socklen_t servlen;
 	int flags;
+#endif
 {
 	const struct afd *afd;
 	struct servent *sp;
@@ -398,14 +343,14 @@ getnameinfo_inet(sa, salen, host, hostlen, serv, servlen, flags)
 		char android_proxy_buf[MAXDNAME];
 
 		int hostnamelen = android_gethostbyaddr_proxy(android_proxy_buf,
-				MAXDNAME, addr, afd->a_addrlen, afd->a_af);
+				MAXDNAME, addr, afd->a_addrlen, afd->a_af, iface);
 		if (hostnamelen > 0) {
 			hp = &android_proxy_hostent;
 			hp->h_name = android_proxy_buf;
 		} else if (!hostnamelen) {
 			hp = NULL;
 		} else {
-			hp = gethostbyaddr(addr, afd->a_addrlen, afd->a_af);
+			hp = android_gethostbyaddrforiface(addr, afd->a_addrlen, afd->a_af, iface);
 		}
 #else
 		hp = gethostbyaddr(addr, afd->a_addrlen, afd->a_af);
