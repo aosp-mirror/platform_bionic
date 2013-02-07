@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PkBnmzEE",
+        "filename": "libc/private/ElfData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-07T19:05:00Z",
+      "side": 1,
+      "message": "ElfData seems overly generic. Perhaps ElfAuxv?",
+      "revId": "42f8361d27a37042c0bfaeaed176040b6a71a436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PkHnXGEs",
+        "filename": "linker/linker_environ.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-07T19:05:00Z",
+      "side": 1,
+      "message": "sounds like getauxval needs an optional out argument to tell you?",
+      "revId": "42f8361d27a37042c0bfaeaed176040b6a71a436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
