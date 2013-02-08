@@ -87,9 +87,8 @@ __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void),
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
-  __libc_init_tls(NULL);
-
   KernelArgumentBlock args(raw_args);
+  __libc_init_tls(args);
   __libc_init_common(args);
 
   apply_gnu_relro();

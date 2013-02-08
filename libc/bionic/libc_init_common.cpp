@@ -48,7 +48,7 @@ extern "C" int __system_properties_init(void);
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
-// Declared in <unistd.h>
+// Declared in <unistd.h>.
 char** environ;
 
 // Declared in <asm/page.h>.
@@ -66,7 +66,9 @@ unsigned int __page_shift = PAGE_SHIFT;
  * This function also stores a pointer to the kernel argument block in a TLS slot to be
  * picked up by the libc constructor.
  */
-extern "C" void __libc_init_tls(void* kernel_argument_block) {
+void __libc_init_tls(KernelArgumentBlock& args) {
+  __libc_auxv = args.auxv;
+
   unsigned stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
   unsigned stack_size = 128 * 1024;
   unsigned stack_bottom = stack_top - stack_size;
@@ -80,7 +82,7 @@ extern "C" void __libc_init_tls(void* kernel_argument_block) {
 
   static void* tls_area[BIONIC_TLS_SLOTS];
   __init_tls(tls_area, &thread);
-  tls_area[TLS_SLOT_BIONIC_PREINIT] = kernel_argument_block;
+  tls_area[TLS_SLOT_BIONIC_PREINIT] = &args;
 }
 
 void __libc_init_common(KernelArgumentBlock& args) {

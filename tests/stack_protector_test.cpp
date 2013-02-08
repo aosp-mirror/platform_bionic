@@ -56,13 +56,7 @@ struct stack_protector_checker {
 
     // Duplicate tid. gettid(2) bug? Seeing this would be very upsetting.
     ASSERT_TRUE(tids.find(tid) == tids.end());
-#ifdef __GLIBC__
-    // glibc uses the same guard for every thread. bionic uses a different guard for each one.
-#else
-    // Duplicate guard. Our bug. Note this is potentially flaky; we _could_ get the
-    // same guard for two threads, but it should be vanishingly unlikely.
-    ASSERT_TRUE(guards.find(guard) == guards.end());
-#endif
+
     // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_ get
     // four random zero bytes, but it should be vanishingly unlikely.
     ASSERT_NE(guard, 0U);
@@ -78,7 +72,7 @@ static void* ThreadGuardHelper(void* arg) {
   return NULL;
 }
 
-TEST(stack_protector, guard_per_thread) {
+TEST(stack_protector, same_guard_per_thread) {
   stack_protector_checker checker;
   size_t thread_count = 10;
   for (size_t i = 0; i < thread_count; ++i) {
@@ -90,12 +84,8 @@ TEST(stack_protector, guard_per_thread) {
   }
   ASSERT_EQ(thread_count, checker.tids.size());
 
-  // glibc uses the same guard for every thread. bionic uses a different guard for each one.
-#ifdef __BIONIC__
-  ASSERT_EQ(thread_count, checker.guards.size());
-#else
+  // bionic and glibc use the same guard for every thread.
   ASSERT_EQ(1U, checker.guards.size());
-#endif
 }
 
 #endif
@@ -107,11 +97,11 @@ TEST(stack_protector, guard_per_thread) {
 // Bionic has the global for x86 too, to support binaries that can run on
 // Android releases that didn't implement the TLS guard value.
 
-extern "C" void* __stack_chk_guard;
+extern "C" uintptr_t __stack_chk_guard;
 
 TEST(stack_protector, global_guard) {
   ASSERT_NE(0, gettid());
-  ASSERT_NE(0U, reinterpret_cast<uintptr_t>(__stack_chk_guard));
+  ASSERT_NE(0U, __stack_chk_guard);
 }
 
 /*
@@ -124,7 +114,7 @@ TEST(stack_protector, global_guard) {
  */
 __attribute__ ((noinline))
 static void do_modify_stack_chk_guard() {
-  __stack_chk_guard = (void *) 0x12345678;
+  __stack_chk_guard = 0x12345678;
 }
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
