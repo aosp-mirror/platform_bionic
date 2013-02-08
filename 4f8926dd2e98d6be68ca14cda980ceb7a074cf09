@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PsfTg1vU",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-08T19:16:20Z",
+      "side": 1,
+      "message": "no point repeatedly re-generating the same value.",
+      "revId": "4f8926dd2e98d6be68ca14cda980ceb7a074cf09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
