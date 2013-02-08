@@ -170,13 +170,12 @@ void  __init_tls(void** tls, void* thread) {
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
-  tls[TLS_SLOT_SELF]      = (void*) tls;
+  tls[TLS_SLOT_SELF] = tls;
   tls[TLS_SLOT_THREAD_ID] = thread;
+  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
+  tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
 
-  // Stack guard generation may make system calls, and those system calls may fail.
-  // If they do, they'll try to set errno, so we can only do this after calling __set_tls.
   __set_tls((void*) tls);
-  tls[TLS_SLOT_STACK_GUARD] = __generate_stack_chk_guard();
 }
 
 

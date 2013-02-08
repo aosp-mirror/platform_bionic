@@ -29,47 +29,13 @@
 #ifndef _PRIVATE_SSP_H
 #define _PRIVATE_SSP_H
 
-#include <errno.h>
-#include <sys/cdefs.h>
-
 __BEGIN_DECLS
 
-/** WARNING WARNING WARNING
- **
- ** This header file is *NOT* part of the public Bionic ABI/API
- ** and should not be used/included by user-serviceable parts of
- ** the system (e.g. applications).
- **/
-
-/* GCC uses this on ARM and MIPS. */
-extern void* __stack_chk_guard;
+/* GCC uses this on ARM and MIPS; we use it on x86 to set the guard in TLS. */
+extern uintptr_t __stack_chk_guard;
 
 /* GCC calls this if a stack guard check fails. */
 extern void __stack_chk_fail();
-
-__inline__ static void* __attribute__((always_inline)) __generate_stack_chk_guard(void) {
-  union {
-    uintptr_t value;
-    char bytes[sizeof(uintptr_t)];
-  } u;
-
-  /* Try pulling random bytes from /dev/urandom. */
-  int fd = TEMP_FAILURE_RETRY(open("/dev/urandom", O_RDONLY));
-  if (fd != -1) {
-    ssize_t byte_count = TEMP_FAILURE_RETRY(read(fd, &u.bytes, sizeof(u)));
-    close(fd);
-    if (byte_count == sizeof(u)) {
-      return (void*) u.value;
-    }
-  }
-
-  /* If that failed, switch to 'terminator canary'. */
-  u.bytes[0] = 0;
-  u.bytes[1] = 0;
-  u.bytes[2] = '\n';
-  u.bytes[3] = 255;
-  return (void*) u.value;
-}
 
 __END_DECLS
 
