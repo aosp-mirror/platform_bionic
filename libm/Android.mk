@@ -1,5 +1,9 @@
 LOCAL_PATH:= $(call my-dir)
 
+#
+# libm source files.
+#
+
 # TODO: these come from from upstream's libc, not libm!
 libm_common_src_files := \
     digittoint.c  \
@@ -9,6 +13,10 @@ libm_common_src_files := \
 # TODO: this is not in the BSDs.
 libm_common_src_files += \
     sincos.c \
+
+# TODO: on Android, "long double" is just double.
+libm_common_src_files += \
+    fake_long_double.c
 
 libm_common_src_files += \
     upstream-freebsd/lib/msun/bsdsrc/b_exp.c \
@@ -177,58 +185,39 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
-libm_common_src_files += fake_long_double.c
+#
+# Architecture-specific assembly language overrides.
+#
 
-# TODO: on Android, "long double" is "double".
-#    upstream-freebsd/lib/msun/src/e_acosl.c \
-#    upstream-freebsd/lib/msun/src/e_asinl.c \
-#    upstream-freebsd/lib/msun/src/e_atan2l.c \
-#    upstream-freebsd/lib/msun/src/e_fmodl.c \
-#    upstream-freebsd/lib/msun/src/e_hypotl.c \
-#    upstream-freebsd/lib/msun/src/e_remainderl.c \
-#    upstream-freebsd/lib/msun/src/e_sqrtl.c \
-#    upstream-freebsd/lib/msun/src/s_atanl.c \
-#    upstream-freebsd/lib/msun/src/s_cbrtl.c \
-#    upstream-freebsd/lib/msun/src/s_ceill.c \
-#    upstream-freebsd/lib/msun/src/s_copysignl.c \
-#    upstream-freebsd/lib/msun/src/s_cosl.c \
-#    upstream-freebsd/lib/msun/src/s_fabsl.c \
-#    upstream-freebsd/lib/msun/src/s_floorl.c \
-#    upstream-freebsd/lib/msun/src/s_fmal.c \
-#    upstream-freebsd/lib/msun/src/s_fmaxl.c \
-#    upstream-freebsd/lib/msun/src/s_fminl.c \
-#    upstream-freebsd/lib/msun/src/s_frexpl.c \
-#    upstream-freebsd/lib/msun/src/s_ilogbl.c \
-#    upstream-freebsd/lib/msun/src/s_llrintl.c \
-#    upstream-freebsd/lib/msun/src/s_llroundl.c \
-#    upstream-freebsd/lib/msun/src/s_logbl.c \
-#    upstream-freebsd/lib/msun/src/s_lrintl.c \
-#    upstream-freebsd/lib/msun/src/s_lroundl.c \
-#    upstream-freebsd/lib/msun/src/s_modfl.c \
-#    upstream-freebsd/lib/msun/src/s_nextafterl.c \
-#    upstream-freebsd/lib/msun/src/s_nexttoward.c \
-#    upstream-freebsd/lib/msun/src/s_remquol.c \
-#    upstream-freebsd/lib/msun/src/s_rintl.c \
-#    upstream-freebsd/lib/msun/src/s_roundl.c \
-#    upstream-freebsd/lib/msun/src/s_scalbnl.c \
-#    upstream-freebsd/lib/msun/src/s_sinl.c \
-#    upstream-freebsd/lib/msun/src/s_tanl.c \
-#    upstream-freebsd/lib/msun/src/s_truncl.c \
+define override
+  $(subst upstream-freebsd/lib/msun/$1,upstream-freebsd/lib/msun/$2,$3)
+endef
 
-# TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
+libm_$(TARGET_ARCH)_src_files := $(call override,src/e_log10.c,i387/e_log10.S,$(libm_common_src_files))
+libm_$(TARGET_ARCH)_src_files := $(call override,src/e_sqrt.c,i387/e_sqrt.S,$(libm_$(TARGET_ARCH)_src_files))
+libm_$(TARGET_ARCH)_src_files := $(call override,src/s_logb.c,i387/s_logb.S,$(libm_$(TARGET_ARCH)_src_files))
+# libm_$(TARGET_ARCH)_src_files = $(libm_common_src_files) # Uncomment to force C-only!
 
-libm_common_cflags := -DFLT_EVAL_METHOD=0
-libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
+$(warning $(libm_$(TARGET_ARCH)_src_files))
+
+# TODO: handle fenv.c better; ARM and MIPS are identical, and the x86 one
+# should come from upstream-freebsd.
+libm_arm_src_files += arm/fenv.c
+libm_x86_src_files += i387/fenv.c
+libm_mips_src_files += mips/fenv.c
+
+#
+# Architecture-specific flags and include directories.
+#
 
 libm_arm_includes := $(LOCAL_PATH)/arm
-libm_arm_src_files := arm/fenv.c
 
 libm_x86_includes := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
-libm_x86_src_files := i387/fenv.c
 
 libm_mips_cflags := -fno-builtin-rintf -fno-builtin-rint
 libm_mips_includes := $(LOCAL_PATH)/mips
-libm_mips_src_files := mips/fenv.c
+
+libm_common_cflags := -DFLT_EVAL_METHOD=0
 
 #
 # libm.a for target.
@@ -237,9 +226,10 @@ include $(CLEAR_VARS)
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ARM_MODE := arm
+LOCAL_ASFLAGS := '-D__FBSDID(s)='
 LOCAL_CFLAGS := $(libm_common_cflags) $(libm_$(TARGET_ARCH)_cflags)
-LOCAL_C_INCLUDES += $(libm_common_includes) $(libm_$(TARGET_ARCH)_includes)
-LOCAL_SRC_FILES := $(libm_common_src_files) $(libm_$(TARGET_ARCH)_src_files)
+LOCAL_C_INCLUDES += $(libm_$(TARGET_ARCH)_includes)
+LOCAL_SRC_FILES := $(libm_$(TARGET_ARCH)_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 include $(BUILD_STATIC_LIBRARY)
 
