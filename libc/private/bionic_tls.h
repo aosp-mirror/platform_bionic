@@ -133,9 +133,11 @@ extern void*  __get_tls( void );
 /* return the stack base and size, used by our malloc debugger */
 extern void*  __get_stack_base(int  *p_stack_size);
 
-/* Initialize the TLS. */
-extern void __libc_init_tls(void* kernel_argument_block);
-
 __END_DECLS
+
+#if defined(__cplusplus)
+struct KernelArgumentBlock;
+extern void __libc_init_tls(KernelArgumentBlock& args);
+#endif
 
 #endif /* _SYS_TLS_H */

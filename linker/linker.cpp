@@ -1781,7 +1781,7 @@ static unsigned __linker_init_post_relocation(KernelArgumentBlock& args, unsigne
      *       to point to a different location to ensure that no other
      *       shared library constructor can access it.
      */
-  __libc_init_tls(&args);
+  __libc_init_tls(args);
 
 #if TIMING
     struct timeval t0, t1;
