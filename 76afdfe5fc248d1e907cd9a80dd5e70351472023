@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PqzqIfXg",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-08T05:50:49Z",
+      "side": 1,
+      "message": "is it just me or does memcpy seem overkill? since you are casting, why not\n\nuintptr_t guard \u003d *(uintptr*) getauxval(AT_RANDOM);\n\nreturn (void*) guard);",
+      "revId": "76afdfe5fc248d1e907cd9a80dd5e70351472023",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
