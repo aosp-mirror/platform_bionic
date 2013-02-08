@@ -39,6 +39,7 @@ long double atanhl(long double a1) { return atanh(a1); }
 long double cbrtl(long double a1) { return cbrt(a1); }
 long double copysignl(long double a1, long double a2) { return copysign(a1, a2); }
 long double coshl(long double a1) { return cosh(a1); }
+long double cosl(long double a1) { return cos(a1); }
 long double erfcl(long double a1) { return erfc(a1); }
 long double erfl(long double a1) { return erf(a1); }
 long double expm1l(long double a1) { return expm1(a1); }
@@ -64,6 +65,8 @@ long double roundl(long double a1) { return round(a1); }
 long double scalbnl(long double a1, int a2) { return scalbn(a1, a2); }
 long double significandl(long double a1) { return significand(a1); }
 long double sinhl(long double a1) { return sinh(a1); }
+long double sinl(long double a1) { return sin(a1); }
 long double sqrtl(long double a1) { return sqrt(a1); }
 long double tanhl(long double a1) { return tanh(a1); }
+long double tanl(long double a1) { return tan(a1); }
 long double tgammal(long double a1) { return tgamma(a1); }
