@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "PuwdNNsE",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-09T01:25:15Z",
+      "side": 1,
+      "message": "gtest to see if you can allocate _SC_THREAD_KEYS_MAX keys on glibc and bionic?",
+      "revId": "6c9b0c24ce2e53333a510e2c808c112049c73a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
