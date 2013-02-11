@@ -60,11 +60,6 @@ int _init_thread(pthread_internal_t* thread, pid_t kernel_id, const pthread_attr
 void _pthread_internal_add( pthread_internal_t*  thread );
 pthread_internal_t* __get_thread(void);
 
-__LIBC_HIDDEN__ void pthread_key_clean_all(void);
-
-extern pthread_internal_t* gThreadList;
-extern pthread_mutex_t gThreadListLock;
-
 /* needed by posix-timers.c */
 
 static __inline__ void timespec_add( struct timespec*  a, const struct timespec*  b )
