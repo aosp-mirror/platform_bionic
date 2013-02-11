@@ -37,18 +37,17 @@
 // TODO: move __cxa_guard_acquire and __cxa_guard_release into libc.
 
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER(name) \
-  static pthread_once_t __bionic_tls_ ## name ## _once; \
   static pthread_key_t __bionic_tls_ ## name ## _key; \
   static void __bionic_tls_ ## name ## _key_destroy(void* buffer) { \
     free(buffer); \
   } \
-  static void __bionic_tls_ ## name ## _key_init() { \
+  /* Run automatically when libc.so is opened by the dynamic linker. */ \
+  __attribute__((constructor)) static void __bionic_tls_ ## name ## _key_init() { \
     pthread_key_create(&__bionic_tls_ ## name ## _key, __bionic_tls_ ## name ## _key_destroy); \
   }
 
 // Leaves "name_tls_buffer" and "name_tls_buffer_size" defined and initialized.
 #define LOCAL_INIT_THREAD_LOCAL_BUFFER(type, name, byte_count) \
-  pthread_once(&__bionic_tls_ ## name ## _once, __bionic_tls_ ## name ## _key_init); \
   type name ## _tls_buffer = \
       reinterpret_cast<type>(pthread_getspecific(__bionic_tls_ ## name ## _key)); \
   if (name ## _tls_buffer == NULL) { \

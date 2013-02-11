@@ -279,6 +279,8 @@ libc_bionic_src_files := \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/pthread_attr.cpp \
+    bionic/pthread_setname_np.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
     bionic/sbrk.cpp \
