@@ -47,24 +47,26 @@ __BEGIN_DECLS
 #define BIONIC_TLS_SLOTS            64
 
 /* Well-known TLS slots. What data goes in which slot is arbitrary unless otherwise noted. */
-enum {
-  TLS_SLOT_SELF = 0, /* The kernel requires this specific slot for x86. */
-  TLS_SLOT_THREAD_ID,
-  TLS_SLOT_ERRNO,
-  TLS_SLOT_OPENGL_API = 3,
-  TLS_SLOT_OPENGL = 4,
-  TLS_SLOT_STACK_GUARD = 5, /* GCC requires this specific slot for x86. */
-  TLS_SLOT_DLERROR,
+#define TLS_SLOT_SELF               0  /* The kernel requires this specific slot for x86. */
+#define TLS_SLOT_THREAD_ID          1
+#define TLS_SLOT_ERRNO              2
 
-  TLS_SLOT_FIRST_USER_SLOT /* Must come last! */
-};
+#define TLS_SLOT_OPENGL_API         3
+#define TLS_SLOT_OPENGL             4
+
+#define TLS_SLOT_STACK_GUARD        5  /* GCC requires this specific slot for x86. */
+#define TLS_SLOT_DLERROR            6
+
+#define TLS_SLOT_MAX_WELL_KNOWN     TLS_SLOT_DLERROR
 
 /* This slot is only used to pass information from the dynamic linker to
  * libc.so when the C library is loaded in to memory. The C runtime init
  * function will then clear it. Since its use is extremely temporary,
- * we reuse an existing location that isn't needed during libc startup.
+ * we reuse an existing location.
  */
 #define  TLS_SLOT_BIONIC_PREINIT    TLS_SLOT_OPENGL_API
+
+#define TLS_DEFAULT_ALLOC_MAP       0x0000001F
 
 /* set the Thread Local Storage, must contain at least BIONIC_TLS_SLOTS pointers */
 extern void __init_tls(void**  tls, void*  thread_info);

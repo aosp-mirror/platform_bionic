@@ -101,8 +101,8 @@ static const pthread_attr_t gDefaultPthreadAttr = {
     .sched_priority = 0
 };
 
-__LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
-__LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_internal_t* gThreadList = NULL;
+static pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static void _pthread_internal_remove_locked(pthread_internal_t* thread) {
@@ -549,6 +549,9 @@ void __pthread_cleanup_pop( __pthread_cleanup_t*  c, int  execute )
     if (execute)
         c->__cleanup_routine(c->__cleanup_arg);
 }
+
+/* used by pthread_exit() to clean all TLS keys of the current thread */
+static void pthread_key_clean_all(void);
 
 void pthread_exit(void * retval)
 {
@@ -1776,6 +1779,303 @@ int pthread_cond_timeout_np(pthread_cond_t *cond,
     return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
 
+
+
+/* A technical note regarding our thread-local-storage (TLS) implementation:
+ *
+ * There can be up to TLSMAP_SIZE independent TLS keys in a given process,
+ * though the first TLSMAP_START keys are reserved for Bionic to hold
+ * special thread-specific variables like errno or a pointer to
+ * the current thread's descriptor.
+ *
+ * while stored in the TLS area, these entries cannot be accessed through
+ * pthread_getspecific() / pthread_setspecific() and pthread_key_delete()
+ *
+ * also, some entries in the key table are pre-allocated (see tlsmap_lock)
+ * to greatly simplify and speedup some OpenGL-related operations. though the
+ * initialy value will be NULL on all threads.
+ *
+ * you can use pthread_getspecific()/setspecific() on these, and in theory
+ * you could also call pthread_key_delete() as well, though this would
+ * probably break some apps.
+ *
+ * The 'tlsmap_t' type defined below implements a shared global map of
+ * currently created/allocated TLS keys and the destructors associated
+ * with them. You should use tlsmap_lock/unlock to access it to avoid
+ * any race condition.
+ *
+ * the global TLS map simply contains a bitmap of allocated keys, and
+ * an array of destructors.
+ *
+ * each thread has a TLS area that is a simple array of TLSMAP_SIZE void*
+ * pointers. the TLS area of the main thread is stack-allocated in
+ * __libc_init_common, while the TLS area of other threads is placed at
+ * the top of their stack in pthread_create.
+ *
+ * when pthread_key_create() is called, it finds the first free key in the
+ * bitmap, then set it to 1, saving the destructor altogether
+ *
+ * when pthread_key_delete() is called. it will erase the key's bitmap bit
+ * and its destructor, and will also clear the key data in the TLS area of
+ * all created threads. As mandated by Posix, it is the responsability of
+ * the caller of pthread_key_delete() to properly reclaim the objects that
+ * were pointed to by these data fields (either before or after the call).
+ *
+ */
+
+/* TLS Map implementation
+ */
+
+#define TLSMAP_START      (TLS_SLOT_MAX_WELL_KNOWN+1)
+#define TLSMAP_SIZE       BIONIC_TLS_SLOTS
+#define TLSMAP_BITS       32
+#define TLSMAP_WORDS      ((TLSMAP_SIZE+TLSMAP_BITS-1)/TLSMAP_BITS)
+#define TLSMAP_WORD(m,k)  (m)->map[(k)/TLSMAP_BITS]
+#define TLSMAP_MASK(k)    (1U << ((k)&(TLSMAP_BITS-1)))
+
+/* this macro is used to quickly check that a key belongs to a reasonable range */
+#define TLSMAP_VALIDATE_KEY(key)  \
+    ((key) >= TLSMAP_START && (key) < TLSMAP_SIZE)
+
+/* the type of tls key destructor functions */
+typedef void (*tls_dtor_t)(void*);
+
+typedef struct {
+    int         init;                  /* see comment in tlsmap_lock() */
+    uint32_t    map[TLSMAP_WORDS];     /* bitmap of allocated keys */
+    tls_dtor_t  dtors[TLSMAP_SIZE];    /* key destructors */
+} tlsmap_t;
+
+static pthread_mutex_t  _tlsmap_lock = PTHREAD_MUTEX_INITIALIZER;
+static tlsmap_t         _tlsmap;
+
+/* lock the global TLS map lock and return a handle to it */
+static __inline__ tlsmap_t* tlsmap_lock(void)
+{
+    tlsmap_t*   m = &_tlsmap;
+
+    pthread_mutex_lock(&_tlsmap_lock);
+    /* we need to initialize the first entry of the 'map' array
+     * with the value TLS_DEFAULT_ALLOC_MAP. doing it statically
+     * when declaring _tlsmap is a bit awkward and is going to
+     * produce warnings, so do it the first time we use the map
+     * instead
+     */
+    if (__unlikely(!m->init)) {
+        TLSMAP_WORD(m,0) = TLS_DEFAULT_ALLOC_MAP;
+        m->init          = 1;
+    }
+    return m;
+}
+
+/* unlock the global TLS map */
+static __inline__ void tlsmap_unlock(tlsmap_t*  m)
+{
+    pthread_mutex_unlock(&_tlsmap_lock);
+    (void)m;  /* a good compiler is a happy compiler */
+}
+
+/* test to see wether a key is allocated */
+static __inline__ int tlsmap_test(tlsmap_t*  m, int  key)
+{
+    return (TLSMAP_WORD(m,key) & TLSMAP_MASK(key)) != 0;
+}
+
+/* set the destructor and bit flag on a newly allocated key */
+static __inline__ void tlsmap_set(tlsmap_t*  m, int  key, tls_dtor_t  dtor)
+{
+    TLSMAP_WORD(m,key) |= TLSMAP_MASK(key);
+    m->dtors[key]       = dtor;
+}
+
+/* clear the destructor and bit flag on an existing key */
+static __inline__ void  tlsmap_clear(tlsmap_t*  m, int  key)
+{
+    TLSMAP_WORD(m,key) &= ~TLSMAP_MASK(key);
+    m->dtors[key]       = NULL;
+}
+
+/* allocate a new TLS key, return -1 if no room left */
+static int tlsmap_alloc(tlsmap_t*  m, tls_dtor_t  dtor)
+{
+    int  key;
+
+    for ( key = TLSMAP_START; key < TLSMAP_SIZE; key++ ) {
+        if ( !tlsmap_test(m, key) ) {
+            tlsmap_set(m, key, dtor);
+            return key;
+        }
+    }
+    return -1;
+}
+
+
+int pthread_key_create(pthread_key_t *key, void (*destructor_function)(void *))
+{
+    uint32_t   err = ENOMEM;
+    tlsmap_t*  map = tlsmap_lock();
+    int        k   = tlsmap_alloc(map, destructor_function);
+
+    if (k >= 0) {
+        *key = k;
+        err  = 0;
+    }
+    tlsmap_unlock(map);
+    return err;
+}
+
+
+/* This deletes a pthread_key_t. note that the standard mandates that this does
+ * not call the destructor of non-NULL key values. Instead, it is the
+ * responsibility of the caller to properly dispose of the corresponding data
+ * and resources, using any means it finds suitable.
+ *
+ * On the other hand, this function will clear the corresponding key data
+ * values in all known threads. this prevents later (invalid) calls to
+ * pthread_getspecific() to receive invalid/stale values.
+ */
+int pthread_key_delete(pthread_key_t key)
+{
+    uint32_t             err;
+    pthread_internal_t*  thr;
+    tlsmap_t*            map;
+
+    if (!TLSMAP_VALIDATE_KEY(key)) {
+        return EINVAL;
+    }
+
+    map = tlsmap_lock();
+
+    if (!tlsmap_test(map, key)) {
+        err = EINVAL;
+        goto err1;
+    }
+
+    /* clear value in all threads */
+    pthread_mutex_lock(&gThreadListLock);
+    for ( thr = gThreadList; thr != NULL; thr = thr->next ) {
+        /* avoid zombie threads with a negative 'join_count'. these are really
+         * already dead and don't have a TLS area anymore.
+         *
+         * similarly, it is possible to have thr->tls == NULL for threads that
+         * were just recently created through pthread_create() but whose
+         * startup trampoline (__thread_entry) hasn't been run yet by the
+         * scheduler. thr->tls will also be NULL after it's stack has been
+         * unmapped but before the ongoing pthread_join() is finished.
+         * so check for this too.
+         */
+        if (thr->join_count < 0 || !thr->tls)
+            continue;
+
+        thr->tls[key] = NULL;
+    }
+    tlsmap_clear(map, key);
+
+    pthread_mutex_unlock(&gThreadListLock);
+    err = 0;
+
+err1:
+    tlsmap_unlock(map);
+    return err;
+}
+
+
+int pthread_setspecific(pthread_key_t key, const void *ptr)
+{
+    int        err = EINVAL;
+    tlsmap_t*  map;
+
+    if (TLSMAP_VALIDATE_KEY(key)) {
+        /* check that we're trying to set data for an allocated key */
+        map = tlsmap_lock();
+        if (tlsmap_test(map, key)) {
+            ((uint32_t *)__get_tls())[key] = (uint32_t)ptr;
+            err = 0;
+        }
+        tlsmap_unlock(map);
+    }
+    return err;
+}
+
+void * pthread_getspecific(pthread_key_t key)
+{
+    if (!TLSMAP_VALIDATE_KEY(key)) {
+        return NULL;
+    }
+
+    /* for performance reason, we do not lock/unlock the global TLS map
+     * to check that the key is properly allocated. if the key was not
+     * allocated, the value read from the TLS should always be NULL
+     * due to pthread_key_delete() clearing the values for all threads.
+     */
+    return (void *)(((unsigned *)__get_tls())[key]);
+}
+
+/* Posix mandates that this be defined in <limits.h> but we don't have
+ * it just yet.
+ */
+#ifndef PTHREAD_DESTRUCTOR_ITERATIONS
+#  define PTHREAD_DESTRUCTOR_ITERATIONS  4
+#endif
+
+/* this function is called from pthread_exit() to remove all TLS key data
+ * from this thread's TLS area. this must call the destructor of all keys
+ * that have a non-NULL data value (and a non-NULL destructor).
+ *
+ * because destructors can do funky things like deleting/creating other
+ * keys, we need to implement this in a loop
+ */
+static void pthread_key_clean_all(void)
+{
+    tlsmap_t*    map;
+    void**       tls = (void**)__get_tls();
+    int          rounds = PTHREAD_DESTRUCTOR_ITERATIONS;
+
+    map = tlsmap_lock();
+
+    for (rounds = PTHREAD_DESTRUCTOR_ITERATIONS; rounds > 0; rounds--)
+    {
+        int  kk, count = 0;
+
+        for (kk = TLSMAP_START; kk < TLSMAP_SIZE; kk++) {
+            if ( tlsmap_test(map, kk) )
+            {
+                void*       data = tls[kk];
+                tls_dtor_t  dtor = map->dtors[kk];
+
+                if (data != NULL && dtor != NULL)
+                {
+                   /* we need to clear the key data now, this will prevent the
+                    * destructor (or a later one) from seeing the old value if
+                    * it calls pthread_getspecific() for some odd reason
+                    *
+                    * we do not do this if 'dtor == NULL' just in case another
+                    * destructor function might be responsible for manually
+                    * releasing the corresponding data.
+                    */
+                    tls[kk] = NULL;
+
+                   /* because the destructor is free to call pthread_key_create
+                    * and/or pthread_key_delete, we need to temporarily unlock
+                    * the TLS map
+                    */
+                    tlsmap_unlock(map);
+                    (*dtor)(data);
+                    map = tlsmap_lock();
+
+                    count += 1;
+                }
+            }
+        }
+
+        /* if we didn't call any destructor, there is no need to check the
+         * TLS data again
+         */
+        if (count == 0)
+            break;
+    }
+    tlsmap_unlock(map);
+}
 
 // man says this should be in <linux/unistd.h>, but it isn't
 extern int tgkill(int tgid, int tid, int sig);
