@@ -175,12 +175,6 @@
 #define  _POSIX_SAVED_IDS           1    /* saved user ids is a Linux feature */
 #define  _POSIX_JOB_CONTROL         1    /* job control is a Linux feature */
 
-#define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4 /* the minimum mandated by POSIX */
-#define PTHREAD_DESTRUCTOR_ITERATIONS 4
-#define _POSIX_THREAD_KEYS_MAX 128            /* the minimum mandated by POSIX */
-/* TODO: our PTHREAD_KEYS_MAX is currently too low to be posix compliant! */
-#define _POSIX_THREAD_THREADS_MAX 64          /* the minimum mandated by POSIX */
-#define PTHREAD_THREADS_MAX                   /* bionic has no specific limit */
 
 
 #endif
