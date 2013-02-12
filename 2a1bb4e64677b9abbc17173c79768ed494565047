@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Pynuem10",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-12T02:23:30Z",
+      "side": 1,
+      "message": "seems odd that the behavior is to return errno but not set it.",
+      "revId": "2a1bb4e64677b9abbc17173c79768ed494565047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
