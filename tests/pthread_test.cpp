@@ -28,14 +28,12 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
-#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
   // We can allocate _SC_THREAD_KEYS_MAX keys.
   std::vector<pthread_key_t> keys;
   for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
     pthread_key_t key;
-    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
-    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf(_SC_THREAD_KEYS_MAX);
+    ASSERT_EQ(0, pthread_key_create(&key, NULL));
     keys.push_back(key);
   }
 
@@ -48,7 +46,6 @@ TEST(pthread, pthread_key_create_lots) {
     ASSERT_EQ(0, pthread_key_delete(keys[i]));
   }
 }
-#endif
 
 static void* IdFn(void* arg) {
   return arg;
@@ -88,15 +85,6 @@ TEST(pthread, pthread_create) {
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_EQ(expected_result, result);
-}
-
-TEST(pthread, pthread_create_EAGAIN) {
-  pthread_attr_t attributes;
-  ASSERT_EQ(0, pthread_attr_init(&attributes));
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, static_cast<size_t>(-1) & ~(getpagesize() - 1)));
-
-  pthread_t t;
-  ASSERT_EQ(EAGAIN, pthread_create(&t, &attributes, IdFn, NULL));
 }
 
 TEST(pthread, pthread_no_join_after_detach) {
