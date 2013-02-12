@@ -494,7 +494,7 @@ libc_common_src_files += \
 	bionic/ptrace.c
 
 libc_static_common_src_files += \
-    bionic/pthread.c
+    bionic/pthread.c \
     bionic/pthread_key.cpp \
 
 libc_arch_static_src_files := \
