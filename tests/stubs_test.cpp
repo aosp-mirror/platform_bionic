@@ -38,7 +38,7 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type)
   errno = 0;
   passwd* pwd = getpwuid(uid);
   ASSERT_TRUE(pwd != NULL);
-  ASSERT_EQ(errno, 0);
+  ASSERT_EQ(0, errno);
   EXPECT_STREQ(username, pwd->pw_name);
   EXPECT_EQ(uid, pwd->pw_uid);
   EXPECT_EQ(uid, pwd->pw_gid);
