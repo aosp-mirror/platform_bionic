@@ -62,6 +62,10 @@ pthread_internal_t* __get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
+#define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
+#define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
+
+extern __LIBC_HIDDEN__ const pthread_attr_t gDefaultPthreadAttr;
 extern pthread_internal_t* gThreadList;
 extern pthread_mutex_t gThreadListLock;
 
