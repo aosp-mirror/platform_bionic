@@ -173,3 +173,13 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(SIGUSR1, received_signal);
   ASSERT_EQ(0, reinterpret_cast<int>(join_result));
 }
+
+#if !defined(__GLIBC__)
+extern "C" int  __pthread_clone(int (*fn)(void*), void* child_stack, int flags, void* arg);
+TEST(pthread, __pthread_clone) {
+  uintptr_t fake_child_stack[16];
+  errno = 0;
+  ASSERT_EQ(-1, __pthread_clone(NULL, &fake_child_stack[0], CLONE_THREAD, NULL));
+  ASSERT_EQ(EINVAL, errno);
+}
+#endif

@@ -29,38 +29,35 @@
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
+// int  __pthread_clone(int (*fn)(void*), void* child_stack, int flags, void* arg);
 ENTRY(__pthread_clone)
-    @ insert the args onto the new stack
+    # Copy the args onto the new stack.
     stmdb r1!, {r0, r3}
 
-    @ do the system call
-    @ get flags
-
+    # The sys_clone system call only takes two arguments: 'flags' and 'child_stack'.
+    # 'child_stack' is already in r1, but we need to move 'flags' into position.
     mov     r0, r2
-
-    @ new sp is already in r1
-
     stmfd   sp!, {r4, r7}
+
+    # System call.
     ldr     r7, =__NR_clone
     swi     #0
-
     movs    r0, r0
-    ldmnefd sp!, {r4, r7}
-    blt     __error
+    beq     1f
+
+    # In parent, reload saved registers then either exit or set errno.
+    ldmfd   sp!, {r4, r7}
     bxne    lr
+    b       __set_syscall_errno
 
-
-    @ pick the function arg and call address off the stack and jump
-    @ to the C __thread_entry function which does some setup and then
-    @ calls the thread's start function
-
+1:  # The child.
+    # pick the function arg and call address off the stack and jump
+    # to the C __thread_entry function which does some setup and then
+    # calls the thread's start function
     pop     {r0, r1}
-    mov     r2, sp			@ __thread_entry needs the TLS pointer
+    # __thread_entry needs the TLS pointer
+    mov     r2, sp
     b       __thread_entry
-
-__error:
-    mov     r0, #-1
-    bx      lr
 END(__pthread_clone)
 
 
@@ -71,8 +68,8 @@ END(__pthread_clone)
     #                          pid_t *pid, void *tls, pid_t *ctid,
     #                          int  (*fn)(void *), void* arg );
     #
-    # NOTE: This is not the same signature than the GLibc
-    #       __clone function here !! Placing 'fn' and 'arg'
+    # NOTE: This is not the same signature as the glibc
+    #       __clone function. Placing 'fn' and 'arg'
     #       at the end of the parameter list makes the
     #       implementation much simpler.
     #
@@ -91,20 +88,18 @@ ENTRY(__bionic_clone)
     str     r5, [r1, #-4]
     str     r6, [r1, #-8]
 
-    # system call
+    # System call
     ldr     r7, =__NR_clone
     swi     #0
     movs    r0, r0
     beq     1f
 
-    # in parent, reload saved registers
-    # then either exit or error
-    #
+    # In the parent, reload saved registers then either exit or set errno.
     ldmfd   sp!, {r4, r5, r6, r7}
     bxne    lr
     b       __set_syscall_errno
 
-1:  # in the child - pick arguments
+1:  # The child.
     ldr    r0, [sp, #-4]
     ldr    r1, [sp, #-8]
     b      __bionic_clone_entry

@@ -75,7 +75,7 @@ TEST(stdio, getdelim) {
   // It should set the end-of-file indicator for the stream, though.
   errno = 0;
   ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), -1);
-  ASSERT_EQ(errno, 0);
+  ASSERT_EQ(0, errno);
   ASSERT_TRUE(feof(fp));
 
   free(word_read);
@@ -91,18 +91,18 @@ TEST(stdio, getdelim_invalid) {
   // The first argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getdelim(NULL, &buffer_length, ' ', fp), -1);
-  ASSERT_EQ(errno, EINVAL);
+  ASSERT_EQ(EINVAL, errno);
 
   // The second argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
-  ASSERT_EQ(errno, EINVAL);
+  ASSERT_EQ(EINVAL, errno);
 
   // The stream can't be closed.
   fclose(fp);
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
-  ASSERT_EQ(errno, EBADF);
+  ASSERT_EQ(EBADF, errno);
 }
 
 TEST(stdio, getline) {
@@ -140,7 +140,7 @@ TEST(stdio, getline) {
   // It should set the end-of-file indicator for the stream, though.
   errno = 0;
   ASSERT_EQ(getline(&line_read, &allocated_length, fp), -1);
-  ASSERT_EQ(errno, 0);
+  ASSERT_EQ(0, errno);
   ASSERT_TRUE(feof(fp));
 
   free(line_read);
@@ -156,16 +156,16 @@ TEST(stdio, getline_invalid) {
   // The first argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getline(NULL, &buffer_length, fp), -1);
-  ASSERT_EQ(errno, EINVAL);
+  ASSERT_EQ(EINVAL, errno);
 
   // The second argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getline(&buffer, NULL, fp), -1);
-  ASSERT_EQ(errno, EINVAL);
+  ASSERT_EQ(EINVAL, errno);
 
   // The stream can't be closed.
   fclose(fp);
   errno = 0;
   ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
-  ASSERT_EQ(errno, EBADF);
+  ASSERT_EQ(EBADF, errno);
 }
