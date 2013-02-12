@@ -2,10 +2,7 @@
 
 .text
 
-/*
- * int  __pthread_clone(int (*fn)(void*), void *tls, int flags,
- *                      void *arg);
- */
+// int  __pthread_clone(int (*fn)(void*), void* tls, int flags, void* arg);
 .globl __pthread_clone
 .type __pthread_clone, @function
 .align 4
