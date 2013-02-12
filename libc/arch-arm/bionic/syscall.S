@@ -25,47 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-
-	.text
-	.align 4
-	.type syscall,#function
-	.globl syscall
- 
-	.text
-	.align
-
-#if __ARM_EABI__
-
-syscall:
+ENTRY(syscall)
     mov     ip, sp
-    stmfd	sp!, {r4, r5, r6, r7}
+    stmfd   sp!, {r4, r5, r6, r7}
     mov     r7, r0
     mov     r0, r1
     mov     r1, r2
     mov     r2, r3
-    ldmfd	ip, {r3, r4, r5, r6}
+    ldmfd   ip, {r3, r4, r5, r6}
     swi     #0
     ldmfd   sp!, {r4, r5, r6, r7}
     movs    r0, r0
     bxpl    lr
     b       __set_syscall_errno
-
-#else
-
-#ifndef __NR_syscall
-#define __NR_syscall    113
-#endif
-
-syscall:
-    stmfd   sp!, {r4, r5, lr}
-    ldr     r4, [sp, #12]
-    ldr     r5, [sp, #16]
-    swi     __NR_syscall
-    ldmfd   sp!, {r4, r5, lr}
-    movs    r0, r0
-    bxpl    lr
-    b       __set_syscall_errno
-
-#endif
+END(syscall)

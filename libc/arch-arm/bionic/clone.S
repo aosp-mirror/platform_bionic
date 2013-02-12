@@ -25,8 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/linux-syscalls.h>
+
 #include <machine/asm.h>
+#include <sys/linux-syscalls.h>
 
 ENTRY(__pthread_clone)
     @ insert the args onto the new stack
@@ -39,18 +40,12 @@ ENTRY(__pthread_clone)
 
     @ new sp is already in r1
 
-#if __ARM_EABI__
     stmfd   sp!, {r4, r7}
     ldr     r7, =__NR_clone
     swi     #0
-#else
-    swi     #__NR_clone
-#endif
 
     movs    r0, r0
-#if __ARM_EABI__
     ldmnefd sp!, {r4, r7}
-#endif
     blt     __error
     bxne    lr
 
