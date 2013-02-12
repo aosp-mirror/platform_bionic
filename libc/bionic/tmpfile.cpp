@@ -38,8 +38,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "private/ErrnoRestorer.h"
-
 class ScopedSignalBlocker {
  public:
   ScopedSignalBlocker() {
@@ -79,8 +77,9 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
     struct stat sb;
     int rc = fstat(fd, &sb);
     if (rc == -1) {
-      ErrnoRestorer errno_restorer;
+      int old_errno = errno;
       close(fd);
+      errno = old_errno;
       return NULL;
     }
   }
@@ -92,8 +91,9 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
   }
 
   // Failure. Clean up. We already unlinked, so we just need to close.
-  ErrnoRestorer errno_restorer;
+  int old_errno = errno;
   close(fd);
+  errno = old_errno;
   return NULL;
 }
 
