@@ -28,6 +28,25 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
+TEST(pthread, pthread_key_create_lots) {
+  // We can allocate _SC_THREAD_KEYS_MAX keys.
+  std::vector<pthread_key_t> keys;
+  for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
+    pthread_key_t key;
+    ASSERT_EQ(0, pthread_key_create(&key, NULL));
+    keys.push_back(key);
+  }
+
+  // ...and that really is the maximum.
+  pthread_key_t key;
+  ASSERT_EQ(EAGAIN, pthread_key_create(&key, NULL));
+
+  // (Don't leak all those keys!)
+  for (size_t i = 0; i < keys.size(); ++i) {
+    ASSERT_EQ(0, pthread_key_delete(keys[i]));
+  }
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }

@@ -55,7 +55,6 @@
 
 /* the following depends on our implementation */
 #define  SYSTEM_ATEXIT_MAX          65536    /* our implementation is unlimited */
-#define  SYSTEM_THREAD_KEYS_MAX     BIONIC_TLS_SLOTS
 #define  SYSTEM_THREAD_STACK_MIN    32768    /* lower values may be possible, but be conservative */
 #define  SYSTEM_THREAD_THREADS_MAX  2048     /* really unlimited */
 
@@ -302,10 +301,13 @@ int sysconf(int name) {
     // GETPW_R_SIZE_MAX ?
 
     case _SC_LOGIN_NAME_MAX:    return SYSTEM_LOGIN_NAME_MAX;
-#ifdef _POSIX_THREAD_DESTRUCTOR_ITERATIONS
-    case _SC_THREAD_DESTRUCTOR_ITERATIONS:  return _POSIX_THREAD_DESTRUCTOR_ITERATIONS;
-#endif
-    case _SC_THREAD_KEYS_MAX:     return SYSTEM_THREAD_KEYS_MAX;
+
+    case _SC_THREAD_DESTRUCTOR_ITERATIONS:
+      return _POSIX_THREAD_DESTRUCTOR_ITERATIONS;
+
+    case _SC_THREAD_KEYS_MAX:
+      return (BIONIC_TLS_SLOTS - TLS_SLOT_FIRST_USER_SLOT);
+
     case _SC_THREAD_STACK_MIN:    return SYSTEM_THREAD_STACK_MIN;
     case _SC_THREAD_THREADS_MAX:  return SYSTEM_THREAD_THREADS_MAX;
     case _SC_TTY_NAME_MAX:        return SYSTEM_TTY_NAME_MAX;
