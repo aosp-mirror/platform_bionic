@@ -36,8 +36,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "private/ErrnoRestorer.h"
-#include "private/ScopedPthreadMutexLocker.h"
+#include <private/ScopedPthreadMutexLocker.h>
 
 struct DIR {
   int fd_;
@@ -109,7 +108,7 @@ dirent* readdir(DIR* d) {
 }
 
 int readdir_r(DIR* d, dirent* entry, dirent** result) {
-  ErrnoRestorer errno_restorer;
+  int saved_errno = errno;
 
   *result = NULL;
   errno = 0;
@@ -125,6 +124,7 @@ int readdir_r(DIR* d, dirent* entry, dirent** result) {
     memcpy(entry, next, next->d_reclen);
     *result = entry;
   }
+  errno = saved_errno;
   return 0;
 }
 
