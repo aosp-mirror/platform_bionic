@@ -66,12 +66,12 @@ TEST(dirent, scandir) {
 
 TEST(dirent, fdopendir_invalid) {
   ASSERT_TRUE(fdopendir(-1) == NULL);
-  ASSERT_EQ(errno, EBADF);
+  ASSERT_EQ(EBADF, errno);
 
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_NE(fd, -1);
   ASSERT_TRUE(fdopendir(fd) == NULL);
-  ASSERT_EQ(errno, ENOTDIR);
+  ASSERT_EQ(ENOTDIR, errno);
   close(fd);
 }
 
@@ -85,15 +85,15 @@ TEST(dirent, fdopendir) {
 
   // fdopendir(3) took ownership, so closedir(3) closed our fd.
   ASSERT_EQ(close(fd), -1);
-  ASSERT_EQ(errno, EBADF);
+  ASSERT_EQ(EBADF, errno);
 }
 
 TEST(dirent, opendir_invalid) {
   ASSERT_TRUE(opendir("/does/not/exist") == NULL);
-  ASSERT_EQ(errno, ENOENT);
+  ASSERT_EQ(ENOENT, errno);
 
   ASSERT_TRUE(opendir("/dev/null") == NULL);
-  ASSERT_EQ(errno, ENOTDIR);
+  ASSERT_EQ(ENOTDIR, errno);
 }
 
 TEST(dirent, opendir) {
@@ -107,7 +107,7 @@ TEST(dirent, opendir) {
 TEST(dirent, closedir_invalid) {
   DIR* d = NULL;
   ASSERT_EQ(closedir(d), -1);
-  ASSERT_EQ(errno, EINVAL);
+  ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(dirent, closedir) {
@@ -127,7 +127,7 @@ TEST(dirent, readdir) {
   }
   // Reading to the end of the directory is not an error.
   // readdir(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(errno, 0);
+  ASSERT_EQ(0, errno);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
@@ -145,7 +145,7 @@ TEST(dirent, readdir_r) {
   }
   // Reading to the end of the directory is not an error.
   // readdir_r(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(errno, 0);
+  ASSERT_EQ(0, errno);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
