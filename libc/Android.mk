@@ -406,7 +406,8 @@ libc_common_src_files += \
 	bionic/ptrace.c.arm
 
 libc_static_common_src_files += \
-        bionic/pthread.c.arm \
+    bionic/pthread.c.arm \
+    bionic/pthread_key.cpp.arm \
 
 # these are used by the static and dynamic versions of the libc
 # respectively
@@ -446,7 +447,8 @@ libc_common_src_files += \
 	bionic/ptrace.c
 
 libc_static_common_src_files += \
-        bionic/pthread.c \
+    bionic/pthread.c \
+    bionic/pthread_key.cpp \
 
 libc_arch_static_src_files := \
 	bionic/dl_iterate_phdr_static.c
@@ -492,7 +494,8 @@ libc_common_src_files += \
 	bionic/ptrace.c
 
 libc_static_common_src_files += \
-	bionic/pthread.c
+    bionic/pthread.c
+    bionic/pthread_key.cpp \
 
 libc_arch_static_src_files := \
 	bionic/dl_iterate_phdr_static.c
