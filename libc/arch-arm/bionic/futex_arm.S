@@ -25,32 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <sys/linux-syscalls.h>
 #include <machine/asm.h>
-#include <machine/cpu-features.h>
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-/* __futex_wait(*ftx, val, *timespec) */
-/* __futex_wake(*ftx, counter) */
-/* __futex_syscall3(*ftx, op, val) */
-/* __futex_syscall4(*ftx, op, val, *timespec) */
-
-.global __futex_wait
-.type __futex_wait, %function
-
-.global __futex_wake
-.type __futex_wake, %function
-
-.global __futex_syscall3
-.type __futex_syscall3, %function
-
-.global __futex_syscall4
-.type __futex_syscall4, %function
-
-#if __ARM_EABI__
-
+// __futex_syscall3(*ftx, op, val)
 ENTRY(__futex_syscall3)
     stmdb   sp!, {r4, r7}
     .save   {r4, r7}
@@ -60,53 +42,32 @@ ENTRY(__futex_syscall3)
     bx      lr
 END(__futex_syscall3)
 
-ENTRY(__futex_wait)
-    stmdb   sp!, {r4, r7}
-    .save   {r4, r7}
-    mov     r3, r2
-    mov     r2, r1
-    mov     r1, #FUTEX_WAIT
-    ldr     r7, =__NR_futex
-    swi     #0
-    ldmia   sp!, {r4, r7}
-    bx      lr
-END(__futex_wait)
-
-ENTRY(__futex_wake)
-    .save   {r4, r7}
-    stmdb   sp!, {r4, r7}
-    mov     r2, r1
-    mov     r1, #FUTEX_WAKE
-    ldr     r7, =__NR_futex
-    swi     #0
-    ldmia   sp!, {r4, r7}
-    bx      lr
-END(__futex_wake)
-
-#else
-
-ENTRY(__futex_syscall3)
-    swi     #__NR_futex
-    bx      lr
-END(__futex_syscall3)
-
-ENTRY(__futex_wait)
-    mov     r3, r2
-    mov     r2, r1
-    mov     r1, #FUTEX_WAIT
-    swi     #__NR_futex
-    bx      lr
-END(__futex_wait)
-
-ENTRY(__futex_wake)
-    mov     r2, r1
-    mov     r1, #FUTEX_WAKE
-    swi     #__NR_futex
-    bx      lr
-END(__futex_wake)
-
-#endif
-
+// __futex_syscall4(*ftx, op, val, *timespec)
 ENTRY(__futex_syscall4)
     b __futex_syscall3
 END(__futex_syscall4)
+
+// __futex_wait(*ftx, val, *timespec)
+ENTRY(__futex_wait)
+    stmdb   sp!, {r4, r7}
+    .save   {r4, r7}
+    mov     r3, r2
+    mov     r2, r1
+    mov     r1, #FUTEX_WAIT
+    ldr     r7, =__NR_futex
+    swi     #0
+    ldmia   sp!, {r4, r7}
+    bx      lr
+END(__futex_wait)
+
+// __futex_wake(*ftx, counter)
+ENTRY(__futex_wake)
+    .save   {r4, r7}
+    stmdb   sp!, {r4, r7}
+    mov     r2, r1
+    mov     r1, #FUTEX_WAKE
+    ldr     r7, =__NR_futex
+    swi     #0
+    ldmia   sp!, {r4, r7}
+    bx      lr
+END(__futex_wake)
