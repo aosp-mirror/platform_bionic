@@ -25,37 +25,55 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _BIONIC_FUTEX_H
-#define _BIONIC_FUTEX_H
 
-#include <linux/futex.h>
+#include <pthread.h>
 
-__BEGIN_DECLS
+#include <fcntl.h>
+#include <stdio.h> // For snprintf.
+#include <sys/prctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-extern int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
-extern int __futex_wake(volatile void *ftx, int count);
+#include "pthread_internal.h"
+#include "private/ErrnoRestorer.h"
 
-extern int __futex_syscall3(volatile void *ftx, int op, int val);
-extern int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout);
+// This value is not exported by kernel headers.
+#define MAX_TASK_COMM_LEN 16
+#define TASK_COMM_FMT "/proc/self/task/%u/comm"
 
-#ifndef FUTEX_PRIVATE_FLAG
-#define FUTEX_PRIVATE_FLAG  128
-#endif
+int pthread_setname_np(pthread_t thread, const char* thread_name) {
+  ErrnoRestorer errno_restorer;
 
-#ifndef FUTEX_WAIT_PRIVATE
-#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
-#endif
+  if (thread == 0 || thread_name == NULL) {
+    return EINVAL;
+  }
 
-#ifndef FUTEX_WAKE_PRIVATE
-#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
-#endif
+  size_t thread_name_len = strlen(thread_name);
+  if (thread_name_len >= MAX_TASK_COMM_LEN) {
+    return ERANGE;
+  }
 
-/* Like __futex_wait/wake, but take an additionnal 'pshared' argument.
- * when non-0, this will use normal futexes. Otherwise, private futexes.
- */
-extern int  __futex_wake_ex(volatile void *ftx, int pshared, int val);
-extern int  __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct timespec *timeout);
+  // Changing our own name is an easy special case.
+  if (thread == pthread_self()) {
+    return prctl(PR_SET_NAME, (unsigned long)thread_name, 0, 0, 0) ? errno : 0;
+  }
 
-__END_DECLS
+  // Have to change another thread's name.
+  pthread_internal_t* t = reinterpret_cast<pthread_internal_t*>(thread);
+  char comm_name[sizeof(TASK_COMM_FMT) + 8];
+  snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, (unsigned int) t->kernel_id);
+  int fd = open(comm_name, O_RDWR);
+  if (fd == -1) {
+    return errno;
+  }
+  ssize_t n = TEMP_FAILURE_RETRY(write(fd, thread_name, thread_name_len));
+  close(fd);
 
-#endif /* _BIONIC_FUTEX_H */
+  if (n < 0) {
+    return errno;
+  } else if ((size_t)n != thread_name_len) {
+    return EIO;
+  }
+  return 0;
+}

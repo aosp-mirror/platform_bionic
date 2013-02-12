@@ -26,33 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <assert.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <malloc.h>
-#include <memory.h>
 #include <pthread.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/atomics.h>
-#include <sys/mman.h>
-#include <sys/prctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
 
-#include "bionic_atomic_inline.h"
-#include "bionic_futex.h"
-#include "bionic_pthread.h"
-#include "bionic_ssp.h"
 #include "bionic_tls.h"
-#include "debug_format.h"
 #include "pthread_internal.h"
-#include "thread_private.h"
 
 /* A technical note regarding our thread-local-storage (TLS) implementation:
  *
