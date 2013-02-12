@@ -30,12 +30,13 @@
 #include <pthread.h>
 #include <signal.h>
 
-#include <private/kernel_sigset_t.h>
+#include "private/ErrnoRestorer.h"
+#include "private/kernel_sigset_t.h"
 
 extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
 
 int pthread_sigmask(int how, const sigset_t* iset, sigset_t* oset) {
-  int old_errno = errno;
+  ErrnoRestorer errno_restorer;
 
   // 'in_set_ptr' is the second parameter to __rt_sigprocmask. It must be NULL
   // if 'set' is NULL to ensure correct semantics (which in this case would
@@ -48,15 +49,13 @@ int pthread_sigmask(int how, const sigset_t* iset, sigset_t* oset) {
   }
 
   kernel_sigset_t out_set;
-  int result = __rt_sigprocmask(how, in_set_ptr, &out_set, sizeof(out_set));
-  if (result < 0) {
-    result = errno;
+  if (__rt_sigprocmask(how, in_set_ptr, &out_set, sizeof(out_set)) == -1) {
+    return errno;
   }
 
   if (oset != NULL) {
     *oset = out_set.bionic;
   }
 
-  errno = old_errno;
-  return result;
+  return 0;
 }
