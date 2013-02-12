@@ -25,27 +25,20 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <asm/unistd.h>
+
 #include <machine/asm.h>
+#include <sys/linux-syscalls.h>
 
-@ void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode)
+// void _exit_with_stack_teardown(void* stackBase, int stackSize, int retCode)
 ENTRY(_exit_with_stack_teardown)
-
-#if __ARM_EABI__
     mov     lr, r2
     ldr     r7, =__NR_munmap
-    swi     #0              @ the stack is destroyed by this call
+    swi     #0              // the stack is destroyed by this call
     mov     r0, lr
     ldr     r7, =__NR_exit
     swi     #0
-#else
-    mov     lr, r2
-    swi     # __NR_munmap   @ the stack is destroyed by this call
-    mov     r0, lr
-    swi     # __NR_exit
-#endif
 
-    @ exit() should never return, cause a crash if it does
-    mov		r0, #0
-    ldr		r0, [r0]
+    // exit() should never return, cause a crash if it does
+    mov     r0, #0
+    ldr     r0, [r0]
 END(_exit_with_stack_teardown)
