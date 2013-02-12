@@ -26,23 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include <assert.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <malloc.h>
-#include <memory.h>
 #include <pthread.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#include <errno.h>
+#include <limits.h>
 #include <sys/atomics.h>
 #include <sys/mman.h>
-#include <sys/prctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "bionic_atomic_inline.h"
@@ -84,22 +73,7 @@ void ATTRIBUTES _thread_created_hook(pid_t thread_id);
 
 static const int kPthreadInitFailed = 1;
 
-#define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
-#define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
-
-#define DEFAULT_STACKSIZE (1024 * 1024)
-
 static pthread_mutex_t mmap_lock = PTHREAD_MUTEX_INITIALIZER;
-
-
-static const pthread_attr_t gDefaultPthreadAttr = {
-    .flags = 0,
-    .stack_base = NULL,
-    .stack_size = DEFAULT_STACKSIZE,
-    .guard_size = PAGE_SIZE,
-    .sched_policy = SCHED_NORMAL,
-    .sched_priority = 0
-};
 
 __LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
 __LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
@@ -306,7 +280,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
 
     pthread_internal_t* thread = calloc(sizeof(*thread), 1);
     if (thread == NULL) {
-        return ENOMEM;
+        return EAGAIN;
     }
     thread->allocated_on_heap = true;
 
@@ -321,7 +295,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         stack = mkstack(stack_size, attr->guard_size);
         if (stack == NULL) {
             free(thread);
-            return ENOMEM;
+            return EAGAIN;
         }
     }
 
@@ -376,152 +350,6 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     pthread_mutex_unlock(start_mutex);
 
     return 0;
-}
-
-
-int pthread_attr_init(pthread_attr_t * attr)
-{
-    *attr = gDefaultPthreadAttr;
-    return 0;
-}
-
-int pthread_attr_destroy(pthread_attr_t * attr)
-{
-    memset(attr, 0x42, sizeof(pthread_attr_t));
-    return 0;
-}
-
-int pthread_attr_setdetachstate(pthread_attr_t * attr, int state)
-{
-    if (state == PTHREAD_CREATE_DETACHED) {
-        attr->flags |= PTHREAD_ATTR_FLAG_DETACHED;
-    } else if (state == PTHREAD_CREATE_JOINABLE) {
-        attr->flags &= ~PTHREAD_ATTR_FLAG_DETACHED;
-    } else {
-        return EINVAL;
-    }
-    return 0;
-}
-
-int pthread_attr_getdetachstate(pthread_attr_t const * attr, int * state)
-{
-    *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED)
-           ? PTHREAD_CREATE_DETACHED
-           : PTHREAD_CREATE_JOINABLE;
-    return 0;
-}
-
-int pthread_attr_setschedpolicy(pthread_attr_t * attr, int policy)
-{
-    attr->sched_policy = policy;
-    return 0;
-}
-
-int pthread_attr_getschedpolicy(pthread_attr_t const * attr, int * policy)
-{
-    *policy = attr->sched_policy;
-    return 0;
-}
-
-int pthread_attr_setschedparam(pthread_attr_t * attr, struct sched_param const * param)
-{
-    attr->sched_priority = param->sched_priority;
-    return 0;
-}
-
-int pthread_attr_getschedparam(pthread_attr_t const * attr, struct sched_param * param)
-{
-    param->sched_priority = attr->sched_priority;
-    return 0;
-}
-
-int pthread_attr_setstacksize(pthread_attr_t * attr, size_t stack_size)
-{
-    if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
-        return EINVAL;
-    }
-    attr->stack_size = stack_size;
-    return 0;
-}
-
-int pthread_attr_getstacksize(pthread_attr_t const * attr, size_t * stack_size)
-{
-    *stack_size = attr->stack_size;
-    return 0;
-}
-
-int pthread_attr_setstackaddr(pthread_attr_t * attr __attribute__((unused)),
-                               void * stack_addr __attribute__((unused)))
-{
-    // This was removed from POSIX.1-2008, and is not implemented on bionic.
-    // Needed for ABI compatibility with the NDK.
-    return ENOSYS;
-}
-
-int pthread_attr_getstackaddr(pthread_attr_t const * attr, void ** stack_addr)
-{
-    // This was removed from POSIX.1-2008.
-    // Needed for ABI compatibility with the NDK.
-    *stack_addr = (char*)attr->stack_base + attr->stack_size;
-    return 0;
-}
-
-int pthread_attr_setstack(pthread_attr_t * attr, void * stack_base, size_t stack_size)
-{
-    if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
-        return EINVAL;
-    }
-    if ((uint32_t)stack_base & (PAGE_SIZE - 1)) {
-        return EINVAL;
-    }
-    attr->stack_base = stack_base;
-    attr->stack_size = stack_size;
-    return 0;
-}
-
-int pthread_attr_getstack(pthread_attr_t const * attr, void ** stack_base, size_t * stack_size)
-{
-    *stack_base = attr->stack_base;
-    *stack_size = attr->stack_size;
-    return 0;
-}
-
-int pthread_attr_setguardsize(pthread_attr_t * attr, size_t guard_size)
-{
-    if (guard_size & (PAGE_SIZE - 1) || guard_size < PAGE_SIZE) {
-        return EINVAL;
-    }
-
-    attr->guard_size = guard_size;
-    return 0;
-}
-
-int pthread_attr_getguardsize(pthread_attr_t const * attr, size_t * guard_size)
-{
-    *guard_size = attr->guard_size;
-    return 0;
-}
-
-int pthread_getattr_np(pthread_t thid, pthread_attr_t * attr)
-{
-    pthread_internal_t * thread = (pthread_internal_t *)thid;
-    *attr = thread->attr;
-    return 0;
-}
-
-int pthread_attr_setscope(pthread_attr_t *attr __attribute__((unused)), int  scope)
-{
-    if (scope == PTHREAD_SCOPE_SYSTEM)
-        return 0;
-    if (scope == PTHREAD_SCOPE_PROCESS)
-        return ENOTSUP;
-
-    return EINVAL;
-}
-
-int pthread_attr_getscope(pthread_attr_t const *attr __attribute__((unused)))
-{
-    return PTHREAD_SCOPE_SYSTEM;
 }
 
 
@@ -1879,57 +1707,6 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
     __futex_wake_ex(ocptr, 0, INT_MAX);
 
     return 0;
-}
-
-/* This value is not exported by kernel headers, so hardcode it here */
-#define MAX_TASK_COMM_LEN	16
-#define TASK_COMM_FMT 		"/proc/self/task/%u/comm"
-
-int pthread_setname_np(pthread_t thid, const char *thname)
-{
-    size_t thname_len;
-    int saved_errno, ret;
-
-    if (thid == 0 || thname == NULL)
-        return EINVAL;
-
-    thname_len = strlen(thname);
-    if (thname_len >= MAX_TASK_COMM_LEN)
-        return ERANGE;
-
-    saved_errno = errno;
-    if (thid == pthread_self())
-    {
-        ret = prctl(PR_SET_NAME, (unsigned long)thname, 0, 0, 0) ? errno : 0;
-    }
-    else
-    {
-        /* Have to change another thread's name */
-        pthread_internal_t *thread = (pthread_internal_t *)thid;
-        char comm_name[sizeof(TASK_COMM_FMT) + 8];
-        ssize_t n;
-        int fd;
-
-        snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, (unsigned int)thread->kernel_id);
-        fd = open(comm_name, O_RDWR);
-        if (fd == -1)
-        {
-            ret = errno;
-            goto exit;
-        }
-        n = TEMP_FAILURE_RETRY(write(fd, thname, thname_len));
-        close(fd);
-
-        if (n < 0)
-            ret = errno;
-        else if ((size_t)n != thname_len)
-            ret = EIO;
-        else
-            ret = 0;
-    }
-exit:
-    errno = saved_errno;
-    return ret;
 }
 
 /* Return the kernel thread ID for a pthread.
