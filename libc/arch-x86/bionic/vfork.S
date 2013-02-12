@@ -1,3 +1,4 @@
+#include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
 #ifndef __NR_vfork
@@ -5,17 +6,12 @@
 #endif
 
 
-    .text
-    .type vfork, @function
-    .globl vfork
-    .align 4
-
 /* Get rid of the stack modifications (popl/ret) after vfork() success.
  * vfork is VERY sneaky. One has to be very careful about what can be done
  * between a successful vfork and a a subsequent execve()
  */
 
-vfork:
+ENTRY(vfork)
     /* grab the return address */
     popl    %ecx
     movl    $__NR_vfork, %eax
@@ -28,3 +24,4 @@ vfork:
     orl     $-1, %eax
 1:
     jmp     *%ecx
+END(vfork)
