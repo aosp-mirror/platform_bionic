@@ -63,6 +63,7 @@ test_src_files = \
     getcwd_test.cpp \
     libgen_test.cpp \
     math_test.cpp \
+    netdb_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
     signal_test.cpp \
