@@ -79,54 +79,19 @@ enum {
 #define BIONIC_TLS_SLOTS 64
 
 /* set the Thread Local Storage, must contain at least BIONIC_TLS_SLOTS pointers */
-extern void __init_tls(void**  tls, void*  thread_info);
+extern void __init_tls(void** tls, void* thread_info);
 
 /* syscall only, do not call directly */
-extern int __set_tls(void *ptr);
+extern int __set_tls(void* ptr);
 
 /* get the TLS */
-#ifdef __arm__
-/* The standard way to get the TLS is to call a kernel helper
- * function (i.e. a function provided at a fixed address in a
- * "magic page" mapped in all user-space address spaces ), which
- * contains the most appropriate code path for the target device.
- *
- * However, for performance reasons, we're going to use our own
- * machine code for the system's C shared library.
- *
- * We cannot use this optimization in the static version of the
- * C library, because we don't know where the corresponding code
- * is going to run.
- */
-#  ifdef LIBC_STATIC
-
-/* Use the kernel helper in static C library. */
-  typedef volatile void* (__kernel_get_tls_t)(void);
-#    define __get_tls() (*(__kernel_get_tls_t *)0xffff0fe0)()
-
-#  else /* !LIBC_STATIC */
-/* Use optimized code path.
- * Note that HAVE_ARM_TLS_REGISTER is build-specific
- * (it must match your kernel configuration)
- */
-#    ifdef HAVE_ARM_TLS_REGISTER
- /* We can read the address directly from a coprocessor
-  * register, which avoids touching the data cache
-  * completely.
-  */
-#      define __get_tls() \
+#if defined(__arm__)
+# define __get_tls() \
     ({ register unsigned int __val asm("r0"); \
        asm ("mrc p15, 0, r0, c13, c0, 3" : "=r"(__val) ); \
        (volatile void*)__val; })
-#    else /* !HAVE_ARM_TLS_REGISTER */
- /* The kernel provides the address of the TLS at a fixed
-  * address of the magic page too.
-  */
-#      define __get_tls() ( *((volatile void **) 0xffff0ff0) )
-#    endif
-#  endif /* !LIBC_STATIC */
 #elif defined(__mips__)
-#    define __get_tls() \
+# define __get_tls() \
     ({ register unsigned int __val asm("v1");   \
         asm (                                   \
             "   .set    push\n"                 \
@@ -136,12 +101,17 @@ extern int __set_tls(void *ptr);
             : "=r"(__val)                       \
             );                                  \
         (volatile void*)__val; })
+#elif defined(__i386__)
+# define __get_tls() \
+    ({ register void* __val; \
+       asm ("movl %%gs:0, %0" : "=r"(__val)); \
+       (volatile void*) __val; })
 #else
-extern void*  __get_tls( void );
+#error unsupported architecture
 #endif
 
 /* return the stack base and size, used by our malloc debugger */
-extern void*  __get_stack_base(int  *p_stack_size);
+extern void* __get_stack_base(int* p_stack_size);
 
 __END_DECLS
 
