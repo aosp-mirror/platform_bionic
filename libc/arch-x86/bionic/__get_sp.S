@@ -25,11 +25,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-    .text
-    .type __get_sp, @function
-    .global __get_sp
-    .align 4
 
-__get_sp:
-    mov  %esp, %eax
-    ret
+#include <machine/asm.h>
+
+ENTRY(__get_sp)
+  mov  %esp, %eax
+  ret
+END(__get_sp)

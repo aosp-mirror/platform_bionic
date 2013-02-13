@@ -1,15 +1,8 @@
+#include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-.text
-.type _exit_with_stack_teardown, @function
-.globl _exit_with_stack_teardown
-.align 4
-
-/*
- * void _exit_with_stack_teardown(void *stackBase, int stackSize, int *retCode) 
- */
-
-_exit_with_stack_teardown:
+// void _exit_with_stack_teardown(void *stackBase, int stackSize, int *retCode)
+ENTRY(_exit_with_stack_teardown)
     /* we can trash %ebx here since this call should never return. */
     /* We can also take advantage of the fact that the linux syscall trap
      * handler saves all the registers, so we don't need a stack to keep
@@ -32,3 +25,4 @@ _exit_with_stack_teardown:
      * that presently, 'hlt' will cause the program to segfault.. but this
      * should never happen :) */
     hlt
+END(_exit_with_stack_teardown)

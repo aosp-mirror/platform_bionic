@@ -1,12 +1,8 @@
+#include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-.text
-
 // int  __pthread_clone(int (*fn)(void*), void* tls, int flags, void* arg);
-.globl __pthread_clone
-.type __pthread_clone, @function
-.align 4
-__pthread_clone:
+ENTRY(__pthread_clone)
         pushl   %ebx
         pushl   %ecx
         movl    16(%esp), %ecx
@@ -49,6 +45,7 @@ __pthread_clone:
         popl    %ecx
         popl    %ebx
         ret
+END(__pthread_clone)
 
 
 /*
@@ -60,11 +57,7 @@ __pthread_clone:
  *                     int           (*fn)(void *),
  *                     void          *arg);
  */
-.text
-.globl __bionic_clone
-.type __bionic_clone, @function
-.align 4
-__bionic_clone:
+ENTRY(__bionic_clone)
         pushl   %ebx
         pushl   %esi
         pushl   %edi
@@ -107,3 +100,4 @@ __bionic_clone:
         popl    %esi
         popl    %ebx
         ret
+END(__bionic_clone)
