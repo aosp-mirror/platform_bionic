@@ -409,6 +409,7 @@ libc_common_src_files += \
 
 libc_static_common_src_files += \
     bionic/pthread.c.arm \
+    bionic/pthread_create.cpp.arm \
     bionic/pthread_key.cpp.arm \
 
 # these are used by the static and dynamic versions of the libc
@@ -450,6 +451,7 @@ libc_common_src_files += \
 
 libc_static_common_src_files += \
     bionic/pthread.c \
+    bionic/pthread_create.cpp \
     bionic/pthread_key.cpp \
 
 libc_arch_static_src_files := \
@@ -497,6 +499,7 @@ libc_common_src_files += \
 
 libc_static_common_src_files += \
     bionic/pthread.c \
+    bionic/pthread_create.cpp \
     bionic/pthread_key.cpp \
 
 libc_arch_static_src_files := \
