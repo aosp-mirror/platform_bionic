@@ -10,14 +10,10 @@
  *	%ebp: arg5                -   callee save
  */
 
+#include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-    .text
-    .type syscall, @function
-    .globl syscall
-    .align 4
-
-syscall:
+ENTRY(syscall)
     # Push the callee save registers.
     push    %ebx
     push    %esi
@@ -53,3 +49,4 @@ syscall:
     pop    %esi
     pop    %ebx
     ret
+END(syscall)
