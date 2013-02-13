@@ -61,3 +61,4 @@ L1:	movb	(%edx),%al		/* unroll loop, but not too much */
 	jnz	L1
 L2:	popl	%eax			/* pop dst address */
 	ret
+END(strcpy)

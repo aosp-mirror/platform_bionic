@@ -42,6 +42,7 @@
 ENTRY(bzero)
         mov     r2, r1
         mov     r1, #0
+        // Fall through to memset...
 END(bzero)
 
 ENTRY(memset)
