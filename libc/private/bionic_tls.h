@@ -43,28 +43,40 @@ __BEGIN_DECLS
  ** pre-allocated slot directly for performance reason).
  **/
 
-/* Maximum number of elements in the TLS array. */
-#define BIONIC_TLS_SLOTS            64
-
 /* Well-known TLS slots. What data goes in which slot is arbitrary unless otherwise noted. */
 enum {
   TLS_SLOT_SELF = 0, /* The kernel requires this specific slot for x86. */
   TLS_SLOT_THREAD_ID,
   TLS_SLOT_ERRNO,
+
+  /* These two aren't used by bionic itself, but allow the graphics code to
+   * access TLS directly rather than using the pthread API. */
   TLS_SLOT_OPENGL_API = 3,
   TLS_SLOT_OPENGL = 4,
+
+  /* This slot is only used to pass information from the dynamic linker to
+   * libc.so when the C library is loaded in to memory. The C runtime init
+   * function will then clear it. Since its use is extremely temporary,
+   * we reuse an existing location that isn't needed during libc startup. */
+  TLS_SLOT_BIONIC_PREINIT = TLS_SLOT_OPENGL_API,
+
   TLS_SLOT_STACK_GUARD = 5, /* GCC requires this specific slot for x86. */
   TLS_SLOT_DLERROR,
 
   TLS_SLOT_FIRST_USER_SLOT /* Must come last! */
 };
 
-/* This slot is only used to pass information from the dynamic linker to
- * libc.so when the C library is loaded in to memory. The C runtime init
- * function will then clear it. Since its use is extremely temporary,
- * we reuse an existing location that isn't needed during libc startup.
+/*
+ * Maximum number of elements in the TLS array.
+ * POSIX says this must be at least 128, but Android has traditionally had only 64, minus those
+ * ones used internally by bionic itself.
+ * There are two kinds of slot used internally by bionic --- there are the well-known slots
+ * enumerated above, and then there are those that are allocated during startup by calls to
+ * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
+ * maintain that second number, but pthread_test will fail if we forget.
  */
-#define  TLS_SLOT_BIONIC_PREINIT    TLS_SLOT_OPENGL_API
+#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
+#define BIONIC_TLS_SLOTS 64
 
 /* set the Thread Local Storage, must contain at least BIONIC_TLS_SLOTS pointers */
 extern void __init_tls(void**  tls, void*  thread_info);
