@@ -18,3 +18,4 @@ ENTRY(strlen)
 	leal	-1(%ecx),%eax		/* and subtracting one */
 	popl	%edi
 	ret
+END(strlen)

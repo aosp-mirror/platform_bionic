@@ -19,7 +19,6 @@ ENTRY(__futex_wait)
     ret
 END(__futex_wait)
 
-
 // int __futex_wake(volatile void *ftx, int count)
 ENTRY(__futex_wake)
     pushl   %ebx

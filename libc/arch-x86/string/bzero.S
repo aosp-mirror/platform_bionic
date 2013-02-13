@@ -41,3 +41,4 @@ L1:	movl	%edx,%ecx		/* zero remainder by bytes */
 
 	popl	%edi
 	ret
+END(bzero)

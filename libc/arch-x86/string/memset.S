@@ -53,3 +53,4 @@ L1:	rep
 	popl	%ebx
 	popl	%edi
 	ret
+END(memset)

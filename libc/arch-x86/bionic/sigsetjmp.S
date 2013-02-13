@@ -61,6 +61,7 @@ ENTRY(sigsetjmp)
 	movl	%edi,20(%ecx)
 	xorl	%eax,%eax
 	ret
+END(sigsetjmp)
 
 ENTRY(siglongjmp)
 	movl	4(%esp),%edx
@@ -90,3 +91,4 @@ ENTRY(siglongjmp)
 	incl	%eax
 2:	movl	%ecx,0(%esp)
 	ret
+END(siglongjmp)
