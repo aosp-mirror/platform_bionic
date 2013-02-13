@@ -42,12 +42,13 @@ typedef struct prop_msg prop_msg;
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
 
-/* (8 header words + 247 toc words) = 1020 bytes */
-/* 1024 bytes header and toc + 247 prop_infos @ 128 bytes = 32640 bytes */
+/* (4 header words + 28 toc words) = 128 bytes */
+/* 128 bytes header and toc + 28 prop_infos @ 128 bytes = 3712 bytes */
 
-#define PA_COUNT_MAX  247
-#define PA_INFO_START 1024
-#define PA_SIZE       32768
+#define PA_COUNT_MAX    28
+#define PA_REGION_COUNT 128
+#define PA_INFO_START   128
+#define PA_SIZE         4096
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
 #define TOC_TO_INFO(area, toc)  ((prop_info*) (((char*) area) + ((toc) & 0xFFFFFF)))
@@ -97,11 +98,17 @@ struct prop_msg
 #define PROP_PATH_FACTORY          "/factory/factory.prop"
 
 /*
+** Map the property area from the specified filename.  This
+** method is for testing only.
+*/
+int __system_property_set_filename(const char *filename);
+
+/*
 ** Initialize the area to be used to store properties.  Can
 ** only be done by a single process that has write access to
 ** the property area.
 */
-void __system_property_area_init(void *data);
+int __system_property_area_init();
 
 /* Add a new system property.  Can only be done by a single
 ** process that has write access to the property area, and

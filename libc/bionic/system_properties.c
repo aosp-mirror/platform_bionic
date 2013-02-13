@@ -55,7 +55,6 @@ struct prop_area {
     unsigned volatile serial;
     unsigned magic;
     unsigned version;
-    unsigned reserved[4];
     unsigned toc[1];
 };
 
@@ -70,10 +69,9 @@ struct prop_info {
 typedef struct prop_info prop_info;
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+static char property_filename[PATH_MAX] = PROP_FILENAME;
 
-static unsigned dummy_props = 0;
-
-prop_area *__system_property_area__ = (void*) &dummy_props;
+prop_area *__system_property_regions__[PA_REGION_COUNT] = { NULL, };
 
 static int get_fd_from_env(void)
 {
@@ -86,27 +84,79 @@ static int get_fd_from_env(void)
     return atoi(env);
 }
 
-void __system_property_area_init(void *data)
+static int map_prop_region_rw(size_t region)
 {
-    prop_area *pa = data;
+    prop_area *pa;
+    int fd;
+    size_t offset = region * PA_SIZE;
+
+    if (__system_property_regions__[region]) {
+        return 0;
+    }
+
+    /* dev is a tmpfs that we can use to carve a shared workspace
+     * out of, so let's do that...
+     */
+    fd = open(property_filename, O_RDWR | O_CREAT | O_NOFOLLOW, 0644);
+    if (fd < 0) {
+        if (errno == EACCES) {
+            /* for consistency with the case where the process has already
+             * mapped the page in and segfaults when trying to write to it
+             */
+            abort();
+        }
+        return -1;
+    }
+
+    if (ftruncate(fd, offset + PA_SIZE) < 0)
+        goto out;
+
+    pa = mmap(NULL, PA_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset);
+    if(pa == MAP_FAILED)
+        goto out;
+
     memset(pa, 0, PA_SIZE);
     pa->magic = PROP_AREA_MAGIC;
     pa->version = PROP_AREA_VERSION;
 
     /* plug into the lib property services */
-    __system_property_area__ = pa;
+    __system_property_regions__[region] = pa;
+
+    close(fd);
+    return 0;
+
+out:
+    close(fd);
+    return -1;
 }
 
-int __system_properties_init(void)
+int __system_property_set_filename(const char *filename)
+{
+    size_t len = strlen(filename);
+    if (len >= sizeof(property_filename))
+        return -1;
+
+    strcpy(property_filename, filename);
+    return 0;
+}
+
+int __system_property_area_init()
+{
+    return map_prop_region_rw(0);
+}
+
+static int map_prop_region(size_t region)
 {
     bool fromFile = true;
+    bool swapped;
+    size_t offset = region * PA_SIZE;
     int result = -1;
 
-    if(__system_property_area__ != ((void*) &dummy_props)) {
+    if(__system_property_regions__[region]) {
         return 0;
     }
 
-    int fd = open(PROP_FILENAME, O_RDONLY | O_NOFOLLOW);
+    int fd = open(property_filename, O_RDONLY | O_NOFOLLOW);
 
     if ((fd < 0) && (errno == ENOENT)) {
         /*
@@ -133,23 +183,33 @@ int __system_properties_init(void)
 
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
-            || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)) {
+            || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
+            || (fd_stat.st_size < offset + PA_SIZE) ) {
         goto cleanup;
     }
 
-    prop_area *pa = mmap(NULL, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    prop_area *pa = mmap(NULL, PA_SIZE, PROT_READ, MAP_SHARED, fd, offset);
 
     if (pa == MAP_FAILED) {
         goto cleanup;
     }
 
     if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
-        munmap(pa, fd_stat.st_size);
+        munmap(pa, PA_SIZE);
         goto cleanup;
     }
 
-    __system_property_area__ = pa;
     result = 0;
+    swapped = __sync_bool_compare_and_swap(&__system_property_regions__[region],
+            NULL, pa);
+    if (!swapped) {
+        /**
+         * In the event of a race either mapping is equally good, so
+         * the thread that lost can just throw its mapping away and proceed as
+         * normal.
+         */
+        munmap(pa, PA_SIZE);
+    }
 
 cleanup:
     if (fromFile) {
@@ -159,17 +219,31 @@ cleanup:
     return result;
 }
 
+int __system_properties_init()
+{
+    return map_prop_region(0);
+}
+
 int __system_property_foreach(
         void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
-    prop_area *pa = __system_property_area__;
-    unsigned i;
+    size_t region;
 
-    for (i = 0; i < pa->count; i++) {
-        unsigned entry = pa->toc[i];
-        prop_info *pi = TOC_TO_INFO(pa, entry);
-        propfn(pi, cookie);
+    for (region = 0; region < PA_REGION_COUNT; region++) {
+        prop_area *pa;
+        unsigned i;
+
+        int err = map_prop_region(region);
+        if (err < 0)
+            break;
+        pa = __system_property_regions__[region];
+
+        for (i = 0; i < pa->count; i++) {
+            unsigned entry = pa->toc[i];
+            prop_info *pi = TOC_TO_INFO(pa, entry);
+            propfn(pi, cookie);
+        }
     }
 
     return 0;
@@ -177,9 +251,15 @@ int __system_property_foreach(
 
 const prop_info *__system_property_find_nth(unsigned n)
 {
-    prop_area *pa = __system_property_area__;
+    size_t region = n / PA_COUNT_MAX;
+    prop_area *pa;
 
-    if(n >= pa->count) {
+    int err = map_prop_region(region);
+    if (err < 0)
+        return NULL;
+    pa = __system_property_regions__[region];
+
+    if((n % PA_COUNT_MAX) >= pa->count) {
         return 0;
     } else {
         return TOC_TO_INFO(pa, pa->toc[n]);
@@ -188,25 +268,36 @@ const prop_info *__system_property_find_nth(unsigned n)
 
 const prop_info *__system_property_find(const char *name)
 {
-    prop_area *pa = __system_property_area__;
-    unsigned count = pa->count;
-    unsigned *toc = pa->toc;
     unsigned len = strlen(name);
-    prop_info *pi;
+    size_t region;
 
     if (len >= PROP_NAME_MAX)
         return 0;
     if (len < 1)
         return 0;
 
-    while(count--) {
-        unsigned entry = *toc++;
-        if(TOC_NAME_LEN(entry) != len) continue;
+    for (region = 0; region < PA_REGION_COUNT; region++) {
+        prop_area *pa;
+        unsigned count;
+        unsigned *toc;
+        prop_info *pi;
 
-        pi = TOC_TO_INFO(pa, entry);
-        if(memcmp(name, pi->name, len)) continue;
+        int err = map_prop_region(region);
+        if (err < 0)
+            return 0;
+        pa = __system_property_regions__[region];
+        count = pa->count;
+        toc = pa->toc;
 
-        return pi;
+        while(count--) {
+            unsigned entry = *toc++;
+            if(TOC_NAME_LEN(entry) != len) continue;
+
+            pi = TOC_TO_INFO(pa, entry);
+            if(memcmp(name, pi->name, len)) continue;
+
+            return pi;
+        }
     }
 
     return 0;
@@ -333,7 +424,7 @@ int __system_property_wait(const prop_info *pi)
 {
     unsigned n;
     if(pi == 0) {
-        prop_area *pa = __system_property_area__;
+        prop_area *pa = __system_property_regions__[0];
         n = pa->serial;
         do {
             __futex_wait(&pa->serial, n, 0);
@@ -349,7 +440,7 @@ int __system_property_wait(const prop_info *pi)
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa = __system_property_regions__[0];
 
     if (len >= PROP_VALUE_MAX)
         return -1;
@@ -368,12 +459,11 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    prop_area *pa = __system_property_area__;
-    prop_info *pa_info_array = (void*) (((char*) pa) + PA_INFO_START);
+    prop_area *pa;
+    prop_info *pa_info_array;
     prop_info *pi;
+    size_t region;
 
-    if (pa->count == PA_COUNT_MAX)
-        return -1;
     if (namelen >= PROP_NAME_MAX)
         return -1;
     if (valuelen >= PROP_VALUE_MAX)
@@ -381,13 +471,28 @@ int __system_property_add(const char *name, unsigned int namelen,
     if (namelen < 1)
         return -1;
 
+    for (region = 0; region < PA_REGION_COUNT; region++)
+    {
+        int err = map_prop_region_rw(region);
+        if (err < 0)
+            return -1;
+
+        pa = __system_property_regions__[region];
+
+        if (pa->count < PA_COUNT_MAX)
+            break;
+    }
+
+    if (region == PA_REGION_COUNT)
+        return -1;
+
+    pa_info_array = (void*) (((char*) pa) + PA_INFO_START);
     pi = pa_info_array + pa->count;
     pi->serial = (valuelen << 24);
     memcpy(pi->name, name, namelen + 1);
     memcpy(pi->value, value, valuelen + 1);
 
-    pa->toc[pa->count] =
-        (namelen << 24) | (((unsigned) pi) - ((unsigned) pa));
+    pa->toc[pa->count] = (namelen << 24) | (((unsigned) pi) - ((unsigned) pa));
 
     pa->count++;
     pa->serial++;
@@ -403,7 +508,7 @@ unsigned int __system_property_serial(const prop_info *pi)
 
 unsigned int __system_property_wait_any(unsigned int serial)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa = __system_property_regions__[0];
 
     do {
         __futex_wait(&pa->serial, serial, 0);
