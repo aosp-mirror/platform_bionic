@@ -196,20 +196,27 @@ TEST(pthread, __pthread_clone) {
 }
 #endif
 
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__too_long) {
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
 }
+#endif
 
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__self) {
   ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
 }
+#endif
 
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__other) {
   pthread_t t1;
   ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
 }
+#endif
 
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__no_such_thread) {
   pthread_t t1;
   ASSERT_EQ(0, pthread_create(&t1, NULL, IdFn, NULL));
@@ -219,3 +226,4 @@ TEST(pthread, pthread_setname_np__no_such_thread) {
   // Call pthread_setname_np after thread has already exited.
   ASSERT_EQ(ENOENT, pthread_setname_np(t1, "short 3"));
 }
+#endif
