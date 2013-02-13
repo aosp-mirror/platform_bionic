@@ -15,3 +15,4 @@ ENTRY(ffs)
 	.align 2
 L1:	xorl	%eax,%eax		/* clear result */
 	ret
+END(ffs)

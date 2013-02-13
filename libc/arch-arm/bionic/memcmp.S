@@ -115,7 +115,7 @@ ENTRY(memcmp)
          * pointer somewhere else
          */
          mov        r4, r0
-        
+
         /* align first pointer to word boundary
          * offset = -src & 3
          */
@@ -151,7 +151,7 @@ ENTRY(memcmp)
         ldr         ip, [r1]
         subs        r2, r2, #(32 + 4)
         bmi         1f
-        
+
 0:      pld         [r4, #(CACHE_LINE_SIZE * 2)]
         pld         [r1, #(CACHE_LINE_SIZE * 2)]
         ldr         r0, [r4], #4
@@ -178,14 +178,14 @@ ENTRY(memcmp)
         ldreq       r0, [r4], #4
         ldreq       ip, [r1, #4]!
         eoreqs      r0, r0, lr
-        bne         2f        
+        bne         2f
         subs        r2, r2, #32
         bhs         0b
 
         /* do we have at least 4 bytes left? */
 1:      adds        r2, r2, #(32 - 4 + 4)
         bmi         4f
-        
+
         /* finish off 4 bytes at a time */
 3:      ldr         r0, [r4], #4
         ldr         ip, [r1], #4
@@ -233,17 +233,14 @@ ENTRY(memcmp)
         subs        r2, r2, #1
         bne         11b
         bx          lr
-END(memcmp)
-
-
 
 5:      /*************** non-congruent case ***************/
-        and         r0, r1, #3      
+        and         r0, r1, #3
         cmp         r0, #2
         bne         4f
 
         /* here, offset is 2 (16-bits aligned, special cased) */
-        
+
         /* make sure we have at least 16 bytes to process */
         subs        r2, r2, #16
         addmi       r2, r2, #16
@@ -341,3 +338,4 @@ END(memcmp)
         mov         r2, #4
 		ldmfd		sp!, {r5, r6, r7}
         b           8b
+END(memcmp)

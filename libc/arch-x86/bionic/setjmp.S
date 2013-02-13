@@ -52,7 +52,7 @@ ENTRY(setjmp)
 	call	_C_LABEL(sigblock)
 #endif
 	addl	$4,%esp
-	PIC_EPILOGUE 
+	PIC_EPILOGUE
 
 	movl	4(%esp),%ecx
 	movl	0(%esp),%edx
@@ -65,6 +65,7 @@ ENTRY(setjmp)
 	movl	%eax,24(%ecx)
 	xorl	%eax,%eax
 	ret
+END(setjmp)
 
 ENTRY(longjmp)
 	movl	4(%esp),%edx
@@ -76,7 +77,7 @@ ENTRY(longjmp)
 	call	_C_LABEL(sigsetmask)
 #endif
 	addl	$4,%esp
-	PIC_EPILOGUE 
+	PIC_EPILOGUE
 
 	movl	4(%esp),%edx
 	movl	8(%esp),%eax
@@ -91,3 +92,4 @@ ENTRY(longjmp)
 	incl	%eax
 1:	movl	%ecx,0(%esp)
 	ret
+END(longjmp)
