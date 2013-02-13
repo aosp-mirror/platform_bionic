@@ -124,6 +124,7 @@ endif
 # implementation for testing the tests themselves.
 ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
 include $(CLEAR_VARS)
+LOCAL_CXX := /usr/bin/g++ # Avoid the host prebuilt so we test the real glibc.
 LOCAL_MODULE := bionic-unit-tests-glibc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
