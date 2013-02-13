@@ -31,7 +31,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <sys/atomics.h>
-#include <sys/mman.h>
 #include <unistd.h>
 
 #include "bionic_atomic_inline.h"
@@ -39,14 +38,12 @@
 #include "bionic_pthread.h"
 #include "bionic_ssp.h"
 #include "bionic_tls.h"
-#include "debug_format.h"
 #include "pthread_internal.h"
 #include "thread_private.h"
 
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
-extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
 
@@ -63,21 +60,8 @@ int  __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct time
 #define  __likely(cond)    __builtin_expect(!!(cond), 1)
 #define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
 
-#ifdef __i386__
-#define ATTRIBUTES __attribute__((noinline)) __attribute__((fastcall))
-#else
-#define ATTRIBUTES __attribute__((noinline))
-#endif
-
-void ATTRIBUTES _thread_created_hook(pid_t thread_id);
-
-static const int kPthreadInitFailed = 1;
-
-static pthread_mutex_t mmap_lock = PTHREAD_MUTEX_INITIALIZER;
-
 __LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
 __LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->next != NULL) {
@@ -132,222 +116,6 @@ __get_stack_base(int  *p_stack_size)
 
     *p_stack_size = thread->attr.stack_size;
     return thread->attr.stack_base;
-}
-
-
-void  __init_tls(void** tls, void* thread) {
-  ((pthread_internal_t*) thread)->tls = tls;
-
-  // Zero-initialize all the slots.
-  for (size_t i = 0; i < BIONIC_TLS_SLOTS; ++i) {
-    tls[i] = NULL;
-  }
-
-  // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
-  tls[TLS_SLOT_SELF] = tls;
-  tls[TLS_SLOT_THREAD_ID] = thread;
-  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
-  tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
-
-  __set_tls((void*) tls);
-}
-
-
-/*
- * This trampoline is called from the assembly _pthread_clone() function.
- */
-void __thread_entry(int (*func)(void*), void *arg, void **tls)
-{
-    // Wait for our creating thread to release us. This lets it have time to
-    // notify gdb about this thread before we start doing anything.
-    //
-    // This also provides the memory barrier needed to ensure that all memory
-    // accesses previously made by the creating thread are visible to us.
-    pthread_mutex_t* start_mutex = (pthread_mutex_t*) &tls[TLS_SLOT_SELF];
-    pthread_mutex_lock(start_mutex);
-    pthread_mutex_destroy(start_mutex);
-
-    pthread_internal_t* thread = (pthread_internal_t*) tls[TLS_SLOT_THREAD_ID];
-    __init_tls(tls, thread);
-
-    if ((thread->internal_flags & kPthreadInitFailed) != 0) {
-        pthread_exit(NULL);
-    }
-
-    int result = func(arg);
-    pthread_exit((void*) result);
-}
-
-#include <private/logd.h>
-
-__LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, bool add_to_thread_list) {
-    int error = 0;
-
-    thread->kernel_id = kernel_id;
-
-    // Set the scheduling policy/priority of the thread.
-    if (thread->attr.sched_policy != SCHED_NORMAL) {
-        struct sched_param param;
-        param.sched_priority = thread->attr.sched_priority;
-        if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param) == -1) {
-            // For backwards compatibility reasons, we just warn about failures here.
-            // error = errno;
-            const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
-            __libc_format_log(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
-        }
-    }
-
-    pthread_cond_init(&thread->join_cond, NULL);
-    thread->join_count = 0;
-    thread->cleanup_stack = NULL;
-
-    if (add_to_thread_list) {
-        _pthread_internal_add(thread);
-    }
-
-    return error;
-}
-
-static void *mkstack(size_t size, size_t guard_size)
-{
-    pthread_mutex_lock(&mmap_lock);
-
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-    void* stack = mmap(NULL, size, prot, flags, -1, 0);
-    if (stack == MAP_FAILED) {
-        stack = NULL;
-        goto done;
-    }
-
-    if (mprotect(stack, guard_size, PROT_NONE) == -1) {
-        munmap(stack, size);
-        stack = NULL;
-        goto done;
-    }
-
-done:
-    pthread_mutex_unlock(&mmap_lock);
-    return stack;
-}
-
-/*
- * Create a new thread. The thread's stack is laid out like so:
- *
- * +---------------------------+
- * |     pthread_internal_t    |
- * +---------------------------+
- * |                           |
- * |          TLS area         |
- * |                           |
- * +---------------------------+
- * |                           |
- * .                           .
- * .         stack area        .
- * .                           .
- * |                           |
- * +---------------------------+
- * |         guard page        |
- * +---------------------------+
- *
- *  note that TLS[0] must be a pointer to itself, this is required
- *  by the thread-local storage implementation of the x86 Linux
- *  kernel, where the TLS pointer is read by reading fs:[0]
- */
-int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
-                   void *(*start_routine)(void *), void * arg)
-{
-    int old_errno = errno;
-
-    /* this will inform the rest of the C library that at least one thread
-     * was created. this will enforce certain functions to acquire/release
-     * locks (e.g. atexit()) to protect shared global structures.
-     *
-     * this works because pthread_create() is not called by the C library
-     * initialization routine that sets up the main thread's data structures.
-     */
-    __isthreaded = 1;
-
-    pthread_internal_t* thread = calloc(sizeof(*thread), 1);
-    if (thread == NULL) {
-        return EAGAIN;
-    }
-    thread->allocated_on_heap = true;
-
-    if (attr == NULL) {
-      pthread_attr_init(&thread->attr);
-    } else {
-      thread->attr = *attr;
-      attr = NULL; // Prevent misuse below.
-    }
-
-    // Make sure the stack size is PAGE_SIZE aligned.
-    size_t stack_size = (thread->attr.stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
-
-    if (thread->attr.stack_base == NULL) {
-        // The caller didn't provide a stack, so allocate one.
-        thread->attr.stack_base = mkstack(stack_size, thread->attr.guard_size);
-        if (thread->attr.stack_base == NULL) {
-            free(thread);
-            return EAGAIN;
-        }
-    } else {
-        // The caller did provide a stack, so remember we're not supposed to free it.
-        thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
-    }
-
-    // Make room for TLS.
-    void** tls = (void**)((uint8_t*)(thread->attr.stack_base) + stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
-
-    // Create a mutex for the thread in TLS_SLOT_SELF to wait on once it starts so we can keep
-    // it from doing anything until after we notify the debugger about it
-    //
-    // This also provides the memory barrier we need to ensure that all
-    // memory accesses previously performed by this thread are visible to
-    // the new thread.
-    pthread_mutex_t* start_mutex = (pthread_mutex_t*) &tls[TLS_SLOT_SELF];
-    pthread_mutex_init(start_mutex, NULL);
-    pthread_mutex_lock(start_mutex);
-
-    tls[TLS_SLOT_THREAD_ID] = thread;
-
-    int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND |
-                CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
-    int tid = __pthread_clone((int(*)(void*))start_routine, tls, flags, arg);
-
-    if (tid < 0) {
-        int clone_errno = errno;
-        pthread_mutex_unlock(start_mutex);
-        if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
-            munmap(thread->attr.stack_base, stack_size);
-        }
-        free(thread);
-        errno = old_errno;
-        return clone_errno;
-    }
-
-    int init_errno = _init_thread(thread, tid, true);
-    if (init_errno != 0) {
-        // Mark the thread detached and let its __thread_entry run to
-        // completion. (It'll just exit immediately, cleaning up its resources.)
-        thread->internal_flags |= kPthreadInitFailed;
-        thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
-        pthread_mutex_unlock(start_mutex);
-        errno = old_errno;
-        return init_errno;
-    }
-
-    // Notify any debuggers about the new thread.
-    pthread_mutex_lock(&gDebuggerNotificationLock);
-    _thread_created_hook(tid);
-    pthread_mutex_unlock(&gDebuggerNotificationLock);
-
-    // Publish the pthread_t and let the thread run.
-    *thread_out = (pthread_t) thread;
-    pthread_mutex_unlock(start_mutex);
-
-    return 0;
 }
 
 
