@@ -37,7 +37,7 @@ double double_subnormal() {
     double d;
     uint64_t i;
   } u;
-  u.i = 0x000fffffffffffffL;
+  u.i = 0x000fffffffffffffLL;
   return u.d;
 }
 
