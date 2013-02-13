@@ -73,12 +73,10 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   unsigned stack_size = 128 * 1024;
   unsigned stack_bottom = stack_top - stack_size;
 
-  pthread_attr_t thread_attr;
-  pthread_attr_init(&thread_attr);
-  pthread_attr_setstack(&thread_attr, (void*) stack_bottom, stack_size);
-
   static pthread_internal_t thread;
-  _init_thread(&thread, gettid(), &thread_attr, (void*) stack_bottom, false);
+  pthread_attr_init(&thread.attr);
+  pthread_attr_setstack(&thread.attr, (void*) stack_bottom, stack_size);
+  _init_thread(&thread, gettid(), false);
 
   static void* tls_area[BIONIC_TLS_SLOTS];
   __init_tls(tls_area, &thread);

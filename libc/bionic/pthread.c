@@ -181,19 +181,10 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 #include <private/logd.h>
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, const pthread_attr_t* attr,
-                 void* stack_base, bool add_to_thread_list)
-{
+int _init_thread(pthread_internal_t* thread, pid_t kernel_id, bool add_to_thread_list) {
     int error = 0;
 
-    thread->attr = *attr;
-    thread->attr.stack_base = stack_base;
     thread->kernel_id = kernel_id;
-
-    // Make a note of whether the user supplied this stack (so we know whether or not to free it).
-    if (attr->stack_base == stack_base) {
-        thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
-    }
 
     // Set the scheduling policy/priority of the thread.
     if (thread->attr.sched_policy != SCHED_NORMAL) {
@@ -285,22 +276,29 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     thread->allocated_on_heap = true;
 
     if (attr == NULL) {
-        attr = &gDefaultPthreadAttr;
+      pthread_attr_init(&thread->attr);
+    } else {
+      thread->attr = *attr;
+      attr = NULL; // Prevent misuse below.
     }
 
-    // make sure the stack is PAGE_SIZE aligned
-    size_t stack_size = (attr->stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
-    uint8_t* stack = attr->stack_base;
-    if (stack == NULL) {
-        stack = mkstack(stack_size, attr->guard_size);
-        if (stack == NULL) {
+    // Make sure the stack size is PAGE_SIZE aligned.
+    size_t stack_size = (thread->attr.stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
+
+    if (thread->attr.stack_base == NULL) {
+        // The caller didn't provide a stack, so allocate one.
+        thread->attr.stack_base = mkstack(stack_size, thread->attr.guard_size);
+        if (thread->attr.stack_base == NULL) {
             free(thread);
             return EAGAIN;
         }
+    } else {
+        // The caller did provide a stack, so remember we're not supposed to free it.
+        thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
     }
 
-    // Make room for TLS
-    void** tls = (void**)(stack + stack_size - BIONIC_TLS_SLOTS*sizeof(void*));
+    // Make room for TLS.
+    void** tls = (void**)((uint8_t*)(thread->attr.stack_base) + stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
 
     // Create a mutex for the thread in TLS_SLOT_SELF to wait on once it starts so we can keep
     // it from doing anything until after we notify the debugger about it
@@ -321,15 +319,15 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     if (tid < 0) {
         int clone_errno = errno;
         pthread_mutex_unlock(start_mutex);
-        if (stack != attr->stack_base) {
-            munmap(stack, stack_size);
+        if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
+            munmap(thread->attr.stack_base, stack_size);
         }
         free(thread);
         errno = old_errno;
         return clone_errno;
     }
 
-    int init_errno = _init_thread(thread, tid, attr, stack, true);
+    int init_errno = _init_thread(thread, tid, true);
     if (init_errno != 0) {
         // Mark the thread detached and let its __thread_entry run to
         // completion. (It'll just exit immediately, cleaning up its resources.)

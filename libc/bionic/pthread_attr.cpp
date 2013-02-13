@@ -30,19 +30,15 @@
 
 #include "pthread_internal.h"
 
-#define DEFAULT_STACKSIZE (1024 * 1024)
-
-const pthread_attr_t gDefaultPthreadAttr = {
-  .flags = 0,
-  .stack_base = NULL,
-  .stack_size = DEFAULT_STACKSIZE,
-  .guard_size = PAGE_SIZE,
-  .sched_policy = SCHED_NORMAL,
-  .sched_priority = 0
-};
+#define DEFAULT_STACK_SIZE (1024 * 1024)
 
 int pthread_attr_init(pthread_attr_t* attr) {
-  *attr = gDefaultPthreadAttr;
+  attr->flags = 0;
+  attr->stack_base = NULL;
+  attr->stack_size = DEFAULT_STACK_SIZE;
+  attr->guard_size = PAGE_SIZE;
+  attr->sched_policy = SCHED_NORMAL;
+  attr->sched_priority = 0;
   return 0;
 }
 
