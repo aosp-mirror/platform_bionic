@@ -71,6 +71,7 @@ test_src_files = \
     stdio_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \
+    strings_test.cpp \
     stubs_test.cpp \
     unistd_test.cpp \
 
