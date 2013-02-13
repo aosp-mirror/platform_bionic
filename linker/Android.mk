@@ -23,14 +23,8 @@ LOCAL_CFLAGS += -fno-stack-protector \
         -fvisibility=hidden \
         -Wall -Wextra -Werror
 
-# We need to access Bionic private headers in the linker...
+# We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
-
-# ...one of which is <private/bionic_tls.h>, for which we
-# need HAVE_ARM_TLS_REGISTER.
-ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
-    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
-endif
 
 ifeq ($(TARGET_ARCH),arm)
     LOCAL_CFLAGS += -DANDROID_ARM_LINKER
