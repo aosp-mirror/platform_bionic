@@ -47,7 +47,7 @@ ENTRY(__pthread_clone)
 
     # In parent, reload saved registers then either exit or set errno.
     ldmfd   sp!, {r4, r7}
-    bxne    lr
+    bxpl    lr
     b       __set_syscall_errno
 
 1:  # The child.
@@ -96,7 +96,7 @@ ENTRY(__bionic_clone)
 
     # In the parent, reload saved registers then either exit or set errno.
     ldmfd   sp!, {r4, r5, r6, r7}
-    bxne    lr
+    bxpl    lr
     b       __set_syscall_errno
 
 1:  # The child.
