@@ -16,6 +16,24 @@
       "revId": "95b1ea1bb3c93369d96045420b91b7617992d8bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "P30mbJWw",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-14T00:48:53Z",
+      "side": 0,
+      "message": "you haven\u0027t met the prebuilt host gcc with its own broken copy of glibc.\n\nyou\u0027re fucked whatever you do.",
+      "parentUuid": "P3.mJMSs",
+      "revId": "95b1ea1bb3c93369d96045420b91b7617992d8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
