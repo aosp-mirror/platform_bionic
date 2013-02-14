@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,20 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_SSP_H
-#define _PRIVATE_SSP_H
+#include <stdlib.h>
 
-#include <stdint.h>
-#include <sys/cdefs.h>
+#include "bionic_ssp.h"
+#include "debug_format.h"
+#include "logd.h"
 
-__BEGIN_DECLS
-
-/* GCC uses this on ARM and MIPS; we use it on x86 to set the guard in TLS. */
-extern uintptr_t __stack_chk_guard;
-
-/* GCC calls this if a stack guard check fails. */
-extern void __stack_chk_fail();
-
-__END_DECLS
-
-#endif
+void __stack_chk_fail() {
+  __libc_format_log(ANDROID_LOG_FATAL, "libc", "stack corruption detected");
+  abort();
+}

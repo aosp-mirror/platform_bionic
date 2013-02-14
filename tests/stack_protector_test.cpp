@@ -36,7 +36,7 @@ pid_t gettid() { return syscall(__NR_gettid); }
 
 #ifdef __i386__
 
-// For x86, bionic and glibc have per-thread stack guard values.
+// For x86, bionic and glibc have per-thread stack guard values (all identical).
 
 static uint32_t GetGuardFromTls() {
   uint32_t guard;
