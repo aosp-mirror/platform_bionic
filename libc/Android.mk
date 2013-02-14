@@ -408,31 +408,32 @@ endif # arm
 
 ifeq ($(TARGET_ARCH),x86)
 libc_common_src_files += \
-	arch-x86/bionic/__get_sp.S \
-	arch-x86/bionic/__get_tls.c \
-	arch-x86/bionic/__set_tls.c \
-	arch-x86/bionic/clone.S \
-	arch-x86/bionic/_exit_with_stack_teardown.S \
-	arch-x86/bionic/futex_x86.S \
-	arch-x86/bionic/setjmp.S \
-	arch-x86/bionic/_setjmp.S \
-	arch-x86/bionic/sigsetjmp.S \
-	arch-x86/bionic/vfork.S \
-	arch-x86/bionic/syscall.S \
-	arch-x86/string/bcopy_wrapper.S \
-	arch-x86/string/memcpy_wrapper.S \
-	arch-x86/string/memmove_wrapper.S \
-	arch-x86/string/bzero_wrapper.S \
-	arch-x86/string/memcmp_wrapper.S \
-	arch-x86/string/memset_wrapper.S \
-	arch-x86/string/strcmp_wrapper.S \
-	arch-x86/string/strncmp_wrapper.S \
-	arch-x86/string/strlen_wrapper.S \
-	string/strcpy.c \
-	bionic/pthread-atfork.c \
-	bionic/pthread-rwlocks.c \
-	bionic/pthread-timers.c \
-	bionic/ptrace.c
+    arch-x86/bionic/clone.S \
+    arch-x86/bionic/_exit_with_stack_teardown.S \
+    arch-x86/bionic/futex_x86.S \
+    arch-x86/bionic/__get_sp.S \
+    arch-x86/bionic/__get_tls.c \
+    arch-x86/bionic/_setjmp.S \
+    arch-x86/bionic/setjmp.S \
+    arch-x86/bionic/__set_tls.c \
+    arch-x86/bionic/sigsetjmp.S \
+    arch-x86/bionic/syscall.S \
+    arch-x86/bionic/vfork.S \
+    arch-x86/string/bcopy_wrapper.S \
+    arch-x86/string/bzero_wrapper.S \
+    arch-x86/string/ffs.S \
+    arch-x86/string/memcmp_wrapper.S \
+    arch-x86/string/memcpy_wrapper.S \
+    arch-x86/string/memmove_wrapper.S \
+    arch-x86/string/memset_wrapper.S \
+    arch-x86/string/strcmp_wrapper.S \
+    arch-x86/string/strlen_wrapper.S \
+    arch-x86/string/strncmp_wrapper.S \
+    bionic/pthread-atfork.c \
+    bionic/pthread-rwlocks.c \
+    bionic/pthread-timers.c \
+    bionic/ptrace.c \
+    string/strcpy.c \
 
 libc_static_common_src_files += \
     bionic/pthread.c \
