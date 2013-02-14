@@ -36,7 +36,6 @@
 #include "bionic_atomic_inline.h"
 #include "bionic_futex.h"
 #include "bionic_pthread.h"
-#include "bionic_ssp.h"
 #include "bionic_tls.h"
 #include "pthread_internal.h"
 #include "thread_private.h"

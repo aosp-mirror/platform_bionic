@@ -26,58 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include <unistd.h>
-
 #include "bionic_ssp.h"
-#include "logd.h"
+
+#include <sys/auxv.h>
 
 uintptr_t __stack_chk_guard = 0;
 
 static void __attribute__((constructor)) __init_stack_check_guard() {
   // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
   __stack_chk_guard = *reinterpret_cast<uintptr_t*>(getauxval(AT_RANDOM));
-}
-
-// This is the crash handler.
-// Does a best effort at logging and calls _exit to terminate
-// the process immediately (without atexit handlers, etc.).
-void __stack_chk_fail() {
-  // Immediately block all (but SIGABRT) signal handlers from running code.
-  sigset_t sigmask;
-  sigfillset(&sigmask);
-  sigdelset(&sigmask, SIGABRT);
-  sigprocmask(SIG_BLOCK, &sigmask, NULL);
-
-  // Use /proc/self/exe link to obtain the program name for logging
-  // purposes. If it's not available, we set it to "<unknown>".
-  char path[PATH_MAX];
-  int count;
-  if ((count = readlink("/proc/self/exe", path, sizeof(path) - 1)) == -1) {
-    strlcpy(path, "<unknown>", sizeof(path));
-  } else {
-    path[count] = '\0';
-  }
-
-  // Do a best effort at logging.
-  __libc_android_log_write(ANDROID_LOG_FATAL, path, "stack corruption detected: aborted");
-
-  // Make sure there is no default action for SIGABRT.
-  struct sigaction sa;
-  memset(&sa, 0, sizeof(sa));
-  sigemptyset(&sa.sa_mask);
-  sa.sa_flags = 0;
-  sa.sa_handler = SIG_DFL;
-  sigaction(SIGABRT, &sa, NULL);
-
-  // Terminate the process and exit immediately.
-  kill(getpid(), SIGABRT);
-
-  _exit(127);
 }
