@@ -726,7 +726,7 @@ WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := bionic/ssp.cpp
-LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector -Werror
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libbionic_ssp
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
