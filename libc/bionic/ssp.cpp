@@ -38,7 +38,7 @@
 #include "bionic_ssp.h"
 #include "logd.h"
 
-uintptr_t __stack_chk_guard = NULL;
+uintptr_t __stack_chk_guard = 0;
 
 static void __attribute__((constructor)) __init_stack_check_guard() {
   // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
