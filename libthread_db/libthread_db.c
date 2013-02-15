@@ -161,7 +161,7 @@ td_err_e
 td_thr_get_info(td_thrhandle_t const * handle, td_thrinfo_t * info)
 {
     info->ti_tid = handle->tid;
-    info->ti_lid = handle->tid; // Our pthreads uses kernel ids for tids
+    info->ti_lid = handle->tid;
     info->ti_state = TD_THR_SLEEP; /* XXX this needs to be read from /proc/<pid>/task/<tid>.
                                       This is only used to see if the thread is a zombie or not */
     return TD_OK;

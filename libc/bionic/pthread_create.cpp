@@ -41,7 +41,7 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-extern "C" int __pthread_clone(int (*fn)(void*), void* child_stack, int flags, void* arg);
+extern "C" int __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
 
 #ifdef __i386__
 #define ATTRIBUTES __attribute__((noinline)) __attribute__((fastcall))
@@ -57,25 +57,23 @@ static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
-void  __init_tls(void** tls, void* thread) {
-  ((pthread_internal_t*) thread)->tls = tls;
-
+void  __init_tls(pthread_internal_t* thread) {
   // Zero-initialize all the slots.
   for (size_t i = 0; i < BIONIC_TLS_SLOTS; ++i) {
-    tls[i] = NULL;
+    thread->tls[i] = NULL;
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
-  tls[TLS_SLOT_SELF] = tls;
-  tls[TLS_SLOT_THREAD_ID] = thread;
+  thread->tls[TLS_SLOT_SELF] = thread->tls;
+  thread->tls[TLS_SLOT_THREAD_ID] = thread;
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
-  tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
+  thread->tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
 
-  __set_tls((void*) tls);
+  __set_tls(thread->tls);
 }
 
 // This trampoline is called from the assembly _pthread_clone() function.
-extern "C" void __thread_entry(int (*func)(void*), void *arg, void **tls) {
+extern "C" void __thread_entry(void* (*func)(void*), void* arg, void** tls) {
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.
   // This also provides the memory barrier needed to ensure that all memory
@@ -85,27 +83,26 @@ extern "C" void __thread_entry(int (*func)(void*), void *arg, void **tls) {
   pthread_mutex_destroy(start_mutex);
 
   pthread_internal_t* thread = (pthread_internal_t*) tls[TLS_SLOT_THREAD_ID];
-  __init_tls(tls, thread);
+  thread->tls = tls;
+  __init_tls(thread);
 
   if ((thread->internal_flags & kPthreadInitFailed) != 0) {
     pthread_exit(NULL);
   }
 
-  int result = func(arg);
-  pthread_exit((void*) result);
+  void* result = func(arg);
+  pthread_exit(result);
 }
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, bool add_to_thread_list) {
+int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
-
-  thread->kernel_id = kernel_id;
 
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
     struct sched_param param;
     param.sched_priority = thread->attr.sched_priority;
-    if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param) == -1) {
+    if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
       // For backwards compatibility reasons, we just warn about failures here.
       // error = errno;
       const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
@@ -198,9 +195,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   tls[TLS_SLOT_THREAD_ID] = thread;
 
-  int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
-  int tid = __pthread_clone((int(*)(void*))start_routine, tls, flags, arg);
+  int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM;
 
+  int tid = __pthread_clone(start_routine, tls, flags, arg);
   if (tid < 0) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
@@ -210,7 +207,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  int init_errno = _init_thread(thread, tid, true);
+  thread->tid = tid;
+
+  int init_errno = _init_thread(thread, true);
   if (init_errno != 0) {
     // Mark the thread detached and let its __thread_entry run to
     // completion. (It'll just exit immediately, cleaning up its resources.)
@@ -222,7 +221,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // Notify any debuggers about the new thread.
   {
     ScopedPthreadMutexLocker debugger_locker(&gDebuggerNotificationLock);
-    _thread_created_hook(tid);
+    _thread_created_hook(thread->tid);
   }
 
   // Publish the pthread_t and let the thread run.

@@ -40,7 +40,7 @@
 
 // This value is not exported by kernel headers.
 #define MAX_TASK_COMM_LEN 16
-#define TASK_COMM_FMT "/proc/self/task/%u/comm"
+#define TASK_COMM_FMT "/proc/self/task/%d/comm"
 
 int pthread_setname_np(pthread_t thread, const char* thread_name) {
   ErrnoRestorer errno_restorer;
@@ -56,14 +56,14 @@ int pthread_setname_np(pthread_t thread, const char* thread_name) {
 
   // Changing our own name is an easy special case.
   if (thread == pthread_self()) {
-    return prctl(PR_SET_NAME, (unsigned long)thread_name, 0, 0, 0) ? errno : 0;
+    return prctl(PR_SET_NAME, thread_name) ? errno : 0;
   }
 
   // Have to change another thread's name.
   pthread_internal_t* t = reinterpret_cast<pthread_internal_t*>(thread);
   char comm_name[sizeof(TASK_COMM_FMT) + 8];
-  snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, (unsigned int) t->kernel_id);
-  int fd = open(comm_name, O_RDWR);
+  snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, t->tid);
+  int fd = open(comm_name, O_WRONLY);
   if (fd == -1) {
     return errno;
   }
