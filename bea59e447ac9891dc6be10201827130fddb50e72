@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "P31h9n6M",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-15T19:25:59Z",
+      "side": 1,
+      "message": "do you want to clean up the kernel ID comments?",
+      "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "P3xgmh84",
+        "filename": "libc/bionic/pthread_setname_np.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-15T19:25:59Z",
+      "side": 1,
+      "message": "should this really change from unsigned to signed?",
+      "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "P35gSd2c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-02-15T19:25:59Z",
+      "side": 1,
+      "message": "%d vs %u",
+      "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
