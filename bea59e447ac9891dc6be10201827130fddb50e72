@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "P35up0ZM",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-15T20:08:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "P31h9n6M",
+      "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "P3xgmh84",
         "filename": "libc/bionic/pthread_setname_np.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-02-15T19:25:59Z",
       "side": 1,
       "message": "should this really change from unsigned to signed?",
+      "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "P3zuRvVk",
+        "filename": "libc/bionic/pthread_setname_np.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-15T20:08:42Z",
+      "side": 1,
+      "message": "we\u0027re using %d everywhere else. i was just going for consistency.",
+      "parentUuid": "P3xgmh84",
       "revId": "bea59e447ac9891dc6be10201827130fddb50e72",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
