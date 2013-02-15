@@ -1,7 +1,7 @@
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-// int  __pthread_clone(int (*fn)(void*), void* tls, int flags, void* arg);
+// int  __pthread_clone(void* (*fn)(void*), void* tls, int flags, void* arg);
 ENTRY(__pthread_clone)
         pushl   %ebx
         pushl   %ecx

@@ -313,9 +313,9 @@ int pthread_getschedparam(pthread_t thid, int * policy,
     int  old_errno = errno;
 
     pthread_internal_t * thread = (pthread_internal_t *)thid;
-    int err = sched_getparam(thread->kernel_id, param);
+    int err = sched_getparam(thread->tid, param);
     if (!err) {
-        *policy = sched_getscheduler(thread->kernel_id);
+        *policy = sched_getscheduler(thread->tid);
     } else {
         err = errno;
         errno = old_errno;
@@ -330,7 +330,7 @@ int pthread_setschedparam(pthread_t thid, int policy,
     int                  old_errno = errno;
     int                  ret;
 
-    ret = sched_setscheduler(thread->kernel_id, policy, param);
+    ret = sched_setscheduler(thread->tid, policy, param);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -342,7 +342,7 @@ int pthread_setschedparam(pthread_t thid, int policy,
 /* a mutex is implemented as a 32-bit integer holding the following fields
  *
  * bits:     name     description
- * 31-16     tid      owner thread's kernel id (recursive and errorcheck only)
+ * 31-16     tid      owner thread's tid (recursive and errorcheck only)
  * 15-14     type     mutex type
  * 13        shared   process-shared flag
  * 12-2      counter  counter of recursive mutexes
@@ -452,8 +452,8 @@ int pthread_setschedparam(pthread_t thid, int policy,
 /* Mutex owner field:
  *
  * This is only used for recursive and errorcheck mutexes. It holds the
- * kernel TID of the owning thread. Note that this works because the Linux
- * kernel _only_ uses 16-bit values for thread ids.
+ * tid of the owning thread. Note that this works because the Linux
+ * kernel _only_ uses 16-bit values for tids.
  *
  * More specifically, it will wrap to 10000 when it reaches over 32768 for
  * application processes. You can check this by running the following inside
@@ -783,7 +783,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -877,7 +877,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid != MUTEX_OWNER_FROM_BITS(mvalue) )
         return EPERM;
 
@@ -951,7 +951,7 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -1060,7 +1060,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -1379,7 +1379,7 @@ int pthread_kill(pthread_t tid, int sig)
     int  old_errno = errno;
     pthread_internal_t * thread = (pthread_internal_t *)tid;
 
-    ret = tgkill(getpid(), thread->kernel_id, sig);
+    ret = tgkill(getpid(), thread->tid, sig);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -1397,7 +1397,7 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
     if (!thread)
         return ESRCH;
 
-    *clockid = CLOCK_THREAD_CPUTIME_ID | (thread->kernel_id << CLOCK_IDTYPE_BITS);
+    *clockid = CLOCK_THREAD_CPUTIME_ID | (thread->tid << CLOCK_IDTYPE_BITS);
     return 0;
 }
 
@@ -1474,25 +1474,18 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
     return 0;
 }
 
-/* Return the kernel thread ID for a pthread.
- * This is only defined for implementations where pthread <-> kernel is 1:1, which this is.
- * Not the same as pthread_getthreadid_np, which is commonly defined to be opaque.
- * Internal, not an NDK API.
- */
-
-pid_t __pthread_gettid(pthread_t thid)
-{
-    pthread_internal_t* thread = (pthread_internal_t*)thid;
-    return thread->kernel_id;
+pid_t __pthread_gettid(pthread_t thid) {
+  pthread_internal_t* thread = (pthread_internal_t*) thid;
+  return thread->tid;
 }
 
-int __pthread_settid(pthread_t thid, pid_t tid)
-{
-    if (thid == 0)
-        return EINVAL;
+int __pthread_settid(pthread_t thid, pid_t tid) {
+  if (thid == 0) {
+      return EINVAL;
+  }
 
-    pthread_internal_t* thread = (pthread_internal_t*)thid;
-    thread->kernel_id = tid;
+  pthread_internal_t* thread = (pthread_internal_t*) thid;
+  thread->tid = tid;
 
-    return 0;
+  return 0;
 }

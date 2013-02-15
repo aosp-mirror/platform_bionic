@@ -78,9 +78,6 @@ enum {
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
 #define BIONIC_TLS_SLOTS 64
 
-/* set the Thread Local Storage, must contain at least BIONIC_TLS_SLOTS pointers */
-extern void __init_tls(void** tls, void* thread_info);
-
 /* syscall only, do not call directly */
 extern int __set_tls(void* ptr);
 
