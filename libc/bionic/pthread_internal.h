@@ -38,7 +38,7 @@ typedef struct pthread_internal_t
     struct pthread_internal_t*  next;
     struct pthread_internal_t*  prev;
     pthread_attr_t              attr;
-    pid_t                       kernel_id;
+    pid_t                       tid;
     bool                        allocated_on_heap;
     pthread_cond_t              join_cond;
     int                         join_count;
@@ -55,7 +55,8 @@ typedef struct pthread_internal_t
     char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 } pthread_internal_t;
 
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, bool add_to_thread_list);
+int _init_thread(pthread_internal_t* thread, bool add_to_thread_list);
+void __init_tls(pthread_internal_t* thread);
 void _pthread_internal_add( pthread_internal_t*  thread );
 pthread_internal_t* __get_thread(void);
 

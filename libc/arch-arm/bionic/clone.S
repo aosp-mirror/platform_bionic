@@ -29,10 +29,10 @@
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-// int  __pthread_clone(int (*fn)(void*), void* child_stack, int flags, void* arg);
+// int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
 ENTRY(__pthread_clone)
     # Copy the args onto the new stack.
-    stmdb r1!, {r0, r3}
+    stmdb   r1!, {r0, r3}
 
     # The sys_clone system call only takes two arguments: 'flags' and 'child_stack'.
     # 'child_stack' is already in r1, but we need to move 'flags' into position.
