@@ -149,12 +149,12 @@ static void TestBug37410() {
   pthread_exit(NULL);
 }
 
-// We have to say "DeathTest" here so gtest knows to run this test (which exits)
-// in its own process.
+// Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
+// run this test (which exits normally) in its own process.
 TEST(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  EXPECT_EXIT(TestBug37410(), ::testing::ExitedWithCode(0), "");
+  ASSERT_EXIT(TestBug37410(), ::testing::ExitedWithCode(0), "");
 }
 #endif
 

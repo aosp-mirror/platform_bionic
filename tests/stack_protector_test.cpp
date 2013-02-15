@@ -117,11 +117,9 @@ static void do_modify_stack_chk_guard() {
   __stack_chk_guard = 0x12345678;
 }
 
-// We have to say "DeathTest" here so gtest knows to run this test (which exits)
-// in its own process.
 TEST(stack_protector_DeathTest, modify_stack_protector) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGSEGV), "");
 }
 
 #endif
