@@ -182,7 +182,6 @@ libc_common_src_files := \
 	bionic/md5.c \
 	bionic/memchr.c \
 	bionic/memmem.c \
-	bionic/memmove_words.c \
 	bionic/memrchr.c \
 	bionic/memswap.c \
 	bionic/mmap.c \
