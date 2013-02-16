@@ -151,7 +151,7 @@ int pthread_equal(pthread_t one, pthread_t two);
 
 int pthread_getschedparam(pthread_t thid, int * policy,
                           struct sched_param * param);
-int pthread_setschedparam(pthread_t thid, int poilcy,
+int pthread_setschedparam(pthread_t thid, int policy,
                           struct sched_param const * param);
 
 int pthread_mutexattr_init(pthread_mutexattr_t *attr);

@@ -59,55 +59,6 @@ int  __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct time
 #define  __likely(cond)    __builtin_expect(!!(cond), 1)
 #define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
 
-__LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
-__LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
-
-static void _pthread_internal_remove_locked(pthread_internal_t* thread) {
-  if (thread->next != NULL) {
-    thread->next->prev = thread->prev;
-  }
-  if (thread->prev != NULL) {
-    thread->prev->next = thread->next;
-  } else {
-    gThreadList = thread->next;
-  }
-
-  // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
-  // and __libc_init_common for the point where it's added to the thread list.
-  if (thread->allocated_on_heap) {
-    free(thread);
-  }
-}
-
-static void _pthread_internal_remove(pthread_internal_t* thread) {
-  pthread_mutex_lock(&gThreadListLock);
-  _pthread_internal_remove_locked(thread);
-  pthread_mutex_unlock(&gThreadListLock);
-}
-
-__LIBC_ABI_PRIVATE__ void _pthread_internal_add(pthread_internal_t* thread) {
-  pthread_mutex_lock(&gThreadListLock);
-
-  // We insert at the head.
-  thread->next = gThreadList;
-  thread->prev = NULL;
-  if (thread->next != NULL) {
-    thread->next->prev = thread;
-  }
-  gThreadList = thread;
-
-  pthread_mutex_unlock(&gThreadListLock);
-}
-
-__LIBC_ABI_PRIVATE__ pthread_internal_t*
-__get_thread(void)
-{
-    void**  tls = (void**)__get_tls();
-
-    return  (pthread_internal_t*) tls[TLS_SLOT_THREAD_ID];
-}
-
-
 void*
 __get_stack_base(int  *p_stack_size)
 {
@@ -166,11 +117,10 @@ void pthread_exit(void * retval)
 
     // if the thread is detached, destroy the pthread_internal_t
     // otherwise, keep it in memory and signal any joiners.
+    pthread_mutex_lock(&gThreadListLock);
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-        _pthread_internal_remove(thread);
+        _pthread_internal_remove_locked(thread);
     } else {
-        pthread_mutex_lock(&gThreadListLock);
-
        /* make sure that the thread struct doesn't have stale pointers to a stack that
         * will be unmapped after the exit call below.
         */
@@ -198,8 +148,8 @@ void pthread_exit(void * retval)
         } else {
             thread->join_count = -1;  /* zombie thread */
         }
-        pthread_mutex_unlock(&gThreadListLock);
     }
+    pthread_mutex_unlock(&gThreadListLock);
 
     sigfillset(&mask);
     sigdelset(&mask, SIGSEGV);
@@ -211,133 +161,6 @@ void pthread_exit(void * retval)
     else
         _exit_with_stack_teardown(stack_base, stack_size, (int)retval);
 }
-
-int pthread_join(pthread_t thid, void ** ret_val)
-{
-    pthread_internal_t*  thread = (pthread_internal_t*)thid;
-    if (thid == pthread_self()) {
-        return EDEADLK;
-    }
-
-    // check that the thread still exists and is not detached
-    pthread_mutex_lock(&gThreadListLock);
-
-    for (thread = gThreadList; thread != NULL; thread = thread->next) {
-        if (thread == (pthread_internal_t*)thid) {
-            goto FoundIt;
-        }
-    }
-
-    pthread_mutex_unlock(&gThreadListLock);
-    return ESRCH;
-
-FoundIt:
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-        pthread_mutex_unlock(&gThreadListLock);
-        return EINVAL;
-    }
-
-   /* wait for thread death when needed
-    *
-    * if the 'join_count' is negative, this is a 'zombie' thread that
-    * is already dead and without stack/TLS
-    *
-    * otherwise, we need to increment 'join-count' and wait to be signaled
-    */
-    int count = thread->join_count;
-    if (count >= 0) {
-        thread->join_count += 1;
-        pthread_cond_wait( &thread->join_cond, &gThreadListLock );
-        count = --thread->join_count;
-    }
-    if (ret_val) {
-        *ret_val = thread->return_value;
-    }
-
-    /* remove thread descriptor when we're the last joiner or when the
-     * thread was already a zombie.
-     */
-    if (count <= 0) {
-        _pthread_internal_remove_locked(thread);
-    }
-    pthread_mutex_unlock(&gThreadListLock);
-    return 0;
-}
-
-int  pthread_detach( pthread_t  thid )
-{
-    pthread_internal_t*  thread;
-    int                  result = 0;
-
-    pthread_mutex_lock(&gThreadListLock);
-    for (thread = gThreadList; thread != NULL; thread = thread->next) {
-        if (thread == (pthread_internal_t*)thid) {
-            goto FoundIt;
-        }
-    }
-
-    result = ESRCH;
-    goto Exit;
-
-FoundIt:
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-        result = EINVAL; // Already detached.
-        goto Exit;
-    }
-
-    if (thread->join_count > 0) {
-        result = 0; // Already being joined; silently do nothing, like glibc.
-        goto Exit;
-    }
-
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
-
-Exit:
-    pthread_mutex_unlock(&gThreadListLock);
-    return result;
-}
-
-pthread_t pthread_self(void)
-{
-    return (pthread_t)__get_thread();
-}
-
-int pthread_equal(pthread_t one, pthread_t two)
-{
-    return (one == two ? 1 : 0);
-}
-
-int pthread_getschedparam(pthread_t thid, int * policy,
-                          struct sched_param * param)
-{
-    int  old_errno = errno;
-
-    pthread_internal_t * thread = (pthread_internal_t *)thid;
-    int err = sched_getparam(thread->tid, param);
-    if (!err) {
-        *policy = sched_getscheduler(thread->tid);
-    } else {
-        err = errno;
-        errno = old_errno;
-    }
-    return err;
-}
-
-int pthread_setschedparam(pthread_t thid, int policy,
-                          struct sched_param const * param)
-{
-    pthread_internal_t * thread = (pthread_internal_t *)thid;
-    int                  old_errno = errno;
-    int                  ret;
-
-    ret = sched_setscheduler(thread->tid, policy, param);
-    if (ret < 0) {
-        ret = errno;
-        errno = old_errno;
-    }
-    return ret;
-}
-
 
 /* a mutex is implemented as a 32-bit integer holding the following fields
  *
@@ -1370,42 +1193,10 @@ int pthread_cond_timeout_np(pthread_cond_t *cond,
 }
 
 
-// man says this should be in <linux/unistd.h>, but it isn't
-extern int tgkill(int tgid, int tid, int sig);
-
-int pthread_kill(pthread_t tid, int sig)
-{
-    int  ret;
-    int  old_errno = errno;
-    pthread_internal_t * thread = (pthread_internal_t *)tid;
-
-    ret = tgkill(getpid(), thread->tid, sig);
-    if (ret < 0) {
-        ret = errno;
-        errno = old_errno;
-    }
-
-    return ret;
-}
-
-
-int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
-{
-    const int            CLOCK_IDTYPE_BITS = 3;
-    pthread_internal_t*  thread = (pthread_internal_t*)tid;
-
-    if (!thread)
-        return ESRCH;
-
-    *clockid = CLOCK_THREAD_CPUTIME_ID | (thread->tid << CLOCK_IDTYPE_BITS);
-    return 0;
-}
-
-
 /* NOTE: this implementation doesn't support a init function that throws a C++ exception
  *       or calls fork()
  */
-int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
+int pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 {
     volatile pthread_once_t* ocptr = once_control;
 
