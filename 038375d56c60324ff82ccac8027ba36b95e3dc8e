@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "P3hBUmh4",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-02-16T05:00:25Z",
+      "side": 1,
+      "message": "ScopedPthreadMutexLocker locker(\u0026gThreadListLock); ?",
+      "revId": "038375d56c60324ff82ccac8027ba36b95e3dc8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
