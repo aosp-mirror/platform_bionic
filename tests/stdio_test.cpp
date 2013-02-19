@@ -169,3 +169,12 @@ TEST(stdio, getline_invalid) {
   ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
   ASSERT_EQ(EBADF, errno);
 }
+
+TEST(stdio, printf_ssize_t) {
+  // We used to have a ssize_t definition that confused GCC into saying:
+  // error: format '%zd' expects argument of type 'signed size_t',
+  //     but argument 4 has type 'ssize_t {aka long int}' [-Werror=format]
+  ssize_t v = 1;
+  char buf[32];
+  snprintf(buf, sizeof(buf), "%zd", v);
+}
