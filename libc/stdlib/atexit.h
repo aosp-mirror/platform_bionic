@@ -30,6 +30,8 @@
  *
  */
 
+#include <sys/cdefs.h>
+
 struct atexit {
 	struct atexit *next;		/* next in list */
 	int ind;			/* next index in this table */
