@@ -57,16 +57,17 @@ typedef struct pthread_internal_t
 
 int _init_thread(pthread_internal_t* thread, bool add_to_thread_list);
 void __init_tls(pthread_internal_t* thread);
-void _pthread_internal_add( pthread_internal_t*  thread );
+void _pthread_internal_add(pthread_internal_t* thread);
 pthread_internal_t* __get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
+__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
 #define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
 #define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
 
-extern pthread_internal_t* gThreadList;
-extern pthread_mutex_t gThreadListLock;
+__LIBC_HIDDEN__ extern pthread_internal_t* gThreadList;
+__LIBC_HIDDEN__ extern pthread_mutex_t gThreadListLock;
 
 /* needed by posix-timers.c */
 

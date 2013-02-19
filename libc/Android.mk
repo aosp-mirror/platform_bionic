@@ -280,7 +280,16 @@ libc_bionic_src_files := \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
     bionic/pthread_attr.cpp \
+    bionic/pthread_detach.cpp \
+    bionic/pthread_equal.cpp \
+    bionic/pthread_getcpuclockid.cpp \
+    bionic/pthread_getschedparam.cpp \
+    bionic/pthread_internals.cpp \
+    bionic/pthread_join.cpp \
+    bionic/pthread_kill.cpp \
+    bionic/pthread_self.cpp \
     bionic/pthread_setname_np.cpp \
+    bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
     bionic/sbrk.cpp \
