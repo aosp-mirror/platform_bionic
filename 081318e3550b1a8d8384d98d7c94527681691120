@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "P.NERU7s",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1016103
+      },
+      "writtenOn": "2013-02-20T05:15:08Z",
+      "side": 0,
+      "message": "I\u0027m wondering where this initialization of gThreadListLock got moved to or done.\nI only see it locked and unlocked but never initialized.\nThe backtrace of a LTP sigaction test shows a child thread\nwaiting for the gThreadListLock.\n----------------------------------------------------------------------------------------------------------------------\n(gdb) bt\n#0  __futex_syscall3 () at bionic/libc/arch-arm/bionic/futex_arm.S:41\n#1  0x40021f1c in _normal_lock (shared\u003d0, mutex\u003d0x4005e584)\n    at bionic/libc/bionic/pthread.c:482\n#2  pthread_mutex_lock_impl (mutex\u003d0x4005e584)\n    at bionic/libc/bionic/pthread.c:604\n#3  0x40026804 in Lock (this\u003d\u003coptimized out\u003e)\n    at bionic/libc/bionic/pthread_accessor.h:48\n#4  pthread_accessor (desired_thread\u003d1073815584, this\u003d\u003csynthetic pointer\u003e)\n    at bionic/libc/bionic/pthread_accessor.h:27\n#5  pthread_kill (t\u003d1073815584, sig\u003d25)\n    at bionic/libc/bionic/pthread_kill.cpp:40\n#6  0x400269f0 in raise (sig\u003d25) at bionic/libc/bionic/raise.cpp:32\n#7  0x0000887c in handler (signo\u003d\u003coptimized out\u003e)\n    at ../../../conformance/interfaces/sigaction/22-26.c:55\n#8  \u003csignal handler called\u003e\n#9  tgkill () at bionic/libc/arch-arm/bionic/tgkill.S:47\n#10 0x4002681c in pthread_kill (t\u003d1073815584, sig\u003d25)\n    at bionic/libc/bionic/pthread_kill.cpp:45\n#11 0x400269f0 in raise (sig\u003d25) at bionic/libc/bionic/raise.cpp:32\n#12 0x0000870c in main ()\n    at ../../../conformance/interfaces/sigaction/22-26.c:78\n(gdb) print \u0026gThreadListLock\n$8 \u003d (pthread_mutex_t *) 0x4005e584\n(gdb) \n----------------------------------------------------------------------------------------------------------------------------",
+      "revId": "081318e3550b1a8d8384d98d7c94527681691120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
