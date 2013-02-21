@@ -76,6 +76,25 @@ static void TestSigSet2(Fn fn) {
   ASSERT_EQ(0, errno);
 }
 
+class ScopedSignalHandler {
+ public:
+  ScopedSignalHandler(int signal_number, void (*handler)(int)) : signal_number_(signal_number) {
+    sigemptyset(&action_.sa_mask);
+    action_.sa_flags = 0;
+    action_.sa_handler = handler;
+    sigaction(signal_number_, &action_, &old_action_);
+  }
+
+  ~ScopedSignalHandler() {
+    sigaction(signal_number_, &old_action_, NULL);
+  }
+
+ private:
+  struct sigaction action_;
+  struct sigaction old_action_;
+  const int signal_number_;
+};
+
 TEST(signal, sigismember_invalid) {
   TestSigSet2(sigismember);
 }
@@ -102,16 +121,25 @@ TEST(signal, raise_invalid) {
   ASSERT_EQ(EINVAL, errno);
 }
 
+static void raise_in_signal_handler_helper(int signal_number) {
+  ASSERT_EQ(SIGALRM, signal_number);
+  static int count = 0;
+  if (++count == 1) {
+    raise(SIGALRM);
+  }
+}
+
+TEST(signal, raise_in_signal_handler) {
+  ScopedSignalHandler ssh(SIGALRM, raise_in_signal_handler_helper);
+  raise(SIGALRM);
+}
+
 static void HandleSIGALRM(int signal_number) {
   ASSERT_EQ(SIGALRM, signal_number);
 }
 
 TEST(signal, sigwait) {
-  struct sigaction action;
-  sigemptyset(&action.sa_mask);
-  action.sa_flags = 0;
-  action.sa_handler = HandleSIGALRM;
-  sigaction(SIGALRM, &action, NULL);
+  ScopedSignalHandler ssh(SIGALRM, HandleSIGALRM);
 
   sigset_t wait_set;
   sigemptyset(&wait_set);

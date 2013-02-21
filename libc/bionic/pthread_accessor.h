@@ -36,6 +36,14 @@ class pthread_accessor {
     Unlock();
   }
 
+  void Unlock() {
+    if (is_locked_) {
+      is_locked_ = false;
+      thread_ = NULL;
+      pthread_mutex_unlock(&gThreadListLock);
+    }
+  }
+
   pthread_internal_t& operator*() const { return *thread_; }
   pthread_internal_t* operator->() const { return thread_; }
   pthread_internal_t* get() const { return thread_; }
@@ -47,14 +55,6 @@ class pthread_accessor {
   void Lock() {
     pthread_mutex_lock(&gThreadListLock);
     is_locked_ = true;
-  }
-
-  void Unlock() {
-    if (is_locked_) {
-      is_locked_ = false;
-      thread_ = NULL;
-      pthread_mutex_unlock(&gThreadListLock);
-    }
   }
 
   // Disallow copy and assignment.
