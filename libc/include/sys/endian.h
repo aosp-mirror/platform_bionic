@@ -159,22 +159,6 @@
 #define swap32 __swap32
 #define swap64 __swap64
 #define swap16_multi __swap16_multi
-
-__BEGIN_DECLS
-__uint64_t	htobe64(__uint64_t);
-__uint32_t	htobe32(__uint32_t);
-__uint16_t	htobe16(__uint16_t);
-__uint64_t	betoh64(__uint64_t);
-__uint32_t	betoh32(__uint32_t);
-__uint16_t	betoh16(__uint16_t);
-
-__uint64_t	htole64(__uint64_t);
-__uint32_t	htole32(__uint32_t);
-__uint16_t	htole16(__uint16_t);
-__uint64_t	letoh64(__uint64_t);
-__uint32_t	letoh32(__uint32_t);
-__uint16_t	letoh16(__uint16_t);
-__END_DECLS
 #endif /* __BSD_VISIBLE */
 
 #if _BYTE_ORDER == _LITTLE_ENDIAN
@@ -269,6 +253,22 @@ __END_DECLS
 #endif
 #ifndef  __BIG_ENDIAN
 #define  __BIG_ENDIAN       _BIG_ENDIAN
+#endif
+
+
+#ifdef __BSD_VISIBLE
+/*
+ * glibc-compatible beXXtoh/leXXtoh synonyms for htobeXX/htoleXX.
+ * The BSDs export both sets of names, bionic historically only
+ * exported the ones above (or on the rhs here), and glibc only
+ * exports these names (on the lhs).
+ */
+#define be16toh(x) htobe16(x)
+#define be32toh(x) htobe32(x)
+#define be64toh(x) htobe64(x)
+#define le16toh(x) htole16(x)
+#define le32toh(x) htole32(x)
+#define le64toh(x) htole64(x)
 #endif
 
 #endif /* _SYS_ENDIAN_H_ */
