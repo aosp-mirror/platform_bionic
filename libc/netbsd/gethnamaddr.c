@@ -753,6 +753,7 @@ gethostbyname_internal(const char *name, int af, res_state res, const char *ifac
 	}
 
 	proxy = android_open_proxy();
+	if (proxy == NULL) goto exit;
 
 	/* This is writing to system/netd/DnsProxyListener.cpp and changes
 	 * here need to be matched there */
