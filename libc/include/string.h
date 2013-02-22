@@ -45,7 +45,6 @@ extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
 extern void   memswap(void *, void *, size_t);
 
 extern char*  index(const char *, int) __purefunc;
-extern char*  rindex(const char *, int) __purefunc;
 extern char*  strchr(const char *, int) __purefunc;
 extern char*  strrchr(const char *, int) __purefunc;
 
