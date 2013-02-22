@@ -446,15 +446,14 @@ android_getaddrinfo_proxy(
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
-	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %s %d",
+	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %s",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
 		    hints == NULL ? -1 : hints->ai_flags,
 		    hints == NULL ? -1 : hints->ai_family,
 		    hints == NULL ? -1 : hints->ai_socktype,
 		    hints == NULL ? -1 : hints->ai_protocol,
-		    iface == NULL ? "^" : iface,
-		    getpid()) < 0) {
+		    iface == NULL ? "^" : iface) < 0) {
 		goto exit;
 	}
 	// literal NULL byte at end, required by FrameworkListener

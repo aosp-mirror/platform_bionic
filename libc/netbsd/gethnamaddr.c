@@ -756,8 +756,7 @@ gethostbyname_internal(const char *name, int af, res_state res, const char *ifac
 
 	/* This is writing to system/netd/DnsProxyListener.cpp and changes
 	 * here need to be matched there */
-	if (fprintf(proxy, "gethostbyname %d %s %s %d",
-			getpid(),
+	if (fprintf(proxy, "gethostbyname %s %s %d",
 			iface == NULL ? "^" : iface,
 			name == NULL ? "^" : name,
 			af) < 0) {
@@ -791,8 +790,8 @@ android_gethostbyaddrforiface_proxy(const void *addr,
 	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
 	if (addrStr == NULL) goto exit;
 
-	if (fprintf(proxy, "gethostbyaddr %s %d %d %d %s",
-			addrStr, len, af, getpid(), iface == NULL ? "^" : iface) < 0) {
+	if (fprintf(proxy, "gethostbyaddr %s %d %d %s",
+			addrStr, len, af, iface == NULL ? "^" : iface) < 0) {
 		goto exit;
 	}
 
