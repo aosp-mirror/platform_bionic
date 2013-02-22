@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QEdS60ss",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-22T01:40:33Z",
+      "side": 1,
+      "message": "index, though deprecated, is implemented, so we\u0027d have to work harder to get rid of that one.",
+      "revId": "538f6fc202b07219ce78de54c0e05ab81e937154",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
