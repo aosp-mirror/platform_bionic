@@ -39,6 +39,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "private/ScopedReaddir.h"
+
 /* seems to be the default on Linux, per the GLibc sources and my own digging */
 
 #define  SYSTEM_CLK_TCK         100
@@ -78,19 +80,18 @@ static bool __matches_cpuN(const char* s) {
 static int __sysconf_nprocessors_conf() {
   // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
   // from there. This method works on both.
-  DIR* d = opendir("/sys/devices/system/cpu");
-  if (!d) {
+  ScopedReaddir reader("/sys/devices/system/cpu");
+  if (reader.IsBad()) {
     return 1;
   }
 
   int result = 0;
-  struct dirent* e;
-  while ((e = readdir(d)) != NULL) {
-    if (e->d_type == DT_DIR && __matches_cpuN(e->d_name)) {
+  dirent* entry;
+  while ((entry = reader.ReadEntry()) != NULL) {
+    if (entry->d_type == DT_DIR && __matches_cpuN(entry->d_name)) {
       ++result;
     }
   }
-  closedir(d);
   return result;
 }
 
