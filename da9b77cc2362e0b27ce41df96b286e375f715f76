@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QTvqoYco",
+        "filename": "libc/bionic/dirent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2013-02-25T18:00:22Z",
+      "side": 1,
+      "message": "This is all we need. But if the caller tries to read sizeof(dirent) bytes they may hit the SIGSEGV again. Should we conservatively allocate sizeof(dirent) bytes anyway and memset the tail to 0?",
+      "revId": "da9b77cc2362e0b27ce41df96b286e375f715f76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
