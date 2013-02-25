@@ -293,6 +293,7 @@ libc_bionic_src_files := \
     bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
     bionic/sbrk.cpp \
+    bionic/scandir.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
