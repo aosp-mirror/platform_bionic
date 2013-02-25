@@ -27,11 +27,9 @@
  */
 
 #include <dirent.h>
+
 #include <errno.h>
 #include <fcntl.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -146,51 +144,6 @@ void rewinddir(DIR* d) {
   d->available_bytes_ = 0;
 }
 
-int scandir(const char* path, dirent*** namelist,
-            int(*filter)(const dirent*),
-            int(*compar)(const dirent**, const dirent**))
-{
-  int n_elem = 0;
-  dirent* this_de, *de;
-  dirent** de_list = NULL;
-  int de_list_size = 0;
-
-  DIR* d = opendir(path);
-  if (d == NULL) {
-    return -1;
-  }
-
-  while ((this_de = readdir(d)) != NULL) {
-    if (filter != NULL && (*filter)(this_de) == 0) {
-      continue;
-    }
-    if (n_elem == 0) {
-      de_list_size = 4;
-      de_list = (dirent**) malloc(sizeof(dirent*) * de_list_size);
-      if (de_list == NULL) {
-        return -1;
-      }
-    } else if (n_elem == de_list_size) {
-      de_list_size += 10;
-      dirent** de_list_new = (dirent**) realloc(de_list, sizeof(dirent*) * de_list_size);
-      if (de_list_new == NULL) {
-        free(de_list);
-        return -1;
-      }
-      de_list = de_list_new;
-    }
-    de = (dirent*) malloc(sizeof(dirent));
-    *de = *this_de;
-    de_list[n_elem++] = de;
-  }
-  closedir(d);
-  if (n_elem && compar) {
-    qsort(de_list, n_elem, sizeof(dirent*), (int (*)(const void*, const void*)) compar);
-  }
-  *namelist = de_list;
-  return n_elem;
-}
-
-int alphasort(const struct dirent** a, const struct dirent** b) {
+int alphasort(const dirent** a, const dirent** b) {
   return strcoll((*a)->d_name, (*b)->d_name);
 }
