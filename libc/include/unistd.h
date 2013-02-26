@@ -33,7 +33,7 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/sysconf.h>
-#include <linux/capability.h>
+#include <sys/capability.h> /* TODO: Remove this include */
 #include <pathconf.h>
 
 __BEGIN_DECLS
@@ -69,8 +69,6 @@ extern int execve(const char *, char * const *, char * const *);
 extern int execl(const char *, const char *, ...);
 extern int execlp(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
-extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
-extern int capset(cap_user_header_t hdrp, const cap_user_data_t datap);
 
 /* IMPORTANT: See comment under <sys/prctl.h> about this declaration */
 extern int prctl(int  option, ...);
