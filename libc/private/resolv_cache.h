@@ -28,6 +28,8 @@
 #ifndef _RESOLV_CACHE_H_
 #define _RESOLV_CACHE_H_
 
+#include <stddef.h>
+
 struct __res_state;
 struct resolv_cache;  /* forward */
 
@@ -67,14 +69,15 @@ extern struct in_addr* _resolv_get_addr_of_default_iface();
 /* gets the address associated with the specified interface */
 extern struct in_addr* _resolv_get_addr_of_iface(const char* ifname);
 
-/* Copy the name of the default interface to provided buffer.
- * Return length of buffer on success on failure -1 is returned */
-extern int _resolv_get_default_iface(char* buff, int buffLen);
+/* Copy the name of the default interface to the provided buffer.
+ * Returns the string length of the default interface,
+ * be that less or more than the buffLen, or 0 if nothing had been written */
+ extern size_t _resolv_get_default_iface(char* buff, size_t buffLen);
 
 /* sets the name server addresses to the provided res_state structure. The
  * name servers are retrieved from the cache which is associated
  * with the interface to which the res_state structure is associated */
-extern int _resolv_populate_res_for_iface(struct __res_state* statp);
+extern void _resolv_populate_res_for_iface(struct __res_state* statp);
 
 typedef enum {
     RESOLV_CACHE_UNSUPPORTED,  /* the cache can't handle that kind of queries */

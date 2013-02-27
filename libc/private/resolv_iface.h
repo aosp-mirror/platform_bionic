@@ -48,7 +48,7 @@ __BEGIN_DECLS
 extern void _resolv_set_default_iface(const char* ifname);
 
 /* set name servers for an interface */
-extern void _resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers,
+extern void _resolv_set_nameservers_for_iface(const char* ifname, const char** servers, int numservers,
         const char *domains);
 
 /* tell resolver of the address of an interface */

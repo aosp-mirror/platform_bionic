@@ -1834,7 +1834,7 @@ static struct in_addr* _get_addr_locked(const char * ifname);
 /* return 1 if the provided list of name servers differs from the list of name servers
  * currently attached to the provided cache_info */
 static int _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
-        char** servers, int numservers);
+        const char** servers, int numservers);
 /* remove a resolv_pidiface_info structure from _res_pidiface_list */
 static void _remove_pidiface_info_locked(int pid);
 /* get a resolv_pidiface_info structure from _res_pidiface_list with a certain pid */
@@ -2077,7 +2077,7 @@ _resolv_set_default_iface(const char* ifname)
 }
 
 void
-_resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers,
+_resolv_set_nameservers_for_iface(const char* ifname, const char** servers, int numservers,
         const char *domains)
 {
     int i, rt, index;
@@ -2150,7 +2150,7 @@ _resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numser
 
 static int
 _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
-        char** servers, int numservers)
+        const char** servers, int numservers)
 {
     int i;
     char** ns;
@@ -2272,8 +2272,8 @@ _resolv_set_addr_of_iface(const char* ifname, struct in_addr* addr)
         memcpy(&cache_info->ifaddr, addr, sizeof(*addr));
 
         if (DEBUG) {
-            char* addr_s = inet_ntoa(cache_info->ifaddr);
-            XLOG("address of interface %s is %s\n", ifname, addr_s);
+            XLOG("address of interface %s is %s\n",
+                    ifname, inet_ntoa(cache_info->ifaddr));
         }
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
@@ -2412,26 +2412,24 @@ _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen)
     return len;
 }
 
-int
-_resolv_get_default_iface(char* buff, int buffLen)
+size_t
+_resolv_get_default_iface(char* buff, size_t buffLen)
 {
-    char* ifname;
-    int len = 0;
-
     if (!buff || buffLen == 0) {
-        return -1;
+        return 0;
     }
 
     pthread_once(&_res_cache_once, _res_cache_init);
     pthread_mutex_lock(&_res_cache_list_lock);
 
-    ifname = _get_default_iface_locked(); // never null, but may be empty
+    char* ifname = _get_default_iface_locked(); // never null, but may be empty
 
     // if default interface not set. Get first cache with an interface
     if (ifname[0] == '\0') {
         ifname = _find_any_iface_name_locked(); // may be null
     }
 
+    size_t len = 0;
     // if we got the default iface or if (no-default) the find_any call gave an answer
     if (ifname) {
         len = strlen(ifname);
@@ -2448,28 +2446,32 @@ _resolv_get_default_iface(char* buff, int buffLen)
     return len;
 }
 
-int
+void
 _resolv_populate_res_for_iface(res_state statp)
 {
-    int nserv;
-    struct resolv_cache_info* info = NULL;
+    if (statp == NULL) {
+        return;
+    }
 
-    if (statp) {
+    if (statp->iface[0] == '\0') { // no interface set assign default
+        size_t if_len = _resolv_get_default_iface(statp->iface, sizeof(statp->iface));
+        if (if_len + 1 > sizeof(statp->iface)) {
+            XLOG("%s: INTERNAL_ERROR: can't fit interface name into statp->iface.\n", __FUNCTION__);
+            return;
+        }
+        if (if_len == 0) {
+            XLOG("%s: INTERNAL_ERROR: can't find any suitable interfaces.\n", __FUNCTION__);
+            return;
+        }
+    }
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(statp->iface);
+    if (info != NULL) {
+        int nserv;
         struct addrinfo* ai;
-
-        if (statp->iface[0] == '\0') { // no interface set assign default
-            _resolv_get_default_iface(statp->iface, sizeof(statp->iface));
-        }
-
-        pthread_once(&_res_cache_once, _res_cache_init);
-        pthread_mutex_lock(&_res_cache_list_lock);
-        info = _find_cache_info_locked(statp->iface);
-
-        if (info == NULL) {
-            pthread_mutex_unlock(&_res_cache_list_lock);
-            return 0;
-        }
-
         XLOG("_resolv_populate_res_for_iface: %s\n", statp->iface);
         for (nserv = 0; nserv < MAXNS; nserv++) {
             ai = info->nsaddrinfo[nserv];
@@ -2503,8 +2505,6 @@ _resolv_populate_res_for_iface(res_state statp)
         while (pp < statp->dnsrch + MAXDNSRCH && *p != -1) {
             *pp++ = &statp->defdname + *p++;
         }
-
-        pthread_mutex_unlock(&_res_cache_list_lock);
     }
-    return nserv;
+    pthread_mutex_unlock(&_res_cache_list_lock);
 }
