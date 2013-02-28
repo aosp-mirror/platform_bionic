@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QZ3up34Y",
+        "filename": "libc/arch-arm/bionic/strcmp.a15.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-02-28T17:30:40Z",
+      "side": 1,
+      "message": "2013?",
+      "revId": "db763f7d9d337ecf7837c062ee949adb02eb4248",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
