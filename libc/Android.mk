@@ -491,17 +491,6 @@ ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -DSOFTFLOAT
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := -mthumb-interwork
-  #
-  # Define HAVE_32_BYTE_CACHE_LINES to indicate to the C library
-  # that it should use the 32-byte version of memcpy, not
-  # the 64-byte version.
-  #
-  ifeq ($(ARCH_ARM_HAVE_32_BYTE_CACHE_LINES),true)
-    libc_common_cflags += -DHAVE_32_BYTE_CACHE_LINE
-  endif
-  ifeq ($(ARCH_ARM_USE_NON_NEON_MEMCPY),true)
-    libc_common_cflags += -DARCH_ARM_USE_NON_NEON_MEMCPY
-  endif
 endif # !arm
 
 ifeq ($(TARGET_ARCH),x86)
