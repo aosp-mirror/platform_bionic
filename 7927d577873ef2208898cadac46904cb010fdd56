@@ -16,6 +16,23 @@
       "revId": "7927d577873ef2208898cadac46904cb010fdd56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "QXu2iXTc",
+        "filename": "libc/arch-arm/bionic/memcpy.a15.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-02-28T19:05:49Z",
+      "side": 1,
+      "message": "please use the usual ENTRY/END macros.",
+      "revId": "7927d577873ef2208898cadac46904cb010fdd56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
