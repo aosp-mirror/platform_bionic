@@ -171,10 +171,17 @@ TEST(stdio, getline_invalid) {
 }
 
 TEST(stdio, printf_ssize_t) {
-  // We used to have a ssize_t definition that confused GCC into saying:
+#if __BIONIC__
+  // http://b/8253769
+  ASSERT_EQ(sizeof(__kernel_ssize_t), sizeof(long int));
+  ASSERT_EQ(sizeof(ssize_t), sizeof(long int));
+#else
+  // TODO: add a .c file so we can test this for bionic --- our C ssize_t is fine.
+  // For our 32-bit C++ ABI, we have a ssize_t definition that confuses GCC into saying:
   // error: format '%zd' expects argument of type 'signed size_t',
   //     but argument 4 has type 'ssize_t {aka long int}' [-Werror=format]
   ssize_t v = 1;
   char buf[32];
   snprintf(buf, sizeof(buf), "%zd", v);
+#endif
 }
