@@ -16,6 +16,24 @@
       "revId": "c6d9f6e5d84545854d76a6f9a7a0b93c938f118f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Qih6rTa4",
+        "filename": "libc/arch-arm/bionic/memcpy.a15.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-03-01T21:39:55Z",
+      "side": 1,
+      "message": "Thanks for the explanation. Since this is on the uncommon path, should we sacrifice the ability to unwind the stack in this case by removing this .save directive so that we don\u0027t need to add any explicit SP manipulation code in the prologue and epilogue?",
+      "parentUuid": "QiV.wo9I",
+      "revId": "c6d9f6e5d84545854d76a6f9a7a0b93c938f118f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
