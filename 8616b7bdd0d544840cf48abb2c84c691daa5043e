@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QeUkOIa8",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2013-03-01T01:25:12Z",
+      "side": 1,
+      "message": "See cts/build/test_executable.mk\nBtw, $(BUILD_CTS_EXECUTABLE) is not supposed to be included outside the cts/ dir: it may be not defined yet at this point.",
+      "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
