@@ -16,6 +16,24 @@
       "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "QfMYvYvg",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-01T01:46:53Z",
+      "side": 1,
+      "message": "but i don\u0027t want to move my source into cts/. can i build a shared library or something and just link that into my tests here (which is what i\u0027ll usually build and test with) and again in cts (which is really just for partners)?",
+      "parentUuid": "QeUkOIa8",
+      "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
