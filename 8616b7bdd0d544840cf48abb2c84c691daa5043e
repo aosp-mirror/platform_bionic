@@ -52,6 +52,24 @@
       "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "QfMaQQtA",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-01T02:28:52Z",
+      "side": 1,
+      "message": "yeah, i can do that. will that fix the cts build error i mentioned on the bug?",
+      "parentUuid": "Qd.vxkV0",
+      "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
