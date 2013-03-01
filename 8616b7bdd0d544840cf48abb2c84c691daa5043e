@@ -34,6 +34,24 @@
       "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Qd.vxkV0",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1010465
+      },
+      "writtenOn": "2013-03-01T02:01:45Z",
+      "side": 1,
+      "message": "What about keeping the Android.mk under the cts, but just locate source to bionic/test?",
+      "parentUuid": "QfMYvYvg",
+      "revId": "8616b7bdd0d544840cf48abb2c84c691daa5043e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
