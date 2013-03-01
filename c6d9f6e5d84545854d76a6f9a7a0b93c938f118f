@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QiV.wo9I",
+        "filename": "libc/arch-arm/bionic/memcpy.a15.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-03-01T21:19:11Z",
+      "side": 1,
+      "message": "the .save directives will be flattened (in the unwind information) for the entire function and and so will only be correct here.\nAs the stack depth is varying through the function you should change the prologue/epilogue to be compatible with unwind information if you are going to go down this route.",
+      "revId": "c6d9f6e5d84545854d76a6f9a7a0b93c938f118f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
