@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <libgen.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -69,4 +71,41 @@ TEST(stdlib, posix_memalign) {
 
   // Can't align to a non-power of 2.
   ASSERT_EQ(EINVAL, posix_memalign(&p, 81, 128));
+}
+
+TEST(stdlib, realpath__NULL_filename) {
+  errno = 0;
+  char* p = realpath(NULL, NULL);
+  ASSERT_TRUE(p == NULL);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(stdlib, realpath__empty_filename) {
+  errno = 0;
+  char* p = realpath("", NULL);
+  ASSERT_TRUE(p == NULL);
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(stdlib, realpath__ENOENT) {
+  errno = 0;
+  char* p = realpath("/this/directory/path/almost/certainly/does/not/exist", NULL);
+  ASSERT_TRUE(p == NULL);
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(stdlib, realpath) {
+  // Get the name of this executable.
+  char executable_path[PATH_MAX];
+  int rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
+  ASSERT_NE(rc, -1);
+  executable_path[rc] = '\0';
+
+  char buf[PATH_MAX + 1];
+  char* p = realpath("/proc/self/exe", buf);
+  ASSERT_STREQ(executable_path, p);
+
+  p = realpath("/proc/self/exe", NULL);
+  ASSERT_STREQ(executable_path, p);
+  free(p);
 }
