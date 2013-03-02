@@ -195,7 +195,6 @@ libc_common_src_files := \
 	bionic/ptsname_r.c \
 	bionic/pututline.c \
 	bionic/pwrite.c \
-	bionic/realpath.c \
 	bionic/reboot.c \
 	bionic/recv.c \
 	bionic/sched_cpualloc.c \
@@ -316,6 +315,9 @@ libc_bionic_src_files := \
     bionic/__vsnprintf_chk.cpp \
     bionic/__vsprintf_chk.cpp \
     bionic/wchar.cpp \
+
+libc_upstream_freebsd_src_files := \
+    upstream-freebsd/lib/libc/stdlib/realpath.c \
 
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
@@ -745,6 +747,29 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_freebsd.a - upstream FreeBSD C library code
+# ========================================================
+#
+# These files are built with the freebsd-compat.h header file
+# automatically included.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_upstream_freebsd_src_files)
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -I$(LOCAL_PATH)/upstream-freebsd \
+    -I$(LOCAL_PATH)/upstream-freebsd/libc/include \
+    -include upstream-freebsd/freebsd-compat.h
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_freebsd
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_netbsd.a - upstream NetBSD C library code
 # ========================================================
 #
@@ -796,7 +821,7 @@ LOCAL_CFLAGS := $(libc_common_cflags) \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_bionic libc_netbsd
+LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_bionic libc_freebsd libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
