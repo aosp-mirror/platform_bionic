@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "QocHl4ps",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-02T02:37:33Z",
+      "side": 1,
+      "message": "these ones grew locale support upstream.",
+      "revId": "eb93ebffba21e2c9b8a12bb86db60d38c7750270",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
