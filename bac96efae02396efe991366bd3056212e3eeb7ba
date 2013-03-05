@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Q594bQd4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-05T23:26:15Z",
+      "side": 1,
+      "message": "s/the it/that it/",
+      "revId": "bac96efae02396efe991366bd3056212e3eeb7ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
