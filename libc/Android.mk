@@ -111,35 +111,8 @@ libc_common_src_files := \
 	string/strspn.c \
 	string/strstr.c \
 	string/strtok.c \
-	wchar/wcpcpy.c \
-	wchar/wcpncpy.c \
-	wchar/wcscasecmp.c \
-	wchar/wcscat.c \
-	wchar/wcschr.c \
-	wchar/wcscmp.c \
-	wchar/wcscpy.c \
-	wchar/wcscspn.c \
-	wchar/wcsdup.c \
-	wchar/wcslcat.c \
-	wchar/wcslcpy.c \
-	wchar/wcslen.c \
-	wchar/wcsncasecmp.c \
-	wchar/wcsncat.c \
-	wchar/wcsncmp.c \
-	wchar/wcsncpy.c \
-	wchar/wcsnlen.c \
-	wchar/wcspbrk.c \
-	wchar/wcsrchr.c \
-	wchar/wcsspn.c \
-	wchar/wcsstr.c \
-	wchar/wcstok.c \
 	wchar/wcswidth.c \
 	wchar/wcsxfrm.c \
-	wchar/wmemchr.c \
-	wchar/wmemcmp.c \
-	wchar/wmemcpy.c \
-	wchar/wmemmove.c \
-	wchar/wmemset.c \
 	tzcode/asctime.c \
 	tzcode/difftime.c \
 	tzcode/localtime.c \
@@ -318,6 +291,33 @@ libc_bionic_src_files := \
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdlib/realpath.c \
+    upstream-freebsd/lib/libc/string/wcpcpy.c \
+    upstream-freebsd/lib/libc/string/wcpncpy.c \
+    upstream-freebsd/lib/libc/string/wcscasecmp.c \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
+    upstream-freebsd/lib/libc/string/wcscspn.c \
+    upstream-freebsd/lib/libc/string/wcsdup.c \
+    upstream-freebsd/lib/libc/string/wcslcat.c \
+    upstream-freebsd/lib/libc/string/wcslcpy.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
+    upstream-freebsd/lib/libc/string/wcsncasecmp.c \
+    upstream-freebsd/lib/libc/string/wcsncat.c \
+    upstream-freebsd/lib/libc/string/wcsncmp.c \
+    upstream-freebsd/lib/libc/string/wcsncpy.c \
+    upstream-freebsd/lib/libc/string/wcsnlen.c \
+    upstream-freebsd/lib/libc/string/wcspbrk.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
+    upstream-freebsd/lib/libc/string/wcsspn.c \
+    upstream-freebsd/lib/libc/string/wcsstr.c \
+    upstream-freebsd/lib/libc/string/wcstok.c \
+    upstream-freebsd/lib/libc/string/wmemchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-freebsd/lib/libc/string/wmemcpy.c \
+    upstream-freebsd/lib/libc/string/wmemmove.c \
+    upstream-freebsd/lib/libc/string/wmemset.c \
 
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
