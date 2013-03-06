@@ -54,15 +54,17 @@
 
 #include <private/debug_format.h>
 
+__LIBC_HIDDEN__ extern int gLdDebugVerbosity;
+
 #if LINKER_DEBUG_TO_LOG
 #define _PRINTVF(v,x...)                                        \
     do {                                                          \
-        if (debug_verbosity > (v)) __libc_format_log(5-(v),"linker",x);  \
+        if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v),"linker",x);  \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
 #define _PRINTVF(v,x...)                           \
     do {                                             \
-        if (debug_verbosity > (v)) __libc_format_fd(1, x);  \
+        if (gLdDebugVerbosity > (v)) __libc_format_fd(1, x);  \
     } while (0)
 #endif /* !LINKER_DEBUG_TO_LOG */
 
