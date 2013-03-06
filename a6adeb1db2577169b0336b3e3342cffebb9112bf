@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "Q71OPJB0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-03-06T06:11:55Z",
+      "side": 1,
+      "message": "do we care about this anymore?",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "Q58F0Rg0",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
@@ -13,6 +30,41 @@
       "writtenOn": "2013-03-06T03:32:48Z",
       "side": 1,
       "message": "at some point we should replace all these iterations with one loop that find everything we care about, and rejects ELF files with duplicates. but not today.",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Q73OMICg",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-03-06T06:11:55Z",
+      "side": 1,
+      "message": "the BSD code is interesting because it only supports two LOAD segments and they have to be consecutive etc.",
+      "parentUuid": "Q58F0Rg0",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Q75N3-E8",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-03-06T06:11:55Z",
+      "side": 1,
+      "message": "but this returns bool? so return false;",
       "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
