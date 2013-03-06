@@ -36,6 +36,15 @@
 
 #include <link.h>
 
+#include <private/debug_format.h>
+
+#define DL_ERR(fmt, x...) \
+    do { \
+      __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
+      /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
+      DEBUG("%s\n", linker_get_error_buffer()); \
+    } while(0)
+
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
 
@@ -169,12 +178,14 @@ int do_dlclose(soinfo* si);
 
 Elf32_Sym* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
-const char* linker_get_error();
 
 Elf32_Sym* dladdr_find_symbol(soinfo* si, const void* addr);
 Elf32_Sym* dlsym_handle_lookup(soinfo* si, const char* name);
 
 void debuggerd_init();
 extern "C" void notify_gdb_of_libraries();
+
+char* linker_get_error_buffer();
+size_t linker_get_error_buffer_size();
 
 #endif

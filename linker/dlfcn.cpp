@@ -64,7 +64,7 @@ void* dlopen(const char* filename, int flags) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
   soinfo* result = do_dlopen(filename, flags);
   if (result == NULL) {
-    __bionic_format_dlerror("dlopen failed", linker_get_error());
+    __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return NULL;
   }
   return result;
