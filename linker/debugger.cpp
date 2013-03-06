@@ -174,7 +174,7 @@ static bool haveSiginfo(int signum) {
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
-void debugger_signal_handler(int n, siginfo_t* info, void*) {
+void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
     /*
      * It's possible somebody cleared the SA_SIGINFO flag, which would mean
      * our "info" arg holds an undefined value.
@@ -245,10 +245,10 @@ void debugger_signal_handler(int n, siginfo_t* info, void*) {
     }
 }
 
-void debugger_init() {
+void debuggerd_init() {
     struct sigaction act;
     memset(&act, 0, sizeof(act));
-    act.sa_sigaction = debugger_signal_handler;
+    act.sa_sigaction = debuggerd_signal_handler;
     act.sa_flags = SA_RESTART | SA_SIGINFO;
     sigemptyset(&act.sa_mask);
 
