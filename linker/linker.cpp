@@ -799,7 +799,7 @@ static int soinfo_unload(soinfo* si) {
     TRACE("unloading '%s'\n", si->name);
     si->CallDestructors();
 
-    for (Elf32_Dyn* d = si->dynamic; d->d_tag != DT_NEEDED; ++d) {
+    for (Elf32_Dyn* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
       if (d->d_tag == DT_NEEDED) {
         const char* library_name = si->strtab + d->d_un.d_val;
         soinfo* lsi = find_loaded_library(library_name);
