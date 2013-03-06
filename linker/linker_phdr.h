@@ -37,33 +37,50 @@
 
 #include "linker.h"
 
-int
-phdr_table_load(int                fd,
-                Elf32_Addr         phdr_offset,
-                Elf32_Half         phdr_num,
-                void**             phdr_mmap,
-                Elf32_Addr*        phdr_size,
-                const Elf32_Phdr** phdr_table);
+class ElfReader {
+ public:
+  ElfReader(const char* name, int fd);
+  ~ElfReader();
 
-void
-phdr_table_unload(void* phdr_mmap, Elf32_Addr phdr_memsize);
+  bool Load();
 
-Elf32_Addr
-phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
-                         size_t phdr_count);
+  size_t phdr_count() { return phdr_num_; }
+  Elf32_Addr load_start() { return reinterpret_cast<Elf32_Addr>(load_start_); }
+  Elf32_Addr load_size() { return load_size_; }
+  Elf32_Addr load_bias() { return load_bias_; }
+  const Elf32_Phdr* loaded_phdr() { return loaded_phdr_; }
 
-int
-phdr_table_reserve_memory(const Elf32_Phdr* phdr_table,
-                          size_t phdr_count,
-                          void** load_start,
-                          Elf32_Addr* load_size,
-                          Elf32_Addr* load_bias);
+ private:
+  bool ReadElfHeader();
+  bool VerifyElfHeader();
+  bool ReadProgramHeader();
+  bool ReserveAddressSpace();
+  bool LoadSegments();
+  bool FindPhdr();
+  bool CheckPhdr(Elf32_Addr);
 
-int
-phdr_table_load_segments(const Elf32_Phdr* phdr_table,
-                         int               phdr_count,
-                         Elf32_Addr        load_bias,
-                         int               fd);
+  const char* name_;
+  int fd_;
+
+  Elf32_Ehdr header_;
+  size_t phdr_num_;
+
+  void* phdr_mmap_;
+  Elf32_Phdr* phdr_table_;
+  Elf32_Addr phdr_size_;
+
+  // First page of reserved address space.
+  void* load_start_;
+  // Size in bytes of reserved address space.
+  Elf32_Addr load_size_;
+  // Load bias.
+  Elf32_Addr load_bias_;
+
+  // Loaded phdr.
+  const Elf32_Phdr* loaded_phdr_;
+};
+
+Elf32_Addr phdr_table_get_load_size(const Elf32_Phdr* phdr, size_t phnum);
 
 int
 phdr_table_protect_segments(const Elf32_Phdr* phdr_table,
@@ -80,10 +97,6 @@ phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
                              int               phdr_count,
                              Elf32_Addr        load_bias);
 
-const Elf32_Phdr*
-phdr_table_get_loaded_phdr(const Elf32_Phdr*   phdr_table,
-                           int                 phdr_count,
-                           Elf32_Addr          load_bias);
 
 #ifdef ANDROID_ARM_LINKER
 int
