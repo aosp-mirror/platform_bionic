@@ -26,21 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <elf.h>
-#include <asm/page.h>
-#include "pthread_internal.h"
-#include "atexit.h"
-#include "KernelArgumentBlock.h"
 #include "libc_init_common.h"
 
+#include <asm/page.h>
 #include <bionic_tls.h>
+#include <elf.h>
 #include <errno.h>
-#include <private/bionic_auxv.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/auxv.h>
+#include <unistd.h>
+
+#include "atexit.h"
+#include "private/bionic_auxv.h"
+#include "private/bionic_ssp.h"
+#include "private/KernelArgumentBlock.h"
+#include "pthread_internal.h"
 
 extern "C" unsigned __get_sp(void);
 extern "C" int __system_properties_init(void);
@@ -50,6 +53,9 @@ const char* __progname;
 
 // Declared in <unistd.h>.
 char** environ;
+
+// Declared in <private/bionic_ssp.h>.
+uintptr_t __stack_chk_guard = 0;
 
 // Declared in <asm/page.h>.
 unsigned int __page_size = PAGE_SIZE;
@@ -90,6 +96,9 @@ void __libc_init_common(KernelArgumentBlock& args) {
   errno = 0;
   __libc_auxv = args.auxv;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
+
+  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
+  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(getauxval(AT_RANDOM));
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
