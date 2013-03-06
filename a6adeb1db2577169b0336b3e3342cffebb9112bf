@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "Q54E8-u4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-06T06:22:22Z",
+      "side": 1,
+      "message": "probably not, now you mention it. it\u0027s been gone since ICS, so almost 50% of users are already on a no-prelinking release.\n\ni\u0027ll remove this.",
+      "parentUuid": "Q71OPJB0",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "Q58F0Rg0",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
@@ -65,6 +83,24 @@
       "writtenOn": "2013-03-06T06:11:55Z",
       "side": 1,
       "message": "but this returns bool? so return false;",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Q56EnOtU",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-06T06:22:22Z",
+      "side": 1,
+      "message": "grr.",
+      "parentUuid": "Q75N3-E8",
       "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
