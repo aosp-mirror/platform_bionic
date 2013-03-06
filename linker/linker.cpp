@@ -1487,7 +1487,7 @@ static bool soinfo_link_image(soinfo* si) {
             break;
 
         default:
-            DEBUG("Unused DT entry: type 0x%08x arg 0x%08x\n", d[-1], d[0]);
+            DEBUG("Unused DT entry: type 0x%08x arg 0x%08x\n", d->d_tag, d->d_un.d_val);
             break;
 #endif
         }
