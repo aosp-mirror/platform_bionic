@@ -550,7 +550,7 @@ void
 phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
                                int               phdr_count,
                                Elf32_Addr        load_bias,
-                               Elf32_Addr**      dynamic,
+                               Elf32_Dyn**       dynamic,
                                size_t*           dynamic_count,
                                Elf32_Word*       dynamic_flags)
 {
@@ -562,7 +562,7 @@ phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
             continue;
         }
 
-        *dynamic = (Elf32_Addr*)(load_bias + phdr->p_vaddr);
+        *dynamic = reinterpret_cast<Elf32_Dyn*>(load_bias + phdr->p_vaddr);
         if (dynamic_count) {
             *dynamic_count = (unsigned)(phdr->p_memsz / 8);
         }

@@ -85,18 +85,18 @@ void* dlsym(void* handle, const char* symbol) {
   soinfo* found = NULL;
   Elf32_Sym* sym = NULL;
   if (handle == RTLD_DEFAULT) {
-    sym = lookup(symbol, &found, NULL);
+    sym = dlsym_linear_lookup(symbol, &found, NULL);
   } else if (handle == RTLD_NEXT) {
     void* ret_addr = __builtin_return_address(0);
     soinfo* si = find_containing_library(ret_addr);
 
     sym = NULL;
     if (si && si->next) {
-      sym = lookup(symbol, &found, si->next);
+      sym = dlsym_linear_lookup(symbol, &found, si->next);
     }
   } else {
-    found = (soinfo*) handle;
-    sym = soinfo_lookup(found, symbol);
+    found = reinterpret_cast<soinfo*>(handle);
+    sym = dlsym_handle_lookup(found, symbol);
   }
 
   if (sym != NULL) {
@@ -131,7 +131,7 @@ int dladdr(const void* addr, Dl_info* info) {
   info->dli_fbase = (void*) si->base;
 
   // Determine if any symbol in the library contains the specified address.
-  Elf32_Sym *sym = soinfo_find_symbol(si, addr);
+  Elf32_Sym *sym = dladdr_find_symbol(si, addr);
   if (sym != NULL) {
     info->dli_sname = si->strtab + sym->st_name;
     info->dli_saddr = (void*)(si->load_bias + sym->st_value);
