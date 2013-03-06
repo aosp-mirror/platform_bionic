@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Q58F0Rg0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-06T03:32:48Z",
+      "side": 1,
+      "message": "at some point we should replace all these iterations with one loop that find everything we care about, and rejects ELF files with duplicates. but not today.",
+      "revId": "a6adeb1db2577169b0336b3e3342cffebb9112bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
