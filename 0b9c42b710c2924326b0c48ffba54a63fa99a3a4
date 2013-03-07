@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "RJuLnQhI",
+        "filename": "ABI-bugs.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-03-07T19:54:34Z",
+      "side": 1,
+      "message": "WS",
+      "revId": "0b9c42b710c2924326b0c48ffba54a63fa99a3a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
