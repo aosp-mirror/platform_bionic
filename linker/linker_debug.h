@@ -31,10 +31,16 @@
 
 #include <stdio.h>
 
-/* set LINKER_DEBUG_TO_LOG to 1 to send the logs to logcat,
- * or 0 to use stdout instead.
- */
+// You can increase the verbosity of debug traces by defining the LD_DEBUG
+// environment variable to a numeric value from 0 to 2 (corresponding to
+// INFO, TRACE, and DEBUG calls in the source). This will only
+// affect new processes being launched.
+
+// By default, traces are sent to logcat, with the "linker" tag. You can
+// change this to go to stdout instead by setting the definition of
+// LINKER_DEBUG_TO_LOG to 0.
 #define LINKER_DEBUG_TO_LOG  1
+
 #define TRACE_DEBUG          1
 #define DO_TRACE_LOOKUP      1
 #define DO_TRACE_RELO        1
