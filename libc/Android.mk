@@ -11,7 +11,6 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fnmatch.c \
 	unistd/getopt_long.c \
-	unistd/popen.c \
 	unistd/syslog.c \
 	unistd/system.c \
 	unistd/time.c \
@@ -326,6 +325,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/gen/ftw.c \
     upstream-netbsd/libc/gen/nftw.c \
     upstream-netbsd/libc/gen/nice.c \
+    upstream-netbsd/libc/gen/popen.c \
     upstream-netbsd/libc/gen/psignal.c \
     upstream-netbsd/libc/gen/setjmperr.c \
     upstream-netbsd/libc/gen/utime.c \
