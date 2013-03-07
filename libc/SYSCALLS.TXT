@@ -25,7 +25,10 @@
 #      - additionally, if the syscall number is different amoung ARM, and x86, MIPS use:
 #        return_type funcname[:syscall_name](parameters) arm_number,x86_number,mips_number
 #
-# the file is processed by a python script named gensyscalls.py
+# This file is processed by a python script named gensyscalls.py.
+#
+# The checksyscalls.py script can check that the syscall numbers here are
+# correct by comparing them to the numbers in the Linux kernel headers.
 #
 
 # process management
