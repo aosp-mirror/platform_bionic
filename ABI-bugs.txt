@@ -1,0 +1,15 @@
+KNOWN ABI BUGS
+--------------
+
+  time_t is 32-bit. http://b/5819737
+
+  off_t is 32-bit. There is off64_t, but no _FILE_OFFSET_BITS support.
+
+  sigset_t is too small on ARM and x86 (but correct on MIPS), so support
+  for real-time signals is broken. http://b/5828899
+
+  Too few TLS slots mean we can't allocate 128 pthread_key_t instances,
+  which POSIX says should be the minimum.
+
+  atexit(3) handlers registered by a shared library aren't called on
+  dlclose(3); this only affects ARM. http://b/4998315
