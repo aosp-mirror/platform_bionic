@@ -16,6 +16,24 @@
       "revId": "6b3f49a5374305ce9690c3c5ca2aadc90f54c521",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "REJJA3BQ",
+        "filename": "libc/upstream-netbsd/netbsd-compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-07T00:54:21Z",
+      "side": 1,
+      "message": "i\u0027ve raised http://b/8332206 to fix this.",
+      "parentUuid": "REVErlFk",
+      "revId": "6b3f49a5374305ce9690c3c5ca2aadc90f54c521",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
