@@ -185,3 +185,15 @@ TEST(stdio, printf_ssize_t) {
   snprintf(buf, sizeof(buf), "%zd", v);
 #endif
 }
+
+TEST(stdio, popen) {
+  FILE* fp = popen("cat /proc/version", "r");
+  ASSERT_TRUE(fp != NULL);
+
+  char buf[16];
+  char* s = fgets(buf, sizeof(buf), fp);
+  buf[13] = '\0';
+  ASSERT_STREQ("Linux version", s);
+
+  ASSERT_EQ(0, pclose(fp));
+}

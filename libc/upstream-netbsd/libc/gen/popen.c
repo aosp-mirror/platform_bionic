@@ -1,4 +1,5 @@
-/*	$OpenBSD: popen.c,v 1.17 2005/08/08 08:05:34 espie Exp $ */
+/*	$NetBSD: popen.c,v 1.32 2012/06/25 22:32:43 abs Exp $	*/
+
 /*
  * Copyright (c) 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -31,70 +32,117 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)popen.c	8.3 (Berkeley) 5/3/95";
+#else
+__RCSID("$NetBSD: popen.c,v 1.32 2012/06/25 22:32:43 abs Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
 #include <sys/param.h>
 #include <sys/wait.h>
+#include <sys/socket.h>
 
-#include <signal.h>
+#include <assert.h>
 #include <errno.h>
-#include <unistd.h>
+#include <paths.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <paths.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#include "env.h"
+#include "reentrant.h"
+
+#ifdef __weak_alias
+__weak_alias(popen,_popen)
+__weak_alias(pclose,_pclose)
+#endif
 
 static struct pid {
 	struct pid *next;
 	FILE *fp;
+#ifdef _REENTRANT
+	int fd;
+#endif
 	pid_t pid;
-} *pidlist;
-
-extern char **environ;
+} *pidlist; 
+	
+#ifdef _REENTRANT
+static rwlock_t pidlist_lock = RWLOCK_INITIALIZER;
+#endif
 
 FILE *
-popen(const char *program, const char *type)
+popen(const char *command, const char *type)
 {
-	struct pid * volatile cur;
+	struct pid *cur, *old;
 	FILE *iop;
-	int pdes[2];
-	pid_t pid;
-	char *argp[] = {"sh", "-c", NULL, NULL};
+	const char * volatile xtype = type;
+	int pdes[2], pid, serrno;
+	volatile int twoway;
+	int flags;
 
-	if ((*type != 'r' && *type != 'w') || type[1] != '\0') {
-		errno = EINVAL;
-		return (NULL);
+	_DIAGASSERT(command != NULL);
+	_DIAGASSERT(xtype != NULL);
+
+	flags = strchr(xtype, 'e') ? O_CLOEXEC : 0;
+	if (strchr(xtype, '+')) {
+		int stype = flags ? (SOCK_STREAM | SOCK_CLOEXEC) : SOCK_STREAM;
+		twoway = 1;
+		xtype = "r+";
+		if (socketpair(AF_LOCAL, stype, 0, pdes) < 0)
+			return NULL;
+	} else  {
+		twoway = 0;
+		xtype = strrchr(xtype, 'r') ? "r" : "w";
+		if (pipe2(pdes, flags) == -1)
+			return NULL;
 	}
 
-	if ((cur = malloc(sizeof(struct pid))) == NULL)
-		return (NULL);
-
-	if (pipe(pdes) < 0) {
-		free(cur);
-		return (NULL);
-	}
-
-	switch (pid = fork()) {
-	case -1:			/* Error. */
+	if ((cur = malloc(sizeof(struct pid))) == NULL) {
 		(void)close(pdes[0]);
 		(void)close(pdes[1]);
+		errno = ENOMEM;
+		return (NULL);
+	}
+
+	(void)rwlock_rdlock(&pidlist_lock);
+	(void)__readlockenv();
+	switch (pid = vfork()) {
+	case -1:			/* Error. */
+		serrno = errno;
+		(void)__unlockenv();
+		(void)rwlock_unlock(&pidlist_lock);
 		free(cur);
+		(void)close(pdes[0]);
+		(void)close(pdes[1]);
+		errno = serrno;
 		return (NULL);
 		/* NOTREACHED */
 	case 0:				/* Child. */
-	    {
-		struct pid *pcur;
-		/*
-		 * We fork()'d, we got our own copy of the list, no
-		 * contention.
-		 */
-		for (pcur = pidlist; pcur; pcur = pcur->next)
-			close(fileno(pcur->fp));
+		/* POSIX.2 B.3.2.2 "popen() shall ensure that any streams
+		   from previous popen() calls that remain open in the 
+		   parent process are closed in the new child process. */
+		for (old = pidlist; old; old = old->next)
+#ifdef _REENTRANT
+			close(old->fd); /* don't allow a flush */
+#else
+			close(fileno(old->fp)); /* don't allow a flush */
+#endif
 
-		if (*type == 'r') {
-			(void) close(pdes[0]);
+		if (*xtype == 'r') {
+			(void)close(pdes[0]);
 			if (pdes[1] != STDOUT_FILENO) {
 				(void)dup2(pdes[1], STDOUT_FILENO);
 				(void)close(pdes[1]);
 			}
+			if (twoway)
+				(void)dup2(STDOUT_FILENO, STDIN_FILENO);
 		} else {
 			(void)close(pdes[1]);
 			if (pdes[0] != STDIN_FILENO) {
@@ -102,19 +150,25 @@ popen(const char *program, const char *type)
 				(void)close(pdes[0]);
 			}
 		}
-		argp[2] = (char *)program;
-		execve(_PATH_BSHELL, argp, environ);
+
+		execl(_PATH_BSHELL, "sh", "-c", command, NULL);
 		_exit(127);
 		/* NOTREACHED */
-	    }
 	}
+	(void)__unlockenv();
 
 	/* Parent; assume fdopen can't fail. */
-	if (*type == 'r') {
-		iop = fdopen(pdes[0], type);
+	if (*xtype == 'r') {
+		iop = fdopen(pdes[0], xtype);
+#ifdef _REENTRANT
+		cur->fd = pdes[0];
+#endif
 		(void)close(pdes[1]);
 	} else {
-		iop = fdopen(pdes[1], type);
+		iop = fdopen(pdes[1], xtype);
+#ifdef _REENTRANT
+		cur->fd = pdes[1];
+#endif
 		(void)close(pdes[0]);
 	}
 
@@ -123,6 +177,7 @@ popen(const char *program, const char *type)
 	cur->pid =  pid;
 	cur->next = pidlist;
 	pidlist = cur;
+	(void)rwlock_unlock(&pidlist_lock);
 
 	return (iop);
 }
@@ -139,25 +194,33 @@ pclose(FILE *iop)
 	int pstat;
 	pid_t pid;
 
+	_DIAGASSERT(iop != NULL);
+
+	rwlock_wrlock(&pidlist_lock);
+
 	/* Find the appropriate file pointer. */
 	for (last = NULL, cur = pidlist; cur; last = cur, cur = cur->next)
 		if (cur->fp == iop)
 			break;
-
-	if (cur == NULL)
+	if (cur == NULL) {
+		(void)rwlock_unlock(&pidlist_lock);
 		return (-1);
+	}
 
 	(void)fclose(iop);
-
-	do {
-		pid = waitpid(cur->pid, &pstat, 0);
-	} while (pid == -1 && errno == EINTR);
 
 	/* Remove the entry from the linked list. */
 	if (last == NULL)
 		pidlist = cur->next;
 	else
 		last->next = cur->next;
+
+	(void)rwlock_unlock(&pidlist_lock);
+
+	do {
+		pid = waitpid(cur->pid, &pstat, 0);
+	} while (pid == -1 && errno == EINTR);
+
 	free(cur);
 
 	return (pid == -1 ? -1 : pstat);
