@@ -85,16 +85,12 @@ typedef  .... pthread_t;
 
 #ifndef _SSIZE_T_DEFINED_
 #define _SSIZE_T_DEFINED_
-/* Traditionally, bionic's ssize_t was "long int". This causes GCC to emit warnings when you
+/* Traditionally, bionic's ssize_t was "long int". This caused GCC to emit warnings when you
  * pass a ssize_t to a printf-style function. The correct type is __kernel_ssize_t, which is
  * "int", which isn't an ABI change for C code (because they're the same size) but is an ABI
  * change for C++ because "int" and "long int" mangle to "i" and "l" respectively. So until
- * we can fix the ABI, this is the best we can do. http://b/8253769. */
-#if defined(__cplusplus)
-typedef long int  ssize_t;
-#else
+ * we can fix the ABI, this change should not be propagated to the NDK. http://b/8253769. */
 typedef __kernel_ssize_t ssize_t;
-#endif
 #endif
 
 typedef __kernel_suseconds_t  suseconds_t;
