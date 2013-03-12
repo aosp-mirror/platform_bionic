@@ -90,8 +90,8 @@ struct soinfo {
   char name[SOINFO_NAME_LEN];
   const Elf32_Phdr* phdr;
   int phnum;
-  unsigned entry;
-  unsigned base;
+  Elf32_Addr entry;
+  Elf32_Addr base;
   unsigned size;
 
   int unused;  // DO NOT USE, maintained for compatibility.
