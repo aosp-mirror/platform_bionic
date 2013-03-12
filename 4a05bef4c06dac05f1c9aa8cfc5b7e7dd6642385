@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Rf8Pz1mU",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-03-12T00:32:37Z",
+      "side": 1,
+      "message": "no scoped lock? :)",
+      "revId": "4a05bef4c06dac05f1c9aa8cfc5b7e7dd6642385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
