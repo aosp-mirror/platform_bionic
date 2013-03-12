@@ -57,12 +57,12 @@
 
 // Magic shared structures that GDB knows about.
 
-struct link_map {
+struct link_map_t {
   uintptr_t l_addr;
   char*  l_name;
   uintptr_t l_ld;
-  struct link_map* l_next;
-  struct link_map* l_prev;
+  link_map_t* l_next;
+  link_map_t* l_prev;
 };
 
 // Values for r_debug->state
@@ -74,7 +74,7 @@ enum {
 
 struct r_debug {
   int32_t r_version;
-  struct link_map* r_map;
+  link_map_t* r_map;
   void (*r_brk)(void);
   int32_t r_state;
   uintptr_t r_ldbase;
@@ -86,20 +86,23 @@ struct r_debug {
 
 #define SOINFO_NAME_LEN 128
 
+typedef void (*linker_function_t)();
+
 struct soinfo {
+ public:
   char name[SOINFO_NAME_LEN];
   const Elf32_Phdr* phdr;
-  int phnum;
+  size_t phnum;
   Elf32_Addr entry;
   Elf32_Addr base;
   unsigned size;
 
-  int unused;  // DO NOT USE, maintained for compatibility.
+  uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 
   Elf32_Dyn* dynamic;
 
-  unsigned unused2; // DO NOT USE, maintained for compatibility
-  unsigned unused3; // DO NOT USE, maintained for compatibility
+  uint32_t unused2; // DO NOT USE, maintained for compatibility
+  uint32_t unused3; // DO NOT USE, maintained for compatibility
 
   soinfo* next;
   unsigned flags;
@@ -107,42 +110,42 @@ struct soinfo {
   const char* strtab;
   Elf32_Sym* symtab;
 
-  unsigned nbucket;
-  unsigned nchain;
+  size_t nbucket;
+  size_t nchain;
   unsigned* bucket;
   unsigned* chain;
 
   unsigned* plt_got;
 
   Elf32_Rel* plt_rel;
-  unsigned plt_rel_count;
+  size_t plt_rel_count;
 
   Elf32_Rel* rel;
-  unsigned rel_count;
+  size_t rel_count;
 
-  unsigned* preinit_array;
-  unsigned preinit_array_count;
+  linker_function_t* preinit_array;
+  size_t preinit_array_count;
 
-  unsigned* init_array;
-  unsigned init_array_count;
-  unsigned* fini_array;
-  unsigned fini_array_count;
+  linker_function_t* init_array;
+  size_t init_array_count;
+  linker_function_t* fini_array;
+  size_t fini_array_count;
 
-  void (*init_func)();
-  void (*fini_func)();
+  linker_function_t init_func;
+  linker_function_t fini_func;
 
 #if defined(ANDROID_ARM_LINKER)
   // ARM EABI section used for stack unwinding.
   unsigned* ARM_exidx;
-  unsigned ARM_exidx_count;
+  size_t ARM_exidx_count;
 #elif defined(ANDROID_MIPS_LINKER)
   unsigned mips_symtabno;
   unsigned mips_local_gotno;
   unsigned mips_gotsym;
 #endif
 
-  unsigned refcount;
-  struct link_map linkmap;
+  size_t ref_count;
+  link_map_t link_map;
 
   bool constructors_called;
 
@@ -158,8 +161,8 @@ struct soinfo {
   void CallPreInitConstructors();
 
  private:
-  void CallArray(const char* array_name, unsigned* array, int count, bool reverse);
-  void CallFunction(const char* function_name, void (*function)());
+  void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
+  void CallFunction(const char* function_name, linker_function_t function);
 };
 
 extern soinfo libdl_info;

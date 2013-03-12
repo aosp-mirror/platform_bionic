@@ -63,14 +63,14 @@
 __LIBC_HIDDEN__ extern int gLdDebugVerbosity;
 
 #if LINKER_DEBUG_TO_LOG
-#define _PRINTVF(v,x...)                                        \
-    do {                                                          \
-        if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v),"linker",x);  \
+#define _PRINTVF(v,x...) \
+    do { \
+      if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v),"linker",x); \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
-#define _PRINTVF(v,x...)                           \
-    do {                                             \
-        if (gLdDebugVerbosity > (v)) __libc_format_fd(1, x);  \
+#define _PRINTVF(v,x...) \
+    do { \
+      if (gLdDebugVerbosity > (v)) { __libc_format_fd(1, x); write(1, "\n", 1); } \
     } while (0)
 #endif /* !LINKER_DEBUG_TO_LOG */
 
