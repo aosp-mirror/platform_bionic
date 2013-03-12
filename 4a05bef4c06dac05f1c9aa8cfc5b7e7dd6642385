@@ -16,6 +16,24 @@
       "revId": "4a05bef4c06dac05f1c9aa8cfc5b7e7dd6642385",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Rf.bSoE0",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-12T01:28:35Z",
+      "side": 1,
+      "message": "yeah, welcome to 1970.",
+      "parentUuid": "Rf8Pz1mU",
+      "revId": "4a05bef4c06dac05f1c9aa8cfc5b7e7dd6642385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
