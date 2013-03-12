@@ -27,6 +27,9 @@
  */
 
 #include <errno.h>
+#include <linux/err.h>
+
+#define unlikely(x) __builtin_expect((x), false) // Used but not defined by <linux/err.h>.
 
 // These functions are called from our assembler syscall stubs.
 // C/C++ code should just assign 'errno' instead.
@@ -39,14 +42,10 @@ extern "C" int __set_errno(int n) {
 }
 
 // TODO: this is only used on ARM, but is exported by NDK on all platforms :-(
-extern "C" __LIBC_HIDDEN__ int __set_syscall_errno(int n) {
-  // Some syscalls, mmap() for example, have valid return
-  // values that are "negative".  Since errno values are not
-  // greater than 131 on Linux, we will just consider
-  // anything significantly out of range as not-an-error.
-  if(n > -256) {
-    return __set_errno(-n);
-  } else {
-    return n;
+extern "C" __LIBC_HIDDEN__ int __set_syscall_errno(unsigned long n) {
+  if (IS_ERR_VALUE(n)) {
+    errno = -n;
+    return -1;
   }
+  return n;
 }
