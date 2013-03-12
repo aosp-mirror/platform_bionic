@@ -32,6 +32,7 @@ benchmark_src_files = \
     benchmark_main.cpp \
     math_benchmark.cpp \
     string_benchmark.cpp \
+    time_benchmark.cpp \
 
 # Build benchmarks for the device (with bionic's .so). Run with:
 #   adb shell bionic-benchmarks
