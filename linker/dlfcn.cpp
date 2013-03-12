@@ -215,7 +215,7 @@ soinfo libdl_info = {
 
     phdr: 0, phnum: 0,
     entry: 0, base: 0, size: 0,
-    unused: 0, dynamic: 0, unused2: 0, unused3: 0,
+    unused1: 0, dynamic: 0, unused2: 0, unused3: 0,
     next: 0,
 
     flags: FLAG_LINKED,
@@ -238,7 +238,7 @@ soinfo libdl_info = {
     mips_symtabno: 0, mips_local_gotno: 0, mips_gotsym: 0,
 #endif
 
-    refcount: 0,
+    ref_count: 0,
     { l_addr: 0, l_name: 0, l_ld: 0, l_next: 0, l_prev: 0, },
     constructors_called: false,
     load_bias: 0,
