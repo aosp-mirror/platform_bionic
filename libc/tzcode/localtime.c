@@ -404,10 +404,7 @@ static int toint(unsigned char *s) {
 }
 
 static int
-tzload(name, sp, doextend)
-register const char *       name;
-register struct state * const   sp;
-register const int      doextend;
+tzload(const char* name, struct state* const sp, const int doextend)
 {
     register const char *       p;
     register int            i;
@@ -2068,32 +2065,55 @@ struct tm * const   tmp;
 }
 
 // BEGIN android-added
-time_t
-mktime_tz(tmp, tz)
-struct tm * const tmp;
-char const * tz;
-{
-    struct state st;
-    if (tzload(tz, &st, TRUE) != 0) {
-        // TODO: not sure what's best here, but for now, we fall back to gmt.
-        gmtload(&st);
-    }
-    return time1(tmp, localsub, 0L, &st);
+
+// Caches the most recent timezone (http://b/8270865).
+static int __bionic_tzload_cached(const char* name, struct state* const sp, const int doextend) {
+  _tzLock();
+
+  // Our single-item cache.
+  static char* gCachedTimeZoneName;
+  static struct state gCachedTimeZone;
+
+  // Do we already have this timezone cached?
+  if (gCachedTimeZoneName != NULL && strcmp(name, gCachedTimeZoneName) == 0) {
+    *sp = gCachedTimeZone;
+    _tzUnlock();
+    return 0;
+  }
+
+  // Can we load it?
+  int rc = tzload(name, sp, doextend);
+  if (rc == 0) {
+    // Update the cache.
+    free(gCachedTimeZoneName);
+    gCachedTimeZoneName = strdup(name);
+    gCachedTimeZone = *sp;
+  }
+
+  _tzUnlock();
+  return rc;
 }
 
-void
-localtime_tz(timep, tmp, tz)
-const time_t * const timep;
-struct tm * tmp;
-const char* tz;
-{
-    struct state st;
-    if (tzload(tz, &st, TRUE) != 0) {
-        // TODO: not sure what's best here, but for now, we fall back to gmt.
-        gmtload(&st);
-    }
-    localsub(timep, 0L, tmp, &st);
+// Non-standard API: mktime(3) but with an explicit timezone parameter.
+time_t mktime_tz(struct tm* const tmp, const char* tz) {
+  struct state st;
+  if (__bionic_tzload_cached(tz, &st, TRUE) != 0) {
+    // TODO: not sure what's best here, but for now, we fall back to gmt.
+    gmtload(&st);
+  }
+  return time1(tmp, localsub, 0L, &st);
 }
+
+// Non-standard API: localtime(3) but with an explicit timezone parameter.
+void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz) {
+  struct state st;
+  if (__bionic_tzload_cached(tz, &st, TRUE) != 0) {
+    // TODO: not sure what's best here, but for now, we fall back to gmt.
+    gmtload(&st);
+  }
+  localsub(timep, 0L, tmp, &st);
+}
+
 // END android-added
 
 #ifdef STD_INSPIRED
