@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <linux/err.h>
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
@@ -45,10 +46,12 @@ ENTRY(__pthread_clone)
     movs    r0, r0
     beq     1f
 
-    # In parent, reload saved registers then either exit or set errno.
+    # In parent, reload saved registers then either return or set errno.
     ldmfd   sp!, {r4, r7}
-    bxpl    lr
-    b       __set_syscall_errno
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno
 
 1:  # The child.
     # pick the function arg and call address off the stack and jump
@@ -94,10 +97,12 @@ ENTRY(__bionic_clone)
     movs    r0, r0
     beq     1f
 
-    # In the parent, reload saved registers then either exit or set errno.
+    # In the parent, reload saved registers then either return or set errno.
     ldmfd   sp!, {r4, r5, r6, r7}
-    bxpl    lr
-    b       __set_syscall_errno
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno
 
 1:  # The child.
     ldr    r0, [sp, #-4]
