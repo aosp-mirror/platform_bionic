@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <linux/err.h>
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
@@ -39,7 +40,8 @@ ENTRY(syscall)
     ldmfd   ip, {r3, r4, r5, r6}
     swi     #0
     ldmfd   sp!, {r4, r5, r6, r7}
-    movs    r0, r0
-    bxpl    lr
-    b       __set_syscall_errno
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno
 END(syscall)
