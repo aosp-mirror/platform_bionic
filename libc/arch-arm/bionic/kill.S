@@ -32,6 +32,8 @@
    abort due to a fatal runtime error (e.g. detection
    of a corrupted malloc heap).
 */
+
+#include <linux/err.h>
 #include <sys/linux-syscalls.h>
 #include <machine/asm.h>
 
@@ -44,7 +46,8 @@ ENTRY(kill)
     ldr     r7, =__NR_kill
     swi     #0
     ldmfd   sp!, {r4-r7, ip, lr}
-    movs    r0, r0
-    bxpl    lr
-    b       __set_syscall_errno
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno
 END(kill)

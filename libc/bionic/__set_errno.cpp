@@ -27,25 +27,11 @@
  */
 
 #include <errno.h>
-#include <linux/err.h>
 
-#define unlikely(x) __builtin_expect((x), false) // Used but not defined by <linux/err.h>.
-
-// These functions are called from our assembler syscall stubs.
+// This function is called from our assembler syscall stubs.
 // C/C++ code should just assign 'errno' instead.
 
-// TODO: should be __LIBC_HIDDEN__, but already exported by NDK :-(
-// TODO: this isn't used on ARM.
-extern "C" int __set_errno(int n) {
+extern "C" __LIBC_HIDDEN__ int __set_errno(int n) {
   errno = n;
   return -1;
-}
-
-// TODO: this is only used on ARM, but is exported by NDK on all platforms :-(
-extern "C" __LIBC_HIDDEN__ int __set_syscall_errno(unsigned long n) {
-  if (IS_ERR_VALUE(n)) {
-    errno = -n;
-    return -1;
-  }
-  return n;
 }
