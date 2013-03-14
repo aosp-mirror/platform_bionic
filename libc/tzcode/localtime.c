@@ -2305,7 +2305,13 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
 
   static const size_t NAME_LENGTH = 40;
   unsigned char buf[NAME_LENGTH + 3 * sizeof(int32_t)];
-  while (TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf))) == (ssize_t) sizeof(buf)) {
+
+  size_t id_count = (ntohl(header.data_offset) - ntohl(header.index_offset)) / sizeof(buf);
+  for (size_t i = 0; i < id_count; ++i) {
+    if (TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf))) != (ssize_t) sizeof(buf)) {
+      break;
+    }
+
     char this_id[NAME_LENGTH + 1];
     memcpy(this_id, buf, NAME_LENGTH);
     this_id[NAME_LENGTH] = '\0';
