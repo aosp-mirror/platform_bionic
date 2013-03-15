@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "Rx3s.n.c",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-15T23:11:30Z",
+      "side": 1,
+      "message": "i don\u0027t think it makes any difference. the BSD headers are usually this style, with only functions in between. but glibc seems to consistently say __BEGIN_DECLS right at the start. so i\u0027ll switch to that style for our header files. it\u0027s simpler to remember than \"some stuff goes inside, other stuff goes outside\".",
+      "parentUuid": "Rx9tv8zE",
+      "revId": "f24fe125e6ad0ef720315fcf8063944dab1dafcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "Rx1uD47g",
         "filename": "libc/private/libc_logging.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-03-15T22:45:10Z",
       "side": 1,
       "message": "Shouldn\u0027t this be __LIBC_HIDDEN__ too? (see libc_logging.cpp line 556).\n\nAlso, I\u0027m confused.  I thought __LIBC_HIDDEN__ was only used on the actual method body, not in the header file declarations.\n\nShould we add __LIBC_HIDDEN__ here, or get rid of the ones above?",
+      "revId": "f24fe125e6ad0ef720315fcf8063944dab1dafcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Rxz6exaQ",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-15T23:11:30Z",
+      "side": 1,
+      "message": "you\u0027re right. i mistakenly thought we had the fortify stuff inlined in .h files, in which case we\u0027d need this symbol to be visible. but we don\u0027t, so we don\u0027t. will fix.\n\nas for where, i think it makes more sense on the declaration, if only because the reader of the header file can see it.",
+      "parentUuid": "Rx1uD47g",
       "revId": "f24fe125e6ad0ef720315fcf8063944dab1dafcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
