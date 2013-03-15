@@ -149,7 +149,6 @@ libc_common_src_files := \
 	bionic/isatty.c \
 	bionic/issetugid.c \
 	bionic/ldexp.c \
-	bionic/logd_write.c \
 	bionic/lseek64.c \
 	bionic/md5.c \
 	bionic/memchr.c \
@@ -238,7 +237,6 @@ libc_common_src_files := \
 libc_bionic_src_files := \
     bionic/assert.cpp \
     bionic/brk.cpp \
-    bionic/debug_format.cpp \
     bionic/dirent.cpp \
     bionic/__errno.c \
     bionic/eventfd.cpp \
@@ -246,6 +244,7 @@ libc_bionic_src_files := \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/libc_init_common.cpp \
+    bionic/libc_logging.cpp \
     bionic/libgen.cpp \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \

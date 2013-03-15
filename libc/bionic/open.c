@@ -29,7 +29,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 extern int  __open(const char*, int, int);
 
@@ -60,4 +60,3 @@ int __open_2(const char *pathname, int flags) {
 
     return __open(pathname, flags, 0);
 }
-

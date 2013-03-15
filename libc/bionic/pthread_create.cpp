@@ -35,8 +35,7 @@
 
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
-#include "private/debug_format.h"
-#include "private/logd.h"
+#include "private/libc_logging.h"
 #include "private/thread_private.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"

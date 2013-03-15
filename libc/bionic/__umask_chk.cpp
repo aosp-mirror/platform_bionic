@@ -30,7 +30,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 #include <stdlib.h>
 
 /*

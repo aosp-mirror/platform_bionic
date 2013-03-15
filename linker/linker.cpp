@@ -42,7 +42,6 @@
 // Private C library headers.
 #include <private/bionic_tls.h>
 #include <private/KernelArgumentBlock.h>
-#include <private/logd.h>
 #include <private/ScopedPthreadMutexLocker.h>
 
 #include "linker.h"
@@ -141,13 +140,13 @@ static unsigned bitmask[4096];
 
 // You shouldn't try to call memory-allocating functions in the dynamic linker.
 // Guard against the most obvious ones.
-#define DISALLOW_ALLOCATION(return_type, name, ...)                             \
-    return_type name __VA_ARGS__                                                \
-    {                                                                           \
+#define DISALLOW_ALLOCATION(return_type, name, ...) \
+    return_type name __VA_ARGS__ \
+    { \
         const char* msg = "ERROR: " #name " called from the dynamic linker!\n"; \
-         __libc_android_log_write(ANDROID_LOG_FATAL, "linker", msg);            \
-        write(2, msg, strlen(msg));                                             \
-        abort();                                                                \
+        __libc_format_log(ANDROID_LOG_FATAL, "linker", "%s", msg); \
+        write(2, msg, strlen(msg)); \
+        abort(); \
     }
 #define UNUSED __attribute__((unused))
 DISALLOW_ALLOCATION(void*, malloc, (size_t u UNUSED));
