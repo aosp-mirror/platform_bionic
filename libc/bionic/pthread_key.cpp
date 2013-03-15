@@ -185,8 +185,8 @@ class ScopedTlsMapAccess {
   }
 };
 
-tls_map_t ScopedTlsMapAccess::s_tls_map_;
-pthread_mutex_t ScopedTlsMapAccess::s_tls_map_lock_;
+__LIBC_HIDDEN__ tls_map_t ScopedTlsMapAccess::s_tls_map_;
+__LIBC_HIDDEN__ pthread_mutex_t ScopedTlsMapAccess::s_tls_map_lock_;
 
 __LIBC_HIDDEN__ void pthread_key_clean_all() {
   ScopedTlsMapAccess tls_map;
