@@ -249,7 +249,7 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
 #include <sys/system_properties.h>
 #include <dlfcn.h>
 #include <stdio.h>
-#include "logd.h"
+#include "libc_logging.h"
 
 /* Table for dispatching malloc calls, depending on environment. */
 static MallocDebug gMallocUse __attribute__((aligned(32))) = {

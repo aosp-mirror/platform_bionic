@@ -36,7 +36,7 @@
 
 #include <link.h>
 
-#include <private/debug_format.h>
+#include "private/libc_logging.h"
 
 #define DL_ERR(fmt, x...) \
     do { \

@@ -18,11 +18,11 @@
 
 #if defined(__BIONIC__)
 
-#include "../libc/bionic/debug_format.cpp"
+#include "../libc/bionic/libc_logging.cpp"
 
 extern int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...);
 
-TEST(debug_format, smoke) {
+TEST(libc_logging, smoke) {
   char buf[BUFSIZ];
 
   __libc_format_buffer(buf, sizeof(buf), "a");
@@ -106,37 +106,37 @@ TEST(debug_format, smoke) {
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
 }
 
-TEST(debug_format, d_INT_MAX) {
+TEST(libc_logging, d_INT_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%d", INT_MAX);
   EXPECT_STREQ("2147483647", buf);
 }
 
-TEST(debug_format, d_INT_MIN) {
+TEST(libc_logging, d_INT_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%d", INT_MIN);
   EXPECT_STREQ("-2147483648", buf);
 }
 
-TEST(debug_format, ld_LONG_MAX) {
+TEST(libc_logging, ld_LONG_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MAX);
   EXPECT_STREQ("2147483647", buf);
 }
 
-TEST(debug_format, ld_LONG_MIN) {
+TEST(libc_logging, ld_LONG_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MIN);
   EXPECT_STREQ("-2147483648", buf);
 }
 
-TEST(debug_format, lld_LLONG_MAX) {
+TEST(libc_logging, lld_LLONG_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%lld", LLONG_MAX);
   EXPECT_STREQ("9223372036854775807", buf);
 }
 
-TEST(debug_format, lld_LLONG_MIN) {
+TEST(libc_logging, lld_LLONG_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%lld", LLONG_MIN);
   EXPECT_STREQ("-9223372036854775808", buf);
