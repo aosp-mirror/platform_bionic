@@ -114,7 +114,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 struct KernelArgumentBlock;
-extern void __libc_init_tls(KernelArgumentBlock& args);
+extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
 #endif
 
 #endif /* _SYS_TLS_H */
