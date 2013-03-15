@@ -27,7 +27,7 @@
  */
 
 #include <sys/types.h>
-#include <private/logd.h>
+#include <private/libc_logging.h>
 #include <stdio.h>
 
 /*
@@ -52,7 +52,7 @@ atexit(void (*func)(void))
      */
     static char const warning[] = "WARNING: generic atexit() called from legacy shared library\n";
 
-    __libc_android_log_write(ANDROID_LOG_WARN, "libc", warning);
+    __libc_format_log(ANDROID_LOG_WARN, "libc", warning);
     fprintf(stderr, warning);
 
     return (__cxa_atexit((void (*)(void *))func, NULL, NULL));

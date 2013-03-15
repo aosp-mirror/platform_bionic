@@ -171,9 +171,8 @@
 
 #undef XLOG
 #if DEBUG
-#  include <logd.h>
-#  define  XLOG(...)   \
-    __libc_android_log_print(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
+#  include "libc_logging.h"
+#  define XLOG(...)  __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -707,9 +706,9 @@ static char*
 _dnsPacket_bprintQR(DnsPacket*  packet, char*  p, char*  end)
 {
 #define  QQ(x)   { DNS_TYPE_##x, #x }
-    static const struct { 
+    static const struct {
         const char*  typeBytes;
-        const char*  typeString; 
+        const char*  typeString;
     } qTypes[] =
     {
         QQ(A), QQ(PTR), QQ(MX), QQ(AAAA), QQ(ALL),

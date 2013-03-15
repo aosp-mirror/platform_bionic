@@ -43,9 +43,7 @@
 #include "bionic_tls.h"
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
-#include "logd.h"
-
-#include <private/debug_format.h>
+#include "libc_logging.h"
 
 /*
  * ===========================================================================

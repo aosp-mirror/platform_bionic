@@ -29,8 +29,7 @@
 #include <sys/cachectl.h>
 
 #ifdef DEBUG
-#include <private/logd.h>
-#include <private/debug_format.h>
+#include <private/libc_logging.h>
 #define  XLOG(...) __libc_format_log(ANDROID_LOG_DEBUG,"libc-cacheflush",__VA_ARGS__)
 #endif
 
