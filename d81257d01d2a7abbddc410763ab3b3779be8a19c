@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Rx5uii40",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-03-15T22:37:22Z",
+      "side": 1,
+      "message": "oops.",
+      "revId": "d81257d01d2a7abbddc410763ab3b3779be8a19c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
