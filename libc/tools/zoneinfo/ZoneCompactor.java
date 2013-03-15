@@ -198,6 +198,8 @@ public class ZoneCompactor {
     // Write the data.
     f.write(allData.toByteArray());
 
+    int zonetab_offset = (int) f.getFilePointer();
+
     // Copy the zone.tab.
     reader = new BufferedReader(new FileReader(zoneTabFile));
     while ((s = reader.readLine()) != null) {
@@ -207,8 +209,6 @@ public class ZoneCompactor {
       }
     }
     reader.close();
-
-    int zonetab_offset = (int) f.getFilePointer();
 
     // Go back and fix up the offsets in the header.
     f.seek(index_offset_offset);
