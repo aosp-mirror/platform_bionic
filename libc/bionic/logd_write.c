@@ -151,9 +151,6 @@ int __libc_android_log_write(int prio, const char *tag, const char *msg)
     if (tag == NULL)
         tag = "";
 
-    if (!strcmp(tag, "HTC_RIL"))
-        log_id = LOG_ID_RADIO;
-
     vec[0].iov_base   = (unsigned char *) &prio;
     vec[0].iov_len    = 1;
     vec[1].iov_base   = (void *) tag;
