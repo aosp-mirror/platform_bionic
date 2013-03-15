@@ -38,9 +38,8 @@
 #include <unistd.h>
 
 #include "private/android_filesystem_config.h"
-#include "private/debug_format.h"
 #include "private/ErrnoRestorer.h"
-#include "private/logd.h"
+#include "private/libc_logging.h"
 
 // Thread-specific state for the non-reentrant functions.
 static pthread_once_t stubs_once = PTHREAD_ONCE_INIT;

@@ -26,13 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <../private/debug_format.h> // Relative path so we can #include this for testing.
+#include <../private/libc_logging.h> // Relative path so we can #include this .cpp file for testing.
+#include <../private/ScopedPthreadMutexLocker.h>
 
 #include <assert.h>
 #include <errno.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -218,29 +220,30 @@ int __libc_format_fd(int fd, const char* format, ...) {
 #include <fcntl.h>
 #include <sys/uio.h>
 
+static pthread_mutex_t gLogInitializationLock = PTHREAD_MUTEX_INITIALIZER;
+
 int __libc_format_log_va_list(int priority, const char* tag, const char* fmt, va_list args) {
   char buf[1024];
-  int result = vformat_buffer(buf, sizeof buf, fmt, args);
+  int buf_strlen = vformat_buffer(buf, sizeof(buf), fmt, args);
 
-  static int log_fd = -1;
-  if (log_fd == -1) {
-    log_fd = open("/dev/log/main", O_WRONLY);
-    if (log_fd == -1) {
-      return result;
+  static int main_log_fd = -1;
+  if (main_log_fd == -1) {
+    ScopedPthreadMutexLocker locker(&gLogInitializationLock);
+    main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
+    if (main_log_fd == -1) {
+      return -1;
     }
   }
 
   struct iovec vec[3];
-  vec[0].iov_base = (unsigned char *) &priority;
+  vec[0].iov_base = &priority;
   vec[0].iov_len = 1;
-  vec[1].iov_base = (void *) tag;
+  vec[1].iov_base = const_cast<char*>(tag);
   vec[1].iov_len = strlen(tag) + 1;
-  vec[2].iov_base = (void *) buf;
-  vec[2].iov_len = strlen(buf) + 1;
+  vec[2].iov_base = const_cast<char*>(buf);
+  vec[2].iov_len = buf_strlen + 1;
 
-  TEMP_FAILURE_RETRY(writev(log_fd, vec, 3));
-
-  return result;
+  return TEMP_FAILURE_RETRY(writev(main_log_fd, vec, 3));
 }
 
 int __libc_format_log(int priority, const char* tag, const char* format, ...) {
@@ -515,4 +518,45 @@ out_vformat(Out *o, const char *format, va_list args)
             out_send_repeat(o, padChar, width - slen);
         }
     }
+}
+
+// must be kept in sync with frameworks/base/core/java/android/util/EventLog.java
+enum AndroidEventLogType {
+  EVENT_TYPE_INT      = 0,
+  EVENT_TYPE_LONG     = 1,
+  EVENT_TYPE_STRING   = 2,
+  EVENT_TYPE_LIST     = 3,
+};
+
+static int __libc_android_log_event(int32_t tag, char type, const void* payload, size_t len) {
+  struct iovec vec[3];
+  vec[0].iov_base = &tag;
+  vec[0].iov_len = sizeof(tag);
+  vec[1].iov_base = &type;
+  vec[1].iov_len = sizeof(type);
+  vec[2].iov_base = const_cast<void*>(payload);
+  vec[2].iov_len = len;
+
+  static int event_log_fd = -1;
+  if (event_log_fd == -1) {
+    ScopedPthreadMutexLocker locker(&gLogInitializationLock);
+    event_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/events", O_CLOEXEC | O_WRONLY));
+  }
+  return TEMP_FAILURE_RETRY(writev(event_log_fd, vec, 3));
+}
+
+void __libc_android_log_event_int(int32_t tag, int value) {
+  __libc_android_log_event(tag, EVENT_TYPE_INT, &value, sizeof(value));
+}
+
+void __libc_android_log_event_uid(int32_t tag) {
+  __libc_android_log_event_int(tag, getuid());
+}
+
+void __fortify_chk_fail(const char *msg, uint32_t tag) {
+  __libc_format_log(ANDROID_LOG_FATAL, "libc", "FORTIFY_SOURCE: %s. Calling abort().\n", msg);
+  if (tag != 0) {
+    __libc_android_log_event_uid(tag);
+  }
+  abort();
 }
