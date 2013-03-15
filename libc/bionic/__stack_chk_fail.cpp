@@ -29,8 +29,7 @@
 #include <stdlib.h>
 
 #include "bionic_ssp.h"
-#include "debug_format.h"
-#include "logd.h"
+#include "libc_logging.h"
 
 void __stack_chk_fail() {
   __libc_format_log(ANDROID_LOG_FATAL, "libc", "stack corruption detected");

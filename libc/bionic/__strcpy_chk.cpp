@@ -28,7 +28,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 /*
  * Runtime implementation of __builtin____strcpy_chk.

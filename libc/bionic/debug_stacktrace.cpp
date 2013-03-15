@@ -33,9 +33,8 @@
 #include <unwind.h>
 #include <sys/types.h>
 
-#include "debug_format.h"
 #include "debug_mapinfo.h"
-#include "logd.h"
+#include "libc_logging.h"
 
 /* depends how the system includes define this */
 #ifdef HAVE_UNWIND_CONTEXT_STRUCT

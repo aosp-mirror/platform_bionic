@@ -47,7 +47,7 @@
 
 #include "debug_stacktrace.h"
 #include "dlmalloc.h"
-#include "logd.h"
+#include "libc_logging.h"
 #include "malloc_debug_common.h"
 #include "ScopedPthreadMutexLocker.h"
 

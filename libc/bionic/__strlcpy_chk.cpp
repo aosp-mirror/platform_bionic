@@ -28,7 +28,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 /*
  * __strlcpy_chk. Called in place of strlcpy() when we know the

@@ -29,7 +29,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 extern int  __openat(int, const char*, int, int);
 
@@ -61,4 +61,3 @@ int __openat_2(int fd, const char *pathname, int flags)
 
     return __openat(fd, pathname, flags, 0);
 }
-
