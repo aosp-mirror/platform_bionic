@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "Rx9tv8zE",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-03-15T22:46:42Z",
+      "side": 1,
+      "message": "Does this need to be before the enum (line 52)?  I\u0027m not sure how enums and c++ interact with each other.",
+      "revId": "f24fe125e6ad0ef720315fcf8063944dab1dafcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "Rx1uD47g",
         "filename": "libc/private/libc_logging.h",
         "patchSetId": 2
