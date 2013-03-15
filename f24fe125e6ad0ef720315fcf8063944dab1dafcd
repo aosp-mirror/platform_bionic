@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Rx1uD47g",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-03-15T22:45:10Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be __LIBC_HIDDEN__ too? (see libc_logging.cpp line 556).\n\nAlso, I\u0027m confused.  I thought __LIBC_HIDDEN__ was only used on the actual method body, not in the header file declarations.\n\nShould we add __LIBC_HIDDEN__ here, or get rid of the ones above?",
+      "revId": "f24fe125e6ad0ef720315fcf8063944dab1dafcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
