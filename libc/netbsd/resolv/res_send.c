@@ -119,7 +119,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #  include <resolv_cache.h>
 #endif
 
-#include "logd.h"
+#include "libc_logging.h"
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
@@ -555,7 +555,7 @@ res_nsend(res_state statp,
 				    ns);
 
 			if (DBG) {
-				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 					"used send_vc %d\n", n);
 			}
 
@@ -567,15 +567,13 @@ res_nsend(res_state statp,
 		} else {
 			/* Use datagrams. */
 			if (DBG) {
-				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
-					"using send_dg\n");
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using send_dg\n");
 			}
 
 			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere);
 			if (DBG) {
-				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
-					"used send_dg %d\n",n);
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "used send_dg %d\n",n);
 			}
 
 			if (n < 0)
@@ -583,7 +581,7 @@ res_nsend(res_state statp,
 			if (n == 0)
 				goto next_ns;
 			if (DBG) {
-				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 					"time=%d, %d\n",time(NULL), time(NULL)%2);
 			}
 			if (v_circuit)
@@ -728,8 +726,7 @@ static int get_timeout(const res_state statp, const int ns)
 		timeout = 1;
 	}
 	if (DBG) {
-		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
-			"using timeout of %d sec\n", timeout);
+		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using timeout of %d sec\n", timeout);
 	}
 
 	return timeout;
@@ -751,7 +748,7 @@ send_vc(res_state statp,
 	void *tmp;
 
 	if (DBG) {
-		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc", "using send_vc\n");
+		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using send_vc\n");
 	}
 
 	nsap = get_nsaddr(statp, (size_t)ns);
@@ -952,8 +949,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 		timeout = evConsTime((long)sec, 0L);
 		finish = evAddTime(now, timeout);
 		if (DBG) {
-			__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
-				"  %d send_vc\n", sock);
+			__libc_format_log(ANDROID_LOG_DEBUG, "libc", "  %d send_vc\n", sock);
 		}
 
 		res = retrying_select(sock, &rset, &wset, &finish);
@@ -964,7 +960,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 done:
 	fcntl(sock, F_SETFL, origflags);
 	if (DBG) {
-		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 			"  %d connect_with_timeout returning %s\n", sock, res);
 	}
 	return res;
@@ -980,7 +976,7 @@ retrying_select(const int sock, fd_set *readset, fd_set *writeset, const struct 
 
 retry:
 	if (DBG) {
-		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc", "  %d retying_select\n", sock);
+		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "  %d retying_select\n", sock);
 	}
 
 	now = evNowTime();
@@ -1000,7 +996,7 @@ retry:
 	n = pselect(sock + 1, readset, writeset, NULL, &timeout, NULL);
 	if (n == 0) {
 		if (DBG) {
-			__libc_android_log_print(ANDROID_LOG_DEBUG, " libc",
+			__libc_format_log(ANDROID_LOG_DEBUG, " libc",
 				"  %d retrying_select timeout\n", sock);
 		}
 		errno = ETIMEDOUT;
@@ -1010,7 +1006,7 @@ retry:
 		if (errno == EINTR)
 			goto retry;
 		if (DBG) {
-			__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+			__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 				"  %d retrying_select got error %d\n",sock, n);
 		}
 		return n;
@@ -1020,7 +1016,7 @@ retry:
 		if (getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len) < 0 || error) {
 			errno = error;
 			if (DBG) {
-				__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 					"  %d retrying_select dot error2 %d\n", sock, errno);
 			}
 
@@ -1028,7 +1024,7 @@ retry:
 		}
 	}
 	if (DBG) {
-		__libc_android_log_print(ANDROID_LOG_DEBUG, "libc",
+		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
 			"  %d retrying_select returning %d for %d\n",sock, n);
 	}
 

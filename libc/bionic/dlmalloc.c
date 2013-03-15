@@ -24,8 +24,7 @@
 
 #include <linux/ashmem.h>
 
-#include <private/debug_format.h>
-#include <private/logd.h>
+#include <private/libc_logging.h>
 
 // Send dlmalloc errors to the log.
 static void __bionic_heap_corruption_error(const char* function);

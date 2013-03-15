@@ -32,8 +32,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <private/debug_format.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 // We log to stderr for the benefit of "adb shell" users, and the log for the benefit
 // of regular app developers who want to see their asserts.

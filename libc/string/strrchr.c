@@ -29,7 +29,7 @@
  */
 
 #include <string.h>
-#include <private/logd.h>
+#include "libc_logging.h"
 
 char *
 __strrchr_chk(const char *p, int ch, size_t s_len)
