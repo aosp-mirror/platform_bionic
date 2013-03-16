@@ -50,7 +50,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 struct KernelArgumentBlock;
-void __libc_init_common(KernelArgumentBlock& args);
+void __LIBC_HIDDEN__ __libc_init_common(KernelArgumentBlock& args);
 #endif
 
 #endif
