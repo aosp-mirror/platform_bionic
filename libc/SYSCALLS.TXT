@@ -37,6 +37,7 @@ void    _exit_thread:exit (int)     1
 pid_t   __fork:fork (void)           2
 pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7,7
 int     __waitid:waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284,278
+pid_t   wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114
 
 # NOTE: this system call is never called directly, but we list it there
 #       to have __NR_clone properly defined.
@@ -283,7 +284,6 @@ int ioprio_get(int which, int who) 315,290,315
 
 # other
 int     uname(struct utsname *)  122
-pid_t   __wait4:wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114
 mode_t  umask(mode_t)  60
 int      __reboot:reboot(int, int, int, void *)  88
 int     __syslog:syslog(int, char *, int)  103

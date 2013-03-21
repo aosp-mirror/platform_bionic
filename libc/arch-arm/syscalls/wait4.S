@@ -3,7 +3,7 @@
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-ENTRY(__wait4)
+ENTRY(wait4)
     mov     ip, r7
     ldr     r7, =__NR_wait4
     swi     #0
@@ -12,4 +12,4 @@ ENTRY(__wait4)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(__wait4)
+END(wait4)
