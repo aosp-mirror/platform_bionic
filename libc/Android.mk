@@ -203,7 +203,6 @@ libc_common_src_files := \
 	bionic/unlockpt.c \
 	bionic/usleep.c \
 	bionic/utmp.c \
-	bionic/wait.c \
 	bionic/wcscoll.c \
 	netbsd/gethnamaddr.c \
 	netbsd/inet/nsap_addr.c \
@@ -285,6 +284,7 @@ libc_bionic_src_files := \
     bionic/__umask_chk.cpp \
     bionic/__vsnprintf_chk.cpp \
     bionic/__vsprintf_chk.cpp \
+    bionic/wait.cpp \
     bionic/wchar.cpp \
 
 libc_upstream_freebsd_src_files := \
