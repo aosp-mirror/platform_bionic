@@ -3,7 +3,7 @@
 #include <machine/asm.h>
 #include <sys/linux-syscalls.h>
 
-ENTRY(__wait4)
+ENTRY(wait4)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
@@ -27,4 +27,4 @@ ENTRY(__wait4)
     popl    %ecx
     popl    %ebx
     ret
-END(__wait4)
+END(wait4)
