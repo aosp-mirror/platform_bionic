@@ -10,8 +10,8 @@
  *	%ebp: arg5                -   callee save
  */
 
+#include <asm/unistd.h>
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
 
 ENTRY(syscall)
     # Push the callee save registers.
