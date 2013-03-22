@@ -50,5 +50,5 @@ __strrchr_chk(const char *p, int ch, size_t s_len)
 char *
 strrchr(const char *p, int ch)
 {
-	return __strrchr_chk(p, ch, (size_t) -1);
+	return __strrchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }
