@@ -129,7 +129,7 @@ extern int    lstat(const char *, struct stat *);
 extern int    mknod(const char *, mode_t, dev_t);
 extern mode_t umask(mode_t);
 
-#if defined(__BIONIC_FORTIFY_INLINE)
+#if defined(__BIONIC_FORTIFY)
 
 extern mode_t __umask_chk(mode_t);
 extern mode_t __umask_real(mode_t)
@@ -147,7 +147,7 @@ mode_t umask(mode_t mode) {
   }
   return __umask_chk(mode);
 }
-#endif /* defined(__BIONIC_FORTIFY_INLINE) */
+#endif /* defined(__BIONIC_FORTIFY) */
 
 
 #define  stat64    stat
