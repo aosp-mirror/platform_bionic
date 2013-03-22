@@ -311,8 +311,8 @@ int     poll(struct pollfd *, unsigned int, long)  168,168,188
 int     eventfd:eventfd2(unsigned int, int)  356,328,325
 
 # ARM-specific ARM_NR_BASE == 0x0f0000 == 983040
-int     __set_tls:ARM_set_tls(void*)                                 983045,-1,-1
-int     cacheflush:ARM_cacheflush(long start, long end, long flags)  983042,-1,-1
+int     __set_tls:__ARM_NR_set_tls(void*)                                 983045,-1,-1
+int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  983042,-1,-1
 
 # MIPS-specific
 int	_flush_cache:cacheflush(char *addr, const int nbytes, const int op)	-1,-1,147
