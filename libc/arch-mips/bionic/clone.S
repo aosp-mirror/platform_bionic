@@ -25,9 +25,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <linux/sched.h>
-#include <sys/linux-syscalls.h>
+
+#include <asm/unistd.h>
 #include <linux/errno.h>
+#include <linux/sched.h>
 
 	.text
 	.type __pthread_clone, @function
