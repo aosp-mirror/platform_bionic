@@ -1,5 +1,5 @@
+#include <asm/unistd.h>
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
 
 // int  __pthread_clone(void* (*fn)(void*), void* tls, int flags, void* arg);
 ENTRY(__pthread_clone)
