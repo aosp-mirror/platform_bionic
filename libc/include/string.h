@@ -84,7 +84,7 @@ extern char*  strsignal(int  sig);
 extern int    strcoll(const char *, const char *) __purefunc;
 extern size_t strxfrm(char *, const char *, size_t);
 
-#if defined(__BIONIC_FORTIFY_INLINE)
+#if defined(__BIONIC_FORTIFY)
 
 extern void __memcpy_dest_size_error()
     __attribute__((__error__("memcpy called with size bigger than destination")));
@@ -258,7 +258,7 @@ char* strrchr(const char *s, int c) {
 }
 
 
-#endif /* defined(__BIONIC_FORTIFY_INLINE) */
+#endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS
 

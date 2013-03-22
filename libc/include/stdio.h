@@ -457,7 +457,7 @@ int vfdprintf(int, const char*, __va_list)
 __END_DECLS
 #endif /* _GNU_SOURCE */
 
-#if defined(__BIONIC_FORTIFY_INLINE)
+#if defined(__BIONIC_FORTIFY)
 
 __BEGIN_DECLS
 
@@ -538,6 +538,6 @@ char *fgets(char *dest, int size, FILE *stream)
 
 __END_DECLS
 
-#endif /* defined(__BIONIC_FORTIFY_INLINE) */
+#endif /* defined(__BIONIC_FORTIFY) */
 
 #endif /* _STDIO_H_ */
