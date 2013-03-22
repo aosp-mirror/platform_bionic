@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "pthread_accessor.h"
 #include "pthread_internal.h"
 #include "private/ErrnoRestorer.h"
 
@@ -42,10 +43,10 @@
 #define MAX_TASK_COMM_LEN 16
 #define TASK_COMM_FMT "/proc/self/task/%d/comm"
 
-int pthread_setname_np(pthread_t thread, const char* thread_name) {
+int pthread_setname_np(pthread_t t, const char* thread_name) {
   ErrnoRestorer errno_restorer;
 
-  if (thread == 0 || thread_name == NULL) {
+  if (thread_name == NULL) {
     return EINVAL;
   }
 
@@ -55,14 +56,21 @@ int pthread_setname_np(pthread_t thread, const char* thread_name) {
   }
 
   // Changing our own name is an easy special case.
-  if (thread == pthread_self()) {
+  if (t == pthread_self()) {
     return prctl(PR_SET_NAME, thread_name) ? errno : 0;
   }
 
-  // Have to change another thread's name.
-  pthread_internal_t* t = reinterpret_cast<pthread_internal_t*>(thread);
+  // We have to change another thread's name.
+  pid_t tid = 0;
+  {
+    pthread_accessor thread(t);
+    if (thread.get() == NULL) {
+      return ESRCH;
+    }
+    tid = thread->tid;
+  }
   char comm_name[sizeof(TASK_COMM_FMT) + 8];
-  snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, t->tid);
+  snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, tid);
   int fd = open(comm_name, O_WRONLY);
   if (fd == -1) {
     return errno;
@@ -72,7 +80,7 @@ int pthread_setname_np(pthread_t thread, const char* thread_name) {
 
   if (n < 0) {
     return errno;
-  } else if ((size_t)n != thread_name_len) {
+  } else if (n != static_cast<ssize_t>(thread_name_len)) {
     return EIO;
   }
   return 0;
