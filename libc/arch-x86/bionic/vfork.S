@@ -1,10 +1,5 @@
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
-
-#ifndef __NR_vfork
-#define __NR_vfork  190
-#endif
-
+#include <asm/unistd.h>
 
 /* Get rid of the stack modifications (popl/ret) after vfork() success.
  * vfork is VERY sneaky. One has to be very careful about what can be done
