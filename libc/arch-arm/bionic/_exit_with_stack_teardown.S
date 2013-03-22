@@ -27,7 +27,7 @@
  */
 
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
+#include <asm/unistd.h>
 
 // void _exit_with_stack_teardown(void* stackBase, int stackSize, int retCode)
 ENTRY(_exit_with_stack_teardown)

@@ -28,7 +28,7 @@
 
 #include <linux/err.h>
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
+#include <asm/unistd.h>
 
 // int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
 ENTRY(__pthread_clone)

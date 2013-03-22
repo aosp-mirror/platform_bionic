@@ -28,7 +28,6 @@
 
 #include <linux/err.h>
 #include <machine/asm.h>
-#include <sys/linux-syscalls.h>
 
 ENTRY(syscall)
     mov     ip, sp
