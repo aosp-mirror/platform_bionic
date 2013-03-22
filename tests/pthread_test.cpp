@@ -239,7 +239,7 @@ TEST(pthread, pthread_setname_np__no_such_thread) {
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
-  ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
+  ASSERT_EQ(ESRCH, pthread_setname_np(dead_thread, "short 3"));
 }
 #endif
 
