@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/linux-syscalls.h>
+#include <asm/unistd.h>
 #include <machine/asm.h>
 
 #define FUTEX_WAIT 0
