@@ -3,9 +3,7 @@
 #define _BIONIC_LINUX_SYSCALLS_H_
 
 #if !defined __ASM_ARM_UNISTD_H && !defined __ASM_I386_UNISTD_H && !defined __ASM_MIPS_UNISTD_H
-#if defined __arm__ && !defined __ARM_EABI__ && !defined __thumb__
-  #  define __NR_SYSCALL_BASE 0x900000
-#elif defined(__mips__)
+#if defined(__mips__)
   #  define __NR_SYSCALL_BASE 4000
 #else
   #  define __NR_SYSCALL_BASE 0
@@ -212,8 +210,8 @@
 #define __NR_inotify_rm_watch             (__NR_SYSCALL_BASE + 318)
 #define __NR_poll                         (__NR_SYSCALL_BASE + 168)
 #define __NR_eventfd2                     (__NR_SYSCALL_BASE + 356)
-#define __NR_ARM_set_tls                  (__NR_SYSCALL_BASE + 983045)
-#define __NR_ARM_cacheflush               (__NR_SYSCALL_BASE + 983042)
+#define __ARM_NR_set_tls                  (__NR_SYSCALL_BASE + 983045)
+#define __ARM_NR_cacheflush               (__NR_SYSCALL_BASE + 983042)
 #endif
 
 #ifdef __i386__
