@@ -5,7 +5,7 @@ import sys, os, string, re
 
 def usage():
     print """\
-  usage:  genserv < /etc/services > netbsd/net/services.h
+  usage:  genserv < /etc/services > libc/netbsd/net/services.h
 
   this program is used to generate the hard-coded internet service list for the
   Bionic C library.
@@ -72,5 +72,3 @@ for s in services:
     line += str(s)+"\\\n"
 line += '\\0";\n'
 print line
-
-
