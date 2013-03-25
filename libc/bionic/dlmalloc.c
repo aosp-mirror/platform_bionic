@@ -47,7 +47,8 @@ static void __bionic_heap_corruption_error(const char* function) {
 }
 
 static void __bionic_heap_usage_error(const char* function, void* address) {
-  __libc_format_log(ANDROID_LOG_FATAL, "libc", "@@@ ABORTING: invalid address %p passed to %s",
+  __libc_format_log(ANDROID_LOG_FATAL, "libc",
+                    "@@@ ABORTING: invalid address or address of corrupt block %p passed to %s",
                     address, function);
   // So that we can get a memory dump around the specific address.
   *((int**) 0xdeadbaad) = (int*) address;
