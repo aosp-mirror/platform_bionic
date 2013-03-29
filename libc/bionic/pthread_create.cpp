@@ -153,6 +153,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(calloc(sizeof(*thread), 1));
   if (thread == NULL) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: couldn't allocate thread");
     return EAGAIN;
   }
   thread->allocated_on_heap = true;
@@ -172,6 +173,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     thread->attr.stack_base = __create_thread_stack(stack_size, thread->attr.guard_size);
     if (thread->attr.stack_base == NULL) {
       free(thread);
+      __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: couldn't allocate %zd-byte stack", stack_size);
       return EAGAIN;
     }
   } else {
@@ -203,6 +205,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
       munmap(thread->attr.stack_base, stack_size);
     }
     free(thread);
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;
   }
 
