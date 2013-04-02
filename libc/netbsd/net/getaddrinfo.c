@@ -1518,10 +1518,8 @@ _get_scope(const struct sockaddr *addr)
 			return IPV6_ADDR_SCOPE_LINKLOCAL;
 		} else {
 			/*
-			 * According to draft-ietf-6man-rfc3484-revise-01 section 2.3,
-			 * it is best not to treat the private IPv4 ranges
-			 * (10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16) as being
-			 * in a special scope, so we don't.
+			 * RFC 6724 section 3.2. Other IPv4 addresses, including private addresses
+			 * and shared addresses (100.64.0.0/10), are assigned global scope.
 			 */
 			return IPV6_ADDR_SCOPE_GLOBAL;
 		}
@@ -1550,7 +1548,7 @@ _get_scope(const struct sockaddr *addr)
 
 /*
  * Get the label for a given IPv4/IPv6 address.
- * RFC 3484, section 2.1, plus changes from draft-ietf-6man-rfc3484-revise-01.
+ * RFC 6724, section 2.1.
  */
 
 /*ARGSUSED*/
@@ -1558,27 +1556,28 @@ static int
 _get_label(const struct sockaddr *addr)
 {
 	if (addr->sa_family == AF_INET) {
-		return 3;
+		return 4;
 	} else if (addr->sa_family == AF_INET6) {
-		const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)addr;
+		const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *) addr;
 		if (IN6_IS_ADDR_LOOPBACK(&addr6->sin6_addr)) {
 			return 0;
-		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
-			return 1;
 		} else if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr)) {
-			return 3;
-		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
 			return 4;
+		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
+			return 2;
 		} else if (IN6_IS_ADDR_TEREDO(&addr6->sin6_addr)) {
 			return 5;
+		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
+			return 13;
 		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr)) {
-			return 10;
+			return 3;
 		} else if (IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr)) {
 			return 11;
 		} else if (IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
 			return 12;
 		} else {
-			return 2;
+			/* All other IPv6 addresses, including global unicast addresses. */
+			return 1;
 		}
 	} else {
 		/*
@@ -1591,7 +1590,7 @@ _get_label(const struct sockaddr *addr)
 
 /*
  * Get the precedence for a given IPv4/IPv6 address.
- * RFC 3484, section 2.1, plus changes from draft-ietf-6man-rfc3484-revise-01.
+ * RFC 6724, section 2.1.
  */
 
 /*ARGSUSED*/
@@ -1599,24 +1598,25 @@ static int
 _get_precedence(const struct sockaddr *addr)
 {
 	if (addr->sa_family == AF_INET) {
-		return 30;
+		return 35;
 	} else if (addr->sa_family == AF_INET6) {
 		const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6 *)addr;
 		if (IN6_IS_ADDR_LOOPBACK(&addr6->sin6_addr)) {
-			return 60;
-		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
 			return 50;
 		} else if (IN6_IS_ADDR_V4MAPPED(&addr6->sin6_addr)) {
-			return 30;
+			return 35;
 		} else if (IN6_IS_ADDR_6TO4(&addr6->sin6_addr)) {
-			return 20;
+			return 30;
 		} else if (IN6_IS_ADDR_TEREDO(&addr6->sin6_addr)) {
-			return 10;
+			return 5;
+		} else if (IN6_IS_ADDR_ULA(&addr6->sin6_addr)) {
+			return 3;
 		} else if (IN6_IS_ADDR_V4COMPAT(&addr6->sin6_addr) ||
 		           IN6_IS_ADDR_SITELOCAL(&addr6->sin6_addr) ||
 		           IN6_IS_ADDR_6BONE(&addr6->sin6_addr)) {
 			return 1;
 		} else {
+			/* All other IPv6 addresses, including global unicast addresses. */
 			return 40;
 		}
 	} else {
@@ -1655,12 +1655,12 @@ _common_prefix_len(const struct in6_addr *a1, const struct in6_addr *a2)
 
 /*
  * Compare two source/destination address pairs.
- * RFC 3484, section 6.
+ * RFC 6724, section 6.
  */
 
 /*ARGSUSED*/
 static int
-_rfc3484_compare(const void *ptr1, const void* ptr2)
+_rfc6724_compare(const void *ptr1, const void* ptr2)
 {
 	const struct addrinfo_sort_elem *a1 = (const struct addrinfo_sort_elem *)ptr1;
 	const struct addrinfo_sort_elem *a2 = (const struct addrinfo_sort_elem *)ptr2;
@@ -1731,7 +1731,7 @@ _rfc3484_compare(const void *ptr1, const void* ptr2)
 
 	/*
 	 * Rule 9: Use longest matching prefix.
-         * We implement this for IPv6 only, as the rules in RFC 3484 don't seem
+         * We implement this for IPv6 only, as the rules in RFC 6724 don't seem
          * to work very well directly applied to IPv4. (glibc uses information from
          * the routing table for a custom IPv4 implementation here.)
 	 */
@@ -1811,13 +1811,13 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr)
 }
 
 /*
- * Sort the linked list starting at sentinel->ai_next in RFC3484 order.
+ * Sort the linked list starting at sentinel->ai_next in RFC6724 order.
  * Will leave the list unchanged if an error occurs.
  */
 
 /*ARGSUSED*/
 static void
-_rfc3484_sort(struct addrinfo *list_sentinel)
+_rfc6724_sort(struct addrinfo *list_sentinel)
 {
 	struct addrinfo *cur;
 	int nelem = 0, i;
@@ -1852,7 +1852,7 @@ _rfc3484_sort(struct addrinfo *list_sentinel)
 	}
 
 	/* Sort the addresses, and rearrange the linked list so it matches the sorted order. */
-	qsort((void *)elems, nelem, sizeof(struct addrinfo_sort_elem), _rfc3484_compare);
+	qsort((void *)elems, nelem, sizeof(struct addrinfo_sort_elem), _rfc6724_compare);
 
 	list_sentinel->ai_next = elems[0].ai;
 	for (i = 0; i < nelem - 1; ++i) {
@@ -2011,7 +2011,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		}
 	}
 
-	_rfc3484_sort(&sentinel);
+	_rfc6724_sort(&sentinel);
 
 	__res_put_state(res);
 
