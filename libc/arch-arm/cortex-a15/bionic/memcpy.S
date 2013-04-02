@@ -319,7 +319,6 @@ dst_not_word_aligned:
 
         sub     r2, r2, ip
 
-        // If src is not word aligned, jump to the unaligned code.
-        ands    ip, r1, #0x3
-        beq     word_aligned
+        // Src is guaranteed to be at least word aligned by this point.
+        b       word_aligned
 END(memcpy)
