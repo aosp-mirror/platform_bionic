@@ -33,10 +33,6 @@ static void __bionic_heap_usage_error(const char* function, void* address);
 #define CORRUPTION_ERROR_ACTION(m) __bionic_heap_corruption_error(__FUNCTION__)
 #define USAGE_ERROR_ACTION(m,p) __bionic_heap_usage_error(__FUNCTION__, p)
 
-// We use ashmem to name the anonymous private regions created by dlmalloc.
-static void* __bionic_named_anonymous_mmap(size_t length);
-#define MMAP(s) __bionic_named_anonymous_mmap(s)
-
 // Ugly inclusion of C file so that bionic specific #defines configure dlmalloc.
 #include "../upstream-dlmalloc/malloc.c"
 
@@ -52,32 +48,4 @@ static void __bionic_heap_usage_error(const char* function, void* address) {
                     address, function);
   // So that we can get a memory dump around the specific address.
   *((int**) 0xdeadbaad) = (int*) address;
-}
-
-static int __ashmem_create_region(const char* name, size_t size) {
-  int fd = open("/dev/ashmem", O_RDWR);
-  if (fd == -1) {
-    return fd;
-  }
-  int rc = ioctl(fd, ASHMEM_SET_NAME, name);
-  if (rc < 0) {
-    close(fd);
-    return rc;
-  }
-  rc = ioctl(fd, ASHMEM_SET_SIZE, size);
-  if (rc < 0) {
-    close(fd);
-    return rc;
-  }
-  return fd;
-}
-
-static void* __bionic_named_anonymous_mmap(size_t length) {
-  int fd = __ashmem_create_region("libc malloc", length);
-  if (fd < 0) {
-    return MAP_FAILED;
-  }
-  void* result = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);
-  close (fd);
-  return result;
 }
