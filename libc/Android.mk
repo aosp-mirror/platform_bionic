@@ -238,7 +238,8 @@ libc_bionic_src_files := \
     bionic/brk.cpp \
     bionic/dirent.cpp \
     bionic/__errno.c \
-    bionic/eventfd.cpp \
+    bionic/eventfd_read.cpp \
+    bionic/eventfd_write.cpp \
     bionic/__fgets_chk.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
