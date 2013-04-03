@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "S8rYaEOk",
+        "filename": "libc/bionic/eventfd_read.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-03T18:11:03Z",
+      "side": 0,
+      "message": "(they looked pretty clearly defined in the man page to me.)",
+      "revId": "14c840df90bb4fc9935f7e24350e3269b6bd7f17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
