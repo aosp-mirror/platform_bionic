@@ -106,7 +106,7 @@ int __system_properties_init(void)
         goto cleanup;
     }
 
-    prop_area *pa = mmap(0, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    prop_area *pa = mmap(NULL, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
 
     if (pa == MAP_FAILED) {
         goto cleanup;
@@ -150,7 +150,7 @@ const prop_info *__system_property_find(const char *name)
     while(count--) {
         unsigned entry = *toc++;
         if(TOC_NAME_LEN(entry) != len) continue;
-        
+
         pi = TOC_TO_INFO(pa, entry);
         if(memcmp(name, pi->name, len)) continue;
 
@@ -163,7 +163,7 @@ const prop_info *__system_property_find(const char *name)
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
     unsigned serial, len;
-    
+
     for(;;) {
         serial = pi->serial;
         while(SERIAL_DIRTY(serial)) {

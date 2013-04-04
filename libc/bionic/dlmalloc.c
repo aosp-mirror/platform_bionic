@@ -16,15 +16,7 @@
 
 #include "dlmalloc.h"
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include <linux/ashmem.h>
-
-#include <private/libc_logging.h>
+#include "private/libc_logging.h"
 
 // Send dlmalloc errors to the log.
 static void __bionic_heap_corruption_error(const char* function);
@@ -37,15 +29,12 @@ static void __bionic_heap_usage_error(const char* function, void* address);
 #include "../upstream-dlmalloc/malloc.c"
 
 static void __bionic_heap_corruption_error(const char* function) {
-  __libc_format_log(ANDROID_LOG_FATAL, "libc", "@@@ ABORTING: heap corruption detected by %s",
-                    function);
-  abort();
+  __libc_fatal("@@@ ABORTING: heap corruption detected by %s", function);
 }
 
 static void __bionic_heap_usage_error(const char* function, void* address) {
-  __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                    "@@@ ABORTING: invalid address or address of corrupt block %p passed to %s",
-                    address, function);
+  __libc_fatal("@@@ ABORTING: invalid address or address of corrupt block %p passed to %s",
+               address, function);
   // So that we can get a memory dump around the specific address.
   *((int**) 0xdeadbaad) = (int*) address;
 }

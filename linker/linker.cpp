@@ -105,6 +105,8 @@ static soinfo* gLdPreloads[LDPRELOAD_MAX + 1];
 
 __LIBC_HIDDEN__ int gLdDebugVerbosity;
 
+__LIBC_HIDDEN__ abort_msg_t* gAbortMessage = NULL; // For debuggerd.
+
 enum RelocationKind {
     kRelocAbsolute = 0,
     kRelocRelative,
@@ -171,8 +173,7 @@ size_t linker_get_error_buffer_size() {
  */
 extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
 
-static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity,
-                                  RT_CONSISTENT, 0};
+static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity, RT_CONSISTENT, 0};
 static link_map_t* r_debug_tail = 0;
 
 static pthread_mutex_t gDebugMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -1815,8 +1816,8 @@ extern "C" Elf32_Addr __linker_init(void* raw_args) {
 
   Elf32_Addr linker_addr = args.getauxval(AT_BASE);
 
-  Elf32_Ehdr *elf_hdr = (Elf32_Ehdr*) linker_addr;
-  Elf32_Phdr *phdr = (Elf32_Phdr*)((unsigned char*) linker_addr + elf_hdr->e_phoff);
+  Elf32_Ehdr* elf_hdr = (Elf32_Ehdr*) linker_addr;
+  Elf32_Phdr* phdr = (Elf32_Phdr*)((unsigned char*) linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so;
   memset(&linker_so, 0, sizeof(soinfo));
@@ -1841,6 +1842,7 @@ extern "C" Elf32_Addr __linker_init(void* raw_args) {
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
+  args.abort_message_ptr = &gAbortMessage;
   Elf32_Addr start_address = __linker_init_post_relocation(args, linker_addr);
 
   set_soinfo_pool_protection(PROT_READ);
