@@ -28,27 +28,16 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "libc_logging.h"
 
-// We log to stderr for the benefit of "adb shell" users, and the log for the benefit
-// of regular app developers who want to see their asserts.
-
 void __assert(const char* file, int line, const char* failed_expression) {
-  const char* fmt = "%s:%d: assertion \"%s\" failed\n";
-  __libc_format_log(ANDROID_LOG_FATAL, "libc", fmt, file, line, failed_expression);
-  fprintf(stderr, fmt, file, line, failed_expression);
-  abort();
+  __libc_fatal("%s:%d: assertion \"%s\" failed", file, line, failed_expression);
   /* NOTREACHED */
 }
 
 void __assert2(const char* file, int line, const char* function, const char* failed_expression) {
-  const char* fmt = "%s:%d: %s: assertion \"%s\" failed\n";
-  __libc_format_log(ANDROID_LOG_FATAL, "libc", fmt, file, line, function, failed_expression);
-  fprintf(stderr, fmt, file, line, function, failed_expression);
-  abort();
+  __libc_fatal("%s:%d: %s: assertion \"%s\" failed", file, line, function, failed_expression);
   /* NOTREACHED */
 }

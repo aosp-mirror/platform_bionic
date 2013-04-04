@@ -21,6 +21,8 @@
 #include <stdint.h>
 #include <sys/auxv.h>
 
+struct abort_msg_t;
+
 // When the kernel starts the dynamic linker, it passes a pointer to a block
 // of memory containing argc, the argv array, the environment variable array,
 // and the array of ELF aux vectors. This class breaks that block up into its
@@ -66,6 +68,8 @@ class KernelArgumentBlock {
   char** argv;
   char** envp;
   Elf32_auxv_t* auxv;
+
+  abort_msg_t** abort_message_ptr;
 
  private:
   // Disallow copy and assignment.

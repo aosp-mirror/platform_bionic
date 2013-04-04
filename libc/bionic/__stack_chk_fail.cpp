@@ -32,6 +32,5 @@
 #include "libc_logging.h"
 
 void __stack_chk_fail() {
-  __libc_format_log(ANDROID_LOG_FATAL, "libc", "stack corruption detected");
-  abort();
+  __libc_fatal("stack corruption detected");
 }
