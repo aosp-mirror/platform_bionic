@@ -45,6 +45,7 @@
 #include "private/KernelArgumentBlock.h"
 #include "pthread_internal.h"
 
+extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" unsigned __get_sp(void);
 extern "C" int __system_properties_init(void);
 
@@ -96,6 +97,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
   errno = 0;
   __libc_auxv = args.auxv;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
+  __abort_message_ptr = args.abort_message_ptr;
 
   // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
   __stack_chk_guard = *reinterpret_cast<uintptr_t*>(getauxval(AT_RANDOM));

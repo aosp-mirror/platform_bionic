@@ -67,6 +67,20 @@ enum {
   ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
 };
 
+struct abort_msg_t {
+  size_t size;
+  char msg[0];
+};
+
+__LIBC_HIDDEN__ void __libc_set_abort_message(const char* msg);
+
+//
+// Formats a message to the log (priority 'fatal'), then aborts.
+//
+
+__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...)
+    __attribute__((__format__(printf, 1, 2)));
+
 //
 // Formatting routines for the C library's internal debugging.
 // Unlike the usual alternatives, these don't allocate.
