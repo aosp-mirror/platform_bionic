@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "TBSPC7no",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-05T16:40:35Z",
+      "side": 1,
+      "message": "can you please add:\n\n__attribute__ ((format (printf, 1, 2)));\n\nhere, like we do on lines 87 through 95.",
+      "revId": "469ee1cea6f9f6a43340f665bc67c9ea226d13a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
