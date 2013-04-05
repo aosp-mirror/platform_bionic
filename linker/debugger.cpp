@@ -52,8 +52,12 @@ enum debugger_action_t {
 
 /* message sent over the socket */
 struct debugger_msg_t {
-    debugger_action_t action;
-    pid_t tid;
+  // version 1 included:
+  debugger_action_t action;
+  pid_t tid;
+
+  // version 2 added:
+  uintptr_t abort_msg_address;
 };
 
 // see man(2) prctl, specifically the section about PR_GET_NAME
@@ -154,14 +158,14 @@ static bool haveSiginfo(int signum) {
     sigemptyset(&newact.sa_mask);
 
     if (sigaction(signum, &newact, &oldact) < 0) {
-      __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed testing for SA_SIGINFO: %s",
+      __libc_format_log(ANDROID_LOG_WARN, "libc", "Failed testing for SA_SIGINFO: %s",
                         strerror(errno));
-      return 0;
+      return false;
     }
     bool ret = (oldact.sa_flags & SA_SIGINFO) != 0;
 
     if (sigaction(signum, &oldact, NULL) == -1) {
-      __libc_format_log(ANDROID_LOG_FATAL, "libc", "Restore failed in test for SA_SIGINFO: %s",
+      __libc_format_log(ANDROID_LOG_WARN, "libc", "Restore failed in test for SA_SIGINFO: %s",
                         strerror(errno));
     }
     return ret;
@@ -186,19 +190,17 @@ void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
     int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
 
     if (s >= 0) {
-        /* debugger knows our pid from the credentials on the
-         * local socket but we need to tell it our tid.  It
-         * is paranoid and will verify that we are giving a tid
-         * that's actually in our process
-         */
-        int  ret;
+        // debuggerd knows our pid from the credentials on the
+        // local socket but we need to tell it the tid of the crashing thread.
+        // debuggerd will be paranoid and verify that we sent a tid
+        // that's actually in our process.
         debugger_msg_t msg;
         msg.action = DEBUGGER_ACTION_CRASH;
         msg.tid = tid;
-        ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
+        msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
+        int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
         if (ret == sizeof(msg)) {
-            /* if the write failed, there is no point to read on
-             * the file descriptor. */
+            // if the write failed, there is no point trying to read a response.
             ret = TEMP_FAILURE_RETRY(read(s, &tid, 1));
             int saved_errno = errno;
             notify_gdb_of_libraries();
