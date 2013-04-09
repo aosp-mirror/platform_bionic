@@ -25,17 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #define _GNU_SOURCE 1
 #include <sched.h>
+#include <string.h>
 
-int  sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)
-{
-    int ret = __sched_getaffinity(pid, setsize, set);
-    if (ret >= 0) {
-        if ((size_t)ret < setsize) {
-            memset((char*)set + ret, '\0', setsize - (size_t)ret);
-        }
-        ret = 0;
-    }
-    return ret;
+extern "C" int __sched_getaffinity(pid_t, size_t, cpu_set_t*);
+
+int sched_getaffinity(pid_t pid, size_t set_size, cpu_set_t* set) {
+  int rc = __sched_getaffinity(pid, set_size, set);
+  if (rc == -1) {
+      return -1;
+  }
+
+  // Clear any bytes the kernel didn't touch.
+  // (The kernel returns the number of bytes written on success.)
+  memset(reinterpret_cast<char*>(set) + rc, 0, set_size - rc);
+  return 0;
 }
