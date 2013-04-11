@@ -193,3 +193,21 @@ TEST(stdio, popen) {
 
   ASSERT_EQ(0, pclose(fp));
 }
+
+TEST(stdio, getc) {
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_TRUE(fp != NULL);
+  ASSERT_EQ('L', getc(fp));
+  ASSERT_EQ('i', getc(fp));
+  ASSERT_EQ('n', getc(fp));
+  ASSERT_EQ('u', getc(fp));
+  ASSERT_EQ('x', getc(fp));
+  fclose(fp);
+}
+
+TEST(stdio, putc) {
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_TRUE(fp != NULL);
+  ASSERT_EQ(EOF, putc('x', fp));
+  fclose(fp);
+}

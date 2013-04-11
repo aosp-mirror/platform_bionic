@@ -1,4 +1,3 @@
-/*	$OpenBSD: fileno.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,21 +30,31 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)setbuffer.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
 #include <stdio.h>
-#include "local.h"
+
+void
+setbuffer(fp, buf, size)
+	FILE *fp;
+	char *buf;
+	int size;
+{
+
+	(void)setvbuf(fp, buf, buf ? _IOFBF : _IONBF, (size_t)size);
+}
 
 /*
- * A subroutine version of the macro fileno.
+ * set line buffering
  */
-#undef fileno
-
 int
-fileno(FILE *fp)
+setlinebuf(fp)
+	FILE *fp;
 {
-	int ret;
 
-	FLOCKFILE(fp);
-	ret = __sfileno(fp);
-	FUNLOCKFILE(fp);
-	return (ret);
+	return (setvbuf(fp, (char *)NULL, _IOLBF, (size_t)0));
 }

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_FREEBSD_COMPAT_H_included
-#define _BIONIC_FREEBSD_COMPAT_H_included
+#ifndef _BIONIC_FREEBSD_LIBC_PRIVATE_H_included
+#define _BIONIC_FREEBSD_LIBC_PRIVATE_H_included
 
-#define __USE_BSD
+#define FLOCKFILE(fp)   do { if (__isthreaded) flockfile(fp); } while (0)
+#define FUNLOCKFILE(fp) do { if (__isthreaded) funlockfile(fp); } while (0)
 
-#define _close close
-#define _fcntl fcntl
-#define _open open
+#define STDIO_THREAD_LOCK()   /* TODO: until we have the FreeBSD findfp.c, this is useless. */
+#define STDIO_THREAD_UNLOCK() /* TODO: until we have the FreeBSD findfp.c, this is useless. */
 
-#define _sseek __sseek /* Needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
+#define ORIENT(fp, o) /* Only needed for wide-character stream support. */
 
 #endif

@@ -1,5 +1,3 @@
-/*	$OpenBSD: remove.c,v 1.7 2005/08/08 08:05:36 espie Exp $	*/
-
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -15,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -32,18 +30,85 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)flags.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include <sys/types.h>
+#include <sys/file.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/stat.h>
+#include <errno.h>
 
+#include "local.h"
+
+/*
+ * Return the (stdio) flags for a given mode.  Store the flags
+ * to be passed to an _open() syscall through *optr.
+ * Return 0 on error.
+ */
 int
-remove(const char *file)
+__sflags(mode, optr)
+	const char *mode;
+	int *optr;
 {
-	struct stat st;
+	int ret, m, o;
 
-	if (lstat(file, &st) < 0)
-		return (-1);
-	if (S_ISDIR(st.st_mode))
-		return (rmdir(file));
-	return (unlink(file));
+	switch (*mode++) {
+
+	case 'r':	/* open for reading */
+		ret = __SRD;
+		m = O_RDONLY;
+		o = 0;
+		break;
+
+	case 'w':	/* open for writing */
+		ret = __SWR;
+		m = O_WRONLY;
+		o = O_CREAT | O_TRUNC;
+		break;
+
+	case 'a':	/* open for appending */
+		ret = __SWR;
+		m = O_WRONLY;
+		o = O_CREAT | O_APPEND;
+		break;
+
+	default:	/* illegal mode */
+		errno = EINVAL;
+		return (0);
+	}
+
+	/* 'b' (binary) is ignored */
+	if (*mode == 'b')
+		mode++;
+
+	/* [rwa][b]\+ means read and write */
+	if (*mode == '+') {
+		mode++;
+		ret = __SRW;
+		m = O_RDWR;
+	}
+
+	/* 'b' (binary) can appear here, too -- and is ignored again */
+	if (*mode == 'b')
+		mode++;
+
+	/* 'x' means exclusive (fail if the file exists) */
+	if (*mode == 'x') {
+		mode++;
+		if (m == O_RDONLY) {
+			errno = EINVAL;
+			return (0);
+		}
+		o |= O_EXCL;
+	}
+
+	/* set close-on-exec */
+	if (*mode == 'e')
+		o |= O_CLOEXEC;
+
+	*optr = m | o;
+	return (ret);
 }

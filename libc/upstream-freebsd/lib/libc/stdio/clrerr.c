@@ -1,4 +1,3 @@
-/*	$OpenBSD: getc.c,v 1.6 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,32 +30,32 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)clrerr.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
-#include "local.h"
+#include "un-namespace.h"
+#include "libc_private.h"
 
-/*
- * A subroutine version of the macro getc_unlocked.
- */
-#undef getc_unlocked
+#undef clearerr
+#undef clearerr_unlocked
 
-int
-getc_unlocked(FILE *fp)
+void
+clearerr(fp)
+	FILE *fp;
 {
-	return (__sgetc(fp));
+	FLOCKFILE(fp);
+	__sclearerr(fp);
+	FUNLOCKFILE(fp);
 }
 
-/*
- * A subroutine version of the macro getc.
- */
-#undef getc
-
-int
-getc(FILE *fp)
+void
+clearerr_unlocked(FILE *fp)
 {
-	int c;
 
-	FLOCKFILE(fp);
-	c = __sgetc(fp);
-	FUNLOCKFILE(fp);
-	return (c);
+	__sclearerr(fp);
 }

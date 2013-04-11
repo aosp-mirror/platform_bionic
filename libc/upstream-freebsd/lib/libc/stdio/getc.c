@@ -1,4 +1,3 @@
-/*	$OpenBSD: puts.c,v 1.7 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,31 +30,36 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)getc.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
-#include <string.h>
+#include "un-namespace.h"
+#include "libc_private.h"
 #include "local.h"
-#include "fvwrite.h"
 
-/*
- * Write the given string to stdout, appending a newline.
- */
+#undef getc
+#undef getc_unlocked
+
 int
-puts(const char *s)
+getc(FILE *fp)
 {
-	size_t c = strlen(s);
-	struct __suio uio;
-	struct __siov iov[2];
-	int ret;
+	int retval;
+	FLOCKFILE(fp);
+	/* Orientation set by __sgetc() when buffer is empty. */
+	/* ORIENT(fp, -1); */
+	retval = __sgetc(fp);
+	FUNLOCKFILE(fp);
+	return (retval);
+}
 
-	iov[0].iov_base = (void *)s;
-	iov[0].iov_len = c;
-	iov[1].iov_base = "\n";
-	iov[1].iov_len = 1;
-	uio.uio_resid = c + 1;
-	uio.uio_iov = &iov[0];
-	uio.uio_iovcnt = 2;
-	FLOCKFILE(stdout);
-	ret = __sfvwrite(stdout, &uio);
-	FUNLOCKFILE(stdout);
-	return (ret ? EOF : '\n');
+int
+getc_unlocked(FILE *fp)
+{
+
+	return (__sgetc(fp));
 }
