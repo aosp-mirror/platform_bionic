@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "TRUbFSDQ",
+        "filename": "libc/upstream-freebsd/lib/libc/stdio/fwrite.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-11T21:10:58Z",
+      "side": 1,
+      "message": "yeah!",
+      "revId": "6b05c8e28017518fae04a3a601d0d245916561d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TRWbExDY",
+        "filename": "libc/upstream-freebsd/lib/libc/stdio/setbuffer.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-11T21:10:58Z",
+      "side": 1,
+      "message": "1, 2, 4? So odd... (this file and others)",
+      "revId": "6b05c8e28017518fae04a3a601d0d245916561d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
