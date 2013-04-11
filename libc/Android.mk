@@ -170,7 +170,6 @@ libc_common_src_files := \
 	bionic/recv.c \
 	bionic/sched_cpualloc.c \
 	bionic/sched_cpucount.c \
-	bionic/sched_getaffinity.c \
 	bionic/sched_getcpu.c \
 	bionic/semaphore.c \
 	bionic/send.c \
@@ -264,6 +263,7 @@ libc_bionic_src_files := \
     bionic/raise.cpp \
     bionic/sbrk.cpp \
     bionic/scandir.cpp \
+    bionic/sched_getaffinity.cpp \
     bionic/__set_errno.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
