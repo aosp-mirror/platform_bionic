@@ -33,6 +33,24 @@
       "revId": "6b05c8e28017518fae04a3a601d0d245916561d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TRebo1KI",
+        "filename": "libc/upstream-freebsd/lib/libc/stdio/setbuffer.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-11T21:18:13Z",
+      "side": 1,
+      "message": "yeah, i\u0027ll mention that to the upstream maintainer. it\u0027s wrong in almost half the FreeBSD libc :-)",
+      "parentUuid": "TRWbExDY",
+      "revId": "6b05c8e28017518fae04a3a601d0d245916561d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
