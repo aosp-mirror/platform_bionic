@@ -1,4 +1,3 @@
-/*	$OpenBSD: fputs.c,v 1.7 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,28 +30,34 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)ferror.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
-#include <string.h>
-#include "local.h"
-#include "fvwrite.h"
+#include "un-namespace.h"
+#include "libc_private.h"
 
-/*
- * Write the given string to the given file.
- */
+#undef ferror
+#undef ferror_unlocked
+
 int
-fputs(const char *s, FILE *fp)
+ferror(FILE *fp)
 {
-	struct __suio uio;
-	struct __siov iov;
-	int ret;
+	int	ret;
 
-	iov.iov_base = (void *)s;
-	iov.iov_len = uio.uio_resid = strlen(s);
-	uio.uio_iov = &iov;
-	uio.uio_iovcnt = 1;
 	FLOCKFILE(fp);
-	_SET_ORIENTATION(fp, -1);
-	ret = __sfvwrite(fp, &uio);
+	ret = __sferror(fp);
 	FUNLOCKFILE(fp);
 	return (ret);
+}
+
+int
+ferror_unlocked(FILE *fp)
+{
+
+	return (__sferror(fp));
 }

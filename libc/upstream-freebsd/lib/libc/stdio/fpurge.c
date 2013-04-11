@@ -1,4 +1,3 @@
-/*	$OpenBSD: feof.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,21 +30,41 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fpurge.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "un-namespace.h"
 #include "local.h"
+#include "libc_private.h"
 
 /*
- * A subroutine version of the macro feof.
+ * fpurge: like fflush, but without writing anything: leave the
+ * given FILE's buffer empty.
  */
-#undef feof
-
 int
-feof(FILE *fp)
+fpurge(fp)
+	FILE *fp;
 {
-	int ret;
-
+	int retval;
 	FLOCKFILE(fp);
-	ret = __sfeof(fp);
+	if (!fp->_flags) {
+		errno = EBADF;
+		retval = EOF;
+	} else {
+		if (HASUB(fp))
+			FREEUB(fp);
+		fp->_p = fp->_bf._base;
+		fp->_r = 0;
+		fp->_w = fp->_flags & (__SLBF|__SNBF|__SRD) ? 0 : fp->_bf._size;
+		retval = 0;
+	}
 	FUNLOCKFILE(fp);
-	return (ret);
+	return (retval);
 }

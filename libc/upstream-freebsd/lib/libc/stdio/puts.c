@@ -1,4 +1,3 @@
-/*	$OpenBSD: fdopen.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,46 +30,42 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)puts.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
-#include <errno.h>
+#include <string.h>
+#include "un-namespace.h"
+#include "fvwrite.h"
+#include "libc_private.h"
 #include "local.h"
 
-FILE *
-fdopen(int fd, const char *mode)
+/*
+ * Write the given string to stdout, appending a newline.
+ */
+int
+puts(s)
+	char const *s;
 {
-	FILE *fp;
-	int flags, oflags, fdflags, tmp;
+	int retval;
+	size_t c = strlen(s);
+	struct __suio uio;
+	struct __siov iov[2];
 
-	if ((flags = __sflags(mode, &oflags)) == 0)
-		return (NULL);
-
-	/* Make sure the mode the user wants is a subset of the actual mode. */
-	if ((fdflags = fcntl(fd, F_GETFL, 0)) < 0)
-		return (NULL);
-	tmp = fdflags & O_ACCMODE;
-	if (tmp != O_RDWR && (tmp != (oflags & O_ACCMODE))) {
-		errno = EINVAL;
-		return (NULL);
-	}
-
-	if ((fp = __sfp()) == NULL)
-		return (NULL);
-	fp->_flags = flags;
-	/*
-	 * If opened for appending, but underlying descriptor does not have
-	 * O_APPEND bit set, assert __SAPP so that __swrite() will lseek to
-	 * end before each write.
-	 */
-	if ((oflags & O_APPEND) && !(fdflags & O_APPEND))
-		fp->_flags |= __SAPP;
-	fp->_file = fd;
-	fp->_cookie = fp;
-	fp->_read = __sread;
-	fp->_write = __swrite;
-	fp->_seek = __sseek;
-	fp->_close = __sclose;
-	return (fp);
+	iov[0].iov_base = (void *)s;
+	iov[0].iov_len = c;
+	iov[1].iov_base = "\n";
+	iov[1].iov_len = 1;
+	uio.uio_resid = c + 1;
+	uio.uio_iov = &iov[0];
+	uio.uio_iovcnt = 2;
+	FLOCKFILE(stdout);
+	ORIENT(stdout, -1);
+	retval = __sfvwrite(stdout, &uio) ? EOF : '\n';
+	FUNLOCKFILE(stdout);
+	return (retval);
 }

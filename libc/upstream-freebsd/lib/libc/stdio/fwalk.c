@@ -1,4 +1,3 @@
-/*	$OpenBSD: fsetpos.c,v 1.6 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,13 +30,37 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fwalk.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
 
-/*
- * fsetpos: like fseeko.
- */
+#include <sys/types.h>
+#include <stdio.h>
+#include "local.h"
+#include "glue.h"
+
 int
-fsetpos(FILE *iop, const fpos_t *pos)
+_fwalk(function)
+	int (*function)(FILE *);
 {
-	return (fseeko(iop, (off_t)*pos, SEEK_SET));
+	FILE *fp;
+	int n, ret;
+	struct glue *g;
+
+	ret = 0;
+	/*
+	 * It should be safe to walk the list without locking it;
+	 * new nodes are only added to the end and none are ever
+	 * removed.
+	 *
+	 * Avoid locking this list while walking it or else you will
+	 * introduce a potential deadlock in [at least] refill.c.
+	 */
+	for (g = &__sglue; g != NULL; g = g->next)
+		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
+			if ((fp->_flags != 0) && ((fp->_flags & __SIGN) == 0))
+				ret |= (*function)(fp);
+	return (ret);
 }

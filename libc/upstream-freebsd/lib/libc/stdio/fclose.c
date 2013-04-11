@@ -1,4 +1,3 @@
-/*	$OpenBSD: fgets.c,v 1.10 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,72 +30,56 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fclose.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
+#include <errno.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include "un-namespace.h"
+#include <spinlock.h>
+#include "libc_private.h"
 #include "local.h"
 
-/*
- * Read at most n-1 characters from the given file.
- * Stop when a newline has been read, or the count runs out.
- * Return first argument, or NULL if no characters were read.
- * Do not return NULL if n == 1.
- */
-char *
-fgets(char *buf, int n, FILE *fp)
+int
+fclose(FILE *fp)
 {
-	size_t len;
-	char *s;
-	unsigned char *p, *t;
+	int r;
 
-	if (n <= 0)		/* sanity check */
-		return (NULL);
-
-	FLOCKFILE(fp);
-	_SET_ORIENTATION(fp, -1);
-	s = buf;
-	n--;			/* leave space for NUL */
-	while (n != 0) {
-		/*
-		 * If the buffer is empty, refill it.
-		 */
-		if (fp->_r <= 0) {
-			if (__srefill(fp)) {
-				/* EOF/error: stop with partial or no line */
-				if (s == buf) {
-					FUNLOCKFILE(fp);
-					return (NULL);
-                                }
-				break;
-			}
-		}
-		len = fp->_r;
-		p = fp->_p;
-
-		/*
-		 * Scan through at most n bytes of the current buffer,
-		 * looking for '\n'.  If found, copy up to and including
-		 * newline, and stop.  Otherwise, copy entire chunk
-		 * and loop.
-		 */
-		if ((int)len > n)
-			len = n;
-		t = memchr((void *)p, '\n', len);
-		if (t != NULL) {
-			len = ++t - p;
-			fp->_r -= len;
-			fp->_p = t;
-			(void)memcpy((void *)s, (void *)p, len);
-			s[len] = '\0';
-			FUNLOCKFILE(fp);
-			return (buf);
-		}
-		fp->_r -= len;
-		fp->_p += len;
-		(void)memcpy((void *)s, (void *)p, len);
-		s += len;
-		n -= len;
+	if (fp->_flags == 0) {	/* not open! */
+		errno = EBADF;
+		return (EOF);
 	}
-	*s = '\0';
+	FLOCKFILE(fp);
+	r = fp->_flags & __SWR ? __sflush(fp) : 0;
+	if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0)
+		r = EOF;
+	if (fp->_flags & __SMBF)
+		free((char *)fp->_bf._base);
+	if (HASUB(fp))
+		FREEUB(fp);
+	if (HASLB(fp))
+		FREELB(fp);
+	fp->_file = -1;
+	fp->_r = fp->_w = 0;	/* Mess up if reaccessed. */
+
+	/*
+	 * Lock the spinlock used to protect __sglue list walk in
+	 * __sfp().  The __sfp() uses fp->_flags == 0 test as an
+	 * indication of the unused FILE.
+	 *
+	 * Taking the lock prevents possible compiler or processor
+	 * reordering of the writes performed before the final _flags
+	 * cleanup, making sure that we are done with the FILE before
+	 * it is considered available.
+	 */
+	STDIO_THREAD_LOCK();
+	fp->_flags = 0;		/* Release this FILE for reuse. */
+	STDIO_THREAD_UNLOCK();
 	FUNLOCKFILE(fp);
-	return (buf);
+	return (r);
 }
