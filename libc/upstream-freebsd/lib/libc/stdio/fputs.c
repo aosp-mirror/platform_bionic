@@ -1,4 +1,3 @@
-/*	$OpenBSD: fpurge.c,v 1.6 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,31 +30,39 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fputs.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+#include "un-namespace.h"
+#include "fvwrite.h"
+#include "libc_private.h"
 #include "local.h"
 
 /*
- * fpurge: like fflush, but without writing anything: leave the
- * given FILE's buffer empty.
+ * Write the given string to the given file.
  */
 int
-fpurge(FILE *fp)
+fputs(s, fp)
+	const char * __restrict s;
+	FILE * __restrict fp;
 {
-	FLOCKFILE(fp);
-	if (!fp->_flags) {
-		FUNLOCKFILE(fp);
-		errno = EBADF;
-		return(EOF);
-	}
+	int retval;
+	struct __suio uio;
+	struct __siov iov;
 
-	if (HASUB(fp))
-		FREEUB(fp);
-	WCIO_FREE(fp);
-	fp->_p = fp->_bf._base;
-	fp->_r = 0;
-	fp->_w = fp->_flags & (__SLBF|__SNBF) ? 0 : fp->_bf._size;
+	iov.iov_base = (void *)s;
+	iov.iov_len = uio.uio_resid = strlen(s);
+	uio.uio_iov = &iov;
+	uio.uio_iovcnt = 1;
+	FLOCKFILE(fp);
+	ORIENT(fp, -1);
+	retval = __sfvwrite(fp, &uio);
 	FUNLOCKFILE(fp);
-	return (0);
+	return (retval);
 }

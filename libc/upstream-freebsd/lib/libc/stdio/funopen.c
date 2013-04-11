@@ -1,7 +1,9 @@
-/*	$OpenBSD: tempnam.c,v 1.14 2005/08/08 08:05:36 espie Exp $ */
-/*
- * Copyright (c) 1988, 1993
+/*-
+ * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -11,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -28,57 +30,47 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/param.h>
-#include <errno.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)funopen.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <paths.h>
+#include <errno.h>
 
-__warn_references(tempnam,
-    "warning: tempnam() possibly used unsafely; consider using mkstemp()");
+#include "local.h"
 
-extern char *_mktemp(char *);
-
-char *
-tempnam(const char *dir, const char *pfx)
+FILE *
+funopen(const void *cookie,
+	int (*readfn)(void *, char *, int),
+	int (*writefn)(void *, const char *, int),
+	fpos_t (*seekfn)(void *, fpos_t, int),
+	int (*closefn)(void *))
 {
-	int sverrno;
-	char *f, *name;
+	FILE *fp;
+	int flags;
 
-	if (!(name = malloc(MAXPATHLEN)))
-		return(NULL);
-
-	if (!pfx)
-		pfx = "tmp.";
-
-	if (issetugid() == 0 && (f = getenv("TMPDIR"))) {
-		(void)snprintf(name, MAXPATHLEN, "%s%s%sXXXXXXXXXX", f,
-		    *(f + strlen(f) - 1) == '/'? "": "/", pfx);
-		if ((f = _mktemp(name)))
-			return(f);
+	if (readfn == NULL) {
+		if (writefn == NULL) {		/* illegal */
+			errno = EINVAL;
+			return (NULL);
+		} else
+			flags = __SWR;		/* write only */
+	} else {
+		if (writefn == NULL)
+			flags = __SRD;		/* read only */
+		else
+			flags = __SRW;		/* read-write */
 	}
-
-	if ((f = (char *)dir)) {
-		(void)snprintf(name, MAXPATHLEN, "%s%s%sXXXXXXXXXX", f,
-		    *(f + strlen(f) - 1) == '/'? "": "/", pfx);
-		if ((f = _mktemp(name)))
-			return(f);
-	}
-
-	f = P_tmpdir;
-	(void)snprintf(name, MAXPATHLEN, "%s%sXXXXXXXXX", f, pfx);
-	if ((f = _mktemp(name)))
-		return(f);
-
-	f = _PATH_TMP;
-	(void)snprintf(name, MAXPATHLEN, "%s%sXXXXXXXXX", f, pfx);
-	if ((f = _mktemp(name)))
-		return(f);
-
-	sverrno = errno;
-	free(name);
-	errno = sverrno;
-	return(NULL);
+	if ((fp = __sfp()) == NULL)
+		return (NULL);
+	fp->_flags = flags;
+	fp->_file = -1;
+	fp->_cookie = (void *)cookie;
+	fp->_read = readfn;
+	fp->_write = writefn;
+	fp->_seek = seekfn;
+	fp->_close = closefn;
+	return (fp);
 }

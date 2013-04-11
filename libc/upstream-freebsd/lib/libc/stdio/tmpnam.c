@@ -1,6 +1,5 @@
-/*	$OpenBSD: wsetup.c,v 1.7 2005/08/08 08:05:36 espie Exp $ */
 /*-
- * Copyright (c) 1990, 1993
+ * Copyright (c) 1990, 1993, 1994
  *	The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,56 +30,32 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)tmpnam.c	8.3 (Berkeley) 3/28/94";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include <sys/types.h>
+
 #include <stdio.h>
-#include <stdlib.h>
-#include "local.h"
+#include <unistd.h>
 
-/*
- * Various output routines call wsetup to be sure it is safe to write,
- * because either _flags does not include __SWR, or _buf is NULL.
- * _wsetup returns 0 if OK to write, nonzero otherwise.
- */
-int
-__swsetup(FILE *fp)
+__warn_references(tmpnam,
+    "warning: tmpnam() possibly used unsafely; consider using mkstemp()");
+
+extern char *_mktemp(char *);
+
+char *
+tmpnam(s)
+	char *s;
 {
-	/* make sure stdio is set up */
-	if (!__sdidinit)
-		__sinit();
+	static u_long tmpcount;
+	static char buf[L_tmpnam];
 
-	/*
-	 * If we are not writing, we had better be reading and writing.
-	 */
-	if ((fp->_flags & __SWR) == 0) {
-		if ((fp->_flags & __SRW) == 0)
-			return (EOF);
-		if (fp->_flags & __SRD) {
-			/* clobber any ungetc data */
-			if (HASUB(fp))
-				FREEUB(fp);
-			fp->_flags &= ~(__SRD|__SEOF);
-			fp->_r = 0;
-			fp->_p = fp->_bf._base;
-		}
-		fp->_flags |= __SWR;
-	}
-
-	/*
-	 * Make a buffer if necessary, then set _w.
-	 */
-	if (fp->_bf._base == NULL) {
-		if ((fp->_flags & (__SSTR | __SALC)) == __SSTR)
-			return (EOF);
-		__smakebuf(fp);
-	}
-	if (fp->_flags & __SLBF) {
-		/*
-		 * It is line buffered, so make _lbfsize be -_bufsize
-		 * for the putc() macro.  We will change _lbfsize back
-		 * to 0 whenever we turn off __SWR.
-		 */
-		fp->_w = 0;
-		fp->_lbfsize = -fp->_bf._size;
-	} else
-		fp->_w = fp->_flags & __SNBF ? 0 : fp->_bf._size;
-	return (0);
+	if (s == NULL)
+		s = buf;
+	(void)snprintf(s, L_tmpnam, "%stmp.%lu.XXXXXX", P_tmpdir, tmpcount);
+	++tmpcount;
+	return (_mktemp(s));
 }

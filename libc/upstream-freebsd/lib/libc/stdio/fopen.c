@@ -1,4 +1,3 @@
-/*	$OpenBSD: fopen.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,18 +30,28 @@
  * SUCH DAMAGE.
  */
 
-#define __USE_BSD
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fopen.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
 
+#include "namespace.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
+#include <limits.h>
+#include "un-namespace.h"
+
 #include "local.h"
-#include <linux/stat.h>
 
 FILE *
-fopen(const char *file, const char *mode)
+fopen(file, mode)
+	const char * __restrict file;
+	const char * __restrict mode;
 {
 	FILE *fp;
 	int f;
@@ -52,8 +61,21 @@ fopen(const char *file, const char *mode)
 		return (NULL);
 	if ((fp = __sfp()) == NULL)
 		return (NULL);
-	if ((f = open(file, oflags, DEFFILEMODE)) < 0) {
+	if ((f = _open(file, oflags, DEFFILEMODE)) < 0) {
 		fp->_flags = 0;			/* release */
+		return (NULL);
+	}
+	/*
+	 * File descriptors are a full int, but _file is only a short.
+	 * If we get a valid file descriptor that is greater than
+	 * SHRT_MAX, then the fd will get sign-extended into an
+	 * invalid file descriptor.  Handle this case by failing the
+	 * open.
+	 */
+	if (f > SHRT_MAX) {
+		fp->_flags = 0;			/* release */
+		_close(f);
+		errno = EMFILE;
 		return (NULL);
 	}
 	fp->_file = f;
@@ -63,7 +85,6 @@ fopen(const char *file, const char *mode)
 	fp->_write = __swrite;
 	fp->_seek = __sseek;
 	fp->_close = __sclose;
-
 	/*
 	 * When opening in append mode, even though we use O_APPEND,
 	 * we need to seek to the end so that ftell() gets the right
@@ -73,6 +94,6 @@ fopen(const char *file, const char *mode)
 	 * fseek and ftell.)
 	 */
 	if (oflags & O_APPEND)
-		(void) __sseek((void *)fp, (fpos_t)0, SEEK_END);
+		(void)_sseek(fp, (fpos_t)0, SEEK_END);
 	return (fp);
 }

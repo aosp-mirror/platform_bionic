@@ -1,4 +1,3 @@
-/*	$OpenBSD: fwrite.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,36 +30,70 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fwrite.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
+#include <errno.h>
+#include <stdint.h>
 #include <stdio.h>
+#include "un-namespace.h"
 #include "local.h"
 #include "fvwrite.h"
+#include "libc_private.h"
 
 /*
  * Write `count' objects (each size `size') from memory to the given file.
  * Return the number of whole objects written.
  */
 size_t
-fwrite(const void *buf, size_t size, size_t count, FILE *fp)
+fwrite(buf, size, count, fp)
+	const void * __restrict buf;
+	size_t size, count;
+	FILE * __restrict fp;
 {
 	size_t n;
 	struct __suio uio;
 	struct __siov iov;
-	int ret;
+
+	/*
+	 * ANSI and SUSv2 require a return value of 0 if size or count are 0.
+	 */
+	if ((count == 0) || (size == 0))
+		return (0);
+
+	/*
+	 * Check for integer overflow.  As an optimization, first check that
+	 * at least one of {count, size} is at least 2^16, since if both
+	 * values are less than that, their product can't possible overflow
+	 * (size_t is always at least 32 bits on FreeBSD).
+	 */
+	if (((count | size) > 0xFFFF) &&
+	    (count > SIZE_MAX / size)) {
+		errno = EINVAL;
+		fp->_flags |= __SERR;
+		return (0);
+	}
+
+	n = count * size;
 
 	iov.iov_base = (void *)buf;
-	uio.uio_resid = iov.iov_len = n = count * size;
+	uio.uio_resid = iov.iov_len = n;
 	uio.uio_iov = &iov;
 	uio.uio_iovcnt = 1;
 
+	FLOCKFILE(fp);
+	ORIENT(fp, -1);
 	/*
 	 * The usual case is success (__sfvwrite returns 0);
 	 * skip the divide if this happens, since divides are
 	 * generally slow and since this occurs whenever size==0.
 	 */
-	FLOCKFILE(fp);
-	ret = __sfvwrite(fp, &uio);
+	if (__sfvwrite(fp, &uio) != 0)
+	    count = (n - uio.uio_resid) / size;
 	FUNLOCKFILE(fp);
-	if (ret == 0)
-		return (count);
-	return ((n - uio.uio_resid) / size);
+	return (count);
 }
