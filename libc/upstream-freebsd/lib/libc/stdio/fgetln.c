@@ -1,4 +1,3 @@
-/*	$OpenBSD: fgetln.c,v 1.7 2005/08/08 08:05:36 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -14,7 +13,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,9 +30,18 @@
  * SUCH DAMAGE.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)fgetln.c	8.2 (Berkeley) 1/2/94";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include "namespace.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "un-namespace.h"
+#include "libc_private.h"
 #include "local.h"
 
 /*
@@ -43,7 +51,7 @@
  * so we add 1 here.
 #endif
  */
-static int
+int
 __slbexpand(FILE *fp, size_t newsize)
 {
 	void *p;
@@ -51,7 +59,7 @@ __slbexpand(FILE *fp, size_t newsize)
 #ifdef notdef
 	++newsize;
 #endif
-	if ((size_t)fp->_lb._size >= newsize)
+	if (fp->_lb._size >= newsize)
 		return (0);
 	if ((p = realloc(fp->_lb._base, newsize)) == NULL)
 		return (-1);
@@ -62,7 +70,7 @@ __slbexpand(FILE *fp, size_t newsize)
 
 /*
  * Get an input line.  The returned pointer often (but not always)
- * points into a stdio buffer.  Fgetline does not alter the text of
+ * points into a stdio buffer.  Fgetln does not alter the text of
  * the returned line (which is thus not a C string because it will
  * not necessarily end with '\0'), but does allow callers to modify
  * it if they wish.  Thus, we set __SMOD in case the caller does.
@@ -71,18 +79,22 @@ char *
 fgetln(FILE *fp, size_t *lenp)
 {
 	unsigned char *p;
-	char *ret;
 	size_t len;
 	size_t off;
 
 	FLOCKFILE(fp);
-
+	ORIENT(fp, -1);
 	/* make sure there is input */
-	if (fp->_r <= 0 && __srefill(fp))
-		goto error;
+	if (fp->_r <= 0 && __srefill(fp)) {
+		*lenp = 0;
+		FUNLOCKFILE(fp);
+		return (NULL);
+	}
 
 	/* look for a newline in the input */
-	if ((p = memchr((void *)fp->_p, '\n', fp->_r)) != NULL) {
+	if ((p = memchr((void *)fp->_p, '\n', (size_t)fp->_r)) != NULL) {
+		char *ret;
+
 		/*
 		 * Found one.  Flag buffer as modified to keep fseek from
 		 * `optimising' a backward seek, in case the user stomps on
@@ -103,7 +115,7 @@ fgetln(FILE *fp, size_t *lenp)
 	 * As a bonus, though, we can leave off the __SMOD.
 	 *
 	 * OPTIMISTIC is length that we (optimistically) expect will
-	 * accommodate the `rest' of the string, on each trip through the
+	 * accomodate the `rest' of the string, on each trip through the
 	 * loop below.
 	 */
 #define OPTIMISTIC 80
@@ -123,7 +135,7 @@ fgetln(FILE *fp, size_t *lenp)
 		off = len;
 		if (__srefill(fp))
 			break;	/* EOF or error: return partial line */
-		if ((p = memchr((void *)fp->_p, '\n', fp->_r)) == NULL)
+		if ((p = memchr((void *)fp->_p, '\n', (size_t)fp->_r)) == NULL)
 			continue;
 
 		/* got it: finish up the line (like code above) */
@@ -139,12 +151,11 @@ fgetln(FILE *fp, size_t *lenp)
 		break;
 	}
 	*lenp = len;
-	ret = (char *)fp->_lb._base;
 #ifdef notdef
-	ret[len] = '\0';
+	fp->_lb._base[len] = 0;
 #endif
 	FUNLOCKFILE(fp);
-	return (ret);
+	return ((char *)fp->_lb._base);
 
 error:
 	*lenp = 0;		/* ??? */

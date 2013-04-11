@@ -1,10 +1,6 @@
-/*	$OpenBSD: flags.c,v 1.6 2005/08/08 08:05:36 espie Exp $ */
-/*-
- * Copyright (c) 1990, 1993
+/*
+ * Copyright (c) 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -14,7 +10,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
+ * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -31,52 +27,64 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <sys/file.h>
-#include <stdio.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+static char sccsid[] = "@(#)tempnam.c	8.1 (Berkeley) 6/4/93";
+#endif /* LIBC_SCCS and not lint */
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+
+#include <sys/param.h>
 #include <errno.h>
-#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <paths.h>
 
-/*
- * Return the (stdio) flags for a given mode.  Store the flags
- * to be passed to an open() syscall through *optr.
- * Return 0 on error.
- */
-int
-__sflags(const char *mode, int *optr)
+__warn_references(tempnam,
+    "warning: tempnam() possibly used unsafely; consider using mkstemp()");
+
+extern char *_mktemp(char *);
+
+char *
+tempnam(dir, pfx)
+	const char *dir, *pfx;
 {
-	int ret, m, o;
+	int sverrno;
+	char *f, *name;
 
-	switch (*mode++) {
+	if (!(name = malloc(MAXPATHLEN)))
+		return(NULL);
 
-	case 'r':	/* open for reading */
-		ret = __SRD;
-		m = O_RDONLY;
-		o = 0;
-		break;
+	if (!pfx)
+		pfx = "tmp.";
 
-	case 'w':	/* open for writing */
-		ret = __SWR;
-		m = O_WRONLY;
-		o = O_CREAT | O_TRUNC;
-		break;
-
-	case 'a':	/* open for appending */
-		ret = __SWR;
-		m = O_WRONLY;
-		o = O_CREAT | O_APPEND;
-		break;
-
-	default:	/* illegal mode */
-		errno = EINVAL;
-		return (0);
+	if (issetugid() == 0 && (f = getenv("TMPDIR"))) {
+		(void)snprintf(name, MAXPATHLEN, "%s%s%sXXXXXX", f,
+		    *(f + strlen(f) - 1) == '/'? "": "/", pfx);
+		if ((f = _mktemp(name)))
+			return(f);
 	}
 
-	/* [rwa]\+ or [rwa]b\+ means read and write */
-	if (*mode == '+' || (*mode == 'b' && mode[1] == '+')) {
-		ret = __SRW;
-		m = O_RDWR;
+	if ((f = (char *)dir)) {
+		(void)snprintf(name, MAXPATHLEN, "%s%s%sXXXXXX", f,
+		    *(f + strlen(f) - 1) == '/'? "": "/", pfx);
+		if ((f = _mktemp(name)))
+			return(f);
 	}
-	*optr = m | o;
-	return (ret);
+
+	f = P_tmpdir;
+	(void)snprintf(name, MAXPATHLEN, "%s%sXXXXXX", f, pfx);
+	if ((f = _mktemp(name)))
+		return(f);
+
+	f = _PATH_TMP;
+	(void)snprintf(name, MAXPATHLEN, "%s%sXXXXXX", f, pfx);
+	if ((f = _mktemp(name)))
+		return(f);
+
+	sverrno = errno;
+	free(name);
+	errno = sverrno;
+	return(NULL);
 }

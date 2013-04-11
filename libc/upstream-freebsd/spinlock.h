@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_FREEBSD_COMPAT_H_included
-#define _BIONIC_FREEBSD_COMPAT_H_included
+#ifndef _BIONIC_FREEBSD_SPINLOCK_H_included
+#define _BIONIC_FREEBSD_SPINLOCK_H_included
 
-#define __USE_BSD
-
-#define _close close
-#define _fcntl fcntl
-#define _open open
-
-#define _sseek __sseek /* Needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
+/* TODO: until we have the FreeBSD findfp.c, this is useless. */
 
 #endif
