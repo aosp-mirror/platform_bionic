@@ -109,3 +109,26 @@ TEST(stdlib, realpath) {
   ASSERT_STREQ(executable_path, p);
   free(p);
 }
+
+TEST(stdlib, qsort) {
+  struct s {
+    char name[16];
+    static int comparator(const void* lhs, const void* rhs) {
+      return strcmp(reinterpret_cast<const s*>(lhs)->name, reinterpret_cast<const s*>(rhs)->name);
+    }
+  };
+  s entries[3];
+  strcpy(entries[0].name, "charlie");
+  strcpy(entries[1].name, "bravo");
+  strcpy(entries[2].name, "alpha");
+
+  qsort(entries, 3, sizeof(s), s::comparator);
+  ASSERT_STREQ("alpha", entries[0].name);
+  ASSERT_STREQ("bravo", entries[1].name);
+  ASSERT_STREQ("charlie", entries[2].name);
+
+  qsort(entries, 3, sizeof(s), s::comparator);
+  ASSERT_STREQ("alpha", entries[0].name);
+  ASSERT_STREQ("bravo", entries[1].name);
+  ASSERT_STREQ("charlie", entries[2].name);
+}
