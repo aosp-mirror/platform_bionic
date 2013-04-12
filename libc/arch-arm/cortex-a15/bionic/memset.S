@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,11 +35,12 @@
          * memset() returns its first argument.
 		 */
 
-    .fpu    neon
+        .fpu        neon
+        .syntax     unified
 
 ENTRY(bzero)
-        mov     r2, r1
-        mov     r1, #0
+        mov         r2, r1
+        mov         r1, #0
         // Fall through to memset...
 END(bzero)
 
@@ -47,60 +48,117 @@ ENTRY(memset)
         .save       {r0}
         stmfd       sp!, {r0}
 
-        vdup.8      q0, r1
-
-        /* do we have at least 16-bytes to write (needed for alignment below) */
+        // The new algorithm is slower for copies < 16 so use the old
+        // neon code in that case.
         cmp         r2, #16
-        blo         3f
+        blo         set_less_than_16_unknown_align
 
-        /* align destination to 16 bytes for the write-buffer */
-        rsb         r3, r0, #0
-        ands        r3, r3, #0xF
-        beq         2f
+        // Use strd which requires an even and odd register so move the
+        // values so that:
+        //   r0 and r1 contain the memset value
+        //   r2 is the number of bytes to set
+        //   r3 is the destination pointer
+        mov         r3, r0
 
-        /* write up to 15-bytes (count in r3) */
-        sub         r2, r2, r3
-        movs        ip, r3, lsl #31
-        strmib      r1, [r0], #1
-        strcsb      r1, [r0], #1
-        strcsb      r1, [r0], #1
-        movs        ip, r3, lsl #29
-        bge         1f
+        // Copy the byte value in every byte of r1.
+        mov         r1, r1, lsl #24
+        orr         r1, r1, r1, lsr #8
+        orr         r1, r1, r1, lsr #16
 
-        // writes 4 bytes, 32-bits aligned
-        vst1.32     {d0[0]}, [r0, :32]!
-1:      bcc         2f
+check_alignment:
+        // Align destination to a double word to avoid the strd crossing
+        // a cache line boundary.
+        ands        ip, r3, #7
+        bne         do_double_word_align
 
-        // writes 8 bytes, 64-bits aligned
-        vst1.8      {d0}, [r0, :64]!
-2:
-        /* make sure we have at least 32 bytes to write */
-        subs        r2, r2, #32
-        blo         2f
-        vmov        q1, q0
+double_word_aligned:
+        mov         r0, r1
 
-1:      /* The main loop writes 32 bytes at a time */
-        subs        r2, r2, #32
-        vst1.8      {d0 - d3}, [r0, :128]!
-        bhs         1b
+        subs        r2, #64
+        blo         set_less_than_64
 
-2:      /* less than 32 left */
-        add         r2, r2, #32
-        tst         r2, #0x10
-        beq         3f
+1:      // Main loop sets 64 bytes at a time.
+        .irp        offset, #0, #8, #16, #24, #32, #40, #48, #56
+        strd        r0, r1, [r3, \offset]
+        .endr
 
-        // writes 16 bytes, 128-bits aligned
-        vst1.8      {d0, d1}, [r0, :128]!
-3:      /* write up to 15-bytes (count in r2) */
+        add         r3, #64
+        subs        r2, #64
+        bge         1b
+
+set_less_than_64:
+        // Restore r2 to the count of bytes left to set.
+        add         r2, #64
+        lsls        ip, r2, #27
+        bcc         set_less_than_32
+        // Set 32 bytes.
+        .irp        offset, #0, #8, #16, #24
+        strd        r0, r1, [r3, \offset]
+        .endr
+        add         r3, #32
+
+set_less_than_32:
+        bpl         set_less_than_16
+        // Set 16 bytes.
+        .irp        offset, #0, #8
+        strd        r0, r1, [r3, \offset]
+        .endr
+        add         r3, #16
+
+set_less_than_16:
+        // Less than 16 bytes to set.
+        lsls        ip, r2, #29
+        bcc         set_less_than_8
+
+        // Set 8 bytes.
+        strd        r0, r1, [r3], #8
+
+set_less_than_8:
+        bpl         set_less_than_4
+        // Set 4 bytes
+        str         r1, [r3], #4
+
+set_less_than_4:
+        lsls        ip, r2, #31
+        it          ne
+        strbne      r1, [r3], #1
+        itt         cs
+        strbcs      r1, [r3], #1
+        strbcs      r1, [r3]
+
+        ldmfd       sp!, {r0}
+        bx          lr
+
+do_double_word_align:
+        rsb         ip, ip, #8
+        sub         r2, r2, ip
+        movs        r0, ip, lsl #31
+        it          mi
+        strbmi      r1, [r3], #1
+        itt         cs
+        strbcs      r1, [r3], #1
+        strbcs      r1, [r3], #1
+
+        // Dst is at least word aligned by this point.
+        cmp         ip, #4
+        blo         double_word_aligned
+        str         r1, [r3], #4
+        b           double_word_aligned
+
+set_less_than_16_unknown_align:
+        // Set up to 15 bytes.
+        vdup.8      d0, r1
         movs        ip, r2, lsl #29
         bcc         1f
         vst1.8      {d0}, [r0]!
 1:      bge         2f
         vst1.32     {d0[0]}, [r0]!
 2:      movs        ip, r2, lsl #31
-        strmib      r1, [r0], #1
-        strcsb      r1, [r0], #1
-        strcsb      r1, [r0], #1
+        it          mi
+        strbmi      r1, [r0], #1
+        itt         cs
+        strbcs      r1, [r0], #1
+        strbcs      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
 END(memset)
