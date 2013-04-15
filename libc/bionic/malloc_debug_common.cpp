@@ -524,7 +524,7 @@ static pthread_once_t  malloc_fini_once_ctl = PTHREAD_ONCE_INIT;
  * This routine is called from __libc_init routines implemented
  * in libc_init_static.c and libc_init_dynamic.c files.
  */
-extern "C" void malloc_debug_init() {
+extern "C" __LIBC_HIDDEN__ void malloc_debug_init() {
     /* We need to initialize malloc iff we implement here custom
      * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so */
 #if defined(USE_DL_PREFIX) && !defined(LIBC_STATIC)
@@ -534,7 +534,7 @@ extern "C" void malloc_debug_init() {
 #endif  // USE_DL_PREFIX && !LIBC_STATIC
 }
 
-extern "C" void malloc_debug_fini() {
+extern "C" __LIBC_HIDDEN__ void malloc_debug_fini() {
     /* We need to finalize malloc iff we implement here custom
      * malloc routines (i.e. USE_DL_PREFIX is defined) for libc.so */
 #if defined(USE_DL_PREFIX) && !defined(LIBC_STATIC)
