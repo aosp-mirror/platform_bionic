@@ -45,6 +45,15 @@ TEST(Fortify2_DeathTest, sprintf_fortified2) {
 }
 
 #if __BIONIC__
+TEST(Fortify2_DeathTest, strchr_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
+  myfoo.b[0] = '\0';
+  ASSERT_EXIT(printf("%s", strchr(myfoo.a, 'a')),
+              testing::KilledBySignal(SIGSEGV), "");
+}
+
 TEST(Fortify2_DeathTest, strrchr_fortified2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;

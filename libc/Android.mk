@@ -66,7 +66,6 @@ libc_common_src_files := \
 	string/index.c \
 	string/strcasecmp.c \
 	string/strcat.c \
-	string/strchr.c \
 	string/strcspn.c \
 	string/strdup.c \
 	string/strlcat.c \
@@ -238,6 +237,7 @@ libc_bionic_src_files := \
     bionic/signalfd.cpp \
     bionic/sigwait.cpp \
     bionic/__strcat_chk.cpp \
+    bionic/strchr.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
