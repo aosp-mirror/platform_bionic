@@ -6,6 +6,7 @@ import ftplib
 import httplib
 import os
 import re
+import socket
 import subprocess
 import sys
 import tarfile
@@ -30,6 +31,14 @@ print 'Found bionic in %s...' % bionic_dir
 
 regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward',
            'etcetera', 'europe', 'northamerica', 'southamerica']
+
+
+def DisableIpv6():
+  """Replaces socket.getaddrinfo with a version that only requests IPv4 addresses."""
+  __real_getaddrinfo = socket.getaddrinfo
+  def __ipv4_getaddrinfo(host, port, family=0, socktype=0, proto=0, flags=0):
+    return __real_getaddrinfo(host, port, socket.AF_INET, socktype, proto, flags)
+  socket.getaddrinfo = __ipv4_getaddrinfo
 
 
 def GetCurrentTzDataVersion():
@@ -148,9 +157,9 @@ def main():
   tzdata_filenames = []
 
   # The FTP server lets you download intermediate releases, and also lets you
-  # download the signatures for verification, so it's your best choice. It's
-  # also less reliable than the HTTP server, so we support that too as a backup.
+  # download the signatures for verification, so it's your best choice.
   use_ftp = True
+  DisableIpv6() # I've been unable to talk to the FTP server over IPv6 (2013-04).
 
   if use_ftp:
     ftp = ftplib.FTP('ftp.iana.org')
