@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "TvatGbdQ",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TveU8lkI",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "TvaVGntQ",
         "filename": "libc/string/strchr.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-04-20T00:34:35Z",
       "side": 1,
       "message": "seems like we\u0027ve rewritten this file enough that we should lose L1, and move this into the bionic/ directory as a .cpp file with the others.",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TvUtMmfM",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TvaVGntQ",
       "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "TvWtJVeI",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TvUVMivM",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "TveUldiA",
         "filename": "libc/string/strchr.c",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2013-04-20T00:34:35Z",
       "side": 1,
       "message": "tabs.",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TvQtWoYE",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TveUldiA",
       "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "TvStTXZI",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Added _chk variant. As for the function name, I just made the term generic, so the function name isn\u0027t encoded.",
+      "parentUuid": "TvYVBIsE",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "TvcUgehM",
         "filename": "libc/string/strchr.c",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2013-04-20T00:34:35Z",
       "side": 1,
       "message": "const_cast here and elsewhere.",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TvcsgiRM",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TvcUgehM",
       "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "TveslRSA",
+        "filename": "libc/string/strchr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TvQVWkoE",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "TvYUagtc",
         "filename": "tests/string_test.cpp",
         "patchSetId": 1
@@ -132,6 +258,24 @@
       "writtenOn": "2013-04-20T00:34:35Z",
       "side": 1,
       "message": "char*",
+      "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "TvYsakdc",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-04-22T19:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "TvYUagtc",
       "revId": "50f187f06da59cb6db8fd7b8e4c04acd6b05909d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
