@@ -80,30 +80,41 @@ def FtpUpgrade(ftp, data_filename):
   signature_filename = '%s.asc' % data_filename
   FtpRetrieve(ftp, signature_filename)
 
-  print 'Verifying signature...'
-  # If this fails for you, you probably need to import Paul Eggert's public key:
-  # gpg --recv-keys ED97E90E62AA7E34
-  subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34', '--verify',
-                         signature_filename, data_filename])
-
   ExtractAndCompile(data_filename)
+
+
+def HttpRetrieve(http, path, output_filename):
+  http.request("GET", path)
+  f = open(output_filename, 'wb')
+  f.write(http.getresponse().read())
+  f.close()
 
 
 def HttpUpgrade(http, data_filename):
   """Downloads and repackages the given data from the given HTTP server."""
   SwitchToNewTemporaryDirectory()
 
+  path = "/time-zones/repository/releases/%s" % data_filename
+
   print 'Downloading data...'
-  http.request("GET", "/time-zones/repository/releases/%s" % data_filename)
-  f = open(data_filename, 'wb')
-  f.write(http.getresponse().read())
-  f.close()
+  HttpRetrieve(http, path, data_filename)
+
+  print 'Downloading signature...'
+  signature_filename = '%s.asc' % data_filename
+  HttpRetrieve(http, "%s.asc" % path, signature_filename)
 
   ExtractAndCompile(data_filename)
 
 
 def ExtractAndCompile(data_filename):
   new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
+
+  signature_filename = '%s.asc' % data_filename
+  print 'Verifying signature...'
+  # If this fails for you, you probably need to import Paul Eggert's public key:
+  # gpg --recv-keys ED97E90E62AA7E34
+  subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34', '--verify',
+                         signature_filename, data_filename])
 
   print 'Extracting...'
   os.mkdir('extracted')
