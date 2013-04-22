@@ -3,6 +3,7 @@
 """Updates the tzdata file."""
 
 import ftplib
+import httplib
 import os
 import re
 import subprocess
@@ -58,32 +59,51 @@ def WriteSetupFile():
   setup.close()
 
 
-def Retrieve(ftp, filename):
-  ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
-
-
-def UpgradeTo(ftp, data_filename):
-  """Downloads and repackages the given data from the given FTP server."""
-
-  new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
-
-  # Switch to a temporary directory.
+def SwitchToNewTemporaryDirectory():
   tmp_dir = tempfile.mkdtemp('-tzdata')
   os.chdir(tmp_dir)
   print 'Created temporary directory "%s"...' % tmp_dir
 
+
+def FtpRetrieve(ftp, filename):
+  ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
+
+
+def FtpUpgrade(ftp, data_filename):
+  """Downloads and repackages the given data from the given FTP server."""
+  SwitchToNewTemporaryDirectory()
+
   print 'Downloading data...'
-  Retrieve(ftp, data_filename)
+  FtpRetrieve(ftp, data_filename)
 
   print 'Downloading signature...'
   signature_filename = '%s.asc' % data_filename
-  Retrieve(ftp, signature_filename)
+  FtpRetrieve(ftp, signature_filename)
 
   print 'Verifying signature...'
   # If this fails for you, you probably need to import Paul Eggert's public key:
   # gpg --recv-keys ED97E90E62AA7E34
   subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34', '--verify',
                          signature_filename, data_filename])
+
+  ExtractAndCompile(data_filename)
+
+
+def HttpUpgrade(http, data_filename):
+  """Downloads and repackages the given data from the given HTTP server."""
+  SwitchToNewTemporaryDirectory()
+
+  print 'Downloading data...'
+  http.request("GET", "/time-zones/repository/releases/%s" % data_filename)
+  f = open(data_filename, 'wb')
+  f.write(http.getresponse().read())
+  f.close()
+
+  ExtractAndCompile(data_filename)
+
+
+def ExtractAndCompile(data_filename):
+  new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
 
   print 'Extracting...'
   os.mkdir('extracted')
@@ -113,14 +133,30 @@ def UpgradeTo(ftp, data_filename):
 # See http://www.iana.org/time-zones/ for more about the source of this data.
 def main():
   print 'Looking for new tzdata...'
-  ftp = ftplib.FTP('ftp.iana.org')
-  ftp.login()
-  ftp.cwd('tz/releases')
+
   tzdata_filenames = []
-  for filename in ftp.nlst():
-    if filename.startswith('tzdata20') and filename.endswith('.tar.gz'):
-      tzdata_filenames.append(filename)
-  tzdata_filenames.sort()
+
+  # The FTP server lets you download intermediate releases, and also lets you
+  # download the signatures for verification, so it's your best choice. It's
+  # also less reliable than the HTTP server, so we support that too as a backup.
+  use_ftp = True
+
+  if use_ftp:
+    ftp = ftplib.FTP('ftp.iana.org')
+    ftp.login()
+    ftp.cwd('tz/releases')
+    for filename in ftp.nlst():
+      if filename.startswith('tzdata20') and filename.endswith('.tar.gz'):
+        tzdata_filenames.append(filename)
+    tzdata_filenames.sort()
+  else:
+    http = httplib.HTTPConnection('www.iana.org')
+    http.request("GET", "/time-zones")
+    index_lines = http.getresponse().read().split('\n')
+    for line in index_lines:
+      m = re.compile('.*href="/time-zones/repository/releases/(tzdata20\d\d\c\.tar\.gz)".*').match(line)
+      if m:
+        tzdata_filenames.append(m.group(1))
 
   # If you're several releases behind, we'll walk you through the upgrades
   # one by one.
@@ -129,7 +165,10 @@ def main():
   for filename in tzdata_filenames:
     if filename > current_filename:
       print 'Found new tzdata: %s' % filename
-      UpgradeTo(ftp, filename)
+      if use_ftp:
+        FtpUpgrade(ftp, filename)
+      else:
+        HttpUpgrade(http, filename)
       sys.exit(0)
 
   print 'You already have the latest tzdata (%s)!' % current_version
