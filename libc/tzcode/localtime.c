@@ -2276,14 +2276,18 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
     int32_t data_offset;
     int32_t zonetab_offset;
   } header;
-  if (TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header))) != sizeof(header)) {
-    fprintf(stderr, "%s: could not read header: %s\n", __FUNCTION__, strerror(errno));
+  memset(&header, 0, sizeof(header));
+  ssize_t bytes_read = TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header)));
+  if (bytes_read != sizeof(header)) {
+    fprintf(stderr, "%s: could not read header of \"%s\": %s\n",
+            __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
     close(fd);
     return -1;
   }
 
   if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
-    fprintf(stderr, "%s: bad magic: %s\n", __FUNCTION__, header.tzdata_version);
+    fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n",
+            __FUNCTION__, path, header.tzdata_version);
     close(fd);
     return -1;
   }
@@ -2296,7 +2300,8 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
 #endif
 
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
-    fprintf(stderr, "%s: couldn't seek to index: %s\n", __FUNCTION__, strerror(errno));
+    fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n",
+            __FUNCTION__, path, strerror(errno));
     close(fd);
     return -1;
   }
@@ -2330,10 +2335,13 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
   }
 
   if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
-    fprintf(stderr, "%s: could not seek to %ld: %s\n", __FUNCTION__, specific_zone_offset, strerror(errno));
+    fprintf(stderr, "%s: could not seek to %ld in \"%s\": %s\n",
+            __FUNCTION__, specific_zone_offset, path, strerror(errno));
     close(fd);
     return -1;
   }
+
+  // TODO: check that there's TZ_MAGIC at this offset, so we can fall back to the other file if not.
 
   return fd;
 }
