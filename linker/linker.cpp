@@ -1595,11 +1595,6 @@ static bool soinfo_link_image(soinfo* si) {
         return false;
     }
 
-    // If this is a setuid/setgid program, close the security hole described in
-    // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
-    if (get_AT_SECURE()) {
-        nullify_closed_stdio();
-    }
     notify_gdb_of_load(si);
     return true;
 }
@@ -1627,6 +1622,12 @@ static Elf32_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf32
 
     // Initialize environment functions, and get to the ELF aux vectors table.
     linker_env_init(args);
+
+    // If this is a setuid/setgid program, close the security hole described in
+    // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
+    if (get_AT_SECURE()) {
+        nullify_closed_stdio();
+    }
 
     debuggerd_init();
 
