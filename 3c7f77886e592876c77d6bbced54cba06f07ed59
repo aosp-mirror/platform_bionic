@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UQMUNzIQ",
+        "filename": "tests/fortify1_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T22:08:12Z",
+      "side": 1,
+      "message": "to get the bionic tests running as part of CTS, i need to write a gtest source parser. any time we do anything like this, we\u0027ll have to hack that tool to look for the custom macro too, so i\u0027d rather have the duplication in this case.",
+      "revId": "3c7f77886e592876c77d6bbced54cba06f07ed59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQKUKSGg",
+        "filename": "tests/fortify2_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T22:08:12Z",
+      "side": 1,
+      "message": "especially if it means different things in different files.",
+      "revId": "3c7f77886e592876c77d6bbced54cba06f07ed59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
