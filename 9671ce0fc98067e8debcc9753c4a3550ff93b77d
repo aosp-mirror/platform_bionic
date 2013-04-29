@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UQGWkwKM",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T21:21:05Z",
+      "side": 1,
+      "message": "glibc calls this __bos(ptr).",
+      "revId": "9671ce0fc98067e8debcc9753c4a3550ff93b77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQAW81ME",
+        "filename": "tests/fortify1_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T21:21:05Z",
+      "side": 1,
+      "message": "except you haven\u0027t said this here :-)",
+      "revId": "9671ce0fc98067e8debcc9753c4a3550ff93b77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQOW40M8",
+        "filename": "tests/fortify2_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T21:21:05Z",
+      "side": 1,
+      "message": "no need for \"struct\".",
+      "revId": "9671ce0fc98067e8debcc9753c4a3550ff93b77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
