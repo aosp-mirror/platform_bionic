@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UQGgXdwY",
+        "filename": "tests/fortify2_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T23:40:48Z",
+      "side": 1,
+      "message": "should this have a trailing 2?",
+      "revId": "8a030b56a0ecc7a3183cef8a8129169408b63363",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
