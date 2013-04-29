@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "UQGWqAGI",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-04-29T21:28:04Z",
+      "side": 1,
+      "message": "that\u0027s not an actual quote from your link. here\u0027s what it actually says, which seems fine:\n\n       _FORTIFY_SOURCE (since glibc 2.3.4)\n              Defining this macro causes some lightweight checks to be per-\n              formed to detect some buffer overflow errors when employing\n              various string and memory manipulation functions.  Not all\n              buffer overflows are detected, just some common cases.  In the\n              current implementation checks are added for calls to mem-\n              cpy(3), mempcpy(3), memmove(3), memset(3), stpcpy(3), str-\n              cpy(3), strncpy(3), strcat(3), strncat(3), sprintf(3),\n              snprintf(3), vsprintf(3), vsnprintf(3), and gets(3).  If _FOR-\n              TIFY_SOURCE is set to 1, with compiler optimization level 1\n              (gcc -O1) and above, checks that shouldn\u0027t change the behavior\n              of conforming programs are performed.  With _FORTIFY_SOURCE\n              set to 2 some more checking is added, but some conforming pro-\n              grams might fail.  Some of the checks can be performed at com-\n              pile time, and result in compiler warnings; other checks take\n              place at run time, and result in a run-time error if the check\n              fails.  Use of this macro requires compiler support, available\n              with gcc(1) since version 4.0.",
+      "parentUuid": "UQKVsCHs",
+      "revId": "9671ce0fc98067e8debcc9753c4a3550ff93b77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UQGWkwKM",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
