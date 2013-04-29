@@ -60,6 +60,8 @@ test_src_files = \
     dirent_test.cpp \
     eventfd_test.cpp \
     fenv_test.cpp \
+    fortify1_test.cpp \
+    fortify2_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
     libc_logging_test.cpp \
