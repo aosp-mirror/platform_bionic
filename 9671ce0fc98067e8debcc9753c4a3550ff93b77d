@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "UQKVsCHs",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1018773
+      },
+      "writtenOn": "2013-04-29T21:25:57Z",
+      "side": 1,
+      "message": "According to http://man7.org/linux/man-pages/man7/feature_test_macros.7.html, _FORTIFY_SOURCE set to 1 does not change the runtime behavior of the code. Your change appears to add an if statement. Will this be an issue?",
+      "revId": "9671ce0fc98067e8debcc9753c4a3550ff93b77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UQGWkwKM",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
