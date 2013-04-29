@@ -494,7 +494,7 @@ __attribute__((__nonnull__ (2)))
 int sprintf(char *dest, const char *format, ...)
 {
     return __builtin___sprintf_chk(dest, 0,
-        __builtin_object_size(dest, 0), format, __builtin_va_arg_pack());
+        __bos(dest), format, __builtin_va_arg_pack());
 }
 
 extern char *__fgets_real(char *, int, FILE *)

@@ -27,13 +27,26 @@ struct foo {
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process.
-TEST(Fortify2_DeathTest, strncpy_fortified) {
+TEST(Fortify2_DeathTest, strncpy_fortified2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   int copy_amt = atoi("11");
   ASSERT_EXIT(strncpy(myfoo.a, "01234567890", copy_amt),
               testing::KilledBySignal(SIGSEGV), "");
 }
+
+TEST(Fortify2_DeathTest, sprintf_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  char source_buf[15];
+  memcpy(source_buf, "12345678901234", 15);
+  ASSERT_EXIT(sprintf(myfoo.a, "%s", source_buf),
+              testing::KilledBySignal(SIGSEGV), "");
+}
+
+/***********************************************************/
+/* TESTS BELOW HERE DUPLICATE TESTS FROM fortify1_test.cpp */
+/***********************************************************/
 
 #if __BIONIC__
 TEST(Fortify2_DeathTest, strcpy_fortified) {
@@ -65,3 +78,11 @@ TEST(Fortify2_DeathTest, strrchr_fortified) {
   ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
 }
 #endif
+
+TEST(Fortify2_DeathTest, sprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  char source_buf[15];
+  memcpy(source_buf, "12345678901234", 15);
+  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGSEGV), "");
+}
