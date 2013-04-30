@@ -52,3 +52,11 @@ TEST(Fortify1_DeathTest, strrchr_fortified) {
   ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
 }
 #endif
+
+TEST(Fortify1_DeathTest, sprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  char source_buf[15];
+  memcpy(source_buf, "12345678901234", 15);
+  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGSEGV), "");
+}
