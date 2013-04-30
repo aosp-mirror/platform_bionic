@@ -116,7 +116,7 @@ void *memmove (void *dest, const void *src, size_t len) {
 
 __BIONIC_FORTIFY_INLINE
 char *strcpy(char *dest, const char *src) {
-    return __builtin___strcpy_chk(dest, src, __builtin_object_size (dest, 0));
+    return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
 
 extern void __strncpy_error()
@@ -133,12 +133,12 @@ char *strncpy(char *dest, const char *src, size_t n) {
 
 __BIONIC_FORTIFY_INLINE
 char *strcat(char *dest, const char *src) {
-    return __builtin___strcat_chk(dest, src, __builtin_object_size (dest, 0));
+    return __builtin___strcat_chk(dest, src, __bos(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
 char *strncat(char *dest, const char *src, size_t n) {
-    return __builtin___strncat_chk(dest, src, n, __builtin_object_size (dest, 0));
+    return __builtin___strncat_chk(dest, src, n, __bos(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -154,7 +154,7 @@ extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char *dest, const char *src, size_t size) {
-    size_t bos = __builtin_object_size(dest, 0);
+    size_t bos = __bos(dest);
 
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -185,7 +185,7 @@ extern size_t __strlcat_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
 size_t strlcat(char *dest, const char *src, size_t size) {
-    size_t bos = __builtin_object_size(dest, 0);
+    size_t bos = __bos(dest);
 
     // Compiler doesn't know destination size. Don't call __strlcat_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -211,7 +211,7 @@ extern size_t __strlen_chk(const char *, size_t);
 
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
-    size_t bos = __builtin_object_size(s, 0);
+    size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strlen_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -230,7 +230,7 @@ extern char* __strchr_chk(const char *, int, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strchr(const char *s, int c) {
-    size_t bos = __builtin_object_size(s, 0);
+    size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {

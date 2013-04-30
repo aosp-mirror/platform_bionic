@@ -466,8 +466,7 @@ __attribute__((__format__ (printf, 3, 0)))
 __attribute__((__nonnull__ (3)))
 int vsnprintf(char *dest, size_t size, const char *format, __va_list ap)
 {
-    return __builtin___vsnprintf_chk(dest, size, 0,
-        __builtin_object_size(dest, 0), format, ap);
+    return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -475,8 +474,7 @@ __attribute__((__format__ (printf, 2, 0)))
 __attribute__((__nonnull__ (2)))
 int vsprintf(char *dest, const char *format, __va_list ap)
 {
-    return __builtin___vsprintf_chk(dest, 0,
-        __builtin_object_size(dest, 0), format, ap);
+    return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -485,7 +483,7 @@ __attribute__((__nonnull__ (3)))
 int snprintf(char *str, size_t size, const char *format, ...)
 {
     return __builtin___snprintf_chk(str, size, 0,
-        __builtin_object_size(str, 0), format, __builtin_va_arg_pack());
+        __bos(str), format, __builtin_va_arg_pack());
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -508,7 +506,7 @@ extern char *__fgets_chk(char *, int, FILE *, size_t);
 __BIONIC_FORTIFY_INLINE
 char *fgets(char *dest, int size, FILE *stream)
 {
-    size_t bos = __builtin_object_size(dest, 0);
+    size_t bos = __bos(dest);
 
     // Compiler can prove, at compile time, that the passed in size
     // is always negative. Force a compiler error.
