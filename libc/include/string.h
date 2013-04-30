@@ -249,7 +249,7 @@ extern char* __strrchr_chk(const char *, int, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {
-    size_t bos = __builtin_object_size(s, 0);
+    size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strrchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
