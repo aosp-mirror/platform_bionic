@@ -119,9 +119,16 @@ char *strcpy(char *dest, const char *src) {
     return __builtin___strcpy_chk(dest, src, __builtin_object_size (dest, 0));
 }
 
+extern void __strncpy_error()
+    __attribute__((__error__("strncpy called with size bigger than buffer")));
+
 __BIONIC_FORTIFY_INLINE
 char *strncpy(char *dest, const char *src, size_t n) {
-    return __builtin___strncpy_chk(dest, src, n, __builtin_object_size (dest, 0));
+    size_t bos = __bos(dest);
+    if (__builtin_constant_p(n) && (n > bos)) {
+        __strncpy_error();
+    }
+    return __builtin___strncpy_chk(dest, src, n, bos);
 }
 
 __BIONIC_FORTIFY_INLINE
