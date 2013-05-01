@@ -45,7 +45,7 @@ TEST(Fortify2_DeathTest, sprintf_fortified2) {
 }
 
 #if __BIONIC__
-TEST(Fortify2_DeathTest, strrchr2) {
+TEST(Fortify2_DeathTest, strrchr_fortified2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.a, "0123456789", 10);
