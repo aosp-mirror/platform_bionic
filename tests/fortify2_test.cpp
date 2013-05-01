@@ -44,6 +44,17 @@ TEST(Fortify2_DeathTest, sprintf_fortified2) {
               testing::KilledBySignal(SIGSEGV), "");
 }
 
+#if __BIONIC__
+TEST(Fortify2_DeathTest, strrchr2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memcpy(myfoo.a, "0123456789", 10);
+  memcpy(myfoo.b, "01234", 6);
+  ASSERT_EXIT(printf("%s", strrchr(myfoo.a, 'a')),
+              testing::KilledBySignal(SIGSEGV), "");
+}
+#endif
+
 /***********************************************************/
 /* TESTS BELOW HERE DUPLICATE TESTS FROM fortify1_test.cpp */
 /***********************************************************/
