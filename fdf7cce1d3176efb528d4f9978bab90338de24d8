@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UQMxPsOk",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T19:53:20Z",
+      "side": 1,
+      "message": "you don\u0027t need the extern \"C\" because of the #include \u003cstring.h\u003e.\n\nalso T*.",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQCxdfKM",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T19:53:20Z",
+      "side": 1,
+      "message": "brace on line above.",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQGwmZCg",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T19:53:20Z",
+      "side": 1,
+      "message": "if we\u0027re cleaning this up, is it clearer as a for (; *p !\u003d \u0027\\0\u0027; ++p) loop with no NOTREACHED?",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQEwroO4",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T19:53:20Z",
+      "side": 1,
+      "message": "static_cast",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
