@@ -50,7 +50,7 @@ extern "C" int __vsnprintf_chk(
         const char *format,
         va_list va)
 {
-    if (supplied_size > dest_len_from_compiler) {
+    if (__predict_false(supplied_size > dest_len_from_compiler)) {
         __fortify_chk_fail("vsnprintf buffer overflow", 0);
     }
 
