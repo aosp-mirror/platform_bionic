@@ -44,7 +44,7 @@
 extern "C" char *__strcpy_chk (char *dest, const char *src, size_t dest_len) {
     // TODO: optimize so we don't scan src twice.
     size_t src_len = strlen(src) + 1;
-    if (src_len > dest_len) {
+    if (__predict_false(src_len > dest_len)) {
         __fortify_chk_fail("strcpy buffer overflow",
                              BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
     }

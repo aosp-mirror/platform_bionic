@@ -44,7 +44,7 @@
 extern "C" void *__memmove_chk (void *dest, const void *src,
               size_t len, size_t dest_len)
 {
-    if (len > dest_len) {
+    if (__predict_false(len > dest_len)) {
         __fortify_chk_fail("memmove buffer overflow",
                              BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
     }
