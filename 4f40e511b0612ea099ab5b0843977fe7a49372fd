@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UQMyHsJg",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T21:13:02Z",
+      "side": 1,
+      "message": "up to you whether we want to support building without FORTIFY.",
+      "revId": "4f40e511b0612ea099ab5b0843977fe7a49372fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQOyKdKI",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-02T21:13:02Z",
+      "side": 1,
+      "message": "ah, i hadn\u0027t thought of strchr(s, \u0027\\0\u0027).",
+      "revId": "4f40e511b0612ea099ab5b0843977fe7a49372fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
