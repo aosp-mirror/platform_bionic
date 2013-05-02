@@ -209,6 +209,13 @@ TEST(string, strcat) {
   }
 }
 
+TEST(string, strchr_with_0) {
+  char buf[10];
+  const char* s = "01234";
+  memcpy(buf, s, strlen(s) + 1);
+  EXPECT_TRUE(strchr(buf, '\0') == (buf + strlen(s)));
+}
+
 TEST(string, strchr) {
   int seek_char = random() & 255;
 
