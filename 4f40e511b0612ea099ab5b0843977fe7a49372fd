@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "UQGxeZF8",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-02T21:17:15Z",
+      "side": 1,
+      "message": "If you don\u0027t mind, let\u0027s leave it as-is for now.  We can always revisit this in the future if need be.",
+      "parentUuid": "UQMyHsJg",
+      "revId": "4f40e511b0612ea099ab5b0843977fe7a49372fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UQOyKdKI",
         "filename": "libc/bionic/strchr.cpp",
         "patchSetId": 5
