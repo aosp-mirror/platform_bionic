@@ -44,7 +44,7 @@
 extern "C" char *__strncpy_chk (char *dest, const char *src,
               size_t len, size_t dest_len)
 {
-    if (len > dest_len) {
+    if (__predict_false(len > dest_len)) {
         __fortify_chk_fail("strncpy buffer overflow",
                              BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
     }
