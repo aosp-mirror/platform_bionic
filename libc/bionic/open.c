@@ -52,7 +52,7 @@ int open(const char *pathname, int flags, ...)
 }
 
 int __open_2(const char *pathname, int flags) {
-    if (flags & O_CREAT) {
+    if (__predict_false(flags & O_CREAT)) {
         __fortify_chk_fail("open(O_CREAT) called without specifying a mode", 0);
     }
 
