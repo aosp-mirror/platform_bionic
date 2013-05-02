@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "UQIwlqBk",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-02T20:53:50Z",
+      "side": 1,
+      "message": "__strchr_chk is only defined in string.h if FORTIFY_SOURCE is defined. In theory, someone may recompile libc without FORTIFY_SOURCE, and we\u0027d lose the declaration of __strchr_chk.\n\nI could modify __strchr_chk so it\u0027s always visible, regardless of whether FORTIFY_SOURCE is enabled or not.  Or I could keep the extern entry here. Or we could always assume that libc will be compiled with FORTIFY_SOURCE enabled.\n\nLet me know what you think is best.",
+      "parentUuid": "UQMxPsOk",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UQCxdfKM",
         "filename": "libc/bionic/strchr.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2013-05-02T19:53:20Z",
       "side": 1,
       "message": "brace on line above.",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UQAzuuHg",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-02T20:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "UQCxdfKM",
       "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "UObJmZpY",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-02T20:53:50Z",
+      "side": 1,
+      "message": "This change causes strchr to behave subtly different. In particular, \"strchr(string, \u0027\\0\u0027)\" would now return NULL, whereas before it would return a pointer to \"string + strlen(string)\".\n\nWhen I attempt to make this change, replacing line 46 with \"return NULL\", the entire system goes to hell. In particular, popen() starts to fail (for unknown reasons).\n\nI suspect this would also cause problems with the fortify check below, as we may return improperly if the very last element after the buffer is a \u0027\\0\u0027.",
+      "parentUuid": "UQGwmZCg",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UQEwroO4",
         "filename": "libc/bionic/strchr.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2013-05-02T19:53:20Z",
       "side": 1,
       "message": "static_cast",
+      "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UORK8EqY",
+        "filename": "libc/bionic/strchr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-02T20:53:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "UQEwroO4",
       "revId": "fdf7cce1d3176efb528d4f9978bab90338de24d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
