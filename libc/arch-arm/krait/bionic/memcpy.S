@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,9 +45,8 @@
 ENTRY(memcpy)
         .save       {r0, lr}
         /* start preloading as early as possible */
-        pld         [r1, #(CACHE_LINE_SIZE*0)]
+        pld         [r1, #(CACHE_LINE_SIZE*4)]
         stmfd       sp!, {r0, lr}
-        pld         [r1, #(CACHE_LINE_SIZE*2)]
 
         /* do we have at least 16-bytes to copy (needed for alignment below) */
         cmp         r2, #16
@@ -56,7 +55,7 @@ ENTRY(memcpy)
         /* align destination to cache-line for the write-buffer */
         rsb         r3, r0, #0
         ands        r3, r3, #0xF
-        beq         0f
+        beq         2f
 
         /* copy up to 15-bytes (count in r3) */
         sub         r2, r2, r3
@@ -76,47 +75,29 @@ ENTRY(memcpy)
         // copies 8 bytes, destination 64-bits aligned
         vld1.8      {d0}, [r1]!
         vst1.8      {d0}, [r0, :64]!
-2:
 
-0:      /* preload immediately the next cache line, which we may need */
-        pld         [r1, #(CACHE_LINE_SIZE*0)]
-        pld         [r1, #(CACHE_LINE_SIZE*2)]
-
-        /* make sure we have at least 64 bytes to copy */
+2:      /* make sure we have at least 64 bytes to copy */
         subs        r2, r2, #64
         blo         2f
-
-        /* Preload all the cache lines we need.
-         * NOTE: The number of pld below depends on CACHE_LINE_SIZE,
-         * ideally we would increase the distance in the main loop to
-         * avoid the goofy code below. In practice this doesn't seem to make
-         * a big difference.
-         * NOTE: The value CACHE_LINE_SIZE * 8 was chosen through
-         * experimentation.
-         */
-        pld         [r1, #(CACHE_LINE_SIZE*4)]
-        pld         [r1, #(CACHE_LINE_SIZE*6)]
-        pld         [r1, #(CACHE_LINE_SIZE*8)]
 
 1:      /* The main loop copies 64 bytes at a time */
         vld1.8      {d0  - d3},   [r1]!
         vld1.8      {d4  - d7},   [r1]!
-        pld         [r1, #(CACHE_LINE_SIZE*8)]
+        pld         [r1, #(CACHE_LINE_SIZE*2)]
         subs        r2, r2, #64
         vst1.8      {d0  - d3},   [r0, :128]!
         vst1.8      {d4  - d7},   [r0, :128]!
         bhs         1b
 
 2:      /* fix-up the remaining count and make sure we have >= 32 bytes left */
-        add         r2, r2, #64
-        subs        r2, r2, #32
+        adds        r2, r2, #32
         blo         4f
 
-3:      /* 32 bytes at a time. These cache lines were already preloaded */
+        /* Copy 32 bytes. These cache lines were already preloaded */
         vld1.8      {d0 - d3},  [r1]!
-        subs        r2, r2, #32
+        sub         r2, r2, #32
         vst1.8      {d0 - d3},  [r0, :128]!
-        bhs         3b
+
 4:      /* less than 32 left */
         add         r2, r2, #32
         tst         r2, #0x10
