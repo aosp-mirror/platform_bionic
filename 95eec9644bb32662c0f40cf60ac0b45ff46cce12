@@ -16,6 +16,24 @@
       "revId": "95eec9644bb32662c0f40cf60ac0b45ff46cce12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UaVlEIyg",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T22:41:23Z",
+      "side": 1,
+      "message": "!",
+      "parentUuid": "Uadna82o",
+      "revId": "95eec9644bb32662c0f40cf60ac0b45ff46cce12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
