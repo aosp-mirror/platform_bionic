@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UaRkSq2g",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T21:45:39Z",
+      "side": 1,
+      "message": "\"type*\" here and elsewhere.",
+      "revId": "2a250dd9d4ba154a0c10418e5120d6735cff1fa7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Uabkin6s",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T21:45:39Z",
+      "side": 1,
+      "message": "size_t\n\n++i",
+      "revId": "2a250dd9d4ba154a0c10418e5120d6735cff1fa7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UaVkMI0k",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T21:45:39Z",
+      "side": 1,
+      "message": "is this safe? i thought _Unwind_GetIP sometimes returns 0?",
+      "revId": "2a250dd9d4ba154a0c10418e5120d6735cff1fa7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UaTkXb1k",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T21:45:39Z",
+      "side": 1,
+      "message": "unnecessary cast.",
+      "revId": "2a250dd9d4ba154a0c10418e5120d6735cff1fa7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UafkF9x8",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-07T21:45:39Z",
+      "side": 1,
+      "message": "lose this #ifdef, and move the #ifdef above inside the function.\n\nand shouldn\u0027t this be adjust_pcs? would it make more sense to do the fixup inside trace_function instead (line 93)?",
+      "revId": "2a250dd9d4ba154a0c10418e5120d6735cff1fa7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
