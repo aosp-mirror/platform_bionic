@@ -101,10 +101,7 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   if (ip != 0) {
     short* ptr = reinterpret_cast<short*>(ip);
     // Thumb BLX(2)
-
-    // FIXME - GCC 4.7 seems to have a bug as without the unnecessary cast to
-    // short the test will never pass.
-    if ((*(ptr-1) & 0xff80) == (short) 0x4780) {
+    if ((*(ptr-1) & 0xff80) == 0x4780) {
       ip -= 2;
     } else {
       ip -= 4;
