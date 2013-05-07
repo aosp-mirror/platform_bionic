@@ -34,11 +34,11 @@
 
 __BEGIN_DECLS
 
-extern void*  memccpy(void *, const void *, int, size_t);
+extern void*  memccpy(void* __restrict, const void* __restrict, int, size_t);
 extern void*  memchr(const void *, int, size_t) __purefunc;
 extern void*  memrchr(const void *, int, size_t) __purefunc;
 extern int    memcmp(const void *, const void *, size_t) __purefunc;
-extern void*  memcpy(void *, const void *, size_t);
+extern void*  memcpy(void* __restrict, const void* __restrict, size_t);
 extern void*  memmove(void *, const void *, size_t);
 extern void*  memset(void *, int, size_t);
 extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
@@ -50,8 +50,8 @@ extern char*  strrchr(const char *, int) __purefunc;
 
 extern size_t strlen(const char *) __purefunc;
 extern int    strcmp(const char *, const char *) __purefunc;
-extern char*  strcpy(char *, const char *);
-extern char*  strcat(char *, const char *);
+extern char*  strcpy(char* __restrict, const char* __restrict);
+extern char*  strcat(char* __restrict, const char* __restrict);
 
 extern int    strcasecmp(const char *, const char *) __purefunc;
 extern int    strncasecmp(const char *, const char *, size_t) __purefunc;
@@ -59,30 +59,30 @@ extern char*  strdup(const char *);
 
 extern char*  strstr(const char *, const char *) __purefunc;
 extern char*  strcasestr(const char *haystack, const char *needle) __purefunc;
-extern char*  strtok(char *, const char *);
-extern char*  strtok_r(char *, const char *, char**);
+extern char*  strtok(char* __restrict, const char* __restrict);
+extern char*  strtok_r(char* __restrict, const char* __restrict, char** __restrict);
 
 extern char*  strerror(int);
 extern int    strerror_r(int errnum, char *buf, size_t n);
 
 extern size_t strnlen(const char *, size_t) __purefunc;
-extern char*  strncat(char *, const char *, size_t);
+extern char*  strncat(char* __restrict, const char* __restrict, size_t);
 extern char*  strndup(const char *, size_t);
 extern int    strncmp(const char *, const char *, size_t) __purefunc;
-extern char*  strncpy(char *, const char *, size_t);
+extern char*  strncpy(char* __restrict, const char* __restrict, size_t);
 
-extern size_t strlcat(char *, const char *, size_t);
-extern size_t strlcpy(char *, const char *, size_t);
+extern size_t strlcat(char* __restrict, const char* __restrict, size_t);
+extern size_t strlcpy(char* __restrict, const char* __restrict, size_t);
 
 extern size_t strcspn(const char *, const char *) __purefunc;
 extern char*  strpbrk(const char *, const char *) __purefunc;
-extern char*  strsep(char **, const char *);
+extern char*  strsep(char** __restrict, const char* __restrict);
 extern size_t strspn(const char *, const char *);
 
 extern char*  strsignal(int  sig);
 
 extern int    strcoll(const char *, const char *) __purefunc;
-extern size_t strxfrm(char *, const char *, size_t);
+extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
 
 #if defined(__BIONIC_FORTIFY)
 
@@ -92,7 +92,7 @@ extern void __memcpy_src_size_error()
     __attribute__((__error__("memcpy called with size bigger than source")));
 
 __BIONIC_FORTIFY_INLINE
-void *memcpy (void *dest, const void *src, size_t copy_amount) {
+void *memcpy (void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     char *d = (char *) dest;
     const char *s = (const char *) src;
     size_t s_len = __builtin_object_size(s, 0);
@@ -115,7 +115,7 @@ void *memmove (void *dest, const void *src, size_t len) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strcpy(char *dest, const char *src) {
+char *strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
 
@@ -123,7 +123,7 @@ extern void __strncpy_error()
     __attribute__((__error__("strncpy called with size bigger than buffer")));
 
 __BIONIC_FORTIFY_INLINE
-char *strncpy(char *dest, const char *src, size_t n) {
+char *strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
     size_t bos = __bos(dest);
     if (__builtin_constant_p(n) && (n > bos)) {
         __strncpy_error();
@@ -132,12 +132,12 @@ char *strncpy(char *dest, const char *src, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strcat(char *dest, const char *src) {
+char *strcat(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcat_chk(dest, src, __bos(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strncat(char *dest, const char *src, size_t n) {
+char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
     return __builtin___strncat_chk(dest, src, n, __bos(dest));
 }
 
@@ -146,14 +146,14 @@ void *memset (void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
 }
 
-extern size_t __strlcpy_real(char *, const char *, size_t)
+extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
 extern void __strlcpy_error()
     __attribute__((__error__("strlcpy called with size bigger than buffer")));
 extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char *dest, const char *src, size_t size) {
+size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     size_t bos = __bos(dest);
 
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
@@ -176,15 +176,15 @@ size_t strlcpy(char *dest, const char *src, size_t size) {
     return __strlcpy_chk(dest, src, size, bos);
 }
 
-extern size_t __strlcat_real(char *, const char *, size_t)
+extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcat");
 extern void __strlcat_error()
     __attribute__((__error__("strlcat called with size bigger than buffer")));
-extern size_t __strlcat_chk(char *, const char *, size_t, size_t);
+extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char *dest, const char *src, size_t size) {
+size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
     size_t bos = __bos(dest);
 
     // Compiler doesn't know destination size. Don't call __strlcat_chk
