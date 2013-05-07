@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Uadna82o",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-05-07T22:13:46Z",
+      "side": 1,
+      "message": "Yeah this is a better place to host the extra code. BTW I believe I have hit a GCC bug where without the short-cast the comparison will never pass. Still investigating.",
+      "revId": "95eec9644bb32662c0f40cf60ac0b45ff46cce12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
