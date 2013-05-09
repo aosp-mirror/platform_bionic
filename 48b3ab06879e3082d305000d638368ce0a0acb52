@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "UaYJUgDI",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-09T22:10:27Z",
+      "side": 1,
+      "message": "this can\u0027t be null unless the list has become corrupt --- we loaded at the DT_NEEDEDs already, and this just pulls them back off the list. any error here is _our_ internal error, not something we should try to report via dlerror(3).",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UaaI4pPk",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-09T22:10:27Z",
+      "side": 1,
+      "message": "the removal of the \"return;\" here is the active ingredient in fixing this bug. everything else is cleanup.",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UacI1mAA",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-09T22:10:27Z",
+      "side": 1,
+      "message": "here too, find_loaded_library must return non-NULL, or we\u0027d have failed earlier and reported the failure to find a DT_NEEDED library to the caller.",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
