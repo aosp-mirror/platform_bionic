@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "UaQIXkGI",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-09T22:29:40Z",
+      "side": 1,
+      "message": "correct. i did wonder about changing it so we call it everywhere and it refuses to do anything in the shared library case, but that looked more confusing to me.\n\n(though maybe we\u0027re not calling the preinit constructors in exactly the right place, and if we were it would make more sense? we can worry about that another day.)\n\ni agree with the comment change. will do.",
+      "parentUuid": "UaQJAcGU",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UaaI4pPk",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -65,6 +83,24 @@
       "side": 1,
       "message": "right, so I see how we got in trouble. we never ran them here in the .so case, this was just code to warn about it, but we made it an error which was overkill.",
       "parentUuid": "UaaI4pPk",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UaS3rpTA",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-05-09T22:29:40Z",
+      "side": 1,
+      "message": "exactly. misled by the (ineffectual) DL_ERR in the original code.",
+      "parentUuid": "UacIcuIo",
       "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
