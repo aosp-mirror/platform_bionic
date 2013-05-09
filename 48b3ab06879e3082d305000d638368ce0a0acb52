@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "UaQJAcGU",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-05-09T22:23:47Z",
+      "side": 1,
+      "message": "rather than making a value judgement about what should be in an .so, i think we should just say \"and should be ignored in shared libraries\"\n\nhoweer, we don\u0027t seem to ignore them at this level, this is done because it is only called in the correct context (for EXE only), right? (I looked at the code, just looking for confirmation i\u0027m reading it right)",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "UaaI4pPk",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +47,24 @@
       "writtenOn": "2013-05-09T22:10:27Z",
       "side": 1,
       "message": "the removal of the \"return;\" here is the active ingredient in fixing this bug. everything else is cleanup.",
+      "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UacIcuIo",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-05-09T22:23:47Z",
+      "side": 1,
+      "message": "right, so I see how we got in trouble. we never ran them here in the .so case, this was just code to warn about it, but we made it an error which was overkill.",
+      "parentUuid": "UaaI4pPk",
       "revId": "48b3ab06879e3082d305000d638368ce0a0acb52",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
