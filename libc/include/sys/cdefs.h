@@ -211,6 +211,9 @@
 #define __statement(x)	(x)
 #endif
 
+#define __printflike(x, y) __attribute__((__format__(printf, x, y))) __attribute__((__nonnull__(x)))
+#define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __attribute__((__nonnull__(x)))
+
 /*
  * C99 defines the restrict type qualifier keyword, which was made available
  * in GCC 2.92.
