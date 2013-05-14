@@ -581,8 +581,8 @@ res_nsend(res_state statp,
 			if (n == 0)
 				goto next_ns;
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
-					"time=%d, %d\n",time(NULL), time(NULL)%2);
+				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "time=%ld\n",
+                                                  time(NULL));
 			}
 			if (v_circuit)
 				goto same_ns;
@@ -961,7 +961,7 @@ done:
 	fcntl(sock, F_SETFL, origflags);
 	if (DBG) {
 		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d connect_with_timeout returning %s\n", sock, res);
+			"  %d connect_with_timeout returning %d\n", sock, res);
 	}
 	return res;
 }
@@ -1025,7 +1025,7 @@ retry:
 	}
 	if (DBG) {
 		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d retrying_select returning %d for %d\n",sock, n);
+			"  %d retrying_select returning %d\n",sock, n);
 	}
 
 	return n;
