@@ -16,6 +16,24 @@
       "revId": "d04c18397946f87ac4495351537c31a3d67257da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "UiyacyPw",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-14T23:16:38Z",
+      "side": 1,
+      "message": "ohhh!  Nice to know.  :-) But wouldn\u0027t this just generate a compiler warning about an undefined function, and still allow linking?",
+      "parentUuid": "Ui6avuB8",
+      "revId": "d04c18397946f87ac4495351537c31a3d67257da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
