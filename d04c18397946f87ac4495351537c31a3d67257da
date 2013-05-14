@@ -34,6 +34,24 @@
       "revId": "d04c18397946f87ac4495351537c31a3d67257da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Ui6aFeJQ",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-05-14T23:30:59Z",
+      "side": 1,
+      "message": "they are setting __AUDIT__ because they are concerned about security but not saying warnings should be errors? :)",
+      "parentUuid": "UiyacyPw",
+      "revId": "d04c18397946f87ac4495351537c31a3d67257da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
