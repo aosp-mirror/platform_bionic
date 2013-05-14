@@ -139,8 +139,8 @@ __END_DECLS
 #define	__SMBF	0x0080		/* _buf is from malloc */
 #define	__SAPP	0x0100		/* fdopen()ed in append mode */
 #define	__SSTR	0x0200		/* this is an sprintf/snprintf string */
-#define	__SOPT	0x0400		/* do fseek() optimisation */
-#define	__SNPT	0x0800		/* do not do fseek() optimisation */
+#define	__SOPT	0x0400		/* do fseek() optimization */
+#define	__SNPT	0x0800		/* do not do fseek() optimization */
 #define	__SOFF	0x1000		/* set iff _offset is in fact correct */
 #define	__SMOD	0x2000		/* true => fgetln modified _p text */
 #define	__SALC	0x4000		/* allocate string space dynamically */
@@ -160,14 +160,14 @@ __END_DECLS
 #define	_IONBF	2		/* setvbuf should set unbuffered */
 
 #define	BUFSIZ	1024		/* size of buffer used by setbuf */
-
 #define	EOF	(-1)
 
 /*
- * FOPEN_MAX is a minimum maximum, and should be the number of descriptors
- * that the kernel can provide without allocation of a resource that can
- * fail without the process sleeping.  Do not use this for anything.
+ * FOPEN_MAX is a minimum maximum, and is the number of streams that
+ * stdio can provide without attempting to allocate further resources
+ * (which could fail).  Do not use this for anything.
  */
+
 #define	FOPEN_MAX	20	/* must be <= OPEN_MAX <sys/syslimits.h> */
 #define	FILENAME_MAX	1024	/* must be <= PATH_MAX <sys/syslimits.h> */
 
@@ -178,6 +178,7 @@ __END_DECLS
 #define	L_tmpnam	1024	/* XXX must be == PATH_MAX */
 #define	TMP_MAX		308915776
 
+/* Always ensure that these are consistent with <fcntl.h> and <unistd.h>! */
 #ifndef SEEK_SET
 #define	SEEK_SET	0	/* set file offset to offset */
 #endif
@@ -202,25 +203,20 @@ int	 feof(FILE *);
 int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
-int	 fgetpos(FILE *, fpos_t *);
-char	*fgets(char *, int, FILE *);
-FILE	*fopen(const char *, const char *);
-int	 fprintf(FILE *, const char *, ...)
-		__attribute__((__format__ (printf, 2, 3)))
-		__attribute__((__nonnull__ (2)));
+char	*fgets(char * __restrict, int, FILE * __restrict);
+FILE	*fopen(const char * __restrict , const char * __restrict);
+int	 fprintf(FILE * __restrict , const char * __restrict, ...)
+		__printflike(2, 3);
 int	 fputc(int, FILE *);
-int	 fputs(const char *, FILE *);
-size_t	 fread(void *, size_t, size_t, FILE *);
-FILE	*freopen(const char *, const char *, FILE *);
-int	 fscanf(FILE *, const char *, ...)
-		__attribute__ ((__format__ (scanf, 2, 3)))
-		__attribute__ ((__nonnull__ (2)));
+int	 fputs(const char * __restrict, FILE * __restrict);
+size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict);
+FILE	*freopen(const char * __restrict, const char * __restrict,
+	    FILE * __restrict);
+int	 fscanf(FILE * __restrict, const char * __restrict, ...)
+		__scanflike(2, 3);
 int	 fseek(FILE *, long, int);
-int	 fseeko(FILE *, off_t, int);
-int	 fsetpos(FILE *, const fpos_t *);
 long	 ftell(FILE *);
-off_t	 ftello(FILE *);
-size_t	 fwrite(const void *, size_t, size_t, FILE *);
+size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
 ssize_t	 getdelim(char ** __restrict, size_t * __restrict, int,
@@ -234,55 +230,55 @@ extern int sys_nerr;			/* perror(3) external variables */
 extern char *sys_errlist[];
 #endif
 void	 perror(const char *);
-int	 printf(const char *, ...)
-		__attribute__((__format__ (printf, 1, 2)))
-		__attribute__((__nonnull__ (1)));
+int	 printf(const char * __restrict, ...)
+		__printflike(1, 2);
 int	 putc(int, FILE *);
 int	 putchar(int);
 int	 puts(const char *);
 int	 remove(const char *);
-int	 rename(const char *, const char *);
 void	 rewind(FILE *);
-int	 scanf(const char *, ...)
-		__attribute__ ((__format__ (scanf, 1, 2)))
-		__attribute__ ((__nonnull__ (1)));
-void	 setbuf(FILE *, char *);
-int	 setvbuf(FILE *, char *, int, size_t);
-int	 sprintf(char *, const char *, ...)
-		__attribute__((__format__ (printf, 2, 3)))
-		__attribute__((__nonnull__ (2)));
-int	 sscanf(const char *, const char *, ...)
-		__attribute__ ((__format__ (scanf, 2, 3)))
-		__attribute__ ((__nonnull__ (2)));
+int	 scanf(const char * __restrict, ...)
+		__scanflike(1, 2);
+void	 setbuf(FILE * __restrict, char * __restrict);
+int	 setvbuf(FILE * __restrict, char * __restrict, int, size_t);
+int	 sscanf(const char * __restrict, const char * __restrict, ...)
+		__scanflike(2, 3);
 FILE	*tmpfile(void);
-char	*tmpnam(char *);
 int	 ungetc(int, FILE *);
-int	 vfprintf(FILE *, const char *, __va_list)
-		__attribute__((__format__ (printf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
-int	 vprintf(const char *, __va_list)
-		__attribute__((__format__ (printf, 1, 0)))
-		__attribute__((__nonnull__ (1)));
-int	 vsprintf(char *, const char *, __va_list)
-		__attribute__((__format__ (printf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
+int	 vfprintf(FILE * __restrict, const char * __restrict, __va_list)
+		__printflike(2, 0);
+int	 vprintf(const char * __restrict, __va_list)
+		__printflike(1, 0);
+
+#ifndef __AUDIT__
+char	*gets(char *);
+int	 sprintf(char * __restrict, const char * __restrict, ...)
+		__printflike(2, 3);
+char	*tmpnam(char *);
+int	 vsprintf(char * __restrict, const char * __restrict,
+    __va_list)
+		__printflike(2, 0);
+#endif
+
+int	 rename (const char *, const char *);
+
+int	 fgetpos(FILE * __restrict, fpos_t * __restrict);
+int	 fsetpos(FILE *, const fpos_t *);
+
+int	 fseeko(FILE *, off_t, int);
+off_t	 ftello(FILE *);
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
-int	 snprintf(char *, size_t, const char *, ...)
-		__attribute__((__format__ (printf, 3, 4)))
-		__attribute__((__nonnull__ (3)));
-int	 vfscanf(FILE *, const char *, __va_list)
-		__attribute__((__format__ (scanf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
+int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
+		__printflike(3, 4);
+int	 vfscanf(FILE * __restrict, const char * __restrict, __va_list)
+		__scanflike(2, 0);
 int	 vscanf(const char *, __va_list)
-		__attribute__((__format__ (scanf, 1, 0)))
-		__attribute__((__nonnull__ (1)));
-int	 vsnprintf(char *, size_t, const char *, __va_list)
-		__attribute__((__format__ (printf, 3, 0)))
-		__attribute__((__nonnull__ (3)));
-int	 vsscanf(const char *, const char *, __va_list)
-		__attribute__((__format__ (scanf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
+		__scanflike(1, 0);
+int	 vsnprintf(char * __restrict, size_t, const char * __restrict, __va_list)
+		__printflike(3, 0);
+int	 vsscanf(const char * __restrict, const char * __restrict, __va_list)
+		__scanflike(2, 0);
 #endif /* __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE */
 
 __END_DECLS
@@ -335,18 +331,17 @@ __END_DECLS
  */
 #if __BSD_VISIBLE
 __BEGIN_DECLS
-int	 asprintf(char **, const char *, ...)
-		__attribute__((__format__ (printf, 2, 3)))
-		__attribute__((__nonnull__ (2)));
-char	*fgetln(FILE *, size_t *);
+int	 asprintf(char ** __restrict, const char * __restrict, ...)
+		__printflike(2, 3);
+char	*fgetln(FILE * __restrict, size_t * __restrict);
 int	 fpurge(FILE *);
 int	 getw(FILE *);
 int	 putw(int, FILE *);
 void	 setbuffer(FILE *, char *, int);
 int	 setlinebuf(FILE *);
-int	 vasprintf(char **, const char *, __va_list)
-		__attribute__((__format__ (printf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
+int	 vasprintf(char ** __restrict, const char * __restrict,
+    __va_list)
+		__printflike(2, 0);
 __END_DECLS
 
 /*
@@ -449,11 +444,9 @@ extern	int __isthreaded;
  */
 __BEGIN_DECLS
 int fdprintf(int, const char*, ...)
-		__attribute__((__format__ (printf, 2, 3)))
-		__attribute__((__nonnull__ (2)));
+		__printflike(2, 3);
 int vfdprintf(int, const char*, __va_list)
-		__attribute__((__format__ (printf, 2, 0)))
-		__attribute__((__nonnull__ (2)));
+		__printflike(2, 0);
 __END_DECLS
 #endif /* _GNU_SOURCE */
 
@@ -462,24 +455,21 @@ __END_DECLS
 __BEGIN_DECLS
 
 __BIONIC_FORTIFY_INLINE
-__attribute__((__format__ (printf, 3, 0)))
-__attribute__((__nonnull__ (3)))
+__printflike(3, 0)
 int vsnprintf(char *dest, size_t size, const char *format, __va_list ap)
 {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE
-__attribute__((__format__ (printf, 2, 0)))
-__attribute__((__nonnull__ (2)))
+__printflike(2, 0)
 int vsprintf(char *dest, const char *format, __va_list ap)
 {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE
-__attribute__((__format__ (printf, 3, 4)))
-__attribute__((__nonnull__ (3)))
+__printflike(3, 4)
 int snprintf(char *str, size_t size, const char *format, ...)
 {
     return __builtin___snprintf_chk(str, size, 0,
@@ -487,8 +477,7 @@ int snprintf(char *str, size_t size, const char *format, ...)
 }
 
 __BIONIC_FORTIFY_INLINE
-__attribute__((__format__ (printf, 2, 3)))
-__attribute__((__nonnull__ (2)))
+__printflike(2, 3)
 int sprintf(char *dest, const char *format, ...)
 {
     return __builtin___sprintf_chk(dest, 0,

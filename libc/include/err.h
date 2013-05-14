@@ -48,42 +48,42 @@
 __BEGIN_DECLS
 
 __noreturn void	err(int, const char *, ...)
-			__attribute__((__format__ (printf, 2, 3)));
+			__printflike(2, 3);
 __noreturn void	verr(int, const char *, __va_list)
-			__attribute__((__format__ (printf, 2, 0)));
+			__printflike(2, 0);
 __noreturn void	errx(int, const char *, ...)
-			__attribute__((__format__ (printf, 2, 3)));
+			__printflike(2, 3);
 __noreturn void	verrx(int, const char *, __va_list)
-			__attribute__((__format__ (printf, 2, 0)));
+			__printflike(2, 0);
 void		warn(const char *, ...)
-			__attribute__((__format__ (printf, 1, 2)));
+			__printflike(1, 2);
 void		vwarn(const char *, __va_list)
-			__attribute__((__format__ (printf, 1, 0)));
+			__printflike(1, 0);
 void		warnx(const char *, ...)
-			__attribute__((__format__ (printf, 1, 2)));
+			__printflike(1, 2);
 void		vwarnx(const char *, __va_list)
-			__attribute__((__format__ (printf, 1, 0)));
+			__printflike(1, 0);
 
 /*
  * The _* versions are for use in library functions so user-defined
  * versions of err*,warn* do not get used.
  */
 __noreturn void	_err(int, const char *, ...)
-			__attribute__((__format__ (printf, 2, 3)));
+			__printflike(2, 3);
 __noreturn void	_verr(int, const char *, __va_list)
-			__attribute__((__format__ (printf, 2, 0)));
+			__printflike(2, 0);
 __noreturn void	_errx(int, const char *, ...)
-			__attribute__((__format__ (printf, 2, 3)));
+			__printflike(2, 3);
 __noreturn void	_verrx(int, const char *, __va_list)
-			__attribute__((__format__ (printf, 2, 0)));
+			__printflike(2, 0);
 void		_warn(const char *, ...)
-			__attribute__((__format__ (printf, 1, 2)));
+			__printflike(1, 2);
 void		_vwarn(const char *, __va_list)
-			__attribute__((__format__ (printf, 1, 0)));
+			__printflike(1, 0);
 void		_warnx(const char *, ...)
-			__attribute__((__format__ (printf, 1, 2)));
+			__printflike(1, 2);
 void		_vwarnx(const char *, __va_list)
-			__attribute__((__format__ (printf, 1, 0)));
+			__printflike(1, 0);
 
 __END_DECLS
 

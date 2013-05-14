@@ -79,7 +79,7 @@ __LIBC_HIDDEN__ void __libc_set_abort_message(const char* msg);
 //
 
 __LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...)
-    __attribute__((__format__(printf, 1, 2)));
+    __printflike(1, 2);
 
 //
 // Formatting routines for the C library's internal debugging.
@@ -87,13 +87,13 @@ __LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...)
 //
 
 __LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+    __printflike(3, 4);
 
 __LIBC_HIDDEN__ int __libc_format_fd(int fd, const char* format, ...)
-    __attribute__((__format__(printf, 2, 3)));
+    __printflike(2, 3);
 
 __LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char* format, ...)
-    __attribute__((__format__(printf, 3, 4)));
+    __printflike(3, 4);
 
 __LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
                                               va_list ap);
