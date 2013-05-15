@@ -298,8 +298,8 @@ int sysconf(int name) {
     case _SC_TIMERS:            return _POSIX_TIMERS;
 #endif
 
-    // GETGR_R_SIZE_MAX ?
-    // GETPW_R_SIZE_MAX ?
+    case _SC_GETGR_R_SIZE_MAX: return 1024;
+    case _SC_GETPW_R_SIZE_MAX: return 1024;
 
     case _SC_LOGIN_NAME_MAX:    return SYSTEM_LOGIN_NAME_MAX;
 
