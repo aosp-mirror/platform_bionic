@@ -29,7 +29,7 @@ _LIBC_ARCH_DYNAMIC_SRC_FILES := \
     arch-arm/bionic/exidx_dynamic.c
 
 ifeq ($(strip $(wildcard bionic/libc/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk)),)
-$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a9, cortex-a15, krait. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a7, cortex-a8, cortex-a9, cortex-a15, krait. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
 endif
 
 include bionic/libc/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
