@@ -74,6 +74,10 @@ static void log_message(const char* format, ...) {
 
 struct hdr_t {
     uint32_t tag;
+    void* base;  // Always points to the memory allocated using dlmalloc.
+                 // For memory allocated in chk_memalign, this value will
+                 // not be the same as the location of the start of this
+                 // structure.
     hdr_t* prev;
     hdr_t* next;
     uintptr_t bt[MAX_BACKTRACE_DEPTH];
@@ -82,7 +86,7 @@ struct hdr_t {
     int freed_bt_depth;
     size_t size;
     char front_guard[FRONT_GUARD_LEN];
-} __attribute__((packed));
+} __attribute__((packed, aligned(MALLOC_ALIGNMENT)));
 
 struct ftr_t {
     char rear_guard[REAR_GUARD_LEN];
@@ -100,21 +104,26 @@ static inline hdr_t* meta(void* user) {
     return reinterpret_cast<hdr_t*>(user) - 1;
 }
 
+static inline const hdr_t* const_meta(const void* user) {
+    return reinterpret_cast<const hdr_t*>(user) - 1;
+}
+
+
 static unsigned gAllocatedBlockCount;
-static hdr_t *tail;
-static hdr_t *head;
+static hdr_t* tail;
+static hdr_t* head;
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 static unsigned backlog_num;
-static hdr_t *backlog_tail;
-static hdr_t *backlog_head;
+static hdr_t* backlog_tail;
+static hdr_t* backlog_head;
 static pthread_mutex_t backlog_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static inline void init_front_guard(hdr_t *hdr) {
+static inline void init_front_guard(hdr_t* hdr) {
     memset(hdr->front_guard, FRONT_GUARD, FRONT_GUARD_LEN);
 }
 
-static inline bool is_front_guard_valid(hdr_t *hdr) {
+static inline bool is_front_guard_valid(hdr_t* hdr) {
     for (size_t i = 0; i < FRONT_GUARD_LEN; i++) {
         if (hdr->front_guard[i] != FRONT_GUARD) {
             return 0;
@@ -123,12 +132,12 @@ static inline bool is_front_guard_valid(hdr_t *hdr) {
     return 1;
 }
 
-static inline void init_rear_guard(hdr_t *hdr) {
+static inline void init_rear_guard(hdr_t* hdr) {
     ftr_t* ftr = to_ftr(hdr);
     memset(ftr->rear_guard, REAR_GUARD, REAR_GUARD_LEN);
 }
 
-static inline bool is_rear_guard_valid(hdr_t *hdr) {
+static inline bool is_rear_guard_valid(hdr_t* hdr) {
     unsigned i;
     int valid = 1;
     int first_mismatch = -1;
@@ -149,7 +158,7 @@ static inline bool is_rear_guard_valid(hdr_t *hdr) {
     return valid;
 }
 
-static inline void add_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
+static inline void add_locked(hdr_t* hdr, hdr_t** tail, hdr_t** head) {
     hdr->prev = NULL;
     hdr->next = *head;
     if (*head)
@@ -159,7 +168,7 @@ static inline void add_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
     *head = hdr;
 }
 
-static inline int del_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
+static inline int del_locked(hdr_t* hdr, hdr_t** tail, hdr_t** head) {
     if (hdr->prev) {
         hdr->prev->next = hdr->next;
     } else {
@@ -173,7 +182,7 @@ static inline int del_locked(hdr_t *hdr, hdr_t **tail, hdr_t **head) {
     return 0;
 }
 
-static inline void add(hdr_t *hdr, size_t size) {
+static inline void add(hdr_t* hdr, size_t size) {
     ScopedPthreadMutexLocker locker(&lock);
     hdr->tag = ALLOCATION_TAG;
     hdr->size = size;
@@ -183,7 +192,7 @@ static inline void add(hdr_t *hdr, size_t size) {
     add_locked(hdr, &tail, &head);
 }
 
-static inline int del(hdr_t *hdr) {
+static inline int del(hdr_t* hdr) {
     if (hdr->tag != ALLOCATION_TAG) {
         return -1;
     }
@@ -194,13 +203,13 @@ static inline int del(hdr_t *hdr) {
     return 0;
 }
 
-static inline void poison(hdr_t *hdr) {
+static inline void poison(hdr_t* hdr) {
     memset(user(hdr), FREE_POISON, hdr->size);
 }
 
-static int was_used_after_free(hdr_t *hdr) {
+static int was_used_after_free(hdr_t* hdr) {
     unsigned i;
-    const char *data = (const char *)user(hdr);
+    const char* data = reinterpret_cast<const char *>(user(hdr));
     for (i = 0; i < hdr->size; i++)
         if (data[i] != FREE_POISON)
             return 1;
@@ -208,7 +217,7 @@ static int was_used_after_free(hdr_t *hdr) {
 }
 
 /* returns 1 if valid, *safe == 1 if safe to dump stack */
-static inline int check_guards(hdr_t *hdr, int *safe) {
+static inline int check_guards(hdr_t* hdr, int* safe) {
     *safe = 1;
     if (!is_front_guard_valid(hdr)) {
         if (hdr->front_guard[0] == FRONT_GUARD) {
@@ -233,7 +242,7 @@ static inline int check_guards(hdr_t *hdr, int *safe) {
 }
 
 /* returns 1 if valid, *safe == 1 if safe to dump stack */
-static inline int check_allocation_locked(hdr_t *hdr, int *safe) {
+static inline int check_allocation_locked(hdr_t* hdr, int* safe) {
     int valid = 1;
     *safe = 1;
 
@@ -270,9 +279,9 @@ static inline int check_allocation_locked(hdr_t *hdr, int *safe) {
     return valid;
 }
 
-static inline int del_and_check_locked(hdr_t *hdr,
-                                       hdr_t **tail, hdr_t **head, unsigned *cnt,
-                                       int *safe) {
+static inline int del_and_check_locked(hdr_t* hdr,
+                                       hdr_t** tail, hdr_t** head, unsigned* cnt,
+                                       int* safe) {
     int valid = check_allocation_locked(hdr, safe);
     if (safe) {
         (*cnt)--;
@@ -281,7 +290,7 @@ static inline int del_and_check_locked(hdr_t *hdr,
     return valid;
 }
 
-static inline void del_from_backlog_locked(hdr_t *hdr) {
+static inline void del_from_backlog_locked(hdr_t* hdr) {
     int safe;
     del_and_check_locked(hdr,
                          &backlog_tail, &backlog_head, &backlog_num,
@@ -289,17 +298,17 @@ static inline void del_from_backlog_locked(hdr_t *hdr) {
     hdr->tag = 0; /* clear the tag */
 }
 
-static inline void del_from_backlog(hdr_t *hdr) {
+static inline void del_from_backlog(hdr_t* hdr) {
     ScopedPthreadMutexLocker locker(&backlog_lock);
     del_from_backlog_locked(hdr);
 }
 
-static inline int del_leak(hdr_t *hdr, int *safe) {
+static inline int del_leak(hdr_t* hdr, int* safe) {
     ScopedPthreadMutexLocker locker(&lock);
     return del_and_check_locked(hdr, &tail, &head, &gAllocatedBlockCount, safe);
 }
 
-static inline void add_to_backlog(hdr_t *hdr) {
+static inline void add_to_backlog(hdr_t* hdr) {
     ScopedPthreadMutexLocker locker(&backlog_lock);
     hdr->tag = BACKLOG_TAG;
     backlog_num++;
@@ -307,9 +316,9 @@ static inline void add_to_backlog(hdr_t *hdr) {
     poison(hdr);
     /* If we've exceeded the maximum backlog, clear it up */
     while (backlog_num > gMallocDebugBacklog) {
-        hdr_t *gone = backlog_tail;
+        hdr_t* gone = backlog_tail;
         del_from_backlog_locked(gone);
-        dlfree(gone);
+        dlfree(gone->base);
     }
 }
 
@@ -318,6 +327,7 @@ extern "C" void* chk_malloc(size_t size) {
 
     hdr_t* hdr = static_cast<hdr_t*>(dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t)));
     if (hdr) {
+        hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
         add(hdr, size);
         return user(hdr);
@@ -325,13 +335,44 @@ extern "C" void* chk_malloc(size_t size) {
     return NULL;
 }
 
-extern "C" void* chk_memalign(size_t, size_t bytes) {
-//  log_message("%s: %s\n", __FILE__, __FUNCTION__);
-    // XXX: it's better to use malloc, than being wrong
-    return chk_malloc(bytes);
+extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
+    if (alignment <= MALLOC_ALIGNMENT) {
+        return chk_malloc(bytes);
+    }
+
+    // Make the alignment a power of two.
+    if (alignment & (alignment-1)) {
+        alignment = 1L << (31 - __builtin_clz(alignment));
+    }
+
+    // here, alignment is at least MALLOC_ALIGNMENT<<1 bytes
+    // we will align by at least MALLOC_ALIGNMENT bytes
+    // and at most alignment-MALLOC_ALIGNMENT bytes
+    size_t size = (alignment-MALLOC_ALIGNMENT) + bytes;
+    if (size < bytes) { // Overflow.
+        return NULL;
+    }
+
+    void* base = dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t));
+    if (base != NULL) {
+        // Check that the actual pointer that will be returned is aligned
+        // properly.
+        uintptr_t ptr = reinterpret_cast<uintptr_t>(user(reinterpret_cast<hdr_t*>(base)));
+        if ((ptr % alignment) != 0) {
+            // Align the pointer.
+            ptr += ((-ptr) % alignment);
+        }
+
+        hdr_t* hdr = meta(reinterpret_cast<void*>(ptr));
+        hdr->base = base;
+        hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
+        add(hdr, bytes);
+        return user(hdr);
+    }
+    return base;
 }
 
-extern "C" void chk_free(void *ptr) {
+extern "C" void chk_free(void* ptr) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
     if (!ptr) /* ignore free(NULL) */
@@ -366,7 +407,7 @@ extern "C" void chk_free(void *ptr) {
     }
 }
 
-extern "C" void *chk_realloc(void *ptr, size_t size) {
+extern "C" void* chk_realloc(void* ptr, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
     if (!ptr) {
@@ -414,8 +455,23 @@ extern "C" void *chk_realloc(void *ptr, size_t size) {
         }
     }
 
-    hdr = static_cast<hdr_t*>(dlrealloc(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
+    if (hdr->base != hdr) {
+        // An allocation from memalign, so create another allocation and
+        // copy the data out.
+        void* newMem = dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t));
+        if (newMem) {
+            memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
+            dlfree(hdr->base);
+            hdr = static_cast<hdr_t*>(newMem);
+        } else {
+            dlfree(hdr->base);
+            hdr = NULL;
+        }
+    } else {
+        hdr = static_cast<hdr_t*>(dlrealloc(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
+    }
     if (hdr) {
+        hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
         add(hdr, size);
         return user(hdr);
@@ -424,16 +480,29 @@ extern "C" void *chk_realloc(void *ptr, size_t size) {
     return NULL;
 }
 
-extern "C" void *chk_calloc(int nmemb, size_t size) {
+extern "C" void* chk_calloc(int nmemb, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     size_t total_size = nmemb * size;
     hdr_t* hdr = static_cast<hdr_t*>(dlcalloc(1, sizeof(hdr_t) + total_size + sizeof(ftr_t)));
     if (hdr) {
+        hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
         add(hdr, total_size);
         return user(hdr);
     }
     return NULL;
+}
+
+extern "C" size_t chk_malloc_usable_size(const void* ptr) {
+    // dlmalloc_usable_size returns 0 for NULL and unknown blocks.
+    if (ptr == NULL)
+        return 0;
+
+    const hdr_t* hdr = const_meta(ptr);
+
+    // The sentinel tail is written just after the request block bytes
+    // so there is no extra room we can report here.
+    return hdr->size;
 }
 
 static void ReportMemoryLeaks() {
