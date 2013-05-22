@@ -137,7 +137,7 @@ struct MallocDescQuery {
      * will respond with information about allocated block that contains this
      * pointer.
      */
-    void*       ptr;
+    const void*       ptr;
 
     /* Id of the process that initialized libc instance, in which this query
      * is called. This field is used by the emulator to report errors in
@@ -469,7 +469,7 @@ static inline int notify_qemu_free(void* ptr_to_free) {
  * Return:
  *  Zero on success, or -1 on failure.
  */
-static inline int query_qemu_malloc_info(void* ptr, MallocDesc* desc, uint32_t routine) {
+static inline int query_qemu_malloc_info(const void* ptr, MallocDesc* desc, uint32_t routine) {
     volatile MallocDescQuery query;
 
     query.ptr = ptr;
@@ -574,11 +574,12 @@ static void test_access_violation(const MallocDesc* desc) {
 // API routines
 // =============================================================================
 
-void* qemu_instrumented_malloc(size_t bytes);
-void  qemu_instrumented_free(void* mem);
-void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size);
-void* qemu_instrumented_realloc(void* mem, size_t bytes);
-void* qemu_instrumented_memalign(size_t alignment, size_t bytes);
+extern "C" void* qemu_instrumented_malloc(size_t bytes);
+extern "C" void  qemu_instrumented_free(void* mem);
+extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size);
+extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes);
+extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes);
+extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem);
 
 /* Initializes malloc debugging instrumentation for the emulator.
  * This routine is called from malloc_init_impl routine implemented in
@@ -589,7 +590,7 @@ void* qemu_instrumented_memalign(size_t alignment, size_t bytes);
  * Return:
  *  0 on success, or -1 on failure.
 */
-int malloc_debug_initialize() {
+extern "C" int malloc_debug_initialize() {
     /* We will be using emulator's magic page to report memory allocation
      * activities. In essence, what magic page does, it translates writes to
      * the memory mapped spaces into writes to an I/O port that emulator
@@ -627,7 +628,7 @@ int malloc_debug_initialize() {
  * Return:
  *  0 on success, or -1 on failure.
 */
-int memcheck_initialize(int alignment, const char* memcheck_param) {
+extern "C" int memcheck_initialize(int alignment, const char* memcheck_param) {
     malloc_alignment = alignment;
 
     /* Parse -memcheck parameter for the guest tracing flags. */
@@ -673,7 +674,7 @@ int memcheck_initialize(int alignment, const char* memcheck_param) {
  * bytes (plus prefix, and suffix guards), and report allocation to the
  * emulator.
  */
-void* qemu_instrumented_malloc(size_t bytes) {
+extern "C" void* qemu_instrumented_malloc(size_t bytes) {
     MallocDesc desc;
 
     /* Initialize block descriptor and allocate memory. Note that dlmalloc
@@ -708,7 +709,7 @@ void* qemu_instrumented_malloc(size_t bytes) {
  * Primary responsibility of this routine is to free requested memory, and
  * report free block to the emulator.
  */
-void qemu_instrumented_free(void* mem) {
+extern "C" void qemu_instrumented_free(void* mem) {
     MallocDesc desc;
 
     if (mem == NULL) {
@@ -751,7 +752,7 @@ void qemu_instrumented_free(void* mem) {
 /* This routine serves as entry point for 'calloc'.
  * This routine behaves similarly to qemu_instrumented_malloc.
  */
-void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
+extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     if (n_elements == 0 || elem_size == 0) {
         // Just let go zero bytes allocation.
         qemu_info_log("::: <libc_pid=%03u, pid=%03u>: Zero calloc redir to malloc",
@@ -823,7 +824,7 @@ void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
  * allocation, but overall it doesn't seem to matter, as caller of realloc
  * should not expect that pointer returned after shrinking will remain the same.
  */
-void* qemu_instrumented_realloc(void* mem, size_t bytes) {
+extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
     MallocDesc new_desc;
     MallocDesc cur_desc;
     size_t to_copy;
@@ -927,7 +928,7 @@ void* qemu_instrumented_realloc(void* mem, size_t bytes) {
 /* This routine serves as entry point for 'memalign'.
  * This routine behaves similarly to qemu_instrumented_malloc.
  */
-void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
+extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     MallocDesc desc;
 
     if (bytes == 0) {
@@ -966,4 +967,28 @@ void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     log_mdesc(info, &desc, "@@@ <libc_pid=%03u, pid=%03u> memalign(%X, %u) -> ",
               malloc_pid, getpid(), alignment, bytes);
     return mallocdesc_user_ptr(&desc);
+}
+
+extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem) {
+    MallocDesc cur_desc;
+
+    // Query emulator for the reallocating block information.
+    if (query_qemu_malloc_info(mem, &cur_desc, 2)) {
+        // Note that this violation should be already caught in the emulator.
+        error_log("<libc_pid=%03u, pid=%03u>: malloc_usable_size(%p) query_info failed.",
+                  malloc_pid, getpid(), mem);
+        return 0;
+    }
+
+    /* Make sure that reallocating pointer value is what we would expect
+     * for this memory block. Note that this violation should be already caught
+     * in the emulator.*/
+    if (mem != mallocdesc_user_ptr(&cur_desc)) {
+        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: malloc_usable_size(%p) is invalid for ",
+                  malloc_pid, getpid(), mem);
+        return 0;
+    }
+
+    /* during instrumentation, we can't really report anything more than requested_bytes */
+    return cur_desc.requested_bytes;
 }
