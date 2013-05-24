@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "VAwIFrIo",
+        "filename": "libc/arch-x86/string/strchr.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-24T17:51:13Z",
+      "side": 0,
+      "message": "oops.  I think I can remove index.S too. Let me verify.",
+      "revId": "2317275f859a685386889139855f2f3314337d53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
