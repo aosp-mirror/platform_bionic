@@ -59,32 +59,32 @@ extern const char* const sys_signame[];
 
 static __inline__ int sigismember(const sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  const unsigned long* local_set = (const unsigned long*) set;
   if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }
-  const unsigned long* local_set = (const unsigned long*) set;
   return (int) ((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
 }
 
 static __inline__ int sigaddset(sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  unsigned long* local_set = (unsigned long*) set;
   if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }
-  unsigned long* local_set = (unsigned long*) set;
   local_set[bit / LONG_BIT] |= 1UL << (bit % LONG_BIT);
   return 0;
 }
 
 static __inline__ int sigdelset(sigset_t* set, int signum) {
   int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  unsigned long* local_set = (unsigned long*) set;
   if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
     errno = EINVAL;
     return -1;
   }
-  unsigned long* local_set = (unsigned long*) set;
   local_set[bit / LONG_BIT] &= ~(1UL << (bit % LONG_BIT));
   return 0;
 }
