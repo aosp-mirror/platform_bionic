@@ -75,6 +75,24 @@ extern void _resolv_clear_iface_for_pid(int pid);
  *               buffLen Length of buff. An interface is at most IF_NAMESIZE in length */
 extern int _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen);
 
+
+/** set a uid range to use the name servers of the specified interface
+ *  If [low,high] overlaps with an already existing rule -1 is returned */
+extern int _resolv_set_iface_for_uid_range(const char* ifname, int low, int high);
+
+/* clear a uid range from being associated with an interface
+ * If the range given is not mapped -1 is returned. */
+extern int _resolv_clear_iface_for_uid_range(int low, int high);
+
+/** Gets the name of the interface to which the uid is attached.
+ *  On error, -1 is returned.
+ *  If no interface is found, 0 is returned and buff is set to empty ('\0').
+ *  If an interface is found, the name is copied to buff and the length of the name is returned.
+ *  Arguments:   uid The uid to find an interface for
+ *               buff A buffer to copy the result to
+ *               buffLen Length of buff. An interface is at most IF_NAMESIZE in length */
+extern int _resolv_get_uids_associated_interface(int uid, char* buff, int buffLen);
+
 #endif /* _BIONIC_RESOLV_IFACE_FUNCTIONS_DECLARED */
 
 __END_DECLS

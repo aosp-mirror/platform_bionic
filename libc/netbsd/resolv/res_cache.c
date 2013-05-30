@@ -1258,6 +1258,12 @@ typedef struct resolv_pidiface_info {
     char                            ifname[IF_NAMESIZE + 1];
     struct resolv_pidiface_info*    next;
 } PidIfaceInfo;
+typedef struct resolv_uidiface_info {
+    int                             low;
+    int                             high;
+    char                            ifname[IF_NAMESIZE + 1];
+    struct resolv_uidiface_info*    next;
+} UidIfaceInfo;
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
 
@@ -1796,6 +1802,9 @@ static struct resolv_cache_info _res_cache_list;
 // List of pid iface pairs
 static struct resolv_pidiface_info _res_pidiface_list;
 
+// List of uid iface pairs
+static struct resolv_uidiface_info _res_uidiface_list;
+
 // name of the current default inteface
 static char            _res_default_ifname[IF_NAMESIZE + 1];
 
@@ -1804,6 +1813,9 @@ static pthread_mutex_t _res_cache_list_lock;
 
 // lock protecting the _res_pid_iface_list
 static pthread_mutex_t _res_pidiface_list_lock;
+
+// lock protecting the _res_uidiface_list
+static pthread_mutex_t _res_uidiface_list_lock;
 
 /* lookup the default interface name */
 static char *_get_default_iface_locked();
@@ -1839,6 +1851,13 @@ static void _remove_pidiface_info_locked(int pid);
 /* get a resolv_pidiface_info structure from _res_pidiface_list with a certain pid */
 static struct resolv_pidiface_info* _get_pid_iface_info_locked(int pid);
 
+/* remove a resolv_pidiface_info structure from _res_uidiface_list */
+static int _remove_uidiface_info_locked(int low, int high);
+/* check if a range [low,high] overlaps with any already existing ranges in the uid=>iface map*/
+static int  _resolv_check_uid_range_overlap_locked(int low, int high);
+/* get a resolv_uidiface_info structure from _res_uidiface_list with a certain uid */
+static struct resolv_uidiface_info* _get_uid_iface_info_locked(int uid);
+
 static void
 _res_cache_init(void)
 {
@@ -1852,8 +1871,10 @@ _res_cache_init(void)
     memset(&_res_default_ifname, 0, sizeof(_res_default_ifname));
     memset(&_res_cache_list, 0, sizeof(_res_cache_list));
     memset(&_res_pidiface_list, 0, sizeof(_res_pidiface_list));
+    memset(&_res_uidiface_list, 0, sizeof(_res_uidiface_list));
     pthread_mutex_init(&_res_cache_list_lock, NULL);
     pthread_mutex_init(&_res_pidiface_list_lock, NULL);
+    pthread_mutex_init(&_res_uidiface_list_lock, NULL);
 }
 
 struct resolv_cache*
@@ -2407,6 +2428,129 @@ _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen)
     XLOG("_resolv_get_pids_associated_interface buff: %s\n", buff);
 
     pthread_mutex_unlock(&_res_pidiface_list_lock);
+
+    return len;
+}
+
+static int
+_remove_uidiface_info_locked(int low, int high) {
+    struct resolv_uidiface_info* result = &_res_uidiface_list.next;
+    struct resolv_uidiface_info* prev = NULL;
+
+    while (result != NULL && result->low != low && result->high != high) {
+        prev = result;
+        result = result->next;
+    }
+    if (prev != NULL && result != NULL) {
+        prev->next = result->next;
+        free(result);
+        return 0;
+    }
+    errno = EINVAL;
+    return -1;
+}
+
+static struct resolv_uidiface_info*
+_get_uid_iface_info_locked(int uid)
+{
+    struct resolv_uidiface_info* result = &_res_uidiface_list.next;
+    while (result != NULL && !(result->low <= uid && result->high >= uid)) {
+        result = result->next;
+    }
+
+    return result;
+}
+
+static int
+_resolv_check_uid_range_overlap_locked(int low, int high)
+{
+    struct resolv_uidiface_info* cur = &_res_uidiface_list.next;
+    while (cur != NULL) {
+        if (cur->low <= high && cur->high >= low) {
+            return -1;
+        }
+        cur = cur->next;
+    }
+    return 0;
+}
+
+int
+_resolv_set_iface_for_uid_range(const char* ifname, int low, int high)
+{
+    int rv = 0;
+    struct resolv_uidiface_info* uidiface_info;
+    // make sure the uid iface list is created
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+    //check that we aren't adding an overlapping range
+    if (!_resolv_check_uid_range_overlap_locked(low,high)) {
+        uidiface_info = calloc(sizeof(*uidiface_info), 1);
+        if (uidiface_info) {
+            uidiface_info->low = low;
+            uidiface_info->high = high;
+            int len = sizeof(uidiface_info->ifname);
+            strncpy(uidiface_info->ifname, ifname, len - 1);
+            uidiface_info->ifname[len - 1] = '\0';
+
+            uidiface_info->next = _res_uidiface_list.next;
+            _res_uidiface_list.next = uidiface_info;
+
+            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", low, high, ifname);
+        } else {
+            XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
+            rv = -1;
+            errno = EINVAL;
+        }
+    } else {
+        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", low, high);
+        rv = -1;
+        errno = EINVAL;
+    }
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+    return rv;
+}
+
+int
+_resolv_clear_iface_for_uid_range(int low, int high)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+
+    int rv = _remove_uidiface_info_locked(low, high);
+
+    XLOG("_resolv_clear_iface_for_uid_range: low %d high %d\n", low, high);
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+
+    return rv;
+}
+
+int
+_resolv_get_uids_associated_interface(int uid, char* buff, int buffLen)
+{
+    int len = 0;
+
+    if (!buff) {
+        return -1;
+    }
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+
+    struct resolv_uidiface_info* uidiface_info = _get_uid_iface_info_locked(uid);
+    buff[0] = '\0';
+    if (uidiface_info) {
+        len = strlen(uidiface_info->ifname);
+        if (len < buffLen) {
+            strncpy(buff, uidiface_info->ifname, len);
+            buff[len] = '\0';
+        }
+    }
+
+    XLOG("_resolv_get_uids_associated_interface buff: %s\n", buff);
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
 
     return len;
 }
