@@ -209,6 +209,120 @@ TEST(string, strcat) {
   }
 }
 
+TEST(string, strcat2) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strcat(buf, "01234");
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(string, strcat3) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strcat(buf, "01234567");
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}
+
+TEST(string, strncat2) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strncat(buf, "01234", sizeof(buf) - strlen(buf) - 1);
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(string, strncat3) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strncat(buf, "0123456789", 5);
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(string, strncat4) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strncat(buf, "01234567", 8);
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}
+
+TEST(string, strncat5) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = strncat(buf, "01234567", 9);
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}
+
 TEST(string, strchr_with_0) {
   char buf[10];
   const char* s = "01234";
