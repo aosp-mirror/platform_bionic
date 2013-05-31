@@ -76,3 +76,166 @@ TEST(Fortify1_DeathTest, strncat2_fortified) {
   size_t n = atoi("10"); // avoid compiler optimizations
   ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGSEGV), "");
 }
+
+TEST(Fortify1_DeathTest, strcat_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char src[11];
+  strcpy(src, "0123456789");
+  char buf[10];
+  buf[0] = '\0';
+  ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGSEGV), "");
+}
+
+extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
+extern "C" char* __strcat_chk(char*, const char*, size_t);
+
+TEST(Fortify1, strncat) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strncat_chk(buf, "01234", sizeof(buf) - strlen(buf) - 1, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(Fortify1, strncat2) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strncat_chk(buf, "0123456789", 5, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(Fortify1, strncat3) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = '\0';
+  char* res = __strncat_chk(buf, "0123456789", 5, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('0',  buf[0]);
+  ASSERT_EQ('1',  buf[1]);
+  ASSERT_EQ('2',  buf[2]);
+  ASSERT_EQ('3',  buf[3]);
+  ASSERT_EQ('4',  buf[4]);
+  ASSERT_EQ('\0', buf[5]);
+  ASSERT_EQ('A',  buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(Fortify1, strncat4) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[9] = '\0';
+  char* res = __strncat_chk(buf, "", 5, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('A',  buf[0]);
+  ASSERT_EQ('A',  buf[1]);
+  ASSERT_EQ('A',  buf[2]);
+  ASSERT_EQ('A',  buf[3]);
+  ASSERT_EQ('A',  buf[4]);
+  ASSERT_EQ('A',  buf[5]);
+  ASSERT_EQ('A',  buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('\0', buf[9]);
+}
+
+TEST(Fortify1, strncat5) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strncat_chk(buf, "01234567", 8, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}
+
+TEST(Fortify1, strncat6) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strncat_chk(buf, "01234567", 9, sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}
+
+
+TEST(Fortify1, strcat) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strcat_chk(buf, "01234", sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('\0', buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+}
+
+TEST(Fortify1, strcat2) {
+  char buf[10];
+  memset(buf, 'A', sizeof(buf));
+  buf[0] = 'a';
+  buf[1] = '\0';
+  char* res = __strcat_chk(buf, "01234567", sizeof(buf));
+  ASSERT_EQ(buf, res);
+  ASSERT_EQ('a',  buf[0]);
+  ASSERT_EQ('0',  buf[1]);
+  ASSERT_EQ('1',  buf[2]);
+  ASSERT_EQ('2',  buf[3]);
+  ASSERT_EQ('3',  buf[4]);
+  ASSERT_EQ('4',  buf[5]);
+  ASSERT_EQ('5', buf[6]);
+  ASSERT_EQ('6',  buf[7]);
+  ASSERT_EQ('7',  buf[8]);
+  ASSERT_EQ('\0',  buf[9]);
+}

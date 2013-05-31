@@ -29,7 +29,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "libc_logging.h"
-#include <safe_iop.h>
 
 /*
  * Runtime implementation of __builtin____strcat_chk.
@@ -42,22 +41,24 @@
  * This strcat check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char *__strcat_chk (char *dest, const char *src, size_t dest_buf_size) {
-    // TODO: optimize so we don't scan src/dest twice.
-    size_t src_len  = strlen(src);
-    size_t dest_len = strlen(dest);
-    size_t sum;
+extern "C" char* __strcat_chk(
+        char* __restrict dest,
+        const char* __restrict src,
+        size_t dest_buf_size)
+{
+    char* save = dest;
+    size_t dest_len = __strlen_chk(dest, dest_buf_size);
 
-    // sum = src_len + dest_len + 1 (with overflow protection)
-    if (!safe_add3(&sum, src_len, dest_len, 1U)) {
-        __fortify_chk_fail("strcat integer overflow",
-                             BIONIC_EVENT_STRCAT_INTEGER_OVERFLOW);
+    dest += dest_len;
+    dest_buf_size -= dest_len;
+
+    while ((*dest++ = *src++) != '\0') {
+        dest_buf_size--;
+        if (__predict_false(dest_buf_size == 0)) {
+            __fortify_chk_fail("strcat buffer overflow",
+                               BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
+        }
     }
 
-    if (sum > dest_buf_size) {
-        __fortify_chk_fail("strcat buffer overflow",
-                             BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
-    }
-
-    return strcat(dest, src);
+    return save;
 }
