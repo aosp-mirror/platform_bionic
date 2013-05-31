@@ -38,5 +38,5 @@
 ENTRY(abort)
     .save   {r3, r14}
     stmfd   sp!, {r3, r14}
-    blx     PIC_SYM(_C_LABEL(__libc_android_abort), PLT)
+    bl      PIC_SYM(_C_LABEL(__libc_android_abort), PLT)
 END(abort)
