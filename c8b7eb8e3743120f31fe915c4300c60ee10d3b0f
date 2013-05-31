@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bdde9125_419354a4",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-31T05:32:41Z",
+      "side": 1,
+      "message": "FYI: there\u0027s already a test for strcat",
+      "revId": "c8b7eb8e3743120f31fe915c4300c60ee10d3b0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bdde9125_619850be",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-05-31T05:32:41Z",
+      "side": 1,
+      "message": "and a test for strncat",
+      "revId": "c8b7eb8e3743120f31fe915c4300c60ee10d3b0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
