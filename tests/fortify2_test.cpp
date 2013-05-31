@@ -80,6 +80,32 @@ TEST(Fortify2_DeathTest, strncat2_fortified2) {
   ASSERT_EXIT(strncat(myfoo.a, "0123456789", n), testing::KilledBySignal(SIGSEGV), "");
 }
 
+TEST(Fortify2_DeathTest, strncat3_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
+  myfoo.b[0] = '\0';
+  size_t n = atoi("10"); // avoid compiler optimizations
+  ASSERT_EXIT(strncat(myfoo.b, myfoo.a, n), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(Fortify2_DeathTest, strcat_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char src[11];
+  strcpy(src, "0123456789");
+  foo myfoo;
+  myfoo.a[0] = '\0';
+  ASSERT_EXIT(strcat(myfoo.a, src), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(Fortify2_DeathTest, strcat2_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
+  myfoo.b[0] = '\0';
+  ASSERT_EXIT(strcat(myfoo.b, myfoo.a), testing::KilledBySignal(SIGSEGV), "");
+}
+
 /***********************************************************/
 /* TESTS BELOW HERE DUPLICATE TESTS FROM fortify1_test.cpp */
 /***********************************************************/
@@ -137,4 +163,13 @@ TEST(Fortify2_DeathTest, strncat2_fortified) {
   buf[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
   ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(Fortify2_DeathTest, strcat_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char src[11];
+  strcpy(src, "0123456789");
+  char buf[10];
+  buf[0] = '\0';
+  ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGSEGV), "");
 }
