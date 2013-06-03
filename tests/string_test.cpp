@@ -209,6 +209,53 @@ TEST(string, strcat) {
   }
 }
 
+// one byte target with "\0" source
+TEST(string, strcpy2) {
+  char buf[1];
+  char* orig = strdup("");
+  strcpy(buf, orig);
+  ASSERT_EQ('\0', buf[0]);
+  free(orig);
+}
+
+// multibyte target where we under fill target
+TEST(string, strcpy3) {
+  char buf[10];
+  char* orig = strdup("12345");
+  memset(buf, 'A', sizeof(buf));
+  strcpy(buf, orig);
+  ASSERT_EQ('1',  buf[0]);
+  ASSERT_EQ('2',  buf[1]);
+  ASSERT_EQ('3',  buf[2]);
+  ASSERT_EQ('4',  buf[3]);
+  ASSERT_EQ('5',  buf[4]);
+  ASSERT_EQ('\0', buf[5]);
+  ASSERT_EQ('A',  buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+  free(orig);
+}
+
+// multibyte target where we fill target exactly
+TEST(string, strcpy4) {
+  char buf[10];
+  char* orig = strdup("123456789");
+  memset(buf, 'A', sizeof(buf));
+  strcpy(buf, orig);
+  ASSERT_EQ('1',  buf[0]);
+  ASSERT_EQ('2',  buf[1]);
+  ASSERT_EQ('3',  buf[2]);
+  ASSERT_EQ('4',  buf[3]);
+  ASSERT_EQ('5',  buf[4]);
+  ASSERT_EQ('6',  buf[5]);
+  ASSERT_EQ('7',  buf[6]);
+  ASSERT_EQ('8',  buf[7]);
+  ASSERT_EQ('9',  buf[8]);
+  ASSERT_EQ('\0', buf[9]);
+  free(orig);
+}
+
 TEST(string, strcat2) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
