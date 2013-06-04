@@ -23,10 +23,39 @@
 #if __BIONIC__
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process.
+
+// multibyte target where we over fill (should fail)
 TEST(Fortify1_DeathTest, strcpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char *orig = strdup("0123456789");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// zero sized target with "\0" source (should fail)
+TEST(Fortify1_DeathTest, strcpy2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[0];
+  char *orig = strdup("");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// zero sized target with longer source (should fail)
+TEST(Fortify1_DeathTest, strcpy3_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[0];
+  char *orig = strdup("1");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// one byte target with longer source (should fail)
+TEST(Fortify1_DeathTest, strcpy4_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[1];
+  char *orig = strdup("12");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
   free(orig);
 }
