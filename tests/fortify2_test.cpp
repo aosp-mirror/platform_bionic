@@ -21,6 +21,8 @@
 #include <string.h>
 
 struct foo {
+  char empty[0];
+  char one[1];
   char a[10];
   char b[10];
 };
@@ -45,6 +47,36 @@ TEST(Fortify2_DeathTest, sprintf_fortified2) {
 }
 
 #if __BIONIC__
+// zero sized target with "\0" source (should fail)
+TEST(Fortify2_DeathTest, strcpy_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  char* src = strdup("");
+  ASSERT_EXIT(strcpy(myfoo.empty, src),
+              testing::KilledBySignal(SIGSEGV), "");
+  free(src);
+}
+
+// zero sized target with longer source (should fail)
+TEST(Fortify2_DeathTest, strcpy2_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  char* src = strdup("1");
+  ASSERT_EXIT(strcpy(myfoo.empty, src),
+              testing::KilledBySignal(SIGSEGV), "");
+  free(src);
+}
+
+// one byte target with longer source (should fail)
+TEST(Fortify2_DeathTest, strcpy3_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  char* src = strdup("12");
+  ASSERT_EXIT(strcpy(myfoo.one, src),
+              testing::KilledBySignal(SIGSEGV), "");
+  free(src);
+}
+
 TEST(Fortify2_DeathTest, strchr_fortified2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
@@ -111,10 +143,38 @@ TEST(Fortify2_DeathTest, strcat2_fortified2) {
 /***********************************************************/
 
 #if __BIONIC__
+// multibyte target where we over fill (should fail)
 TEST(Fortify2_DeathTest, strcpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char *orig = strdup("0123456789");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// zero sized target with "\0" source (should fail)
+TEST(Fortify2_DeathTest, strcpy2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[0];
+  char *orig = strdup("");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// zero sized target with longer source (should fail)
+TEST(Fortify2_DeathTest, strcpy3_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[0];
+  char *orig = strdup("1");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  free(orig);
+}
+
+// one byte target with longer source (should fail)
+TEST(Fortify2_DeathTest, strcpy4_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[1];
+  char *orig = strdup("12");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
   free(orig);
 }
