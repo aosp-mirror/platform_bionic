@@ -33,7 +33,7 @@ extern void* realloc(void* p, size_t byte_count) __wur;
 extern void free(void* p);
 
 extern void* memalign(size_t alignment, size_t byte_count) __mallocfunc __wur;
-extern size_t malloc_usable_size(void* p);
+extern size_t malloc_usable_size(const void* p);
 
 extern void* valloc(size_t byte_count) __mallocfunc __wur;
 extern void* pvalloc(size_t byte_count) __mallocfunc __wur;
