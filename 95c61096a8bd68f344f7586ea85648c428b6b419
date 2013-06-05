@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d879d2a_83a9d26c",
+        "filename": "libc/private/thread_private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-05T01:21:56Z",
+      "side": 1,
+      "message": "(this comment should be removed too.)",
+      "revId": "95c61096a8bd68f344f7586ea85648c428b6b419",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
