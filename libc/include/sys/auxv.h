@@ -29,6 +29,7 @@
 #define _SYS_AUXV_H_
 
 #include <linux/auxvec.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
