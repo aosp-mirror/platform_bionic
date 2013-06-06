@@ -66,6 +66,9 @@ extern void _resolv_set_iface_for_pid(const char* ifname, int pid);
 /* clear pid from being associated with an interface */
 extern void _resolv_clear_iface_for_pid(int pid);
 
+/* clear the entire mapping of pids to interfaces. */
+extern void _resolv_clear_iface_pid_mapping();
+
 /** Gets the name of the interface to which the pid is attached.
  *  On error, -1 is returned.
  *  If no interface is found, 0 is returned and buff is set to empty ('\0').
@@ -78,11 +81,14 @@ extern int _resolv_get_pids_associated_interface(int pid, char* buff, int buffLe
 
 /** set a uid range to use the name servers of the specified interface
  *  If [low,high] overlaps with an already existing rule -1 is returned */
-extern int _resolv_set_iface_for_uid_range(const char* ifname, int low, int high);
+extern int _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end);
 
 /* clear a uid range from being associated with an interface
  * If the range given is not mapped -1 is returned. */
-extern int _resolv_clear_iface_for_uid_range(int low, int high);
+extern int _resolv_clear_iface_for_uid_range(int uid_start, int uid_end);
+
+/* clear the entire mapping of uid ranges to interfaces. */
+extern void _resolv_clear_iface_uid_range_mapping();
 
 /** Gets the name of the interface to which the uid is attached.
  *  On error, -1 is returned.
