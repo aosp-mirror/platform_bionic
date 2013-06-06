@@ -29,6 +29,7 @@
 #define _BIONIC_FUTEX_H
 
 #include <linux/futex.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
