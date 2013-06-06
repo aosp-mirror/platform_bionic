@@ -29,6 +29,7 @@
 #define _PRIVATE_BIONIC_AUXV_H_
 
 #include <elf.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 

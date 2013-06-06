@@ -29,8 +29,9 @@
 #ifndef _SYS_SIGNALFD_H_
 #define _SYS_SIGNALFD_H_
 
-#include <signal.h>
 #include <linux/signalfd.h>
+#include <signal.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 

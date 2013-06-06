@@ -28,6 +28,7 @@
 #ifndef _SYS_TIMEB_H
 #define _SYS_TIMEB_H
 
+#include <sys/cdefs.h>
 #include <sys/time.h>
 
 __BEGIN_DECLS
