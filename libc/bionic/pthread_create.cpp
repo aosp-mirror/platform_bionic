@@ -110,7 +110,6 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   }
 
   pthread_cond_init(&thread->join_cond, NULL);
-  thread->join_count = 0;
   thread->cleanup_stack = NULL;
 
   if (add_to_thread_list) {
