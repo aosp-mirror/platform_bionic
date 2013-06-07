@@ -67,9 +67,6 @@ extern HashTable gHashTable;
 // stack trace functions
 // =============================================================================
 
-#ifndef MALLOC_ALIGNMENT
-#define MALLOC_ALIGNMENT    ((size_t)8U)
-#endif
 #define GUARD               0x48151642
 #define DEBUG               0
 
@@ -80,10 +77,14 @@ extern HashTable gHashTable;
 struct AllocationEntry {
     HashEntry* entry;
     uint32_t guard;
-};
+} __attribute__((aligned(MALLOC_ALIGNMENT)));
 
-static AllocationEntry* to_header(void* mem) {
+static inline AllocationEntry* to_header(void* mem) {
   return reinterpret_cast<AllocationEntry*>(mem) - 1;
+}
+
+static inline const AllocationEntry* const_to_header(const void* mem) {
+  return reinterpret_cast<const AllocationEntry*>(mem) - 1;
 }
 
 // =============================================================================
@@ -229,17 +230,16 @@ extern "C" void fill_free(void* mem) {
 }
 
 extern "C" void* fill_realloc(void* mem, size_t bytes) {
-    void* buffer = fill_malloc(bytes);
-    if (mem == NULL) {
-        return buffer;
+    size_t oldSize = dlmalloc_usable_size(mem);
+    void* newMem = dlrealloc(mem, bytes);
+    if (newMem) {
+        // If this is larger than before, fill the extra with our pattern.
+        size_t newSize = dlmalloc_usable_size(newMem);
+        if (newSize > oldSize) {
+            memset(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(newMem)+oldSize), CHK_FILL_FREE, newSize-oldSize);
+        }
     }
-    if (buffer) {
-        size_t old_size = dlmalloc_usable_size(mem);
-        size_t size = (bytes < old_size)?(bytes):(old_size);
-        memcpy(buffer, mem, size);
-        fill_free(mem);
-    }
-    return buffer;
+    return newMem;
 }
 
 extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
@@ -250,11 +250,17 @@ extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
     return buffer;
 }
 
+extern "C" size_t fill_malloc_usable_size(const void* mem) {
+    // Since we didn't allocate extra bytes before or after, we can
+    // report the normal usable size here.
+    return dlmalloc_usable_size(mem);
+}
+
 // =============================================================================
 // malloc leak functions
 // =============================================================================
 
-static void* MEMALIGN_GUARD = reinterpret_cast<void*>(0xA1A41520);
+static uint32_t MEMALIGN_GUARD      = 0xA1A41520;
 
 extern "C" void* leak_malloc(size_t bytes) {
     // allocate enough space infront of the allocation to store the pointer for
@@ -296,9 +302,10 @@ extern "C" void leak_free(void* mem) {
 
         if (header->guard != GUARD) {
             // could be a memaligned block
-            if (reinterpret_cast<void**>(mem)[-1] == MEMALIGN_GUARD) {
-                mem = reinterpret_cast<void**>(mem)[-2];
-                header = to_header(mem);
+            if (header->guard == MEMALIGN_GUARD) {
+                // For memaligned blocks, header->entry points to the memory
+                // allocated through leak_malloc.
+                header = to_header(header->entry);
             }
         }
 
@@ -338,19 +345,26 @@ extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
     if (oldMem == NULL) {
         return leak_malloc(bytes);
     }
+
     void* newMem = NULL;
     AllocationEntry* header = to_header(oldMem);
-    if (header && header->guard == GUARD) {
-        size_t oldSize = header->entry->size & ~SIZE_FLAG_MASK;
-        newMem = leak_malloc(bytes);
-        if (newMem != NULL) {
-            size_t copySize = (oldSize <= bytes) ? oldSize : bytes;
-            memcpy(newMem, oldMem, copySize);
-            leak_free(oldMem);
-        }
-    } else {
-        newMem = dlrealloc(oldMem, bytes);
+    if (header->guard == MEMALIGN_GUARD) {
+        // Get the real header.
+        header = to_header(header->entry);
+    } else if (header->guard != GUARD) {
+        debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
+                   header->guard, header->entry);
+        return NULL;
     }
+
+    newMem = leak_malloc(bytes);
+    if (newMem != NULL) {
+        size_t oldSize = header->entry->size & ~SIZE_FLAG_MASK;
+        size_t copySize = (oldSize <= bytes) ? oldSize : bytes;
+        memcpy(newMem, oldMem, copySize);
+    }
+    leak_free(oldMem);
+
     return newMem;
 }
 
@@ -375,7 +389,7 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
 
     void* base = leak_malloc(size);
     if (base != NULL) {
-        intptr_t ptr = reinterpret_cast<intptr_t>(base);
+        uintptr_t ptr = reinterpret_cast<uintptr_t>(base);
         if ((ptr % alignment) == 0) {
             return base;
         }
@@ -383,11 +397,38 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
         // align the pointer
         ptr += ((-ptr) % alignment);
 
-        // there is always enough space for the base pointer and the guard
-        reinterpret_cast<void**>(ptr)[-1] = MEMALIGN_GUARD;
-        reinterpret_cast<void**>(ptr)[-2] = base;
+        // Already allocated enough space for the header. This assumes
+        // that the malloc alignment is at least 8, otherwise, this is
+        // not guaranteed to have the space for the header.
+        AllocationEntry* header = to_header(reinterpret_cast<void*>(ptr));
+        header->guard = MEMALIGN_GUARD;
+        header->entry = reinterpret_cast<HashEntry*>(base);
 
         return reinterpret_cast<void*>(ptr);
     }
     return base;
+}
+
+extern "C" size_t leak_malloc_usable_size(const void* mem) {
+    if (mem != NULL) {
+        // Check the guard to make sure it is valid.
+        const AllocationEntry* header = const_to_header((void*)mem);
+
+        if (header->guard == MEMALIGN_GUARD) {
+            // If this is a memalign'd pointer, then grab the header from
+            // entry.
+            header = const_to_header(header->entry);
+        } else if (header->guard != GUARD) {
+            debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
+                      header->guard, header->entry);
+            return 0;
+        }
+
+        size_t ret = dlmalloc_usable_size(header);
+        if (ret != 0) {
+            // The usable area starts at 'mem' and stops at 'header+ret'.
+            return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
+        }
+    }
+    return 0;
 }

@@ -66,6 +66,7 @@ test_src_files = \
     getcwd_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
+    malloc_test.cpp \
     math_test.cpp \
     netdb_test.cpp \
     pthread_test.cpp \

@@ -348,7 +348,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
             buffer[0] = '0';
             buffer[1] = 'x';
             format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
-        } else if (c == 'd' || c == 'i' || c == 'o' || c == 'x' || c == 'X') {
+        } else if (c == 'd' || c == 'i' || c == 'o' || c == 'u' || c == 'x' || c == 'X') {
             /* integers - first read value from stack */
             uint64_t value;
             int is_signed = (c == 'd' || c == 'i' || c == 'o');
