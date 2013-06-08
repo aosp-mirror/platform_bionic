@@ -28,16 +28,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if defined(USE_SSE2)
 
-# include "cache_wrapper.S"
-# undef __i686
-# define USE_AS_BZERO
-# define sse2_memset5_atom bzero
-# include "sse2-memset5-atom.S"
+#define USE_AS_STRNCMP
+#define STRCMP  strncmp
+#include "ssse3-strcmp-atom.S"
 
-#else
-
-# include "bzero.S"
-
-#endif

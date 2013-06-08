@@ -107,8 +107,12 @@ name:					\
 	sub	%esi, %ebp
 #endif
 
+#ifndef STRCMP
+# define STRCMP strcmp
+#endif
+
 	.section .text.ssse3,"ax",@progbits
-ENTRY (ssse3_strcmp_latest)
+ENTRY (STRCMP)
 #ifdef USE_AS_STRNCMP
 	PUSH	(%ebp)
 #endif
@@ -2271,4 +2275,4 @@ L(less16bytes_sncmp):
 	ret
 #endif
 
-END (ssse3_strcmp_latest)
+END (STRCMP)
