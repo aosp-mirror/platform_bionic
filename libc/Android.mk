@@ -63,17 +63,11 @@ libc_common_src_files := \
 	stdlib/strtoumax.c \
 	stdlib/tolower_.c \
 	stdlib/toupper_.c \
-	string/index.c \
 	string/strcasecmp.c \
-	string/strcat.c \
 	string/strcspn.c \
 	string/strdup.c \
-	string/strlcat.c \
-	string/strlcpy.c \
-	string/strncat.c \
-	string/strncpy.c \
 	string/strpbrk.c \
-	string/strrchr.c \
+	string/__strrchr_chk.c \
 	string/strsep.c \
 	string/strspn.c \
 	string/strstr.c \
@@ -119,9 +113,7 @@ libc_common_src_files := \
 	bionic/ldexp.c \
 	bionic/lseek64.c \
 	bionic/md5.c \
-	bionic/memchr.c \
 	bionic/memmem.c \
-	bionic/memrchr.c \
 	bionic/memswap.c \
 	bionic/mmap.c \
 	bionic/openat.c \
@@ -157,7 +149,6 @@ libc_common_src_files := \
 	bionic/sleep.c \
 	bionic/statfs.c \
 	bionic/strndup.c \
-	bionic/strnlen.c \
 	bionic/strntoimax.c \
 	bionic/strntoumax.c \
 	bionic/strtotimeval.c \
@@ -237,7 +228,7 @@ libc_bionic_src_files := \
     bionic/signalfd.cpp \
     bionic/sigwait.cpp \
     bionic/__strcat_chk.cpp \
-    bionic/strchr.cpp \
+    bionic/__strchr_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
@@ -293,27 +284,20 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wcpcpy.c \
     upstream-freebsd/lib/libc/string/wcpncpy.c \
     upstream-freebsd/lib/libc/string/wcscasecmp.c \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
     upstream-freebsd/lib/libc/string/wcscspn.c \
     upstream-freebsd/lib/libc/string/wcsdup.c \
     upstream-freebsd/lib/libc/string/wcslcat.c \
     upstream-freebsd/lib/libc/string/wcslcpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsncasecmp.c \
     upstream-freebsd/lib/libc/string/wcsncat.c \
     upstream-freebsd/lib/libc/string/wcsncmp.c \
     upstream-freebsd/lib/libc/string/wcsncpy.c \
     upstream-freebsd/lib/libc/string/wcsnlen.c \
     upstream-freebsd/lib/libc/string/wcspbrk.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wcsspn.c \
     upstream-freebsd/lib/libc/string/wcsstr.c \
     upstream-freebsd/lib/libc/string/wcstok.c \
     upstream-freebsd/lib/libc/string/wmemchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemcpy.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-freebsd/lib/libc/string/wmemset.c \
@@ -369,6 +353,24 @@ libc_common_src_files += \
 	bionic/memmove.c.arm \
 	string/bcopy.c \
 	string/strncmp.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	bionic/strchr.cpp \
+	string/strrchr.c \
+	bionic/memchr.c \
+	bionic/memrchr.c \
+	string/index.c \
+	bionic/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	upstream-freebsd/lib/libc/string/wcschr.c \
+	upstream-freebsd/lib/libc/string/wcsrchr.c \
+	upstream-freebsd/lib/libc/string/wcscmp.c \
+	upstream-freebsd/lib/libc/string/wcscpy.c \
+	upstream-freebsd/lib/libc/string/wmemcmp.c \
+	upstream-freebsd/lib/libc/string/wcslen.c \
+	upstream-freebsd/lib/libc/string/wcscat.c
 
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
@@ -392,7 +394,6 @@ libc_common_src_files += \
     bionic/pthread-rwlocks.c \
     bionic/pthread-timers.c \
     bionic/ptrace.c \
-    string/strcpy.c \
 
 libc_static_common_src_files += \
     bionic/pthread.c \
@@ -407,7 +408,25 @@ libc_common_src_files += \
 	string/bcopy.c \
 	string/strcmp.c \
 	string/strcpy.c \
-	string/strncmp.c
+	string/strncmp.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	bionic/strchr.cpp \
+	string/strrchr.c \
+	bionic/memchr.c \
+	bionic/memrchr.c \
+	string/index.c \
+	bionic/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	upstream-freebsd/lib/libc/string/wcschr.c \
+	upstream-freebsd/lib/libc/string/wcsrchr.c \
+	upstream-freebsd/lib/libc/string/wcscmp.c \
+	upstream-freebsd/lib/libc/string/wcscpy.c \
+	upstream-freebsd/lib/libc/string/wmemcmp.c \
+	upstream-freebsd/lib/libc/string/wcslen.c \
+	upstream-freebsd/lib/libc/string/wcscat.c
 
 libc_common_src_files += \
 	bionic/pthread-atfork.c \
