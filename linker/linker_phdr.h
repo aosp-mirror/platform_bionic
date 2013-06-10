@@ -80,7 +80,11 @@ class ElfReader {
   const Elf32_Phdr* loaded_phdr_;
 };
 
-Elf32_Addr phdr_table_get_load_size(const Elf32_Phdr* phdr, size_t phnum);
+size_t
+phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
+                         size_t phdr_count,
+                         Elf32_Addr* min_vaddr = NULL,
+                         Elf32_Addr* max_vaddr = NULL);
 
 int
 phdr_table_protect_segments(const Elf32_Phdr* phdr_table,
