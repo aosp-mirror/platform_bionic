@@ -29,7 +29,7 @@ TEST(Fortify1_DeathTest, strcpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char *orig = strdup("0123456789");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
   free(orig);
 }
 
@@ -38,7 +38,7 @@ TEST(Fortify1_DeathTest, strcpy2_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
   free(orig);
 }
 
@@ -47,7 +47,7 @@ TEST(Fortify1_DeathTest, strcpy3_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("1");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
   free(orig);
 }
 
@@ -56,7 +56,7 @@ TEST(Fortify1_DeathTest, strcpy4_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   char *orig = strdup("12");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
   free(orig);
 }
 
@@ -64,21 +64,21 @@ TEST(Fortify1_DeathTest, strlen_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%d", strlen(buf)), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(printf("%d", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strchr_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strrchr_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
 }
 #endif
 
@@ -87,7 +87,7 @@ TEST(Fortify1_DeathTest, sprintf_fortified) {
   char buf[10];
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
-  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strncat_fortified) {
@@ -95,7 +95,7 @@ TEST(Fortify1_DeathTest, strncat_fortified) {
   char buf[10];
   size_t n = atoi("10"); // avoid compiler optimizations
   strncpy(buf, "012345678", n);
-  ASSERT_EXIT(strncat(buf, "9", n), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strncat(buf, "9", n), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strncat2_fortified) {
@@ -103,7 +103,7 @@ TEST(Fortify1_DeathTest, strncat2_fortified) {
   char buf[10];
   buf[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
-  ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strcat_fortified) {
@@ -112,7 +112,7 @@ TEST(Fortify1_DeathTest, strcat_fortified) {
   strcpy(src, "0123456789");
   char buf[10];
   buf[0] = '\0';
-  ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGABRT), "");
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
