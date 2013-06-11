@@ -119,7 +119,7 @@ static void do_modify_stack_chk_guard() {
 
 TEST(stack_protector_DeathTest, modify_stack_protector) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGSEGV), "");
+  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
 }
 
 #endif
