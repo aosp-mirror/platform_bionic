@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd1bf126_39b9cb04",
+        "filename": "libc/arch-arm/bionic/tgkill.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-11T00:10:31Z",
+      "side": 1,
+      "message": "d\u0027oh!",
+      "revId": "6fa74103255226e2c7599ba81c449a69c9043d8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd1bf126_f9be33ed",
+        "filename": "libc/unistd/abort.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-11T00:10:31Z",
+      "side": 1,
+      "message": "L56-58 can be removed too.",
+      "revId": "6fa74103255226e2c7599ba81c449a69c9043d8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
