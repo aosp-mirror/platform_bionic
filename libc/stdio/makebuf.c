@@ -65,7 +65,6 @@ __smakebuf(FILE *fp)
 		fp->_bf._size = 1;
 		return;
 	}
-	__atexit_register_cleanup(_cleanup);
 	flags |= __SMBF;
 	fp->_bf._base = fp->_p = p;
 	fp->_bf._size = size;

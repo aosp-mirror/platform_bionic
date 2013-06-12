@@ -6,7 +6,6 @@ include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
 # =========================================================
 libc_common_src_files := \
 	$(syscall_src) \
-	unistd/abort.c \
 	unistd/alarm.c \
 	unistd/exec.c \
 	unistd/fnmatch.c \
@@ -192,6 +191,7 @@ libc_common_src_files := \
 	netbsd/nameser/ns_samedomain.c \
 
 libc_bionic_src_files := \
+    bionic/abort.cpp \
     bionic/assert.cpp \
     bionic/brk.cpp \
     bionic/dirent.cpp \
