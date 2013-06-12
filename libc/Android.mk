@@ -26,13 +26,11 @@ libc_common_src_files := \
 	stdio/ftell.c \
 	stdio/fvwrite.c \
 	stdio/gets.c \
-	stdio/makebuf.c \
 	stdio/mktemp.c \
 	stdio/printf.c \
 	stdio/refill.c \
 	stdio/rewind.c \
 	stdio/scanf.c \
-	stdio/setvbuf.c \
 	stdio/snprintf.c\
 	stdio/sprintf.c \
 	stdio/sscanf.c \
@@ -268,6 +266,7 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/fwrite.c \
     upstream-freebsd/lib/libc/stdio/getc.c \
     upstream-freebsd/lib/libc/stdio/getchar.c \
+    upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/putc.c \
     upstream-freebsd/lib/libc/stdio/putchar.c \
     upstream-freebsd/lib/libc/stdio/puts.c \
@@ -276,6 +275,7 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/rget.c \
     upstream-freebsd/lib/libc/stdio/setbuf.c \
     upstream-freebsd/lib/libc/stdio/setbuffer.c \
+    upstream-freebsd/lib/libc/stdio/setvbuf.c \
     upstream-freebsd/lib/libc/stdio/tempnam.c \
     upstream-freebsd/lib/libc/stdio/tmpnam.c \
     upstream-freebsd/lib/libc/stdio/wsetup.c \
