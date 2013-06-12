@@ -1,4 +1,3 @@
-/*	$OpenBSD: abort.c,v 1.14 2005/08/08 08:05:36 espie Exp $ */
 /*
  * Copyright (c) 1985 Regents of the University of California.
  * All rights reserved.
@@ -31,62 +30,38 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "thread_private.h"
 #include "atexit.h"
 
+__LIBC_HIDDEN__ void (*__cleanup)();
+
 #ifdef __arm__
-__LIBC_HIDDEN__ void
-__libc_android_abort(void)
+extern "C" __LIBC_HIDDEN__ void __libc_android_abort()
 #else
-void
-abort(void)
+void abort()
 #endif
 {
-	struct atexit *p = __atexit;
-	static int cleanup_called = 0;
-	sigset_t mask;
+  // Don't block SIGABRT to give any signal handler a chance; we ignore
+  // any errors -- X311J doesn't allow abort to return anyway.
+  sigset_t mask;
+  sigfillset(&mask);
+  sigdelset(&mask, SIGABRT);
+  sigprocmask(SIG_SETMASK, &mask, NULL);
 
+  // POSIX requires we flush stdio buffers on abort.
+  if (__cleanup) {
+    (*__cleanup)();
+  }
 
-	sigfillset(&mask);
-	/*
-	 * don't block SIGABRT to give any handler a chance; we ignore
-	 * any errors -- X311J doesn't allow abort to return anyway.
-	 */
-	sigdelset(&mask, SIGABRT);
+  raise(SIGABRT);
 
-	(void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
-
-	/*
-	 * POSIX requires we flush stdio buffers on abort
-	 */
-	if (cleanup_called == 0) {
-		while (p != NULL && p->next != NULL)
-			p = p->next;
-		/* the check for fn_dso == NULL is mostly paranoia */
-		if (p != NULL && p->fns[0].fn_dso == NULL &&
-		    p->fns[0].fn_ptr.std_func != NULL) {
-			cleanup_called = 1;
-			(*p->fns[0].fn_ptr.std_func)();
-		}
-	}
-
-	raise(SIGABRT);
-
-	/*
-	 * if SIGABRT ignored, or caught and the handler returns, do
-	 * it again, only harder.
-	 */
-        {
-            struct sigaction sa;
-
-            sa.sa_handler = SIG_DFL;
-            sa.sa_flags   = SA_RESTART;
-            sigemptyset(&sa.sa_mask);
-
-            (void)sigaction( SIGABRT, &sa, &sa );
-        }
-
-	(void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
-	raise(SIGABRT);
-	_exit(1);
+  // If SIGABRT ignored, or caught and the handler returns,
+  // remove the SIGABRT signal handler and raise SIGABRT again.
+  struct sigaction sa;
+  sa.sa_handler = SIG_DFL;
+  sa.sa_flags   = SA_RESTART;
+  sigemptyset(&sa.sa_mask);
+  sigaction(SIGABRT, &sa, &sa);
+  sigprocmask(SIG_SETMASK, &mask, NULL);
+  raise(SIGABRT);
+  _exit(1);
 }

@@ -28,13 +28,17 @@ static void __bionic_heap_usage_error(const char* function, void* address);
 // Ugly inclusion of C file so that bionic specific #defines configure dlmalloc.
 #include "../upstream-dlmalloc/malloc.c"
 
+extern void (*__cleanup)();
+
 static void __bionic_heap_corruption_error(const char* function) {
-  __libc_fatal("@@@ ABORTING: heap corruption detected by %s", function);
+  __cleanup = NULL; // The heap is corrupt. We can forget trying to shut down stdio.
+  __libc_fatal("heap corruption detected by %s", function);
 }
 
 static void __bionic_heap_usage_error(const char* function, void* address) {
-  __libc_fatal("@@@ ABORTING: invalid address or address of corrupt block %p passed to %s",
+  __libc_fatal_no_abort("invalid address or address of corrupt block %p passed to %s",
                address, function);
-  // So that we can get a memory dump around the specific address.
+  // So that debuggerd gives us a memory dump around the specific address.
+  // TODO: improve the debuggerd protocol so we can tell it to dump an address when we abort.
   *((int**) 0xdeadbaad) = (int*) address;
 }

@@ -79,6 +79,15 @@ __LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...)
     __printflike(1, 2);
 
 //
+// Formats a message to the log (priority 'fatal'), but doesn't abort.
+// Used by the malloc implementation to ensure that debuggerd dumps memory
+// around the bad address.
+//
+
+__LIBC_HIDDEN__ void __libc_fatal_no_abort(const char* format, ...)
+    __printflike(1, 2);
+
+//
 // Formatting routines for the C library's internal debugging.
 // Unlike the usual alternatives, these don't allocate.
 //

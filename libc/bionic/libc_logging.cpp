@@ -488,13 +488,10 @@ void __fortify_chk_fail(const char *msg, uint32_t tag) {
   __libc_fatal("FORTIFY_SOURCE: %s. Calling abort().", msg);
 }
 
-void __libc_fatal(const char* format, ...) {
+static void __libc_fatal(const char* format, va_list args) {
   char msg[1024];
   BufferOutputStream os(msg, sizeof(msg));
-  va_list args;
-  va_start(args, format);
   out_vformat(os, format, args);
-  va_end(args);
 
   // TODO: log to stderr for the benefit of "adb shell" users.
 
@@ -502,7 +499,20 @@ void __libc_fatal(const char* format, ...) {
   __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
 
   __libc_set_abort_message(msg);
+}
 
+void __libc_fatal_no_abort(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  __libc_fatal(format, args);
+  va_end(args);
+}
+
+void __libc_fatal(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  __libc_fatal(format, args);
+  va_end(args);
   abort();
 }
 
