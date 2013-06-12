@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd1bf126_c5c2642f",
+        "filename": "libc/arch-arm/cortex-a9/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-06-12T19:56:22Z",
+      "side": 1,
+      "message": "The cortexa9 implementation we are using assumes ARM_NEON. We are trying to minimize the number of #ifdef XXX because it makes the code really difficult to follow. It would be better to break this into two implementations, one with neon support and one without. I know that it can lead to some small issues with maintenance, but this code really doesn\u0027t change that often and trying to wade through all of the ifdefs is a pain.",
+      "revId": "dd1a984a1c8a80c7381c78b80f824a7d23b03ec5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
