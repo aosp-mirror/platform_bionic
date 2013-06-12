@@ -21,6 +21,7 @@
 
 #define _close close
 #define _fcntl fcntl
+#define _fstat fstat
 #define _open open
 
 #define _sseek __sseek /* Needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
