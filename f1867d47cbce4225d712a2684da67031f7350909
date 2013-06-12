@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd8e91af_7ee151e7",
+        "filename": "libc/upstream-freebsd/lib/libc/stdio/setvbuf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-12T22:33:41Z",
+      "side": 0,
+      "message": "this macro expands to nothing currently anyway. it would be for wchar support.",
+      "revId": "f1867d47cbce4225d712a2684da67031f7350909",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
