@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd1bf126_85218cab",
+        "filename": "libc/include/stdint.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-12T17:56:23Z",
+      "side": 1,
+      "message": "there\u0027s other stuff that should be in here that isn\u0027t, but that stuff is even less conveniently available and no one has hit it yet.\n\nmaybe we can clean all this up when we add 64 bit support...",
+      "revId": "2c157aec9b37f49367f9411e2c2253bf3975f11c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
