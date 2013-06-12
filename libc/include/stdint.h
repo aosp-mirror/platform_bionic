@@ -30,7 +30,7 @@
 
 #include <stddef.h>
 #include <sys/_types.h>
-#include <limits.h> /* For SIZE_MAX. */
+#include <machine/limits.h> /* For SIZE_MAX. */
 
 #if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
 #  define __STDINT_LIMITS
