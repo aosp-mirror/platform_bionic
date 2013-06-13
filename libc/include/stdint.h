@@ -30,7 +30,6 @@
 
 #include <stddef.h>
 #include <sys/_types.h>
-#include <machine/limits.h> /* For SIZE_MAX. */
 
 #if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
 #  define __STDINT_LIMITS
@@ -225,6 +224,25 @@ typedef int64_t  intmax_t;
 #ifdef __STDINT_MACROS
 #  define INTMAX_C(c)	INT64_C(c)
 #  define UINTMAX_C(c)	UINT64_C(c)
+#endif
+
+/*
+ * sig_atomic_t, size_t, wchar_t, and wint_t.
+ */
+
+#ifdef __STDINT_LIMITS
+#  define SIG_ATOMIC_MAX INT32_MAX
+#  define SIG_ATOMIC_MIN INT32_MIN
+
+#  define SIZE_MAX UINT32_MAX
+
+#  ifndef WCHAR_MAX /* These might also have been defined by <wchar.h>. */
+#    define WCHAR_MAX INT32_MAX
+#    define WCHAR_MIN INT32_MIN
+#  endif
+
+#  define WINT_MAX INT32_MAX
+#  define WINT_MIN INT32_MIN
 #endif
 
 #define _BITSIZE 32
