@@ -16,6 +16,24 @@
       "revId": "523b67c39acb98701bfa8db3a93a05d935813ce1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d379dc4_8ce7c7d2",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1004359
+      },
+      "writtenOn": "2013-06-13T21:33:20Z",
+      "side": 1,
+      "message": "Specifically, not decrementing reltime?\n\nYes, it does have the same problem.\n\nRe-reading the posix spec, it looks like returning 0 on a spurious wake is acceptable, but that totally breaks pthread_join, so it seems like changing pthread_cond_wait() is the right way to fix that problem.  I am not sure callers will have an easy mechanism to recover from the spurious interrupt if it is going to return 0.\n\nI\u0027ll work on the time math, since it looks like it would also be a violation of the description (if not the API) to start waiting after reltime had expired.",
+      "parentUuid": "cafa992f_1ec98d01",
+      "revId": "523b67c39acb98701bfa8db3a93a05d935813ce1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
