@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cafa992f_1ec98d01",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-13T20:36:22Z",
+      "side": 1,
+      "message": "doesn\u0027t this have the same problem as the Intel patch? see my comments there.",
+      "revId": "523b67c39acb98701bfa8db3a93a05d935813ce1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
