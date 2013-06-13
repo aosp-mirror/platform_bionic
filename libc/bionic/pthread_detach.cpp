@@ -40,7 +40,7 @@ int pthread_detach(pthread_t t) {
     return EINVAL; // Already detached.
   }
 
-  if (thread->join_count > 0) {
+  if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
     return 0; // Already being joined; silently do nothing, like glibc.
   }
 

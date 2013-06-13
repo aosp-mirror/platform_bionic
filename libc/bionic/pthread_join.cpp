@@ -30,7 +30,7 @@
 
 #include "pthread_accessor.h"
 
-int pthread_join(pthread_t t, void ** ret_val) {
+int pthread_join(pthread_t t, void** ret_val) {
   if (t == pthread_self()) {
     return EDEADLK;
   }
@@ -44,25 +44,19 @@ int pthread_join(pthread_t t, void ** ret_val) {
     return EINVAL;
   }
 
-  // Wait for thread death when needed.
+  if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
+    return EINVAL;
+  }
 
-  // If the 'join_count' is negative, this is a 'zombie' thread that
-  // is already dead and without stack/TLS. Otherwise, we need to increment 'join-count'
-  // and wait to be signaled
-  int count = thread->join_count;
-  if (count >= 0) {
-    thread->join_count += 1;
+  // Signal our intention to join, and wait for the thread to exit.
+  thread->attr.flags |= PTHREAD_ATTR_FLAG_JOINED;
+  while ((thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) == 0) {
     pthread_cond_wait(&thread->join_cond, &gThreadListLock);
-    count = --thread->join_count;
   }
   if (ret_val) {
     *ret_val = thread->return_value;
   }
 
-  // Remove thread from thread list when we're the last joiner or when the
-  // thread was already a zombie.
-  if (count <= 0) {
-    _pthread_internal_remove_locked(thread.get());
-  }
+  _pthread_internal_remove_locked(thread.get());
   return 0;
 }

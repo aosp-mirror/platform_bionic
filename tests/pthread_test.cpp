@@ -317,3 +317,25 @@ TEST(pthread, pthread_kill__no_such_thread) {
 
   ASSERT_EQ(ESRCH, pthread_kill(dead_thread, 0));
 }
+
+TEST(pthread, pthread_join__multijoin) {
+  bool done = false;
+
+  pthread_t t1;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
+
+  pthread_t t2;
+  ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
+
+  sleep(1); // (Give t2 a chance to call pthread_join.)
+
+  // Multiple joins to the same thread should fail.
+  ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
+
+  done = true;
+
+  // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
+  void* join_result;
+  ASSERT_EQ(0, pthread_join(t2, &join_result));
+  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+}
