@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d379dc4_accd6b0e",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 822,
+      "author": {
+        "id": 1004359
+      },
+      "writtenOn": "2013-06-13T22:49:53Z",
+      "side": 1,
+      "message": "I\u0027ll take suggestions for a better name for this function.",
+      "revId": "ee350adc308ed7d8c2b6856c7bf778a7df341fa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d379dc4_ccc29fdd",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1142,
+      "author": {
+        "id": 1004359
+      },
+      "writtenOn": "2013-06-13T22:49:53Z",
+      "side": 1,
+      "message": "I kept this null abstime check, because previous callers were protected from null timespec, and I don\u0027t want to introduce new bugs.\n\nI separated pthread_cond_wait since the logic to deal with null-or-not timespec\u0027s was ugly.",
+      "revId": "ee350adc308ed7d8c2b6856c7bf778a7df341fa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d379dc4_4cb78f6f",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 1004359
+      },
+      "writtenOn": "2013-06-13T22:49:53Z",
+      "side": 1,
+      "message": "EINVAL or EPERM are also valid returns, might be nice to implement someday.",
+      "revId": "ee350adc308ed7d8c2b6856c7bf778a7df341fa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d379dc4_ac7acbc9",
+        "filename": "libc/bionic/pthread.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1004359
+      },
+      "writtenOn": "2013-06-13T22:49:53Z",
+      "side": 1,
+      "message": "another null pointer check I kept, since previously callers were protected from null timespec\u0027s.",
+      "revId": "ee350adc308ed7d8c2b6856c7bf778a7df341fa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
