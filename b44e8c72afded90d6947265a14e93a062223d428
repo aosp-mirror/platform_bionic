@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a042103_bf06132d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-13T23:53:54Z",
+      "side": 1,
+      "message": "isn\u0027t whether AT_SYSINFO_EHDR is 0 or not the real \"KERNEL_PROVIDES_VDSO\"? why do we need the #define?",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a042103_7f108b5d",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-13T23:53:54Z",
+      "side": 1,
+      "message": "is there a reason why this is C rather than C++ like the other tests? the unused arguments would be cleaner in C++.",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a042103_9f03571d",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-13T23:53:54Z",
+      "side": 1,
+      "message": "tabs.",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a042103_3f0a0330",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-13T23:53:54Z",
+      "side": 1,
+      "message": "i don\u0027t understand this test. you\u0027re basically testing that foo1_handler is called, but i don\u0027t see what that has to do with the kernel dso.\n\nare you saying that unwinding currently stops at the vdso frame? i thought it went through it but just didn\u0027t know what dso to attribute the frame to.\n\ni guess i was expecting a test that checks that one of the PC values is in the vdso.",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
