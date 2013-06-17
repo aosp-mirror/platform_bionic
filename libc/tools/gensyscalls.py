@@ -10,17 +10,7 @@ import getpass
 
 from bionic_utils import *
 
-# get the root Bionic directory, simply this script's dirname
-#
-bionic_root = find_bionic_root()
-if not bionic_root:
-    print "could not find the Bionic root directory. aborting"
-    sys.exit(1)
-
-if bionic_root[-1] != '/':
-    bionic_root += "/"
-
-print "bionic_root is %s" % bionic_root
+bionic_libc_root = os.environ["ANDROID_BUILD_TOP"] + "/bionic/libc/"
 
 # temp directory where we store all intermediate files
 bionic_temp = "/tmp/bionic_gensyscalls/"
@@ -334,11 +324,11 @@ class State:
         glibc_fp.write("#define _BIONIC_GLIBC_SYSCALLS_H_\n")
 
         glibc_fp.write("#if defined(__arm__)\n")
-        self.scan_linux_unistd_h(glibc_fp, "libc/kernel/arch-arm/asm/unistd.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-arm/asm/unistd.h")
         glibc_fp.write("#elif defined(__mips__)\n")
-        self.scan_linux_unistd_h(glibc_fp, "libc/kernel/arch-mips/asm/unistd.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-mips/asm/unistd.h")
         glibc_fp.write("#elif defined(__i386__)\n")
-        self.scan_linux_unistd_h(glibc_fp, "libc/kernel/arch-x86/asm/unistd_32.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-x86/asm/unistd_32.h")
         glibc_fp.write("#endif\n")
 
         glibc_fp.write("#endif /* _BIONIC_GLIBC_SYSCALLS_H_ */\n")
@@ -397,14 +387,14 @@ class State:
     def  regenerate(self):
         D( "scanning for existing architecture-specific stub files" )
 
-        bionic_root_len = len(bionic_root)
+        bionic_libc_root_len = len(bionic_libc_root)
 
         for arch in all_archs:
-            arch_path = bionic_root + "arch-" + arch
+            arch_path = bionic_libc_root + "arch-" + arch
             D( "scanning " + arch_path )
             files = glob.glob( arch_path + "/syscalls/*.S" )
             for f in files:
-                self.old_stubs.append( f[bionic_root_len:] )
+                self.old_stubs.append( f[bionic_libc_root_len:] )
 
         D( "found %d stub files" % len(self.old_stubs) )
 
@@ -424,13 +414,13 @@ class State:
         edits   = []
 
         for stub in self.new_stubs + self.other_files:
-            if not os.path.exists( bionic_root + stub ):
+            if not os.path.exists( bionic_libc_root + stub ):
                 # new file, git add it
                 D( "new file:     " + stub)
-                adds.append( bionic_root + stub )
-                shutil.copyfile( bionic_temp + stub, bionic_root + stub )
+                adds.append( bionic_libc_root + stub )
+                shutil.copyfile( bionic_temp + stub, bionic_libc_root + stub )
 
-            elif not filecmp.cmp( bionic_temp + stub, bionic_root + stub ):
+            elif not filecmp.cmp( bionic_temp + stub, bionic_libc_root + stub ):
                 D( "changed file: " + stub)
                 edits.append( stub )
 
@@ -438,7 +428,7 @@ class State:
         for stub in self.old_stubs:
             if not stub in self.new_stubs:
                 D( "deleted file: " + stub)
-                deletes.append( bionic_root + stub )
+                deletes.append( bionic_libc_root + stub )
 
 
         if adds:
@@ -447,11 +437,11 @@ class State:
             commands.getoutput("git rm " + " ".join(deletes))
         if edits:
             for file in edits:
-                shutil.copyfile( bionic_temp + file, bionic_root + file )
+                shutil.copyfile( bionic_temp + file, bionic_libc_root + file )
             commands.getoutput("git add " +
-                               " ".join((bionic_root + file) for file in edits))
+                               " ".join((bionic_libc_root + file) for file in edits))
 
-        commands.getoutput("git add %s%s" % (bionic_root,"SYSCALLS.TXT"))
+        commands.getoutput("git add %s%s" % (bionic_libc_root,"SYSCALLS.TXT"))
 
         if (not adds) and (not deletes) and (not edits):
             D("no changes detected!")
@@ -461,5 +451,5 @@ class State:
 D_setlevel(1)
 
 state = State()
-state.process_file(bionic_root+"SYSCALLS.TXT")
+state.process_file(bionic_libc_root+"SYSCALLS.TXT")
 state.regenerate()
