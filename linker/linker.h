@@ -43,7 +43,16 @@
       __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
       /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
       DEBUG("%s\n", linker_get_error_buffer()); \
-    } while(0)
+    } while (false)
+
+#define DL_WARN(fmt, x...) \
+    do { \
+      __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
+      __libc_format_fd(2, "WARNING: linker: "); \
+      __libc_format_fd(2, fmt, ##x); \
+      __libc_format_fd(2, "\n"); \
+    } while (false)
+
 
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
