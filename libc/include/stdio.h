@@ -486,10 +486,8 @@ int sprintf(char *dest, const char *format, ...)
 
 extern char *__fgets_real(char *, int, FILE *)
     __asm__(__USER_LABEL_PREFIX__ "fgets");
-extern void __fgets_too_big_error()
-    __attribute__((__error__("fgets called with size bigger than buffer")));
-extern void __fgets_too_small_error()
-    __attribute__((__error__("fgets called with size less than zero")));
+__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
+__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 extern char *__fgets_chk(char *, int, FILE *, size_t);
 
 __BIONIC_FORTIFY_INLINE

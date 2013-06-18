@@ -330,6 +330,12 @@
 #define __wur
 #endif
 
+#if __GNUC_PREREQ__(4, 3)
+#define __errordecl(name, msg) extern void name(void) __attribute__((__error__(msg)))
+#else
+#define __errordecl(name, msg) extern void name(void)
+#endif
+
 /*
  * Macros for manipulating "link sets".  Link sets are arrays of pointers
  * to objects, which are gathered up by the linker.
