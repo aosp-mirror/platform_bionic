@@ -16,6 +16,24 @@
       "revId": "7e5a8cc5230dcc027686813e51a1b001cee4c602",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad591ff_207e4a28",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-18T20:19:36Z",
+      "side": 1,
+      "message": "because DL_ERR isn\u0027t usually actually logging. it\u0027s usually storing up a future response from dlerror(3).\n\nwhereas warnings have nowhere to be stored, and just have to come straight out.",
+      "parentUuid": "0ad591ff_409c2e62",
+      "revId": "7e5a8cc5230dcc027686813e51a1b001cee4c602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
