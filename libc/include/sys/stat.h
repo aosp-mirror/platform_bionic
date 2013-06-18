@@ -134,13 +134,13 @@ extern mode_t umask(mode_t);
 extern mode_t __umask_chk(mode_t);
 extern mode_t __umask_real(mode_t)
     __asm__(__USER_LABEL_PREFIX__ "umask");
-__errordecl(__umask_error, "umask called with invalid mode");
+__errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
 __BIONIC_FORTIFY_INLINE
 mode_t umask(mode_t mode) {
   if (__builtin_constant_p(mode)) {
     if ((mode & 0777) != mode) {
-      __umask_error();
+      __umask_invalid_mode();
     }
     return __umask_real(mode);
   }
