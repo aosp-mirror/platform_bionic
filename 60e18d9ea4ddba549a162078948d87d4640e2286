@@ -16,6 +16,24 @@
       "revId": "60e18d9ea4ddba549a162078948d87d4640e2286",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad591ff_a02eda93",
+        "filename": "tests/fortify1_test_clang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-18T19:23:20Z",
+      "side": 1,
+      "message": "In https://android-review.googlesource.com/#/c/57750/2/tests/fortify1_test.cpp (patchset 2), enh recommended that we duplicate tests, to make migrating this code to CTS easier. \n\nThere\u0027s some minor differences between fortify1_test.cpp and fortify1_test_clang.cpp. In particular, we don\u0027t support fortified sprintf under clang. In fortify2_test.cpp / fortify2_test_clang.cpp, gcc calls the fortified version of some code when clang doesn\u0027t, so there\u0027s also differences there.\n\nI\u0027m happy to do whatever makes enh\u0027s CTS work easier. Right now, it looks like keeping everything separate is what he recommends.",
+      "parentUuid": "ea0bdd5e_4fabad7e",
+      "revId": "60e18d9ea4ddba549a162078948d87d4640e2286",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
