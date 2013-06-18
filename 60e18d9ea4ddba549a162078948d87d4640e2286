@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea0bdd5e_4fabad7e",
+        "filename": "tests/fortify1_test_clang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-06-18T18:33:38Z",
+      "side": 1,
+      "message": "should we try to abstract this so we don\u0027t basically have two copies of these tests? I assume all that is different is that this file says _Clang and is built with clang?",
+      "revId": "60e18d9ea4ddba549a162078948d87d4640e2286",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
