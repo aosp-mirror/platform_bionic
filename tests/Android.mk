@@ -96,6 +96,7 @@ LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SHARED_LIBRARIES += libdl
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
+LOCAL_WHOLE_STATIC_LIBRARIES := bionic-unit-tests-clang
 include $(BUILD_NATIVE_TEST)
 
 # Build tests for the device (with bionic's .a). Run with:
@@ -107,6 +108,7 @@ LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
+LOCAL_WHOLE_STATIC_LIBRARIES := bionic-unit-tests-clang
 include $(BUILD_NATIVE_TEST)
 
 # -----------------------------------------------------------------------------
@@ -142,5 +144,27 @@ LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
 include $(BUILD_HOST_NATIVE_TEST)
 endif
+
+# -----------------------------------------------------------------------------
+# Unit tests which depend on clang as the compiler
+# -----------------------------------------------------------------------------
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := fortify1_test_clang.cpp fortify2_test_clang.cpp
+LOCAL_MODULE := bionic-unit-tests-clang
+LOCAL_CLANG := true
+
+# -Wno-error=unused-parameter needed as
+# external/stlport/stlport/stl/_threads.c (included from
+# external/gtest/include/gtest/gtest.h) does not compile cleanly under
+# clang. TODO: fix this.
+LOCAL_CFLAGS += $(test_c_flags) -Wno-error=unused-parameter
+
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_C_INCLUDES += bionic \
+                    bionic/libstdc++/include \
+                    external/stlport/stlport \
+                    external/gtest/include
+
+include $(BUILD_STATIC_LIBRARY)
 
 endif # !BUILD_TINY_ANDROID
