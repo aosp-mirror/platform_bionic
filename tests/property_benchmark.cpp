@@ -62,10 +62,10 @@ struct LocalPropertyTestState {
             delete names[i];
             delete values[i];
         }
-        delete names;
-        delete name_lens;
-        delete values;
-        delete value_lens;
+        delete[] names;
+        delete[] name_lens;
+        delete[] values;
+        delete[] value_lens;
         free(pa);
     }
 public:
