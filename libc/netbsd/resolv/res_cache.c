@@ -2435,7 +2435,7 @@ _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen)
 static int
 _remove_uidiface_info_locked(int uid_start, int uid_end) {
     struct resolv_uidiface_info* result = _res_uidiface_list.next;
-    struct resolv_uidiface_info* prev = NULL;
+    struct resolv_uidiface_info* prev = &_res_uidiface_list;
 
     while (result != NULL && result->uid_start != uid_start && result->uid_end != uid_end) {
         prev = result;
