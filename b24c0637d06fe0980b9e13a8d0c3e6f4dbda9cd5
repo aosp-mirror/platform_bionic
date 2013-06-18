@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0ad591ff_80d47610",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-18T20:09:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad591ff_8030f6bf",
+      "revId": "b24c0637d06fe0980b9e13a8d0c3e6f4dbda9cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ad591ff_a0341ab3",
         "filename": "libc/include/fcntl.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "0ad591ff_a0d89a43",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-18T20:09:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad591ff_a0341ab3",
+      "revId": "b24c0637d06fe0980b9e13a8d0c3e6f4dbda9cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ad591ff_602bf257",
         "filename": "libc/include/sys/stat.h",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2013-06-18T19:52:53Z",
       "side": 1,
       "message": "__umask_invalid_mode?",
+      "revId": "b24c0637d06fe0980b9e13a8d0c3e6f4dbda9cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad591ff_c0d59e0a",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-18T20:09:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad591ff_602bf257",
       "revId": "b24c0637d06fe0980b9e13a8d0c3e6f4dbda9cd5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
