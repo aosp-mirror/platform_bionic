@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4a2f89b5_2292ae9d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1016421
+      },
+      "writtenOn": "2013-06-18T08:46:17Z",
+      "side": 1,
+      "message": "I fixed my patch: use AT_SYSINFO_EHDR instead of KERNEL_PROVIDES_VDSO to avoid introducing new macro. On other platforms VDSO may be implemented through other AUX vector item or any other mechanism. AT_SYSINFO_EHDR  macro is platform specific. KERNEL_PROVIDES_VDSO looks more straightforward but that\u0027s not important.",
+      "parentUuid": "8a042103_bf06132d",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a042103_7f108b5d",
         "filename": "tests/stack_unwinding_test_impl.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-06-13T23:53:54Z",
       "side": 1,
       "message": "is there a reason why this is C rather than C++ like the other tests? the unused arguments would be cleaner in C++.",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2f89b5_82973a8c",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016421
+      },
+      "writtenOn": "2013-06-18T08:46:17Z",
+      "side": 1,
+      "message": "I use C instead of C++ to avoid C++ exception-handling machinery. If I compile this code as C++ code, I should use –fexceptions flag. Then gcc emits lanuage-specific personality routine calls (__gxx_personality_v0). As result, test would require C++ runtime with exception-handling support. We don\u0027t want that for the test purpose.",
+      "parentUuid": "8a042103_7f108b5d",
       "revId": "b44e8c72afded90d6947265a14e93a062223d428",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4a2f89b5_629cb6b0",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016421
+      },
+      "writtenOn": "2013-06-18T08:46:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a042103_9f03571d",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a042103_3f0a0330",
         "filename": "tests/stack_unwinding_test_impl.c",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2013-06-13T23:53:54Z",
       "side": 1,
       "message": "i don\u0027t understand this test. you\u0027re basically testing that foo1_handler is called, but i don\u0027t see what that has to do with the kernel dso.\n\nare you saying that unwinding currently stops at the vdso frame? i thought it went through it but just didn\u0027t know what dso to attribute the frame to.\n\ni guess i was expecting a test that checks that one of the PC values is in the vdso.",
+      "revId": "b44e8c72afded90d6947265a14e93a062223d428",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2f89b5_c2a022e2",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1016421
+      },
+      "writtenOn": "2013-06-18T08:46:17Z",
+      "side": 1,
+      "message": "As I see unwinding currently stops at vdso signal frame. Without my patch, libgcc calls stop_fn (called for every stack frame) for vdso frame with _UA_END_OF_STACK flag. This flag marks end of stack. With my patch, libgcc is able to unwind to frames before vdso signal handler frame.\n\nThis test checks if libgcc can unwind stack through signal frame. Pass condition: cleanup handler foo1_handler is executed during unwinding (after vdso frame). Fail condition: libgcc stops unwinding on signal frame and don’t execute foo1_handler: stop_fn receive _UA_END_OF_STACK flag for signal stack frame and don\u0027t unwind stack further. It does a bit more than you are suggesting to check. If you still think that we should make test more simple please let me know.",
+      "parentUuid": "8a042103_3f0a0330",
       "revId": "b44e8c72afded90d6947265a14e93a062223d428",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
