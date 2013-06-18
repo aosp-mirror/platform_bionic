@@ -87,10 +87,8 @@ extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
 
 #if defined(__BIONIC_FORTIFY)
 
-extern void __memcpy_dest_size_error()
-    __attribute__((__error__("memcpy called with size bigger than destination")));
-extern void __memcpy_src_size_error()
-    __attribute__((__error__("memcpy called with size bigger than source")));
+__errordecl(__memcpy_dest_size_error, "memcpy called with size bigger than destination");
+__errordecl(__memcpy_src_size_error, "memcpy called with size bigger than source");
 
 __BIONIC_FORTIFY_INLINE
 void *memcpy (void* __restrict dest, const void* __restrict src, size_t copy_amount) {
@@ -120,8 +118,7 @@ char *strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
 
-extern void __strncpy_error()
-    __attribute__((__error__("strncpy called with size bigger than buffer")));
+__errordecl(__strncpy_error, "strncpy called with size bigger than buffer");
 
 __BIONIC_FORTIFY_INLINE
 char *strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
@@ -149,8 +146,7 @@ void *memset (void *s, int c, size_t n) {
 
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
-extern void __strlcpy_error()
-    __attribute__((__error__("strlcpy called with size bigger than buffer")));
+__errordecl(__strlcpy_error, "strlcpy called with size bigger than buffer");
 extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
@@ -179,8 +175,7 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
 
 extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcat");
-extern void __strlcat_error()
-    __attribute__((__error__("strlcat called with size bigger than buffer")));
+__errordecl(__strlcat_error, "strlcat called with size bigger than buffer");
 extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 
