@@ -25,7 +25,7 @@
 // in its own process.
 
 // multibyte target where we over fill (should fail)
-TEST(Fortify1_DeathTest, strcpy_fortified) {
+TEST(Fortify1_Clang_DeathTest, strcpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char *orig = strdup("0123456789");
@@ -34,7 +34,7 @@ TEST(Fortify1_DeathTest, strcpy_fortified) {
 }
 
 // zero sized target with "\0" source (should fail)
-TEST(Fortify1_DeathTest, strcpy2_fortified) {
+TEST(Fortify1_Clang_DeathTest, strcpy2_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("");
@@ -43,7 +43,7 @@ TEST(Fortify1_DeathTest, strcpy2_fortified) {
 }
 
 // zero sized target with longer source (should fail)
-TEST(Fortify1_DeathTest, strcpy3_fortified) {
+TEST(Fortify1_Clang_DeathTest, strcpy3_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("1");
@@ -52,7 +52,7 @@ TEST(Fortify1_DeathTest, strcpy3_fortified) {
 }
 
 // one byte target with longer source (should fail)
-TEST(Fortify1_DeathTest, strcpy4_fortified) {
+TEST(Fortify1_Clang_DeathTest, strcpy4_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   char *orig = strdup("12");
@@ -60,21 +60,21 @@ TEST(Fortify1_DeathTest, strcpy4_fortified) {
   free(orig);
 }
 
-TEST(Fortify1_DeathTest, strlen_fortified) {
+TEST(Fortify1_Clang_DeathTest, strlen_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%d", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, strchr_fortified) {
+TEST(Fortify1_Clang_DeathTest, strchr_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, strrchr_fortified) {
+TEST(Fortify1_Clang_DeathTest, strrchr_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
@@ -82,15 +82,7 @@ TEST(Fortify1_DeathTest, strrchr_fortified) {
 }
 #endif
 
-TEST(Fortify1_DeathTest, sprintf_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  char buf[10];
-  char source_buf[15];
-  memcpy(source_buf, "12345678901234", 15);
-  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
-}
-
-TEST(Fortify1_DeathTest, strncat_fortified) {
+TEST(Fortify1_Clang_DeathTest, strncat_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   size_t n = atoi("10"); // avoid compiler optimizations
@@ -98,7 +90,7 @@ TEST(Fortify1_DeathTest, strncat_fortified) {
   ASSERT_EXIT(strncat(buf, "9", n), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, strncat2_fortified) {
+TEST(Fortify1_Clang_DeathTest, strncat2_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   buf[0] = '\0';
@@ -106,7 +98,7 @@ TEST(Fortify1_DeathTest, strncat2_fortified) {
   ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, strcat_fortified) {
+TEST(Fortify1_Clang_DeathTest, strcat_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char src[11];
   strcpy(src, "0123456789");
@@ -115,7 +107,7 @@ TEST(Fortify1_DeathTest, strcat_fortified) {
   ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, memmove_fortified) {
+TEST(Fortify1_Clang_DeathTest, memmove_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[20];
   strcpy(buf, "0123456789");
@@ -123,7 +115,7 @@ TEST(Fortify1_DeathTest, memmove_fortified) {
   ASSERT_EXIT(memmove(buf + 11, buf, n), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, memcpy_fortified) {
+TEST(Fortify1_Clang_DeathTest, memcpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[10];
   char bufb[10];
@@ -132,7 +124,7 @@ TEST(Fortify1_DeathTest, memcpy_fortified) {
   ASSERT_EXIT(memcpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(Fortify1_DeathTest, strncpy_fortified) {
+TEST(Fortify1_Clang_DeathTest, strncpy_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
@@ -144,7 +136,7 @@ TEST(Fortify1_DeathTest, strncpy_fortified) {
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
-TEST(Fortify1, strncat) {
+TEST(Fortify1_Clang, strncat) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -163,7 +155,7 @@ TEST(Fortify1, strncat) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(Fortify1, strncat2) {
+TEST(Fortify1_Clang, strncat2) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -182,7 +174,7 @@ TEST(Fortify1, strncat2) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(Fortify1, strncat3) {
+TEST(Fortify1_Clang, strncat3) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = '\0';
@@ -200,7 +192,7 @@ TEST(Fortify1, strncat3) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(Fortify1, strncat4) {
+TEST(Fortify1_Clang, strncat4) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[9] = '\0';
@@ -218,7 +210,7 @@ TEST(Fortify1, strncat4) {
   ASSERT_EQ('\0', buf[9]);
 }
 
-TEST(Fortify1, strncat5) {
+TEST(Fortify1_Clang, strncat5) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -237,7 +229,7 @@ TEST(Fortify1, strncat5) {
   ASSERT_EQ('\0',  buf[9]);
 }
 
-TEST(Fortify1, strncat6) {
+TEST(Fortify1_Clang, strncat6) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -257,7 +249,7 @@ TEST(Fortify1, strncat6) {
 }
 
 
-TEST(Fortify1, strcat) {
+TEST(Fortify1_Clang, strcat) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -276,7 +268,7 @@ TEST(Fortify1, strcat) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(Fortify1, strcat2) {
+TEST(Fortify1_Clang, strcat2) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -293,4 +285,14 @@ TEST(Fortify1, strcat2) {
   ASSERT_EQ('6',  buf[7]);
   ASSERT_EQ('7',  buf[8]);
   ASSERT_EQ('\0',  buf[9]);
+}
+
+__BIONIC_FORTIFY_INLINE
+size_t test_fortify_inline(char* buf) {
+    return __bos(buf);
+}
+
+TEST(Fortify1_Clang, fortify_inline) {
+  char buf[1024];
+  ASSERT_EQ(test_fortify_inline(buf), sizeof(buf));
 }

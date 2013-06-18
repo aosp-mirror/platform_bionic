@@ -524,7 +524,7 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0 && !defined(__clang__)
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
 #define __BIONIC_FORTIFY 1
 #if _FORTIFY_SOURCE == 2
 #define __bos(s) __builtin_object_size((s), 1)
@@ -535,8 +535,7 @@
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \
     __attribute__ ((always_inline)) \
-    __attribute__ ((gnu_inline)) \
-    __attribute__ ((artificial))
+    __attribute__ ((gnu_inline))
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 

@@ -49,7 +49,7 @@ extern int  unlinkat(int dirfd, const char *pathname, int flags);
 extern int  fcntl(int   fd, int   command, ...);
 extern int  creat(const char*  path, mode_t  mode);
 
-#if defined(__BIONIC_FORTIFY)
+#if defined(__BIONIC_FORTIFY) && !defined(__clang__)
 __errordecl(__creat_error, "called with O_CREAT, but missing mode");
 __errordecl(__too_many_args_error, "too many arguments");
 extern int __open_real(const char *pathname, int flags, ...)
@@ -98,7 +98,7 @@ int openat(int dirfd, const char *pathname, int flags, ...) {
     return __openat_real(dirfd, pathname, flags, __builtin_va_arg_pack());
 }
 
-#endif /* defined(__BIONIC_FORTIFY) */
+#endif /* defined(__BIONIC_FORTIFY) && !defined(__clang__) */
 
 __END_DECLS
 

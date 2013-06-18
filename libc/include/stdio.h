@@ -450,7 +450,7 @@ int vfdprintf(int, const char*, __va_list)
 __END_DECLS
 #endif /* _GNU_SOURCE */
 
-#if defined(__BIONIC_FORTIFY)
+#if defined(__BIONIC_FORTIFY) && !defined(__clang__)
 
 __BEGIN_DECLS
 
@@ -523,6 +523,6 @@ char *fgets(char *dest, int size, FILE *stream)
 
 __END_DECLS
 
-#endif /* defined(__BIONIC_FORTIFY) */
+#endif /* defined(__BIONIC_FORTIFY) && !defined(__clang__) */
 
 #endif /* _STDIO_H_ */
