@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea0bdd5e_4fd44d0f",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-18T18:23:18Z",
+      "side": 1,
+      "message": "oops. commented on wrong change. the glibc __errordecl takes two arguments, a symbol name and a message. the symbol name is used to declare the bogus function, making all your call sites shorter.",
+      "revId": "b2f9c5f8c78f0da13924aea3c974460889dec4dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
