@@ -1492,18 +1492,19 @@ static bool soinfo_link_image(soinfo* si) {
         return false;
     }
 
-    /* if this is the main executable, then load all of the preloads now */
+    // If this is the main executable, then load all of the libraries from LD_PRELOAD now.
     if (si->flags & FLAG_EXE) {
         memset(gLdPreloads, 0, sizeof(gLdPreloads));
+        size_t preload_count = 0;
         for (size_t i = 0; gLdPreloadNames[i] != NULL; i++) {
             soinfo* lsi = find_library(gLdPreloadNames[i]);
-            if (lsi == NULL) {
-                strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
-                DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
-                       gLdPreloadNames[i], si->name, tmp_err_buf);
-                return false;
+            if (lsi != NULL) {
+                gLdPreloads[preload_count++] = lsi;
+            } else {
+                // As with glibc, failure to load an LD_PRELOAD library is just a warning.
+                DL_WARN("could not load library \"%s\" from LD_PRELOAD for \"%s\"; caused by %s",
+                        gLdPreloadNames[i], si->name, linker_get_error_buffer());
             }
-            gLdPreloads[i] = lsi;
         }
     }
 
