@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-extern void *__system_property_regions__[PA_REGION_COUNT];
+extern void *__system_property_area__;
 
 #define TEST_NUM_PROPS \
     Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)->Arg(1024)
@@ -39,10 +39,8 @@ struct LocalPropertyTestState {
             return;
         }
 
-        for (size_t i = 0; i < PA_REGION_COUNT; i++) {
-            old_pa[i] = __system_property_regions__[i];
-            __system_property_regions__[i] = NULL;
-        }
+        old_pa = __system_property_area__;
+        __system_property_area__ = NULL;
 
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
@@ -79,9 +77,7 @@ struct LocalPropertyTestState {
         if (!valid)
             return;
 
-        for (size_t i = 0; i < PA_REGION_COUNT; i++) {
-            __system_property_regions__[i] = old_pa[i];
-        }
+        __system_property_area__ = old_pa;
 
         __system_property_set_filename(PROP_FILENAME);
         unlink(pa_filename.c_str());
@@ -107,7 +103,7 @@ public:
 private:
     std::string pa_dirname;
     std::string pa_filename;
-    void *old_pa[PA_REGION_COUNT];
+    void *old_pa;
 };
 
 static void BM_property_get(int iters, int nprops)
