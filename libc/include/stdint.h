@@ -66,7 +66,7 @@ typedef uint8_t       uint_fast8_t;
 #  define INT_FAST8_MIN    INT8_MIN
 #  define INT_FAST8_MAX    INT8_MAX
 
-#  define UINT8_MAX           (255U)
+#  define UINT8_MAX           (255)
 #  define UINT_LEAST8_MAX     UINT8_MAX
 #  define UINT_FAST8_MAX      UINT8_MAX
 #endif
@@ -76,7 +76,7 @@ typedef uint8_t       uint_fast8_t;
 #  define INT_LEAST8_C(c)	 INT8_C(c)
 #  define INT_FAST8_C(c)	INT8_C(c)
 
-#  define UINT8_C(c)	c ## U
+#  define UINT8_C(c)	c
 #  define UINT_LEAST8_C(c)  UINT8_C(c)
 #  define UINT_FAST8_C(c)  UINT8_C(c)
 #endif
@@ -99,7 +99,7 @@ typedef uint32_t      uint_fast16_t;
 #  define INT_FAST16_MIN	INT32_MIN
 #  define INT_FAST16_MAX	INT32_MAX
 
-#  define UINT16_MAX	(65535U)
+#  define UINT16_MAX	(65535)
 #  define UINT_LEAST16_MAX UINT16_MAX
 #  define UINT_FAST16_MAX UINT32_MAX
 #endif
@@ -109,7 +109,7 @@ typedef uint32_t      uint_fast16_t;
 #  define INT_LEAST16_C(c) INT16_C(c)
 #  define INT_FAST16_C(c)	 INT32_C(c)
 
-#  define UINT16_C(c)	c ## U
+#  define UINT16_C(c)	c
 #  define UINT_LEAST16_C(c) UINT16_C(c)
 #  define UINT_FAST16_C(c) UINT32_C(c)
 #endif
