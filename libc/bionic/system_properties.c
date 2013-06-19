@@ -159,6 +159,22 @@ cleanup:
     return result;
 }
 
+int __system_property_foreach(
+        void (*propfn)(const prop_info *pi, void *cookie),
+        void *cookie)
+{
+    prop_area *pa = __system_property_area__;
+    unsigned i;
+
+    for (i = 0; i < pa->count; i++) {
+        unsigned entry = pa->toc[i];
+        prop_info *pi = TOC_TO_INFO(pa, entry);
+        propfn(pi, cookie);
+    }
+
+    return 0;
+}
+
 const prop_info *__system_property_find_nth(unsigned n)
 {
     prop_area *pa = __system_property_area__;

@@ -125,6 +125,25 @@ TEST(properties, fill_247) {
     }
 }
 
+static void foreach_test_callback(const prop_info *pi, void* cookie) {
+    size_t *count = static_cast<size_t *>(cookie);
+
+    ASSERT_NE((prop_info *)NULL, pi);
+    (*count)++;
+}
+
+TEST(properties, foreach) {
+    LocalPropertyTestState pa;
+    size_t count = 0;
+
+    ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
+    ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
+    ASSERT_EQ(0, __system_property_add("property_other", 14, "value3", 6));
+
+    ASSERT_EQ(0, __system_property_foreach(foreach_test_callback, &count));
+    ASSERT_EQ(3U, count);
+}
+
 TEST(properties, find_nth) {
     LocalPropertyTestState pa;
 
