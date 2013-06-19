@@ -162,10 +162,14 @@ TEST(Fortify2_Clang_DeathTest, strncpy_fortified) {
 
 __BIONIC_FORTIFY_INLINE
 size_t test_fortify2_inline(char* buf) {
-    return __bos(buf);
+  return __bos(buf);
 }
 
 TEST(Fortify2_Clang, fortify_inline) {
   char buf[1024];
-  ASSERT_EQ(test_fortify2_inline(buf), sizeof(buf));
+  // no-op. Prints nothing. Needed to prevent the compiler
+  // from optimizing out buf.
+  buf[0] = '\0';
+  printf("%s", buf);
+  ASSERT_EQ(sizeof(buf), test_fortify2_inline(buf));
 }

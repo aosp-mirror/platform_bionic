@@ -289,10 +289,14 @@ TEST(Fortify1_Clang, strcat2) {
 
 __BIONIC_FORTIFY_INLINE
 size_t test_fortify_inline(char* buf) {
-    return __bos(buf);
+  return __bos(buf);
 }
 
 TEST(Fortify1_Clang, fortify_inline) {
   char buf[1024];
-  ASSERT_EQ(test_fortify_inline(buf), sizeof(buf));
+  // no-op. Prints nothing. Needed to prevent the compiler
+  // from optimizing out buf.
+  buf[0] = '\0';
+  printf("%s", buf);
+  ASSERT_EQ(sizeof(buf), test_fortify_inline(buf));
 }
