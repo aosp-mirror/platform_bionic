@@ -144,7 +144,6 @@ void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
 }
 
-#if !defined(__clang__)
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
 __errordecl(__strlcpy_error, "strlcpy called with size bigger than buffer");
@@ -154,6 +153,7 @@ __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     size_t bos = __bos(dest);
 
+#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcpy_real(dest, src, size);
@@ -170,10 +170,10 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     if (__builtin_constant_p(size) && (size > bos)) {
         __strlcpy_error();
     }
+#endif /* !defined(__clang__) */
 
     return __strlcpy_chk(dest, src, size, bos);
 }
-#endif /* !defined(__clang__) */
 
 #if !defined(__clang__)
 extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
