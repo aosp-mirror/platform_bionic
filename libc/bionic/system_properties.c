@@ -34,6 +34,7 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <sys/mman.h>
 
@@ -51,12 +52,15 @@
 #include <sys/atomics.h>
 #include <bionic_atomic_inline.h>
 
+#define ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
+
 struct prop_area {
-    unsigned volatile count;
+    unsigned bytes_used;
     unsigned volatile serial;
     unsigned magic;
     unsigned version;
-    unsigned toc[1];
+    unsigned reserved[28];
+    char data[0];
 };
 
 typedef struct prop_area prop_area;
@@ -69,10 +73,45 @@ struct prop_info {
 
 typedef struct prop_info prop_info;
 
+/*
+ * Properties are stored in a hybrid trie/binary tree structure.
+ * Each property's name is delimited at '.' characters, and the tokens are put
+ * into a trie structure.  Siblings at each level of the trie are stored in a
+ * binary tree.  For instance, "ro.secure"="1" could be stored as follows:
+ *
+ * +-----+   children    +----+   children    +--------+
+ * |     |-------------->| ro |-------------->| secure |
+ * +-----+               +----+               +--------+
+ *                       /    \                /   |
+ *                 left /      \ right   left /    |  prop   +===========+
+ *                     v        v            v     +-------->| ro.secure |
+ *                  +-----+   +-----+     +-----+            +-----------+
+ *                  | net |   | sys |     | com |            |     1     |
+ *                  +-----+   +-----+     +-----+            +===========+
+ */
+
+typedef volatile uint32_t prop_off_t;
+struct prop_bt {
+    char name[PROP_NAME_MAX];
+    uint8_t namelen;
+    uint8_t reserved[3];
+
+    prop_off_t prop;
+
+    prop_off_t left;
+    prop_off_t right;
+
+    prop_off_t children;
+};
+
+typedef struct prop_bt prop_bt;
+
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static char property_filename[PATH_MAX] = PROP_FILENAME;
 
 prop_area *__system_property_regions__[PA_REGION_COUNT] = { NULL, };
+
+const size_t PA_DATA_SIZE = PA_SIZE - sizeof(prop_area);
 
 static int get_fd_from_env(void)
 {
@@ -119,6 +158,11 @@ static int map_prop_region_rw(size_t region)
     memset(pa, 0, PA_SIZE);
     pa->magic = PROP_AREA_MAGIC;
     pa->version = PROP_AREA_VERSION;
+
+    if (!region) {
+        /* reserve root node */
+        pa->bytes_used += sizeof(prop_bt);
+    }
 
     /* plug into the lib property services */
     __system_property_regions__[region] = pa;
@@ -225,83 +269,183 @@ int __system_properties_init()
     return map_prop_region(0);
 }
 
-int __system_property_foreach(
-        void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie)
+static void *new_prop_obj(size_t size, prop_off_t *off)
 {
-    size_t region;
+    prop_area *pa;
+    size_t i, idx;
+    size = ALIGN(size, sizeof(uint32_t));
 
-    for (region = 0; region < PA_REGION_COUNT; region++) {
-        prop_area *pa;
-        unsigned i;
-
-        int err = map_prop_region(region);
-        if (err < 0)
-            break;
-        pa = __system_property_regions__[region];
-
-        for (i = 0; i < pa->count; i++) {
-            unsigned entry = pa->toc[i];
-            prop_info *pi = TOC_TO_INFO(pa, entry);
-            propfn(pi, cookie);
+    for (i = 0; i < PA_REGION_COUNT; i++) {
+        int err = map_prop_region_rw(i);
+        if (err < 0) {
+            return NULL;
         }
+
+        pa = __system_property_regions__[i];
+        if (pa->bytes_used + size <= PA_DATA_SIZE)
+            break;
     }
 
-    return 0;
+    if (i == PA_REGION_COUNT)
+        return NULL;
+
+    idx = pa->bytes_used;
+    *off = idx + i * PA_DATA_SIZE;
+    pa->bytes_used += size;
+    return pa->data + idx;
 }
 
-const prop_info *__system_property_find_nth(unsigned n)
+static prop_bt *new_prop_bt(const char *name, uint8_t namelen, prop_off_t *off)
 {
-    size_t region = n / PA_COUNT_MAX;
-    prop_area *pa;
+    prop_off_t off_tmp;
+    prop_bt *bt = new_prop_obj(sizeof(prop_bt), &off_tmp);
+    if (bt) {
+        memcpy(bt->name, name, namelen);
+        bt->name[namelen] = '\0';
+        bt->namelen = namelen;
+        ANDROID_MEMBAR_FULL();
+        *off = off_tmp;
+    }
 
-    int err = map_prop_region(region);
-    if (err < 0)
+    return bt;
+}
+
+static prop_info *new_prop_info(const char *name, uint8_t namelen,
+        const char *value, uint8_t valuelen, prop_off_t *off)
+{
+    prop_off_t off_tmp;
+    prop_info *info = new_prop_obj(sizeof(prop_info), &off_tmp);
+    if (info) {
+        memcpy(info->name, name, namelen);
+        info->name[namelen] = '\0';
+        info->serial = (valuelen << 24);
+        memcpy(info->value, value, valuelen);
+        info->value[valuelen] = '\0';
+        ANDROID_MEMBAR_FULL();
+        *off = off_tmp;
+    }
+
+    return info;
+}
+
+static void *to_prop_obj(prop_off_t off)
+{
+    size_t region = off / PA_DATA_SIZE;
+    size_t idx = off % PA_DATA_SIZE;
+
+    if (region > PA_REGION_COUNT)
         return NULL;
-    pa = __system_property_regions__[region];
 
-    if((n % PA_COUNT_MAX) >= pa->count) {
-        return 0;
+    if (map_prop_region(region) < 0)
+        return NULL;
+
+    return __system_property_regions__[region]->data + idx;
+}
+
+static prop_bt *root_node()
+{
+    return to_prop_obj(0);
+}
+
+static int cmp_prop_name(const char *one, uint8_t one_len, const char *two,
+        uint8_t two_len)
+{
+    if (one_len < two_len)
+        return -1;
+    else if (one_len > two_len)
+        return 1;
+    else
+        return strncmp(one, two, one_len);
+}
+
+static prop_bt *find_prop_bt(prop_bt *bt, const char *name, uint8_t namelen,
+        bool alloc_if_needed)
+{
+    while (true) {
+        int ret;
+        if (!bt)
+            return bt;
+        ret = cmp_prop_name(name, namelen, bt->name, bt->namelen);
+
+        if (ret == 0) {
+            return bt;
+        } else if (ret < 0) {
+            if (bt->left) {
+                bt = to_prop_obj(bt->left);
+            } else {
+                if (!alloc_if_needed)
+                   return NULL;
+
+                bt = new_prop_bt(name, namelen, &bt->left);
+            }
+        } else {
+            if (bt->right) {
+                bt = to_prop_obj(bt->right);
+            } else {
+                if (!alloc_if_needed)
+                   return NULL;
+
+                bt = new_prop_bt(name, namelen, &bt->right);
+            }
+        }
+    }
+}
+
+static const prop_info *find_property(prop_bt *trie, const char *name,
+        uint8_t namelen, const char *value, uint8_t valuelen,
+        bool alloc_if_needed)
+{
+    const char *remaining_name = name;
+
+    while (true) {
+        char *sep = strchr(remaining_name, '.');
+        bool want_subtree = (sep != NULL);
+        uint8_t substr_size;
+
+        prop_bt *root;
+
+        if (want_subtree) {
+            substr_size = sep - remaining_name;
+        } else {
+            substr_size = strlen(remaining_name);
+        }
+
+        if (!substr_size)
+            return NULL;
+
+        if (trie->children) {
+            root = to_prop_obj(trie->children);
+        } else if (alloc_if_needed) {
+            root = new_prop_bt(remaining_name, substr_size, &trie->children);
+        } else {
+            root = NULL;
+        }
+
+        if (!root)
+            return NULL;
+
+        trie = find_prop_bt(root, remaining_name, substr_size, alloc_if_needed);
+        if (!trie)
+            return NULL;
+
+        if (!want_subtree)
+            break;
+
+        remaining_name = sep + 1;
+    }
+
+    if (trie->prop) {
+        return to_prop_obj(trie->prop);
+    } else if (alloc_if_needed) {
+        return new_prop_info(name, namelen, value, valuelen, &trie->prop);
     } else {
-        return TOC_TO_INFO(pa, pa->toc[n]);
+        return NULL;
     }
 }
 
 const prop_info *__system_property_find(const char *name)
 {
-    unsigned len = strlen(name);
-    size_t region;
-
-    if (len >= PROP_NAME_MAX)
-        return 0;
-    if (len < 1)
-        return 0;
-
-    for (region = 0; region < PA_REGION_COUNT; region++) {
-        prop_area *pa;
-        unsigned count;
-        unsigned *toc;
-        prop_info *pi;
-
-        int err = map_prop_region(region);
-        if (err < 0)
-            return 0;
-        pa = __system_property_regions__[region];
-        count = pa->count;
-        toc = pa->toc;
-
-        while(count--) {
-            unsigned entry = *toc++;
-            if(TOC_NAME_LEN(entry) != len) continue;
-
-            pi = TOC_TO_INFO(pa, entry);
-            if(memcmp(name, pi->name, len)) continue;
-
-            return pi;
-        }
-    }
-
-    return 0;
+    return find_property(root_node(), name, strlen(name), NULL, 0, false);
 }
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
@@ -463,10 +607,8 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    prop_area *pa;
-    prop_info *pa_info_array;
-    prop_info *pi;
-    size_t region;
+    prop_area *pa = __system_property_regions__[0];
+    const prop_info *pi;
 
     if (namelen >= PROP_NAME_MAX)
         return -1;
@@ -475,34 +617,12 @@ int __system_property_add(const char *name, unsigned int namelen,
     if (namelen < 1)
         return -1;
 
-    for (region = 0; region < PA_REGION_COUNT; region++)
-    {
-        int err = map_prop_region_rw(region);
-        if (err < 0)
-            return -1;
-
-        pa = __system_property_regions__[region];
-
-        if (pa->count < PA_COUNT_MAX)
-            break;
-    }
-
-    if (region == PA_REGION_COUNT)
+    pi = find_property(root_node(), name, namelen, value, valuelen, true);
+    if (!pi)
         return -1;
 
-    pa_info_array = (void*) (((char*) pa) + PA_INFO_START);
-    pi = pa_info_array + pa->count;
-    pi->serial = (valuelen << 24);
-    memcpy(pi->name, name, namelen + 1);
-    memcpy(pi->value, value, valuelen + 1);
-
-    pa->toc[pa->count] = (namelen << 24) | (((unsigned) pi) - ((unsigned) pa));
-    ANDROID_MEMBAR_FULL();
-
-    pa->count++;
     pa->serial++;
     __futex_wake(&pa->serial, INT32_MAX);
-
     return 0;
 }
 
@@ -520,4 +640,73 @@ unsigned int __system_property_wait_any(unsigned int serial)
     } while(pa->serial == serial);
 
     return pa->serial;
+}
+
+struct find_nth_cookie {
+    unsigned count;
+    unsigned n;
+    const prop_info *pi;
+};
+
+static void find_nth_fn(const prop_info *pi, void *ptr)
+{
+    struct find_nth_cookie *cookie = ptr;
+
+    if (cookie->n == cookie->count)
+        cookie->pi = pi;
+
+    cookie->count++;
+}
+
+const prop_info *__system_property_find_nth(unsigned n)
+{
+    struct find_nth_cookie cookie;
+    int err;
+
+    memset(&cookie, 0, sizeof(cookie));
+    cookie.n = n;
+
+    err = __system_property_foreach(find_nth_fn, &cookie);
+    if (err < 0)
+        return NULL;
+
+    return cookie.pi;
+}
+
+static int foreach_property(prop_off_t off,
+        void (*propfn)(const prop_info *pi, void *cookie), void *cookie)
+{
+    prop_bt *trie = to_prop_obj(off);
+    if (!trie)
+        return -1;
+
+    if (trie->left) {
+        int err = foreach_property(trie->left, propfn, cookie);
+        if (err < 0)
+            return -1;
+    }
+    if (trie->prop) {
+        prop_info *info = to_prop_obj(trie->prop);
+        if (!info)
+            return -1;
+        propfn(info, cookie);
+    }
+    if (trie->children) {
+        int err = foreach_property(trie->children, propfn, cookie);
+        if (err < 0)
+            return -1;
+    }
+    if (trie->right) {
+        int err = foreach_property(trie->right, propfn, cookie);
+        if (err < 0)
+            return -1;
+    }
+
+    return 0;
+}
+
+int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
+        void *cookie)
+{
+    return foreach_property(0, propfn, cookie);
 }
