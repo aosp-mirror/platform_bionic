@@ -806,4 +806,11 @@ void res_setiface(res_state statp, const char* iface)
 		}
 	}
 }
+
+void res_setmark(res_state statp, int mark)
+{
+	if (statp != NULL) {
+		statp->_mark = mark;
+	}
+}
 #endif /* ANDROID_CHANGES */
