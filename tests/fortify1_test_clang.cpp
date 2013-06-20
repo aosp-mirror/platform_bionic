@@ -80,6 +80,16 @@ TEST(Fortify1_Clang_DeathTest, strrchr_fortified) {
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
 }
+
+TEST(Fortify1_Clang_DeathTest, strlcpy_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char bufa[15];
+  char bufb[10];
+  strcpy(bufa, "01234567890123");
+  size_t n = strlen(bufa);
+  ASSERT_EXIT(strlcpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+}
+
 #endif
 
 TEST(Fortify1_Clang_DeathTest, strncat_fortified) {
