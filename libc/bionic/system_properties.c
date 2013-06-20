@@ -49,6 +49,7 @@
 #include <sys/_system_properties.h>
 
 #include <sys/atomics.h>
+#include <bionic_atomic_inline.h>
 
 struct prop_area {
     unsigned volatile count;
@@ -315,6 +316,7 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         }
         len = SERIAL_VALUE_LEN(serial);
         memcpy(value, pi->value, len + 1);
+        ANDROID_MEMBAR_FULL();
         if(serial == pi->serial) {
             if(name != 0) {
                 strcpy(name, pi->name);
@@ -446,7 +448,9 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
         return -1;
 
     pi->serial = pi->serial | 1;
+    ANDROID_MEMBAR_FULL();
     memcpy(pi->value, value, len + 1);
+    ANDROID_MEMBAR_FULL();
     pi->serial = (len << 24) | ((pi->serial + 1) & 0xffffff);
     __futex_wake(&pi->serial, INT32_MAX);
 
@@ -493,6 +497,7 @@ int __system_property_add(const char *name, unsigned int namelen,
     memcpy(pi->value, value, valuelen + 1);
 
     pa->toc[pa->count] = (namelen << 24) | (((unsigned) pi) - ((unsigned) pa));
+    ANDROID_MEMBAR_FULL();
 
     pa->count++;
     pa->serial++;
