@@ -37,7 +37,7 @@
 typedef struct prop_msg prop_msg;
 
 #define PROP_AREA_MAGIC   0x504f5250
-#define PROP_AREA_VERSION 0x45434f76
+#define PROP_AREA_VERSION 0xfc6ed0ab
 
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
@@ -45,13 +45,8 @@ typedef struct prop_msg prop_msg;
 /* (4 header words + 28 toc words) = 128 bytes */
 /* 128 bytes header and toc + 28 prop_infos @ 128 bytes = 3712 bytes */
 
-#define PA_COUNT_MAX    28
 #define PA_REGION_COUNT 128
-#define PA_INFO_START   128
 #define PA_SIZE         4096
-
-#define TOC_NAME_LEN(toc)       ((toc) >> 24)
-#define TOC_TO_INFO(area, toc)  ((prop_info*) (((char*) area) + ((toc) & 0xFFFFFF)))
 
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
@@ -84,11 +79,6 @@ struct prop_msg
 **   1. pi->serial = pi->serial | 1
 **   2. memcpy(pi->value, local_value, value_len)
 **   3. pi->serial = (value_len << 24) | ((pi->serial + 1) & 0xffffff)
-**
-** Improvements:
-** - maintain the toc sorted by pi->name to allow lookup
-**   by binary search
-**
 */
 
 #define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"
