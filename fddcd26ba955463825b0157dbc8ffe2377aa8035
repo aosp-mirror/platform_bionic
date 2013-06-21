@@ -16,6 +16,24 @@
       "revId": "fddcd26ba955463825b0157dbc8ffe2377aa8035",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ab421fd_1cb11517",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1536,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-21T19:56:54Z",
+      "side": 1,
+      "message": "FYI: Patchset 2 changes this from INFO to PRINT.\n\nDL_WARN prints to stderr, whereas PRINT only logs to logcat. I was worried about accidentally breaking command line utilities which may not expect information to be printed to stderr. I\u0027d prefer to leave stdin / stdout / stderr untouched by the dynamic linker.",
+      "parentUuid": "8ab421fd_7cba59f9",
+      "revId": "fddcd26ba955463825b0157dbc8ffe2377aa8035",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
