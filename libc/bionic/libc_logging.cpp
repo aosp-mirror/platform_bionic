@@ -42,7 +42,6 @@
 #include <unistd.h>
 
 static pthread_mutex_t gAbortMsgLock = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t gLogInitializationLock = PTHREAD_MUTEX_INITIALIZER;
 
 __LIBC_HIDDEN__ abort_msg_t** __abort_message_ptr; // Accessible to __libc_init_common.
 
@@ -421,13 +420,9 @@ int __libc_format_fd(int fd, const char* format, ...) {
 }
 
 static int __libc_write_log(int priority, const char* tag, const char* msg) {
-  static int main_log_fd = -1;
+  int main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
   if (main_log_fd == -1) {
-    ScopedPthreadMutexLocker locker(&gLogInitializationLock);
-    main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
-    if (main_log_fd == -1) {
-      return -1;
-    }
+    return -1;
   }
 
   iovec vec[3];
@@ -438,7 +433,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[2].iov_base = const_cast<char*>(msg);
   vec[2].iov_len = strlen(msg) + 1;
 
-  return TEMP_FAILURE_RETRY(writev(main_log_fd, vec, 3));
+  int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, 3));
+  close(main_log_fd);
+  return result;
 }
 
 int __libc_format_log_va_list(int priority, const char* tag, const char* format, va_list args) {
@@ -465,12 +462,13 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   vec[2].iov_base = const_cast<void*>(payload);
   vec[2].iov_len = len;
 
-  static int event_log_fd = -1;
+  int event_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/events", O_CLOEXEC | O_WRONLY));
   if (event_log_fd == -1) {
-    ScopedPthreadMutexLocker locker(&gLogInitializationLock);
-    event_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/events", O_CLOEXEC | O_WRONLY));
+    return -1;
   }
-  return TEMP_FAILURE_RETRY(writev(event_log_fd, vec, 3));
+  int result = TEMP_FAILURE_RETRY(writev(event_log_fd, vec, 3));
+  close(event_log_fd);
+  return result;
 }
 
 void __libc_android_log_event_int(int32_t tag, int value) {
