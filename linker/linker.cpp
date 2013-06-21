@@ -1533,6 +1533,8 @@ static bool soinfo_link_image(soinfo* si) {
          * phdr_table_protect_segments() after all of them are applied
          * and all constructors are run.
          */
+        DL_WARN("%s has text relocations. This is wasting memory and is "
+                "a security risk. Please fix.", si->name);
         if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
             DL_ERR("can't unprotect loadable segments for \"%s\": %s",
                    si->name, strerror(errno));
