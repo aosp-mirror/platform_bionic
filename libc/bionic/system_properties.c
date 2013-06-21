@@ -66,9 +66,9 @@ struct prop_area {
 typedef struct prop_area prop_area;
 
 struct prop_info {
-    char name[PROP_NAME_MAX];
     unsigned volatile serial;
     char value[PROP_VALUE_MAX];
+    char name[0];
 };
 
 typedef struct prop_info prop_info;
@@ -92,7 +92,6 @@ typedef struct prop_info prop_info;
 
 typedef volatile uint32_t prop_off_t;
 struct prop_bt {
-    char name[PROP_NAME_MAX];
     uint8_t namelen;
     uint8_t reserved[3];
 
@@ -102,6 +101,8 @@ struct prop_bt {
     prop_off_t right;
 
     prop_off_t children;
+
+    char name[0];
 };
 
 typedef struct prop_bt prop_bt;
@@ -277,7 +278,7 @@ static void *new_prop_obj(size_t size, prop_off_t *off)
 static prop_bt *new_prop_bt(const char *name, uint8_t namelen, prop_off_t *off)
 {
     prop_off_t off_tmp;
-    prop_bt *bt = new_prop_obj(sizeof(prop_bt), &off_tmp);
+    prop_bt *bt = new_prop_obj(sizeof(prop_bt) + namelen + 1, &off_tmp);
     if (bt) {
         memcpy(bt->name, name, namelen);
         bt->name[namelen] = '\0';
@@ -293,7 +294,7 @@ static prop_info *new_prop_info(const char *name, uint8_t namelen,
         const char *value, uint8_t valuelen, prop_off_t *off)
 {
     prop_off_t off_tmp;
-    prop_info *info = new_prop_obj(sizeof(prop_info), &off_tmp);
+    prop_info *info = new_prop_obj(sizeof(prop_info) + namelen + 1, &off_tmp);
     if (info) {
         memcpy(info->name, name, namelen);
         info->name[namelen] = '\0';
