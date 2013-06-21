@@ -16,6 +16,41 @@
       "revId": "17fc25d20f4d61f7fc3dfb3de095719ada89e38b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ab421fd_9cf9a576",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-21T21:18:54Z",
+      "side": 1,
+      "message": "still in use.",
+      "parentUuid": "8ab421fd_9c7c052d",
+      "revId": "17fc25d20f4d61f7fc3dfb3de095719ada89e38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ab421fd_bcf4617c",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-21T21:18:54Z",
+      "side": 1,
+      "message": "ScopedPthreadMutexLocker is still used here.",
+      "revId": "17fc25d20f4d61f7fc3dfb3de095719ada89e38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
