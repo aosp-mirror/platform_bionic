@@ -34,6 +34,24 @@
       "revId": "f95ad82a93add85d9db9bbd6a2977e531bc603d4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a298121_546aec22",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-24T20:54:49Z",
+      "side": 1,
+      "message": "The previous version wouldn\u0027t catch sprintf calls like:\n\n  char bar[5];\n  sprintf(bar, \"aaaaaaaaa\");\n\nSee also: http://en.wikipedia.org/wiki/Variadic_macro#The_impossible_example",
+      "parentUuid": "8a298121_d48efcec",
+      "revId": "f95ad82a93add85d9db9bbd6a2977e531bc603d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
