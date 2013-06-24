@@ -92,6 +92,20 @@ TEST(Fortify1_Clang_DeathTest, strlcpy_fortified) {
 
 #endif
 
+TEST(Fortify1_Clang_DeathTest, sprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  char source_buf[15];
+  memcpy(source_buf, "12345678901234", 15);
+  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(Fortify1_Clang_DeathTest, sprintf2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[5];
+  ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
+}
+
 TEST(Fortify1_Clang_DeathTest, strncat_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];

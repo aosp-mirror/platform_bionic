@@ -100,6 +100,12 @@ TEST(Fortify1_DeathTest, sprintf_fortified) {
   ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(Fortify1_DeathTest, sprintf2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[5];
+  ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
+}
+
 TEST(Fortify1_DeathTest, strncat_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
