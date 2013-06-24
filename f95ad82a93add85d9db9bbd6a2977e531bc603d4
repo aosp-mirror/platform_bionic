@@ -16,6 +16,24 @@
       "revId": "f95ad82a93add85d9db9bbd6a2977e531bc603d4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a298121_d48efcec",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-06-24T20:44:47Z",
+      "side": 1,
+      "message": "can you explain why you prefer this? i feel like i prefer the original because it seems more obviously correct (i don\u0027t have to reason about the fact that it doesn\u0027t matter whether we count the non-varargs argument as a macro preprocessor varargs argument).",
+      "parentUuid": "8a298121_5472ec57",
+      "revId": "f95ad82a93add85d9db9bbd6a2977e531bc603d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
