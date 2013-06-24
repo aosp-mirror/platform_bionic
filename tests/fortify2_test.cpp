@@ -46,6 +46,13 @@ TEST(Fortify2_DeathTest, sprintf_fortified2) {
               testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(Fortify2_DeathTest, sprintf2_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  ASSERT_EXIT(sprintf(myfoo.a, "0123456789"),
+              testing::KilledBySignal(SIGABRT), "");
+}
+
 #if __BIONIC__
 // zero sized target with "\0" source (should fail)
 TEST(Fortify2_DeathTest, strcpy_fortified2) {
@@ -227,6 +234,12 @@ TEST(Fortify2_DeathTest, sprintf_fortified) {
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
   ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(Fortify2_DeathTest, sprintf2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[5];
+  ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify2_DeathTest, strncat_fortified) {
