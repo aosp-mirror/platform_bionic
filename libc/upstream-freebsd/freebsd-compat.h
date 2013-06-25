@@ -18,6 +18,7 @@
 #define _BIONIC_FREEBSD_COMPAT_H_included
 
 #define __USE_BSD
+#define REPLACE_GETOPT
 
 #define _close close
 #define _fcntl fcntl
