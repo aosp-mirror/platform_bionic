@@ -112,7 +112,8 @@ static char property_filename[PATH_MAX] = PROP_FILENAME;
 
 prop_area *__system_property_area__ = NULL;
 
-const size_t PA_DATA_SIZE = PA_SIZE - sizeof(prop_area);
+size_t pa_data_size;
+size_t pa_size;
 
 static int get_fd_from_env(void)
 {
@@ -153,11 +154,14 @@ static int map_prop_area_rw()
     if (ftruncate(fd, PA_SIZE) < 0)
         goto out;
 
-    pa = mmap(NULL, PA_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    pa_size = PA_SIZE;
+    pa_data_size = pa_size - sizeof(prop_area);
+
+    pa = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if(pa == MAP_FAILED)
         goto out;
 
-    memset(pa, 0, PA_SIZE);
+    memset(pa, 0, pa_size);
     pa->magic = PROP_AREA_MAGIC;
     pa->version = PROP_AREA_VERSION;
     /* reserve root node */
@@ -230,18 +234,20 @@ static int map_prop_area()
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
             || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
-            || (fd_stat.st_size < PA_SIZE) ) {
+            || (fd_stat.st_size < sizeof(prop_area)) ) {
         goto cleanup;
     }
 
-    prop_area *pa = mmap(NULL, PA_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    pa_size = fd_stat.st_size;
+    pa_data_size = pa_size - sizeof(prop_area);
+    prop_area *pa = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
 
     if (pa == MAP_FAILED) {
         goto cleanup;
     }
 
     if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
-        munmap(pa, PA_SIZE);
+        munmap(pa, pa_size);
         goto cleanup;
     }
 
@@ -267,7 +273,7 @@ static void *new_prop_obj(size_t size, prop_off_t *off)
     prop_area *pa = __system_property_area__;
     size = ALIGN(size, sizeof(uint32_t));
 
-    if (pa->bytes_used + size > PA_DATA_SIZE)
+    if (pa->bytes_used + size > pa_data_size)
         return NULL;
 
     *off = pa->bytes_used;
@@ -310,7 +316,7 @@ static prop_info *new_prop_info(const char *name, uint8_t namelen,
 
 static void *to_prop_obj(prop_off_t off)
 {
-    if (off > PA_DATA_SIZE)
+    if (off > pa_data_size)
         return NULL;
 
     return __system_property_area__->data + off;
