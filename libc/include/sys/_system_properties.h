@@ -45,10 +45,10 @@ typedef struct prop_msg prop_msg;
 /* (4 header words + 28 toc words) = 128 bytes */
 /* 128 bytes header and toc + 28 prop_infos @ 128 bytes = 3712 bytes */
 
-#define PA_COUNT_MAX    28
-#define PA_REGION_COUNT 128
-#define PA_INFO_START   128
-#define PA_SIZE         4096
+#define PA_COUNT_MAX    247
+#define PA_REGION_COUNT 16
+#define PA_INFO_START   1024
+#define PA_SIZE         32768
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
 #define TOC_TO_INFO(area, toc)  ((prop_info*) (((char*) area) + ((toc) & 0xFFFFFF)))
