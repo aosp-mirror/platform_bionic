@@ -37,20 +37,12 @@
 typedef struct prop_msg prop_msg;
 
 #define PROP_AREA_MAGIC   0x504f5250
-#define PROP_AREA_VERSION 0x45434f76
+#define PROP_AREA_VERSION 0xfc6ed0ab
 
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
 
-/* (8 header words + 247 toc words) = 1020 bytes */
-/* 1024 bytes header and toc + 247 prop_infos @ 128 bytes = 32640 bytes */
-
-#define PA_COUNT_MAX  247
-#define PA_INFO_START 1024
-#define PA_SIZE       32768
-
-#define TOC_NAME_LEN(toc)       ((toc) >> 24)
-#define TOC_TO_INFO(area, toc)  ((prop_info*) (((char*) area) + ((toc) & 0xFFFFFF)))
+#define PA_SIZE         (128 * 1024)
 
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
@@ -83,11 +75,6 @@ struct prop_msg
 **   1. pi->serial = pi->serial | 1
 **   2. memcpy(pi->value, local_value, value_len)
 **   3. pi->serial = (value_len << 24) | ((pi->serial + 1) & 0xffffff)
-**
-** Improvements:
-** - maintain the toc sorted by pi->name to allow lookup
-**   by binary search
-**
 */
 
 #define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"
@@ -97,11 +84,17 @@ struct prop_msg
 #define PROP_PATH_FACTORY          "/factory/factory.prop"
 
 /*
+** Map the property area from the specified filename.  This
+** method is for testing only.
+*/
+int __system_property_set_filename(const char *filename);
+
+/*
 ** Initialize the area to be used to store properties.  Can
 ** only be done by a single process that has write access to
 ** the property area.
 */
-void __system_property_area_init(void *data);
+int __system_property_area_init();
 
 /* Add a new system property.  Can only be done by a single
 ** process that has write access to the property area, and
