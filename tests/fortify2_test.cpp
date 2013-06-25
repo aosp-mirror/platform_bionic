@@ -155,6 +155,14 @@ TEST(Fortify2_DeathTest, strcat2_fortified2) {
   ASSERT_EXIT(strcat(myfoo.b, myfoo.a), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(Fortify2_DeathTest, snprintf_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  strcpy(myfoo.a, "012345678");
+  size_t n = strlen(myfoo.a) + 2;
+  ASSERT_EXIT(snprintf(myfoo.b, n, "a%s", myfoo.a), testing::KilledBySignal(SIGABRT), "");
+}
+
 /***********************************************************/
 /* TESTS BELOW HERE DUPLICATE TESTS FROM fortify1_test.cpp */
 /***********************************************************/
@@ -291,4 +299,13 @@ TEST(Fortify2_DeathTest, strncpy_fortified) {
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
   ASSERT_EXIT(strncpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(Fortify2_DeathTest, snprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char bufa[15];
+  char bufb[10];
+  strcpy(bufa, "0123456789");
+  size_t n = strlen(bufa) + 1;
+  ASSERT_EXIT(snprintf(bufb, n, "%s", bufa), testing::KilledBySignal(SIGABRT), "");
 }
