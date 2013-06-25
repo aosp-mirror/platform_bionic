@@ -157,6 +157,15 @@ TEST(Fortify1_Clang_DeathTest, strncpy_fortified) {
   ASSERT_EXIT(strncpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(Fortify1_Clang_DeathTest, snprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char bufa[15];
+  char bufb[10];
+  strcpy(bufa, "0123456789");
+  size_t n = strlen(bufa) + 1;
+  ASSERT_EXIT(snprintf(bufb, n, "%s", bufa), testing::KilledBySignal(SIGABRT), "");
+}
+
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
