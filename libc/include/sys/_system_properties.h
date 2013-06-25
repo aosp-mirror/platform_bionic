@@ -42,7 +42,11 @@ typedef struct prop_msg prop_msg;
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
 
-#define PA_SIZE         (128 * 1024)
+/* (4 header words + 28 toc words) = 128 bytes */
+/* 128 bytes header and toc + 28 prop_infos @ 128 bytes = 3712 bytes */
+
+#define PA_REGION_COUNT 128
+#define PA_SIZE         4096
 
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)

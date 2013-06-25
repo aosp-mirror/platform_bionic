@@ -109,7 +109,7 @@ typedef struct prop_bt prop_bt;
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static char property_filename[PATH_MAX] = PROP_FILENAME;
 
-prop_area *__system_property_area__ = NULL;
+prop_area *__system_property_regions__[PA_REGION_COUNT] = { NULL, };
 
 const size_t PA_DATA_SIZE = PA_SIZE - sizeof(prop_area);
 
@@ -124,10 +124,15 @@ static int get_fd_from_env(void)
     return atoi(env);
 }
 
-static int map_prop_area_rw()
+static int map_prop_region_rw(size_t region)
 {
     prop_area *pa;
     int fd;
+    size_t offset = region * PA_SIZE;
+
+    if (__system_property_regions__[region]) {
+        return 0;
+    }
 
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
@@ -143,21 +148,24 @@ static int map_prop_area_rw()
         return -1;
     }
 
-    if (ftruncate(fd, PA_SIZE) < 0)
+    if (ftruncate(fd, offset + PA_SIZE) < 0)
         goto out;
 
-    pa = mmap(NULL, PA_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    pa = mmap(NULL, PA_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset);
     if(pa == MAP_FAILED)
         goto out;
 
     memset(pa, 0, PA_SIZE);
     pa->magic = PROP_AREA_MAGIC;
     pa->version = PROP_AREA_VERSION;
-    /* reserve root node */
-    pa->bytes_used = sizeof(prop_bt);
+
+    if (!region) {
+        /* reserve root node */
+        pa->bytes_used += sizeof(prop_bt);
+    }
 
     /* plug into the lib property services */
-    __system_property_area__ = pa;
+    __system_property_regions__[region] = pa;
 
     close(fd);
     return 0;
@@ -179,13 +187,19 @@ int __system_property_set_filename(const char *filename)
 
 int __system_property_area_init()
 {
-    return map_prop_area_rw();
+    return map_prop_region_rw(0);
 }
 
-static int map_prop_area()
+static int map_prop_region(size_t region)
 {
     bool fromFile = true;
+    bool swapped;
+    size_t offset = region * PA_SIZE;
     int result = -1;
+
+    if(__system_property_regions__[region]) {
+        return 0;
+    }
 
     int fd = open(property_filename, O_RDONLY | O_NOFOLLOW);
 
@@ -215,11 +229,11 @@ static int map_prop_area()
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
             || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
-            || (fd_stat.st_size < PA_SIZE) ) {
+            || (fd_stat.st_size < offset + PA_SIZE) ) {
         goto cleanup;
     }
 
-    prop_area *pa = mmap(NULL, PA_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    prop_area *pa = mmap(NULL, PA_SIZE, PROT_READ, MAP_SHARED, fd, offset);
 
     if (pa == MAP_FAILED) {
         goto cleanup;
@@ -231,8 +245,16 @@ static int map_prop_area()
     }
 
     result = 0;
-
-    __system_property_area__ = pa;
+    swapped = __sync_bool_compare_and_swap(&__system_property_regions__[region],
+            NULL, pa);
+    if (!swapped) {
+        /**
+         * In the event of a race either mapping is equally good, so
+         * the thread that lost can just throw its mapping away and proceed as
+         * normal.
+         */
+        munmap(pa, PA_SIZE);
+    }
 
 cleanup:
     if (fromFile) {
@@ -244,20 +266,33 @@ cleanup:
 
 int __system_properties_init()
 {
-    return map_prop_area();
+    return map_prop_region(0);
 }
 
 static void *new_prop_obj(size_t size, prop_off_t *off)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa;
+    size_t i, idx;
     size = ALIGN(size, sizeof(uint32_t));
 
-    if (pa->bytes_used + size > PA_DATA_SIZE)
+    for (i = 0; i < PA_REGION_COUNT; i++) {
+        int err = map_prop_region_rw(i);
+        if (err < 0) {
+            return NULL;
+        }
+
+        pa = __system_property_regions__[i];
+        if (pa->bytes_used + size <= PA_DATA_SIZE)
+            break;
+    }
+
+    if (i == PA_REGION_COUNT)
         return NULL;
 
-    *off = pa->bytes_used;
-    __system_property_area__->bytes_used += size;
-    return __system_property_area__->data + *off;
+    idx = pa->bytes_used;
+    *off = idx + i * PA_DATA_SIZE;
+    pa->bytes_used += size;
+    return pa->data + idx;
 }
 
 static prop_bt *new_prop_bt(const char *name, uint8_t namelen, prop_off_t *off)
@@ -295,10 +330,16 @@ static prop_info *new_prop_info(const char *name, uint8_t namelen,
 
 static void *to_prop_obj(prop_off_t off)
 {
-    if (off > PA_DATA_SIZE)
+    size_t region = off / PA_DATA_SIZE;
+    size_t idx = off % PA_DATA_SIZE;
+
+    if (region > PA_REGION_COUNT)
         return NULL;
 
-    return __system_property_area__->data + off;
+    if (map_prop_region(region) < 0)
+        return NULL;
+
+    return __system_property_regions__[region]->data + idx;
 }
 
 static prop_bt *root_node()
@@ -529,7 +570,7 @@ int __system_property_wait(const prop_info *pi)
 {
     unsigned n;
     if(pi == 0) {
-        prop_area *pa = __system_property_area__;
+        prop_area *pa = __system_property_regions__[0];
         n = pa->serial;
         do {
             __futex_wait(&pa->serial, n, 0);
@@ -545,7 +586,7 @@ int __system_property_wait(const prop_info *pi)
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa = __system_property_regions__[0];
 
     if (len >= PROP_VALUE_MAX)
         return -1;
@@ -566,7 +607,7 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa = __system_property_regions__[0];
     const prop_info *pi;
 
     if (namelen >= PROP_NAME_MAX)
@@ -592,7 +633,7 @@ unsigned int __system_property_serial(const prop_info *pi)
 
 unsigned int __system_property_wait_any(unsigned int serial)
 {
-    prop_area *pa = __system_property_area__;
+    prop_area *pa = __system_property_regions__[0];
 
     do {
         __futex_wait(&pa->serial, serial, 0);

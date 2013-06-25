@@ -24,7 +24,7 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-extern void *__system_property_area__;
+extern void *__system_property_regions__[PA_REGION_COUNT];
 
 struct LocalPropertyTestState {
     LocalPropertyTestState() : valid(false) {
@@ -35,8 +35,10 @@ struct LocalPropertyTestState {
             return;
         }
 
-        old_pa = __system_property_area__;
-        __system_property_area__ = NULL;
+        for (size_t i = 0; i < PA_REGION_COUNT; i++) {
+            old_pa[i] = __system_property_regions__[i];
+            __system_property_regions__[i] = NULL;
+        }
 
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
@@ -50,7 +52,9 @@ struct LocalPropertyTestState {
         if (!valid)
             return;
 
-        __system_property_area__ = old_pa;
+        for (size_t i = 0; i < PA_REGION_COUNT; i++) {
+            __system_property_regions__[i] = old_pa[i];
+        }
 
         __system_property_set_filename(PROP_FILENAME);
         unlink(pa_filename.c_str());
@@ -61,7 +65,7 @@ public:
 private:
     std::string pa_dirname;
     std::string pa_filename;
-    void *old_pa;
+    void *old_pa[PA_REGION_COUNT];
 };
 
 TEST(properties, add) {
