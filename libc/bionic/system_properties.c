@@ -128,13 +128,11 @@ static int map_prop_area_rw()
 {
     prop_area *pa;
     int fd;
-    int ret;
 
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
      */
-    fd = open(property_filename, O_RDWR | O_CREAT | O_NOFOLLOW | O_CLOEXEC |
-            O_EXCL, 0444);
+    fd = open(property_filename, O_RDWR | O_CREAT | O_NOFOLLOW, 0644);
     if (fd < 0) {
         if (errno == EACCES) {
             /* for consistency with the case where the process has already
@@ -144,10 +142,6 @@ static int map_prop_area_rw()
         }
         return -1;
     }
-
-    ret = fcntl(fd, F_SETFD, FD_CLOEXEC);
-    if (ret < 0)
-        goto out;
 
     if (ftruncate(fd, PA_SIZE) < 0)
         goto out;
@@ -192,16 +186,8 @@ static int map_prop_area()
 {
     bool fromFile = true;
     int result = -1;
-    int fd;
-    int ret;
 
-    fd = open(property_filename, O_RDONLY | O_NOFOLLOW | O_CLOEXEC);
-    if (fd >= 0) {
-        /* For old kernels that don't support O_CLOEXEC */
-        ret = fcntl(fd, F_SETFD, FD_CLOEXEC);
-        if (ret < 0)
-            goto cleanup;
-    }
+    int fd = open(property_filename, O_RDONLY | O_NOFOLLOW);
 
     if ((fd < 0) && (errno == ENOENT)) {
         /*
