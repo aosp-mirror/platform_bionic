@@ -109,6 +109,7 @@ typedef struct prop_bt prop_bt;
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static char property_filename[PATH_MAX] = PROP_FILENAME;
+static bool compat_mode = false;
 
 prop_area *__system_property_area__ = NULL;
 
@@ -156,6 +157,7 @@ static int map_prop_area_rw()
 
     pa_size = PA_SIZE;
     pa_data_size = pa_size - sizeof(prop_area);
+    compat_mode = false;
 
     pa = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if(pa == MAP_FAILED)
@@ -246,9 +248,14 @@ static int map_prop_area()
         goto cleanup;
     }
 
-    if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
+    if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION &&
+                pa->version != PROP_AREA_VERSION_COMPAT)) {
         munmap(pa, pa_size);
         goto cleanup;
+    }
+
+    if (pa->version == PROP_AREA_VERSION_COMPAT) {
+        compat_mode = true;
     }
 
     result = 0;
@@ -425,12 +432,19 @@ static const prop_info *find_property(prop_bt *trie, const char *name,
 
 const prop_info *__system_property_find(const char *name)
 {
+    if (__predict_false(compat_mode)) {
+        return __system_property_find_compat(name);
+    }
     return find_property(root_node(), name, strlen(name), NULL, 0, false);
 }
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
     unsigned serial, len;
+
+    if (__predict_false(compat_mode)) {
+        return __system_property_read_compat(pi, name, value);
+    }
 
     for(;;) {
         serial = pi->serial;
@@ -688,5 +702,8 @@ static int foreach_property(prop_off_t off,
 int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
+    if (__predict_false(compat_mode)) {
+        return __system_property_foreach_compat(propfn, cookie);
+	}
     return foreach_property(0, propfn, cookie);
 }

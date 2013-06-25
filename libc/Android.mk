@@ -150,6 +150,7 @@ libc_common_src_files := \
 	bionic/strntoumax.c \
 	bionic/strtotimeval.c \
 	bionic/system_properties.c \
+	bionic/system_properties_compat.c \
 	bionic/tcgetpgrp.c \
 	bionic/tcsetpgrp.c \
 	bionic/thread_atexit.c \
