@@ -16,6 +16,8 @@
 
 #include <gtest/gtest.h>
 #include <sys/wait.h>
+#include <unistd.h>
+#include <string>
 
 #if __BIONIC__
 
@@ -25,23 +27,46 @@
 extern void *__system_property_area__;
 
 struct LocalPropertyTestState {
-    LocalPropertyTestState() {
+    LocalPropertyTestState() : valid(false) {
+        char dir_template[] = "/data/nativetest/prop-XXXXXX";
+        char *dirname = mkdtemp(dir_template);
+        if (!dirname) {
+            perror("making temp file for test state failed (is /data/nativetest writable?)");
+            return;
+        }
+
         old_pa = __system_property_area__;
-        pa = malloc(PA_SIZE);
-        __system_property_area_init(pa);
+        __system_property_area__ = NULL;
+
+        pa_dirname = dirname;
+        pa_filename = pa_dirname + "/__properties__";
+
+        __system_property_set_filename(pa_filename.c_str());
+        __system_property_area_init();
+        valid = true;
     }
 
     ~LocalPropertyTestState() {
+        if (!valid)
+            return;
+
         __system_property_area__ = old_pa;
-        free(pa);
+
+        __system_property_set_filename(PROP_FILENAME);
+        unlink(pa_filename.c_str());
+        rmdir(pa_dirname.c_str());
     }
+public:
+    bool valid;
 private:
-    void *pa;
+    std::string pa_dirname;
+    std::string pa_filename;
     void *old_pa;
 };
 
 TEST(properties, add) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
 
     char propvalue[PROP_VALUE_MAX];
 
@@ -61,6 +86,7 @@ TEST(properties, add) {
 
 TEST(properties, update) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
 
     char propvalue[PROP_VALUE_MAX];
     prop_info *pi;
@@ -91,27 +117,34 @@ TEST(properties, update) {
     ASSERT_STREQ(propvalue, "value6");
 }
 
-// 247 = max # of properties supported by current implementation
-// (this should never go down)
-TEST(properties, fill_247) {
+TEST(properties, fill) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
     char prop_name[PROP_NAME_MAX];
     char prop_value[PROP_VALUE_MAX];
     char prop_value_ret[PROP_VALUE_MAX];
+    int count = 0;
     int ret;
 
-    for (int i = 0; i < 247; i++) {
-        ret = snprintf(prop_name, PROP_NAME_MAX - 1, "property_%d", i);
+    while (true) {
+        ret = snprintf(prop_name, PROP_NAME_MAX - 1, "property_%d", count);
         memset(prop_name + ret, 'a', PROP_NAME_MAX - 1 - ret);
-        ret = snprintf(prop_value, PROP_VALUE_MAX - 1, "value_%d", i);
+        ret = snprintf(prop_value, PROP_VALUE_MAX - 1, "value_%d", count);
         memset(prop_value + ret, 'b', PROP_VALUE_MAX - 1 - ret);
         prop_name[PROP_NAME_MAX - 1] = 0;
         prop_value[PROP_VALUE_MAX - 1] = 0;
 
-        ASSERT_EQ(0, __system_property_add(prop_name, PROP_NAME_MAX - 1, prop_value, PROP_VALUE_MAX - 1));
+        ret = __system_property_add(prop_name, PROP_NAME_MAX - 1, prop_value, PROP_VALUE_MAX - 1);
+        if (ret < 0)
+            break;
+
+        count++;
     }
 
-    for (int i = 0; i < 247; i++) {
+    // For historical reasons at least 247 properties must be supported
+    ASSERT_GE(count, 247);
+
+    for (int i = 0; i < count; i++) {
         ret = snprintf(prop_name, PROP_NAME_MAX - 1, "property_%d", i);
         memset(prop_name + ret, 'a', PROP_NAME_MAX - 1 - ret);
         ret = snprintf(prop_value, PROP_VALUE_MAX - 1, "value_%d", i);
@@ -134,6 +167,7 @@ static void foreach_test_callback(const prop_info *pi, void* cookie) {
 
 TEST(properties, foreach) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
     size_t count = 0;
 
     ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
@@ -146,6 +180,7 @@ TEST(properties, foreach) {
 
 TEST(properties, find_nth) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
 
     ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
     ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
@@ -165,6 +200,7 @@ TEST(properties, find_nth) {
 
 TEST(properties, errors) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
     char prop_value[PROP_NAME_MAX];
 
     ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
@@ -181,6 +217,7 @@ TEST(properties, errors) {
 
 TEST(properties, serial) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
     const prop_info *pi;
     unsigned int serial;
 
@@ -206,6 +243,7 @@ static void *PropertyWaitHelperFn(void *arg)
 
 TEST(properties, wait) {
     LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
     unsigned int serial;
     prop_info *pi;
     pthread_t t;

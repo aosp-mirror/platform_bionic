@@ -15,23 +15,38 @@
  */
 
 #include "benchmark.h"
+#include <unistd.h>
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
 #include <vector>
+#include <string>
 
 extern void *__system_property_area__;
 
 #define TEST_NUM_PROPS \
-    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(247)
+    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)->Arg(1024)
 
 struct LocalPropertyTestState {
-    LocalPropertyTestState(int nprops) : nprops(nprops) {
+    LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
         static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_";
+
+        char dir_template[] = "/data/nativetest/prop-XXXXXX";
+        char *dirname = mkdtemp(dir_template);
+        if (!dirname) {
+            perror("making temp file for test state failed (is /data/nativetest writable?)");
+            return;
+        }
+
         old_pa = __system_property_area__;
-        pa = malloc(PA_SIZE);
-        __system_property_area_init(pa);
+        __system_property_area__ = NULL;
+
+        pa_dirname = dirname;
+        pa_filename = pa_dirname + "/__properties__";
+
+        __system_property_set_filename(pa_filename.c_str());
+        __system_property_area_init();
 
         names = new char* [nprops];
         name_lens = new int[nprops];
@@ -54,10 +69,20 @@ struct LocalPropertyTestState {
             }
             __system_property_add(names[i], name_lens[i], values[i], value_lens[i]);
         }
+
+        valid = true;
     }
 
     ~LocalPropertyTestState() {
+        if (!valid)
+            return;
+
         __system_property_area__ = old_pa;
+
+        __system_property_set_filename(PROP_FILENAME);
+        unlink(pa_filename.c_str());
+        rmdir(pa_dirname.c_str());
+
         for (int i = 0; i < nprops; i++) {
             delete names[i];
             delete values[i];
@@ -66,7 +91,6 @@ struct LocalPropertyTestState {
         delete[] name_lens;
         delete[] values;
         delete[] value_lens;
-        free(pa);
     }
 public:
     const int nprops;
@@ -74,9 +98,11 @@ public:
     int *name_lens;
     char **values;
     int *value_lens;
+    bool valid;
 
 private:
-    void *pa;
+    std::string pa_dirname;
+    std::string pa_filename;
     void *old_pa;
 };
 
@@ -86,6 +112,9 @@ static void BM_property_get(int iters, int nprops)
 
     LocalPropertyTestState pa(nprops);
     char value[PROP_VALUE_MAX];
+
+    if (!pa.valid)
+        return;
 
     srandom(iters * nprops);
 
@@ -103,6 +132,9 @@ static void BM_property_find(int iters, int nprops)
     StopBenchmarkTiming();
 
     LocalPropertyTestState pa(nprops);
+
+    if (!pa.valid)
+        return;
 
     srandom(iters * nprops);
 
