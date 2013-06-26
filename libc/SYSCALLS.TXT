@@ -201,6 +201,8 @@ int     removexattr(const char *, const char *) 1
 int     lremovexattr(const char *, const char *) 1
 int     __statfs64:statfs64(const char *, size_t, struct statfs *)  1
 long    unshare(unsigned long)  1
+int     swapon(const char *, int) 1
+int     swapoff(const char *) 1
 
 # time
 int           pause ()                       1
