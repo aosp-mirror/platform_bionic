@@ -109,10 +109,12 @@ typedef struct prop_bt prop_bt;
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static char property_filename[PATH_MAX] = PROP_FILENAME;
+static bool compat_mode = false;
 
 prop_area *__system_property_area__ = NULL;
 
-const size_t PA_DATA_SIZE = PA_SIZE - sizeof(prop_area);
+size_t pa_data_size;
+size_t pa_size;
 
 static int get_fd_from_env(void)
 {
@@ -153,11 +155,15 @@ static int map_prop_area_rw()
     if (ftruncate(fd, PA_SIZE) < 0)
         goto out;
 
-    pa = mmap(NULL, PA_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    pa_size = PA_SIZE;
+    pa_data_size = pa_size - sizeof(prop_area);
+    compat_mode = false;
+
+    pa = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if(pa == MAP_FAILED)
         goto out;
 
-    memset(pa, 0, PA_SIZE);
+    memset(pa, 0, pa_size);
     pa->magic = PROP_AREA_MAGIC;
     pa->version = PROP_AREA_VERSION;
     /* reserve root node */
@@ -230,19 +236,26 @@ static int map_prop_area()
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
             || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
-            || (fd_stat.st_size < PA_SIZE) ) {
+            || (fd_stat.st_size < sizeof(prop_area)) ) {
         goto cleanup;
     }
 
-    prop_area *pa = mmap(NULL, PA_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    pa_size = fd_stat.st_size;
+    pa_data_size = pa_size - sizeof(prop_area);
+    prop_area *pa = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
 
     if (pa == MAP_FAILED) {
         goto cleanup;
     }
 
-    if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION)) {
-        munmap(pa, PA_SIZE);
+    if((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION &&
+                pa->version != PROP_AREA_VERSION_COMPAT)) {
+        munmap(pa, pa_size);
         goto cleanup;
+    }
+
+    if (pa->version == PROP_AREA_VERSION_COMPAT) {
+        compat_mode = true;
     }
 
     result = 0;
@@ -267,7 +280,7 @@ static void *new_prop_obj(size_t size, prop_off_t *off)
     prop_area *pa = __system_property_area__;
     size = ALIGN(size, sizeof(uint32_t));
 
-    if (pa->bytes_used + size > PA_DATA_SIZE)
+    if (pa->bytes_used + size > pa_data_size)
         return NULL;
 
     *off = pa->bytes_used;
@@ -310,7 +323,7 @@ static prop_info *new_prop_info(const char *name, uint8_t namelen,
 
 static void *to_prop_obj(prop_off_t off)
 {
-    if (off > PA_DATA_SIZE)
+    if (off > pa_data_size)
         return NULL;
 
     return __system_property_area__->data + off;
@@ -419,12 +432,19 @@ static const prop_info *find_property(prop_bt *trie, const char *name,
 
 const prop_info *__system_property_find(const char *name)
 {
+    if (__predict_false(compat_mode)) {
+        return __system_property_find_compat(name);
+    }
     return find_property(root_node(), name, strlen(name), NULL, 0, false);
 }
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
     unsigned serial, len;
+
+    if (__predict_false(compat_mode)) {
+        return __system_property_read_compat(pi, name, value);
+    }
 
     for(;;) {
         serial = pi->serial;
@@ -682,5 +702,8 @@ static int foreach_property(prop_off_t off,
 int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
+    if (__predict_false(compat_mode)) {
+        return __system_property_foreach_compat(propfn, cookie);
+	}
     return foreach_property(0, propfn, cookie);
 }
