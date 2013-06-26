@@ -27,39 +27,56 @@
  */
 
 #include <elf.h>
+#include <sys/auxv.h>
 #include <sys/types.h>
 #include <link.h>
 
-/* Dynamic binaries get this from the dynamic linker (system/linker), which
- * we don't pull in for static bins. We also don't have a list of so's to
- * iterate over, since there's really only a single monolithic blob of
- * code/data.
- *
- * All we need to do is to find where the executable is in memory, and grab the
- * phdr and phnum from there.
- */
-
 /* ld provides this to us in the default link script */
-extern void *__executable_start;
+extern void* __executable_start;
 
-int
-dl_iterate_phdr(int (*cb)(struct dl_phdr_info *info, size_t size, void *data),
-                void *data)
-{
-    struct dl_phdr_info dl_info;
-    Elf32_Ehdr *ehdr = (Elf32_Ehdr *) &__executable_start;
-    Elf32_Phdr *phdr = (Elf32_Phdr *)((unsigned long)ehdr + ehdr->e_phoff);
+int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data), void* data) {
+    Elf32_Ehdr* ehdr = (Elf32_Ehdr*) &__executable_start;
 
-    /* TODO: again, copied from linker.c. Find a better home for this
-     * later. */
+    // TODO: again, copied from linker.c. Find a better home for this later.
     if (ehdr->e_ident[EI_MAG0] != ELFMAG0) return -1;
     if (ehdr->e_ident[EI_MAG1] != ELFMAG1) return -1;
     if (ehdr->e_ident[EI_MAG2] != ELFMAG2) return -1;
     if (ehdr->e_ident[EI_MAG3] != ELFMAG3) return -1;
 
-    dl_info.dlpi_addr = 0;
-    dl_info.dlpi_name = NULL;
-    dl_info.dlpi_phdr = phdr;
-    dl_info.dlpi_phnum = ehdr->e_phnum;
-    return cb(&dl_info, sizeof (struct dl_phdr_info), data);
+    // Dynamic binaries get their dl_iterate_phdr from the dynamic linker, but
+    // static binaries get this. We don't have a list of shared objects to
+    // iterate over, since there's really only a single monolithic blob of
+    // code/data, plus optionally a VDSO.
+
+    struct dl_phdr_info exe_info;
+    exe_info.dlpi_addr = 0;
+    exe_info.dlpi_name = NULL;
+    exe_info.dlpi_phdr = (Elf32_Phdr*) ((unsigned long) ehdr + ehdr->e_phoff);
+    exe_info.dlpi_phnum = ehdr->e_phnum;
+
+#ifdef AT_SYSINFO_EHDR
+    // Try the executable first.
+    int rc = cb(&exe_info, sizeof(exe_info), data);
+    if (rc != 0) {
+        return rc;
+    }
+
+    // Try the VDSO if that didn't work.
+    Elf32_Ehdr* ehdr_vdso = (Elf32_Ehdr*) getauxval(AT_SYSINFO_EHDR);
+    struct dl_phdr_info vdso_info;
+    vdso_info.dlpi_addr = 0;
+    vdso_info.dlpi_name = NULL;
+    vdso_info.dlpi_phdr = (Elf32_Phdr*) ((char*) ehdr_vdso + ehdr_vdso->e_phoff);
+    vdso_info.dlpi_phnum = ehdr_vdso->e_phnum;
+    for (size_t i = 0; i < vdso_info.dlpi_phnum; ++i) {
+        if (vdso_info.dlpi_phdr[i].p_type == PT_LOAD) {
+            vdso_info.dlpi_addr = (Elf32_Addr) ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
+            break;
+        }
+    }
+    return cb(&vdso_info, sizeof(vdso_info), data);
+#else
+    // There's only the executable to try.
+    return cb(&exe_info, sizeof(exe_info), data);
+#endif
 }
