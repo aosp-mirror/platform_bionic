@@ -38,6 +38,7 @@ typedef struct prop_msg prop_msg;
 
 #define PROP_AREA_MAGIC   0x504f5250
 #define PROP_AREA_VERSION 0xfc6ed0ab
+#define PROP_AREA_VERSION_COMPAT 0x45434f76
 
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME "/dev/__properties__"
@@ -128,6 +129,15 @@ unsigned int __system_property_serial(const prop_info *pi);
 ** in 0 the first time, and the previous return value on each
 ** successive call. */
 unsigned int __system_property_wait_any(unsigned int serial);
+
+/*  Compatibility functions to support using an old init with a new libc,
+ ** mostly for the OTA updater binary.  These can be deleted once OTAs from
+ ** a pre-K release no longer needed to be supported. */
+const prop_info *__system_property_find_compat(const char *name);
+int __system_property_read_compat(const prop_info *pi, char *name, char *value);
+int __system_property_foreach_compat(
+        void (*propfn)(const prop_info *pi, void *cookie),
+        void *cookie);
 
 __END_DECLS
 
