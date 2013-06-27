@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, 2011 Intel Corporation
+Copyright (c) 2010, 2011, 2012, 2013 Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -106,8 +106,11 @@ name:                            \
 ENTRY (MEMCMP)
 	movl	LEN(%esp), %ecx
 
-#ifdef USE_AS_WMEMCMP
+#ifdef USE_WCHAR
 	shl	$2, %ecx
+	jz	L(zero)
+#elif defined USE_UTF16
+	shl	$1, %ecx
 	jz	L(zero)
 #endif
 
@@ -116,7 +119,7 @@ ENTRY (MEMCMP)
 	movl	BLK2(%esp), %edx
 	jae	L(48bytesormore)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$1, %ecx
 	jbe	L(less1bytes)
 #endif
@@ -128,7 +131,7 @@ ENTRY (MEMCMP)
 
 	CFI_POP	(%ebx)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	.p2align 4
 L(less1bytes):
 	jb	L(zero)
@@ -174,7 +177,7 @@ L(48bytesormore):
 	jz	L(shr_0)
 	xor	%edx, %esi
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$8, %edx
 	jae	L(next_unaligned_table)
 	cmp	$0, %edx
@@ -210,7 +213,7 @@ L(next_unaligned_table):
 	cmp	$14, %edx
 	je	L(shr_14)
 	jmp	L(shr_15)
-#else
+#elif defined(USE_WCHAR)
 	cmp	$0, %edx
 	je	L(shr_0)
 	cmp	$4, %edx
@@ -218,6 +221,22 @@ L(next_unaligned_table):
 	cmp	$8, %edx
 	je	L(shr_8)
 	jmp	L(shr_12)
+#elif defined(USE_UTF16)
+	cmp	$0, %edx
+	je	L(shr_0)
+	cmp	$2, %edx
+	je	L(shr_2)
+	cmp	$4, %edx
+	je	L(shr_4)
+	cmp	$6, %edx
+	je	L(shr_6)
+	cmp	$8, %edx
+	je	L(shr_8)
+	cmp	$10, %edx
+	je	L(shr_10)
+	cmp	$12, %edx
+	je	L(shr_12)
+	jmp	L(shr_14)
 #endif
 
 	.p2align 4
@@ -289,7 +308,7 @@ L(shr_0_gobble_loop_next):
 	POP	(%esi)
 	jmp	L(less48bytes)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -372,8 +391,10 @@ L(shr_1_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
 
+#if !defined(USE_WCHAR)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -456,7 +477,9 @@ L(shr_2_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -624,7 +647,7 @@ L(shr_4_gobble_next):
 	POP	(%esi)
 	jmp	L(less48bytes)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -707,7 +730,9 @@ L(shr_5_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -790,7 +815,9 @@ L(shr_6_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -958,7 +985,7 @@ L(shr_8_gobble_next):
 	POP	(%esi)
 	jmp	L(less48bytes)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1041,7 +1068,9 @@ L(shr_9_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1124,7 +1153,9 @@ L(shr_10_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1292,7 +1323,7 @@ L(shr_12_gobble_next):
 	POP	(%esi)
 	jmp	L(less48bytes)
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1375,7 +1406,9 @@ L(shr_13_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1458,7 +1491,9 @@ L(shr_14_gobble_next):
 	POP	(%edi)
 	POP	(%esi)
 	jmp	L(less48bytes)
+#endif
 
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cfi_restore_state
 	cfi_remember_state
 	.p2align 4
@@ -1558,7 +1593,7 @@ L(first16bytes):
 	add	%eax, %esi
 L(less16bytes):
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	test	%dl, %dl
 	jz	L(next_24_bytes)
 
@@ -1668,7 +1703,7 @@ L(Byte31):
 	movzbl	-9(%esi), %edx
 	sub	%edx, %eax
 	RETURN_END
-#else
+#elif defined(USE_AS_WMEMCMP)
 
 /* special for wmemcmp */
 	test	%dl, %dl
@@ -1682,7 +1717,6 @@ L(Byte31):
 	neg	%eax
 	RETURN
 
-
 	.p2align 4
 L(second_double_word):
 	mov	-12(%edi), %ecx
@@ -1691,7 +1725,7 @@ L(second_double_word):
 	jg	L(nequal_bigger)
 	neg	%eax
 	RETURN
-	
+
 	.p2align 4
 L(next_two_double_words):
 	and	$15, %dh
@@ -1715,6 +1749,79 @@ L(fourth_double_word):
 	.p2align 4
 L(nequal_bigger):
 	RETURN_END
+
+#elif defined(USE_AS_MEMCMP16)
+
+/* special for __memcmp16 */
+	test	%dl, %dl
+	jz	L(next_four_words)
+	test	$15, %dl
+	jz	L(second_two_words)
+	test	$3, %dl
+	jz	L(second_word)
+	movzwl	-16(%edi), %eax
+	movzwl	-16(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(second_word):
+	movzwl	-14(%edi), %eax
+	movzwl	-14(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(second_two_words):
+	test	$63, %dl
+	jz	L(fourth_word)
+	movzwl	-12(%edi), %eax
+	movzwl	-12(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(fourth_word):
+	movzwl	-10(%edi), %eax
+	movzwl	-10(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(next_four_words):
+	test	$15, %dh
+	jz	L(fourth_two_words)
+	test	$3, %dh
+	jz	L(sixth_word)
+	movzwl	-8(%edi), %eax
+	movzwl	-8(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(sixth_word):
+	movzwl	-6(%edi), %eax
+	movzwl	-6(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(fourth_two_words):
+	test	$63, %dh
+	jz	L(eighth_word)
+	movzwl	-4(%edi), %eax
+	movzwl	-4(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+
+	.p2align 4
+L(eighth_word):
+	movzwl	-2(%edi), %eax
+	movzwl	-2(%esi), %ebx
+	subl	%ebx, %eax
+	RETURN
+#else
+# error Unreachable preprocessor case
 #endif
 
 	CFI_PUSH (%ebx)
@@ -1725,7 +1832,7 @@ L(more8bytes):
 	jae	L(more16bytes)
 	cmp	$8, %ecx
 	je	L(8bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$9, %ecx
 	je	L(9bytes)
 	cmp	$10, %ecx
@@ -1739,8 +1846,16 @@ L(more8bytes):
 	cmp	$14, %ecx
 	je	L(14bytes)
 	jmp	L(15bytes)
-#else
+#elif defined(USE_WCHAR) && !defined(USE_UTF16)
 	jmp	L(12bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$10, %ecx
+	je	L(10bytes)
+	cmp	$12, %ecx
+	je	L(12bytes)
+	jmp	L(14bytes)
+#else
+# error Unreachable preprocessor case
 #endif
 
 	.p2align 4
@@ -1749,7 +1864,7 @@ L(more16bytes):
 	jae	L(more24bytes)
 	cmp	$16, %ecx
 	je	L(16bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$17, %ecx
 	je	L(17bytes)
 	cmp	$18, %ecx
@@ -1763,8 +1878,16 @@ L(more16bytes):
 	cmp	$22, %ecx
 	je	L(22bytes)
 	jmp	L(23bytes)
-#else
+#elif defined(USE_WCHAR) && !defined(USE_UTF16)
 	jmp	L(20bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$18, %ecx
+	je	L(18bytes)
+	cmp	$20, %ecx
+	je	L(20bytes)
+	jmp	L(22bytes)
+#else
+# error Unreachable preprocessor case
 #endif
 
 	.p2align 4
@@ -1773,7 +1896,7 @@ L(more24bytes):
 	jae	L(more32bytes)
 	cmp	$24, %ecx
 	je	L(24bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$25, %ecx
 	je	L(25bytes)
 	cmp	$26, %ecx
@@ -1787,8 +1910,16 @@ L(more24bytes):
 	cmp	$30, %ecx
 	je	L(30bytes)
 	jmp	L(31bytes)
-#else
+#elif defined(USE_WCHAR) && !defined(USE_UTF16)
 	jmp	L(28bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$26, %ecx
+	je	L(26bytes)
+	cmp	$28, %ecx
+	je	L(28bytes)
+	jmp	L(30bytes)
+#else
+# error Unreachable preprocessor case
 #endif
 
 	.p2align 4
@@ -1797,7 +1928,7 @@ L(more32bytes):
 	jae	L(more40bytes)
 	cmp	$32, %ecx
 	je	L(32bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$33, %ecx
 	je	L(33bytes)
 	cmp	$34, %ecx
@@ -1811,15 +1942,23 @@ L(more32bytes):
 	cmp	$38, %ecx
 	je	L(38bytes)
 	jmp	L(39bytes)
-#else
+#elif defined(USE_WCHAR) && !defined(USE_UTF16)
 	jmp	L(36bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$34, %ecx
+	je	L(34bytes)
+	cmp	$36, %ecx
+	je	L(36bytes)
+	jmp	L(38bytes)
+#else
+# error Unreachable preprocessor case
 #endif
 
 	.p2align 4
 L(less48bytes):
 	cmp	$8, %ecx
 	jae	L(more8bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$2, %ecx
 	je	L(2bytes)
 	cmp	$3, %ecx
@@ -1831,15 +1970,23 @@ L(less48bytes):
 	cmp	$6, %ecx
 	je	L(6bytes)
 	jmp	L(7bytes)
-#else
+#elif defined(USE_WCHAR) && !defined(USE_UTF16)
 	jmp	L(4bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$2, %ecx
+	je	L(2bytes)
+	cmp	$4, %ecx
+	je	L(4bytes)
+	jmp	L(6bytes)
+#else
+# error Unreachable preprocessor case
 #endif
 
 	.p2align 4
 L(more40bytes):
 	cmp	$40, %ecx
 	je	L(40bytes)
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_WCHAR) && !defined(USE_UTF16)
 	cmp	$41, %ecx
 	je	L(41bytes)
 	cmp	$42, %ecx
@@ -1853,7 +2000,15 @@ L(more40bytes):
 	cmp	$46, %ecx
 	je	L(46bytes)
 	jmp	L(47bytes)
+#elif defined(USE_UTF16) && !defined(USE_WCHAR)
+	cmp	$42, %ecx
+	je	L(42bytes)
+	cmp	$44, %ecx
+	je	L(44bytes)
+	jmp	L(46bytes)
+#endif
 
+#if !defined(USE_AS_WMEMCMP) && !defined(USE_AS_MEMCMP16)
 	.p2align 4
 L(44bytes):
 	mov	-44(%eax), %ecx
@@ -1914,7 +2069,8 @@ L(4bytes):
 	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
-#else
+#elif defined(USE_AS_WMEMCMP)
+
 	.p2align 4
 L(44bytes):
 	mov	-44(%eax), %ecx
@@ -1964,9 +2120,131 @@ L(4bytes):
 	POP	(%ebx)
 	ret
 	CFI_PUSH (%ebx)
+#elif defined USE_AS_MEMCMP16
+
+	.p2align 4
+L(46bytes):
+	movzwl	-46(%eax), %ecx
+	movzwl	-46(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(44bytes):
+	movzwl	-44(%eax), %ecx
+	movzwl	-44(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(42bytes):
+	movzwl	-42(%eax), %ecx
+	movzwl	-42(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(40bytes):
+	movzwl	-40(%eax), %ecx
+	movzwl	-40(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(38bytes):
+	movzwl	-38(%eax), %ecx
+	movzwl	-38(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(36bytes):
+	movzwl	-36(%eax), %ecx
+	movzwl	-36(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(34bytes):
+	movzwl	-34(%eax), %ecx
+	movzwl	-34(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(32bytes):
+	movzwl	-32(%eax), %ecx
+	movzwl	-32(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(30bytes):
+	movzwl	-30(%eax), %ecx
+	movzwl	-30(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(28bytes):
+	movzwl	-28(%eax), %ecx
+	movzwl	-28(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(26bytes):
+	movzwl	-26(%eax), %ecx
+	movzwl	-26(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(24bytes):
+	movzwl	-24(%eax), %ecx
+	movzwl	-24(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(22bytes):
+	movzwl	-22(%eax), %ecx
+	movzwl	-22(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(20bytes):
+	movzwl	-20(%eax), %ecx
+	movzwl	-20(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(18bytes):
+	movzwl	-18(%eax), %ecx
+	movzwl	-18(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(16bytes):
+	movzwl	-16(%eax), %ecx
+	movzwl	-16(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(14bytes):
+	movzwl	-14(%eax), %ecx
+	movzwl	-14(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(12bytes):
+	movzwl	-12(%eax), %ecx
+	movzwl	-12(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(10bytes):
+	movzwl	-10(%eax), %ecx
+	movzwl	-10(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(8bytes):
+	movzwl	-8(%eax), %ecx
+	movzwl	-8(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(6bytes):
+	movzwl	-6(%eax), %ecx
+	movzwl	-6(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(4bytes):
+	movzwl	-4(%eax), %ecx
+	movzwl	-4(%edx), %ebx
+	subl	%ebx, %ecx
+	jne	L(memcmp16_exit)
+L(2bytes):
+	movzwl	-2(%eax), %eax
+	movzwl	-2(%edx), %ebx
+	subl	%ebx, %eax
+	POP	(%ebx)
+	ret
+	CFI_PUSH (%ebx)
+#else
+# error Unreachable preprocessor case
 #endif
 
-#ifndef USE_AS_WMEMCMP
+#if !defined(USE_AS_WMEMCMP) && !defined(USE_AS_MEMCMP16)
 
 	.p2align 4
 L(45bytes):
@@ -2191,9 +2469,8 @@ L(end):
 	neg	%eax
 L(bigger):
 	ret
-#else
+#elif defined(USE_AS_WMEMCMP)
 
-/* for wmemcmp */
 	.p2align 4
 L(find_diff):
 	POP	(%ebx)
@@ -2206,5 +2483,14 @@ L(find_diff):
 L(find_diff_bigger):
 	ret
 
+#elif defined(USE_AS_MEMCMP16)
+
+	.p2align 4
+L(memcmp16_exit):
+	POP	(%ebx)
+	mov	%ecx, %eax
+	ret
+#else
+# error Unreachable preprocessor case
 #endif
 END (MEMCMP)
