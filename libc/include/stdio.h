@@ -454,7 +454,6 @@ __END_DECLS
 
 __BEGIN_DECLS
 
-#if !defined(__clang__)
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 0)
 int vsnprintf(char *dest, size_t size, const char *format, __va_list ap)
@@ -468,7 +467,6 @@ int vsprintf(char *dest, const char *format, __va_list ap)
 {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
-#endif /* !defined(__clang__) */
 
 #if defined(__clang__)
 #define snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
