@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 #include <string.h>
+#include <stdarg.h>
 
 #if __BIONIC__
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
@@ -104,6 +105,49 @@ TEST(Fortify1_DeathTest, sprintf2_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[5];
   ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
+}
+
+static int vsprintf_helper(const char *fmt, ...) {
+  char buf[10];
+  va_list va;
+  int result;
+
+  va_start(va, fmt);
+  result = vsprintf(buf, fmt, va); // should crash here
+  va_end(va);
+  return result;
+}
+
+TEST(Fortify1_DeathTest, vsprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(vsprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(Fortify1_DeathTest, vsprintf2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(vsprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
+}
+
+static int vsnprintf_helper(const char *fmt, ...) {
+  char buf[10];
+  va_list va;
+  int result;
+  size_t size = atoi("11");
+
+  va_start(va, fmt);
+  result = vsnprintf(buf, size, fmt, va); // should crash here
+  va_end(va);
+  return result;
+}
+
+TEST(Fortify1_DeathTest, vsnprintf_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(vsnprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(Fortify1_DeathTest, vsnprintf2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(vsnprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(Fortify1_DeathTest, strncat_fortified) {
