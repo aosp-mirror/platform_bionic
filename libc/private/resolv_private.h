@@ -343,11 +343,6 @@ extern const struct res_sym __p_type_syms[];
 extern const struct res_sym __p_rcode_syms[];
 #endif /* SHARED_LIBBIND */
 
-#ifndef ADNROID_CHANGES
-#define b64_ntop		__b64_ntop
-#define b64_pton		__b64_pton
-#endif
-
 #define dn_comp			__dn_comp
 #define dn_count_labels		__dn_count_labels
 #define dn_skipname		__dn_skipname
