@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a2cb179_91235e18",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-06-28T17:54:19Z",
+      "side": 1,
+      "message": "I just noticed that I never use this variable anywhere, but the tests still pass. Do we really have to say \"DeathTest\" to get the test to run in it\u0027s own process? It seems to work without...",
+      "revId": "880123c3462fe6043812d6585db30d9245bee94d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
