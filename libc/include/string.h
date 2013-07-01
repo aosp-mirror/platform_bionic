@@ -175,7 +175,6 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     return __strlcpy_chk(dest, src, size, bos);
 }
 
-#if !defined(__clang__)
 extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcat");
 __errordecl(__strlcat_error, "strlcat called with size bigger than buffer");
@@ -186,6 +185,7 @@ __BIONIC_FORTIFY_INLINE
 size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
     size_t bos = __bos(dest);
 
+#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlcat_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcat_real(dest, src, size);
@@ -202,10 +202,10 @@ size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
     if (__builtin_constant_p(size) && (size > bos)) {
         __strlcat_error();
     }
+#endif /* !defined(__clang__) */
 
     return __strlcat_chk(dest, src, size, bos);
 }
-#endif /* !defined(__clang__) */
 
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {

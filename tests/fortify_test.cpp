@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 #include <string.h>
 #include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
@@ -204,6 +206,20 @@ TEST(DEATHTEST, strlcpy_fortified2) {
 }
 #endif
 
+#ifndef __clang__
+// This test is disabled in clang because clang doesn't properly detect
+// this buffer overflow. TODO: Fix clang.
+TEST(DEATHTEST, strlcat_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  strcpy(myfoo.a, "01");
+  myfoo.one[0] = '\0';
+  size_t n = strlen(myfoo.a);
+  ASSERT_EXIT(strlcat(myfoo.one, myfoo.a, n),
+              testing::KilledBySignal(SIGABRT), "");
+}
+#endif
+
 #endif /* __BIONIC__ */
 
 #ifndef __clang__
@@ -266,6 +282,14 @@ TEST(DEATHTEST, snprintf_fortified2) {
   strcpy(myfoo.a, "012345678");
   size_t n = strlen(myfoo.a) + 2;
   ASSERT_EXIT(snprintf(myfoo.b, n, "a%s", myfoo.a), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, bzero_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memcpy(myfoo.b, "0123456789", sizeof(myfoo.b));
+  size_t n = atoi("11");
+  ASSERT_EXIT(bzero(myfoo.b, n), testing::KilledBySignal(SIGABRT), "");
 }
 
 #endif /* defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE=2 */
@@ -335,6 +359,16 @@ TEST(DEATHTEST, strlcpy_fortified) {
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
   ASSERT_EXIT(strlcpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, strlcat_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char bufa[15];
+  char bufb[10];
+  bufb[0] = '\0';
+  strcpy(bufa, "01234567890123");
+  size_t n = strlen(bufa);
+  ASSERT_EXIT(strlcat(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
 }
 
 #endif
@@ -454,6 +488,20 @@ TEST(DEATHTEST, snprintf_fortified) {
   strcpy(bufa, "0123456789");
   size_t n = strlen(bufa) + 1;
   ASSERT_EXIT(snprintf(bufb, n, "%s", bufa), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, bzero_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  memcpy(buf, "0123456789", sizeof(buf));
+  size_t n = atoi("11");
+  ASSERT_EXIT(bzero(buf, n), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, umask_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  mode_t mask = atoi("1023");  // 01777 in octal
+  ASSERT_EXIT(umask(mask), testing::KilledBySignal(SIGABRT), "");
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);

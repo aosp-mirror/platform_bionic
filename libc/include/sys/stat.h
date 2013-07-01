@@ -129,7 +129,7 @@ extern int    lstat(const char *, struct stat *);
 extern int    mknod(const char *, mode_t, dev_t);
 extern mode_t umask(mode_t);
 
-#if defined(__BIONIC_FORTIFY) && !defined(__clang__)
+#if defined(__BIONIC_FORTIFY)
 
 extern mode_t __umask_chk(mode_t);
 extern mode_t __umask_real(mode_t)
@@ -138,15 +138,17 @@ __errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
 __BIONIC_FORTIFY_INLINE
 mode_t umask(mode_t mode) {
+#if !defined(__clang__)
   if (__builtin_constant_p(mode)) {
     if ((mode & 0777) != mode) {
       __umask_invalid_mode();
     }
     return __umask_real(mode);
   }
+#endif
   return __umask_chk(mode);
 }
-#endif /* defined(__BIONIC_FORTIFY) && !defined(__clang__) */
+#endif /* defined(__BIONIC_FORTIFY) */
 
 
 #define  stat64    stat
