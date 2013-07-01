@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a2cb179_cfc9ae7d",
+        "filename": "libc/arch-arm/bionic/memcpy.a9.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-07-01T16:43:08Z",
+      "side": 1,
+      "message": "(please don\u0027t mix copyright and arbitrary English text. it breaks our duplicate copyright detection and bloats our display of open-source licenses in Settings.)",
+      "revId": "b61103dff4531322b02dd0f2217149e9b258fa10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
