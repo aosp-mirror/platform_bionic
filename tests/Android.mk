@@ -63,6 +63,7 @@ test_src_files = \
     fenv_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
+    inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
     malloc_test.cpp \
