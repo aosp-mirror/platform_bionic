@@ -43,8 +43,9 @@ void* mmap(void *addr, size_t size, int prot, int flags, int fd, long offset)
 
     ret = __mmap2(addr, size, prot, flags, fd, (size_t)offset >> MMAP2_SHIFT);
 
-    if (ret && (flags & (MAP_PRIVATE | MAP_ANONYMOUS)))
-	    madvise(ret, size, MADV_MERGEABLE);
+    if ((ret != MAP_FAILED) && (flags & (MAP_PRIVATE | MAP_ANONYMOUS))) {
+        madvise(ret, size, MADV_MERGEABLE);
+    }
 
     return ret;
 }
