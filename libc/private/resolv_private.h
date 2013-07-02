@@ -343,7 +343,9 @@ extern const struct res_sym __p_type_syms[];
 extern const struct res_sym __p_rcode_syms[];
 #endif /* SHARED_LIBBIND */
 
+#ifndef ANDROID_CHANGES
 #define dn_comp			__dn_comp
+#endif
 #define dn_count_labels		__dn_count_labels
 #define dn_skipname		__dn_skipname
 #define fp_resstat		__fp_resstat
@@ -438,9 +440,6 @@ const u_char *	p_fqname(const u_char *, const u_char *, FILE *);
 const char *	p_option(u_long);
 char *		p_secstodate(u_long);
 int		dn_count_labels(const char *);
-int		dn_comp(const char *, u_char *, int, u_char **, u_char **);
-int		dn_expand(const u_char *, const u_char *, const u_char *,
-			       char *, int);
 u_int		res_randomid(void);
 int		res_nameinquery(const char *, int, int, const u_char *,
 				     const u_char *);
