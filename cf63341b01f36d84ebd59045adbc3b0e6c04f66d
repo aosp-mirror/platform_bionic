@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2771b0c7_79c68746",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-07-02T22:34:14Z",
+      "side": 1,
+      "message": "this file isn\u0027t included in this patchset.",
+      "revId": "cf63341b01f36d84ebd59045adbc3b0e6c04f66d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
