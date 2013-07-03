@@ -28,6 +28,9 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ */
+
+/*
    This memcpy routine is optimised for Cortex-A15 cores and takes advantage
    of VFP or NEON when built with the appropriate flags.
 
