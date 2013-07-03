@@ -33,12 +33,14 @@ typedef __u64 __bitwise __le64;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __u64 __bitwise __be64;
 #endif
+typedef __u16 __bitwise __sum16;
+typedef __u32 __bitwise __wsum;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ustat {
  __kernel_daddr_t f_tfree;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __kernel_ino_t f_tinode;
  char f_fname[6];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char f_fpack[6];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
