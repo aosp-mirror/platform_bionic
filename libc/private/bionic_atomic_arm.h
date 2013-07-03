@@ -70,10 +70,6 @@
  *        code is going to run on a single or multi-core device, so we
  *        need to be cautious.
  *
- *        Fortunately, we can use the kernel helper function that is
- *        mapped at address 0xffff0fa0 in all user process, and that
- *        provides a device-specific barrier operation.
- *
  *        I.e. on single-core devices, the helper immediately returns,
  *        on multi-core devices, it uses "dmb" or any other means to
  *        perform a full-memory barrier.
@@ -82,7 +78,7 @@
  *
  *    - multi-core ARMv7-A       => use the 'dmb' hardware instruction
  *    - multi-core ARMv6         => use the coprocessor
- *    - single core ARMv5TE/6/7  => do not use any hardware barrier
+ *    - single core ARMv6+       => do not use any hardware barrier
  */
 #if defined(ANDROID_SMP) && ANDROID_SMP == 1
 
@@ -124,18 +120,14 @@ __bionic_memory_barrier(void)
 }
 #endif /* !ANDROID_SMP */
 
+#ifndef __ARM_HAVE_LDREX_STREX
+#error Only ARM devices which have LDREX / STREX are supported
+#endif
+
 /* Compare-and-swap, without any explicit barriers. Note that this functions
  * returns 0 on success, and 1 on failure. The opposite convention is typically
  * used on other platforms.
- *
- * There are two cases to consider:
- *
- *     - ARMv6+  => use LDREX/STREX instructions
- *     - < ARMv6 => use kernel helper function mapped at 0xffff0fc0
- *
- * LDREX/STREX are only available starting from ARMv6
  */
-#ifdef __ARM_HAVE_LDREX_STREX
 __ATOMIC_INLINE__ int
 __bionic_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr)
 {
@@ -157,32 +149,8 @@ __bionic_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr)
     } while (__builtin_expect(status != 0, 0));
     return prev != old_value;
 }
-#  else /* !__ARM_HAVE_LDREX_STREX */
 
-/* Use the handy kernel helper function mapped at 0xffff0fc0 */
-typedef int (kernel_cmpxchg)(int32_t, int32_t, volatile int32_t *);
-
-__ATOMIC_INLINE__ int
-__kernel_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr)
-{
-    /* Note: the kernel function returns 0 on success too */
-    return (*(kernel_cmpxchg *)0xffff0fc0)(old_value, new_value, ptr);
-}
-
-__ATOMIC_INLINE__ int
-__bionic_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr)
-{
-    return __kernel_cmpxchg(old_value, new_value, ptr);
-}
-#endif /* !__ARM_HAVE_LDREX_STREX */
-
-/* Swap operation, without any explicit barriers.
- * There are again two similar cases to consider:
- *
- *   ARMv6+ => use LDREX/STREX
- *   < ARMv6 => use SWP instead.
- */
-#ifdef __ARM_HAVE_LDREX_STREX
+/* Swap operation, without any explicit barriers. */
 __ATOMIC_INLINE__ int32_t
 __bionic_swap(int32_t new_value, volatile int32_t* ptr)
 {
@@ -199,24 +167,10 @@ __bionic_swap(int32_t new_value, volatile int32_t* ptr)
     } while (__builtin_expect(status != 0, 0));
     return prev;
 }
-#else /* !__ARM_HAVE_LDREX_STREX */
-__ATOMIC_INLINE__ int32_t
-__bionic_swap(int32_t new_value, volatile int32_t* ptr)
-{
-    int32_t prev;
-    /* NOTE: SWP is available in Thumb-1 too */
-    __asm__ __volatile__ ("swp %0, %2, [%3]"
-                          : "=&r" (prev), "+m" (*ptr)
-                          : "r" (new_value), "r" (ptr)
-                          : "cc");
-    return prev;
-}
-#endif /* !__ARM_HAVE_LDREX_STREX */
 
 /* Atomic increment - without any barriers
  * This returns the old value
  */
-#ifdef __ARM_HAVE_LDREX_STREX
 __ATOMIC_INLINE__ int32_t
 __bionic_atomic_inc(volatile int32_t* ptr)
 {
@@ -234,23 +188,10 @@ __bionic_atomic_inc(volatile int32_t* ptr)
     } while (__builtin_expect(status != 0, 0));
     return prev;
 }
-#else
-__ATOMIC_INLINE__ int32_t
-__bionic_atomic_inc(volatile int32_t* ptr)
-{
-    int32_t  prev, status;
-    do {
-        prev = *ptr;
-        status = __kernel_cmpxchg(prev, prev+1, ptr);
-    } while (__builtin_expect(status != 0, 0));
-    return prev;
-}
-#endif
 
 /* Atomic decrement - without any barriers
  * This returns the old value.
  */
-#ifdef __ARM_HAVE_LDREX_STREX
 __ATOMIC_INLINE__ int32_t
 __bionic_atomic_dec(volatile int32_t* ptr)
 {
@@ -268,17 +209,5 @@ __bionic_atomic_dec(volatile int32_t* ptr)
     } while (__builtin_expect(status != 0, 0));
     return prev;
 }
-#else
-__ATOMIC_INLINE__ int32_t
-__bionic_atomic_dec(volatile int32_t* ptr)
-{
-    int32_t  prev, status;
-    do {
-        prev = *ptr;
-        status = __kernel_cmpxchg(prev, prev-1, ptr);
-    } while (__builtin_expect(status != 0, 0));
-    return prev;
-}
-#endif
 
 #endif /* SYS_ATOMICS_ARM_H */
