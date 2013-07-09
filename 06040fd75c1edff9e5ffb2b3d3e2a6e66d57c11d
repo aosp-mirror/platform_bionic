@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8796dc56_2cc9f37a",
+        "filename": "libc/include/sys/statvfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-07-09T20:28:50Z",
+      "side": 1,
+      "message": "POSIX says \"unsigned long\". so we can:\n\n1. go with POSIX, and have to add struct statvfs64, statvfs64, and fstatvfs64 later.\n\n2. go straight to 64-bit for statvfs but break expectations about these types. (in printf format strings, say.)\n\nthis patch takes option 1. it makes me slightly sad, but i figure it\u0027s only a small extra helping of turd on top of the big fat turd we already have.",
+      "revId": "06040fd75c1edff9e5ffb2b3d3e2a6e66d57c11d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
