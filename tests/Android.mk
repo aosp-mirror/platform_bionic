@@ -74,6 +74,7 @@ test_src_files = \
     signal_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
+    statvfs_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \

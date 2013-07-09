@@ -225,6 +225,7 @@ libc_bionic_src_files := \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
     bionic/sigwait.cpp \
+    bionic/statvfs.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strchr_chk.cpp \
     bionic/__strcpy_chk.cpp \
