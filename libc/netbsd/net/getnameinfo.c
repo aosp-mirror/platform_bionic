@@ -93,7 +93,7 @@ struct sockinet {
 };
 
 static int getnameinfo_inet(const struct sockaddr *, socklen_t, char *,
-    socklen_t, char *, socklen_t, int, const char*);
+    socklen_t, char *, socklen_t, int, const char*, int);
 #ifdef INET6
 static int ip6_parsenumeric(const struct sockaddr *, const char *, char *,
 				 socklen_t, int);
@@ -108,16 +108,16 @@ static int getnameinfo_local(const struct sockaddr *, socklen_t, char *,
  */
 int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen, char* serv, size_t servlen, int flags)
 {
-	return android_getnameinfoforiface(sa, salen, host, hostlen, serv, servlen, flags, NULL);
+	return android_getnameinfoforiface(sa, salen, host, hostlen, serv, servlen, flags, NULL, 0);
 }
 
-int android_getnameinfoforiface(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen, char* serv, size_t servlen, int flags, const char* iface)
+int android_getnameinfoforiface(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen, char* serv, size_t servlen, int flags, const char* iface, int mark)
 {
 	switch (sa->sa_family) {
 	case AF_INET:
 	case AF_INET6:
 		return getnameinfo_inet(sa, salen, host, hostlen,
-				serv, servlen, flags, iface);
+				serv, servlen, flags, iface, mark);
 	case AF_LOCAL:
 		return getnameinfo_local(sa, salen, host, hostlen,
 		    serv, servlen, flags);
@@ -158,10 +158,10 @@ getnameinfo_local(const struct sockaddr *sa, socklen_t salen,
  * the address. On failure -1 is returned in which case
  * normal execution flow shall continue. */
 static int
-android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, socklen_t addrLen, int addrFamily, const char* iface)
+android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, socklen_t addrLen, int addrFamily, const char* iface, int mark)
 {
 	struct hostent *hostResult =
-			android_gethostbyaddrforiface_proxy(addr, addrLen, addrFamily, iface);
+			android_gethostbyaddrforiface_proxy(addr, addrLen, addrFamily, iface, mark);
 
 	if (hostResult == NULL) return 0;
 
@@ -179,7 +179,7 @@ static int
 getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
        char *host, socklen_t hostlen,
        char *serv, socklen_t servlen,
-       int flags, const char* iface)
+       int flags, const char* iface, int mark)
 {
 	const struct afd *afd;
 	struct servent *sp;
@@ -321,14 +321,15 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 		char android_proxy_buf[MAXDNAME];
 
 		int hostnamelen = android_gethostbyaddr_proxy(android_proxy_buf,
-				MAXDNAME, addr, afd->a_addrlen, afd->a_af, iface);
+				MAXDNAME, addr, afd->a_addrlen, afd->a_af, iface, mark);
 		if (hostnamelen > 0) {
 			hp = &android_proxy_hostent;
 			hp->h_name = android_proxy_buf;
 		} else if (!hostnamelen) {
 			hp = NULL;
 		} else {
-			hp = android_gethostbyaddrforiface(addr, afd->a_addrlen, afd->a_af, iface);
+			hp = android_gethostbyaddrforiface(addr, afd->a_addrlen, afd->a_af,
+					iface, mark);
 		}
 
 		if (hp) {
