@@ -33,8 +33,8 @@
 
 __BEGIN_DECLS
 
-extern int swapon(const char *, int) __attribute__((__nonnull__(1)));
-extern int swapoff(const char *) __attribute__((__nonnull__(1)));
+extern int swapon(const char*, int) __nonnull((1));
+extern int swapoff(const char*) __nonnull((1));
 
 __END_DECLS
 

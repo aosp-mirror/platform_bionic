@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-/* note: this corresponds to the kernel's statfs64 type */
+/* These correspond to the kernel's statfs64 type. */
 #ifdef __mips__
 struct statfs {
     uint32_t        f_type;
@@ -48,7 +48,8 @@ struct statfs {
     uint64_t        f_bavail;
     __kernel_fsid_t f_fsid;
     uint32_t        f_namelen;
-    uint32_t        f_spare[6];
+    uint32_t        f_flags;
+    uint32_t        f_spare[5];
 };
 #else
 struct statfs {
@@ -62,7 +63,8 @@ struct statfs {
     __kernel_fsid_t f_fsid;
     uint32_t        f_namelen;
     uint32_t        f_frsize;
-    uint32_t        f_spare[5];
+    uint32_t        f_flags;
+    uint32_t        f_spare[4];
 };
 #endif
 
