@@ -42,3 +42,15 @@ TEST(time, mktime_tz) {
   ASSERT_EQ(2678400, mktime_tz(&epoch, "PST"));
 }
 #endif
+
+TEST(time, gmtime) {
+  time_t t = 0;
+  tm* broken_down = gmtime(&t);
+  ASSERT_TRUE(broken_down != NULL);
+  ASSERT_EQ(0, broken_down->tm_sec);
+  ASSERT_EQ(0, broken_down->tm_min);
+  ASSERT_EQ(0, broken_down->tm_hour);
+  ASSERT_EQ(1, broken_down->tm_mday);
+  ASSERT_EQ(0, broken_down->tm_mon);
+  ASSERT_EQ(1970, broken_down->tm_year + 1900);
+}
