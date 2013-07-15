@@ -65,39 +65,11 @@ ENTRY(strlen)
     mov     r1, r0
 
     ands    r3, r0, #7
-    beq     mainloop
-
-    // Align to a double word (64 bits).
-    rsb     r3, r3, #8
-    lsls    ip, r3, #31
-    beq     align_to_32
-
-    ldrb    r2, [r1], #1
-    cbz     r2, update_count_and_return
-
-align_to_32:
-    bcc     align_to_64
-    ands    ip, r3, #2
-    beq     align_to_64
-
-    ldrb    r2, [r1], #1
-    cbz     r2, update_count_and_return
-    ldrb    r2, [r1], #1
-    cbz     r2, update_count_and_return
-
-align_to_64:
-    tst     r3, #4
-    beq     mainloop
-    ldr     r3, [r1], #4
-
-    sub     ip, r3, #0x01010101
-    bic     ip, ip, r3
-    ands    ip, ip, #0x80808080
-    bne     zero_in_second_register
+    bne     align_src
 
     .p2align 2
 mainloop:
-    ldrd    r2, r3, [r1], #8
+    ldmia   r1!, {r2, r3}
 
     pld     [r1, #64]
 
@@ -112,54 +84,84 @@ mainloop:
     bne     zero_in_second_register
     b       mainloop
 
-update_count_and_return:
-    sub     r0, r1, r0
-    sub     r0, r0, #1
-    bx      lr
-
 zero_in_first_register:
     sub     r0, r1, r0
-    lsls    r3, ip, #17
-    bne     sub8_and_return
-    bcs     sub7_and_return
-    lsls    ip, ip, #1
-    bne     sub6_and_return
+    // Check for zero in byte 0.
+    lsls    r2, ip, #17
+    beq     check_byte1_reg1
 
-    sub     r0, r0, #5
-    bx      lr
-
-sub8_and_return:
     sub     r0, r0, #8
     bx      lr
 
-sub7_and_return:
+check_byte1_reg1:
+    bcc     check_byte2_reg1
+
     sub     r0, r0, #7
     bx      lr
 
-sub6_and_return:
-    sub     r0, r0, #6
+check_byte2_reg1:
+    // Check for zero in byte 2.
+    tst     ip, #0x800000
+    itt     ne
+    subne   r0, r0, #6
+    bxne    lr
+    sub     r0, r0, #5
     bx      lr
 
 zero_in_second_register:
     sub     r0, r1, r0
-    lsls    r3, ip, #17
-    bne     sub4_and_return
-    bcs     sub3_and_return
-    lsls    ip, ip, #1
-    bne     sub2_and_return
+    // Check for zero in byte 0.
+    lsls    r2, ip, #17
+    beq     check_byte1_reg2
 
-    sub     r0, r0, #1
-    bx      lr
-
-sub4_and_return:
     sub     r0, r0, #4
     bx      lr
 
-sub3_and_return:
+check_byte1_reg2:
+    bcc     check_byte2_reg2
+
     sub     r0, r0, #3
     bx      lr
 
-sub2_and_return:
-    sub     r0, r0, #2
+check_byte2_reg2:
+    // Check for zero in byte 2.
+    tst     ip, #0x800000
+    itt     ne
+    subne   r0, r0, #2
+    bxne    lr
+    sub     r0, r0, #1
+    bx      lr
+
+align_src:
+    // Align to a double word (64 bits).
+    rsb     r3, r3, #8
+    lsls    ip, r3, #31
+    beq     align_to_32
+
+    ldrb    r2, [r1], #1
+    cbz     r2, done
+
+align_to_32:
+    bcc     align_to_64
+
+    ldrb    r2, [r1], #1
+    cbz     r2, done
+    ldrb    r2, [r1], #1
+    cbz     r2, done
+
+align_to_64:
+    tst     r3, #4
+    beq     mainloop
+    ldr     r2, [r1], #4
+
+    sub     ip, r2, #0x01010101
+    bic     ip, ip, r2
+    ands    ip, ip, #0x80808080
+    bne     zero_in_second_register
+    b       mainloop
+
+done:
+    sub     r0, r1, r0
+    sub     r0, r0, #1
     bx      lr
 END(strlen)
