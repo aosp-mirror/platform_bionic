@@ -104,8 +104,8 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
     if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
       // For backwards compatibility reasons, we just warn about failures here.
       // error = errno;
-      const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
-      __libc_format_log(ANDROID_LOG_WARN, "libc", msg, strerror(errno));
+      __libc_format_log(ANDROID_LOG_WARN, "libc",
+                        "pthread_create sched_setscheduler call failed: %s", strerror(errno));
     }
   }
 
@@ -119,20 +119,27 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   return error;
 }
 
-static void* __create_thread_stack(size_t stack_size, size_t guard_size) {
+static void* __create_thread_stack(pthread_internal_t* thread) {
   ScopedPthreadMutexLocker lock(&gPthreadStackCreationLock);
 
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* stack = mmap(NULL, stack_size, prot, flags, -1, 0);
+  void* stack = mmap(NULL, thread->attr.stack_size, prot, flags, -1, 0);
   if (stack == MAP_FAILED) {
+    __libc_format_log(ANDROID_LOG_WARN,
+                      "libc",
+                      "pthread_create failed: couldn't allocate %zd-byte stack: %s",
+                      thread->attr.stack_size, strerror(errno));
     return NULL;
   }
 
   // Set the guard region at the end of the stack to PROT_NONE.
-  if (mprotect(stack, guard_size, PROT_NONE) == -1) {
-    munmap(stack, stack_size);
+  if (mprotect(stack, thread->attr.guard_size, PROT_NONE) == -1) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc",
+                      "pthread_create failed: couldn't mprotect PROT_NONE %zd-byte stack guard region: %s",
+                      thread->attr.guard_size, strerror(errno));
+    munmap(stack, thread->attr.stack_size);
     return NULL;
   }
 
@@ -164,15 +171,15 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     attr = NULL; // Prevent misuse below.
   }
 
-  // Make sure the stack size is PAGE_SIZE aligned.
-  size_t stack_size = (thread->attr.stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
+  // Make sure the stack size and guard size are multiples of PAGE_SIZE.
+  thread->attr.stack_size = (thread->attr.stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
+  thread->attr.guard_size = (thread->attr.guard_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
 
   if (thread->attr.stack_base == NULL) {
     // The caller didn't provide a stack, so allocate one.
-    thread->attr.stack_base = __create_thread_stack(stack_size, thread->attr.guard_size);
+    thread->attr.stack_base = __create_thread_stack(thread);
     if (thread->attr.stack_base == NULL) {
       free(thread);
-      __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: couldn't allocate %zd-byte stack", stack_size);
       return EAGAIN;
     }
   } else {
@@ -181,7 +188,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   }
 
   // Make room for TLS.
-  void** tls = (void**)((uint8_t*)(thread->attr.stack_base) + stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
+  void** tls = (void**)((uint8_t*)(thread->attr.stack_base) + thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
 
   // Create a mutex for the thread in TLS_SLOT_SELF to wait on once it starts so we can keep
   // it from doing anything until after we notify the debugger about it
@@ -201,7 +208,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   if (tid < 0) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
-      munmap(thread->attr.stack_base, stack_size);
+      munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
     free(thread);
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));

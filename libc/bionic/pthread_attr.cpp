@@ -84,7 +84,7 @@ int pthread_attr_getschedparam(pthread_attr_t const* attr, struct sched_param* p
 }
 
 int pthread_attr_setstacksize(pthread_attr_t* attr, size_t stack_size) {
-  if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
+  if (stack_size < PTHREAD_STACK_MIN) {
     return EINVAL;
   }
   attr->stack_size = stack_size;
@@ -128,9 +128,6 @@ int pthread_attr_getstack(pthread_attr_t const* attr, void** stack_base, size_t*
 }
 
 int pthread_attr_setguardsize(pthread_attr_t* attr, size_t guard_size) {
-  if (guard_size & (PAGE_SIZE - 1) || guard_size < PAGE_SIZE) {
-    return EINVAL;
-  }
   attr->guard_size = guard_size;
   return 0;
 }

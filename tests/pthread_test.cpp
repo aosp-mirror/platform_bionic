@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <limits.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -338,4 +339,96 @@ TEST(pthread, pthread_join__multijoin) {
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
   ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+}
+
+static void* GetActualGuardSizeFn(void* arg) {
+  pthread_attr_t attributes;
+  pthread_getattr_np(pthread_self(), &attributes);
+  pthread_attr_getguardsize(&attributes, reinterpret_cast<size_t*>(arg));
+  return NULL;
+}
+
+static size_t GetActualGuardSize(const pthread_attr_t& attributes) {
+  size_t result;
+  pthread_t t;
+  pthread_create(&t, &attributes, GetActualGuardSizeFn, &result);
+  void* join_result;
+  pthread_join(t, &join_result);
+  return result;
+}
+
+static void* GetActualStackSizeFn(void* arg) {
+  pthread_attr_t attributes;
+  pthread_getattr_np(pthread_self(), &attributes);
+  pthread_attr_getstacksize(&attributes, reinterpret_cast<size_t*>(arg));
+  return NULL;
+}
+
+static size_t GetActualStackSize(const pthread_attr_t& attributes) {
+  size_t result;
+  pthread_t t;
+  pthread_create(&t, &attributes, GetActualStackSizeFn, &result);
+  void* join_result;
+  pthread_join(t, &join_result);
+  return result;
+}
+
+TEST(pthread, pthread_attr_setguardsize) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Get the default guard size.
+  size_t default_guard_size;
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &default_guard_size));
+
+  // No such thing as too small: will be rounded up to one page by pthread_create.
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 128));
+  size_t guard_size;
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(128U, guard_size);
+  ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+
+  // Large enough and a multiple of the page size.
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(32*1024U, guard_size);
+
+  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024 + 1));
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(32*1024U + 1, guard_size);
+}
+
+TEST(pthread, pthread_attr_setstacksize) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Get the default stack size.
+  size_t default_stack_size;
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &default_stack_size));
+
+  // Too small.
+  ASSERT_EQ(EINVAL, pthread_attr_setstacksize(&attributes, 128));
+  size_t stack_size;
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
+  ASSERT_EQ(default_stack_size, stack_size);
+  ASSERT_GE(GetActualStackSize(attributes), default_stack_size);
+
+  // Large enough and a multiple of the page size.
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
+  ASSERT_EQ(32*1024U, stack_size);
+  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
+
+  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
+  ASSERT_EQ(32*1024U + 1, stack_size);
+#if __BIONIC__
+  // Bionic rounds up, which is what POSIX allows.
+  ASSERT_EQ(GetActualStackSize(attributes), (32 + 4)*1024U);
+#else
+  // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
+  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
+#endif
 }
