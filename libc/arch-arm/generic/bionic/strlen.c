@@ -33,16 +33,16 @@ size_t strlen(const char *s)
 {
     __builtin_prefetch(s);
     __builtin_prefetch(s+32);
-    
+
     union {
         const char      *b;
         const uint32_t  *w;
         uintptr_t       i;
     } u;
-    
+
     // these are some scratch variables for the asm code below
     uint32_t v, t;
-    
+
     // initialize the string length to zero
     size_t l = 0;
 
@@ -69,42 +69,50 @@ size_t strlen(const char *s)
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
 #if !defined(__OPTIMIZE_SIZE__)
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
         "bne     1f                         \n"
         "sub     %[t], %[v], %[mask], lsr #7\n"
         "and     %[t], %[t], %[mask]        \n"
         "bics    %[t], %[t], %[v]           \n"
+        "it      eq                         \n"
         "ldreq   %[v], [%[s]], #4           \n"
 #endif
         "beq     0b                         \n"
@@ -117,13 +125,14 @@ size_t strlen(const char *s)
         "beq     2f                         \n"
         "add     %[l], %[l], #1             \n"
         "tst     %[v], #0xFF0000            \n"
+        "it      ne                         \n"
         "addne   %[l], %[l], #1             \n"
         "2:                                 \n"
         : [l]"=&r"(l), [v]"=&r"(v), [t]"=&r"(t), [s]"=&r"(u.b)
         : "%[l]"(l), "%[s]"(u.b), [mask]"r"(0x80808080UL)
         : "cc"
     );
-    
+
 done:
     return l;
 }
