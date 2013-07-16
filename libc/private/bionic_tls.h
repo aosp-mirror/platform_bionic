@@ -105,9 +105,6 @@ extern int __set_tls(void* ptr);
 #error unsupported architecture
 #endif
 
-/* return the stack base and size, used by our malloc debugger */
-extern void* __get_stack_base(int* p_stack_size);
-
 __END_DECLS
 
 #if defined(__cplusplus)
