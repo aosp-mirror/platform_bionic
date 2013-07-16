@@ -81,9 +81,6 @@
 /* the maximum value of overrun counters */
 #define  DELAYTIMER_MAX    0x7fffffff
 
-#define  __likely(x)   __builtin_expect(!!(x),1)
-#define  __unlikely(x) __builtin_expect(!!(x),0)
-
 typedef struct thr_timer          thr_timer_t;
 typedef struct thr_timer_table    thr_timer_table_t;
 
@@ -294,7 +291,7 @@ static void* timer_thread_start(void*);
 
 int timer_create(clockid_t clock_id, struct sigevent* evp, timer_t* timer_id) {
   // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
-  if (__likely(evp == NULL || evp->sigev_notify != SIGEV_THREAD)) {
+  if (__predict_true(evp == NULL || evp->sigev_notify != SIGEV_THREAD)) {
     return __timer_create(clock_id, evp, timer_id);
   }
 
@@ -360,7 +357,7 @@ int timer_create(clockid_t clock_id, struct sigevent* evp, timer_t* timer_id) {
 int
 timer_delete( timer_t  id )
 {
-    if ( __likely(!TIMER_ID_IS_WRAPPED(id)) )
+    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) )
         return __timer_delete( id );
     else
     {
@@ -422,7 +419,7 @@ timer_gettime( timer_t  id, struct itimerspec*  ospec )
         return -1;
     }
 
-    if ( __likely(!TIMER_ID_IS_WRAPPED(id)) ) {
+    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
         return __timer_gettime( id, ospec );
     } else {
         thr_timer_t*  timer = thr_timer_from_id(id);
@@ -450,7 +447,7 @@ timer_settime( timer_t                   id,
         return -1;
     }
 
-    if ( __likely(!TIMER_ID_IS_WRAPPED(id)) ) {
+    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
         return __timer_settime( id, flags, spec, ospec );
     } else {
         thr_timer_t*        timer = thr_timer_from_id(id);
@@ -494,7 +491,7 @@ timer_settime( timer_t                   id,
 int
 timer_getoverrun(timer_t  id)
 {
-    if ( __likely(!TIMER_ID_IS_WRAPPED(id)) ) {
+    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
         return __timer_getoverrun( id );
     } else {
         thr_timer_t*  timer = thr_timer_from_id(id);

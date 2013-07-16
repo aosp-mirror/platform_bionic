@@ -56,19 +56,6 @@ int  __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct time
     return __futex_syscall4(ftx, pshared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, val, timeout);
 }
 
-#define  __likely(cond)    __builtin_expect(!!(cond), 1)
-#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
-
-void*
-__get_stack_base(int  *p_stack_size)
-{
-    pthread_internal_t*  thread = __get_thread();
-
-    *p_stack_size = thread->attr.stack_size;
-    return thread->attr.stack_base;
-}
-
-
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation
  */
@@ -399,7 +386,7 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
     if (mutex == NULL)
         return EINVAL;
 
-    if (__likely(attr == NULL)) {
+    if (__predict_true(attr == NULL)) {
         mutex->value = MUTEX_TYPE_BITS_NORMAL;
         return 0;
     }
@@ -565,7 +552,7 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
     for (;;) {
         /* increment counter, overflow was already checked */
         int newval = mvalue + MUTEX_COUNTER_BITS_ONE;
-        if (__likely(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
+        if (__predict_true(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
             /* mutex is still locked, not need for a memory barrier */
             return 0;
         }
@@ -582,7 +569,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, shared;
 
-    if (__unlikely(mutex == NULL))
+    if (__predict_false(mutex == NULL))
         return EINVAL;
 
     mvalue = mutex->value;
@@ -590,7 +577,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle normal case first */
-    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
+    if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
         _normal_lock(mutex, shared);
         return 0;
     }
@@ -631,7 +618,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
              *        implement it to get rid of the explicit memory
              *        barrier below.
              */
-            if (__unlikely(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
+            if (__predict_false(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
                 mvalue = mutex->value;
                 continue;
             }
@@ -643,7 +630,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
          * we will change it to 2 to indicate contention. */
         if (MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(mvalue)) {
             newval = MUTEX_STATE_BITS_FLIP_CONTENTION(mvalue); /* locked state 1 => state 2 */
-            if (__unlikely(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
+            if (__predict_false(__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0)) {
                 mvalue = mutex->value;
                 continue;
             }
@@ -676,7 +663,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, shared;
 
-    if (__unlikely(mutex == NULL))
+    if (__predict_false(mutex == NULL))
         return EINVAL;
 
     mvalue = mutex->value;
@@ -684,7 +671,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if (__likely(mtype == MUTEX_TYPE_BITS_NORMAL)) {
+    if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
         _normal_unlock(mutex, shared);
         return 0;
     }
@@ -701,7 +688,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     if (!MUTEX_COUNTER_BITS_IS_ZERO(mvalue)) {
         for (;;) {
             int newval = mvalue - MUTEX_COUNTER_BITS_ONE;
-            if (__likely(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
+            if (__predict_true(__bionic_cmpxchg(mvalue, newval, &mutex->value) == 0)) {
                 /* success: we still own the mutex, so no memory barrier */
                 return 0;
             }
@@ -743,7 +730,7 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
 {
     int mvalue, mtype, tid, shared;
 
-    if (__unlikely(mutex == NULL))
+    if (__predict_false(mutex == NULL))
         return EINVAL;
 
     mvalue = mutex->value;
@@ -751,7 +738,7 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) )
+    if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) )
     {
         if (__bionic_cmpxchg(shared|MUTEX_STATE_BITS_UNLOCKED,
                              shared|MUTEX_STATE_BITS_LOCKED_UNCONTENDED,
@@ -775,7 +762,7 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     mtype |= shared | MUTEX_STATE_BITS_UNLOCKED;
     mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
 
-    if (__likely(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
+    if (__predict_true(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
         ANDROID_MEMBAR_FULL();
         return 0;
     }
@@ -841,7 +828,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
 
-    if (__unlikely(mutex == NULL))
+    if (__predict_false(mutex == NULL))
         return EINVAL;
 
     mvalue = mutex->value;
@@ -849,7 +836,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     shared = (mvalue & MUTEX_SHARED_MASK);
 
     /* Handle common case first */
-    if ( __likely(mtype == MUTEX_TYPE_BITS_NORMAL) )
+    if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) )
     {
         const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
         const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
@@ -886,7 +873,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     /* first try a quick lock */
     if (mvalue == mtype) {
         mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
-        if (__likely(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
+        if (__predict_true(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
             ANDROID_MEMBAR_FULL();
             return 0;
         }
@@ -1063,7 +1050,7 @@ __pthread_cond_pulse(pthread_cond_t *cond, int  counter)
 {
     long flags;
 
-    if (__unlikely(cond == NULL))
+    if (__predict_false(cond == NULL))
         return EINVAL;
 
     flags = (cond->value & ~COND_COUNTER_MASK);
@@ -1204,7 +1191,7 @@ int pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
     * stores performed by the initialization function are observable on
     * this CPU after we exit.
     */
-    if (__likely((*ocptr & ONCE_COMPLETED) != 0)) {
+    if (__predict_true((*ocptr & ONCE_COMPLETED) != 0)) {
         ANDROID_MEMBAR_FULL();
         return 0;
     }
