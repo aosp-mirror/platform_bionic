@@ -32,33 +32,33 @@
 
 // int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
 ENTRY(__pthread_clone)
-    # Copy the args onto the new stack.
+    # Push 'fn' and 'arg' onto 'child_stack'.
     stmdb   r1!, {r0, r3}
 
     # The sys_clone system call only takes two arguments: 'flags' and 'child_stack'.
     # 'child_stack' is already in r1, but we need to move 'flags' into position.
     mov     r0, r2
-    stmfd   sp!, {r4, r7}
 
     # System call.
+    mov     ip, r7
     ldr     r7, =__NR_clone
     swi     #0
+
+    # Child?
     movs    r0, r0
     beq     1f
 
-    # In parent, reload saved registers then either return or set errno.
-    ldmfd   sp!, {r4, r7}
+    # Parent.
+    mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
 
-1:  # The child.
-    # pick the function arg and call address off the stack and jump
-    # to the C __thread_entry function which does some setup and then
-    # calls the thread's start function
+1:  # Child.
+    # Pop 'fn' and 'arg' back off the stack and call __thread_entry.
     pop     {r0, r1}
-    # __thread_entry needs the TLS pointer
+    # __thread_entry also needs our stack pointer.
     mov     r2, sp
     b       __thread_entry
 END(__pthread_clone)
