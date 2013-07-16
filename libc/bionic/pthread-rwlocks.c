@@ -53,9 +53,6 @@
  *
  */
 
-#define  __likely(cond)    __builtin_expect(!!(cond), 1)
-#define  __unlikely(cond)  __builtin_expect(!!(cond), 0)
-
 #define  RWLOCKATTR_DEFAULT     0
 #define  RWLOCKATTR_SHARED_MASK 0x0010
 
@@ -212,7 +209,7 @@ int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock)
         return EINVAL;
 
     pthread_mutex_lock(&rwlock->lock);
-    if (__unlikely(!read_precondition(rwlock, __get_thread()->tid)))
+    if (__predict_false(!read_precondition(rwlock, __get_thread()->tid)))
         ret = EBUSY;
     else
         rwlock->numLocks ++;
@@ -230,7 +227,7 @@ int pthread_rwlock_timedrdlock(pthread_rwlock_t *rwlock, const struct timespec *
 
     pthread_mutex_lock(&rwlock->lock);
     int tid = __get_thread()->tid;
-    if (__unlikely(!read_precondition(rwlock, tid))) {
+    if (__predict_false(!read_precondition(rwlock, tid))) {
         rwlock->pendingReaders += 1;
         do {
             ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
@@ -260,7 +257,7 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock)
 
     pthread_mutex_lock(&rwlock->lock);
     int tid = __get_thread()->tid;
-    if (__unlikely(!write_precondition(rwlock, tid))) {
+    if (__predict_false(!write_precondition(rwlock, tid))) {
         ret = EBUSY;
     } else {
         rwlock->numLocks ++;
@@ -279,7 +276,7 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *
 
     pthread_mutex_lock(&rwlock->lock);
     int tid = __get_thread()->tid;
-    if (__unlikely(!write_precondition(rwlock, tid))) {
+    if (__predict_false(!write_precondition(rwlock, tid))) {
         /* If we can't read yet, wait until the rwlock is unlocked
          * and try again. Increment pendingReaders to get the
          * cond broadcast when that happens.
