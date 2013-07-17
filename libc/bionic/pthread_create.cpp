@@ -62,15 +62,6 @@ void  __init_tls(pthread_internal_t* thread) {
     thread->tls[i] = NULL;
   }
 
-  // Create and set an alternate signal stack.
-  stack_t ss;
-  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-  if (ss.ss_sp != MAP_FAILED) {
-    ss.ss_size = SIGSTKSZ;
-    ss.ss_flags = 0;
-    sigaltstack(&ss, NULL);
-  }
-
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
@@ -80,9 +71,7 @@ void  __init_tls(pthread_internal_t* thread) {
   __set_tls(thread->tls);
 }
 
-// This trampoline is called from the assembly _pthread_clone function.
-// Our 'tls' and __pthread_clone's 'child_stack' are one and the same, just growing in
-// opposite directions.
+// This trampoline is called from the assembly _pthread_clone() function.
 extern "C" void __thread_entry(void* (*func)(void*), void* arg, void** tls) {
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.
@@ -198,12 +187,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
   }
 
-  // Make room for the TLS area.
-  // The child stack is the same address, just growing in the opposite direction.
-  // At offsets >= 0, we have the TLS slots.
-  // At offsets < 0, we have the child stack.
+  // Make room for TLS.
   void** tls = (void**)((uint8_t*)(thread->attr.stack_base) + thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
-  void* child_stack = tls;
 
   // Create a mutex for the thread in TLS_SLOT_SELF to wait on once it starts so we can keep
   // it from doing anything until after we notify the debugger about it
@@ -219,7 +204,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM;
 
-  int tid = __pthread_clone(start_routine, child_stack, flags, arg);
+  int tid = __pthread_clone(start_routine, tls, flags, arg);
   if (tid < 0) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
