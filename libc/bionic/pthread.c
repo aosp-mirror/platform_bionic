@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <sys/atomics.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #include "bionic_atomic_inline.h"
@@ -101,6 +102,18 @@ void pthread_exit(void * retval)
     // a TLS key, the corresponding value will be set to NULL in this thread's TLS
     // space (see pthread_key_delete)
     pthread_key_clean_all();
+
+    if (thread->alternate_signal_stack != NULL) {
+      // Tell the kernel to stop using the alternate signal stack.
+      stack_t ss;
+      ss.ss_sp = NULL;
+      ss.ss_flags = SS_DISABLE;
+      sigaltstack(&ss, NULL);
+
+      // Free it.
+      munmap(thread->alternate_signal_stack, SIGSTKSZ);
+      thread->alternate_signal_stack = NULL;
+    }
 
     // if the thread is detached, destroy the pthread_internal_t
     // otherwise, keep it in memory and signal any joiners.
