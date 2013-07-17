@@ -69,7 +69,6 @@ void  __init_tls(pthread_internal_t* thread) {
     ss.ss_size = SIGSTKSZ;
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
-    thread->alternate_signal_stack = ss.ss_sp;
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
