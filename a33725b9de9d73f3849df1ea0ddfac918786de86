@@ -16,6 +16,24 @@
       "revId": "a33725b9de9d73f3849df1ea0ddfac918786de86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53882be2_61e7b65f",
+        "filename": "libc/arch-mips/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1016103
+      },
+      "writtenOn": "2013-07-17T05:44:37Z",
+      "side": 1,
+      "message": "Yes your right; CRT_LEGACY_WORKAROUND is only defined \nin libc/Android.mk for arm and we don\u0027t need it for the MIPS arch.\n \nLet\u0027s see if everyone would like to see it removed in this submission.\nI don\u0027t see a problem removing it.\n\n-piet",
+      "parentUuid": "f3283f83_2e50a7d8",
+      "revId": "a33725b9de9d73f3849df1ea0ddfac918786de86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
