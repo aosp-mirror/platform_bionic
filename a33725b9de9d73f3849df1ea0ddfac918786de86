@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3283f83_2e50a7d8",
+        "filename": "libc/arch-mips/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-07-17T03:52:29Z",
+      "side": 1,
+      "message": "enh: I thought we only needed this workaround on arm, not mips or x86. Do we really need this anymore?",
+      "revId": "a33725b9de9d73f3849df1ea0ddfac918786de86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
