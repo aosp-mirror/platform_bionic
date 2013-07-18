@@ -569,23 +569,17 @@ libc_crt_target_cflags += \
 # static C++ destructors are properly called on dlclose().
 #
 ifeq ($(TARGET_ARCH),arm)
-    libc_crtbegin_extension := c
     libc_crt_target_so_cflags :=
 endif
 ifeq ($(TARGET_ARCH),mips)
-    libc_crtbegin_extension := c
     libc_crt_target_so_cflags := -fPIC
 endif
 ifeq ($(TARGET_ARCH),x86)
-    libc_crtbegin_extension := c
     libc_crt_target_so_cflags := -fPIC
 endif
-ifeq ($(libc_crtbegin_extension),)
-    $(error $(TARGET_ARCH) not supported)
-endif
 libc_crt_target_so_cflags += $(libc_crt_target_cflags)
-libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.$(libc_crtbegin_extension)
-libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.$(libc_crtbegin_extension)
+libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
+libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.c
 
 # See the comment in crtbrand.c for the reason why we need to generate
 # crtbrand.s before generating crtbrand.o.
