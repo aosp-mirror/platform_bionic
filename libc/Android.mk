@@ -25,7 +25,6 @@ libc_common_src_files := \
 	stdio/ftell.c \
 	stdio/fvwrite.c \
 	stdio/gets.c \
-	stdio/mktemp.c \
 	stdio/printf.c \
 	stdio/refill.c \
 	stdio/rewind.c \
@@ -270,6 +269,7 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/getc.c \
     upstream-freebsd/lib/libc/stdio/getchar.c \
     upstream-freebsd/lib/libc/stdio/makebuf.c \
+    upstream-freebsd/lib/libc/stdio/mktemp.c \
     upstream-freebsd/lib/libc/stdio/putc.c \
     upstream-freebsd/lib/libc/stdio/putchar.c \
     upstream-freebsd/lib/libc/stdio/puts.c \
