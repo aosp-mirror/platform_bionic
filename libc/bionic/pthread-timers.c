@@ -33,6 +33,12 @@
 #include <stdio.h>
 #include <string.h>
 
+extern int __pthread_cond_timedwait(pthread_cond_t*, pthread_mutex_t*, const struct timespec*,
+                                    clockid_t);
+
+extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*,
+                                             const struct timespec*);
+
 // Normal (i.e. non-SIGEV_THREAD) timers are created directly by the kernel
 // and are passed as is to/from the caller.
 //
@@ -277,6 +283,49 @@ static __inline__ void
 thr_timer_unlock( thr_timer_t*  t )
 {
     pthread_mutex_unlock(&t->mutex);
+}
+
+
+static __inline__ void timespec_add(struct timespec* a, const struct timespec* b) {
+  a->tv_sec  += b->tv_sec;
+  a->tv_nsec += b->tv_nsec;
+  if (a->tv_nsec >= 1000000000) {
+    a->tv_nsec -= 1000000000;
+    a->tv_sec  += 1;
+  }
+}
+
+static __inline__ void timespec_sub(struct timespec* a, const struct timespec* b) {
+  a->tv_sec  -= b->tv_sec;
+  a->tv_nsec -= b->tv_nsec;
+  if (a->tv_nsec < 0) {
+    a->tv_nsec += 1000000000;
+    a->tv_sec  -= 1;
+  }
+}
+
+static __inline__ void timespec_zero(struct timespec* a) {
+  a->tv_sec = a->tv_nsec = 0;
+}
+
+static __inline__ int timespec_is_zero(const struct timespec* a) {
+  return (a->tv_sec == 0 && a->tv_nsec == 0);
+}
+
+static __inline__ int timespec_cmp(const struct timespec* a, const struct timespec* b) {
+  if (a->tv_sec  < b->tv_sec)  return -1;
+  if (a->tv_sec  > b->tv_sec)  return +1;
+  if (a->tv_nsec < b->tv_nsec) return -1;
+  if (a->tv_nsec > b->tv_nsec) return +1;
+  return 0;
+}
+
+static __inline__ int timespec_cmp0(const struct timespec* a) {
+  if (a->tv_sec < 0) return -1;
+  if (a->tv_sec > 0) return +1;
+  if (a->tv_nsec < 0) return -1;
+  if (a->tv_nsec > 0) return +1;
+  return 0;
 }
 
 /** POSIX TIMERS APIs */
