@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53210b30_792607c7",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001421
+      },
+      "writtenOn": "2013-07-24T09:41:37Z",
+      "side": 1,
+      "message": "void* result \u003d __mmap2(addr, size, prot, flags, fd, (size_t)offset \u003e\u003e MMAP2_SHIFT);",
+      "revId": "107cdd406b8e404af4d552498076cfe2dfe5efbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
