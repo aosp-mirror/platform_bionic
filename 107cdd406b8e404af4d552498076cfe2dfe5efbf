@@ -52,6 +52,24 @@
       "revId": "107cdd406b8e404af4d552498076cfe2dfe5efbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "934d4312_2f2831f8",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2013-07-25T01:16:32Z",
+      "side": 1,
+      "message": "using long for offset seems wrong, it will sign extend when shifting right.",
+      "parentUuid": "53210b30_5fac43ce",
+      "revId": "107cdd406b8e404af4d552498076cfe2dfe5efbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
