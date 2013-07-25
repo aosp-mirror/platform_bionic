@@ -34,6 +34,24 @@
       "revId": "107cdd406b8e404af4d552498076cfe2dfe5efbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53210b30_5fac43ce",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001421
+      },
+      "writtenOn": "2013-07-25T01:13:12Z",
+      "side": 1,
+      "message": "in my CyanogenMod style project, i met /system/bin/rmt_storage logged an error when calling mmap that \"Mmap on 0xXXX failed (22) EINVAL\" .  The rmt_storage was built with mmap.c (not this new mmap.cpp) .   After i applied this change, rmt_storage works as normal.  The last parameter rmt_storage passed to mmap is \"off_t\" type, value is 0x8FB00000 \n\nso, i think by adding (size_t) we can get better backwards compatibility here.  not 100% sure",
+      "parentUuid": "934d4312_614732c7",
+      "revId": "107cdd406b8e404af4d552498076cfe2dfe5efbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
