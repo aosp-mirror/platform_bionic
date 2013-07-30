@@ -76,7 +76,12 @@ enum {
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
-#define BIONIC_TLS_SLOTS 128
+/*
+ * This is PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
+ * rounded up to maintain stack alignment.
+ */
+#define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
+#define BIONIC_TLS_SLOTS BIONIC_ALIGN(128 + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
 
 /* syscall only, do not call directly */
 extern int __set_tls(void* ptr);
