@@ -2310,6 +2310,12 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 	    (dots && !trailing_dot && (res->options & RES_DNSRCH))) {
 		int done = 0;
 
+		/* Unfortunately we need to set stuff up before
+		 * the domain stuff is tried.  Will have a better
+		 * fix after thread pools are used.
+		 */
+		_resolv_populate_res_for_iface(res);
+
 		for (domain = (const char * const *)res->dnsrch;
 		   *domain && !done;
 		   domain++) {
