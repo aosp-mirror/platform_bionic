@@ -28,6 +28,7 @@
 
 #include <machine/cpu-features.h>
 #include <machine/asm.h>
+#include "libc_events.h"
 
 /*
  * This code assumes it is running on a processor that supports all arm v7
@@ -37,9 +38,28 @@
 
     .fpu    neon
 
+ENTRY(__memset_chk)
+        cmp         r2, r3
+        bls         done
+
+        ldr         r0, error_message
+        ldr         r1, error_code
+1:
+        add         r0, pc
+        bl          __fortify_chk_fail
+error_code:
+        .word       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW
+error_message:
+        .word       error_string-(1b+8)
+
+END(__memset_chk)
+
 ENTRY(bzero)
         mov     r2, r1
         mov     r1, #0
+
+done:
+        // Fall through to memset...
 END(bzero)
 
 /* memset() returns its first argument.  */
@@ -79,3 +99,7 @@ ENTRY(memset)
         ldmfd       sp!, {r0}
         bx          lr
 END(memset)
+
+        .data
+error_string:
+        .string     "memset buffer overflow"

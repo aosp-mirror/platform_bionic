@@ -30,6 +30,7 @@
 
 #include <machine/cpu-features.h>
 #include <machine/asm.h>
+#include "libc_events.h"
 
 /*
  * This code assumes it is running on a processor that supports all arm v7
@@ -37,10 +38,17 @@
  * cache line.
  */
 
+#define CACHE_LINE_SIZE     32
+
         .text
         .fpu    neon
 
-#define CACHE_LINE_SIZE     32
+ENTRY(__memcpy_chk)
+        cmp         r2, r3
+        bgt         fortify_check_failed
+
+        // Fall through to memcpy...
+END(__memcpy_chk)
 
 ENTRY(memcpy)
         .save       {r0, lr}
@@ -143,4 +151,20 @@ ENTRY(memcpy)
 
         ldmfd       sp!, {r0, lr}
         bx          lr
+
+        // Only reached when the __memcpy_chk check fails.
+fortify_check_failed:
+        ldr     r0, error_message
+        ldr     r1, error_code
+1:
+        add     r0, pc
+        bl      __fortify_chk_fail
+error_code:
+        .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
+error_message:
+        .word   error_string-(1b+8)
 END(memcpy)
+
+        .data
+error_string:
+        .string     "memcpy buffer overflow"

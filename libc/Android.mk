@@ -62,7 +62,6 @@ libc_common_src_files := \
 	string/strcspn.c \
 	string/strdup.c \
 	string/strpbrk.c \
-	string/__strrchr_chk.c \
 	string/strsep.c \
 	string/strspn.c \
 	string/strstr.c \
@@ -181,6 +180,25 @@ libc_common_src_files := \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c \
 
+# Fortify implementations of libc functions.
+libc_common_src_files += \
+    bionic/__fgets_chk.cpp \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memmove_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/__strcat_chk.cpp \
+    bionic/__strchr_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/__strlcat_chk.cpp \
+    bionic/__strlcpy_chk.cpp \
+    bionic/__strlen_chk.cpp \
+    bionic/__strncat_chk.cpp \
+    bionic/__strncpy_chk.cpp \
+    bionic/__strrchr_chk.cpp \
+    bionic/__umask_chk.cpp \
+    bionic/__vsnprintf_chk.cpp \
+    bionic/__vsprintf_chk.cpp \
+
 libc_bionic_src_files := \
     bionic/abort.cpp \
     bionic/assert.cpp \
@@ -189,16 +207,12 @@ libc_bionic_src_files := \
     bionic/__errno.c \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
-    bionic/__fgets_chk.cpp \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memmove_chk.cpp \
-    bionic/__memset_chk.cpp \
     bionic/mmap.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_detach.cpp \
@@ -221,24 +235,13 @@ libc_bionic_src_files := \
     bionic/signalfd.cpp \
     bionic/sigwait.cpp \
     bionic/statvfs.cpp \
-    bionic/__strcat_chk.cpp \
-    bionic/__strchr_chk.cpp \
-    bionic/__strcpy_chk.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
-    bionic/__strlcat_chk.cpp \
-    bionic/__strlcpy_chk.cpp \
-    bionic/__strlen_chk.cpp \
-    bionic/__strncat_chk.cpp \
-    bionic/__strncpy_chk.cpp \
     bionic/strsignal.cpp \
     bionic/stubs.cpp \
     bionic/sysconf.cpp \
     bionic/tdestroy.cpp \
     bionic/tmpfile.cpp \
-    bionic/__umask_chk.cpp \
-    bionic/__vsnprintf_chk.cpp \
-    bionic/__vsprintf_chk.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
 
