@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b83224ef_407bbe32",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-08-02T22:43:33Z",
+      "side": 1,
+      "message": "Yeah.",
+      "parentUuid": "b83224ef_40061ee7",
+      "revId": "1313af67d35971c63eae2230689425e42196275b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b83224ef_80cac660",
         "filename": "libc/arch-arm/bionic/libgcc_compat.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-02T22:38:26Z",
       "side": 1,
       "message": "do we need a corresponding comment for __aeabi_lasr?\n\nis there somewhere we can get a current list from?",
+      "revId": "1313af67d35971c63eae2230689425e42196275b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b83224ef_008c9630",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-08-02T22:43:33Z",
+      "side": 1,
+      "message": "Yes and now I need to rebase my CL...\n\nI think in the extreme case all __aeabi_xxx functions can be added here, but we can always refresh the list lazily when we see dynamic linker errors due to compiler changes.",
+      "parentUuid": "b83224ef_80cac660",
       "revId": "1313af67d35971c63eae2230689425e42196275b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
