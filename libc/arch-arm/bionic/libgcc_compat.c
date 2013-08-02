@@ -30,8 +30,8 @@
  * dynamic linker to copy their definition into the final libc.so binary.
  *
  * They are required to ensure backwards binary compatibility with
- * Android 1.5, 1.6 and even 3.0  system images. Some applications built
- * using the NDK require them to be here.
+ * libc.so provided by the platform and binaries built with the NDK or
+ * different versions/configurations of toolchains.
  *
  * Now, for a more elaborate description of the issue:
  *
@@ -48,7 +48,9 @@
  *         gcc <options> -o libfoo.so  foo.a libgcc.a -lc -lm
  *
  * This ensures that any helper function needed by the code in foo.a is copied
- * into the final libfoo.so. Unfortunately, the Android build system has been
+ * into the final libfoo.so. However, doing so will link a bunch of other __cxa
+ * functions from libgcc.a into each .so and executable, causing 4k+ increase
+ * in every binary. Therefore the Android platform build system has been
  * using this instead:
  *
  *         gcc <options> -o libfoo.so foo.a -lc -lm libgcc.a
@@ -58,9 +60,10 @@
  * into libfoo.so. Instead, a symbol import definition will be added to it
  * so libfoo.so can directly call the one in libc.so at runtime.
  *
- * When changing toolchains for 2.0, the set of helper functions copied to
- * libc.so changed, which resulted in some native shared libraries generated
- * with the NDK to fail to load properly.
+ * When refreshing toolchains for new versions or using different architecture
+ * flags, the set of helper functions copied to libc.so may change, which
+ * resulted in some native shared libraries generated with the NDK or prebuilts
+ * from vendors to fail to load properly.
  *
  * The NDK has been fixed after 1.6_r1 to use the correct link command, so
  * any native shared library generated with it should now be safe from that
@@ -72,6 +75,11 @@
  * list of requirements. Technically, this is due to mis-linked NDK libraries
  * but it is easier to add a single function here than asking several app
  * developers to fix their build.
+ *
+ * The __aeabi_idiv function is added to the list since cortex-a15 supports
+ * HW idiv instructions so the system libc.so doesn't pull in the reference to
+ * __aeabi_idiv but legacy libraries built against cortex-a9 targets still need
+ * it.
  *
  * Final note: some of the functions below should really be in libm.so to
  *             completely reflect the state of 1.5/1.6 system images. However,
