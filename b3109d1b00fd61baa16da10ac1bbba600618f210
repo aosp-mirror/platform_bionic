@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "587128c6_59b94312",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1867,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2013-08-03T15:11:30Z",
+      "side": 1,
+      "message": "just sticking with the pattern of the file..",
+      "parentUuid": "b83224ef_26dfaa53",
+      "revId": "b3109d1b00fd61baa16da10ac1bbba600618f210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b83224ef_a6a39adb",
         "filename": "libc/netbsd/net/getaddrinfo.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-02T23:44:03Z",
       "side": 1,
       "message": "since the only caller negates the result, would this be clearer as something like _is_default_interface?",
+      "revId": "b3109d1b00fd61baa16da10ac1bbba600618f210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "587128c6_79be87fd",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1877,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2013-08-03T15:11:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b83224ef_a6a39adb",
       "revId": "b3109d1b00fd61baa16da10ac1bbba600618f210",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
