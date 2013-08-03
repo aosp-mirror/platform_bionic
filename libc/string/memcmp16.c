@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011, 2012, 2013 Intel Corporation
+Copyright (c) 2013 Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,8 +28,18 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define MEMCMP  wmemcmp
+#include <stddef.h>
 
-#define USE_WCHAR
-#define USE_AS_WMEMCMP 1
-#include "ssse3-memcmp-atom.S"
+/* Unoptimised version of __memcmp16 */
+int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n)
+{
+  size_t i;
+
+  for (i = 0; i < n; i++) {
+    if (*ptr1 != *ptr2)
+      return *ptr1 - *ptr2;
+    ptr1++;
+    ptr2++;
+  }
+  return 0;
+}
