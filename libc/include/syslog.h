@@ -98,7 +98,7 @@ struct syslog_data {
 
 #define SYSLOG_DATA_INIT {-1, 0, 0, 0, (const char *)0, LOG_USER, 0xff}
 
-#define _PATH_LOG  "/dev/kmsg"
+#define _PATH_LOG  "/dev/syslog"
 
 extern void	closelog(void);
 extern void	openlog(const char *, int, int);
