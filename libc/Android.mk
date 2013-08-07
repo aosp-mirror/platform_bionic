@@ -104,6 +104,7 @@ libc_common_src_files := \
 	bionic/md5.c \
 	bionic/memmem.c \
 	bionic/memswap.c \
+	bionic/name_mem.c \
 	bionic/openat.c \
 	bionic/open.c \
 	bionic/pathconf.c \
