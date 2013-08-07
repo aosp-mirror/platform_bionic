@@ -31,6 +31,8 @@ _LIBC_ARCH_DYNAMIC_SRC_FILES := \
 _LIBC_FORTIFY_FILES_TO_REMOVE := \
     bionic/__memcpy_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/__strcat_chk.cpp \
 
 libc_common_src_files := \
     $(filter-out $(_LIBC_FORTIFY_FILES_TO_REMOVE),$(libc_common_src_files))
