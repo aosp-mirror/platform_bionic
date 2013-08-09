@@ -190,6 +190,7 @@ libc_bionic_src_files := \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
     bionic/__fgets_chk.cpp \
+    bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/libc_init_common.cpp \
