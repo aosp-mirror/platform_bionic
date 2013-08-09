@@ -168,7 +168,8 @@ extern int renameat(int olddirfd, const char *oldpath, int newdirfd, const char 
 
 # define UTIME_NOW      ((1l << 30) - 1l)
 # define UTIME_OMIT     ((1l << 30) - 2l)
-extern int utimensat (int fd, const char *path, const struct timespec times[2], int flags);
+extern int utimensat(int fd, const char *path, const struct timespec times[2], int flags);
+extern int futimens(int fd, const struct timespec times[2]);
 
 __END_DECLS
 
