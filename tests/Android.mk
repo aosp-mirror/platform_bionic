@@ -80,6 +80,7 @@ test_src_files = \
     string_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
+    sys_stat_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
     unistd_test.cpp \
