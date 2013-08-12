@@ -287,7 +287,12 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/tempnam.c \
     upstream-freebsd/lib/libc/stdio/tmpnam.c \
     upstream-freebsd/lib/libc/stdio/wsetup.c \
+    upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
+    upstream-freebsd/lib/libc/stdlib/imaxabs.c \
+    upstream-freebsd/lib/libc/stdlib/imaxdiv.c \
+    upstream-freebsd/lib/libc/stdlib/labs.c \
+    upstream-freebsd/lib/libc/stdlib/llabs.c \
     upstream-freebsd/lib/libc/stdlib/qsort.c \
     upstream-freebsd/lib/libc/stdlib/realpath.c \
     upstream-freebsd/lib/libc/string/wcpcpy.c \
