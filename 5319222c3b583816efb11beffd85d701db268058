@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18697074_373c0449",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2013-08-13T19:46:04Z",
+      "side": 1,
+      "message": "This is not necessary: the order you assign the PRIVATE_ variables doesn\u0027t affect the order the flags appear in the linker command line.",
+      "revId": "5319222c3b583816efb11beffd85d701db268058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18697074_3715e4b2",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2013-08-13T19:46:04Z",
+      "side": 1,
+      "message": "The order of the flags passed to the linker is defined in transform-o-to-static-executable, which you already changed.",
+      "revId": "5319222c3b583816efb11beffd85d701db268058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
