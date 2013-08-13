@@ -42,14 +42,14 @@
 
 #include <sys/cdefs.h>
 
-#define	_U	0x01
-#define	_L	0x02
-#define	_N	0x04
-#define	_S	0x08
-#define	_P	0x10
-#define	_C	0x20
-#define	_X	0x40
-#define	_B	0x80
+#define	_CTYPE_U	0x01
+#define	_CTYPE_L	0x02
+#define	_CTYPE_N	0x04
+#define	_CTYPE_S	0x08
+#define	_CTYPE_P	0x10
+#define	_CTYPE_C	0x20
+#define	_CTYPE_X	0x40
+#define	_CTYPE_B	0x80
 
 __BEGIN_DECLS
 
@@ -101,57 +101,57 @@ int	_toupper(int);
 
 __CTYPE_INLINE int isalnum(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L|_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_U|_CTYPE_L|_CTYPE_N)));
 }
 
 __CTYPE_INLINE int isalpha(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_U|_CTYPE_L)));
 }
 
 __CTYPE_INLINE int iscntrl(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _C));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_C));
 }
 
 __CTYPE_INLINE int isdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _N));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_N));
 }
 
 __CTYPE_INLINE int isgraph(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_N)));
 }
 
 __CTYPE_INLINE int islower(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _L));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_L));
 }
 
 __CTYPE_INLINE int isprint(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_N|_B)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_N|_CTYPE_B)));
 }
 
 __CTYPE_INLINE int ispunct(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _P));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_P));
 }
 
 __CTYPE_INLINE int isspace(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _S));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_S));
 }
 
 __CTYPE_INLINE int isupper(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _U));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_U));
 }
 
 __CTYPE_INLINE int isxdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_N|_X)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_N|_CTYPE_X)));
 }
 
 __CTYPE_INLINE int tolower(int c)
