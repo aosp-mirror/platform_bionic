@@ -38,8 +38,14 @@
     .fpu    neon
 
 ENTRY(__memset_chk)
+        .cfi_startproc
         cmp         r2, r3
-        bls         done
+        bls         .L_done
+
+        // Preserve lr for backtrace.
+        push        {lr}
+        .cfi_def_cfa_offset 4
+        .cfi_rel_offset lr, 0
 
         ldr         r0, error_message
         ldr         r1, error_code
@@ -51,24 +57,29 @@ error_code:
 error_message:
         .word       error_string-(1b+8)
 
+        .cfi_endproc
 END(__memset_chk)
 
 ENTRY(bzero)
+        .cfi_startproc
         mov     r2, r1
         mov     r1, #0
 
-done:
+.L_done:
         // Fall through to memset...
+        .cfi_endproc
 END(bzero)
 
 /* memset() returns its first argument.  */
 ENTRY(memset)
+        .cfi_startproc
         # The neon memset only wins for less than 132.
         cmp         r2, #132
         bhi         11f
 
-        .save       {r0}
         stmfd       sp!, {r0}
+        .cfi_def_cfa_offset 4
+        .cfi_rel_offset r0, 0
 
         vdup.8      q0, r1
 
@@ -106,8 +117,15 @@ ENTRY(memset)
          * offset = (4-(src&3))&3 = -src & 3
          */
 
-        .save       {r0, r4-r7, lr}
         stmfd       sp!, {r0, r4-r7, lr}
+        .cfi_def_cfa_offset 24
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset r4, 4
+        .cfi_rel_offset r5, 8
+        .cfi_rel_offset r6, 12
+        .cfi_rel_offset r7, 16
+        .cfi_rel_offset lr, 20
+
         rsb         r3, r0, #0
         ands        r3, r3, #3
         cmp         r3, r2
@@ -169,6 +187,7 @@ ENTRY(memset)
         strcsb      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, lr}
         bx          lr
+        .cfi_endproc
 END(memset)
 
         .data
