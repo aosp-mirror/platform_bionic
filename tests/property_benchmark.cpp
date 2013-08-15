@@ -32,10 +32,10 @@ struct LocalPropertyTestState {
     LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
         static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_";
 
-        char dir_template[] = "/data/nativetest/prop-XXXXXX";
+        char dir_template[] = "/data/local/tmp/prop-XXXXXX";
         char *dirname = mkdtemp(dir_template);
         if (!dirname) {
-            perror("making temp file for test state failed (is /data/nativetest writable?)");
+            perror("making temp file for test state failed (is /data/local/tmp writable?)");
             return;
         }
 
