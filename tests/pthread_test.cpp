@@ -278,6 +278,16 @@ TEST(pthread, pthread_detach__no_such_thread) {
   ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
 }
 
+TEST(pthread, pthread_getcpuclockid__clock_gettime) {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, SleepFn, reinterpret_cast<void*>(5)));
+
+  clockid_t c;
+  ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(c, &ts));
+}
+
 TEST(pthread, pthread_getcpuclockid__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
