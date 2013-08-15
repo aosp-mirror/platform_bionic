@@ -28,6 +28,7 @@
 
 #include <machine/cpu-features.h>
 #include <machine/asm.h>
+#include "libc_events.h"
 
         /*
          * Optimized memcpy() for ARM.
@@ -35,6 +36,13 @@
          * note that memcpy() always returns the destination pointer,
          * so we have to preserve R0.
          */
+
+ENTRY(__memcpy_chk)
+        cmp         r2, r3
+        bgt         fortify_check_failed
+
+        // Fall through to memcpy...
+END(__memcpy_chk)
 
 ENTRY(memcpy)
         /* The stack must always be 64-bits aligned to be compliant with the
@@ -377,4 +385,20 @@ copy_last_3_and_return:
         add         sp,  sp, #28
         ldmfd       sp!, {r0, r4, lr}
         bx          lr
+
+        // Only reached when the __memcpy_chk check fails.
+fortify_check_failed:
+        ldr     r0, error_message
+        ldr     r1, error_code
+1:
+        add     r0, pc
+        bl      __fortify_chk_fail
+error_code:
+        .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
+error_message:
+        .word   error_string-(1b+8)
 END(memcpy)
+
+        .data
+error_string:
+        .string     "memcpy buffer overflow"
