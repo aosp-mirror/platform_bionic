@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,60 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "libc_events.h"
+#ifndef _LIBC_EVENTS_H
+#define _LIBC_EVENTS_H
 
-/*
- * This code assumes it is running on a processor that supports all arm v7
- * instructions, that supports neon instructions, and that has a 32 byte
- * cache line.
- */
 
-        .syntax unified
-        .fpu    neon
-        .thumb
-        .thumb_func
+// This is going to be included in assembler code so only allow #define
+// values instead of defining an enum.
 
-ENTRY(__memcpy_chk)
-        .cfi_startproc
-        cmp         r2, r3
-        bgt         __memcpy_chk_fail
+#define BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW   80100
+#define BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW   80105
+#define BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW  80110
+#define BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW  80115
+#define BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW  80120
+#define BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW   80125
+#define BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW   80130
 
-        // Fall through to memcpy...
-        .cfi_endproc
-END(__memcpy_chk)
+#define BIONIC_EVENT_RESOLVER_OLD_RESPONSE    80300
+#define BIONIC_EVENT_RESOLVER_WRONG_SERVER    80305
+#define BIONIC_EVENT_RESOLVER_WRONG_QUERY     80310
 
-ENTRY(memcpy)
-        .cfi_startproc
-        pld     [r1, #0]
-        stmfd   sp!, {r0, lr}
-        .cfi_def_cfa_offset 8
-        .cfi_rel_offset r0, 0
-        .cfi_rel_offset lr, 4
-        pld     [r1, #64]
-
-        #include "memcpy_base.S"
-        .cfi_endproc
-END(memcpy)
-
-        .cfi_startproc
-__memcpy_chk_fail:
-        // Preserve lr for backtrace.
-        push    {lr}
-        .cfi_def_cfa_offset 4
-        .cfi_rel_offset lr, 0
-
-        ldr     r0, error_message
-        ldr     r1, error_code
-1:
-        add     r0, pc
-        bl      __fortify_chk_fail
-error_code:
-        .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
-error_message:
-        .word   error_string-(1b+4)
-        .cfi_endproc
-
-        .data
-error_string:
-        .string     "memcpy buffer overflow"
+#endif // _LIBC_EVENTS_H
