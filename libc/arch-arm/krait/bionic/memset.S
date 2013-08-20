@@ -44,6 +44,7 @@ ENTRY(__memset_chk)
         bls         .L_done
 
         // Preserve lr for backtrace.
+        .save       {lr}
         push        {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
@@ -74,6 +75,7 @@ END(bzero)
 /* memset() returns its first argument.  */
 ENTRY(memset)
         .cfi_startproc
+        .save       {r0}
         stmfd       sp!, {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0

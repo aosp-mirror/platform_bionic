@@ -55,6 +55,7 @@ END(__memcpy_chk)
 ENTRY(memcpy)
         .cfi_startproc
         pld     [r1, #64]
+        .save   {r0, lr}
         stmfd   sp!, {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
@@ -64,9 +65,11 @@ ENTRY(memcpy)
         .cfi_endproc
 END(memcpy)
 
+        .fnstart
         .cfi_startproc
 __memcpy_chk_fail:
         // Preserve lr for backtrace.
+        .save   {lr}
         push    {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
@@ -81,6 +84,7 @@ error_code:
 error_message:
         .word   error_string-(1b+4)
         .cfi_endproc
+        .fnend
 
         .data
 error_string:
