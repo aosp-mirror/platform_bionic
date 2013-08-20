@@ -43,11 +43,11 @@ struct dl_phdr_info {
   ElfW(Half) dlpi_phnum;
 };
 
+int dl_iterate_phdr(int (*cb)(struct dl_phdr_info*, size_t, void*), void*);
+
 #ifdef __arm__
 typedef long unsigned int* _Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount);
-#else
-int dl_iterate_phdr(int (*cb)(struct dl_phdr_info*, size_t, void*), void*);
 #endif
 
 __END_DECLS
