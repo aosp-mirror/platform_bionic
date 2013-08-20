@@ -133,7 +133,14 @@
         bx          lr
 11:
         /* Simple arm-only copy loop to handle aligned copy operations */
-        stmfd       sp!, {r4, r5, r6, r7, r8}
+        .save       {r4-r8}
+        stmfd       sp!, {r4-r8}
+        .cfi_def_cfa_offset 20
+        .cfi_rel_offset r4, 0
+        .cfi_rel_offset r5, 4
+        .cfi_rel_offset r6, 8
+        .cfi_rel_offset r7, 12
+        .cfi_rel_offset r8, 16
         pld         [r1, #(32 * 4)]
 
         /* Check alignment */
