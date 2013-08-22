@@ -2531,14 +2531,15 @@ _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
             uidiface_info->next = _res_uidiface_list.next;
             _res_uidiface_list.next = uidiface_info;
 
-            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", low, high, ifname);
+            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", uid_start, uid_end,
+                    ifname);
         } else {
             XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
             rv = -1;
             errno = EINVAL;
         }
     } else {
-        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", low, high);
+        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", uid_start, uid_end);
         rv = -1;
         errno = EINVAL;
     }
@@ -2603,19 +2604,16 @@ _resolv_get_default_iface(char* buff, size_t buffLen)
 
     char* ifname = _get_default_iface_locked(); // never null, but may be empty
 
-    // if default interface not set. Get first cache with an interface
+    // if default interface not set give up.
     if (ifname[0] == '\0') {
-        ifname = _find_any_iface_name_locked(); // may be null
+        pthread_mutex_unlock(&_res_cache_list_lock);
+        return 0;
     }
 
-    size_t len = 0;
-    // if we got the default iface or if (no-default) the find_any call gave an answer
-    if (ifname) {
-        len = strlen(ifname);
-        if (len < buffLen) {
-            strncpy(buff, ifname, len);
-            buff[len] = '\0';
-        }
+    size_t len = strlen(ifname);
+    if (len < buffLen) {
+        strncpy(buff, ifname, len);
+        buff[len] = '\0';
     } else {
         buff[0] = '\0';
     }
