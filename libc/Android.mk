@@ -718,8 +718,6 @@ LOCAL_CFLAGS := \
     -DTZDIR=\"/system/usr/share/zoneinfo\" \
     -DTM_GMTOFF=tm_gmtoff \
     -DUSG_COMPAT=1
-# tzcode currently relies on signed overflow in numerous places (http://b/10310929).
-LOCAL_CFLAGS += -fno-strict-overflow
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_tzcode
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk

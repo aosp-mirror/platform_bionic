@@ -304,6 +304,16 @@ const char *	scheck(const char * string, const char * format);
 #define TYPE_SIGNED(type) (((type) -1) < 0)
 #endif /* !defined TYPE_SIGNED */
 
+/* The minimum and maximum finite time values.  */
+static time_t const time_t_min =
+  (TYPE_SIGNED(time_t)
+   ? (time_t) -1 << (CHAR_BIT * sizeof (time_t) - 1)
+   : 0);
+static time_t const time_t_max =
+  (TYPE_SIGNED(time_t)
+   ? - (~ 0 < 0) - ((time_t) -1 << (CHAR_BIT * sizeof (time_t) - 1))
+   : -1);
+
 /*
 ** Since the definition of TYPE_INTEGRAL contains floating point numbers,
 ** it cannot be used in preprocessor directives.
