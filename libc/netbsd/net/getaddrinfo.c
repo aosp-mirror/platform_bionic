@@ -1874,10 +1874,10 @@ static bool _using_default_dns(const char *iface)
 	if (iface == NULL || *iface == '\0') return true;
 
 	if_len = _resolv_get_default_iface(buf, sizeof(buf));
-	if (if_len + 1 <= sizeof(buf)) {
-		if (strcmp(buf, iface) != 0) return false;
+	if (if_len != 0 && if_len + 1 <= sizeof(buf)) {
+		if (strcmp(buf, iface) == 0) return true;
 	}
-	return true;
+	return false;
 }
 
 /*ARGSUSED*/
