@@ -2603,19 +2603,16 @@ _resolv_get_default_iface(char* buff, size_t buffLen)
 
     char* ifname = _get_default_iface_locked(); // never null, but may be empty
 
-    // if default interface not set. Get first cache with an interface
+    // if default interface not set give up.
     if (ifname[0] == '\0') {
-        ifname = _find_any_iface_name_locked(); // may be null
+        pthread_mutex_unlock(&_res_cache_list_lock);
+        return 0;
     }
 
-    size_t len = 0;
-    // if we got the default iface or if (no-default) the find_any call gave an answer
-    if (ifname) {
-        len = strlen(ifname);
-        if (len < buffLen) {
-            strncpy(buff, ifname, len);
-            buff[len] = '\0';
-        }
+    size_t len = strlen(ifname);
+    if (len < buffLen) {
+        strncpy(buff, ifname, len);
+        buff[len] = '\0';
     } else {
         buff[0] = '\0';
     }
