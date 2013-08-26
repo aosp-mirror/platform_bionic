@@ -2531,14 +2531,15 @@ _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
             uidiface_info->next = _res_uidiface_list.next;
             _res_uidiface_list.next = uidiface_info;
 
-            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", low, high, ifname);
+            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", uid_start, uid_end,
+                    ifname);
         } else {
             XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
             rv = -1;
             errno = EINVAL;
         }
     } else {
-        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", low, high);
+        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", uid_start, uid_end);
         rv = -1;
         errno = EINVAL;
     }
