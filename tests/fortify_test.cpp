@@ -51,6 +51,19 @@ TEST(DEATHTEST, strncpy_fortified2) {
 #ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
+TEST(DEATHTEST, strncpy2_fortified2) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  foo myfoo;
+  memset(&myfoo, 0, sizeof(myfoo));
+  myfoo.one[0] = 'A'; // not null terminated string
+  ASSERT_EXIT(strncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)),
+              testing::KilledBySignal(SIGABRT), "");
+}
+#endif
+
+#ifndef __clang__
+// This test is disabled in clang because clang doesn't properly detect
+// this buffer overflow. TODO: Fix clang.
 TEST(DEATHTEST, sprintf_fortified2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
@@ -481,6 +494,14 @@ TEST(DEATHTEST, strncpy_fortified) {
   ASSERT_EXIT(strncpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(DEATHTEST, strncpy2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char dest[11];
+  char src[10];
+  memcpy(src, "0123456789", sizeof(src)); // src is not null terminated
+  ASSERT_EXIT(strncpy(dest, src, sizeof(dest)), testing::KilledBySignal(SIGABRT), "");
+}
+
 TEST(DEATHTEST, snprintf_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
@@ -656,4 +677,43 @@ TEST(TEST_NAME, strcat2) {
   ASSERT_EQ('6',  buf[7]);
   ASSERT_EQ('7',  buf[8]);
   ASSERT_EQ('\0',  buf[9]);
+}
+
+TEST(TEST_NAME, strncpy) {
+  char src[10];
+  char dst[10];
+  memcpy(src, "0123456789", sizeof(src)); // non null terminated string
+  strncpy(dst, src, sizeof(dst));
+  ASSERT_EQ('0', dst[0]);
+  ASSERT_EQ('1', dst[1]);
+  ASSERT_EQ('2', dst[2]);
+  ASSERT_EQ('3', dst[3]);
+  ASSERT_EQ('4', dst[4]);
+  ASSERT_EQ('5', dst[5]);
+  ASSERT_EQ('6', dst[6]);
+  ASSERT_EQ('7', dst[7]);
+  ASSERT_EQ('8', dst[8]);
+  ASSERT_EQ('9', dst[9]);
+}
+
+TEST(TEST_NAME, strncpy2) {
+  char src[10];
+  char dst[15];
+  memcpy(src, "012345678\0", sizeof(src));
+  strncpy(dst, src, sizeof(dst));
+  ASSERT_EQ('0',  dst[0]);
+  ASSERT_EQ('1',  dst[1]);
+  ASSERT_EQ('2',  dst[2]);
+  ASSERT_EQ('3',  dst[3]);
+  ASSERT_EQ('4',  dst[4]);
+  ASSERT_EQ('5',  dst[5]);
+  ASSERT_EQ('6',  dst[6]);
+  ASSERT_EQ('7',  dst[7]);
+  ASSERT_EQ('8',  dst[8]);
+  ASSERT_EQ('\0', dst[9]);
+  ASSERT_EQ('\0', dst[10]);
+  ASSERT_EQ('\0', dst[11]);
+  ASSERT_EQ('\0', dst[12]);
+  ASSERT_EQ('\0', dst[13]);
+  ASSERT_EQ('\0', dst[14]);
 }
