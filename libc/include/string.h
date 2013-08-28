@@ -94,8 +94,8 @@ __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     char *d = (char *) dest;
     const char *s = (const char *) src;
-    size_t s_len = __builtin_object_size(s, 0);
-    size_t d_len = __builtin_object_size(d, 0);
+    size_t s_len = __bos0(s);
+    size_t d_len = __bos0(d);
 
     if (__builtin_constant_p(copy_amount) && (copy_amount > d_len)) {
         __memcpy_dest_size_error();
@@ -110,7 +110,7 @@ void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amou
 
 __BIONIC_FORTIFY_INLINE
 void* memmove(void *dest, const void *src, size_t len) {
-    return __builtin___memmove_chk(dest, src, len, __builtin_object_size (dest, 0));
+    return __builtin___memmove_chk(dest, src, len, __bos0(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -153,7 +153,7 @@ char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
 
 __BIONIC_FORTIFY_INLINE
 void* memset(void *s, int c, size_t n) {
-    return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
+    return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
