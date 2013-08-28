@@ -119,14 +119,26 @@ char* strcpy(char* __restrict dest, const char* __restrict src) {
 }
 
 __errordecl(__strncpy_error, "strncpy called with size bigger than buffer");
+extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
-    size_t bos = __bos(dest);
-    if (__builtin_constant_p(n) && (n > bos)) {
+    size_t bos_dest = __bos(dest);
+    size_t bos_src = __bos(src);
+    if (__builtin_constant_p(n) && (n > bos_dest)) {
         __strncpy_error();
     }
-    return __builtin___strncpy_chk(dest, src, n, bos);
+
+    if (bos_src == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
+    size_t slen = __builtin_strlen(src);
+    if (__builtin_constant_p(slen)) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
+    return __strncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
 
 __BIONIC_FORTIFY_INLINE

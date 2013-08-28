@@ -41,13 +41,51 @@
  * This strncpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char *__strncpy_chk (char *dest, const char *src,
+extern "C" char* __strncpy_chk(char* __restrict dest, const char* __restrict src,
               size_t len, size_t dest_len)
 {
-    if (__predict_false(len > dest_len)) {
-        __fortify_chk_fail("strncpy buffer overflow",
-                             BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
-    }
+  if (__predict_false(len > dest_len)) {
+    __fortify_chk_fail("strncpy dest buffer overflow",
+                       BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
+  }
 
-    return strncpy(dest, src, len);
+  return strncpy(dest, src, len);
+}
+
+/*
+ * __strncpy_chk2
+ *
+ * This is a variant of __strncpy_chk, but it also checks to make
+ * sure we don't read beyond the end of "src". The code for this is
+ * based on the original version of strncpy, but modified to check
+ * how much we read from "src" at the end of the copy operation.
+ */
+extern "C" char* __strncpy_chk2(char* __restrict dst, const char* __restrict src,
+              size_t n, size_t dest_len, size_t src_len)
+{
+  if (__predict_false(n > dest_len)) {
+    __fortify_chk_fail("strncpy dest buffer overflow",
+                       BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
+  }
+  if (n != 0) {
+    char* d = dst;
+    const char* s = src;
+
+    do {
+      if ((*d++ = *s++) == 0) {
+        /* NUL pad the remaining n-1 bytes */
+        while (--n != 0) {
+          *d++ = 0;
+        }
+        break;
+      }
+    } while (--n != 0);
+
+    size_t s_copy_len = static_cast<size_t>(s - src);
+    if (__predict_false(s_copy_len > src_len)) {
+      __fortify_chk_fail("strncpy read beyond end of src buffer", 0);
+    }
+  }
+
+  return dst;
 }
