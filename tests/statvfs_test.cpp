@@ -35,7 +35,7 @@ TEST(statvfs, statvfs) {
 #endif
 
 #if __BIONIC__
-  ASSERT_EQ(0, statvfs("/data/data", &sb));
+  ASSERT_EQ(0, statvfs("/data/local/tmp", &sb));
   ASSERT_NE(0U, sb.f_bfree);
   ASSERT_NE(0U, sb.f_ffree);
   ASSERT_NE(0U, sb.f_fsid);
@@ -59,7 +59,7 @@ TEST(statvfs, fstatvfs) {
 #endif
 
 #if __BIONIC__
-  fd = open("/data/data", O_RDONLY);
+  fd = open("/data/local/tmp", O_RDONLY);
   ASSERT_EQ(0, fstatvfs(fd, &sb));
   close(fd);
   ASSERT_NE(0U, sb.f_bfree);
