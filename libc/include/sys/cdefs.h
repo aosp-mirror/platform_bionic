@@ -526,6 +526,14 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
+/*
+ * When _FORTIFY_SOURCE is defined, automatic bounds checking is
+ * added to commonly used libc functions. If a buffer overrun is
+ * detected, the program is safely aborted.
+ *
+ * See
+ * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
+ */
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
 #define __BIONIC_FORTIFY 1
 #if _FORTIFY_SOURCE == 2
@@ -533,6 +541,7 @@
 #else
 #define __bos(s) __builtin_object_size((s), 0)
 #endif
+#define __bos0(s) __builtin_object_size((s), 0)
 
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \
