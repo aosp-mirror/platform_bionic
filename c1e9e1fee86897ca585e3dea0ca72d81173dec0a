@@ -16,6 +16,24 @@
       "revId": "c1e9e1fee86897ca585e3dea0ca72d81173dec0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d4ec857_970d0cbf",
+        "filename": "libc/CAVEATS",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-28T00:03:26Z",
+      "side": 1,
+      "message": "yeah, please delete it.",
+      "parentUuid": "4d4ec857_54c482d9",
+      "revId": "c1e9e1fee86897ca585e3dea0ca72d81173dec0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
