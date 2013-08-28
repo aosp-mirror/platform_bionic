@@ -32,7 +32,7 @@ extern int  __cxa_atexit(void (*)(void*), void*, void* );
 
 /* The "C++ ABI for ARM" document states that static C++ constructors,
  * which are called from the .init_array, should manually call
- * __aeabi_atexit() to register static destructors explicitely.
+ * __aeabi_atexit() to register static destructors explicitly.
  *
  * Note that 'dso_handle' is the address of a magic linker-generate
  * variable from the shared object that contains the constructor/destructor
