@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "32581541_6eb10bfa",
+        "filename": "libc/bionic/__strncpy_chk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-08-28T19:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32581541_6ebb4b0b",
+      "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32581541_2eb55315",
         "filename": "libc/bionic/__strncpy_chk.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-28T19:24:29Z",
       "side": 1,
       "message": "...Type* name...",
+      "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32581541_4eb647f4",
+        "filename": "libc/bionic/__strncpy_chk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-08-28T19:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32581541_2eb55315",
       "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "32581541_2eab138c",
+        "filename": "libc/bionic/__strncpy_chk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-08-28T19:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32581541_ceab57b6",
+      "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32581541_8e5f9fe3",
         "filename": "libc/include/string.h",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2013-08-28T19:24:29Z",
       "side": 1,
       "message": "should the handful of direct references to __builtin_object_size actually be references to __bos? if not, should we add some new names to make it clear that this is a deliberate decision rather than an accident?",
+      "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32581541_2eb793cf",
+        "filename": "libc/include/string.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-08-28T19:50:24Z",
+      "side": 1,
+      "message": "I\u0027ll address this in a followup change.",
+      "parentUuid": "32581541_8e5f9fe3",
       "revId": "fcc98c5991babf7ba52c444234a646ad95f364f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
