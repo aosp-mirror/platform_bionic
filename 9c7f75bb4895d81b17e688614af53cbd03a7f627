@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32581541_11d74e0a",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-28T21:08:39Z",
+      "side": 1,
+      "message": "maybe a comment linking to http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html here?",
+      "revId": "9c7f75bb4895d81b17e688614af53cbd03a7f627",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
