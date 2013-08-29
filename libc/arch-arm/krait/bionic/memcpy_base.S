@@ -35,6 +35,13 @@
 
 // Assumes neon instructions and a cache line size of 32 bytes.
 
+ENTRY(MEMCPY_BASE)
+        .cfi_startproc
+        .save {r0, lr}
+        .cfi_def_cfa_offset 8
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset lr, 4
+
         /* do we have at least 16-bytes to copy (needed for alignment below) */
         cmp         r2, #16
         blo         5f
@@ -115,3 +122,6 @@
 
         ldmfd       sp!, {r0, lr}
         bx          lr
+
+        .cfi_endproc
+END(MEMCPY_BASE)
