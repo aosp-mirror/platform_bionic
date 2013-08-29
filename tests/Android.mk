@@ -124,7 +124,7 @@ LOCAL_MODULE := bionic-unit-tests-static
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_WHOLE_STATIC_LIBRARIES += libBionicTests
-LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc bionic-unit-tests-unwind-test-impl
+LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
 # -----------------------------------------------------------------------------
@@ -137,9 +137,19 @@ LOCAL_MODULE := libBionicTests
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_SRC_FILES := $(test_src_files)
-LOCAL_CFLAGS += -DGTEST_OS_LINUX_ANDROID -DGTEST_HAS_STD_STRING
-LOCAL_C_INCLUDES += bionic bionic/libstdc++/include external/gtest/include external/stlport/stlport
-LOCAL_WHOLE_STATIC_LIBRARIES := $(test_fortify_static_libraries)
+LOCAL_CFLAGS += \
+    -DGTEST_OS_LINUX_ANDROID \
+    -DGTEST_HAS_STD_STRING \
+
+LOCAL_C_INCLUDES += \
+    bionic bionic/libstdc++/include \
+    external/gtest/include \
+    external/stlport/stlport \
+
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+    $(test_fortify_static_libraries) \
+    bionic-unit-tests-unwind-test-impl \
+
 include $(BUILD_STATIC_LIBRARY)
 
 # -----------------------------------------------------------------------------
