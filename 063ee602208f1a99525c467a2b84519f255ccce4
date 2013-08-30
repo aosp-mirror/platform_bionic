@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b265e52b_b72602e0",
+        "filename": "libc/arch-arm/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-08-30T19:25:21Z",
+      "side": 1,
+      "message": "Would it be preferred to include this header or path via makefile? It didn\u0027t feel right to me, but this doesn\u0027t either.",
+      "parentUuid": "b265e52b_749e284e",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b265e52b_b4a720a5",
         "filename": "libc/stdlib/atexit.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-30T17:03:30Z",
       "side": 1,
       "message": "with what?",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_b75e0279",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-08-30T19:25:21Z",
+      "side": 1,
+      "message": "Bionic libc files need this definition (such as abort.cpp and libc_init_common.cpp). I didn\u0027t want to modify the makefile to include a file or path in upstream-freebsd. That solution didn\u0027t feel right to me, but this solution doesn\u0027t either. This was done prior to the arch specific header hacks.",
+      "parentUuid": "b265e52b_b4a720a5",
       "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b265e52b_37331225",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-08-30T19:25:21Z",
+      "side": 1,
+      "message": "I\u0027ve modified the comment as requested and moved it above _close and kept all the lines together.\nI don\u0027t see a need to distinguish them apart either, each of these definitions serve a clear purpose.",
+      "parentUuid": "b265e52b_14c25424",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b265e52b_54bcccae",
         "filename": "libc/upstream-freebsd/freebsd-compat.h",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "b265e52b_f747da75",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-08-30T19:25:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b265e52b_54bcccae",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b265e52b_74f0e884",
         "filename": "libc/upstream-freebsd/freebsd-compat.h",
         "patchSetId": 2
@@ -81,6 +153,24 @@
       "writtenOn": "2013-08-30T17:03:30Z",
       "side": 1,
       "message": "why does this work? why don\u0027t we actually need to implement these functions?",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_37ae7235",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-08-30T19:25:21Z",
+      "side": 1,
+      "message": "This was done to workaround any atexit.c changes to keep it the same as the upstream implementation.\nIt would definitely be better to implement these functions in their entirety with complete support, but it\u0027s not as trivial as it seems.\nSomething like the following could be done in atexit (around L180) to remove the need for these altogether:\n#if ANDROID\n    continue;\n#else\n    if (!has_phdr || !__elf_phdr_match_addr(\n        \u0026phdr_info, fn.fn_ptr.cxa_func))\n        continue;\n#endif\n\nThis may be noted upstream here: https://github.com/freebsd/freebsd/blob/master/lib/libc/gen/dlfcn.c#L220\n\nSpecific to __elf_phdr_match_addr, this is a nasty workaround.\nHowever as I mention above, it\u0027s also not as trivial as it seems to implement this function in it\u0027s entirety.\nThis implementation ensures that continue is always used in atexit.c as we want it to on android.\nIt doesn\u0027t currently function as intended like this, and could possibly break _elf_phdr_match_addr functionality if it was used in another context (which it currently is not).",
+      "parentUuid": "b265e52b_74f0e884",
       "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
