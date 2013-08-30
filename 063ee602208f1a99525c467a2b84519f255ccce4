@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b265e52b_749e284e",
+        "filename": "libc/arch-arm/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-30T17:03:30Z",
+      "side": 1,
+      "message": "compatibility with what? why can\u0027t we remove these?",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_b4a720a5",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-30T17:03:30Z",
+      "side": 1,
+      "message": "with what?",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_14c25424",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-30T17:03:30Z",
+      "side": 1,
+      "message": "i think we should move this comment up to before _sseek and keep these together. (your comment is better than mine, but i don\u0027t think it\u0027s particularly useful to distinguish stdio and stdlib. even if it is, we could have a /* stdio */ and a /* stdlib */ line separating the two sections.)",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_54bcccae",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-30T17:03:30Z",
+      "side": 1,
+      "message": "Type* id in new code, { on the same line as the signature, and no useless parens. (also there\u0027s a stray blank line here.)",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b265e52b_74f0e884",
+        "filename": "libc/upstream-freebsd/freebsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-08-30T17:03:30Z",
+      "side": 1,
+      "message": "why does this work? why don\u0027t we actually need to implement these functions?",
+      "revId": "063ee602208f1a99525c467a2b84519f255ccce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
