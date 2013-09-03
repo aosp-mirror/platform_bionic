@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5213c9db_89583958",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-09-03T21:06:04Z",
+      "side": 1,
+      "message": "Should we put this declaration into bionic/libc/private instead? For example, glibc considers this to be a \"binary standard\", and not a function people should call from their code.\n\nhttp://refspecs.linux-foundation.org/LSB_4.0.0/LSB-Core-generic/LSB-Core-generic/libc---strcpy-chk-1.html\n\n(same for line 54, which I added earlier and ended up regretting).",
+      "revId": "3c4b50fd8cce143d9ba8f03a93f0fccba4e54d14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
