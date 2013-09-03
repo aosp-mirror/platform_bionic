@@ -16,6 +16,24 @@
       "revId": "3c4b50fd8cce143d9ba8f03a93f0fccba4e54d14",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5213c9db_ece34354",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-03T21:10:28Z",
+      "side": 1,
+      "message": "that seems slightly worse if we\u0027d then have to #include the private header file below if we are compiling with fortify (which is the normal case, and will eventually be checked by CTS). or can we lose some of the inline code from this file given cferris\u0027 work?",
+      "parentUuid": "5213c9db_89583958",
+      "revId": "3c4b50fd8cce143d9ba8f03a93f0fccba4e54d14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
