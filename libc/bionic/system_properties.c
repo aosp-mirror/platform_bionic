@@ -325,6 +325,8 @@ static void *to_prop_obj(prop_off_t off)
 {
     if (off > pa_data_size)
         return NULL;
+    if (!__system_property_area__)
+        return NULL;
 
     return __system_property_area__->data + off;
 }
@@ -383,6 +385,8 @@ static const prop_info *find_property(prop_bt *trie, const char *name,
         bool alloc_if_needed)
 {
     const char *remaining_name = name;
+
+    if (!trie) return NULL;
 
     while (true) {
         char *sep = strchr(remaining_name, '.');
