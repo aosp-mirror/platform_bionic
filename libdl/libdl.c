@@ -30,12 +30,8 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) { }
 
 void *dl_unwind_find_exidx(void *pc, int *pcount) { return 0; }
 
-#elif defined(__i386__) || defined(__mips__)
+#endif
 
 /* we munge the cb definition so we don't have to include any headers here.
  * It won't affect anything since these are just symbols anyway */
 int dl_iterate_phdr(int (*cb)(void *info, void *size, void *data), void *data) { return 0; }
-
-#else
-#error Unsupported architecture. Only mips, arm and x86 are supported.
-#endif
