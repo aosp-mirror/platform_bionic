@@ -146,11 +146,10 @@ int dlclose(void* handle) {
 }
 
 #if defined(ANDROID_ARM_LINKER)
-//   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
-//   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
+//   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888 8888888
+//   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012 3456789
 #define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_unwind_find_exidx\0"
-
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
 #elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
@@ -181,10 +180,9 @@ static Elf32_Sym gLibDlSymtab[] = {
   ELF32_SYM_INITIALIZER(21, &dlerror, 1),
   ELF32_SYM_INITIALIZER(29, &dladdr, 1),
   ELF32_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
-#if defined(ANDROID_ARM_LINKER)
-  ELF32_SYM_INITIALIZER(67, &dl_unwind_find_exidx, 1),
-#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
   ELF32_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
+#if defined(ANDROID_ARM_LINKER)
+  ELF32_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -207,7 +205,11 @@ static Elf32_Sym gLibDlSymtab[] = {
 // Note that adding any new symbols here requires
 // stubbing them out in libdl.
 static unsigned gLibDlBuckets[1] = { 1 };
+#if defined(ANDROID_ARM_LINKER)
+static unsigned gLibDlChains[9] = { 0, 2, 3, 4, 5, 6, 7, 8, 0 };
+#else
 static unsigned gLibDlChains[8] = { 0, 2, 3, 4, 5, 6, 7, 0 };
+#endif
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo libdl_info = {
@@ -223,8 +225,8 @@ soinfo libdl_info = {
     strtab: ANDROID_LIBDL_STRTAB,
     symtab: gLibDlSymtab,
 
-    nbucket: 1,
-    nchain: 8,
+    nbucket: sizeof(gLibDlBuckets)/sizeof(unsigned),
+    nchain: sizeof(gLibDlChains)/sizeof(unsigned),
     bucket: gLibDlBuckets,
     chain: gLibDlChains,
 

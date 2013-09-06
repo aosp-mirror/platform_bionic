@@ -21,10 +21,11 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
 # These are used by the static and dynamic versions of the libc
 # respectively.
 _LIBC_ARCH_STATIC_SRC_FILES := \
-    arch-arm/bionic/exidx_static.c
+    arch-arm/bionic/exidx_static.c \
+    bionic/dl_iterate_phdr_static.c \
 
 _LIBC_ARCH_DYNAMIC_SRC_FILES := \
-    arch-arm/bionic/exidx_dynamic.c
+    arch-arm/bionic/exidx_dynamic.c \
 
 # Remove the C++ fortify function implementations for which there is an
 # arm assembler version.
