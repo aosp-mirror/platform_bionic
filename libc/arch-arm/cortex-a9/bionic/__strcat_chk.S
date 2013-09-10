@@ -183,7 +183,7 @@ ENTRY(__strcat_chk)
 .L_strlen_done:
     add     r2, r3, r4
     cmp     r2, lr
-    bgt     __strcat_chk_fail
+    bhi     __strcat_chk_fail
 
     // Set up the registers for the memcpy code.
     mov     r1, r5
