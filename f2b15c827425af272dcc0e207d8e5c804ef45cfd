@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "07daf132_73b028f2",
+        "filename": "libc/arch-arm/bionic/strncmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-11T17:43:31Z",
+      "side": 1,
+      "message": "current NetBSD -- which is where FreeBSD seems to have taken their implementation from -- is a lot newer than this:\n\n/*      $NetBSD: strncmp.S,v 1.2 2013/08/19 00:57:25 matt Exp $ */",
+      "revId": "f2b15c827425af272dcc0e207d8e5c804ef45cfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
