@@ -65,7 +65,7 @@
 ENTRY(__memcpy_chk)
         .cfi_startproc
         cmp     r2, r3
-        bgt     __memcpy_chk_fail
+        bhi     __memcpy_chk_fail
 
         // Fall through to memcpy...
         .cfi_endproc
