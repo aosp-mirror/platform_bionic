@@ -151,7 +151,7 @@ ENTRY(__strcpy_chk)
     pld     [r1, #64]
     ldr     r0, [sp]
     cmp     r3, lr
-    bge     __strcpy_chk_failed
+    bhs     __strcpy_chk_failed
 
     // Add 1 for copy length to get the string terminator.
     add     r2, r3, #1
