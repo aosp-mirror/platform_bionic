@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "67c00d69_407442c9",
+        "filename": "libc/arch-x86_64/include/machine/_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-12T16:54:14Z",
+      "side": 1,
+      "message": "I\u0027m going to bring kernel headers update within another patch. It should have correct types for 64-bit.\nDo you think we should fix anything in this _types.h header?",
+      "parentUuid": "277c55f0_1c870568",
+      "revId": "6dd19fad7a76d616383bcfb356f7cba06f3142fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "277c55f0_5c917da0",
         "filename": "libc/arch-x86_64/include/machine/kernel.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-09-12T15:37:35Z",
       "side": 1,
       "message": "ARM?",
+      "revId": "6dd19fad7a76d616383bcfb356f7cba06f3142fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67c00d69_40556270",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-12T16:54:14Z",
+      "side": 1,
+      "message": "Will fix. Came from x86 header.",
+      "parentUuid": "277c55f0_5c917da0",
       "revId": "6dd19fad7a76d616383bcfb356f7cba06f3142fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
