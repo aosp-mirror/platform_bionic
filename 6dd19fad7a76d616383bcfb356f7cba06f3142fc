@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "277c55f0_1c870568",
+        "filename": "libc/arch-x86_64/include/machine/_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-12T15:37:35Z",
+      "side": 1,
+      "message": "we should fix time_t and off_t and sigset_t (and any others we fucked up in the 32-bit ABIs) for 64-bit.",
+      "revId": "6dd19fad7a76d616383bcfb356f7cba06f3142fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "277c55f0_5c917da0",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-12T15:37:35Z",
+      "side": 1,
+      "message": "ARM?",
+      "revId": "6dd19fad7a76d616383bcfb356f7cba06f3142fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
