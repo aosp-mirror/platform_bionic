@@ -64,19 +64,15 @@ uintptr_t __stack_chk_guard = 0;
 unsigned int __page_size = PAGE_SIZE;
 unsigned int __page_shift = PAGE_SHIFT;
 
-static size_t get_stack_size() {
-  const size_t minimal_stack_size = 128 * 1024;
-  size_t stack_size = minimal_stack_size;
-  struct rlimit stack_limit;
+static size_t get_main_thread_stack_size() {
+  rlimit stack_limit;
   int rlimit_result = getrlimit(RLIMIT_STACK, &stack_limit);
-  if ((rlimit_result == 0) && (stack_limit.rlim_cur != RLIM_INFINITY)) {
-    stack_size = stack_limit.rlim_cur;
-    stack_size = (stack_size & ~(PAGE_SIZE - 1));
-    if (stack_size < minimal_stack_size) {
-      stack_size = minimal_stack_size;
-    }
+  if ((rlimit_result == 0) &&
+      (stack_limit.rlim_cur != RLIM_INFINITY) &&
+      (stack_limit.rlim_cur > PTHREAD_STACK_MIN)) {
+    return (stack_limit.rlim_cur & ~(PAGE_SIZE - 1));
   }
-  return stack_size;
+  return PTHREAD_STACK_SIZE_DEFAULT;
 }
 
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
@@ -94,7 +90,7 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
   uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  size_t stack_size = get_stack_size();
+  size_t stack_size = get_main_thread_stack_size();
   uintptr_t stack_bottom = stack_top - stack_size;
 
   static void* tls[BIONIC_TLS_SLOTS];

@@ -77,6 +77,15 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
 /* Has the thread already exited but not been joined? */
 #define PTHREAD_ATTR_FLAG_ZOMBIE        0x00000008
 
+/*
+ * Traditionally we give threads a 1MiB stack. When we started
+ * allocating per-thread alternate signal stacks to ease debugging of
+ * stack overflows, we subtracted the same amount we were using there
+ * from the default thread stack size. This should keep memory usage
+ * roughly constant.
+ */
+#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
+
 __LIBC_HIDDEN__ extern pthread_internal_t* gThreadList;
 __LIBC_HIDDEN__ extern pthread_mutex_t gThreadListLock;
 
