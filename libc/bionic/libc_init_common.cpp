@@ -37,6 +37,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 #include <unistd.h>
 
 #include "atexit.h"
@@ -62,6 +64,21 @@ uintptr_t __stack_chk_guard = 0;
 unsigned int __page_size = PAGE_SIZE;
 unsigned int __page_shift = PAGE_SHIFT;
 
+static size_t get_stack_size() {
+  const size_t minimal_stack_size = 128 * 1024;
+  size_t stack_size = minimal_stack_size;
+  struct rlimit stack_limit;
+  int rlimit_result = getrlimit(RLIMIT_STACK, &stack_limit);
+  if ((rlimit_result == 0) && (stack_limit.rlim_cur != RLIM_INFINITY)) {
+    stack_size = stack_limit.rlim_cur;
+    stack_size = (stack_size & ~(PAGE_SIZE - 1));
+    if (stack_size < minimal_stack_size) {
+      stack_size = minimal_stack_size;
+    }
+  }
+  return stack_size;
+}
+
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
  * apply to linker-private copies and will not be visible from libc later on.
@@ -76,9 +93,9 @@ unsigned int __page_shift = PAGE_SHIFT;
 void __libc_init_tls(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
-  unsigned stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  unsigned stack_size = 128 * 1024;
-  unsigned stack_bottom = stack_top - stack_size;
+  uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
+  size_t stack_size = get_stack_size();
+  uintptr_t stack_bottom = stack_top - stack_size;
 
   static void* tls[BIONIC_TLS_SLOTS];
   static pthread_internal_t thread;
