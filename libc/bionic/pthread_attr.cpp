@@ -30,16 +30,10 @@
 
 #include "pthread_internal.h"
 
-// Traditionally we give threads a 1MiB stack. When we started allocating per-thread
-// alternate signal stacks to ease debugging of stack overflows, we subtracted the
-// same amount we were using there from the default thread stack size. This should
-// keep memory usage roughly constant.
-#define DEFAULT_THREAD_STACK_SIZE ((1 * 1024 * 1024) - SIGSTKSZ)
-
 int pthread_attr_init(pthread_attr_t* attr) {
   attr->flags = 0;
   attr->stack_base = NULL;
-  attr->stack_size = DEFAULT_THREAD_STACK_SIZE;
+  attr->stack_size = PTHREAD_STACK_SIZE_DEFAULT;
   attr->guard_size = PAGE_SIZE;
   attr->sched_policy = SCHED_NORMAL;
   attr->sched_priority = 0;
