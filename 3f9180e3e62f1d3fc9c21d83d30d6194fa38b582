@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7468540_f84b962f",
+        "filename": "libc/arch-x86_64/include/machine/_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-17T20:31:47Z",
+      "side": 1,
+      "message": "it looks to me as if nothing\u0027s actually using most of these typedefs. if that\u0027s the case, i\u0027d like to (a) not carry them across to 64-bit and (b) remove them from 32-bit if possible.\n\nif we do need any of them for building the upstream-*bsd libraries, let\u0027s just move the bits we actually need into the compatibility headers we already have there.",
+      "revId": "3f9180e3e62f1d3fc9c21d83d30d6194fa38b582",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
