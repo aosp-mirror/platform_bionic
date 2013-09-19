@@ -469,3 +469,15 @@ void setusershell() {
 void endusershell() {
   UNIMPLEMENTED;
 }
+
+// Portable code should use sysconf(_SC_PAGESIZE) directly instead.
+int getpagesize() {
+  return sysconf(_SC_PAGESIZE);
+}
+
+// These were accidentally declared in <unistd.h> because we stupidly used to inline
+// getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
+extern "C" {
+  unsigned int __page_size = PAGE_SIZE;
+  unsigned int __page_shift = PAGE_SHIFT;
+}
