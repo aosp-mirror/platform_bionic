@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64356bd1_4734ecbe",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-09-19T15:33:20Z",
+      "side": 1,
+      "message": "default to \"\" if getenv returns NULL and warn?\n\ni know we don\u0027t want to die necessarily since recovery might not have these set.",
+      "revId": "8ef3c73e977184e9c821023aa920435551e49521",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
