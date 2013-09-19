@@ -2114,7 +2114,15 @@ static int to_int(unsigned char* s) {
   return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
 }
 
-static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int* data_size) {
+static int __bionic_open_tzdata_path(const char* path_prefix_variable, const char* path_suffix,
+                                     const char* olson_id, int* data_size) {
+  const char* path_prefix = getenv(path_prefix_variable);
+  if (path_prefix == NULL) {
+    fprintf(stderr, "%s: %s not set!\n", __FUNCTION__, path_prefix_variable);
+    return -1;
+  }
+  char path[PATH_MAX];
+  snprintf(path, sizeof(path), "%s/%s", path_prefix, path_suffix);
   int fd = TEMP_FAILURE_RETRY(open(path, OPEN_MODE));
   if (fd == -1) {
     XLOG(("%s: could not open \"%s\": %s\n", __FUNCTION__, path, strerror(errno)));
@@ -2202,10 +2210,9 @@ static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int
 }
 
 static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
-  // TODO: use $ANDROID_DATA and $ANDROID_ROOT like libcore, to support bionic on the host.
-  int fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/tzdata", olson_id, data_size);
+  int fd = __bionic_open_tzdata_path("ANDROID_DATA", "/misc/zoneinfo/tzdata", olson_id, data_size);
   if (fd < 0) {
-    fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata", olson_id, data_size);
+    fd = __bionic_open_tzdata_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata", olson_id, data_size);
     if (fd == -2) {
       // The first thing that 'recovery' does is try to format the current time. It doesn't have
       // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
