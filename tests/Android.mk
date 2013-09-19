@@ -200,6 +200,7 @@ ifeq ($(TARGET_ARCH),x86)
 bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/linker
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	cp $(TARGET_OUT_EXECUTABLES)/linker /system/bin
+	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	EXTERNAL_STORAGE=$(TARGET_OUT_DATA)/local/tmp \
