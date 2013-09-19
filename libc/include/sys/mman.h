@@ -45,6 +45,7 @@ __BEGIN_DECLS
 #define MREMAP_FIXED    2
 
 extern void*  mmap(void *, size_t, int, int, int, off_t);
+extern void*  mmap64(void *, size_t, int, int, int, off64_t);
 extern int    munmap(void *, size_t);
 extern int    msync(const void *, size_t, int);
 extern int    mprotect(const void *, size_t, int);
