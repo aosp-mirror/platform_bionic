@@ -25,16 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <unistd.h>
 
-extern int __llseek(int fd, unsigned long  offset_hi, unsigned long  offset_lo, loff_t*  result, int  whence);
+extern int __llseek(int fd, unsigned long offset_hi, unsigned long offset_lo, off64_t* result, int whence);
 
-off64_t lseek64(int fd, off64_t off, int whence)
-{
-    loff_t  result;
+off64_t lseek64(int fd, off64_t off, int whence) {
+  off64_t result;
+  if (__llseek(fd, (unsigned long)(off >> 32),(unsigned long)(off), &result, whence) < 0) {
+    return -1;
+  }
 
-    if ( __llseek(fd, (unsigned long)(off >> 32),(unsigned long)(off), &result, whence ) < 0 )
-        return -1;
-
-    return result;
+  return result;
 }

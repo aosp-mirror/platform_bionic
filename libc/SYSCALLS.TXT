@@ -118,7 +118,7 @@ int         __openat:openat (int, const char*, int, mode_t) 1
 int         close (int)                      1
 int         creat(const char*, mode_t)       stub
 off_t       lseek(int, off_t, int)           1
-int         __llseek:_llseek (int, unsigned long, unsigned long, loff_t*, int)  1
+int         __llseek:_llseek (int, unsigned long, unsigned long, off64_t*, int)  1
 pid_t       getpid ()    1
 void *      mmap(void *, size_t, int, int, int, long)  stub
 void *      __mmap2:mmap2(void*, size_t, int, int, int, long)   1
@@ -153,7 +153,8 @@ int         fchown:fchown(int, uid_t, gid_t)    -1,-1,1
 void        sync(void)  1
 int         __fcntl64:fcntl64(int, int, void *)  1
 int         __fstatfs64:fstatfs64(int, size_t, struct statfs *)  1
-ssize_t     sendfile(int out_fd, int in_fd, off_t *offset, size_t count)  1
+ssize_t     sendfile(int out_fd, int in_fd, off_t* offset, size_t count)  1
+ssize_t     sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count)  1
 int         fstatat:fstatat64(int dirfd, const char *path, struct stat *buf, int flags)   1
 int         mkdirat(int dirfd, const char *pathname, mode_t mode)  1
 int         fchownat(int dirfd, const char *path, uid_t owner, gid_t group, int flags)  1
@@ -191,6 +192,7 @@ int     faccessat(int, const char *, int, int)  1
 int     symlink(const char *, const char *)  1
 int     fchdir(int)    1
 int     truncate(const char*, off_t)    1
+int     truncate64(const char*, off64_t)    1
 int     setxattr(const char *, const char *, const void *, size_t, int) 1
 int     lsetxattr(const char *, const char *, const void *, size_t, int) 1
 ssize_t getxattr(const char *, const char *, void *, size_t) 1
