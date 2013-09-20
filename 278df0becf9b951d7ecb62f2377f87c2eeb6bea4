@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4a76389_446dee30",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-20T21:01:28Z",
+      "side": 1,
+      "message": "arm,x86,x64,mips",
+      "revId": "278df0becf9b951d7ecb62f2377f87c2eeb6bea4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
