@@ -113,7 +113,7 @@ extern int __set_tls(void* ptr);
 __END_DECLS
 
 #if defined(__cplusplus)
-struct KernelArgumentBlock;
+class KernelArgumentBlock;
 extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
 #endif
 
