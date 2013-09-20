@@ -65,7 +65,7 @@ typedef __kernel_nlink_t	 nlink_t;
 typedef __kernel_off_t       off_t;
 #endif
 typedef __kernel_loff_t      loff_t;
-typedef loff_t               off64_t;  /* GLibc-specific */
+typedef loff_t               off64_t;
 
 typedef __kernel_pid_t		 pid_t;
 
