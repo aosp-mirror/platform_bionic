@@ -122,9 +122,15 @@ ENTRY(strcmp)
 
         .macro  init
         /* Macro to save temporary registers and prepare magic values.  */
+        .save   {r4-r7}
         subs    sp, sp, #16
+        .cfi_def_cfa_offset 16
         strd    r4, r5, [sp, #8]
+        .cfi_rel_offset r4, 0
+        .cfi_rel_offset r5, 4
         strd    r6, r7, [sp]
+        .cfi_rel_offset r6, 8
+        .cfi_rel_offset r7, 12
         mvn     r6, #0  /* all F */
         mov     r7, #0  /* all 0 */
         .endm   /* init */
@@ -165,6 +171,7 @@ ENTRY(strcmp)
 #endif /* not  __ARMEB__ */
         .endm /* setup_return */
 
+        .cfi_startproc
         pld [r0, #0]
         pld [r1, #0]
 
@@ -334,7 +341,13 @@ do_return:
         /* Restore temporaries early, before computing the return value.  */
         ldrd    r6, r7, [sp]
         ldrd    r4, r5, [sp, #8]
+        .pad    #-16
         adds    sp, sp, #16
+        .cfi_def_cfa_offset 0
+        .cfi_restore r4
+        .cfi_restore r5
+        .cfi_restore r6
+        .cfi_restore r7
 
         /* There is a zero or a different byte between r1 and r2.  */
         /* r0 contains a mask of all-zero bytes in r1.  */
@@ -519,7 +532,13 @@ strcmp_unaligned:
     /* Restore registers and stack. */
     ldrd    r6, r7, [sp]
     ldrd    r4, r5, [sp, #8]
+    .pad    #-16
     adds    sp, sp, #16
+    .cfi_def_cfa_offset 0
+    .cfi_restore r4
+    .cfi_restore r5
+    .cfi_restore r6
+    .cfi_restore r7
 
 	bx	lr
 
@@ -538,7 +557,14 @@ strcmp_unaligned:
     /* Restore registers and stack. */
     ldrd    r6, r7, [sp]
     ldrd    r4, r5, [sp, #8]
+    .pad    #-16
     adds    sp, sp, #16
+    .cfi_def_cfa_offset 0
+    .cfi_restore r4
+    .cfi_restore r5
+    .cfi_restore r6
+    .cfi_restore r7
 
 	bx	lr
+    .cfi_endproc
 END(strcmp)
