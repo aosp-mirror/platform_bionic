@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64580b70_7d40d3b4",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-21T01:03:03Z",
+      "side": 0,
+      "message": "we don\u0027t want to turn -Werror off.",
+      "revId": "8512992f50e8444c1985bbeb17c3385a58fc0fed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04574f42_17725414",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-21T01:03:03Z",
+      "side": 0,
+      "message": "especially not here.",
+      "revId": "8512992f50e8444c1985bbeb17c3385a58fc0fed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
