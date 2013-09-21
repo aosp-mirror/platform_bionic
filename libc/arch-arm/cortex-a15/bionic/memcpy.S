@@ -74,23 +74,24 @@ END(__memcpy_chk)
 ENTRY(memcpy)
         .cfi_startproc
         pld     [r1, #64]
-        .save   {r0, lr}
         push    {r0, lr}
+        .save   {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
 
-        #include "memcpy_base.S"
-
         .cfi_endproc
 END(memcpy)
 
-        .fnstart
+#define MEMCPY_BASE         __memcpy_base
+#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
+#include "memcpy_base.S"
+
+ENTRY(__memcpy_chk_fail)
         .cfi_startproc
-__memcpy_chk_fail:
         // Preserve lr for backtrace.
-        .save   {lr}
         push    {lr}
+        .save   {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
 
@@ -104,7 +105,7 @@ error_code:
 error_message:
         .word   error_string-(1b+8)
         .cfi_endproc
-        .fnend
+END(__memcpy_chk_fail)
 
         .data
 error_string:

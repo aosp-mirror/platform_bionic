@@ -43,8 +43,8 @@ ENTRY(__memset_chk)
         bls         .L_done
 
         // Preserve lr for backtrace.
-        .save       {lr}
         push        {lr}
+        .save       {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
 
@@ -74,12 +74,13 @@ END(bzero)
 /* memset() returns its first argument.  */
 ENTRY(memset)
         .cfi_startproc
+
         # The neon memset only wins for less than 132.
         cmp         r2, #132
-        bhi         11f
+        bhi         __memset_large_copy
 
-        .save       {r0}
         stmfd       sp!, {r0}
+        .save       {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0
 
@@ -114,13 +115,18 @@ ENTRY(memset)
         strcsb      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
-11:
+
+        .cfi_endproc
+END(memset)
+
+ENTRY(__memset_large_copy)
+        .cfi_startproc
+
         /* compute the offset to align the destination
          * offset = (4-(src&3))&3 = -src & 3
          */
-
-        .save       {r0, r4-r7, lr}
         stmfd       sp!, {r0, r4-r7, lr}
+        .save       {r0, r4-r7, lr}
         .cfi_def_cfa_offset 24
         .cfi_rel_offset r0, 0
         .cfi_rel_offset r4, 4
@@ -191,7 +197,7 @@ ENTRY(memset)
         ldmfd       sp!, {r0, r4-r7, lr}
         bx          lr
         .cfi_endproc
-END(memset)
+END(__memset_large_copy)
 
         .data
 error_string:
