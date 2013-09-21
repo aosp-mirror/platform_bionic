@@ -39,6 +39,7 @@
 ENTRY(__strcpy_chk)
     .cfi_startproc
     pld     [r0, #0]
+    .save   {r0, lr}
     push    {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
