@@ -492,7 +492,6 @@ libc_arch_dynamic_src_files := $(_LIBC_ARCH_DYNAMIC_SRC_FILES)
 libc_common_cflags := \
     -DANDROID_CHANGES \
     -D_LIBC=1 \
-    -DFLOATING_POINT \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
     -DPOSIX_MISTAKE \
