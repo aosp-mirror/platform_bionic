@@ -16,6 +16,24 @@
       "revId": "278df0becf9b951d7ecb62f2377f87c2eeb6bea4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e46b1bfc_364cb8a1",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-23T15:08:20Z",
+      "side": 1,
+      "message": "Thanks. Will fix in next patchset.",
+      "parentUuid": "a4a76389_446dee30",
+      "revId": "278df0becf9b951d7ecb62f2377f87c2eeb6bea4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
