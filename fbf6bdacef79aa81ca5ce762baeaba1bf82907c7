@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4fa0380_2c359305",
+        "filename": "libc/include/errno.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-23T15:07:41Z",
+      "side": 1,
+      "message": "Right. Made wrong fix. I\u0027ll post new one.",
+      "parentUuid": "c47c57a6_7e974539",
+      "revId": "fbf6bdacef79aa81ca5ce762baeaba1bf82907c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e47f9b95_eab06f22",
         "filename": "libc/include/time.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-09-20T19:10:18Z",
       "side": 1,
       "message": "i don\u0027t think this is right either.",
+      "revId": "fbf6bdacef79aa81ca5ce762baeaba1bf82907c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84f7bf98_4b08c5aa",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-23T15:07:41Z",
+      "side": 1,
+      "message": "We\u0027ve got it defined as time_t in libc/tzcode/localtime.c. One of them should be fixed:\n\nOn x32 I\u0027ve got:\nbionic/libc/tzcode/localtime.c:235:17: error: conflicting types for \u0027timezone\u0027\n\ntime_t is 64-bit on x32.\nWhat do you suggest?",
+      "parentUuid": "e47f9b95_eab06f22",
       "revId": "fbf6bdacef79aa81ca5ce762baeaba1bf82907c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
