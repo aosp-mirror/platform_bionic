@@ -51,7 +51,7 @@ class SysCallsTxtParser:
         """ parse a syscall spec line.
 
         line processing, format is
-           return type    func_name[:syscall_name[:call_id]] ( [paramlist] )   (syscall_number[,syscall_number_x86])|stub
+           return type    func_name[:syscall_name[:call_id]] ( [paramlist] )   architecture_list
         """
         pos_lparen = line.find('(')
         E          = self.E
@@ -102,34 +102,27 @@ class SysCallsTxtParser:
             syscall_params = []
             params         = "void"
 
-        number = line[pos_rparen+1:].strip()
-        if number == "stub":
-            syscall_common = -1
-            syscall_arm  = -1
-            syscall_x86 = -1
-            syscall_mips = -1
+        # Parse the architecture list.
+        syscall_common = -1
+        syscall_arm  = -1
+        syscall_x86 = -1
+        syscall_mips = -1
+        arch_list = line[pos_rparen+1:].strip()
+        if arch_list == "custom":
+            pass
+        elif arch_list == "all":
+            syscall_common = 1
         else:
-            try:
-                if number[0] == '#':
-                    number = number[1:].strip()
-                numbers = string.split(number,',')
-                if len(numbers) == 1:
-                    syscall_common = int(numbers[0])
-                    syscall_arm = -1
-                    syscall_x86 = -1
-                    syscall_mips = -1
+            for arch in string.split(arch_list, ','):
+                if arch == "arm":
+                    syscall_arm = 1
+                elif arch == "x86":
+                    syscall_x86 = 1
+                elif arch == "mips":
+                    syscall_mips = 1
                 else:
-                    if len(numbers) == 3:
-                        syscall_common = -1
-                        syscall_arm  = int(numbers[0])
-                        syscall_x86 = int(numbers[1])
-                        syscall_mips = int(numbers[2])
-                    else:
-                        E("invalid syscall number format in '%s'" % line)
-                        return
-            except:
-                E("invalid syscall number in '%s'" % line)
-                return
+                    E("invalid syscall architecture list in '%s'" % line)
+                    return
 
         global verbose
         if verbose >= 2:
