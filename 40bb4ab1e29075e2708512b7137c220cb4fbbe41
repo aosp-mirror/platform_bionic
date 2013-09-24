@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84e5fff4_bbea875b",
+        "filename": "libc/arch-x86_64/include/machine/_types.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-24T14:26:35Z",
+      "side": 1,
+      "message": "I cleaned up this header and keep only those defs which are required to buld bionic/linker.\n\nI\u0027ve tried to put this stuff into netbsd/freebsd compat headers, but these types are required for other projects as well besides [netbsd|freebsd]-upstream content (through math.h or stdio). At some point of making changes I decided to stop and keep only those types which are required here for now.\n\nPlease let me know if you have any better idea how to get rid of these types if required.",
+      "revId": "40bb4ab1e29075e2708512b7137c220cb4fbbe41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
