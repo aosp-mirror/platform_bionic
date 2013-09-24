@@ -69,6 +69,24 @@
       "revId": "fbf6bdacef79aa81ca5ce762baeaba1bf82907c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64b48bde_5a033591",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-24T12:19:47Z",
+      "side": 1,
+      "message": "localtime.c changed in NetBSD upstream. So fixing localtime.c seems the right choice. Will fix in new patchset.",
+      "parentUuid": "84f7bf98_4b08c5aa",
+      "revId": "fbf6bdacef79aa81ca5ce762baeaba1bf82907c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
