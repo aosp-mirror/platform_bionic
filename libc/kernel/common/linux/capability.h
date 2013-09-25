@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_CAPABILITY_H
-#define _LINUX_CAPABILITY_H
+#ifndef _UAPI_LINUX_CAPABILITY_H
+#define _UAPI_LINUX_CAPABILITY_H
 #include <linux/types.h>
 struct task_struct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -112,9 +112,10 @@ struct vfs_cap_data {
 #define CAP_SYSLOG 34
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAP_WAKE_ALARM 35
-#define CAP_LAST_CAP CAP_WAKE_ALARM
+#define CAP_BLOCK_SUSPEND 36
+#define CAP_LAST_CAP CAP_BLOCK_SUSPEND
 #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
-#define CAP_TO_INDEX(x) ((x) >> 5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define CAP_TO_INDEX(x) ((x) >> 5)
 #define CAP_TO_MASK(x) (1 << ((x) & 31))
 #endif
