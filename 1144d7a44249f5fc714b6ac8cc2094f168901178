@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4015b89_669acebe",
+        "filename": "linker/arch/x86/begin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T22:31:25Z",
+      "side": 0,
+      "message": "x86-64 should just use begin.S:\n\n_start:\n        /* Pass elfdata to __linker_init. */\n        mov    %rsp, %rdi\n        call   __linker_init\n\n        /* linker init returns (%rax) the _entry address in the main image */\n        jmp    *%rax\n\nIt is very easy to understand.",
+      "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
