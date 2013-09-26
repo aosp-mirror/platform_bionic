@@ -1,0 +1,378 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "247c53f0_8b23b1b2",
+        "filename": "libc/arch-x86_64/bionic/__get_sp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Remove it or align it to 16 byte.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247c53f0_ab2075a6",
+        "filename": "libc/arch-x86_64/bionic/__get_tls.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Just use\n\nasm ( \" mov %%fs:0, %0\" : \"\u003dr\"(tls) );\n\nThere is no need for 2 versions.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247c53f0_4b53791b",
+        "filename": "libc/arch-x86_64/bionic/__set_tls.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "There is no need for lock since there is global variable.\nWe can just do\n\n    /* We also need to write the location of the tls to ptr[0] */\n    *(void **) ptr \u003d ptr;\n    return __arch_prctl(ARCH_SET_FS, ptr);",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4d31b45_794dc370",
+        "filename": "libc/arch-x86_64/bionic/__stack_chk_fail_local.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "What is it used for? An empty dummy file should work.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf4fdf_7ae255e9",
+        "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Use %eax since __NR_munmap is 32-bit integer.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf4fdf_5adf9123",
+        "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Use %eax also to save a byte.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_781ffd74",
+        "filename": "libc/arch-x86_64/bionic/crtend.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "This is wrong for x86-64 since pointers are 64-bits and arch-x86/bionic/crtend.S\nhas\n\t.section .preinit_array, \"aw\"\n\t.long 0\n\nwhere \".long\" is 32-bit.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf4fdf_dae4c1c7",
+        "filename": "libc/arch-x86_64/bionic/crtend_so.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "arch-x86/bionic/crtend_so.S has\n\n.section .init_array, \"aw\"\n    .long 0\n\nIt should be \".quad 0\" for x86-64.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf4fdf_bae90d9e",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Use %esi to save a byte.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247c53f0_8bc7318b",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Use %eax to save a byte.  It applies to other places in this file.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247c53f0_cbd12948",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "_JB_SIGMASK should be _JBLEN.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48cfb4a_95202361",
+        "filename": "libc/arch-x86_64/bionic/sigaction.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "I don\u0027t think it is the correct implementation of\nsigaction with __rt_sigaction. See\n\nhttp://git.kernel.org/cgit/libs/klibc/klibc.git/tree/usr/klibc/sigaction.c\n\nfor an example.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_b89b5562",
+        "filename": "libc/arch-x86_64/bionic/sigprocmask.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "It should be sizeof(sigset_t) instead of _NSIG / 8.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_78a6dda4",
+        "filename": "libc/arch-x86_64/bionic/sigsetjmp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "We can use _JBLEN instead of _JB_SIGMASK.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04a82f8f_3b36826a",
+        "filename": "libc/arch-x86_64/bionic/sigsuspend.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "It should be sizeof (*unewset) instead of  _NSIG / 8.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04a82f8f_db4656ce",
+        "filename": "libc/arch-x86_64/bionic/syscall.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "For\n\nextern int syscall(int number, ...);\n\nthe syscall number is passed in %edi.  We need to do\n\n    mov     %edi,%eax\n    mov     %rsi,%rdi\n    mov     %rdx,%rsi\n    mov     %rcx,%rdx\n    mov     %r8,%r10\n    mov     %r9,%r8\n    mov     8(%rsp),%r9",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_f8830dca",
+        "filename": "libc/arch-x86_64/include/machine/asm.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Why no use movq %rsp,%rbp to save a byte?",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48cfb4a_35092fb2",
+        "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "It should check __ILP32__ for x32.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04a82f8f_7be48a95",
+        "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Do we need to handle __i386__?  There is no\ni386/elf_machdep.h.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_f802ed5e",
+        "filename": "libc/arch-x86_64/include/machine/exec.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "kernel/common/linux/elf-em.h has EM_X86_64, not EM_AMD64.\nPlease use EM_X86_64 instead.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4d0d73d_789c9d07",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "Those longs should be long long to be correct for both x32 and x86-64.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf4fdf_dad28120",
+        "filename": "libc/arch-x86_64/include/machine/setjmp.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T17:31:27Z",
+      "side": 1,
+      "message": "There are only 10 elements.  Why is _JBLEN 11?  What\nare _JB_SIGFLAG and _JB_SIGMASK used for?  include/setjmp.h has\n\ntypedef long sigjmp_buf[_JBLEN + 1];\ntypedef long jmp_buf[_JBLEN];\n\nThere is an entry for signal mask in sigjmp_buf.\nWe can use _JBLEN as index for the signal mask in\nsigjmp_buf.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
