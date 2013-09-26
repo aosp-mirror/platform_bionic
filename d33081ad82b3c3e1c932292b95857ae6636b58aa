@@ -104,6 +104,40 @@
     },
     {
       "key": {
+        "uuid": "04a82f8f_ae3f92e7",
+        "filename": "libc/arch-x86_64/bionic/crtbegin.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T19:13:19Z",
+      "side": 1,
+      "message": "arch-arm/bionic/crtbegin.c is better.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48cfb4a_58e512c1",
+        "filename": "libc/arch-x86_64/bionic/crtbegin_so.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T19:13:19Z",
+      "side": 1,
+      "message": "arch-arm/bionic/crtbegin_so.c is better.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4d0d73d_781ffd74",
         "filename": "libc/arch-x86_64/bionic/crtend.S",
         "patchSetId": 5
