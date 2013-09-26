@@ -2,9 +2,7 @@
 
 import sys, os, commands, string
 
-# support Bionic architectures, add new ones as appropriate
-#
-bionic_archs = [ "arm", "x86", "mips" ]
+all_arches = [ "arm", "mips", "x86" ]
 
 # basic debugging trace support
 # call D_setlevel to set the verbosity level
@@ -51,7 +49,7 @@ class SysCallsTxtParser:
         """ parse a syscall spec line.
 
         line processing, format is
-           return type    func_name[:syscall_name[:call_id]] ( [paramlist] )   architecture_list
+           return type    func_name[:syscall_name[:socketcall_id]] ( [paramlist] )   architecture_list
         """
         pos_lparen = line.find('(')
         E          = self.E
@@ -71,7 +69,7 @@ class SysCallsTxtParser:
 
         syscall_func = return_type[-1]
         return_type  = string.join(return_type[:-1],' ')
-        call_id = -1
+        socketcall_id = -1
 
         pos_colon = syscall_func.find(':')
         if pos_colon < 0:
@@ -81,7 +79,7 @@ class SysCallsTxtParser:
                 E("misplaced colon in '%s'" % line)
                 return
 
-            # now find if there is a call_id for a dispatch-type syscall
+            # now find if there is a socketcall_id for a dispatch-type syscall
             # after the optional 2nd colon
             pos_colon2 = syscall_func.find(':', pos_colon + 1)
             if pos_colon2 < 0:
@@ -92,7 +90,7 @@ class SysCallsTxtParser:
                     E("misplaced colon2 in '%s'" % line)
                     return
                 syscall_name = syscall_func[(pos_colon+1):pos_colon2]
-                call_id = int(syscall_func[pos_colon2+1:])
+                socketcall_id = int(syscall_func[pos_colon2+1:])
                 syscall_func = syscall_func[:pos_colon]
 
         if pos_rparen > pos_lparen+1:
@@ -102,51 +100,35 @@ class SysCallsTxtParser:
             syscall_params = []
             params         = "void"
 
+        t = {
+              "name"    : syscall_name,
+              "func"    : syscall_func,
+              "params"  : syscall_params,
+              "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
+              "socketcall_id" : socketcall_id
+        }
+
         # Parse the architecture list.
-        syscall_common = -1
-        syscall_arm  = -1
-        syscall_x86 = -1
-        syscall_mips = -1
         arch_list = line[pos_rparen+1:].strip()
         if arch_list == "custom":
             pass
         elif arch_list == "all":
-            syscall_common = 1
+            for arch in all_arches:
+                t[arch] = True
         else:
             for arch in string.split(arch_list, ','):
-                if arch == "arm":
-                    syscall_arm = 1
-                elif arch == "x86":
-                    syscall_x86 = 1
-                elif arch == "mips":
-                    syscall_mips = 1
+                if arch in all_arches:
+                    t[arch] = True
                 else:
                     E("invalid syscall architecture list in '%s'" % line)
                     return
 
+        self.syscalls.append(t)
+
         global verbose
         if verbose >= 2:
-            if call_id == -1:
-                if syscall_common == -1:
-                    print "%s: %d,%d,%d" % (syscall_name, syscall_arm, syscall_x86, syscall_mips)
-                else:
-                    print "%s: %d" % (syscall_name, syscall_common)
-            else:
-                if syscall_common == -1:
-                    print "%s(%d): %d,%d,%d" % (syscall_name, call_id, syscall_arm, syscall_x86, syscall_mips)
-                else:
-                    print "%s(%d): %d" % (syscall_name, call_id, syscall_common)
+            print t
 
-        t = { "armid"  : syscall_arm,
-              "x86id"  : syscall_x86,
-              "mipsid" : syscall_mips,
-              "common" : syscall_common,
-              "cid"    : call_id,
-              "name"   : syscall_name,
-              "func"   : syscall_func,
-              "params" : syscall_params,
-              "decl"   : "%-15s  %s (%s);" % (return_type, syscall_func, params) }
-        self.syscalls.append(t)
 
     def parse_file(self, file_path):
         D2("parse_file: %s" % file_path)
