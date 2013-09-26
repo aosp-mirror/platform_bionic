@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4d0d73d_f59b1873",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-26T05:43:13Z",
+      "side": 1,
+      "message": "the x86-64 return may as well be in the call, like for arm and mips. the only reason it was separated out for x86 was because sometimes we had to insert some extra stack manipulation instructions in between call and return.",
+      "revId": "f42ad07504609a981691cba7d8e386975fb664ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
