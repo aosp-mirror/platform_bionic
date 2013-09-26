@@ -2,7 +2,7 @@
 #
 # Each non-blank, non-comment line has the following format:
 #
-# return_type func_name[:syscall_name[:call_id]]([parameter_list]) arch_list
+# return_type func_name[:syscall_name[:socketcall_id]]([parameter_list]) arch_list
 #
 # where:
 #       arch_list ::= "all" | "custom" | arch+
