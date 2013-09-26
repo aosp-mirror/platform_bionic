@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "640e4bb7_aab64f1d",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-26T22:24:39Z",
+      "side": 1,
+      "message": "We should use movl $%(idname)s, %%eax since system call numbers are unsigned 32-bit integers.",
+      "revId": "f42ad07504609a981691cba7d8e386975fb664ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4d0d73d_f59b1873",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 3
