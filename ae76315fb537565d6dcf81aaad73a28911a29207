@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24a1b3ba_a06b1a1b",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-26T11:51:59Z",
+      "side": 1,
+      "message": "Can we remove trailing space here?",
+      "revId": "ae76315fb537565d6dcf81aaad73a28911a29207",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
