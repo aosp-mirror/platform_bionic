@@ -135,6 +135,10 @@ char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
         return __builtin___strncpy_chk(dest, src, n, bos_dest);
     }
 
+    if (__builtin_constant_p(n) && (n <= bos_src)) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
     size_t slen = __builtin_strlen(src);
     if (__builtin_constant_p(slen)) {
         return __builtin___strncpy_chk(dest, src, n, bos_dest);
