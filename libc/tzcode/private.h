@@ -166,10 +166,21 @@ typedef int int_fast32_t;
 #ifndef INTMAX_MAX
 # if defined LLONG_MAX || defined __LONG_LONG_MAX__
 typedef long long intmax_t;
+#  define strtoimax strtoll
 #  define PRIdMAX "lld"
+#  ifdef LLONG_MAX
+#   define INTMAX_MAX LLONG_MAX
+#   define INTMAX_MIN LLONG_MIN
+#  else
+#   define INTMAX_MAX __LONG_LONG_MAX__
+#   define INTMAX_MIN __LONG_LONG_MIN__
+#  endif
 # else
 typedef long intmax_t;
+#  define strtoimax strtol
 #  define PRIdMAX "ld"
+#  define INTMAX_MAX LONG_MAX
+#  define INTMAX_MIN LONG_MIN
 # endif
 #endif
 
@@ -193,9 +204,11 @@ typedef unsigned long uintmax_t;
 #if 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
 # define ATTRIBUTE_CONST __attribute__ ((const))
 # define ATTRIBUTE_PURE __attribute__ ((__pure__))
+# define ATTRIBUTE_FORMAT(spec) __attribute__ ((__format__ spec))
 #else
 # define ATTRIBUTE_CONST /* empty */
 # define ATTRIBUTE_PURE /* empty */
+# define ATTRIBUTE_FORMAT(spec) /* empty */
 #endif
 
 #if !defined _Noreturn && __STDC_VERSION__ < 201112
@@ -313,15 +326,6 @@ static time_t const time_t_max =
   (TYPE_SIGNED(time_t)
    ? - (~ 0 < 0) - ((time_t) -1 << (CHAR_BIT * sizeof (time_t) - 1))
    : -1);
-
-/*
-** Since the definition of TYPE_INTEGRAL contains floating point numbers,
-** it cannot be used in preprocessor directives.
-*/
-
-#ifndef TYPE_INTEGRAL
-#define TYPE_INTEGRAL(type) (((type) 0.5) != 0.5)
-#endif /* !defined TYPE_INTEGRAL */
 
 #ifndef INT_STRLEN_MAXIMUM
 /*
