@@ -52,6 +52,23 @@
       "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c471b754_8deb8124",
+        "filename": "linker/arch/x86/begin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-09-27T13:43:10Z",
+      "side": 0,
+      "message": "I think begin.S is better here.",
+      "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
