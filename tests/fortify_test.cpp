@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
@@ -523,6 +524,13 @@ TEST(DEATHTEST, umask_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   mode_t mask = atoi("1023");  // 01777 in octal
   ASSERT_EXIT(umask(mask), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, recv_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  size_t data_len = atoi("11"); // suppress compiler optimizations
+  char buf[10];
+  ASSERT_EXIT(recv(0, buf, data_len, 0), testing::KilledBySignal(SIGABRT), "");
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
