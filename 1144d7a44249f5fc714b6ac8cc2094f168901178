@@ -69,6 +69,24 @@
       "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44214730_d90873b0",
+        "filename": "linker/arch/x86/begin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-09-27T16:49:08Z",
+      "side": 0,
+      "message": "yeah, i\u0027m happy switching to begin.S if that\u0027s easier. especially because ARM and MIPS already have a begin.S rather than a begin.c. i\u0027m just curious to see how big the x86 (that is, \"i386\") begin.S will be.\n\n(as for text relocations, i think x86 is the architecture with the most text relocations at the moment. dalvik is especially bad, iirc.)",
+      "parentUuid": "c471b754_8deb8124",
+      "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
