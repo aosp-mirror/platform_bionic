@@ -150,6 +150,7 @@ LOCAL_C_INCLUDES += \
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     $(test_fortify_static_libraries) \
     bionic-unit-tests-unwind-test-impl \
+
 include $(BUILD_STATIC_LIBRARY)
 
 # -----------------------------------------------------------------------------
