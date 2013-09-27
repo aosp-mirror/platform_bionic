@@ -34,6 +34,24 @@
       "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6481eb4b_f23468f1",
+        "filename": "linker/arch/x86/begin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-27T08:15:06Z",
+      "side": 0,
+      "message": "Better maintenance (single version for x86/x32/x86_64) was the original goal. There are other advantages as well like nop padding in thunk for atom if have begin.c recompiled per target. Also it helped to reduce number of text relocations as far as I remember.\nI believe with a few more tricks we can have the same optimal resulting code as HJ suggests.\nIf you think it\u0027s not worth it we can reconsider.",
+      "parentUuid": "e4015b89_e6bc7e01",
+      "revId": "1144d7a44249f5fc714b6ac8cc2094f168901178",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
