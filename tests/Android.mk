@@ -125,7 +125,7 @@ LOCAL_MODULE := bionic-unit-tests-static
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_WHOLE_STATIC_LIBRARIES += libBionicTests
-LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc bionic-unit-tests-unwind-test-impl
+LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
 # -----------------------------------------------------------------------------
