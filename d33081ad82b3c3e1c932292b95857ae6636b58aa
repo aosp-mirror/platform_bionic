@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4438675c_c15162e3",
+        "filename": "libc/arch-x86_64/bionic/__get_sp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "247c53f0_8b23b1b2",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "247c53f0_ab2075a6",
         "filename": "libc/arch-x86_64/bionic/__get_tls.c",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "Just use\n\nasm ( \" mov %%fs:0, %0\" : \"\u003dr\"(tls) );\n\nThere is no need for 2 versions.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_616736c0",
+        "filename": "libc/arch-x86_64/bionic/__get_tls.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "247c53f0_ab2075a6",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4438675c_415eb2ee",
+        "filename": "libc/arch-x86_64/bionic/__set_tls.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done. Thanks.",
+      "parentUuid": "247c53f0_4b53791b",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4d31b45_794dc370",
         "filename": "libc/arch-x86_64/bionic/__stack_chk_fail_local.h",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "What is it used for? An empty dummy file should work.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8426df4d_53cbe45e",
+        "filename": "libc/arch-x86_64/bionic/__stack_chk_fail_local.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Yes. Will remove after merging crtfiles.",
+      "parentUuid": "e4d31b45_794dc370",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "4438675c_a101bed2",
+        "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04bf4fdf_7ae255e9",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04bf4fdf_5adf9123",
         "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 5
@@ -98,6 +188,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "Use %eax also to save a byte.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_c10642e8",
+        "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04bf4fdf_5adf9123",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_32975044",
+        "filename": "libc/arch-x86_64/bionic/crtbegin.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Yes. Probably it\u0027s time to merge them all. I\u0027ll prepare separate patch and then rebase this one.",
+      "parentUuid": "04a82f8f_ae3f92e7",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e48cfb4a_58e512c1",
         "filename": "libc/arch-x86_64/bionic/crtbegin_so.c",
         "patchSetId": 5
@@ -132,6 +258,24 @@
       "writtenOn": "2013-09-26T19:13:19Z",
       "side": 1,
       "message": "arch-arm/bionic/crtbegin_so.c is better.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_81e91adb",
+        "filename": "libc/arch-x86_64/bionic/crtbegin_so.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Yes. I\u0027ll fix it after crtfiles merge.",
+      "parentUuid": "e48cfb4a_58e512c1",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_92b4fcc7",
+        "filename": "libc/arch-x86_64/bionic/crtend.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "I\u0027ll fix it after crtfiles merge.",
+      "parentUuid": "c4d0d73d_781ffd74",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04bf4fdf_dae4c1c7",
         "filename": "libc/arch-x86_64/bionic/crtend_so.S",
         "patchSetId": 5
@@ -166,6 +328,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "arch-x86/bionic/crtend_so.S has\n\n.section .init_array, \"aw\"\n    .long 0\n\nIt should be \".quad 0\" for x86-64.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_c1b5e2e2",
+        "filename": "libc/arch-x86_64/bionic/crtend_so.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Right. I\u0027ll fix it after crtfiles merge.",
+      "parentUuid": "04bf4fdf_dae4c1c7",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_52cf744a",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04bf4fdf_bae90d9e",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "247c53f0_8bc7318b",
         "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
         "patchSetId": 5
@@ -200,6 +398,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "Use %eax to save a byte.  It applies to other places in this file.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6481eb4b_72ccf854",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "247c53f0_8bc7318b",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +439,24 @@
     },
     {
       "key": {
+        "uuid": "8426df4d_f3bf90a1",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "I\u0027ve taken this from upstream as is. I didn\u0027t test it yet.",
+      "parentUuid": "247c53f0_cbd12948",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e48cfb4a_95202361",
         "filename": "libc/arch-x86_64/bionic/sigaction.c",
         "patchSetId": 5
@@ -234,6 +468,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "I don\u0027t think it is the correct implementation of\nsigaction with __rt_sigaction. See\n\nhttp://git.kernel.org/cgit/libs/klibc/klibc.git/tree/usr/klibc/sigaction.c\n\nfor an example.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_a1a53eaa",
+        "filename": "libc/arch-x86_64/bionic/sigaction.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e48cfb4a_95202361",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -257,6 +509,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_32f43069",
+        "filename": "libc/arch-x86_64/bionic/sigprocmask.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "It looks the same. Done.",
+      "parentUuid": "c4d0d73d_b89b5562",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4d0d73d_78a6dda4",
         "filename": "libc/arch-x86_64/bionic/sigsetjmp.S",
         "patchSetId": 5
@@ -268,6 +538,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "We can use _JBLEN instead of _JB_SIGMASK.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_c1aac277",
+        "filename": "libc/arch-x86_64/bionic/sigsetjmp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Got that from upstream as is.",
+      "parentUuid": "c4d0d73d_78a6dda4",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -291,6 +579,24 @@
     },
     {
       "key": {
+        "uuid": "8426df4d_73cce054",
+        "filename": "libc/arch-x86_64/bionic/sigsuspend.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04a82f8f_3b36826a",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04a82f8f_db4656ce",
         "filename": "libc/arch-x86_64/bionic/syscall.S",
         "patchSetId": 5
@@ -302,6 +608,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "For\n\nextern int syscall(int number, ...);\n\nthe syscall number is passed in %edi.  We need to do\n\n    mov     %edi,%eax\n    mov     %rsi,%rdi\n    mov     %rdx,%rsi\n    mov     %rcx,%rdx\n    mov     %r8,%r10\n    mov     %r9,%r8\n    mov     8(%rsp),%r9",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8426df4d_33c66835",
+        "filename": "libc/arch-x86_64/bionic/syscall.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Thanks! Done.",
+      "parentUuid": "04a82f8f_db4656ce",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -325,6 +649,24 @@
     },
     {
       "key": {
+        "uuid": "8426df4d_f3e470c7",
+        "filename": "libc/arch-x86_64/include/machine/asm.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Will be done in separate patch to keep first commit from upstream clean.",
+      "parentUuid": "c4d0d73d_f8830dca",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e48cfb4a_35092fb2",
         "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
         "patchSetId": 5
@@ -336,6 +678,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "It should check __ILP32__ for x32.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6481eb4b_5233f46d",
+        "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Will be done in separate patch to keep first commit from upstream clean.",
+      "parentUuid": "e48cfb4a_35092fb2",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -359,6 +719,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_f223081d",
+        "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Will be done in separate patch to keep first commit from upstream clean.",
+      "parentUuid": "04a82f8f_7be48a95",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4d0d73d_f802ed5e",
         "filename": "libc/arch-x86_64/include/machine/exec.h",
         "patchSetId": 5
@@ -370,6 +748,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "kernel/common/linux/elf-em.h has EM_X86_64, not EM_AMD64.\nPlease use EM_X86_64 instead.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8426df4d_73faa059",
+        "filename": "libc/arch-x86_64/include/machine/exec.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Will be done in separate patch to keep first commit from upstream clean.",
+      "parentUuid": "c4d0d73d_f802ed5e",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -393,6 +789,24 @@
     },
     {
       "key": {
+        "uuid": "6481eb4b_322af0ec",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "Better make it __kernel_ulong_t I think.",
+      "parentUuid": "c4d0d73d_789c9d07",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04bf4fdf_dad28120",
         "filename": "libc/arch-x86_64/include/machine/setjmp.h",
         "patchSetId": 5
@@ -404,6 +818,24 @@
       "writtenOn": "2013-09-26T17:31:27Z",
       "side": 1,
       "message": "There are only 10 elements.  Why is _JBLEN 11?  What\nare _JB_SIGFLAG and _JB_SIGMASK used for?  include/setjmp.h has\n\ntypedef long sigjmp_buf[_JBLEN + 1];\ntypedef long jmp_buf[_JBLEN];\n\nThere is an entry for signal mask in sigjmp_buf.\nWe can use _JBLEN as index for the signal mask in\nsigjmp_buf.",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4438675c_8176fa42",
+        "filename": "libc/arch-x86_64/include/machine/setjmp.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-09-30T19:24:16Z",
+      "side": 1,
+      "message": "I got this from upstream as is. I don\u0027t know at this point what\u0027s behind that. As you pointed out in setjmp.S comments _JB_SIGMASK has been used instead of _JBLEN. I\u0027ll try to change as you are suggesting in the following patches just to keep upstream pickup clean.",
+      "parentUuid": "04bf4fdf_dad28120",
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
