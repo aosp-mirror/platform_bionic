@@ -2,7 +2,7 @@
 
 import sys, os, commands, string
 
-all_arches = [ "arm", "mips", "x86" ]
+all_arches = [ "arm", "mips", "x86", "x86_64" ]
 
 # basic debugging trace support
 # call D_setlevel to set the verbosity level
