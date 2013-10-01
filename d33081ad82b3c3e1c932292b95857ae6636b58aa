@@ -839,6 +839,24 @@
       "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "242c537a_ceb6171f",
+        "filename": "libc/arch-x86_64/include/machine/setjmp.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-01T18:00:38Z",
+      "side": 1,
+      "message": "the upstream netbsd copy of this file is newer (1.2 2008-10-26) but the only change appears to be an #ifdef __x86_64__.\n\nfreebsd has a _JBLEN of 12 :-)\n\ni don\u0027t care about this, though. as long as it\u0027s \u003e\u003d to what we actually need, that\u0027s fine. i would be worried if it was too small (like sigset_t in our 32-bit ABI, for example). we can take this up with upstream and worry about it later. for now i\u0027d rather have untouched upstream files.",
+      "parentUuid": "4438675c_8176fa42",
+      "revId": "d33081ad82b3c3e1c932292b95857ae6636b58aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
