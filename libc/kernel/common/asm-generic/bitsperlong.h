@@ -16,10 +16,10 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASMARM_PAGE_H
-#define _ASMARM_PAGE_H
-#define PAGE_SHIFT 12
-#define PAGE_SIZE (1UL << PAGE_SHIFT)
+#ifndef __ASM_GENERIC_BITS_PER_LONG
+#define __ASM_GENERIC_BITS_PER_LONG
+#ifndef __BITS_PER_LONG
+#define __BITS_PER_LONG 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PAGE_MASK (~(PAGE_SIZE-1))
+#endif
 #endif

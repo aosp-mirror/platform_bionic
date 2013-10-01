@@ -18,7 +18,12 @@
  ****************************************************************************/
 #ifndef _ASM_X86_ACPI_H
 #define _ASM_X86_ACPI_H
+#ifdef __i386__
 #include "acpi_32.h"
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#else
+#include "acpi_64.h"
+#endif
 #include <asm/processor.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

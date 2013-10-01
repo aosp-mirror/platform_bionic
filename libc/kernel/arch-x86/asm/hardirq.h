@@ -16,4 +16,9 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifdef __i386__
 #include "hardirq_32.h"
+#else
+#include "hardirq_64.h"
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
