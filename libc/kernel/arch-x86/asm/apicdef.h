@@ -16,4 +16,9 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifdef __i386__
 #include "apicdef_32.h"
+#else
+#include "apicdef_64.h"
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

@@ -18,7 +18,12 @@
  ****************************************************************************/
 #ifndef _ASM_X86_KMAP_TYPES_H
 #define _ASM_X86_KMAP_TYPES_H
+#if defined(CONFIG_X86_32) && defined(CONFIG_DEBUG_HIGHMEM)
+#define D(n) __KM_FENCE_##n ,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#else
 #define D(n)
+#endif
 enum km_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 D(0) KM_BOUNCE_READ,

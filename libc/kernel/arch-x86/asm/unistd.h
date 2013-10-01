@@ -16,4 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#include "unistd_32.h"
+#ifndef _ASM_X86_UNISTD_H
+#define _ASM_X86_UNISTD_H 1
+#define __X32_SYSCALL_BIT 0x40000000
+#ifdef __i386__
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#include <asm/unistd_32.h>
+#elif defined(__ILP32__)
+#include <asm/unistd_x32.h>
+#else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#include <asm/unistd_64.h>
+#endif
+#endif

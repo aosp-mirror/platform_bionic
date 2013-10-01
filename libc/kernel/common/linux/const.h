@@ -16,13 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _I386_PAGE_H
-#define _I386_PAGE_H
-#define PAGE_SHIFT 12
-#define PAGE_SIZE (1UL << PAGE_SHIFT)
+#ifndef _LINUX_CONST_H
+#define _LINUX_CONST_H
+#ifdef __ASSEMBLY__
+#define _AC(X,Y) X
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PAGE_MASK (~(PAGE_SIZE-1))
-#define LARGE_PAGE_MASK (~(LARGE_PAGE_SIZE-1))
-#define LARGE_PAGE_SIZE (1UL << PMD_SHIFT)
+#define _AT(T,X) X
+#else
+#define __AC(X,Y) (X##Y)
+#define _AC(X,Y) __AC(X,Y)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define _AT(T,X) ((T)(X))
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
