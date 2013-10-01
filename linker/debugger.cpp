@@ -137,9 +137,9 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
     // "info" will be NULL if the siginfo_t information was not available.
     if (info != NULL) {
         __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                          "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
-                          signum, signal_name, reinterpret_cast<uintptr_t>(info->si_addr),
-                          info->si_code, gettid(), thread_name);
+                          "Fatal signal %d (%s) at %p (code=%d), thread %d (%s)",
+                          signum, signal_name, info->si_addr, info->si_code,
+                          gettid(), thread_name);
     } else {
         __libc_format_log(ANDROID_LOG_FATAL, "libc",
                           "Fatal signal %d (%s), thread %d (%s)",

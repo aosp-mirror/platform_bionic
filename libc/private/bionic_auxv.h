@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-extern Elf32_auxv_t* __libc_auxv;
+extern Elf_auxv_t* __libc_auxv;
 
 __END_DECLS
 

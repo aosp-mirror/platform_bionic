@@ -49,7 +49,7 @@
     p_vaddr   -> segment's virtual address
     p_flags   -> segment flags (e.g. readable, writable, executable)
 
-  We will ignore the p_paddr and p_align fields of Elf32_Phdr for now.
+  We will ignore the p_paddr and p_align fields of Elf_Phdr for now.
 
   The loadable segments can be seen as a list of [p_vaddr ... p_vaddr+p_memsz)
   ranges of virtual addresses. A few rules apply:
@@ -147,8 +147,8 @@ bool ElfReader::ReadElfHeader() {
     return false;
   }
   if (rc != sizeof(header_)) {
-    DL_ERR("\"%s\" is too small to be an ELF executable. Expected at least %d bytes, only found %d bytes.",
-           name_, sizeof(header_), rc);
+    DL_ERR("\"%s\" is too small to be an ELF executable: only found %zd bytes", name_,
+           static_cast<size_t>(rc));
     return false;
   }
   return true;
@@ -205,14 +205,14 @@ bool ElfReader::ReadProgramHeader() {
 
   // Like the kernel, we only accept program header tables that
   // are smaller than 64KiB.
-  if (phdr_num_ < 1 || phdr_num_ > 65536/sizeof(Elf32_Phdr)) {
-    DL_ERR("\"%s\" has invalid e_phnum: %d", name_, phdr_num_);
+  if (phdr_num_ < 1 || phdr_num_ > 65536/sizeof(Elf_Phdr)) {
+    DL_ERR("\"%s\" has invalid e_phnum: %zd", name_, phdr_num_);
     return false;
   }
 
-  Elf32_Addr page_min = PAGE_START(header_.e_phoff);
-  Elf32_Addr page_max = PAGE_END(header_.e_phoff + (phdr_num_ * sizeof(Elf32_Phdr)));
-  Elf32_Addr page_offset = PAGE_OFFSET(header_.e_phoff);
+  Elf_Addr page_min = PAGE_START(header_.e_phoff);
+  Elf_Addr page_max = PAGE_END(header_.e_phoff + (phdr_num_ * sizeof(Elf_Phdr)));
+  Elf_Addr page_offset = PAGE_OFFSET(header_.e_phoff);
 
   phdr_size_ = page_max - page_min;
 
@@ -223,7 +223,7 @@ bool ElfReader::ReadProgramHeader() {
   }
 
   phdr_mmap_ = mmap_result;
-  phdr_table_ = reinterpret_cast<Elf32_Phdr*>(reinterpret_cast<char*>(mmap_result) + page_offset);
+  phdr_table_ = reinterpret_cast<Elf_Phdr*>(reinterpret_cast<char*>(mmap_result) + page_offset);
   return true;
 }
 
@@ -237,17 +237,15 @@ bool ElfReader::ReadProgramHeader() {
  * set to the minimum and maximum addresses of pages to be reserved,
  * or 0 if there is nothing to load.
  */
-size_t phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
-                                size_t phdr_count,
-                                Elf32_Addr* out_min_vaddr,
-                                Elf32_Addr* out_max_vaddr)
-{
-    Elf32_Addr min_vaddr = 0xFFFFFFFFU;
-    Elf32_Addr max_vaddr = 0x00000000U;
+size_t phdr_table_get_load_size(const Elf_Phdr* phdr_table, size_t phdr_count,
+                                Elf_Addr* out_min_vaddr,
+                                Elf_Addr* out_max_vaddr) {
+    Elf_Addr min_vaddr = 0xFFFFFFFFU;
+    Elf_Addr max_vaddr = 0x00000000U;
 
     bool found_pt_load = false;
     for (size_t i = 0; i < phdr_count; ++i) {
-        const Elf32_Phdr* phdr = &phdr_table[i];
+        const Elf_Phdr* phdr = &phdr_table[i];
 
         if (phdr->p_type != PT_LOAD) {
             continue;
@@ -282,7 +280,7 @@ size_t phdr_table_get_load_size(const Elf32_Phdr* phdr_table,
 // segments of a program header table. This is done by creating a
 // private anonymous mmap() with PROT_NONE.
 bool ElfReader::ReserveAddressSpace() {
-  Elf32_Addr min_vaddr;
+  Elf_Addr min_vaddr;
   load_size_ = phdr_table_get_load_size(phdr_table_, phdr_num_, &min_vaddr);
   if (load_size_ == 0) {
     DL_ERR("\"%s\" has no loadable segments", name_);
@@ -308,27 +306,27 @@ bool ElfReader::ReserveAddressSpace() {
 // TODO: assert assumption.
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
-    const Elf32_Phdr* phdr = &phdr_table_[i];
+    const Elf_Phdr* phdr = &phdr_table_[i];
 
     if (phdr->p_type != PT_LOAD) {
       continue;
     }
 
     // Segment addresses in memory.
-    Elf32_Addr seg_start = phdr->p_vaddr + load_bias_;
-    Elf32_Addr seg_end   = seg_start + phdr->p_memsz;
+    Elf_Addr seg_start = phdr->p_vaddr + load_bias_;
+    Elf_Addr seg_end   = seg_start + phdr->p_memsz;
 
-    Elf32_Addr seg_page_start = PAGE_START(seg_start);
-    Elf32_Addr seg_page_end   = PAGE_END(seg_end);
+    Elf_Addr seg_page_start = PAGE_START(seg_start);
+    Elf_Addr seg_page_end   = PAGE_END(seg_end);
 
-    Elf32_Addr seg_file_end   = seg_start + phdr->p_filesz;
+    Elf_Addr seg_file_end   = seg_start + phdr->p_filesz;
 
     // File offsets.
-    Elf32_Addr file_start = phdr->p_offset;
-    Elf32_Addr file_end   = file_start + phdr->p_filesz;
+    Elf_Addr file_start = phdr->p_offset;
+    Elf_Addr file_end   = file_start + phdr->p_filesz;
 
-    Elf32_Addr file_page_start = PAGE_START(file_start);
-    Elf32_Addr file_length = file_end - file_page_start;
+    Elf_Addr file_page_start = PAGE_START(file_start);
+    Elf_Addr file_length = file_end - file_page_start;
 
     if (file_length != 0) {
       void* seg_addr = mmap((void*)seg_page_start,
@@ -338,7 +336,7 @@ bool ElfReader::LoadSegments() {
                             fd_,
                             file_page_start);
       if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %d: %s", name_, i, strerror(errno));
+        DL_ERR("couldn't map \"%s\" segment %zd: %s", name_, i, strerror(errno));
         return false;
       }
     }
@@ -375,21 +373,17 @@ bool ElfReader::LoadSegments() {
  * with optional extra flags (i.e. really PROT_WRITE). Used by
  * phdr_table_protect_segments and phdr_table_unprotect_segments.
  */
-static int
-_phdr_table_set_load_prot(const Elf32_Phdr* phdr_table,
-                          int               phdr_count,
-                          Elf32_Addr        load_bias,
-                          int               extra_prot_flags)
-{
-    const Elf32_Phdr* phdr = phdr_table;
-    const Elf32_Phdr* phdr_limit = phdr + phdr_count;
+static int _phdr_table_set_load_prot(const Elf_Phdr* phdr_table, size_t phdr_count,
+                                     Elf_Addr load_bias, int extra_prot_flags) {
+    const Elf_Phdr* phdr = phdr_table;
+    const Elf_Phdr* phdr_limit = phdr + phdr_count;
 
     for (; phdr < phdr_limit; phdr++) {
         if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0)
             continue;
 
-        Elf32_Addr seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-        Elf32_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+        Elf_Addr seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
+        Elf_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
         int ret = mprotect((void*)seg_page_start,
                            seg_page_end - seg_page_start,
@@ -412,13 +406,8 @@ _phdr_table_set_load_prot(const Elf32_Phdr* phdr_table,
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int
-phdr_table_protect_segments(const Elf32_Phdr* phdr_table,
-                            int               phdr_count,
-                            Elf32_Addr        load_bias)
-{
-    return _phdr_table_set_load_prot(phdr_table, phdr_count,
-                                      load_bias, 0);
+int phdr_table_protect_segments(const Elf_Phdr* phdr_table, size_t phdr_count, Elf_Addr load_bias) {
+    return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, 0);
 }
 
 /* Change the protection of all loaded segments in memory to writable.
@@ -437,26 +426,17 @@ phdr_table_protect_segments(const Elf32_Phdr* phdr_table,
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int
-phdr_table_unprotect_segments(const Elf32_Phdr* phdr_table,
-                              int               phdr_count,
-                              Elf32_Addr        load_bias)
-{
-    return _phdr_table_set_load_prot(phdr_table, phdr_count,
-                                      load_bias, PROT_WRITE);
+int phdr_table_unprotect_segments(const Elf_Phdr* phdr_table, size_t phdr_count, Elf_Addr load_bias) {
+    return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
 }
 
 /* Used internally by phdr_table_protect_gnu_relro and
  * phdr_table_unprotect_gnu_relro.
  */
-static int
-_phdr_table_set_gnu_relro_prot(const Elf32_Phdr* phdr_table,
-                               int               phdr_count,
-                               Elf32_Addr        load_bias,
-                               int               prot_flags)
-{
-    const Elf32_Phdr* phdr = phdr_table;
-    const Elf32_Phdr* phdr_limit = phdr + phdr_count;
+static int _phdr_table_set_gnu_relro_prot(const Elf_Phdr* phdr_table, size_t phdr_count,
+                                          Elf_Addr load_bias, int prot_flags) {
+    const Elf_Phdr* phdr = phdr_table;
+    const Elf_Phdr* phdr_limit = phdr + phdr_count;
 
     for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
         if (phdr->p_type != PT_GNU_RELRO)
@@ -479,8 +459,8 @@ _phdr_table_set_gnu_relro_prot(const Elf32_Phdr* phdr_table,
          *    linker must only emit a PT_GNU_RELRO segment if it ensures
          *    that it starts on a page boundary.
          */
-        Elf32_Addr seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-        Elf32_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+        Elf_Addr seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
+        Elf_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
         int ret = mprotect((void*)seg_page_start,
                            seg_page_end - seg_page_start,
@@ -508,15 +488,8 @@ _phdr_table_set_gnu_relro_prot(const Elf32_Phdr* phdr_table,
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int
-phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
-                             int               phdr_count,
-                             Elf32_Addr        load_bias)
-{
-    return _phdr_table_set_gnu_relro_prot(phdr_table,
-                                          phdr_count,
-                                          load_bias,
-                                          PROT_READ);
+int phdr_table_protect_gnu_relro(const Elf_Phdr* phdr_table, size_t phdr_count, Elf_Addr load_bias) {
+    return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
 }
 
 #ifdef ANDROID_ARM_LINKER
@@ -538,21 +511,17 @@ phdr_table_protect_gnu_relro(const Elf32_Phdr* phdr_table,
  * Return:
  *   0 on error, -1 on failure (_no_ error code in errno)
  */
-int
-phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
-                         int               phdr_count,
-                         Elf32_Addr        load_bias,
-                         Elf32_Addr**      arm_exidx,
-                         unsigned*         arm_exidx_count)
-{
-    const Elf32_Phdr* phdr = phdr_table;
-    const Elf32_Phdr* phdr_limit = phdr + phdr_count;
+int phdr_table_get_arm_exidx(const Elf_Phdr* phdr_table, size_t phdr_count,
+                             Elf_Addr load_bias,
+                             Elf_Addr** arm_exidx, unsigned* arm_exidx_count) {
+    const Elf_Phdr* phdr = phdr_table;
+    const Elf_Phdr* phdr_limit = phdr + phdr_count;
 
     for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
         if (phdr->p_type != PT_ARM_EXIDX)
             continue;
 
-        *arm_exidx = (Elf32_Addr*)(load_bias + phdr->p_vaddr);
+        *arm_exidx = (Elf_Addr*)(load_bias + phdr->p_vaddr);
         *arm_exidx_count = (unsigned)(phdr->p_memsz / 8);
         return 0;
     }
@@ -576,23 +545,18 @@ phdr_table_get_arm_exidx(const Elf32_Phdr* phdr_table,
  * Return:
  *   void
  */
-void
-phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
-                               int               phdr_count,
-                               Elf32_Addr        load_bias,
-                               Elf32_Dyn**       dynamic,
-                               size_t*           dynamic_count,
-                               Elf32_Word*       dynamic_flags)
-{
-    const Elf32_Phdr* phdr = phdr_table;
-    const Elf32_Phdr* phdr_limit = phdr + phdr_count;
+void phdr_table_get_dynamic_section(const Elf_Phdr* phdr_table, size_t phdr_count,
+                                    Elf_Addr load_bias,
+                                    Elf_Dyn** dynamic, size_t* dynamic_count, Elf_Word* dynamic_flags) {
+    const Elf_Phdr* phdr = phdr_table;
+    const Elf_Phdr* phdr_limit = phdr + phdr_count;
 
     for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
         if (phdr->p_type != PT_DYNAMIC) {
             continue;
         }
 
-        *dynamic = reinterpret_cast<Elf32_Dyn*>(load_bias + phdr->p_vaddr);
+        *dynamic = reinterpret_cast<Elf_Dyn*>(load_bias + phdr->p_vaddr);
         if (dynamic_count) {
             *dynamic_count = (unsigned)(phdr->p_memsz / 8);
         }
@@ -611,10 +575,10 @@ phdr_table_get_dynamic_section(const Elf32_Phdr* phdr_table,
 // segments in memory. This is in contrast with 'phdr_table_' which
 // is temporary and will be released before the library is relocated.
 bool ElfReader::FindPhdr() {
-  const Elf32_Phdr* phdr_limit = phdr_table_ + phdr_num_;
+  const Elf_Phdr* phdr_limit = phdr_table_ + phdr_num_;
 
   // If there is a PT_PHDR, use it directly.
-  for (const Elf32_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
+  for (const Elf_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type == PT_PHDR) {
       return CheckPhdr(load_bias_ + phdr->p_vaddr);
     }
@@ -623,13 +587,13 @@ bool ElfReader::FindPhdr() {
   // Otherwise, check the first loadable segment. If its file offset
   // is 0, it starts with the ELF header, and we can trivially find the
   // loaded program header from it.
-  for (const Elf32_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
+  for (const Elf_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type == PT_LOAD) {
       if (phdr->p_offset == 0) {
-        Elf32_Addr  elf_addr = load_bias_ + phdr->p_vaddr;
-        const Elf32_Ehdr* ehdr = (const Elf32_Ehdr*)(void*)elf_addr;
-        Elf32_Addr  offset = ehdr->e_phoff;
-        return CheckPhdr((Elf32_Addr)ehdr + offset);
+        Elf_Addr  elf_addr = load_bias_ + phdr->p_vaddr;
+        const Elf_Ehdr* ehdr = (const Elf_Ehdr*)(void*)elf_addr;
+        Elf_Addr  offset = ehdr->e_phoff;
+        return CheckPhdr((Elf_Addr)ehdr + offset);
       }
       break;
     }
@@ -642,17 +606,17 @@ bool ElfReader::FindPhdr() {
 // Ensures that our program header is actually within a loadable
 // segment. This should help catch badly-formed ELF files that
 // would cause the linker to crash later when trying to access it.
-bool ElfReader::CheckPhdr(Elf32_Addr loaded) {
-  const Elf32_Phdr* phdr_limit = phdr_table_ + phdr_num_;
-  Elf32_Addr loaded_end = loaded + (phdr_num_ * sizeof(Elf32_Phdr));
-  for (Elf32_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
+bool ElfReader::CheckPhdr(Elf_Addr loaded) {
+  const Elf_Phdr* phdr_limit = phdr_table_ + phdr_num_;
+  Elf_Addr loaded_end = loaded + (phdr_num_ * sizeof(Elf_Phdr));
+  for (Elf_Phdr* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type != PT_LOAD) {
       continue;
     }
-    Elf32_Addr seg_start = phdr->p_vaddr + load_bias_;
-    Elf32_Addr seg_end = phdr->p_filesz + seg_start;
+    Elf_Addr seg_start = phdr->p_vaddr + load_bias_;
+    Elf_Addr seg_end = phdr->p_filesz + seg_start;
     if (seg_start <= loaded && loaded_end <= seg_end) {
-      loaded_phdr_ = reinterpret_cast<const Elf32_Phdr*>(loaded);
+      loaded_phdr_ = reinterpret_cast<const Elf_Phdr*>(loaded);
       return true;
     }
   }
