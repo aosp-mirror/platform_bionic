@@ -35,7 +35,7 @@
 extern void* __executable_start;
 
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data), void* data) {
-    Elf32_Ehdr* ehdr = (Elf32_Ehdr*) &__executable_start;
+    Elf_Ehdr* ehdr = (Elf_Ehdr*) &__executable_start;
 
     // TODO: again, copied from linker.c. Find a better home for this later.
     if (ehdr->e_ident[EI_MAG0] != ELFMAG0) return -1;
@@ -51,7 +51,7 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
     struct dl_phdr_info exe_info;
     exe_info.dlpi_addr = 0;
     exe_info.dlpi_name = NULL;
-    exe_info.dlpi_phdr = (Elf32_Phdr*) ((unsigned long) ehdr + ehdr->e_phoff);
+    exe_info.dlpi_phdr = (Elf_Phdr*) ((unsigned long) ehdr + ehdr->e_phoff);
     exe_info.dlpi_phnum = ehdr->e_phnum;
 
 #ifdef AT_SYSINFO_EHDR
@@ -62,15 +62,15 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
     }
 
     // Try the VDSO if that didn't work.
-    Elf32_Ehdr* ehdr_vdso = (Elf32_Ehdr*) getauxval(AT_SYSINFO_EHDR);
+    Elf_Ehdr* ehdr_vdso = (Elf_Ehdr*) getauxval(AT_SYSINFO_EHDR);
     struct dl_phdr_info vdso_info;
     vdso_info.dlpi_addr = 0;
     vdso_info.dlpi_name = NULL;
-    vdso_info.dlpi_phdr = (Elf32_Phdr*) ((char*) ehdr_vdso + ehdr_vdso->e_phoff);
+    vdso_info.dlpi_phdr = (Elf_Phdr*) ((char*) ehdr_vdso + ehdr_vdso->e_phoff);
     vdso_info.dlpi_phnum = ehdr_vdso->e_phnum;
     for (size_t i = 0; i < vdso_info.dlpi_phnum; ++i) {
         if (vdso_info.dlpi_phdr[i].p_type == PT_LOAD) {
-            vdso_info.dlpi_addr = (Elf32_Addr) ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
+            vdso_info.dlpi_addr = (Elf_Addr) ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
             break;
         }
     }

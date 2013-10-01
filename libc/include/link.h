@@ -33,8 +33,7 @@
 
 __BEGIN_DECLS
 
-/* bionic is currently only 32-bit. */
-#define ElfW(type) Elf32_##type
+#define ElfW(type) Elf_##type
 
 struct dl_phdr_info {
   ElfW(Addr) dlpi_addr;
