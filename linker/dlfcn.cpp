@@ -83,7 +83,7 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   soinfo* found = NULL;
-  Elf32_Sym* sym = NULL;
+  Elf_Sym* sym = NULL;
   if (handle == RTLD_DEFAULT) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
   } else if (handle == RTLD_NEXT) {
@@ -131,7 +131,7 @@ int dladdr(const void* addr, Dl_info* info) {
   info->dli_fbase = (void*) si->base;
 
   // Determine if any symbol in the library contains the specified address.
-  Elf32_Sym *sym = dladdr_find_symbol(si, addr);
+  Elf_Sym *sym = dladdr_find_symbol(si, addr);
   if (sym != NULL) {
     info->dli_sname = si->strtab + sym->st_name;
     info->dli_saddr = (void*)(si->load_bias + sym->st_value);
