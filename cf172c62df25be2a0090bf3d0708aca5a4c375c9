@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "213fe5b6_90121466",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-01T19:14:46Z",
+      "side": 1,
+      "message": "We can use\n\nnegl %%eax\nmovl %%eax, %%edi\n\nto save 2 bytes since __set_errno takes int.",
+      "revId": "cf172c62df25be2a0090bf3d0708aca5a4c375c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
