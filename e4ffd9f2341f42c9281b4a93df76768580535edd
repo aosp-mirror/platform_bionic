@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "213fe5b6_93e7bef5",
+        "filename": "libc/arch-x86_64/syscalls/fstatfs.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-01T21:13:44Z",
+      "side": 1,
+      "message": "We need an alias of __fstatfs64 for bionic/statvfs.cpp.",
+      "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "413a19c6_14bdfaf7",
+        "filename": "libc/arch-x86_64/syscalls/ftruncate.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-01T21:13:44Z",
+      "side": 1,
+      "message": "We need an alias of ftruncate64.",
+      "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "413a19c6_d46092a8",
+        "filename": "libc/arch-x86_64/syscalls/statfs.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-01T21:13:44Z",
+      "side": 1,
+      "message": "We need an alias of __statfs64 for bionic/statvfs.cpp.",
+      "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
