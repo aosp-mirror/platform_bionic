@@ -18,7 +18,7 @@ include $(CLEAR_VARS)
 LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a
 
 # for x86, exclude libgcc_eh.a for the same reasons as above
-ifeq ($(TARGET_ARCH),x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 LOCAL_LDFLAGS += -Wl,--exclude-libs=libgcc_eh.a
 endif
 
