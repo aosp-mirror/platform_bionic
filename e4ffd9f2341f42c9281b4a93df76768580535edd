@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0144a155_52c3927b",
+        "filename": "libc/arch-x86_64/syscalls/fstatfs.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-01T21:22:02Z",
+      "side": 1,
+      "message": "i don\u0027t think we can do that because the 32-bit system calls take an extra argument that\u0027s the sizeof the struct to be filled.",
+      "parentUuid": "213fe5b6_93e7bef5",
+      "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "413a19c6_14bdfaf7",
         "filename": "libc/arch-x86_64/syscalls/ftruncate.S",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-01T21:13:44Z",
       "side": 1,
       "message": "We need an alias of ftruncate64.",
+      "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "213fe5b6_736e9a33",
+        "filename": "libc/arch-x86_64/syscalls/ftruncate.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-01T21:22:02Z",
+      "side": 1,
+      "message": "yes, that might be the best solution for these calls. i\u0027m pretty close to _FILE_OFFSET_BITS for 32-bit; i have the off_t and off64_t variants of each call. i haven\u0027t got as far as thinking about what to do for the 64-bit ABIs.",
+      "parentUuid": "413a19c6_14bdfaf7",
       "revId": "e4ffd9f2341f42c9281b4a93df76768580535edd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
