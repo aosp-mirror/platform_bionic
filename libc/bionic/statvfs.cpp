@@ -23,10 +23,6 @@ extern "C" int __fstatfs64(int, size_t, struct statfs*);
 
 #define ST_VALID 0x0020
 
-#if !defined(__arm__)
-#define __val val
-#endif
-
 static void __statfs_to_statvfs(const struct statfs& in, struct statvfs* out) {
   out->f_bsize = in.f_bsize;
   out->f_frsize = in.f_frsize;
