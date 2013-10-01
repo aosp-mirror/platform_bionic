@@ -28,11 +28,17 @@ typedef unsigned short __u16;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __signed__ int __s32;
 typedef unsigned int __u32;
+#ifdef __i386__
 #ifdef __GNUC__
-__extension__ typedef __signed__ long long __s64;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+__extension__ typedef __signed__ long long __s64;
 __extension__ typedef unsigned long long __u64;
 #endif
+#else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+typedef __signed__ long long __s64;
+typedef unsigned long long __u64;
 #endif
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
