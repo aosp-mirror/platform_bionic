@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a132f5ee_0c0a97ee",
+        "filename": "libc/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-01T22:37:10Z",
+      "side": 1,
+      "message": "i\u0027ve factored this out rather than duplicate it for all the 32-bit architectures.",
+      "revId": "a567a8e4bd9036bcb74a0a028235a48d8b2a115e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
