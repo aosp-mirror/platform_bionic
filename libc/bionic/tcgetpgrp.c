@@ -1,5 +1,4 @@
-/* bionic/unistd/tcgetpgrp.c
-**
+/*
 ** Copyright 2006, The Android Open Source Project
 **
 ** Redistribution and use in source and binary forms, with or without
