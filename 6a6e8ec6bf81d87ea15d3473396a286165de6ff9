@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d0d387_0b8da130",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-01T01:34:47Z",
+      "side": 1,
+      "message": "you changed the order above, but not here and elsewhere in this file.",
+      "revId": "6a6e8ec6bf81d87ea15d3473396a286165de6ff9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
