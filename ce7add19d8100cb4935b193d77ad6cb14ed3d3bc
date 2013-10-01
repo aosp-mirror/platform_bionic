@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4468340_55d2be4c",
+        "filename": "libm/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-01T18:40:39Z",
+      "side": 1,
+      "message": "upstream freebsd seems to share the regular x86 fenv.h; it already has support for x86 and x86_64.",
+      "revId": "ce7add19d8100cb4935b193d77ad6cb14ed3d3bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
