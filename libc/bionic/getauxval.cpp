@@ -32,10 +32,10 @@
 #include <private/bionic_auxv.h>
 #include <elf.h>
 
-__LIBC_HIDDEN__ Elf32_auxv_t* __libc_auxv = NULL;
+__LIBC_HIDDEN__ Elf_auxv_t* __libc_auxv = NULL;
 
 extern "C" unsigned long int getauxval(unsigned long int type) {
-  for (Elf32_auxv_t* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
+  for (Elf_auxv_t* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == type) {
       return v->a_un.a_val;
     }
