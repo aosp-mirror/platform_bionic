@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21660513_fb760b41",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T14:47:21Z",
+      "side": 1,
+      "message": "We can use\n\nasm (\"mov %%fs:0, %0\" : \"\u003dr\"(__val));\n\nfor both x86-64 and x32.",
+      "revId": "6f632731c2d8e4f92f0838729162a1152502c73b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
