@@ -111,7 +111,7 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
   if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
     return EINVAL;
   }
-  if ((uint32_t)stack_base & (PAGE_SIZE - 1)) {
+  if (reinterpret_cast<uintptr_t>(stack_base) & (PAGE_SIZE - 1)) {
     return EINVAL;
   }
   attr->stack_base = stack_base;
