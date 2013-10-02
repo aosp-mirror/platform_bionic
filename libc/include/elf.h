@@ -46,5 +46,10 @@ typedef struct {
   } a_un;
 } Elf64_auxv_t;
 
-#endif /* _ELF_H */
+#ifdef __LP64__
+#  define Elf_auxv_t Elf64_auxv_t
+#else
+#  define Elf_auxv_t Elf32_auxv_t
+#endif
 
+#endif /* _ELF_H */
