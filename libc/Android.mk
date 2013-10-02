@@ -188,6 +188,7 @@ endif
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
+    bionic/__FD_chk.cpp \
     bionic/__fgets_chk.cpp \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
