@@ -547,6 +547,13 @@ TEST(DEATHTEST, recv_fortified) {
   ASSERT_EXIT(recv(0, buf, data_len, 0), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(DEATHTEST, FD_ISSET_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  fd_set set;
+  memset(&set, 0, sizeof(set));
+  ASSERT_EXIT(FD_ISSET(-1, &set), testing::KilledBySignal(SIGABRT), "");
+}
+
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
