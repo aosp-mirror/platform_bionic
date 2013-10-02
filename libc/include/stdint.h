@@ -25,17 +25,18 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _STDINT_H
 #define _STDINT_H
 
 #include <stddef.h>
 #include <sys/_types.h>
 
-#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
+#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS) || (__cplusplus >= 201103L)
 #  define __STDINT_LIMITS
 #endif
 
-#if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS)
+#if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS) || (__cplusplus >= 201103L)
 #  define  __STDINT_MACROS
 #endif
 
@@ -157,6 +158,14 @@ typedef int64_t       int_fast64_t;
 typedef uint64_t      uint_least64_t;
 typedef uint64_t      uint_fast64_t;
 
+#if __LP64__
+#  define __INT64_C(c)  c ## L
+#  define __UINT64_C(c) c ## UL
+#else
+#  define __INT64_C(c)  c ## LL
+#  define __UINT64_C(c) c ## ULL
+#endif
+
 #ifdef __STDINT_LIMITS
 #  define INT64_MIN        (__INT64_C(-9223372036854775807)-1)
 #  define INT64_MAX        (__INT64_C(9223372036854775807))
@@ -169,9 +178,6 @@ typedef uint64_t      uint_fast64_t;
 #  define UINT_LEAST64_MAX UINT64_MAX
 #  define UINT_FAST64_MAX UINT64_MAX
 #endif
-
-#define __INT64_C(c)     c ## LL
-#define __UINT64_C(c)     c ## ULL
 
 #ifdef __STDINT_MACROS
 #  define INT64_C(c)       __INT64_C(c)
