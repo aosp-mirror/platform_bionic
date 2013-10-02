@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21b445af_515046dd",
+        "filename": "libc/bionic/lseek64.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:51:34Z",
+      "side": 1,
+      "message": "I would skip it and add an alias of lseek64 to lseek for x86-64.",
+      "revId": "a95fc0792265950bb03ae0a51f338a52e308e2d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
