@@ -350,7 +350,7 @@ TEST(DEATHTEST, strlen_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%d", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(printf("%zd", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(DEATHTEST, strchr_fortified) {
