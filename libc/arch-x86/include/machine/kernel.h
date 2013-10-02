@@ -1,5 +1,4 @@
-/* bionic/arch-arm/include/machine/kernel.h
-**
+/*
 ** Copyright 2006-2008, The Android Open Source Project
 **
 ** Redistribution and use in source and binary forms, with or without
