@@ -87,6 +87,23 @@
     },
     {
       "key": {
+        "uuid": "21660513_12195c8d",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-02T23:46:03Z",
+      "side": 1,
+      "message": "this gets me:\n\n/usr/local/google/home/enh/aosp/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.7/bin/../lib/gcc/x86_64-linux-android/4.7/../../../../x86_64-linux-android/bin/ld: error: out/target/product/generic_x86_64/obj/STATIC_LIBRARIES/libc_common_intermediates/libc_common.a(clone.o): requires dynamic R_X86_64_PC32 reloc against \u0027__thread_entry\u0027 which may overflow at runtime; recompile with -fPIC\n/usr/local/google/home/enh/aosp/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.7/bin/../lib/gcc/x86_64-linux-android/4.7/../../../../x86_64-linux-android/bin/ld: warning: shared library text segment is not shareable",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "819df127_44dc0430",
         "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
         "patchSetId": 6
