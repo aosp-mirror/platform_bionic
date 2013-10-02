@@ -226,6 +226,9 @@ libm_arm_src_files := arm/fenv.c
 libm_x86_includes := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
 libm_x86_src_files := i387/fenv.c
 
+libm_x86_64_includes := $(LOCAL_PATH)/amd64 $(LOCAL_PATH)/i387
+libm_x86_64_src_files := amd64/fenv.c
+
 libm_mips_cflags := -fno-builtin-rintf -fno-builtin-rint
 libm_mips_includes := $(LOCAL_PATH)/mips
 libm_mips_src_files := mips/fenv.c
