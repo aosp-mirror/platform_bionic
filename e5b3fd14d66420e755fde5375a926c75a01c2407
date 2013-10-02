@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "819df127_44b3a4fb",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-02T19:25:57Z",
+      "side": 1,
+      "message": "don\u0027t we want this for all libraries? why did you choose just these few?",
+      "revId": "e5b3fd14d66420e755fde5375a926c75a01c2407",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
