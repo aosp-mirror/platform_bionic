@@ -23,7 +23,7 @@ extern "C" int __fstatfs64(int, size_t, struct statfs*);
 
 #define ST_VALID 0x0020
 
-#if defined(__mips__)
+#if !defined(__arm__)
 #define __val val
 #endif
 
