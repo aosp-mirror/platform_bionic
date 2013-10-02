@@ -256,8 +256,6 @@ typedef int64_t  intmax_t;
 #  define WINT_MIN INT32_MIN
 #endif
 
-#define _BITSIZE 32
-
 /* Keep the kernel from trying to define these types... */
 #define __BIT_TYPES_DEFINED__
 
