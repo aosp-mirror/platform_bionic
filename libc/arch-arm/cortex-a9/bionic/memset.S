@@ -119,7 +119,7 @@ ENTRY(memset)
         .cfi_endproc
 END(memset)
 
-ENTRY(__memset_large_copy)
+ENTRY_PRIVATE(__memset_large_copy)
         .cfi_startproc
 
         /* compute the offset to align the destination

@@ -35,7 +35,7 @@
 
 // Assumes neon instructions and a cache line size of 32 bytes.
 
-ENTRY(MEMCPY_BASE)
+ENTRY_PRIVATE(MEMCPY_BASE)
         .cfi_startproc
         .save {r0, lr}
         .cfi_def_cfa_offset 8
