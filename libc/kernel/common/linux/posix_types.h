@@ -19,21 +19,11 @@
 #ifndef _LINUX_POSIX_TYPES_H
 #define _LINUX_POSIX_TYPES_H
 #include <linux/stddef.h>
-#undef __NFDBITS
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __NFDBITS (8 * sizeof(unsigned long))
 #undef __FD_SETSIZE
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __FD_SETSIZE 1024
-#undef __FDSET_LONGS
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __FDSET_LONGS (__FD_SETSIZE/__NFDBITS)
-#undef __FDELT
-#define __FDELT(d) ((d) / __NFDBITS)
-#undef __FDMASK
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __FDMASK(d) (1UL << ((d) % __NFDBITS))
 typedef struct {
- unsigned long fds_bits [__FDSET_LONGS];
+ unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
 } __kernel_fd_set;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef void (*__kernel_sighandler_t)(int);

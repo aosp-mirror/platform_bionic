@@ -35,11 +35,28 @@
 
 __BEGIN_DECLS
 
-typedef __kernel_fd_set   fd_set;
+#define __FD_SETSIZE 1024
+#define __NFDBITS (8 * sizeof(unsigned long))
+#define __FDSET_LONGS (__FD_SETSIZE/__NFDBITS)
 
-extern int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
-extern int pselect(int n, fd_set *readfds, fd_set *writefds, fd_set *errfds,
-                   const struct timespec *timeout, const sigset_t *sigmask);
+typedef struct {
+  unsigned long fds_bits[__FDSET_LONGS];
+} fd_set;
+
+#define __FDELT(fd) ((fd) / __NFDBITS)
+#define __FDMASK(fd) (1UL << ((fd) % __NFDBITS))
+#define __FDS_BITS(set) (((fd_set*)(set))->fds_bits)
+
+#define __FD_CLR(fd, set) (__FDS_BITS(set)[__FDELT(fd)] &= ~__FDMASK(fd))
+#define __FD_SET(fd, set) (__FDS_BITS(set)[__FDELT(fd)] |= __FDMASK(fd))
+
+#define __FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
+
+#define __FD_ZERO(set) (__builtin_memset(set, 0, sizeof(*(fd_set*)(set))))
+
+extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
+extern int pselect(int n, fd_set* read_fds, fd_set* write_fds, fd_set* err_fds,
+                   const struct timespec * timeout, const sigset_t* sigmask);
 
 __END_DECLS
 
