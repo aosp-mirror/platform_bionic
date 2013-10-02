@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21660513_5bd937e1",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-02T16:13:11Z",
+      "side": 1,
+      "message": "this is only needed for ARM?",
+      "revId": "5f6cfce4f6608f2e450266814543e70b1ed2e02c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_1e9ba962",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-02T16:13:11Z",
+      "side": 1,
+      "message": "is there a clang equivalent of the GCC version macros so we can make this #error if we have a new enough clang?",
+      "revId": "5f6cfce4f6608f2e450266814543e70b1ed2e02c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
