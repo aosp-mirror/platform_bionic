@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21b445af_ee107ba2",
+        "filename": "libc/arch-x86_64/bionic/__stack_chk_fail_local.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "I think this file should be removed since it shouldn\u0027t be needed for\nx86-64.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21b445af_4e642720",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %eax.  It applies to other syscalls in this file.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21b445af_0e5e2f52",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %eax since clone (2) returns int.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_240538de",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %eax.  It applies to __bionic_clone.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_e4ee70e5",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %eax since it returns int.  Same for __bionic_clone.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_44dc0430",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Need to move count (%esi) to %edx.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_24a9b886",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %edi.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_84968c38",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Why not just push %rsi/pop %rax instead of %r8?",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21b445af_3194b28e",
+        "filename": "libc/arch-x86_64/bionic/sigaction.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "This is incorrect.  Please see my comments in patch 5.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21660513_410aa8ef",
+        "filename": "libc/arch-x86_64/bionic/sigsetjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %edi.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21660513_211c5430",
+        "filename": "libc/arch-x86_64/bionic/syscall.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Use %eax.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21660513_a1eaa4bd",
+        "filename": "libc/arch-x86_64/include/machine/exec.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Some are wrong for x32.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "819df127_8473ec14",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-02T19:49:08Z",
+      "side": 1,
+      "message": "Those should be \"long long\" or __kernel_ulong_t.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
