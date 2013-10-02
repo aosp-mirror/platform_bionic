@@ -20,6 +20,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
+#include <malloc.h>
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
@@ -394,6 +395,19 @@ TEST(DEATHTEST, sprintf_fortified) {
   memcpy(source_buf, "12345678901234", 15);
   ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
 }
+
+#ifndef __clang__
+// This test is disabled in clang because clang doesn't properly detect
+// this buffer overflow. TODO: Fix clang.
+TEST(DEATHTEST, sprintf_malloc_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char* buf = (char *) malloc(10);
+  char source_buf[11];
+  memcpy(source_buf, "1234567890", 11);
+  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
+  free(buf);
+}
+#endif
 
 TEST(DEATHTEST, sprintf2_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
