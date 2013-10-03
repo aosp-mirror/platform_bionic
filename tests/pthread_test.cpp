@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -56,7 +57,7 @@ static void* IdFn(void* arg) {
 }
 
 static void* SleepFn(void* arg) {
-  sleep(reinterpret_cast<unsigned int>(arg));
+  sleep(reinterpret_cast<uintptr_t>(arg));
   return NULL;
 }
 
@@ -140,7 +141,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
 TEST(pthread, pthread_join_self) {
@@ -190,7 +191,7 @@ TEST(pthread, pthread_sigmask) {
   void* join_result;
   ASSERT_EQ(0, pthread_join(signal_thread, &join_result));
   ASSERT_EQ(SIGUSR1, received_signal);
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
 #if __BIONIC__
@@ -348,7 +349,7 @@ TEST(pthread, pthread_join__multijoin) {
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
 static void* GetActualGuardSizeFn(void* arg) {
