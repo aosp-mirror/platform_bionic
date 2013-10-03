@@ -1,6 +1,3 @@
-/*	$OpenBSD: fenv.h,v 1.4 2011/05/25 21:46:49 martynas Exp $	*/
-/*	$NetBSD: fenv.h,v 1.1 2010/07/31 21:47:54 joerg Exp $	*/
-
 /*-
  * Copyright (c) 2004-2005 David Schultz <das (at) FreeBSD.ORG>
  * All rights reserved.
@@ -31,6 +28,14 @@
 #define	_AMD64_FENV_H_
 
 #include <sys/types.h>
+
+/*
+ * This file combines the OpenBSD include/fenv.h and machine/fenv.h to fit
+ * the style of the other architectures (where we couldn't just take an
+ * upstream fenv.h and had to write our own).
+ */
+
+__BEGIN_DECLS
 
 /*
  * Each symbol representing a floating point exception expands to an integer
@@ -95,9 +100,7 @@ typedef	struct {
  * that manage the floating-point environment, namely fesetenv() and
  * feupdateenv().
  */
-__BEGIN_DECLS
 extern	fenv_t			__fe_dfl_env;
-__END_DECLS
 #define	FE_DFL_ENV		((const fenv_t *)&__fe_dfl_env)
 
 /*
@@ -113,5 +116,32 @@ __END_DECLS
  * the user to affect the subsequent behavior of floating-point arithmetic.
  */
 typedef	unsigned int		fexcept_t;
+
+/* C99 floating-point exception functions */
+int feclearexcept(int excepts);
+int fegetexceptflag(fexcept_t *flagp, int excepts);
+int fesetexceptflag(const fexcept_t *flagp, int excepts);
+/* feraiseexcept does not set the inexact flag on overflow/underflow */
+int feraiseexcept(int excepts);
+int fetestexcept(int excepts);
+
+/* C99 rounding control functions */
+int fegetround(void);
+int fesetround(int round);
+
+/* C99 floating-point environment functions */
+int fegetenv(fenv_t *__envp);
+int feholdexcept(fenv_t *__envp);
+int fesetenv(const fenv_t *envp);
+int feupdateenv(const fenv_t *__envp);
+
+#if __BSD_VISIBLE
+/* Additional support functions to set/query floating point traps */
+int feenableexcept(int __mask);
+int fedisableexcept(int __mask);
+int fegetexcept(void);
+#endif /* __BSD_VISIBLE */
+
+__END_DECLS
 
 #endif	/* !_AMD64_FENV_H_ */
