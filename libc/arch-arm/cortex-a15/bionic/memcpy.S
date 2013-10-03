@@ -87,7 +87,7 @@ END(memcpy)
 #define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
 #include "memcpy_base.S"
 
-ENTRY(__memcpy_chk_fail)
+ENTRY_PRIVATE(__memcpy_chk_fail)
         .cfi_startproc
         // Preserve lr for backtrace.
         push    {lr}

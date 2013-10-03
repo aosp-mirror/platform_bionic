@@ -53,7 +53,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-ENTRY(MEMCPY_BASE)
+ENTRY_PRIVATE(MEMCPY_BASE)
         .cfi_startproc
         .save   {r0, lr}
         .cfi_def_cfa_offset 8
@@ -172,7 +172,7 @@ ENTRY(MEMCPY_BASE)
         .cfi_endproc
 END(MEMCPY_BASE)
 
-ENTRY(MEMCPY_BASE_ALIGNED)
+ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
         .cfi_startproc
         .save   {r0, lr}
         .cfi_def_cfa_offset 8
