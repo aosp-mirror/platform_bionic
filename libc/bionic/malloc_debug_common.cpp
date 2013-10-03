@@ -293,7 +293,7 @@ unsigned int gMallocDebugBacklog;
 int gMallocDebugLevel;
 
 template<typename FunctionType>
-void InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
+static void InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
     char symbol[128];
     snprintf(symbol, sizeof(symbol), "%s_%s", prefix, suffix);
     *func = reinterpret_cast<FunctionType>(dlsym(malloc_impl_handler, symbol));
