@@ -554,6 +554,20 @@ TEST(DEATHTEST, FD_ISSET_fortified) {
   ASSERT_EXIT(FD_ISSET(-1, &set), testing::KilledBySignal(SIGABRT), "");
 }
 
+TEST(DEATHTEST, FD_ISSET_2_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[1];
+  fd_set* set = (fd_set*) buf;
+  ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, FD_ZERO_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[1];
+  fd_set* set = (fd_set*) buf;
+  ASSERT_EXIT(FD_ZERO(set), testing::KilledBySignal(SIGABRT), "");
+}
+
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
