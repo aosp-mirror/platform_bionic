@@ -2,6 +2,11 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
 
+# Make everything depend on any changes to included makefiles.
+libc_common_additional_dependencies := \
+    $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk \
+    $(LOCAL_PATH)/Android.mk \
+
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
@@ -537,12 +542,17 @@ _LIBC_ARCH_COMMON_SRC_FILES :=
 _LIBC_ARCH_CPU_VARIANT_SRC_FILES :=
 _LIBC_ARCH_STATIC_SRC_FILES :=
 _LIBC_ARCH_DYNAMIC_SRC_FILES :=
-include bionic/libc/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+_LIBC_ARCH_ADDITIONAL_DEPENDENCIES :=
+
+libc_common_additional_dependencies += \
+    $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
 
 libc_common_src_files += $(_LIBC_ARCH_COMMON_SRC_FILES)
 libc_common_src_files += $(_LIBC_ARCH_CPU_VARIANT_SRC_FILES)
 libc_arch_static_src_files := $(_LIBC_ARCH_STATIC_SRC_FILES)
 libc_arch_dynamic_src_files := $(_LIBC_ARCH_DYNAMIC_SRC_FILES)
+libc_common_additional_dependencies += $(_LIBC_ARCH_ADDITIONAL_DEPENDENCIES)
 
 # Define some common cflags
 # ========================================================
@@ -769,7 +779,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libbionic_ssp
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -792,7 +802,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_tzcode
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -817,7 +827,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_freebsd
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -842,7 +852,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_netbsd
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -860,7 +870,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_bionic
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -879,7 +889,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     libbionic_ssp \
     libc_bionic \
@@ -918,7 +928,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_MODULE := libc_nomalloc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
@@ -943,7 +953,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
@@ -986,7 +996,7 @@ ifeq ($(TARGET_ARCH),arm)
 endif
 
 LOCAL_MODULE:= libc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_REQUIRED_MODULES := tzdata
 
 # WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
@@ -1032,7 +1042,7 @@ LOCAL_SRC_FILES := \
 	bionic/malloc_debug_check.cpp \
 
 LOCAL_MODULE:= libc_malloc_debug_leak
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
@@ -1062,7 +1072,7 @@ LOCAL_SRC_FILES := \
 	bionic/malloc_debug_qemu.cpp
 
 LOCAL_MODULE:= libc_malloc_debug_qemu
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
