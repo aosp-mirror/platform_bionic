@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "01e021ae_520a92aa",
+        "filename": "libc/arch-x86_64/bionic/__stack_chk_fail_local.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b445af_ee107ba2",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21b445af_4e642720",
         "filename": "libc/arch-x86_64/bionic/clone.S",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "Use %eax.  It applies to other syscalls in this file.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01e021ae_720f96b9",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b445af_4e642720",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e1c4ed29_d12686c4",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b445af_0e5e2f52",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "819df127_240538de",
         "filename": "libc/arch-x86_64/bionic/clone.S",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "Use %eax.  It applies to __bionic_clone.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c1a91a_30b346fd",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_240538de",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "c1c1a91a_f08ffe2a",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_e4ee70e5",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21660513_12195c8d",
         "filename": "libc/arch-x86_64/bionic/clone.S",
         "patchSetId": 6
@@ -98,6 +188,24 @@
       "writtenOn": "2013-10-02T23:46:03Z",
       "side": 1,
       "message": "this gets me:\n\n/usr/local/google/home/enh/aosp/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.7/bin/../lib/gcc/x86_64-linux-android/4.7/../../../../x86_64-linux-android/bin/ld: error: out/target/product/generic_x86_64/obj/STATIC_LIBRARIES/libc_common_intermediates/libc_common.a(clone.o): requires dynamic R_X86_64_PC32 reloc against \u0027__thread_entry\u0027 which may overflow at runtime; recompile with -fPIC\n/usr/local/google/home/enh/aosp/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.7/bin/../lib/gcc/x86_64-linux-android/4.7/../../../../x86_64-linux-android/bin/ld: warning: shared library text segment is not shareable",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c1a91a_b3266028",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Hmm.... Can\u0027t reproduce.... Are you building from scratch?",
+      "parentUuid": "21660513_12195c8d",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "e1c4ed29_11164ec1",
+        "filename": "libc/arch-x86_64/bionic/futex_x86_64.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Thanks. Done. Also fixed __futex_wait",
+      "parentUuid": "819df127_44dc0430",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "819df127_24a9b886",
         "filename": "libc/arch-x86_64/bionic/setjmp.S",
         "patchSetId": 6
@@ -132,6 +258,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "Use %edi.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1c4ed29_b1817abe",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_24a9b886",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "e1c4ed29_516e1633",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_84968c38",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21b445af_3194b28e",
         "filename": "libc/arch-x86_64/bionic/sigaction.c",
         "patchSetId": 6
@@ -166,6 +328,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "This is incorrect.  Please see my comments in patch 5.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c1a91a_13b2d4d8",
+        "filename": "libc/arch-x86_64/bionic/sigaction.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b445af_3194b28e",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "e1c4ed29_11face29",
+        "filename": "libc/arch-x86_64/bionic/sigsetjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21660513_410aa8ef",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21660513_211c5430",
         "filename": "libc/arch-x86_64/bionic/syscall.S",
         "patchSetId": 6
@@ -200,6 +398,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "Use %eax.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1c4ed29_f11062a2",
+        "filename": "libc/arch-x86_64/bionic/syscall.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21660513_211c5430",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +439,24 @@
     },
     {
       "key": {
+        "uuid": "e1c4ed29_910d5e8d",
+        "filename": "libc/arch-x86_64/include/machine/exec.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Yes. x32 will be submitted separately.",
+      "parentUuid": "21660513_a1eaa4bd",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "819df127_8473ec14",
         "filename": "libc/arch-x86_64/include/machine/kernel.h",
         "patchSetId": 6
@@ -234,6 +468,24 @@
       "writtenOn": "2013-10-02T19:49:08Z",
       "side": 1,
       "message": "Those should be \"long long\" or __kernel_ulong_t.",
+      "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01e021ae_f545b0c3",
+        "filename": "libc/arch-x86_64/include/machine/kernel.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-03T18:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_8473ec14",
       "revId": "ba53821d774d1828aafeeb5abad14e58eff92206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
