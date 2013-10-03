@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "819df127_3d91c20f",
+        "filename": "libc/arch-x86_64/syscalls/__rt_sigreturn.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-03T18:44:50Z",
+      "side": 1,
+      "message": "This is a special sycall.  It never returns here. Just keep\n\n\tmovl\t$__NR_rt_sigreturn,%eax\n\tsyscall",
+      "revId": "30352eabeced292da723ff410136fee3ba56ff90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
