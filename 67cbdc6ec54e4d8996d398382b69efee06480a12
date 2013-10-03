@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21660513_533fd339",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-03T22:39:42Z",
+      "side": 1,
+      "message": "while you\u0027re here, i was thinking we should perhaps remove these #undefs and have a #else for the unchecked variants?",
+      "revId": "67cbdc6ec54e4d8996d398382b69efee06480a12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
