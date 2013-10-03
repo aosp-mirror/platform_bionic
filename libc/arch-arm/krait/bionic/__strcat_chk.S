@@ -196,7 +196,7 @@ END(__strcat_chk)
 #define MEMCPY_BASE_ALIGNED __strcat_chk_memcpy_base_aligned
 #include "memcpy_base.S"
 
-ENTRY(__strcat_chk_failed)
+ENTRY_PRIVATE(__strcat_chk_failed)
     .cfi_startproc
     .save   {r0, lr}
     .save   {r4, r5}
