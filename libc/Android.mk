@@ -656,18 +656,20 @@ libc_crt_target_cflags += \
 # that will call __cxa_finalize(&__dso_handle) in order to ensure that
 # static C++ destructors are properly called on dlclose().
 #
+libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin.c
+libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
+
 ifeq ($(TARGET_ARCH),arm)
     libc_crt_target_so_cflags :=
 endif
 ifeq ($(TARGET_ARCH),mips)
     libc_crt_target_so_cflags := -fPIC
+libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
 endif
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
     libc_crt_target_so_cflags := -fPIC
 endif
 libc_crt_target_so_cflags += $(libc_crt_target_cflags)
-libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
-libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin_so.c
 
 # See the comment in crtbrand.c for the reason why we need to generate
 # crtbrand.s before generating crtbrand.o.
@@ -697,7 +699,7 @@ $(GEN): $(libc_crt_target_crtbegin_so_file)
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend_so.S
+$(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend_so.S
 	@mkdir -p $(dir $@)
 	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
@@ -750,7 +752,7 @@ ALL_GENERATED_SOURCES += $(GEN)
 # We rename crtend.o to crtend_android.o to avoid a
 # name clash between gcc and bionic.
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_android.o
-$(GEN): $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtend.S
+$(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend.S
 	@mkdir -p $(dir $@)
 	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
@@ -989,10 +991,10 @@ ifeq ($(TARGET_ARCH),arm)
 	LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
 
 	LOCAL_SRC_FILES := \
-		arch-arm/bionic/crtbegin_so.c \
+		arch-common/bionic/crtbegin_so.c \
 		arch-arm/bionic/atexit_legacy.c \
 		$(LOCAL_SRC_FILES) \
-		arch-arm/bionic/crtend_so.S
+		arch-common/bionic/crtend_so.S
 endif
 
 LOCAL_MODULE:= libc
