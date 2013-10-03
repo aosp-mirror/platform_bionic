@@ -30,32 +30,41 @@
 #include <sys/select.h>
 #include "libc_logging.h"
 
-extern "C" int __FD_ISSET_chk(int fd, fd_set* set) {
+extern "C" int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("file descriptor is negative for FD_ISSET", 0);
   }
   if (__predict_false(fd >= FD_SETSIZE)) {
     __fortify_chk_fail("file descriptor is too big for FD_ISSET", 0);
   }
+  if (__predict_false(set_size < sizeof(fd_set))) {
+    __fortify_chk_fail("set is too small", 0);
+  }
   return FD_ISSET(fd, set);
 }
 
-extern "C" void __FD_CLR_chk(int fd, fd_set* set) {
+extern "C" void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("file descriptor is negative for FD_CLR", 0);
   }
   if (__predict_false(fd >= FD_SETSIZE)) {
     __fortify_chk_fail("file descriptor is too big for FD_CLR", 0);
   }
+  if (__predict_false(set_size < sizeof(fd_set))) {
+    __fortify_chk_fail("set is too small", 0);
+  }
   FD_CLR(fd, set);
 }
 
-extern "C" void __FD_SET_chk(int fd, fd_set* set) {
+extern "C" void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("file descriptor is negative for FD_SET", 0);
   }
   if (__predict_false(fd >= FD_SETSIZE)) {
     __fortify_chk_fail("file descriptor is too big for FD_SET", 0);
+  }
+  if (__predict_false(set_size < sizeof(fd_set))) {
+    __fortify_chk_fail("set is too small", 0);
   }
   FD_SET(fd, set);
 }
