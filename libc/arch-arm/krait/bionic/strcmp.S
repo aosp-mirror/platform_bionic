@@ -145,19 +145,8 @@ ENTRY(strcmp)
 
         .macro  magic_find_zero_bytes w1
         /* Macro to find all-zero bytes in w1, result is in ip.  */
-#if (defined (__ARM_FEATURE_DSP))
         uadd8   ip, \w1, r6
         sel     ip, r7, r6
-#else /* not defined (__ARM_FEATURE_DSP) */
-        /* __ARM_FEATURE_DSP is not defined for some Cortex-M processors.
-        Coincidently, these processors only have Thumb-2 mode, where we can use the
-        the (large) magic constant available directly as an immediate in instructions.
-        Note that we cannot use the magic constant in ARM mode, where we need
-        to create the constant in a register.  */
-        sub     ip, \w1, #0x01010101
-        bic     ip, ip, \w1
-        and     ip, ip, #0x80808080
-#endif /* not defined (__ARM_FEATURE_DSP) */
         .endm /* magic_find_zero_bytes */
 
         .macro  setup_return w1 w2
