@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "819df127_dddd3ef9",
+        "filename": "libc/bionic/lseek64.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-03T18:32:36Z",
+      "side": 1,
+      "message": "I don\u0027t think it provides an alias for lseek64.  You need\nto set it in lseek.S.",
+      "revId": "76ddb908d0f8d0e6e27b457b7beec54c3afb05c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
