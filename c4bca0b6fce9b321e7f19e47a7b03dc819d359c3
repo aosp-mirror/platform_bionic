@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81625122_96102aa2",
+        "filename": "libc/bionic/__strncpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-04T17:08:44Z",
+      "side": 1,
+      "message": "end of destination buffer? or we could actually lose \"dest[ination]\" now because the explicit read/write makes it clear which buffer we\u0027re talking about anyway.",
+      "revId": "c4bca0b6fce9b321e7f19e47a7b03dc819d359c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
