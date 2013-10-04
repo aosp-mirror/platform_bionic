@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c13fe9e6_80ed78ad",
+        "filename": "libc/arch-x86_64/bionic/__rt_sigreturn.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1005205
+      },
+      "writtenOn": "2013-10-04T15:25:07Z",
+      "side": 1,
+      "message": "Please remove hlt.   There is no need here.",
+      "revId": "7db41407f1ab792b411fe5a050f864cfb45f42fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
