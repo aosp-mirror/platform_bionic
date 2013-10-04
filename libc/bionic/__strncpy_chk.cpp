@@ -45,7 +45,7 @@ extern "C" char* __strncpy_chk(char* __restrict dest, const char* __restrict src
               size_t len, size_t dest_len)
 {
   if (__predict_false(len > dest_len)) {
-    __fortify_chk_fail("strncpy dest buffer overflow",
+    __fortify_chk_fail("strncpy dest buffer overflow prevented",
                        BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
   }
 
@@ -64,7 +64,7 @@ extern "C" char* __strncpy_chk2(char* __restrict dst, const char* __restrict src
               size_t n, size_t dest_len, size_t src_len)
 {
   if (__predict_false(n > dest_len)) {
-    __fortify_chk_fail("strncpy dest buffer overflow",
+    __fortify_chk_fail("strncpy dest buffer overflow prevented",
                        BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
   }
   if (n != 0) {
@@ -83,7 +83,7 @@ extern "C" char* __strncpy_chk2(char* __restrict dst, const char* __restrict src
 
     size_t s_copy_len = static_cast<size_t>(s - src);
     if (__predict_false(s_copy_len > src_len)) {
-      __fortify_chk_fail("strncpy read beyond end of src buffer", 0);
+      __fortify_chk_fail("strncpy buffer overrun prevented", 0);
     }
   }
 

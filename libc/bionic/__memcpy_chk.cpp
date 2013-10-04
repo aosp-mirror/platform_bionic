@@ -46,7 +46,7 @@ extern "C" void *__memcpy_chk(void *dest, const void *src,
               size_t copy_amount, size_t dest_len)
 {
     if (__predict_false(copy_amount > dest_len)) {
-        __fortify_chk_fail("memcpy buffer overflow",
+        __fortify_chk_fail("memcpy buffer overflow prevented",
                              BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
     }
 
