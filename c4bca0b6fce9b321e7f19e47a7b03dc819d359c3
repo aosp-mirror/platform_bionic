@@ -16,6 +16,24 @@
       "revId": "c4bca0b6fce9b321e7f19e47a7b03dc819d359c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2120c5dd_28b8ebb9",
+        "filename": "libc/bionic/__strncpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-10-04T18:44:26Z",
+      "side": 1,
+      "message": "dropped \"dest\". Like you said, only one buffer is being written to.",
+      "parentUuid": "81625122_96102aa2",
+      "revId": "c4bca0b6fce9b321e7f19e47a7b03dc819d359c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
