@@ -28,9 +28,9 @@
 
 #ifdef __LP64__
 # define ASM_PTR_SIZE(x) .quad x
-# define ASM_ALIGN(x)    .align 4
+# define ASM_ALIGN(x)
 #else
 # define ASM_PTR_SIZE(x) .long x
-# define ASM_ALIGN(x)
+# define ASM_ALIGN(x)    .align x
 #endif
 
