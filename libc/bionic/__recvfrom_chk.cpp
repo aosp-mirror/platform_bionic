@@ -37,7 +37,7 @@ ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buflen, unsigne
         const struct sockaddr* src_addr, socklen_t* addrlen)
 {
   if (__predict_false(len > buflen)) {
-    __fortify_chk_fail("recvfrom buffer overflow prevented", 0);
+    __fortify_chk_fail("recvfrom prevented write past end of buffer", 0);
   }
 
   return recvfrom(socket, buf, len, flags, src_addr, addrlen);

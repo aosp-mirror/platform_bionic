@@ -43,7 +43,7 @@
  */
 extern "C" void *__memset_chk (void *dest, int c, size_t n, size_t dest_len) {
     if (__predict_false(n > dest_len)) {
-        __fortify_chk_fail("memset buffer overflow prevented",
+        __fortify_chk_fail("memset prevented write past end of buffer",
                              BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
     }
 

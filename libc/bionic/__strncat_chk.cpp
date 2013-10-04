@@ -59,7 +59,7 @@ extern "C" char *__strncat_chk(
         len--; dest_buf_size--;
 
         if (__predict_false(dest_buf_size == 0)) {
-            __fortify_chk_fail("strncat buffer overflow prevented",
+            __fortify_chk_fail("strncat prevented write past end of buffer",
                                BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW);
         }
 
