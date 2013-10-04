@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c13fe9e6_00f968a8",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-04T06:39:50Z",
+      "side": 1,
+      "message": "not sure SOFTFLOAT means anything for x86 or x86_64, so this is just an (in)correctness-preserving transform from what we had before.",
+      "revId": "7e841ed688947855a3bd20d2b23a44599257038a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
