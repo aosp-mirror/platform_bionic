@@ -222,4 +222,4 @@ END(__strcat_chk_failed)
 
     .data
 error_string:
-    .string "strcat buffer overflow"
+    .string "strcat prevented write past end of buffer"
