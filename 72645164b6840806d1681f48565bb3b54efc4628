@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "012581ee_b02f1e01",
+        "filename": "libc/include/sys/limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-04T23:17:30Z",
+      "side": 1,
+      "message": "upstream has actually made this change in the years since 2005...",
+      "revId": "72645164b6840806d1681f48565bb3b54efc4628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
