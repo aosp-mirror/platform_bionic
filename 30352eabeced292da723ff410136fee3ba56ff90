@@ -16,6 +16,24 @@
       "revId": "30352eabeced292da723ff410136fee3ba56ff90",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2107e553_1038a4e0",
+        "filename": "libc/arch-x86_64/syscalls/__rt_sigreturn.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-04T10:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "819df127_3d91c20f",
+      "revId": "30352eabeced292da723ff410136fee3ba56ff90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
