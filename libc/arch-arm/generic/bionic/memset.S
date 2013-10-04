@@ -130,4 +130,4 @@ END(memset)
 
         .data
 error_string:
-        .string     "memset buffer overflow"
+        .string     "memset prevented write past end of buffer"

@@ -52,7 +52,7 @@ extern "C" int __vsprintf_chk(
     int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
 
     if ((size_t) ret >= dest_len_from_compiler) {
-        __fortify_chk_fail("vsprintf buffer overflow prevented", 0);
+        __fortify_chk_fail("vsprintf prevented write past end of buffer", 0);
     }
 
     return ret;

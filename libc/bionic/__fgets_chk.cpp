@@ -49,7 +49,7 @@ extern "C" char *__fgets_chk(char *dest, int supplied_size,
     }
 
     if (((size_t) supplied_size) > dest_len_from_compiler) {
-        __fortify_chk_fail("fgets buffer overflow prevented", 0);
+        __fortify_chk_fail("fgets prevented write past end of buffer", 0);
     }
 
     return fgets(dest, supplied_size, stream);
