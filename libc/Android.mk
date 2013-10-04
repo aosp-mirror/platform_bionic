@@ -579,26 +579,7 @@ ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -DSOFTFLOAT
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := -mthumb-interwork
-endif # !arm
-
-ifeq ($(TARGET_ARCH),x86)
-  libc_crt_target_cflags := -m32
-  libc_crt_target_ldflags := -melf_i386
-endif
-ifeq ($(TARGET_ARCH),x86_64)
-  libc_crt_target_cflags := -m64
-  libc_crt_target_ldflags := -melf_x86_64
-endif
-
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-  libc_common_cflags += -DSOFTFLOAT
-  ifeq ($(ARCH_X86_HAVE_SSE2),true)
-      libc_crt_target_cflags += -DUSE_SSE2=1
-  endif
-  ifeq ($(ARCH_X86_HAVE_SSSE3),true)
-      libc_crt_target_cflags += -DUSE_SSSE3=1
-  endif
-endif
+endif # arm
 
 ifeq ($(TARGET_ARCH),mips)
   ifneq ($(ARCH_MIPS_HAS_FPU),true)
@@ -607,6 +588,18 @@ ifeq ($(TARGET_ARCH),mips)
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags := $(TARGET_GLOBAL_CFLAGS)
 endif # mips
+
+ifeq ($(TARGET_ARCH),x86)
+  libc_common_cflags += -DSOFTFLOAT
+  libc_crt_target_cflags := -m32
+  libc_crt_target_ldflags := -melf_i386
+endif # x86
+
+ifeq ($(TARGET_ARCH),x86_64)
+  libc_common_cflags += -DSOFTFLOAT
+  libc_crt_target_cflags := -m64
+  libc_crt_target_ldflags := -melf_x86_64
+endif # x86_64
 
 # Define ANDROID_SMP appropriately.
 ifeq ($(TARGET_CPU_SMP),true)

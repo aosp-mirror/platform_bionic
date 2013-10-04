@@ -50,7 +50,6 @@ _LIBC_ARCH_COMMON_SRC_FILES += \
 	upstream-freebsd/lib/libc/string/wmemcmp.c
 endif
 
-ifeq ($(ARCH_X86_HAVE_SSE2),true)
 _LIBC_ARCH_COMMON_SRC_FILES += \
 	arch-x86/string/sse2-memset-atom.S \
 	arch-x86/string/sse2-bzero-atom.S \
@@ -64,23 +63,7 @@ _LIBC_ARCH_COMMON_SRC_FILES += \
 	arch-x86/string/sse2-wcschr-atom.S \
 	arch-x86/string/sse2-wcsrchr-atom.S \
 	arch-x86/string/sse2-wcslen-atom.S \
-	arch-x86/string/sse2-wcscmp-atom.S
-else
-_LIBC_ARCH_COMMON_SRC_FILES += \
-	arch-x86/string/memset.S \
-	arch-x86/string/strlen.S \
-	arch-x86/string/bzero.S \
-	bionic/memrchr.c \
-	bionic/memchr.c \
-	bionic/strchr.cpp \
-	string/strrchr.c \
-	string/index.c \
-	bionic/strnlen.c \
-	upstream-freebsd/lib/libc/string/wcschr.c \
-	upstream-freebsd/lib/libc/string/wcsrchr.c \
-	upstream-freebsd/lib/libc/string/wcslen.c \
-	upstream-freebsd/lib/libc/string/wcscmp.c
-endif
+	arch-x86/string/sse2-wcscmp-atom.S \
 
 _LIBC_ARCH_STATIC_SRC_FILES := \
     bionic/dl_iterate_phdr_static.c \
