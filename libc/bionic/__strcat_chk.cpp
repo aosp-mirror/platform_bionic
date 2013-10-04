@@ -55,7 +55,7 @@ extern "C" char* __strcat_chk(
     while ((*dest++ = *src++) != '\0') {
         dest_buf_size--;
         if (__predict_false(dest_buf_size == 0)) {
-            __fortify_chk_fail("strcat buffer overflow",
+            __fortify_chk_fail("strcat buffer overflow prevented",
                                BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
         }
     }
