@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e1422d7c_843d8ad3",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 8
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-04T16:21:47Z",
+      "side": 1,
+      "message": "i think we\u0027re better off just taking the auto-generated stub like we did in the original patch. it doesn\u0027t hurt anyone that there\u0027s dead code at the end because the syscall never returns, and it\u0027s arguably more confusing to be insisting on supplying our own stub.",
+      "parentUuid": "81625122_56e6922e",
+      "revId": "7db41407f1ab792b411fe5a050f864cfb45f42fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c13fe9e6_80ed78ad",
         "filename": "libc/arch-x86_64/bionic/__rt_sigreturn.S",
         "patchSetId": 8
