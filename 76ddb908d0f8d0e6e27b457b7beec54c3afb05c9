@@ -16,6 +16,24 @@
       "revId": "76ddb908d0f8d0e6e27b457b7beec54c3afb05c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21528551_f8799181",
+        "filename": "libc/bionic/lseek64.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-04T08:47:50Z",
+      "side": 1,
+      "message": "Right. But we have lseek.S generated... so it would be tricky.\nI\u0027ll just remove lseek64.c from the x86_64 build for a while with separate patch to keep libc build working.",
+      "parentUuid": "819df127_dddd3ef9",
+      "revId": "76ddb908d0f8d0e6e27b457b7beec54c3afb05c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
