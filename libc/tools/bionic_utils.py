@@ -49,7 +49,7 @@ class SysCallsTxtParser:
         """ parse a syscall spec line.
 
         line processing, format is
-           return type    func_name[:syscall_name[:socketcall_id]] ( [paramlist] )   architecture_list
+           return type    func_name[|alias_list][:syscall_name[:socketcall_id]] ( [paramlist] ) architecture_list
         """
         pos_lparen = line.find('(')
         E          = self.E
@@ -93,6 +93,17 @@ class SysCallsTxtParser:
                 socketcall_id = int(syscall_func[pos_colon2+1:])
                 syscall_func = syscall_func[:pos_colon]
 
+        alias_delim = syscall_func.find('|')
+        if alias_delim > 0:
+            alias_list = syscall_func[alias_delim+1:].strip()
+            syscall_func = syscall_func[:alias_delim]
+            alias_delim = syscall_name.find('|')
+            if alias_delim > 0:
+                syscall_name = syscall_name[:alias_delim]
+            syscall_aliases = string.split(alias_list, ',')
+        else:
+            syscall_aliases = []
+
         if pos_rparen > pos_lparen+1:
             syscall_params = line[pos_lparen+1:pos_rparen].split(',')
             params         = string.join(syscall_params,',')
@@ -103,6 +114,7 @@ class SysCallsTxtParser:
         t = {
               "name"    : syscall_name,
               "func"    : syscall_func,
+              "aliases" : syscall_aliases,
               "params"  : syscall_params,
               "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
               "socketcall_id" : socketcall_id
