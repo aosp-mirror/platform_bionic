@@ -3,7 +3,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(arch_prctl)
+ENTRY(__arch_prctl)
     movl    $__NR_arch_prctl, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -14,4 +14,4 @@ ENTRY(arch_prctl)
     orq     $-1, %rax
 1:
     ret
-END(arch_prctl)
+END(__arch_prctl)
