@@ -31,18 +31,6 @@
 
 /* Common definitions for limits.h. */
 
-/*
- * <machine/internal_types.h> is meant to describe a specific architecture,
- * but to be a safe include, that doesn't ever define anything that is
- * user-visible (only typedefs and #define names that stays in the __xxx
- * namespace).
- *
- *   __machine_has_unsigned_chars	(default is signed chars)
- *   __FLT_xxx/__DBL_xxx		non standard values for floating
- *   					points limits.
- */
-#include <machine/internal_types.h>
-
 /* Legacy */
 #include <machine/limits.h>
 
@@ -52,7 +40,7 @@
 #define SCHAR_MIN	(-0x7f-1)	/* min value for a signed char */
 
 #define	UCHAR_MAX	0xffU		/* max value for an unsigned char */
-#ifdef __machine_has_unsigned_chars
+#ifdef __CHAR_UNSIGNED__
 # define CHAR_MIN	0		/* min value for a char */
 # define CHAR_MAX	0xff		/* max value for a char */
 #else
