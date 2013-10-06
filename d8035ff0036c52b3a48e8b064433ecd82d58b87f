@@ -16,6 +16,24 @@
       "revId": "d8035ff0036c52b3a48e8b064433ecd82d58b87f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1194dc0_80e3aa8d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1022430
+      },
+      "writtenOn": "2013-10-06T20:25:02Z",
+      "side": 1,
+      "message": "My bionic wasn\u0027t fully up to date, I apologize.",
+      "parentUuid": "2120c5dd_af2cda0c",
+      "revId": "d8035ff0036c52b3a48e8b064433ecd82d58b87f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
