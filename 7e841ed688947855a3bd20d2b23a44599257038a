@@ -16,6 +16,24 @@
       "revId": "7e841ed688947855a3bd20d2b23a44599257038a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21d52500_438a7871",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-07T14:37:11Z",
+      "side": 1,
+      "message": "Yes, looks like obsolete.",
+      "parentUuid": "c13fe9e6_00f968a8",
+      "revId": "7e841ed688947855a3bd20d2b23a44599257038a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
