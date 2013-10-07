@@ -146,10 +146,13 @@ void pthread_exit(void * retval)
     (void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
 
     // destroy the thread stack
-    if (user_stack)
+    if (user_stack) {
         _exit_thread((int)retval);
-    else
+    } else {
+        // We need to munmap the stack we're running on before calling exit.
+        // That's not something we can do in C.
         _exit_with_stack_teardown(stack_base, stack_size, (int)retval);
+    }
 }
 
 /* a mutex is implemented as a 32-bit integer holding the following fields
