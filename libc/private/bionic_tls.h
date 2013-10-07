@@ -89,13 +89,13 @@ extern int __set_tls(void* ptr);
 /* get the TLS */
 #if defined(__arm__)
 # define __get_tls() \
-    ({ register unsigned int __val; \
+    ({ unsigned int __val; \
        asm ("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); \
        (volatile void*) __val; })
 #elif defined(__mips__)
 # define __get_tls() \
     /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register unsigned int __val asm("v1"); \
+    ({ unsigned int __val asm("v1"); \
        asm ("   .set    push\n" \
             "   .set    mips32r2\n" \
             "   rdhwr   %0,$29\n" \
@@ -103,13 +103,13 @@ extern int __set_tls(void* ptr);
        (volatile void*) __val; })
 #elif defined(__i386__)
 # define __get_tls() \
-    ({ register void* __val; \
+    ({ void* __val; \
        asm ("movl %%gs:0, %0" : "=r"(__val)); \
        (volatile void*) __val; })
 
 #elif defined(__x86_64__)
 # define __get_tls() \
-    ({ register void* __val; \
+    ({ void* __val; \
        asm ("mov %%fs:0, %0" : "=r"(__val)); \
        (volatile void*) __val; })
 #else
