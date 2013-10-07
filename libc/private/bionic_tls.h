@@ -95,7 +95,7 @@ extern int __set_tls(void* ptr);
 #elif defined(__mips__)
 # define __get_tls() \
     /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ unsigned int __val asm("v1"); \
+    ({ register unsigned int __val asm("v1"); \
        asm ("   .set    push\n" \
             "   .set    mips32r2\n" \
             "   rdhwr   %0,$29\n" \
