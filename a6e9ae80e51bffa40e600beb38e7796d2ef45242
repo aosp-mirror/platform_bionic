@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1194dc0_ed5a56f7",
+        "filename": "libc/arch-x86/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-07T17:49:18Z",
+      "side": 0,
+      "message": "i thought it was odd that we\u0027d have a big comment saying this wasn\u0027t necessary, then do it anyway, but the tests still pass without this line so it seems to be true that %edx isn\u0027t clobbered by the munmap.",
+      "revId": "a6e9ae80e51bffa40e600beb38e7796d2ef45242",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
