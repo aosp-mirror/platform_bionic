@@ -51,6 +51,24 @@
       "revId": "9b95410f1b7669831d11a8ca332bc82e46ad9dad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "419e996d_77f0280f",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-07T20:16:49Z",
+      "side": 1,
+      "message": "maybe this is why i\u0027m having trouble with that relocation in the clone code? my toolchain (the checked-in AOSP toolchain) must be different to yours. mine looks for /system/bin/linker regardless.",
+      "parentUuid": "21d52500_63e13c15",
+      "revId": "9b95410f1b7669831d11a8ca332bc82e46ad9dad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
