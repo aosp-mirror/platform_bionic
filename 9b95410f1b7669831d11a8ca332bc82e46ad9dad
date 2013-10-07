@@ -34,6 +34,23 @@
       "revId": "9b95410f1b7669831d11a8ca332bc82e46ad9dad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21d52500_63e13c15",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-07T15:35:57Z",
+      "side": 1,
+      "message": "We need to rename it for 64bit or differentiate by path to be able to have both x86_64 and x86 linker on the same system. I\u0027m using host /system/bin for that purpose and linker64 name at the moment.\n\nAlso currently it\u0027s in the toolchain since we should integrate linker name into all binaries:\n\ngcc/config/linux.h:#define BIONIC_DYNAMIC_LINKER32 \"/system/bin/linker\"\ngcc/config/linux.h:#define BIONIC_DYNAMIC_LINKER64 \"/system/bin/linker64\"\ngcc/config/linux.h:#define BIONIC_DYNAMIC_LINKERX32 \"/system/bin/linkerx32\"\n\nIf we\u0027d like to reconsider it we should update a toolchain.",
+      "revId": "9b95410f1b7669831d11a8ca332bc82e46ad9dad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
