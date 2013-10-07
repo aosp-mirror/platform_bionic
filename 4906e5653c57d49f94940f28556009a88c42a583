@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "61cb9d66_42b992dc",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-07T14:50:56Z",
+      "side": 1,
+      "message": "Cool. Thanks.",
+      "parentUuid": "012581ee_8d3925b4",
+      "revId": "4906e5653c57d49f94940f28556009a88c42a583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1194dc0_6cd78f0d",
         "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "61cb9d66_62ae9699",
+        "filename": "libc/arch-x86_64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-07T14:50:56Z",
+      "side": 1,
+      "message": "Yeah, we can clean it up I think. In the worst case it will just segfault later.",
+      "parentUuid": "e1194dc0_6cd78f0d",
+      "revId": "4906e5653c57d49f94940f28556009a88c42a583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "012581ee_2dfbd9a8",
         "filename": "libc/arch-x86_64/bionic/syscall.S",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2013-10-04T22:02:06Z",
       "side": 1,
       "message": "i just made this match the canonical syscall code the stub generator uses.",
+      "revId": "4906e5653c57d49f94940f28556009a88c42a583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61cb9d66_c2c4c251",
+        "filename": "libc/arch-x86_64/bionic/syscall.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-07T14:50:56Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "012581ee_2dfbd9a8",
       "revId": "4906e5653c57d49f94940f28556009a88c42a583",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
