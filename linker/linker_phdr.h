@@ -46,7 +46,7 @@ class ElfReader {
 
   size_t phdr_count() { return phdr_num_; }
   Elf_Addr load_start() { return reinterpret_cast<Elf_Addr>(load_start_); }
-  Elf_Addr load_size() { return load_size_; }
+  size_t load_size() { return load_size_; }
   Elf_Addr load_bias() { return load_bias_; }
   const Elf_Phdr* loaded_phdr() { return loaded_phdr_; }
 
@@ -72,7 +72,7 @@ class ElfReader {
   // First page of reserved address space.
   void* load_start_;
   // Size in bytes of reserved address space.
-  Elf_Addr load_size_;
+  size_t load_size_;
   // Load bias.
   Elf_Addr load_bias_;
 
