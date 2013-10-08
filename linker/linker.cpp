@@ -90,8 +90,13 @@ static soinfo* sonext = &libdl_info;
 static soinfo* somain; /* main process, always the one after libdl_info */
 
 static const char* const gSoPaths[] = {
+#if __LP64__
+  "/vendor/lib64",
+  "/system/lib64",
+#else
   "/vendor/lib",
   "/system/lib",
+#endif
   NULL
 };
 
