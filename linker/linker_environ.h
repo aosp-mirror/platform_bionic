@@ -29,7 +29,7 @@
 #ifndef LINKER_ENVIRON_H
 #define LINKER_ENVIRON_H
 
-struct KernelArgumentBlock;
+class KernelArgumentBlock;
 
 // Call this function before any of the other functions in this header file.
 extern void linker_env_init(KernelArgumentBlock& args);
