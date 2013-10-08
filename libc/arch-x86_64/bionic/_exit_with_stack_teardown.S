@@ -29,17 +29,17 @@
 #include <asm/unistd.h>
 #include <machine/asm.h>
 
-// void _exit_with_stack_teardown(void* stackBase, int stackSize, int retCode)
+// void _exit_with_stack_teardown(void* stackBase, int stackSize, int status)
 ENTRY(_exit_with_stack_teardown)
     // We take advantage of the fact that the linux syscall trap
     // handler saves all the registers, so we don't need to save
-    // the retCode argument for exit(2) while doing the munmap(2).
+    // the status argument for exit(2) while doing the munmap(2).
     mov     $__NR_munmap, %eax
     syscall
 
     // If munmap failed, ignore the failure and exit anyway.
 
-    mov     %rdx, %rdi        // retCode
+    mov     %rdx, %rdi        // status
     mov     $__NR_exit, %eax
     syscall
 
