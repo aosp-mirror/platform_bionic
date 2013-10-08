@@ -29,7 +29,7 @@
 #include <machine/asm.h>
 #include <asm/unistd.h>
 
-// void _exit_with_stack_teardown(void* stackBase, int stackSize, int retCode)
+// void _exit_with_stack_teardown(void* stackBase, int stackSize, int status)
 ENTRY(_exit_with_stack_teardown)
     mov     lr, r2
     ldr     r7, =__NR_munmap

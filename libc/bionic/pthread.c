@@ -44,8 +44,8 @@
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
-extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
-extern void _exit_thread(int  retCode);
+extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int status);
+extern void _exit_thread(int status);
 
 int  __futex_wake_ex(volatile void *ftx, int pshared, int val)
 {
@@ -143,15 +143,15 @@ void pthread_exit(void * retval)
 
     sigfillset(&mask);
     sigdelset(&mask, SIGSEGV);
-    (void)sigprocmask(SIG_SETMASK, &mask, (sigset_t *)NULL);
+    sigprocmask(SIG_SETMASK, &mask, NULL);
 
-    // destroy the thread stack
     if (user_stack) {
-        _exit_thread((int)retval);
+        // Cleaning up this thread's stack is the creator's responsibility, not ours.
+        _exit_thread(0);
     } else {
         // We need to munmap the stack we're running on before calling exit.
         // That's not something we can do in C.
-        _exit_with_stack_teardown(stack_base, stack_size, (int)retval);
+        _exit_with_stack_teardown(stack_base, stack_size, 0);
     }
 }
 
