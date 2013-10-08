@@ -128,6 +128,13 @@ struct soinfo {
   unsigned* bucket;
   unsigned* chain;
 
+#if defined(ANDROID_X86_64_LINKER)
+  Elf_Rela *plt_rela;
+  size_t plt_rela_count;
+
+  Elf_Rela *rela;
+  size_t rela_count;
+#else
   unsigned* plt_got;
 
   Elf_Rel* plt_rel;
@@ -135,6 +142,7 @@ struct soinfo {
 
   Elf_Rel* rel;
   size_t rel_count;
+#endif
 
   linker_function_t* preinit_array;
   size_t preinit_array_count;
