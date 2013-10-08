@@ -230,68 +230,72 @@ static unsigned gLibDlChains[8] = { 0, 2, 3, 4, 5, 6, 7, 0 };
 soinfo libdl_info = {
     "libdl.so",
 
-    phdr: 0,
-    phnum: 0,
-    entry: 0,
-    base: 0,
-    size: 0,
+    .phdr = 0,
+    .phnum = 0,
+    .entry = 0,
+    .base = 0,
+    .size = 0,
+
 #if !defined(__LP64__)
-    unused1: 0,
+    .unused1 = 0,
 #endif
-    dynamic: 0,
+
+    .dynamic = 0,
+
 #if !defined(__LP64__)
-    unused2: 0, unused3: 0,
+    .unused2 = 0, .unused3 = 0,
 #endif
-    next: 0,
 
-    flags: FLAG_LINKED,
+    .next = 0,
 
-    strtab: ANDROID_LIBDL_STRTAB,
-    symtab: gLibDlSymtab,
+    .flags = FLAG_LINKED,
 
-    nbucket: sizeof(gLibDlBuckets)/sizeof(unsigned),
-    nchain: sizeof(gLibDlChains)/sizeof(unsigned),
-    bucket: gLibDlBuckets,
-    chain: gLibDlChains,
+    .strtab = ANDROID_LIBDL_STRTAB,
+    .symtab = gLibDlSymtab,
+
+    .nbucket = sizeof(gLibDlBuckets)/sizeof(unsigned),
+    .nchain = sizeof(gLibDlChains)/sizeof(unsigned),
+    .bucket = gLibDlBuckets,
+    .chain = gLibDlChains,
 
 #if defined(ANDROID_X86_64_LINKER)
-    plt_rela: 0,
-    plt_rela_count: 0,
-    rela: 0,
-    rela_count: 0,
+    .plt_rela = 0,
+    .plt_rela_count = 0,
+    .rela = 0,
+    .rela_count = 0,
 #else
-    plt_got: 0,
-    plt_rel: 0,
-    plt_rel_count: 0,
-    rel: 0,
-    rel_count: 0,
+    .plt_got = 0,
+    .plt_rel = 0,
+    .plt_rel_count = 0,
+    .rel = 0,
+    .rel_count = 0,
 #endif
 
-    preinit_array: 0,
-    preinit_array_count: 0,
+    .preinit_array = 0,
+    .preinit_array_count = 0,
 
-    init_array: 0,
-    init_array_count: 0,
+    .init_array = 0,
+    .init_array_count = 0,
 
-    fini_array: 0,
-    fini_array_count: 0,
+    .fini_array = 0,
+    .fini_array_count = 0,
 
-    init_func: 0,
-    fini_func: 0,
+    .init_func = 0,
+    .fini_func = 0,
 
 #if defined(ANDROID_ARM_LINKER)
-    ARM_exidx: 0,
-    ARM_exidx_count: 0,
+    .ARM_exidx = 0,
+    .ARM_exidx_count = 0,
 #elif defined(ANDROID_MIPS_LINKER)
-    mips_symtabno: 0,
-    mips_local_gotno: 0,
-    mips_gotsym: 0,
+    .mips_symtabno = 0,
+    .mips_local_gotno = 0,
+    .mips_gotsym = 0,
 #endif
 
-    ref_count: 0,
-    { l_addr: 0, l_name: 0, l_ld: 0, l_next: 0, l_prev: 0, },
-    constructors_called: false,
-    load_bias: 0,
-    has_text_relocations: false,
-    has_DT_SYMBOLIC: true,
+    .ref_count = 0,
+    { .l_addr = 0, .l_name = 0, .l_ld = 0, .l_next = 0, .l_prev = 0, },
+    .constructors_called = false,
+    .load_bias = 0,
+    .has_text_relocations = false,
+    .has_DT_SYMBOLIC = true,
 };
