@@ -100,11 +100,10 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   if (sym != NULL) {
-    unsigned bind = ELF32_ST_BIND(sym->st_info);
+    unsigned bind = ELF_ST_BIND(sym->st_info);
 
     if (bind == STB_GLOBAL && sym->st_shndx != 0) {
-      unsigned ret = sym->st_value + found->load_bias;
-      return (void*) ret;
+      return reinterpret_cast<void*>(sym->st_value + found->load_bias);
     }
 
     __bionic_format_dlerror("symbol found but not global", symbol);
@@ -150,13 +149,13 @@ int dlclose(void* handle) {
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012 3456789
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
-#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
+#elif defined(ANDROID_MIPS_LINKER) || defined(ANDROID_X86_LINKER) || defined(ANDROID_X86_64_LINKER)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
 #else
-#error Unsupported architecture. Only ARM, MIPS, and x86 are presently supported.
+#error Unsupported architecture. Only ARM, MIPS, x86, and x86_64 are presently supported.
 #endif
 
 // name_offset: starting index of the name in libdl_info.strtab
@@ -166,23 +165,39 @@ int dlclose(void* handle) {
       /* st_size */ 0, \
       (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
-      shndx }
+      shndx, \
+    }
 
-static Elf32_Sym gLibDlSymtab[] = {
+#define ELF64_SYM_INITIALIZER(name_offset, value, shndx) \
+    { name_offset, \
+      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
+      /* st_other */ 0, \
+      shndx, \
+      reinterpret_cast<Elf64_Addr>(reinterpret_cast<void*>(value)), \
+      /* st_size */ 0, \
+    }
+
+#if defined(__LP64__)
+#  define ELF_SYM_INITIALIZER ELF64_SYM_INITIALIZER
+#else
+#  define ELF_SYM_INITIALIZER ELF32_SYM_INITIALIZER
+#endif
+
+static Elf_Sym gLibDlSymtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
   // in the strtab with a \0 to make iterating through the symtab easier.
-  ELF32_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
-  ELF32_SYM_INITIALIZER( 0, &dlopen, 1),
-  ELF32_SYM_INITIALIZER( 7, &dlclose, 1),
-  ELF32_SYM_INITIALIZER(15, &dlsym, 1),
-  ELF32_SYM_INITIALIZER(21, &dlerror, 1),
-  ELF32_SYM_INITIALIZER(29, &dladdr, 1),
-  ELF32_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
-  ELF32_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
+  ELF_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
+  ELF_SYM_INITIALIZER( 0, &dlopen, 1),
+  ELF_SYM_INITIALIZER( 7, &dlclose, 1),
+  ELF_SYM_INITIALIZER(15, &dlsym, 1),
+  ELF_SYM_INITIALIZER(21, &dlerror, 1),
+  ELF_SYM_INITIALIZER(29, &dladdr, 1),
+  ELF_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
+  ELF_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
 #if defined(ANDROID_ARM_LINKER)
-  ELF32_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
+  ELF_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -215,9 +230,18 @@ static unsigned gLibDlChains[8] = { 0, 2, 3, 4, 5, 6, 7, 0 };
 soinfo libdl_info = {
     "libdl.so",
 
-    phdr: 0, phnum: 0,
-    entry: 0, base: 0, size: 0,
-    unused1: 0, dynamic: 0, unused2: 0, unused3: 0,
+    phdr: 0,
+    phnum: 0,
+    entry: 0,
+    base: 0,
+    size: 0,
+#if !defined(__LP64__)
+    unused1: 0,
+#endif
+    dynamic: 0,
+#if !defined(__LP64__)
+    unused2: 0, unused3: 0,
+#endif
     next: 0,
 
     flags: FLAG_LINKED,
@@ -230,14 +254,38 @@ soinfo libdl_info = {
     bucket: gLibDlBuckets,
     chain: gLibDlChains,
 
-    plt_got: 0, plt_rel: 0, plt_rel_count: 0, rel: 0, rel_count: 0,
-    preinit_array: 0, preinit_array_count: 0, init_array: 0, init_array_count: 0,
-    fini_array: 0, fini_array_count: 0, init_func: 0, fini_func: 0,
+#if defined(ANDROID_X86_64_LINKER)
+    plt_rela: 0,
+    plt_rela_count: 0,
+    rela: 0,
+    rela_count: 0,
+#else
+    plt_got: 0,
+    plt_rel: 0,
+    plt_rel_count: 0,
+    rel: 0,
+    rel_count: 0,
+#endif
+
+    preinit_array: 0,
+    preinit_array_count: 0,
+
+    init_array: 0,
+    init_array_count: 0,
+
+    fini_array: 0,
+    fini_array_count: 0,
+
+    init_func: 0,
+    fini_func: 0,
 
 #if defined(ANDROID_ARM_LINKER)
-    ARM_exidx: 0, ARM_exidx_count: 0,
+    ARM_exidx: 0,
+    ARM_exidx_count: 0,
 #elif defined(ANDROID_MIPS_LINKER)
-    mips_symtabno: 0, mips_local_gotno: 0, mips_gotsym: 0,
+    mips_symtabno: 0,
+    mips_local_gotno: 0,
+    mips_gotsym: 0,
 #endif
 
     ref_count: 0,

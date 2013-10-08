@@ -163,10 +163,29 @@ bool ElfReader::VerifyElfHeader() {
     return false;
   }
 
-  if (header_.e_ident[EI_CLASS] != ELFCLASS32) {
-    DL_ERR("\"%s\" not 32-bit: %d", name_, header_.e_ident[EI_CLASS]);
+  // Try to give a clear diagnostic for ELF class mismatches, since they're
+  // an easy mistake to make during the 32-bit/64-bit transition period.
+  int elf_class = header_.e_ident[EI_CLASS];
+#if defined(__LP64__)
+  if (elf_class != ELFCLASS64) {
+    if (elf_class == ELFCLASS32) {
+      DL_ERR("\"%s\" is 32-bit instead of 64-bit", name_);
+    } else {
+      DL_ERR("\"%s\" has unknown ELF class: %d", name_, elf_class);
+    }
     return false;
   }
+#else
+  if (elf_class != ELFCLASS32) {
+    if (elf_class == ELFCLASS64) {
+      DL_ERR("\"%s\" is 64-bit instead of 32-bit", name_);
+    } else {
+      DL_ERR("\"%s\" has unknown ELF class: %d", name_, elf_class);
+    }
+    return false;
+  }
+#endif
+
   if (header_.e_ident[EI_DATA] != ELFDATA2LSB) {
     DL_ERR("\"%s\" not little-endian: %d", name_, header_.e_ident[EI_DATA]);
     return false;
@@ -189,6 +208,8 @@ bool ElfReader::VerifyElfHeader() {
       EM_MIPS
 #elif defined(ANDROID_X86_LINKER)
       EM_386
+#elif defined(ANDROID_X86_64_LINKER)
+      EM_X86_64
 #endif
   ) {
     DL_ERR("\"%s\" has unexpected e_machine: %d", name_, header_.e_machine);
@@ -291,7 +312,7 @@ bool ElfReader::ReserveAddressSpace() {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   void* start = mmap(addr, load_size_, PROT_NONE, mmap_flags, -1, 0);
   if (start == MAP_FAILED) {
-    DL_ERR("couldn't reserve %d bytes of address space for \"%s\"", load_size_, name_);
+    DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_);
     return false;
   }
 
@@ -620,6 +641,6 @@ bool ElfReader::CheckPhdr(Elf_Addr loaded) {
       return true;
     }
   }
-  DL_ERR("\"%s\" loaded phdr %x not in loadable segment", name_, loaded);
+  DL_ERR("\"%s\" loaded phdr %p not in loadable segment", name_, reinterpret_cast<void*>(loaded));
   return false;
 }
