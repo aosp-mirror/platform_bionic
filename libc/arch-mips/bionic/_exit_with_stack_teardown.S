@@ -30,14 +30,14 @@
 
 	.text
 
-/* void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode) */
+// void _exit_with_stack_teardown(void * stackBase, int stackSize, int status)
 
 	.type	_exit_with_stack_teardown, @function
 	.global	_exit_with_stack_teardown
 	.align	4
 	.ent	_exit_with_stack_teardown
 _exit_with_stack_teardown:
-	move	$s0,$a2		/* preserve retCode for exit() call */
+	move	$s0,$a2		/* preserve status for exit() call */
 
 	li	$v0,__NR_munmap
 	syscall			/* the stack is destroyed by this call */
