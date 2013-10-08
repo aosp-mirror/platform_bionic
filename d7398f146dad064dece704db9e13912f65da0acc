@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1d30d45_5ffb075b",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-08T18:20:33Z",
+      "side": 1,
+      "message": "so we have the tool chain change for this now?",
+      "revId": "d7398f146dad064dece704db9e13912f65da0acc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
