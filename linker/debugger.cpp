@@ -176,7 +176,12 @@ static bool have_siginfo(int signum) {
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
+#if __LP64__ // TODO: implement 64-bit sigaction using rt_sigaction.
+void debuggerd_signal_handler(int n) {
+    siginfo_t* info = NULL;
+#else
 void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
+#endif
     /*
      * It's possible somebody cleared the SA_SIGINFO flag, which would mean
      * our "info" arg holds an undefined value.
@@ -249,7 +254,11 @@ void debuggerd_init() {
     struct sigaction action;
     memset(&action, 0, sizeof(action));
     sigemptyset(&action.sa_mask);
+#if __LP64__ // TODO: implement 64-bit sigaction using rt_sigaction.
+    action.sa_handler = debuggerd_signal_handler;
+#else
     action.sa_sigaction = debuggerd_signal_handler;
+#endif
     action.sa_flags = SA_RESTART | SA_SIGINFO;
 
     // Use the alternate signal stack if available so we can catch stack overflows.
