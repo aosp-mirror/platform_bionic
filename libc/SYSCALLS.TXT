@@ -2,7 +2,7 @@
 #
 # Each non-blank, non-comment line has the following format:
 #
-# return_type func_name[:syscall_name[:socketcall_id]]([parameter_list]) arch_list
+# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
 #
 # where:
 #       arch_list ::= "all" | "custom" | arch+
@@ -12,6 +12,8 @@
 #      - syscall_name corresponds to the name of the syscall, which may differ from
 #        the exported function name (example: the exit syscall is implemented by the _exit()
 #        function, which is not the same as the standard C exit() function which calls it)
+#
+#      - alias_list is optional comma separated list of function aliases.
 #
 #      - The call_id parameter, given that func_name and syscall_name have
 #        been provided, allows the user to specify dispatch style syscalls.
@@ -109,7 +111,8 @@ int         __open:open(const char*, int, mode_t)  all
 int         __openat:openat(int, const char*, int, mode_t) all
 int         close(int)                      all
 int         creat(const char*, mode_t)       custom
-off_t       lseek(int, off_t, int)           all
+off_t       lseek(int, off_t, int)           arm,x86,mips
+off_t       lseek|lseek64(int, off_t, int)   x86_64
 int         __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int)  arm,x86,mips
 pid_t       getpid()    all
 void*       mmap(void*, size_t, int, int, int, long)  x86_64

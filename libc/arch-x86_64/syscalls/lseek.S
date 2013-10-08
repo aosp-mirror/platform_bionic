@@ -15,3 +15,6 @@ ENTRY(lseek)
 1:
     ret
 END(lseek)
+
+    .globl _C_LABEL(lseek64)
+    .equ _C_LABEL(lseek64), _C_LABEL(lseek)
