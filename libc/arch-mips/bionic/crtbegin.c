@@ -90,5 +90,5 @@ __asm__ (
 "       .set pop                    \n"
 );
 
-#include "__dso_handle.h"
+#include "../../arch-common/bionic/__dso_handle.h"
 #include "atexit.h"

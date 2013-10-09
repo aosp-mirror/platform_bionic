@@ -27,7 +27,7 @@
  */
 
 #include <string.h>
-#include "ThreadLocalBuffer.h"
+#include "private/ThreadLocalBuffer.h"
 
 extern "C" const char* __strerror_lookup(int);
 

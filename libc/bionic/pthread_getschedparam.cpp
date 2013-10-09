@@ -28,7 +28,7 @@
 
 #include <errno.h>
 
-#include "ErrnoRestorer.h"
+#include "private/ErrnoRestorer.h"
 #include "pthread_accessor.h"
 
 int pthread_getschedparam(pthread_t t, int* policy, sched_param* param) {

@@ -47,9 +47,10 @@
 
 #include "debug_stacktrace.h"
 #include "dlmalloc.h"
-#include "libc_logging.h"
 #include "malloc_debug_common.h"
-#include "ScopedPthreadMutexLocker.h"
+
+#include "private/libc_logging.h"
+#include "private/ScopedPthreadMutexLocker.h"
 
 // This file should be included into the build only when
 // MALLOC_LEAK_CHECK, or MALLOC_QEMU_INSTRUMENT, or both

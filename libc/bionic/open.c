@@ -29,7 +29,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 extern int  __open(const char*, int, int);
 

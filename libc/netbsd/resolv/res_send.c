@@ -119,7 +119,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #  include <resolv_cache.h>
 #endif
 
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \

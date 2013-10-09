@@ -152,34 +152,38 @@ libc_common_src_files := \
 	bionic/usleep.c \
 	bionic/utmp.c \
 	bionic/wcscoll.c \
-	netbsd/gethnamaddr.c \
-	netbsd/inet/nsap_addr.c \
-	netbsd/resolv/__dn_comp.c \
-	netbsd/resolv/__res_close.c \
-	netbsd/resolv/__res_send.c \
-	netbsd/resolv/herror.c \
-	netbsd/resolv/res_comp.c \
-	netbsd/resolv/res_data.c \
-	netbsd/resolv/res_debug.c \
-	netbsd/resolv/res_init.c \
-	netbsd/resolv/res_mkquery.c \
-	netbsd/resolv/res_query.c \
-	netbsd/resolv/res_send.c \
-	netbsd/resolv/res_state.c \
-	netbsd/resolv/res_cache.c \
-	netbsd/net/nsdispatch.c \
-	netbsd/net/getaddrinfo.c \
-	netbsd/net/getnameinfo.c \
-	netbsd/net/getservbyname.c \
-	netbsd/net/getservent.c \
-	netbsd/net/base64.c \
-	netbsd/net/getservbyport.c \
-	netbsd/nameser/ns_name.c \
-	netbsd/nameser/ns_parse.c \
-	netbsd/nameser/ns_ttl.c \
-	netbsd/nameser/ns_netint.c \
-	netbsd/nameser/ns_print.c \
-	netbsd/nameser/ns_samedomain.c \
+
+
+libc_dns_src_files += \
+    netbsd/gethnamaddr.c \
+    netbsd/inet/nsap_addr.c \
+    netbsd/nameser/ns_name.c \
+    netbsd/nameser/ns_netint.c \
+    netbsd/nameser/ns_parse.c \
+    netbsd/nameser/ns_print.c \
+    netbsd/nameser/ns_samedomain.c \
+    netbsd/nameser/ns_ttl.c \
+    netbsd/net/base64.c \
+    netbsd/net/getaddrinfo.c \
+    netbsd/net/getnameinfo.c \
+    netbsd/net/getservbyname.c \
+    netbsd/net/getservbyport.c \
+    netbsd/net/getservent.c \
+    netbsd/net/nsdispatch.c \
+    netbsd/resolv/__dn_comp.c \
+    netbsd/resolv/herror.c \
+    netbsd/resolv/res_cache.c \
+    netbsd/resolv/__res_close.c \
+    netbsd/resolv/res_comp.c \
+    netbsd/resolv/res_data.c \
+    netbsd/resolv/res_debug.c \
+    netbsd/resolv/res_init.c \
+    netbsd/resolv/res_mkquery.c \
+    netbsd/resolv/res_query.c \
+    netbsd/resolv/__res_send.c \
+    netbsd/resolv/res_send.c \
+    netbsd/resolv/res_state.c \
+
 
 # These are shared by all the 32-bit targets, but not the 64-bit ones.
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
@@ -256,6 +260,7 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/sysconf.cpp \
     bionic/tdestroy.cpp \
+    bionic/__thread_entry.cpp \
     bionic/tmpfile.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
@@ -506,10 +511,10 @@ libc_common_src_files += \
 	upstream-freebsd/lib/libc/string/wmemcmp.c \
 
 libc_common_src_files += \
-	bionic/pthread-atfork.c \
-	bionic/pthread-rwlocks.c \
-	bionic/pthread-timers.c \
-	bionic/ptrace.c
+    bionic/pthread-atfork.c \
+    bionic/pthread-rwlocks.c \
+    bionic/pthread-timers.c \
+    bionic/ptrace.c \
 
 libc_static_common_src_files += \
     bionic/pthread.c \
@@ -551,8 +556,8 @@ libc_common_additional_dependencies += \
     $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
 include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
 
-libc_common_src_files += $(_LIBC_ARCH_COMMON_SRC_FILES)
-libc_common_src_files += $(_LIBC_ARCH_CPU_VARIANT_SRC_FILES)
+libc_bionic_src_files += $(_LIBC_ARCH_COMMON_SRC_FILES)
+libc_bionic_src_files += $(_LIBC_ARCH_CPU_VARIANT_SRC_FILES)
 libc_arch_static_src_files := $(_LIBC_ARCH_STATIC_SRC_FILES)
 libc_arch_dynamic_src_files := $(_LIBC_ARCH_DYNAMIC_SRC_FILES)
 libc_common_additional_dependencies += $(_LIBC_ARCH_ADDITIONAL_DEPENDENCIES)
@@ -562,9 +567,6 @@ libc_common_additional_dependencies += $(_LIBC_ARCH_ADDITIONAL_DEPENDENCIES)
 libc_common_cflags := \
     -DANDROID_CHANGES \
     -D_LIBC=1 \
-    -DINET6 \
-    -I$(LOCAL_PATH)/private \
-    -DPOSIX_MISTAKE \
     -Wall -Wextra \
 
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
@@ -618,7 +620,8 @@ endif
 # crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
 libc_crt_target_cflags += \
     -I$(LOCAL_PATH)/include  \
-    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
+    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include \
+    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
 
 # Define some common conlyflags
 libc_common_conlyflags := \
@@ -635,12 +638,6 @@ libc_common_c_includes := \
 		$(LOCAL_PATH)/string  \
 		$(LOCAL_PATH)/stdio   \
 		external/safe-iop/include
-
-# Needed to access private/__dso_handle.h from
-# crtbegin_xxx.S and crtend_xxx.S
-libc_crt_target_cflags += \
-    -I$(LOCAL_PATH)/private \
-    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include
 
 # Define the libc run-time (crt) support object files that must be built,
 # which are needed to build all other objects (shared/static libs and
@@ -811,6 +808,29 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_dns.a - modified NetBSD DNS code
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_dns_src_files)
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -DINET6 \
+    -I$(LOCAL_PATH)/private \
+    -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for NetBSD private headers
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_dns
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_freebsd.a - upstream FreeBSD C library code
 # ========================================================
 #
@@ -847,6 +867,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -DPOSIX_MISTAKE \
     -I$(LOCAL_PATH)/upstream-netbsd \
     -I$(LOCAL_PATH)/upstream-netbsd/libc/include \
     -include upstream-netbsd/netbsd-compat.h
@@ -885,8 +906,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags) \
-    -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for netbsd private headers
+LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -895,9 +915,11 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     libbionic_ssp \
     libc_bionic \
+    libc_dns \
     libc_freebsd \
     libc_netbsd \
-    libc_tzcode
+    libc_tzcode \
+
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # TODO: split out the asflags.

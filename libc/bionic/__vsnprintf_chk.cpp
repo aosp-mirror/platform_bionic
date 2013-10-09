@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * Runtime implementation of __builtin____vsnprintf_chk.

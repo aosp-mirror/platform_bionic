@@ -28,8 +28,8 @@
 
 #include "pthread_internal.h"
 
-#include "bionic_tls.h"
-#include "ScopedPthreadMutexLocker.h"
+#include "private/bionic_tls.h"
+#include "private/ScopedPthreadMutexLocker.h"
 
 __LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
 __LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;

@@ -28,8 +28,6 @@
 
 #include "libc_init_common.h"
 
-#include <asm/page.h>
-#include <bionic_tls.h>
 #include <elf.h>
 #include <errno.h>
 #include <stddef.h>
@@ -44,6 +42,7 @@
 #include "atexit.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_ssp.h"
+#include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "pthread_internal.h"
 
@@ -57,7 +56,7 @@ const char* __progname;
 // Declared in <unistd.h>.
 char** environ;
 
-// Declared in <private/bionic_ssp.h>.
+// Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
 static size_t get_main_thread_stack_size() {
