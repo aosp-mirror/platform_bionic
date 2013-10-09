@@ -26,8 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/page.h>
-#include <bionic_tls.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <errno.h>
@@ -40,6 +38,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "private/bionic_tls.h"
 #include "private/ScopedReaddir.h"
 
 /* seems to be the default on Linux, per the GLibc sources and my own digging */

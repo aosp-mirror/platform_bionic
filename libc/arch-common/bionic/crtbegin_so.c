@@ -59,4 +59,3 @@ void __on_dlclose() {
 #ifdef __i386__
 # include "../../arch-x86/bionic/__stack_chk_fail_local.h"
 #endif
-

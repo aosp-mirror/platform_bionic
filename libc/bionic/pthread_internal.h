@@ -77,6 +77,8 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
 /* Has the thread already exited but not been joined? */
 #define PTHREAD_ATTR_FLAG_ZOMBIE        0x00000008
 
+#define PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED 1
+
 /*
  * Traditionally we give threads a 1MiB stack. When we started
  * allocating per-thread alternate signal stacks to ease debugging of

@@ -27,8 +27,9 @@
  */
 #include <unistd.h>
 #include "pthread_internal.h"
-#include "bionic_pthread.h"
 #include "cpuacct.h"
+
+#include "private/bionic_pthread.h"
 
 extern int  __fork(void);
 

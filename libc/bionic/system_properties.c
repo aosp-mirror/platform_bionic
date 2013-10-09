@@ -50,7 +50,8 @@
 #include <sys/_system_properties.h>
 
 #include <sys/atomics.h>
-#include <bionic_atomic_inline.h>
+
+#include "private/bionic_atomic_inline.h"
 
 #define ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
 
