@@ -64,6 +64,5 @@ __LIBC_ABI_PRIVATE__ void _pthread_internal_add(pthread_internal_t* thread) {
 }
 
 __LIBC_ABI_PRIVATE__ pthread_internal_t* __get_thread(void) {
-  void** tls = reinterpret_cast<void**>(const_cast<void*>(__get_tls()));
-  return reinterpret_cast<pthread_internal_t*>(tls[TLS_SLOT_THREAD_ID]);
+  return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }

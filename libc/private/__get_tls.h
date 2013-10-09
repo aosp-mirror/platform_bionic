@@ -25,13 +25,36 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-/* see the implementation of __set_tls and pthread.c to understand this
- * code. Basically, the content of gs:[0] always is a pointer to the base
- * address of the tls region
- */
-void*   __get_tls(void)
-{
-  void*  tls;
-  asm ( "   movl  %%gs:0, %0" : "=r"(tls) );
-  return tls;
-}
+
+#ifndef __BIONIC_PRIVATE_GET_TLS_H_
+#define __BIONIC_PRIVATE_GET_TLS_H_
+
+#if defined(__arm__)
+# define __get_tls() \
+    ({ void** __val; \
+       __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); \
+       __val; })
+#elif defined(__mips__)
+# define __get_tls() \
+    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
+    ({ register void** __val asm("v1"); \
+       __asm__(".set    push\n" \
+               ".set    mips32r2\n" \
+               "rdhwr   %0,$29\n" \
+               ".set    pop\n" : "=r"(__val)); \
+       __val; })
+#elif defined(__i386__)
+# define __get_tls() \
+    ({ void** __val; \
+       __asm__("movl %%gs:0, %0" : "=r"(__val)); \
+       __val; })
+#elif defined(__x86_64__)
+# define __get_tls() \
+    ({ void** __val; \
+       __asm__("mov %%fs:0, %0" : "=r"(__val)); \
+       __val; })
+#else
+#error unsupported architecture
+#endif
+
+#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
