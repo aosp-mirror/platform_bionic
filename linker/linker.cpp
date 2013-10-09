@@ -1844,7 +1844,11 @@ static Elf_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf_Add
      */
     {
         static soinfo linker_soinfo;
+#ifdef __LP64__
+        strlcpy(linker_soinfo.name, "/system/bin/linker64", sizeof(linker_soinfo.name));
+#else
         strlcpy(linker_soinfo.name, "/system/bin/linker", sizeof(linker_soinfo.name));
+#endif
         linker_soinfo.flags = 0;
         linker_soinfo.base = linker_base;
 
