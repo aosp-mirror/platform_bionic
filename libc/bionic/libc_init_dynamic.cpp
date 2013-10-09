@@ -65,7 +65,7 @@ extern "C" {
 // as soon as the shared library is loaded.
 __attribute__((constructor)) static void __libc_preinit() {
   // Read the kernel argument block pointer from TLS.
-  void* tls = const_cast<void*>(__get_tls());
+  void** tls = __get_tls();
   KernelArgumentBlock** args_slot = &reinterpret_cast<KernelArgumentBlock**>(tls)[TLS_SLOT_BIONIC_PREINIT];
   KernelArgumentBlock* args = *args_slot;
 
