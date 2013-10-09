@@ -25,10 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <errno.h>
 #include <bionic_tls.h>
+#include <stdint.h>
 
-volatile int*  __errno( void )
-{
-  return  &((volatile int*)__get_tls())[TLS_SLOT_ERRNO];
+volatile int*  __errno() {
+  return reinterpret_cast<int*>(&(__get_tls()[TLS_SLOT_ERRNO]));
 }

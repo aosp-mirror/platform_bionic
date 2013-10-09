@@ -1,6 +1,5 @@
 _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-mips/bionic/__get_sp.S \
-    arch-mips/bionic/__get_tls.c \
     arch-mips/bionic/__set_tls.c \
     arch-mips/bionic/_exit_with_stack_teardown.S \
     arch-mips/bionic/_setjmp.S \
