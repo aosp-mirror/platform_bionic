@@ -16,6 +16,24 @@
       "revId": "cd1fdc91dc41ad01e596c820d8d9a58bf7d4edb7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8126d14d_9332dccf",
+        "filename": "libc/bionic/__errno.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-09T03:29:24Z",
+      "side": 1,
+      "message": "yeah, i did feel dirty. my excuse is that i feel like we\u0027ve got a deeper problem with __get_tls. everywhere we use __get_tls is a mess of casts. i think we should change __get_tls to non-volatile void**. then i think we\u0027d probably only ever need one cast, and no const_casts?",
+      "parentUuid": "a15035a5_9c49853d",
+      "revId": "cd1fdc91dc41ad01e596c820d8d9a58bf7d4edb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
