@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <malloc.h>
+#include <fcntl.h>
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
@@ -566,6 +567,15 @@ TEST(DEATHTEST, FD_ZERO_fortified) {
   char buf[1];
   fd_set* set = (fd_set*) buf;
   ASSERT_EXIT(FD_ZERO(set), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(DEATHTEST, read_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_RDONLY);
+  ASSERT_EXIT(read(fd, buf, ct), testing::KilledBySignal(SIGABRT), "");
+  close(fd);
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
