@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <../private/libc_logging.h> // Relative path so we can #include this .cpp file for testing.
-#include <../private/ScopedPthreadMutexLocker.h>
+#include "../private/libc_logging.h" // Relative path so we can #include this .cpp file for testing.
+#include "../private/ScopedPthreadMutexLocker.h"
 
 #include <assert.h>
 #include <errno.h>

@@ -41,7 +41,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/time.h>
-#include "thread_private.h"
+#include "private/thread_private.h"
 
 /* BIONIC-BEGIN */
 /* this lock should protect the global variables in this file */

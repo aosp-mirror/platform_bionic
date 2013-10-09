@@ -27,7 +27,7 @@
  */
 
 #include <string.h>
-#include "ThreadLocalBuffer.h"
+#include "private/ThreadLocalBuffer.h"
 
 extern "C" const char* __strsignal_lookup(int);
 extern "C" const char* __strsignal(int, char*, size_t);

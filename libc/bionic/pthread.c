@@ -34,12 +34,13 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#include "bionic_atomic_inline.h"
-#include "bionic_futex.h"
-#include "bionic_pthread.h"
-#include "bionic_tls.h"
 #include "pthread_internal.h"
-#include "thread_private.h"
+
+#include "private/bionic_atomic_inline.h"
+#include "private/bionic_futex.h"
+#include "private/bionic_pthread.h"
+#include "private/bionic_tls.h"
+#include "private/thread_private.h"
 
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);

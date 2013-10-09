@@ -48,9 +48,9 @@
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
 #include "dlmalloc.h"
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 #include "malloc_debug_common.h"
-#include "ScopedPthreadMutexLocker.h"
+#include "private/ScopedPthreadMutexLocker.h"
 
 /* libc.debug.malloc.backlog */
 extern unsigned int gMallocDebugBacklog;

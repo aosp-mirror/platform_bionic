@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
+#include <pthread.h>
 
-#include <stddef.h>
-#include <sys/socket.h>
-#include "private/libc_logging.h"
+#include "pthread_internal.h"
 
-extern "C"
-ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buflen, unsigned int flags,
-        const struct sockaddr* src_addr, socklen_t* addrlen)
-{
-  if (__predict_false(len > buflen)) {
-    __fortify_chk_fail("recvfrom prevented write past end of buffer", 0);
+#include "private/bionic_tls.h"
+
+// This trampoline is called from the assembly _pthread_clone function.
+// Our 'tls' and __pthread_clone's 'child_stack' are one and the same, just growing in
+// opposite directions.
+extern "C" void __thread_entry(void* (*func)(void*), void* arg, void** tls) {
+  // Wait for our creating thread to release us. This lets it have time to
+  // notify gdb about this thread before we start doing anything.
+  // This also provides the memory barrier needed to ensure that all memory
+  // accesses previously made by the creating thread are visible to us.
+  pthread_mutex_t* start_mutex = (pthread_mutex_t*) &tls[TLS_SLOT_SELF];
+  pthread_mutex_lock(start_mutex);
+  pthread_mutex_destroy(start_mutex);
+
+  pthread_internal_t* thread = (pthread_internal_t*) tls[TLS_SLOT_THREAD_ID];
+  thread->tls = tls;
+  __init_tls(thread);
+
+  if ((thread->internal_flags & PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED) != 0) {
+    pthread_exit(NULL);
   }
 
-  return recvfrom(socket, buf, len, flags, src_addr, addrlen);
+  void* result = func(arg);
+  pthread_exit(result);
 }

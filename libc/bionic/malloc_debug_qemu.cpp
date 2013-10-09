@@ -51,7 +51,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include "dlmalloc.h"
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 #include "malloc_debug_common.h"
 
 /* This file should be included into the build only when

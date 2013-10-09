@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "atexit.h"
-#include "thread_private.h"
+#include "private/thread_private.h"
 
 /*
  * This variable is zero until a process has created a thread.

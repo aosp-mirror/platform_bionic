@@ -39,7 +39,7 @@
 #include <string.h>
 #include "local.h"
 #include "glue.h"
-#include "thread_private.h"
+#include "private/thread_private.h"
 
 int	__sdidinit;
 

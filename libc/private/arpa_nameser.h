@@ -567,7 +567,7 @@ __END_DECLS
 #endif
 
 #if 0
-#  include "libc_logging.h"
+#  include "private/libc_logging.h"
 #  define XLOG(...)  __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
 #else
 #define  XLOG(...)   do {} while (0)

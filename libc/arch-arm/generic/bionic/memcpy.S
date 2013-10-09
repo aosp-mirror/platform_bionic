@@ -28,7 +28,7 @@
 
 #include <machine/cpu-features.h>
 #include <machine/asm.h>
-#include "libc_events.h"
+#include "private/libc_events.h"
 
         /*
          * Optimized memcpy() for ARM.

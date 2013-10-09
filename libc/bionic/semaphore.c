@@ -30,9 +30,10 @@
 #include <sys/time.h>
 #include <sys/atomics.h>
 #include <time.h>
-#include <bionic_atomic_inline.h>
-#include <bionic_futex.h>
 #include <limits.h>
+
+#include "private/bionic_atomic_inline.h"
+#include "private/bionic_futex.h"
 
 /* In this implementation, a semaphore contains a
  * 31-bit signed value and a 1-bit 'shared' flag

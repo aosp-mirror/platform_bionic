@@ -171,7 +171,7 @@
 
 #undef XLOG
 #if DEBUG
-#  include "libc_logging.h"
+#  include "private/libc_logging.h"
 #  define XLOG(...)  __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
 
 #include <stdio.h>

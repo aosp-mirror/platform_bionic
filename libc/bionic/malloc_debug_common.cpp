@@ -47,7 +47,7 @@
 #include <unistd.h>
 
 #include "dlmalloc.h"
-#include "ScopedPthreadMutexLocker.h"
+#include "private/ScopedPthreadMutexLocker.h"
 
 /*
  * In a VM process, this is set to 1 after fork()ing out of zygote.
@@ -250,7 +250,7 @@ extern "C" size_t malloc_usable_size(const void* mem) {
 #include <sys/system_properties.h>
 #include <dlfcn.h>
 #include <stdio.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /* Table for dispatching malloc calls, depending on environment. */
 static MallocDebug gMallocUse __attribute__((aligned(32))) = {
