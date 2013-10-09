@@ -29,6 +29,7 @@
 #include "debug_stacktrace.h"
 
 #include <dlfcn.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <unwind.h>
 #include <sys/types.h>
@@ -142,12 +143,12 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
                     "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 
   for (size_t i = 0 ; i < frame_count; ++i) {
-    void* offset = 0;
+    uintptr_t offset = 0;
     const char* symbol = NULL;
 
     Dl_info info;
     if (dladdr((void*) frames[i], &info) != 0) {
-      offset = info.dli_saddr;
+      offset = reinterpret_cast<uintptr_t>(info.dli_saddr);
       symbol = info.dli_sname;
     }
 
@@ -162,13 +163,20 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       char* demangled_symbol = demangle(symbol);
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
-      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s (%s+0x%x)",
-                        i, rel_pc, soname, best_name, frames[i] - (uintptr_t) offset);
+      __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                        "          #%02zd  pc %0*" PRIxPTR "  %s (%s+%" PRIuPTR ")",
+                        i,
+                        static_cast<int>(2 * sizeof(void*)), rel_pc,
+                        soname,
+                        best_name, frames[i] - offset);
 
       free(demangled_symbol);
     } else {
-      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s",
-                        i, rel_pc, soname);
+      __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                        "          #%02zd  pc %0*" PRIxPTR "  %s",
+                        i,
+                        static_cast<int>(2 * sizeof(void*)), rel_pc,
+                        soname);
     }
   }
 }
