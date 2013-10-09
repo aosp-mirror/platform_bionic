@@ -28,7 +28,7 @@
 
 #undef _FORTIFY_SOURCE
 #include <sys/select.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 extern "C" int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
   if (__predict_false(fd < 0)) {

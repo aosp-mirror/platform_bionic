@@ -31,7 +31,6 @@
 #include <sys/system_properties.h>
 #include <sys/mman.h>
 
-//#include <dlfcn.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,10 +39,10 @@
 #include <unwind.h>
 #include <unistd.h>
 
-#include "bionic_tls.h"
+#include "private/bionic_tls.h"
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * ===========================================================================

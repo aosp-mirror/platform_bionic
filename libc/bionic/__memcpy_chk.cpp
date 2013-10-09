@@ -29,7 +29,7 @@
 #undef _FORTIFY_SOURCE
 #include <string.h>
 #include <stdlib.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * Runtime implementation of __memcpy_chk.

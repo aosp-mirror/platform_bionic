@@ -47,10 +47,11 @@
 #include <sys/mman.h>
 
 #include "atexit.h"
-#include "bionic_tls.h"
-#include "KernelArgumentBlock.h"
 #include "libc_init_common.h"
 #include "pthread_internal.h"
+
+#include "private/bionic_tls.h"
+#include "private/KernelArgumentBlock.h"
 
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)

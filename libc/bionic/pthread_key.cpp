@@ -28,7 +28,7 @@
 
 #include <pthread.h>
 
-#include "bionic_tls.h"
+#include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
 /* A technical note regarding our thread-local-storage (TLS) implementation:

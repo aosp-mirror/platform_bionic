@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * __fgets_chk. Called in place of fgets() when we know the
