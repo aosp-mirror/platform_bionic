@@ -185,6 +185,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
 libc_common_src_files += \
     bionic/fcntl.c \
     bionic/fstatfs.c \
+    bionic/__get_tls.cpp \
     bionic/lseek64.c \
     bionic/sigsuspend.c \
     bionic/statfs.c \
@@ -217,7 +218,7 @@ libc_bionic_src_files := \
     bionic/assert.cpp \
     bionic/brk.cpp \
     bionic/dirent.cpp \
-    bionic/__errno.c \
+    bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
     bionic/futimens.cpp \
