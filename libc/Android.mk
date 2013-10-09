@@ -199,6 +199,7 @@ libc_common_src_files += \
     bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memset_chk.cpp \
+    bionic/__read_chk.cpp \
     bionic/__recvfrom_chk.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strchr_chk.cpp \
