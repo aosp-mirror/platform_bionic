@@ -563,7 +563,13 @@ libc_common_cflags := \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
     -DPOSIX_MISTAKE \
-    -Wall -Wextra
+    -Wall -Wextra \
+
+# Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+libc_common_cflags += \
+    -Werror=pointer-to-int-cast \
+    -Werror=int-to-pointer-cast \
+    -Werror=type-limits \
 
 ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
