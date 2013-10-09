@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61c0fd68_44a9efb8",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-09T00:04:05Z",
+      "side": 1,
+      "message": "this is basically what cferris has done in libbacktrace, but with C++ casts :-)",
+      "revId": "c7c5f85ead6a58eadd511c728a9020a493bc128f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
