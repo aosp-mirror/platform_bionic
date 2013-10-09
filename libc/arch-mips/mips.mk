@@ -5,7 +5,7 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-mips/bionic/_setjmp.S \
     arch-mips/bionic/futex_mips.S \
     arch-mips/bionic/bzero.S \
-    arch-mips/bionic/cacheflush.c \
+    arch-mips/bionic/cacheflush.cpp \
     arch-mips/bionic/clone.S \
     arch-mips/bionic/ffs.S \
     arch-mips/bionic/memcmp16.S \
