@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21e9a52b_a0e59a54",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-09T07:47:13Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we unconditionally return something here for 32-bit case?",
+      "revId": "51aeff70218e18a7213fc6b7b9a4112be488bf58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
