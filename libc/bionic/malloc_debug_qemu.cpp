@@ -394,9 +394,9 @@ static inline void* mallocdesc_alloc_end(const MallocDesc* desc) {
  *  code - Event code (one of the TRACE_DEV_XXX).
  *  val  - Event's value parameter.
  */
-static inline void notify_qemu(uint32_t code, uint32_t val) {
+static inline void notify_qemu(uint32_t code, uintptr_t val) {
     if (NULL != qtrace) {
-        *(volatile uint32_t*)((uint32_t)qtrace + ((code - 1024) << 2)) = val;
+        *(volatile uintptr_t*)((uintptr_t)qtrace + ((code - 1024) << 2)) = val;
     }
 }
 
@@ -407,7 +407,7 @@ static inline void notify_qemu(uint32_t code, uint32_t val) {
  */
 static void notify_qemu_string(const char* str) {
     if (str != NULL) {
-        notify_qemu(TRACE_DEV_REG_PRINT_USER_STR, (uint32_t)str);
+        notify_qemu(TRACE_DEV_REG_PRINT_USER_STR, reinterpret_cast<uintptr_t>(str));
     }
 }
 
@@ -432,7 +432,7 @@ static inline int notify_qemu_malloc(volatile MallocDesc* desc) {
     desc->libc_pid = malloc_pid;
     desc->allocator_pid = getpid();
     desc->av_count = 0;
-    notify_qemu(TRACE_DEV_REG_MALLOC, (uint32_t)desc);
+    notify_qemu(TRACE_DEV_REG_MALLOC, reinterpret_cast<uintptr_t>(desc));
 
     /* Emulator reports failure by zeroing libc_pid field of the
      * descriptor. */
@@ -451,7 +451,7 @@ static inline int notify_qemu_free(void* ptr_to_free) {
     free_desc.ptr = ptr_to_free;
     free_desc.libc_pid = malloc_pid;
     free_desc.free_pid = getpid();
-    notify_qemu(TRACE_DEV_REG_FREE_PTR, (uint32_t)&free_desc);
+    notify_qemu(TRACE_DEV_REG_FREE_PTR, reinterpret_cast<uintptr_t>(&free_desc));
 
     /* Emulator reports failure by zeroing libc_pid field of the
      * descriptor. */
@@ -477,7 +477,7 @@ static inline int query_qemu_malloc_info(const void* ptr, MallocDesc* desc, uint
     query.query_pid = getpid();
     query.routine = routine;
     query.desc = desc;
-    notify_qemu(TRACE_DEV_REG_QUERY_MALLOC, (uint32_t)&query);
+    notify_qemu(TRACE_DEV_REG_QUERY_MALLOC, reinterpret_cast<uintptr_t>(&query));
 
     /* Emulator reports failure by zeroing libc_pid field of the
      * descriptor. */
@@ -534,11 +534,11 @@ static void qemu_log(int prio, const char* fmt, ...) {
 static void dump_malloc_descriptor(char* str, size_t str_buf_size, const MallocDesc* desc) {
     if (str_buf_size) {
         snprintf(str, str_buf_size,
-            "MDesc: %p: %X <-> %X [%u + %u + %u] by pid=%03u in libc_pid=%03u",
-            mallocdesc_user_ptr(desc), (uint32_t)desc->ptr,
-            (uint32_t)mallocdesc_alloc_end(desc), desc->prefix_size,
-            desc->requested_bytes, desc->suffix_size, desc->allocator_pid,
-            desc->libc_pid);
+                 "MDesc: %p: %p <-> %p [%u + %u + %u] by pid=%03u in libc_pid=%03u",
+                 mallocdesc_user_ptr(desc), desc->ptr,
+                 mallocdesc_alloc_end(desc), desc->prefix_size,
+                 desc->requested_bytes, desc->suffix_size, desc->allocator_pid,
+                 desc->libc_pid);
         str[str_buf_size - 1] = '\0';
     }
 }
