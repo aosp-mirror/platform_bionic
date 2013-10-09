@@ -35,7 +35,7 @@
 #include <sys/types.h>
 
 #include "debug_mapinfo.h"
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /* depends how the system includes define this */
 #ifdef HAVE_UNWIND_CONTEXT_STRUCT

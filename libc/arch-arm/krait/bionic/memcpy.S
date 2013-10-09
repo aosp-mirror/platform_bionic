@@ -29,7 +29,7 @@
 /* Assumes neon instructions and a cache line size of 32 bytes. */
 
 #include <machine/asm.h>
-#include "libc_events.h"
+#include "private/libc_events.h"
 
 /*
  * This code assumes it is running on a processor that supports all arm v7

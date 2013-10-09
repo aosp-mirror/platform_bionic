@@ -30,8 +30,9 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "libc_logging.h"
 #include <stdlib.h>
+
+#include "private/libc_logging.h"
 
 /*
  * Runtime implementation of __umask_chk.

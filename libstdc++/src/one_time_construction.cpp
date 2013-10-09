@@ -5,8 +5,9 @@
 #include <stddef.h>
 #include <sys/atomics.h>
 #include <endian.h>
-#include <private/bionic_futex.h>
-#include <private/bionic_atomic_inline.h>
+
+#include "private/bionic_atomic_inline.h"
+#include "private/bionic_futex.h"
 
 // This file contains C++ ABI support functions for one time
 // constructors as defined in the "Run-time ABI for the ARM Architecture"

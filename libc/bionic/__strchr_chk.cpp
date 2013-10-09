@@ -28,7 +28,7 @@
  */
 
 #include <string.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 extern "C" char* __strchr_chk(const char* p, int ch, size_t s_len) {
   for (;; ++p, s_len--) {

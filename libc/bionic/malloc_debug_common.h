@@ -35,7 +35,7 @@
 
 #include <stdlib.h>
 
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 #define HASHTABLE_SIZE      1543
 #define BACKTRACE_SIZE      32

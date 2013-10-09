@@ -22,9 +22,9 @@
 #include <stdlib.h>
 
 #include <bionic/pthread_internal.h>
-#include <private/bionic_tls.h>
-#include <private/ScopedPthreadMutexLocker.h>
-#include <private/ThreadLocalBuffer.h>
+#include "private/bionic_tls.h"
+#include "private/ScopedPthreadMutexLocker.h"
+#include "private/ThreadLocalBuffer.h"
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
