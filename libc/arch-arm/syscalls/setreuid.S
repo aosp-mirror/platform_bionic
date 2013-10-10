@@ -3,13 +3,13 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__setuid)
+ENTRY(setreuid)
     mov     ip, r7
-    ldr     r7, =__NR_setuid32
+    ldr     r7, =__NR_setreuid32
     swi     #0
     mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(__setuid)
+END(setreuid)
