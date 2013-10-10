@@ -3,7 +3,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__setresuid)
+ENTRY(setresuid)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
@@ -24,4 +24,4 @@ ENTRY(__setresuid)
     popl    %ecx
     popl    %ebx
     ret
-END(__setresuid)
+END(setresuid)

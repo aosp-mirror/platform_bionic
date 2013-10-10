@@ -3,7 +3,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__setuid)
+ENTRY(setuid)
     pushl   %ebx
     mov     8(%esp), %ebx
     movl    $__NR_setuid32, %eax
@@ -18,4 +18,4 @@ ENTRY(__setuid)
 1:
     popl    %ebx
     ret
-END(__setuid)
+END(setuid)

@@ -3,7 +3,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__setreuid)
+ENTRY(setreuid)
     pushl   %ebx
     pushl   %ecx
     mov     12(%esp), %ebx
@@ -21,4 +21,4 @@ ENTRY(__setreuid)
     popl    %ecx
     popl    %ebx
     ret
-END(__setreuid)
+END(setreuid)

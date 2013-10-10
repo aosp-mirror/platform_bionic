@@ -41,8 +41,6 @@ pid_t   __sys_clone:clone(int, void*, int*, void*, int*) all
 
 int     execve(const char*, char* const*, char* const*)  all
 
-int     __setuid:setuid32(uid_t)  arm,x86
-int     __setuid:setuid(uid_t)    mips,x86_64
 uid_t   getuid:getuid32()         arm,x86
 uid_t   getuid:getuid()           mips,x86_64
 gid_t   getgid:getgid32()         arm,x86
@@ -65,11 +63,13 @@ pid_t   getsid(pid_t)              all
 pid_t   setsid()                   all
 int     setgid:setgid32(gid_t)     arm,x86
 int     setgid:setgid(gid_t)       mips,x86_64
+int     setuid:setuid32(uid_t)    arm,x86
+int     setuid:setuid(uid_t)      mips,x86_64
 int     seteuid:seteuid32(uid_t)   custom
-int     __setreuid:setreuid32(uid_t, uid_t)   arm,x86
-int     __setreuid:setreuid(uid_t, uid_t)     mips,x86_64
-int     __setresuid:setresuid32(uid_t, uid_t, uid_t)   arm,x86
-int     __setresuid:setresuid(uid_t, uid_t, uid_t)     mips,x86_64
+int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
+int     setreuid:setreuid(uid_t, uid_t)     mips,x86_64
+int     setresuid:setresuid32(uid_t, uid_t, uid_t)   arm,x86
+int     setresuid:setresuid(uid_t, uid_t, uid_t)     mips,x86_64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     mips,x86_64
 void*   __brk:brk(void*)           all
