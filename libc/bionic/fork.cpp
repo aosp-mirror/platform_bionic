@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,13 +25,30 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <unistd.h>
-#include "cpuacct.h"
+#include "pthread_internal.h"
 
-extern int __setreuid(uid_t ruid, uid_t euid);
+#include "private/bionic_pthread.h"
 
-int setreuid(uid_t ruid, uid_t euid)
-{
-    cpuacct_add(euid);
-    return __setreuid(ruid, euid);
+extern "C" int __fork();
+
+int fork() {
+  // POSIX mandates that the timers of a fork child process be
+  // disarmed, but not destroyed. To avoid a race condition, we're
+  // going to stop all timers now, and only re-start them in case
+  // of error, or in the parent process
+  __timer_table_start_stop(1);
+  __bionic_atfork_run_prepare();
+
+  int result = __fork();
+  if (result != 0) {  // Not a child process.
+    __timer_table_start_stop(0);
+    __bionic_atfork_run_parent();
+  } else {
+    // Fix the tid in the pthread_internal_t struct after a fork.
+    __pthread_settid(pthread_self(), gettid());
+    __bionic_atfork_run_child();
+  }
+  return result;
 }

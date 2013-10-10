@@ -3,7 +3,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__setresuid)
+ENTRY(setresuid)
     movl    $__NR_setresuid, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -14,4 +14,4 @@ ENTRY(__setresuid)
     orq     $-1, %rax
 1:
     ret
-END(__setresuid)
+END(setresuid)

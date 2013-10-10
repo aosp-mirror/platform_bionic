@@ -80,14 +80,12 @@ libc_common_src_files := \
 	bionic/bindresvport.c \
 	bionic/bionic_clone.c \
 	bionic/clearenv.c \
-	bionic/cpuacct.c \
 	bionic/daemon.c \
 	bionic/err.c \
 	bionic/ether_aton.c \
 	bionic/ether_ntoa.c \
 	bionic/fdprintf.c \
 	bionic/flockfile.c \
-	bionic/fork.c \
 	bionic/ftime.c \
 	bionic/ftok.c \
 	bionic/fts.c \
@@ -124,12 +122,7 @@ libc_common_src_files := \
 	bionic/sched_getcpu.c \
 	bionic/semaphore.c \
 	bionic/send.c \
-	bionic/setegid.c \
-	bionic/seteuid.c \
 	bionic/setpgrp.c \
-	bionic/setresuid.c \
-	bionic/setreuid.c \
-	bionic/setuid.c \
 	bionic/sigblock.c \
 	bionic/siginterrupt.c \
 	bionic/siglist.c \
@@ -226,6 +219,7 @@ libc_bionic_src_files := \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
+    bionic/fork.cpp \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
@@ -248,7 +242,9 @@ libc_bionic_src_files := \
     bionic/sbrk.cpp \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
+    bionic/setegid.cpp \
     bionic/__set_errno.cpp \
+    bionic/seteuid.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
     bionic/sigwait.cpp \
