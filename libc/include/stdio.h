@@ -469,7 +469,8 @@ int vsprintf(char *dest, const char *format, __va_list ap)
 }
 
 #if defined(__clang__)
-#define snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
+#define __wrap_snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
+#define snprintf(...) __wrap_snprintf(__VA_ARGS__)
 #else
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 4)
@@ -481,7 +482,8 @@ int snprintf(char *dest, size_t size, const char *format, ...)
 #endif
 
 #if defined(__clang__)
-#define sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
+#define __wrap_sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
+#define sprintf(...) __wrap_sprintf(__VA_ARGS__)
 #else
 __BIONIC_FORTIFY_INLINE
 __printflike(2, 3)
