@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de23489b_3f9a0b5d",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2013-10-11T19:18:58Z",
+      "side": 1,
+      "message": "I placed the tests here because this file is one of very few that are built with clang (due to fortify). If you reset the stdio.h definition for snprintf/sprintf, this test will fail to compile under clang. If the gcc path were using a macro, it would fail in a similar fashion.",
+      "revId": "6e38072addd556e3894284b5bd040ac64fffa72e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
