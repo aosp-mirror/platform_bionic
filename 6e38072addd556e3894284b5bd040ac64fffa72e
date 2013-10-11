@@ -16,6 +16,24 @@
       "revId": "6e38072addd556e3894284b5bd040ac64fffa72e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e10383e_1d93d7a9",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-10-11T19:23:31Z",
+      "side": 1,
+      "message": "SGTM.",
+      "parentUuid": "de23489b_3f9a0b5d",
+      "revId": "6e38072addd556e3894284b5bd040ac64fffa72e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
