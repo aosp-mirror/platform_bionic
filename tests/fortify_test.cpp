@@ -825,3 +825,21 @@ TEST(TEST_NAME, memcpy_chk_max_int_size) {
   ASSERT_EQ('8',  buf[8]);
   ASSERT_EQ('\0', buf[9]);
 }
+
+// Verify that macro expansion is done properly for sprintf/snprintf (which
+// are defined as macros in stdio.h under clang).
+#define CONTENTS "macro expansion"
+#define BUF_AND_SIZE(A) A, sizeof(A)
+#define BUF_AND_CONTENTS(A) A, CONTENTS
+#define BUF_AND_SIZE_AND_CONTENTS(A) A, sizeof(A), CONTENTS
+TEST(TEST_NAME, s_n_printf_macro_expansion) {
+  char buf[BUFSIZ];
+  snprintf(BUF_AND_SIZE(buf), CONTENTS);
+  EXPECT_STREQ(CONTENTS, buf);
+
+  snprintf(BUF_AND_SIZE_AND_CONTENTS(buf));
+  EXPECT_STREQ(CONTENTS, buf);
+
+  sprintf(BUF_AND_CONTENTS(buf));
+  EXPECT_STREQ(CONTENTS, buf);
+}
