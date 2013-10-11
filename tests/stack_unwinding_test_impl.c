@@ -48,7 +48,7 @@ static void noinline do_crash() {
 }
 
 static void noinline foo() {
-  char c1 __attribute__((cleanup(foo_cleanup)));
+  char c1 __attribute__((cleanup(foo_cleanup))) unused;
   do_crash();
 }
 
