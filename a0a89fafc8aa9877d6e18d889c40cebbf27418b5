@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e83d8c4_08a12b8b",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2013-10-11T23:14:12Z",
+      "side": 1,
+      "message": "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf doesn\u0027t list it for C++11 in 2.14.4.\n\nhttp://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf doesn\u0027t list it for C99 in 6.4.4.2.\n\nI did see reference to it in http://www.open-std.org/jtc1/sc22/open/n4060.pdf, but that was just an extension for decimal floating point.",
+      "revId": "a0a89fafc8aa9877d6e18d889c40cebbf27418b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
