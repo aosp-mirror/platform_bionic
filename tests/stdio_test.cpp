@@ -226,10 +226,10 @@ TEST(stdio, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a%db", -8123);
   EXPECT_STREQ("a-8123b", buf);
 
-  snprintf(buf, sizeof(buf), "a%hdb", 0x7fff0010);
+  snprintf(buf, sizeof(buf), "a%hdb", static_cast<short>(0x7fff0010));
   EXPECT_STREQ("a16b", buf);
 
-  snprintf(buf, sizeof(buf), "a%hhdb", 0x7fffff10);
+  snprintf(buf, sizeof(buf), "a%hhdb", static_cast<char>(0x7fffff10));
   EXPECT_STREQ("a16b", buf);
 
   snprintf(buf, sizeof(buf), "a%lldb", 0x1000000000LL);
@@ -281,7 +281,7 @@ TEST(stdio, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a_%f_b", 1.23f);
   EXPECT_STREQ("a_1.230000_b", buf);
 
-  snprintf(buf, sizeof(buf), "a_%g_b", 3.14d);
+  snprintf(buf, sizeof(buf), "a_%g_b", 3.14);
   EXPECT_STREQ("a_3.14_b", buf);
 }
 
