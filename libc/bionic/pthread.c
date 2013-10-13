@@ -45,7 +45,7 @@
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
-extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int status);
+extern void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status);
 extern void _exit_thread(int status);
 
 int  __futex_wake_ex(volatile void *ftx, int pshared, int val)
@@ -87,7 +87,7 @@ void pthread_exit(void * retval)
 {
     pthread_internal_t*  thread     = __get_thread();
     void*                stack_base = thread->attr.stack_base;
-    int                  stack_size = thread->attr.stack_size;
+    size_t               stack_size = thread->attr.stack_size;
     int                  user_stack = (thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) != 0;
     sigset_t mask;
 
