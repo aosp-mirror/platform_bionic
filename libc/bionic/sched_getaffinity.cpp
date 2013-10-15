@@ -35,7 +35,7 @@ extern "C" int __sched_getaffinity(pid_t, size_t, cpu_set_t*);
 int sched_getaffinity(pid_t pid, size_t set_size, cpu_set_t* set) {
   int rc = __sched_getaffinity(pid, set_size, set);
   if (rc == -1) {
-      return -1;
+    return -1;
   }
 
   // Clear any bytes the kernel didn't touch.
