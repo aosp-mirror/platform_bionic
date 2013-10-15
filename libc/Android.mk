@@ -247,6 +247,7 @@ libc_bionic_src_files := \
     bionic/seteuid.cpp \
     bionic/setlocale.cpp \
     bionic/signalfd.cpp \
+    bionic/sigprocmask.cpp \
     bionic/sigwait.cpp \
     bionic/statvfs.cpp \
     bionic/strerror.cpp \

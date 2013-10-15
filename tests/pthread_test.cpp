@@ -173,11 +173,27 @@ static void* SignalHandlerFn(void* arg) {
 }
 
 TEST(pthread, pthread_sigmask) {
+  // Check that SIGUSR1 isn't blocked.
+  sigset_t original_set;
+  sigemptyset(&original_set);
+  ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, NULL, &original_set));
+  ASSERT_FALSE(sigismember(&original_set, SIGUSR1));
+
   // Block SIGUSR1.
   sigset_t set;
   sigemptyset(&set);
   sigaddset(&set, SIGUSR1);
   ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, &set, NULL));
+
+  // Check that SIGUSR1 is blocked.
+  sigset_t final_set;
+  sigemptyset(&final_set);
+  ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember(&final_set, SIGUSR1));
+  // ...and that sigprocmask agrees with pthread_sigmask.
+  sigemptyset(&final_set);
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember(&final_set, SIGUSR1));
 
   // Spawn a thread that calls sigwait and tells us what it received.
   pthread_t signal_thread;
@@ -192,6 +208,9 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(0, pthread_join(signal_thread, &join_result));
   ASSERT_EQ(SIGUSR1, received_signal);
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
+
+  // Restore the original signal mask.
+  ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
 #if __BIONIC__
