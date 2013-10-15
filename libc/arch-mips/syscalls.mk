@@ -155,7 +155,6 @@ syscall_src += arch-mips/syscalls/timerfd_create.S
 syscall_src += arch-mips/syscalls/timerfd_settime.S
 syscall_src += arch-mips/syscalls/timerfd_gettime.S
 syscall_src += arch-mips/syscalls/sigaction.S
-syscall_src += arch-mips/syscalls/sigprocmask.S
 syscall_src += arch-mips/syscalls/__sigsuspend.S
 syscall_src += arch-mips/syscalls/__rt_sigaction.S
 syscall_src += arch-mips/syscalls/__rt_sigprocmask.S

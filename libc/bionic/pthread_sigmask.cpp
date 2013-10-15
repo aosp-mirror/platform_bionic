@@ -31,31 +31,9 @@
 #include <signal.h>
 
 #include "private/ErrnoRestorer.h"
-#include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
-
-int pthread_sigmask(int how, const sigset_t* iset, sigset_t* oset) {
+int pthread_sigmask(int how, const sigset_t* new_set, sigset_t* old_set) {
   ErrnoRestorer errno_restorer;
-
-  // 'in_set_ptr' is the second parameter to __rt_sigprocmask. It must be NULL
-  // if 'set' is NULL to ensure correct semantics (which in this case would
-  // be to ignore 'how' and return the current signal set into 'oset').
-  kernel_sigset_t in_set;
-  kernel_sigset_t* in_set_ptr = NULL;
-  if (iset != NULL) {
-    in_set.set(iset);
-    in_set_ptr = &in_set;
-  }
-
-  kernel_sigset_t out_set;
-  if (__rt_sigprocmask(how, in_set_ptr, &out_set, sizeof(out_set)) == -1) {
-    return errno;
-  }
-
-  if (oset != NULL) {
-    *oset = out_set.bionic;
-  }
-
-  return 0;
+  int result = sigprocmask(how, new_set, old_set);
+  return (result == -1) ? errno : 0;
 }
