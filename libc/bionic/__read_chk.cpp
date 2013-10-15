@@ -32,11 +32,11 @@
 
 extern "C" ssize_t __read_chk(int fd, void* buf, size_t count, size_t buf_size) {
   if (__predict_false(count > buf_size)) {
-    __fortify_chk_fail("read prevented write past end of buffer", 0);
+    __fortify_chk_fail("read: prevented write past end of buffer", 0);
   }
 
   if (__predict_false(count > SSIZE_MAX)) {
-    __fortify_chk_fail("read count > SSIZE_MAX", 0);
+    __fortify_chk_fail("read: count > SSIZE_MAX", 0);
   }
 
   return read(fd, buf, count);
