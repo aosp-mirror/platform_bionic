@@ -41,24 +41,21 @@
  * This strcat check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strcat_chk(
-        char* __restrict dest,
-        const char* __restrict src,
-        size_t dest_buf_size)
-{
-    char* save = dest;
-    size_t dest_len = __strlen_chk(dest, dest_buf_size);
+extern "C" char* __strcat_chk(char* __restrict dest, const char* __restrict src,
+                              size_t dest_buf_size) {
+  char* save = dest;
+  size_t dest_len = __strlen_chk(dest, dest_buf_size);
 
-    dest += dest_len;
-    dest_buf_size -= dest_len;
+  dest += dest_len;
+  dest_buf_size -= dest_len;
 
-    while ((*dest++ = *src++) != '\0') {
-        dest_buf_size--;
-        if (__predict_false(dest_buf_size == 0)) {
-            __fortify_chk_fail("strcat prevented write past end of buffer",
-                               BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
-        }
+  while ((*dest++ = *src++) != '\0') {
+    dest_buf_size--;
+    if (__predict_false(dest_buf_size == 0)) {
+      __fortify_chk_fail("strcat: prevented write past end of buffer",
+                         BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
     }
+  }
 
-    return save;
+  return save;
 }
