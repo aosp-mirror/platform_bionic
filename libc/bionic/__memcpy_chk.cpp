@@ -42,13 +42,12 @@
  * This memcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" void *__memcpy_chk(void *dest, const void *src,
-              size_t copy_amount, size_t dest_len)
-{
-    if (__predict_false(copy_amount > dest_len)) {
-        __fortify_chk_fail("memcpy prevented write past end of buffer",
-                             BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
-    }
+extern "C" void* __memcpy_chk(void* dest, const void* src,
+                              size_t copy_amount, size_t dest_len) {
+  if (__predict_false(copy_amount > dest_len)) {
+    __fortify_chk_fail("memcpy: prevented write past end of buffer",
+                       BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
+  }
 
-    return memcpy(dest, src, copy_amount);
+  return memcpy(dest, src, copy_amount);
 }

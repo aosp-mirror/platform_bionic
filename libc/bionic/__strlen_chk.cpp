@@ -53,12 +53,12 @@
  *
  * or anytime strlen reads beyond an object boundary.
  */
-extern "C" size_t __strlen_chk(const char *s, size_t s_len) {
-    size_t ret = strlen(s);
+extern "C" size_t __strlen_chk(const char* s, size_t s_len) {
+  size_t ret = strlen(s);
 
-    if (__predict_false(ret >= s_len)) {
-        __fortify_chk_fail("strlen prevented read past end of buffer", 0);
-    }
+  if (__predict_false(ret >= s_len)) {
+    __fortify_chk_fail("strlen: prevented read past end of buffer", 0);
+  }
 
-    return ret;
+  return ret;
 }

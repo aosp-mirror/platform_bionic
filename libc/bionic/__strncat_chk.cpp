@@ -41,33 +41,30 @@
  * This strncat check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char *__strncat_chk(
-        char* __restrict dest,
-        const char* __restrict src,
-        size_t len, size_t dest_buf_size)
-{
-    if (len == 0) {
-        return dest;
-    }
-
-    size_t dest_len = __strlen_chk(dest, dest_buf_size);
-    char *d = dest + dest_len;
-    dest_buf_size -= dest_len;
-
-    while (*src != '\0') {
-        *d++ = *src++;
-        len--; dest_buf_size--;
-
-        if (__predict_false(dest_buf_size == 0)) {
-            __fortify_chk_fail("strncat prevented write past end of buffer",
-                               BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW);
-        }
-
-        if (len == 0) {
-            break;
-        }
-    }
-
-    *d = '\0';
+extern "C" char* __strncat_chk(char* __restrict dest, const char* __restrict src,
+                               size_t len, size_t dest_buf_size) {
+  if (len == 0) {
     return dest;
+  }
+
+  size_t dest_len = __strlen_chk(dest, dest_buf_size);
+  char *d = dest + dest_len;
+  dest_buf_size -= dest_len;
+
+  while (*src != '\0') {
+    *d++ = *src++;
+    len--; dest_buf_size--;
+
+    if (__predict_false(dest_buf_size == 0)) {
+      __fortify_chk_fail("strncat: prevented write past end of buffer",
+                         BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW);
+    }
+
+    if (len == 0) {
+      break;
+    }
+  }
+
+  *d = '\0';
+  return dest;
 }

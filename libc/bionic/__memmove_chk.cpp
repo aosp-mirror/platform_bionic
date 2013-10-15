@@ -41,13 +41,12 @@
  * This memmove check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" void *__memmove_chk (void *dest, const void *src,
-              size_t len, size_t dest_len)
-{
-    if (__predict_false(len > dest_len)) {
-        __fortify_chk_fail("memmove prevented write past end of buffer",
-                             BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
-    }
+extern "C" void* __memmove_chk (void* dest, const void* src,
+                                size_t len, size_t dest_len) {
+  if (__predict_false(len > dest_len)) {
+    __fortify_chk_fail("memmove: prevented write past end of buffer",
+                       BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
+  }
 
-    return memmove(dest, src, len);
+  return memmove(dest, src, len);
 }
