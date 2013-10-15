@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dead086a_e994f18f",
+        "filename": "libc/bionic/__strrchr_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-15T23:58:58Z",
+      "side": 1,
+      "message": "(char) ch -\u003e (char)ch",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dead086a_496d05c3",
+        "filename": "libc/bionic/__vsnprintf_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-15T23:58:58Z",
+      "side": 1,
+      "message": "Align to char* from above.",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ea7108a_e45f3a78",
+        "filename": "libc/bionic/__vsprintf_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-15T23:58:58Z",
+      "side": 1,
+      "message": "Align to char* from above.",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "beaa1451_c5c6bae9",
+        "filename": "libc/bionic/open.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-15T23:58:58Z",
+      "side": 1,
+      "message": "(mode_t) va_arg -\u003e (mode_t)va_arg",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ea7108a_44d88edd",
+        "filename": "libc/bionic/openat.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-15T23:58:58Z",
+      "side": 1,
+      "message": "(mode_t) va_arg -\u003e (mode_t)va_arg",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
