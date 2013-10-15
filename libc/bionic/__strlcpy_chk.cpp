@@ -42,12 +42,11 @@
  * This strlcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" size_t __strlcpy_chk(char *dest, const char *src,
-              size_t supplied_size, size_t dest_len_from_compiler)
-{
-    if (__predict_false(supplied_size > dest_len_from_compiler)) {
-        __fortify_chk_fail("strlcpy prevented write past end of buffer", 0);
-    }
+extern "C" size_t __strlcpy_chk(char* dest, const char* src,
+                                size_t supplied_size, size_t dest_len_from_compiler) {
+  if (__predict_false(supplied_size > dest_len_from_compiler)) {
+    __fortify_chk_fail("strlcpy: prevented write past end of buffer", 0);
+  }
 
-    return strlcpy(dest, src, supplied_size);
+  return strlcpy(dest, src, supplied_size);
 }

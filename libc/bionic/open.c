@@ -33,30 +33,27 @@
 
 extern int  __open(const char*, int, int);
 
-int open(const char *pathname, int flags, ...)
-{
-    mode_t  mode = 0;
+int open(const char* pathname, int flags, ...) {
+  mode_t mode = 0;
 
-    flags |= O_LARGEFILE;
+  flags |= O_LARGEFILE;
 
-    if (flags & O_CREAT)
-    {
-        va_list  args;
+  if (flags & O_CREAT) {
+    va_list args;
+    va_start(args, flags);
+    mode = (mode_t) va_arg(args, int);
+    va_end(args);
+  }
 
-        va_start(args, flags);
-        mode = (mode_t) va_arg(args, int);
-        va_end(args);
-    }
-
-    return __open(pathname, flags, mode);
+  return __open(pathname, flags, mode);
 }
 
-int __open_2(const char *pathname, int flags) {
-    if (__predict_false(flags & O_CREAT)) {
-        __fortify_chk_fail("open(O_CREAT) called without specifying a mode", 0);
-    }
+int __open_2(const char* pathname, int flags) {
+  if (__predict_false(flags & O_CREAT)) {
+    __fortify_chk_fail("open(O_CREAT): called without specifying a mode", 0);
+  }
 
-    flags |= O_LARGEFILE;
+  flags |= O_LARGEFILE;
 
-    return __open(pathname, flags, 0);
+  return __open(pathname, flags, 0);
 }

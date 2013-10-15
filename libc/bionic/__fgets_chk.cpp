@@ -41,16 +41,15 @@
  * This fgets check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char *__fgets_chk(char *dest, int supplied_size,
-                  FILE *stream, size_t dest_len_from_compiler)
-{
-    if (supplied_size < 0) {
-        __fortify_chk_fail("fgets buffer size less than 0", 0);
-    }
+extern "C" char* __fgets_chk(char* dest, int supplied_size,
+                             FILE* stream, size_t dest_len_from_compiler) {
+  if (supplied_size < 0) {
+    __fortify_chk_fail("fgets: buffer size < 0", 0);
+  }
 
-    if (((size_t) supplied_size) > dest_len_from_compiler) {
-        __fortify_chk_fail("fgets prevented write past end of buffer", 0);
-    }
+  if (((size_t) supplied_size) > dest_len_from_compiler) {
+    __fortify_chk_fail("fgets: prevented write past end of buffer", 0);
+  }
 
-    return fgets(dest, supplied_size, stream);
+  return fgets(dest, supplied_size, stream);
 }

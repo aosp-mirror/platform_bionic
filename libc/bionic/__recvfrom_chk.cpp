@@ -34,10 +34,9 @@
 
 extern "C"
 ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buflen, unsigned int flags,
-        const struct sockaddr* src_addr, socklen_t* addrlen)
-{
+                       const struct sockaddr* src_addr, socklen_t* addrlen) {
   if (__predict_false(len > buflen)) {
-    __fortify_chk_fail("recvfrom prevented write past end of buffer", 0);
+    __fortify_chk_fail("recvfrom: prevented write past end of buffer", 0);
   }
 
   return recvfrom(socket, buf, len, flags, src_addr, addrlen);

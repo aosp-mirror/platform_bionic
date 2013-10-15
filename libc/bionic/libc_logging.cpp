@@ -504,7 +504,7 @@ void __libc_android_log_event_uid(int32_t tag) {
   __libc_android_log_event_int(tag, getuid());
 }
 
-void __fortify_chk_fail(const char *msg, uint32_t tag) {
+void __fortify_chk_fail(const char* msg, uint32_t tag) {
   if (tag != 0) {
     __libc_android_log_event_uid(tag);
   }
