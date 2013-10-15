@@ -26,10 +26,30 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
+#include <pthread.h>
 #include <signal.h>
 
-extern int __rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t);
+#include "private/kernel_sigset_t.h"
 
-int sigprocmask(int how, const sigset_t* set, sigset_t* old_set) {
-  return __rt_sigprocmask(how, set, old_set, sizeof(sigset_t));
+extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
+
+int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
+  kernel_sigset_t new_set;
+  kernel_sigset_t* new_set_ptr = NULL;
+  if (bionic_new_set != NULL) {
+    new_set.set(bionic_new_set);
+    new_set_ptr = &new_set;
+  }
+
+  kernel_sigset_t old_set;
+  if (__rt_sigprocmask(how, new_set_ptr, &old_set, sizeof(old_set)) == -1) {
+    return -1;
+  }
+
+  if (bionic_old_set != NULL) {
+    *bionic_old_set = old_set.bionic;
+  }
+
+  return 0;
 }
