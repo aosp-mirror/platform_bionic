@@ -3,14 +3,12 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__sigsuspend)
+ENTRY(__rt_sigsuspend)
     pushl   %ebx
     pushl   %ecx
-    pushl   %edx
-    mov     16(%esp), %ebx
-    mov     20(%esp), %ecx
-    mov     24(%esp), %edx
-    movl    $__NR_sigsuspend, %eax
+    mov     12(%esp), %ebx
+    mov     16(%esp), %ecx
+    movl    $__NR_rt_sigsuspend, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -20,8 +18,7 @@ ENTRY(__sigsuspend)
     addl    $4, %esp
     orl     $-1, %eax
 1:
-    popl    %edx
     popl    %ecx
     popl    %ebx
     ret
-END(__sigsuspend)
+END(__rt_sigsuspend)
