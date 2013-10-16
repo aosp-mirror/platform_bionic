@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e2f58b5_88ec7baf",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-16T21:05:45Z",
+      "side": 1,
+      "message": "upai -\u003e uapi",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e346406_0717ba5a",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-16T21:05:45Z",
+      "side": 1,
+      "message": "I know that this is pattern is used all over in this file, but there is no need to compile the pattern since it\u0027s only every used once.\n\nThis would be better as:\n\nm_uapi \u003d re.match( r\"...\", src_path)\nif m_uapi:\n  .\n  .\n  .\n  m_uapi_arch \u003d re.match( r\"...\", m_uapi.group(2))\n\nOr you could create a global match object at the top of the file and use that.",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e346406_27dbde6a",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-16T21:05:45Z",
+      "side": 1,
+      "message": "This code keeps the directory structure for uapi. I\u0027m assuming that this is intentional, but I wanted to verify.",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
