@@ -227,4 +227,4 @@ END(__strcat_chk_fail)
 
     .data
 error_string:
-    .string "strcat prevented write past end of buffer"
+    .string "strcat: prevented write past end of buffer"

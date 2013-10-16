@@ -43,7 +43,7 @@
  * greater than 0.
  */
 extern "C" int __vsprintf_chk(char* dest, int /*flags*/,
-        size_t dest_len_from_compiler, const char* format, va_list va) {
+                              size_t dest_len_from_compiler, const char* format, va_list va) {
   int result = vsnprintf(dest, dest_len_from_compiler, format, va);
   if ((size_t) result >= dest_len_from_compiler) {
     __fortify_chk_fail("vsprintf: prevented write past end of buffer", 0);
