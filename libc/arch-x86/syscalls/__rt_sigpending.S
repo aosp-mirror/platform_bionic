@@ -3,10 +3,12 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(sigpending)
+ENTRY(__rt_sigpending)
     pushl   %ebx
-    mov     8(%esp), %ebx
-    movl    $__NR_sigpending, %eax
+    pushl   %ecx
+    mov     12(%esp), %ebx
+    mov     16(%esp), %ecx
+    movl    $__NR_rt_sigpending, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -16,6 +18,7 @@ ENTRY(sigpending)
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    popl    %ecx
     popl    %ebx
     ret
-END(sigpending)
+END(__rt_sigpending)
