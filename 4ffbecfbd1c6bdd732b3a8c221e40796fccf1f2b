@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e346406_ca1cb780",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-16T22:24:30Z",
+      "side": 1,
+      "message": "One last nit, probably best to move this below the statics \u003d line and right next to the if m ... code.",
+      "revId": "4ffbecfbd1c6bdd732b3a8c221e40796fccf1f2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
