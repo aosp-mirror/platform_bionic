@@ -43,15 +43,26 @@ def  cleanupFile( path, original_path):
     # and the corresponding list of known static functions
     #
     arch = None
-    re_asm_arch = re.compile( r"asm-([\w\d_\+\.\-]+)(/.*)" )
-    m = re_asm_arch.match(src_path)
     statics = kernel_known_generic_statics
+    m = re.match(r"asm-([\w\d_\+\.\-]+)(/.*)", src_path)
     if m and m.group(1) != 'generic':
         dst_path = "arch-%s/asm/%s" % m.groups()
         arch     = m.group(1)
         statics  = statics.union( kernel_known_statics.get( arch, set() ) )
     else:
-        dst_path = "common/" + src_path
+        # process headers under the uapi directory
+        # note the "asm" level has been explicitly added in the original
+        # kernel header tree for architectural-dependent uapi headers
+        m_uapi = re.match(r"(uapi)/([\w\d_\+\.\-]+)(/.*)", src_path)
+        if m_uapi:
+            dst_path = src_path
+            m_uapi_arch = re.match(r"asm-([\w\d_\+\.\-]+)", m_uapi.group(2))
+            if m_uapi_arch and m_uapi_arch.group(1) != 'generic':
+                arch     = m_uapi_arch.group(1)
+                statics  = statics.union( kernel_known_statics.get( arch, set() ) )
+        # common headers (ie non-asm and non-uapi)
+        else:
+            dst_path = "common/" + src_path
 
     dst_path = os.path.normpath( kernel_cleaned_path + "/" + dst_path )
 
