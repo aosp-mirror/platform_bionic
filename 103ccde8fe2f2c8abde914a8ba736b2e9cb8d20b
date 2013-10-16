@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ea41c87_d7b2ec26",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T21:35:18Z",
+      "side": 1,
+      "message": "why the lambda? because if you just sort on the syscall itself, you end up with some entries apparently out of order because the actual syscall is __ARM_NR_set_tls but our generated function name is __set_tls. since the files are named after the functions they contain, sorting on the function name makes more sense.",
+      "revId": "103ccde8fe2f2c8abde914a8ba736b2e9cb8d20b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
