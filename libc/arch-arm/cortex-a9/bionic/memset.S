@@ -201,4 +201,4 @@ END(__memset_large_copy)
 
         .data
 error_string:
-        .string     "memset prevented write past end of buffer"
+        .string     "memset: prevented write past end of buffer"
