@@ -109,4 +109,4 @@ END(__memcpy_chk_fail)
 
         .data
 error_string:
-        .string "memcpy prevented write past end of buffer"
+        .string "memcpy: prevented write past end of buffer"
