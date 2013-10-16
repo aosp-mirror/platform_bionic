@@ -33,31 +33,27 @@
 
 extern int  __openat(int, const char*, int, int);
 
-int openat(int fd, const char *pathname, int flags, ...)
-{
-    mode_t  mode = 0;
+int openat(int fd, const char *pathname, int flags, ...) {
+  mode_t mode = 0;
 
-    flags |= O_LARGEFILE;
+  flags |= O_LARGEFILE;
 
-    if (flags & O_CREAT)
-    {
-        va_list  args;
+  if (flags & O_CREAT) {
+    va_list args;
+    va_start(args, flags);
+    mode = (mode_t) va_arg(args, int);
+    va_end(args);
+  }
 
-        va_start(args, flags);
-        mode = (mode_t) va_arg(args, int);
-        va_end(args);
-    }
-
-    return __openat(fd, pathname, flags, mode);
+  return __openat(fd, pathname, flags, mode);
 }
 
-int __openat_2(int fd, const char *pathname, int flags)
-{
-    if (flags & O_CREAT) {
-        __fortify_chk_fail("openat(O_CREAT) called without specifying a mode", 0);
-    }
+int __openat_2(int fd, const char* pathname, int flags) {
+  if (flags & O_CREAT) {
+    __fortify_chk_fail("openat(O_CREAT): called without specifying a mode", 0);
+  }
 
-    flags |= O_LARGEFILE;
+  flags |= O_LARGEFILE;
 
-    return __openat(fd, pathname, flags, 0);
+  return __openat(fd, pathname, flags, 0);
 }
