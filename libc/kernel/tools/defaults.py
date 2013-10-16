@@ -7,7 +7,7 @@ from utils import *
 
 # the list of supported architectures
 #
-kernel_archs = [ 'arm', 'mips', 'x86' ]
+kernel_archs = [ 'aarch64', 'arm', 'mips', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -44,12 +44,14 @@ kernel_remove_config_macros = True
 # maps an architecture to a set of default macros that would be provided by
 # toolchain preprocessor
 kernel_default_arch_macros = {
+    "aarch64": {},
     "arm": {},
     "mips": {"CONFIG_32BIT":"1"},
     "x86": {},
     }
 
 kernel_arch_token_replacements = {
+    "aarch64": {},
     "arm": {},
     "mips": {"off_t":"__kernel_off_t"},
     "x86": {},
@@ -63,6 +65,11 @@ kernel_token_replacements = {
 # this is the set of known static inline functions that we want to keep
 # in the final ARM headers. this is only used to keep optimized byteswapping
 # static functions and stuff like that.
+kernel_known_aarch64_statics = set(
+        [
+        ]
+    )
+
 kernel_known_arm_statics = set(
         [ "___arch__swab32",    # asm-arm/byteorder.h
         ]
@@ -92,6 +99,7 @@ kernel_known_generic_statics = set(
 # we want to keep in the final headers
 #
 kernel_known_statics = {
+        "aarch64" : kernel_known_aarch64_statics,
         "arm" : kernel_known_arm_statics,
         "mips" : kernel_known_mips_statics,
         "x86" : kernel_known_x86_statics,
