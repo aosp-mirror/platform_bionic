@@ -122,24 +122,20 @@ static __inline__ __sighandler_t signal(int s, __sighandler_t f)
     return bsd_signal(s,f);
 }
 
-/* the syscall itself */
-extern __sighandler_t __signal(int, __sighandler_t, int);
-
-extern int sigprocmask(int, const sigset_t *, sigset_t *);
-extern int sigaction(int, const struct sigaction *, struct sigaction *);
-
-extern int sigpending(sigset_t *);
-extern int sigsuspend(const sigset_t *);
-extern int sigwait(const sigset_t *set, int *sig);
-extern int siginterrupt(int  sig, int  flag);
+extern int sigaction(int, const struct sigaction*, struct sigaction*);
+extern int siginterrupt(int, int);
+extern int sigpending(sigset_t*) __nonnull((1));
+extern int sigprocmask(int, const sigset_t*, sigset_t*);
+extern int sigsuspend(const sigset_t*) __nonnull((1));
+extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
 
 extern int raise(int);
 extern int kill(pid_t, int);
-extern int killpg(int pgrp, int sig);
-extern int sigaltstack(const stack_t *ss, stack_t *oss);
+extern int killpg(int, int);
+extern int sigaltstack(const stack_t*, stack_t*);
 
-extern void psiginfo(const siginfo_t* si, const char* message);
-extern void psignal(int signal_number, const char* message);
+extern void psiginfo(const siginfo_t*, const char*);
+extern void psignal(int, const char*);
 
 __END_DECLS
 
