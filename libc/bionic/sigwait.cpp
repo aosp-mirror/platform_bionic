@@ -31,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 
-#include <private/kernel_sigset_t.h>
+#include "private/kernel_sigset_t.h"
 
 extern "C" int __rt_sigtimedwait(const sigset_t* uthese, siginfo_t* uinfo, const struct timespec* uts, size_t sigsetsize);
 

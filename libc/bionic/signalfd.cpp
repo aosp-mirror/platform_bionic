@@ -28,7 +28,7 @@
 
 #include <sys/signalfd.h>
 
-#include <private/kernel_sigset_t.h>
+#include "private/kernel_sigset_t.h"
 
 extern "C" int signalfd4(int fd, kernel_sigset_t* mask, size_t sizemask, int flags);
 

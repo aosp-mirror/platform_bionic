@@ -153,3 +153,36 @@ TEST(signal, sigwait) {
   ASSERT_EQ(0, errno);
   ASSERT_EQ(SIGALRM, received_signal);
 }
+
+static int gSigSuspendTestHelperCallCount = 0;
+
+static void SigSuspendTestHelper(int) {
+  ++gSigSuspendTestHelperCallCount;
+}
+
+TEST(signal, sigsuspend) {
+  ScopedSignalHandler ssh(SIGALRM, SigSuspendTestHelper);
+
+  // Block SIGALRM.
+  sigset_t just_SIGALRM;
+  sigemptyset(&just_SIGALRM);
+  sigaddset(&just_SIGALRM, SIGALRM);
+  sigset_t original_set;
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
+
+  // Raise SIGALRM and check our signal handler wasn't called.
+  raise(SIGALRM);
+  ASSERT_EQ(0, gSigSuspendTestHelperCallCount);
+
+  // Use sigsuspend to block everything except SIGALRM...
+  sigset_t not_SIGALRM;
+  sigfillset(&not_SIGALRM);
+  sigdelset(&not_SIGALRM, SIGALRM);
+  ASSERT_EQ(-1, sigsuspend(&not_SIGALRM));
+  ASSERT_EQ(EINTR, errno);
+  // ...and check that we now receive our pending SIGALRM.
+  ASSERT_EQ(1, gSigSuspendTestHelperCallCount);
+
+  // Restore the original set.
+  assert(0 == sigprocmask(SIG_SETMASK, &original_set, NULL));
+}
