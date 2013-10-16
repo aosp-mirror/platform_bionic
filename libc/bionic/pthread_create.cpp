@@ -91,8 +91,10 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
     struct sched_param param;
     param.sched_priority = thread->attr.sched_priority;
     if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
-      // For backwards compatibility reasons, we just warn about failures here.
-      // error = errno;
+#if __LP64__
+      // For backwards compatibility reasons, we only report failures on 64-bit devices.
+      error = errno;
+#endif
       __libc_format_log(ANDROID_LOG_WARN, "libc",
                         "pthread_create sched_setscheduler call failed: %s", strerror(errno));
     }
