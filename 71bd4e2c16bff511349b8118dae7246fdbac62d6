@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e346406_441d40dd",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T20:01:54Z",
+      "side": 1,
+      "message": "i\u0027ll remove these in a separate patch. just wanted to move them together so i don\u0027t have to work this out again.\n\nwait4 handles all our waiting, and since i rewrote the script you get all the __NR_* constants anyway, whether a syscall is mentioned in this file or not.",
+      "revId": "71bd4e2c16bff511349b8118dae7246fdbac62d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ea41c87_0c039b24",
+        "filename": "libc/arch-arm/syscalls.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T20:01:54Z",
+      "side": 1,
+      "message": "one day i\u0027ll add the missing sorted() calls to the script that generates this...",
+      "revId": "71bd4e2c16bff511349b8118dae7246fdbac62d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e346406_248bdce4",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T20:01:54Z",
+      "side": 1,
+      "message": "note the new __LP64__ check. we don\u0027t want to fuck 64-bit bit up like 32-bit was fucked.",
+      "revId": "71bd4e2c16bff511349b8118dae7246fdbac62d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
