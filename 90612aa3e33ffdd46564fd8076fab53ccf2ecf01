@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7ea41c87_57d6fc44",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-10-16T21:33:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e2f58b5_88ec7baf",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e346406_0717ba5a",
         "filename": "libc/kernel/tools/clean_header.py",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5e2f58b5_8b3c75d5",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-10-16T21:33:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e346406_0717ba5a",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e346406_27dbde6a",
         "filename": "libc/kernel/tools/clean_header.py",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2013-10-16T21:05:45Z",
       "side": 1,
       "message": "This code keeps the directory structure for uapi. I\u0027m assuming that this is intentional, but I wanted to verify.",
+      "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e346406_278c7e32",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2013-10-16T21:33:04Z",
+      "side": 1,
+      "message": "Comments added.",
+      "parentUuid": "3e346406_27dbde6a",
       "revId": "90612aa3e33ffdd46564fd8076fab53ccf2ecf01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
