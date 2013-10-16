@@ -19,6 +19,28 @@
 #include <errno.h>
 #include <signal.h>
 
+static size_t SIGNAL_MIN() {
+  return 1; // Signals start at 1 (SIGHUP), not 0.
+}
+
+static size_t SIGNAL_MAX() {
+  size_t result = SIGRTMAX;
+
+#if defined(__BIONIC__) && !defined(__mips__) && !defined(__LP64__)
+  // 32-bit bionic's sigset_t is too small for ARM and x86: 32 bits instead of 64.
+  // This means you can't refer to any of the real-time signals.
+  // See http://b/3038348 and http://b/5828899.
+  result = 32;
+#else
+  // Otherwise, C libraries should be perfectly capable of using their largest signal.
+  if (sizeof(sigset_t) * 8 < static_cast<size_t>(SIGRTMAX)) {
+    abort();
+  }
+#endif
+
+  return result;
+}
+
 template <typename Fn>
 static void TestSigSet1(Fn fn) {
   // NULL sigset_t*.
@@ -45,19 +67,6 @@ static void TestSigSet2(Fn fn) {
   sigset_t set;
   sigemptyset(&set);
 
-  int min_signal = SIGHUP;
-  int max_signal = SIGRTMAX;
-
-#if defined(__BIONIC__) && !defined(__mips__)
-  // bionic's sigset_t is too small for ARM and x86: 32 bits instead of 64.
-  // This means you can't refer to any of the real-time signals.
-  // See http://b/3038348 and http://b/5828899.
-  max_signal = 32;
-#else
-  // Other C libraries (or bionic for MIPS) are perfectly capable of using their largest signal.
-  ASSERT_GE(sizeof(sigset_t) * 8, static_cast<size_t>(SIGRTMAX));
-#endif
-
   // Bad signal number: too small.
   errno = 0;
   ASSERT_EQ(-1, fn(&set, 0));
@@ -65,14 +74,14 @@ static void TestSigSet2(Fn fn) {
 
   // Bad signal number: too high.
   errno = 0;
-  ASSERT_EQ(-1, fn(&set, max_signal + 1));
+  ASSERT_EQ(-1, fn(&set, SIGNAL_MAX() + 1));
   ASSERT_EQ(EINVAL, errno);
 
   // Good signal numbers, low and high ends of range.
   errno = 0;
-  ASSERT_EQ(0, fn(&set, min_signal));
+  ASSERT_EQ(0, fn(&set, SIGNAL_MIN()));
   ASSERT_EQ(0, errno);
-  ASSERT_EQ(0, fn(&set, max_signal));
+  ASSERT_EQ(0, fn(&set, SIGNAL_MAX()));
   ASSERT_EQ(0, errno);
 }
 
@@ -160,7 +169,7 @@ static void SigSuspendTestHelper(int) {
   ++gSigSuspendTestHelperCallCount;
 }
 
-TEST(signal, sigsuspend) {
+TEST(signal, sigsuspend_sigpending) {
   ScopedSignalHandler ssh(SIGALRM, SigSuspendTestHelper);
 
   // Block SIGALRM.
@@ -170,9 +179,24 @@ TEST(signal, sigsuspend) {
   sigset_t original_set;
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
 
+  // There should be no pending signals.
+  sigset_t pending;
+  sigemptyset(&pending);
+  ASSERT_EQ(0, sigpending(&pending));
+  for (size_t i = SIGNAL_MIN(); i <= SIGNAL_MAX(); ++i) {
+    EXPECT_FALSE(sigismember(&pending, i)) << i;
+  }
+
   // Raise SIGALRM and check our signal handler wasn't called.
   raise(SIGALRM);
   ASSERT_EQ(0, gSigSuspendTestHelperCallCount);
+
+  // We should now have a pending SIGALRM but nothing else.
+  sigemptyset(&pending);
+  ASSERT_EQ(0, sigpending(&pending));
+  for (size_t i = SIGNAL_MIN(); i <= SIGNAL_MAX(); ++i) {
+    EXPECT_EQ((i == SIGALRM), sigismember(&pending, i));
+  }
 
   // Use sigsuspend to block everything except SIGALRM...
   sigset_t not_SIGALRM;

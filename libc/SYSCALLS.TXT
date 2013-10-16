@@ -28,13 +28,12 @@
 void    _exit:exit_group(int)      all
 void    _exit_thread:exit(int)     all
 pid_t   __fork:fork(void)           all
-pid_t   _waitpid:waitpid(pid_t, int*, int, struct rusage*)   mips,x86
-int     __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)          all
 pid_t   wait4(pid_t pid, int* status, int options, struct rusage* rusage)   all
 
-# NOTE: this system call is never called directly, but we list it there
-#       to have __NR_clone properly defined.
+# NOTE: these stubs are unused.
 pid_t   __sys_clone:clone(int, void*, int*, void*, int*) all
+pid_t   _waitpid:waitpid(pid_t, int*, int, struct rusage*)   mips,x86
+int     __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)          all
 
 int     execve(const char*, char* const*, char* const*)  all
 
@@ -226,8 +225,8 @@ int           timerfd_gettime(int, struct itimerspec*)   all
 
 # signals
 int     sigaction(int, const struct sigaction*, struct sigaction*)  arm,x86,mips
-int     sigpending(sigset_t*)  arm,x86,mips
 int     __rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t)  all
+int     __rt_sigpending:rt_sigpending(sigset_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t)  all
 int     __rt_sigsuspend:rt_sigsuspend(const sigset_t*, size_t)  all
 int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, struct timespec_t*, size_t)  all
