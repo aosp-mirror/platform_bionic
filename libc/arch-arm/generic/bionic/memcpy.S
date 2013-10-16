@@ -401,4 +401,4 @@ END(memcpy)
 
         .data
 error_string:
-        .string     "memcpy prevented write past end of buffer"
+        .string     "memcpy: prevented write past end of buffer"

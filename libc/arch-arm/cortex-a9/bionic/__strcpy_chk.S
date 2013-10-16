@@ -191,4 +191,4 @@ END(__strcpy_chk_fail)
 
     .data
 error_string:
-    .string "strcpy prevented write past end of buffer"
+    .string "strcpy: prevented write past end of buffer"
