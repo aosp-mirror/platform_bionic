@@ -122,9 +122,7 @@ class SysCallsTxtParser:
 
         # Parse the architecture list.
         arch_list = line[pos_rparen+1:].strip()
-        if arch_list == "custom":
-            pass
-        elif arch_list == "all":
+        if arch_list == "all":
             for arch in all_arches:
                 t[arch] = True
         else:
