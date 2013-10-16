@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "7ea41c87_ac2cc7a1",
+        "filename": "libc/bionic/sigpending.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-16T20:05:46Z",
+      "side": 1,
+      "message": "Does it matter that you are setting this regardless of the result of __rt_sigpending? I don\u0027t think it would, but I wanted to ask.",
+      "revId": "71bd4e2c16bff511349b8118dae7246fdbac62d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e346406_248bdce4",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 1
