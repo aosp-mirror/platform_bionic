@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dead086a_89f77db5",
+        "filename": "libc/bionic/__strrchr_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T00:13:41Z",
+      "side": 1,
+      "message": "actually, _with_ the space is the approved style for C.\n\nfor C++ we shouldn\u0027t be using C-style casts at all. one day we\u0027ll clean all that up too, but my editor isn\u0027t smart enough to just do it for me.",
+      "parentUuid": "dead086a_e994f18f",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dead086a_496d05c3",
         "filename": "libc/bionic/__vsnprintf_chk.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-15T23:58:58Z",
       "side": 1,
       "message": "Align to char* from above.",
+      "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "beaa1451_0855c7fc",
+        "filename": "libc/bionic/__vsnprintf_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-16T00:13:41Z",
+      "side": 1,
+      "message": "crap. bizarre that i got the opposite one in each of these files!",
+      "parentUuid": "dead086a_496d05c3",
       "revId": "d1eda33f012e46083b91e087fb79d14a5ce70f0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
