@@ -9,7 +9,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-x86_64/bionic/__set_tls.c \
     arch-x86_64/bionic/sigaction.c \
     arch-x86_64/bionic/sigsetjmp.S \
-    arch-x86_64/bionic/sigsuspend.c \
     arch-x86_64/bionic/syscall.S \
 
 _LIBC_ARCH_STATIC_SRC_FILES := \

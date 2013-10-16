@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,8 +28,11 @@
 
 #include <signal.h>
 
-extern int __rt_sigsuspend(const sigset_t*, size_t);
+#include "private/kernel_sigset_t.h"
 
-int sigsuspend(const sigset_t* set) {
-  return __rt_sigsuspend(set, sizeof(sigset_t));
+extern "C" int __rt_sigsuspend(const kernel_sigset_t*, size_t);
+
+int sigsuspend(const sigset_t* bionic_set) {
+  kernel_sigset_t set(bionic_set);
+  return __rt_sigsuspend(&set, sizeof(set));
 }
