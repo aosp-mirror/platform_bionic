@@ -4,7 +4,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(sigaction)
+ENTRY(__sigaction)
     mov     ip, r7
     ldr     r7, =__NR_sigaction
     swi     #0
@@ -13,4 +13,4 @@ ENTRY(sigaction)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(sigaction)
+END(__sigaction)

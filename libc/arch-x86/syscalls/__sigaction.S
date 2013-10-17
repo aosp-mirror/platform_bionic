@@ -4,7 +4,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(sigaction)
+ENTRY(__sigaction)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
@@ -25,4 +25,4 @@ ENTRY(sigaction)
     popl    %ecx
     popl    %ebx
     ret
-END(sigaction)
+END(__sigaction)
