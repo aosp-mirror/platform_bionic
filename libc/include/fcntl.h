@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _FCNTL_H
 #define _FCNTL_H
 
@@ -37,10 +38,6 @@ __BEGIN_DECLS
 
 #ifndef O_ASYNC
 #define O_ASYNC  FASYNC
-#endif
-
-#ifndef O_CLOEXEC
-#define O_CLOEXEC  02000000
 #endif
 
 extern int  open(const char*  path, int  mode, ...);
