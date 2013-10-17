@@ -210,3 +210,44 @@ TEST(signal, sigsuspend_sigpending) {
   // Restore the original set.
   assert(0 == sigprocmask(SIG_SETMASK, &original_set, NULL));
 }
+
+static void EmptySignalHandler(int) {}
+static void EmptySignalAction(int, siginfo_t*, void*) {}
+
+TEST(signal, sigaction) {
+  // See what's currently set for SIGALRM.
+  struct sigaction sa;
+  memset(&sa, 0, sizeof(sa));
+  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
+  ASSERT_TRUE(sa.sa_handler == NULL);
+  ASSERT_TRUE(sa.sa_sigaction == NULL);
+  ASSERT_TRUE(sa.sa_flags == 0);
+
+  // Set a traditional sa_handler signal handler.
+  memset(&sa, 0, sizeof(sa));
+  sigaddset(&sa.sa_mask, SIGALRM);
+  sa.sa_flags = SA_ONSTACK;
+  sa.sa_handler = EmptySignalHandler;
+  ASSERT_EQ(0, sigaction(SIGALRM, &sa, NULL));
+
+  // Check that we can read it back.
+  memset(&sa, 0, sizeof(sa));
+  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
+  ASSERT_TRUE(sa.sa_handler == EmptySignalHandler);
+  ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
+  ASSERT_TRUE(sa.sa_flags == SA_ONSTACK);
+
+  // Set a new-style sa_sigaction signal handler.
+  memset(&sa, 0, sizeof(sa));
+  sigaddset(&sa.sa_mask, SIGALRM);
+  sa.sa_flags = SA_ONSTACK | SA_SIGINFO;
+  sa.sa_sigaction = EmptySignalAction;
+  ASSERT_EQ(0, sigaction(SIGALRM, &sa, NULL));
+
+  // Check that we can read it back.
+  memset(&sa, 0, sizeof(sa));
+  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
+  ASSERT_TRUE(sa.sa_sigaction == EmptySignalAction);
+  ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
+  ASSERT_TRUE(sa.sa_flags == (SA_ONSTACK | SA_SIGINFO));
+}

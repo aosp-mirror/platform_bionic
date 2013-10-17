@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SIGNAL_H_
 #define _SIGNAL_H_
 
@@ -33,7 +34,18 @@
 #include <limits.h>		/* For LONG_BIT */
 #include <string.h>		/* For memset() */
 #include <sys/types.h>
-#include <asm/signal.h>
+
+#if defined(__LP64__)
+/* For 64-bit, the kernel's struct sigaction doesn't match the POSIX one,
+ * so we need to expose our own and translate behind the scenes. */
+#  define sigaction __kernel_sigaction
+#  include <asm/signal.h>
+#  undef sigaction
+#else
+/* For 32-bit, we're stuck with the definitions we already shipped,
+ * even though they contain a sigset_t that's too small. */
+#  include <asm/signal.h>
+#endif
 
 #define __ARCH_SI_UID_T __kernel_uid32_t
 #include <asm/siginfo.h>
@@ -57,73 +69,37 @@ typedef int sig_atomic_t;
 extern const char* const sys_siglist[];
 extern const char* const sys_signame[];
 
-static __inline__ int sigismember(const sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  const unsigned long* local_set = (const unsigned long*) set;
-  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
-    errno = EINVAL;
-    return -1;
-  }
-  return (int) ((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
-}
+typedef __sighandler_t sig_t; /* BSD compatibility. */
+typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
-static __inline__ int sigaddset(sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  unsigned long* local_set = (unsigned long*) set;
-  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
-    errno = EINVAL;
-    return -1;
-  }
-  local_set[bit / LONG_BIT] |= 1UL << (bit % LONG_BIT);
-  return 0;
-}
+#if __LP64__
 
-static __inline__ int sigdelset(sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  unsigned long* local_set = (unsigned long*) set;
-  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
-    errno = EINVAL;
-    return -1;
-  }
-  local_set[bit / LONG_BIT] &= ~(1UL << (bit % LONG_BIT));
-  return 0;
-}
+struct sigaction {
+  unsigned int sa_flags;
+  union {
+    sighandler_t sa_handler;
+    void (*sa_sigaction)(int, struct siginfo*, void*);
+  };
+  sigset_t sa_mask;
+  void (*sa_restorer)(void);
+};
 
-static __inline__ int sigemptyset(sigset_t* set) {
-  if (set == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-  memset(set, 0, sizeof *set);
-  return 0;
-}
-
-static __inline__ int sigfillset(sigset_t* set) {
-  if (set == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-  memset(set, ~0, sizeof *set);
-  return 0;
-}
-
-
-/* compatibility types */
-typedef void  (*sig_t)(int);
-typedef sig_t sighandler_t;
-
-/* differentiater between sysv and bsd behaviour 8*/
-extern __sighandler_t sysv_signal(int, __sighandler_t);
-extern __sighandler_t bsd_signal(int, __sighandler_t);
-
-/* the default is bsd */
-static __inline__ __sighandler_t signal(int s, __sighandler_t f)
-{
-    return bsd_signal(s,f);
-}
+#endif
 
 extern int sigaction(int, const struct sigaction*, struct sigaction*);
+
+extern sighandler_t signal(int, sighandler_t);
+extern sighandler_t bsd_signal(int, sighandler_t);
+extern sighandler_t sysv_signal(int, sighandler_t);
+
 extern int siginterrupt(int, int);
+
+extern int sigaddset(sigset_t*, int);
+extern int sigdelset(sigset_t*, int);
+extern int sigemptyset(sigset_t*);
+extern int sigfillset(sigset_t*);
+extern int sigismember(const sigset_t*, int);
+
 extern int sigpending(sigset_t*) __nonnull((1));
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
 extern int sigsuspend(const sigset_t*) __nonnull((1));
@@ -132,6 +108,7 @@ extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
 extern int raise(int);
 extern int kill(pid_t, int);
 extern int killpg(int, int);
+
 extern int sigaltstack(const stack_t*, stack_t*);
 
 extern void psiginfo(const siginfo_t*, const char*);

@@ -224,7 +224,7 @@ int           timerfd_settime(int, int, const struct itimerspec*, struct itimers
 int           timerfd_gettime(int, struct itimerspec*)   all
 
 # signals
-int     sigaction(int, const struct sigaction*, struct sigaction*)  arm,x86,mips
+int     __sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  arm,mips,x86
 int     __rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t)  all
 int     __rt_sigpending:rt_sigpending(sigset_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t)  all
