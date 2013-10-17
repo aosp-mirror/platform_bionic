@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def0a8a0_51e7d69a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-17T19:51:10Z",
+      "side": 1,
+      "message": "i\u0027m unconvinced that this logging is right, but i think _most_ of the linker\u0027s RELO logging is wrong, or at least inconsistent, so we can worry about that another day.\n\ndo you guys ever use the RELO logging? personally i find it too verbose to be useful, and tend to turn on lower levels of logging instead.",
+      "revId": "c075c18537d18ccb6760ba1f5727ce2c0890285a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
