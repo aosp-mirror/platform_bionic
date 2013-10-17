@@ -947,6 +947,14 @@ static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo*
       *reinterpret_cast<Elf_Addr*>(reloc) = sym_addr + rela->r_addend;
       break;
 
+    case R_X86_64_64:
+      count_relocation(kRelocRelative);
+      MARK(rela->r_offset);
+      TRACE_TYPE(RELO, "RELO R_X86_64_64 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
+                 static_cast<size_t>(sym_addr), sym_name);
+      *reinterpret_cast<Elf_Addr*>(reloc) = sym_addr + rela->r_addend;
+      break;
+
     case R_X86_64_PC32:
       count_relocation(kRelocRelative);
       MARK(rela->r_offset);
