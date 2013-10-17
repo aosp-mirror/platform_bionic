@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "fe0bac5e_b2c6fee7",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-17T18:38:18Z",
+      "side": 1,
+      "message": "to be clear: if you don\u0027t supply the size of the new sigset_t you get EINVAL. the kernel doesn\u0027t just say \"okay, old code using new syscalls, let me accommodate that\". that\u0027s why there\u0027s the special case for the 32-bit ABIs below.",
+      "parentUuid": "3e02a442_d4bd7254",
+      "revId": "4ac6eaea8ef57215236ddb99bf9740cd87045d08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "def0a8a0_31320a04",
         "filename": "libc/bionic/sigemptyset.cpp",
         "patchSetId": 2
