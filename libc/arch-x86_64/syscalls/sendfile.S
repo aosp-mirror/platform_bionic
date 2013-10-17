@@ -17,3 +17,6 @@ ENTRY(sendfile)
 1:
     ret
 END(sendfile)
+
+    .globl _C_LABEL(sendfile64)
+    .equ _C_LABEL(sendfile64), _C_LABEL(sendfile)
