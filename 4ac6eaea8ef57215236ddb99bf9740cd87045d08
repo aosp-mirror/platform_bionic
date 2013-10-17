@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ea41c87_0c45d6c3",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-17T05:36:11Z",
+      "side": 1,
+      "message": "not setting this back caused the new signal test to fail if you ran all the tests (because it wasn\u0027t expecting to see a signal handler for SIGALRM installed).",
+      "revId": "4ac6eaea8ef57215236ddb99bf9740cd87045d08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
