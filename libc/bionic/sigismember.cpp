@@ -25,33 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <signal.h>
 
-
-static __sighandler_t
-_signal(int  signum, __sighandler_t  handler, int  flags)
-{
-    struct sigaction  sa;
-    __sighandler_t    result = SIG_ERR;
-
-    sigemptyset( &sa.sa_mask );
-
-    sa.sa_handler = handler;
-    sa.sa_flags   = flags;
-
-    if ( !sigaction( signum, &sa, &sa ) )
-        result = (__sighandler_t) sa.sa_handler;
-
-    return result;
-}
-
-
-__sighandler_t bsd_signal(int signum, __sighandler_t handler)
-{
-  return _signal(signum, handler, SA_RESTART);
-}
-
-__sighandler_t sysv_signal(int signum, __sighandler_t handler)
-{
-  return _signal(signum, handler, SA_RESETHAND);
+int sigismember(const sigset_t* set, int signum) {
+  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+  const unsigned long* local_set = (const unsigned long*) set;
+  if (set == NULL || bit < 0 || bit >= (int) (8*sizeof(sigset_t))) {
+    errno = EINVAL;
+    return -1;
+  }
+  return (int) ((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
 }

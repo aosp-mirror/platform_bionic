@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,25 +28,11 @@
 
 #include <signal.h>
 
-extern void __rt_sigreturn(void);
-extern int __rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t);
-
-int sigaction(int sig, const struct sigaction* act, struct sigaction* old_act) {
-  struct sigaction sa;
-
-  if (act != NULL && !(act->sa_flags & SA_RESTORER)) {
-    sa = *act;
-    act = &sa;
-    sa.sa_flags |= SA_RESTORER;
-    sa.sa_restorer = &__rt_sigreturn;
+int sigemptyset(sigset_t* set) {
+  if (set == NULL) {
+    errno = EINVAL;
+    return -1;
   }
-
-  int result = __rt_sigaction(sig, act, old_act, sizeof(sigset_t));
-
-  if (old_act != NULL && (old_act->sa_restorer == &__rt_sigreturn)) {
-    old_act->sa_flags &= ~SA_RESTORER;
-  }
-
-  return result;
+  memset(set, 0, sizeof(sigset_t));
+  return 0;
 }
-

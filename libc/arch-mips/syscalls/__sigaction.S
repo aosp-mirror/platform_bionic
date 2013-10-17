@@ -2,11 +2,11 @@
 
 #include <asm/unistd.h>
     .text
-    .globl sigaction
+    .globl __sigaction
     .align 4
-    .ent sigaction
+    .ent __sigaction
 
-sigaction:
+__sigaction:
     .set noreorder
     .cpload $t9
     li $v0, __NR_sigaction
@@ -20,4 +20,4 @@ sigaction:
     j $t9
     nop
     .set reorder
-    .end sigaction
+    .end __sigaction
