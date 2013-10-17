@@ -284,11 +284,13 @@ static void pthread_kill__in_signal_handler_helper(int signal_number) {
 
 TEST(pthread, pthread_kill__in_signal_handler) {
   struct sigaction action;
+  struct sigaction original_action;
   sigemptyset(&action.sa_mask);
   action.sa_flags = 0;
   action.sa_handler = pthread_kill__in_signal_handler_helper;
-  sigaction(SIGALRM, &action, NULL);
+  ASSERT_EQ(0, sigaction(SIGALRM, &action, &original_action));
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
+  ASSERT_EQ(0, sigaction(SIGALRM, &original_action, NULL));
 }
 
 TEST(pthread, pthread_detach__no_such_thread) {
