@@ -18,10 +18,17 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_LDFLAGS := -shared -Wl,--exclude-libs,ALL
 
-LOCAL_CFLAGS += -fno-stack-protector \
-        -Wstrict-overflow=5 \
-        -fvisibility=hidden \
-        -Wall -Wextra -Werror \
+LOCAL_CFLAGS += \
+    -fno-stack-protector \
+    -Wstrict-overflow=5 \
+    -fvisibility=hidden \
+    -Wall -Wextra -Werror \
+
+LOCAL_CONLYFLAGS += \
+    -std=gnu99 \
+
+LOCAL_CPPFLAGS += \
+    -std=gnu++11 \
 
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
