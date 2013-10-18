@@ -194,14 +194,19 @@ endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 ifeq ($(TARGET_ARCH),x86)
+LINKER = linker
+else
+LINKER = linker64
+endif
 # gtest needs EXTERNAL_STORAGE for death test output.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
 # We create /data/local/tmp to be as much like the regular target environment
 # as possible.
-bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/linker
+bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	cp $(TARGET_OUT_EXECUTABLES)/linker /system/bin
+	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
 	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
