@@ -16,3 +16,6 @@ ENTRY(ftruncate)
 1:
     ret
 END(ftruncate)
+
+    .globl _C_LABEL(ftruncate64)
+    .equ _C_LABEL(ftruncate64), _C_LABEL(ftruncate)
