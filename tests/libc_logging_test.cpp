@@ -121,13 +121,21 @@ TEST(libc_logging, d_INT_MIN) {
 TEST(libc_logging, ld_LONG_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MAX);
+#if __LP64__
+  EXPECT_STREQ("9223372036854775807", buf);
+#else
   EXPECT_STREQ("2147483647", buf);
+#endif
 }
 
 TEST(libc_logging, ld_LONG_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MIN);
+#if __LP64__
+  EXPECT_STREQ("-9223372036854775808", buf);
+#else
   EXPECT_STREQ("-2147483648", buf);
+#endif
 }
 
 TEST(libc_logging, lld_LLONG_MAX) {

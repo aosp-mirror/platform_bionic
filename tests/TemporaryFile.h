@@ -19,13 +19,14 @@
 class TemporaryFile {
  public:
   TemporaryFile() {
-#if __BIONIC__
-    const char* tmp_dir = "/data/local/tmp";
-#else
-    const char* tmp_dir = "/tmp";
-#endif
-    snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
-    fd = mkstemp(filename);
+    // Since we might be running on the host or the target, and if we're
+    // running on the host we might be running under bionic or glibc,
+    // let's just try both possible temporary directories and take the
+    // first one that works.
+    init("/data/local/tmp");
+    if (fd == -1) {
+      init("/tmp");
+    }
   }
 
   ~TemporaryFile() {
@@ -35,4 +36,10 @@ class TemporaryFile {
 
   int fd;
   char filename[1024];
+
+ private:
+  void init(const char* tmp_dir) {
+    snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
+    fd = mkstemp(filename);
+  }
 };
