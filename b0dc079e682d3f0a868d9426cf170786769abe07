@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def0a8a0_03f85ca2",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-18T18:50:38Z",
+      "side": 1,
+      "message": "depending on $(LINKER) depends on the phony target. its probably better to depend on the actual file like before with $(TARGET_OUT_EXECUTABLES)/$(LINKER). it is also clearer that the things you are copying are the listed in the dependencies.",
+      "revId": "b0dc079e682d3f0a868d9426cf170786769abe07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
