@@ -31,24 +31,24 @@
 
 // int  __pthread_clone(void* (*fn)(void*), void* tls, int flags, void* arg);
 ENTRY(__pthread_clone)
-        # save tls
+        # Save tls.
         movq    %rsi, %r11
-        # 16-byte alignment on child stack
+        # 16-byte alignment for child stack.
         andq    $~15, %rsi
 
-        # insert arguments onto the child stack
-        movq    %rdi, -32(%rsi)
-        movq    %rcx, -24(%rsi)
-        movq    %r11, -16(%rsi)
-
+        # Copy arguments onto the child stack.
+        movq    %rdi, -32(%rsi) # fn
+        movq    %rcx, -24(%rsi) # arg
+        movq    %r11, -16(%rsi) # tls
         subq    $32, %rsi
+
         movq    %rdx, %rdi
         movl    $__NR_clone, %eax
         syscall
         testl   %eax, %eax
         jns     1f
 
-        # an error occurred, set errno and return -1
+        # An error occurred, set errno and return -1.
         negl    %eax
         movl    %eax, %edi
         call    __set_errno
@@ -57,9 +57,12 @@ ENTRY(__pthread_clone)
 1:
         jnz     2f
 
-        # we're in the child thread now, call __thread_entry
-        # with the appropriate arguments on the child stack
-        # we already placed most of them
+        # We're in the child thread now, call __thread_entry
+        # with the arguments from the child stack moved into
+        # the appropriate registers.
+        popq    %rdi
+        popq    %rsi
+        popq    %rdx
         call    __thread_entry
         hlt
 2:
@@ -103,6 +106,7 @@ ENTRY(__bionic_clone)
         # we're in the child now, call __bionic_clone_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
+        # TODO: write a test for __bionic_clone and then fix this too (see above).
         call    __bionic_clone_entry
         hlt
 
