@@ -16,3 +16,6 @@ ENTRY(truncate)
 1:
     ret
 END(truncate)
+
+    .globl _C_LABEL(truncate64)
+    .equ _C_LABEL(truncate64), _C_LABEL(truncate)
