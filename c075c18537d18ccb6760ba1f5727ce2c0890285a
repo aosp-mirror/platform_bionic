@@ -16,6 +16,24 @@
       "revId": "c075c18537d18ccb6760ba1f5727ce2c0890285a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1988c0_e6d39e4b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2013-10-18T08:52:22Z",
+      "side": 1,
+      "message": "Well... it was helpful to some extent when I was coding 64-bit linker part. I don\u0027t remember using it in other use cases though.",
+      "parentUuid": "def0a8a0_51e7d69a",
+      "revId": "c075c18537d18ccb6760ba1f5727ce2c0890285a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
