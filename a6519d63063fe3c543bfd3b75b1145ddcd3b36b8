@@ -16,6 +16,24 @@
       "revId": "a6519d63063fe3c543bfd3b75b1145ddcd3b36b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e02a442_06f6a849",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-18T04:42:07Z",
+      "side": 1,
+      "message": "only that i\u0027ve never liked the ASCII art in this file, and bringing together calls from different sections -- sections which i\u0027ve also never really liked because they don\u0027t add any value -- meant that i had to reformat the lines anyway, because different sections are indented a different amount.\n\nif i could be bothered, i\u0027d probably move to a ()return_type style so we could |sort the file.\n\ni don\u0027t care much though. if you were to upload a change that aligns the entire file to the same column, i\u0027d +2 that too.",
+      "parentUuid": "3e02a442_2bbe15a6",
+      "revId": "a6519d63063fe3c543bfd3b75b1145ddcd3b36b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
