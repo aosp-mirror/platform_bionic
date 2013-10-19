@@ -33,13 +33,13 @@
 ENTRY(__pthread_clone)
         # Save tls.
         movq    %rsi, %r11
-        # 16-byte alignment for child stack.
+        # Enforce 16-byte alignment for child stack.
         andq    $~15, %rsi
 
-        # Copy arguments onto the child stack.
-        movq    %rdi, -32(%rsi) # fn
-        movq    %rcx, -24(%rsi) # arg
-        movq    %r11, -16(%rsi) # tls
+        # Copy 'fn', 'arg', and 'tls' onto the child stack.
+        movq    %rdi, -32(%rsi)  # fn
+        movq    %rcx, -24(%rsi)  # arg
+        movq    %r11, -16(%rsi)  # tls
         subq    $32, %rsi
 
         movq    %rdx, %rdi
@@ -57,33 +57,32 @@ ENTRY(__pthread_clone)
 1:
         jnz     2f
 
-        # We're in the child thread now, call __thread_entry
+        # We're in the child now, so call __thread_entry
         # with the arguments from the child stack moved into
         # the appropriate registers.
-        popq    %rdi
-        popq    %rsi
-        popq    %rdx
+        popq    %rdi  # fn
+        popq    %rsi  # arg
+        popq    %rdx  # tls
         call    __thread_entry
         hlt
 2:
         ret
 
-/*
- * int  __bionic_clone(unsigned long clone_flags,
- *                     void*         newsp,
- *                     int           *parent_tidptr,
- *                     void          *new_tls,
- *                     int           *child_tidptr,
- *                     int           (*fn)(void *),
- *                     void          *arg);
- */
+// int __bionic_clone(unsigned long clone_flags,
+//                    void* new_sp,
+//                    int* parent_tid_ptr,
+//                    void* new_tls,
+//                    int* child_tid_ptr,
+//                    int (*fn)(void*),
+//                    void* arg);
 ENTRY(__bionic_clone)
-        # insert arguments onto the child stack
+        # Enforce 16-byte alignment for child stack.
         andq    $~15, %rsi
-        movq    %r9, -16(%rsi)
-        # 7th argument (arg) goes through stack
-        movq    8(%rsp), %rax
-        movq    %rax, -8(%rsi)
+
+        # Copy 'fn' and 'arg' onto the child stack.
+        movq    %r9, -16(%rsi)  # fn
+        movq    8(%rsp), %rax   # Read 'arg'.
+        movq    %rax, -8(%rsi)  # Write 'arg'.
 
         subq    $16, %rsi
         movq    %r8, %r10
@@ -93,23 +92,21 @@ ENTRY(__bionic_clone)
         testl   %eax, %eax
         jns     1f
 
-        # an error occurred, set errno and return -1
+        # An error occurred, set errno and return -1.
         negl    %eax
         movl    %eax, %edi
         call    __set_errno
         orl     $-1, %eax
         jmp     2f
-
 1:
         jnz     2f
 
-        # we're in the child now, call __bionic_clone_entry
-        # with the appropriate arguments on the child stack
-        # we already placed most of them
-        # TODO: write a test for __bionic_clone and then fix this too (see above).
+        # We're in the child now, so call __bionic_clone_entry
+        # with the arguments from the child stack moved into
+        # the appropriate registers.
+        popq    %rdi  # fn
+        popq    %rsi  # arg
         call    __bionic_clone_entry
         hlt
-
 2:
         ret
-
