@@ -16,6 +16,24 @@
       "revId": "53bfdae4ffdbd43d0c019d1a35af1f8477a272c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "def0a8a0_1ae0baad",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-21T21:19:58Z",
+      "side": 1,
+      "message": "__NR_ and SYS_ are the two common prefixes for the userspace constants for system calls. (i forget which is SYSV and which is the other one.) so you need to grep your linux kernel tree for clone or read \"man 2 clone\" or whatever.\n\nwhat\u0027s happening here is that other than \u0027flags\u0027 and \u0027fn\u0027 being the wrong way round, __bionic_clone\u0027s arguments are the same as the kernel\u0027s syscall. that\u0027s handled in the next block. up here, we\u0027re stashing the two arguments that __bionic_clone_entry will need later.\n\ni\u0027d like to reorder to remove the need for the later block, but some retard made this public ABI, so i worry i\u0027d break something. (i\u0027d also like to kill __pthread_clone and just use this more general form, but since we probably have to keep this for ABI compatibility anyway...)\n\nit\u0027s worth thinking about simplifying all this for the 64-bit architectures though.",
+      "parentUuid": "def0a8a0_89d2aaa2",
+      "revId": "53bfdae4ffdbd43d0c019d1a35af1f8477a272c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
