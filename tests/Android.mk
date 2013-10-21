@@ -71,6 +71,7 @@ test_src_files = \
     netdb_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    sched_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
