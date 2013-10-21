@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def0a8a0_89d2aaa2",
+        "filename": "libc/arch-x86_64/bionic/clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-21T05:19:05Z",
+      "side": 1,
+      "message": "I couldn\u0027t find the source for __NR_clone, but the code above sets three parameters fn, arg, tls. However, this call only sets fn and arg, is that expected?",
+      "revId": "53bfdae4ffdbd43d0c019d1a35af1f8477a272c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
