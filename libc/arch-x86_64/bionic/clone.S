@@ -59,10 +59,11 @@ ENTRY(__pthread_clone)
 
         # We're in the child now, so call __thread_entry
         # with the arguments from the child stack moved into
-        # the appropriate registers.
-        popq    %rdi  # fn
-        popq    %rsi  # arg
-        popq    %rdx  # tls
+        # the appropriate registers. We avoid pop here to keep
+        # the required 16-byte stack alignment.
+        movq    (%rsp), %rdi    # fn
+        movq    8(%rsp), %rsi   # arg
+        movq    16(%rsp), %rdx  # tls
         call    __thread_entry
         hlt
 2:
