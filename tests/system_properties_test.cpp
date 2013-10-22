@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include <unistd.h>
 #include <string>
 
@@ -28,10 +29,13 @@ extern void *__system_property_area__;
 
 struct LocalPropertyTestState {
     LocalPropertyTestState() : valid(false) {
-        char dir_template[] = "/data/local/tmp/prop-XXXXXX";
-        char *dirname = mkdtemp(dir_template);
+        const char* ANDROID_DATA = getenv("ANDROID_DATA");
+        char dir_template[PATH_MAX];
+        snprintf(dir_template, sizeof(dir_template), "%s/local/tmp/prop-XXXXXX", ANDROID_DATA);
+        char* dirname = mkdtemp(dir_template);
         if (!dirname) {
-            perror("making temp file for test state failed (is /data/local/tmp writable?)");
+            fprintf(stderr, "making temp file for test state failed (is %s writable?): %s",
+                    dir_template, strerror(errno));
             return;
         }
 
@@ -47,8 +51,9 @@ struct LocalPropertyTestState {
     }
 
     ~LocalPropertyTestState() {
-        if (!valid)
+        if (!valid) {
             return;
+        }
 
         __system_property_area__ = old_pa;
 
@@ -357,8 +362,15 @@ bool KilledByFault::operator()(int exit_status) const {
 }
 
 TEST(properties_DeathTest, read_only) {
-      ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-      ASSERT_EXIT(__system_property_add("property", 8, "value", 5),
-                  KilledByFault(), "");
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  // This test only makes sense if we're talking to the real system property service.
+  struct stat sb;
+  if (stat(PROP_FILENAME, &sb) == -1 && errno == ENOENT) {
+    return;
+  }
+
+  ASSERT_EXIT(__system_property_add("property", 8, "value", 5), KilledByFault(), "");
 }
+
 #endif
