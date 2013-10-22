@@ -29,7 +29,7 @@
 #include <asm/unistd.h>
 #include <machine/asm.h>
 
-// void _exit_with_stack_teardown(void* stackBase, int stackSize, int status)
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize, int status)
 ENTRY(_exit_with_stack_teardown)
     // We take advantage of the fact that the linux syscall trap
     // handler saves all the registers, so we don't need to save
