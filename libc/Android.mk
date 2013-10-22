@@ -105,8 +105,6 @@ libc_common_src_files := \
 	bionic/memmem.c \
 	bionic/memswap.c \
 	bionic/name_mem.c \
-	bionic/openat.c \
-	bionic/open.c \
 	bionic/pathconf.c \
 	bionic/perror.c \
 	bionic/pread.c \
@@ -212,8 +210,11 @@ libc_common_src_files += \
 
 libc_bionic_src_files := \
     bionic/abort.cpp \
+    bionic/access.cpp \
     bionic/assert.cpp \
     bionic/brk.cpp \
+    bionic/chmod.cpp \
+    bionic/chown.cpp \
     bionic/dirent.cpp \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
@@ -222,10 +223,16 @@ libc_bionic_src_files := \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
+    bionic/lchown.cpp \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
+    bionic/link.cpp \
+    bionic/lstat.cpp \
+    bionic/mkdir.cpp \
     bionic/mkfifo.cpp \
+    bionic/mknod.cpp \
+    bionic/open.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_detach.cpp \
     bionic/pthread_equal.cpp \
@@ -239,6 +246,9 @@ libc_bionic_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/raise.cpp \
+    bionic/readlink.cpp \
+    bionic/rename.cpp \
+    bionic/rmdir.cpp \
     bionic/sbrk.cpp \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
@@ -258,15 +268,19 @@ libc_bionic_src_files := \
     bionic/sigprocmask.cpp \
     bionic/sigsuspend.cpp \
     bionic/sigwait.cpp \
+    bionic/stat.cpp \
     bionic/statvfs.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
     bionic/strsignal.cpp \
     bionic/stubs.cpp \
+    bionic/symlink.cpp \
     bionic/sysconf.cpp \
     bionic/tdestroy.cpp \
     bionic/__thread_entry.cpp \
     bionic/tmpfile.cpp \
+    bionic/unlink.cpp \
+    bionic/utimes.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
 
