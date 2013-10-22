@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "1ea320b4_b011b8a7",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T18:06:39Z",
+      "side": 1,
+      "message": "aarch64 only supports the *at variants of all these syscalls?",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fed9ec3e_856e462c",
         "filename": "libc/tools/bionic_utils.py",
         "patchSetId": 1
