@@ -193,17 +193,33 @@ typedef uint64_t      uint_fast64_t;
 #  define __PRIFAST_RANK ""
 #  define __PRIPTR_RANK  ""
 
+
 /*
  * intptr_t & uintptr_t
  */
 
 #ifdef __LP64__
+
 typedef long           intptr_t;
 typedef unsigned long  uintptr_t;
+
+#ifdef __STDINT_LIMITS
+#  define INTPTR_MIN    INT64_MIN
+#  define INTPTR_MAX    INT64_MAX
+#  define UINTPTR_MAX   UINT64_MAX
+#  define PTRDIFF_MIN   INT64_MIN
+#  define PTRDIFF_MAX   INT64_MAX
+#endif
+#ifdef __STDINT_MACROS
+#  define INTPTR_C(c)   INT64_C(c)
+#  define UINTPTR_C(c)  UINT64_C(c)
+#  define PTRDIFF_C(c)  INT64_C(c)
+#endif
+
 #else
+
 typedef int           intptr_t;
 typedef unsigned int  uintptr_t;
-#endif
 
 #ifdef __STDINT_LIMITS
 #  define INTPTR_MIN    INT32_MIN
@@ -212,12 +228,14 @@ typedef unsigned int  uintptr_t;
 #  define PTRDIFF_MIN   INT32_MIN
 #  define PTRDIFF_MAX   INT32_MAX
 #endif
-
 #ifdef __STDINT_MACROS
 #  define INTPTR_C(c)   INT32_C(c)
 #  define UINTPTR_C(c)  UINT32_C(c)
 #  define PTRDIFF_C(c)  INT32_C(c)
 #endif
+
+#endif /* __LP64__ */
+
 
 /*
  *  intmax_t & uintmax_t
