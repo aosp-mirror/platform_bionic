@@ -30,7 +30,7 @@
 
 	.text
 
-// void _exit_with_stack_teardown(void * stackBase, int stackSize, int status)
+// void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status)
 
 	.type	_exit_with_stack_teardown, @function
 	.global	_exit_with_stack_teardown
