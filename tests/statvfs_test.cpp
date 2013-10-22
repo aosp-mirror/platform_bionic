@@ -22,50 +22,32 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <string>
+
 TEST(statvfs, statvfs) {
   struct statvfs sb;
   memset(&sb, 0, sizeof(sb));
 
-  ASSERT_EQ(0, statvfs("/", &sb));
-#if __BIONIC__
-  ASSERT_EQ(0U, sb.f_bfree);
-  ASSERT_EQ(0U, sb.f_ffree);
-  ASSERT_EQ(0U, sb.f_fsid);
-  ASSERT_TRUE((sb.f_flag & ST_RDONLY) != 0);
-#endif
+  ASSERT_EQ(0, statvfs("/proc", &sb));
 
-#if __BIONIC__
-  ASSERT_EQ(0, statvfs("/data/local/tmp", &sb));
-  ASSERT_NE(0U, sb.f_bfree);
-  ASSERT_NE(0U, sb.f_ffree);
-  ASSERT_NE(0U, sb.f_fsid);
-  ASSERT_FALSE((sb.f_flag & ST_RDONLY) != 0);
-  ASSERT_TRUE((sb.f_flag & ST_NOSUID) != 0);
-#endif
+  EXPECT_EQ(4096U, sb.f_bsize);
+  EXPECT_EQ(0U, sb.f_bfree);
+  EXPECT_EQ(0U, sb.f_ffree);
+  EXPECT_EQ(0U, sb.f_fsid);
+  EXPECT_EQ(255U, sb.f_namemax);
 }
 
 TEST(statvfs, fstatvfs) {
   struct statvfs sb;
   memset(&sb, 0, sizeof(sb));
 
-  int fd = open("/", O_RDONLY);
+  int fd = open("/proc", O_RDONLY);
   ASSERT_EQ(0, fstatvfs(fd, &sb));
   close(fd);
-#if __BIONIC__
-  ASSERT_EQ(0U, sb.f_bfree);
-  ASSERT_EQ(0U, sb.f_ffree);
-  ASSERT_EQ(0U, sb.f_fsid);
-  ASSERT_TRUE((sb.f_flag & ST_RDONLY) != 0);
-#endif
 
-#if __BIONIC__
-  fd = open("/data/local/tmp", O_RDONLY);
-  ASSERT_EQ(0, fstatvfs(fd, &sb));
-  close(fd);
-  ASSERT_NE(0U, sb.f_bfree);
-  ASSERT_NE(0U, sb.f_ffree);
-  ASSERT_NE(0U, sb.f_fsid);
-  ASSERT_FALSE((sb.f_flag & ST_RDONLY) != 0);
-  ASSERT_TRUE((sb.f_flag & ST_NOSUID) != 0);
-#endif
+  EXPECT_EQ(4096U, sb.f_bsize);
+  EXPECT_EQ(0U, sb.f_bfree);
+  EXPECT_EQ(0U, sb.f_ffree);
+  EXPECT_EQ(0U, sb.f_fsid);
+  EXPECT_EQ(255U, sb.f_namemax);
 }
