@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bedbf437_e348e663",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-22T00:26:26Z",
+      "side": 1,
+      "message": "Is this the only way to tell if running on host versus a device? Do we add any defines to distinguish host from device?",
+      "revId": "9bdf658abbae6210a665903f0eacf49e6bdd721b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
