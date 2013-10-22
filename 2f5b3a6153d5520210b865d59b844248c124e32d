@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e9e246d_b4afeebe",
+        "filename": "tests/benchmark_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T18:27:15Z",
+      "side": 1,
+      "message": "this shouldn\u0027t be necessary.",
+      "revId": "2f5b3a6153d5520210b865d59b844248c124e32d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fea72cbd_cf721ddd",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T18:27:15Z",
+      "side": 1,
+      "message": "no, this is a bug in mrand48. i\u0027m talking with upstream about it.",
+      "revId": "2f5b3a6153d5520210b865d59b844248c124e32d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
