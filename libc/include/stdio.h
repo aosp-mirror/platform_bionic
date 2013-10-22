@@ -260,7 +260,8 @@ int	 vsprintf(char * __restrict, const char * __restrict,
 		__printflike(2, 0);
 #endif
 
-int	 rename (const char *, const char *);
+extern int rename(const char*, const char*);
+extern int renameat(int, const char*, int, const char*);
 
 int	 fgetpos(FILE * __restrict, fpos_t * __restrict);
 int	 fsetpos(FILE *, const fpos_t *);

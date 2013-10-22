@@ -180,11 +180,10 @@ mode_t umask(mode_t mode) {
 
 extern int mkfifo(const char*, mode_t);
 
-extern int  fstatat(int dirfd, const char *path, struct stat *buf, int flags);
-extern int  mkdirat(int dirfd, const char *pathname, mode_t mode);
-extern int fchownat(int dirfd, const char *path, uid_t owner, gid_t group, int flags);
-extern int fchmodat(int dirfd, const char *path, mode_t mode, int flags);
-extern int renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath);
+extern int fchmodat(int, const char*, mode_t, int);
+extern int fstatat(int, const char*, struct stat*, int);
+extern int mkdirat(int, const char*, mode_t);
+extern int mknodat(int, const char*, mode_t, dev_t);
 
 # define UTIME_NOW      ((1l << 30) - 1l)
 # define UTIME_OMIT     ((1l << 30) - 2l)
