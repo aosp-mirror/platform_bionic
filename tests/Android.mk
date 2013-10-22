@@ -84,6 +84,7 @@ test_src_files = \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
     sys_stat_test.cpp \
+    sys_time_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
     unistd_test.cpp \

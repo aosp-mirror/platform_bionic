@@ -34,6 +34,7 @@ pid_t   wait4(pid_t pid, int* status, int options, struct rusage* rusage)   all
 pid_t   __sys_clone:clone(int, void*, int*, void*, int*) all
 pid_t   _waitpid:waitpid(pid_t, int*, int, struct rusage*)   mips,x86
 int     __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)          all
+int __open:open(const char*, int, mode_t)  arm,mips,x86
 
 int     execve(const char*, char* const*, char* const*)  all
 
@@ -101,8 +102,6 @@ ssize_t     read(int, void*, size_t)        all
 ssize_t     write(int, const void*, size_t)       all
 ssize_t     pread64(int, void*, size_t, off64_t) all
 ssize_t     pwrite64(int, void*, size_t, off64_t) all
-int         __open:open(const char*, int, mode_t)  all
-int         __openat:openat(int, const char*, int, mode_t) all
 int         close(int)                      all
 pid_t       getpid()    all
 void*       mmap(void*, size_t, int, int, int, long)  x86_64
@@ -139,15 +138,25 @@ void        sync(void)  all
 int         __fcntl64:fcntl64(int, int, void*)  arm,x86,mips
 int         __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,x86,mips
 int         fstatfs(int, struct statfs*)  x86_64
-int         fstatat:fstatat64(int dirfd, const char* path, struct stat* buf, int flags)   arm,x86,mips
-int         mkdirat(int dirfd, const char* pathname, mode_t mode)  all
-int         fchownat(int dirfd, const char* path, uid_t owner, gid_t group, int flags)  all
-int         fchmodat(int dirfd, const char* path, mode_t mode, int flags)  all
-int         renameat(int olddirfd, const char* oldpath, int newdirfd, const char* newpath)  all
 int         fsetxattr(int, const char*, const void*, size_t, int) all
 ssize_t     fgetxattr(int, const char*, void*, size_t) all
 ssize_t     flistxattr(int, char*, size_t) all
 int         fremovexattr(int, const char*) all
+
+int __openat:openat(int, const char*, int, mode_t) all
+int faccessat(int, const char*, int, int)  all
+int fchmodat(int, const char*, mode_t, int)  all
+int fchownat(int, const char*, uid_t, gid_t, int)  all
+int fstatat:fstatat64(int, const char*, struct stat*, int)   arm,x86,mips
+int fstatat:newfstatat(int, const char*, struct stat*, int)  x86_64
+int linkat(int, const char*, int, const char*, int)  all
+int mkdirat(int, const char*, mode_t)  all
+int mknodat(int, const char*, mode_t, dev_t)  all
+int readlinkat(int, const char*, char*, size_t)  all
+int renameat(int, const char*, int, const char*)  all
+int symlinkat(const char*, int, const char*)  all
+int unlinkat(int, const char*, int)   all
+int utimensat(int, const char*, const struct timespec times[2], int)  all
 
 # Paired off_t/off64_t system calls. On 64-bit systems,
 # sizeof(off_t) == sizeof(off64_t), so there we emit two symbols that are
@@ -167,32 +176,12 @@ int truncate64(const char*, off64_t) arm,mips,x86
 int truncate|truncate64(const char*, off_t) x86_64
 
 # file system
-int     link(const char*, const char*)  all
-int     unlink(const char*)             all
-int     unlinkat(int, const char*, int)   all
 int     chdir(const char*)              all
-int     mknod(const char*, mode_t, dev_t)  all
-int     chmod(const char*, mode_t)          all
-int     chown:chown32(const char*, uid_t, gid_t)  arm,x86
-int     chown:chown(const char*, uid_t, gid_t)    mips,x86_64
-int     lchown:lchown32(const char*, uid_t, gid_t)  arm,x86
-int     lchown:lchown(const char*, uid_t, gid_t)  mips,x86_64
 int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
 int     umount2(const char*, int)  all
 int     fstat:fstat64(int, struct stat*)    arm,x86,mips
 int     fstat(int, struct stat*)    x86_64
-int     stat:stat64(const char*, struct stat*)  arm,x86,mips
-int     stat(const char*, struct stat*)  x86_64
-int     lstat:lstat64(const char*, struct stat*)  arm,x86,mips
-int     lstat(const char*, struct stat*)  x86_64
-int     mkdir(const char*, mode_t) all
-int     readlink(const char*, char*, size_t)  all
-int     rmdir(const char*)  all
-int     rename(const char*, const char*)  all
 int     __getcwd:getcwd(char* buf, size_t size)  all
-int     access(const char*, int)  all
-int     faccessat(int, const char*, int, int)  all
-int     symlink(const char*, const char*)  all
 int     fchdir(int)    all
 int     setxattr(const char*, const char*, const void*, size_t, int) all
 int     lsetxattr(const char*, const char*, const void*, size_t, int) all
@@ -225,8 +214,6 @@ int           __timer_settime:timer_settime(timer_t, int, const struct itimerspe
 int           __timer_gettime:timer_gettime(timer_t, struct itimerspec*)                                all
 int           __timer_getoverrun:timer_getoverrun(timer_t)                                              all
 int           __timer_delete:timer_delete(timer_t)                                                      all
-int           utimes(const char*, const struct timeval tvp[2])                          all
-int           utimensat(int, const char*, const struct timespec times[2], int)         all
 int           timerfd_create(clockid_t, int)   all
 int           timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
 int           timerfd_gettime(int, struct itimerspec*)   all

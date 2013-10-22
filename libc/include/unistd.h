@@ -104,10 +104,12 @@ extern void endusershell(void);
 #define X_OK  1  /* Execute */
 #define F_OK  0  /* Existence */
 
-extern int access(const char *, int);
-extern int faccessat(int, const char *, int, int);
-extern int link(const char *, const char *);
-extern int unlink(const char *);
+extern int access(const char*, int);
+extern int faccessat(int, const char*, int, int);
+extern int link(const char*, const char*);
+extern int linkat(int, const char*, int, const char*, int);
+extern int unlink(const char*);
+extern int unlinkat(int, const char*, int);
 extern int chdir(const char *);
 extern int fchdir(int);
 extern int rmdir(const char *);
@@ -116,10 +118,13 @@ extern int pipe(int *);
 extern int pipe2(int *, int);
 #endif
 extern int chroot(const char *);
-extern int symlink(const char *, const char *);
-extern int readlink(const char *, char *, size_t);
+extern int symlink(const char*, const char*);
+extern int symlinkat(const char*, int, const char*);
+extern ssize_t readlink(const char*, char*, size_t);
+extern ssize_t readlinkat(int, const char*, char*, size_t);
 extern int chown(const char *, uid_t, gid_t);
 extern int fchown(int, uid_t, gid_t);
+extern int fchownat(int, const char*, uid_t, gid_t, int);
 extern int lchown(const char *, uid_t, gid_t);
 extern int truncate(const char *, off_t);
 extern int truncate64(const char *, off64_t);
