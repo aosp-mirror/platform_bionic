@@ -178,10 +178,7 @@ mode_t umask(mode_t mode) {
 #define  fstat64   fstat
 #define  lstat64   lstat
 
-static __inline__ int mkfifo(const char *__p, mode_t __m)
-{
-  return mknod(__p, (__m & ~S_IFMT) | S_IFIFO, (dev_t)0);
-}
+extern int mkfifo(const char*, mode_t);
 
 extern int  fstatat(int dirfd, const char *path, struct stat *buf, int flags);
 extern int  mkdirat(int dirfd, const char *pathname, mode_t mode);
