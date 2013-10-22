@@ -16,6 +16,24 @@
       "revId": "9bdf658abbae6210a665903f0eacf49e6bdd721b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe0bac5e_30c31449",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T00:34:14Z",
+      "side": 1,
+      "message": "there are probably other ways, but since the real question here is \"are we talking to the real system properties service?\" this seemed to make sense.\n\nthere\u0027s no compile-time way to distinguish, and i don\u0027t think really want to --- being able to run the x86 and now x86_64 bionics and their tests on the host is pretty handy.\n\ni\u0027ll rewrite the comment though.",
+      "parentUuid": "bedbf437_e348e663",
+      "revId": "9bdf658abbae6210a665903f0eacf49e6bdd721b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
