@@ -47,7 +47,7 @@
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
-extern "C" unsigned __get_sp(void);
+extern "C" uintptr_t __get_sp(void);
 extern "C" int __system_properties_init(void);
 
 // Not public, but well-known in the BSDs.
