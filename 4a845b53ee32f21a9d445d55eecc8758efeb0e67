@@ -36,6 +36,58 @@
     },
     {
       "key": {
+        "uuid": "1ea320b4_f627b824",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T20:50:03Z",
+      "side": 1,
+      "message": "answering my own question: yes, it does. i\u0027ll switch all the architectures over to always using the *at variants, like i did for the rt_sig* stuff.\n\ni\u0027ll also add the missing *at functions to \u003cunistd.h\u003e",
+      "parentUuid": "1ea320b4_b011b8a7",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fea72cbd_95ed84ea",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T20:50:03Z",
+      "side": 1,
+      "message": "aarch64 also doesn\u0027t implement any of the kernel\u0027s set of \"deprecated\" syscalls, like this one...",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fea72cbd_f5f410b2",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-22T20:50:03Z",
+      "side": 1,
+      "message": "...or any of the \"no flags\" syscalls that now have variants that take an extra flags argument.\n\ni\u0027ll prepare separate changes switching all architectures (a) off the deprecated syscalls and (b) off the \"no flags\" syscalls.",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fed9ec3e_856e462c",
         "filename": "libc/tools/bionic_utils.py",
         "patchSetId": 1
