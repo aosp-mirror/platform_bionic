@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bedbf437_838ba2b0",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2013-10-22T18:01:03Z",
+      "side": 1,
+      "message": "Should be sorted here and the rest of the file",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed9ec3e_856e462c",
+        "filename": "libc/tools/bionic_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1002975
+      },
+      "writtenOn": "2013-10-22T18:01:03Z",
+      "side": 1,
+      "message": "Should be sorted.",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
