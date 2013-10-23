@@ -33,6 +33,24 @@
       "revId": "2f5b3a6153d5520210b865d59b844248c124e32d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe1acc01_f7b9c0dd",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-23T10:15:41Z",
+      "side": 1,
+      "message": "Will drop this change, however shouldn\u0027t we cast these values to long (static_cast\u003clong\u003e) since mrand48() returns a long ?",
+      "parentUuid": "fea72cbd_cf721ddd",
+      "revId": "2f5b3a6153d5520210b865d59b844248c124e32d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
