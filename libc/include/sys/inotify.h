@@ -25,10 +25,12 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_INOTIFY_H_
 #define _SYS_INOTIFY_H_
 
 #include <sys/cdefs.h>
+#include <sys/types.h>
 #include <stdint.h>
 #include <linux/inotify.h>
 #include <asm/fcntl.h> /* For O_CLOEXEC and O_NONBLOCK. */
