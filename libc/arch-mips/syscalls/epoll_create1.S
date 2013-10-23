@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl inotify_init
+    .globl epoll_create1
     .align 4
-    .ent inotify_init
+    .ent epoll_create1
 
-inotify_init:
+epoll_create1:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_inotify_init
+    li $v0, __NR_epoll_create1
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ inotify_init:
     j $t9
     nop
     .set reorder
-    .end inotify_init
+    .end epoll_create1

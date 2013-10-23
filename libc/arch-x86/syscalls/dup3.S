@@ -4,10 +4,14 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(pipe)
+ENTRY(dup3)
     pushl   %ebx
-    mov     8(%esp), %ebx
-    movl    $__NR_pipe, %eax
+    pushl   %ecx
+    pushl   %edx
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
+    mov     24(%esp), %edx
+    movl    $__NR_dup3, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -17,6 +21,8 @@ ENTRY(pipe)
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    popl    %edx
+    popl    %ecx
     popl    %ebx
     ret
-END(pipe)
+END(dup3)
