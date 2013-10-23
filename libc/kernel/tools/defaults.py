@@ -34,6 +34,7 @@ kernel_known_macros = {
     "__CHECKER__": kCppUndefinedMacro,
     "__CHECK_ENDIAN__": kCppUndefinedMacro,
     "CONFIG_X86_32": "__i386__",
+    "__EXPORTED_HEADERS__": "1",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
