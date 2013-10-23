@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl dup2
+    .globl inotify_init1
     .align 4
-    .ent dup2
+    .ent inotify_init1
 
-dup2:
+inotify_init1:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_dup2
+    li $v0, __NR_inotify_init1
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ dup2:
     j $t9
     nop
     .set reorder
-    .end dup2
+    .end inotify_init1

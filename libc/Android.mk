@@ -215,6 +215,8 @@ libc_bionic_src_files := \
     bionic/chmod.cpp \
     bionic/chown.cpp \
     bionic/dirent.cpp \
+    bionic/dup2.cpp \
+    bionic/epoll_create.cpp \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
@@ -222,6 +224,7 @@ libc_bionic_src_files := \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
+    bionic/inotify_init.cpp \
     bionic/lchown.cpp \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
@@ -232,6 +235,7 @@ libc_bionic_src_files := \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
     bionic/open.cpp \
+    bionic/pipe.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_detach.cpp \
     bionic/pthread_equal.cpp \

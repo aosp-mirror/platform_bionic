@@ -4,8 +4,8 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(pipe)
-    movl    $__NR_pipe, %eax
+ENTRY(epoll_create1)
+    movl    $__NR_epoll_create1, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -15,4 +15,4 @@ ENTRY(pipe)
     orq     $-1, %rax
 1:
     ret
-END(pipe)
+END(epoll_create1)

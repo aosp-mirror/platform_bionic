@@ -114,7 +114,7 @@ extern int chdir(const char *);
 extern int fchdir(int);
 extern int rmdir(const char *);
 extern int pipe(int *);
-#ifdef _GNU_SOURCE  /* GLibc compatibility */
+#ifdef _GNU_SOURCE
 extern int pipe2(int *, int);
 #endif
 extern int chroot(const char *);
@@ -145,6 +145,9 @@ extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 
 extern int dup(int);
 extern int dup2(int, int);
+#ifdef _GNU_SOURCE
+extern int dup3(int, int, int);
+#endif
 extern int fcntl(int, int, ...);
 extern int ioctl(int, int, ...);
 extern int flock(int, int);
