@@ -4,10 +4,10 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(inotify_init)
+ENTRY(epoll_create1)
     pushl   %ebx
     mov     8(%esp), %ebx
-    movl    $__NR_inotify_init, %eax
+    movl    $__NR_epoll_create1, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -19,4 +19,4 @@ ENTRY(inotify_init)
 1:
     popl    %ebx
     ret
-END(inotify_init)
+END(epoll_create1)

@@ -4,13 +4,13 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(epoll_create)
+ENTRY(dup3)
     mov     ip, r7
-    ldr     r7, =__NR_epoll_create
+    ldr     r7, =__NR_dup3
     swi     #0
     mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(epoll_create)
+END(dup3)

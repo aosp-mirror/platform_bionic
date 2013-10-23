@@ -4,8 +4,8 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(epoll_create)
-    movl    $__NR_epoll_create, %eax
+ENTRY(dup3)
+    movl    $__NR_dup3, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -15,4 +15,4 @@ ENTRY(epoll_create)
     orq     $-1, %rax
 1:
     ret
-END(epoll_create)
+END(dup3)
