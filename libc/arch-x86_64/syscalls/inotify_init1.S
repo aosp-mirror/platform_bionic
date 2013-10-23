@@ -4,8 +4,8 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(dup2)
-    movl    $__NR_dup2, %eax
+ENTRY(inotify_init1)
+    movl    $__NR_inotify_init1, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -15,4 +15,4 @@ ENTRY(dup2)
     orq     $-1, %rax
 1:
     ret
-END(dup2)
+END(inotify_init1)

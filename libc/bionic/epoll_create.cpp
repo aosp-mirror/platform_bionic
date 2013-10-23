@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_EVENTFD_H
-#define _SYS_EVENTFD_H
+#include <sys/epoll.h>
 
-#include <sys/cdefs.h>
-#include <fcntl.h>
-
-__BEGIN_DECLS
-
-#define EFD_CLOEXEC O_CLOEXEC
-#define EFD_NONBLOCK O_NONBLOCK
-
-/* type of event counter */
-typedef uint64_t eventfd_t;
-
-extern int eventfd(unsigned int initial_value, int flags);
-
-extern int eventfd_read(int fd, eventfd_t* value);
-extern int eventfd_write(int fd, eventfd_t value);
-
-__END_DECLS
-
-#endif /* _SYS_EVENTFD_H */
+int epoll_create(int /*obsolete_size*/) {
+  return epoll_create1(0);
+}
