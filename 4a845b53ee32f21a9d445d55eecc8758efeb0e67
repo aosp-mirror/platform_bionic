@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9e29d021_b4e4a026",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-23T10:08:34Z",
+      "side": 1,
+      "message": "Will do, thanks!",
+      "parentUuid": "bedbf437_838ba2b0",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ea320b4_b011b8a7",
         "filename": "libc/SYSCALLS.TXT",
         "patchSetId": 1
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "fe1acc01_577bcc2a",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-23T10:08:34Z",
+      "side": 1,
+      "message": "Correct, we only support the *at variants. Thanks for restructuring SYSCALL.TXT, I will rebase and send a v2 of the patches. \n\nSorry for the time zone delay :-).",
+      "parentUuid": "1ea320b4_4460cedb",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fea72cbd_95ed84ea",
         "filename": "libc/SYSCALLS.TXT",
         "patchSetId": 1
@@ -100,6 +136,24 @@
       "writtenOn": "2013-10-22T20:50:03Z",
       "side": 1,
       "message": "...or any of the \"no flags\" syscalls that now have variants that take an extra flags argument.\n\ni\u0027ll prepare separate changes switching all architectures (a) off the deprecated syscalls and (b) off the \"no flags\" syscalls.",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e26dc50_d36cd4c9",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-23T10:08:34Z",
+      "side": 1,
+      "message": "Correct, AArch64 does not support any of the \"no flags\" syscalls - temporarily we provide c stubs in arch-aarch64/bionic/.",
+      "parentUuid": "fea72cbd_f5f410b2",
       "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
