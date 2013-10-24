@@ -16,6 +16,24 @@
       "revId": "bf425680e484486803bf21e4c4cd1e3f36614a3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be713455_90a71ab3",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-24T23:35:50Z",
+      "side": 1,
+      "message": "yeah, we\u0027re adding them on purpose. (but only as we touch lists.)",
+      "parentUuid": "7e7b3c37_8ee13b89",
+      "revId": "bf425680e484486803bf21e4c4cd1e3f36614a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
