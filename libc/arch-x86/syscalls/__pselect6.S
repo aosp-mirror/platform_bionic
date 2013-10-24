@@ -4,18 +4,20 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__sys_clone)
+ENTRY(__pselect6)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
     pushl   %esi
     pushl   %edi
-    mov     24(%esp), %ebx
-    mov     28(%esp), %ecx
-    mov     32(%esp), %edx
-    mov     36(%esp), %esi
-    mov     40(%esp), %edi
-    movl    $__NR_clone, %eax
+    pushl   %ebp
+    mov     28(%esp), %ebx
+    mov     32(%esp), %ecx
+    mov     36(%esp), %edx
+    mov     40(%esp), %esi
+    mov     44(%esp), %edi
+    mov     48(%esp), %ebp
+    movl    $__NR_pselect6, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -25,10 +27,11 @@ ENTRY(__sys_clone)
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    popl    %ebp
     popl    %edi
     popl    %esi
     popl    %edx
     popl    %ecx
     popl    %ebx
     ret
-END(__sys_clone)
+END(__pselect6)

@@ -4,9 +4,9 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(__sys_clone)
+ENTRY(__pselect6)
     movq    %rcx, %r10
-    movl    $__NR_clone, %eax
+    movl    $__NR_pselect6, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -16,4 +16,4 @@ ENTRY(__sys_clone)
     orq     $-1, %rax
 1:
     ret
-END(__sys_clone)
+END(__pselect6)

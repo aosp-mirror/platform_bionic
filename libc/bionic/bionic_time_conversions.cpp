@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _POLL_H_
-#define _POLL_H_
+#include "private/bionic_time_conversions.h"
 
-#include <sys/cdefs.h>
-#include <linux/poll.h>
-#include <signal.h> /* For sigset_t. */
-#include <time.h> /* For timespec. */
+bool timespec_from_timeval(timespec& ts, const timeval& tv) {
+  // Whole seconds can just be copied.
+  ts.tv_sec = tv.tv_sec;
 
-__BEGIN_DECLS
+  // But we might overflow when converting microseconds to nanoseconds.
+  if (tv.tv_usec >= 1000000 || tv.tv_usec < 0) {
+    return false;
+  }
+  ts.tv_nsec = tv.tv_usec * 1000;
+  return true;
+}
 
-typedef unsigned int nfds_t;
+void timespec_from_ms(timespec& ts, const int ms) {
+  ts.tv_sec = ms / 1000;
+  ts.tv_nsec = (ms % 1000) * 1000000;
+}
 
-extern int poll(struct pollfd*, nfds_t, int);
-extern int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*);
-
-__END_DECLS
-
-#endif /* _POLL_H_ */
+void timeval_from_timespec(timeval& tv, const timespec& ts) {
+  tv.tv_sec = ts.tv_sec;
+  tv.tv_usec = ts.tv_nsec / 1000;
+}

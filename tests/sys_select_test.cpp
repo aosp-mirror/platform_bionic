@@ -41,3 +41,73 @@ TEST(sys_select, fd_set_smoke) {
   EXPECT_FALSE(FD_ISSET(0, &fds));
   EXPECT_FALSE(FD_ISSET(1, &fds));
 }
+
+TEST(sys_select, select_smoke) {
+  fd_set r;
+  FD_ZERO(&r);
+  fd_set w;
+  FD_ZERO(&w);
+  fd_set e;
+  FD_ZERO(&e);
+
+  FD_SET(STDIN_FILENO, &r);
+  FD_SET(STDOUT_FILENO, &w);
+  FD_SET(STDERR_FILENO, &w);
+
+  int max = STDERR_FILENO + 1;
+
+  // Invalid max fd.
+  ASSERT_EQ(-1, select(-1, &r, &w, &e, NULL));
+  ASSERT_EQ(EINVAL, errno);
+
+  ASSERT_EQ(2, select(max, &r, &w, &e, NULL));
+
+  // Invalid timeout.
+  timeval tv;
+  tv.tv_sec = -1;
+  tv.tv_usec = 0;
+  ASSERT_EQ(-1, select(max, &r, &w, &e, &tv));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Valid timeout...
+  tv.tv_sec = 1;
+  ASSERT_EQ(2, select(max, &r, &w, &e, &tv));
+  ASSERT_NE(0, tv.tv_usec); // ...which got updated.
+}
+
+TEST(sys_select, pselect_smoke) {
+  sigset_t ss;
+  sigemptyset(&ss);
+  sigaddset(&ss, SIGPIPE);
+
+  fd_set r;
+  FD_ZERO(&r);
+  fd_set w;
+  FD_ZERO(&w);
+  fd_set e;
+  FD_ZERO(&e);
+
+  FD_SET(STDIN_FILENO, &r);
+  FD_SET(STDOUT_FILENO, &w);
+  FD_SET(STDERR_FILENO, &w);
+
+  int max = STDERR_FILENO + 1;
+
+  // Invalid max fd.
+  ASSERT_EQ(-1, pselect(-1, &r, &w, &e, NULL, &ss));
+  ASSERT_EQ(EINVAL, errno);
+
+  ASSERT_EQ(2, pselect(max, &r, &w, &e, NULL, &ss));
+
+  // Invalid timeout.
+  timespec tv;
+  tv.tv_sec = -1;
+  tv.tv_nsec = 0;
+  ASSERT_EQ(-1, pselect(max, &r, &w, &e, &tv, &ss));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Valid timeout...
+  tv.tv_sec = 1;
+  ASSERT_EQ(2, pselect(max, &r, &w, &e, &tv, &ss));
+  ASSERT_EQ(0, tv.tv_nsec); // ...which did _not_ get updated.
+}
