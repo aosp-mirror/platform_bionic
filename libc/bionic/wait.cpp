@@ -44,7 +44,7 @@ pid_t waitpid(pid_t pid, int* status, int options) {
 }
 
 int waitid(idtype_t which, id_t id, siginfo_t* info, int options) {
-  /* the system call takes an option struct rusage that we don't need */
+  // The system call takes an optional struct rusage that we don't need.
   return __waitid(which, id, info, options, NULL);
 }
 

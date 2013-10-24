@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl __fork
+    .globl __ppoll
     .align 4
-    .ent __fork
+    .ent __ppoll
 
-__fork:
+__ppoll:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_fork
+    li $v0, __NR_ppoll
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ __fork:
     j $t9
     nop
     .set reorder
-    .end __fork
+    .end __ppoll

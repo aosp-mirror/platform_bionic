@@ -4,8 +4,9 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(poll)
-    movl    $__NR_poll, %eax
+ENTRY(__ppoll)
+    movq    %rcx, %r10
+    movl    $__NR_ppoll, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -15,4 +16,4 @@ ENTRY(poll)
     orq     $-1, %rax
 1:
     ret
-END(poll)
+END(__ppoll)

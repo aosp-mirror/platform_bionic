@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl pause
+    .globl __epoll_pwait
     .align 4
-    .ent pause
+    .ent __epoll_pwait
 
-pause:
+__epoll_pwait:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_pause
+    li $v0, __NR_epoll_pwait
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ pause:
     j $t9
     nop
     .set reorder
-    .end pause
+    .end __epoll_pwait

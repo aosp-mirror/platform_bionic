@@ -32,7 +32,7 @@ union kernel_sigset_t {
   }
 
   void clear() {
-    memset(this, 0, sizeof(*this));
+    __builtin_memset(this, 0, sizeof(*this));
   }
 
   void set(const sigset_t* value) {
