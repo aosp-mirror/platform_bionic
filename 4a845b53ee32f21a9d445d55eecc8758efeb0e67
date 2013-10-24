@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "7e7b3c37_ae6bd7ac",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-24T23:04:34Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/#/c/68731/ moves bionic off the deprecated syscalls.\n\nnow would be a good time to rebase your changes; they should be a lot smaller afterwards!",
+      "parentUuid": "9efb90cd_cad06718",
+      "revId": "4a845b53ee32f21a9d445d55eecc8758efeb0e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fed9ec3e_856e462c",
         "filename": "libc/tools/bionic_utils.py",
         "patchSetId": 1
