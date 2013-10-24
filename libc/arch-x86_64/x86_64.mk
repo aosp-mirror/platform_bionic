@@ -10,7 +10,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-x86_64/bionic/sigsetjmp.S \
     arch-x86_64/bionic/syscall.S \
     arch-x86_64/bionic/vfork.S \
-    arch-x86_64/string/ffs.S \
     string/memcmp16.c \
 
 _LIBC_ARCH_STATIC_SRC_FILES := \
