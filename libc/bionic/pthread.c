@@ -1176,13 +1176,10 @@ int pthread_cond_timedwait_relative_np(pthread_cond_t *cond,
 
 int pthread_cond_timeout_np(pthread_cond_t *cond,
                             pthread_mutex_t * mutex,
-                            unsigned msecs)
+                            unsigned ms)
 {
     struct timespec ts;
-
-    ts.tv_sec = msecs / 1000;
-    ts.tv_nsec = (msecs % 1000) * 1000000;
-
+    timespec_from_ms(ts, ms);
     return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
 

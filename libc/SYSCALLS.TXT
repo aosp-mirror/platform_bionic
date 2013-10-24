@@ -27,14 +27,9 @@
 # process management
 void    _exit:exit_group(int)      all
 void    _exit_thread:exit(int)     all
-pid_t   __fork:fork(void)           all
-pid_t   wait4(pid_t pid, int* status, int options, struct rusage* rusage)   all
 
-# NOTE: these stubs are unused.
-pid_t   __sys_clone:clone(int, void*, int*, void*, int*) all
-pid_t   _waitpid:waitpid(pid_t, int*, int, struct rusage*)   mips,x86
-int     __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)          all
-int __open:open(const char*, int, mode_t)  arm,mips,x86
+pid_t wait4(pid_t, int*, int, struct rusage*)  all
+int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
 
 int     execve(const char*, char* const*, char* const*)  all
 
@@ -126,8 +121,6 @@ int         fchmod(int, mode_t)  all
 int         dup(int)  all
 int         pipe2(int*, int) all
 int         dup3(int, int, int)   all
-int         select:_newselect(int, struct fd_set*, struct fd_set*, struct fd_set*, struct timeval*)  arm,x86,mips
-int         select(int, struct fd_set*, struct fd_set*, struct fd_set*, struct timeval*)  x86_64
 int         getdents:getdents64(unsigned int, struct dirent*, unsigned int)   all
 int         fsync(int)  all
 int         fdatasync(int) all
@@ -197,7 +190,6 @@ int     swapon(const char*, int) all
 int     swapoff(const char*) all
 
 # time
-int           pause()                       all
 int           gettimeofday(struct timeval*, struct timezone*)       all
 int           settimeofday(const struct timeval*, const struct timezone*)   all
 clock_t       times(struct tms*)       all
@@ -289,9 +281,11 @@ int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
 long    perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) all
 
+pid_t __clone:clone(int, void*, int*, void*, int*)  all
+
 int epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
-int epoll_wait(int, struct epoll_event*, int, int)  all
+int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset_t*, size_t)  all
 
 int eventfd:eventfd2(unsigned int, int)  all
 
@@ -301,7 +295,8 @@ int inotify_init1(int)  all
 int inotify_add_watch(int, const char*, unsigned int)  all
 int inotify_rm_watch(int, unsigned int)  all
 
-int     poll(struct pollfd*, unsigned int, long)  all
+int __pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
+int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  all
 
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
