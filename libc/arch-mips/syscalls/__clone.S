@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl _waitpid
+    .globl __clone
     .align 4
-    .ent _waitpid
+    .ent __clone
 
-_waitpid:
+__clone:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_waitpid
+    li $v0, __NR_clone
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ _waitpid:
     j $t9
     nop
     .set reorder
-    .end _waitpid
+    .end __clone

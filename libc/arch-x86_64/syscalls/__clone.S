@@ -4,16 +4,16 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(pause)
-    movl    $__NR_pause, %eax
-    int     $0x80
-    cmpl    $-MAX_ERRNO, %eax
+ENTRY(__clone)
+    movq    %rcx, %r10
+    movl    $__NR_clone, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
     jb      1f
     negl    %eax
-    pushl   %eax
+    movl    %eax, %edi
     call    __set_errno
-    addl    $4, %esp
-    orl     $-1, %eax
+    orq     $-1, %rax
 1:
     ret
-END(pause)
+END(__clone)

@@ -31,7 +31,7 @@
 
 #include "private/bionic_pthread.h"
 
-extern "C" int __fork();
+extern "C" int __clone(int, void*, int*, void*, int*);
 
 int fork() {
   // POSIX mandates that the timers of a fork child process be
@@ -41,7 +41,7 @@ int fork() {
   __timer_table_start_stop(1);
   __bionic_atfork_run_prepare();
 
-  int result = __fork();
+  int result = __clone(SIGCHLD, NULL, NULL, NULL, NULL);
   if (result != 0) {  // Not a child process.
     __timer_table_start_stop(0);
     __bionic_atfork_run_parent();

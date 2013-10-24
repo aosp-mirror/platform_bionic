@@ -4,9 +4,9 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(select)
+ENTRY(__epoll_pwait)
     movq    %rcx, %r10
-    movl    $__NR_select, %eax
+    movl    $__NR_epoll_pwait, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -16,4 +16,4 @@ ENTRY(select)
     orq     $-1, %rax
 1:
     ret
-END(select)
+END(__epoll_pwait)

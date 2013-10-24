@@ -170,14 +170,14 @@ static void SigSuspendTestHelper(int) {
 }
 
 TEST(signal, sigsuspend_sigpending) {
-  ScopedSignalHandler ssh(SIGALRM, SigSuspendTestHelper);
-
   // Block SIGALRM.
   sigset_t just_SIGALRM;
   sigemptyset(&just_SIGALRM);
   sigaddset(&just_SIGALRM, SIGALRM);
   sigset_t original_set;
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
+
+  ScopedSignalHandler ssh(SIGALRM, SigSuspendTestHelper);
 
   // There should be no pending signals.
   sigset_t pending;
@@ -208,7 +208,7 @@ TEST(signal, sigsuspend_sigpending) {
   ASSERT_EQ(1, gSigSuspendTestHelperCallCount);
 
   // Restore the original set.
-  assert(0 == sigprocmask(SIG_SETMASK, &original_set, NULL));
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
 }
 
 static void EmptySignalHandler(int) {}
@@ -216,14 +216,15 @@ static void EmptySignalAction(int, siginfo_t*, void*) {}
 
 TEST(signal, sigaction) {
   // See what's currently set for SIGALRM.
-  struct sigaction sa;
-  memset(&sa, 0, sizeof(sa));
-  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
-  ASSERT_TRUE(sa.sa_handler == NULL);
-  ASSERT_TRUE(sa.sa_sigaction == NULL);
-  ASSERT_TRUE(sa.sa_flags == 0);
+  struct sigaction original_sa;
+  memset(&original_sa, 0, sizeof(original_sa));
+  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &original_sa));
+  ASSERT_TRUE(original_sa.sa_handler == NULL);
+  ASSERT_TRUE(original_sa.sa_sigaction == NULL);
+  ASSERT_TRUE(original_sa.sa_flags == 0);
 
   // Set a traditional sa_handler signal handler.
+  struct sigaction sa;
   memset(&sa, 0, sizeof(sa));
   sigaddset(&sa.sa_mask, SIGALRM);
   sa.sa_flags = SA_ONSTACK;
@@ -250,4 +251,7 @@ TEST(signal, sigaction) {
   ASSERT_TRUE(sa.sa_sigaction == EmptySignalAction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_TRUE(sa.sa_flags == (SA_ONSTACK | SA_SIGINFO));
+
+  // Put everything back how it was.
+  ASSERT_EQ(0, sigaction(SIGALRM, &original_sa, NULL));
 }
