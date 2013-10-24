@@ -9,7 +9,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-x86/bionic/sigsetjmp.S \
     arch-x86/bionic/syscall.S \
     arch-x86/bionic/vfork.S \
-    arch-x86/string/ffs.S
 
 ifeq ($(ARCH_X86_HAVE_SSSE3),true)
 _LIBC_ARCH_COMMON_SRC_FILES += \
