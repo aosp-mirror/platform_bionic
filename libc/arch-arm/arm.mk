@@ -4,7 +4,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/clone.S \
     arch-arm/bionic/eabi.c \
     arch-arm/bionic/_exit_with_stack_teardown.S \
-    arch-arm/bionic/ffs.S \
     arch-arm/bionic/futex_arm.S \
     arch-arm/bionic/__get_sp.S \
     arch-arm/bionic/kill.S \

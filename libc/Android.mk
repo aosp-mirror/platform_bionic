@@ -222,6 +222,7 @@ libc_bionic_src_files := \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
+    bionic/ffs.cpp \
     bionic/fork.cpp \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
