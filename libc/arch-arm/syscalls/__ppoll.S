@@ -4,13 +4,16 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(pause)
-    mov     ip, r7
-    ldr     r7, =__NR_pause
+ENTRY(__ppoll)
+    mov     ip, sp
+    .save   {r4, r5, r6, r7}
+    stmfd   sp!, {r4, r5, r6, r7}
+    ldmfd   ip, {r4, r5, r6}
+    ldr     r7, =__NR_ppoll
     swi     #0
-    mov     r7, ip
+    ldmfd   sp!, {r4, r5, r6, r7}
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(pause)
+END(__ppoll)

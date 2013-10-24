@@ -30,21 +30,13 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#include "private/bionic_time_conversions.h"
+
 int utimes(const char* path, const timeval tv[2]) {
   timespec ts[2];
-
-  // Whole seconds can just be copied.
-  ts[0].tv_sec = tv[0].tv_sec;
-  ts[1].tv_sec = tv[1].tv_sec;
-
-  // But we might overflow when converting microseconds to nanoseconds.
-  if (tv[0].tv_usec >= 1000000 || tv[0].tv_usec < 0 ||
-      tv[1].tv_usec >= 1000000 || tv[1].tv_usec < 0) {
+  if (!timespec_from_timeval(ts[0], tv[0]) || !timespec_from_timeval(ts[1], tv[1])) {
     errno = EINVAL;
     return -1;
   }
-  ts[0].tv_nsec = tv[0].tv_usec * 1000;
-  ts[1].tv_nsec = tv[1].tv_usec * 1000;
-
   return utimensat(AT_FDCWD, path, ts, 0);
 }

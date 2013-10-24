@@ -73,3 +73,16 @@ TEST(unistd, ftruncate64) {
   ASSERT_EQ(0, stat(tf.filename, &sb));
   ASSERT_EQ(123, sb.st_size);
 }
+
+static bool gPauseTestFlag = false;
+static void PauseTestSignalHandler(int) {
+  gPauseTestFlag = true;
+}
+
+TEST(unistd, pause) {
+  signal(SIGALRM, PauseTestSignalHandler);
+  alarm(1);
+  ASSERT_FALSE(gPauseTestFlag);
+  ASSERT_EQ(-1, pause());
+  ASSERT_TRUE(gPauseTestFlag);
+}

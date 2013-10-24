@@ -2,14 +2,14 @@
 
 #include <asm/unistd.h>
     .text
-    .globl poll
+    .globl __pselect6
     .align 4
-    .ent poll
+    .ent __pselect6
 
-poll:
+__pselect6:
     .set noreorder
     .cpload $t9
-    li $v0, __NR_poll
+    li $v0, __NR_pselect6
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -20,4 +20,4 @@ poll:
     j $t9
     nop
     .set reorder
-    .end poll
+    .end __pselect6
