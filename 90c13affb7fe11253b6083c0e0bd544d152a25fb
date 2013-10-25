@@ -34,6 +34,24 @@
       "revId": "90c13affb7fe11253b6083c0e0bd544d152a25fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe62ccbe_0b93ada9",
+        "filename": "libc/bionic/pthread_join.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-25T22:30:44Z",
+      "side": 1,
+      "message": "oh, yeah, duh...\n\n  // Get the main thread from TLS and add it to the thread list.\n  pthread_internal_t* main_thread \u003d __get_thread();\n  main_thread-\u003eallocated_on_heap \u003d false;\n  _pthread_internal_add(main_thread);\n\nluckily that code is fairly well-commented (which led me to this) because i always have trouble understanding how all the moving parts interact.",
+      "parentUuid": "3e69c4a2_ade1f5ba",
+      "revId": "90c13affb7fe11253b6083c0e0bd544d152a25fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
