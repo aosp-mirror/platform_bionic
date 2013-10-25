@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,24 +26,30 @@
  * SUCH DAMAGE.
  */
 
+// This file perpetuates the mistakes of the past, but only for 32-bit targets.
+#if !defined(__LP64__)
+
+#include <stdlib.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include <sys/wait.h>
-#include <stddef.h>
+#include <unistd.h>
 
-extern "C" int __waitid(idtype_t which, id_t id, siginfo_t* info, int options, struct rusage* ru);
-
-pid_t wait(int* status) {
-  return wait4(-1, status, 0, NULL);
+// These were accidentally declared in <unistd.h> because we stupidly used to inline
+// getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
+extern "C" {
+  unsigned int __page_size = PAGE_SIZE;
+  unsigned int __page_shift = PAGE_SHIFT;
 }
 
-pid_t wait3(int* status, int options, struct rusage* rusage) {
-  return wait4(-1, status, options, rusage);
+// TODO: remove this backward compatibility hack (for jb-mr1 strace binaries).
+extern "C" pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
+  return wait4(pid, status, options, rusage);
 }
 
-pid_t waitpid(pid_t pid, int* status, int options) {
-  return wait4(pid, status, options, NULL);
+extern "C" int __open() {
+  abort();
 }
 
-int waitid(idtype_t which, id_t id, siginfo_t* info, int options) {
-  // The system call takes an optional struct rusage that we don't need.
-  return __waitid(which, id, info, options, NULL);
-}
+#endif
