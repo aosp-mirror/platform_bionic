@@ -233,10 +233,17 @@ def make__NR_name(name):
         return "__NR_%s" % (name)
 
 
-def add_aliases(stub, syscall):
+def add_footer(pointer_length, stub, syscall):
+    # Add any aliases for this syscall.
     aliases = syscall["aliases"]
     for alias in aliases:
         stub += function_alias % { "func" : syscall["func"], "alias" : alias }
+
+    # Use hidden visibility for any functions beginning with underscores.
+    # TODO: clean up single-underscore names too.
+    if pointer_length == 64 and syscall["func"].startswith("__"):
+        stub += '.hidden _C_LABEL(' + syscall["func"] + ')\n'
+
     return stub
 
 
@@ -334,22 +341,22 @@ class State:
             syscall["__NR_name"] = make__NR_name(syscall["name"])
 
             if syscall.has_key("arm"):
-                syscall["asm-arm"] = add_aliases(arm_eabi_genstub(syscall), syscall)
+                syscall["asm-arm"] = add_footer(32, arm_eabi_genstub(syscall), syscall)
 
             if syscall.has_key("x86"):
                 if syscall["socketcall_id"] >= 0:
-                    syscall["asm-x86"] = add_aliases(x86_genstub_socketcall(syscall), syscall)
+                    syscall["asm-x86"] = add_footer(32, x86_genstub_socketcall(syscall), syscall)
                 else:
-                    syscall["asm-x86"] = add_aliases(x86_genstub(syscall), syscall)
+                    syscall["asm-x86"] = add_footer(32, x86_genstub(syscall), syscall)
             elif syscall["socketcall_id"] >= 0:
                 E("socketcall_id for dispatch syscalls is only supported for x86 in '%s'" % t)
                 return
 
             if syscall.has_key("mips"):
-                syscall["asm-mips"] = add_aliases(mips_genstub(syscall), syscall)
+                syscall["asm-mips"] = add_footer(32, mips_genstub(syscall), syscall)
 
             if syscall.has_key("x86_64"):
-                syscall["asm-x86_64"] = add_aliases(x86_64_genstub(syscall), syscall)
+                syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)
 
 
     # Scan a Linux kernel asm/unistd.h file containing __NR_* constants

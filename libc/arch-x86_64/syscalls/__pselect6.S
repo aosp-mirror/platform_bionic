@@ -17,3 +17,4 @@ ENTRY(__pselect6)
 1:
     ret
 END(__pselect6)
+.hidden _C_LABEL(__pselect6)
