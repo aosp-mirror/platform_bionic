@@ -17,3 +17,4 @@ ENTRY(__timer_settime)
 1:
     ret
 END(__timer_settime)
+.hidden _C_LABEL(__timer_settime)
