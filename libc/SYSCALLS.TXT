@@ -24,13 +24,6 @@
 #
 # This file is processed by a python script named gensyscalls.py.
 
-# process management
-void    _exit:exit_group(int)      all
-void    _exit_thread:exit(int)     all
-
-pid_t wait4(pid_t, int*, int, struct rusage*)  all
-int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
-
 int     execve(const char*, char* const*, char* const*)  all
 
 uid_t   getuid:getuid32()         arm,x86
@@ -289,6 +282,9 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset_t
 
 int eventfd:eventfd2(unsigned int, int)  all
 
+void _exit:exit_group(int)  all
+void __exit:exit(int)  all
+
 int futex(void*, int, int, void*, void*, int)  all
 
 int inotify_init1(int)  all
@@ -297,6 +293,9 @@ int inotify_rm_watch(int, unsigned int)  all
 
 int __pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
 int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  all
+
+pid_t wait4(pid_t, int*, int, struct rusage*)  all
+int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
 
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
