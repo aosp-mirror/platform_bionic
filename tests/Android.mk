@@ -190,6 +190,15 @@ LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
 LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl-host
 include $(BUILD_HOST_NATIVE_TEST)
+
+# gtest needs ANDROID_DATA/local/tmp for death test output.
+# Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
+# Use the current target out directory as ANDROID_DATA.
+bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
+	mkdir -p $(TARGET_OUT_DATA)/local/tmp
+	ANDROID_DATA=$(TARGET_OUT_DATA) \
+	ANDROID_ROOT=$(TARGET_OUT) \
+		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc
 endif
 
 # -----------------------------------------------------------------------------
@@ -203,17 +212,19 @@ LINKER = linker
 else
 LINKER = linker64
 endif
-# gtest needs EXTERNAL_STORAGE for death test output.
+# gtest needs ANDROID_DATA/local/tmp for death test output.
+# Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
-# We create /data/local/tmp to be as much like the regular target environment
-# as possible.
 bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+	if [ ! -d /system -o ! -d /system/bin ]; then \
+	  echo "Attempting to create /system/bin"; \
+	  sudo mkdir -p -m 0777 /system/bin; \
+	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
 	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
-	EXTERNAL_STORAGE=$(TARGET_OUT_DATA)/local/tmp \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
 		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests
 endif
