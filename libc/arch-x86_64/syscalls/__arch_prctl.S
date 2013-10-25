@@ -16,3 +16,4 @@ ENTRY(__arch_prctl)
 1:
     ret
 END(__arch_prctl)
+.hidden _C_LABEL(__arch_prctl)

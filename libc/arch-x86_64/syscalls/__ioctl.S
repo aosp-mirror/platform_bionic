@@ -16,3 +16,4 @@ ENTRY(__ioctl)
 1:
     ret
 END(__ioctl)
+.hidden _C_LABEL(__ioctl)
