@@ -16,6 +16,24 @@
       "revId": "90c13affb7fe11253b6083c0e0bd544d152a25fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e69c4a2_ade1f5ba",
+        "filename": "libc/bionic/pthread_join.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-25T22:08:28Z",
+      "side": 1,
+      "message": "That\u0027s what I thought, so I naively changed this to flip the two checks only. But that didn\u0027t work because gTaskList always contains the main thread. I assumed that the main thread should always be in gTaskList.",
+      "parentUuid": "3e69c4a2_4dc69959",
+      "revId": "90c13affb7fe11253b6083c0e0bd544d152a25fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
