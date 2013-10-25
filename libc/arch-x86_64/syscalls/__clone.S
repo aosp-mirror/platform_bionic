@@ -17,3 +17,4 @@ ENTRY(__clone)
 1:
     ret
 END(__clone)
+.hidden _C_LABEL(__clone)

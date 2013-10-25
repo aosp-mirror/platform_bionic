@@ -16,3 +16,4 @@ ENTRY(__timer_getoverrun)
 1:
     ret
 END(__timer_getoverrun)
+.hidden _C_LABEL(__timer_getoverrun)

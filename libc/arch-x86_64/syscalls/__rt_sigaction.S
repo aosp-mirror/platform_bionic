@@ -17,3 +17,4 @@ ENTRY(__rt_sigaction)
 1:
     ret
 END(__rt_sigaction)
+.hidden _C_LABEL(__rt_sigaction)

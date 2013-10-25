@@ -17,3 +17,4 @@ ENTRY(__openat)
 1:
     ret
 END(__openat)
+.hidden _C_LABEL(__openat)
