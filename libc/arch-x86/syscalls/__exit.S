@@ -4,15 +4,19 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(_exit_thread)
+ENTRY(__exit)
+    pushl   %ebx
+    mov     8(%esp), %ebx
     movl    $__NR_exit, %eax
-    syscall
-    cmpq    $-MAX_ERRNO, %rax
+    int     $0x80
+    cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax
-    movl    %eax, %edi
+    pushl   %eax
     call    __set_errno
-    orq     $-1, %rax
+    addl    $4, %esp
+    orl     $-1, %eax
 1:
+    popl    %ebx
     ret
-END(_exit_thread)
+END(__exit)
