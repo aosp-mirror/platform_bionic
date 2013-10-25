@@ -16,3 +16,4 @@ ENTRY(__sched_getaffinity)
 1:
     ret
 END(__sched_getaffinity)
+.hidden _C_LABEL(__sched_getaffinity)

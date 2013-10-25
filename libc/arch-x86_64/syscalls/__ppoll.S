@@ -17,3 +17,4 @@ ENTRY(__ppoll)
 1:
     ret
 END(__ppoll)
+.hidden _C_LABEL(__ppoll)

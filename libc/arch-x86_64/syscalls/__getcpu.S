@@ -16,3 +16,4 @@ ENTRY(__getcpu)
 1:
     ret
 END(__getcpu)
+.hidden _C_LABEL(__getcpu)
