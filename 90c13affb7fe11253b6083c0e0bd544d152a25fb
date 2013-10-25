@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e69c4a2_4dc69959",
+        "filename": "libc/bionic/pthread_join.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-25T22:00:17Z",
+      "side": 1,
+      "message": "the main thread shouldn\u0027t be on the thread list, so how does pthread_accessor find it?",
+      "revId": "90c13affb7fe11253b6083c0e0bd544d152a25fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
