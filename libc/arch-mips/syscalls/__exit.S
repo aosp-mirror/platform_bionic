@@ -2,11 +2,11 @@
 
 #include <asm/unistd.h>
     .text
-    .globl _exit_thread
+    .globl __exit
     .align 4
-    .ent _exit_thread
+    .ent __exit
 
-_exit_thread:
+__exit:
     .set noreorder
     .cpload $t9
     li $v0, __NR_exit
@@ -20,4 +20,4 @@ _exit_thread:
     j $t9
     nop
     .set reorder
-    .end _exit_thread
+    .end __exit

@@ -4,7 +4,7 @@
 #include <linux/err.h>
 #include <machine/asm.h>
 
-ENTRY(_exit_thread)
+ENTRY(__exit)
     mov     ip, r7
     ldr     r7, =__NR_exit
     swi     #0
@@ -13,4 +13,4 @@ ENTRY(_exit_thread)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(_exit_thread)
+END(__exit)
