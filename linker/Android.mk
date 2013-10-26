@@ -33,11 +33,6 @@ LOCAL_CPPFLAGS += \
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
-# Make the target architecture available at compile time.
-# TODO: do we really need this? why not just use __aarch64__, __arm__, __i386__, __mips__, __x86_64__?
-uppercase_target_arch := $(shell tr '[:lower:]' '[:upper:]' <<< $(TARGET_ARCH))
-LOCAL_CFLAGS += -DANDROID_$(uppercase_target_arch)_LINKER
-
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
     LOCAL_MODULE := linker64
 else

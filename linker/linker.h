@@ -97,6 +97,11 @@ struct r_debug {
 
 typedef void (*linker_function_t)();
 
+// Android uses REL for 32-bit but only uses RELA for 64-bit.
+#if defined(__LP64__)
+#define USE_RELA 1
+#endif
+
 struct soinfo {
  public:
   char name[SOINFO_NAME_LEN];
@@ -128,15 +133,19 @@ struct soinfo {
   unsigned* bucket;
   unsigned* chain;
 
-#if defined(ANDROID_X86_64_LINKER)
-  Elf_Rela *plt_rela;
+#if !defined(__LP64__)
+  // This is only used by 32-bit MIPS, but needs to be here for
+  // all 32-bit architectures to preserve binary compatibility.
+  unsigned* plt_got;
+#endif
+
+#if defined(USE_RELA)
+  Elf_Rela* plt_rela;
   size_t plt_rela_count;
 
-  Elf_Rela *rela;
+  Elf_Rela* rela;
   size_t rela_count;
 #else
-  unsigned* plt_got;
-
   Elf_Rel* plt_rel;
   size_t plt_rel_count;
 
@@ -155,11 +164,11 @@ struct soinfo {
   linker_function_t init_func;
   linker_function_t fini_func;
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
   // ARM EABI section used for stack unwinding.
   unsigned* ARM_exidx;
   size_t ARM_exidx_count;
-#elif defined(ANDROID_MIPS_LINKER)
+#elif defined(__mips__)
   unsigned mips_symtabno;
   unsigned mips_local_gotno;
   unsigned mips_gotsym;

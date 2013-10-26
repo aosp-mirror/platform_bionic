@@ -235,7 +235,7 @@ void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
         case SIGABRT:
         case SIGFPE:
         case SIGPIPE:
-#ifdef SIGSTKFLT
+#if defined(SIGSTKFLT)
         case SIGSTKFLT:
 #endif
             (void) tgkill(getpid(), gettid(), n);
