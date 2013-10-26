@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fe62ccbe_91f52cae",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "__x86__ is basically unused in bionic atm. there\u0027s one reference to it, and _lots_ to __i386__. plus __i386__ matches the ELF EM_386 constant. but, yeah, it\u0027s nicer to have something that matches what Android calls the architecture, so i\u0027ll switch all the linker code over in this patch, and i\u0027ll send out another patch switching our non-upsteam code over to __x86__ too.",
+      "parentUuid": "fe62ccbe_c6dc4cd3",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e5ec0fd_8d78b17c",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-26T03:01:08Z",
       "side": 1,
       "message": "is the use rel vs rela of these really related to __LP64__ i thought this was more architecture specific? should this be __x86_64__?",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e69c4a2_021d4b2b",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "strictly speaking, you\u0027re right, but in practice it appears that the aarch64 toolchain is only using rela, so this seems like a nice simplification going forward. i don\u0027t want to support rel on the 64-bit architectures unless we have to. YAGNI.",
+      "parentUuid": "1e5ec0fd_8d78b17c",
       "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1e5ec0fd_6d527d8b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "yeah, there\u0027s more to come adding in the aarch64 relocation types...",
+      "parentUuid": "1e5ec0fd_2d816549",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e69c4a2_ceb9bfde",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +124,41 @@
     },
     {
       "key": {
+        "uuid": "1e5ec0fd_8d4fd1e0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "...but i\u0027ll make this change right now so this at least still compiles for other LP64 architectures even if it rejects every ELF file at runtime because it\u0027s ignorant of their relocation types.",
+      "parentUuid": "3e69c4a2_ceb9bfde",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e69c4a2_22224f6b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "i\u0027ll also clean all this up and move all the ARM stuff together, et cetera...",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e5ec0fd_add57538",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -81,6 +170,41 @@
       "writtenOn": "2013-10-26T03:01:08Z",
       "side": 1,
       "message": "again, not sure rela is directly related to this. perhaps set a REL vs RELA #define via __x86_64__?\n\n(and use it below as well?)",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_ad1c95e2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "okay, even though i don\u0027t plan on supporting REL for 64-bit bionic, i can\u0027t argue with a more intention-revealing name. i\u0027ll add #define USE_RELA __LP64__ in linker.h.",
+      "parentUuid": "1e5ec0fd_add57538",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe62ccbe_f11ca831",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1623,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-26T19:10:46Z",
+      "side": 1,
+      "message": "hmm. this looks like another #ifdef bug. shouldn\u0027t we have a default for all architectures, not just MIPS?",
       "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
