@@ -16,6 +16,91 @@
       "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_8d78b17c",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-26T03:01:08Z",
+      "side": 1,
+      "message": "is the use rel vs rela of these really related to __LP64__ i thought this was more architecture specific? should this be __x86_64__?",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_2d816549",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-26T03:01:08Z",
+      "side": 1,
+      "message": "is __LP64__ right here? its not just a simple substitution for x86_64 is it? should the R_X86_64 parts be protected with an ifdef like the other architectures?",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e69c4a2_ceb9bfde",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-26T03:01:08Z",
+      "side": 1,
+      "message": "#if defined(__x86_64__)",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_add57538",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-26T03:01:08Z",
+      "side": 1,
+      "message": "again, not sure rela is directly related to this. perhaps set a REL vs RELA #define via __x86_64__?\n\n(and use it below as well?)",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe62ccbe_46e91c6a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1855,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-26T03:01:08Z",
+      "side": 1,
+      "message": "this seems to be the only noncontroversial use of __LP64__",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
