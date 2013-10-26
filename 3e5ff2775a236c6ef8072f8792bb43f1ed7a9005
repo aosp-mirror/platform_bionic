@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe62ccbe_c6dc4cd3",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-26T02:52:31Z",
+      "side": 1,
+      "message": "What\u0027s the difference between __x86__ and __i386__?",
+      "revId": "3e5ff2775a236c6ef8072f8792bb43f1ed7a9005",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
