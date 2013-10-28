@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5e7bd85f_e58f90ec",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-28T15:57:01Z",
+      "side": 1,
+      "message": "This change is needed by the linux toolchain we use internally. We haven\u0027t switched to using the android toolchain yet, therefore we do not know if it is still needed by an Android toolchain. We will remove it for now.\n\nThe use of static linker flag -Bsymbolic is so that functions are\ncalled directly rather than via the PLT in the build of the linker.",
+      "parentUuid": "3e69c4a2_93461455",
+      "revId": "18e1729b1a2008ee16101e87d00a180e3f10afe1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e69c4a2_b383185d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-26T00:34:13Z",
       "side": 1,
       "message": "when does this happen? when is AT_BASE NULL on aarch64?",
+      "revId": "18e1729b1a2008ee16101e87d00a180e3f10afe1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de8ee8b0_81dddcf8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2240,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2013-10-28T15:57:01Z",
+      "side": 1,
+      "message": "This was a boot-strap to get us going with the Android linker development in a Linux environment. Will be removed from the new version of the patchset.",
+      "parentUuid": "3e69c4a2_b383185d",
       "revId": "18e1729b1a2008ee16101e87d00a180e3f10afe1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
