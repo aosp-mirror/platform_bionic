@@ -16,6 +16,24 @@
       "revId": "e72891cb5a5ac5f68b92c320ca68c361d367177e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_ae464854",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-28T21:31:41Z",
+      "side": 1,
+      "message": "yes it does, but i\u0027m never sure whether to leave it or not.\n\nhow about this: we _do_ leave it in the \"upstream-*\" directories, because they\u0027re supposed to be byte-identical with upstream files, but we fix it here because this file is lightly edited (there\u0027s an Android-specific bit below commenting out the AT_* constants, which we pull in from a linux kernel header)?",
+      "parentUuid": "fe62ccbe_3617f10c",
+      "revId": "e72891cb5a5ac5f68b92c320ca68c361d367177e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
