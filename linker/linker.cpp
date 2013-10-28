@@ -1548,25 +1548,32 @@ static bool soinfo_link_image(soinfo* si) {
             si->preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(Elf_Addr);
             break;
         case DT_TEXTREL:
+#if defined(__LP64__)
+            DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", si->name);
+            return false;
+#else
             si->has_text_relocations = true;
             break;
+#endif
         case DT_SYMBOLIC:
             si->has_DT_SYMBOLIC = true;
             break;
         case DT_NEEDED:
             ++needed_count;
             break;
-#if defined DT_FLAGS
-        // TODO: why is DT_FLAGS not defined?
         case DT_FLAGS:
             if (d->d_un.d_val & DF_TEXTREL) {
+#if defined(__LP64__)
+                DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", si->name);
+                return false;
+#else
                 si->has_text_relocations = true;
+#endif
             }
             if (d->d_un.d_val & DF_SYMBOLIC) {
                 si->has_DT_SYMBOLIC = true;
             }
             break;
-#endif
 #if defined(__mips__)
         case DT_STRSZ:
         case DT_SYMENT:
@@ -1661,12 +1668,10 @@ static bool soinfo_link_image(soinfo* si) {
     }
     *pneeded = NULL;
 
+#if !defined(__LP64__)
     if (si->has_text_relocations) {
-        /* Unprotect the segments, i.e. make them writable, to allow
-         * text relocations to work properly. We will later call
-         * phdr_table_protect_segments() after all of them are applied
-         * and all constructors are run.
-         */
+        // Make segments writable to allow text relocations to work properly. We will later call
+        // phdr_table_protect_segments() after all of them are applied and all constructors are run.
         DL_WARN("%s has text relocations. This is wasting memory and prevents "
                 "security hardening. Please fix.", si->name);
         if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
@@ -1675,6 +1680,7 @@ static bool soinfo_link_image(soinfo* si) {
             return false;
         }
     }
+#endif
 
 #if defined(USE_RELA)
     if (si->plt_rela != NULL) {
@@ -1713,15 +1719,16 @@ static bool soinfo_link_image(soinfo* si) {
     si->flags |= FLAG_LINKED;
     DEBUG("[ finished linking %s ]", si->name);
 
+#if !defined(__LP64__)
     if (si->has_text_relocations) {
-        /* All relocations are done, we can protect our segments back to
-         * read-only. */
+        // All relocations are done, we can protect our segments back to read-only.
         if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
             DL_ERR("can't protect segments for \"%s\": %s",
                    si->name, strerror(errno));
             return false;
         }
     }
+#endif
 
     /* We can also turn on GNU RELRO protection */
     if (phdr_table_protect_gnu_relro(si->phdr, si->phnum, si->load_bias) < 0) {
