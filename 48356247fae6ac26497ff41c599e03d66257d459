@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe62ccbe_39c7e2e6",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-28T23:41:00Z",
+      "side": 1,
+      "message": "*exit_code \u003d i?",
+      "revId": "48356247fae6ac26497ff41c599e03d66257d459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe62ccbe_d9d7c694",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-28T23:41:00Z",
+      "side": 1,
+      "message": "do you have a link to the bug you suspect, and/or the version of glibc you believe this to be fixed in? (otherwise this will live forever.)",
+      "revId": "48356247fae6ac26497ff41c599e03d66257d459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
