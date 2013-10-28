@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <sys/time.h>
 
+#include "TemporaryFile.h"
+
 TEST(sys_time, utimes) {
   timeval tv[2];
   memset(&tv, 0, sizeof(tv));
@@ -37,4 +39,10 @@ TEST(sys_time, utimes) {
   tv[1].tv_usec = 1234567;
   ASSERT_EQ(-1, utimes("/", tv));
   ASSERT_EQ(EINVAL, errno);
+}
+
+// http://b/11383777
+TEST(sys_time, utimes_NULL) {
+  TemporaryFile tf;
+  ASSERT_EQ(0, utimes(tf.filename, NULL));
 }
