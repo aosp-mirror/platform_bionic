@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <signal.h>
 
+#include "ScopedSignalHandler.h"
+
 static size_t SIGNAL_MIN() {
   return 1; // Signals start at 1 (SIGHUP), not 0.
 }
@@ -84,25 +86,6 @@ static void TestSigSet2(Fn fn) {
   ASSERT_EQ(0, fn(&set, SIGNAL_MAX()));
   ASSERT_EQ(0, errno);
 }
-
-class ScopedSignalHandler {
- public:
-  ScopedSignalHandler(int signal_number, void (*handler)(int)) : signal_number_(signal_number) {
-    sigemptyset(&action_.sa_mask);
-    action_.sa_flags = 0;
-    action_.sa_handler = handler;
-    sigaction(signal_number_, &action_, &old_action_);
-  }
-
-  ~ScopedSignalHandler() {
-    sigaction(signal_number_, &old_action_, NULL);
-  }
-
- private:
-  struct sigaction action_;
-  struct sigaction old_action_;
-  const int signal_number_;
-};
 
 TEST(signal, sigismember_invalid) {
   TestSigSet2(sigismember);

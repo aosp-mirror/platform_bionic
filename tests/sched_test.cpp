@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#ifdef __BIONIC__
 static int child_fn(void* i_ptr) {
   *reinterpret_cast<int*>(i_ptr) = 42;
   return 123;
@@ -30,7 +31,7 @@ TEST(sched, clone) {
   void* child_stack[1024];
 
   int i = 0;
-  pid_t tid = clone(child_fn, &child_stack[1024], /*CLONE_FILES | CLONE_FS | */CLONE_VM/* | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM*/, &i);
+  pid_t tid = clone(child_fn, &child_stack[1024], CLONE_VM, &i);
 
   int status;
   ASSERT_EQ(tid, TEMP_FAILURE_RETRY(waitpid(tid, &status, __WCLONE)));
@@ -40,3 +41,12 @@ TEST(sched, clone) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(123, WEXITSTATUS(status));
 }
+#else
+// For glibc, any call to clone with CLONE_VM set will cause later pthread
+// calls in the same process to misbehave.
+// See https://sourceware.org/bugzilla/show_bug.cgi?id=10311 for more details.
+TEST(sched, clone) {
+  // In order to enumerate all possible tests for CTS, create an empty test.
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+#endif
