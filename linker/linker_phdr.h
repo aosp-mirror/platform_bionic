@@ -90,7 +90,7 @@ int phdr_table_unprotect_segments(const Elf_Phdr* phdr_table, size_t phdr_count,
 int phdr_table_protect_gnu_relro(const Elf_Phdr* phdr_table, size_t phdr_count, Elf_Addr load_bias);
 
 
-#ifdef ANDROID_ARM_LINKER
+#if defined(__arm__)
 int phdr_table_get_arm_exidx(const Elf_Phdr* phdr_table, size_t phdr_count, Elf_Addr load_bias,
                              Elf_Addr** arm_exidx, unsigned* arm_exidix_count);
 #endif
