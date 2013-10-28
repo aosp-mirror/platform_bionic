@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bec694d7_4bf31959",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-28T23:06:20Z",
+      "side": 1,
+      "message": "I\u0027ll remove the commented out stuff. Do you know why the extra options are even here and commented out?\n\nAs for SIGCHLD, as I mention later, I think that when we go to a new glibc and new gcc it will all just work.",
+      "parentUuid": "5e49184c_21f41802",
+      "revId": "2c5e263c401c5633f5ce9b2f2a41fa5c394ff3dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e49184c_e1e9302f",
         "filename": "tests/sched_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-28T22:52:37Z",
       "side": 1,
       "message": "what was the crash? are we sure we\u0027re not just calling clone wrong?",
+      "revId": "2c5e263c401c5633f5ce9b2f2a41fa5c394ff3dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_cbe6e99d",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-28T23:06:20Z",
+      "side": 1,
+      "message": "It\u0027s not a crash, but other pthread functions just start returning invalid values or deadlocking. I found a bug in glibc referencing some strange behavior after calling clone and a fix put in a while ago. I suspect when we move to gcc 4.8 for host this will just start working as intended (assuming we get a new version of glibc too). I\u0027ll follow-up to see if I can try out a new glibc and if the problem goes away. I also suspect the other stdio change will be fixed with a newer glibc.\n\nI did try to change the parameters, seeing if maybe we allocated a too small stack or something else, but no love. I spent time with the man page and it looks like we\u0027re calling it correctly.",
+      "parentUuid": "5e49184c_e1e9302f",
       "revId": "2c5e263c401c5633f5ce9b2f2a41fa5c394ff3dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
