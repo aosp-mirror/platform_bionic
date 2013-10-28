@@ -34,6 +34,24 @@
       "revId": "020bcdaef349b6bd82302a0656fdf9aaff30bdb3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_494846dc",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-28T23:09:36Z",
+      "side": 0,
+      "message": "yeah, maybe we should pull ScopedSignalHandler out into a header file so we can use it in more tests?",
+      "parentUuid": "bec694d7_2becdd7a",
+      "revId": "020bcdaef349b6bd82302a0656fdf9aaff30bdb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
