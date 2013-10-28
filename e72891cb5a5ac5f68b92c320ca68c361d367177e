@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe62ccbe_3617f10c",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-28T21:27:33Z",
+      "side": 1,
+      "message": "Trailing whitespace here and a few lines down. Does the upstream version have the whitespace and we should just leave it?",
+      "revId": "e72891cb5a5ac5f68b92c320ca68c361d367177e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
