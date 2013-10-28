@@ -143,12 +143,12 @@ int dlclose(void* handle) {
   return do_dlclose(reinterpret_cast<soinfo*>(handle));
 }
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888 8888888
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012 3456789
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
-#elif defined(ANDROID_MIPS_LINKER) || defined(ANDROID_X86_LINKER) || defined(ANDROID_X86_64_LINKER)
+#elif defined(__i386__) || defined(__mips__) || defined(__x86_64__)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
 #define ANDROID_LIBDL_STRTAB \
@@ -195,7 +195,7 @@ static Elf_Sym gLibDlSymtab[] = {
   ELF_SYM_INITIALIZER(29, &dladdr, 1),
   ELF_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
   ELF_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
   ELF_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
 #endif
 };
@@ -219,7 +219,7 @@ static Elf_Sym gLibDlSymtab[] = {
 // Note that adding any new symbols here requires
 // stubbing them out in libdl.
 static unsigned gLibDlBuckets[1] = { 1 };
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
 static unsigned gLibDlChains[9] = { 0, 2, 3, 4, 5, 6, 7, 8, 0 };
 #else
 static unsigned gLibDlChains[8] = { 0, 2, 3, 4, 5, 6, 7, 0 };
@@ -257,7 +257,7 @@ soinfo libdl_info = {
     .bucket = gLibDlBuckets,
     .chain = gLibDlChains,
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(USE_RELA)
     .plt_rela = 0,
     .plt_rela_count = 0,
     .rela = 0,
@@ -282,10 +282,10 @@ soinfo libdl_info = {
     .init_func = 0,
     .fini_func = 0,
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
     .ARM_exidx = 0,
     .ARM_exidx_count = 0,
-#elif defined(ANDROID_MIPS_LINKER)
+#elif defined(__mips__)
     .mips_symtabno = 0,
     .mips_local_gotno = 0,
     .mips_gotsym = 0,
