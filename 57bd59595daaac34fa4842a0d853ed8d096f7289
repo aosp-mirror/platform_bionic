@@ -16,6 +16,24 @@
       "revId": "57bd59595daaac34fa4842a0d853ed8d096f7289",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5ec0fd_44266bc6",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-10-28T23:40:15Z",
+      "side": 1,
+      "message": "http://infocenter.arm.com/help/topic/com.arm.doc.ihi0056b/IHI0056B_aaelf64.pdf",
+      "parentUuid": "1e5ec0fd_49920655",
+      "revId": "57bd59595daaac34fa4842a0d853ed8d096f7289",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
