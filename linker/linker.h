@@ -197,15 +197,6 @@ struct soinfo {
   void CallFunction(const char* function_name, linker_function_t function);
 };
 
-// The possible DT_FLAGS bits are in
-// http://www.sco.com/developers/gabi/latest/ch5.dynamic.html#dynamic_section
-// but not in the upstream NetBSD <sys/exec_elf.h> header file ours is based on.
-#define DF_ORIGIN 0x1
-#define DF_SYMBOLIC 0x2
-#define DF_TEXTREL 0x4
-#define DF_BIND_NOW 0x8
-#define DF_STATIC_TLS 0x10
-
 extern soinfo libdl_info;
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
