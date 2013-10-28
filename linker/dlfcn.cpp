@@ -295,6 +295,8 @@ soinfo libdl_info = {
     { .l_addr = 0, .l_name = 0, .l_ld = 0, .l_next = 0, .l_prev = 0, },
     .constructors_called = false,
     .load_bias = 0,
+#if !defined(__LP64__)
     .has_text_relocations = false,
+#endif
     .has_DT_SYMBOLIC = true,
 };
