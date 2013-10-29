@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5ed67883_d3bdfef7",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-29T00:24:12Z",
+      "side": 1,
+      "message": "If i doesn\u0027t get set, and is left at zero, then the compare will fail, but the test will pass because it will exit with zero. I\u0027ll change it to some other value so it\u0027s clear it\u0027s not related at all to the value of i. I\u0027ll also add a comment describing how this works.",
+      "parentUuid": "fe62ccbe_39c7e2e6",
+      "revId": "48356247fae6ac26497ff41c599e03d66257d459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe62ccbe_d9d7c694",
         "filename": "tests/sched_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-28T23:41:00Z",
       "side": 1,
       "message": "do you have a link to the bug you suspect, and/or the version of glibc you believe this to be fixed in? (otherwise this will live forever.)",
+      "revId": "48356247fae6ac26497ff41c599e03d66257d459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ed08087_ce5c3751",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-29T00:24:12Z",
+      "side": 1,
+      "message": "https://bugzilla.redhat.com/show_bug.cgi?id\u003d737387\n\nI don\u0027t know if it\u0027s appropriate to put this in the comments since it\u0027s a redhat bug. And it could be completely unrelated, but my gut tells me that glibc for host is just old and not working very well.",
+      "parentUuid": "fe62ccbe_d9d7c694",
       "revId": "48356247fae6ac26497ff41c599e03d66257d459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
