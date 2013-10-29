@@ -175,7 +175,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     }
   } else {
     // The caller did provide a stack, so remember we're not supposed to free it.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
+    thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
   }
 
   // Make room for the TLS area.
@@ -202,7 +202,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   int tid = __pthread_clone(start_routine, child_stack, flags, arg);
   if (tid < 0) {
     int clone_errno = errno;
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
+    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
     free(thread);
