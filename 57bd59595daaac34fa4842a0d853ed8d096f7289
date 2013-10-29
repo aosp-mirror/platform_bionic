@@ -52,6 +52,24 @@
       "revId": "57bd59595daaac34fa4842a0d853ed8d096f7289",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e49184c_3917f00c",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-29T15:51:54Z",
+      "side": 1,
+      "message": "this is now upstream, and i\u0027ve pulled down the latest version: https://android-review.googlesource.com/#/c/68931/\n\npulling three new versions of upstream \u003csys/exec_elf.h\u003e down on the same day has to be a new record!",
+      "parentUuid": "5e49184c_c1698cf8",
+      "revId": "57bd59595daaac34fa4842a0d853ed8d096f7289",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
