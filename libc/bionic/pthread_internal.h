@@ -66,16 +66,16 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
-#define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
+#define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
 /* Was the thread's stack allocated by the user rather than by us? */
-#define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
+#define PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK 0x00000002
 
 /* Has the thread been joined by another thread? */
-#define PTHREAD_ATTR_FLAG_JOINED        0x00000004
+#define PTHREAD_ATTR_FLAG_JOINED 0x00000004
 
 /* Has the thread already exited but not been joined? */
-#define PTHREAD_ATTR_FLAG_ZOMBIE        0x00000008
+#define PTHREAD_ATTR_FLAG_ZOMBIE 0x00000008
 
 #define PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED 1
 
