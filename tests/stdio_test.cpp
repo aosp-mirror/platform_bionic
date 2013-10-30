@@ -273,7 +273,11 @@ TEST(stdio, snprintf_smoke) {
 
   void* p = NULL;
   snprintf(buf, sizeof(buf), "a%d,%pz", 5, p);
+#if defined(__BIONIC__)
   EXPECT_STREQ("a5,0x0z", buf);
+#else
+  EXPECT_STREQ("a5,(nil)z", buf);
+#endif
 
   snprintf(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
