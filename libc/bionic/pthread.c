@@ -83,25 +83,20 @@ void __pthread_cleanup_pop( __pthread_cleanup_t*  c, int  execute )
         c->__cleanup_routine(c->__cleanup_arg);
 }
 
-void pthread_exit(void * retval)
-{
-    pthread_internal_t*  thread     = __get_thread();
-    void*                stack_base = thread->attr.stack_base;
-    size_t               stack_size = thread->attr.stack_size;
-    int                  user_stack = (thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) != 0;
-    sigset_t mask;
+void pthread_exit(void* retval) {
+    pthread_internal_t* thread = __get_thread();
 
-    // call the cleanup handlers first
+    // Call the cleanup handlers first.
     while (thread->cleanup_stack) {
-        __pthread_cleanup_t*  c = thread->cleanup_stack;
-        thread->cleanup_stack   = c->__cleanup_prev;
+        __pthread_cleanup_t* c = thread->cleanup_stack;
+        thread->cleanup_stack = c->__cleanup_prev;
         c->__cleanup_routine(c->__cleanup_arg);
     }
 
-    // call the TLS destructors, it is important to do that before removing this
-    // thread from the global list. this will ensure that if someone else deletes
+    // Call the TLS destructors. It is important to do that before removing this
+    // thread from the global list. This will ensure that if someone else deletes
     // a TLS key, the corresponding value will be set to NULL in this thread's TLS
-    // space (see pthread_key_delete)
+    // space (see pthread_key_delete).
     pthread_key_clean_all();
 
     if (thread->alternate_signal_stack != NULL) {
@@ -116,42 +111,49 @@ void pthread_exit(void * retval)
       thread->alternate_signal_stack = NULL;
     }
 
-    // if the thread is detached, destroy the pthread_internal_t
-    // otherwise, keep it in memory and signal any joiners.
+    // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
+    void* stack_base = thread->attr.stack_base;
+    size_t stack_size = thread->attr.stack_size;
+    bool user_allocated_stack = ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0);
+
+    // If the thread is detached, destroy the pthread_internal_t,
+    // otherwise keep it in memory and signal any joiners.
     pthread_mutex_lock(&gThreadListLock);
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
         _pthread_internal_remove_locked(thread);
     } else {
-       /* make sure that the thread struct doesn't have stale pointers to a stack that
-        * will be unmapped after the exit call below.
-        */
-        if (!user_stack) {
+        // Make sure that the thread struct doesn't have stale pointers to a stack that
+        // will be unmapped after the exit call below.
+        if (!user_allocated_stack) {
             thread->attr.stack_base = NULL;
             thread->attr.stack_size = 0;
             thread->tls = NULL;
         }
 
-       /* Indicate that the thread has exited for joining threads. */
+        // Indicate that the thread has exited for joining threads.
         thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
         thread->return_value = retval;
 
-       /* Signal the joining thread if present. */
+        // Signal the joining thread if present.
         if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
             pthread_cond_signal(&thread->join_cond);
         }
     }
     pthread_mutex_unlock(&gThreadListLock);
 
-    sigfillset(&mask);
-    sigdelset(&mask, SIGSEGV);
-    sigprocmask(SIG_SETMASK, &mask, NULL);
-
-    if (user_stack) {
+    if (user_allocated_stack) {
         // Cleaning up this thread's stack is the creator's responsibility, not ours.
         __exit(0);
     } else {
         // We need to munmap the stack we're running on before calling exit.
         // That's not something we can do in C.
+
+        // We don't want to take a signal after we've unmapped the stack.
+        // That's one last thing we can handle in C.
+        sigset_t mask;
+        sigfillset(&mask);
+        sigprocmask(SIG_SETMASK, &mask, NULL);
+
         _exit_with_stack_teardown(stack_base, stack_size, 0);
     }
 }
