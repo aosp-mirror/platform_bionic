@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "ScopedSignalHandler.h"
 #include "TemporaryFile.h"
 
 #include <stdint.h>
@@ -80,7 +81,8 @@ static void PauseTestSignalHandler(int) {
 }
 
 TEST(unistd, pause) {
-  signal(SIGALRM, PauseTestSignalHandler);
+  ScopedSignalHandler handler(SIGALRM, PauseTestSignalHandler);
+
   alarm(1);
   ASSERT_FALSE(gPauseTestFlag);
   ASSERT_EQ(-1, pause());
