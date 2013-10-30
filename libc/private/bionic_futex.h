@@ -51,11 +51,11 @@ extern int __futex_syscall4(volatile void *ftx, int op, int val, const struct ti
 #define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
 #endif
 
-/* Like __futex_wait/wake, but take an additionnal 'pshared' argument.
+/* Like __futex_wait/wake, but take an additional 'pshared' argument.
  * when non-0, this will use normal futexes. Otherwise, private futexes.
  */
-extern int  __futex_wake_ex(volatile void *ftx, int pshared, int val);
-extern int  __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct timespec *timeout);
+extern int __futex_wake_ex(volatile void *ftx, int pshared, int val);
+extern int __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct timespec *timeout);
 
 __END_DECLS
 
