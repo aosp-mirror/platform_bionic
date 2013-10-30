@@ -414,36 +414,11 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/string/strxfrm.c \
     upstream-netbsd/libc/unistd/killpg.c \
 
-
-# Architecture specific source files go here
-# =========================================================
-ifeq ($(TARGET_ARCH),arm)
-libc_common_src_files += \
-	bionic/memchr.c \
-	bionic/memmove.c.arm \
-	bionic/memrchr.c \
-	bionic/strchr.cpp \
-	bionic/strnlen.c \
-	string/bcopy.c \
-	string/index.c \
-	string/strlcat.c \
-	string/strlcpy.c \
-	string/strncat.c \
-	string/strncmp.c \
-	string/strncpy.c \
-	string/strrchr.c \
-	upstream-freebsd/lib/libc/string/wcscat.c \
-	upstream-freebsd/lib/libc/string/wcschr.c \
-	upstream-freebsd/lib/libc/string/wcscmp.c \
-	upstream-freebsd/lib/libc/string/wcscpy.c \
-	upstream-freebsd/lib/libc/string/wcslen.c \
-	upstream-freebsd/lib/libc/string/wcsrchr.c \
-	upstream-freebsd/lib/libc/string/wmemcmp.c \
-
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
 # up any thumb code.
 # TODO: is this actually necessary?
+ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
     bionic/pthread-atfork.c.arm \
     bionic/pthread-rwlocks.c.arm \
@@ -455,9 +430,7 @@ libc_static_common_src_files += \
     bionic/pthread_create.cpp.arm \
     bionic/pthread_key.cpp.arm \
 
-endif # arm
-
-ifeq ($(TARGET_ARCH),x86)
+else
 libc_common_src_files += \
     bionic/pthread-atfork.c \
     bionic/pthread-rwlocks.c \
@@ -469,7 +442,63 @@ libc_static_common_src_files += \
     bionic/pthread_create.cpp \
     bionic/pthread_key.cpp \
 
-endif # x86
+endif # arm
+
+
+# Architecture specific source files go here
+# =========================================================
+ifeq ($(TARGET_ARCH),arm)
+libc_common_src_files += \
+    bionic/memchr.c \
+    bionic/memmove.c.arm \
+    bionic/memrchr.c \
+    bionic/strchr.cpp \
+    bionic/strnlen.c \
+    string/bcopy.c \
+    string/index.c \
+    string/strlcat.c \
+    string/strlcpy.c \
+    string/strncat.c \
+    string/strncmp.c \
+    string/strncpy.c \
+    string/strrchr.c \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+
+endif # arm
+
+ifeq ($(TARGET_ARCH),mips)
+libc_common_src_files += \
+    bionic/memchr.c \
+    bionic/memcmp.c \
+    bionic/memrchr.c \
+    bionic/strchr.cpp \
+    bionic/strnlen.c \
+    string/bcopy.c \
+    string/index.c \
+    string/strcat.c \
+    string/strcmp.c \
+    string/strcpy.c \
+    string/strlcat.c \
+    string/strlcpy.c \
+    string/strncat.c \
+    string/strncmp.c \
+    string/strncpy.c \
+    string/strrchr.c \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+
+endif # mips
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 libc_common_src_files += \
@@ -479,10 +508,6 @@ libc_common_src_files += \
     bionic/memmove.c \
     bionic/memrchr.c \
     bionic/memset.c \
-    bionic/pthread-atfork.c \
-    bionic/pthread-rwlocks.c \
-    bionic/pthread-timers.c \
-    bionic/ptrace.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     string/bcopy.c \
@@ -505,54 +530,12 @@ libc_common_src_files += \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
 
-libc_static_common_src_files += \
-    bionic/pthread.c \
-    bionic/pthread_create.cpp \
-    bionic/pthread_key.cpp \
-
 endif # x86_64
 
-ifeq ($(TARGET_ARCH),mips)
-libc_common_src_files += \
-	bionic/memchr.c \
-	bionic/memcmp.c \
-	bionic/memrchr.c \
-	bionic/strchr.cpp \
-	bionic/strnlen.c \
-	string/bcopy.c \
-	string/index.c \
-	string/strcat.c \
-	string/strcmp.c \
-	string/strcpy.c \
-	string/strlcat.c \
-	string/strlcpy.c \
-	string/strncat.c \
-	string/strncmp.c \
-	string/strncpy.c \
-	string/strrchr.c \
-	upstream-freebsd/lib/libc/string/wcscat.c \
-	upstream-freebsd/lib/libc/string/wcschr.c \
-	upstream-freebsd/lib/libc/string/wcscmp.c \
-	upstream-freebsd/lib/libc/string/wcscpy.c \
-	upstream-freebsd/lib/libc/string/wcslen.c \
-	upstream-freebsd/lib/libc/string/wcsrchr.c \
-	upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-libc_common_src_files += \
-    bionic/pthread-atfork.c \
-    bionic/pthread-rwlocks.c \
-    bionic/pthread-timers.c \
-    bionic/ptrace.c \
-
-libc_static_common_src_files += \
-    bionic/pthread.c \
-    bionic/pthread_create.cpp \
-    bionic/pthread_key.cpp \
-
-endif # mips
-
-ifeq ($(strip $(TARGET_CPU_VARIANT)),)
-$(warning TARGET_CPU_VARIANT is not defined)
+ifeq ($(TARGET_ARCH),arm)
+  ifeq ($(strip $(TARGET_CPU_VARIANT)),)
+    $(warning TARGET_ARCH is arm, but TARGET_CPU_VARIANT is not defined)
+  endif
 endif
 
 ###########################################################
