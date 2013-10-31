@@ -29,17 +29,18 @@
 /* some simple glue used to make the BSD atexit code happy */
 
 #include <pthread.h>
-#include "pthread_internal.h"
 
-static pthread_mutex_t   gAtExitLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t gAtExitLock = PTHREAD_MUTEX_INITIALIZER;
 
-void  _thread_atexit_lock( void )
-{
-  pthread_mutex_lock( &gAtExitLock );
+__BEGIN_DECLS
+__LIBC_HIDDEN__ void _thread_atexit_lock();
+__LIBC_HIDDEN__ void _thread_atexit_unlock();
+__END_DECLS
+
+void _thread_atexit_lock() {
+  pthread_mutex_lock(&gAtExitLock);
 }
 
-void _thread_atexit_unlock( void )
-{
-  pthread_mutex_unlock( &gAtExitLock );
+void _thread_atexit_unlock() {
+  pthread_mutex_unlock(&gAtExitLock);
 }
-

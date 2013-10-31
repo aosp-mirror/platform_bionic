@@ -25,33 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <sys/types.h>
 #include <sys/ptrace.h>
 
-extern long __ptrace(int request, pid_t pid, void *addr, void *data);
+extern "C" long __ptrace(int request, pid_t pid, void* addr, void* data);
 
-long ptrace(int request, pid_t pid, void * addr, void * data)
-{
-    switch (request) {
-        case PTRACE_PEEKUSR:
-        case PTRACE_PEEKTEXT:
-        case PTRACE_PEEKDATA:
-        {
-            long word;
-            long ret;
-
-            ret = __ptrace(request, pid, addr, &word);
-            if (ret == 0) {
-                return word;
-            } else {
-                // __ptrace will set errno for us
-                return -1;
-            }
-        }
-
-        default:
-             return __ptrace(request, pid, addr, data);
+long ptrace(int request, pid_t pid, void* addr, void* data) {
+  switch (request) {
+    case PTRACE_PEEKUSR:
+    case PTRACE_PEEKTEXT:
+    case PTRACE_PEEKDATA:
+      {
+      long word;
+      long ret = __ptrace(request, pid, addr, &word);
+      if (ret == 0) {
+        return word;
+      } else {
+        // __ptrace already set errno for us.
+        return -1;
+      }
     }
+
+    default:
+      return __ptrace(request, pid, addr, data);
+  }
 }
 
 /*
@@ -63,6 +61,7 @@ long ptrace(int request, pid_t pid, void * addr, void * data)
 #define ATTRIBUTES __attribute__((noinline))
 #endif
 
-void ATTRIBUTES _thread_created_hook(pid_t thread_id)
-{
+extern "C" void _thread_created_hook(pid_t) ATTRIBUTES;
+
+void _thread_created_hook(pid_t) {
 }

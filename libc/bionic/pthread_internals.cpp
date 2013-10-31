@@ -28,11 +28,13 @@
 
 #include "pthread_internal.h"
 
+#include "private/bionic_futex.h"
+#include "private/bionic_pthread.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-__LIBC_HIDDEN__ pthread_internal_t* gThreadList = NULL;
-__LIBC_HIDDEN__ pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
+pthread_internal_t* gThreadList = NULL;
+pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
 
 void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->next != NULL) {
@@ -51,7 +53,7 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   }
 }
 
-__LIBC_ABI_PRIVATE__ void _pthread_internal_add(pthread_internal_t* thread) {
+void _pthread_internal_add(pthread_internal_t* thread) {
   ScopedPthreadMutexLocker locker(&gThreadListLock);
 
   // We insert at the head.
@@ -63,6 +65,42 @@ __LIBC_ABI_PRIVATE__ void _pthread_internal_add(pthread_internal_t* thread) {
   gThreadList = thread;
 }
 
-__LIBC_ABI_PRIVATE__ pthread_internal_t* __get_thread(void) {
+pthread_internal_t* __get_thread(void) {
   return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
+}
+
+pid_t __pthread_gettid(pthread_t t) {
+  return reinterpret_cast<pthread_internal_t*>(t)->tid;
+}
+
+int __pthread_settid(pthread_t t, pid_t tid) {
+  if (t == 0) {
+    return EINVAL;
+  }
+  reinterpret_cast<pthread_internal_t*>(t)->tid = tid;
+  return 0;
+}
+
+// Initialize 'ts' with the difference between 'abstime' and the current time
+// according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
+int __timespec_to_absolute(timespec* ts, const timespec* abstime, clockid_t clock) {
+  clock_gettime(clock, ts);
+  ts->tv_sec  = abstime->tv_sec - ts->tv_sec;
+  ts->tv_nsec = abstime->tv_nsec - ts->tv_nsec;
+  if (ts->tv_nsec < 0) {
+    ts->tv_sec--;
+    ts->tv_nsec += 1000000000;
+  }
+  if ((ts->tv_nsec < 0) || (ts->tv_sec < 0)) {
+    return -1;
+  }
+  return 0;
+}
+
+int __futex_wake_ex(volatile void* ftx, int pshared, int val) {
+  return __futex_syscall3(ftx, pshared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, val);
+}
+
+int __futex_wait_ex(volatile void* ftx, int pshared, int val, const timespec* timeout) {
+  return __futex_syscall4(ftx, pshared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, val, timeout);
 }
