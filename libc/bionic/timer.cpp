@@ -33,11 +33,8 @@
 #include <stdio.h>
 #include <string.h>
 
-extern int __pthread_cond_timedwait(pthread_cond_t*, pthread_mutex_t*, const struct timespec*,
-                                    clockid_t);
-
-extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*,
-                                             const struct timespec*);
+extern int __pthread_cond_timedwait(pthread_cond_t*, pthread_mutex_t*, const timespec*, clockid_t);
+extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*, const timespec*);
 
 // Normal (i.e. non-SIGEV_THREAD) timers are created directly by the kernel
 // and are passed as is to/from the caller.
@@ -110,8 +107,8 @@ struct thr_timer {
     pthread_cond_t            cond;      /* signal a state change to thread */
     int volatile              done;      /* set by timer_delete */
     int volatile              stopped;   /* set by _start_stop() */
-    struct timespec volatile  expires;   /* next expiration time, or 0 */
-    struct timespec volatile  period;    /* reload value, or 0 */
+    timespec volatile  expires;   /* next expiration time, or 0 */
+    timespec volatile  period;    /* reload value, or 0 */
     int volatile              overruns;  /* current number of overruns */
 };
 
@@ -240,7 +237,7 @@ static pthread_once_t __timer_table_once = PTHREAD_ONCE_INIT;
 static thr_timer_table_t* __timer_table;
 
 static void __timer_table_init(void) {
-  __timer_table = calloc(1, sizeof(*__timer_table));
+  __timer_table = reinterpret_cast<thr_timer_table_t*>(calloc(1, sizeof(*__timer_table)));
   if (__timer_table != NULL) {
     thr_timer_table_init(__timer_table);
   }
@@ -258,7 +255,7 @@ static thr_timer_table_t* __timer_table_get(void) {
  ** requirements: the timers of fork child processes must be
  ** disarmed but not deleted.
  **/
-__LIBC_HIDDEN__ void __timer_table_start_stop(int stop) {
+void __timer_table_start_stop(int stop) {
   // We access __timer_table directly so we don't create it if it doesn't yet exist.
   thr_timer_table_start_stop(__timer_table, stop);
 }
@@ -286,7 +283,7 @@ thr_timer_unlock( thr_timer_t*  t )
 }
 
 
-static __inline__ void timespec_add(struct timespec* a, const struct timespec* b) {
+static __inline__ void timespec_add(timespec* a, const timespec* b) {
   a->tv_sec  += b->tv_sec;
   a->tv_nsec += b->tv_nsec;
   if (a->tv_nsec >= 1000000000) {
@@ -295,7 +292,7 @@ static __inline__ void timespec_add(struct timespec* a, const struct timespec* b
   }
 }
 
-static __inline__ void timespec_sub(struct timespec* a, const struct timespec* b) {
+static __inline__ void timespec_sub(timespec* a, const timespec* b) {
   a->tv_sec  -= b->tv_sec;
   a->tv_nsec -= b->tv_nsec;
   if (a->tv_nsec < 0) {
@@ -304,15 +301,15 @@ static __inline__ void timespec_sub(struct timespec* a, const struct timespec* b
   }
 }
 
-static __inline__ void timespec_zero(struct timespec* a) {
+static __inline__ void timespec_zero(timespec* a) {
   a->tv_sec = a->tv_nsec = 0;
 }
 
-static __inline__ int timespec_is_zero(const struct timespec* a) {
+static __inline__ int timespec_is_zero(const timespec* a) {
   return (a->tv_sec == 0 && a->tv_nsec == 0);
 }
 
-static __inline__ int timespec_cmp(const struct timespec* a, const struct timespec* b) {
+static __inline__ int timespec_cmp(const timespec* a, const timespec* b) {
   if (a->tv_sec  < b->tv_sec)  return -1;
   if (a->tv_sec  > b->tv_sec)  return +1;
   if (a->tv_nsec < b->tv_nsec) return -1;
@@ -320,7 +317,7 @@ static __inline__ int timespec_cmp(const struct timespec* a, const struct timesp
   return 0;
 }
 
-static __inline__ int timespec_cmp0(const struct timespec* a) {
+static __inline__ int timespec_cmp0(const timespec* a) {
   if (a->tv_sec < 0) return -1;
   if (a->tv_sec > 0) return +1;
   if (a->tv_nsec < 0) return -1;
@@ -330,15 +327,15 @@ static __inline__ int timespec_cmp0(const struct timespec* a) {
 
 /** POSIX TIMERS APIs */
 
-extern int __timer_create(clockid_t, struct sigevent*, timer_t*);
-extern int __timer_delete(timer_t);
-extern int __timer_gettime(timer_t, struct itimerspec*);
-extern int __timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*);
-extern int __timer_getoverrun(timer_t);
+extern "C" int __timer_create(clockid_t, sigevent*, timer_t*);
+extern "C" int __timer_delete(timer_t);
+extern "C" int __timer_gettime(timer_t, itimerspec*);
+extern "C" int __timer_settime(timer_t, int, const itimerspec*, itimerspec*);
+extern "C" int __timer_getoverrun(timer_t);
 
 static void* timer_thread_start(void*);
 
-int timer_create(clockid_t clock_id, struct sigevent* evp, timer_t* timer_id) {
+int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
   if (__predict_true(evp == NULL || evp->sigev_notify != SIGEV_THREAD)) {
     return __timer_create(clock_id, evp, timer_id);
@@ -351,7 +348,7 @@ int timer_create(clockid_t clock_id, struct sigevent* evp, timer_t* timer_id) {
   }
 
   // Check that the clock id is supported by the kernel.
-  struct timespec dummy;
+  timespec dummy;
   if (clock_gettime(clock_id, &dummy) < 0 && errno == EINVAL) {
     return -1;
   }
@@ -435,34 +432,26 @@ timer_delete( timer_t  id )
 
 /* return the relative time until the next expiration, or 0 if
  * the timer is disarmed */
-static void
-timer_gettime_internal( thr_timer_t*        timer,
-                        struct itimerspec*  spec)
-{
-    struct timespec  diff;
+static void timer_gettime_internal(thr_timer_t* timer, itimerspec* spec) {
+  timespec diff = const_cast<timespec&>(timer->expires);
+  if (!timespec_is_zero(&diff)) {
+    timespec now;
 
-    diff = timer->expires;
-    if (!timespec_is_zero(&diff))
-    {
-        struct timespec  now;
+    clock_gettime(timer->clock, &now);
+    timespec_sub(&diff, &now);
 
-        clock_gettime( timer->clock, &now );
-        timespec_sub(&diff, &now);
-
-        /* in case of overrun, return 0 */
-        if (timespec_cmp0(&diff) < 0) {
-            timespec_zero(&diff);
-        }
+    /* in case of overrun, return 0 */
+    if (timespec_cmp0(&diff) < 0) {
+      timespec_zero(&diff);
     }
+  }
 
-    spec->it_value    = diff;
-    spec->it_interval = timer->period;
+  spec->it_value = diff;
+  spec->it_interval = const_cast<timespec&>(timer->period);
 }
 
 
-int
-timer_gettime( timer_t  id, struct itimerspec*  ospec )
-{
+int timer_gettime(timer_t id, itimerspec* ospec) {
     if (ospec == NULL) {
         errno = EINVAL;
         return -1;
@@ -486,11 +475,7 @@ timer_gettime( timer_t  id, struct itimerspec*  ospec )
 
 
 int
-timer_settime( timer_t                   id,
-               int                       flags,
-               const struct itimerspec*  spec,
-               struct itimerspec*        ospec )
-{
+timer_settime(timer_t id, int flags, const itimerspec* spec, itimerspec* ospec) {
     if (spec == NULL) {
         errno = EINVAL;
         return -1;
@@ -500,7 +485,7 @@ timer_settime( timer_t                   id,
         return __timer_settime( id, flags, spec, ospec );
     } else {
         thr_timer_t*        timer = thr_timer_from_id(id);
-        struct timespec     expires, now;
+        timespec     expires, now;
 
         if (timer == NULL) {
             errno = EINVAL;
@@ -526,8 +511,8 @@ timer_settime( timer_t                   id,
                     expires = now;
             }
         }
-        timer->expires = expires;
-        timer->period  = spec->it_interval;
+        const_cast<timespec&>(timer->expires) = expires;
+        const_cast<timespec&>(timer->period) = spec->it_interval;
         thr_timer_unlock( timer );
 
         /* signal the change to the thread */
@@ -561,7 +546,7 @@ timer_getoverrun(timer_t  id)
 
 
 static void* timer_thread_start(void* arg) {
-  thr_timer_t* timer = arg;
+  thr_timer_t* timer = reinterpret_cast<thr_timer_t*>(arg);
 
   thr_timer_lock(timer);
 
@@ -572,8 +557,8 @@ static void* timer_thread_start(void* arg) {
 
   // We loop until timer->done is set in timer_delete().
   while (!timer->done) {
-    struct timespec expires = timer->expires;
-    struct timespec period = timer->period;
+    timespec expires = const_cast<timespec&>(timer->expires);
+    timespec period = const_cast<timespec&>(timer->period);
 
     // If the timer is stopped or disarmed, wait indefinitely
     // for a state change from timer_settime/_delete/_start_stop.
@@ -584,13 +569,13 @@ static void* timer_thread_start(void* arg) {
 
     // Otherwise, we need to do a timed wait until either a
     // state change of the timer expiration time.
-    struct timespec now;
+    timespec now;
     clock_gettime(timer->clock, &now);
 
     if (timespec_cmp(&expires, &now) > 0) {
       // Cool, there was no overrun, so compute the
       // relative timeout as 'expires - now', then wait.
-      struct timespec diff = expires;
+      timespec diff = expires;
       timespec_sub(&diff, &now);
 
       int ret = __pthread_cond_timedwait_relative(&timer->cond, &timer->mutex, &diff);
@@ -627,7 +612,7 @@ static void* timer_thread_start(void* arg) {
     } else {
       timespec_zero(&expires);
     }
-    timer->expires = expires;
+    const_cast<timespec&>(timer->expires) = expires;
 
     // Now call the timer callback function. Release the
     // lock to allow the function to modify the timer setting
