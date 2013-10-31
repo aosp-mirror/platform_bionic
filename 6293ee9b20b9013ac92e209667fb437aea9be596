@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dec988ea_7aad01c5",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "search and replace gone wild :-)\n\nfixed.",
+      "parentUuid": "dec988ea_9a71dda0",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fed48c7e_bb5adf2c",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-31T18:43:30Z",
       "side": 1,
       "message": "Slight nit, do you need to update the copyright to be 2013 since this is a new file?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_54f57aaa",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "it\u0027s not. it\u0027s code pulled out of pthread.c. my understanding is that it\u0027s not cool to bump the copyright date in such cases.",
+      "parentUuid": "fed48c7e_bb5adf2c",
       "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dec988ea_5aaac5ae",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "no idea. this code just moved.",
+      "parentUuid": "bec694d7_945532d0",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dec988ea_3a81c949",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2013-10-31T18:43:30Z",
       "side": 1,
       "message": "Small nit, but you\u0027re mixing c style comments with c++ style comments.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_7bd4e734",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "fixed.",
+      "parentUuid": "dec988ea_3a81c949",
       "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +193,24 @@
     },
     {
       "key": {
+        "uuid": "bec694d7_9427f27b",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bec694d7_745fd6e8",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dec988ea_1ac7ad8d",
         "filename": "libc/bionic/pthread_internals.cpp",
         "patchSetId": 3
@@ -132,6 +222,24 @@
       "writtenOn": "2013-10-31T18:43:30Z",
       "side": 1,
       "message": "Do you need to check the return code of clock_gettime? I assume it really shouldn\u0027t fail, but it might.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_5bd12343",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "again, this code just moved. it seems like we mostly don\u0027t check clock_gettime, but i\u0027ll raise a bug to come back and look at all call sites.",
+      "parentUuid": "dec988ea_1ac7ad8d",
       "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "bec694d7_f41c6631",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "POSIX says tv_nsec is. tv_sec is time_t, but time_t is always signed on Android.",
+      "parentUuid": "fed48c7e_db9233a4",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dec988ea_5ad12543",
         "filename": "libc/bionic/pthread_once.cpp",
         "patchSetId": 3
@@ -172,6 +298,24 @@
     },
     {
       "key": {
+        "uuid": "fed48c7e_bbbe5ff4",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "no, font issue on your machine. there are underscores there :-)",
+      "parentUuid": "dec988ea_5ad12543",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dec988ea_babe59f4",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
@@ -183,6 +327,24 @@
       "writtenOn": "2013-10-31T18:43:30Z",
       "side": 1,
       "message": "Can you remove the funky space? I don\u0027t know why that\u0027s there.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_9bc39b7c",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "done all through the file.",
+      "parentUuid": "dec988ea_babe59f4",
       "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -217,6 +379,24 @@
       "writtenOn": "2013-10-31T18:43:30Z",
       "side": 1,
       "message": "Do you need __BEGIN_DECLS since this is already c++?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_d4216a67",
+        "filename": "libc/bionic/thread_atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T19:05:21Z",
+      "side": 1,
+      "message": "that\u0027s _why_ i need it. these are only called by C code (see the comment on L29).\n\nlonger term, we should see whether we can get rid of these or implement it differently.",
+      "parentUuid": "fed48c7e_5b78037b",
       "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
