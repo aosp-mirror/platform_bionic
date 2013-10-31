@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e5ec0fd_c81d1b7b",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-10-31T04:04:44Z",
+      "side": 1,
+      "message": "i should have another pass switching to ScopedPthreadThing...",
+      "revId": "acb3bb8e5cfbfd99d824834bceeb6fa8e2b9c0ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
