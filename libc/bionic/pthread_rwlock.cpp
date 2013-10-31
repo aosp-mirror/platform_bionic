@@ -91,8 +91,7 @@ int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int  pshared)
     }
 }
 
-int pthread_rwlockattr_getpshared(pthread_rwlockattr_t *attr, int *pshared)
-{
+int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t* attr, int* pshared) {
     if (!attr || !pshared)
         return EINVAL;
 
@@ -195,10 +194,62 @@ static void _pthread_rwlock_pulse(pthread_rwlock_t *rwlock)
         pthread_cond_broadcast(&rwlock->cond);
 }
 
+static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
+  int ret = 0;
 
-int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock)
-{
-    return pthread_rwlock_timedrdlock(rwlock, NULL);
+  if (rwlock == NULL) {
+    return EINVAL;
+  }
+
+  pthread_mutex_lock(&rwlock->lock);
+  int tid = __get_thread()->tid;
+  if (__predict_false(!read_precondition(rwlock, tid))) {
+    rwlock->pendingReaders += 1;
+    do {
+      ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
+    } while (ret == 0 && !read_precondition(rwlock, tid));
+    rwlock->pendingReaders -= 1;
+    if (ret != 0) {
+      goto EXIT;
+    }
+  }
+  ++rwlock->numLocks;
+EXIT:
+  pthread_mutex_unlock(&rwlock->lock);
+  return ret;
+}
+
+static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
+  int ret = 0;
+
+  if (rwlock == NULL) {
+    return EINVAL;
+  }
+
+  pthread_mutex_lock(&rwlock->lock);
+  int tid = __get_thread()->tid;
+  if (__predict_false(!write_precondition(rwlock, tid))) {
+    // If we can't read yet, wait until the rwlock is unlocked
+    // and try again. Increment pendingReaders to get the
+    // cond broadcast when that happens.
+    rwlock->pendingWriters += 1;
+    do {
+      ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
+    } while (ret == 0 && !write_precondition(rwlock, tid));
+    rwlock->pendingWriters -= 1;
+    if (ret != 0) {
+      goto EXIT;
+    }
+  }
+  ++rwlock->numLocks;
+  rwlock->writerThreadId = tid;
+EXIT:
+  pthread_mutex_unlock(&rwlock->lock);
+  return ret;
+}
+
+int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock) {
+  return __pthread_rwlock_timedrdlock(rwlock, NULL);
 }
 
 int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock)
@@ -212,40 +263,18 @@ int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock)
     if (__predict_false(!read_precondition(rwlock, __get_thread()->tid)))
         ret = EBUSY;
     else
-        rwlock->numLocks ++;
+        ++rwlock->numLocks;
     pthread_mutex_unlock(&rwlock->lock);
 
     return ret;
 }
 
-int pthread_rwlock_timedrdlock(pthread_rwlock_t *rwlock, const struct timespec *abs_timeout)
-{
-    int ret = 0;
-
-    if (rwlock == NULL)
-        return EINVAL;
-
-    pthread_mutex_lock(&rwlock->lock);
-    int tid = __get_thread()->tid;
-    if (__predict_false(!read_precondition(rwlock, tid))) {
-        rwlock->pendingReaders += 1;
-        do {
-            ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-        } while (ret == 0 && !read_precondition(rwlock, tid));
-        rwlock->pendingReaders -= 1;
-        if (ret != 0)
-            goto EXIT;
-    }
-    rwlock->numLocks ++;
-EXIT:
-    pthread_mutex_unlock(&rwlock->lock);
-    return ret;
+int pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
+  return __pthread_rwlock_timedrdlock(rwlock, abs_timeout);
 }
 
-
-int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock)
-{
-    return pthread_rwlock_timedwrlock(rwlock, NULL);
+int pthread_rwlock_wrlock(pthread_rwlock_t* rwlock) {
+  return __pthread_rwlock_timedwrlock(rwlock, NULL);
 }
 
 int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock)
@@ -260,42 +289,16 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock)
     if (__predict_false(!write_precondition(rwlock, tid))) {
         ret = EBUSY;
     } else {
-        rwlock->numLocks ++;
+        ++rwlock->numLocks;
         rwlock->writerThreadId = tid;
     }
     pthread_mutex_unlock(&rwlock->lock);
     return ret;
 }
 
-int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *abs_timeout)
-{
-    int ret = 0;
-
-    if (rwlock == NULL)
-        return EINVAL;
-
-    pthread_mutex_lock(&rwlock->lock);
-    int tid = __get_thread()->tid;
-    if (__predict_false(!write_precondition(rwlock, tid))) {
-        /* If we can't read yet, wait until the rwlock is unlocked
-         * and try again. Increment pendingReaders to get the
-         * cond broadcast when that happens.
-         */
-        rwlock->pendingWriters += 1;
-        do {
-            ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-        } while (ret == 0 && !write_precondition(rwlock, tid));
-        rwlock->pendingWriters -= 1;
-        if (ret != 0)
-            goto EXIT;
-    }
-    rwlock->numLocks ++;
-    rwlock->writerThreadId = tid;
-EXIT:
-    pthread_mutex_unlock(&rwlock->lock);
-    return ret;
+int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
+  return __pthread_rwlock_timedwrlock(rwlock, abs_timeout);
 }
-
 
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock)
 {

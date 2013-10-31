@@ -464,3 +464,65 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
 #endif
 }
+
+TEST(pthread, pthread_rwlock_smoke) {
+  pthread_rwlock_t l;
+  ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
+
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  ASSERT_EQ(0, pthread_rwlock_destroy(&l));
+}
+
+static int gOnceFnCallCount = 0;
+static void OnceFn() {
+  ++gOnceFnCallCount;
+}
+
+TEST(pthread, pthread_once_smoke) {
+  pthread_once_t once_control = PTHREAD_ONCE_INIT;
+  ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
+  ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
+  ASSERT_EQ(1, gOnceFnCallCount);
+}
+
+static int gAtForkPrepareCalls = 0;
+static void AtForkPrepare1() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 1; }
+static void AtForkPrepare2() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 2; }
+static int gAtForkParentCalls = 0;
+static void AtForkParent1() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 1; }
+static void AtForkParent2() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 2; }
+static int gAtForkChildCalls = 0;
+static void AtForkChild1() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 1; }
+static void AtForkChild2() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 2; }
+
+TEST(pthread, pthread_atfork) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // Child and parent calls are made in the order they were registered.
+  if (pid == 0) {
+    ASSERT_EQ(0x12, gAtForkChildCalls);
+    _exit(0);
+  }
+  ASSERT_EQ(0x12, gAtForkParentCalls);
+
+  // Prepare calls are made in the reverse order.
+  ASSERT_EQ(0x21, gAtForkPrepareCalls);
+}
+
+TEST(pthread, pthread_attr_getscope) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  int scope;
+  ASSERT_EQ(0, pthread_attr_getscope(&attr, &scope));
+  ASSERT_EQ(PTHREAD_SCOPE_SYSTEM, scope);
+}

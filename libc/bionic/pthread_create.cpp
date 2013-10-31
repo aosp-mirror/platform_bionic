@@ -82,13 +82,12 @@ void  __init_tls(pthread_internal_t* thread) {
   }
 }
 
-__LIBC_ABI_PRIVATE__
 int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
 
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
-    struct sched_param param;
+    sched_param param;
     param.sched_priority = thread->attr.sched_priority;
     if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
 #if __LP64__
