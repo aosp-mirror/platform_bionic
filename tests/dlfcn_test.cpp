@@ -222,3 +222,15 @@ TEST(dlfcn, dlopen_bad_flags) {
   ASSERT_TRUE(handle != NULL);
   ASSERT_SUBSTR(NULL, dlerror());
 }
+
+TEST(dlfcn, rtld_default_unknown_symbol) {
+  void* self = RTLD_DEFAULT;
+  void* addr = dlsym(self, "ANY_UNKNOWN_SYMBOL_NAME");
+  ASSERT_TRUE(addr == NULL);
+}
+
+TEST(dlfcn, rtld_default_known_symbol) {
+  void* self = RTLD_DEFAULT;
+  void* addr = dlsym(self, "fopen");
+  ASSERT_TRUE(addr != NULL);
+}
