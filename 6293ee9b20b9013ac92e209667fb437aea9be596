@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dec988ea_9a71dda0",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "This is kind of a weird name for the struct. Is there a reason you didn\u0027t use atforklist_t?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_bb5adf2c",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Slight nit, do you need to update the copyright to be 2013 since this is a new file?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_945532d0",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Is this value special in any way, or is it just a unique value so we could tell if someone called this, and then tried to to call another attr function?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dec988ea_3a81c949",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Small nit, but you\u0027re mixing c style comments with c++ style comments.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_d44faa3b",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Would it be possible to add a comment saying something about why you are choosing these values?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dec988ea_5a78057b",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Another nit about the comment. Should be // instead.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bec694d7_745fd6e8",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "compile -\u003e compiler",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dec988ea_1ac7ad8d",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Do you need to check the return code of clock_gettime? I assume it really shouldn\u0027t fail, but it might.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_db9233a4",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Are we guaranteed that tv_sec/tv_nsec are always going to be signed values?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dec988ea_5ad12543",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Alignment issue.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dec988ea_babe59f4",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Can you remove the funky space? I don\u0027t know why that\u0027s there.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_fb6617e6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Same weird space.",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed48c7e_5b78037b",
+        "filename": "libc/bionic/thread_atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-10-31T18:43:30Z",
+      "side": 1,
+      "message": "Do you need __BEGIN_DECLS since this is already c++?",
+      "revId": "6293ee9b20b9013ac92e209667fb437aea9be596",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
