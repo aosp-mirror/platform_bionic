@@ -887,6 +887,10 @@ LOCAL_MODULE := libc_bionic
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+# Set -DPTHREAD_DEBUG_ENABLED=true to enable support for pthread deadlock prediction.
+# Since this code is experimental it is disabled by default.
+LOCAL_CFLAGS += $(libc_common_cflags) -DPTHREAD_DEBUG_ENABLED=false
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -980,13 +984,7 @@ include $(BUILD_STATIC_LIBRARY)
 # ========================================================
 include $(CLEAR_VARS)
 
-# pthread deadlock prediction:
-# set -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=1 to enable support for
-# pthread deadlock prediction.
-# Since this code is experimental it is disabled by default.
-# see libc/bionic/pthread_debug.c for details
-
-LOCAL_CFLAGS := $(libc_common_cflags) -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
+LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
