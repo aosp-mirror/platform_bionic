@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e3704c5_499a21fa",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-10-31T22:50:27Z",
+      "side": 1,
+      "message": "FYI: I consider this a launch blocker to resolve. We can\u0027t have an Android build without stack protection.",
+      "revId": "3b03e95b511754ac470657e4e9e4a9a0a3f2d4ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
