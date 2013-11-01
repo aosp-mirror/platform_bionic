@@ -33,6 +33,24 @@
       "revId": "aa327ad9ac6b7089987ad27b67e8c4e8e4b64719",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e15fd2d_993edbcd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1017587
+      },
+      "writtenOn": "2013-11-01T07:46:23Z",
+      "side": 1,
+      "message": "Old code just set link_map.l_addr value for correct vdso enumeration from dl_iterate_phdr function. It\u0027s valuable for stack unwinding through signal (kernel) strack frame.",
+      "parentUuid": "fe62ccbe_e10cc38e",
+      "revId": "aa327ad9ac6b7089987ad27b67e8c4e8e4b64719",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
