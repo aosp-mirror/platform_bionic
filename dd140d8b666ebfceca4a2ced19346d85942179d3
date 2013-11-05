@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e5e312a_b93f4b3b",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-05T21:58:06Z",
+      "side": 1,
+      "message": "this should be fixed more generally by https://android-review.googlesource.com/#/c/69340/ which moves all architectures over to the uapi time.h.",
+      "revId": "dd140d8b666ebfceca4a2ced19346d85942179d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
