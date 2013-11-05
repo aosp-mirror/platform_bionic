@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe256da9_16af42ae",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-05T02:18:45Z",
+      "side": 1,
+      "message": "the __clang__ part of this still isn\u0027t right. clang _does_ support this attribute, and it\u0027s correctly telling you that the linux perf code is using it incorrectly. the \"attribute ignored\" warning is just saying that in the specific nonsensical case of applying this attribute to a function parameter, the attribute is being ignored.",
+      "revId": "76f2c07163a395dd7b9ccae795f82be1ac40ed45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
