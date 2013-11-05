@@ -132,7 +132,6 @@ class HeaderScanner:
 
         list = cpp.BlockParser().parseFile(path)
         if list:
-            #list.removePrefixed("CONFIG_",self.config)
             macros = kernel_known_macros.copy()
             if kernel_root:
                 macros.update(self.config)
