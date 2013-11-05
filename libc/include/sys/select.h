@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_SELECT_H_
 #define _SYS_SELECT_H_
 
@@ -36,35 +37,35 @@
 
 __BEGIN_DECLS
 
-#define __FD_SETSIZE 1024
-#define __NFDBITS (8 * sizeof(unsigned long))
-#define __FDSET_LONGS (__FD_SETSIZE/__NFDBITS)
+#define FD_SETSIZE 1024
+#define NFDBITS (8 * sizeof(unsigned long))
+#define __FDSET_LONGS (FD_SETSIZE/NFDBITS)
 
 typedef struct {
   unsigned long fds_bits[__FDSET_LONGS];
 } fd_set;
 
-#define __FDELT(fd) ((fd) / __NFDBITS)
-#define __FDMASK(fd) (1UL << ((fd) % __NFDBITS))
+#define __FDELT(fd) ((fd) / NFDBITS)
+#define __FDMASK(fd) (1UL << ((fd) % NFDBITS))
 #define __FDS_BITS(set) (((fd_set*)(set))->fds_bits)
-#define __FD_ZERO(set) (memset(set, 0, sizeof(*(fd_set*)(set))))
+
+#define FD_ZERO(set) (memset(set, 0, sizeof(*(fd_set*)(set))))
 
 #if defined(__BIONIC_FORTIFY)
 extern void __FD_CLR_chk(int, fd_set*, size_t);
 extern void __FD_SET_chk(int, fd_set*, size_t);
 extern int  __FD_ISSET_chk(int, fd_set*, size_t);
-#define __FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
-#define __FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
-#define __FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
+#define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
+#define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
+#define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 #else
-#define __FD_CLR(fd, set) (__FDS_BITS(set)[__FDELT(fd)] &= ~__FDMASK(fd))
-#define __FD_SET(fd, set) (__FDS_BITS(set)[__FDELT(fd)] |= __FDMASK(fd))
-#define __FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
+#define FD_CLR(fd, set) (__FDS_BITS(set)[__FDELT(fd)] &= ~__FDMASK(fd))
+#define FD_SET(fd, set) (__FDS_BITS(set)[__FDELT(fd)] |= __FDMASK(fd))
+#define FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 #endif /* defined(__BIONIC_FORTIFY) */
 
 extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-extern int pselect(int n, fd_set* read_fds, fd_set* write_fds, fd_set* err_fds,
-                   const struct timespec * timeout, const sigset_t* sigmask);
+extern int pselect(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
 
 __END_DECLS
 

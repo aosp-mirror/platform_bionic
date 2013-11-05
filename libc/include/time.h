@@ -25,99 +25,82 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _TIME_H_
 #define _TIME_H_
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
 
+/* For struct sigevent. */
 #define __ARCH_SI_UID_T __kernel_uid32_t
 #include <asm/siginfo.h>
 #undef __ARCH_SI_UID_T
 
 __BEGIN_DECLS
 
-extern time_t   time(time_t *);
-extern int      nanosleep(const struct timespec *, struct timespec *);
+#define CLOCKS_PER_SEC 1000000
 
-extern char *strtotimeval(const char *str, struct timeval *tv);
+extern char* tzname[];
+extern int daylight;
+extern long int timezone;
 
 struct tm {
-   int     tm_sec;         /* seconds */
-   int     tm_min;         /* minutes */
-   int     tm_hour;        /* hours */
-   int     tm_mday;        /* day of the month */
-   int     tm_mon;         /* month */
-   int     tm_year;        /* year */
-   int     tm_wday;        /* day of the week */
-   int     tm_yday;        /* day in the year */
-   int     tm_isdst;       /* daylight saving time */
-
-   long int tm_gmtoff;     /* Seconds east of UTC.  */
-   const char *tm_zone;    /* Timezone abbreviation.  */
-
+  int tm_sec;
+  int tm_min;
+  int tm_hour;
+  int tm_mday;
+  int tm_mon;
+  int tm_year;
+  int tm_wday;
+  int tm_yday;
+  int tm_isdst;
+  long int tm_gmtoff;
+  const char* tm_zone;
 };
 
-/* defining TM_ZONE indicates that we have a "timezone abbreviation" field in
- * struct tm, the value should be the field name
- */
-#define   TM_ZONE   tm_zone
+#define TM_ZONE tm_zone
 
-extern char* asctime(const struct tm* a);
-extern char* asctime_r(const struct tm* a, char* buf);
+extern time_t time(time_t*);
+extern int nanosleep(const struct timespec*, struct timespec*);
 
-/* Return the difference between TIME1 and TIME0.  */
-extern double difftime (time_t __time1, time_t __time0);
-extern time_t mktime (struct tm *a);
+extern char* strtotimeval(const char*, struct timeval*);
 
-extern struct tm*  localtime(const time_t *t);
-extern struct tm*  localtime_r(const time_t *timep, struct tm *result);
+extern char* asctime(const struct tm*);
+extern char* asctime_r(const struct tm*, char*);
 
-extern struct tm*  gmtime(const time_t *timep);
-extern struct tm*  gmtime_r(const time_t *timep, struct tm *result);
+extern double difftime(time_t, time_t);
+extern time_t mktime(struct tm*);
 
-extern char*       strptime(const char *buf, const char *fmt, struct tm *tm);
-extern size_t      strftime(char *s, size_t max, const char *format, const struct tm *tm);
+extern struct tm* localtime(const time_t*);
+extern struct tm* localtime_r(const time_t*, struct tm*);
 
-extern char *ctime(const time_t *timep);
-extern char *ctime_r(const time_t *timep, char *buf);
+extern struct tm* gmtime(const time_t*);
+extern struct tm* gmtime_r(const time_t*, struct tm*);
 
-extern void  tzset(void);
+extern char* strptime(const char*, const char*, struct tm*);
+extern size_t strftime(char*, size_t, const char*, const struct tm*);
 
-/* global includes */
-extern char*     tzname[];
-extern int       daylight;
-extern long int  timezone;
+extern char* ctime(const time_t*);
+extern char* ctime_r(const time_t*, char*);
 
-#define CLOCKS_PER_SEC     1000000
+extern void tzset(void);
 
-extern clock_t   clock(void);
+extern clock_t clock(void);
 
-/* BIONIC: extra linux clock goodies */
-extern int clock_getres(int, struct timespec *);
-extern int clock_gettime(int, struct timespec *);
+extern int clock_getres(int, struct timespec*);
+extern int clock_gettime(int, struct timespec*);
 
-#define CLOCK_REALTIME             0
-#define CLOCK_MONOTONIC            1
-#define CLOCK_PROCESS_CPUTIME_ID   2
-#define CLOCK_THREAD_CPUTIME_ID    3
-#define CLOCK_MONOTONIC_RAW        4
-#define CLOCK_REALTIME_COARSE      5
-#define CLOCK_MONOTONIC_COARSE     6
-#define CLOCK_BOOTTIME             7
-#define CLOCK_REALTIME_ALARM       8
-#define CLOCK_BOOTTIME_ALARM       9
+extern int timer_create(int, struct sigevent*, timer_t*);
+extern int timer_delete(timer_t);
+extern int timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*);
+extern int timer_gettime(timer_t, struct itimerspec*);
+extern int timer_getoverrun(timer_t);
 
-extern int  timer_create(int, struct sigevent*, timer_t*);
-extern int  timer_delete(timer_t);
-extern int  timer_settime(timer_t timerid, int flags, const struct itimerspec *value, struct itimerspec *ovalue);
-extern int  timer_gettime(timer_t timerid, struct itimerspec *value);
-extern int  timer_getoverrun(timer_t  timerid);
-
-extern time_t timelocal(struct tm *tm);
-extern time_t timegm(struct tm* tm);
-extern time_t time2posix(time_t ti);
-extern time_t posix2time(time_t ti);
+extern time_t timelocal(struct tm*);
+extern time_t timegm(struct tm*);
+extern time_t time2posix(time_t);
+extern time_t posix2time(time_t);
 
 __END_DECLS
 
