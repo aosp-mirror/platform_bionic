@@ -29,7 +29,6 @@
 #include "pthread_internal.h"
 
 #include <errno.h>
-#include <linux/time.h>
 #include <stdio.h>
 #include <string.h>
 
