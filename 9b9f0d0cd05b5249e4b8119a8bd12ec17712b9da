@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e5e312a_d9bf9f93",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-05T21:33:52Z",
+      "side": 0,
+      "message": "these changes fix warnings on 32-bit ARM (where the FD_* stuff was already defined in the old header), and fix builds on aarch64 (where no one was defining them at all).",
+      "revId": "9b9f0d0cd05b5249e4b8119a8bd12ec17712b9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e5e312a_39b91bb3",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-05T21:33:52Z",
+      "side": 0,
+      "message": "this is the most relevant part here --- removing these duplicated constant definitions.",
+      "revId": "9b9f0d0cd05b5249e4b8119a8bd12ec17712b9da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
