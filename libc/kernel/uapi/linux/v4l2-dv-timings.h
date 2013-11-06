@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _V4L2_DV_TIMINGS_H
 #define _V4L2_DV_TIMINGS_H
-#if __GNUC__ < (4 || __GNUC__ == (4 && __GNUC_MINOR__ < 6))
+#if __GNUC__ < 4 || __GNUC__ == 4 && __GNUC_MINOR__ < 6
 #define V4L2_INIT_BT_TIMINGS(_width, args...)   { .bt = { _width , ## args } }
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #else

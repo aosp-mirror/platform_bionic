@@ -784,7 +784,7 @@ typedef struct mixer_vol_table {
 #define TMR_SPP 10
 #define TMR_TIMESIG 11
 #define LOCL_STARTAUDIO 1
-#if !defined(__KERNEL__) && !defined(KERNEL) && !defined(INKERNEL) && !defined(_KERNEL) || defined(USE_SEQ_MACROS)
+#if !defined(KERNEL) && !defined(INKERNEL) && !defined(_KERNEL) || defined(USE_SEQ_MACROS)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SEQ_DECLAREBUF() SEQ_USE_EXTBUF()
 #define SEQ_PM_DEFINES int __foo_bar___
