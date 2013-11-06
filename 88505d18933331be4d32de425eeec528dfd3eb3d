@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eaec165_0685ba3f",
+        "filename": "libc/arch-arm/arm.mk.orig",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-11-06T09:37:47Z",
+      "side": 1,
+      "message": "This looks like an artifact from your editor, please revert if that\u0027s the case",
+      "revId": "88505d18933331be4d32de425eeec528dfd3eb3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eaec165_c68ec263",
+        "filename": "libc/arch-arm/bionic/compiler-rt/aeabi_memclr.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-11-06T09:37:47Z",
+      "side": 1,
+      "message": "This looks like a copy of files from external/compiler-rt/lib/arm. Is this a compatible license ? Most files in this directory are apache licensed.\n\n(Also, there\u0027s no file called LICENSE.TXT in this project)",
+      "revId": "88505d18933331be4d32de425eeec528dfd3eb3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
