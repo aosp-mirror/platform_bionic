@@ -48,7 +48,7 @@ struct stat {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned int __unused5;
 };
-#if __BITS_PER_LONG != (64 || defined(__ARCH_WANT_STAT64))
+#if __BITS_PER_LONG != 64 || defined(__ARCH_WANT_STAT64)
 struct stat64 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long long st_dev;

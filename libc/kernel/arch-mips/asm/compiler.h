@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _ASM_COMPILER_H
 #define _ASM_COMPILER_H
-#if __GNUC__ > (3 || __GNUC__ == (3 && __GNUC_MINOR__ >= 4))
+#if __GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ >= 4
 #define GCC_IMM_ASM() "n"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define GCC_REG_ACCUM "$0"
