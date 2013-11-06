@@ -88,8 +88,10 @@ int     acct(const char*  filepath)  all
 # file descriptors
 ssize_t     read(int, void*, size_t)        all
 ssize_t     write(int, const void*, size_t)       all
-ssize_t     pread64(int, void*, size_t, off64_t) all
-ssize_t     pwrite64(int, void*, size_t, off64_t) all
+ssize_t     pread64(int, void*, size_t, off64_t) arm,mips,x86
+ssize_t     pread64|pread(int, void*, size_t, off_t) aarch64,x86_64
+ssize_t     pwrite64(int, void*, size_t, off64_t) arm,mips,x86
+ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) aarch64,x86_64
 int         close(int)                      all
 pid_t       getpid()    all
 void*       mmap(void*, size_t, int, int, int, long)  aarch64,x86_64
