@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fec1ed19_966d4d90",
+        "filename": "libc/kernel/uapi/asm-arm/asm/byteorder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-06T23:53:35Z",
+      "side": 1,
+      "message": "we should probably hard-code this in the script.",
+      "revId": "a6b53f03c7c03c5bd28a1d582585b2b86fe70d59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "decee94a_9311db20",
+        "filename": "libc/kernel/uapi/asm-arm/asm/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-06T23:53:35Z",
+      "side": 1,
+      "message": "these too.",
+      "revId": "a6b53f03c7c03c5bd28a1d582585b2b86fe70d59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
