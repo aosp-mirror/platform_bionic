@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "decee94a_efe63dcd",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-06T01:27:06Z",
+      "side": 1,
+      "message": "You might as well remove this, or wrap it in the debug check.",
+      "revId": "7bbb39d8af81432d88c2487916b4e6efc3ef528c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "becbf53b_cebca3f3",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-06T01:27:06Z",
+      "side": 1,
+      "message": "Do you need a self.skip_space() here? Or is any space already skipped?",
+      "revId": "7bbb39d8af81432d88c2487916b4e6efc3ef528c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "decee94a_4ffd1158",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-06T01:27:06Z",
+      "side": 1,
+      "message": "Is this leftover test code? All of these #print should probably be wrapped in the debug check.",
+      "revId": "7bbb39d8af81432d88c2487916b4e6efc3ef528c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
