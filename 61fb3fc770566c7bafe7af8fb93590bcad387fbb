@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e570543_e6c9f040",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-07T20:41:19Z",
+      "side": 1,
+      "message": "POSIX actually allows us to drag in all of \u003csignal.h\u003e but glibc doesn\u0027t, and i\u0027d rather we avoided it too. i\u0027m building the whole tree now to see if anyone was incorrectly relying on the old transitive #include of \u003casm/siginfo.h\u003e.",
+      "revId": "61fb3fc770566c7bafe7af8fb93590bcad387fbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
