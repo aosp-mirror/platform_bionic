@@ -39,17 +39,15 @@
 /* For 64-bit, the kernel's struct sigaction doesn't match the POSIX one,
  * so we need to expose our own and translate behind the scenes. */
 #  define sigaction __kernel_sigaction
-#  include <asm/signal.h>
+#  include <linux/signal.h>
 #  undef sigaction
 #else
 /* For 32-bit, we're stuck with the definitions we already shipped,
  * even though they contain a sigset_t that's too small. */
-#  include <asm/signal.h>
+#  define __ARCH_SI_UID_T __kernel_uid32_t /* TODO: remove this when we switch to uapi. */
+#  include <linux/signal.h>
+#  undef __ARCH_SI_UID_T
 #endif
-
-#define __ARCH_SI_UID_T __kernel_uid32_t
-#include <asm/siginfo.h>
-#undef __ARCH_SI_UID_T
 
 __BEGIN_DECLS
 
