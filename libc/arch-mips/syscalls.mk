@@ -4,7 +4,6 @@ syscall_src += arch-mips/syscalls/__brk.S
 syscall_src += arch-mips/syscalls/__clone.S
 syscall_src += arch-mips/syscalls/__epoll_pwait.S
 syscall_src += arch-mips/syscalls/__exit.S
-syscall_src += arch-mips/syscalls/__fcntl.S
 syscall_src += arch-mips/syscalls/__fcntl64.S
 syscall_src += arch-mips/syscalls/__fstatfs64.S
 syscall_src += arch-mips/syscalls/__getcpu.S
