@@ -4,7 +4,6 @@ syscall_src += arch-arm/syscalls/__brk.S
 syscall_src += arch-arm/syscalls/__clone.S
 syscall_src += arch-arm/syscalls/__epoll_pwait.S
 syscall_src += arch-arm/syscalls/__exit.S
-syscall_src += arch-arm/syscalls/__fcntl.S
 syscall_src += arch-arm/syscalls/__fcntl64.S
 syscall_src += arch-arm/syscalls/__fstatfs64.S
 syscall_src += arch-arm/syscalls/__getcpu.S
