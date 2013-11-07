@@ -127,71 +127,6 @@ class BadExpectedToken(Exception):
     def __init__(self,msg):
         print msg
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####          C P P   T O K E N   C U R S O R                                  #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
-
-class TokenCursor:
-    """a small class to iterate over a list of Token objects"""
-    def __init__(self,tokens):
-        self.tokens = tokens
-        self.n      = 0
-        self.count  = len(tokens)
-
-    def set(self,n):
-        """set the current position"""
-        if n < 0:
-            n = 0
-        if n > self.count:
-            n = self.count
-        self.n = n
-
-    def peekId(self):
-        """retrieve the id of the current token"""
-        if (self.n >= self.count):
-            return None
-        return self.tokens[self.n].id
-
-    def peek(self):
-        """retrieve the current token. does not change position"""
-        if (self.n >= self.count):
-            return None
-        return self.tokens[self.n]
-
-    def skip(self):
-        """increase current token position"""
-        if (self.n < self.count):
-            self.n += 1
-
-    def skipSpaces(self):
-        """skip over all space tokens, this includes tokSPACE and tokLN"""
-        while 1:
-            tok = self.peekId()
-            if tok != tokSPACE and tok != tokLN:
-                break
-            self.skip()
-
-    def skipIfId(self,id):
-        """skip an optional token"""
-        if self.peekId() == id:
-            self.skip()
-
-    def expectId(self,id):
-        """raise an exception if the current token hasn't a given id.
-           otherwise skip over it"""
-        tok = self.peek()
-        if tok.id != id:
-            raise BadExpectedToken, "%d:%d: '%s' expected, received '%s'" % (tok.lineno, tok.colno, id, tok.id)
-        self.skip()
-
-    def remain(self):
-        """return the list of remaining tokens"""
-        return self.tokens[self.n:]
-
 
 #####################################################################################
 #####################################################################################
@@ -346,7 +281,6 @@ class CppTokenizer:
                 while 1:
                     c = self.nextChar()
                     if c == tokEOF:
-                        #print "## EOF after '%s'" % value
                         return tok.set(tokEOF,value)
                     if c == '/' and prev_c == '*':
                         break
@@ -354,7 +288,6 @@ class CppTokenizer:
                     value += c
 
                 value += "/"
-                #print "## COMMENT: '%s'" % value
                 return tok.set(tokSPACE,value)
             c = '/'
 
@@ -567,7 +500,6 @@ class CppTokenizerTester:
             self.expect(item)
 
 def test_CppTokenizer():
-    print "running CppTokenizer tests"
     tester = CppTokenizerTester()
 
     tester.setTokenizer( CppLineTokenizer("#an/example  && (01923_xy)") )
@@ -616,343 +548,6 @@ def test_CppTokenizer():
 #####################################################################################
 #####################################################################################
 
-# Cpp expressions are modeled by tuples of the form (op,arg) or (op,arg1,arg2), etc..
-# op is an "operator" string
-
-class Expr:
-    """a class used to model a CPP expression"""
-    opInteger   = "int"
-    opIdent     = "ident"
-    opCall      = "call"
-    opDefined   = "defined"
-    opTest      = "?"
-    opLogicNot  = "!"
-    opNot       = "~"
-    opNeg       = "[-]"
-    opUnaryPlus = "[+]"
-    opAdd = "+"
-    opSub = "-"
-    opMul = "*"
-    opDiv = "/"
-    opMod = "%"
-    opAnd = "&"
-    opOr  = "|"
-    opXor = "^"
-    opLogicAnd = "&&"
-    opLogicOr  = "||"
-    opEqual = "=="
-    opNotEqual = "!="
-    opLess = "<"
-    opLessEq = "<="
-    opGreater = ">"
-    opGreaterEq = ">="
-    opShl = "<<"
-    opShr = ">>"
-
-    unaries  = [ opLogicNot, opNot, opNeg, opUnaryPlus ]
-    binaries = [ opAdd, opSub, opMul, opDiv, opMod, opAnd, opOr, opXor, opLogicAnd, opLogicOr,
-                 opEqual, opNotEqual, opLess, opLessEq, opGreater, opGreaterEq ]
-
-    precedences = {
-                    opTest: 0,
-                    opLogicOr:  1,
-                    opLogicNot: 2,
-                    opOr : 3,
-                    opXor: 4,
-                    opAnd: 5,
-                    opEqual: 6, opNotEqual: 6,
-                    opLess:7, opLessEq:7, opGreater:7, opGreaterEq:7,
-                    opShl:8, opShr:8,
-                    opAdd:9, opSub:9,
-                    opMul:10, opDiv:10, opMod:10,
-                    opLogicNot:11,
-                    opNot: 12,
-                    }
-
-    def __init__(self,op):
-        self.op = op
-
-    def __repr__(self):
-        return "(%s)" % self.op
-
-    def __str__(self):
-        return "operator(%s)" % self.op
-
-    def precedence(self):
-        """return the precedence of a given operator"""
-        return Expr.precedences.get(self.op, 1000)
-
-    def isUnary(self):
-        return self.op in Expr.unaries
-
-    def isBinary(self):
-        return self.op in Expr.binaries
-
-    def isDefined(self):
-        return self.op is opDefined
-
-    def toInt(self):
-        """return the integer value of a given expression. only valid for integer expressions
-           will return None otherwise"""
-        return None
-
-class IntExpr(Expr):
-    def __init__(self,value):
-        Expr.__init__(self,opInteger)
-        self.arg   = value
-
-    def __repr__(self):
-        return "(int %s)" % self.arg
-
-    def __str__(self):
-        return self.arg
-
-    def toInt(self):
-        s = self.arg  # string value
-        # get rid of U or L suffixes
-        while len(s) > 0 and s[-1] in "LUlu":
-            s = s[:-1]
-        return string.atoi(s)
-
-class IdentExpr(Expr):
-    def __init__(self,name):
-        Expr.__init__(self,opIdent)
-        self.name = name
-
-    def __repr__(self):
-        return "(ident %s)" % self.name
-
-    def __str__(self):
-        return self.name
-
-class CallExpr(Expr):
-    def __init__(self,funcname,params):
-        Expr.__init__(self,opCall)
-        self.funcname = funcname
-        self.params   = params
-
-    def __repr__(self):
-        result = "(call %s [" % self.funcname
-        comma  = ""
-        for param in self.params:
-            result += "%s%s" % (comma, repr(param))
-            comma   = ","
-        result += "])"
-        return result
-
-    def __str__(self):
-        result = "%s(" % self.funcname
-        comma = ""
-        for param in self.params:
-            result += "%s%s" % (comma, str(param))
-            comma = ","
-
-        result += ")"
-        return result
-
-class TestExpr(Expr):
-    def __init__(self,cond,iftrue,iffalse):
-        Expr.__init__(self,opTest)
-        self.cond    = cond
-        self.iftrue  = iftrue
-        self.iffalse = iffalse
-
-    def __repr__(self):
-        return "(?: %s %s %s)" % (repr(self.cond),repr(self.iftrue),repr(self.iffalse))
-
-    def __str__(self):
-        return "(%s) ? (%s) : (%s)" % (self.cond, self.iftrue, self.iffalse)
-
-class SingleArgExpr(Expr):
-    def __init__(self,op,arg):
-        Expr.__init__(self,op)
-        self.arg = arg
-
-    def __repr__(self):
-        return "(%s %s)" % (self.op, repr(self.arg))
-
-class DefinedExpr(SingleArgExpr):
-    def __init__(self,op,macroname):
-        SingleArgExpr.__init__(self.opDefined,macroname)
-
-    def __str__(self):
-        return "defined(%s)" % self.arg
-
-
-class UnaryExpr(SingleArgExpr):
-    def __init__(self,op,arg,opstr=None):
-        SingleArgExpr.__init__(self,op,arg)
-        if not opstr:
-            opstr = op
-        self.opstr = opstr
-
-    def __str__(self):
-        arg_s     = str(self.arg)
-        arg_prec  = self.arg.precedence()
-        self_prec = self.precedence()
-        if arg_prec < self_prec:
-            return "%s(%s)" % (self.opstr,arg_s)
-        else:
-            return "%s%s" % (self.opstr, arg_s)
-
-class TwoArgExpr(Expr):
-    def __init__(self,op,arg1,arg2):
-        Expr.__init__(self,op)
-        self.arg1 = arg1
-        self.arg2 = arg2
-
-    def __repr__(self):
-        return "(%s %s %s)" % (self.op, repr(self.arg1), repr(self.arg2))
-
-class BinaryExpr(TwoArgExpr):
-    def __init__(self,op,arg1,arg2,opstr=None):
-        TwoArgExpr.__init__(self,op,arg1,arg2)
-        if not opstr:
-            opstr = op
-        self.opstr = opstr
-
-    def __str__(self):
-        arg1_s    = str(self.arg1)
-        arg2_s    = str(self.arg2)
-        arg1_prec = self.arg1.precedence()
-        arg2_prec = self.arg2.precedence()
-        self_prec = self.precedence()
-
-        result = ""
-        if arg1_prec < self_prec:
-            result += "(%s)" % arg1_s
-        else:
-            result += arg1_s
-
-        result += " %s " % self.opstr
-
-        if arg2_prec < self_prec:
-            result += "(%s)" % arg2_s
-        else:
-            result += arg2_s
-
-        return result
-
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####           C P P   E X P R E S S I O N   P A R S E R                       #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
-
-
-class ExprParser:
-    """a class used to convert a list of tokens into a cpp Expr object"""
-
-    re_octal   = re.compile(r"\s*\(0[0-7]+\).*")
-    re_decimal = re.compile(r"\s*\(\d+[ulUL]*\).*")
-    re_hexadecimal = re.compile(r"\s*\(0[xX][0-9a-fA-F]*\).*")
-
-    def __init__(self,tokens):
-        self.tok = tokens
-        self.n   = len(self.tok)
-        self.i   = 0
-
-    def mark(self):
-        return self.i
-
-    def release(self,pos):
-        self.i = pos
-
-    def peekId(self):
-        if self.i < self.n:
-            return self.tok[self.i].id
-        return None
-
-    def peek(self):
-        if self.i < self.n:
-            return self.tok[self.i]
-        return None
-
-    def skip(self):
-        if self.i < self.n:
-            self.i += 1
-
-    def skipOptional(self,id):
-        if self.i < self.n and self.tok[self.i].id == id:
-            self.i += 1
-
-    def skipSpaces(self):
-        i   = self.i
-        n   = self.n
-        tok = self.tok
-        while i < n and (tok[i] == tokSPACE or tok[i] == tokLN):
-            i += 1
-        self.i = i
-
-    # all the isXXX functions returns a (expr,nextpos) pair if a match is found
-    # or None if not
-
-    def is_integer(self):
-        id = self.tok[self.i].id
-        c  = id[0]
-        if c < '0' or c > '9':
-            return None
-
-        m = ExprParser.re_octal.match(id)
-        if m:
-            return (IntExpr(id), m.end(1))
-
-        m = ExprParser.re_decimal.match(id)
-        if m:
-            return (IntExpr(id), m.end(1))
-
-        m = ExprParser.re_hexadecimal(id)
-        if m:
-            return (IntExpr(id), m.end(1))
-
-        return None
-
-    def is_defined(self):
-        id = self.tok[self.i].id
-        if id != "defined":
-            return None
-
-        pos = self.mark()
-
-        use_paren = 0
-        if self.peekId() == tokLPAREN:
-            self.skip()
-            use_paren = 1
-
-        if self.peekId() != tokIDENT:
-            self.throw( BadExpectedToken, "identifier expected")
-
-        macroname = self.peek().value
-        self.skip()
-        if use_paren:
-            self.skipSpaces()
-            if self.peekId() != tokRPAREN:
-                self.throw( BadExpectedToken, "missing right-paren after 'defined' directive")
-            self.skip()
-
-        i = self.i
-        return (DefinedExpr(macroname),i+1)
-
-    def is_call_or_ident(self):
-        pass
-
-    def parse(self, i):
-        return None
-
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####           C P P   E X P R E S S I O N S                                   #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
-
-class CppInvalidExpression(Exception):
-    """an exception raised when an invalid/unsupported cpp expression is detected"""
-    pass
-
 class CppExpr:
     """a class that models the condition of #if directives into
         an expression tree. each node in the tree is of the form (op,arg) or (op,arg1,arg2)
@@ -973,69 +568,70 @@ class CppExpr:
                      "!":11, "~":12
                      }
 
+    re_cpp_constant = re.compile(r"((\d|\w|_)+)")
+
     def __init__(self, tokens):
         """initialize a CppExpr. 'tokens' must be a CppToken list"""
         self.tok  = tokens
         self.n    = len(tokens)
+        self.i    = 0
         if debugCppExpr:
             print "CppExpr: trying to parse %s" % repr(tokens)
-        expr      = self.is_expr(0)
+        self.expr = self.parseExpression(0)
         if debugCppExpr:
-            print "CppExpr: got " + repr(expr)
-        self.expr = expr[0]
+            print "CppExpr: got " + repr(self.expr)
+        if self.i != self.n:
+            print 'crap at end of input (%d != %d)' % (self.i, self.n)
+            raise
 
-    re_cpp_constant = re.compile(r"((\d|\w|_)+)")
 
-    def throw(self,exception,i,msg):
-        if i < self.n:
-            tok = self.tok[i]
+    def throw(self, exception, msg):
+        if self.i < self.n:
+            tok = self.tok[self.i]
             print "%d:%d: %s" % (tok.lineno,tok.colno,msg)
         else:
             print "EOF: %s" % msg
-        raise exception
+        raise exception(msg)
 
-    def skip_spaces(self,i):
+
+    def skip_spaces(self):
         """skip spaces in input token list"""
-        while i < self.n:
-            t = self.tok[i]
+        while self.i < self.n:
+            t = self.tok[self.i]
             if t.id != tokSPACE and t.id != tokLN:
                 break
-            i += 1
-        return i
+            self.i += 1
 
-    def expectId(self,i,id):
+
+    def expectId(self, id):
         """check that a given token id is at the current position, then skip over it"""
-        i = self.skip_spaces(i)
-        if i >= self.n or self.tok[i].id != id:
-            self.throw(BadExpectedToken,i,"### expecting '%s' in expression, got '%s'" % (id, self.tok[i].id))
-        return i+1
+        self.skip_spaces()
+        if self.i >= self.n or self.tok[self.i].id != id:
+            self.throw(BadExpectedToken,self.i,"### expecting '%s' in expression, got '%s'" % (id, self.tok[self.i].id))
+        self.i += 1
 
-    def expectIdent(self,i):
-        i = self.skip_spaces(i)
-        if i >= self.n or self.tok[i].id != tokIDENT:
-            self.throw(BadExpectedToken,i,"### expecting identifier in expression, got '%s'" % (id, self.tok[i].id))
-        return i+1
 
-    # the is_xxxxx function returns either None or a pair (e,nextpos)
-    # where 'e' is an expression tuple (e.g. (op,arg)) and 'nextpos' is
-    # the corresponding next position in the input token list
-    #
+    def expectIdent(self):
+        self.skip_spaces()
+        if self.i >= self.n or self.tok[self.i].id != tokIDENT:
+            self.throw(BadExpectedToken, self.i,"### expecting identifier in expression, got '%s'" % (id, self.tok[self.i].id))
+        self.i += 1
 
-    def is_decimal(self,i):
-        v = self.tok[i].value[:]
+
+    def is_decimal(self):
+        v = self.tok[self.i].value[:]
         while len(v) > 0 and v[-1] in "ULul":
             v = v[:-1]
         for digit in v:
             if not digit.isdigit():
                 return None
 
-        # for an integer expression tuple, the argument
-        # is simply the value as an integer
-        val = string.atoi(v)
-        return ("int", val), i+1
+        self.i += 1
+        return ("int", string.atoi(v))
 
-    def is_hexadecimal(self,i):
-        v = self.tok[i].value[:]
+
+    def is_hexadecimal(self):
+        v = self.tok[self.i].value[:]
         while len(v) > 0 and v[-1] in "ULul":
             v = v[:-1]
         if len(v) > 2 and (v[0:2] == "0x" or v[0:2] == "0X"):
@@ -1043,217 +639,186 @@ class CppExpr:
                 if not digit in "0123456789abcdefABCDEF":
                     return None
 
-            # for an hex expression tuple, the argument
+            # for a hex expression tuple, the argument
             # is the value as an integer
-            val = int(v[2:], 16)
-            return ("hex", val), i+1
+            self.i += 1
+            return ("hex", int(v[2:], 16))
 
         return None
 
-    def is_integer(self,i):
-        if self.tok[i].id != tokNUMBER:
+
+    def is_integer(self):
+        if self.tok[self.i].id != tokNUMBER:
             return None
 
-        c = self.is_decimal(i)
+        c = self.is_decimal()
         if c: return c
 
-        c = self.is_hexadecimal(i)
+        c = self.is_hexadecimal()
         if c: return c
 
         return None
 
-    def is_number(self,i):
-        t = self.tok[i]
-        if t.id == tokMINUS and i+1 < self.n:
-            c = self.is_integer(i+1)
+
+    def is_number(self):
+        t = self.tok[self.i]
+        if t.id == tokMINUS and self.i+1 < self.n:
+            self.i += 1
+            c = self.is_integer()
             if c:
-                e, i2 = c
-                op, val  = e
-                return (op, -val), i2
-        if t.id == tokPLUS and i+1 < self.n:
-            c = self.is_integer(i+1)
+                op, val  = c
+                return (op, -val)
+        if t.id == tokPLUS and self.i+1 < self.n:
+            c = self.is_integer()
             if c: return c
 
-        return self.is_integer(i)
+        return self.is_integer()
 
 
-    def is_alnum(self,i):
-        """test wether a given token is alpha-numeric"""
-        i = self.skip_spaces(i)
-        if i >= self.n:
-            return None
-        t = self.tok[i]
-        m = CppExpr.re_cpp_constant.match(t.id)
-        if m:
-            #print "... alnum '%s'" % m.group(1)
-            r = m.group(1)
-            return ("ident", r), i+1
-        return None
-
-    def is_defined(self,i):
-        t = self.tok[i]
+    def is_defined(self):
+        t = self.tok[self.i]
         if t.id != tokDEFINED:
             return None
 
         # we have the defined keyword, check the rest
-        i = self.skip_spaces(i+1)
+        self.i += 1
+        self.skip_spaces()
         use_parens = 0
-        if i < self.n and self.tok[i].id == tokLPAREN:
+        if self.i < self.n and self.tok[self.i].id == tokLPAREN:
             use_parens = 1
-            i = self.skip_spaces(i+1)
+            self.i += 1
+            self.skip_spaces()
 
-        if i >= self.n:
+        if self.i >= self.n:
             self.throw(CppConstantExpected,i,"### 'defined' must be followed  by macro name or left paren")
 
-        t = self.tok[i]
+        t = self.tok[self.i]
         if t.id != tokIDENT:
             self.throw(CppConstantExpected,i,"### 'defined' must be followed by macro name")
 
-        i += 1
+        self.i += 1
         if use_parens:
-            i = self.expectId(i,tokRPAREN)
+            self.expectId(tokRPAREN)
 
-        return ("defined",t.value), i
+        return ("defined", t.value)
 
 
-    def is_call_or_ident(self,i):
-        i = self.skip_spaces(i)
-        if i >= self.n:
+    def is_call_or_ident(self):
+        self.skip_spaces()
+        if self.i >= self.n:
             return None
 
-        t = self.tok[i]
+        t = self.tok[self.i]
         if t.id != tokIDENT:
             return None
 
         name = t.value
 
-        i = self.skip_spaces(i+1)
-        if i >= self.n or self.tok[i].id != tokLPAREN:
-            return ("ident", name), i
+        self.i += 1
+        self.skip_spaces()
+        if self.i >= self.n or self.tok[self.i].id != tokLPAREN:
+            return ("ident", name)
 
         params    = []
         depth     = 1
-        i += 1
-        j  = i
-        while i < self.n:
-            id = self.tok[i].id
+        self.i += 1
+        j  = self.i
+        while self.i < self.n:
+            id = self.tok[self.i].id
             if id == tokLPAREN:
                 depth += 1
             elif depth == 1 and (id == tokCOMMA or id == tokRPAREN):
-                while j < i and self.tok[j].id == tokSPACE:
+                while j < self.i and self.tok[j].id == tokSPACE:
                     j += 1
-                k = i
+                k = self.i
                 while k > j and self.tok[k-1].id == tokSPACE:
                     k -= 1
                 param = self.tok[j:k]
-                params.append( param )
+                params.append(param)
                 if id == tokRPAREN:
                     break
-                j = i+1
+                j = self.i+1
             elif id == tokRPAREN:
                 depth -= 1
-            i += 1
+            self.i += 1
 
-        if i >= self.n:
+        if self.i >= self.n:
             return None
 
-        return ("call", (name, params)), i+1
-
-    def is_token(self,i,token):
-        i = self.skip_spaces(i)
-        if i >= self.n or self.tok[i].id != token:
-            return None
-        return token, i+1
+        self.i += 1
+        return ("call", (name, params))
 
 
-    def is_value(self,i):
-        t = self.tok[i]
-        if t.id == tokSTRING:
-            return ("string", t.value), i+1
-
-        c = self.is_number(i)
-        if c: return c
-
-        c = self.is_defined(i)
-        if c: return c
-
-        c = self.is_call_or_ident(i)
-        if c: return c
-
-        i = self.skip_spaces(i)
-        if i >= self.n or self.tok[i].id != tokLPAREN:
+    # Implements the "precedence climbing" algorithm from http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm.
+    # The "classic" algorithm would be fine if we were using a tool to generate the parser, but we're not.
+    # Dijkstra's "shunting yard" algorithm hasn't been necessary yet.
+    def parseExpression(self, minPrecedence):
+        self.skip_spaces()
+        if self.i >= self.n:
             return None
 
-        popcount = 1
-        i2       = i+1
-        while i2 < self.n:
-            t = self.tok[i2]
-            if t.id == tokLPAREN:
-                popcount += 1
-            elif t.id == tokRPAREN:
-                popcount -= 1
-                if popcount == 0:
-                    break
-            i2 += 1
+        node = self.parsePrimary()
+        while self.token() != None and self.isBinary(self.token()) and self.precedence(self.token()) >= minPrecedence:
+            op = self.token()
+            self.nextToken()
+            rhs = self.parseExpression(self.precedence(op) + 1)
+            node = (op.id, node, rhs)
 
-        if popcount != 0:
-            self.throw(CppInvalidExpression, i, "expression missing closing parenthesis")
+        return node
 
-        if debugCppExpr:
-            print "CppExpr: trying to parse sub-expression %s" % repr(self.tok[i+1:i2])
-        oldcount   = self.n
-        self.n     = i2
-        c          = self.is_expr(i+1)
-        self.n     = oldcount
-        if not c:
-            self.throw(CppInvalidExpression, i, "invalid expression within parenthesis")
 
-        e, i = c
-        return e, i2+1
+    def parsePrimary(self):
+        op = self.token()
+        if self.isUnary(op):
+            self.nextToken()
+            return (op.id, self.parseExpression(self.precedence(op)))
 
-    def is_unary(self,i):
-        i = self.skip_spaces(i)
-        if i >= self.n:
+        primary = None
+        if op.id == tokLPAREN:
+            self.nextToken()
+            primary = self.parseExpression(0)
+            self.expectId(tokRPAREN)
+        elif op.id == tokNUMBER:
+            primary = self.is_number()
+        elif op.id == tokIDENT:
+            primary = self.is_call_or_ident()
+        elif op.id == tokDEFINED:
+            primary = self.is_defined()
+        else:
+            self.throw(BadExpectedToken, "didn't expect to see a %s in factor" % (self.tok[self.i].id))
+
+        self.skip_spaces()
+
+        return primary;
+
+
+    def isBinary(self, token):
+        return token.id in self.binaries
+
+
+    def isUnary(self, token):
+        return token.id in self.unaries
+
+
+    def precedence(self, token):
+        return self.precedences.get(token.id)
+
+
+    def token(self):
+        if self.i >= self.n:
             return None
+        return self.tok[self.i]
 
-        t = self.tok[i]
-        if t.id in CppExpr.unaries:
-            c = self.is_unary(i+1)
-            if not c:
-                self.throw(CppInvalidExpression, i, "%s operator must be followed by value" % t.id)
-            e, i = c
-            return (t.id, e), i
 
-        return self.is_value(i)
-
-    def is_binary(self,i):
-        i = self.skip_spaces(i)
-        if i >= self.n:
+    def nextToken(self):
+        self.i += 1
+        self.skip_spaces()
+        if self.i >= self.n:
             return None
+        return self.tok[self.i]
 
-        c = self.is_unary(i)
-        if not c:
-            return None
 
-        e1, i2 = c
-        i2 = self.skip_spaces(i2)
-        if i2 >= self.n:
-            return c
-
-        t = self.tok[i2]
-        if t.id in CppExpr.binaries:
-            c = self.is_binary(i2+1)
-            if not c:
-                self.throw(CppInvalidExpression, i,"### %s operator must be followed by value" % t.id )
-            e2, i3 = c
-            return (t.id, e1, e2), i3
-
-        return None
-
-    def is_expr(self,i):
-        return self.is_binary(i)
-
-    def dump_node(self,e):
+    def dump_node(self, e):
         op = e[0]
         line = "(" + op
         if op == "int":
@@ -1287,7 +852,7 @@ class CppExpr:
     def __repr__(self):
         return self.dump_node(self.expr)
 
-    def source_node(self,e):
+    def source_node(self, e):
         op = e[0]
         if op == "int":
             return "%d" % e[1]
@@ -1337,10 +902,10 @@ class CppExpr:
     def toInt(self):
         return self.int_node(self.expr)
 
-    def optimize_node(self,e,macros={}):
+    def optimize_node(self, e, macros={}):
         op = e[0]
         if op == "defined":
-            name = e[1]
+            op, name = e
             if macros.has_key(name):
                 if macros[name] == kCppUndefinedMacro:
                     return ("int", 0)
@@ -1354,6 +919,19 @@ class CppExpr:
             if kernel_remove_config_macros and name.startswith("CONFIG_"):
                 return ("int", 0)
 
+            return e
+
+        elif op == "ident":
+            op, name = e
+            if macros.has_key(name):
+                try:
+                    value = int(macros[name])
+                    expanded = ("int", value)
+                except:
+                    expanded = ("ident", macros[name])
+                return self.optimize_node(expanded, macros)
+            return e
+
         elif op == "!":
             op, v = e
             v = self.optimize_node(v, macros)
@@ -1362,6 +940,7 @@ class CppExpr:
                     return ("int", 1)
                 else:
                     return ("int", 0)
+            return ('!', v)
 
         elif op == "&&":
             op, l, r = e
@@ -1374,6 +953,12 @@ class CppExpr:
                     return ("int", 0)
                 else:
                     return r
+            elif ri != None:
+                if ri == 0:
+                    return ("int", 0)
+                else:
+                    return l
+            return (op, l, r)
 
         elif op == "||":
             op, l, r = e
@@ -1391,41 +976,13 @@ class CppExpr:
                     return l
                 else:
                     return ("int", 1)
-        return e
+            return (op, l, r)
+
+        else:
+            return e
 
     def optimize(self,macros={}):
-        self.expr = self.optimize_node(self.expr,macros)
-
-    def removePrefixedNode(self,e,prefix,names):
-        op = e[0]
-        if op == "defined":
-            name = e[1]
-            if name.startswith(prefix):
-                if names.has_key[name] and names[name] == "y":
-                    return ("int", 1)
-                else:
-                    return ("int", 0)
-
-        elif op in CppExpr.unaries:
-            op, v = e
-            v = self.removePrefixedNode(v,prefix,names)
-            return (op, v)
-        elif op in CppExpr.binaries:
-            op, v1, v2 = e
-            v1 = self.removePrefixedNode(v1,prefix,names)
-            v2 = self.removePrefixedNode(v2,prefix,names)
-            return (op, v1, v2)
-        elif op == "call":
-            func, params = e[1]
-            params2 = []
-            for param in params:
-                params2.append( self.removePrefixedNode(param,prefix,names) )
-            return (op, (func, params2))
-
-        return e
-
-    def removePrefixed(self,prefix,names={}):
-        self.expr = self.removePrefixedNode(self.expr,prefix,names)
+        self.expr = self.optimize_node(self.expr, macros)
 
     def is_equal_node(self,e1,e2):
         if e1[0] != e2[0] or len(e1) != len(e2):
@@ -1442,85 +999,97 @@ class CppExpr:
 
 def test_cpp_expr(expr, expected):
     e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
-    #print repr(e.expr)
     s1 = repr(e)
     if s1 != expected:
-        print "KO: expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
-    else:
-        #print "OK: expression '%s'" % expr
-        pass
+        print "[FAIL]: expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
+        global failure_count
+        failure_count += 1
 
 def test_cpp_expr_optim(expr, expected, macros={}):
     e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
     e.optimize(macros)
-
     s1 = repr(e)
     if s1 != expected:
-        print "KO: optimized expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
-    else:
-        #print "OK: optmized expression '%s'" % expr
-        pass
+        print "[FAIL]: optimized expression '%s' generates '%s' with macros %s, should be '%s'" % (expr, s1, macros, expected)
+        global failure_count
+        failure_count += 1
 
 def test_cpp_expr_source(expr, expected):
     e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
     s1 = str(e)
     if s1 != expected:
-        print "KO: source expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
-    else:
-        #print "OK: source expression '%s'" % expr
-        pass
+        print "[FAIL]: source expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
+        global failure_count
+        failure_count += 1
 
 def test_CppExpr():
-    print "testing CppExpr"
-    test_cpp_expr( "0", "(int 0)" )
-    test_cpp_expr( "1", "(int 1)" )
-    test_cpp_expr( "1 && 1", "(&& (int 1) (int 1))" )
-    test_cpp_expr( "1 && 0", "(&& (int 1) (int 0))" )
-    test_cpp_expr( "EXAMPLE", "(ident EXAMPLE)" )
-    test_cpp_expr( "EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))" )
-    test_cpp_expr( "defined(EXAMPLE)", "(defined EXAMPLE)" )
-    test_cpp_expr( "!defined(EXAMPLE)", "(! (defined EXAMPLE))" )
-    test_cpp_expr( "defined(ABC) || defined(BINGO)", "(|| (defined ABC) (defined BINGO))" )
-    test_cpp_expr( "FOO(BAR)", "(call FOO [BAR])" )
+    test_cpp_expr("0", "(int 0)")
+    test_cpp_expr("1", "(int 1)")
+    test_cpp_expr("(0)", "(int 0)")
+    test_cpp_expr("1 && 1", "(&& (int 1) (int 1))")
+    test_cpp_expr("1 && 0", "(&& (int 1) (int 0))")
+    test_cpp_expr("EXAMPLE", "(ident EXAMPLE)")
+    test_cpp_expr("EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))")
+    test_cpp_expr("defined(EXAMPLE)", "(defined EXAMPLE)")
+    test_cpp_expr("defined ( EXAMPLE ) ", "(defined EXAMPLE)")
+    test_cpp_expr("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
+    test_cpp_expr("defined(ABC) || defined(BINGO)", "(|| (defined ABC) (defined BINGO))")
+    test_cpp_expr("FOO(BAR)", "(call FOO [BAR])")
+    test_cpp_expr("A == 1 || defined(B)", "(|| (== (ident A) (int 1)) (defined B))")
 
-    test_cpp_expr_optim( "0", "(int 0)" )
-    test_cpp_expr_optim( "1", "(int 1)" )
-    test_cpp_expr_optim( "1 && 1", "(int 1)" )
-    test_cpp_expr_optim( "1 && 0", "(int 0)" )
-    test_cpp_expr_optim( "0 && 1", "(int 0)" )
-    test_cpp_expr_optim( "0 && 0", "(int 0)" )
-    test_cpp_expr_optim( "1 || 1", "(int 1)" )
-    test_cpp_expr_optim( "1 || 0", "(int 1)" )
-    test_cpp_expr_optim( "0 || 1", "(int 1)" )
-    test_cpp_expr_optim( "0 || 0", "(int 0)" )
-    test_cpp_expr_optim( "EXAMPLE", "(ident EXAMPLE)" )
-    test_cpp_expr_optim( "EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))" )
-    test_cpp_expr_optim( "defined(EXAMPLE)", "(defined EXAMPLE)" )
-    test_cpp_expr_optim( "defined(EXAMPLE)", "(int 1)", { "EXAMPLE": "XOWOE" } )
-    test_cpp_expr_optim( "defined(EXAMPLE)", "(int 0)", { "EXAMPLE": kCppUndefinedMacro} )
-    test_cpp_expr_optim( "!defined(EXAMPLE)", "(! (defined EXAMPLE))" )
-    test_cpp_expr_optim( "!defined(EXAMPLE)", "(int 0)", { "EXAMPLE" : "XOWOE" } )
-    test_cpp_expr_optim( "!defined(EXAMPLE)", "(int 1)", { "EXAMPLE" : kCppUndefinedMacro } )
-    test_cpp_expr_optim( "defined(ABC) || defined(BINGO)", "(|| (defined ABC) (defined BINGO))" )
-    test_cpp_expr_optim( "defined(ABC) || defined(BINGO)", "(int 1)", { "ABC" : "1" } )
-    test_cpp_expr_optim( "defined(ABC) || defined(BINGO)", "(int 1)", { "BINGO" : "1" } )
-    test_cpp_expr_optim( "defined(ABC) || defined(BINGO)", "(defined ABC)", { "BINGO" : kCppUndefinedMacro } )
-    test_cpp_expr_optim( "defined(ABC) || defined(BINGO)", "(int 0)", { "ABC" : kCppUndefinedMacro, "BINGO" : kCppUndefinedMacro } )
+    test_cpp_expr_optim("0", "(int 0)")
+    test_cpp_expr_optim("1", "(int 1)")
+    test_cpp_expr_optim("1 && 1", "(int 1)")
+    test_cpp_expr_optim("1 && 0", "(int 0)")
+    test_cpp_expr_optim("0 && 1", "(int 0)")
+    test_cpp_expr_optim("0 && 0", "(int 0)")
+    test_cpp_expr_optim("1 || 1", "(int 1)")
+    test_cpp_expr_optim("1 || 0", "(int 1)")
+    test_cpp_expr_optim("0 || 1", "(int 1)")
+    test_cpp_expr_optim("0 || 0", "(int 0)")
+    test_cpp_expr_optim("A", "(ident A)")
+    test_cpp_expr_optim("A", "(int 1)", { "A": 1 })
+    test_cpp_expr_optim("A || B", "(int 1)", { "A": 1 })
+    test_cpp_expr_optim("A || B", "(int 1)", { "B": 1 })
+    test_cpp_expr_optim("A && B", "(ident B)", { "A": 1 })
+    test_cpp_expr_optim("A && B", "(ident A)", { "B": 1 })
+    test_cpp_expr_optim("A && B", "(&& (ident A) (ident B))")
+    test_cpp_expr_optim("EXAMPLE", "(ident EXAMPLE)")
+    test_cpp_expr_optim("EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))")
+    test_cpp_expr_optim("defined(EXAMPLE)", "(defined EXAMPLE)")
+    test_cpp_expr_optim("defined(EXAMPLE)", "(defined XOWOE)", { "EXAMPLE": "XOWOE" })
+    test_cpp_expr_optim("defined(EXAMPLE)", "(int 0)", { "EXAMPLE": kCppUndefinedMacro})
+    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
+    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined XOWOE))", { "EXAMPLE" : "XOWOE" })
+    test_cpp_expr_optim("!defined(EXAMPLE)", "(int 1)", { "EXAMPLE" : kCppUndefinedMacro })
+    test_cpp_expr_optim("defined(A) || defined(B)", "(|| (defined A) (defined B))")
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", { "A" : "1" })
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", { "B" : "1" })
+    test_cpp_expr_optim("defined(A) || defined(B)", "(defined A)", { "B" : kCppUndefinedMacro })
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 0)", { "A" : kCppUndefinedMacro, "B" : kCppUndefinedMacro })
+    test_cpp_expr_optim("defined(A) && defined(B)", "(&& (defined A) (defined B))")
+    test_cpp_expr_optim("defined(A) && defined(B)", "(defined B)", { "A" : "1" })
+    test_cpp_expr_optim("defined(A) && defined(B)", "(defined A)", { "B" : "1" })
+    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)", { "B" : kCppUndefinedMacro })
+    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)", { "A" : kCppUndefinedMacro })
+    test_cpp_expr_optim("A == 1 || defined(B)", "(|| (== (ident A) (int 1)) (defined B))" )
+    test_cpp_expr_optim("defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)", "(|| (! (defined __GLIBC__)) (< (ident __GLIBC__) (int 2)))", { "__KERNEL__": kCppUndefinedMacro })
 
-    test_cpp_expr_source( "0", "0" )
-    test_cpp_expr_source( "1", "1" )
-    test_cpp_expr_source( "1 && 1", "1 && 1" )
-    test_cpp_expr_source( "1 && 0", "1 && 0" )
-    test_cpp_expr_source( "0 && 1", "0 && 1" )
-    test_cpp_expr_source( "0 && 0", "0 && 0" )
-    test_cpp_expr_source( "1 || 1", "1 || 1" )
-    test_cpp_expr_source( "1 || 0", "1 || 0" )
-    test_cpp_expr_source( "0 || 1", "0 || 1" )
-    test_cpp_expr_source( "0 || 0", "0 || 0" )
-    test_cpp_expr_source( "EXAMPLE", "EXAMPLE" )
-    test_cpp_expr_source( "EXAMPLE - 3", "EXAMPLE - 3" )
-    test_cpp_expr_source( "defined(EXAMPLE)", "defined(EXAMPLE)" )
-    test_cpp_expr_source( "defined EXAMPLE", "defined(EXAMPLE)" )
+    test_cpp_expr_source("0", "0")
+    test_cpp_expr_source("1", "1")
+    test_cpp_expr_source("1 && 1", "1 && 1")
+    test_cpp_expr_source("1 && 0", "1 && 0")
+    test_cpp_expr_source("0 && 1", "0 && 1")
+    test_cpp_expr_source("0 && 0", "0 && 0")
+    test_cpp_expr_source("1 || 1", "1 || 1")
+    test_cpp_expr_source("1 || 0", "1 || 0")
+    test_cpp_expr_source("0 || 1", "0 || 1")
+    test_cpp_expr_source("0 || 0", "0 || 0")
+    test_cpp_expr_source("EXAMPLE", "EXAMPLE")
+    test_cpp_expr_source("EXAMPLE - 3", "EXAMPLE - 3")
+    test_cpp_expr_source("defined(EXAMPLE)", "defined(EXAMPLE)")
+    test_cpp_expr_source("defined EXAMPLE", "defined(EXAMPLE)")
+    test_cpp_expr_source("A == 1 || defined(B)", "A == 1 || defined(B)")
 
 
 #####################################################################################
@@ -1592,7 +1161,6 @@ class Block:
         if self.directive != "include":
             return None
 
-        #print "iii " + repr(self.tokens)
         if self.tokens[0].id == tokSTRING:
             # a double-quote include, that's easy
             return self.tokens[0].value
@@ -1641,15 +1209,12 @@ class Block:
             if tok.id == tokLN:
                 old_line  = line
                 old_space = space
-                #print "N line=%d space=%d ii=%d" % (line, space, ii)
                 ii   += 1
                 line  = ii
                 space = -1
                 if old_space == old_line:  # line only contains spaces
-                    #print "-s"
                     continue
                 if ii-1 == old_line:  # line is empty
-                    #print "-e"
                     continue
                 tokens.append(tok)
                 continue
@@ -1777,11 +1342,6 @@ class BlockList:
         """remove known macro definitions from a BlockList"""
         self.blocks = remove_macro_defines(self.blocks,macros)
 
-    def removePrefixed(self,prefix,names):
-        for b in self.blocks:
-            if b.isIf():
-                b.expr.removePrefixed(prefix,names)
-
     def removeWhiteSpace(self):
         for b in self.blocks:
             b.removeWhiteSpace()
@@ -1881,7 +1441,6 @@ class BlockList:
 
                     # Is it a new type definition, then start recording it
                     if tok.value in [ 'struct', 'typedef', 'enum', 'union', '__extension__' ]:
-                        #print "$$$ keep type declr" + repr(b.tokens[i:])
                         state = 1
                         i     = i+1
                         continue
@@ -2225,6 +1784,14 @@ def  test_optimizeAll():
 #define  GOOD_3
 #endif
 
+#if defined(__KERNEL__)
+#define BAD_KERNEL
+#endif
+
+#if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
+#define X
+#endif
+
 #if 0
 #if 1
 #define  BAD_6
@@ -2239,41 +1806,40 @@ def  test_optimizeAll():
 
 #define GOOD_3
 
+
+#if !defined(__GLIBC__) || __GLIBC__ < 2
+#define X
+#endif
+
 """
 
-    print "running test_BlockList.optimizeAll"
     out = StringOutput()
     lines = string.split(text, '\n')
     list = BlockParser().parse( CppLinesTokenizer(lines) )
     #D_setlevel(2)
     list.optimizeAll( {"__KERNEL__":kCppUndefinedMacro} )
-    #print repr(list)
     list.write(out)
     if out.get() != expected:
-        print "KO: macro optimization failed\n"
+        print "[FAIL]: macro optimization failed\n"
         print "<<<< expecting '",
         print expected,
         print "'\n>>>> result '"
         print out.get(),
         print "'\n----"
+        global failure_count
+        failure_count += 1
 
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####                                                                           #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+# -- Always run the unit tests.
 
 def runUnitTests():
     """run all unit tests for this program"""
-    print "running unit tests"
     test_CppTokenizer()
     test_CppExpr()
     test_optimizeAll()
     test_BlockParser()
-    print "OK"
 
-if __name__ == "__main__":
-    runUnitTests()
+failure_count = 0
+runUnitTests()
+if failure_count != 0:
+    sys.exit(1)

@@ -34,9 +34,6 @@
 #ifndef _SYS__TYPES_H_
 #define	_SYS__TYPES_H_
 
-#undef  __KERNEL_STRICT_NAMES
-#define __KERNEL_STRICT_NAMES  1
-
 #include <machine/_types.h>
 
 typedef	unsigned long	__cpuid_t;	/* CPU id */
@@ -68,10 +65,5 @@ typedef union {
 	char __mbstate8[128];
 	__int64_t __mbstateL;			/* for alignment */
 } __mbstate_t;
-
-/* BIONIC: if we're using non-cleaned up user-level kernel headers, 
- *         this will prevent many type declaration conflicts
- */
-#define  __KERNEL_STRICT_NAMES  1
 
 #endif /* !_SYS__TYPES_H_ */
