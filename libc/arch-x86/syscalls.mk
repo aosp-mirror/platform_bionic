@@ -4,7 +4,6 @@ syscall_src += arch-x86/syscalls/__brk.S
 syscall_src += arch-x86/syscalls/__clone.S
 syscall_src += arch-x86/syscalls/__epoll_pwait.S
 syscall_src += arch-x86/syscalls/__exit.S
-syscall_src += arch-x86/syscalls/__fcntl.S
 syscall_src += arch-x86/syscalls/__fcntl64.S
 syscall_src += arch-x86/syscalls/__fstatfs64.S
 syscall_src += arch-x86/syscalls/__getcpu.S

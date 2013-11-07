@@ -109,8 +109,8 @@ int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
 int         __ioctl:ioctl(int, int, void*)  all
 int         readv(int, const struct iovec*, int)   all
 int         writev(int, const struct iovec*, int)  all
-int         __fcntl:fcntl(int, int, void*)  arm,mips,x86
-int         fcntl(int, void*)  aarch64,x86_64
+int         __fcntl64:fcntl64(int, int, void*)  arm,mips,x86
+int         fcntl(int, int, void*)  aarch64,x86_64
 int         flock(int, int)   all
 int         fchmod(int, mode_t)  all
 int         dup(int)  all
@@ -122,7 +122,6 @@ int         fdatasync(int) all
 int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    aarch64,mips,x86_64
 void        sync(void)  all
-int         __fcntl64:fcntl64(int, int, void*)  arm,mips,x86
 int         __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
 int         fstatfs(int, struct statfs*)  aarch64,x86_64
 int         fsetxattr(int, const char*, const void*, size_t, int) all

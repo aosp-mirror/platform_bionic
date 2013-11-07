@@ -48,8 +48,15 @@ extern "C" pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rus
   return wait4(pid, status, options, rusage);
 }
 
+// TODO: does anything still need this?
 extern "C" int __open() {
   abort();
+}
+
+// TODO: does anything still need this?
+extern "C" void** __get_tls() {
+#include "private/__get_tls.h"
+  return __get_tls();
 }
 
 #endif
