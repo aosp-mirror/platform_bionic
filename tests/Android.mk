@@ -60,6 +60,7 @@ test_c_flags = \
 test_src_files = \
     dirent_test.cpp \
     eventfd_test.cpp \
+    fcntl_test.cpp \
     fenv_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
