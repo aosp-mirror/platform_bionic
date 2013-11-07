@@ -19,39 +19,44 @@
 #ifndef _LINUX_ION_H
 #define _LINUX_ION_H
 #include <linux/types.h>
-struct ion_handle;
+typedef int ion_user_handle_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum ion_heap_type {
  ION_HEAP_TYPE_SYSTEM,
  ION_HEAP_TYPE_SYSTEM_CONTIG,
  ION_HEAP_TYPE_CARVEOUT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ ION_HEAP_TYPE_CHUNK,
+ ION_HEAP_TYPE_DMA,
  ION_HEAP_TYPE_CUSTOM,
  ION_NUM_HEAPS = 16,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ION_HEAP_SYSTEM_MASK (1 << ION_HEAP_TYPE_SYSTEM)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ION_HEAP_SYSTEM_CONTIG_MASK (1 << ION_HEAP_TYPE_SYSTEM_CONTIG)
 #define ION_HEAP_CARVEOUT_MASK (1 << ION_HEAP_TYPE_CARVEOUT)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ION_HEAP_TYPE_DMA_MASK (1 << ION_HEAP_TYPE_DMA)
+#define ION_NUM_HEAP_IDS sizeof(unsigned int) * 8
 #define ION_FLAG_CACHED 1
 #define ION_FLAG_CACHED_NEEDS_SYNC 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ion_allocation_data {
  size_t len;
  size_t align;
- unsigned int heap_mask;
+ unsigned int heap_id_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned int flags;
- struct ion_handle *handle;
+ ion_user_handle_t handle;
 };
 struct ion_fd_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ion_handle *handle;
+ ion_user_handle_t handle;
  int fd;
 };
 struct ion_handle_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ion_handle *handle;
+ ion_user_handle_t handle;
 };
 struct ion_custom_data {
  unsigned int cmd;
