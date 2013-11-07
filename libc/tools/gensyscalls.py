@@ -41,9 +41,7 @@ def create_file(relpath):
 
 syscall_stub_header = "/* " + warning + " */\n" + \
 """
-#include <asm/unistd.h>
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(%(func)s)
 """

@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <linux/err.h>
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /* unlike our auto-generated syscall stubs, this code saves lr
    on the stack, as well as a few other registers. this makes
