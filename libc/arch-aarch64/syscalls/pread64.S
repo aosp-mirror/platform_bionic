@@ -21,3 +21,6 @@ ENTRY(pread64)
 
     ret
 END(pread64)
+
+    .globl _C_LABEL(pread)
+    .equ _C_LABEL(pread), _C_LABEL(pread64)
