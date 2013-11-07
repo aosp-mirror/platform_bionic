@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <linux/err.h>
-#include <machine/asm.h>
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 
 // int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
 ENTRY(__pthread_clone)

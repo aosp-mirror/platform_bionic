@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 // This custom code preserves the return address across the system call.
 
