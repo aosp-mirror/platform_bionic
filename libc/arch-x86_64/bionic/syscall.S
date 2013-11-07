@@ -38,9 +38,7 @@
  *   %r9: arg5
  */
 
-#include <asm/unistd.h>
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(syscall)
     # All arguments are passed via registers.
@@ -63,3 +61,4 @@ ENTRY(syscall)
     orq     $-1, %rax
 1:
     ret
+END(syscall)
