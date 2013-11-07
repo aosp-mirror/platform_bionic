@@ -32,11 +32,6 @@
 #include <sys/cdefs.h>
 #include <sys/time.h>
 
-/* For struct sigevent. */
-#define __ARCH_SI_UID_T __kernel_uid32_t
-#include <asm/siginfo.h>
-#undef __ARCH_SI_UID_T
-
 __BEGIN_DECLS
 
 #define CLOCKS_PER_SEC 1000000
@@ -44,6 +39,8 @@ __BEGIN_DECLS
 extern char* tzname[];
 extern int daylight;
 extern long int timezone;
+
+struct sigevent;
 
 struct tm {
   int tm_sec;
