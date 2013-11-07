@@ -24,9 +24,6 @@
 // TODO: update our <sys/cdefs.h> to support this properly.
 #define __type_fit(t, a) (0 == 0)
 
-// TODO: our 2.6 emulator kernels don't support SOCK_CLOEXEC yet, so we have to do without.
-#define SOCK_CLOEXEC 0
-
 #define _GNU_SOURCE
 
 // TODO: we don't yet have thread-safe environment variables.
