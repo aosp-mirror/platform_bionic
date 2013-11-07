@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#ifndef _PRIVATE_BIONIC_ASM_H_
+#define _PRIVATE_BIONIC_ASM_H_
 
-/* unlike our auto-generated syscall stubs, this code saves lr
-   on the stack, as well as a few other registers. this makes
-   our stack unwinder happy, when we generate debug stack
-   traces after the C library or other parts of the system
-   abort due to a fatal runtime error (e.g. detection
-   of a corrupted malloc heap).
-*/
+#include <machine/asm.h>
 
-ENTRY(tkill)
-    stmfd   sp!, {r4-r7, ip, lr}
-    ldr     r7, =__NR_tkill
-    swi     #0
-    ldmfd   sp!, {r4-r7, ip, lr}
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno
-END(tkill)
+#include <asm/unistd.h> /* For system call numbers. */
+#define MAX_ERRNO 4095  /* For recognizing system call error returns. */
+
+/* TODO: add ENTRY_PRIVATE. */
+/* TODO: add ASM_ALIAS macro. */
+
+#endif /* _PRIVATE_BIONIC_ASM_H_ */
