@@ -59,7 +59,6 @@ typedef __kernel_id_t        id_t;
 typedef __kernel_ino_t       ino_t;
 typedef __kernel_key_t       key_t;
 typedef __kernel_mode_t      mode_t;
-typedef __kernel_nlink_t	 nlink_t;
 #ifndef _OFF_T_DEFINED_
 #define _OFF_T_DEFINED_
 typedef __kernel_off_t       off_t;
@@ -68,6 +67,8 @@ typedef __kernel_loff_t      loff_t;
 typedef loff_t               off64_t;
 
 typedef __kernel_pid_t		 pid_t;
+
+typedef __nlink_t nlink_t;
 
 /* while POSIX wants these in <sys/types.h>, we
  * declare then in <pthread.h> instead */
