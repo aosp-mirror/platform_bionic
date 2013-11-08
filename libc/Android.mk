@@ -465,6 +465,9 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector -Werror
+ifeq ($(TARGET_USES_LOGD),yes)
+LOCAL_CFLAGS += -DTARGET_USES_LOGD
+endif
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)

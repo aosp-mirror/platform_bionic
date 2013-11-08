@@ -52,6 +52,17 @@ enum {
   ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
 };
 
+enum {
+    LOG_ID_MIN = 0,
+
+    LOG_ID_MAIN = 0,
+    LOG_ID_RADIO = 1,
+    LOG_ID_EVENTS = 2,
+    LOG_ID_SYSTEM = 3,
+
+    LOG_ID_MAX
+};
+
 struct abort_msg_t {
   size_t size;
   char msg[0];
