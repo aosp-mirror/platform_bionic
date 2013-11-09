@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de65092b_e5471965",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-09T02:07:02Z",
+      "side": 1,
+      "message": "ws\n\n(plus we\u0027ve used lower_case_style for stuff like stack protector and stack unwinding tests that don\u0027t correspond to a header file.)",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e5dfd5e_c7d65c8e",
+        "filename": "tests/BufferTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-09T02:07:02Z",
+      "side": 1,
+      "message": "uint8_t* here and elsewhere.\n\nwhy malloc rather than new?",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de65092b_45808d30",
+        "filename": "tests/BufferTests.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-09T02:07:02Z",
+      "side": 1,
+      "message": "shouldn\u0027t there be some consts here somewhere?",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
