@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3e570543_0ac4de75",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-12T18:39:53Z",
+      "side": 1,
+      "message": "You always review too quickly.\n\nOriginally, I was going to make this a class, so I did the upper lower stuff. It would be better to be consistent with the other stuff, so I\u0027ll make it lower case with underscores.",
+      "parentUuid": "de65092b_e5471965",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e5dfd5e_c7d65c8e",
         "filename": "tests/BufferTests.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3e570543_0345e485",
+        "filename": "tests/BufferTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-12T18:39:53Z",
+      "side": 1,
+      "message": "I guess I like the control that malloc gives. It also allows me to test with the exact alignment that malloc returns. I know that new probably gives me nearly the same control, but I\u0027m always afraid someone has overriden the new operator somewhere.",
+      "parentUuid": "7e5dfd5e_c7d65c8e",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de65092b_45808d30",
         "filename": "tests/BufferTests.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2013-11-09T02:07:02Z",
       "side": 1,
       "message": "shouldn\u0027t there be some consts here somewhere?",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de65092b_6032d010",
+        "filename": "tests/BufferTests.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-12T18:39:53Z",
+      "side": 1,
+      "message": "Not really. Even though the src is const for the functions, I actually do some initialization in the test_funcs, so I\u0027m modifying both src and dst.",
+      "parentUuid": "de65092b_45808d30",
       "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
