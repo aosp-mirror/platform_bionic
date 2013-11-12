@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "3e570543_5e37af67",
+        "filename": "tests/BufferTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-12T19:26:45Z",
+      "side": 1,
+      "message": "I don\u0027t care about the natural alignments of malloc per se, I\u0027m just paranoid and letting the tests run using the native malloc alignments. This is in case someone in the future does something crazy with the natural alignment, we\u0027ll still catch it. I agree that it\u0027s overkill, but it doesn\u0027t take that much time run with it.",
+      "parentUuid": "3e570543_9e3dc7a8",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de65092b_45808d30",
         "filename": "tests/BufferTests.h",
         "patchSetId": 1
@@ -155,6 +173,24 @@
       "side": 1,
       "message": "but you\u0027re not modifying the data they point to?",
       "parentUuid": "de65092b_6032d010",
+      "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de65092b_e01ee0bb",
+        "filename": "tests/BufferTests.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-12T19:26:45Z",
+      "side": 1,
+      "message": "Yes, I modify the src data to initialize it to a specific pattern. I could have made the generic runner a bit more complicated by using a separate init function to do a one time src init, but I decided to go this way. If you\u0027d prefer a separate init function and then make the src parameters const let me know.",
+      "parentUuid": "7e5dfd5e_e400b119",
       "revId": "ab22a00636a8dbbd70db1d63076f1332d74bdedd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
