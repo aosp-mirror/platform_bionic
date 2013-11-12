@@ -224,13 +224,21 @@ TEST(dlfcn, dlopen_bad_flags) {
 }
 
 TEST(dlfcn, rtld_default_unknown_symbol) {
-  void* self = RTLD_DEFAULT;
-  void* addr = dlsym(self, "ANY_UNKNOWN_SYMBOL_NAME");
+  void* addr = dlsym(RTLD_DEFAULT, "ANY_UNKNOWN_SYMBOL_NAME");
   ASSERT_TRUE(addr == NULL);
 }
 
 TEST(dlfcn, rtld_default_known_symbol) {
-  void* self = RTLD_DEFAULT;
-  void* addr = dlsym(self, "fopen");
+  void* addr = dlsym(RTLD_DEFAULT, "fopen");
+  ASSERT_TRUE(addr != NULL);
+}
+
+TEST(dlfcn, rtld_next_unknown_symbol) {
+  void* addr = dlsym(RTLD_NEXT, "ANY_UNKNOWN_SYMBOL_NAME");
+  ASSERT_TRUE(addr == NULL);
+}
+
+TEST(dlfcn, rtld_next_known_symbol) {
+  void* addr = dlsym(RTLD_NEXT, "fopen");
   ASSERT_TRUE(addr != NULL);
 }
