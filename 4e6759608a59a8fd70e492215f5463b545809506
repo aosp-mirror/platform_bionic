@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e81c517_27375a69",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-13T23:08:05Z",
+      "side": 1,
+      "message": "ah, you don\u0027t have const here because you use it for strlen and memset.",
+      "revId": "4e6759608a59a8fd70e492215f5463b545809506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe72cd1e_c5a75a9f",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-13T23:08:05Z",
+      "side": 1,
+      "message": "type*\n\ni still think the use of malloc here is a mistake. it gains us nothing, and it makes the code need a cast.",
+      "revId": "4e6759608a59a8fd70e492215f5463b545809506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe72cd1e_a5717e70",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-13T23:08:05Z",
+      "side": 1,
+      "message": "but this should still be able to have the source buffer const uint8_t*.",
+      "revId": "4e6759608a59a8fd70e492215f5463b545809506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
