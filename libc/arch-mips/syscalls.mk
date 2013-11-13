@@ -175,7 +175,6 @@ syscall_src += arch-mips/syscalls/swapoff.S
 syscall_src += arch-mips/syscalls/swapon.S
 syscall_src += arch-mips/syscalls/symlinkat.S
 syscall_src += arch-mips/syscalls/sync.S
-syscall_src += arch-mips/syscalls/syscall.S
 syscall_src += arch-mips/syscalls/sysinfo.S
 syscall_src += arch-mips/syscalls/tgkill.S
 syscall_src += arch-mips/syscalls/timerfd_create.S
