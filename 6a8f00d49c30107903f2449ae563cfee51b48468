@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bee5b5f4_2a7b7fa6",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-13T21:48:41Z",
+      "side": 1,
+      "message": "Is there a reason to use isnanf directly? It looks like isnan is a macro for c99 that checks the size and then uses the correct isnan function based on the size.",
+      "revId": "6a8f00d49c30107903f2449ae563cfee51b48468",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
