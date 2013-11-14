@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9ec0f169_5ae795c9",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-11-14T09:40:20Z",
+      "side": 1,
+      "message": "BTW. The test failed on pow(1.0, nan(\"\")) . You might want to test that as well, many implementations have special cases for the 1.0 and 0.0",
+      "revId": "6a8f00d49c30107903f2449ae563cfee51b48468",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bee5b5f4_2a7b7fa6",
         "filename": "tests/math_test.cpp",
         "patchSetId": 1
