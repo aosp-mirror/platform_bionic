@@ -1,7 +1,8 @@
-/*	$OpenBSD: exit.c,v 1.12 2007/09/03 14:40:16 millert Exp $ */
+/*	$NetBSD: exit.c,v 1.15 2011/05/18 19:36:36 dsl Exp $	*/
+
 /*-
- * Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,21 +29,23 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
+#include <sys/cdefs.h>
+#if defined(LIBC_SCCS) && !defined(lint)
+#if 0
+static char sccsid[] = "@(#)exit.c	8.1 (Berkeley) 6/4/93";
+#else
+__RCSID("$NetBSD: exit.c,v 1.15 2011/05/18 19:36:36 dsl Exp $");
+#endif
+#endif /* LIBC_SCCS and not lint */
+
 #include <stdlib.h>
 #include <unistd.h>
+#ifdef _LIBC
+#include "reentrant.h"
 #include "atexit.h"
-#include "private/thread_private.h"
+#endif
 
-/*
- * This variable is zero until a process has created a thread.
- * It is used to avoid calling locking functions in libc when they
- * are not required. By default, libc is intended to be(come)
- * thread-safe, but without a (significant) penalty to non-threaded
- * processes.
- */
-int     __isthreaded    = 0;
+void (*__cleanup)(void);
 
 /*
  * Exit, flushing stdio buffers if necessary.
@@ -50,10 +53,11 @@ int     __isthreaded    = 0;
 void
 exit(int status)
 {
-	/*
-	 * Call functions registered by atexit() or _cxa_atexit()
-	 * (including the stdio cleanup routine) and then _exit().
-	 */
+
+#ifdef _LIBC
 	__cxa_finalize(NULL);
+#endif
+	if (__cleanup)
+		(*__cleanup)();
 	_exit(status);
 }
