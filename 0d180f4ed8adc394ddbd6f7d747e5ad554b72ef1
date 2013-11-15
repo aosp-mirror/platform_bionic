@@ -16,6 +16,23 @@
       "revId": "0d180f4ed8adc394ddbd6f7d747e5ad554b72ef1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e30817d_16e31cf6",
+        "filename": "tests/benchmark_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-11-15T23:55:47Z",
+      "side": 1,
+      "message": "An Aside ... several of the globals are int64_t should really be uint64_t. I have a copy of this file where I added discrete sample overrides and standard deviation, but we would prefer to see more meaningful statistics now that this is turning into a library. Colin mentioned confidence etc.",
+      "revId": "0d180f4ed8adc394ddbd6f7d747e5ad554b72ef1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
