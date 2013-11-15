@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ed9616f_4897e3e6",
+        "filename": "libc/arch-x86/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-15T21:11:26Z",
+      "side": 1,
+      "message": "As long as you are here, can you remove the trailing */.",
+      "revId": "0b161487f7adac4390adbd17c99767c81e8a3c87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ed9616f_88970bb8",
+        "filename": "libc/bionic/__thread_entry.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-15T21:11:26Z",
+      "side": 1,
+      "message": "This used to be called from __pthread_clone, but it\u0027s not called from __bionic_clone is it?\n\nIt looks like this code is dead now.",
+      "revId": "0b161487f7adac4390adbd17c99767c81e8a3c87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
