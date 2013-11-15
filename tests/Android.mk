@@ -58,6 +58,7 @@ test_c_flags = \
     -fno-builtin \
 
 test_src_files = \
+    buffer_tests.cpp \
     dirent_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
