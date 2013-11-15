@@ -16,6 +16,24 @@
       "revId": "70b24b1cc2a1a4436b1fea3f8b76616fdcb27224",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dee2691a_a652fa27",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-15T22:44:23Z",
+      "side": 1,
+      "message": "oh, but you\u0027re right it\u0027s no longer called from assembler, so i can remove the forward declaration and clean things up a bit. sorry. i didn\u0027t spot that. will follow up.",
+      "parentUuid": "fed56d33_e787de87",
+      "revId": "70b24b1cc2a1a4436b1fea3f8b76616fdcb27224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
