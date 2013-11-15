@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fed56d33_2775e6e0",
+        "filename": "tests/benchmark.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-15T22:49:24Z",
+      "side": 1,
+      "message": "type* here and elsewhere.",
+      "revId": "ab7aafacc69ef5de8f60bfc1741ea306b732c8a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
