@@ -20,8 +20,11 @@
 #include <math.h>
 #include <string.h>
 
+#include "buffer_tests.h"
+
 #define KB 1024
 #define SMALL 1*KB
+#define MEDIUM 4*KB
 #define LARGE 64*KB
 
 static int signum(int i) {
@@ -884,4 +887,123 @@ TEST(string, bzero) {
 
     ASSERT_EQ(0, memcmp(state.ptr1, state.ptr2, state.MAX_LEN));
   }
+}
+
+static void DoMemcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  memset(src, (len % 255) + 1, len);
+  memset(dst, 0, len);
+
+  ASSERT_EQ(dst, memcpy(dst, src, len));
+  ASSERT_TRUE(memcmp(src, dst, len) == 0);
+}
+
+TEST(string, memcpy_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoMemcpyTest);
+}
+
+TEST(string, memcpy_overread) {
+  RunSrcDstBufferOverreadTest(DoMemcpyTest);
+}
+
+static void DoMemsetTest(uint8_t* buf, size_t len) {
+  for (size_t i = 0; i < len; i++) {
+    buf[i] = 0;
+  }
+  int value = (len % 255) + 1;
+  ASSERT_EQ(buf, memset(buf, value, len));
+  for (size_t i = 0; i < len; i++) {
+    ASSERT_EQ(value, buf[i]);
+  }
+}
+
+TEST(string, memset_align) {
+  RunSingleBufferAlignTest(LARGE, DoMemsetTest);
+}
+
+static void DoStrlenTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    memset(buf, (32 + (len % 96)), len - 1);
+    buf[len-1] = '\0';
+    ASSERT_EQ(len-1, strlen(reinterpret_cast<char*>(buf)));
+  }
+}
+
+TEST(string, strlen_align) {
+  RunSingleBufferAlignTest(LARGE, DoStrlenTest);
+}
+
+TEST(string, strlen_overread) {
+  RunSingleBufferOverreadTest(DoStrlenTest);
+}
+
+static void DoStrcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    memset(src, (32 + (len % 96)), len - 1);
+    src[len-1] = '\0';
+    memset(dst, 0, len);
+    ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcpy(reinterpret_cast<char*>(dst),
+                                                     reinterpret_cast<char*>(src))));
+    ASSERT_TRUE(memcmp(src, dst, len) == 0);
+  }
+}
+
+TEST(string, strcpy_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoStrcpyTest);
+}
+
+TEST(string, strcpy_overread) {
+  RunSrcDstBufferOverreadTest(DoStrcpyTest);
+}
+
+// Use our own incrementer to cut down on the total number of calls.
+static size_t StrcatSetIncrement(size_t len) {
+  if (len >= 4096) {
+    return 4096;
+  } else if (len >= 1024) {
+    return 1024;
+  } else if (len >= 256) {
+    return 256;
+  }
+  return 1;
+}
+
+#define STRCAT_DST_LEN  128
+
+static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    int value = 32 + (len % 96);
+    memset(src, value, len - 1);
+    src[len-1] = '\0';
+
+    if (len >= STRCAT_DST_LEN) {
+      // Create a small buffer for doing quick compares in each loop.
+      uint8_t cmp_buf[STRCAT_DST_LEN];
+      // Make sure dst string contains a different value then the src string.
+      int value2 = 32 + (value + 2) % 96;
+      memset(cmp_buf, value2, sizeof(cmp_buf));
+
+      for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
+        memset(dst, value2, i-1);
+        memset(dst+i-1, 0, len-i);
+        src[len-i] = '\0';
+        ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
+                                                         reinterpret_cast<char*>(src))));
+        ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
+        ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+      }
+    } else {
+      dst[0] = '\0';
+      ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
+                                                       reinterpret_cast<char*>(src))));
+      ASSERT_TRUE(memcmp(src, dst, len) == 0);
+    }
+  }
+}
+
+TEST(string, strcat_align) {
+  RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, StrcatSetIncrement);
+}
+
+TEST(string, strcat_overread) {
+  RunSrcDstBufferOverreadTest(DoStrcatTest);
 }
