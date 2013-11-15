@@ -215,7 +215,7 @@ int pthread_key_delete(pthread_key_t key) {
     // Skip zombie threads. They don't have a valid TLS area any more.
     // Similarly, it is possible to have t->tls == NULL for threads that
     // were just recently created through pthread_create() but whose
-    // startup trampoline (__thread_entry) hasn't been run yet by the
+    // startup trampoline (__pthread_start) hasn't been run yet by the
     // scheduler. t->tls will also be NULL after a thread's stack has been
     // unmapped but before the ongoing pthread_join() is finished.
     if ((t->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) || t->tls == NULL) {
