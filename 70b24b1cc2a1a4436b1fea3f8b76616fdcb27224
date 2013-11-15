@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fed56d33_e787de87",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-15T22:42:56Z",
+      "side": 1,
+      "message": "(this is where __thread_entry is still used.)",
+      "revId": "70b24b1cc2a1a4436b1fea3f8b76616fdcb27224",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
