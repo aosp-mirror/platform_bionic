@@ -51,6 +51,9 @@ enum {
   TLS_SLOT_THREAD_ID,
   TLS_SLOT_ERRNO,
 
+  /* This slot is used when starting a new thread, before any code that needs errno runs. */
+  TLS_SLOT_START_MUTEX = TLS_SLOT_ERRNO,
+
   /* These two aren't used by bionic itself, but allow the graphics code to
    * access TLS directly rather than using the pthread API. */
   TLS_SLOT_OPENGL_API = 3,

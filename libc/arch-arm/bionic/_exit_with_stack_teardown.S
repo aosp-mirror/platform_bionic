@@ -33,12 +33,11 @@
 ENTRY(_exit_with_stack_teardown)
     mov     lr, r2
     ldr     r7, =__NR_munmap
-    swi     #0              // the stack is destroyed by this call
+    swi     #0
+    // If munmap failed, we ignore the failure and exit anyway.
+
     mov     r0, lr
     ldr     r7, =__NR_exit
     swi     #0
-
-    // exit() should never return, cause a crash if it does
-    mov     r0, #0
-    ldr     r0, [r0]
+    // The exit syscall does not return.
 END(_exit_with_stack_teardown)

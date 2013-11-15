@@ -29,53 +29,7 @@
 #include <asm/unistd.h>
 #include <machine/asm.h>
 
-// int  __pthread_clone(void* (*fn)(void*), void* tls, int flags, void* arg);
-ENTRY(__pthread_clone)
-        # Save tls.
-        movq    %rsi, %r11
-        # Enforce 16-byte alignment for child stack.
-        andq    $~15, %rsi
-
-        # Copy 'fn', 'arg', and 'tls' onto the child stack.
-        movq    %rdi, -32(%rsi)  # fn
-        movq    %rcx, -24(%rsi)  # arg
-        movq    %r11, -16(%rsi)  # tls
-        subq    $32, %rsi
-
-        movq    %rdx, %rdi
-        movl    $__NR_clone, %eax
-        syscall
-        testl   %eax, %eax
-        jns     1f
-
-        # An error occurred, set errno and return -1.
-        negl    %eax
-        movl    %eax, %edi
-        call    __set_errno
-        orl     $-1, %eax
-        jmp     2f
-1:
-        jnz     2f
-
-        # We're in the child now, so call __thread_entry
-        # with the arguments from the child stack moved into
-        # the appropriate registers. We avoid pop here to keep
-        # the required 16-byte stack alignment.
-        movq    (%rsp), %rdi    # fn
-        movq    8(%rsp), %rsi   # arg
-        movq    16(%rsp), %rdx  # tls
-        call    __thread_entry
-        hlt
-2:
-        ret
-
-// int __bionic_clone(unsigned long clone_flags,
-//                    void* new_sp,
-//                    int* parent_tid_ptr,
-//                    void* new_tls,
-//                    int* child_tid_ptr,
-//                    int (*fn)(void*),
-//                    void* arg);
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
         # Enforce 16-byte alignment for child stack.
         andq    $~15, %rsi
