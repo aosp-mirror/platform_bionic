@@ -23,6 +23,7 @@ syscall_src += arch-arm/syscalls/__rt_sigprocmask.S
 syscall_src += arch-arm/syscalls/__rt_sigsuspend.S
 syscall_src += arch-arm/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-arm/syscalls/__sched_getaffinity.S
+syscall_src += arch-arm/syscalls/__set_tid_address.S
 syscall_src += arch-arm/syscalls/__set_tls.S
 syscall_src += arch-arm/syscalls/__sigaction.S
 syscall_src += arch-arm/syscalls/__statfs64.S

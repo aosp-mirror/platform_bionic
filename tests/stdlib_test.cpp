@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <libgen.h>
 #include <limits.h>
+#include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -131,4 +132,28 @@ TEST(stdlib, qsort) {
   ASSERT_STREQ("alpha", entries[0].name);
   ASSERT_STREQ("bravo", entries[1].name);
   ASSERT_STREQ("charlie", entries[2].name);
+}
+
+static void* TestBug57421_child(void* arg) {
+  pthread_t main_thread = reinterpret_cast<pthread_t>(arg);
+  pthread_join(main_thread, NULL);
+  char* value = getenv("ENVIRONMENT_VARIABLE");
+  if (value == NULL) {
+    setenv("ENVIRONMENT_VARIABLE", "value", 1);
+  }
+  return NULL;
+}
+
+static void TestBug57421_main() {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, TestBug57421_child, reinterpret_cast<void*>(pthread_self())));
+  pthread_exit(NULL);
+}
+
+// Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
+// run this test (which exits normally) in its own process.
+TEST(stdlib_DeathTest, getenv_after_main_thread_exits) {
+  // https://code.google.com/p/android/issues/detail?id=57421
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }

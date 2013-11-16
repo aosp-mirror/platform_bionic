@@ -57,8 +57,9 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   }
 }
 
-void pthread_exit(void* retval) {
+void pthread_exit(void* return_value) {
   pthread_internal_t* thread = __get_thread();
+  thread->return_value = return_value;
 
   // Call the cleanup handlers first.
   while (thread->cleanup_stack) {
@@ -90,10 +91,9 @@ void pthread_exit(void* retval) {
   size_t stack_size = thread->attr.stack_size;
   bool user_allocated_stack = ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0);
 
-  // If the thread is detached, destroy the pthread_internal_t,
-  // otherwise keep it in memory and signal any joiners.
   pthread_mutex_lock(&gThreadListLock);
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
+    // The thread is detached, so we can destroy the pthread_internal_t.
     _pthread_internal_remove_locked(thread);
   } else {
     // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
@@ -103,15 +103,8 @@ void pthread_exit(void* retval) {
       thread->attr.stack_size = 0;
       thread->tls = NULL;
     }
-
-    // Indicate that the thread has exited for joining threads.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
-    thread->return_value = retval;
-
-    // Signal the joining thread if present.
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-      pthread_cond_signal(&thread->join_cond);
-    }
+    // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
+    // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
   }
   pthread_mutex_unlock(&gThreadListLock);
 
@@ -131,6 +124,6 @@ void pthread_exit(void* retval) {
     _exit_with_stack_teardown(stack_base, stack_size, 0);
   }
 
-  /* NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us. */
+  // NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us.
   abort();
 }
