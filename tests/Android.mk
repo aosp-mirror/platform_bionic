@@ -19,34 +19,6 @@ ifneq ($(BUILD_TINY_ANDROID), true)
 LOCAL_PATH := $(call my-dir)
 
 # -----------------------------------------------------------------------------
-# Benchmarks.
-# -----------------------------------------------------------------------------
-
-benchmark_c_flags = \
-    -O2 \
-    -Wall -Wextra \
-    -Werror \
-    -fno-builtin \
-
-benchmark_src_files = \
-    benchmark_main.cpp \
-    math_benchmark.cpp \
-    property_benchmark.cpp \
-    string_benchmark.cpp \
-    time_benchmark.cpp \
-
-# Build benchmarks for the device (with bionic's .so). Run with:
-#   adb shell bionic-benchmarks
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-benchmarks
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
-LOCAL_SHARED_LIBRARIES += libstlport
-LOCAL_SRC_FILES := $(benchmark_src_files)
-include $(BUILD_EXECUTABLE)
-
-# -----------------------------------------------------------------------------
 # Unit tests.
 # -----------------------------------------------------------------------------
 
