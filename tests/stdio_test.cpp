@@ -103,7 +103,10 @@ TEST(stdio, getdelim_invalid) {
   fclose(fp);
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
+  // glibc sometimes doesn't set errno in this particular case.
+#if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
+#endif
 }
 
 TEST(stdio, getline) {
@@ -168,7 +171,10 @@ TEST(stdio, getline_invalid) {
   fclose(fp);
   errno = 0;
   ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
+  // glibc sometimes doesn't set errno in this particular case.
+#if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
+#endif
 }
 
 TEST(stdio, printf_ssize_t) {
