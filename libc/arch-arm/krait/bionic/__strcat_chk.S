@@ -38,7 +38,6 @@
 // Check that the two lengths together don't exceed the threshold, then
 // do a memcpy of the data.
 ENTRY(__strcat_chk)
-    .cfi_startproc
     pld     [r0, #0]
     push    {r0, lr}
     .save   {r0, lr}
@@ -188,8 +187,6 @@ ENTRY(__strcat_chk)
     mov     r2, r4
     add     r0, r0, r3
     pop     {r4, r5}
-
-    .cfi_endproc
 END(__strcat_chk)
 
 #define MEMCPY_BASE         __strcat_chk_memcpy_base
@@ -197,7 +194,6 @@ END(__strcat_chk)
 #include "memcpy_base.S"
 
 ENTRY_PRIVATE(__strcat_chk_failed)
-    .cfi_startproc
     .save   {r0, lr}
     .save   {r4, r5}
     .cfi_def_cfa_offset 8
@@ -216,8 +212,6 @@ error_code:
     .word   BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
-
-    .cfi_endproc
 END(__strcat_chk_failed)
 
     .data

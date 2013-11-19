@@ -70,7 +70,7 @@
 #endif
 
 #define _ENTRY(x) \
-	.text; _ALIGN_TEXT; .globl x; .type x,@function; x:
+	.text; _ALIGN_TEXT; .globl x; .type x,@function; x: .cfi_startproc;
 #define _LABEL(x) \
 	.globl x; x:
 
@@ -108,7 +108,7 @@
 #define	ALTENTRY(x)	NENTRY(x)
 #define	ASENTRY(y)	_ENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
 #define	LABEL(y)	_LABEL(_C_LABEL(y))
-#define	END(y)		.size y, . - y
+#define	END(y)		.cfi_endproc; .size y, . - y
 
 #define	ASMSTR		.asciz
 

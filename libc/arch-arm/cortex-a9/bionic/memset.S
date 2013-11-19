@@ -38,7 +38,6 @@
     .fpu    neon
 
 ENTRY(__memset_chk)
-        .cfi_startproc
         cmp         r2, r3
         bls         .L_done
 
@@ -57,25 +56,19 @@ error_code:
         .word       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW
 error_message:
         .word       error_string-(1b+8)
-
-        .cfi_endproc
 END(__memset_chk)
 
 ENTRY(bzero)
-        .cfi_startproc
         mov     r2, r1
         mov     r1, #0
 
 .L_done:
         // Fall through to memset...
-        .cfi_endproc
 END(bzero)
 
 /* memset() returns its first argument.  */
 ENTRY(memset)
-        .cfi_startproc
-
-        # The neon memset only wins for less than 132.
+        // The neon memset only wins for less than 132.
         cmp         r2, #132
         bhi         __memset_large_copy
 
@@ -115,13 +108,9 @@ ENTRY(memset)
         strcsb      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
-
-        .cfi_endproc
 END(memset)
 
 ENTRY_PRIVATE(__memset_large_copy)
-        .cfi_startproc
-
         /* compute the offset to align the destination
          * offset = (4-(src&3))&3 = -src & 3
          */
@@ -196,7 +185,6 @@ ENTRY_PRIVATE(__memset_large_copy)
         strcsb      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, lr}
         bx          lr
-        .cfi_endproc
 END(__memset_large_copy)
 
         .data

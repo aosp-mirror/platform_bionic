@@ -77,6 +77,7 @@ ENTRY(sigsetjmp)
 
 2:	xorl	%eax,%eax
 	ret
+END(sigsetjmp)
 
 ENTRY(siglongjmp)
 	movq	%rdi,%r12
@@ -105,3 +106,4 @@ ENTRY(siglongjmp)
 	incl	%eax
 1:	movq	%r11,0(%rsp)
 	ret
+END(siglongjmp)

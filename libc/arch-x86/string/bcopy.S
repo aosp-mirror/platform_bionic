@@ -38,14 +38,12 @@
 	 *  ws@tools.de     (Wolfgang Solfrank, TooLs GmbH) +49-228-985800
 	 */
 
-#ifdef MEMCOPY
+#if defined(MEMCOPY)
 ENTRY(memcpy)
-#else
-#ifdef MEMMOVE
+#elif defined(MEMMOVE)
 ENTRY(memmove)
 #else
 ENTRY(bcopy)
-#endif
 #endif
 	pushl	%esi
 	pushl	%edi
@@ -91,3 +89,10 @@ ENTRY(bcopy)
 	popl	%esi
 	cld
 	ret
+#if defined(MEMCOPY)
+END(memcpy)
+#elif defined(MEMMOVE)
+END(memmove)
+#else
+END(bcopy)
+#endif
