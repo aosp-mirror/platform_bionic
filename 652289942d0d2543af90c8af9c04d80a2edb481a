@@ -34,6 +34,24 @@
       "revId": "652289942d0d2543af90c8af9c04d80a2edb481a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e64b999_e2824a7a",
+        "filename": "libc/upstream-netbsd/libc/stdlib/exit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T03:23:14Z",
+      "side": 1,
+      "message": "duh. yes, line 552. our internal code indexer can\u0027t find that, but grep can. sorry for the confusion!",
+      "parentUuid": "7ee41d51_417e52ca",
+      "revId": "652289942d0d2543af90c8af9c04d80a2edb481a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
