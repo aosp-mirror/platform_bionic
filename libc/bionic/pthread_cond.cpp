@@ -38,7 +38,6 @@
 
 #include "private/bionic_atomic_inline.h"
 #include "private/bionic_futex.h"
-#include "private/bionic_pthread.h"
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
 #include "private/thread_private.h"

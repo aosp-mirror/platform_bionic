@@ -275,9 +275,6 @@ int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
 long    perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) all
 
-pid_t __clone:clone(int, void*, int*, void*, int*)  all
-int __set_tid_address:set_tid_address(int*) all
-
 int epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset_t*, size_t)  all
@@ -295,6 +292,8 @@ int inotify_rm_watch(int, unsigned int)  all
 
 int __pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
 int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  all
+
+int __set_tid_address:set_tid_address(int*)  all
 
 pid_t wait4(pid_t, int*, int, struct rusage*)  all
 int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
