@@ -31,28 +31,31 @@
 #include <pthread.h>
 
 struct pthread_internal_t {
-    struct pthread_internal_t*  next;
-    struct pthread_internal_t*  prev;
-    pthread_attr_t              attr;
-    pid_t                       tid;
-    bool                        allocated_on_heap;
-    pthread_cond_t              join_cond;
-    void*                       return_value;
-    int                         internal_flags;
-    __pthread_cleanup_t*        cleanup_stack;
-    void**                      tls;         /* thread-local storage area */
+  struct pthread_internal_t* next;
+  struct pthread_internal_t* prev;
 
-    void* (*start_routine)(void*);
-    void* start_routine_arg;
+  pid_t tid;
 
-    void* alternate_signal_stack;
+  void** tls;
 
-    /*
-     * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
-     * per-thread buffer by simply using malloc(3) and free(3).
-     */
+  pthread_attr_t attr;
+  bool allocated_on_heap; /* TODO: move this into attr.flags? */
+  int internal_flags; /* TODO: move this into attr.flags? */
+
+  __pthread_cleanup_t* cleanup_stack;
+
+  void* (*start_routine)(void*);
+  void* start_routine_arg;
+  void* return_value;
+
+  void* alternate_signal_stack;
+
+  /*
+   * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
+   * per-thread buffer by simply using malloc(3) and free(3).
+   */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
-    char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
+  char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
 __LIBC_HIDDEN__ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list);
@@ -72,9 +75,6 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
 
 /* Has the thread been joined by another thread? */
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000004
-
-/* Has the thread already exited but not been joined? */
-#define PTHREAD_ATTR_FLAG_ZOMBIE 0x00000008
 
 #define PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED 1
 
