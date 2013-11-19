@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e08f1da_548d64d5",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-19T03:15:23Z",
+      "side": 1,
+      "message": "Technically this comment isn\u0027t quite right. You are telling the kernel where the address of the tid is.",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe71ed53_99badef3",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-19T03:15:23Z",
+      "side": 1,
+      "message": "Is there a reason you spread these last three flags out like this?",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e08f1da_345c30b3",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-19T03:15:23Z",
+      "side": 1,
+      "message": "I assume that a mutex_unlock is not necessary because everything has failed. Is that correct?",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e08f1da_9497fce5",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-19T03:15:23Z",
+      "side": 1,
+      "message": "This comment isn\u0027t correct anymore. It would be great to say something about what\u0027s really happening. Maybe something like, when the child thread exits, the kernel will clear the tid in memory which signals any joiners.",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
