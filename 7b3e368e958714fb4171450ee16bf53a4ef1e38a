@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e64b999_652c21c7",
+        "filename": "libc/arch-arm/include/machine/asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T23:17:18Z",
+      "side": 1,
+      "message": "i\u0027ve been wondering whether we should have a BIONIC_ENTRY or somesuch so we can stop editing this file and start tracking upstream, and so we can have the same bionic assembler macros across architectures. (currently iirc mips has no ENTRY/END macros, and i think only arm has ENTRY_PRIVATE, which is why i do that manually in the generated syscalls.)\n\nthis isn\u0027t making the current situation worse, though.",
+      "revId": "7b3e368e958714fb4171450ee16bf53a4ef1e38a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
