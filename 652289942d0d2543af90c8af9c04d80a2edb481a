@@ -16,6 +16,24 @@
       "revId": "652289942d0d2543af90c8af9c04d80a2edb481a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ee41d51_417e52ca",
+        "filename": "libc/upstream-netbsd/libc/stdlib/exit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1011499
+      },
+      "writtenOn": "2013-11-19T03:04:52Z",
+      "side": 1,
+      "message": "It\u0027s in the common_flags in Android.mk\n\nI\u0027ve also check using #error that it\u0027s defined.",
+      "parentUuid": "9e08f1da_7466a884",
+      "revId": "652289942d0d2543af90c8af9c04d80a2edb481a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
