@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e08f1da_94d1bc0c",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T02:23:02Z",
+      "side": 1,
+      "message": "it turns out that x86-64 has the clone arguments in a different order to the other architectures :-(\n\ni\u0027ll go through the rest of bionic sorting this out in a separate change. i\u0027ve raised internal bug http://b/11754626 but plan on coming straight back to this tomorrow while it\u0027s fresh in my mind.",
+      "revId": "0068469ed009ef44e159bded04b2ad8c57111cd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
