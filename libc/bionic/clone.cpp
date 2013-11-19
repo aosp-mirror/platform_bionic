@@ -25,41 +25,39 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #define __GNU_SOURCE 1
 #include <sched.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h>
 
-extern pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
-extern void __exit(int status);
+extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
+extern "C" void __exit(int status);
 
-/* this function is called from the __bionic_clone
- * assembly fragment to call the thread function
- * then exit. */
-extern void __bionic_clone_entry(int (*fn)(void*), void* arg) {
+// Called from the __bionic_clone assembler to call the thread function then exit.
+extern "C" void __bionic_clone_entry(int (*fn)(void*), void* arg) {
   int status = (*fn)(arg);
   __exit(status);
 }
 
 int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
-    va_list  args;
-    int     *parent_tidptr = NULL;
-    void    *new_tls = NULL;
-    int     *child_tidptr = NULL;
+  int* parent_tid = NULL;
+  void* new_tls = NULL;
+  int* child_tid = NULL;
 
-    /* extract optional parameters - they are cumulative. */
-    va_start(args, arg);
-    if (flags & (CLONE_PARENT_SETTID|CLONE_SETTLS|CLONE_CHILD_SETTID)) {
-        parent_tidptr = va_arg(args, int*);
-    }
-    if (flags & (CLONE_SETTLS|CLONE_CHILD_SETTID)) {
-        new_tls = va_arg(args, void*);
-    }
-    if (flags & CLONE_CHILD_SETTID) {
-        child_tidptr = va_arg(args, int*);
-    }
-    va_end(args);
+  // Extract any optional parameters required by the flags.
+  va_list args;
+  va_start(args, arg);
+  if ((flags & (CLONE_PARENT_SETTID|CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    parent_tid = va_arg(args, int*);
+  }
+  if ((flags & (CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    new_tls = va_arg(args, void*);
+  }
+  if ((flags & (CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    child_tid = va_arg(args, int*);
+  }
+  va_end(args);
 
-    return __bionic_clone(flags, child_stack, parent_tidptr, new_tls, child_tidptr, fn, arg);
+  return __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
 }

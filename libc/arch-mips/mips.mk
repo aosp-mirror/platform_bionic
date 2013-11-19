@@ -1,7 +1,7 @@
 _LIBC_ARCH_COMMON_SRC_FILES := \
+    arch-mips/bionic/__bionic_clone.S \
     arch-mips/bionic/bzero.S \
     arch-mips/bionic/cacheflush.cpp \
-    arch-mips/bionic/clone.S \
     arch-mips/bionic/_exit_with_stack_teardown.S \
     arch-mips/bionic/futex_mips.S \
     arch-mips/bionic/__get_sp.S \
