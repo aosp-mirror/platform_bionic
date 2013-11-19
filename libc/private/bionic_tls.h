@@ -51,7 +51,9 @@ enum {
   TLS_SLOT_THREAD_ID,
   TLS_SLOT_ERRNO,
 
-  /* This slot is used when starting a new thread, before any code that needs errno runs. */
+  /* This slot in the child's TLS is used to synchronize the parent and child
+   * during thread initialization. The child finishes with this mutex before
+   * running any code that can set errno, so we can reuse the errno slot. */
   TLS_SLOT_START_MUTEX = TLS_SLOT_ERRNO,
 
   /* These two aren't used by bionic itself, but allow the graphics code to
