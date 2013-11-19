@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fe71ed53_f9e44203",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T03:46:58Z",
+      "side": 1,
+      "message": "yes, but specifically so it can clear it.",
+      "parentUuid": "9e08f1da_548d64d5",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe71ed53_99badef3",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2013-11-19T03:15:23Z",
       "side": 1,
       "message": "Is there a reason you spread these last three flags out like this?",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e08f1da_14080c80",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T03:46:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe71ed53_99badef3",
       "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "fe71ed53_19110e1f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T03:46:58Z",
+      "side": 1,
+      "message": "correct. clarified.",
+      "parentUuid": "9e08f1da_345c30b3",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e08f1da_9497fce5",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2013-11-19T03:15:23Z",
       "side": 1,
       "message": "This comment isn\u0027t correct anymore. It would be great to say something about what\u0027s really happening. Maybe something like, when the child thread exits, the kernel will clear the tid in memory which signals any joiners.",
+      "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe71ed53_b9bc7ac3",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T03:46:58Z",
+      "side": 1,
+      "message": "done. i got rid of the ZOMBIE flag too.",
+      "parentUuid": "9e08f1da_9497fce5",
       "revId": "4d8cb67463e824e61ff9652c98c92d0f090bb59c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
