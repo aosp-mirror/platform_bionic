@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e08f1da_7466a884",
+        "filename": "libc/upstream-netbsd/libc/stdlib/exit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-19T02:58:20Z",
+      "side": 1,
+      "message": "is _LIBC actually defined?",
+      "revId": "652289942d0d2543af90c8af9c04d80a2edb481a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
