@@ -1,5 +1,5 @@
 _LIBC_ARCH_COMMON_SRC_FILES := \
-    arch-x86_64/bionic/clone.S \
+    arch-x86_64/bionic/__bionic_clone.S \
     arch-x86_64/bionic/_exit_with_stack_teardown.S \
     arch-x86_64/bionic/futex_x86_64.S \
     arch-x86_64/bionic/__get_sp.S \
