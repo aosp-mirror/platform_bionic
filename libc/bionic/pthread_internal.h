@@ -39,8 +39,6 @@ struct pthread_internal_t {
   void** tls;
 
   pthread_attr_t attr;
-  bool allocated_on_heap; /* TODO: move this into attr.flags? */
-  int internal_flags; /* TODO: move this into attr.flags? */
 
   __pthread_cleanup_t* cleanup_stack;
 
@@ -58,7 +56,7 @@ struct pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 __LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
@@ -76,7 +74,8 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
 /* Has the thread been joined by another thread? */
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000004
 
-#define PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED 1
+/* Is this the main thread? */
+#define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
 
 /*
  * Traditionally we give threads a 1MiB stack. When we started
