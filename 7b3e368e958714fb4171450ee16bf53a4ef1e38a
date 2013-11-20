@@ -16,6 +16,24 @@
       "revId": "7b3e368e958714fb4171450ee16bf53a4ef1e38a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e08f1da_fa60dee4",
+        "filename": "libc/arch-arm/include/machine/asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-20T00:30:05Z",
+      "side": 1,
+      "message": "Yeah, I was thinking about fixing up mips too, but that was a bigger change. There is an END in their asm.h, but no ENTRY.",
+      "parentUuid": "5e64b999_652c21c7",
+      "revId": "7b3e368e958714fb4171450ee16bf53a4ef1e38a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
