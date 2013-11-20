@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e64b999_63e099e7",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-11-20T01:06:06Z",
+      "side": 1,
+      "message": "This is an incredibly minor nit, but could you change the name to something like __return_immediately? __return_null isn\u0027t as obvious about what it does.",
+      "revId": "a3afa1181858a8d628ccb26e0fdd2a51ae67d916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
