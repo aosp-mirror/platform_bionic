@@ -70,3 +70,4 @@ ENTRY(__bionic_clone)
         hlt
 2:
         ret
+END(__bionic_clone)
