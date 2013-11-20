@@ -35,8 +35,8 @@
 #include <string.h>		/* For memset() */
 #include <sys/types.h>
 
-#if defined(__LP64__)
-/* For 64-bit, the kernel's struct sigaction doesn't match the POSIX one,
+#if defined(__LP64__) || defined(__mips__)
+/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the POSIX one,
  * so we need to expose our own and translate behind the scenes. */
 #  define sigaction __kernel_sigaction
 #  include <linux/signal.h>
@@ -44,7 +44,7 @@
 #else
 /* For 32-bit, we're stuck with the definitions we already shipped,
  * even though they contain a sigset_t that's too small. */
-#  define __ARCH_SI_UID_T __kernel_uid32_t /* TODO: remove this when we switch to uapi. */
+#  define __ARCH_SI_UID_T __kernel_uid32_t /* TODO: 64-bit: remove this when we've switch 32-bit to uapi too. */
 #  include <linux/signal.h>
 #  undef __ARCH_SI_UID_T
 #endif
@@ -53,15 +53,12 @@ __BEGIN_DECLS
 
 typedef int sig_atomic_t;
 
-/* _NSIG is used by the SIGRTMAX definition under <asm/signal.h>, however
- * its definition is part of a #if __KERNEL__ .. #endif block in the original
- * kernel headers and is thus not part of our cleaned-up versions.
- *
- * Looking at the current kernel sources, it is defined as 64 for all
- * architectures except for the 'mips' one which set it to 128.
- */
+/* TODO: 64-bit: we should probably #undef the uapi NSIG and add a unit test that NSIG == _NSIG && NSIG >= 64. */
 #ifndef _NSIG
-#  define _NSIG  64
+#  define _NSIG 64
+#endif
+#ifndef NSIG
+#  define NSIG _NSIG
 #endif
 
 extern const char* const sys_siglist[];
@@ -70,7 +67,7 @@ extern const char* const sys_signame[];
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
-#if __LP64__
+#if defined(__LP64__)
 
 struct sigaction {
   unsigned int sa_flags;
@@ -80,6 +77,17 @@ struct sigaction {
   };
   sigset_t sa_mask;
   void (*sa_restorer)(void);
+};
+
+#elif defined(__mips__)
+
+struct sigaction {
+  unsigned int sa_flags;
+  union {
+    sighandler_t sa_handler;
+    void (*sa_sigaction) (int, struct siginfo*, void*);
+  };
+  sigset_t sa_mask;
 };
 
 #endif
