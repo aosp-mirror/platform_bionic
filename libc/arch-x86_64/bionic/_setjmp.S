@@ -63,6 +63,7 @@ ENTRY(_setjmp)
 
 	xorl	%eax,%eax
 	ret
+END(_setjmp)
 
 ENTRY(_longjmp)
 	movq    (_JB_RBX * 8)(%rdi),%rbx
@@ -80,3 +81,4 @@ ENTRY(_longjmp)
 	incl	%eax
 1:	movq	%r11,0(%rsp)
 	ret
+END(_longjmp)
