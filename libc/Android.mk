@@ -77,7 +77,6 @@ libc_common_src_files := \
 	bionic/atol.c \
 	bionic/atoll.c \
 	bionic/bindresvport.c \
-	bionic/bionic_clone.c \
 	bionic/clearenv.c \
 	bionic/daemon.c \
 	bionic/err.c \
@@ -208,6 +207,7 @@ libc_bionic_src_files := \
     bionic/brk.cpp \
     bionic/chmod.cpp \
     bionic/chown.cpp \
+    bionic/clone.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
