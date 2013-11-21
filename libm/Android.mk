@@ -217,7 +217,11 @@ libm_common_src_files += fake_long_double.c
 
 # TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
-libm_common_cflags := -DFLT_EVAL_METHOD=0 -std=c99
+libm_common_cflags := \
+    -DFLT_EVAL_METHOD=0 \
+    -std=c99 \
+    -include $(LOCAL_PATH)/freebsd-compat.h \
+
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
 libm_arm_includes := $(LOCAL_PATH)/arm

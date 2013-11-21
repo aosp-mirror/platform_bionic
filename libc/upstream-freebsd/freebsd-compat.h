@@ -20,11 +20,31 @@
 #define __USE_BSD
 #define REPLACE_GETOPT
 
+/*
+ * FreeBSD's libc has three symbols for every symbol:
+ *
+ *     __f will be the actual implementation.
+ *     _f will be a weak reference to __f (used for calls to f from within the library).
+ *     f will be a weak reference to __f (used for calls to f from outside the library).
+ *
+ * We collapse this into just the one symbol, f.
+ */
+
+/* Prevent weak reference generation. */
+#define __weak_reference(sym,alias)
+
+/* Ensure that the implementation itself gets the underscore-free name. */
+#define __sleep sleep
+#define __usleep usleep
+
+/* Redirect internal C library calls to the public function. */
 #define _close close
 #define _fcntl fcntl
 #define _fstat fstat
+#define _nanosleep nanosleep
 #define _open open
 
-#define _sseek __sseek /* Needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
+/* This one is only needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
+#define _sseek __sseek
 
 #endif
