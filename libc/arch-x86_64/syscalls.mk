@@ -20,6 +20,7 @@ syscall_src += arch-x86_64/syscalls/__rt_sigprocmask.S
 syscall_src += arch-x86_64/syscalls/__rt_sigsuspend.S
 syscall_src += arch-x86_64/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-x86_64/syscalls/__sched_getaffinity.S
+syscall_src += arch-x86_64/syscalls/__set_tid_address.S
 syscall_src += arch-x86_64/syscalls/__syslog.S
 syscall_src += arch-x86_64/syscalls/__timer_create.S
 syscall_src += arch-x86_64/syscalls/__timer_delete.S

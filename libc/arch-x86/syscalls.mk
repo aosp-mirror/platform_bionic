@@ -24,6 +24,7 @@ syscall_src += arch-x86/syscalls/__rt_sigsuspend.S
 syscall_src += arch-x86/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-x86/syscalls/__sched_getaffinity.S
 syscall_src += arch-x86/syscalls/__set_thread_area.S
+syscall_src += arch-x86/syscalls/__set_tid_address.S
 syscall_src += arch-x86/syscalls/__sigaction.S
 syscall_src += arch-x86/syscalls/__statfs64.S
 syscall_src += arch-x86/syscalls/__syslog.S

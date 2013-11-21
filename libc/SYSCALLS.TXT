@@ -276,6 +276,7 @@ int     personality(unsigned long)  all
 long    perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) all
 
 pid_t __clone:clone(int, void*, int*, void*, int*)  all
+int __set_tid_address:set_tid_address(int*) all
 
 int epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all

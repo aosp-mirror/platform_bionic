@@ -150,22 +150,48 @@ TEST(pthread, pthread_join_self) {
   ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), &result));
 }
 
-#if __BIONIC__ // For some reason, gtest on bionic can cope with this but gtest on glibc can't.
+struct TestBug37410 {
+  pthread_t main_thread;
+  pthread_mutex_t mutex;
 
-static void TestBug37410() {
-  pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, JoinFn, reinterpret_cast<void*>(pthread_self())));
-  pthread_exit(NULL);
-}
+  static void main() {
+    TestBug37410 data;
+    data.main_thread = pthread_self();
+    ASSERT_EQ(0, pthread_mutex_init(&data.mutex, NULL));
+    ASSERT_EQ(0, pthread_mutex_lock(&data.mutex));
+
+    pthread_t t;
+    ASSERT_EQ(0, pthread_create(&t, NULL, TestBug37410::thread_fn, reinterpret_cast<void*>(&data)));
+
+    // Wait for the thread to be running...
+    ASSERT_EQ(0, pthread_mutex_lock(&data.mutex));
+    ASSERT_EQ(0, pthread_mutex_unlock(&data.mutex));
+
+    // ...and exit.
+    pthread_exit(NULL);
+  }
+
+ private:
+  static void* thread_fn(void* arg) {
+    TestBug37410* data = reinterpret_cast<TestBug37410*>(arg);
+
+    // Let the main thread know we're running.
+    pthread_mutex_unlock(&data->mutex);
+
+    // And wait for the main thread to exit.
+    pthread_join(data->main_thread, NULL);
+
+    return NULL;
+  }
+};
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
 TEST(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(TestBug37410(), ::testing::ExitedWithCode(0), "");
+  ASSERT_EXIT(TestBug37410::main(), ::testing::ExitedWithCode(0), "");
 }
-#endif
 
 static void* SignalHandlerFn(void* arg) {
   sigset_t wait_set;

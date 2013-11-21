@@ -97,7 +97,6 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
     }
   }
 
-  pthread_cond_init(&thread->join_cond, NULL);
   thread->cleanup_stack = NULL;
 
   if (add_to_thread_list) {
@@ -215,17 +214,22 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // the new thread.
   pthread_mutex_t* start_mutex = (pthread_mutex_t*) &thread->tls[TLS_SLOT_START_MUTEX];
   pthread_mutex_init(start_mutex, NULL);
-  ScopedPthreadMutexLocker start_locker(start_mutex);
+  pthread_mutex_lock(start_mutex);
 
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
 
   thread->start_routine = start_routine;
   thread->start_routine_arg = arg;
 
-  int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM | CLONE_SETTLS;
-  int tid = __bionic_clone(flags, child_stack, NULL, thread->tls, NULL, __pthread_start, thread);
-  if (tid < 0) {
+  int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
+      CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+  int rc = __bionic_clone(flags, child_stack, &(thread->tid), thread->tls, &(thread->tid), __pthread_start, thread);
+  if (rc == -1) {
     int clone_errno = errno;
+    // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
+    // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
+    // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
+    pthread_mutex_unlock(start_mutex);
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
@@ -234,12 +238,10 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  thread->tid = tid;
-
   int init_errno = _init_thread(thread, true);
   if (init_errno != 0) {
-    // Mark the thread detached and let its __pthread_start run to
-    // completion. (It'll just exit immediately, cleaning up its resources.)
+    // Mark the thread detached and let its __pthread_start run to completion.
+    // It'll check this flag and exit immediately, cleaning up its resources.
     thread->internal_flags |= PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED;
     thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
     return init_errno;
@@ -251,8 +253,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     _thread_created_hook(thread->tid);
   }
 
-  // Publish the pthread_t and let the thread run.
-  *thread_out = (pthread_t) thread;
+  // Publish the pthread_t and unlock the mutex to let the new thread start running.
+  *thread_out = reinterpret_cast<pthread_t>(thread);
+  pthread_mutex_unlock(start_mutex);
 
   return 0;
 }
