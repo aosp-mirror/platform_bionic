@@ -16,6 +16,23 @@
       "revId": "ab61eb366ac48addf2bca6093a34455193f5c8df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bea77522_3ff1af80",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-21T16:54:08Z",
+      "side": 1,
+      "message": "yeah, you\u0027re right. i realized just as i was going to bed last night, when i also had this nagging feeling that it should have been _int_ rather than long. (which turns out to be the case.)\n\ni do worry about how we\u0027re going to have any kind of confidence we got these types right for LP64. especially because int/long never used to matter so we\u0027ve got this false sense of security.",
+      "revId": "ab61eb366ac48addf2bca6093a34455193f5c8df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
