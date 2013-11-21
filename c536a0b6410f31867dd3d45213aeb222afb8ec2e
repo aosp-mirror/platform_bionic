@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bea77522_5a1929d1",
+        "filename": "libc/include/sys/reboot.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-11-21T19:41:47Z",
+      "side": 1,
+      "message": "glibc doesn\u0027t seem to have a reboot2. shouldn\u0027t we just change the one caller to use syscall?\n\nwe should probably remove the__reboot declaration while we\u0027re here.",
+      "revId": "c536a0b6410f31867dd3d45213aeb222afb8ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
