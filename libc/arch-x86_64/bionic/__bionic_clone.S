@@ -40,8 +40,13 @@ ENTRY(__bionic_clone)
         movq    %rax, -8(%rsi)  # Write 'arg'.
 
         subq    $16, %rsi
+
+        # Translate to the kernel calling convention and swap the 'tls' and 'child_tid' arguments.
+        # They're flipped for x86-64 compared to all our other architectures and __bionic_clone.
         movq    %r8, %r10
         movq    %rcx, %r8
+
+        # Make the system call.
         movl    $__NR_clone, %eax
         syscall
         testl   %eax, %eax

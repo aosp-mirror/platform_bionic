@@ -27,11 +27,10 @@
  */
 
 #include <unistd.h>
+#include <sys/syscall.h>
+
+#include "private/libc_logging.h"
 #include "pthread_internal.h"
-
-#include "private/bionic_pthread.h"
-
-extern "C" int __clone(int, void*, int*, void*, int*);
 
 int fork() {
   // POSIX mandates that the timers of a fork child process be
@@ -42,18 +41,17 @@ int fork() {
   __bionic_atfork_run_prepare();
 
   pthread_internal_t* self = __get_thread();
-#if defined(__x86_64__)
-  int result = __clone(CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, NULL, NULL, &(self->tid), NULL);
+  int flags = CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD;
+#if defined(__x86_64__) // sys_clone's last two arguments are flipped on x86-64.
+  int result = syscall(__NR_clone, flags, NULL, NULL, &(self->tid), NULL);
 #else
-  int result = __clone(CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, NULL, NULL, NULL, &(self->tid));
+  int result = syscall(__NR_clone, flags, NULL, NULL, NULL, &(self->tid));
 #endif
-  if (result != 0) {  // Not a child process.
+  if (result == 0) {
+    __bionic_atfork_run_child();
+  } else {
     __timer_table_start_stop(0);
     __bionic_atfork_run_parent();
-  } else {
-    // Fix the tid in the pthread_internal_t struct after a fork.
-    __pthread_settid(pthread_self(), gettid());
-    __bionic_atfork_run_child();
   }
   return result;
 }

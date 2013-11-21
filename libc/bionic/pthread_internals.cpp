@@ -73,14 +73,6 @@ pid_t __pthread_gettid(pthread_t t) {
   return reinterpret_cast<pthread_internal_t*>(t)->tid;
 }
 
-int __pthread_settid(pthread_t t, pid_t tid) {
-  if (t == 0) {
-    return EINVAL;
-  }
-  reinterpret_cast<pthread_internal_t*>(t)->tid = tid;
-  return 0;
-}
-
 // Initialize 'ts' with the difference between 'abstime' and the current time
 // according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
 int __timespec_to_absolute(timespec* ts, const timespec* abstime, clockid_t clock) {
