@@ -55,6 +55,7 @@ typedef __kernel_dev_t       dev_t;
 typedef __kernel_fsblkcnt_t  fsblkcnt_t;
 typedef __kernel_fsfilcnt_t  fsfilcnt_t;
 typedef __kernel_gid32_t     gid_t;
+typedef __kernel_uid32_t     uid_t;
 typedef __kernel_id_t        id_t;
 typedef __kernel_ino_t       ino_t;
 typedef __kernel_key_t       key_t;
@@ -94,10 +95,10 @@ typedef  .... pthread_t;
 typedef __kernel_ssize_t ssize_t;
 #endif
 
-typedef __kernel_suseconds_t  suseconds_t;
-typedef __kernel_time_t       time_t;
-typedef __kernel_uid32_t        uid_t;
-typedef signed long           useconds_t;
+typedef __kernel_time_t time_t;
+
+typedef __kernel_suseconds_t suseconds_t;
+typedef unsigned long useconds_t;
 
 typedef __kernel_daddr_t	daddr_t;
 typedef __kernel_timer_t	timer_t;

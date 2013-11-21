@@ -159,7 +159,7 @@ extern int ftruncate64(int, off64_t);
 extern int pause(void);
 extern unsigned int alarm(unsigned int);
 extern unsigned int sleep(unsigned int);
-extern int usleep(unsigned long);
+extern int usleep(useconds_t);
 
 extern int gethostname(char *, size_t);
 
