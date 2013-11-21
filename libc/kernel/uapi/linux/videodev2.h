@@ -1264,12 +1264,12 @@ struct v4l2_event_subscription {
  __u32 reserved[5];
 };
 #define V4L2_CHIP_MATCH_BRIDGE 0
-#define V4L2_CHIP_MATCH_SUBDEV 4
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CHIP_MATCH_HOST V4L2_CHIP_MATCH_BRIDGE
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CHIP_MATCH_I2C_DRIVER 1
 #define V4L2_CHIP_MATCH_I2C_ADDR 2
 #define V4L2_CHIP_MATCH_AC97 3
+#define V4L2_CHIP_MATCH_SUBDEV 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_dbg_match {
  __u32 type;
@@ -1287,124 +1287,132 @@ struct v4l2_dbg_register {
  __u64 val;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__ ((packed));
+struct v4l2_dbg_chip_ident {
+ struct v4l2_dbg_match match;
+ __u32 ident;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 revision;
+} __attribute__ ((packed));
 #define V4L2_CHIP_FL_READABLE (1 << 0)
 #define V4L2_CHIP_FL_WRITABLE (1 << 1)
-struct v4l2_dbg_chip_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct v4l2_dbg_chip_info {
  struct v4l2_dbg_match match;
  char name[32];
  __u32 flags;
- __u32 reserved[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 reserved[32];
 } __attribute__ ((packed));
 struct v4l2_create_buffers {
  __u32 index;
- __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 count;
  __u32 memory;
  struct v4l2_format format;
  __u32 reserved[8];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define VIDIOC_QUERYCAP _IOR('V', 0, struct v4l2_capability)
 #define VIDIOC_RESERVED _IO('V', 1)
 #define VIDIOC_ENUM_FMT _IOWR('V', 2, struct v4l2_fmtdesc)
-#define VIDIOC_G_FMT _IOWR('V', 4, struct v4l2_format)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_FMT _IOWR('V', 4, struct v4l2_format)
 #define VIDIOC_S_FMT _IOWR('V', 5, struct v4l2_format)
 #define VIDIOC_REQBUFS _IOWR('V', 8, struct v4l2_requestbuffers)
 #define VIDIOC_QUERYBUF _IOWR('V', 9, struct v4l2_buffer)
-#define VIDIOC_G_FBUF _IOR('V', 10, struct v4l2_framebuffer)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_FBUF _IOR('V', 10, struct v4l2_framebuffer)
 #define VIDIOC_S_FBUF _IOW('V', 11, struct v4l2_framebuffer)
 #define VIDIOC_OVERLAY _IOW('V', 14, int)
 #define VIDIOC_QBUF _IOWR('V', 15, struct v4l2_buffer)
-#define VIDIOC_EXPBUF _IOWR('V', 16, struct v4l2_exportbuffer)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_EXPBUF _IOWR('V', 16, struct v4l2_exportbuffer)
 #define VIDIOC_DQBUF _IOWR('V', 17, struct v4l2_buffer)
 #define VIDIOC_STREAMON _IOW('V', 18, int)
 #define VIDIOC_STREAMOFF _IOW('V', 19, int)
-#define VIDIOC_G_PARM _IOWR('V', 21, struct v4l2_streamparm)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_PARM _IOWR('V', 21, struct v4l2_streamparm)
 #define VIDIOC_S_PARM _IOWR('V', 22, struct v4l2_streamparm)
 #define VIDIOC_G_STD _IOR('V', 23, v4l2_std_id)
 #define VIDIOC_S_STD _IOW('V', 24, v4l2_std_id)
-#define VIDIOC_ENUMSTD _IOWR('V', 25, struct v4l2_standard)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_ENUMSTD _IOWR('V', 25, struct v4l2_standard)
 #define VIDIOC_ENUMINPUT _IOWR('V', 26, struct v4l2_input)
 #define VIDIOC_G_CTRL _IOWR('V', 27, struct v4l2_control)
 #define VIDIOC_S_CTRL _IOWR('V', 28, struct v4l2_control)
-#define VIDIOC_G_TUNER _IOWR('V', 29, struct v4l2_tuner)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_TUNER _IOWR('V', 29, struct v4l2_tuner)
 #define VIDIOC_S_TUNER _IOW('V', 30, struct v4l2_tuner)
 #define VIDIOC_G_AUDIO _IOR('V', 33, struct v4l2_audio)
 #define VIDIOC_S_AUDIO _IOW('V', 34, struct v4l2_audio)
-#define VIDIOC_QUERYCTRL _IOWR('V', 36, struct v4l2_queryctrl)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_QUERYCTRL _IOWR('V', 36, struct v4l2_queryctrl)
 #define VIDIOC_QUERYMENU _IOWR('V', 37, struct v4l2_querymenu)
 #define VIDIOC_G_INPUT _IOR('V', 38, int)
 #define VIDIOC_S_INPUT _IOWR('V', 39, int)
-#define VIDIOC_G_OUTPUT _IOR('V', 46, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_OUTPUT _IOR('V', 46, int)
 #define VIDIOC_S_OUTPUT _IOWR('V', 47, int)
 #define VIDIOC_ENUMOUTPUT _IOWR('V', 48, struct v4l2_output)
 #define VIDIOC_G_AUDOUT _IOR('V', 49, struct v4l2_audioout)
-#define VIDIOC_S_AUDOUT _IOW('V', 50, struct v4l2_audioout)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_S_AUDOUT _IOW('V', 50, struct v4l2_audioout)
 #define VIDIOC_G_MODULATOR _IOWR('V', 54, struct v4l2_modulator)
 #define VIDIOC_S_MODULATOR _IOW('V', 55, struct v4l2_modulator)
 #define VIDIOC_G_FREQUENCY _IOWR('V', 56, struct v4l2_frequency)
-#define VIDIOC_S_FREQUENCY _IOW('V', 57, struct v4l2_frequency)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_S_FREQUENCY _IOW('V', 57, struct v4l2_frequency)
 #define VIDIOC_CROPCAP _IOWR('V', 58, struct v4l2_cropcap)
 #define VIDIOC_G_CROP _IOWR('V', 59, struct v4l2_crop)
 #define VIDIOC_S_CROP _IOW('V', 60, struct v4l2_crop)
-#define VIDIOC_G_JPEGCOMP _IOR('V', 61, struct v4l2_jpegcompression)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_JPEGCOMP _IOR('V', 61, struct v4l2_jpegcompression)
 #define VIDIOC_S_JPEGCOMP _IOW('V', 62, struct v4l2_jpegcompression)
 #define VIDIOC_QUERYSTD _IOR('V', 63, v4l2_std_id)
 #define VIDIOC_TRY_FMT _IOWR('V', 64, struct v4l2_format)
-#define VIDIOC_ENUMAUDIO _IOWR('V', 65, struct v4l2_audio)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_ENUMAUDIO _IOWR('V', 65, struct v4l2_audio)
 #define VIDIOC_ENUMAUDOUT _IOWR('V', 66, struct v4l2_audioout)
 #define VIDIOC_G_PRIORITY _IOR('V', 67, __u32)
 #define VIDIOC_S_PRIORITY _IOW('V', 68, __u32)
-#define VIDIOC_G_SLICED_VBI_CAP _IOWR('V', 69, struct v4l2_sliced_vbi_cap)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_G_SLICED_VBI_CAP _IOWR('V', 69, struct v4l2_sliced_vbi_cap)
 #define VIDIOC_LOG_STATUS _IO('V', 70)
 #define VIDIOC_G_EXT_CTRLS _IOWR('V', 71, struct v4l2_ext_controls)
 #define VIDIOC_S_EXT_CTRLS _IOWR('V', 72, struct v4l2_ext_controls)
-#define VIDIOC_TRY_EXT_CTRLS _IOWR('V', 73, struct v4l2_ext_controls)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_TRY_EXT_CTRLS _IOWR('V', 73, struct v4l2_ext_controls)
 #define VIDIOC_ENUM_FRAMESIZES _IOWR('V', 74, struct v4l2_frmsizeenum)
 #define VIDIOC_ENUM_FRAMEINTERVALS _IOWR('V', 75, struct v4l2_frmivalenum)
 #define VIDIOC_G_ENC_INDEX _IOR('V', 76, struct v4l2_enc_idx)
-#define VIDIOC_ENCODER_CMD _IOWR('V', 77, struct v4l2_encoder_cmd)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_ENCODER_CMD _IOWR('V', 77, struct v4l2_encoder_cmd)
 #define VIDIOC_TRY_ENCODER_CMD _IOWR('V', 78, struct v4l2_encoder_cmd)
 #define VIDIOC_DBG_S_REGISTER _IOW('V', 79, struct v4l2_dbg_register)
 #define VIDIOC_DBG_G_REGISTER _IOWR('V', 80, struct v4l2_dbg_register)
-#define VIDIOC_S_HW_FREQ_SEEK _IOW('V', 82, struct v4l2_hw_freq_seek)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIDIOC_DBG_G_CHIP_IDENT _IOWR('V', 81, struct v4l2_dbg_chip_ident)
+#define VIDIOC_S_HW_FREQ_SEEK _IOW('V', 82, struct v4l2_hw_freq_seek)
 #define VIDIOC_S_DV_TIMINGS _IOWR('V', 87, struct v4l2_dv_timings)
 #define VIDIOC_G_DV_TIMINGS _IOWR('V', 88, struct v4l2_dv_timings)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_DQEVENT _IOR('V', 89, struct v4l2_event)
 #define VIDIOC_SUBSCRIBE_EVENT _IOW('V', 90, struct v4l2_event_subscription)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_UNSUBSCRIBE_EVENT _IOW('V', 91, struct v4l2_event_subscription)
 #define VIDIOC_CREATE_BUFS _IOWR('V', 92, struct v4l2_create_buffers)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_PREPARE_BUF _IOWR('V', 93, struct v4l2_buffer)
 #define VIDIOC_G_SELECTION _IOWR('V', 94, struct v4l2_selection)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_S_SELECTION _IOWR('V', 95, struct v4l2_selection)
 #define VIDIOC_DECODER_CMD _IOWR('V', 96, struct v4l2_decoder_cmd)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_TRY_DECODER_CMD _IOWR('V', 97, struct v4l2_decoder_cmd)
 #define VIDIOC_ENUM_DV_TIMINGS _IOWR('V', 98, struct v4l2_enum_dv_timings)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_QUERY_DV_TIMINGS _IOR('V', 99, struct v4l2_dv_timings)
 #define VIDIOC_DV_TIMINGS_CAP _IOWR('V', 100, struct v4l2_dv_timings_cap)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDIOC_ENUM_FREQ_BANDS _IOWR('V', 101, struct v4l2_frequency_band)
 #define VIDIOC_DBG_G_CHIP_INFO _IOWR('V', 102, struct v4l2_dbg_chip_info)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BASE_VIDIOC_PRIVATE 192
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

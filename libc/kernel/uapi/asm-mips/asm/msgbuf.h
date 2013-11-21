@@ -21,40 +21,21 @@
 struct msqid64_ds {
  struct ipc64_perm msg_perm;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#if !defined(__mips64) && defined(__MIPSEB__)
  unsigned long __unused1;
-#endif
  __kernel_time_t msg_stime;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#if !defined(__mips64) && defined(__MIPSEL__)
- unsigned long __unused1;
-#endif
-#if !defined(__mips64) && defined(__MIPSEB__)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  unsigned long __unused2;
-#endif
  __kernel_time_t msg_rtime;
-#if !defined(__mips64) && defined(__MIPSEL__)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long __unused2;
-#endif
-#if !defined(__mips64) && defined(__MIPSEB__)
  unsigned long __unused3;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
  __kernel_time_t msg_ctime;
-#if !defined(__mips64) && defined(__MIPSEL__)
- unsigned long __unused3;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
  unsigned long msg_cbytes;
  unsigned long msg_qnum;
- unsigned long msg_qbytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long msg_qbytes;
  __kernel_pid_t msg_lspid;
  __kernel_pid_t msg_lrpid;
  unsigned long __unused4;
- unsigned long __unused5;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned long __unused5;
 };
 #endif
