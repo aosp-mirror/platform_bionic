@@ -486,18 +486,21 @@ TEST(math, expm1l) {
 
 TEST(math, pow) {
   ASSERT_TRUE(isnan(pow(nan(""), 3.0)));
+  ASSERT_FLOAT_EQ(1.0, (pow(1.0, nan(""))));
   ASSERT_TRUE(isnan(pow(2.0, nan(""))));
   ASSERT_FLOAT_EQ(8.0, pow(2.0, 3.0));
 }
 
 TEST(math, powf) {
   ASSERT_TRUE(isnanf(powf(nanf(""), 3.0f)));
+  ASSERT_FLOAT_EQ(1.0f, (powf(1.0f, nanf(""))));
   ASSERT_TRUE(isnanf(powf(2.0f, nanf(""))));
   ASSERT_FLOAT_EQ(8.0f, powf(2.0f, 3.0f));
 }
 
 TEST(math, powl) {
   ASSERT_TRUE(__isnanl(powl(nanl(""), 3.0)));
+  ASSERT_FLOAT_EQ(1.0, (powl(1.0, nanl(""))));
   ASSERT_TRUE(__isnanl(powl(2.0, nanl(""))));
   ASSERT_FLOAT_EQ(8.0, powl(2.0, 3.0));
 }
