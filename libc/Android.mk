@@ -290,7 +290,6 @@ libc_bionic_src_files := \
     bionic/sysconf.cpp \
     bionic/thread_atexit.cpp \
     bionic/tdestroy.cpp \
-    bionic/__thread_entry.cpp \
     bionic/timer.cpp \
     bionic/tmpfile.cpp \
     bionic/unlink.cpp \

@@ -134,6 +134,31 @@ static void* __create_thread_stack(pthread_internal_t* thread) {
   return stack;
 }
 
+static int __pthread_start(void* arg) {
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
+
+  // Wait for our creating thread to release us. This lets it have time to
+  // notify gdb about this thread before we start doing anything.
+  // This also provides the memory barrier needed to ensure that all memory
+  // accesses previously made by the creating thread are visible to us.
+  pthread_mutex_t* start_mutex = (pthread_mutex_t*) &thread->tls[TLS_SLOT_START_MUTEX];
+  pthread_mutex_lock(start_mutex);
+  pthread_mutex_destroy(start_mutex);
+
+  __init_tls(thread);
+
+  __init_alternate_signal_stack(thread);
+
+  if ((thread->internal_flags & PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED) != 0) {
+    pthread_exit(NULL);
+  }
+
+  void* result = thread->start_routine(thread->start_routine_arg);
+  pthread_exit(result);
+
+  return 0;
+}
+
 int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;
@@ -198,7 +223,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   thread->start_routine_arg = arg;
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM | CLONE_SETTLS;
-  int tid = __bionic_clone(flags, child_stack, NULL, thread->tls, NULL, __thread_entry, thread);
+  int tid = __bionic_clone(flags, child_stack, NULL, thread->tls, NULL, __pthread_start, thread);
   if (tid < 0) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
@@ -213,7 +238,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   int init_errno = _init_thread(thread, true);
   if (init_errno != 0) {
-    // Mark the thread detached and let its __thread_entry run to
+    // Mark the thread detached and let its __pthread_start run to
     // completion. (It'll just exit immediately, cleaning up its resources.)
     thread->internal_flags |= PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED;
     thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
