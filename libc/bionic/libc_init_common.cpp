@@ -101,9 +101,9 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   // environment variables with global scope live on it).
   pthread_attr_init(&main_thread.attr);
   pthread_attr_setstack(&main_thread.attr, (void*) stack_bottom, stack_size);
-  main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
+  main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK | PTHREAD_ATTR_FLAG_MAIN_THREAD;
 
-  _init_thread(&main_thread, false);
+  __init_thread(&main_thread, false);
   __init_tls(&main_thread);
   __set_tls(main_thread.tls);
   tls[TLS_SLOT_BIONIC_PREINIT] = &args;
@@ -124,7 +124,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
-  main_thread->allocated_on_heap = false;
   _pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
