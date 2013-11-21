@@ -49,6 +49,7 @@
 extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" uintptr_t __get_sp(void);
 extern "C" int __system_properties_init(void);
+extern "C" int __set_tls(void* ptr);
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -96,7 +97,10 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   pthread_attr_setstack(&thread.attr, (void*) stack_bottom, stack_size);
   _init_thread(&thread, false);
   __init_tls(&thread);
+  __set_tls(thread.tls);
   tls[TLS_SLOT_BIONIC_PREINIT] = &args;
+
+  __init_alternate_signal_stack(&thread);
 }
 
 void __libc_init_common(KernelArgumentBlock& args) {

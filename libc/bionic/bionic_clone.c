@@ -31,14 +31,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-extern int  __bionic_clone(unsigned long   clone_flags,
-                           void*           newsp,
-                           int            *parent_tidptr,
-                           void           *new_tls,
-                           int            *child_tidptr,
-                           int            (*fn)(void *),
-                           void          *arg);
-
+extern pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
 extern void __exit(int status);
 
 /* this function is called from the __bionic_clone
