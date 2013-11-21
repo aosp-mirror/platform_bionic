@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fec64dd8_c5041a2d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-11-21T09:36:26Z",
+      "side": 1,
+      "message": "Pedantry: I don\u0027t think the \"u\" in the name implies unsigned in this case (it implies \"micro\"), more like the lack of an \"s\" as compared to suseconds_t",
+      "revId": "ab61eb366ac48addf2bca6093a34455193f5c8df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
