@@ -30,7 +30,7 @@
 
 	.text
 
-// void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status)
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize, int status)
 
 	.type	_exit_with_stack_teardown, @function
 	.global	_exit_with_stack_teardown
@@ -40,12 +40,11 @@ _exit_with_stack_teardown:
 	move	$s0,$a2		/* preserve status for exit() call */
 
 	li	$v0,__NR_munmap
-	syscall			/* the stack is destroyed by this call */
+	syscall
+	// If munmap failed, we ignore the failure and exit anyway.
+
 	move	$a0,$s0
 	li	$v0,__NR_exit
 	syscall
-
-	/* exit() should never return, cause a crash if it does */
-	move	$a0,$0
-	lw	$a0,($a0)
+        // The exit syscall does not return.
 	.end	_exit_with_stack_teardown

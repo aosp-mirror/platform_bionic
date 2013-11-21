@@ -20,6 +20,7 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 TEST(pthread, pthread_key_create) {
@@ -214,11 +215,12 @@ TEST(pthread, pthread_sigmask) {
 }
 
 #if __BIONIC__
-extern "C" int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
-TEST(pthread, __pthread_clone) {
+extern "C" pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
+TEST(pthread, __bionic_clone) {
+  // Check that our hand-written clone assembler sets errno correctly on failure.
   uintptr_t fake_child_stack[16];
   errno = 0;
-  ASSERT_EQ(-1, __pthread_clone(NULL, &fake_child_stack[0], CLONE_THREAD, NULL));
+  ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[0], NULL, NULL, NULL, NULL, NULL));
   ASSERT_EQ(EINVAL, errno);
 }
 #endif
@@ -371,6 +373,24 @@ TEST(pthread, pthread_join__multijoin) {
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
+}
+
+TEST(pthread, pthread_join__race) {
+  // http://b/11693195 --- pthread_join could return before the thread had actually exited.
+  // If the joiner unmapped the thread's stack, that could lead to SIGSEGV in the thread.
+  for (size_t i = 0; i < 1024; ++i) {
+    size_t stack_size = 64*1024;
+    void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
+
+    pthread_attr_t a;
+    pthread_attr_init(&a);
+    pthread_attr_setstack(&a, stack, stack_size);
+
+    pthread_t t;
+    ASSERT_EQ(0, pthread_create(&t, &a, IdFn, NULL));
+    ASSERT_EQ(0, pthread_join(t, NULL));
+    ASSERT_EQ(0, munmap(stack, stack_size));
+  }
 }
 
 static void* GetActualGuardSizeFn(void* arg) {

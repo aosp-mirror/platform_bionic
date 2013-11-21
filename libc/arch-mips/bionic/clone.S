@@ -30,78 +30,7 @@
 #include <linux/errno.h>
 #include <linux/sched.h>
 
-	.text
-	.type __pthread_clone, @function
-	.global __pthread_clone
-	.align 4
-        .ent __pthread_clone
-
-/*
- * int __pthread_clone(void* (*fn)(void*), void *child_stack,
- *			 int flags, void *arg);
- */
-
-__pthread_clone:
-        .set	noreorder
-        .cpload $t9
-        .set	reorder
-
-	# set up child stack
-	subu	$a1,16
-	sw	$a0,0($a1)	# fn
-	sw	$a3,4($a1)	# arg
-#	sw	$a1+16,8($a1)	# tls
-
-	/*
-	 * int sys_clone(int flags, void *child_stack, int *parent_tidptr,
-	 *	 struct user_desc *newtls, int *child_tidptr);
-	 */
-
-	move	$a0,$a2		# flags
-#	move	$a1,$a1		# child_stack
-	move	$a2,$0		# parent_tidptr
-	move	$a3,$0		# user_desc
-	and	$a0,~(CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)
-				# make sure the kernel doesn't access child_tidptr
-
-        li	$v0,__NR_clone
-        syscall
-
-        bnez	$a3,.L__error
-
-        beqz	$v0,.L__thread_start
-
-        j $ra
-
-.L__thread_start:
-        lw	$a0,0($sp)	#  fn
-        lw	$a1,4($sp)	#  arg
-        addu	$a2,$sp,16	#  tls
-
-	# void __thread_entry(void* (*func)(void*), void *arg, void *tls)
-        la	$t9, __thread_entry
-        j	$t9
-
-.L__error:
-	move	$a0,$v0
-	la	$t9,__set_errno
-	j	$t9
-
-        .end __pthread_clone
-
-
-    #
-    # This function is defined as:
-    #
-    #   pid_t  __bionic_clone( int  flags, void *child_stack,
-    #                          pid_t *pid, void *tls, pid_t *ctid,
-    #                          int  (*fn)(void *), void* arg );
-    #
-    # NOTE: This is not the same signature than the GLibc
-    #       __clone function here !! Placing 'fn' and 'arg'
-    #       at the end of the parameter list makes the
-    #       implementation much simpler.
-    #
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 	.text
 	.type __bionic_clone, @function
 	.global __bionic_clone

@@ -28,53 +28,7 @@
 
 #include <private/bionic_asm.h>
 
-// int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
-ENTRY(__pthread_clone)
-    # Push 'fn' and 'arg' onto 'child_stack'.
-    stmdb   r1!, {r0, r3}
-
-    # The sys_clone system call only takes two arguments: 'flags' and 'child_stack'.
-    # 'child_stack' is already in r1, but we need to move 'flags' into position.
-    mov     r0, r2
-
-    # System call.
-    mov     ip, r7
-    ldr     r7, =__NR_clone
-    swi     #0
-
-    # Child?
-    movs    r0, r0
-    beq     1f
-
-    # Parent.
-    mov     r7, ip
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno
-
-1:  # Child.
-    # Pop 'fn' and 'arg' back off the stack and call __thread_entry.
-    pop     {r0, r1}
-    # __thread_entry also needs our stack pointer.
-    mov     r2, sp
-    b       __thread_entry
-END(__pthread_clone)
-
-
-    #
-    # This function is defined as:
-    #
-    #   pid_t  __bionic_clone( int  flags, void *child_stack,
-    #                          pid_t *pid, void *tls, pid_t *ctid,
-    #                          int  (*fn)(void *), void* arg );
-    #
-    # NOTE: This is not the same signature as the glibc
-    #       __clone function. Placing 'fn' and 'arg'
-    #       at the end of the parameter list makes the
-    #       implementation much simpler.
-    #
-
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
     mov     ip, sp
     .save   {r4, r5, r6, r7}
