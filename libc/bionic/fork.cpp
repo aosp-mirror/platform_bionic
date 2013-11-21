@@ -41,7 +41,12 @@ int fork() {
   __timer_table_start_stop(1);
   __bionic_atfork_run_prepare();
 
-  int result = __clone(SIGCHLD, NULL, NULL, NULL, NULL);
+  pthread_internal_t* self = __get_thread();
+#if defined(__x86_64__)
+  int result = __clone(CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, NULL, NULL, &(self->tid), NULL);
+#else
+  int result = __clone(CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, NULL, NULL, NULL, &(self->tid));
+#endif
   if (result != 0) {  // Not a child process.
     __timer_table_start_stop(0);
     __bionic_atfork_run_parent();

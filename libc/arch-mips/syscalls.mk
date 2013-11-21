@@ -24,6 +24,7 @@ syscall_src += arch-mips/syscalls/__rt_sigsuspend.S
 syscall_src += arch-mips/syscalls/__rt_sigtimedwait.S
 syscall_src += arch-mips/syscalls/__sched_getaffinity.S
 syscall_src += arch-mips/syscalls/__set_thread_area.S
+syscall_src += arch-mips/syscalls/__set_tid_address.S
 syscall_src += arch-mips/syscalls/__sigaction.S
 syscall_src += arch-mips/syscalls/__statfs64.S
 syscall_src += arch-mips/syscalls/__syslog.S

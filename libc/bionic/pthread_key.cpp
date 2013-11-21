@@ -218,7 +218,7 @@ int pthread_key_delete(pthread_key_t key) {
     // startup trampoline (__pthread_start) hasn't been run yet by the
     // scheduler. t->tls will also be NULL after a thread's stack has been
     // unmapped but before the ongoing pthread_join() is finished.
-    if ((t->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) || t->tls == NULL) {
+    if (t->tid == 0 || t->tls == NULL) {
       continue;
     }
 
