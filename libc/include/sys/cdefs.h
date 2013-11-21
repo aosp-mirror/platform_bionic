@@ -550,11 +550,4 @@
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
-/* Android-added: for FreeBSD's libm. */
-#define __weak_reference(sym,alias) \
-    __asm__(".weak " #alias); \
-    __asm__(".equ "  #alias ", " #sym)
-#define __strong_reference(sym,aliassym) \
-    extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
-
 #endif /* !_SYS_CDEFS_H_ */
