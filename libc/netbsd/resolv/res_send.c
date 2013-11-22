@@ -762,10 +762,13 @@ send_vc(res_state statp,
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_storage peer;
 		socklen_t size = sizeof peer;
-
+		int old_mark;
+		int mark_size = sizeof(old_mark);
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)(void *)&peer, &size) < 0 ||
-		    !sock_eq((struct sockaddr *)(void *)&peer, nsap)) {
+		    !sock_eq((struct sockaddr *)(void *)&peer, nsap) ||
+			getsockopt(statp->_vcsock, SOL_SOCKET, SO_MARK, &old_mark, &mark_size) < 0 ||
+			old_mark != statp->_mark) {
 			res_nclose(statp);
 			statp->_flags &= ~RES_F_VC;
 		}
@@ -793,6 +796,14 @@ send_vc(res_state statp,
 				*terrno = errno;
 				Perror(statp, stderr, "socket(vc)", errno);
 				return (-1);
+			}
+		}
+		if (statp->_mark != 0) {
+			if (setsockopt(statp->_vcsock, SOL_SOCKET,
+				        SO_MARK, &statp->_mark, sizeof(statp->_mark)) < 0) {
+				*terrno = errno;
+				Perror(statp, stderr, "setsockopt", errno);
+				return -1;
 			}
 		}
 		errno = 0;
@@ -1070,6 +1081,14 @@ send_dg(res_state statp,
 				return (-1);
 			}
 		}
+
+		if (statp->_mark != 0) {
+			if (setsockopt(EXT(statp).nssocks[ns], SOL_SOCKET,
+					SO_MARK, &(statp->_mark), sizeof(statp->_mark)) < 0) {
+				res_nclose(statp);
+				return -1;
+			}
+		}
 #ifndef CANNOT_CONNECT_DGRAM
 		/*
 		 * On a 4.3BSD+ machine (client and server,
@@ -1097,6 +1116,7 @@ send_dg(res_state statp,
 #endif /* !CANNOT_CONNECT_DGRAM */
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; new DG socket\n"))
+
 	}
 	s = EXT(statp).nssocks[ns];
 #ifndef CANNOT_CONNECT_DGRAM

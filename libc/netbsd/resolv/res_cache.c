@@ -1258,6 +1258,12 @@ typedef struct resolv_pidiface_info {
     char                            ifname[IF_NAMESIZE + 1];
     struct resolv_pidiface_info*    next;
 } PidIfaceInfo;
+typedef struct resolv_uidiface_info {
+    int                             uid_start;
+    int                             uid_end;
+    char                            ifname[IF_NAMESIZE + 1];
+    struct resolv_uidiface_info*    next;
+} UidIfaceInfo;
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
 
@@ -1796,6 +1802,9 @@ static struct resolv_cache_info _res_cache_list;
 // List of pid iface pairs
 static struct resolv_pidiface_info _res_pidiface_list;
 
+// List of uid iface pairs
+static struct resolv_uidiface_info _res_uidiface_list;
+
 // name of the current default inteface
 static char            _res_default_ifname[IF_NAMESIZE + 1];
 
@@ -1804,6 +1813,9 @@ static pthread_mutex_t _res_cache_list_lock;
 
 // lock protecting the _res_pid_iface_list
 static pthread_mutex_t _res_pidiface_list_lock;
+
+// lock protecting the _res_uidiface_list
+static pthread_mutex_t _res_uidiface_list_lock;
 
 /* lookup the default interface name */
 static char *_get_default_iface_locked();
@@ -1833,11 +1845,18 @@ static struct in_addr* _get_addr_locked(const char * ifname);
 /* return 1 if the provided list of name servers differs from the list of name servers
  * currently attached to the provided cache_info */
 static int _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
-        char** servers, int numservers);
+        const char** servers, int numservers);
 /* remove a resolv_pidiface_info structure from _res_pidiface_list */
 static void _remove_pidiface_info_locked(int pid);
 /* get a resolv_pidiface_info structure from _res_pidiface_list with a certain pid */
 static struct resolv_pidiface_info* _get_pid_iface_info_locked(int pid);
+
+/* remove a resolv_pidiface_info structure from _res_uidiface_list */
+static int _remove_uidiface_info_locked(int uid_start, int uid_end);
+/* check if a range [low,high] overlaps with any already existing ranges in the uid=>iface map*/
+static int  _resolv_check_uid_range_overlap_locked(int uid_start, int uid_end);
+/* get a resolv_uidiface_info structure from _res_uidiface_list with a certain uid */
+static struct resolv_uidiface_info* _get_uid_iface_info_locked(int uid);
 
 static void
 _res_cache_init(void)
@@ -1852,8 +1871,10 @@ _res_cache_init(void)
     memset(&_res_default_ifname, 0, sizeof(_res_default_ifname));
     memset(&_res_cache_list, 0, sizeof(_res_cache_list));
     memset(&_res_pidiface_list, 0, sizeof(_res_pidiface_list));
+    memset(&_res_uidiface_list, 0, sizeof(_res_uidiface_list));
     pthread_mutex_init(&_res_cache_list_lock, NULL);
     pthread_mutex_init(&_res_pidiface_list_lock, NULL);
+    pthread_mutex_init(&_res_uidiface_list_lock, NULL);
 }
 
 struct resolv_cache*
@@ -2076,7 +2097,7 @@ _resolv_set_default_iface(const char* ifname)
 }
 
 void
-_resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numservers,
+_resolv_set_nameservers_for_iface(const char* ifname, const char** servers, int numservers,
         const char *domains)
 {
     int i, rt, index;
@@ -2149,7 +2170,7 @@ _resolv_set_nameservers_for_iface(const char* ifname, char** servers, int numser
 
 static int
 _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
-        char** servers, int numservers)
+        const char** servers, int numservers)
 {
     int i;
     char** ns;
@@ -2271,8 +2292,8 @@ _resolv_set_addr_of_iface(const char* ifname, struct in_addr* addr)
         memcpy(&cache_info->ifaddr, addr, sizeof(*addr));
 
         if (DEBUG) {
-            char* addr_s = inet_ntoa(cache_info->ifaddr);
-            XLOG("address of interface %s is %s\n", ifname, addr_s);
+            XLOG("address of interface %s is %s\n",
+                    ifname, inet_ntoa(cache_info->ifaddr));
         }
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
@@ -2411,20 +2432,177 @@ _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen)
     return len;
 }
 
-int
-_resolv_get_default_iface(char* buff, int buffLen)
+static int
+_remove_uidiface_info_locked(int uid_start, int uid_end) {
+    struct resolv_uidiface_info* result = _res_uidiface_list.next;
+    struct resolv_uidiface_info* prev = &_res_uidiface_list;
+
+    while (result != NULL && result->uid_start != uid_start && result->uid_end != uid_end) {
+        prev = result;
+        result = result->next;
+    }
+    if (prev != NULL && result != NULL) {
+        prev->next = result->next;
+        free(result);
+        return 0;
+    }
+    errno = EINVAL;
+    return -1;
+}
+
+static struct resolv_uidiface_info*
+_get_uid_iface_info_locked(int uid)
 {
-    char* ifname;
+    struct resolv_uidiface_info* result = _res_uidiface_list.next;
+    while (result != NULL && !(result->uid_start <= uid && result->uid_end >= uid)) {
+        result = result->next;
+    }
+
+    return result;
+}
+
+static int
+_resolv_check_uid_range_overlap_locked(int uid_start, int uid_end)
+{
+    struct resolv_uidiface_info* cur = _res_uidiface_list.next;
+    while (cur != NULL) {
+        if (cur->uid_start <= uid_end && cur->uid_end >= uid_start) {
+            return -1;
+        }
+        cur = cur->next;
+    }
+    return 0;
+}
+
+void
+_resolv_clear_iface_uid_range_mapping()
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+    struct resolv_uidiface_info *current = _res_uidiface_list.next;
+    struct resolv_uidiface_info *next;
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    _res_uidiface_list.next = NULL;
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+}
+
+void
+_resolv_clear_iface_pid_mapping()
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_pidiface_list_lock);
+    struct resolv_pidiface_info *current = _res_pidiface_list.next;
+    struct resolv_pidiface_info *next;
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    _res_pidiface_list.next = NULL;
+    pthread_mutex_unlock(&_res_pidiface_list_lock);
+}
+
+int
+_resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
+{
+    int rv = 0;
+    struct resolv_uidiface_info* uidiface_info;
+    // make sure the uid iface list is created
+    pthread_once(&_res_cache_once, _res_cache_init);
+    if (uid_start > uid_end) {
+        errno = EINVAL;
+        return -1;
+    }
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+    //check that we aren't adding an overlapping range
+    if (!_resolv_check_uid_range_overlap_locked(uid_start, uid_end)) {
+        uidiface_info = calloc(sizeof(*uidiface_info), 1);
+        if (uidiface_info) {
+            uidiface_info->uid_start = uid_start;
+            uidiface_info->uid_end = uid_end;
+            int len = sizeof(uidiface_info->ifname);
+            strncpy(uidiface_info->ifname, ifname, len - 1);
+            uidiface_info->ifname[len - 1] = '\0';
+
+            uidiface_info->next = _res_uidiface_list.next;
+            _res_uidiface_list.next = uidiface_info;
+
+            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", uid_start, uid_end,
+                    ifname);
+        } else {
+            XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
+            rv = -1;
+            errno = EINVAL;
+        }
+    } else {
+        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", uid_start, uid_end);
+        rv = -1;
+        errno = EINVAL;
+    }
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+    return rv;
+}
+
+int
+_resolv_clear_iface_for_uid_range(int uid_start, int uid_end)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+
+    int rv = _remove_uidiface_info_locked(uid_start, uid_end);
+
+    XLOG("_resolv_clear_iface_for_uid_range: [%d,%d]\n", uid_start, uid_end);
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+
+    return rv;
+}
+
+int
+_resolv_get_uids_associated_interface(int uid, char* buff, int buffLen)
+{
     int len = 0;
 
-    if (!buff || buffLen == 0) {
+    if (!buff) {
         return -1;
+    }
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_uidiface_list_lock);
+
+    struct resolv_uidiface_info* uidiface_info = _get_uid_iface_info_locked(uid);
+    buff[0] = '\0';
+    if (uidiface_info) {
+        len = strlen(uidiface_info->ifname);
+        if (len < buffLen) {
+            strncpy(buff, uidiface_info->ifname, len);
+            buff[len] = '\0';
+        }
+    }
+
+    XLOG("_resolv_get_uids_associated_interface buff: %s\n", buff);
+
+    pthread_mutex_unlock(&_res_uidiface_list_lock);
+
+    return len;
+}
+
+size_t
+_resolv_get_default_iface(char* buff, size_t buffLen)
+{
+    if (!buff || buffLen == 0) {
+        return 0;
     }
 
     pthread_once(&_res_cache_once, _res_cache_init);
     pthread_mutex_lock(&_res_cache_list_lock);
 
-    ifname = _get_default_iface_locked(); // never null, but may be empty
+    char* ifname = _get_default_iface_locked(); // never null, but may be empty
 
     // if default interface not set give up.
     if (ifname[0] == '\0') {
@@ -2432,7 +2610,7 @@ _resolv_get_default_iface(char* buff, int buffLen)
         return 0;
     }
 
-    len = strlen(ifname);
+    size_t len = strlen(ifname);
     if (len < buffLen) {
         strncpy(buff, ifname, len);
         buff[len] = '\0';
@@ -2445,28 +2623,32 @@ _resolv_get_default_iface(char* buff, int buffLen)
     return len;
 }
 
-int
+void
 _resolv_populate_res_for_iface(res_state statp)
 {
-    int nserv;
-    struct resolv_cache_info* info = NULL;
+    if (statp == NULL) {
+        return;
+    }
 
-    if (statp) {
+    if (statp->iface[0] == '\0') { // no interface set assign default
+        size_t if_len = _resolv_get_default_iface(statp->iface, sizeof(statp->iface));
+        if (if_len + 1 > sizeof(statp->iface)) {
+            XLOG("%s: INTERNAL_ERROR: can't fit interface name into statp->iface.\n", __FUNCTION__);
+            return;
+        }
+        if (if_len == 0) {
+            XLOG("%s: INTERNAL_ERROR: can't find any suitable interfaces.\n", __FUNCTION__);
+            return;
+        }
+    }
+
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(statp->iface);
+    if (info != NULL) {
+        int nserv;
         struct addrinfo* ai;
-
-        if (statp->iface[0] == '\0') { // no interface set assign default
-            _resolv_get_default_iface(statp->iface, sizeof(statp->iface));
-        }
-
-        pthread_once(&_res_cache_once, _res_cache_init);
-        pthread_mutex_lock(&_res_cache_list_lock);
-        info = _find_cache_info_locked(statp->iface);
-
-        if (info == NULL) {
-            pthread_mutex_unlock(&_res_cache_list_lock);
-            return 0;
-        }
-
         XLOG("_resolv_populate_res_for_iface: %s\n", statp->iface);
         for (nserv = 0; nserv < MAXNS; nserv++) {
             ai = info->nsaddrinfo[nserv];
@@ -2500,8 +2682,6 @@ _resolv_populate_res_for_iface(res_state statp)
         while (pp < statp->dnsrch + MAXDNSRCH && *p != -1) {
             *pp++ = &statp->defdname + *p++;
         }
-
-        pthread_mutex_unlock(&_res_cache_list_lock);
     }
-    return nserv;
+    pthread_mutex_unlock(&_res_cache_list_lock);
 }

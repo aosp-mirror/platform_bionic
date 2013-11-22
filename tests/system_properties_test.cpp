@@ -203,6 +203,84 @@ TEST(properties, find_nth) {
     ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(247));
 }
 
+static void hierarchical_test_callback(const prop_info *pi, void *cookie) {
+    bool (*ok)[8][8] = static_cast<bool (*)[8][8]>(cookie);
+
+    char name[PROP_NAME_MAX];
+    char value[PROP_VALUE_MAX];
+
+    __system_property_read(pi, name, value);
+
+    int name_i, name_j, name_k;
+    int value_i, value_j, value_k;
+    ASSERT_EQ(3, sscanf(name, "property_%d.%d.%d", &name_i, &name_j, &name_k));
+    ASSERT_EQ(3, sscanf(value, "value_%d.%d.%d", &value_i, &value_j, &value_k));
+    ASSERT_EQ(name_i, value_i);
+    ASSERT_GE(name_i, 0);
+    ASSERT_LT(name_i, 8);
+    ASSERT_EQ(name_j, value_j);
+    ASSERT_GE(name_j, 0);
+    ASSERT_LT(name_j, 8);
+    ASSERT_EQ(name_k, value_k);
+    ASSERT_GE(name_k, 0);
+    ASSERT_LT(name_k, 8);
+
+    ok[name_i][name_j][name_k] = true;
+}
+
+TEST(properties, fill_hierarchical) {
+    LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
+    char prop_name[PROP_NAME_MAX];
+    char prop_value[PROP_VALUE_MAX];
+    char prop_value_ret[PROP_VALUE_MAX];
+    int ret;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 8; k++) {
+                ret = snprintf(prop_name, PROP_NAME_MAX - 1, "property_%d.%d.%d", i, j, k);
+                memset(prop_name + ret, 'a', PROP_NAME_MAX - 1 - ret);
+                ret = snprintf(prop_value, PROP_VALUE_MAX - 1, "value_%d.%d.%d", i, j, k);
+                memset(prop_value + ret, 'b', PROP_VALUE_MAX - 1 - ret);
+                prop_name[PROP_NAME_MAX - 1] = 0;
+                prop_value[PROP_VALUE_MAX - 1] = 0;
+
+                ASSERT_EQ(0, __system_property_add(prop_name, PROP_NAME_MAX - 1, prop_value, PROP_VALUE_MAX - 1));
+            }
+        }
+    }
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 8; k++) {
+                ret = snprintf(prop_name, PROP_NAME_MAX - 1, "property_%d.%d.%d", i, j, k);
+                memset(prop_name + ret, 'a', PROP_NAME_MAX - 1 - ret);
+                ret = snprintf(prop_value, PROP_VALUE_MAX - 1, "value_%d.%d.%d", i, j, k);
+                memset(prop_value + ret, 'b', PROP_VALUE_MAX - 1 - ret);
+                prop_name[PROP_NAME_MAX - 1] = 0;
+                prop_value[PROP_VALUE_MAX - 1] = 0;
+                memset(prop_value_ret, '\0', PROP_VALUE_MAX);
+
+                ASSERT_EQ(PROP_VALUE_MAX - 1, __system_property_get(prop_name, prop_value_ret));
+                ASSERT_EQ(0, memcmp(prop_value, prop_value_ret, PROP_VALUE_MAX));
+            }
+        }
+    }
+
+    bool ok[8][8][8];
+    memset(ok, 0, sizeof(ok));
+    __system_property_foreach(hierarchical_test_callback, ok);
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 8; k++) {
+                ASSERT_TRUE(ok[i][j][k]);
+            }
+        }
+    }
+}
+
 TEST(properties, errors) {
     LocalPropertyTestState pa;
     ASSERT_TRUE(pa.valid);

@@ -73,8 +73,10 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         cmp     r2, #16
         blo     .L_copy_less_than_16_unknown_align
 
-        cmp     r2, #832
-        bge     .L_check_alignment
+        // TODO: The aligned copy code is extremely slow copying some large
+        //       buffers so always go through the unaligned path for now.
+        //cmp     r2, #832
+        //bge     .L_check_alignment
 
 .L_copy_unknown_alignment:
         // Unknown alignment of src and dst.

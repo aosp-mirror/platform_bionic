@@ -26,61 +26,28 @@
  * SUCH DAMAGE.
  */
 
-/* Assumes neon instructions and a cache line size of 32 bytes. */
-
-#include <machine/asm.h>
-#include "private/libc_events.h"
+#include "private/bionic_name_mem.h"
 
 /*
- * This code assumes it is running on a processor that supports all arm v7
- * instructions, that supports neon instructions, and that has a 32 byte
- * cache line.
+ * Local definitions of custom prctl arguments to set a vma name in some kernels
  */
+#define BIONIC_PR_SET_VMA               0x53564d41
+#define BIONIC_PR_SET_VMA_ANON_NAME     0
 
-        .text
-        .syntax unified
-        .fpu    neon
-        .thumb
-        .thumb_func
-
-ENTRY(__memcpy_chk)
-        cmp         r2, r3
-        bhi         __memcpy_chk_fail
-
-        // Fall through to memcpy...
-END(__memcpy_chk)
-
-ENTRY(memcpy)
-        pld     [r1, #64]
-        stmfd   sp!, {r0, lr}
-        .save   {r0, lr}
-        .cfi_def_cfa_offset 8
-        .cfi_rel_offset r0, 0
-        .cfi_rel_offset lr, 4
-END(memcpy)
-
-#define MEMCPY_BASE         __memcpy_base
-#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
-#include "memcpy_base.S"
-
-ENTRY_PRIVATE(__memcpy_chk_fail)
-        // Preserve lr for backtrace.
-        push    {lr}
-        .save   {lr}
-        .cfi_def_cfa_offset 4
-        .cfi_rel_offset lr, 0
-
-        ldr     r0, error_message
-        ldr     r1, error_code
-1:
-        add     r0, pc
-        bl      __fortify_chk_fail
-error_code:
-        .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
-error_message:
-        .word   error_string-(1b+4)
-END(__memcpy_chk_fail)
-
-        .data
-error_string:
-        .string     "memcpy: prevented write past end of buffer"
+/*
+ * Names a region of memory.  The name is expected to show up in /proc/pid/maps
+ * and /proc/pid/smaps.  There is no guarantee that it will work, and it if it
+ * does work it is likely to only work on memory that was allocated with
+ * mmap(MAP_ANONYMOUS), and only on regions that are page aligned.  name should
+ * be a pointer to a string that is valid for as long as the memory is mapped,
+ * preferably a compile-time constant string.
+ *
+ * Returns -1 on error and sets errno.  If it returns an error naming page
+ * aligned anonymous memory the kernel doesn't support naming, and an alternate
+ * method of naming memory should be used (like ashmem).
+ */
+int __bionic_name_mem(void *addr, size_t len, const char *name)
+{
+    return prctl(BIONIC_PR_SET_VMA, BIONIC_PR_SET_VMA_ANON_NAME,
+                 addr, len, name);
+}
