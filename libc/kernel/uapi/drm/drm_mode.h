@@ -313,59 +313,46 @@ struct drm_mode_cursor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 handle;
 };
-struct drm_mode_cursor2 {
- __u32 flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 crtc_id;
- __s32 x;
- __s32 y;
- __u32 width;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 height;
- __u32 handle;
- __s32 hot_x;
- __s32 hot_y;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
 struct drm_mode_crtc_lut {
  __u32 crtc_id;
- __u32 gamma_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 gamma_size;
  __u64 red;
  __u64 green;
  __u64 blue;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define DRM_MODE_PAGE_FLIP_EVENT 0x01
 #define DRM_MODE_PAGE_FLIP_FLAGS DRM_MODE_PAGE_FLIP_EVENT
 struct drm_mode_crtc_page_flip {
- __u32 crtc_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 crtc_id;
  __u32 fb_id;
  __u32 flags;
  __u32 reserved;
- __u64 user_data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u64 user_data;
 };
 struct drm_mode_create_dumb {
  uint32_t height;
- uint32_t width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ uint32_t width;
  uint32_t bpp;
  uint32_t flags;
  uint32_t handle;
- uint32_t pitch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ uint32_t pitch;
  uint64_t size;
 };
 struct drm_mode_map_dumb {
- __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 handle;
  __u32 pad;
  __u64 offset;
 };
-struct drm_mode_destroy_dumb {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_destroy_dumb {
  uint32_t handle;
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -16,43 +16,34 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __ASM_GENERIC_POLL_H
-#define __ASM_GENERIC_POLL_H
-#define POLLIN 0x0001
-#define POLLPRI 0x0002
+#ifndef _UAPI_LINUX_ASHMEM_H
+#define _UAPI_LINUX_ASHMEM_H
+#include <linux/ioctl.h>
+#define ASHMEM_NAME_LEN 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define POLLOUT 0x0004
-#define POLLERR 0x0008
-#define POLLHUP 0x0010
-#define POLLNVAL 0x0020
+#define ASHMEM_NAME_DEF "dev/ashmem"
+#define ASHMEM_NOT_PURGED 0
+#define ASHMEM_WAS_PURGED 1
+#define ASHMEM_IS_UNPINNED 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define POLLRDNORM 0x0040
-#define POLLRDBAND 0x0080
-#ifndef POLLWRNORM
-#define POLLWRNORM 0x0100
+#define ASHMEM_IS_PINNED 1
+struct ashmem_pin {
+ __u32 offset;
+ __u32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
-#ifndef POLLWRBAND
-#define POLLWRBAND 0x0200
-#endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#ifndef POLLMSG
-#define POLLMSG 0x0400
-#endif
-#ifndef POLLREMOVE
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define POLLREMOVE 0x1000
-#endif
-#ifndef POLLRDHUP
-#define POLLRDHUP 0x2000
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
-#define POLLFREE 0x4000
-struct pollfd {
- int fd;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short events;
- short revents;
 };
-#endif
+#define __ASHMEMIOC 0x77
+#define ASHMEM_SET_NAME _IOW(__ASHMEMIOC, 1, char[ASHMEM_NAME_LEN])
+#define ASHMEM_GET_NAME _IOR(__ASHMEMIOC, 2, char[ASHMEM_NAME_LEN])
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ASHMEM_SET_SIZE _IOW(__ASHMEMIOC, 3, size_t)
+#define ASHMEM_GET_SIZE _IO(__ASHMEMIOC, 4)
+#define ASHMEM_SET_PROT_MASK _IOW(__ASHMEMIOC, 5, unsigned long)
+#define ASHMEM_GET_PROT_MASK _IO(__ASHMEMIOC, 6)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ASHMEM_PIN _IOW(__ASHMEMIOC, 7, struct ashmem_pin)
+#define ASHMEM_UNPIN _IOW(__ASHMEMIOC, 8, struct ashmem_pin)
+#define ASHMEM_GET_PIN_STATUS _IO(__ASHMEMIOC, 9)
+#define ASHMEM_PURGE_ALL_CACHES _IO(__ASHMEMIOC, 10)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

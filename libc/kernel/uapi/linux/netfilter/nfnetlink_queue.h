@@ -122,5 +122,4 @@ enum nfqnl_attr_config {
 #define NFQA_SKB_CSUMNOTREADY (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NFQA_SKB_GSO (1 << 1)
-#define NFQA_SKB_CSUM_NOTVERIFIED (1 << 2)
 #endif
