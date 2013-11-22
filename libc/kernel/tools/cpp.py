@@ -554,19 +554,21 @@ class CppExpr:
         where "op" is a string describing the operation"""
 
     unaries  = [ "!", "~" ]
-    binaries = [ "+", "-", "<", "<=", ">=", ">", "&&", "||", "*", "/", "%", "&", "|", "^", "<<", ">>", "==", "!=" ]
-    precedences = { "||": 1,
-                    "&&": 2,
-                     "|": 3,
-                     "^": 4,
-                     "&": 5,
-                     "==":6, "!=":6,
-                     "<":7, "<=":7, ">":7, ">=":7,
-                     "<<":8, ">>":8,
-                     "+":9, "-":9,
-                     "*":10, "/":10, "%":10,
-                     "!":11, "~":12
-                     }
+    binaries = [ "+", "-", "<", "<=", ">=", ">", "&&", "||", "*", "/", "%", "&", "|", "^", "<<", ">>", "==", "!=", "?", ":" ]
+    precedences = {
+        "?": 1, ":": 1,
+        "||": 2,
+        "&&": 3,
+        "|": 4,
+        "^": 5,
+        "&": 6,
+        "==": 7, "!=": 7,
+        "<": 8, "<=": 8, ">": 8, ">=": 8,
+        "<<": 9, ">>": 9,
+        "+": 10, "-": 10,
+        "*": 11, "/": 11, "%": 11,
+        "!": 12, "~": 12
+    }
 
     re_cpp_constant = re.compile(r"((\d|\w|_)+)")
 
@@ -581,7 +583,7 @@ class CppExpr:
         if debugCppExpr:
             print "CppExpr: got " + repr(self.expr)
         if self.i != self.n:
-            print 'crap at end of input (%d != %d)' % (self.i, self.n)
+            print 'crap at end of input (%d != %d): %s' % (self.i, self.n, repr(tokens))
             raise
 
 
@@ -778,6 +780,10 @@ class CppExpr:
             self.nextToken()
             primary = self.parseExpression(0)
             self.expectId(tokRPAREN)
+        elif op.id == "?":
+            self.nextToken()
+            primary = self.parseExpression(0)
+            self.expectId(":")
         elif op.id == tokNUMBER:
             primary = self.is_number()
         elif op.id == tokIDENT:
