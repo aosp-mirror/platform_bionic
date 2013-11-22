@@ -121,7 +121,6 @@ libc_common_src_files := \
 	bionic/siglist.c \
 	bionic/signame.c \
 	bionic/sigsetmask.c \
-	bionic/sleep.c \
 	bionic/strndup.c \
 	bionic/strntoimax.c \
 	bionic/strntoumax.c \
@@ -133,7 +132,6 @@ libc_common_src_files := \
 	bionic/time64.c \
 	bionic/umount.c \
 	bionic/unlockpt.c \
-	bionic/usleep.c \
 	bionic/utmp.c \
 	bionic/wcscoll.c \
 
@@ -311,6 +309,8 @@ libc_tzcode_src_files := \
     tzcode/strptime.c \
 
 libc_upstream_freebsd_src_files := \
+    upstream-freebsd/lib/libc/gen/sleep.c \
+    upstream-freebsd/lib/libc/gen/usleep.c \
     upstream-freebsd/lib/libc/stdio/clrerr.c \
     upstream-freebsd/lib/libc/stdio/fclose.c \
     upstream-freebsd/lib/libc/stdio/fdopen.c \
