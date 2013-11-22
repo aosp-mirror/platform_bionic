@@ -98,7 +98,7 @@ typedef __kernel_ssize_t ssize_t;
 typedef __kernel_time_t time_t;
 
 typedef __kernel_suseconds_t suseconds_t;
-typedef unsigned long useconds_t;
+typedef unsigned int useconds_t;
 
 typedef __kernel_daddr_t	daddr_t;
 typedef __kernel_timer_t	timer_t;
