@@ -16,16 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_VIRTIO_CONFIG_H
-#define _UAPI_LINUX_VIRTIO_CONFIG_H
-#include <linux/types.h>
-#define VIRTIO_CONFIG_S_ACKNOWLEDGE 1
+#ifndef _UAPI_LINUX_KEYCHORD_H_
+#define _UAPI_LINUX_KEYCHORD_H_
+#include <linux/input.h>
+#define KEYCHORD_VERSION 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIRTIO_CONFIG_S_DRIVER 2
-#define VIRTIO_CONFIG_S_DRIVER_OK 4
-#define VIRTIO_CONFIG_S_FAILED 0x80
-#define VIRTIO_TRANSPORT_F_START 28
+struct input_keychord {
+ __u16 version;
+ __u16 id;
+ __u16 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIRTIO_TRANSPORT_F_END 32
-#define VIRTIO_F_NOTIFY_ON_EMPTY 24
+ __u16 keycodes[];
+};
 #endif

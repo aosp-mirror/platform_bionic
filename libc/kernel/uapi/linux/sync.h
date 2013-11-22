@@ -16,48 +16,38 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __LINUX_GEN_STATS_H
-#define __LINUX_GEN_STATS_H
+#ifndef _UAPI_LINUX_SYNC_H
+#define _UAPI_LINUX_SYNC_H
+#include <linux/ioctl.h>
 #include <linux/types.h>
-enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- TCA_STATS_UNSPEC,
- TCA_STATS_BASIC,
- TCA_STATS_RATE_EST,
- TCA_STATS_QUEUE,
+struct sync_merge_data {
+ __s32 fd2;
+ char name[32];
+ __s32 fence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- TCA_STATS_APP,
- __TCA_STATS_MAX,
 };
-#define TCA_STATS_MAX (__TCA_STATS_MAX - 1)
+struct sync_pt_info {
+ __u32 len;
+ char obj_name[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct gnet_stats_basic {
- __u64 bytes;
- __u32 packets;
+ char driver_name[32];
+ __s32 status;
+ __u64 timestamp_ns;
+ __u8 driver_data[0];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct sync_fence_info_data {
+ __u32 len;
+ char name[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct gnet_stats_basic_packed {
- __u64 bytes;
- __u32 packets;
-} __attribute__ ((packed));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct gnet_stats_rate_est {
- __u32 bps;
- __u32 pps;
+ __s32 status;
+ __u8 pt_info[0];
 };
+#define SYNC_IOC_MAGIC '>'
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct gnet_stats_queue {
- __u32 qlen;
- __u32 backlog;
- __u32 drops;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 requeues;
- __u32 overlimits;
-};
-struct gnet_estimator {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- signed char interval;
- unsigned char ewma_log;
-};
+#define SYNC_IOC_WAIT _IOW(SYNC_IOC_MAGIC, 0, __s32)
+#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 1, struct sync_merge_data)
+#define SYNC_IOC_FENCE_INFO _IOWR(SYNC_IOC_MAGIC, 2,  struct sync_fence_info_data)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
