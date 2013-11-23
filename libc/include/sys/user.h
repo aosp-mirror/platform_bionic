@@ -179,10 +179,48 @@ struct user {
   char u_comm[32];
 };
 
+#elif defined(__arm__)
+
+struct user_fp {
+  struct fp_reg {
+    unsigned int sign1:1;
+    unsigned int unused:15;
+    unsigned int sign2:1;
+    unsigned int exponent:14;
+    unsigned int j:1;
+    unsigned int mantissa1:31;
+    unsigned int mantissa0:32;
+  } fpregs[8];
+  unsigned int fpsr:32;
+  unsigned int fpcr:32;
+  unsigned char ftype[8];
+  unsigned int init_flag;
+};
+struct user{
+  struct pt_regs regs;
+  int u_fpvalid;
+  unsigned long int u_tsize;
+  unsigned long int u_dsize;
+  unsigned long int u_ssize;
+  unsigned long start_code;
+  unsigned long start_stack;
+  long int signal;
+  int reserved;
+  unsigned long u_ar0;
+  unsigned long magic;
+  char u_comm[32];
+  int u_debugreg[8];
+  struct user_fp u_fp;
+  struct user_fp_struct * u_fp0;
+};
+
+#elif defined(__aarch64__)
+
+// There are no user structures for 64 bit arm.
+
 #else
 
-/* arm and aarch64 have uapi user.h headers. */
-#include <asm/user.h>
+#error "Unsupported architecture."
 
 #endif
 
