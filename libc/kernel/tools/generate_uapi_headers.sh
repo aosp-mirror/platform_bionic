@@ -80,6 +80,25 @@ function copy_hdrs () {
   fi
 }
 
+function copy_if_exists () {
+  local check_dir=$1
+  local src_dir=$2
+  local tgt_dir=$3
+
+  mkdir -p ${tgt_dir}
+
+  # This only works if none of the filenames have spaces.
+  for file in $(ls -d ${src_dir}/* 2> /dev/null); do
+    if [[ -f  "${file}" ]] && [[ "${file}" =~ .h$ ]]; then
+      # Check that this file exists in check_dir.
+      header=$(basename ${file})
+      if [[ -f "${check_dir}/${header}" ]]; then
+        cp ${file} ${tgt_dir}
+      fi
+    fi
+  done
+}
+
 trap cleanup EXIT
 # This automatically triggers a call to cleanup.
 trap "exit 1" HUP INT TERM TSTP
@@ -158,9 +177,11 @@ fi
 # Copy all of the include/uapi files to the kernel headers uapi directory.
 copy_hdrs "${KERNEL_DIR}/common/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
 
+# Copy the staging files to uapi/linux.
 copy_hdrs "${KERNEL_DIR}/common/drivers/staging/android/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi/linux" "no-copy-dirs"
 
+# Copy the generated headers.
 copy_hdrs "${KERNEL_DIR}/common/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
 
@@ -171,10 +192,16 @@ for arch in "${ARCH_LIST[@]}"; do
   else
     tgt_arch="asm-${arch}"
   fi
-  # Copy arch headers first.
+  # Copy arch headers.
   copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}"
-  # Copy the generated arch header files.
+  # Copy the generated arch headers.
   copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/generated/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}"
+
+  # Special copy of generated header files from arch/<ARCH>/generated/asm that
+  # also exist in uapi/asm-generic.
+  copy_if_exists "${KERNEL_DIR}/common/include/uapi/asm-generic" \
+                 "${KERNEL_DIR}/common/arch/${arch}/include/generated/asm" \
+                 "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}/asm"
 done
