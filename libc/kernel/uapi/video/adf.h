@@ -24,7 +24,7 @@
 #include <drm/drm_fourcc.h>
 #include <drm/drm_mode.h>
 #define ADF_NAME_LEN 32
-#define ADF_MAX_CUSTOM_DATA_SIZE PAGE_SIZE
+#define ADF_MAX_CUSTOM_DATA_SIZE 4096
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum adf_interface_type {
  ADF_INTF_DSI = 0,
@@ -84,7 +84,7 @@ struct adf_buffer_config {
  __u8 n_planes;
  __s64 acquire_fence;
 };
-#define ADF_MAX_BUFFERS (PAGE_SIZE / sizeof(struct adf_buffer_config))
+#define ADF_MAX_BUFFERS (4096 / sizeof(struct adf_buffer_config))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct adf_post_config {
  size_t n_interfaces;
@@ -97,7 +97,7 @@ struct adf_post_config {
  __s64 complete_fence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define ADF_MAX_INTERFACES (PAGE_SIZE / sizeof(__u32))
+#define ADF_MAX_INTERFACES (4096 / sizeof(__u32))
 struct adf_simple_buffer_alloc {
  __u16 w;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -129,7 +129,7 @@ struct adf_device_data {
  size_t custom_data_size;
  void __user *custom_data;
 };
-#define ADF_MAX_ATTACHMENTS (PAGE_SIZE / sizeof(struct adf_attachment))
+#define ADF_MAX_ATTACHMENTS (4096 / sizeof(struct adf_attachment_config))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct adf_interface_data {
  char name[ADF_NAME_LEN];
@@ -149,7 +149,7 @@ struct adf_interface_data {
  size_t custom_data_size;
  void __user *custom_data;
 };
-#define ADF_MAX_MODES (PAGE_SIZE / sizeof(struct drm_mode_modeinfo))
+#define ADF_MAX_MODES (4096 / sizeof(struct drm_mode_modeinfo))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct adf_overlay_engine_data {
  char name[ADF_NAME_LEN];
@@ -159,7 +159,7 @@ struct adf_overlay_engine_data {
  size_t custom_data_size;
  void __user *custom_data;
 };
-#define ADF_MAX_SUPPORTED_FORMATS (PAGE_SIZE / sizeof(__u32))
+#define ADF_MAX_SUPPORTED_FORMATS (4096 / sizeof(__u32))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ADF_SET_EVENT _IOW('D', 0, struct adf_set_event)
 #define ADF_BLANK _IOW('D', 1, __u8)
