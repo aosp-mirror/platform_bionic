@@ -41,6 +41,7 @@
 #include "private/ScopedPthreadMutexLocker.h"
 
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
+extern "C" int __set_tls(void*);
 
 #ifdef __i386__
 #define ATTRIBUTES __attribute__((noinline)) __attribute__((fastcall))
@@ -60,6 +61,10 @@ void  __init_tls(pthread_internal_t* thread) {
   for (size_t i = TLS_SLOT_ERRNO; i < BIONIC_TLS_SLOTS; ++i) {
     thread->tls[i] = NULL;
   }
+
+#if defined(__i386__)
+  __set_tls(thread->tls);
+#endif
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
@@ -225,6 +230,12 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
       CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+#if defined(__i386__)
+  // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc rather than
+  // a pointer to the TLS itself. Rather than try to deal with that here, we just let x86 set
+  // the TLS manually in __init_tls, like all architectures used to.
+  flags &= ~CLONE_SETTLS;
+#endif
   int rc = __bionic_clone(flags, child_stack, &(thread->tid), thread->tls, &(thread->tid), __pthread_start, thread);
   if (rc == -1) {
     int clone_errno = errno;
