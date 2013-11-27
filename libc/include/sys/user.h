@@ -79,7 +79,7 @@ struct user_regs_struct {
   unsigned long sp;
   unsigned long ss;
 };
-struct user{
+struct user {
   struct user_regs_struct regs;
   int u_fpvalid;
   struct user_i387_struct i387;
@@ -91,7 +91,7 @@ struct user{
   long int signal;
   int reserved;
   unsigned long u_ar0;
-  struct user_i387_struct *u_fpstate;
+  struct user_i387_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
   int u_debugreg[8];
@@ -155,7 +155,7 @@ struct user {
   int reserved;
   int pad1;
   unsigned long u_ar0;
-  struct user_i387_struct *u_fpstate;
+  struct user_i387_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
   unsigned long u_debugreg[8];
@@ -196,7 +196,16 @@ struct user_fp {
   unsigned char ftype[8];
   unsigned int init_flag;
 };
-struct user{
+struct user_vfp {
+  unsigned long long fpregs[32];
+  unsigned long fpscr;
+};
+struct user_vfp_exc {
+  unsigned long fpexc;
+  unsigned long fpinst;
+  unsigned long fpinst2;
+};
+struct user {
   struct pt_regs regs;
   int u_fpvalid;
   unsigned long int u_tsize;
@@ -211,7 +220,7 @@ struct user{
   char u_comm[32];
   int u_debugreg[8];
   struct user_fp u_fp;
-  struct user_fp_struct * u_fp0;
+  struct user_fp_struct* u_fp0;
 };
 
 #elif defined(__aarch64__)
