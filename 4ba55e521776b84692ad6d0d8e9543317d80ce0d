@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4325c2ed_872906b7",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-12-02T16:23:57Z",
+      "side": 0,
+      "message": "I am confused, I\u0027d expect this linkage to remain in some form. Did it move into BUILD_NATIVE_BENCHMARK (and I missed the review)?",
+      "revId": "4ba55e521776b84692ad6d0d8e9543317d80ce0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
