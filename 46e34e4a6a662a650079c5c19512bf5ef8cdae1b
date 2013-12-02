@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "632006df_c80f8fb2",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-12-02T16:01:44Z",
+      "side": 1,
+      "message": "ULL (#define NS_PER_SEC 1000000000ULL)",
+      "revId": "46e34e4a6a662a650079c5c19512bf5ef8cdae1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "832b3ac2_6c5dd329",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-12-02T16:01:44Z",
+      "side": 1,
+      "message": "We could reuse this function for the throughput portion of the benchmark results; in that case it may be advised to support a uint64_t here?",
+      "revId": "46e34e4a6a662a650079c5c19512bf5ef8cdae1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "832b3ac2_4c628fed",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-12-02T16:01:44Z",
+      "side": 1,
+      "message": "uint64_t can be used here for the math, in that case we could also leverage PrettyPrint above to make this human readable over a large range of values?",
+      "revId": "46e34e4a6a662a650079c5c19512bf5ef8cdae1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "632006df_284aabea",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2013-12-02T16:01:44Z",
+      "side": 1,
+      "message": "Wow, a new expanded meaning for auto (C++11. It scares me, only because it is asking C++ to \u0027do the right thing\u0027 and I worry what the \u0027right thing\u0027 might be ;-)\n\nThanks, I lurned something new today!",
+      "revId": "46e34e4a6a662a650079c5c19512bf5ef8cdae1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
