@@ -106,7 +106,7 @@ struct soinfo {
   size_t phnum;
   Elf_Addr entry;
   Elf_Addr base;
-  unsigned size;
+  size_t size;
 
 #ifndef __LP64__
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
