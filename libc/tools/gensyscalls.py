@@ -94,12 +94,17 @@ END(%(func)s)
 
 arm_eabi_call_long = syscall_stub_header + """\
     mov     ip, sp
-    .save   {r4, r5, r6, r7}
     stmfd   sp!, {r4, r5, r6, r7}
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset r4, 0
+    .cfi_rel_offset r5, 4
+    .cfi_rel_offset r6, 8
+    .cfi_rel_offset r7, 12
     ldmfd   ip, {r4, r5, r6}
     ldr     r7, =%(__NR_name)s
     swi     #0
     ldmfd   sp!, {r4, r5, r6, r7}
+    .cfi_def_cfa_offset 0
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
@@ -413,11 +418,11 @@ class State:
         glibc_fp.write("#elif defined(__arm__)\n")
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-arm/asm/unistd.h")
         glibc_fp.write("#elif defined(__mips__)\n")
-        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-mips/asm/unistd.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-mips/asm/unistd.h")
         glibc_fp.write("#elif defined(__i386__)\n")
-        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-x86/asm/unistd_32.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-x86/asm/unistd_32.h")
         glibc_fp.write("#elif defined(__x86_64__)\n")
-        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-x86/asm/unistd_64.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-x86/asm/unistd_64.h")
         glibc_fp.write("#endif\n")
 
         glibc_fp.write("#endif /* _BIONIC_GLIBC_SYSCALLS_H_ */\n")

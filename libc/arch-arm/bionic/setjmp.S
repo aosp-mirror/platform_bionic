@@ -51,12 +51,16 @@
 ENTRY(setjmp)
 	/* Block all signals and retrieve the old signal mask */
 	stmfd	sp!, {r0, r14}
+	.cfi_def_cfa_offset 8
+	.cfi_rel_offset r0, 0
+	.cfi_rel_offset r14, 4
 	mov	r0, #0x00000000
 
 	bl	PIC_SYM(_C_LABEL(sigblock), PLT)
 	mov	r1, r0
 
 	ldmfd	sp!, {r0, r14}
+	.cfi_def_cfa_offset 0
 
 	/* Store signal mask */
 	str	r1, [r0, #(_JB_SIGMASK * 4)]
@@ -96,13 +100,20 @@ ENTRY(longjmp)
 
 	/* Set signal mask */
 	stmfd	sp!, {r0, r1, r14}
+	.cfi_def_cfa_offset 12
+	.cfi_rel_offset r0, 0
+	.cfi_rel_offset r1, 4
+	.cfi_rel_offset r14, 8
 	sub	sp, sp, #4	/* align the stack */
+	.cfi_adjust_cfa_offset 4
 
 	mov	r0, r2
 	bl	PIC_SYM(_C_LABEL(sigsetmask), PLT)
 
 	add	sp, sp, #4	/* unalign the stack */
+	.cfi_adjust_cfa_offset -4
 	ldmfd	sp!, {r0, r1, r14} 
+	.cfi_def_cfa_offset 0
 
 #ifdef __ARM_HAVE_VFP
 	/* Restore floating-point registers */
