@@ -31,10 +31,13 @@
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
     mov     ip, sp
-    .save   {r4, r5, r6, r7}
-
     # save registers to parent stack
     stmfd   sp!, {r4, r5, r6, r7}
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset r4, 0
+    .cfi_rel_offset r5, 4
+    .cfi_rel_offset r6, 8
+    .cfi_rel_offset r7, 12
 
     # load extra parameters
     ldmfd   ip, {r4, r5, r6}
@@ -51,12 +54,19 @@ ENTRY(__bionic_clone)
 
     # In the parent, reload saved registers then either return or set errno.
     ldmfd   sp!, {r4, r5, r6, r7}
+    .cfi_def_cfa_offset 0
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
 
 1:  # The child.
+    # Re-add the unwind directives that were reset from above.
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset r4, 0
+    .cfi_rel_offset r5, 4
+    .cfi_rel_offset r6, 8
+    .cfi_rel_offset r7, 12
     ldr    r0, [sp, #-4]
     ldr    r1, [sp, #-8]
     b      __bionic_clone_entry
