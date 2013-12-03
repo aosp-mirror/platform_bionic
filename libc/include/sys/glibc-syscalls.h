@@ -721,6 +721,7 @@
 #define SYS_fcntl64 __NR_fcntl64
 #define SYS_fdatasync __NR_fdatasync
 #define SYS_fgetxattr __NR_fgetxattr
+#define SYS_finit_module __NR_finit_module
 #define SYS_flistxattr __NR_flistxattr
 #define SYS_flock __NR_flock
 #define SYS_fork __NR_fork
@@ -785,6 +786,7 @@
 #define SYS_ioprio_get __NR_ioprio_get
 #define SYS_ioprio_set __NR_ioprio_set
 #define SYS_ipc __NR_ipc
+#define SYS_kcmp __NR_kcmp
 #define SYS_kexec_load __NR_kexec_load
 #define SYS_keyctl __NR_keyctl
 #define SYS_kill __NR_kill
@@ -1077,6 +1079,7 @@
 #define SYS_fcntl64 __NR_fcntl64
 #define SYS_fdatasync __NR_fdatasync
 #define SYS_fgetxattr __NR_fgetxattr
+#define SYS_finit_module __NR_finit_module
 #define SYS_flistxattr __NR_flistxattr
 #define SYS_flock __NR_flock
 #define SYS_fork __NR_fork
@@ -1146,6 +1149,7 @@
 #define SYS_ioprio_get __NR_ioprio_get
 #define SYS_ioprio_set __NR_ioprio_set
 #define SYS_ipc __NR_ipc
+#define SYS_kcmp __NR_kcmp
 #define SYS_kexec_load __NR_kexec_load
 #define SYS_keyctl __NR_keyctl
 #define SYS_kill __NR_kill
@@ -1164,7 +1168,6 @@
 #define SYS_lstat __NR_lstat
 #define SYS_lstat64 __NR_lstat64
 #define SYS_madvise __NR_madvise
-#define SYS_madvise1 __NR_madvise1
 #define SYS_mbind __NR_mbind
 #define SYS_migrate_pages __NR_migrate_pages
 #define SYS_mincore __NR_mincore
@@ -1216,6 +1219,8 @@
 #define SYS_pread64 __NR_pread64
 #define SYS_preadv __NR_preadv
 #define SYS_prlimit64 __NR_prlimit64
+#define SYS_process_vm_readv __NR_process_vm_readv
+#define SYS_process_vm_writev __NR_process_vm_writev
 #define SYS_prof __NR_prof
 #define SYS_profil __NR_profil
 #define SYS_pselect6 __NR_pselect6
@@ -1420,6 +1425,7 @@
 #define SYS_fcntl __NR_fcntl
 #define SYS_fdatasync __NR_fdatasync
 #define SYS_fgetxattr __NR_fgetxattr
+#define SYS_finit_module __NR_finit_module
 #define SYS_flistxattr __NR_flistxattr
 #define SYS_flock __NR_flock
 #define SYS_fork __NR_fork
@@ -1477,6 +1483,7 @@
 #define SYS_iopl __NR_iopl
 #define SYS_ioprio_get __NR_ioprio_get
 #define SYS_ioprio_set __NR_ioprio_set
+#define SYS_kcmp __NR_kcmp
 #define SYS_kexec_load __NR_kexec_load
 #define SYS_keyctl __NR_keyctl
 #define SYS_kill __NR_kill
