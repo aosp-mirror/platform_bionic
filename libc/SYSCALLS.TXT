@@ -57,10 +57,9 @@ int     setresuid:setresuid(uid_t, uid_t, uid_t)     aarch64,mips,x86_64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     aarch64,mips,x86_64
 void*   __brk:brk(void*)           all
-# See comments in kill.S to understand why we don't generate ARM stubs for kill/tkill/tgkill.
-int     kill(pid_t, int)           aarch64,mips,x86,x86_64
-int     tkill(pid_t tid, int sig)  aarch64,mips,x86,x86_64
-int     tgkill(pid_t tgid, pid_t tid, int sig)  aarch64,mips,x86,x86_64
+int     kill(pid_t, int)           all
+int     tkill(pid_t tid, int sig)  all
+int     tgkill(pid_t tgid, pid_t tid, int sig)  all
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
 int     __set_thread_area:set_thread_area(void*  user_desc)  mips,x86
 int     __getpriority:getpriority(int, int)  all

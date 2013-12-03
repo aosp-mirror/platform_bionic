@@ -6,7 +6,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/_exit_with_stack_teardown.S \
     arch-arm/bionic/futex_arm.S \
     arch-arm/bionic/__get_sp.S \
-    arch-arm/bionic/kill.S \
     arch-arm/bionic/libgcc_compat.c \
     arch-arm/bionic/memcmp16.S \
     arch-arm/bionic/memcmp.S \
@@ -14,8 +13,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/setjmp.S \
     arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
-    arch-arm/bionic/tgkill.S \
-    arch-arm/bionic/tkill.S \
 
 # These are used by the static and dynamic versions of the libc
 # respectively.

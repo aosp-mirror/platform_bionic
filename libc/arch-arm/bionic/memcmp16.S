@@ -74,9 +74,11 @@ ENTRY(__memcmp16)
         bx          lr
 
 
-        .save {r4, lr}
         /* save registers */
 0:      stmfd       sp!, {r4, lr}
+        .cfi_def_cfa_offset 8
+        .cfi_rel_offset r4, 0
+        .cfi_rel_offset lr, 4
         
         /* align first pointer to word boundary */
         tst         r3, #2
