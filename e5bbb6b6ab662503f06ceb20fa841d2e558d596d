@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3c03e69_3a9621ec",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-12-04T19:16:28Z",
+      "side": 1,
+      "message": "delete[] buf1;\ndelete[] buf2;",
+      "revId": "e5bbb6b6ab662503f06ceb20fa841d2e558d596d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
