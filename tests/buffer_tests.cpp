@@ -21,6 +21,10 @@
 #include <gtest/gtest.h>
 #include "buffer_tests.h"
 
+// For the comparison buffer tests, the maximum length to test for the
+// miscompare checks.
+#define MISCMP_MAX_LENGTH 512
+
 #define FENCEPOST_LENGTH 8
 
 static int g_single_aligns[][2] = {
@@ -248,9 +252,7 @@ void RunSingleBufferAlignTest(
 
       test_func(buf_align, len);
 
-      if (buf_align != buf) {
-        VerifyFencepost(&buf_align[-FENCEPOST_LENGTH]);
-      }
+      VerifyFencepost(&buf_align[-FENCEPOST_LENGTH]);
       VerifyFencepost(&buf_align[len]);
     }
   }
@@ -286,14 +288,64 @@ void RunSrcDstBufferAlignTest(
 
       test_func(src_align, dst_align, len);
 
-      if (dst_align != dst) {
-        VerifyFencepost(&dst_align[-FENCEPOST_LENGTH]);
-      }
+      VerifyFencepost(&dst_align[-FENCEPOST_LENGTH]);
       VerifyFencepost(&dst_align[len]);
     }
   }
   delete src;
   delete dst;
+}
+
+void RunCmpBufferAlignTest(
+    size_t max_test_size, void (*test_cmp_func)(uint8_t*, uint8_t*, size_t),
+    void (*test_miscmp_func)(uint8_t*, uint8_t*, size_t, size_t),
+    size_t (*set_incr)(size_t)) {
+  if (!set_incr) {
+    set_incr = SetIncrement;
+  }
+
+  // Allocate two large buffers for all of the testing.
+  uint8_t* buf1 = new uint8_t[3*max_test_size];
+  uint8_t* buf2 = new uint8_t[3*max_test_size];
+
+  uint8_t* buf1_align;
+  uint8_t* buf2_align;
+  for (size_t i = 0; i < g_double_aligns_len; i++) {
+    size_t incr = 1;
+    for (size_t len = 0; len <= max_test_size; len += incr) {
+      incr = set_incr(len);
+
+      buf1_align =
+          reinterpret_cast<uint8_t*>(GetAlignedPtr(
+              buf1, g_double_aligns[i][0], g_double_aligns[i][1]));
+      buf2_align =
+          reinterpret_cast<uint8_t*>(GetAlignedPtr(
+              buf2, g_double_aligns[i][2], g_double_aligns[i][3]));
+
+      // Check by putting all zeroes after both buffers.
+      memset(buf1_align+len, 0, 32);
+      memset(buf2_align+len, 0, 32);
+      test_cmp_func(buf1_align, buf2_align, len);
+
+      // Check by putting different values after both buffers.
+      for (size_t j = 0; j < 32; j++) {
+        buf1_align[len+j] = j;
+        buf2_align[len+j] = j+1;
+      }
+      test_cmp_func(buf1_align, buf2_align, len);
+
+      if (len > 0) {
+        // Change the lengths of the buffers and verify that there are
+        // miscompares.
+        for (size_t len2 = len+1; len2 < len+32; len2++) {
+          test_miscmp_func(buf1_align, buf2_align, len, len2);
+          test_miscmp_func(buf1_align, buf2_align, len2, len);
+        }
+      }
+    }
+  }
+  delete buf1;
+  delete buf2;
 }
 
 void RunSingleBufferOverreadTest(void (*test_func)(uint8_t*, size_t)) {
@@ -338,4 +390,59 @@ void RunSrcDstBufferOverreadTest(void (*test_func)(uint8_t*, uint8_t*, size_t)) 
   ASSERT_TRUE(mprotect(&memory[pagesize], pagesize, PROT_READ | PROT_WRITE) == 0);
   free(memory);
   delete dst;
+}
+
+void RunCmpBufferOverreadTest(
+    void (*test_cmp_func)(uint8_t*, uint8_t*, size_t),
+    void (*test_miscmp_func)(uint8_t*, uint8_t*, size_t, size_t)) {
+  // In order to verify that functions are not reading past the end of either
+  // of the bufs, create both buffers that end exactly at an unreadable memory
+  // boundary.
+  size_t pagesize = static_cast<size_t>(sysconf(_SC_PAGE_SIZE));
+  uint8_t* memory1;
+  ASSERT_TRUE(posix_memalign(reinterpret_cast<void**>(&memory1), pagesize,
+                             2*pagesize) == 0);
+  memset(memory1, 0x23, 2*pagesize);
+
+  // Make the second page unreadable and unwritable.
+  ASSERT_TRUE(mprotect(&memory1[pagesize], pagesize, PROT_NONE) == 0);
+
+  uint8_t* memory2;
+  ASSERT_TRUE(posix_memalign(reinterpret_cast<void**>(&memory2), pagesize,
+                             2*pagesize) == 0);
+  memset(memory2, 0x23, 2*pagesize);
+
+  // Make the second page unreadable and unwritable.
+  ASSERT_TRUE(mprotect(&memory2[pagesize], pagesize, PROT_NONE) == 0);
+
+  for (size_t i = 0; i < pagesize; i++) {
+    uint8_t* buf1 = &memory1[pagesize-i];
+    uint8_t* buf2 = &memory2[pagesize-i];
+
+    test_cmp_func(buf1, buf2, i);
+  }
+
+  // Don't cycle through pagesize, MISCMP_MAX_LENGTH bytes should be good.
+  size_t miscmp_len;
+  if (pagesize > MISCMP_MAX_LENGTH) {
+    miscmp_len = MISCMP_MAX_LENGTH;
+  } else {
+    miscmp_len = pagesize;
+  }
+  for (size_t i = 1; i < miscmp_len; i++) {
+    uint8_t* buf1 = &memory1[pagesize-i];
+    for (size_t j = 1; j < miscmp_len; j++) {
+      if (j == i)
+        continue;
+
+      uint8_t* buf2 = &memory2[pagesize-j];
+
+      test_miscmp_func(buf1, buf2, i, j);
+    }
+  }
+
+  ASSERT_TRUE(mprotect(&memory1[pagesize], pagesize, PROT_READ | PROT_WRITE) == 0);
+  ASSERT_TRUE(mprotect(&memory2[pagesize], pagesize, PROT_READ | PROT_WRITE) == 0);
+  free(memory1);
+  free(memory2);
 }
