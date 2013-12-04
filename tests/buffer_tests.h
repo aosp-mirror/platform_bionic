@@ -28,8 +28,17 @@ void RunSrcDstBufferAlignTest(
     size_t max_test_size, void (*test_func)(uint8_t*, uint8_t*, size_t),
     size_t (*set_incr)(size_t) = NULL);
 
+void RunCmpBufferAlignTest(
+    size_t max_test_size, void (*test_cmp_func)(uint8_t*, uint8_t*, size_t),
+    void (*test_miscmp_func)(uint8_t*, uint8_t*, size_t, size_t),
+    size_t (*set_incr)(size_t) = NULL);
+
 void RunSingleBufferOverreadTest(void (*test_func)(uint8_t*, size_t));
 
 void RunSrcDstBufferOverreadTest(void (*test_func)(uint8_t*, uint8_t*, size_t));
+
+void RunCmpBufferOverreadTest(
+    void (*test_cmp_func)(uint8_t*, uint8_t*, size_t),
+    void (*test_miscmp_func)(uint8_t*, uint8_t*, size_t, size_t));
 
 #endif // _BIONIC_TESTS_BUFFER_TESTS_H
