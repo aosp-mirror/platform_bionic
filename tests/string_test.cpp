@@ -956,7 +956,7 @@ TEST(string, strcpy_overread) {
 }
 
 // Use our own incrementer to cut down on the total number of calls.
-static size_t StrcatSetIncrement(size_t len) {
+static size_t LargeSetIncrement(size_t len) {
   if (len >= 4096) {
     return 4096;
   } else if (len >= 1024) {
@@ -1001,9 +1001,94 @@ static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
 }
 
 TEST(string, strcat_align) {
-  RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, StrcatSetIncrement);
+  RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, LargeSetIncrement);
 }
 
 TEST(string, strcat_overread) {
   RunSrcDstBufferOverreadTest(DoStrcatTest);
+}
+
+static void DoStrcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
+  if (len >= 1) {
+    memset(buf1, (32 + (len % 96)), len - 1);
+    buf1[len-1] = '\0';
+    memset(buf2, (32 + (len % 96)), len - 1);
+    buf2[len-1] = '\0';
+    ASSERT_EQ(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+  }
+}
+
+static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+  // Do string length differences.
+  int c = (32 + (len1 % 96));
+  memset(buf1, c, len1 - 1);
+  buf1[len1-1] = '\0';
+  memset(buf2, c, len2 - 1);
+  buf2[len2-1] = '\0';
+  ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                      reinterpret_cast<char*>(buf2)));
+
+  // Do single character differences.
+  size_t len;
+  if (len1 > len2) {
+    len = len2;
+  } else {
+    len = len1;
+  }
+  // Need at least a two character buffer to do this test.
+  if (len > 1) {
+    buf1[len-1] = '\0';
+    buf2[len-1] = '\0';
+    int diff_c = (c + 1) % 96;
+
+    buf1[len-2] = diff_c;
+    ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+
+    buf1[len-2] = c;
+    buf2[len-2] = diff_c;
+    ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+  }
+}
+
+TEST(string, strcmp_align) {
+  RunCmpBufferAlignTest(MEDIUM, DoStrcmpTest, DoStrcmpFailTest, LargeSetIncrement);
+}
+
+TEST(string, strcmp_overread) {
+  RunCmpBufferOverreadTest(DoStrcmpTest, DoStrcmpFailTest);
+}
+
+static void DoMemcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
+  memset(buf1, len+1, len);
+  memset(buf2, len+1, len);
+  ASSERT_EQ(0, memcmp(buf1, buf2, len));
+}
+
+static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+  size_t len;
+  if (len1 > len2) {
+    len = len2;
+  } else {
+    len = len1;
+  }
+
+  memset(buf1, len2+1, len);
+  buf1[len-1] = len2;
+  memset(buf2, len2+1, len);
+  ASSERT_NE(0, memcmp(buf1, buf2, len));
+
+  buf1[len-1] = len2+1;
+  buf2[len-1] = len2;
+  ASSERT_NE(0, memcmp(buf1, buf2, len));
+}
+
+TEST(string, memcmp_align) {
+  RunCmpBufferAlignTest(MEDIUM, DoMemcmpTest, DoMemcmpFailTest, LargeSetIncrement);
+}
+
+TEST(string, memcmp_overread) {
+  RunCmpBufferOverreadTest(DoMemcmpTest, DoMemcmpFailTest);
 }
