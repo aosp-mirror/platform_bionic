@@ -16,6 +16,24 @@
       "revId": "fc6e06a51bb2fd7c463be8b2953808064e77c32f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43eea235_85cb46e0",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-12-07T06:16:29Z",
+      "side": 1,
+      "message": "the more I think about handling pthread_detach, I think we need to deal with this by not  freeing the pthread_internal_t of detached threads in pthread_exit, but instead sticking it into a list where it can be recycled once the tid is cleared.\n\npresumably such thread memory could be reused in pthread_create. it could also be freed on later pthread_exit calls that are putting a new value on the list to try to keep a backlog from forming.\n\nnot sure if there is already a global lock in the pthread code that could serialize access to such a list.",
+      "parentUuid": "a3df5e7e_cb7f1d3f",
+      "revId": "fc6e06a51bb2fd7c463be8b2953808064e77c32f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
