@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3df5e7e_cb7f1d3f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-12-07T05:19:17Z",
+      "side": 1,
+      "message": "presumably this will still be a problem if pthread_detach is used later?",
+      "revId": "fc6e06a51bb2fd7c463be8b2953808064e77c32f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
