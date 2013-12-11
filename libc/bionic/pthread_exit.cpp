@@ -94,9 +94,9 @@ void pthread_exit(void* return_value) {
 
   pthread_mutex_lock(&gThreadListLock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
-    // The thread is detached, so we can destroy the pthread_internal_t.
-    // First make sure that the thread does not try to clear the tid since
-    // it points into memory that will be freed.
+    // The thread is detached, so we can free the pthread_internal_t.
+    // First make sure that the kernel does not try to clear the tid field
+    // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
     _pthread_internal_remove_locked(thread);
   } else {
