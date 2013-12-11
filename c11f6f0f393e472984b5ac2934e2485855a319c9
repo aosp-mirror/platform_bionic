@@ -16,6 +16,24 @@
       "revId": "c11f6f0f393e472984b5ac2934e2485855a319c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f6bf4a_8281bc79",
+        "filename": "libc/netbsd/resolv/res_query.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2013-12-11T20:38:45Z",
+      "side": 1,
+      "message": "All dns resolutions go through netd (even native calls).  Each of them causes a thread to be spawned and the thread private data is loaded with resolver data particular for that request.  We\u0027ve been looking at using a thread pool in netd so we can avoid the cost of creating threads.  Once we do that we can load this data once for the thread and not each time we resolve a name/address.",
+      "parentUuid": "a332fed0_be1af151",
+      "revId": "c11f6f0f393e472984b5ac2934e2485855a319c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
