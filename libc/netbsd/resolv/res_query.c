@@ -272,6 +272,15 @@ res_nsearch(res_state statp,
 	    (dots && !trailing_dot && (statp->options & RES_DNSRCH) != 0U)) {
 		int done = 0;
 
+		/* Unfortunately we need to load interface info
+		 * (dns servers, search domains) before
+		 * the domain stuff is tried.  Will have a better
+		 * fix after thread pools are used as this will
+		 * be loaded once for the thread instead of each
+		 * time a query is tried.
+		 */
+		_resolv_populate_res_for_iface(statp);
+
 		for (domain = (const char * const *)statp->dnsrch;
 		     *domain && !done;
 		     domain++) {
