@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8101b3f_da1fa56d",
+        "filename": "libc/netbsd/resolv/res_query.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-12-11T09:49:48Z",
+      "side": 1,
+      "message": "This comment is pretty unhelpful. What \"stuff\" do we need to set up before the domain \"stuff\" ?",
+      "revId": "9aa4973fa968c4c0b8fe63fe0413bdab7a98d384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
