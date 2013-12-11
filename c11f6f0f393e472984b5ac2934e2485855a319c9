@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a332fed0_be1af151",
+        "filename": "libc/netbsd/resolv/res_query.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-11T20:20:54Z",
+      "side": 1,
+      "message": "btw, i\u0027m not sure i get the \"thread pools\" comment... where will these thread pools be, and what will they be doing?",
+      "revId": "c11f6f0f393e472984b5ac2934e2485855a319c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
