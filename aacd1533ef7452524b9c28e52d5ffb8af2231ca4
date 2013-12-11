@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8337bac2_6ca613a6",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-11T05:52:22Z",
+      "side": 1,
+      "message": "type*. but i think if we\u0027re doing this, we should use the thread-safe idiom instead:\n\n  static BenchmarkMap\u0026 Benchmarks() {\n    static BenchmarkMap benchmarks;\n    return benchmarks;\n  }\n\nwhich also lets us keep . instead of -\u003e.",
+      "revId": "aacd1533ef7452524b9c28e52d5ffb8af2231ca4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a332fed0_edc201d0",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-11T05:52:22Z",
+      "side": 1,
+      "message": "these should be inside the include guard.",
+      "revId": "aacd1533ef7452524b9c28e52d5ffb8af2231ca4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
