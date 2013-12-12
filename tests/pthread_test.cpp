@@ -33,6 +33,11 @@ TEST(pthread, pthread_key_create) {
 
 #if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
+  // POSIX says PTHREAD_KEYS_MAX should be at least 128.
+  ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+  // sysconf shouldn't return a smaller value.
+  ASSERT_GE(sysconf(_SC_THREAD_KEYS_MAX), PTHREAD_KEYS_MAX);
+
   // We can allocate _SC_THREAD_KEYS_MAX keys.
   std::vector<pthread_key_t> keys;
   for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
