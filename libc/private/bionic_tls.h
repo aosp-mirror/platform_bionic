@@ -30,6 +30,7 @@
 #define __BIONIC_PRIVATE_BIONIC_TLS_H_
 
 #include <sys/cdefs.h>
+#include <sys/limits.h>
 #include "__get_tls.h"
 
 __BEGIN_DECLS
@@ -74,21 +75,21 @@ enum {
 };
 
 /*
- * Maximum number of elements in the TLS array.
- * POSIX says this must be at least 128, but Android has traditionally had only 64, minus those
- * ones used internally by bionic itself.
  * There are two kinds of slot used internally by bionic --- there are the well-known slots
  * enumerated above, and then there are those that are allocated during startup by calls to
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
-/*
- * This is PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
- * rounded up to maintain stack alignment.
- */
+
 #define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(128 + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
+
+/*
+ * Maximum number of elements in the TLS array.
+ * This includes space for pthread keys and our own internal slots.
+ * We need to round up to maintain stack alignment.
+ */
+#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
 
 __END_DECLS
 
