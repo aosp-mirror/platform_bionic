@@ -93,8 +93,6 @@ ssize_t     pwrite64(int, void*, size_t, off64_t) arm,mips,x86
 ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) aarch64,x86_64
 int         close(int)                      all
 pid_t       getpid()    all
-void*       mmap(void*, size_t, int, int, int, long)  aarch64,x86_64
-void*       __mmap2:mmap2(void*, size_t, int, int, int, long)   arm,mips,x86
 int         munmap(void*, size_t)  all
 void*       mremap(void*, size_t, size_t, unsigned long)  all
 int         msync(const void*, size_t, int)    all
@@ -159,6 +157,9 @@ ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) 
 int truncate(const char*, off_t) arm,mips,x86
 int truncate64(const char*, off64_t) arm,mips,x86
 int truncate|truncate64(const char*, off_t) aarch64,x86_64
+# (mmap only gets two lines because we only used the 64-bit variant on 32-bit systems.)
+void* __mmap2:mmap2(void*, size_t, int, int, int, long)   arm,mips,x86
+void* mmap|mmap64(void*, size_t, int, int, int, off_t)  aarch64,x86_64
 
 # file system
 int     chdir(const char*)              all
