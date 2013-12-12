@@ -40,8 +40,19 @@
 #define ALIGNBYTES 3
 #endif
 
-#define ALIGN(p)    (((unsigned long)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+#ifndef ALIGN
+#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+#endif
 
-#define powerof2(x) ((((x)-1)&(x))==0)
+/* Macros for counting and rounding. */
+#ifndef howmany
+#define howmany(x, y)   (((x)+((y)-1))/(y))
+#endif
+#define roundup(x, y)   ((((x)+((y)-1))/(y))*(y))
+#define powerof2(x)     ((((x)-1)&(x))==0)
+
+/* Macros for min/max. */
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 #endif /* _SYS_PARAM_H_ */
