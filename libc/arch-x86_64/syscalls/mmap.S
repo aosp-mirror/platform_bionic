@@ -15,3 +15,6 @@ ENTRY(mmap)
 1:
     ret
 END(mmap)
+
+    .globl _C_LABEL(mmap64)
+    .equ _C_LABEL(mmap64), _C_LABEL(mmap)
