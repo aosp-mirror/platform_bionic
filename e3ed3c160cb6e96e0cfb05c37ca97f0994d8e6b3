@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28aeeb65_fabb51f4",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-12-12T19:10:20Z",
+      "side": 1,
+      "message": "This comment seems out of date now.",
+      "revId": "e3ed3c160cb6e96e0cfb05c37ca97f0994d8e6b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
