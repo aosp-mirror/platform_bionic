@@ -32,15 +32,15 @@
 /*
  * Optimized memcmp16() for ARM9.
  * This would not be optimal on XScale or ARM11, where more prefetching
- * and use of PLD will be needed.
+ * and use of pld will be needed.
  * The 2 major optimzations here are
  * (1) The main loop compares 16 bytes at a time
  * (2) The loads are scheduled in a way they won't stall
  */
 
 ENTRY(__memcmp16)
-        PLD         (r0, #0)
-        PLD         (r1, #0)
+        pld         [r0, #0]
+        pld         [r1, #0]
 
         /* take of the case where length is nul or the buffers are the same */
         cmp         r0, r1
@@ -62,13 +62,13 @@ ENTRY(__memcmp16)
         bpl         0f
 
         /* small blocks (less then 12 words) */
-        PLD         (r0, #32)
-        PLD         (r1, #32)
+        pld         [r0, #32]
+        pld         [r1, #32]
 
 1:      ldrh        r0, [r3], #2
         ldrh        ip, [r1], #2
         subs        r0, r0, ip
-        bxne        lr        
+        bxne        lr
         subs        r2, r2, #1
         bne         1b
         bx          lr
@@ -79,11 +79,11 @@ ENTRY(__memcmp16)
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r4, 0
         .cfi_rel_offset lr, 4
-        
+
         /* align first pointer to word boundary */
         tst         r3, #2
         beq         0f
-        
+
         ldrh        r0, [r3], #2
         ldrh        ip, [r1], #2
         sub         r2, r2, #1
@@ -111,10 +111,10 @@ ENTRY(__memcmp16)
         ldr         ip, [r1]
         subs        r2, r2, #(16 + 2)
         bmi         1f
-        
+
 0:
-        PLD         (r3, #64)
-        PLD         (r1, #64)
+        pld         [r3, #64]
+        pld         [r1, #64]
         ldr         r0, [r3], #4
         ldr         lr, [r1, #4]!
         eors        r0, r0, ip
@@ -139,14 +139,14 @@ ENTRY(__memcmp16)
         ldreq       r0, [r3], #4
         ldreq       ip, [r1, #4]!
         eoreqs      r0, r0, lr
-        bne         2f        
+        bne         2f
         subs        r2, r2, #16
         bhs         0b
 
         /* do we have at least 2 words left? */
 1:      adds        r2, r2, #(16 - 2 + 2)
         bmi         4f
-        
+
         /* finish off 2 words at a time */
 3:      ldr         r0, [r3], #4
         ldr         ip, [r1], #4
@@ -195,8 +195,8 @@ ENTRY(__memcmp16)
         sub         r2, r2, #8
 
 6:
-        PLD         (r3, #64)
-        PLD         (r1, #64)
+        pld         [r3, #64]
+        pld         [r1, #64]
         mov         ip, lr, lsr #16
         ldr         lr, [r1], #4
         ldr         r0, [r3], #4
