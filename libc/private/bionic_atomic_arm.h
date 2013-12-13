@@ -82,47 +82,21 @@
  */
 #if defined(ANDROID_SMP) && ANDROID_SMP == 1
 
-/* Sanity check, multi-core is only supported starting from ARMv6 */
-#  if __ARM_ARCH__ < 6
-#    error ANDROID_SMP should not be set to 1 for an ARM architecture less than 6
-#  endif
-
-#  ifdef __ARM_HAVE_DMB
 /* For ARMv7-A, we can use the 'dmb' instruction directly */
-__ATOMIC_INLINE__ void
-__bionic_memory_barrier(void)
-{
+__ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
     /* Note: we always build in ARM or Thumb-2 on ARMv7-A, so don't
      * bother with __ATOMIC_SWITCH_TO_ARM */
     __asm__ __volatile__ ( "dmb" : : : "memory" );
 }
-#  else /* !__ARM_HAVE_DMB */
-/* Otherwise, i.e. for multi-core ARMv6, we need to use the coprocessor,
- * which requires the use of a general-purpose register, which is slightly
- * less efficient.
- */
-__ATOMIC_INLINE__ void
-__bionic_memory_barrier(void)
-{
-    __asm__ __volatile__ (
-        __SWITCH_TO_ARM
-        "mcr p15, 0, %0, c7, c10, 5"
-        __SWITCH_TO_THUMB
-        : : "r" (0) : __ATOMIC_CLOBBERS "memory");
-}
-#  endif /* !__ARM_HAVE_DMB */
+
 #else /* !ANDROID_SMP */
-__ATOMIC_INLINE__ void
-__bionic_memory_barrier(void)
-{
+
+__ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
     /* A simple compiler barrier */
     __asm__ __volatile__ ( "" : : : "memory" );
 }
-#endif /* !ANDROID_SMP */
 
-#ifndef __ARM_HAVE_LDREX_STREX
-#error Only ARM devices which have LDREX / STREX are supported
-#endif
+#endif /* !ANDROID_SMP */
 
 /* Compare-and-swap, without any explicit barriers. Note that this functions
  * returns 0 on success, and 1 on failure. The opposite convention is typically
