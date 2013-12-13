@@ -33,7 +33,7 @@
 #include <machine/asm.h>
 
 ENTRY(strcpy)
-	PLD(r1, #0)
+	pld	[r1, #0]
 	eor	r2, r0, r1
 	mov	ip, r0
 	tst	r2, #3
@@ -62,7 +62,7 @@ ENTRY(strcpy)
 	  load stalls.  */
 	.p2align 2
 2:
-	PLD(r1, #8)
+	pld	[r1, #8]
 	ldr	r4, [r1], #4
 	sub	r2, r3, r5
 	bics	r2, r2, r3
