@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8973b5d_4be22dbc",
+        "filename": "libc/arch-mips/bionic/syscall.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-14T22:04:25Z",
+      "side": 1,
+      "message": "why 32? shouldn\u0027t this be (6args*4bytes)-(16bytes guaranteed by caller)?",
+      "revId": "f097baa2f0d959456e5d77c21caf95dffefefd03",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
