@@ -33,15 +33,6 @@
 
 #ifdef __GNUC__
 
-/*
- * REV and REV16 weren't available on ARM5 or ARM4.
- * We don't include <machine/cpu-features.h> because it pollutes the
- * namespace with macros like PLD.
- */
-#if !defined __ARM_ARCH_5__ && !defined __ARM_ARCH_5T__ && \
-    !defined __ARM_ARCH_5TE__ && !defined __ARM_ARCH_5TEJ__ && \
-    !defined __ARM_ARCH_4T__ && !defined __ARM_ARCH_4__
-
 /* According to RealView Assembler User's Guide, REV and REV16 are available
  * in Thumb code and 16-bit instructions when used in Thumb-2 code.
  *
@@ -55,13 +46,13 @@
  */
 #define __swap16md(x) ({                                        \
     register u_int16_t _x = (x);                                \
-    __asm volatile ("rev16 %0, %0" : "+l" (_x));                \
+    __asm__ __volatile__("rev16 %0, %0" : "+l" (_x));           \
     _x;                                                         \
 })
 
 #define __swap32md(x) ({                                        \
     register u_int32_t _x = (x);                                \
-    __asm volatile ("rev %0, %0" : "+l" (_x));                  \
+    __asm__ __volatile__("rev %0, %0" : "+l" (_x));             \
     _x;                                                         \
 })
 
@@ -74,7 +65,6 @@
 /* Tell sys/endian.h we have MD variants of the swap macros.  */
 #define MD_SWAP
 
-#endif  /* __ARM_ARCH__ */
 #endif  /* __GNUC__ */
 
 #if defined(__ARMEB__)

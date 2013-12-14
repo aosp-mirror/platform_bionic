@@ -52,8 +52,8 @@
 #define magic2(REG) REG, lsl #7
 
 ENTRY(strcmp)
-	PLD(r0, #0)
-	PLD(r1, #0)
+	pld	[r0, #0]
+	pld	[r1, #0]
 	eor	r2, r0, r1
 	tst	r2, #3
 
@@ -88,8 +88,8 @@ ENTRY(strcmp)
 	orr	r4, r4, r4, lsl #16
 	.p2align	2
 4:
-	PLD(r0, #8)
-	PLD(r1, #8)
+	pld	[r0, #8]
+	pld	[r1, #8]
 	sub	r2, ip, magic1(r4)
 	cmp	ip, r3
 	itttt	eq
