@@ -25,7 +25,7 @@ __ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
 #endif
 }
 
-/* Compare-and-swap, without any explicit barriers. Note that this functions
+/* Compare-and-swap, without any explicit barriers. Note that this function
  * returns 0 on success, and 1 on failure. The opposite convention is typically
  * used on other platforms.
  */
