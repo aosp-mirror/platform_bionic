@@ -44,7 +44,9 @@ extern "C" {
  */
 #define  __ATOMIC_INLINE__  static __inline__ __attribute__((always_inline))
 
-#ifdef __arm__
+#if defined(__aarch64__)
+#  include "bionic_atomic_aarch64.h"
+#elif defined(__arm__)
 #  include "bionic_atomic_arm.h"
 #elif defined(__i386__)
 #  include "bionic_atomic_x86.h"
