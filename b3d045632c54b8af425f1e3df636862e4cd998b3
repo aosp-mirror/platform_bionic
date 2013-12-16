@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c86c6f4a_373f80f0",
+        "filename": "libc/private/bionic_atomic_x86.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-12-16T07:31:43Z",
+      "side": 1,
+      "message": "Small nit, this should be aligned with the line above it.",
+      "range": {
+        "startLine": 58,
+        "startChar": 25,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "b3d045632c54b8af425f1e3df636862e4cd998b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
