@@ -32,6 +32,12 @@
     .align 4
     .ent syscall
 
+/*
+ * The caller is only required to allocate 16 bytes of stack for a0-a3.
+ * syscall has up to 6 arguments, so we need space for the extra two arguments.
+ */
+#define STACKSIZE 2*4
+
 syscall:
     .set noreorder
     .cpload $t9
@@ -42,9 +48,11 @@ syscall:
     lw      $a3, 16($sp)
     lw      $t0, 20($sp)
     lw      $t1, 24($sp)
+    subu    $sp, STACKSIZE
     sw      $t0, 16($sp)
     sw      $t1, 20($sp)
     syscall
+    addu    $sp, STACKSIZE
     bnez    $a3, 1f
     move    $a0, $v0
     j       $ra
