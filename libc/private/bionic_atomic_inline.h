@@ -23,11 +23,6 @@
  * memory barrier needs to be issued inline rather than as a function
  * call.
  *
- * Most code should not use these.
- *
- * Anything that does include this file must set ANDROID_SMP to either
- * 0 or 1, indicating compilation for UP or SMP, respectively.
- *
  * Macros defined in this header:
  *
  * void ANDROID_MEMBAR_FULL(void)
