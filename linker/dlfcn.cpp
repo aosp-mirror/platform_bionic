@@ -148,13 +148,13 @@ int dlclose(void* handle) {
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012 3456789
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
-#elif defined(__i386__) || defined(__mips__) || defined(__x86_64__)
+#elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
 #else
-#error Unsupported architecture. Only ARM, MIPS, x86, and x86_64 are presently supported.
+#error Unsupported architecture. Only aarch64, arm, mips, x86, and x86_64 are presently supported.
 #endif
 
 // name_offset: starting index of the name in libdl_info.strtab
