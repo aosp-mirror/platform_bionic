@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "480ddfba_27129a6d",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1037821
+      },
+      "writtenOn": "2013-12-17T03:14:46Z",
+      "side": 1,
+      "message": "To avoid sign extension, \n(static_cast\u003coff64_t\u003e(offset))\u0026(0xFFFFFFFF),\nelse 0x80000000 becomes 0xffffffff80000000.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 2
+      },
+      "revId": "afcc0cccdafef0c67600cbbc72cee0e7a41f3f04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
