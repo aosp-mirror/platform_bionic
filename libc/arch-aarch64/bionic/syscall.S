@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
- * All rights reserved.
+ * Copyright (C) 2013 The Android Open Source Project
+ * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,28 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#include <linux/err.h>
+#include <machine/asm.h>
 
-#if defined(__aarch64__)
-# define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
-#elif defined(__arm__)
-# define __get_tls() ({ void** __val; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); __val; })
-#elif defined(__mips__)
-# define __get_tls() \
-    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register void** __val asm("v1"); \
-       __asm__(".set    push\n" \
-               ".set    mips32r2\n" \
-               "rdhwr   %0,$29\n" \
-               ".set    pop\n" : "=r"(__val)); \
-       __val; })
-#elif defined(__i386__)
-# define __get_tls() ({ void** __val; __asm__("movl %%gs:0, %0" : "=r"(__val)); __val; })
-#elif defined(__x86_64__)
-# define __get_tls() ({ void** __val; __asm__("mov %%fs:0, %0" : "=r"(__val)); __val; })
-#else
-#error unsupported architecture
-#endif
+ENTRY(syscall)
+    /* create AAPCS frame pointer */
+    stp     x29, x30, [sp, #-16]!
+    mov     x29,  sp
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+    /* store x8 */
+    str     x8,       [sp, #-16]!
+
+    /* Move syscall No. from x0 to x8 */
+    mov     x8, x0
+    /* Move syscall parameters from x1 thru x6 to x0 thru x5 */
+    mov     x0, x1
+    mov     x1, x2
+    mov     x2, x3
+    mov     x3, x4
+    mov     x4, x5
+    mov     x5, x6
+    svc     #0
+
+    /* restore x8 */
+    ldr     x8,       [sp], #16
+    ldp     x29, x30, [sp], #16
+
+    /* check if syscall returned successfully */
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno
+
+    ret
+END(syscall)

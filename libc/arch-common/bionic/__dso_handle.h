@@ -30,5 +30,9 @@
 #ifndef CRT_LEGACY_WORKAROUND
 __attribute__ ((visibility ("hidden")))
 #endif
+#ifdef __aarch64__
+__attribute__ ((section (".data")))
+#else
 __attribute__ ((section (".bss")))
+#endif
 void *__dso_handle = (void *) 0;
