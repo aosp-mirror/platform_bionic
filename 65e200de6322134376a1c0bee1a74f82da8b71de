@@ -16,6 +16,24 @@
       "revId": "65e200de6322134376a1c0bee1a74f82da8b71de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c84d4f11_bbeb2722",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1013945
+      },
+      "writtenOn": "2013-12-17T22:30:16Z",
+      "side": 1,
+      "message": "Oops, you\u0027re right.  Sorry about that. I was using an incorrect futex_wait_ex implementation that made me think this was wrong; and also there\u0027s code in pthread_mutex_lock_timeout_np_impl that has it backwards too.  I\u0027ll update the CL with the fix for that.",
+      "parentUuid": "e85053a6_bc024120",
+      "revId": "65e200de6322134376a1c0bee1a74f82da8b71de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
