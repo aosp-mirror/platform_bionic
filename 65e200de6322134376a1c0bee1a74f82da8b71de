@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e85053a6_bc024120",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-17T22:24:02Z",
+      "side": 1,
+      "message": "no, the existing code is correct. the futex calls aren\u0027t auto-generated stubs that set errno; they\u0027re direct system calls that don\u0027t check the result. so errors really are reported as negated errno values.",
+      "revId": "65e200de6322134376a1c0bee1a74f82da8b71de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
