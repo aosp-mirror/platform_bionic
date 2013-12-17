@@ -92,7 +92,7 @@ static int socket_abstract_client(const char* name, int type) {
         return -1;
     }
 
-    int err = TEMP_FAILURE_RETRY(connect(s, (sockaddr*) &addr, alen));
+    int err = TEMP_FAILURE_RETRY(connect(s, reinterpret_cast<sockaddr*>(&addr), alen));
     if (err == -1) {
         close(s);
         s = -1;
