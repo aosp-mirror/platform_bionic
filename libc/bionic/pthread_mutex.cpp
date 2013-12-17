@@ -800,7 +800,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
          * thread.
          */
         if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(mvalue)) {
-            if (__futex_wait_ex(&mutex->value, shared, mvalue, &ts) == ETIMEDOUT) {
+            if (__futex_wait_ex(&mutex->value, shared, mvalue, &ts) == (-ETIMEDOUT)) {
                 return EBUSY;
             }
             mvalue = mutex->value;
