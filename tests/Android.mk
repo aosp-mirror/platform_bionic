@@ -29,6 +29,14 @@ test_c_flags = \
     -Werror \
     -fno-builtin \
 
+ifeq ($(TARGET_ARCH),aarch64)
+  $(info TODO: $(LOCAL_PATH)/Android.mk -fstack-protector not yet available for the AArch64 toolchain)
+  test_c_flags += -fno-stack-protector
+
+  $(info TODO: $(LOCAL_PATH)/Android.mk aarch64 GCC sees things other GCCs do not; punt for now)
+  test_c_flags += -Wno-error=strict-aliasing
+endif # aarch64
+
 test_src_files = \
     buffer_tests.cpp \
     dirent_test.cpp \
