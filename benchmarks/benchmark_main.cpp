@@ -23,6 +23,8 @@
 #include <string>
 #include <map>
 
+#include <inttypes.h>
+
 static int64_t gBytesProcessed;
 static int64_t gBenchmarkTotalTimeNs;
 static int64_t gBenchmarkStartTimeNs;
@@ -162,8 +164,8 @@ void Benchmark::RunWithArg(int arg) {
     snprintf(full_name, sizeof(full_name), "%s", name_);
   }
 
-  printf("%-20s %10lld %10lld%s\n", full_name,
-         static_cast<int64_t>(iterations), gBenchmarkTotalTimeNs/iterations, throughput);
+  printf("%-20s %10d %10" PRId64 "%s\n", full_name,
+         iterations, gBenchmarkTotalTimeNs/iterations, throughput);
   fflush(stdout);
 }
 
