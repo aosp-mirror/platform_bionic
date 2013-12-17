@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,28 +26,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#ifndef _AARCH64_ENDIAN_H_
+#define _AARCH64_ENDIAN_H_
 
-#if defined(__aarch64__)
-# define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
-#elif defined(__arm__)
-# define __get_tls() ({ void** __val; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); __val; })
-#elif defined(__mips__)
-# define __get_tls() \
-    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register void** __val asm("v1"); \
-       __asm__(".set    push\n" \
-               ".set    mips32r2\n" \
-               "rdhwr   %0,$29\n" \
-               ".set    pop\n" : "=r"(__val)); \
-       __val; })
-#elif defined(__i386__)
-# define __get_tls() ({ void** __val; __asm__("movl %%gs:0, %0" : "=r"(__val)); __val; })
-#elif defined(__x86_64__)
-# define __get_tls() ({ void** __val; __asm__("mov %%fs:0, %0" : "=r"(__val)); __val; })
+#include <sys/types.h>
+#include <sys/endian.h>
+
+#ifdef __GNUC__
+
+#define __swap16md(x) ({                                        \
+    register u_int16_t _x = (x);                                \
+    __asm volatile ("rev16 %0, %0" : "+r" (_x));                \
+    _x;                                                         \
+})
+
+/* Use GCC builtins */
+#define __swap32md(x) __builtin_bswap32(x)
+#define __swap64md(x) __builtin_bswap64(x)
+
+/* Tell sys/endian.h we have MD variants of the swap macros.  */
+#define MD_SWAP
+
+#endif  /* __GNUC__ */
+
+#if defined(__AARCH64EB__)
+#define _BYTE_ORDER _BIG_ENDIAN
 #else
-#error unsupported architecture
+#define _BYTE_ORDER _LITTLE_ENDIAN
 #endif
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+#endif /* _AARCH64_ENDIAN_H_ */

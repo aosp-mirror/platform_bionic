@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
- * All rights reserved.
+ * Copyright (C) 2013 The Android Open Source Project
+ * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,28 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#include <private/bionic_asm.h>
 
-#if defined(__aarch64__)
-# define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
-#elif defined(__arm__)
-# define __get_tls() ({ void** __val; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); __val; })
-#elif defined(__mips__)
-# define __get_tls() \
-    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register void** __val asm("v1"); \
-       __asm__(".set    push\n" \
-               ".set    mips32r2\n" \
-               "rdhwr   %0,$29\n" \
-               ".set    pop\n" : "=r"(__val)); \
-       __val; })
-#elif defined(__i386__)
-# define __get_tls() ({ void** __val; __asm__("movl %%gs:0, %0" : "=r"(__val)); __val; })
-#elif defined(__x86_64__)
-# define __get_tls() ({ void** __val; __asm__("mov %%fs:0, %0" : "=r"(__val)); __val; })
-#else
-#error unsupported architecture
-#endif
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+ENTRY(__bionic_clone)
+    stp     x29, x30, [sp, #-16]!
+    mov     x29,  sp
+    str     x8,       [sp, #-16]!
+
+    /* store thread pointer & args in child stack */
+    stp     x5, x6, [x1, #-16]
+
+    /* sys_clone */
+    uxtw    x0, w0
+    mov     x8, __NR_clone
+    svc     #0
+
+    /* check for child/parent */
+    cbz     x0,1f
+
+    ldr     x8,       [sp], #16
+    ldp     x29, x30, [sp], #16
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno
+
+    ret
+
+    /* thread initialization - set the end of the frame record chain */
+1:
+    mov     x29, xzr
+    ldp     x0, x1, [sp, #-16]
+    b       __bionic_clone_entry
+END(__bionic_clone)
