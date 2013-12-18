@@ -32,44 +32,44 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
-#include <linux/posix_types.h>
-#include <asm/types.h>
 #include <linux/types.h>
-#include <machine/kernel.h>
+#include <linux/posix_types.h>
 
-typedef __u32    __kernel_dev_t;
-
-/* be careful with __kernel_gid_t and __kernel_uid_t
- * these are defined as 16-bit for legacy reason, but
- * the kernel uses 32-bits instead.
- *
- * 32-bit values are required for Android, so use
- * __kernel_uid32_t and __kernel_gid32_t
+/* __kernel_gid_t and __kernel_uid_t are 16 bit for legacy reasons.
+ * Android uses __kernel_uid32_t and __kernel_gid32_t instead.
  */
+typedef __kernel_gid32_t gid_t;
+typedef __kernel_uid32_t uid_t;
 
-typedef __kernel_blkcnt_t    blkcnt_t;
-typedef __kernel_blksize_t   blksize_t;
-typedef __kernel_clock_t     clock_t;
-typedef __kernel_clockid_t   clockid_t;
-typedef __kernel_dev_t       dev_t;
-typedef __kernel_fsblkcnt_t  fsblkcnt_t;
-typedef __kernel_fsfilcnt_t  fsfilcnt_t;
-typedef __kernel_gid32_t     gid_t;
-typedef __kernel_uid32_t     uid_t;
-typedef __kernel_id_t        id_t;
-typedef __kernel_ino_t       ino_t;
-typedef __kernel_key_t       key_t;
-typedef __kernel_mode_t      mode_t;
+typedef __kernel_ulong_t blkcnt_t;
+typedef __kernel_ulong_t blksize_t;
+typedef __kernel_caddr_t caddr_t;
+typedef __kernel_clock_t clock_t;
+typedef __kernel_clockid_t clockid_t;
+typedef __kernel_daddr_t daddr_t;
+typedef __u32 dev_t;
+typedef __kernel_ulong_t fsblkcnt_t;
+typedef __kernel_ulong_t fsfilcnt_t;
+typedef __u32 id_t;
+typedef __kernel_ino_t ino_t;
+typedef __kernel_key_t key_t;
+typedef __kernel_mode_t mode_t;
+typedef __nlink_t nlink_t;
+typedef __kernel_pid_t pid_t;
+typedef __kernel_suseconds_t suseconds_t;
+typedef __kernel_timer_t timer_t;
+typedef unsigned int useconds_t;
+
+/* This historical accident means that we had a 32-bit time_t on 32-bit architectures. */
+typedef __kernel_time_t time_t;
+
+/* This historical accident means that we had a 32-bit off_t on 32-bit architectures. */
 #ifndef _OFF_T_DEFINED_
 #define _OFF_T_DEFINED_
-typedef __kernel_off_t       off_t;
+typedef __kernel_off_t off_t;
 #endif
-typedef __kernel_loff_t      loff_t;
-typedef loff_t               off64_t;
-
-typedef __kernel_pid_t		 pid_t;
-
-typedef __nlink_t nlink_t;
+typedef __kernel_loff_t loff_t;
+typedef loff_t off64_t;
 
 /* while POSIX wants these in <sys/types.h>, we
  * declare then in <pthread.h> instead */
@@ -95,16 +95,6 @@ typedef  .... pthread_t;
 typedef __kernel_ssize_t ssize_t;
 #endif
 
-typedef __kernel_time_t time_t;
-
-typedef __kernel_suseconds_t suseconds_t;
-typedef unsigned int useconds_t;
-
-typedef __kernel_daddr_t	daddr_t;
-typedef __kernel_timer_t	timer_t;
-typedef __kernel_mqd_t		mqd_t;
-
-typedef __kernel_caddr_t    caddr_t;
 typedef unsigned int        uint_t;
 typedef unsigned int        uint;
 
