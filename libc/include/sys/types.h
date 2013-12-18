@@ -41,16 +41,16 @@
 typedef __kernel_gid32_t gid_t;
 typedef __kernel_uid32_t uid_t;
 
-typedef __kernel_ulong_t blkcnt_t;
-typedef __kernel_ulong_t blksize_t;
+typedef unsigned long blkcnt_t;
+typedef unsigned long blksize_t;
 typedef __kernel_caddr_t caddr_t;
 typedef __kernel_clock_t clock_t;
 typedef __kernel_clockid_t clockid_t;
 typedef __kernel_daddr_t daddr_t;
-typedef __u32 dev_t;
-typedef __kernel_ulong_t fsblkcnt_t;
-typedef __kernel_ulong_t fsfilcnt_t;
-typedef __u32 id_t;
+typedef uint32_t dev_t;
+typedef unsigned long fsblkcnt_t;
+typedef unsigned long fsfilcnt_t;
+typedef uint32_t id_t;
 typedef __kernel_ino_t ino_t;
 typedef __kernel_key_t key_t;
 typedef __kernel_mode_t mode_t;
