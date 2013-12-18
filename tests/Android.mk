@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-ifneq ($(BUILD_TINY_ANDROID), true)
+ifneq ($(BUILD_TINY_ANDROID),true)
 
 LOCAL_PATH := $(call my-dir)
 

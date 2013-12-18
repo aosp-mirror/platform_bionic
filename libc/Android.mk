@@ -605,10 +605,16 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
 endif
 
+# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+libc_crt_target_cflags := \
+    -I$(LOCAL_PATH)/include \
+    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include \
+    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+
 ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -DSOFTFLOAT
   libc_common_cflags += -fstrict-aliasing
-  libc_crt_target_cflags := -mthumb-interwork
+  libc_crt_target_cflags += -mthumb-interwork
 endif # arm
 
 ifeq ($(TARGET_ARCH),mips)
@@ -616,16 +622,16 @@ ifeq ($(TARGET_ARCH),mips)
     libc_common_cflags += -DSOFTFLOAT
   endif
   libc_common_cflags += -fstrict-aliasing
-  libc_crt_target_cflags := $(TARGET_GLOBAL_CFLAGS)
+  libc_crt_target_cflags += $(TARGET_GLOBAL_CFLAGS)
 endif # mips
 
 ifeq ($(TARGET_ARCH),x86)
-  libc_crt_target_cflags := -m32
+  libc_crt_target_cflags += -m32
   libc_crt_target_ldflags := -melf_i386
 endif # x86
 
 ifeq ($(TARGET_ARCH),x86_64)
-  libc_crt_target_cflags := -m64
+  libc_crt_target_cflags += -m64
   libc_crt_target_ldflags := -melf_x86_64
 endif # x86_64
 
@@ -635,12 +641,6 @@ ifeq ($(TARGET_CPU_SMP),true)
 else
     libc_common_cflags += -DANDROID_SMP=0
 endif
-
-# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-libc_crt_target_cflags += \
-    -I$(LOCAL_PATH)/include  \
-    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include \
-    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
 
 # Define some common conlyflags
 libc_common_conlyflags := \
@@ -684,7 +684,7 @@ ifeq ($(TARGET_ARCH),arm)
 endif
 ifeq ($(TARGET_ARCH),mips)
     libc_crt_target_so_cflags := -fPIC
-libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
+    libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
 endif
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
     libc_crt_target_so_cflags := -fPIC
@@ -907,7 +907,7 @@ include $(BUILD_STATIC_LIBRARY)
 # ========================================================
 # libc_bionic.a - home-grown C library code
 # ========================================================
-#
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_bionic_src_files)
@@ -1022,12 +1022,14 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	$(libc_arch_dynamic_src_files) \
-	$(libc_static_common_src_files) \
-	bionic/dlmalloc.c \
-	bionic/malloc_debug_common.cpp \
-	bionic/pthread_debug.cpp \
-	bionic/libc_init_dynamic.cpp
+    $(libc_arch_dynamic_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/dlmalloc.c \
+    bionic/malloc_debug_common.cpp \
+    bionic/debug_mapinfo.cpp \
+    bionic/debug_stacktrace.cpp \
+    bionic/pthread_debug.cpp \
+    bionic/libc_init_dynamic.cpp \
 
 ifeq ($(TARGET_ARCH),arm)
 	LOCAL_NO_CRT := true
@@ -1103,8 +1105,6 @@ include $(BUILD_SHARED_LIBRARY)
 # ========================================================
 # libc_malloc_debug_qemu.so
 # ========================================================
-#TODO: We do not build this library for now
-ifneq ($(TARGET_ARCH),aarch64)
 include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := \
@@ -1130,7 +1130,6 @@ LOCAL_MODULE_TAGS := eng debug
 
 include $(BUILD_SHARED_LIBRARY)
 
-endif	#!aarch64
 endif	#!user
 
 
