@@ -91,6 +91,8 @@ the lock, so we actually do most of our deadlock prediction work after
 the lock has been acquired.
 */
 
+#if PTHREAD_DEBUG_ENABLED
+
 // =============================================================================
 // log functions
 // =============================================================================
@@ -658,23 +660,6 @@ static MutexInfo* get_most_recently_locked() {
 
 /****************************************************************************/
 
-/* pthread_debug_init() is called from libc_init_dynamic() just
- * after system properties have been initialized
- */
-
-extern "C" __LIBC_HIDDEN__ void pthread_debug_init() {
-    char env[PROP_VALUE_MAX];
-    if (__system_property_get("debug.libc.pthread", env)) {
-        int level = atoi(env);
-        if (level) {
-            LOGI("pthread deadlock detection level %d enabled for pid %d (%s)",
-                    level, getpid(), __progname);
-            hashmap_init(&sMutexMap);
-            sPthreadDebugLevel = level;
-        }
-    }
-}
-
 /*
  * See if we were allowed to grab the lock at this time.  We do it
  * *after* acquiring the lock, rather than before, so that we can
@@ -711,4 +696,22 @@ extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_unlock_check(pthread_mutex_t
     MutexInfo* object = get_mutex_info(mutex);
     remove_most_recently_locked(object);
     mutex_unlock_checked(object);
+}
+
+#endif // PTHREAD_DEBUG_ENABLED
+
+// Called from libc_init_dynamic() just after system properties have been initialized.
+extern "C" __LIBC_HIDDEN__ void pthread_debug_init() {
+#if PTHREAD_DEBUG_ENABLED
+    char env[PROP_VALUE_MAX];
+    if (__system_property_get("debug.libc.pthread", env)) {
+        int level = atoi(env);
+        if (level) {
+            LOGI("pthread deadlock detection level %d enabled for pid %d (%s)",
+                    level, getpid(), __progname);
+            hashmap_init(&sMutexMap);
+            sPthreadDebugLevel = level;
+        }
+    }
+#endif
 }
