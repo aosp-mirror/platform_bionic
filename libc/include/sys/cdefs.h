@@ -334,8 +334,10 @@
 
 #if __GNUC_PREREQ__(4, 3)
 #define __errordecl(name, msg) extern void name(void) __attribute__((__error__(msg)))
+#define __warnattr(msg) __attribute__((__warning__(msg)))
 #else
 #define __errordecl(name, msg) extern void name(void)
+#define __warnattr(msg)
 #endif
 
 /*
