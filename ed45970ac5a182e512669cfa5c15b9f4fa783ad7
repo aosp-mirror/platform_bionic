@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "089e87d0_f35c8866",
+        "filename": "libc/arch-arm/bionic/__bionic_clone.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:30:53Z",
+      "side": 1,
+      "message": ".cfi_restore r4\n.cfi_restore r5\n.cfi_restore r6\n.cfi_restore r7",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 25
+      },
+      "revId": "ed45970ac5a182e512669cfa5c15b9f4fa783ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "089e87d0_33473092",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:30:53Z",
+      "side": 1,
+      "message": ".cfi_restore r0\n.cfi_restore r14",
+      "range": {
+        "startLine": 63,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 22
+      },
+      "revId": "ed45970ac5a182e512669cfa5c15b9f4fa783ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8ad7bfe_5bcc8f71",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:30:53Z",
+      "side": 1,
+      "message": ".cfi_restore r0\n.cfi_restore r1\n.cfi_restore r14",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 20
+      },
+      "revId": "ed45970ac5a182e512669cfa5c15b9f4fa783ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8ad7bfe_9b9c3757",
+        "filename": "libc/arch-arm/bionic/syscall.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:30:53Z",
+      "side": 1,
+      "message": ".cfi_restore r4\n.cfi_restore r5\n.cfi_restore r6\n.cfi_restore r7",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 0
+      },
+      "revId": "ed45970ac5a182e512669cfa5c15b9f4fa783ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "089e87d0_53259cd7",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:30:53Z",
+      "side": 1,
+      "message": ".cfi_restore r4\n.cfi_restore r5\n.cfi_restore r6\n.cfi_restore r7",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 0
+      },
+      "revId": "ed45970ac5a182e512669cfa5c15b9f4fa783ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
