@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "089e87d0_d3c50cda",
+        "filename": "libc/arch-x86/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:13:24Z",
+      "side": 1,
+      "message": "test %eax, %eax\njze bc_child\njns bc_parent",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "99c393dff33e0a5d3838c16dc7878f32ac3da971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
