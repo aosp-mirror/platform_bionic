@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48bcff31_b80bfd80",
+        "filename": "libc/include/stdint.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:44:50Z",
+      "side": 1,
+      "message": "move to next line for shorter line length. Full-stop at end of comment.",
+      "range": {
+        "startLine": 269,
+        "startChar": 78,
+        "endLine": 269,
+        "endChar": 131
+      },
+      "revId": "33a51cb932e49e7164ef42ce0c3064791dddabed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
