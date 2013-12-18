@@ -62,10 +62,8 @@ typedef	short			__int16_t;
 typedef	unsigned short		__uint16_t;
 typedef	int			__int32_t;
 typedef	unsigned int		__uint32_t;
-/* LONGLONG */
-typedef	long long		__int64_t;
-/* LONGLONG */
-typedef	unsigned long long	__uint64_t;
+typedef	long                    __int64_t;
+typedef	unsigned long           __uint64_t;
 
 /* 7.18.1.2 Minimum-width integer types */
 typedef	__int8_t		__int_least8_t;
