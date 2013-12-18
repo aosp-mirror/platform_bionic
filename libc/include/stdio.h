@@ -222,13 +222,13 @@ int	 getchar(void);
 ssize_t	 getdelim(char ** __restrict, size_t * __restrict, int,
 	    FILE * __restrict);
 ssize_t	 getline(char ** __restrict, size_t * __restrict, FILE * __restrict);
-char	*gets(char *);
+
 #if __BSD_VISIBLE && !defined(__SYS_ERRLIST)
 #define __SYS_ERRLIST
-
 extern int sys_nerr;			/* perror(3) external variables */
 extern char *sys_errlist[];
 #endif
+
 void	 perror(const char *);
 int	 printf(const char * __restrict, ...)
 		__printflike(1, 2);
@@ -251,13 +251,16 @@ int	 vprintf(const char * __restrict, __va_list)
 		__printflike(1, 0);
 
 #ifndef __AUDIT__
-char	*gets(char *);
-int	 sprintf(char * __restrict, const char * __restrict, ...)
-		__printflike(2, 3);
-char	*tmpnam(char *);
-int	 vsprintf(char * __restrict, const char * __restrict,
-    __va_list)
-		__printflike(2, 0);
+char* gets(char*) __warnattr("gets is very unsafe; consider using fgets");
+int sprintf(char* __restrict, const char* __restrict, ...)
+    __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
+char* tmpnam(char*) __warnattr("tmpnam possibly used unsafely; consider using mkstemp");
+int vsprintf(char* __restrict, const char* __restrict, __va_list)
+    __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
+#if __XPG_VISIBLE
+char* tempnam(const char*, const char*)
+    __warnattr("tempnam possibly used unsafely; consider using mkstemp");
+#endif
 #endif
 
 extern int rename(const char*, const char*);
@@ -320,9 +323,6 @@ int	 putc_unlocked(int, FILE *);
 int	 putchar_unlocked(int);
 #endif /* __POSIX_VISIBLE >= 199506 */
 
-#if __XPG_VISIBLE
-char	*tempnam(const char *, const char *);
-#endif
 __END_DECLS
 
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
