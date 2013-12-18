@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "085be7e1_857b6209",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2013-12-18T05:21:51Z",
+      "side": 1,
+      "message": "As long as you are here, do you want to remove the tabs?",
+      "range": {
+        "startLine": 1032,
+        "startChar": 0,
+        "endLine": 1032,
+        "endChar": 1
+      },
+      "revId": "48fa6c474b0aee280500bd8af39239889c8bec3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
