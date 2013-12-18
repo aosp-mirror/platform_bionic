@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "089e87d0_13a8340b",
+        "filename": "libc/arch-x86/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2013-12-18T23:14:01Z",
+      "side": 1,
+      "message": "int 3 or hlt then?",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 40
+      },
+      "revId": "9dec707bd6fa59849c205db6f878f1b2cc2de536",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
