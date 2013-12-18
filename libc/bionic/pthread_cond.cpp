@@ -154,7 +154,7 @@ int __pthread_cond_timedwait_relative(pthread_cond_t* cond, pthread_mutex_t* mut
   int status = __futex_wait_ex(&cond->value, COND_IS_SHARED(cond), old_value, reltime);
   pthread_mutex_lock(mutex);
 
-  if (status == (-ETIMEDOUT)) {
+  if (status == -ETIMEDOUT) {
     return ETIMEDOUT;
   }
   return 0;
