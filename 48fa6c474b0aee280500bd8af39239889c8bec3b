@@ -22,6 +22,29 @@
       "revId": "48fa6c474b0aee280500bd8af39239889c8bec3b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c87b8f35_4ec59346",
+        "filename": "libc/bionic/pthread_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2013-12-18T05:28:15Z",
+      "side": 1,
+      "message": "this is far enough away from the start, I\u0027d probably comment it that its the end of PTHREAD_DEBUG_ENABLED",
+      "range": {
+        "startLine": 701,
+        "startChar": 1,
+        "endLine": 701,
+        "endChar": 6
+      },
+      "revId": "48fa6c474b0aee280500bd8af39239889c8bec3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
