@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
