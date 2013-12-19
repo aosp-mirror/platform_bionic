@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e871338d_f4681880",
+        "filename": "libc/bionic/open.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2013-12-19T18:42:01Z",
+      "side": 1,
+      "message": "The way this was done in other files was to add the extern \"C\" here.\n\ni.e,\n\nextern \"C\" int __open_2(...)\n\n(see, for example, __memset_chk.cpp)",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 3
+      },
+      "revId": "8bcbb5beb56385696a3095d6ec598ccdda9726ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
