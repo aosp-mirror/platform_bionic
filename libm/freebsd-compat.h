@@ -18,8 +18,7 @@
 #define _BIONIC_LIBM_FREEBSD_COMPAT_H_included
 
 #define __weak_reference(sym,alias) \
-    __asm__(".weak " #alias); \
-    __asm__(".equ "  #alias ", " #sym)
+    /* We don't use __weak_reference; see "fake_long_double.c". */
 
 #define __strong_reference(sym,aliassym) \
     extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
