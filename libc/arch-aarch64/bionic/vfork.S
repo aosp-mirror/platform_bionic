@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(vfork)
     mov     x0, #0x4111     /* CLONE_VM | CLONE_VFORK | SIGCHLD */

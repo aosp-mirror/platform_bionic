@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <linux/err.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(syscall)
     /* create AAPCS frame pointer */
