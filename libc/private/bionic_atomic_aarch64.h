@@ -17,7 +17,7 @@
 #define BIONIC_ATOMIC_AARCH64_H
 
 /* For ARMv8, we can use the 'dmb' instruction directly */
-__ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
+__ATOMIC_INLINE__ void __bionic_memory_barrier() {
   __asm__ __volatile__ ( "dmb ish" : : : "memory" );
 }
 

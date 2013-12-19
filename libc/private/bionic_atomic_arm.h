@@ -16,9 +16,9 @@
 #ifndef BIONIC_ATOMIC_ARM_H
 #define BIONIC_ATOMIC_ARM_H
 
-__ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
+__ATOMIC_INLINE__ void __bionic_memory_barrier() {
 #if defined(ANDROID_SMP) && ANDROID_SMP == 1
-  __asm__ __volatile__ ( "dmb" : : : "memory" );
+  __asm__ __volatile__ ( "dmb ish" : : : "memory" );
 #else
   /* A simple compiler barrier. */
   __asm__ __volatile__ ( "" : : : "memory" );
