@@ -25,7 +25,7 @@
  *
  * Macros defined in this header:
  *
- * void ANDROID_MEMBAR_FULL(void)
+ * void ANDROID_MEMBAR_FULL()
  *   Full memory barrier.  Provides a compiler reordering barrier, and
  *   on SMP systems emits an appropriate instruction.
  */
