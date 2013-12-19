@@ -25,7 +25,7 @@
  * the architecture-specific assembler versions.
  */
 
-__ATOMIC_INLINE__ void __bionic_memory_barrier(void) {
+__ATOMIC_INLINE__ void __bionic_memory_barrier() {
   __sync_synchronize();
 }
 
