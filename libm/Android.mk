@@ -177,7 +177,9 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
-libm_common_src_files += fake_long_double.c
+libm_common_src_files += \
+    fake_long_double.c \
+    upstream-freebsd/lib/msun/src/s_modfl.c \
 
 # TODO: on Android, "long double" is "double".
 #    upstream-freebsd/lib/msun/src/e_acosl.c \
@@ -204,7 +206,6 @@ libm_common_src_files += fake_long_double.c
 #    upstream-freebsd/lib/msun/src/s_logbl.c \
 #    upstream-freebsd/lib/msun/src/s_lrintl.c \
 #    upstream-freebsd/lib/msun/src/s_lroundl.c \
-#    upstream-freebsd/lib/msun/src/s_modfl.c \
 #    upstream-freebsd/lib/msun/src/s_nextafterl.c \
 #    upstream-freebsd/lib/msun/src/s_nexttoward.c \
 #    upstream-freebsd/lib/msun/src/s_remquol.c \
