@@ -35,52 +35,52 @@
 
 extern "C" int __openat(int, const char*, int, int);
 
+static inline int force_O_LARGEFILE(int flags) {
+#if __LP64__
+  return flags; // No need, and aarch64's strace gets confused.
+#else
+  return flags | O_LARGEFILE;
+#endif
+}
+
 int open(const char* pathname, int flags, ...) {
   mode_t mode = 0;
 
-  flags |= O_LARGEFILE;
-
-  if (flags & O_CREAT) {
+  if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
     mode = (mode_t) va_arg(args, int);
     va_end(args);
   }
 
-  return __openat(AT_FDCWD, pathname, flags, mode);
+  return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), mode);
 }
 
 int __open_2(const char* pathname, int flags) {
-  if (__predict_false(flags & O_CREAT)) {
+  if (__predict_false((flags & O_CREAT) != 0)) {
     __fortify_chk_fail("open(O_CREAT): called without specifying a mode", 0);
   }
 
-  flags |= O_LARGEFILE;
-
-  return __openat(AT_FDCWD, pathname, flags, 0);
+  return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0);
 }
 
 int openat(int fd, const char *pathname, int flags, ...) {
   mode_t mode = 0;
 
-  flags |= O_LARGEFILE;
-
-  if (flags & O_CREAT) {
+  if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
     mode = (mode_t) va_arg(args, int);
     va_end(args);
   }
 
-  return __openat(fd, pathname, flags, mode);
+  return __openat(fd, pathname, force_O_LARGEFILE(flags), mode);
 }
 
 int __openat_2(int fd, const char* pathname, int flags) {
-  if (flags & O_CREAT) {
+  if ((flags & O_CREAT) != 0) {
     __fortify_chk_fail("openat(O_CREAT): called without specifying a mode", 0);
   }
 
-  flags |= O_LARGEFILE;
-
-  return __openat(fd, pathname, flags, 0);
+  return __openat(fd, pathname, force_O_LARGEFILE(flags), 0);
 }
