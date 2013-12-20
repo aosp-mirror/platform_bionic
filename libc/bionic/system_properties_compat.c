@@ -48,6 +48,7 @@ struct prop_area_compat {
     unsigned volatile serial;
     unsigned magic;
     unsigned version;
+    unsigned reserved[4];
     unsigned toc[1];
 };
 
