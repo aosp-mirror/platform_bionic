@@ -37,94 +37,93 @@
 
 __BEGIN_DECLS
 
-/* really matches stat64 in the kernel, hence the padding
- * Note: The kernel zero's the padded region because glibc might read them
- * in the hope that the kernel has stretched to using larger sizes.
- */
-#ifdef __mips__
+#if defined(__aarch64__)
 struct stat {
-    unsigned long       st_dev;
-    unsigned long       __pad0[3];
-
-    unsigned long long  st_ino;
-
-    unsigned int        st_mode;
-    unsigned int        st_nlink;
-
-    unsigned long       st_uid;
-    unsigned long       st_gid;
-
-    unsigned long       st_rdev;
-    unsigned long       __pad1[3];
-
-    long long           st_size;
-
-    unsigned long       st_atime;
-    unsigned long       st_atime_nsec;
-
-    unsigned long       st_mtime;
-    unsigned long       st_mtime_nsec;
-
-    unsigned long       st_ctime;
-    unsigned long       st_ctime_nsec;
-
-    unsigned long       st_blksize;
-    unsigned long       __pad2;
-
-    unsigned long long  st_blocks;
+  unsigned long st_dev;
+  unsigned long st_ino;
+  unsigned int st_mode;
+  unsigned int st_nlink;
+  unsigned int st_uid;
+  unsigned int st_gid;
+  unsigned long st_rdev;
+  unsigned long __pad1;
+  long st_size;
+  int st_blksize;
+  int __pad2;
+  long st_blocks;
+  long st_atime;
+  unsigned long st_atime_nsec;
+  long st_mtime;
+  unsigned long st_mtime_nsec;
+  long st_ctime;
+  unsigned long st_ctime_nsec;
+  unsigned int __unused4;
+  unsigned int __unused5;
 };
-
-#elif __x86_64__
+#elif defined(__mips__)
 struct stat {
-    unsigned long st_dev;
-    unsigned long st_ino;
-    unsigned long st_nlink;
-    unsigned int st_mode;
-    unsigned int st_uid;
-    unsigned int st_gid;
-    unsigned int __pad0;
-    unsigned long st_rdev;
-    long st_size;
-    long st_blksize;
-    long st_blocks;
-    unsigned long st_atime;
-    unsigned long st_atime_nsec;
-    unsigned long st_mtime;
-    unsigned long st_mtime_nsec;
-    unsigned long st_ctime;
-    unsigned long st_ctime_nsec;
-    long __pad3[3];
+  unsigned long st_dev;
+  unsigned long __pad0[3];
+  unsigned long long st_ino;
+  unsigned int st_mode;
+  unsigned int st_nlink;
+  unsigned long st_uid;
+  unsigned long st_gid;
+  unsigned long st_rdev;
+  unsigned long __pad1[3];
+  long long st_size;
+  unsigned long st_atime;
+  unsigned long st_atime_nsec;
+  unsigned long st_mtime;
+  unsigned long st_mtime_nsec;
+  unsigned long st_ctime;
+  unsigned long st_ctime_nsec;
+  unsigned long st_blksize;
+  unsigned long __pad2;
+  unsigned long long st_blocks;
 };
-
+#elif defined(__x86_64__)
+struct stat {
+  unsigned long st_dev;
+  unsigned long st_ino;
+  unsigned long st_nlink;
+  unsigned int st_mode;
+  unsigned int st_uid;
+  unsigned int st_gid;
+  unsigned int __pad0;
+  unsigned long st_rdev;
+  long st_size;
+  long st_blksize;
+  long st_blocks;
+  unsigned long st_atime;
+  unsigned long st_atime_nsec;
+  unsigned long st_mtime;
+  unsigned long st_mtime_nsec;
+  unsigned long st_ctime;
+  unsigned long st_ctime_nsec;
+  long __pad3[3];
+};
 #else
 struct stat {
-    unsigned long long  st_dev;
-    unsigned char       __pad0[4];
-
-    unsigned long       __st_ino;
-    unsigned int        st_mode;
-    unsigned int        st_nlink;
-
-    unsigned long       st_uid;
-    unsigned long       st_gid;
-
-    unsigned long long  st_rdev;
-    unsigned char       __pad3[4];
-
-    long long           st_size;
-    unsigned long	st_blksize;
-    unsigned long long  st_blocks;
-
-    unsigned long       st_atime;
-    unsigned long       st_atime_nsec;
-
-    unsigned long       st_mtime;
-    unsigned long       st_mtime_nsec;
-
-    unsigned long       st_ctime;
-    unsigned long       st_ctime_nsec;
-
-    unsigned long long  st_ino;
+  unsigned long long st_dev;
+  unsigned char __pad0[4];
+  unsigned long __st_ino;
+  unsigned int st_mode;
+  unsigned int st_nlink;
+  unsigned long st_uid;
+  unsigned long st_gid;
+  unsigned long long st_rdev;
+  unsigned char __pad3[4];
+  long long st_size;
+  unsigned long st_blksize;
+  unsigned long long st_blocks;
+  unsigned long st_atime;
+  unsigned long st_atime_nsec;
+  unsigned long st_mtime;
+  unsigned long st_mtime_nsec;
+  unsigned long st_ctime;
+  unsigned long st_ctime_nsec;
+  unsigned long long st_ino;
 };
 #endif
 
