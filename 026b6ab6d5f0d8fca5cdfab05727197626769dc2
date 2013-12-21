@@ -16,6 +16,24 @@
       "revId": "026b6ab6d5f0d8fca5cdfab05727197626769dc2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "088cc7b8_1583bf3f",
+        "filename": "libc/arch-aarch64/bionic/futex_aarch64.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2013-12-21T01:12:44Z",
+      "side": 0,
+      "message": "only if you can persuade your kernel pals to add the __ASSEMBLER__ #ifdefs to keep those structs out of my .S files :-)",
+      "parentUuid": "48631fc4_a65f5822",
+      "revId": "026b6ab6d5f0d8fca5cdfab05727197626769dc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
