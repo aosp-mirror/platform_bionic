@@ -26,15 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-/*
- * __futex_wait(*ftx, val, *timespec)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
+// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
 	.type	__futex_wait, @function
 	.global	__futex_wait
 	.align	4
@@ -59,10 +56,7 @@ __futex_wait:
 	j	$ra
 	.end	__futex_wait
 
-/*
- * int __futex_wake(volatile void *ftx, int count)
- * int futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
+// int __futex_wake(volatile void* ftx, int count)
 	.type	__futex_wake, @function
 	.globl	__futex_wake
 	.align	4
@@ -87,9 +81,7 @@ __futex_wake:
 	j	$ra
 	.end	__futex_wake
 
-/* __futex_syscall3(*ftx, op, val)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
+// int __futex_syscall3(volatile void* ftx, int op, int count)
 	.type	__futex_syscall3, @function
 	.global	__futex_syscall3
 	.align	4
@@ -114,9 +106,7 @@ __futex_syscall3:
 	j	$ra
 	.end	__futex_syscall3
 
-/* __futex_syscall4(*ftx, op, val)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
 	.type	__futex_syscall4, @function
 	.global	__futex_syscall4
 	.align	4

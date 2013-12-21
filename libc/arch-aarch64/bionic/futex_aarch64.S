@@ -31,97 +31,56 @@
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-/*
- * Syscall interface for fast userspace locks
- *
- * int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
- * int __futex_wake(volatile void *ftx, int count);
- * int __futex_syscall3(volatile void *ftx, int op, int val);
- * int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout);
- */
-
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
 ENTRY(__futex_syscall4)
-    /* create AArch64 PCS frame pointer */
-    stp    x29, x30, [sp, #-16]!
-    mov    x29,  sp
+  stp x29, x30, [sp, #-16]!
+  mov x29, sp
 
-    /* store x8 */
-    str    x8,       [sp, #-16]!
+  str x8, [sp, #-16]!
+  mov x8, __NR_futex
+  svc #0
+  ldr x8, [sp], #16
 
-    /* syscall No. in x8 */
-    mov     x8, __NR_futex
-    svc     #0
-
-    /* restore x8 */
-    ldr     x8,       [sp], #16
-    ldp     x29, x30, [sp], #16
-
-    /* check if syscall returned successfully */
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno
-
-    ret
+  ldp x29, x30, [sp], #16
+  ret
 END(__futex_syscall4)
 
+// int __futex_syscall3(volatile void* ftx, int op, int count)
 ENTRY(__futex_syscall3)
-    /* __futex_syscall4 but with fewer arguments */
-    b __futex_syscall4
+  b __futex_syscall4
 END(__futex_syscall3)
 
+// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
 ENTRY(__futex_wait)
-    /* create AArch64 PCS frame pointer */
-    stp    x29, x30, [sp, #-16]!
-    mov    x29,  sp
+  stp x29, x30, [sp, #-16]!
+  mov x29, sp
 
-    /* store x8 */
-    str    x8,       [sp, #-16]!
+  mov x3, x2
+  mov x2, x1
+  mov x1, #FUTEX_WAIT
 
-    /* arange arguments as expected in the kernel side */
-    mov x3, x2
-    mov w2, w1
-    mov w1, #FUTEX_WAIT
+  str x8, [sp, #-16]!
+  mov x8, __NR_futex
+  svc #0
+  ldr x8, [sp], #16
 
-    /* syscall No. in X8 */
-    mov     x8, __NR_futex
-    svc     #0
-
-    /* restore x8 */
-    ldr     x8,       [sp], #16
-    ldp     x29, x30, [sp], #16
-
-    /* check if syscall returned successfully */
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno
-
-    ret
+  ldp x29, x30, [sp], #16
+  ret
 END(__futex_wait)
 
+// int __futex_wake(volatile void* ftx, int count)
 ENTRY(__futex_wake)
-    /* create AArch64 PCS frame pointer */
-    stp    x29, x30, [sp, #-16]!
-    mov    x29,  sp
+  stp x29, x30, [sp, #-16]!
+  mov x29, sp
 
-    /* store x8 */
-    str    x8,       [sp, #-16]!
+  mov x2, x1
+  mov x1, #FUTEX_WAKE
 
-    /* arange arguments as expected in the kernel side */
-    mov w2, w1
-    mov w1, #FUTEX_WAIT
+  str x8, [sp, #-16]!
+  mov x8, __NR_futex
+  svc #0
+  ldr x8, [sp], #16
 
-    /* syscall No. in X8 */
-    mov     x8, __NR_futex
-    svc     #0
-
-    /* restore x8 */
-    ldr     x8,       [sp], #16
-    ldp     x29, x30, [sp], #16
-
-    /* check if syscall returned successfully */
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno
-
-    ret
+  ldp x29, x30, [sp], #16
+  ret
 END(__futex_wake)
