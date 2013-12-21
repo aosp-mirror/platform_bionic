@@ -34,6 +34,24 @@
       "revId": "026b6ab6d5f0d8fca5cdfab05727197626769dc2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e871338d_a8ac8375",
+        "filename": "libc/arch-aarch64/bionic/futex_aarch64.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2013-12-21T01:17:57Z",
+      "side": 0,
+      "message": "I\u0027ll revisit that, I may send a batch of uapi patches upstream sometime.",
+      "parentUuid": "088cc7b8_1583bf3f",
+      "revId": "026b6ab6d5f0d8fca5cdfab05727197626769dc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
