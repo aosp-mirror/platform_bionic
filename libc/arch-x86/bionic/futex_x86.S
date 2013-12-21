@@ -1,10 +1,9 @@
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-// int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout)
+// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
 ENTRY(__futex_wait)
     pushl   %ebx
     pushl   %esi
@@ -19,7 +18,7 @@ ENTRY(__futex_wait)
     ret
 END(__futex_wait)
 
-// int __futex_wake(volatile void *ftx, int count)
+// int __futex_wake(volatile void* ftx, int count)
 ENTRY(__futex_wake)
     pushl   %ebx
     mov     8(%esp), %ebx            /* ftx */
@@ -31,7 +30,7 @@ ENTRY(__futex_wake)
     ret
 END(__futex_wake)
 
-// int __futex_syscall3(volatile void *ftx, int op, int count)
+// int __futex_syscall3(volatile void* ftx, int op, int count)
 ENTRY(__futex_syscall3)
     pushl   %ebx
     movl    8(%esp), %ebx      /* ftx */
@@ -43,7 +42,7 @@ ENTRY(__futex_syscall3)
     ret
 END(__futex_syscall3)
 
-// int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout)
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
 ENTRY(__futex_syscall4)
     pushl   %ebx
     pushl   %esi
