@@ -44,9 +44,7 @@
 #else
 /* For 32-bit, we're stuck with the definitions we already shipped,
  * even though they contain a sigset_t that's too small. */
-#  define __ARCH_SI_UID_T __kernel_uid32_t /* TODO: 64-bit: remove this when we've switch 32-bit to uapi too. */
 #  include <linux/signal.h>
-#  undef __ARCH_SI_UID_T
 #endif
 
 __BEGIN_DECLS
