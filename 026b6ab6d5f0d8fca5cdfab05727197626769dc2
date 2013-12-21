@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48631fc4_a65f5822",
+        "filename": "libc/arch-aarch64/bionic/futex_aarch64.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2013-12-21T01:08:23Z",
+      "side": 0,
+      "message": "should these come from linux/futex.h?  same on all other arches",
+      "revId": "026b6ab6d5f0d8fca5cdfab05727197626769dc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
