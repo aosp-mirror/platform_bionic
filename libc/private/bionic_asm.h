@@ -29,7 +29,10 @@
 #ifndef _PRIVATE_BIONIC_ASM_H_
 #define _PRIVATE_BIONIC_ASM_H_
 
+#if !defined(__mips__)
+/* <machine/asm.h> causes trouble on mips by including regdefs.h. */
 #include <machine/asm.h>
+#endif
 
 #include <asm/unistd.h> /* For system call numbers. */
 #define MAX_ERRNO 4095  /* For recognizing system call error returns. */
