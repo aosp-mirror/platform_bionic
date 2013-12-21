@@ -46,14 +46,16 @@ TEST(string, strerror) {
   ASSERT_STREQ("Unknown error 1234", strerror(1234));
 }
 
-#if __BIONIC__ // glibc's strerror isn't thread safe, only its strsignal.
-
+#if defined(__BIONIC__)
 static void* ConcurrentStrErrorFn(void*) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
+#endif // __BIONIC__
 
+// glibc's strerror isn't thread safe, only its strsignal.
 TEST(string, strerror_concurrent) {
+#if defined(__BIONIC__)
   const char* strerror1001 = strerror(1001);
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 
@@ -64,12 +66,13 @@ TEST(string, strerror_concurrent) {
   ASSERT_TRUE(static_cast<bool>(result));
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
 
-#endif
-
-#if __BIONIC__ // glibc's strerror_r doesn't even have the same signature as the POSIX one.
 TEST(string, strerror_r) {
+#if defined(__BIONIC__) // glibc's strerror_r doesn't even have the same signature as the POSIX one.
   char buf[256];
 
   // Valid.
@@ -87,8 +90,10 @@ TEST(string, strerror_r) {
   // Buffer too small.
   ASSERT_EQ(-1, strerror_r(0, buf, 2));
   ASSERT_EQ(ERANGE, errno);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, strsignal) {
   // A regular signal.
@@ -478,8 +483,8 @@ TEST(string, strcpy) {
 }
 
 
-#if __BIONIC__
 TEST(string, strlcat) {
+#if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
     for (size_t j = 0; j < POS_ITER; j++) {
@@ -504,11 +509,13 @@ TEST(string, strlcat) {
       ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) == 0);
     }
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__
 TEST(string, strlcpy) {
+#if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
   for (size_t j = 0; j < POS_ITER; j++) {
     state.NewIteration();
@@ -539,8 +546,10 @@ TEST(string, strlcpy) {
     ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, strncat) {
   StringTestState<char> state(SMALL);
@@ -732,10 +741,10 @@ TEST(string, memcmp) {
   }
 }
 
-#if defined(__BIONIC__)
 extern "C" int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n);
 
 TEST(string, __memcmp16) {
+#if defined(__BIONIC__)
   StringTestState<unsigned short> state(SMALL);
 
   for (size_t i = 0; i < state.n; i++) {
@@ -758,8 +767,10 @@ TEST(string, __memcmp16) {
       ASSERT_EQ(expected, actual);
     }
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);

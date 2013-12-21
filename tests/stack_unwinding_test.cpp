@@ -20,8 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#if defined(i386) // Only our x86 unwinding is good enough. Switch to libunwind?
-
 extern "C" {
   void do_test();
 }
@@ -29,8 +27,11 @@ extern "C" {
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process.
 TEST(stack_unwinding_DeathTest, unwinding_through_signal_frame) {
+// Only our x86 unwinding is good enough. Switch to libunwind?
+#if defined(__BIONIC__) && defined(__i386__)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(do_test(), ::testing::ExitedWithCode(42), "");
+#else // __i386__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __i386__
 }
-
-#endif
