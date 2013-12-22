@@ -34,7 +34,7 @@
 
 #include "pthread_internal.h"
 
-extern "C" void _exit_with_stack_teardown(void*, size_t, int);
+extern "C" void _exit_with_stack_teardown(void*, size_t);
 extern "C" void __exit(int);
 extern "C" int __set_tid_address(int*);
 
@@ -125,7 +125,7 @@ void pthread_exit(void* return_value) {
     sigfillset(&mask);
     sigprocmask(SIG_SETMASK, &mask, NULL);
 
-    _exit_with_stack_teardown(stack_base, stack_size, 0);
+    _exit_with_stack_teardown(stack_base, stack_size);
   }
 
   // NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us.
