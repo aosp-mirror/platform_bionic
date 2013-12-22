@@ -2212,6 +2212,7 @@ extern "C" Elf_Addr __linker_init(void* raw_args) {
   soinfo linker_so;
   memset(&linker_so, 0, sizeof(soinfo));
 
+  strcpy(linker_so.name, "[dynamic linker]");
   linker_so.base = linker_addr;
   linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
   linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
@@ -2223,11 +2224,13 @@ extern "C" Elf_Addr __linker_init(void* raw_args) {
   if (!soinfo_link_image(&linker_so)) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
-    // call write() (because it involves a GOT reference).
-    //
-    // This situation should never occur unless the linker itself
-    // is corrupt.
-    exit(EXIT_FAILURE);
+    // call write() (because it involves a GOT reference). We may as
+    // well try though...
+    const char* msg = "CANNOT LINK EXECUTABLE: ";
+    write(2, msg, strlen(msg));
+    write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
+    write(2, "\n", 1);
+    _exit(EXIT_FAILURE);
   }
 
   // We have successfully fixed our own relocations. It's safe to run
