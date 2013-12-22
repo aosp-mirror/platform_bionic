@@ -26,20 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
-// void _exit_with_stack_teardown(void* stackBase, size_t stackSize, int status)
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
 ENTRY(_exit_with_stack_teardown)
-    // We take advantage of the fact that the linux syscall trap
-    // handler saves all the registers, so we don't need to save
-    // the status argument for exit(2) while doing the munmap(2).
-    mov     $__NR_munmap, %eax
-    syscall
-    // If munmap failed, we ignore the failure and exit anyway.
+  mov $__NR_munmap, %eax
+  syscall
+  // If munmap failed, we ignore the failure and exit anyway.
 
-    mov     %rdx, %rdi        // status
-    mov     $__NR_exit, %eax
-    syscall
-    // The exit syscall does not return.
+  mov $0, %rdi
+  mov $__NR_exit, %eax
+  syscall
+  // The exit syscall does not return.
 END(_exit_with_stack_teardown)

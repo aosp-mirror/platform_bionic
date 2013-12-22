@@ -30,21 +30,19 @@
 
 	.text
 
-// void _exit_with_stack_teardown(void* stackBase, size_t stackSize, int status)
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
 
 	.type	_exit_with_stack_teardown, @function
 	.global	_exit_with_stack_teardown
 	.align	4
 	.ent	_exit_with_stack_teardown
 _exit_with_stack_teardown:
-	move	$s0,$a2		/* preserve status for exit() call */
-
-	li	$v0,__NR_munmap
+	li	$v0, __NR_munmap
 	syscall
 	// If munmap failed, we ignore the failure and exit anyway.
 
-	move	$a0,$s0
-	li	$v0,__NR_exit
+	move	$a0, 0
+	li	$v0, __NR_exit
 	syscall
         // The exit syscall does not return.
 	.end	_exit_with_stack_teardown
