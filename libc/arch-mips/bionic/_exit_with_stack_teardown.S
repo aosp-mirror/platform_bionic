@@ -41,7 +41,7 @@ _exit_with_stack_teardown:
 	syscall
 	// If munmap failed, we ignore the failure and exit anyway.
 
-	move	$a0, 0
+	li	$a0, 0
 	li	$v0, __NR_exit
 	syscall
         // The exit syscall does not return.
