@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8438f32_8e397b0d",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2013-12-30T18:37:50Z",
+      "side": 1,
+      "message": "I\u0027m probably missing something but.... Given that off_t \u0026 off64_t are signed types, shouldn\u0027t we EINVAL for negative offsets before this conversion (and before the cast to uint64_t in mmap64) ?",
+      "range": {
+        "startLine": 58,
+        "startChar": 76,
+        "endLine": 58,
+        "endChar": 86
+      },
+      "revId": "99868904feeac944a0d482a2994f9d7b6828bff2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
