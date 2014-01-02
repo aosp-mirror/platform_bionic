@@ -416,7 +416,7 @@ class State:
         glibc_fp.write("#if defined(__aarch64__)\n")
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-generic/unistd.h")
         glibc_fp.write("#elif defined(__arm__)\n")
-        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-arm/asm/unistd.h")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-arm/asm/unistd.h")
         glibc_fp.write("#elif defined(__mips__)\n")
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-mips/asm/unistd.h")
         glibc_fp.write("#elif defined(__i386__)\n")

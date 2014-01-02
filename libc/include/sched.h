@@ -31,54 +31,32 @@
 #include <sys/cdefs.h>
 #include <sys/time.h>
 
+#include <linux/sched.h>
+
 __BEGIN_DECLS
 
-#define SCHED_NORMAL            0
-#define SCHED_OTHER             0
-#define SCHED_FIFO              1
-#define SCHED_RR                2
+/* This name is used by glibc, but not by the kernel. */
+#define SCHED_OTHER SCHED_NORMAL
 
 struct sched_param {
-    int sched_priority;
+  int sched_priority;
 };
 
-extern int sched_setscheduler(pid_t, int, const struct sched_param *);
+extern int sched_setscheduler(pid_t, int, const struct sched_param*);
 extern int sched_getscheduler(pid_t);
 extern int sched_yield(void);
-extern int sched_get_priority_max(int policy);
-extern int sched_get_priority_min(int policy);
-extern int sched_setparam(pid_t, const struct sched_param *);
-extern int sched_getparam(pid_t, struct sched_param *);
-extern int sched_rr_get_interval(pid_t pid, struct timespec *tp);
-
-#define CLONE_VM             0x00000100
-#define CLONE_FS             0x00000200
-#define CLONE_FILES          0x00000400
-#define CLONE_SIGHAND        0x00000800
-#define CLONE_PTRACE         0x00002000
-#define CLONE_VFORK          0x00004000
-#define CLONE_PARENT         0x00008000
-#define CLONE_THREAD         0x00010000
-#define CLONE_NEWNS          0x00020000
-#define CLONE_SYSVSEM        0x00040000
-#define CLONE_SETTLS         0x00080000
-#define CLONE_PARENT_SETTID  0x00100000
-#define CLONE_CHILD_CLEARTID 0x00200000
-#define CLONE_DETACHED       0x00400000
-#define CLONE_UNTRACED       0x00800000
-#define CLONE_CHILD_SETTID   0x01000000
-#define CLONE_STOPPED        0x02000000
+extern int sched_get_priority_max(int);
+extern int sched_get_priority_min(int);
+extern int sched_setparam(pid_t, const struct sched_param*);
+extern int sched_getparam(pid_t, struct sched_param*);
+extern int sched_rr_get_interval(pid_t, struct timespec*);
 
 #ifdef _GNU_SOURCE
-extern int clone(int (*fn)(void *), void *child_stack, int flags, void*  arg, ...);
+
+extern int clone(int (*)(void*), void*, int, void*, ...);
 extern int unshare(int);
-#endif
-
-/* Support for cpu thread affinity */
-#ifdef _GNU_SOURCE
-
 extern int sched_getcpu(void);
-
+extern int setns(int, int);
 
 /* Our implementation supports up to 32 independent CPUs, which is also
  * the maximum supported by the kernel at the moment. GLibc uses 1024 by

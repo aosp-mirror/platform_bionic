@@ -112,7 +112,6 @@ libc_common_src_files := \
 	bionic/recv.c \
 	bionic/sched_cpualloc.c \
 	bionic/sched_cpucount.c \
-	bionic/sched_getcpu.c \
 	bionic/semaphore.c \
 	bionic/send.c \
 	bionic/setpgrp.c \
@@ -261,6 +260,7 @@ libc_bionic_src_files := \
     bionic/sbrk.cpp \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
+    bionic/sched_getcpu.cpp \
     bionic/setegid.cpp \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
