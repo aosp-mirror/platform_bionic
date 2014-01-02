@@ -22,6 +22,30 @@
       "revId": "99868904feeac944a0d482a2994f9d7b6828bff2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd01e1f4_3b2b3704",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-02T19:06:23Z",
+      "side": 1,
+      "message": "gah. i always forget that off_t is signed. even when i\u0027m wanking around to avoid sign extension.\n\namusingly, the real syscall implementation (sys_mmap_pgoff) takes an unsigned long instead of an off_t.",
+      "parentUuid": "c8438f32_8e397b0d",
+      "range": {
+        "startLine": 58,
+        "startChar": 76,
+        "endLine": 58,
+        "endChar": 86
+      },
+      "revId": "99868904feeac944a0d482a2994f9d7b6828bff2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
