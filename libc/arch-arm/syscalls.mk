@@ -154,6 +154,7 @@ syscall_src += arch-arm/syscalls/sendto.S
 syscall_src += arch-arm/syscalls/setgid.S
 syscall_src += arch-arm/syscalls/setgroups.S
 syscall_src += arch-arm/syscalls/setitimer.S
+syscall_src += arch-arm/syscalls/setns.S
 syscall_src += arch-arm/syscalls/setpgid.S
 syscall_src += arch-arm/syscalls/setpriority.S
 syscall_src += arch-arm/syscalls/setregid.S

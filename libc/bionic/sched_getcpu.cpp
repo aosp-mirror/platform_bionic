@@ -25,16 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #define _GNU_SOURCE 1
 #include <sched.h>
 
-extern int  __getcpu(unsigned *cpu, unsigned *node, void* unused);
+extern "C" int __getcpu(unsigned*, unsigned*, void*);
 
-int  sched_getcpu(void)
-{
-    unsigned cpu;
-    if (__getcpu(&cpu, NULL, NULL) < 0)
-        return 0;
-
-    return (int)cpu;
+int sched_getcpu() {
+  unsigned cpu;
+  int rc = __getcpu(&cpu, NULL, NULL);
+  if (rc == -1) {
+    return -1; // errno is already set.
+  }
+  return cpu;
 }

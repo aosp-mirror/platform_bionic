@@ -147,6 +147,7 @@ syscall_src += arch-aarch64/syscalls/sendto.S
 syscall_src += arch-aarch64/syscalls/setgid.S
 syscall_src += arch-aarch64/syscalls/setgroups.S
 syscall_src += arch-aarch64/syscalls/setitimer.S
+syscall_src += arch-aarch64/syscalls/setns.S
 syscall_src += arch-aarch64/syscalls/setpgid.S
 syscall_src += arch-aarch64/syscalls/setpriority.S
 syscall_src += arch-aarch64/syscalls/setregid.S

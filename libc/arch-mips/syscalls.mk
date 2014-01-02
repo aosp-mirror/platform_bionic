@@ -154,6 +154,7 @@ syscall_src += arch-mips/syscalls/sendto.S
 syscall_src += arch-mips/syscalls/setgid.S
 syscall_src += arch-mips/syscalls/setgroups.S
 syscall_src += arch-mips/syscalls/setitimer.S
+syscall_src += arch-mips/syscalls/setns.S
 syscall_src += arch-mips/syscalls/setpgid.S
 syscall_src += arch-mips/syscalls/setpriority.S
 syscall_src += arch-mips/syscalls/setregid.S
