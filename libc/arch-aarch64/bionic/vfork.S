@@ -27,9 +27,11 @@
  */
 
 #include <private/bionic_asm.h>
+#include <asm/signal.h>
+#include <linux/sched.h>
 
 ENTRY(vfork)
-    mov     x0, #0x4111     /* CLONE_VM | CLONE_VFORK | SIGCHLD */
+    mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
     mov     x1, xzr
     mov     x2, xzr
     mov     x3, xzr
@@ -37,11 +39,9 @@ ENTRY(vfork)
 
     str     x8, [sp, #-16]!
     mov     x8, __NR_clone
-
     svc     #0
     ldr     x8, [sp], #16
 
-    /* check if syscall returned successfully */
     cmn     x0, #(MAX_ERRNO + 1)
     cneg    x0, x0, hi
     b.hi    __set_errno
