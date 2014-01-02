@@ -179,7 +179,6 @@ int     removexattr(const char*, const char*) all
 int     lremovexattr(const char*, const char*) all
 int     __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
 int     statfs(const char*, struct statfs*)  aarch64,x86_64
-long    unshare(unsigned long)  all
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
 
@@ -256,8 +255,10 @@ int sched_get_priority_max(int policy)  all
 int sched_get_priority_min(int policy)  all
 int sched_rr_get_interval(pid_t pid, struct timespec* interval)  all
 int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) all
+int setns(int, int) all
+int unshare(int) all
 int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)  all
-int __getcpu:getcpu(unsigned* cpu, unsigned* node, void* unused) all
+int __getcpu:getcpu(unsigned*, unsigned*, void*) all
 
 # io priorities
 int ioprio_set(int which, int who, int ioprio) all
