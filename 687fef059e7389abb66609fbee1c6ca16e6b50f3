@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "0dabf957_c5ef9a2b",
+        "filename": "libc/arch-mips/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-01-03T22:23:44Z",
+      "side": 1,
+      "message": "The ABI expects the stack to be 8 byte aligned so it would be better to decrement stack by 8 here even though it\u0027s not strictly needed.",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "687fef059e7389abb66609fbee1c6ca16e6b50f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda78588_84f9a6f5",
+        "filename": "libc/arch-mips/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-01-03T22:23:44Z",
+      "side": 1,
+      "message": "And increment by 8 here",
+      "revId": "687fef059e7389abb66609fbee1c6ca16e6b50f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8dd609da_f41e1671",
         "filename": "libc/arch-mips/bionic/vfork.S",
         "patchSetId": 2
@@ -13,6 +53,30 @@
       "writtenOn": "2014-01-03T21:39:04Z",
       "side": 1,
       "message": "was this a bug before, or have i introduced a bug here? this is what the generated syscall stubs look like, with the move in the bnez delay slot. is there some reason why we wouldn\u0027t want to do that for vfork?",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 6
+      },
+      "revId": "687fef059e7389abb66609fbee1c6ca16e6b50f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2daefd65_e6ec1e39",
+        "filename": "libc/arch-mips/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-01-03T22:23:44Z",
+      "side": 1,
+      "message": "This is ok. $a0 is not a callee saved register so neither the parent nor child will expect $a0 to survive across the vfork call. $a0 is being set in case the error path is taken. It does not matter if it is done here or in code starting at line 60, but doing it here is better as it keeps the auto-generated and handcrafted code consistent as far as possible.",
+      "parentUuid": "8dd609da_f41e1671",
       "range": {
         "startLine": 56,
         "startChar": 2,
