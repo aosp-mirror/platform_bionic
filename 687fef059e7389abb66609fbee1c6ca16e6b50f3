@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dd609da_f41e1671",
+        "filename": "libc/arch-mips/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-03T21:39:04Z",
+      "side": 1,
+      "message": "was this a bug before, or have i introduced a bug here? this is what the generated syscall stubs look like, with the move in the bnez delay slot. is there some reason why we wouldn\u0027t want to do that for vfork?",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 6
+      },
+      "revId": "687fef059e7389abb66609fbee1c6ca16e6b50f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
