@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed4b0572_a46e02d5",
+        "filename": "libc/arch-mips/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-01-03T17:45:59Z",
+      "side": 1,
+      "message": "This store will overwrite callers stack",
+      "range": {
+        "startLine": 50,
+        "startChar": 5,
+        "endLine": 50,
+        "endChar": 6
+      },
+      "revId": "0948b39cb2f0a71db3bcf8ecc2f291710a0f299c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
