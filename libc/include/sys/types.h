@@ -47,10 +47,8 @@ typedef __kernel_caddr_t caddr_t;
 typedef __kernel_clock_t clock_t;
 typedef __kernel_clockid_t clockid_t;
 typedef __kernel_daddr_t daddr_t;
-typedef uint32_t dev_t;
 typedef unsigned long fsblkcnt_t;
 typedef unsigned long fsfilcnt_t;
-typedef uint32_t id_t;
 typedef __kernel_ino_t ino_t;
 typedef __kernel_key_t key_t;
 typedef __kernel_mode_t mode_t;
@@ -59,6 +57,13 @@ typedef __kernel_pid_t pid_t;
 typedef __kernel_suseconds_t suseconds_t;
 typedef __kernel_timer_t timer_t;
 typedef unsigned int useconds_t;
+
+#if !defined(__LP64__)
+/* This historical accident means that we had a 32-bit dev_t on 32-bit architectures. */
+typedef uint32_t dev_t;
+#else
+typedef uint64_t dev_t;
+#endif
 
 /* This historical accident means that we had a 32-bit time_t on 32-bit architectures. */
 typedef __kernel_time_t time_t;
@@ -70,6 +75,9 @@ typedef __kernel_off_t off_t;
 #endif
 typedef __kernel_loff_t loff_t;
 typedef loff_t off64_t;
+
+/* This one really is meant to be just 32 bits! */
+typedef uint32_t id_t;
 
 /* while POSIX wants these in <sys/types.h>, we
  * declare then in <pthread.h> instead */
