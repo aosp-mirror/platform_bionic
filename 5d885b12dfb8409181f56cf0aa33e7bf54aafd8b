@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d7db99f_6aca1b8e",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-06T23:56:41Z",
+      "side": 1,
+      "message": "why \u0027unsigned int\u0027?",
+      "revId": "5d885b12dfb8409181f56cf0aa33e7bf54aafd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d80bdc3_ab7fd937",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-06T23:56:41Z",
+      "side": 1,
+      "message": "do we really only want to do this for exact multiples?\n\nchrome and art have code more like\n\n  std::string PrettySize(size_t byte_count) {\n  // The byte thresholds at which we display amounts.  A byte count is displayed\n  // in unit U when kUnitThresholds[U] \u003c\u003d bytes \u003c kUnitThresholds[U+1].\n  static const size_t kUnitThresholds[] \u003d {\n    0,              // B up to...\n    3*1024,         // KB up to...\n    2*1024*1024,    // MB up to...\n    1024*1024*1024  // GB from here.\n  };\n  static const size_t kBytesPerUnit[] \u003d { 1, KB, MB, GB };\n  static const char* const kUnitStrings[] \u003d { \"B\", \"KB\", \"MB\", \"GB\" };\n\n  int i \u003d arraysize(kUnitThresholds);\n  while (--i \u003e 0) {\n    if (byte_count \u003e\u003d kUnitThresholds[i]) {\n      break;\n    }\n  }\n\n  return StringPrintf(\"%zd%s\", byte_count / kBytesPerUnit[i], kUnitStrings[i]);\n  }",
+      "revId": "5d885b12dfb8409181f56cf0aa33e7bf54aafd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d7db99f_ca9d6f7c",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-06T23:56:41Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "5d885b12dfb8409181f56cf0aa33e7bf54aafd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d7db99f_0a25a793",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-06T23:56:41Z",
+      "side": 1,
+      "message": "why make this protected _and_ add an accessor?",
+      "revId": "5d885b12dfb8409181f56cf0aa33e7bf54aafd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d7db99f_8a14570f",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-06T23:56:41Z",
+      "side": 1,
+      "message": "this all seems a bit complicated, and i don\u0027t understand the motivation. what does all this hierarchy gain us?",
+      "revId": "5d885b12dfb8409181f56cf0aa33e7bf54aafd8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
