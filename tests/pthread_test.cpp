@@ -251,7 +251,7 @@ TEST(pthread, __bionic_clone) {
   // Check that our hand-written clone assembler sets errno correctly on failure.
   uintptr_t fake_child_stack[16];
   errno = 0;
-  ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[0], NULL, NULL, NULL, NULL, NULL));
+  ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[16], NULL, NULL, NULL, NULL, NULL));
   ASSERT_EQ(EINVAL, errno);
 }
 #endif
