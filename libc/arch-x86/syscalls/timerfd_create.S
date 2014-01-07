@@ -5,6 +5,9 @@
 ENTRY(timerfd_create)
     pushl   %ebx
     pushl   %ecx
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset ebx, 0
+    .cfi_rel_offset ecx, 4
     mov     12(%esp), %ebx
     mov     16(%esp), %ecx
     movl    $__NR_timerfd_create, %eax

@@ -4,6 +4,8 @@
 
 ENTRY(getpgid)
     pushl   %ebx
+    .cfi_def_cfa_offset 4
+    .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_getpgid, %eax
     int     $0x80
