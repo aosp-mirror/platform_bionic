@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d1a7db4_898abdbd",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "maybe give it a more intention-revealing name then?",
+      "range": {
+        "startLine": 120,
+        "startChar": 10,
+        "endLine": 120,
+        "endChar": 11
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d1a7db4_c917959b",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "ouch. this was bad enough before. can we define all this away, or is that worse?",
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d1a7db4_697dc1fb",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "can we put these in #else blocks with the corresponding real tests? it seems likely that these might be fixed one by one rather than all at once.",
+      "range": {
+        "startLine": 244,
+        "startChar": 4,
+        "endLine": 244,
+        "endChar": 5
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d17798c_ab4a0d6e",
+        "filename": "tests/libgen_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "we\u0027ve mostly used \"_smoke\" for these kind of \"test a bunch of random cases\" tests.",
+      "range": {
+        "startLine": 43,
+        "startChar": 13,
+        "endLine": 43,
+        "endChar": 27
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed13059f_c717809b",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "of all the styles used in this patch, i think i like this one the best.",
+      "range": {
+        "startLine": 36,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 3
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d1a7db4_c96dd54a",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "though i think we should have a macro for this. and i\u0027d rather have it fail if we accidentally end up running this. aren\u0027t we using gtest\u0027s built-in test listing for CTS anyway? so we only need to _build_ these tests, never run them?",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 12
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed13059f_07bb585a",
+        "filename": "tests/stack_unwinding_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "this should probably be __i386__ because that\u0027s what we\u0027ve used elsewhere. (i didn\u0027t actually know that i386 is also defined.)",
+      "range": {
+        "startLine": 23,
+        "startChar": 12,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d17798c_6b82d53c",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "it\u0027s a pity we can\u0027t write macros that take a block like in ruby. would be nice to have a TEST_BIONIC_ONLY macro that would let us factor all this out in a less error-prone way.\n\ni don\u0027t know how we\u0027re going to maintain this, even if we switch to the better #else-per-test idiom.",
+      "range": {
+        "startLine": 104,
+        "startChar": 5,
+        "endLine": 104,
+        "endChar": 13
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed13059f_87a6283f",
+        "filename": "tests/sys_sendfile_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T21:38:56Z",
+      "side": 1,
+      "message": "i guess we could have a BIONIC_ONLY_TEST_BEGIN ... BIONIC_ONLY_TEST_END pair.",
+      "range": {
+        "startLine": 46,
+        "startChar": 1,
+        "endLine": 46,
+        "endChar": 3
+      },
+      "revId": "025fbdcf5fe2ab04de5897182831ddd24bef3885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
