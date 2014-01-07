@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad266df6_6d82f13c",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T02:21:48Z",
+      "side": 1,
+      "message": "if you\u0027re bringing in roughly art\u0027s utils.cc in another change, can\u0027t we just use PrettySize from there?",
+      "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d25f1ed_670852ba",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T02:21:48Z",
+      "side": 1,
+      "message": "i still don\u0027t see what we\u0027re doing here except adding the ability for arg to not be an \u0027int\u0027. why don\u0027t we just have Benchmark\u003cT\u003e? it\u0027s not like Benchmark is really a public type anyway. \"callers\" should just be using the BENCHMARK macro.",
+      "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
