@@ -9,6 +9,13 @@ ENTRY(futex)
     pushl   %esi
     pushl   %edi
     pushl   %ebp
+    .cfi_def_cfa_offset 24
+    .cfi_rel_offset ebx, 0
+    .cfi_rel_offset ecx, 4
+    .cfi_rel_offset edx, 8
+    .cfi_rel_offset esi, 12
+    .cfi_rel_offset edi, 16
+    .cfi_rel_offset ebp, 20
     mov     28(%esp), %ebx
     mov     32(%esp), %ecx
     mov     36(%esp), %edx
