@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d2b69c2_29dc6d85",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-07T00:58:29Z",
+      "side": 1,
+      "message": "would \".att_syntax noprefix\" make everyone\u0027s life easier?\n\ninteresting that the cfi directives don\u0027t follow the rest of the syntax.",
+      "revId": "e4bc7561219ddb7cfb7b33f731caa92a7766b9ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
