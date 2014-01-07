@@ -8,6 +8,12 @@ ENTRY(fsetxattr)
     pushl   %edx
     pushl   %esi
     pushl   %edi
+    .cfi_def_cfa_offset 20
+    .cfi_rel_offset ebx, 0
+    .cfi_rel_offset ecx, 4
+    .cfi_rel_offset edx, 8
+    .cfi_rel_offset esi, 12
+    .cfi_rel_offset edi, 16
     mov     24(%esp), %ebx
     mov     28(%esp), %ecx
     mov     32(%esp), %edx

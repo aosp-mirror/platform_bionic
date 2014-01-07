@@ -7,6 +7,11 @@ ENTRY(__rt_sigprocmask)
     pushl   %ecx
     pushl   %edx
     pushl   %esi
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset ebx, 0
+    .cfi_rel_offset ecx, 4
+    .cfi_rel_offset edx, 8
+    .cfi_rel_offset esi, 12
     mov     20(%esp), %ebx
     mov     24(%esp), %ecx
     mov     28(%esp), %edx
