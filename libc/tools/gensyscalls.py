@@ -147,7 +147,7 @@ mips_call = "/* " + warning + " */\n" + \
 # x86 assembler templates for each syscall stub
 #
 
-x86_registers = [ "%ebx", "%ecx", "%edx", "%esi", "%edi", "%ebp" ]
+x86_registers = [ "ebx", "ecx", "edx", "esi", "edi", "ebp" ]
 
 x86_call = """\
     movl    $%(__NR_name)s, %%eax
@@ -289,20 +289,26 @@ def mips_genstub(syscall):
 
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
-    stack_bias = 4
 
     numparams = count_generic_param_registers(syscall["params"])
-    for r in range(numparams):
-        result     += "    pushl   " + x86_registers[r] + "\n"
-        stack_bias += 4
+    stack_bias = numparams*4 + 4
+    offset = 0
+    mov_result = ""
+    cfi_result = "    .cfi_def_cfa_offset %d\n" % (numparams*4)
+    for register in x86_registers[:numparams]:
+        result     += "    pushl   %%%s\n" % register
+        mov_result += "    mov     %d(%%esp), %%%s\n" % (stack_bias+offset, register)
+        cfi_result += "    .cfi_rel_offset %s, %d\n" % (register, offset)
+        offset += 4
 
-    for r in range(numparams):
-        result += "    mov     %d(%%esp), %s" % (stack_bias+r*4, x86_registers[r]) + "\n"
+    if numparams:
+        result += cfi_result
+        result += mov_result
 
     result += x86_call % syscall
 
-    for r in range(numparams):
-        result += "    popl    " + x86_registers[numparams-r-1] + "\n"
+    for register in reversed(x86_registers[:numparams]):
+        result += "    popl    %%%s\n" % register
 
     result += x86_return % syscall
     return result
@@ -315,27 +321,28 @@ def x86_genstub_socketcall(syscall):
     #                          from the original function called (socket())
 
     result = syscall_stub_header % syscall
-    stack_bias = 4
 
     # save the regs we need
-    result += "    pushl   %ebx" + "\n"
-    stack_bias += 4
-    result += "    pushl   %ecx" + "\n"
-    stack_bias += 4
+    result += "    pushl   %ebx\n"
+    result += "    pushl   %ecx\n"
+    result += "    .cfi_def_cfa_offset 8\n"
+    result += "    .cfi_rel_offset ebx, 0\n"
+    result += "    .cfi_rel_offset ecx, 4\n"
+    stack_bias = 12
 
     # set the call id (%ebx)
-    result += "    mov     $%d, %%ebx" % syscall["socketcall_id"] + "\n"
+    result += "    mov     $%d, %%ebx\n" % syscall["socketcall_id"]
 
     # set the pointer to the rest of the args into %ecx
-    result += "    mov     %esp, %ecx" + "\n"
-    result += "    addl    $%d, %%ecx" % (stack_bias) + "\n"
+    result += "    mov     %esp, %ecx\n"
+    result += "    addl    $%d, %%ecx\n" % (stack_bias)
 
     # now do the syscall code itself
     result += x86_call % syscall
 
     # now restore the saved regs
-    result += "    popl    %ecx" + "\n"
-    result += "    popl    %ebx" + "\n"
+    result += "    popl    %ecx\n"
+    result += "    popl    %ebx\n"
 
     # epilog
     result += x86_return % syscall
