@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4d25f1ed_279ada12",
+        "filename": "benchmarks/benchmark_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-07T02:47:10Z",
+      "side": 1,
+      "message": "Benchmark arguments are often sizes, which are normally powers of 2, but sometimes they are powers of 10.  This is an attempt to support both, PrettySize only supports powers of 2.\n\nThe main user of this with powers of 10 is when I started pretty printing iteration counts.  I could use PrettySize for all arguments, and a similar PrettyIterations for powers of 10.",
+      "parentUuid": "ad266df6_6d82f13c",
+      "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d25f1ed_670852ba",
         "filename": "benchmarks/include/benchmark.h",
         "patchSetId": 4
@@ -30,6 +48,41 @@
       "writtenOn": "2014-01-07T02:21:48Z",
       "side": 1,
       "message": "i still don\u0027t see what we\u0027re doing here except adding the ability for arg to not be an \u0027int\u0027. why don\u0027t we just have Benchmark\u003cT\u003e? it\u0027s not like Benchmark is really a public type anyway. \"callers\" should just be using the BENCHMARK macro.",
+      "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad266df6_4d3c4da7",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-07T02:47:10Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand.  How can Benchmark\u003cT\u003e be used to implement a benchmark that doesn\u0027t take an argument?  I guess I could use a dummy \u003cT\u003e that is ignored when using the fn(int) constructor instead of the fn(int, T) constructor, and have BENCHMARK use Benchmark\u003cint\u003e or something, but this seems cleaner.",
+      "parentUuid": "4d25f1ed_670852ba",
+      "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d2b69c2_cc283f9b",
+        "filename": "benchmarks/include/benchmark.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-07T02:47:10Z",
+      "side": 1,
+      "message": "BenchmarkWithBase is used to share implementation between the general BenchmarkWithArg\u003cT\u003e and the specialized BenchmarkWithArg\u003cint\u003e.  BenchmarkWithArg\u003cint\u003e automatically pretty prints the argument into the benchmark name, other types require passing in a name for the benchmark + argument.",
       "revId": "cd40d2b86455acb1b9501a7128403da4ad4d1f7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
