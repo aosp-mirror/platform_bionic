@@ -6,6 +6,10 @@ ENTRY(mprotect)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
+    .cfi_def_cfa_offset 12
+    .cfi_rel_offset ebx, 0
+    .cfi_rel_offset ecx, 4
+    .cfi_rel_offset edx, 8
     mov     16(%esp), %ebx
     mov     20(%esp), %ecx
     mov     24(%esp), %edx
