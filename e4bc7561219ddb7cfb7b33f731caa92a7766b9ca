@@ -16,6 +16,24 @@
       "revId": "e4bc7561219ddb7cfb7b33f731caa92a7766b9ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad266df6_eac9a742",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-01-07T01:12:10Z",
+      "side": 1,
+      "message": "Probably not. Since this is all generated code, I don\u0027t think many people will be looking at this. And if they do, I think the directives are relatively self explanatory.\n\nI don\u0027t really have a big opinion one way or the other though, so if you feel strongly about it, I could make the change.",
+      "parentUuid": "8d2b69c2_29dc6d85",
+      "revId": "e4bc7561219ddb7cfb7b33f731caa92a7766b9ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
