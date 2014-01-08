@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <linux/fadvise.h>
 #include <linux/fcntl.h>
 #include <unistd.h>  /* this is not required, but makes client code much happier */
 
