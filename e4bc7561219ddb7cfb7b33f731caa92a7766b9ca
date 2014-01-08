@@ -34,6 +34,29 @@
       "revId": "e4bc7561219ddb7cfb7b33f731caa92a7766b9ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4da89190_afba39ef",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2014-01-08T06:40:17Z",
+      "side": 1,
+      "message": "Why not turn pushl and popl into macros and then have the macros do the CFI work?\nIn ART line 79:\nhttps://android.googlesource.com/platform/art/+/master/runtime/arch/x86/asm_support_x86.S\nCompared to this it has the CFA correct on every instruction, and its doing restoring.",
+      "range": {
+        "startLine": 326,
+        "startChar": 0,
+        "endLine": 326,
+        "endChar": 34
+      },
+      "revId": "e4bc7561219ddb7cfb7b33f731caa92a7766b9ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
