@@ -36,6 +36,7 @@ __BEGIN_DECLS
 
 /* The kernel's __kernel_fsid_t has a 'val' member but glibc uses '__val'. */
 typedef struct { int __val[2]; } __fsid_t;
+typedef __fsid_t fsid_t;
 
 #if defined(__LP64__)
 struct statfs {
@@ -46,7 +47,7 @@ struct statfs {
   uint64_t f_bavail;
   uint64_t f_files;
   uint64_t f_ffree;
-  __fsid_t f_fsid;
+  fsid_t f_fsid;
   uint64_t f_namelen;
   uint64_t f_frsize;
   uint64_t f_flags;
@@ -64,7 +65,7 @@ struct statfs {
   uint64_t f_files;
   uint64_t f_ffree;
   uint64_t f_bavail;
-  __fsid_t f_fsid;
+  fsid_t f_fsid;
   uint32_t f_namelen;
   uint32_t f_flags;
   uint32_t f_spare[5];
@@ -79,7 +80,7 @@ struct statfs {
   uint64_t f_bavail;
   uint64_t f_files;
   uint64_t f_ffree;
-  __fsid_t f_fsid;
+  fsid_t f_fsid;
   uint32_t f_namelen;
   uint32_t f_frsize;
   uint32_t f_flags;
