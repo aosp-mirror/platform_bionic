@@ -129,6 +129,7 @@ syscall_src += arch-mips/syscalls/personality.S
 syscall_src += arch-mips/syscalls/pipe2.S
 syscall_src += arch-mips/syscalls/prctl.S
 syscall_src += arch-mips/syscalls/pread64.S
+syscall_src += arch-mips/syscalls/prlimit64.S
 syscall_src += arch-mips/syscalls/pwrite64.S
 syscall_src += arch-mips/syscalls/read.S
 syscall_src += arch-mips/syscalls/readahead.S

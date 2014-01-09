@@ -2,12 +2,12 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getrlimit)
+ENTRY(prlimit64)
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
 
-    mov     x8, __NR_getrlimit
+    mov     x8, __NR_prlimit64
     svc     #0
 
     ldr     x8,       [sp], #16
@@ -18,7 +18,7 @@ ENTRY(getrlimit)
     b.hi    __set_errno
 
     ret
-END(getrlimit)
+END(prlimit64)
 
-    .globl _C_LABEL(getrlimit64)
-    .equ _C_LABEL(getrlimit64), _C_LABEL(getrlimit)
+    .globl _C_LABEL(prlimit)
+    .equ _C_LABEL(prlimit), _C_LABEL(prlimit64)
