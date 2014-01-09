@@ -28,10 +28,9 @@
 
 #include <errno.h>
 #include <stdarg.h>
+#include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
-#include <sys/vfs.h>
-#include <unistd.h>
 #include <unistd.h>
 
 #if __LP64__
@@ -85,4 +84,14 @@ ssize_t pread(int fd, void* buf, size_t byte_count, off_t offset) {
 // There is no pwrite for 32-bit off_t, so we need to widen and call pwrite64.
 ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
+}
+
+// There is no getrlimit64 system call, so we need to use prlimit64.
+int getrlimit64(int resource, rlimit64* limits64) {
+  return prlimit64(0, resource, NULL, limits64);
+}
+
+// There is no setrlimit64 system call, so we need to use prlimit64.
+int setrlimit64(int resource, const rlimit64* limits64) {
+  return prlimit64(0, resource, limits64, NULL);
 }
