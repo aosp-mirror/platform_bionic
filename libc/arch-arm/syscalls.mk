@@ -129,6 +129,7 @@ syscall_src += arch-arm/syscalls/personality.S
 syscall_src += arch-arm/syscalls/pipe2.S
 syscall_src += arch-arm/syscalls/prctl.S
 syscall_src += arch-arm/syscalls/pread64.S
+syscall_src += arch-arm/syscalls/prlimit64.S
 syscall_src += arch-arm/syscalls/pwrite64.S
 syscall_src += arch-arm/syscalls/read.S
 syscall_src += arch-arm/syscalls/readahead.S
