@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2dd43d2d_5fed4731",
+        "filename": "libc/include/sys/ptrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-01-09T00:39:45Z",
+      "side": 1,
+      "message": "Is there a reason to hardcode this? I assume it\u0027s causing some kind of compilation error.",
+      "range": {
+        "startLine": 40,
+        "startChar": 24,
+        "endLine": 40,
+        "endChar": 25
+      },
+      "revId": "6d2a8652e8e8d2e47057433af96eb89c6b10e5d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
