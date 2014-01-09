@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _DIRENT_H_
 #define _DIRENT_H_
 
@@ -34,15 +35,15 @@
 __BEGIN_DECLS
 
 #ifndef DT_UNKNOWN
-#define  DT_UNKNOWN     0
-#define  DT_FIFO        1
-#define  DT_CHR         2
-#define  DT_DIR         4
-#define  DT_BLK         6
-#define  DT_REG         8
-#define  DT_LNK         10
-#define  DT_SOCK        12
-#define  DT_WHT         14
+#define DT_UNKNOWN 0
+#define DT_FIFO 1
+#define DT_CHR 2
+#define DT_DIR 4
+#define DT_BLK 6
+#define DT_REG 8
+#define DT_LNK 10
+#define DT_SOCK 12
+#define DT_WHT 14
 #endif
 
 struct dirent {
@@ -52,23 +53,20 @@ struct dirent {
   unsigned char    d_type;
   char             d_name[256];
 };
+#define dirent64 dirent
 
 typedef struct DIR DIR;
 
-extern  DIR*             opendir(const char* dirpath);
-extern  DIR*             fdopendir(int fd);
-extern  struct dirent*   readdir(DIR* dirp);
-extern  int              readdir_r(DIR*  dirp, struct dirent* entry, struct dirent** result);
-extern  int              closedir(DIR* dirp);
-extern  void             rewinddir(DIR* dirp);
-extern  int              dirfd(DIR* dirp);
-extern  int              alphasort(const struct dirent** a, const struct dirent** b);
-extern  int              scandir(const char* dir, struct dirent*** namelist,
-                                 int(*filter)(const struct dirent*),
-                                 int(*compar)(const struct dirent**,
-                                              const struct dirent**));
-
-extern  int              getdents(unsigned int, struct dirent*, unsigned int);
+extern DIR* opendir(const char*);
+extern DIR* fdopendir(int);
+extern struct dirent* readdir(DIR*);
+extern int readdir_r(DIR*, struct dirent*, struct dirent**);
+extern int closedir(DIR*);
+extern void rewinddir(DIR*);
+extern int dirfd(DIR*);
+extern int alphasort(const struct dirent**, const struct dirent**);
+extern int scandir(const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
+extern int getdents(unsigned int, struct dirent*, unsigned int);
 
 __END_DECLS
 
