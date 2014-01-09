@@ -30,6 +30,8 @@
 
 #include <stdint.h>
 #include <linux/auxvec.h>
+
+/* TODO: can we switch to <linux/elf.h> instead? http://b/12476126. */
 #include <sys/exec_elf.h>
 
 typedef struct {
@@ -51,5 +53,8 @@ typedef struct {
 #else
 #  define Elf_auxv_t Elf32_auxv_t
 #endif
+
+/* <sys/exec_elf.h> doesn't contain any NT_ constants. aarch64 strace needs this one. */
+#define NT_PRSTATUS 1
 
 #endif /* _ELF_H */
