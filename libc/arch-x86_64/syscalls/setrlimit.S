@@ -14,3 +14,6 @@ ENTRY(setrlimit)
 1:
     ret
 END(setrlimit)
+
+    .globl _C_LABEL(setrlimit64)
+    .equ _C_LABEL(setrlimit64), _C_LABEL(setrlimit)

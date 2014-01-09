@@ -62,12 +62,21 @@ int     tkill(pid_t tid, int sig)  all
 int     tgkill(pid_t tgid, pid_t tid, int sig)  all
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
 int     __set_thread_area:set_thread_area(void*  user_desc)  mips,x86
-int     __getpriority:getpriority(int, int)  all
-int     setpriority(int, int, int)   all
-int     setrlimit(int resource, const struct rlimit* rlp)  all
-int     getrlimit:ugetrlimit(int resource, struct rlimit* rlp)  arm,x86
-int     getrlimit:getrlimit(int resource, struct rlimit* rlp)  aarch64,mips,x86_64
-int     getrusage(int who, struct rusage*  r_usage)  all
+
+# <sys/resource.h>
+int getrusage(int, struct rusage*)  all
+int __getpriority:getpriority(int, int)  all
+int setpriority(int, int, int)   all
+# On LP64, rlimit and rlimit64 are the same.
+# On 32-bit systems we use prlimit64 to implement the rlimit64 functions.
+int getrlimit:ugetrlimit(int, struct rlimit*)  arm,x86
+int getrlimit(int, struct rlimit*)  mips
+int getrlimit|getrlimit64(int, struct rlimit*)  aarch64,x86_64
+int setrlimit(int, const struct rlimit*)  arm,mips,x86
+int setrlimit|setrlimit64(int, const struct rlimit*)  aarch64,x86_64
+int prlimit64|prlimit(pid_t, int, struct rlimit64*, const struct rlimit64*)  aarch64,x86_64
+int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  arm,mips,x86
+
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
 int     setgroups:setgroups(int, const gid_t*)     aarch64,mips,x86_64
 int     setpgid(pid_t, pid_t)  all

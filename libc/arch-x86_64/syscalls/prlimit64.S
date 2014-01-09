@@ -2,8 +2,9 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getrlimit)
-    movl    $__NR_getrlimit, %eax
+ENTRY(prlimit64)
+    movq    %rcx, %r10
+    movl    $__NR_prlimit64, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -13,7 +14,7 @@ ENTRY(getrlimit)
     orq     $-1, %rax
 1:
     ret
-END(getrlimit)
+END(prlimit64)
 
-    .globl _C_LABEL(getrlimit64)
-    .equ _C_LABEL(getrlimit64), _C_LABEL(getrlimit)
+    .globl _C_LABEL(prlimit)
+    .equ _C_LABEL(prlimit), _C_LABEL(prlimit64)
