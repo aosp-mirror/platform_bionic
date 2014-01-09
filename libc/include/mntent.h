@@ -30,7 +30,9 @@
 
 #include <stdio.h>
 #include <sys/cdefs.h>
+#include <paths.h>  /* for _PATH_MOUNTED */
 
+#define MOUNTED _PATH_MOUNTED
 #define MNTTYPE_IGNORE "ignore"
 
 struct mntent
@@ -48,6 +50,8 @@ __BEGIN_DECLS
 
 
 struct mntent* getmntent(FILE*);
+FILE* setmntent(const char*, const char*);
+int endmntent(FILE*);
 
 __END_DECLS
 
