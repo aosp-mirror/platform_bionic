@@ -53,6 +53,7 @@ struct dirent {
   unsigned char    d_type;
   char             d_name[256];
 };
+#define d_fileno d_ino
 #define dirent64 dirent
 
 typedef struct DIR DIR;
