@@ -29,12 +29,9 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
-#include <unistd.h>
-#include <sys/types.h>
 #include <elf.h>
-#include <sys/exec_elf.h>
-
 #include <link.h>
+#include <unistd.h>
 
 #include "private/libc_logging.h"
 
