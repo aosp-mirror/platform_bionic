@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dd6993f_70460e97",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1037968
+      },
+      "writtenOn": "2014-01-13T11:33:27Z",
+      "side": 1,
+      "message": "The tmp_fd from open is not closed before continuing, leaking file descriptors.",
+      "range": {
+        "startLine": 692,
+        "startChar": 10,
+        "endLine": 692,
+        "endChar": 18
+      },
+      "revId": "1f1ffbb46c44e3a161b7ca9968505b398020ebaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ede2251a_d2ea64cf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1037968
+      },
+      "writtenOn": "2014-01-13T11:33:27Z",
+      "side": 1,
+      "message": "This open looks identical to that which returned tmp_fd, so why open again (without closing), why not just return tmp_fd?",
+      "range": {
+        "startLine": 694,
+        "startChar": 19,
+        "endLine": 694,
+        "endChar": 37
+      },
+      "revId": "1f1ffbb46c44e3a161b7ca9968505b398020ebaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
