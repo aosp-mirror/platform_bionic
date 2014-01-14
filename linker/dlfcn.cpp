@@ -54,6 +54,11 @@ const char* dlerror() {
   return old_value;
 }
 
+void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
+  ScopedPthreadMutexLocker locker(&gDlMutex);
+  do_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
+}
+
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   ScopedPthreadMutexLocker locker(&gDlMutex);
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
@@ -143,20 +148,6 @@ int dlclose(void* handle) {
   return do_dlclose(reinterpret_cast<soinfo*>(handle));
 }
 
-#if defined(__arm__)
-//   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888 8888888
-//   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012 3456789
-#define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
-#elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
-//   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
-//   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
-#define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
-#else
-#error Unsupported architecture. Only aarch64, arm, mips, x86, and x86_64 are presently supported.
-#endif
-
 // name_offset: starting index of the name in libdl_info.strtab
 #define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
@@ -182,47 +173,55 @@ int dlclose(void* handle) {
 #  define ELF_SYM_INITIALIZER ELF32_SYM_INITIALIZER
 #endif
 
+#if defined(__arm__)
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1
+#  define ANDROID_LIBDL_STRTAB \
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
+#elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1
+#  define ANDROID_LIBDL_STRTAB \
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
+#else
+#  error Unsupported architecture. Only aarch64, arm, mips, x86, and x86_64 are presently supported.
+#endif
+
 static Elf_Sym gLibDlSymtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
   // in the strtab with a \0 to make iterating through the symtab easier.
   ELF_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
-  ELF_SYM_INITIALIZER( 0, &dlopen, 1),
-  ELF_SYM_INITIALIZER( 7, &dlclose, 1),
-  ELF_SYM_INITIALIZER(15, &dlsym, 1),
-  ELF_SYM_INITIALIZER(21, &dlerror, 1),
-  ELF_SYM_INITIALIZER(29, &dladdr, 1),
-  ELF_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
-  ELF_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
+  ELF_SYM_INITIALIZER(  0, &dlopen, 1),
+  ELF_SYM_INITIALIZER(  7, &dlclose, 1),
+  ELF_SYM_INITIALIZER( 15, &dlsym, 1),
+  ELF_SYM_INITIALIZER( 21, &dlerror, 1),
+  ELF_SYM_INITIALIZER( 29, &dladdr, 1),
+  ELF_SYM_INITIALIZER( 36, &android_update_LD_LIBRARY_PATH, 1),
+  ELF_SYM_INITIALIZER( 67, &android_get_LD_LIBRARY_PATH, 1),
+  ELF_SYM_INITIALIZER( 95, &dl_iterate_phdr, 1),
 #if defined(__arm__)
-  ELF_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
+  ELF_SYM_INITIALIZER(111, &dl_unwind_find_exidx, 1),
 #endif
 };
 
 // Fake out a hash table with a single bucket.
-// A search of the hash table will look through
-// gLibDlSymtab starting with index [1], then
-// use gLibDlChains to find the next index to
-// look at.  gLibDlChains should be set up to
-// walk through every element in gLibDlSymtab,
-// and then end with 0 (sentinel value).
 //
-// That is, gLibDlChains should look like
-// { 0, 2, 3, ... N, 0 } where N is the number
-// of actual symbols, or nelems(gLibDlSymtab)-1
-// (since the first element of gLibDlSymtab is not
-// a real symbol).
+// A search of the hash table will look through gLibDlSymtab starting with index 1, then
+// use gLibDlChains to find the next index to look at. gLibDlChains should be set up to
+// walk through every element in gLibDlSymtab, and then end with 0 (sentinel value).
 //
-// (see soinfo_elf_lookup())
+// That is, gLibDlChains should look like { 0, 2, 3, ... N, 0 } where N is the number
+// of actual symbols, or nelems(gLibDlSymtab)-1 (since the first element of gLibDlSymtab is not
+// a real symbol). (See soinfo_elf_lookup().)
 //
-// Note that adding any new symbols here requires
-// stubbing them out in libdl.
+// Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned gLibDlBuckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned gLibDlChains[9] = { 0, 2, 3, 4, 5, 6, 7, 8, 0 };
+static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #else
-static unsigned gLibDlChains[8] = { 0, 2, 3, 4, 5, 6, 7, 0 };
+static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 0 };
 #endif
 
 // This is used by the dynamic linker. Every process gets these symbols for free.

@@ -196,6 +196,7 @@ struct soinfo {
 
 extern soinfo libdl_info;
 
+void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
