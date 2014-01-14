@@ -50,13 +50,6 @@
 #include "linker_environ.h"
 #include "linker_phdr.h"
 
-/* Assume average path length of 64 and max 8 paths */
-#define LDPATH_BUFSIZE 512
-#define LDPATH_MAX 8
-
-#define LDPRELOAD_BUFSIZE 512
-#define LDPRELOAD_MAX 8
-
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
  * Do NOT use malloc() and friends or pthread_*() code here.
@@ -91,7 +84,7 @@ static soinfo* solist = &libdl_info;
 static soinfo* sonext = &libdl_info;
 static soinfo* somain; /* main process, always the one after libdl_info */
 
-static const char* const gSoPaths[] = {
+static const char* const gDefaultLdPaths[] = {
 #if defined(__LP64__)
   "/vendor/lib64",
   "/system/lib64",
@@ -101,6 +94,12 @@ static const char* const gSoPaths[] = {
 #endif
   NULL
 };
+
+#define LDPATH_BUFSIZE (LDPATH_MAX*64)
+#define LDPATH_MAX 8
+
+#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
+#define LDPRELOAD_MAX 8
 
 static char gLdPathsBuffer[LDPATH_BUFSIZE];
 static const char* gLdPaths[LDPATH_MAX + 1];
@@ -708,7 +707,7 @@ static int open_library(const char* name) {
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
   int fd = open_library_on_path(name, gLdPaths);
   if (fd == -1) {
-    fd = open_library_on_path(name, gSoPaths);
+    fd = open_library_on_path(name, gDefaultLdPaths);
   }
   return fd;
 }
@@ -826,6 +825,10 @@ static int soinfo_unload(soinfo* si) {
     TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
   }
   return 0;
+}
+
+void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
+  snprintf(buffer, buffer_size, "%s:%s", gDefaultLdPaths[0], gDefaultLdPaths[1]);
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {

@@ -15,6 +15,8 @@
  */
 
 #include <dlfcn.h>
+#include <stdlib.h>
+
 /* These are stubs for functions that are actually defined
  * in the dynamic linker (dlfcn.c), and hijacked at runtime.
  */
@@ -24,6 +26,7 @@ void *dlsym(void *handle, const char *symbol) { return 0; }
 int dladdr(const void *addr, Dl_info *info) { return 0; }
 int dlclose(void *handle) { return 0; }
 
+void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) { }
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path) { }
 
 #if defined(__arm__)
