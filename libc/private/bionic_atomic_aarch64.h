@@ -29,15 +29,15 @@ __ATOMIC_INLINE__ int __bionic_cmpxchg(int32_t old_value, int32_t new_value, vol
   int32_t tmp, oldval;
   __asm__ __volatile__ (
       "// atomic_cmpxchg\n"
-      "1:  ldaxr %w1, [%3]\n"
+      "1:  ldxr %w1, [%3]\n"
       "    cmp %w1, %w4\n"
       "    b.ne 2f\n"
-      "    stlxr %w0, %w5, [%3]\n"
+      "    stxr %w0, %w5, [%3]\n"
       "    cbnz  %w0, 1b\n"
       "2:"
       : "=&r" (tmp), "=&r" (oldval), "+o"(*ptr)
       : "r" (ptr), "Ir" (old_value), "r" (new_value)
-      : "cc");
+      : "cc", "memory");
   return oldval != old_value;
 }
 
@@ -51,7 +51,7 @@ __ATOMIC_INLINE__ int32_t __bionic_swap(int32_t new_value, volatile int32_t* ptr
       "    cbnz %w1, 1b\n"
       : "=&r" (prev), "=&r" (status), "+o" (*ptr)
       : "r" (ptr), "r" (new_value)
-      : "cc");
+      : "cc", "memory");
   return prev;
 }
 
@@ -65,7 +65,7 @@ __ATOMIC_INLINE__ int32_t __bionic_atomic_dec(volatile int32_t* ptr) {
       "    cbnz %w2, 1b"
       : "=&r" (prev), "=&r" (tmp), "=&r" (status), "+m"(*ptr)
       : "r" (ptr)
-      : "cc");
+      : "cc", "memory");
   return prev;
 }
 
