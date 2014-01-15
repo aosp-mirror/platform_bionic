@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2df35d1c_a113d825",
+        "filename": "libthread_db/include/sys/procfs.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-15T01:47:55Z",
+      "side": 1,
+      "message": "i\u0027ll start looking at switching us over to the uapi elf.h this week...",
+      "revId": "6db485d6e599fe882f52542d4edc3d71f28c781a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
