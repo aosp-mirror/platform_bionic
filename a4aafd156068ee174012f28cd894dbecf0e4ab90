@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d07b1cb_f73760fb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-01-15T09:35:54Z",
+      "side": 1,
+      "message": "ignoring the return value of snprintf ? What if it\u0027s \u003e buffer_size ?",
+      "revId": "a4aafd156068ee174012f28cd894dbecf0e4ab90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
