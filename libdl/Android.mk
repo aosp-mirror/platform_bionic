@@ -23,8 +23,9 @@ LOCAL_LDFLAGS += -Wl,--exclude-libs=libgcc_eh.a
 endif
 
 LOCAL_SRC_FILES:= libdl.c
+LOCAL_CFLAGS := -Wall -Wextra -Werror
 
-LOCAL_MODULE:= libdl
+LOCAL_MODULE := libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 # NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
@@ -36,23 +37,3 @@ LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_SHARED_LIBRARY)
-
-BUILD_DLTEST:=0
-ifeq ($(BUILD_DLTEST),1)
-
-#
-# dltest
-#
-
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES:= dltest.c
-
-LOCAL_MODULE:= dltest
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-
-LOCAL_SHARED_LIBRARIES := libdl
-
-include $(BUILD_EXECUTABLE)
-
-endif
