@@ -43,20 +43,19 @@
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
 extern "C" int __set_tls(void*);
 
+// Used by gdb to track thread creation. See libthread_db.
 #ifdef __i386__
-#define ATTRIBUTES __attribute__((noinline)) __attribute__((fastcall))
+extern "C" __attribute__((noinline)) __attribute__((fastcall)) void _thread_created_hook(pid_t) {}
 #else
-#define ATTRIBUTES __attribute__((noinline))
+extern "C" __attribute__((noinline)) void _thread_created_hook(pid_t) {}
 #endif
-
-extern "C" void ATTRIBUTES _thread_created_hook(pid_t thread_id);
 
 static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
-void  __init_tls(pthread_internal_t* thread) {
+void __init_tls(pthread_internal_t* thread) {
   // Zero-initialize all the slots after TLS_SLOT_SELF and TLS_SLOT_THREAD_ID.
   for (size_t i = TLS_SLOT_ERRNO; i < BIONIC_TLS_SLOTS; ++i) {
     thread->tls[i] = NULL;
