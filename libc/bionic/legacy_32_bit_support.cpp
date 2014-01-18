@@ -59,11 +59,13 @@ int fcntl(int fd, int cmd, ...) {
 int fstatfs(int fd, struct statfs* stat) {
   return __fstatfs64(fd, sizeof(*stat), stat);
 }
+__strong_alias(fstatfs64, fstatfs);
 
 // For statfs we need to add the extra argument giving the kernel the size of the buffer.
 int statfs(const char* path, struct statfs* stat) {
   return __statfs64(path, sizeof(*stat), stat);
 }
+__strong_alias(statfs64, statfs);
 
 // For lseek64 we need to use the llseek system call which splits the off64_t in two and
 // returns the off64_t result via a pointer because 32-bit kernels can't return 64-bit results.

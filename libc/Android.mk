@@ -378,7 +378,6 @@ libc_upstream_freebsd_src_files := \
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
     upstream-netbsd/common/lib/libc/inet/inet_addr.c \
-    upstream-netbsd/libc/compat-43/creat.c \
     upstream-netbsd/libc/gen/ftw.c \
     upstream-netbsd/libc/gen/nftw.c \
     upstream-netbsd/libc/gen/nice.c \

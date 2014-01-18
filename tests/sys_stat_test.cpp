@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -67,4 +68,13 @@ TEST(sys_stat, mkfifo) {
   ASSERT_EQ(0, stat(path.c_str(), &sb));
   ASSERT_TRUE(S_ISFIFO(sb.st_mode));
   unlink(path.c_str());
+}
+
+TEST(sys_stat, stat64_lstat64_fstat64) {
+  struct stat64 sb;
+  ASSERT_EQ(0, stat64("/proc/version", &sb));
+  ASSERT_EQ(0, lstat64("/proc/version", &sb));
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_EQ(0, fstat64(fd, &sb));
+  close(fd);
 }

@@ -2,13 +2,16 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fstat)
+ENTRY(fstatat64)
     mov     ip, r7
-    ldr     r7, =__NR_fstat64
+    ldr     r7, =__NR_fstatat64
     swi     #0
     mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(fstat)
+END(fstatat64)
+
+    .globl _C_LABEL(fstatat)
+    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)
