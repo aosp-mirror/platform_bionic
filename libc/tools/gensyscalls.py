@@ -54,29 +54,6 @@ function_alias = """
 
 
 #
-# AArch64 assembler templates for each syscall stub
-#
-
-aarch64_call = syscall_stub_header + """\
-    stp     x29, x30, [sp, #-16]!
-    mov     x29,  sp
-    str     x8,       [sp, #-16]!
-
-    mov     x8, %(__NR_name)s
-    svc     #0
-
-    ldr     x8,       [sp], #16
-    ldp     x29, x30, [sp], #16
-
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno
-
-    ret
-END(%(func)s)
-"""
-
-#
 # ARM assembler templates for each syscall stub
 #
 
@@ -109,6 +86,30 @@ arm_eabi_call_long = syscall_stub_header + """\
     bxls    lr
     neg     r0, r0
     b       __set_errno
+END(%(func)s)
+"""
+
+
+#
+# Arm64 assembler templates for each syscall stub
+#
+
+arm64_call = syscall_stub_header + """\
+    stp     x29, x30, [sp, #-16]!
+    mov     x29,  sp
+    str     x8,       [sp, #-16]!
+
+    mov     x8, %(__NR_name)s
+    svc     #0
+
+    ldr     x8,       [sp], #16
+    ldp     x29, x30, [sp], #16
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno
+
+    ret
 END(%(func)s)
 """
 
@@ -272,15 +273,15 @@ def add_footer(pointer_length, stub, syscall):
     return stub
 
 
-def aarch64_genstub(syscall):
-    return aarch64_call % syscall
-
-
 def arm_eabi_genstub(syscall):
     num_regs = count_arm_param_registers(syscall["params"])
     if num_regs > 4:
         return arm_eabi_call_long % syscall
     return arm_eabi_call_default % syscall
+
+
+def arm64_genstub(syscall):
+    return arm64_call % syscall
 
 
 def mips_genstub(syscall):
@@ -377,11 +378,11 @@ class State:
         for syscall in self.syscalls:
             syscall["__NR_name"] = make__NR_name(syscall["name"])
 
-            if syscall.has_key("aarch64"):
-                syscall["asm-aarch64"] = add_footer(64, aarch64_genstub(syscall), syscall)
-
             if syscall.has_key("arm"):
                 syscall["asm-arm"] = add_footer(32, arm_eabi_genstub(syscall), syscall)
+
+            if syscall.has_key("arm64"):
+                syscall["asm-arm64"] = add_footer(64, arm64_genstub(syscall), syscall)
 
             if syscall.has_key("x86"):
                 if syscall["socketcall_id"] >= 0:
