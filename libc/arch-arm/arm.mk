@@ -1,4 +1,54 @@
-_LIBC_ARCH_COMMON_SRC_FILES := \
+# arm specific configs
+
+# These are used by the 32-bit targets, but not the 64-bit ones.
+libc_common_src_files_arm := \
+    bionic/legacy_32_bit_support.cpp \
+    bionic/ndk_cruft.cpp \
+
+# These are shared by all the 32-bit targets, but not the 64-bit ones.
+libc_bionic_src_files_arm := \
+    bionic/mmap.cpp
+
+libc_common_src_files_arm += \
+    bionic/memchr.c \
+    bionic/memmove.c.arm \
+    bionic/memrchr.c \
+    bionic/strchr.cpp \
+    bionic/strnlen.c \
+    string/bcopy.c \
+    string/index.c \
+    string/strlcat.c \
+    string/strlcpy.c \
+    string/strncat.c \
+    string/strncmp.c \
+    string/strncpy.c \
+    string/strrchr.c \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+
+# The C++ fortify function implementations for which there is an
+# arm assembler version.
+#
+# Fortify implementations of libc functions.
+# libc_common_src_files_arm +=
+#    bionic/__memcpy_chk.cpp \
+#    bionic/__memset_chk.cpp \
+#    bionic/__strcpy_chk.cpp \
+#    bionic/__strcat_chk.cpp \
+
+# cflags
+libc_common_cflags_arm := \
+    -DSOFTFLOAT \
+    -fstrict-aliasing
+
+##########################################
+### CPU specific source files
+libc_bionic_src_files_arm += \
     arch-arm/bionic/abort_arm.S \
     arch-arm/bionic/atomics_arm.c \
     arch-arm/bionic/__bionic_clone.S \
@@ -14,27 +64,37 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
 
-_LIBC_ARCH_STATIC_SRC_FILES := \
+# These are used by the static and dynamic versions of the libc
+# respectively.
+libc_arch_static_src_files_arm := \
     arch-arm/bionic/exidx_static.c \
 
-_LIBC_ARCH_DYNAMIC_SRC_FILES := \
+libc_arch_dynamic_src_files_arm := \
     arch-arm/bionic/exidx_dynamic.c \
 
-# Remove the C++ fortify function implementations for which there is an
-# arm assembler version.
-_LIBC_FORTIFY_FILES_TO_REMOVE := \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
-
-libc_common_src_files := \
-    $(filter-out $(_LIBC_FORTIFY_FILES_TO_REMOVE),$(libc_common_src_files))
-
-ifeq ($(strip $(wildcard bionic/libc/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk)),)
-$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a7, cortex-a8, cortex-a9, cortex-a15, krait. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+## CPU variant specific source files
+ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
+  $(warning TARGET_$(my_2nd_arch_prefix)ARCH is arm, but TARGET_$(my_2nd_arch_prefix)CPU_VARIANT is not defined)
 endif
+cpu_variant_mk := $(LOCAL_PATH)/arch-arm/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT).mk
+ifeq ($(wildcard $(cpu_variant_mk)),)
+$(error "TARGET_$(my_2nd_arch_prefix)CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a7, cortex-a8, cortex-a9, cortex-a15, krait. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+endif
+include $(cpu_variant_mk)
+libc_common_additional_dependencies += $(cpu_variant_mk)
 
-_LIBC_ARCH_ADDITIONAL_DEPENDENCIES := \
-    $(LOCAL_PATH)/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
-include $(LOCAL_PATH)/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
+cpu_variant_mk :=
+
+##########################################
+# crt-related
+libc_crt_target_cflags_arm := \
+    -I$(LOCAL_PATH)/arch-arm/include \
+    -mthumb-interwork
+
+libc_crt_target_so_cflags_arm :=
+
+libc_crt_target_crtbegin_file_arm := \
+    $(LOCAL_PATH)/arch-common/bionic/crtbegin.c
+
+libc_crt_target_crtbegin_so_file_arm := \
+    $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
