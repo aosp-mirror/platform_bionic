@@ -29,10 +29,10 @@ test_c_flags = \
     -Werror \
     -fno-builtin \
 
-ifeq ($(TARGET_ARCH),aarch64)
+ifeq ($(TARGET_ARCH),arm64)
   $(info TODO: $(LOCAL_PATH)/Android.mk -fstack-protector not yet available for the AArch64 toolchain)
   test_c_flags += -fno-stack-protector
-endif # aarch64
+endif # arm64
 
 test_src_files = \
     buffer_tests.cpp \

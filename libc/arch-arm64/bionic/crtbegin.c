@@ -40,7 +40,7 @@ __attribute__ ((section (".fini_array")))
 void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 
 
-__LIBC_HIDDEN__ void do_aarch64_start(void* raw_args) {
+__LIBC_HIDDEN__ void do_arm64_start(void* raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
@@ -49,7 +49,7 @@ __LIBC_HIDDEN__ void do_aarch64_start(void* raw_args) {
 }
 
 /*
- * Put the value of sp in x0 and call do_aarch64_init(). The latter will then
+ * Put the value of sp in x0 and call do_arm64_init(). The latter will then
  * then be able to access the stack as prepared by the kernel's execve system
  * call (via the first argument).
  */
@@ -61,7 +61,7 @@ __asm__ (
 "        .type   _start, %function  \n"
 "_start:                            \n"
 "        add     x0, sp, xzr        \n"
-"        b       do_aarch64_start   \n"
+"        b       do_arm64_start   \n"
 "        .size   _start, .-_start   \n"
 );
 

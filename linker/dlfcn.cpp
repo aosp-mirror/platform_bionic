@@ -184,7 +184,7 @@ int dlclose(void* handle) {
 #  define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
 #else
-#  error Unsupported architecture. Only aarch64, arm, mips, x86, and x86_64 are presently supported.
+#  error Unsupported architecture. Only arm, arm64, mips, x86, and x86_64 are presently supported.
 #endif
 
 static Elf_Sym gLibDlSymtab[] = {
