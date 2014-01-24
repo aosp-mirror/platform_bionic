@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72b456b0_c2c54628",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "arm sorts before arm64.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92bf0a8c_35eb3bcf",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92bf0a8c_55f02fb8",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72b456b0_82d74edf",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f265a62a_688e4b6a",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "L224-L238 likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f265a62a_c892ff8b",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise all through this file.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92bf0a8c_15d2b723",
+        "filename": "libc/kernel/tools/generate_uapi_headers.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "yay!\n\n(or just remove this variable.)",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92bf0a8c_d5dbbf3c",
+        "filename": "libc/private/bionic_atomic_inline.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f265a62a_e899bbae",
+        "filename": "libc/tools/bionic_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72b456b0_42d156e7",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise all through this file.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72b456b0_e2e5eabe",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise all through this file.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72b456b0_02e35eba",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72b456b0_a2dff2f2",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-24T02:25:01Z",
+      "side": 1,
+      "message": "missed one :-)",
+      "revId": "95fec4cba400294b8ccfc058b392309b23858570",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
