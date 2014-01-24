@@ -129,6 +129,7 @@
     XX(__aeabi_ui2f)         \
     XX(__aeabi_ul2d)         \
     XX(__aeabi_ul2f)         \
+    XX(__aeabi_uidivmod)     \
     XX(__cmpdf2)             \
     XX(__divdf3)             \
     XX(__divsf3)             \
@@ -153,6 +154,7 @@
     XX(__mulsf3)             \
     XX(__nedf2)              \
     XX(__popcountsi2)        \
+    XX(__popcount_tab)       \
     XX(__subdf3)             \
     XX(__subsf3)             \
     XX(__truncdfsf2)         \
