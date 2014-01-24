@@ -225,11 +225,11 @@ libm_common_cflags := \
 
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
-libm_aarch64_includes := $(LOCAL_PATH)/aarch64
-libm_aarch64_src_files := aarch64/fenv.c
-
 libm_arm_includes := $(LOCAL_PATH)/arm
 libm_arm_src_files := arm/fenv.c
+
+libm_arm64_includes := $(LOCAL_PATH)/arm64
+libm_arm64_src_files := arm64/fenv.c
 
 libm_x86_includes := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
 libm_x86_src_files := i387/fenv.c

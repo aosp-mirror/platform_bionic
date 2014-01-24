@@ -186,22 +186,16 @@ copy_hdrs "${KERNEL_DIR}/common/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
 
 for arch in "${ARCH_LIST[@]}"; do
-  if [[ "$arch" == "arm64" ]]; then
-    # The Android headers use aarch64 as the name of the 64 bit arm headers.
-    tgt_arch="asm-aarch64"
-  else
-    tgt_arch="asm-${arch}"
-  fi
   # Copy arch headers.
   copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/uapi" \
-            "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}"
+            "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
   # Copy the generated arch headers.
   copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/generated/uapi" \
-            "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}"
+            "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
 
   # Special copy of generated header files from arch/<ARCH>/generated/asm that
   # also exist in uapi/asm-generic.
   copy_if_exists "${KERNEL_DIR}/common/include/uapi/asm-generic" \
                  "${KERNEL_DIR}/common/arch/${arch}/include/generated/asm" \
-                 "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}/asm"
+                 "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
