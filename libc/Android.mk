@@ -446,6 +446,40 @@ libc_common_src_files += \
 
 endif # arm
 
+ifeq ($(TARGET_ARCH), arm64)
+#TODO: Replace C stubs with optimised assembly
+libc_common_src_files += \
+    bionic/memchr.c   \
+    bionic/memcmp.c   \
+    bionic/memcpy.c   \
+    bionic/memmove.c  \
+    bionic/memrchr.c  \
+    bionic/memset.c   \
+    bionic/strchr.cpp \
+    bionic/strnlen.c  \
+    string/bcopy.c    \
+    string/index.c    \
+    string/memcmp16.c \
+    string/strcat.c   \
+    string/strcmp.c   \
+    string/strcpy.c   \
+    string/strlcat.c  \
+    string/strlcpy.c  \
+    string/strlen.c   \
+    string/strncat.c  \
+    string/strncmp.c  \
+    string/strncpy.c  \
+    string/strrchr.c  \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+
+endif # arm64
+
 ifeq ($(TARGET_ARCH),mips)
 libc_common_src_files += \
     bionic/memchr.c \
@@ -505,40 +539,6 @@ libc_common_src_files += \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
 
 endif # x86_64
-
-ifeq ($(TARGET_ARCH), aarch64)
-#TODO: Replace C stubs with optimised assembly
-libc_common_src_files += \
-    bionic/memchr.c   \
-    bionic/memcmp.c   \
-    bionic/memcpy.c   \
-    bionic/memmove.c  \
-    bionic/memrchr.c  \
-    bionic/memset.c   \
-    bionic/strchr.cpp \
-    bionic/strnlen.c  \
-    string/bcopy.c    \
-    string/index.c    \
-    string/memcmp16.c \
-    string/strcat.c   \
-    string/strcmp.c   \
-    string/strcpy.c   \
-    string/strlcat.c  \
-    string/strlcpy.c  \
-    string/strlen.c   \
-    string/strncat.c  \
-    string/strncmp.c  \
-    string/strncpy.c  \
-    string/strrchr.c  \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-endif # aarch64
 
 ifeq ($(TARGET_ARCH),arm)
   ifeq ($(strip $(TARGET_CPU_VARIANT)),)
@@ -662,7 +662,7 @@ libc_common_c_includes := \
 # which are needed to build all other objects (shared/static libs and
 # executables)
 # ==========================================================================
-# AArch64, ARM, MIPS, and x86 all need crtbegin_so/crtend_so.
+# ARM, Arm64, MIPS, and x86 all need crtbegin_so/crtend_so.
 #
 # For x86, the .init section must point to a function that calls all
 # entries in the .ctors section. (on ARM this is done through the
@@ -675,12 +675,12 @@ libc_common_c_includes := \
 libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin.c
 libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
 
-ifeq ($(TARGET_ARCH),aarch64)
-    libc_crt_target_so_cflags :=
-    libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
-endif
 ifeq ($(TARGET_ARCH),arm)
     libc_crt_target_so_cflags :=
+endif
+ifeq ($(TARGET_ARCH),arm64)
+    libc_crt_target_so_cflags :=
+    libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
 endif
 ifeq ($(TARGET_ARCH),mips)
     libc_crt_target_so_cflags := -fPIC
