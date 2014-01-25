@@ -119,17 +119,21 @@
     XX(__aeabi_i2d)          \
     XX(__aeabi_i2f)          \
     XX(__aeabi_idiv)         \
+    XX(__aeabi_idivmod)      \
     XX(__aeabi_l2d)          \
     XX(__aeabi_l2f)          \
     XX(__aeabi_lasr)         \
-    XX(__aeabi_lmul)         \
+    XX(__aeabi_ldivmod)      \
     XX(__aeabi_llsl)         \
     XX(__aeabi_llsr)         \
+    XX(__aeabi_lmul)         \
     XX(__aeabi_ui2d)         \
     XX(__aeabi_ui2f)         \
+    XX(__aeabi_uidiv)        \
+    XX(__aeabi_uidivmod)     \
     XX(__aeabi_ul2d)         \
     XX(__aeabi_ul2f)         \
-    XX(__aeabi_uidivmod)     \
+    XX(__aeabi_uldivmod)     \
     XX(__cmpdf2)             \
     XX(__divdf3)             \
     XX(__divsf3)             \
