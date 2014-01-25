@@ -22,8 +22,6 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
-#if !defined(__cplusplus) || defined(__STDC_FORMAT_MACROS) || (__cplusplus >= 201103L)
-
 #ifdef __LP64__
 #define __PRI_64_prefix  "l"
 #define __PRI_PTR_prefix "l"
@@ -249,8 +247,6 @@
 
 #define	SCNxMAX			"jx"		/* uintmax_t */
 #define	SCNxPTR			__PRI_PTR_prefix"x"		/* uintptr_t */
-
-#endif /* __cplusplus || __STDC_FORMAT_MACROS */
 
 typedef struct {
 	intmax_t quot;		/* quotient */

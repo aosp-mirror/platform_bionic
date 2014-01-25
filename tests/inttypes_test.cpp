@@ -16,8 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#define __STDC_FORMAT_MACROS // Otherwise not available in C++.
-
 #include <stdio.h>
 #include <inttypes.h>
 
