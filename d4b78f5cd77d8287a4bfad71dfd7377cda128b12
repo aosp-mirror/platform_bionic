@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12dcfa2e_fd2327b5",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-01-27T09:42:09Z",
+      "side": 1,
+      "message": "Does this break binary compatibility ? Several android apps make assumptions about the layout of this struct even if it isn\u0027t a public API.",
+      "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
