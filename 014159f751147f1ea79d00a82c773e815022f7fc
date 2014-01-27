@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2f7c297_9a5f91ac",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-27T23:34:25Z",
+      "side": 1,
+      "message": "I find all the uses of $(TARGET_ARCH) and $(TARGET_2ND_ARCH) in here very confusing, and its exposing the implementation of the build system to all the modules.  I understand not wanting to set too many variables for other architectures that stay around forever.  Would a combination of manually clearing all the libc_* variables at the end of this file, plus clearing LOCAL_*_\u003carch\u003e for all supported arches in clear_vars.mk work?\n\nThen this would become something more like:\n\n $(foreach $(libc_supported_arches),arch,\n   $(eval include $(LOCAL_PATH)/arch-$(arch)/$(arch).mk)\n   $(eval include $(LOCAL_PATH)/arch-$(arch)/syscalls.mk))\n\nwith no mentions of 2nd arch, etc.",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12eebac6_07e06aaa",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-27T23:34:25Z",
+      "side": 1,
+      "message": "there is a large repeated block of variable definitions here, and this is a fairly common pattern - defining variables in a set of common variables, and then reusing them in every module.  Maybe we should a function in definitions.mk that allows:\n\n $(call set-LOCAL-variables libc_common)\n\nwhich would automatically add:\n LOCAL_CFLAGS +\u003d $(libc_common_cflags)\n LOCAL_CONLYFLAGS +\u003d $(libc_common_conlyflags)\n ...\n LOCAL_CFLAGS_$(TARGET_ARCH) :\u003d $(libc_common_cflags_$(TARGET_ARCH))",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2fa0681_a65fdaab",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-27T23:34:25Z",
+      "side": 1,
+      "message": "x86 -\u003e arm",
+      "range": {
+        "startLine": 38,
+        "startChar": 24,
+        "endLine": 38,
+        "endChar": 27
+      },
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2fa0681_8630de6a",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-01-27T23:34:25Z",
+      "side": 1,
+      "message": "Using TARGET_2ND_CPU_VARIANT in a module makefile is exposing too much of the implementation.  What about having the build system convert TARGET_CPU_VARIANT and TARGET_2ND_CPU_VARIANT (and all the other related definitions) into TARGET_CPU_VARIANT_$(TARGET_ARCH) and TARGET_CPU_VARIANT_$(TARGET_2ND_ARCH)?  Then an arm-specific makefile like this can use TARGET_CPU_VARIANT_arm, without worrying about if TARGET_ARCH or TARGET_2ND_ARCH is arm.",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
