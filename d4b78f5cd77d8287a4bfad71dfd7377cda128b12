@@ -34,6 +34,24 @@
       "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2fa0681_167419a1",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2014-01-28T06:23:21Z",
+      "side": 1,
+      "message": "Firefox is one I believe, see http://www.filewatcher.com/p/firefox-5.0.source.tar.bz2.68782151/mozilla-release/other-licenses/android/linker.h.html\n\nI believe some game engines as well.",
+      "parentUuid": "12eebac6_b6eb8919",
+      "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
