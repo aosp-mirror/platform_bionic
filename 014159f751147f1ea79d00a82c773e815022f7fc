@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "922b8ac2_ec6c2363",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-01-28T05:02:40Z",
+      "side": 1,
+      "message": "I don\u0027t think TARGET_ARCH or TARGET_2ND_ARCH is the build system implementation. Board config variables should be visible to all modules.\nIn addition, one problem with the load-config-of-all-arch approach is, you can\u0027t access the board-dependent variables in the arch-specific config files. For example, in bionic/libc/arch-arm/arm.mk, we have \"include $(LOCAL_PATH)/arch-arm/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk\", where TARGET_CPU_VARIANT actually may be TARGET_CPU_VARIANT or TARGET_2ND_CPU_VARIANT.\nAnother example in libc/arch-x86/x86.mk, we have \"ifeq ($(ARCH_X86_HAVE_SSSE3),true)\".\n\nP.S., in your other comment, we are talking about this issue.",
+      "parentUuid": "d2f7c297_9a5f91ac",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12eebac6_07e06aaa",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-01-27T23:34:25Z",
       "side": 1,
       "message": "there is a large repeated block of variable definitions here, and this is a fairly common pattern - defining variables in a set of common variables, and then reusing them in every module.  Maybe we should a function in definitions.mk that allows:\n\n $(call set-LOCAL-variables libc_common)\n\nwhich would automatically add:\n LOCAL_CFLAGS +\u003d $(libc_common_cflags)\n LOCAL_CONLYFLAGS +\u003d $(libc_common_conlyflags)\n ...\n LOCAL_CFLAGS_$(TARGET_ARCH) :\u003d $(libc_common_cflags_$(TARGET_ARCH))",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7220d6de_aeeea329",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-01-28T05:02:40Z",
+      "side": 1,
+      "message": "Hmm, we can either define a function to call $(eval) to set up the variables, or split out a small .mk file and include it in each module definition.\nI was reluctant to use that for:\n1) $(eval) is much slower compared to \"include\" directive.\n2) to include the small .mk, I have to set up a couple of variables so it know what libc_*_flags to use. That would be as cluttering as what\u0027s now in my change.\nAnyway, now I think it may be a better idea to define a function using $(eval), for we have just a handful of calls to it. I\u0027ll do it.",
+      "parentUuid": "12eebac6_07e06aaa",
       "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +95,24 @@
     },
     {
       "key": {
+        "uuid": "922b8ac2_ac906bf4",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-01-28T05:02:40Z",
+      "side": 1,
+      "message": "Good catch. Done.",
+      "parentUuid": "f2fa0681_a65fdaab",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2fa0681_8630de6a",
         "filename": "libc/arch-arm/arm.mk",
         "patchSetId": 1
@@ -70,6 +124,24 @@
       "writtenOn": "2014-01-27T23:34:25Z",
       "side": 1,
       "message": "Using TARGET_2ND_CPU_VARIANT in a module makefile is exposing too much of the implementation.  What about having the build system convert TARGET_CPU_VARIANT and TARGET_2ND_CPU_VARIANT (and all the other related definitions) into TARGET_CPU_VARIANT_$(TARGET_ARCH) and TARGET_CPU_VARIANT_$(TARGET_2ND_ARCH)?  Then an arm-specific makefile like this can use TARGET_CPU_VARIANT_arm, without worrying about if TARGET_ARCH or TARGET_2ND_ARCH is arm.",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b226cef6_7002c8d5",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-01-28T05:02:40Z",
+      "side": 1,
+      "message": "For an arm product, we already have TARGET_CPU_VARIANT, then we\u0027ll have a TARGET_CPU_VARIANT_arm and they are of the same value. That sounds a bit weird to me. Also if the  TARGET_ARCH isn\u0027t arm,$(cpu_variant_mk) will evaluate to a non-existent file and we\u0027ll need TARGET_ARCH again to decide if we want to include that file...\nFollowing the include-config-of-all-arch approach, perhaps we should include all cpu-variants\u0027 config makefiles as well, and embed the cpu variant name in the LOCAL_ vriable name, such as LOCAL_CFLAGS_arm_cortex_a9, etc. Actually that\u0027s my first thought but then I realized that went too far -  we also have a TARGET_ARCH_VARIANT between TARGET_ARCH and TARGET_CPU_VARIANT. On the other hand, board config variables such as TARGET_ARCH, TARGET_2ND_ARCH are really visible to the module definition (TARGET_ARCH has been used in Android.mks in many places anyway). So I wanted to include configs of just TARGET_ARCH and TARGET_2ND_ARCH.",
+      "parentUuid": "f2fa0681_8630de6a",
       "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
