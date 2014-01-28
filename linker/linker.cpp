@@ -783,7 +783,7 @@ static soinfo* find_library_internal(const char* name) {
 
   // At this point we know that whatever is loaded @ base is a valid ELF
   // shared library whose segments are properly mapped in.
-  TRACE("[ init_library base=%p sz=0x%08x name='%s' ]",
+  TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
         reinterpret_cast<void*>(si->base), si->size, si->name);
 
   if (!soinfo_link_image(si)) {
