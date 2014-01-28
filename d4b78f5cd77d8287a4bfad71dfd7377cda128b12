@@ -70,6 +70,24 @@
       "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32df3e25_7e1f11ef",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-01-28T08:56:12Z",
+      "side": 1,
+      "message": "Yeah, this is seems like a pretty safe change (I don\u0027t really expect the high bit to be set). I was just being paranoid.",
+      "parentUuid": "f2fa0681_36d2f547",
+      "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
