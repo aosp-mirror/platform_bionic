@@ -38,14 +38,12 @@ extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
 #define MMAP2_SHIFT 12 // 2**12 == 4096
 
 void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset & ((1UL << MMAP2_SHIFT)-1)) {
+  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
     errno = EINVAL;
     return MAP_FAILED;
   }
 
-  uint64_t unsigned_offset = static_cast<uint64_t>(offset); // To avoid sign extension.
-  void* result = __mmap2(addr, size, prot, flags, fd, unsigned_offset >> MMAP2_SHIFT);
-
+  void* result = __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
   if (result != MAP_FAILED && (flags & (MAP_PRIVATE | MAP_ANONYMOUS)) != 0) {
     ErrnoRestorer errno_restorer;
     madvise(result, size, MADV_MERGEABLE);
@@ -55,5 +53,5 @@ void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offse
 }
 
 void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset) & 0xffffffff);
+  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
 }
