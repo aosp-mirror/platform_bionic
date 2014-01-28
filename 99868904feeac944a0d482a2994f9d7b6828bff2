@@ -46,6 +46,30 @@
       "revId": "99868904feeac944a0d482a2994f9d7b6828bff2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2f7c297_c5cade5a",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-28T00:36:19Z",
+      "side": 1,
+      "message": "sorry for the long delay. finally addressed in https://android-review.googlesource.com/80124. i think you\u0027re right and we\u0027ve been going about this the wrong way since the beginning.",
+      "parentUuid": "cd01e1f4_3b2b3704",
+      "range": {
+        "startLine": 58,
+        "startChar": 76,
+        "endLine": 58,
+        "endChar": 86
+      },
+      "revId": "99868904feeac944a0d482a2994f9d7b6828bff2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
