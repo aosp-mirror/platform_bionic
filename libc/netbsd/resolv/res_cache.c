@@ -137,10 +137,6 @@
  *
  * As such, a value of 64 should be relatively comfortable at the moment.
  *
- * The system property ro.net.dns_cache_size can be used to override the default
- * value with a custom value
- *
- *
  * ******************************************
  * * NOTE - this has changed.
  * * 1) we've added IPv6 support so each dns query results in 2 responses
@@ -153,7 +149,6 @@
  */
 #define  CONFIG_MAX_ENTRIES    64 * 2 * 5
 /* name of the system property that can be used to set the cache size */
-#define  DNS_CACHE_SIZE_PROP_NAME   "ro.net.dns_cache_size"
 
 /****************************************************************************/
 /****************************************************************************/
@@ -1397,37 +1392,19 @@ _cache_flush_locked( Cache*  cache )
          "*************************");
 }
 
-/* Return max number of entries allowed in the cache,
- * i.e. cache size. The cache size is either defined
- * by system property ro.net.dns_cache_size or by
- * CONFIG_MAX_ENTRIES if system property not set
- * or set to invalid value. */
 static int
 _res_cache_get_max_entries( void )
 {
-    int result = -1;
-    char cache_size[PROP_VALUE_MAX];
+    int cache_size = CONFIG_MAX_ENTRIES;
 
     const char* cache_mode = getenv("ANDROID_DNS_MODE");
-
     if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
-        // Don't use the cache in local mode.  This is used by the
-        // proxy itself.
-        XLOG("setup cache for non-cache process. size=0, %s", cache_mode);
-        return 0;
+        // Don't use the cache in local mode. This is used by the proxy itself.
+        cache_size = 0;
     }
 
-    if (__system_property_get(DNS_CACHE_SIZE_PROP_NAME, cache_size) > 0) {
-        result = atoi(cache_size);
-    }
-
-    // ro.net.dns_cache_size not set or set to negative value
-    if (result <= 0) {
-        result = CONFIG_MAX_ENTRIES;
-    }
-
-    XLOG("cache size: %d", result);
-    return result;
+    XLOG("cache size: %d", cache_size);
+    return cache_size;
 }
 
 static struct resolv_cache*
