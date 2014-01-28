@@ -88,6 +88,24 @@
       "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7220d6de_51350658",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-28T19:51:33Z",
+      "side": 1,
+      "message": "(the signedness stays the same too; size_t is unsigned, ssize_t signed.)\n\nbut, yeah, in general we need to be careful with this struct.",
+      "parentUuid": "32df3e25_7e1f11ef",
+      "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
