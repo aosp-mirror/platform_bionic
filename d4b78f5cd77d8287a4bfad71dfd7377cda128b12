@@ -52,6 +52,24 @@
       "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2fa0681_36d2f547",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-28T06:30:06Z",
+      "side": 1,
+      "message": "in this case, the size stays the same for 32-bit and (as you can see from the __LP64__s everywhere) we\u0027re not maintaining compatibility for 64-bit anyway. \n\ni don\u0027t think there\u0027s much point to this change (\u003e2GiB libraries? really? the biggest one on my x86_64 desktop is only 20MiB!) but size_t is the appropriate type for sizes. well, that or the ELF equivalent, so i plan on committing this tomorrow.\n\nwe might want to think about what extra fields we\u0027ll need to support currently-missing linker features and add space for them in advance before this nonsense starts again for LP64.\n\n(i think Unity stopped doing this, but Kindle were still at it last time we had to change something.)",
+      "parentUuid": "f2fa0681_167419a1",
+      "revId": "d4b78f5cd77d8287a4bfad71dfd7377cda128b12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
