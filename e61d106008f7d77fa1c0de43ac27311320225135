@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52811216_61e5ba47",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "i fixed the copyright years.",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52811216_5636ba17",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "NGREG is supposed to be the number of registers named above, used for sizing gregset_t, not the size of the user struct, which contains some other stuff that won\u0027t be in gregset_t.",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_d6fb84e6",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "glibc\u0027s greg_t is signed.",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92870a29_c3766aab",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "this isn\u0027t the exact same underlying type as glibc, but the members whose names don\u0027t start with underscores all match (and the other members match too in terms of size) so i think this is \"compatible enough\".",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_b600f81b",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "glibc reserves extra space, presumably out of paranoia about future ABI worries. not sure what to do.",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92870a29_83b39214",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-01-29T23:41:19Z",
+      "side": 1,
+      "message": "i don\u0027t know whether we need this.",
+      "revId": "e61d106008f7d77fa1c0de43ac27311320225135",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
