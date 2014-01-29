@@ -35,15 +35,19 @@ TEST(pthread, pthread_key_create) {
 TEST(pthread, pthread_key_create_lots) {
   // POSIX says PTHREAD_KEYS_MAX should be at least 128.
   ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+
+  int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
+
   // sysconf shouldn't return a smaller value.
-  ASSERT_GE(sysconf(_SC_THREAD_KEYS_MAX), PTHREAD_KEYS_MAX);
+  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
 
   // We can allocate _SC_THREAD_KEYS_MAX keys.
+  sysconf_max -= 2; // (Except that gtest takes two for itself.)
   std::vector<pthread_key_t> keys;
-  for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
+  for (int i = 0; i < sysconf_max; ++i) {
     pthread_key_t key;
     // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
-    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf(_SC_THREAD_KEYS_MAX);
+    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf_max;
     keys.push_back(key);
   }
 
