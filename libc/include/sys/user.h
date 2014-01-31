@@ -181,7 +181,7 @@ struct user {
 
 #elif defined(__arm__)
 
-struct user_fp {
+struct user_fpregs {
   struct fp_reg {
     unsigned int sign1:1;
     unsigned int unused:15;
@@ -196,6 +196,9 @@ struct user_fp {
   unsigned char ftype[8];
   unsigned int init_flag;
 };
+struct user_regs {
+  unsigned long uregs[18];
+};
 struct user_vfp {
   unsigned long long fpregs[32];
   unsigned long fpscr;
@@ -206,7 +209,7 @@ struct user_vfp_exc {
   unsigned long fpinst2;
 };
 struct user {
-  struct pt_regs regs;
+  struct user_regs regs;
   int u_fpvalid;
   unsigned long int u_tsize;
   unsigned long int u_dsize;
@@ -215,12 +218,12 @@ struct user {
   unsigned long start_stack;
   long int signal;
   int reserved;
-  unsigned long u_ar0;
+  struct user_regs* u_ar0;
   unsigned long magic;
   char u_comm[32];
   int u_debugreg[8];
-  struct user_fp u_fp;
-  struct user_fp_struct* u_fp0;
+  struct user_fpregs u_fp;
+  struct user_fpregs* u_fp0;
 };
 
 #elif defined(__aarch64__)
