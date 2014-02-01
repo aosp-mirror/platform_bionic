@@ -40,7 +40,11 @@
 
 extern "C" int tgkill(int tgid, int tid, int sig);
 
+#if __LP64__
+#define DEBUGGER_SOCKET_NAME "android:debuggerd64"
+#else
 #define DEBUGGER_SOCKET_NAME "android:debuggerd"
+#endif
 
 enum debugger_action_t {
     // dump a crash
