@@ -96,10 +96,10 @@ static int socket_abstract_client(const char* name, int type) {
         return -1;
     }
 
-    int err = TEMP_FAILURE_RETRY(connect(s, reinterpret_cast<sockaddr*>(&addr), alen));
-    if (err == -1) {
+    int rc = TEMP_FAILURE_RETRY(connect(s, reinterpret_cast<sockaddr*>(&addr), alen));
+    if (rc == -1) {
         close(s);
-        s = -1;
+        return -1;
     }
 
     return s;
@@ -180,69 +180,64 @@ static bool have_siginfo(int signum) {
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
-void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
-    /*
-     * It's possible somebody cleared the SA_SIGINFO flag, which would mean
-     * our "info" arg holds an undefined value.
-     */
-    if (!have_siginfo(n)) {
+void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
+    // It's possible somebody cleared the SA_SIGINFO flag, which would mean
+    // our "info" arg holds an undefined value.
+    if (!have_siginfo(signal_number)) {
         info = NULL;
     }
 
-    log_signal_summary(n, info);
+    log_signal_summary(signal_number, info);
 
-    pid_t tid = gettid();
     int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
-
-    if (s >= 0) {
+    if (s != -1) {
         // debuggerd knows our pid from the credentials on the
         // local socket but we need to tell it the tid of the crashing thread.
         // debuggerd will be paranoid and verify that we sent a tid
         // that's actually in our process.
         debugger_msg_t msg;
         msg.action = DEBUGGER_ACTION_CRASH;
-        msg.tid = tid;
+        msg.tid = gettid();
         msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
         int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
         if (ret == sizeof(msg)) {
-            // if the write failed, there is no point trying to read a response.
-            ret = TEMP_FAILURE_RETRY(read(s, &tid, 1));
+            // If the write failed, there is no point trying to read a response.
+            char debuggerd_ack;
+            ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
             int saved_errno = errno;
             notify_gdb_of_libraries();
             errno = saved_errno;
         }
 
         if (ret < 0) {
-            /* read or write failed -- broken connection? */
+            // read or write failed -- broken connection?
             __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
                               strerror(errno));
         }
 
         close(s);
     } else {
-        /* socket failed; maybe process ran out of fds */
+        // socket failed; maybe process ran out of fds?
         __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
                           strerror(errno));
     }
 
-    /* remove our net so we fault for real when we return */
-    signal(n, SIG_DFL);
+    // Remove our net so we fault for real when we return.
+    signal(signal_number, SIG_DFL);
 
-    /*
-     * These signals are not re-thrown when we resume.  This means that
-     * crashing due to (say) SIGPIPE doesn't work the way you'd expect it
-     * to.  We work around this by throwing them manually.  We don't want
-     * to do this for *all* signals because it'll screw up the address for
-     * faults like SIGSEGV.
-     */
-    switch (n) {
+    // These signals are not re-thrown when we resume.  This means that
+    // crashing due to (say) SIGPIPE doesn't work the way you'd expect it
+    // to.  We work around this by throwing them manually.  We don't want
+    // to do this for *all* signals because it'll screw up the address for
+    // faults like SIGSEGV.
+    switch (signal_number) {
         case SIGABRT:
         case SIGFPE:
         case SIGPIPE:
 #if defined(SIGSTKFLT)
         case SIGSTKFLT:
 #endif
-            (void) tgkill(getpid(), gettid(), n);
+            tgkill(getpid(), gettid(), signal_number);
             break;
         default:    // SIGILL, SIGBUS, SIGSEGV
             break;
