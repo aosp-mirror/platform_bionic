@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "TemporaryFile.h"
+
 TEST(fcntl, fcntl_smoke) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_TRUE(fd != -1);
@@ -33,4 +35,51 @@ TEST(fcntl, fcntl_smoke) {
   flags = fcntl(fd, F_GETFD);
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+}
+
+TEST(fcntl, fallocate_EINVAL) {
+  TemporaryFile tf;
+
+#if !defined(__GLIBC__)
+  errno = 0;
+  ASSERT_EQ(-1, fallocate(tf.fd, 0, 0, -1));
+  ASSERT_EQ(EINVAL, errno);
+
+  errno = 0;
+  ASSERT_EQ(-1, fallocate64(tf.fd, 0, 0, -1));
+  ASSERT_EQ(EINVAL, errno);
+#endif
+
+  errno = 0;
+  ASSERT_EQ(EINVAL, posix_fallocate(tf.fd, 0, -1));
+  ASSERT_EQ(0, errno);
+
+  errno = 0;
+  ASSERT_EQ(EINVAL, posix_fallocate64(tf.fd, 0, -1));
+  ASSERT_EQ(0, errno);
+}
+
+TEST(fcntl, fallocate) {
+  TemporaryFile tf;
+  struct stat sb;
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_EQ(0, sb.st_size);
+
+#if !defined(__GLIBC__)
+  ASSERT_EQ(0, fallocate(tf.fd, 0, 0, 1));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_EQ(1, sb.st_size);
+
+  ASSERT_EQ(0, fallocate64(tf.fd, 0, 0, 2));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_EQ(2, sb.st_size);
+#endif
+
+  ASSERT_EQ(0, posix_fallocate(tf.fd, 0, 3));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_EQ(3, sb.st_size);
+
+  ASSERT_EQ(0, posix_fallocate64(tf.fd, 0, 4));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_EQ(4, sb.st_size);
 }
