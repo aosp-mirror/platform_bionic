@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "521bd206_5df76b40",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-04T18:25:02Z",
+      "side": 1,
+      "message": "maybe include-if-exists would help here?",
+      "parentUuid": "922b8ac2_ec6c2363",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12eebac6_07e06aaa",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -142,6 +160,24 @@
       "side": 1,
       "message": "For an arm product, we already have TARGET_CPU_VARIANT, then we\u0027ll have a TARGET_CPU_VARIANT_arm and they are of the same value. That sounds a bit weird to me. Also if the  TARGET_ARCH isn\u0027t arm,$(cpu_variant_mk) will evaluate to a non-existent file and we\u0027ll need TARGET_ARCH again to decide if we want to include that file...\nFollowing the include-config-of-all-arch approach, perhaps we should include all cpu-variants\u0027 config makefiles as well, and embed the cpu variant name in the LOCAL_ vriable name, such as LOCAL_CFLAGS_arm_cortex_a9, etc. Actually that\u0027s my first thought but then I realized that went too far -  we also have a TARGET_ARCH_VARIANT between TARGET_ARCH and TARGET_CPU_VARIANT. On the other hand, board config variables such as TARGET_ARCH, TARGET_2ND_ARCH are really visible to the module definition (TARGET_ARCH has been used in Android.mks in many places anyway). So I wanted to include configs of just TARGET_ARCH and TARGET_2ND_ARCH.",
       "parentUuid": "f2fa0681_8630de6a",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "721616de_21e054ab",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-04T18:25:02Z",
+      "side": 1,
+      "message": "This is a bit of a special case, because we use $(TARGET_CPU_VARIANT) in the path.  Maybe include-if-exists would help here?\n\nThe case I\u0027m worried about, which I\u0027m running into all over the build system, is neon vs. non-neon.  There are lots of places that need to include one set of files if neon is enabled, and a different set if it is disabled.  Right now, the only way to do that is to check TARGET_ARCH + TARGET_ARCH_VARIANT and TARGET_2ND_ARCH + TARGET_2ND_ARCH_VARIANT manually in every makefile, when all I really want to know is \"what variant of arm is being built\", but I don\u0027t care if arm is the 1st or 2nd arch, and I don\u0027t care what the answer is if arm is not being built.",
+      "parentUuid": "b226cef6_7002c8d5",
       "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
