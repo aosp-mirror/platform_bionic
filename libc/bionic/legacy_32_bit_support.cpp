@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stdarg.h>
 #include <sys/resource.h>
 #include <sys/types.h>
@@ -84,6 +85,11 @@ ssize_t pread(int fd, void* buf, size_t byte_count, off_t offset) {
 // There is no pwrite for 32-bit off_t, so we need to widen and call pwrite64.
 ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
+}
+
+// There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
+int fallocate(int fd, int mode, off_t offset, off_t length) {
+  return fallocate64(fd, mode, static_cast<off64_t>(offset), static_cast<off64_t>(length));
 }
 
 // There is no getrlimit64 system call, so we need to use prlimit64.

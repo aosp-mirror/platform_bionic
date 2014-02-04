@@ -55,6 +55,7 @@ syscall_src += arch-x86/syscalls/epoll_ctl.S
 syscall_src += arch-x86/syscalls/eventfd.S
 syscall_src += arch-x86/syscalls/execve.S
 syscall_src += arch-x86/syscalls/faccessat.S
+syscall_src += arch-x86/syscalls/fallocate64.S
 syscall_src += arch-x86/syscalls/fchdir.S
 syscall_src += arch-x86/syscalls/fchmod.S
 syscall_src += arch-x86/syscalls/fchmodat.S
