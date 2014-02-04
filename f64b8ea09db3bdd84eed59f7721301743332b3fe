@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2dfc254_d7036f67",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-04T00:32:57Z",
+      "side": 1,
+      "message": "Is there a reason you sorted this function before fallocate (same with openat/open and posix_fallocate64/posix_fallocate)?",
+      "range": {
+        "startLine": 45,
+        "startChar": 11,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "f64b8ea09db3bdd84eed59f7721301743332b3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
