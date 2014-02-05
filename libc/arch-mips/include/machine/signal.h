@@ -57,8 +57,6 @@ typedef int sig_atomic_t;
  * a non-standard exit is performed.
  */
 
-#if defined(__ANDROID__)
-
 /*
  * The Linux and OpenBSD sigcontext structures are slightly different
  * This is the Linux O32 ABI compatible sigcontext
@@ -85,26 +83,9 @@ struct sigcontext {
 	unsigned long sc_lo3;
 };
 
-#else
-
-struct	sigcontext {
-	long	sc_onstack;	/* sigstack state to restore */
-	long	 sc_mask;	/* signal mask to restore */
-	__register_t sc_pc;	/* pc at time of signal */
-	__register_t sc_regs[32]; /* processor regs 0 to 31 */
-	__register_t mullo;	/* mullo and mulhi registers... */
-	__register_t mulhi;	/* mullo and mulhi registers... */
-	f_register_t sc_fpregs[33]; /* fp regs 0 to 31 and csr */
-	long	sc_fpused;	/* fp has been used */
-	long	sc_fpc_eir;	/* floating point exception instruction reg */
-	long	xxx[8];		/* XXX reserved */
-};
-#endif
 #endif /* __BSD_VISIBLE || __XPG_VISIBLE >= 420 */
 
 #else /* __LANGUAGE_ASSEMBLY */
-
-#ifdef __ANDROID__
 
 #define	SC_REGMASK	(0*REGSZ)
 #define	SC_STATUS	(1*REGSZ)
@@ -127,20 +108,6 @@ struct	sigcontext {
 /* OpenBSD compatibility */
 #define	SC_MASK		SC_REGMASK
 #define	SC_FPUSED	SC_USED_MATH
-
-#else
-
-#define SC_ONSTACK	(0 * REGSZ)
-#define	SC_MASK		(1 * REGSZ)
-#define	SC_PC		(2 * REGSZ)
-#define	SC_REGS		(3 * REGSZ)
-#define	SC_MULLO	(35 * REGSZ)
-#define	SC_MULHI	(36 * REGSZ)
-#define	SC_FPREGS	(37 * REGSZ)
-#define	SC_FPUSED	(70 * REGSZ)
-#define	SC_FPC_EIR	(71 * REGSZ)
-
-#endif /* __ANDROID__ */
 
 #endif /* __LANGUAGE_ASSEMBLY */
 
