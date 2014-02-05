@@ -37,55 +37,7 @@
 #ifndef _MIPS_SIGNAL_H_
 #define _MIPS_SIGNAL_H_
 
-#include <sys/cdefs.h>
-
-#if !defined(__LANGUAGE_ASSEMBLY)
-#include <sys/types.h>
-
-/*
- * Machine-dependent signal definitions
- */
-typedef int sig_atomic_t;
-
-#if __BSD_VISIBLE || __XPG_VISIBLE >= 420
-
-/*
- * Information pushed on stack when a signal is delivered.
- * This is used by the kernel to restore state following
- * execution of the signal handler.  It is also made available
- * to the handler to allow it to restore state properly if
- * a non-standard exit is performed.
- */
-
-/*
- * The Linux and OpenBSD sigcontext structures are slightly different
- * This is the Linux O32 ABI compatible sigcontext
- */
-
-struct sigcontext {
-	unsigned int sc_regmask;
-	unsigned int sc_status;
-	unsigned long long sc_pc;
-	unsigned long long sc_regs[32];
-	unsigned long long sc_fpregs[32];
-	unsigned int sc_acx;
-	unsigned int sc_fpc_csr;
-	unsigned int sc_fpc_eir;
-	unsigned int sc_used_math;
-	unsigned int sc_dsp;
-	unsigned long long sc_mdhi;
-	unsigned long long sc_mdlo;
-	unsigned long sc_hi1;
-	unsigned long sc_lo1;
-	unsigned long sc_hi2;
-	unsigned long sc_lo2;
-	unsigned long sc_hi3;
-	unsigned long sc_lo3;
-};
-
-#endif /* __BSD_VISIBLE || __XPG_VISIBLE >= 420 */
-
-#else /* __LANGUAGE_ASSEMBLY */
+#include <machine/asm.h>
 
 #define	SC_REGMASK	(0*REGSZ)
 #define	SC_STATUS	(1*REGSZ)
@@ -93,22 +45,9 @@ struct sigcontext {
 #define	SC_REGS		(SC_PC+8)
 #define	SC_FPREGS	(SC_REGS+32*8)
 #define	SC_ACX		(SC_FPREGS+32*REGSZ_FP)
-#define	SC_FPC_CSR	(SC_ACX+1*REGSZ)
-#define	SC_FPC_EIR	(SC_ACX+2*REGSZ)
 #define	SC_USED_MATH	(SC_ACX+3*REGSZ)
-#define	SC_DSP		(SC_ACX+4*REGSZ)
-#define	SC_MDHI		(SC_ACX+5*REGSZ)
-#define	SC_MDLO		(SC_MDHI+8)
-#define	SC_HI1		(SC_MDLO+8)
-#define	SC_LO1		(SC_HI1+1*REGSZ)
-#define	SC_HI2		(SC_HI1+2*REGSZ)
-#define	SC_LO2		(SC_HI1+3*REGSZ)
-#define	SC_HI3		(SC_HI1+4*REGSZ)
-#define	SC_LO3		(SC_HI1+5*REGSZ)
 /* OpenBSD compatibility */
 #define	SC_MASK		SC_REGMASK
 #define	SC_FPUSED	SC_USED_MATH
-
-#endif /* __LANGUAGE_ASSEMBLY */
 
 #endif	/* !_MIPS_SIGNAL_H_ */
