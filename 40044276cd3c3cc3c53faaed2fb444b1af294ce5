@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "129ebad0_47631273",
+        "filename": "tests/Android.build.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-06T01:50:13Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "f2aa06eb_3b1423cf",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "129ebad0_2777e6a8",
         "filename": "tests/Android.mk",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f2aa06eb_a6063a37",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-06T01:50:13Z",
+      "side": 1,
+      "message": "I can\u0027t compile these libraries for clang at all, so I fake it just to get the right tests to compile.",
+      "parentUuid": "129ebad0_2777e6a8",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2aa06eb_9b3a774b",
         "filename": "tests/inttypes_test.cpp",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2014-02-06T01:18:53Z",
       "side": 1,
       "message": "doesn\u0027t this work anyway? 08 just means that the output won\u0027t necessarily be aligned on 64-bit machines, but sscanf doesn\u0027t care.",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2aa06eb_e600421d",
+        "filename": "tests/inttypes_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-06T01:50:13Z",
+      "side": 1,
+      "message": "Yeah, I guess it doesn\u0027t matter. I was originally going to modify the test to do something a little more complicated but I decided not to bother.",
+      "parentUuid": "f2aa06eb_9b3a774b",
       "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
