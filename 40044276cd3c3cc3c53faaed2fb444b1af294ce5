@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2aa06eb_3b1423cf",
+        "filename": "tests/Android.build.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T01:18:53Z",
+      "side": 1,
+      "message": "this is supposed to be fixed in build/ now; it should just filter-out the stack protector stuff.",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "129ebad0_2777e6a8",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T01:18:53Z",
+      "side": 1,
+      "message": "clang doesn\u0027t do this itself?",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2aa06eb_9b3a774b",
+        "filename": "tests/inttypes_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T01:18:53Z",
+      "side": 1,
+      "message": "doesn\u0027t this work anyway? 08 just means that the output won\u0027t necessarily be aligned on 64-bit machines, but sscanf doesn\u0027t care.",
+      "revId": "40044276cd3c3cc3c53faaed2fb444b1af294ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
