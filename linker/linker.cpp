@@ -690,7 +690,7 @@ static int open_library(const char* name) {
   return fd;
 }
 
-static soinfo* load_library(const char* name) {
+static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) {
     // Open the file.
     int fd = open_library(name);
     if (fd == -1) {
@@ -700,7 +700,7 @@ static soinfo* load_library(const char* name) {
 
     // Read the ELF header and load the segments.
     ElfReader elf_reader(name, fd);
-    if (!elf_reader.Load()) {
+    if (!elf_reader.Load(extinfo)) {
         return NULL;
     }
 
@@ -735,7 +735,7 @@ static soinfo *find_loaded_library(const char* name) {
     return NULL;
 }
 
-static soinfo* find_library_internal(const char* name) {
+static soinfo* find_library_internal(const char* name, const android_dlextinfo* extinfo) {
   if (name == NULL) {
     return somain;
   }
@@ -750,7 +750,7 @@ static soinfo* find_library_internal(const char* name) {
   }
 
   TRACE("[ '%s' has not been loaded yet.  Locating...]", name);
-  si = load_library(name);
+  si = load_library(name, extinfo);
   if (si == NULL) {
     return NULL;
   }
@@ -769,8 +769,8 @@ static soinfo* find_library_internal(const char* name) {
   return si;
 }
 
-static soinfo* find_library(const char* name) {
-  soinfo* si = find_library_internal(name);
+static soinfo* find_library(const char* name, const android_dlextinfo* extinfo) {
+  soinfo* si = find_library_internal(name, extinfo);
   if (si != NULL) {
     si->ref_count++;
   }
@@ -821,7 +821,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     return NULL;
   }
   set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
-  soinfo* si = find_library(name);
+  soinfo* si = find_library(name, extinfo);
   if (si != NULL) {
     si->CallConstructors();
   }
@@ -1803,7 +1803,7 @@ static bool soinfo_link_image(soinfo* si) {
         memset(gLdPreloads, 0, sizeof(gLdPreloads));
         size_t preload_count = 0;
         for (size_t i = 0; gLdPreloadNames[i] != NULL; i++) {
-            soinfo* lsi = find_library(gLdPreloadNames[i]);
+            soinfo* lsi = find_library(gLdPreloadNames[i], NULL);
             if (lsi != NULL) {
                 gLdPreloads[preload_count++] = lsi;
             } else {
@@ -1821,7 +1821,7 @@ static bool soinfo_link_image(soinfo* si) {
         if (d->d_tag == DT_NEEDED) {
             const char* library_name = si->strtab + d->d_un.d_val;
             DEBUG("%s needs %s", si->name, library_name);
-            soinfo* lsi = find_library(library_name);
+            soinfo* lsi = find_library(library_name, NULL);
             if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
