@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d26ee2af_36461696",
+        "filename": "tests/libgen_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T23:04:38Z",
+      "side": 1,
+      "message": "(this seems reasonable enough, assuming we can\u0027t just use (basename).)",
+      "revId": "eea76ec6e9406c3ea7375a03a8b31865bfcbe25a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2496e4f_782ed971",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T23:04:38Z",
+      "side": 1,
+      "message": "i suspect here we should be fixing our libm instead.\n\nour \u003cmath.h\u003e claims these are \"ANSI/POSIX\", but they\u0027re not. the unadorned names are, and they\u0027re explicitly macros with trivial definitions.",
+      "revId": "eea76ec6e9406c3ea7375a03a8b31865bfcbe25a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2496e4f_b8b841f5",
+        "filename": "tests/sys_sendfile_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T23:04:38Z",
+      "side": 1,
+      "message": "glibc does have a sendfile64.",
+      "revId": "eea76ec6e9406c3ea7375a03a8b31865bfcbe25a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_34753e0f",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T23:04:38Z",
+      "side": 1,
+      "message": "why doesn\u0027t this test work on glibc?\n\noh, because the mktime_tzt stuff is mixed in. we should probably just #if those three lines out.",
+      "revId": "eea76ec6e9406c3ea7375a03a8b31865bfcbe25a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
