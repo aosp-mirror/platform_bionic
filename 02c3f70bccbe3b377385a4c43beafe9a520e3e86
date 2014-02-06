@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32a1fe0c_c8b0b376",
+        "filename": "tests/sys_types_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T00:38:09Z",
+      "side": 1,
+      "message": "the time_t stuff is the same for each, no?",
+      "revId": "02c3f70bccbe3b377385a4c43beafe9a520e3e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32a1fe0c_48ccc3fe",
+        "filename": "tests/sys_types_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-06T00:38:09Z",
+      "side": 1,
+      "message": "how about...\n\n  #if defined(__BIONIC__) \u0026\u0026 !defined(__LP64__)\n   ... stupid legacy mistakes.\n  #else\n   ... 64-bit bionic and glibc should be the same.\n  #endif\n\nthat should keep it readable and keep it building on all four possibilities?",
+      "revId": "02c3f70bccbe3b377385a4c43beafe9a520e3e86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
