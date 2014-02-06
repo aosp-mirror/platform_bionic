@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <android/dlext.h>
 
 #include <bionic/pthread_internal.h>
 #include "private/bionic_tls.h"
@@ -64,14 +65,19 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
-void* dlopen(const char* filename, int flags) {
+void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo)
+{
   ScopedPthreadMutexLocker locker(&gDlMutex);
-  soinfo* result = do_dlopen(filename, flags);
+  soinfo* result = do_dlopen(filename, flags, extinfo);
   if (result == NULL) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return NULL;
   }
   return result;
+}
+
+void* dlopen(const char* filename, int flags) {
+  return android_dlopen_ext(filename, flags, NULL);
 }
 
 void* dlsym(void* handle, const char* symbol) {
@@ -168,15 +174,15 @@ int dlclose(void* handle) {
     }
 
 #if defined(__arm__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 333333333344444444445
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 012345678901234567890
 #  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0dl_unwind_find_exidx\0"
 #elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789
 #  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0"
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0"
 #else
 #  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
 #endif
@@ -195,8 +201,9 @@ static ElfW(Sym) gLibDlSymtab[] = {
   ELFW(SYM_INITIALIZER)( 36, &android_update_LD_LIBRARY_PATH, 1),
   ELFW(SYM_INITIALIZER)( 67, &android_get_LD_LIBRARY_PATH, 1),
   ELFW(SYM_INITIALIZER)( 95, &dl_iterate_phdr, 1),
+  ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(111, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(130, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -213,9 +220,9 @@ static ElfW(Sym) gLibDlSymtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned gLibDlBuckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 #else
-static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 0 };
+static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
