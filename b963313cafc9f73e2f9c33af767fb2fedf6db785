@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "924e2a55_57c9e443",
+        "filename": "libc/arch-mips64/bionic/__bionic_clone.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "it looks like you haven\u0027t even compiled the LP32 code. do you actually plan to merge the mips and mips64 directories, or should we remove the LP32 stuff from the mips64 code? it doesn\u0027t seem to make any sense to carry around code we\u0027re not building, have no plans to build, and which was bitrotted the day it was checked in...",
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d26ee2af_f93acff9",
+        "filename": "libc/arch-mips64/bionic/cacheflush.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "i think we should switch everyone over to __builtin__cache_flush for LP64, but we can keep this for now.",
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_1782fc72",
+        "filename": "libc/arch-mips64/bionic/memmove.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "i\u0027ve removed mips and mips64\u0027s duplicates of this. the shared copy has a bug fix that\u0027s missing from these copies.",
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_b77210fa",
+        "filename": "libc/arch-mips64/include/machine/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "i\u0027ve cleaned this up like i did mips32 the other day.",
+      "range": {
+        "startLine": 42,
+        "startChar": 5,
+        "endLine": 42,
+        "endChar": 12
+      },
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2496e4f_fb3803b4",
+        "filename": "libc/arch-mips64/string/mips_strlen.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "i\u0027ve left this in for now, on the assumption that you\u0027re coming back to it.",
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2496e4f_7bdc1336",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:22:00Z",
+      "side": 1,
+      "message": "these are all uint32_t for mips and mips64?",
+      "revId": "b963313cafc9f73e2f9c33af767fb2fedf6db785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
