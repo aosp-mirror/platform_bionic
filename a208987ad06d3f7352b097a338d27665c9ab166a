@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "924e2a55_7a57adb9",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T01:14:11Z",
+      "side": 1,
+      "message": "let\u0027s remove this because it isn\u0027t in glibc and it\u0027s only used in one place. (and i want to move us away from these BSD elf headers and over to the linux uapi ones anyway.)",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d26ee2af_bcb5a564",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T01:14:11Z",
+      "side": 1,
+      "message": "intptr_t?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_5ac90944",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1450,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T01:14:11Z",
+      "side": 1,
+      "message": "uintptr_t?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_bad675e1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T01:14:11Z",
+      "side": 1,
+      "message": "can you be more specific? what\u0027s the problem here? what needs to be fixed?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2496e4f_9bb0d775",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T01:14:11Z",
+      "side": 1,
+      "message": "can\u0027t this just be #if defined(__mips__)?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
