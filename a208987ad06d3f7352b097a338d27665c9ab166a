@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b27b2e5f_a56588f3",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T01:44:23Z",
+      "side": 1,
+      "message": "OK.. will you make that change independently then I can update the mips64 side of it?",
+      "parentUuid": "924e2a55_7a57adb9",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d26ee2af_bcb5a564",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-07T01:14:11Z",
       "side": 1,
       "message": "intptr_t?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5263d2c3_b759487e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T01:44:23Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "d26ee2af_bcb5a564",
       "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "12c79ad6_886a37c1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1450,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T01:44:23Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "924e2a55_5ac90944",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "924e2a55_bad675e1",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "b27b2e5f_859a44a1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T01:44:23Z",
+      "side": 1,
+      "message": "I think I was getting a SEGV when this code tried to update the DT_DEBUG entry. I will take another look at this",
+      "parentUuid": "924e2a55_bad675e1",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2496e4f_9bb0d775",
         "filename": "linker/linker.h",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2014-02-07T01:14:11Z",
       "side": 1,
       "message": "can\u0027t this just be #if defined(__mips__)?",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b27b2e5f_659d409a",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T01:44:23Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "b2496e4f_9bb0d775",
       "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
