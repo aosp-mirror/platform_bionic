@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf01d9f4_9ef479fb",
+        "filename": "libc/include/sys/un.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-07T23:23:46Z",
+      "side": 1,
+      "message": "Is there a reason this definition is duplicated from sys/socket.h?",
+      "range": {
+        "startLine": 31,
+        "startChar": 23,
+        "endLine": 31,
+        "endChar": 35
+      },
+      "revId": "9f87a0b285128542a221f2b69d3b959a4e33c054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
