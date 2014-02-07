@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2496e4f_fbd003e7",
+        "filename": "tests/eventfd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:37:48Z",
+      "side": 1,
+      "message": "can we make your glibc version stuff more widely available? i liked the way your getauxval test will run on a new enough glibc, and a similar change would work here. my desktop\u0027s glibc has \u003csys/eventfd.h\u003e (though i don\u0027t know how to find out what version it first went in to).",
+      "revId": "146e3df01b3e69a25b94cf70732881ea58eb4e02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d26ee2af_7cf4ed68",
+        "filename": "tests/stack_unwinding_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T00:37:48Z",
+      "side": 1,
+      "message": "this comment should stay with the #if, unless we can just remove both now because we\u0027re on libunwind?",
+      "revId": "146e3df01b3e69a25b94cf70732881ea58eb4e02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
