@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <signal.h>
 #include <sys/epoll.h>
 
 TEST(sys_epoll, smoke) {
