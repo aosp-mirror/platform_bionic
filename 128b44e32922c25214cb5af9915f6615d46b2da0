@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5263d2c3_77509049",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003284
+      },
+      "writtenOn": "2014-02-07T05:13:27Z",
+      "side": 1,
+      "message": "On reflection I think this is correct. The plt_got entry needs to be there for all 32 bit targets",
+      "range": {
+        "startLine": 133,
+        "startChar": 3,
+        "endLine": 133,
+        "endChar": 4
+      },
+      "revId": "128b44e32922c25214cb5af9915f6615d46b2da0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
