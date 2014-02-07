@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b2496e4f_c659a27d",
+        "filename": "tests/eventfd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-07T04:12:00Z",
+      "side": 1,
+      "message": "On my system, glibc is 2.15, but sys/eventfd.h still doesn\u0027t compile if I use the prereq trick. The problem is that our prebuilt headers don\u0027t include the file, but it\u0027s in glibc. So I just copied in the necessary part of the file and it compiles and even runs properly.\n\nLet me know if this is not good enough. I\u0027ll also see why the file doesn\u0027t exist in our prebuilts.",
+      "parentUuid": "b2496e4f_fbd003e7",
+      "revId": "146e3df01b3e69a25b94cf70732881ea58eb4e02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d26ee2af_7cf4ed68",
         "filename": "tests/stack_unwinding_test.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-07T00:37:48Z",
       "side": 1,
       "message": "this comment should stay with the #if, unless we can just remove both now because we\u0027re on libunwind?",
+      "revId": "146e3df01b3e69a25b94cf70732881ea58eb4e02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "924e2a55_251ee6c1",
+        "filename": "tests/stack_unwinding_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-07T04:12:00Z",
+      "side": 1,
+      "message": "I have to figure out how to switch us to use libunwind. I looked at it a bit a while ago, but I couldn\u0027t immediately see how to make it work.\n\nI moved the comment.",
+      "parentUuid": "d26ee2af_7cf4ed68",
       "revId": "146e3df01b3e69a25b94cf70732881ea58eb4e02",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
