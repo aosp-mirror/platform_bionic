@@ -22,19 +22,23 @@ LOCAL_PATH := $(call my-dir)
 # Unit tests.
 # -----------------------------------------------------------------------------
 
-test_c_flags = \
+ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
+build_host := true
+else
+build_host := false
+endif
+
+# -----------------------------------------------------------------------------
+# All standard tests.
+# -----------------------------------------------------------------------------
+test_cflags = \
     -fstack-protector-all \
     -g \
     -Wall -Wextra \
     -Werror \
     -fno-builtin \
 
-ifeq ($(TARGET_ARCH),arm64)
-  $(info TODO: $(LOCAL_PATH)/Android.mk -fstack-protector not yet available for the AArch64 toolchain)
-  test_c_flags += -fno-stack-protector
-endif # arm64
-
-test_src_files = \
+libBionicStandardTests_src_files := \
     buffer_tests.cpp \
     dirent_test.cpp \
     eventfd_test.cpp \
@@ -54,6 +58,7 @@ test_src_files = \
     signal_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
+    stack_unwinding_test_impl.c \
     statvfs_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
@@ -73,106 +78,168 @@ test_src_files = \
     time_test.cpp \
     unistd_test.cpp \
 
-test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
-test_dynamic_src_files = \
-    dlfcn_test.cpp \
+libBionicStandardTests_cflags := \
+    $(test_cflags) \
 
-test_fortify_static_libraries = \
-    fortify1-tests-gcc fortify2-tests-gcc fortify1-tests-clang fortify2-tests-clang
+libBionicStandardTests_ldlibs_host := \
+    -lrt \
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-unit-tests-unwind-test-impl
-LOCAL_CFLAGS += $(test_c_flags) -fexceptions -fnon-call-exceptions
-LOCAL_SRC_FILES := stack_unwinding_test_impl.c
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-unit-tests-unwind-test-impl-host
-LOCAL_CFLAGS += $(test_c_flags) -fexceptions -fnon-call-exceptions
-LOCAL_SRC_FILES := stack_unwinding_test_impl.c
-include $(BUILD_HOST_STATIC_LIBRARY)
-
-# Build tests for the device (with bionic's .so). Run with:
-#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-unit-tests
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_CFLAGS += $(test_c_flags)
-LOCAL_LDFLAGS += $(test_dynamic_ldflags)
-LOCAL_SHARED_LIBRARIES += libdl
-LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
-LOCAL_WHOLE_STATIC_LIBRARIES := $(test_fortify_static_libraries)
-LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl
-include $(BUILD_NATIVE_TEST)
-
-# Build tests for the device (with bionic's .a). Run with:
-#   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-unit-tests-static
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_WHOLE_STATIC_LIBRARIES += libBionicTests
-LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
-include $(BUILD_NATIVE_TEST)
+module := libBionicStandardTests
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# We build the static unit tests as a library so they can be used both for
-# bionic-unit-tests-static and also as part of CTS.
+# Fortify tests.
 # -----------------------------------------------------------------------------
+$(foreach compiler,gcc clang, \
+  $(foreach test,1 2, \
+    $(eval fortify$(test)-tests-$(compiler)_cflags := \
+      $(test_cflags) \
+      -U_FORTIFY_SOURCE \
+      -D_FORTIFY_SOURCE=$(test) \
+      -DTEST_NAME=Fortify$(test)_$(compiler)); \
+    $(eval fortify$(test)-tests-$(compiler)_cflags_host := \
+      -Wno-error); \
+    $(eval fortify$(test)-tests-$(compiler)_src_files := \
+      fortify_test.cpp); \
+    $(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
+  ) \
+)
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := libBionicTests
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_CFLAGS += $(test_c_flags)
-LOCAL_SRC_FILES := $(test_src_files)
-LOCAL_CFLAGS += \
-    -DGTEST_OS_LINUX_ANDROID \
-    -DGTEST_HAS_STD_STRING \
+module := fortify1-tests-gcc
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
 
-LOCAL_C_INCLUDES += \
-    bionic bionic/libstdc++/include \
-    external/gtest/include \
-    external/stlport/stlport \
+module := fortify2-tests-gcc
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
 
-LOCAL_WHOLE_STATIC_LIBRARIES := \
-    $(test_fortify_static_libraries) \
-    bionic-unit-tests-unwind-test-impl \
+fortify1-tests-clang_clang_target := true
+fortify1-tests-clang_cflags_host := -D__clang__
 
-include $(BUILD_STATIC_LIBRARY)
+module := fortify1-tests-clang
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
+
+fortify2-tests-clang_clang_target := true
+
+fortify2-tests-clang_cflags_host := -D__clang__
+
+module := fortify2-tests-clang
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# Test library for the unit tests.
+# Library of all tests (excluding the dynamic linker tests).
 # -----------------------------------------------------------------------------
+libBionicTests_whole_static_libraries := \
+    libBionicStandardTests \
+    $(fortify_libs) \
 
-# Build no-elf-hash-table-library.so to test dlopen(3) on a library that
-# only has a GNU-style hash table. MIPS doesn't support GNU hash style.
-ifneq ($(TARGET_ARCH),mips)
-include $(CLEAR_VARS)
-LOCAL_MODULE := no-elf-hash-table-library
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_SRC_FILES := empty.cpp
-LOCAL_LDFLAGS := -Wl,--hash-style=gnu
-include $(BUILD_SHARED_LIBRARY)
+module := libBionicTests
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library used by dlfcn tests.
+# -----------------------------------------------------------------------------
+ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
+no-elf-hash-table-library_src_files := \
+    empty.cpp \
+
+no-elf-hash-table-library_ldflags := \
+    -Wl,--hash-style=gnu \
+
+module := no-elf-hash-table-library
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
 endif
 
 # -----------------------------------------------------------------------------
-# Unit tests built against glibc.
+# Tests for the device using bionic's .so. Run with:
+#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 # -----------------------------------------------------------------------------
+bionic-unit-tests_whole_static_libraries := \
+    libBionicTests \
 
-# Build tests for the host (with glibc).
-# Note that this will build against glibc, so it's not useful for testing
-# bionic's implementation, but it does let you use glibc as a reference
-# implementation for testing the tests themselves.
-ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
-include $(CLEAR_VARS)
-LOCAL_MODULE := bionic-unit-tests-glibc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_CFLAGS += $(test_c_flags)
-LOCAL_LDFLAGS += -lpthread -ldl -lrt
-LOCAL_LDFLAGS += $(test_dynamic_ldflags)
-LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
-LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl-host
-include $(BUILD_HOST_NATIVE_TEST)
+bionic-unit-tests_src_files := \
+    dlfcn_test.cpp \
+
+bionic-unit-tests_ldflags := \
+    -Wl,--export-dynamic \
+    -Wl,-u,DlSymTestFunction \
+
+bionic-unit-tests_shared_libraries_target := \
+    libdl \
+
+module := bionic-unit-tests
+module_tag := optional
+build_type := target
+build_target := NATIVE_TEST
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Tests for the device linked against bionic's static library. Run with:
+#   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
+# -----------------------------------------------------------------------------
+bionic-unit-tests-static_whole_static_libraries := \
+    libBionicTests \
+
+bionic-unit-tests-static_static_libraries := \
+    libstlport_static \
+    libm \
+    libc \
+    libstdc++ \
+
+bionic-unit-tests-static_force_static_executable := true
+
+module := bionic-unit-tests-static
+module_tag := optional
+build_type := target
+build_target := NATIVE_TEST
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Tests to run on the host and linked against glibc. Run with:
+#   cd bionic/tests; mm bionic-unit-tests-glibc-run
+# -----------------------------------------------------------------------------
+bionic-unit-tests-glibc_whole_static_libraries := \
+    libBionicStandardTests \
+
+bionic-unit-tests-glibc_ldlibs := \
+    -lrt \
+
+module := bionic-unit-tests-glibc
+module_tag := optional
+build_type := host
+build_target := NATIVE_TEST
+include $(LOCAL_PATH)/Android.build.mk
 
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
@@ -182,12 +249,10 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc
-endif
 
 # -----------------------------------------------------------------------------
 # Run the unit tests built against x86 bionic on an x86 host.
 # -----------------------------------------------------------------------------
-
 ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 ifeq ($(TARGET_ARCH),x86)
@@ -212,56 +277,5 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests
 endif
 endif
-
-# -----------------------------------------------------------------------------
-# FORTIFY_SOURCE tests
-# -----------------------------------------------------------------------------
-
-fortify_c_includes = \
-    bionic \
-    bionic/libstdc++/include \
-    external/stlport/stlport \
-    external/gtest/include
-fortify_test_files = fortify_test.cpp
-
-# -Wno-error=unused-parameter needed as
-# external/stlport/stlport/stl/_threads.c (included from
-# external/gtest/include/gtest/gtest.h) does not compile cleanly under
-# clang. TODO: fix this.
-fortify_c_flags = $(test_c_flags) -Wno-error=unused-parameter
-
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(fortify_test_files)
-LOCAL_MODULE := fortify1-tests-gcc
-LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DTEST_NAME=Fortify1_Gcc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_C_INCLUDES += $(fortify_c_includes)
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(fortify_test_files)
-LOCAL_MODULE := fortify2-tests-gcc
-LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Gcc
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_C_INCLUDES += $(fortify_c_includes)
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(fortify_test_files)
-LOCAL_MODULE := fortify1-tests-clang
-LOCAL_CLANG := true
-LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DTEST_NAME=Fortify1_Clang
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_C_INCLUDES += $(fortify_c_includes)
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(fortify_test_files)
-LOCAL_MODULE := fortify2-tests-clang
-LOCAL_CLANG := true
-LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Clang
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_C_INCLUDES += $(fortify_c_includes)
-include $(BUILD_STATIC_LIBRARY)
 
 endif # !BUILD_TINY_ANDROID

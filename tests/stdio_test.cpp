@@ -107,7 +107,7 @@ TEST(stdio, getdelim_invalid) {
   // glibc sometimes doesn't set errno in this particular case.
 #if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
-#endif
+#endif // __BIONIC__
 }
 
 TEST(stdio, getline) {
@@ -176,7 +176,7 @@ TEST(stdio, getline_invalid) {
   // glibc sometimes doesn't set errno in this particular case.
 #if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
-#endif
+#endif // __BIONIC__
 }
 
 TEST(stdio, printf_ssize_t) {
@@ -191,8 +191,8 @@ TEST(stdio, printf_ssize_t) {
   snprintf(buf, sizeof(buf), "%zd", v);
 }
 
-#if !defined(__GLIBC__)
 TEST(stdio, snprintf_n_format_specifier_not_implemented) {
+#if defined(__BIONIC__)
   char buf[32];
   int i = 0;
   // We deliberately don't implement %n, so it's treated like
@@ -200,8 +200,10 @@ TEST(stdio, snprintf_n_format_specifier_not_implemented) {
   EXPECT_EQ(5, snprintf(buf, sizeof(buf), "a %n b", &i));
   EXPECT_EQ(0, i);
   EXPECT_STREQ("a n b", buf);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(stdio, snprintf_smoke) {
   char buf[BUFSIZ];
@@ -283,9 +285,9 @@ TEST(stdio, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a%d,%pz", 5, p);
 #if defined(__BIONIC__)
   EXPECT_STREQ("a5,0x0z", buf);
-#else
+#else // __BIONIC__
   EXPECT_STREQ("a5,(nil)z", buf);
-#endif
+#endif // __BIONIC__
 
   snprintf(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
