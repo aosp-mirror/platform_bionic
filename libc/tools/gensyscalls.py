@@ -145,6 +145,44 @@ mips_call = "/* " + warning + " */\n" + \
 
 
 #
+# MIPS64 assembler templates for each syscall stub
+#
+
+mips64_call = "/* " + warning + " */\n" + \
+"""
+#include <asm/unistd.h>
+#include <machine/asm.h>
+#include <machine/regdef.h>
+    .text
+    .globl %(func)s
+    .align 4
+    .ent %(func)s
+
+%(func)s:
+    .set push
+    .set noreorder
+    li v0, %(__NR_name)s
+    syscall
+    bnez a3, 1f
+    move a0, v0
+    j ra
+    nop
+1:
+    move t0, ra
+    bal     2f
+    nop
+2:
+    .cpsetup ra, t1, 2b
+    LA t9,__set_errno
+    .cpreturn
+    j t9
+    move ra, t0
+    .set pop
+    .end %(func)s
+"""
+
+
+#
 # x86 assembler templates for each syscall stub
 #
 
@@ -288,6 +326,10 @@ def mips_genstub(syscall):
     return mips_call % syscall
 
 
+def mips64_genstub(syscall):
+    return mips64_call % syscall
+
+
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
 
@@ -395,6 +437,9 @@ class State:
 
             if syscall.has_key("mips"):
                 syscall["asm-mips"] = add_footer(32, mips_genstub(syscall), syscall)
+
+            if syscall.has_key("mips64"):
+                syscall["asm-mips64"] = add_footer(64, mips64_genstub(syscall), syscall)
 
             if syscall.has_key("x86_64"):
                 syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)
