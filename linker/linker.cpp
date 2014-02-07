@@ -858,7 +858,7 @@ int do_dlclose(soinfo* si) {
 }
 
 #if defined(USE_RELA)
-static int soinfo_relocate_a(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
   ElfW(Sym)* symtab = si->symtab;
   const char* strtab = si->strtab;
   ElfW(Sym)* s;
@@ -1155,7 +1155,9 @@ static int soinfo_relocate_a(soinfo* si, ElfW(Rela)* rela, unsigned count, soinf
   }
   return 0;
 }
-#else
+
+#else // REL, not RELA.
+
 static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
     ElfW(Sym)* symtab = si->symtab;
     const char* strtab = si->strtab;
@@ -1337,10 +1339,21 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             break;
 #elif defined(__mips__)
         case R_MIPS_REL32:
+#if defined(__LP64__)
+            // MIPS Elf64_Rel entries contain compound relocations
+            // We only handle the R_MIPS_NONE|R_MIPS_64|R_MIPS_REL32 case
+            if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
+                ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
+                DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%d)",
+                       type, (unsigned)ELF64_R_TYPE2(rel->r_info),
+                       (unsigned)ELF64_R_TYPE3(rel->r_info), rel, (int) (rel - start));
+                return -1;
+            }
+#endif
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
-            TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x %s",
-                       reloc, sym_addr, (sym_name) ? sym_name : "*SECTIONHDR*");
+            TRACE_TYPE(RELO, "RELO REL32 %08zx <- %08zx %s", static_cast<size_t>(reloc),
+                       static_cast<size_t>(sym_addr), sym_name ? sym_name : "*SECTIONHDR*");
             if (s) {
                 *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
             } else {
@@ -1376,7 +1389,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
 
 #if defined(__mips__)
 static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
-    unsigned* got = si->plt_got;
+    ElfW(Addr)** got = si->plt_got;
     if (got == NULL) {
         return true;
     }
@@ -1385,55 +1398,43 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
     unsigned symtabno = si->mips_symtabno;
     ElfW(Sym)* symtab = si->symtab;
 
-    /*
-     * got[0] is address of lazy resolver function
-     * got[1] may be used for a GNU extension
-     * set it to a recognizable address in case someone calls it
-     * (should be _rtld_bind_start)
-     * FIXME: maybe this should be in a separate routine
-     */
-
+    // got[0] is the address of the lazy resolver function.
+    // got[1] may be used for a GNU extension.
+    // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
+    // FIXME: maybe this should be in a separate routine?
     if ((si->flags & FLAG_LINKER) == 0) {
         size_t g = 0;
-        got[g++] = 0xdeadbeef;
-        if (got[g] & 0x80000000) {
-            got[g++] = 0xdeadfeed;
+        got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadbeef);
+        if (reinterpret_cast<intptr_t>(got[g]) < 0) {
+            got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadfeed);
         }
-        /*
-         * Relocate the local GOT entries need to be relocated
-         */
+        // Relocate the local GOT entries.
         for (; g < local_gotno; g++) {
-            got[g] += si->load_bias;
+            got[g] = reinterpret_cast<ElfW(Addr)*>(reinterpret_cast<uintptr_t>(got[g]) + si->load_bias);
         }
     }
 
-    /* Now for the global GOT entries */
+    // Now for the global GOT entries...
     ElfW(Sym)* sym = symtab + gotsym;
     got = si->plt_got + local_gotno;
     for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
-        const char* sym_name;
-        ElfW(Sym)* s;
+        // This is an undefined reference... try to locate it.
+        const char* sym_name = si->strtab + sym->st_name;
         soinfo* lsi;
-
-        /* This is an undefined reference... try to locate it */
-        sym_name = si->strtab + sym->st_name;
-        s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+        ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, needed);
         if (s == NULL) {
-            /* We only allow an undefined symbol if this is a weak
-               reference..   */
+            // We only allow an undefined symbol if this is a weak reference.
             s = &symtab[g];
             if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
                 DL_ERR("cannot locate \"%s\"...", sym_name);
                 return false;
             }
             *got = 0;
-        }
-        else {
-            /* FIXME: is this sufficient?
-             * For reference see NetBSD link loader
-             * http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
-             */
-             *got = lsi->load_bias + s->st_value;
+        } else {
+            // FIXME: is this sufficient?
+            // For reference see NetBSD link loader
+            // http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
+            *got = reinterpret_cast<ElfW(Addr)*>(lsi->load_bias + s->st_value);
         }
     }
     return true;
@@ -1664,19 +1665,25 @@ static bool soinfo_link_image(soinfo* si) {
             si->plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
 #endif
             break;
-#if !defined(__LP64__)
+#if defined(__mips__)
         case DT_PLTGOT:
-            // Used by 32-bit MIPS.
-            si->plt_got = (unsigned *)(base + d->d_un.d_ptr);
+            // Used by mips and mips64.
+            si->plt_got = reinterpret_cast<ElfW(Addr)**>(base + d->d_un.d_ptr);
             break;
 #endif
         case DT_DEBUG:
             // Set the DT_DEBUG entry to the address of _r_debug for GDB
             // if the dynamic table is writable
+// FIXME: not working currently for N64
+// The flags for the LOAD and DYNAMIC program headers do not agree.
+// The LOAD section containng the dynamic table has been mapped as
+// read-only, but the DYNAMIC header claims it is writable.
+#if !(defined(__mips__) && defined(__LP64__))
             if ((dynamic_flags & PF_W) != 0) {
                 d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
             }
             break;
+#endif
 #if defined(USE_RELA)
          case DT_RELA:
             si->rela = (ElfW(Rela)*) (base + d->d_un.d_ptr);
@@ -1868,13 +1875,13 @@ static bool soinfo_link_image(soinfo* si) {
 #if defined(USE_RELA)
     if (si->plt_rela != NULL) {
         DEBUG("[ relocating %s plt ]\n", si->name );
-        if (soinfo_relocate_a(si, si->plt_rela, si->plt_rela_count, needed)) {
+        if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count, needed)) {
             return false;
         }
     }
     if (si->rela != NULL) {
         DEBUG("[ relocating %s ]\n", si->name );
-        if (soinfo_relocate_a(si, si->rela, si->rela_count, needed)) {
+        if (soinfo_relocate(si, si->rela, si->rela_count, needed)) {
             return false;
         }
     }
