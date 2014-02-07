@@ -22,6 +22,30 @@
       "revId": "9f87a0b285128542a221f2b69d3b959a4e33c054",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf1ab966_f3bf30df",
+        "filename": "libc/include/sys/un.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T23:49:29Z",
+      "side": 1,
+      "message": "posix says \u003csys/un.h\u003e gets you sa_family_t, but i didn\u0027t want to drag in the whole of \u003csys/socket.h\u003e here. glibc factors them out into bits/sockaddr.h. (glibc doesn\u0027t have a __sa_family_t.)\n\nwe could \"typedef __kernel_sa_family_t sa_family_t;\" here and \u003csys/socket.h\u003e. or i could just stick it in \u003csys/types.h\u003e.",
+      "parentUuid": "cf01d9f4_9ef479fb",
+      "range": {
+        "startLine": 31,
+        "startChar": 23,
+        "endLine": 31,
+        "endChar": 35
+      },
+      "revId": "9f87a0b285128542a221f2b69d3b959a4e33c054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
