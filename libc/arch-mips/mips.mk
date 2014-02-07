@@ -6,7 +6,6 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-mips/bionic/futex_mips.S \
     arch-mips/bionic/__get_sp.S \
     arch-mips/bionic/memcmp16.S \
-    arch-mips/bionic/memmove.c \
     arch-mips/bionic/_setjmp.S \
     arch-mips/bionic/setjmp.S \
     arch-mips/bionic/__set_tls.c \
