@@ -254,6 +254,10 @@ LOCAL_CFLAGS_mips := -fno-builtin-rintf -fno-builtin-rint
 LOCAL_C_INCLUDES_mips := $(LOCAL_PATH)/mips
 LOCAL_SRC_FILES_mips := mips/fenv.c
 
+LOCAL_CFLAGS_mips64 := -fno-builtin-rintf -fno-builtin-rint
+LOCAL_C_INCLUDES_mips64 := $(LOCAL_PATH)/mips
+LOCAL_SRC_FILES_mips64 := mips/fenv.c
+
 include $(BUILD_STATIC_LIBRARY)
 
 #

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,20 +25,45 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <string.h>
-#include <strings.h>
 
-void *memmove(void *dst, const void *src, size_t n)
-{
-  const char *p = src;
-  char *q = dst;
-  /* We can use the optimized memcpy if the destination is completely below the
-   * source (i.e. q + n <= p), or if it is completely over it (i.e. q >= p+n).
-   */
-  if (__builtin_expect((q + n < p) || (q >= p + n), 1)) {
-    return memcpy(dst, src, n);
-  } else {
-    bcopy(src, dst, n);
-    return dst;
-  }
-}
+#include <machine/asm.h>
+#include <asm/unistd.h>
+
+#if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
+FRAMESZ		=	MKFSIZ(6,0)
+#else
+FRAMESZ		=	MKFSIZ(0,1)
+FRAME_GP	=	FRAMESZ-1*REGSZ
+#endif
+
+LEAF(syscall,FRAMESZ)
+	PTR_SUBU sp, FRAMESZ	# allocate stack frame
+	SETUP_GP64(FRAME_GP,syscall)
+	SAVE_GP(FRAME_GP)
+	move	v0, a0		# syscall number to v0
+	move	a0, a1		# shift args down
+	move	a1, a2
+	move	a2, a3
+#if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
+	REG_L	a3, FRAMESZ+4*REGSZ(sp)
+	REG_L	t0, FRAMESZ+5*REGSZ(sp)
+	REG_L	t1, FRAMESZ+6*REGSZ(sp)
+	REG_S	t0, 4*REGSZ(sp)
+	REG_S	t1, 5*REGSZ(sp)
+#else
+	move	a3, a4
+	move	a4, a5
+	REG_L	a5, FRAMESZ(sp)
+#endif
+	syscall
+	move	a0, v0
+	bnez	a3, 1f
+	RESTORE_GP64
+	PTR_ADDU sp, FRAMESZ
+	j	ra
+1:
+	LA	t9,__set_errno
+	RESTORE_GP64
+	PTR_ADDU sp, FRAMESZ
+	j	t9
+	END(syscall)
