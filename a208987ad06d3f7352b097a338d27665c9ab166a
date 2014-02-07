@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "924e2a55_6531ced1",
+        "filename": "libc/include/sys/exec_elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-07T02:03:55Z",
+      "side": 1,
+      "message": "i was hoping you\u0027d do it because i\u0027m still not at a point where i can actually run on qemu anything whereas you can test your change :-)",
+      "parentUuid": "b27b2e5f_a56588f3",
+      "revId": "a208987ad06d3f7352b097a338d27665c9ab166a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d26ee2af_bcb5a564",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
