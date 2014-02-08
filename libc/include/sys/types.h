@@ -111,7 +111,13 @@ typedef  .... pthread_rwlock_attr_t;
 typedef  .... pthread_t;
 #endif
 
+#if !defined(__LP64__)
+/* This historical accident means that we had a signed socklen_t on 32-bit architectures. */
+typedef __int32_t __socklen_t;
+#else
+/* LP64 still has a 32-bit socklen_t. */
 typedef __uint32_t __socklen_t;
+#endif
 typedef __socklen_t socklen_t;
 
 typedef __builtin_va_list __va_list;
