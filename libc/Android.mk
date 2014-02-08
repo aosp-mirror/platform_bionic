@@ -481,10 +481,11 @@ libc_common_src_files += \
 
 endif # arm64
 
-ifeq ($(TARGET_ARCH),mips)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 libc_common_src_files += \
     bionic/memchr.c \
     bionic/memcmp.c \
+    bionic/memmove.c \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
@@ -507,7 +508,7 @@ libc_common_src_files += \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
 
-endif # mips
+endif # mips || mips64
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 libc_common_src_files += \
@@ -618,7 +619,7 @@ ifeq ($(TARGET_ARCH),arm)
   libc_crt_target_cflags += -mthumb-interwork
 endif # arm
 
-ifeq ($(TARGET_ARCH),mips)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
   ifneq ($(ARCH_MIPS_HAS_FPU),true)
     libc_common_cflags += -DSOFTFLOAT
   endif
@@ -683,7 +684,7 @@ ifeq ($(TARGET_ARCH),arm64)
     libc_crt_target_so_cflags :=
     libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
 endif
-ifeq ($(TARGET_ARCH),mips)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
     libc_crt_target_so_cflags := -fPIC
     libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
 endif
