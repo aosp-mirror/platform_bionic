@@ -104,61 +104,73 @@ TEST(math, signbit) {
 }
 */
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyd) {
+#if defined(__BIONIC__)
   ASSERT_EQ(FP_INFINITE, __fpclassifyd(HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassifyd(nan("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyd(1.0));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyd(double_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyd(0.0));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyf) {
+#if defined(__BIONIC__)
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(HUGE_VALF));
   ASSERT_EQ(FP_NAN, __fpclassifyf(nanf("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyf(1.0f));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyf(float_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyf(0.0f));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyl) {
+#if defined(__BIONIC__)
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(HUGE_VALL));
   EXPECT_EQ(FP_NAN, __fpclassifyl(nanl("")));
   EXPECT_EQ(FP_NORMAL, __fpclassifyl(1.0));
   EXPECT_EQ(FP_SUBNORMAL, __fpclassifyl(double_subnormal()));
   EXPECT_EQ(FP_ZERO, __fpclassifyl(0.0));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, finitef) {
   ASSERT_TRUE(finitef(123.0f));
   ASSERT_FALSE(finitef(HUGE_VALF));
 }
 
-#if defined(__BIONIC__)
 TEST(math, __isfinite) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinite(123.0));
   ASSERT_FALSE(__isfinite(HUGE_VAL));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isfinitef) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinitef(123.0f));
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isfinitel) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinitel(123.0f));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, finite) {
   ASSERT_TRUE(finite(123.0));
@@ -190,26 +202,32 @@ TEST(math, isnanf) {
   ASSERT_TRUE(isnanf(nanf("")));
 }
 
-#if defined(__BIONIC__)
 TEST(math, __isnormal) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isnormalf) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isnormall) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0));
   ASSERT_FALSE(__isnormall(double_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, __signbit) {
   ASSERT_EQ(0, __signbit(0.0));
@@ -1005,21 +1023,25 @@ TEST(math, gammaf) {
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f));
 }
 
-#if defined(__BIONIC__)
 TEST(math, gamma_r) {
+#if defined(__BIONIC__)
   int sign;
   ASSERT_FLOAT_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, gammaf_r) {
+#if defined(__BIONIC__)
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, lgamma) {
   ASSERT_FLOAT_EQ(log(24.0), lgamma(5.0));
