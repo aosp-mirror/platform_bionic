@@ -1,7 +1,6 @@
 _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm64/bionic/__bionic_clone.S \
     arch-arm64/bionic/bzero_arm64.c \
-    arch-arm64/bionic/cacheflush_arm64.c \
     arch-arm64/bionic/_exit_with_stack_teardown.S \
     arch-arm64/bionic/futex_arm64.S \
     arch-arm64/bionic/__get_sp.S \
