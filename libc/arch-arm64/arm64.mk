@@ -12,8 +12,3 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm64/bionic/sigsetjmp.S \
     arch-arm64/bionic/syscall.S \
     arch-arm64/bionic/vfork.S \
-
-_LIBC_ARCH_STATIC_SRC_FILES := \
-    bionic/dl_iterate_phdr_static.c \
-
-_LIBC_ARCH_DYNAMIC_SRC_FILES :=

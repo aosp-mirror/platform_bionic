@@ -87,7 +87,7 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   soinfo* found = NULL;
-  Elf_Sym* sym = NULL;
+  ElfW(Sym)* sym = NULL;
   if (handle == RTLD_DEFAULT) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
   } else if (handle == RTLD_NEXT) {
@@ -134,7 +134,7 @@ int dladdr(const void* addr, Dl_info* info) {
   info->dli_fbase = (void*) si->base;
 
   // Determine if any symbol in the library contains the specified address.
-  Elf_Sym *sym = dladdr_find_symbol(si, addr);
+  ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
   if (sym != NULL) {
     info->dli_sname = si->strtab + sym->st_name;
     info->dli_saddr = (void*)(si->load_bias + sym->st_value);
@@ -167,12 +167,6 @@ int dlclose(void* handle) {
       /* st_size */ 0, \
     }
 
-#if defined(__LP64__)
-#  define ELF_SYM_INITIALIZER ELF64_SYM_INITIALIZER
-#else
-#  define ELF_SYM_INITIALIZER ELF32_SYM_INITIALIZER
-#endif
-
 #if defined(__arm__)
   // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1
   // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1
@@ -187,22 +181,22 @@ int dlclose(void* handle) {
 #  error Unsupported architecture. Only arm, arm64, mips, x86, and x86_64 are presently supported.
 #endif
 
-static Elf_Sym gLibDlSymtab[] = {
+static ElfW(Sym) gLibDlSymtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
   // in the strtab with a \0 to make iterating through the symtab easier.
-  ELF_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
-  ELF_SYM_INITIALIZER(  0, &dlopen, 1),
-  ELF_SYM_INITIALIZER(  7, &dlclose, 1),
-  ELF_SYM_INITIALIZER( 15, &dlsym, 1),
-  ELF_SYM_INITIALIZER( 21, &dlerror, 1),
-  ELF_SYM_INITIALIZER( 29, &dladdr, 1),
-  ELF_SYM_INITIALIZER( 36, &android_update_LD_LIBRARY_PATH, 1),
-  ELF_SYM_INITIALIZER( 67, &android_get_LD_LIBRARY_PATH, 1),
-  ELF_SYM_INITIALIZER( 95, &dl_iterate_phdr, 1),
+  ELFW(SYM_INITIALIZER)(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
+  ELFW(SYM_INITIALIZER)(  0, &dlopen, 1),
+  ELFW(SYM_INITIALIZER)(  7, &dlclose, 1),
+  ELFW(SYM_INITIALIZER)( 15, &dlsym, 1),
+  ELFW(SYM_INITIALIZER)( 21, &dlerror, 1),
+  ELFW(SYM_INITIALIZER)( 29, &dladdr, 1),
+  ELFW(SYM_INITIALIZER)( 36, &android_update_LD_LIBRARY_PATH, 1),
+  ELFW(SYM_INITIALIZER)( 67, &android_get_LD_LIBRARY_PATH, 1),
+  ELFW(SYM_INITIALIZER)( 95, &dl_iterate_phdr, 1),
 #if defined(__arm__)
-  ELF_SYM_INITIALIZER(111, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(111, &dl_unwind_find_exidx, 1),
 #endif
 };
 

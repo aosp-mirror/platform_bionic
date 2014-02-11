@@ -14,11 +14,8 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
 _LIBC_ARCH_STATIC_SRC_FILES := \
     arch-arm/bionic/exidx_static.c \
-    bionic/dl_iterate_phdr_static.c \
 
 _LIBC_ARCH_DYNAMIC_SRC_FILES := \
     arch-arm/bionic/exidx_dynamic.c \
