@@ -579,7 +579,7 @@ include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
 
 libc_bionic_src_files += $(_LIBC_ARCH_COMMON_SRC_FILES)
 libc_bionic_src_files += $(_LIBC_ARCH_CPU_VARIANT_SRC_FILES)
-libc_arch_static_src_files := $(_LIBC_ARCH_STATIC_SRC_FILES)
+libc_arch_static_src_files := $(_LIBC_ARCH_STATIC_SRC_FILES) bionic/dl_iterate_phdr_static.cpp
 libc_arch_dynamic_src_files := $(_LIBC_ARCH_DYNAMIC_SRC_FILES)
 libc_common_additional_dependencies += $(_LIBC_ARCH_ADDITIONAL_DEPENDENCIES)
 
