@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "0fc2111e_0d7f11f4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1191,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-11T02:19:24Z",
+      "side": 1,
+      "message": "i\u0027ve uploaded a patch that removes \u003csys/exec_elf.h\u003e. my plan is to leave \u003celf.h\u003e macros giving you something that represents the ELF spec, and then we\u0027ll keep this in the linker so we switch to MIPS-specific macros for mips64.",
+      "revId": "128b44e32922c25214cb5af9915f6615d46b2da0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbfe18b_894459d6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1741,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-11T02:19:24Z",
+      "side": 1,
+      "message": "i\u0027m still unclear about whether this is a toolchain bug? in our mips64 toolchain or everyone\u0027s mips64 toolchains?",
+      "revId": "128b44e32922c25214cb5af9915f6615d46b2da0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5263d2c3_77509049",
         "filename": "linker/linker.h",
         "patchSetId": 2
