@@ -483,20 +483,6 @@ class State:
         self.other_files.append(glibc_syscalls_h_path)
 
 
-    # Write the contents of syscalls.mk.
-    def gen_arch_syscalls_mk(self, arch):
-        path = "arch-%s/syscalls.mk" % arch
-        D("generating " + path)
-        fp = create_file(path)
-        fp.write("# %s\n" % warning)
-        fp.write("syscall_src :=\n")
-        for syscall in sorted(self.syscalls, key=lambda syscall: syscall["func"]):
-            if syscall.has_key("asm-%s" % arch):
-                fp.write("syscall_src += arch-%s/syscalls/%s.S\n" % (arch, syscall["func"]))
-        fp.close()
-        self.other_files.append(path)
-
-
     # Write each syscall stub.
     def gen_syscall_stubs(self):
         for syscall in self.syscalls:
@@ -531,8 +517,6 @@ class State:
         D("re-generating stubs and support files...")
 
         self.gen_glibc_syscalls_h()
-        for arch in all_arches:
-            self.gen_arch_syscalls_mk(arch)
         self.gen_syscall_stubs()
 
         D("comparing files...")
