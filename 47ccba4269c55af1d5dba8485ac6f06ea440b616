@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fbfe18b_2c021b25",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-11T03:03:53Z",
+      "side": 1,
+      "message": "Did you want to add a deprecated attribute so people will get a warning on recompile?",
+      "range": {
+        "startLine": 190,
+        "startChar": 0,
+        "endLine": 190,
+        "endChar": 40
+      },
+      "revId": "47ccba4269c55af1d5dba8485ac6f06ea440b616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
