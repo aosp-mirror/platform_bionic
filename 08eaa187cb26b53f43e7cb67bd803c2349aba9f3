@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efce9d4a_0c31576e",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-11T02:17:57Z",
+      "side": 1,
+      "message": "I didn\u0027t see anything in this file that uses link.h stuff. Is this needed by this file, or a file that include this one?",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 17
+      },
+      "revId": "08eaa187cb26b53f43e7cb67bd803c2349aba9f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fc2111e_6da1f544",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-11T02:17:57Z",
+      "side": 1,
+      "message": "Extra period.",
+      "range": {
+        "startLine": 456,
+        "startChar": 33,
+        "endLine": 456,
+        "endChar": 34
+      },
+      "revId": "08eaa187cb26b53f43e7cb67bd803c2349aba9f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
