@@ -61,31 +61,6 @@
 // itself at the start of a page.
 #define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
-// Magic shared structures that GDB knows about.
-
-struct link_map_t {
-  uintptr_t l_addr;
-  char*  l_name;
-  uintptr_t l_ld;
-  link_map_t* l_next;
-  link_map_t* l_prev;
-};
-
-// Values for r_debug->state
-enum {
-  RT_CONSISTENT,
-  RT_ADD,
-  RT_DELETE
-};
-
-struct r_debug {
-  int32_t r_version;
-  link_map_t* r_map;
-  void (*r_brk)(void);
-  int32_t r_state;
-  uintptr_t r_ldbase;
-};
-
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
@@ -172,7 +147,7 @@ struct soinfo {
 #endif
 
   size_t ref_count;
-  link_map_t link_map;
+  link_map link_map_head;
 
   bool constructors_called;
 
