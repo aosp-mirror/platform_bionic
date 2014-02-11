@@ -622,6 +622,10 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
   libc_common_cflags += -fstrict-aliasing
   libc_crt_target_cflags += $(TARGET_GLOBAL_CFLAGS)
 endif # mips
+ifeq ($(TARGET_ARCH),mips64)
+  libc_crt_target_ldflags := -melf64ltsmip
+endif
+
 
 ifeq ($(TARGET_ARCH),x86)
   libc_crt_target_cflags += -m32

@@ -56,6 +56,20 @@
 #define ELFW(what) ELF32_ ## what
 #endif
 
+// mips64 interprets Elf64_Rel structures' r_info field differently.
+// bionic (like other C libraries) has macros that assume regular ELF files,
+// but the dynamic linker needs to be able to load mips64 ELF files.
+#if defined(__mips__) && defined(__LP64__)
+#undef ELF64_R_SYM
+#undef ELF64_R_TYPE
+#undef ELF64_R_INFO
+#define ELF64_R_SYM(info)   (((info) >> 0) & 0xffffffff)
+#define ELF64_R_SSYM(info)  (((info) >> 32) & 0xff)
+#define ELF64_R_TYPE3(info) (((info) >> 40) & 0xff)
+#define ELF64_R_TYPE2(info) (((info) >> 48) & 0xff)
+#define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
+#endif
+
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
 
@@ -74,8 +88,8 @@
 
 typedef void (*linker_function_t)();
 
-// Android uses REL for 32-bit but only uses RELA for 64-bit.
-#if defined(__LP64__)
+// Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
+#if defined(__aarch64__) || defined(__x86_64__)
 #define USE_RELA 1
 #endif
 
@@ -110,10 +124,10 @@ struct soinfo {
   unsigned* bucket;
   unsigned* chain;
 
-#if !defined(__LP64__)
-  // This is only used by 32-bit MIPS, but needs to be here for
+#if defined(__mips__) || !defined(__LP64__)
+  // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
-  unsigned* plt_got;
+  ElfW(Addr)** plt_got;
 #endif
 
 #if defined(USE_RELA)
