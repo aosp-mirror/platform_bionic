@@ -21,8 +21,3 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
 _LIBC_ARCH_COMMON_SRC_FILES += bionic/memcpy.c
 _LIBC_ARCH_COMMON_SRC_FILES += bionic/memset.c
 _LIBC_ARCH_COMMON_SRC_FILES += string/strlen.c
-
-_LIBC_ARCH_STATIC_SRC_FILES := \
-    bionic/dl_iterate_phdr_static.c \
-
-_LIBC_ARCH_DYNAMIC_SRC_FILES :=

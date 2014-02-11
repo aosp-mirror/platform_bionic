@@ -50,6 +50,11 @@
       __libc_format_fd(2, "\n"); \
     } while (false)
 
+#if defined(__LP64__)
+#define ELFW(what) ELF64_ ## what
+#else
+#define ELFW(what) ELF32_ ## what
+#endif
 
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
@@ -77,17 +82,17 @@ typedef void (*linker_function_t)();
 struct soinfo {
  public:
   char name[SOINFO_NAME_LEN];
-  const Elf_Phdr* phdr;
+  const ElfW(Phdr)* phdr;
   size_t phnum;
-  Elf_Addr entry;
-  Elf_Addr base;
+  ElfW(Addr) entry;
+  ElfW(Addr) base;
   size_t size;
 
 #ifndef __LP64__
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
-  Elf_Dyn* dynamic;
+  ElfW(Dyn)* dynamic;
 
 #ifndef __LP64__
   uint32_t unused2; // DO NOT USE, maintained for compatibility
@@ -98,7 +103,7 @@ struct soinfo {
   unsigned flags;
 
   const char* strtab;
-  Elf_Sym* symtab;
+  ElfW(Sym)* symtab;
 
   size_t nbucket;
   size_t nchain;
@@ -112,16 +117,16 @@ struct soinfo {
 #endif
 
 #if defined(USE_RELA)
-  Elf_Rela* plt_rela;
+  ElfW(Rela)* plt_rela;
   size_t plt_rela_count;
 
-  Elf_Rela* rela;
+  ElfW(Rela)* rela;
   size_t rela_count;
 #else
-  Elf_Rel* plt_rel;
+  ElfW(Rel)* plt_rel;
   size_t plt_rel_count;
 
-  Elf_Rel* rel;
+  ElfW(Rel)* rel;
   size_t rel_count;
 #endif
 
@@ -153,7 +158,7 @@ struct soinfo {
 
   // When you read a virtual address from the ELF file, add this
   // value to get the corresponding address in the process' address space.
-  Elf_Addr load_bias;
+  ElfW(Addr) load_bias;
 
 #if !defined(__LP64__)
   bool has_text_relocations;
@@ -176,11 +181,11 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
 
-Elf_Sym* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
-Elf_Sym* dladdr_find_symbol(soinfo* si, const void* addr);
-Elf_Sym* dlsym_handle_lookup(soinfo* si, const char* name);
+ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr);
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* gAbortMessage;

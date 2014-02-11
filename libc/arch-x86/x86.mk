@@ -62,8 +62,3 @@ _LIBC_ARCH_COMMON_SRC_FILES += \
 	arch-x86/string/sse2-wcsrchr-atom.S \
 	arch-x86/string/sse2-wcslen-atom.S \
 	arch-x86/string/sse2-wcscmp-atom.S \
-
-_LIBC_ARCH_STATIC_SRC_FILES := \
-    bionic/dl_iterate_phdr_static.c \
-
-_LIBC_ARCH_DYNAMIC_SRC_FILES :=
