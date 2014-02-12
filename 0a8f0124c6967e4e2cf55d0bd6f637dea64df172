@@ -22,6 +22,30 @@
       "revId": "0a8f0124c6967e4e2cf55d0bd6f637dea64df172",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f028140_11170c32",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-12T01:31:53Z",
+      "side": 1,
+      "message": "idx seemed more useful to me, so that\u0027s what i used for LP64. i\u0027ll change the LP32 ones too...",
+      "parentUuid": "8fbfe18b_18a6715e",
+      "range": {
+        "startLine": 1210,
+        "startChar": 78,
+        "endLine": 1210,
+        "endChar": 91
+      },
+      "revId": "0a8f0124c6967e4e2cf55d0bd6f637dea64df172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
