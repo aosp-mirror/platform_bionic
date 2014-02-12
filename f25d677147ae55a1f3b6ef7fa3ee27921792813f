@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef13fd9e_c4c3feca",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-12T22:47:00Z",
+      "side": 1,
+      "message": "If I come across another place that needs this I might try to promote this to build/core/definitions.mk",
+      "revId": "f25d677147ae55a1f3b6ef7fa3ee27921792813f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afcbc564_a24a5ee0",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-12T22:47:00Z",
+      "side": 1,
+      "message": "might be useful to add $(1)_32 and $(1)_64 to this",
+      "revId": "f25d677147ae55a1f3b6ef7fa3ee27921792813f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

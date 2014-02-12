@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef13fd9e_64d32aa4",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-12T22:47:00Z",
+      "side": 0,
+      "message": "these should end up in LOCAL_SRC_FILES_32, not each LOCAL_SRC_FILES_arch",
+      "revId": "022885e2fad5ef9643e05d80c6f50a2a90bf3431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef13fd9e_44d8aebc",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-02-12T22:47:00Z",
+      "side": 0,
+      "message": "LOCAL_SRC_FILES_32",
+      "revId": "022885e2fad5ef9643e05d80c6f50a2a90bf3431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
