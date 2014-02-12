@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fbfe18b_18a6715e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-12T01:10:18Z",
+      "side": 1,
+      "message": "Some of these you changed to idx, and some you left as rel - start? Is there a reason for that?\n\nAlso, isn\u0027t rel - start a pointer value, so %d isn\u0027t quite right?",
+      "range": {
+        "startLine": 1210,
+        "startChar": 78,
+        "endLine": 1210,
+        "endChar": 91
+      },
+      "revId": "0a8f0124c6967e4e2cf55d0bd6f637dea64df172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
