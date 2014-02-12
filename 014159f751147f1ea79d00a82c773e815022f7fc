@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "cff71998_0e0ecb01",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-12T21:58:53Z",
+      "side": 1,
+      "message": "Considering how we configure the gcc and clang, I think the best practice is to write the arch-specific configs in separate files and load only the configs for the current product. It structures better, reduces the load time / make memory usage,  and also is less confusing .",
+      "parentUuid": "521bd206_5df76b40",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12eebac6_07e06aaa",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -178,6 +196,24 @@
       "side": 1,
       "message": "This is a bit of a special case, because we use $(TARGET_CPU_VARIANT) in the path.  Maybe include-if-exists would help here?\n\nThe case I\u0027m worried about, which I\u0027m running into all over the build system, is neon vs. non-neon.  There are lots of places that need to include one set of files if neon is enabled, and a different set if it is disabled.  Right now, the only way to do that is to check TARGET_ARCH + TARGET_ARCH_VARIANT and TARGET_2ND_ARCH + TARGET_2ND_ARCH_VARIANT manually in every makefile, when all I really want to know is \"what variant of arm is being built\", but I don\u0027t care if arm is the 1st or 2nd arch, and I don\u0027t care what the answer is if arm is not being built.",
       "parentUuid": "b226cef6_7002c8d5",
+      "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cff71998_cef323b9",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-12T21:58:53Z",
+      "side": 1,
+      "message": "Yes, for the ARCH_\u003carch\u003e_HAVA_* variables we just don\u0027t need to add the 2ND_ prefix: we already encode the arch in the variable name and the can\u0027t be mixed - unless you configure the 1st and 2nd arch the same.",
+      "parentUuid": "721616de_21e054ab",
       "revId": "014159f751147f1ea79d00a82c773e815022f7fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
