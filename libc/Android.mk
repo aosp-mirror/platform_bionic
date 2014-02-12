@@ -1,8 +1,38 @@
 LOCAL_PATH := $(call my-dir)
 
 # Make everything depend on any changes to included makefiles.
-libc_common_additional_dependencies := \
-    $(LOCAL_PATH)/Android.mk \
+libc_common_additional_dependencies := $(LOCAL_PATH)/Android.mk
+
+# Load config for TARGET_ARCH
+my_2nd_arch_prefix :=
+include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+libc_common_additional_dependencies += \
+    $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+
+
+ifdef TARGET_2ND_ARCH
+# Load config for TARGET_2ND_ARCH
+my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+include $(LOCAL_PATH)/arch-$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
+my_2nd_arch_prefix :=
+libc_common_additional_dependencies += \
+    $(LOCAL_PATH)/arch-$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
+endif
+
+# crt obj files
+# ========================================================
+# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+libc_crt_target_cflags := \
+    -I$(LOCAL_PATH)/include \
+    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+
+my_2nd_arch_prefix :=
+include $(LOCAL_PATH)/crt.mk
+ifdef TARGET_2ND_ARCH
+my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+include $(LOCAL_PATH)/crt.mk
+my_2nd_arch_prefix :=
+endif
 
 # Define the common source files for all the libc instances
 # =========================================================
@@ -162,26 +192,14 @@ libc_dns_src_files += \
     netbsd/resolv/res_state.c \
 
 
-# These are used by the 32-bit targets, but not the 64-bit ones.
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
-libc_common_src_files += \
-    bionic/legacy_32_bit_support.cpp \
-    bionic/ndk_cruft.cpp \
-
-endif
-
 # Fortify implementations of libc functions.
 libc_common_src_files += \
     bionic/__FD_chk.cpp \
     bionic/__fgets_chk.cpp \
-    bionic/__memcpy_chk.cpp \
     bionic/__memmove_chk.cpp \
-    bionic/__memset_chk.cpp \
     bionic/__read_chk.cpp \
     bionic/__recvfrom_chk.cpp \
-    bionic/__strcat_chk.cpp \
     bionic/__strchr_chk.cpp \
-    bionic/__strcpy_chk.cpp \
     bionic/__strlcat_chk.cpp \
     bionic/__strlcpy_chk.cpp \
     bionic/__strlen_chk.cpp \
@@ -291,19 +309,6 @@ libc_bionic_src_files := \
     bionic/wait.cpp \
     bionic/wchar.cpp \
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
-libc_bionic_src_files += \
-    bionic/mmap.cpp \
-
-endif
-
-libc_tzcode_src_files := \
-    tzcode/asctime.c \
-    tzcode/difftime.c \
-    tzcode/localtime.c \
-    tzcode/strftime.c \
-    tzcode/strptime.c \
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/sleep.c \
@@ -416,168 +421,8 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/thread-stub/__isthreaded.c \
     upstream-netbsd/libc/unistd/killpg.c \
 
-# Architecture specific source files go here
-# =========================================================
-ifeq ($(TARGET_ARCH),arm)
-libc_common_src_files += \
-    bionic/memchr.c \
-    bionic/memmove.c.arm \
-    bionic/memrchr.c \
-    bionic/strchr.cpp \
-    bionic/strnlen.c \
-    string/bcopy.c \
-    string/index.c \
-    string/strlcat.c \
-    string/strlcpy.c \
-    string/strncat.c \
-    string/strncmp.c \
-    string/strncpy.c \
-    string/strrchr.c \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-endif # arm
-
-ifeq ($(TARGET_ARCH), arm64)
-#TODO: Replace C stubs with optimised assembly
-libc_common_src_files += \
-    bionic/memchr.c   \
-    bionic/memcmp.c   \
-    bionic/memcpy.c   \
-    bionic/memmove.c  \
-    bionic/memrchr.c  \
-    bionic/memset.c   \
-    bionic/strchr.cpp \
-    bionic/strnlen.c  \
-    string/bcopy.c    \
-    string/index.c    \
-    string/memcmp16.c \
-    string/strcat.c   \
-    string/strcmp.c   \
-    string/strcpy.c   \
-    string/strlcat.c  \
-    string/strlcpy.c  \
-    string/strlen.c   \
-    string/strncat.c  \
-    string/strncmp.c  \
-    string/strncpy.c  \
-    string/strrchr.c  \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-endif # arm64
-
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-libc_common_src_files += \
-    bionic/memchr.c \
-    bionic/memcmp.c \
-    bionic/memmove.c \
-    bionic/memrchr.c \
-    bionic/strchr.cpp \
-    bionic/strnlen.c \
-    string/bcopy.c \
-    string/index.c \
-    string/strcat.c \
-    string/strcmp.c \
-    string/strcpy.c \
-    string/strlcat.c \
-    string/strlcpy.c \
-    string/strncat.c \
-    string/strncmp.c \
-    string/strncpy.c \
-    string/strrchr.c \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-endif # mips || mips64
-
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
-libc_common_src_files += \
-    bionic/memchr.c \
-    bionic/memcmp.c \
-    bionic/memcpy.c \
-    bionic/memmove.c \
-    bionic/memrchr.c \
-    bionic/memset.c \
-    bionic/strchr.cpp \
-    bionic/strnlen.c \
-    string/bcopy.c \
-    string/index.c \
-    string/strcat.c \
-    string/strcmp.c \
-    string/strcpy.c \
-    string/strlcat.c \
-    string/strlcpy.c \
-    string/strlen.c \
-    string/strncat.c \
-    string/strncmp.c \
-    string/strncpy.c \
-    string/strrchr.c \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-
-endif # x86_64
-
-ifeq ($(TARGET_ARCH),arm)
-  ifeq ($(strip $(TARGET_CPU_VARIANT)),)
-    $(warning TARGET_ARCH is arm, but TARGET_CPU_VARIANT is not defined)
-  endif
-endif
-
-###########################################################
-## Add cpu specific source files.
-##
-## This can be called multiple times, but it will only add
-## the first source file for each unique $(1).
-## $(1): Unique identifier to identify the cpu variant
-##       implementation.
-## $(2): Cpu specific source file.
-###########################################################
-
-define libc-add-cpu-variant-src
-$(if $(filter true,$(_LIBC_ARCH_CPU_VARIANT_HAS_$(1))), \
-	, \
-     $(eval _LIBC_ARCH_CPU_VARIANT_HAS_$(1) := true) \
-     $(eval _LIBC_ARCH_CPU_VARIANT_SRC_FILE.$(1) := $(2)) \
-     $(eval _LIBC_ARCH_CPU_VARIANT_SRC_FILES += $(2)) \
-)
-endef
-
-_LIBC_ARCH_COMMON_SRC_FILES :=
-_LIBC_ARCH_CPU_VARIANT_SRC_FILES :=
-_LIBC_ARCH_STATIC_SRC_FILES :=
-_LIBC_ARCH_DYNAMIC_SRC_FILES :=
-_LIBC_ARCH_ADDITIONAL_DEPENDENCIES :=
-
-libc_common_additional_dependencies += \
-    $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
-include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
-
-libc_bionic_src_files += $(_LIBC_ARCH_COMMON_SRC_FILES)
-libc_bionic_src_files += $(_LIBC_ARCH_CPU_VARIANT_SRC_FILES)
-libc_arch_static_src_files := $(_LIBC_ARCH_STATIC_SRC_FILES) bionic/dl_iterate_phdr_static.cpp
-libc_arch_dynamic_src_files := $(_LIBC_ARCH_DYNAMIC_SRC_FILES)
-libc_common_additional_dependencies += $(_LIBC_ARCH_ADDITIONAL_DEPENDENCIES)
+libc_arch_static_src_files := \
+    bionic/dl_iterate_phdr_static.cpp \
 
 # Define some common cflags
 # ========================================================
@@ -603,40 +448,6 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
 endif
 
-# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-libc_crt_target_cflags := \
-    -I$(LOCAL_PATH)/include \
-    -I$(LOCAL_PATH)/arch-$(TARGET_ARCH)/include \
-    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
-
-ifeq ($(TARGET_ARCH),arm)
-  libc_common_cflags += -DSOFTFLOAT
-  libc_common_cflags += -fstrict-aliasing
-  libc_crt_target_cflags += -mthumb-interwork
-endif # arm
-
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-  ifneq ($(ARCH_MIPS_HAS_FPU),true)
-    libc_common_cflags += -DSOFTFLOAT
-  endif
-  libc_common_cflags += -fstrict-aliasing
-  libc_crt_target_cflags += $(TARGET_GLOBAL_CFLAGS)
-endif # mips
-ifeq ($(TARGET_ARCH),mips64)
-  libc_crt_target_ldflags := -melf64ltsmip
-endif
-
-
-ifeq ($(TARGET_ARCH),x86)
-  libc_crt_target_cflags += -m32
-  libc_crt_target_ldflags := -melf_i386
-endif # x86
-
-ifeq ($(TARGET_ARCH),x86_64)
-  libc_crt_target_cflags += -m64
-  libc_crt_target_ldflags := -melf_x86_64
-endif # x86_64
-
 # Define ANDROID_SMP appropriately.
 ifeq ($(TARGET_CPU_SMP),true)
     libc_common_cflags += -DANDROID_SMP=1
@@ -660,132 +471,18 @@ libc_common_c_includes := \
 		$(LOCAL_PATH)/stdio   \
 		external/safe-iop/include
 
-# Define the libc run-time (crt) support object files that must be built,
-# which are needed to build all other objects (shared/static libs and
-# executables)
-# ==========================================================================
-# ARM, Arm64, MIPS, and x86 all need crtbegin_so/crtend_so.
-#
-# For x86, the .init section must point to a function that calls all
-# entries in the .ctors section. (on ARM this is done through the
-# .init_array section instead).
-#
-# For all the platforms, the .fini_array section must point to a function
-# that will call __cxa_finalize(&__dso_handle) in order to ensure that
-# static C++ destructors are properly called on dlclose().
-#
-libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin.c
-libc_crt_target_crtbegin_so_file := $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
-
-ifeq ($(TARGET_ARCH),arm)
-    libc_crt_target_so_cflags :=
+# ========================================================
+# Add in the arch-specific flags.
+# Must be called with $(eval).
+# $(1): the LOCAL_ variable name
+# $(2): the bionic variable name to pull in
+define patch-up-arch-specific-flags
+$(1)_$(TARGET_ARCH) += $($(2)_$(TARGET_ARCH))
+ifdef TARGET_2ND_ARCH
+$(1)_$(TARGET_2ND_ARCH) += $($(2)_$(TARGET_2ND_ARCH))
 endif
-ifeq ($(TARGET_ARCH),arm64)
-    libc_crt_target_so_cflags :=
-    libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
-endif
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-    libc_crt_target_so_cflags := -fPIC
-    libc_crt_target_crtbegin_file := $(LOCAL_PATH)/arch-$(TARGET_ARCH)/bionic/crtbegin.c
-endif
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-    libc_crt_target_so_cflags := -fPIC
-endif
-libc_crt_target_so_cflags += $(libc_crt_target_cflags)
+endef
 
-# See the comment in crtbrand.c for the reason why we need to generate
-# crtbrand.s before generating crtbrand.o.
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
-$(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) -S \
-		-MD -MF $(@:%.s=%.d) -o $@ $<
-	$(hide) sed -i -e '/\.note\.ABI-tag/s/progbits/note/' $@
-	$(call transform-d-to-p-args,$(@:%.s=%.d),$(@:%.s=%.P))
--include $(GEN:%.s=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
-$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) -o $@ -c $<
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
-$(GEN): $(libc_crt_target_crtbegin_so_file)
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
-		-MD -MF $(@:%.o=%.d) -o $@ -c $<
-	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
-$(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend_so.S
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_so_cflags) \
-		-MD -MF $(@:%.o=%.d) -o $@ -c $<
-	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-# The following two are installed to device
-GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtbegin_so.o
-$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
-	$(hide) mkdir -p $(dir $@) && cp -f $< $@
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_SHARED_LIBRARIES)/crtend_so.o
-$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
-	$(hide) mkdir -p $(dir $@) && cp -f $< $@
-ALL_GENERATED_SOURCES += $(GEN)
-
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o
-$(GEN): $(libc_crt_target_crtbegin_file)
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
-		-MD -MF $(@:%.o=%.d) -o $@ -c $<
-	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
-$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_LD) $(libc_crt_target_ldflags) -r -o $@ $^
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o
-$(GEN): $(libc_crt_target_crtbegin_file)
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
-		-MD -MF $(@:%.o=%.d) -o $@ -c $<
-	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
-$(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_LD) $(libc_crt_target_ldflags) -r -o $@ $^
-ALL_GENERATED_SOURCES += $(GEN)
-
-# We rename crtend.o to crtend_android.o to avoid a
-# name clash between gcc and bionic.
-GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_android.o
-$(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend.S
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_CC) $(libc_crt_target_cflags) \
-		-MD -MF $(@:%.o=%.d) -o $@ -c $<
-	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
-ALL_GENERATED_SOURCES += $(GEN)
-
-
-# To enable malloc leak check for statically linked programs, add
-# "WITH_MALLOC_CHECK_LIBC_A := true" to buildspec.mk
-WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 
 # ========================================================
 # libbionic_ssp.a - stack protector code
@@ -806,6 +503,7 @@ LOCAL_MODULE := libbionic_ssp
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -815,7 +513,13 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(libc_tzcode_src_files)
+LOCAL_SRC_FILES := \
+    tzcode/asctime.c \
+    tzcode/difftime.c \
+    tzcode/localtime.c \
+    tzcode/strftime.c \
+    tzcode/strptime.c \
+
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DSTD_INSPIRED=1 \
@@ -829,6 +533,7 @@ LOCAL_MODULE := libc_tzcode
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -852,6 +557,7 @@ LOCAL_MODULE := libc_dns
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -877,6 +583,7 @@ LOCAL_MODULE := libc_freebsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -903,6 +610,7 @@ LOCAL_MODULE := libc_netbsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -923,8 +631,10 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Set -DPTHREAD_DEBUG_ENABLED=true to enable support for pthread deadlock prediction.
 # Since this code is experimental it is disabled by default.
-LOCAL_CFLAGS += $(libc_common_cflags) -DPTHREAD_DEBUG_ENABLED=false
+LOCAL_CFLAGS += -DPTHREAD_DEBUG_ENABLED=false
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -934,7 +644,10 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-S-files-under,arch-$(TARGET_ARCH)/syscalls)
+LOCAL_SRC_FILES_$(TARGET_ARCH) := $(call all-S-files-under,arch-$(TARGET_ARCH)/syscalls)
+ifdef TARGET_2ND_ARCH
+LOCAL_SRC_FILES_$(TARGET_2ND_ARCH) := $(call all-S-files-under,arch-$(TARGET_2ND_ARCH)/syscalls)
+endif
 LOCAL_MODULE := libc_syscalls
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
@@ -969,6 +682,9 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # TODO: split out the asflags.
 LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_common_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_ASFLAGS,LOCAL_CFLAGS))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -985,9 +701,9 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-	$(libc_arch_static_src_files) \
-	$(libc_static_common_src_files) \
-	bionic/libc_init_static.cpp
+    $(libc_arch_static_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/libc_init_static.cpp
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
@@ -1000,6 +716,8 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_static_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -1009,11 +727,11 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-	$(libc_arch_static_src_files) \
-	$(libc_static_common_src_files) \
-	bionic/dlmalloc.c \
-	bionic/malloc_debug_common.cpp \
-	bionic/libc_init_static.cpp
+    $(libc_arch_static_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/dlmalloc.c \
+    bionic/malloc_debug_common.cpp \
+    bionic/libc_init_static.cpp \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC
@@ -1025,6 +743,8 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_static_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -1048,17 +768,6 @@ LOCAL_SRC_FILES := \
     bionic/pthread_debug.cpp \
     bionic/libc_init_dynamic.cpp \
 
-ifeq ($(TARGET_ARCH),arm)
-	LOCAL_NO_CRT := true
-	LOCAL_CFLAGS += -DCRT_LEGACY_WORKAROUND
-
-	LOCAL_SRC_FILES := \
-		arch-common/bionic/crtbegin_so.c \
-		arch-arm/bionic/atexit_legacy.c \
-		$(LOCAL_SRC_FILES) \
-		arch-common/bionic/crtend_so.S
-endif
-
 LOCAL_MODULE:= libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_REQUIRED_MODULES := tzdata
@@ -1074,6 +783,17 @@ LOCAL_REQUIRED_MODULES := tzdata
 LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,libc_arch_dynamic_src_files))
+$(eval $(call patch-up-arch-specific-flags,libc_static_common_src_files))
+# special for arm
+LOCAL_NO_CRT_arm := true
+LOCAL_CFLAGS_arm += -DCRT_LEGACY_WORKAROUND
+LOCAL_SRC_FILES_arm += \
+    arch-common/bionic/crtbegin_so.c \
+    arch-arm/bionic/atexit_legacy.c \
+    arch-common/bionic/crtend_so.S
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -1092,18 +812,18 @@ ifneq ($(TARGET_BUILD_VARIANT),user)
 include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := \
-	$(libc_common_cflags) \
-	-DMALLOC_LEAK_CHECK
+    $(libc_common_cflags) \
+    -DMALLOC_LEAK_CHECK
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	bionic/debug_mapinfo.cpp \
-	bionic/debug_stacktrace.cpp \
-	bionic/malloc_debug_leak.cpp \
-	bionic/malloc_debug_check.cpp \
+    bionic/debug_mapinfo.cpp \
+    bionic/debug_stacktrace.cpp \
+    bionic/malloc_debug_leak.cpp \
+    bionic/malloc_debug_check.cpp \
 
 LOCAL_MODULE:= libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -1116,6 +836,7 @@ LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_SHARED_LIBRARY)
 
 
@@ -1125,15 +846,15 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := \
-	$(libc_common_cflags) \
-	-DMALLOC_QEMU_INSTRUMENT
+    $(libc_common_cflags) \
+    -DMALLOC_QEMU_INSTRUMENT
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	bionic/malloc_debug_qemu.cpp
+    bionic/malloc_debug_qemu.cpp
 
 LOCAL_MODULE:= libc_malloc_debug_qemu
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -1145,9 +866,10 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_SHARED_LIBRARY)
 
-endif	#!user
+endif  #!user
 
 
 # ========================================================
