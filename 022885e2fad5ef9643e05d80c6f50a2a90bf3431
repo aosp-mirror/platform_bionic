@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4f0c0978_5284f2af",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-12T23:35:10Z",
+      "side": 0,
+      "message": "Yeah, we may be able to do that. But during the time I made the change, I found it\u0027s even more confusing to add a libc_common_src_files_32 to this already super confusing (common vs bionic, static vs dynamic, 1st vs 2nd arch, all arch variants, and now 64 vs 32) and gigantic makefile. \nI\u0027ll let it as is for now.",
+      "parentUuid": "ef13fd9e_64d32aa4",
+      "revId": "022885e2fad5ef9643e05d80c6f50a2a90bf3431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef13fd9e_44d8aebc",
         "filename": "libc/Android.mk",
         "patchSetId": 2
