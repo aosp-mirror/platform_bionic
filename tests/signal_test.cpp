@@ -238,3 +238,17 @@ TEST(signal, sigaction) {
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction(SIGALRM, &original_sa, NULL));
 }
+
+TEST(signal, sys_signame) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_TRUE(sys_signame[0] == NULL);
+  ASSERT_STREQ("HUP", sys_signame[SIGHUP]);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}
+
+TEST(signal, sys_siglist) {
+  ASSERT_TRUE(sys_siglist[0] == NULL);
+  ASSERT_STREQ("Hangup", sys_siglist[SIGHUP]);
+}

@@ -37,67 +37,6 @@ endif
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
-    unistd/alarm.c \
-    unistd/exec.c \
-    unistd/fnmatch.c \
-    unistd/syslog.c \
-    unistd/system.c \
-    unistd/time.c \
-    stdio/asprintf.c \
-    stdio/fflush.c \
-    stdio/fgetc.c \
-    stdio/findfp.c \
-    stdio/fprintf.c \
-    stdio/fputc.c \
-    stdio/fread.c \
-    stdio/freopen.c \
-    stdio/fscanf.c \
-    stdio/fseek.c \
-    stdio/ftell.c \
-    stdio/fvwrite.c \
-    stdio/gets.c \
-    stdio/printf.c \
-    stdio/refill.c \
-    stdio/rewind.c \
-    stdio/scanf.c \
-    stdio/snprintf.c\
-    stdio/sprintf.c \
-    stdio/sscanf.c \
-    stdio/stdio.c \
-    stdio/ungetc.c \
-    stdio/vasprintf.c \
-    stdio/vfprintf.c \
-    stdio/vfscanf.c \
-    stdio/vprintf.c \
-    stdio/vsnprintf.c \
-    stdio/vsprintf.c \
-    stdio/vscanf.c \
-    stdio/vsscanf.c \
-    stdio/wbuf.c \
-    stdlib/atexit.c \
-    stdlib/ctype_.c \
-    stdlib/getenv.c \
-    stdlib/putenv.c \
-    stdlib/setenv.c \
-    stdlib/strtod.c \
-    stdlib/strtoimax.c \
-    stdlib/strtol.c \
-    stdlib/strtoll.c \
-    stdlib/strtoul.c \
-    stdlib/strtoull.c \
-    stdlib/strtoumax.c \
-    stdlib/tolower_.c \
-    stdlib/toupper_.c \
-    string/strcasecmp.c \
-    string/strcspn.c \
-    string/strdup.c \
-    string/strpbrk.c \
-    string/strsep.c \
-    string/strspn.c \
-    string/strstr.c \
-    string/strtok.c \
-    wchar/wcswidth.c \
-    wchar/wcsxfrm.c \
     bionic/arc4random.c \
     bionic/atoi.c \
     bionic/atol.c \
@@ -143,8 +82,6 @@ libc_common_src_files := \
     bionic/setpgrp.c \
     bionic/sigblock.c \
     bionic/siginterrupt.c \
-    bionic/siglist.c \
-    bionic/signame.c \
     bionic/sigsetmask.c \
     bionic/strndup.c \
     bionic/strntoimax.c \
@@ -159,6 +96,67 @@ libc_common_src_files := \
     bionic/unlockpt.c \
     bionic/utmp.c \
     bionic/wcscoll.c \
+    stdio/asprintf.c \
+    stdio/fflush.c \
+    stdio/fgetc.c \
+    stdio/findfp.c \
+    stdio/fprintf.c \
+    stdio/fputc.c \
+    stdio/fread.c \
+    stdio/freopen.c \
+    stdio/fscanf.c \
+    stdio/fseek.c \
+    stdio/ftell.c \
+    stdio/fvwrite.c \
+    stdio/gets.c \
+    stdio/printf.c \
+    stdio/refill.c \
+    stdio/rewind.c \
+    stdio/scanf.c \
+    stdio/snprintf.c\
+    stdio/sprintf.c \
+    stdio/sscanf.c \
+    stdio/stdio.c \
+    stdio/ungetc.c \
+    stdio/vasprintf.c \
+    stdio/vfprintf.c \
+    stdio/vfscanf.c \
+    stdio/vprintf.c \
+    stdio/vscanf.c \
+    stdio/vsnprintf.c \
+    stdio/vsprintf.c \
+    stdio/vsscanf.c \
+    stdio/wbuf.c \
+    stdlib/atexit.c \
+    stdlib/ctype_.c \
+    stdlib/getenv.c \
+    stdlib/putenv.c \
+    stdlib/setenv.c \
+    stdlib/strtod.c \
+    stdlib/strtoimax.c \
+    stdlib/strtol.c \
+    stdlib/strtoll.c \
+    stdlib/strtoul.c \
+    stdlib/strtoull.c \
+    stdlib/strtoumax.c \
+    stdlib/tolower_.c \
+    stdlib/toupper_.c \
+    string/strcasecmp.c \
+    string/strcspn.c \
+    string/strdup.c \
+    string/strpbrk.c \
+    string/strsep.c \
+    string/strspn.c \
+    string/strstr.c \
+    string/strtok.c \
+    unistd/alarm.c \
+    unistd/exec.c \
+    unistd/fnmatch.c \
+    unistd/syslog.c \
+    unistd/system.c \
+    unistd/time.c \
+    wchar/wcswidth.c \
+    wchar/wcsxfrm.c \
 
 
 libc_dns_src_files += \
@@ -222,8 +220,8 @@ libc_bionic_src_files := \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
-    bionic/epoll_wait.cpp \
     bionic/epoll_pwait.cpp \
+    bionic/epoll_wait.cpp \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
@@ -280,7 +278,6 @@ libc_bionic_src_files := \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
     bionic/setlocale.cpp \
-    bionic/signalfd.cpp \
     bionic/sigaction.cpp \
     bionic/sigaddset.cpp \
     bionic/sigdelset.cpp \
@@ -288,6 +285,7 @@ libc_bionic_src_files := \
     bionic/sigfillset.cpp \
     bionic/sigismember.cpp \
     bionic/signal.cpp \
+    bionic/signalfd.cpp \
     bionic/sigpending.cpp \
     bionic/sigprocmask.cpp \
     bionic/sigsuspend.cpp \
@@ -300,8 +298,10 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
-    bionic/thread_atexit.cpp \
+    bionic/sys_siglist.c \
+    bionic/sys_signame.c \
     bionic/tdestroy.cpp \
+    bionic/thread_atexit.cpp \
     bionic/timer.cpp \
     bionic/tmpfile.cpp \
     bionic/unlink.cpp \
