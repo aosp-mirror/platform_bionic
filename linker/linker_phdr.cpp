@@ -111,7 +111,7 @@
 
  **/
 
-#define MAYBE_MAP_FLAG(x,from,to)    (((x) & (from)) ? (to) : 0)
+#define MAYBE_MAP_FLAG(x, from, to)  (((x) & (from)) ? (to) : 0)
 #define PFLAGS_TO_PROT(x)            (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | \
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
@@ -337,7 +337,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_length != 0) {
-      void* seg_addr = mmap((void*)seg_page_start,
+      void* seg_addr = mmap(reinterpret_cast<void*>(seg_page_start),
                             file_length,
                             PFLAGS_TO_PROT(phdr->p_flags),
                             MAP_FIXED|MAP_PRIVATE,
@@ -352,7 +352,7 @@ bool ElfReader::LoadSegments() {
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
     if ((phdr->p_flags & PF_W) != 0 && PAGE_OFFSET(seg_file_end) > 0) {
-      memset((void*)seg_file_end, 0, PAGE_SIZE - PAGE_OFFSET(seg_file_end));
+      memset(reinterpret_cast<void*>(seg_file_end), 0, PAGE_SIZE - PAGE_OFFSET(seg_file_end));
     }
 
     seg_file_end = PAGE_END(seg_file_end);
@@ -362,7 +362,7 @@ bool ElfReader::LoadSegments() {
     // between them. This is done by using a private anonymous
     // map for all extra pages.
     if (seg_page_end > seg_file_end) {
-      void* zeromap = mmap((void*)seg_file_end,
+      void* zeromap = mmap(reinterpret_cast<void*>(seg_file_end),
                            seg_page_end - seg_file_end,
                            PFLAGS_TO_PROT(phdr->p_flags),
                            MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE,
@@ -394,7 +394,7 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
-    int ret = mprotect((void*)seg_page_start,
+    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
                        PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags);
     if (ret < 0) {
@@ -471,7 +471,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
-    int ret = mprotect((void*)seg_page_start,
+    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
                        prot_flags);
     if (ret < 0) {
@@ -601,7 +601,7 @@ bool ElfReader::FindPhdr() {
     if (phdr->p_type == PT_LOAD) {
       if (phdr->p_offset == 0) {
         ElfW(Addr)  elf_addr = load_bias_ + phdr->p_vaddr;
-        const ElfW(Ehdr)* ehdr = (const ElfW(Ehdr)*)(void*)elf_addr;
+        const ElfW(Ehdr)* ehdr = reinterpret_cast<const ElfW(Ehdr)*>(elf_addr);
         ElfW(Addr)  offset = ehdr->e_phoff;
         return CheckPhdr((ElfW(Addr))ehdr + offset);
       }
