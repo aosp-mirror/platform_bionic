@@ -142,12 +142,12 @@ static unsigned bitmask[4096];
     do { \
         if ((((offset) >> 12) >> 5) < 4096) \
             bitmask[((offset) >> 12) >> 5] |= (1 << (((offset) >> 12) & 31)); \
-    } while(0)
+    } while (0)
 #else
 #define MARK(offset) \
     do { \
         bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
-    } while(0)
+    } while (0)
 #endif
 #else
 #define MARK(x) do {} while (0)
@@ -195,7 +195,7 @@ static void insert_soinfo_into_debug_map(soinfo* info) {
     // Copy the necessary fields into the debug structure.
     link_map* map = &(info->link_map_head);
     map->l_addr = info->load_bias;
-    map->l_name = (char*) info->name;
+    map->l_name = reinterpret_cast<char*>(info->name);
     map->l_ld = info->dynamic;
 
     /* Stick the new library at the end of the list.
@@ -332,8 +332,7 @@ static soinfo* soinfo_alloc(const char* name) {
   return si;
 }
 
-static void soinfo_free(soinfo* si)
-{
+static void soinfo_free(soinfo* si) {
     if (si == NULL) {
         return;
     }
@@ -412,18 +411,16 @@ static void parse_LD_PRELOAD(const char* path) {
  *
  * This function is exposed via dlfcn.cpp and libdl.so.
  */
-_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
-{
-    soinfo *si;
+_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
     unsigned addr = (unsigned)pc;
 
-    for (si = solist; si != 0; si = si->next) {
+    for (soinfo* si = solist; si != 0; si = si->next) {
         if ((addr >= si->base) && (addr < (si->base + si->size))) {
             *pcount = si->ARM_exidx_count;
             return (_Unwind_Ptr)si->ARM_exidx;
         }
     }
-   *pcount = 0;
+    *pcount = 0;
     return NULL;
 }
 
@@ -431,10 +428,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
 
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
-int
-dl_iterate_phdr(int (*cb)(dl_phdr_info *info, size_t size, void *data),
-                void *data)
-{
+int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
     int rv = 0;
     for (soinfo* si = solist; si != NULL; si = si->next) {
         dl_phdr_info dl_info;
@@ -480,10 +474,10 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
 }
 
 static unsigned elfhash(const char* _name) {
-    const unsigned char* name = (const unsigned char*) _name;
+    const unsigned char* name = reinterpret_cast<const unsigned char*>(_name);
     unsigned h = 0, g;
 
-    while(*name) {
+    while (*name) {
         h = (h << 4) + *name++;
         g = h & 0xf0000000;
         h ^= g;
@@ -497,7 +491,6 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
     ElfW(Sym)* s = NULL;
 
     if (si != NULL && somain != NULL) {
-
         /*
          * Local scope is executable scope. Just start looking into it right away
          * for the shortcut.
@@ -662,19 +655,6 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
   return NULL;
 }
 
-#if 0
-static void dump(soinfo* si)
-{
-  ElfW(Sym)* s = si->symtab;
-  for (unsigned n = 0; n < si->nchain; n++) {
-    TRACE("%04d> %08x: %02x %04x %08x %08x %s", n, s,
-          s->st_info, s->st_shndx, s->st_value, s->st_size,
-          si->strtab + s->st_name);
-    s++;
-  }
-}
-#endif
-
 static int open_library_on_path(const char* name, const char* const paths[]) {
   char buf[512];
   for (size_t i = 0; paths[i] != NULL; ++i) {
@@ -741,18 +721,14 @@ static soinfo* load_library(const char* name) {
     return si;
 }
 
-static soinfo *find_loaded_library(const char *name)
-{
-    soinfo *si;
-    const char *bname;
-
+static soinfo *find_loaded_library(const char* name) {
     // TODO: don't use basename only for determining libraries
     // http://code.google.com/p/android/issues/detail?id=6670
 
-    bname = strrchr(name, '/');
+    const char* bname = strrchr(name, '/');
     bname = bname ? bname + 1 : name;
 
-    for (si = solist; si != NULL; si = si->next) {
+    for (soinfo* si = solist; si != NULL; si = si->next) {
         if (!strcmp(bname, si->name)) {
             return si;
         }
@@ -870,14 +846,14 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
     unsigned sym = ELFW(R_SYM)(rela->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
     ElfW(Addr) sym_addr = 0;
-    char* sym_name = NULL;
+    const char* sym_name = NULL;
 
     DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
     if (type == 0) { // R_*_NONE
       continue;
     }
     if (sym != 0) {
-      sym_name = (char *)(strtab + symtab[sym].st_name);
+      sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
       s = soinfo_do_lookup(si, sym_name, &lsi, needed);
       if (s == NULL) {
         // We only allow an undefined symbol if this is a weak reference...
@@ -925,7 +901,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
           break;
 #endif
         default:
-          DL_ERR("unknown weak reloc type %d @ %p (%d)", type, rela, (int) (rela - start));
+          DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rela, idx);
           return -1;
         }
       } else {
@@ -1084,7 +1060,8 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
                        si->name, s->st_size, src->st_size);
                 return -1;
             }
-            memcpy((void*)reloc, (void*)(src->st_value + lsi->load_bias), src->st_size);
+            memcpy(reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
         } else {
             DL_ERR("%s R_AARCH64_COPY relocation target cannot be resolved", si->name);
             return -1;
@@ -1149,7 +1126,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
 #endif
 
     default:
-      DL_ERR("unknown reloc type %d @ %p (%d)", type, rela, (int) (rela - start));
+      DL_ERR("unknown reloc type %d @ %p (%zu)", type, rela, idx);
       return -1;
     }
   }
@@ -1171,14 +1148,14 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
         unsigned sym = ELFW(R_SYM)(rel->r_info);
         ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
         ElfW(Addr) sym_addr = 0;
-        char* sym_name = NULL;
+        const char* sym_name = NULL;
 
         DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
         if (type == 0) { // R_*_NONE
             continue;
         }
         if (sym != 0) {
-            sym_name = (char *)(strtab + symtab[sym].st_name);
+            sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
             s = soinfo_do_lookup(si, sym_name, &lsi, needed);
             if (s == NULL) {
                 // We only allow an undefined symbol if this is a weak reference...
@@ -1230,7 +1207,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
                     // Fall through. Can't really copy if weak symbol is not found at run-time.
 #endif
                 default:
-                    DL_ERR("unknown weak reloc type %d @ %p (%d)", type, rel, (int) (rel - start));
+                    DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
                     return -1;
                 }
             } else {
@@ -1305,7 +1282,8 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
                            si->name, s->st_size, src->st_size);
                     return -1;
                 }
-                memcpy((void*)reloc, (void*)(src->st_value + lsi->load_bias), src->st_size);
+                memcpy(reinterpret_cast<void*>(reloc),
+                       reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
             } else {
                 DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", si->name);
                 return -1;
@@ -1344,9 +1322,9 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             // We only handle the R_MIPS_NONE|R_MIPS_64|R_MIPS_REL32 case
             if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
                 ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
-                DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%d)",
+                DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
                        type, (unsigned)ELF64_R_TYPE2(rel->r_info),
-                       (unsigned)ELF64_R_TYPE3(rel->r_info), rel, (int) (rel - start));
+                       (unsigned)ELF64_R_TYPE3(rel->r_info), rel, idx);
                 return -1;
             }
 #endif
@@ -1379,7 +1357,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             break;
 
         default:
-            DL_ERR("unknown reloc type %d @ %p (%d)", type, rel, (int) (rel - start));
+            DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
             return -1;
         }
     }
@@ -1632,16 +1610,16 @@ static bool soinfo_link_image(soinfo* si) {
               d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         switch (d->d_tag) {
         case DT_HASH:
-            si->nbucket = ((unsigned *) (base + d->d_un.d_ptr))[0];
-            si->nchain = ((unsigned *) (base + d->d_un.d_ptr))[1];
-            si->bucket = (unsigned *) (base + d->d_un.d_ptr + 8);
-            si->chain = (unsigned *) (base + d->d_un.d_ptr + 8 + si->nbucket * 4);
+            si->nbucket = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr)[0];
+            si->nchain = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr)[1];
+            si->bucket = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr + 8);
+            si->chain = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr + 8 + si->nbucket * 4);
             break;
         case DT_STRTAB:
-            si->strtab = (const char *) (base + d->d_un.d_ptr);
+            si->strtab = reinterpret_cast<const char*>(base + d->d_un.d_ptr);
             break;
         case DT_SYMTAB:
-            si->symtab = (ElfW(Sym)*) (base + d->d_un.d_ptr);
+            si->symtab = reinterpret_cast<ElfW(Sym)*>(base + d->d_un.d_ptr);
             break;
 #if !defined(__LP64__)
         case DT_PLTREL:
@@ -1653,9 +1631,9 @@ static bool soinfo_link_image(soinfo* si) {
 #endif
         case DT_JMPREL:
 #if defined(USE_RELA)
-            si->plt_rela = (ElfW(Rela)*) (base + d->d_un.d_ptr);
+            si->plt_rela = reinterpret_cast<ElfW(Rela)*>(base + d->d_un.d_ptr);
 #else
-            si->plt_rel = (ElfW(Rel)*) (base + d->d_un.d_ptr);
+            si->plt_rel = reinterpret_cast<ElfW(Rel)*>(base + d->d_un.d_ptr);
 #endif
             break;
         case DT_PLTRELSZ:
@@ -1686,7 +1664,7 @@ static bool soinfo_link_image(soinfo* si) {
 #endif
 #if defined(USE_RELA)
          case DT_RELA:
-            si->rela = (ElfW(Rela)*) (base + d->d_un.d_ptr);
+            si->rela = reinterpret_cast<ElfW(Rela)*>(base + d->d_un.d_ptr);
             break;
          case DT_RELASZ:
             si->rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
@@ -1699,7 +1677,7 @@ static bool soinfo_link_image(soinfo* si) {
             return false;
 #else
         case DT_REL:
-            si->rel = (ElfW(Rel)*) (base + d->d_un.d_ptr);
+            si->rel = reinterpret_cast<ElfW(Rel)*>(base + d->d_un.d_ptr);
             break;
         case DT_RELSZ:
             si->rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
@@ -1772,7 +1750,7 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_MIPS_RLD_MAP:
             // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
             {
-              r_debug** dp = (r_debug**) d->d_un.d_ptr;
+              r_debug** dp = reinterpret_cast<r_debug**>(d->d_un.d_ptr);
               *dp = &_r_debug;
             }
             break;
@@ -1839,7 +1817,7 @@ static bool soinfo_link_image(soinfo* si) {
         }
     }
 
-    soinfo** needed = (soinfo**) alloca((1 + needed_count) * sizeof(soinfo*));
+    soinfo** needed = reinterpret_cast<soinfo**>(alloca((1 + needed_count) * sizeof(soinfo*)));
     soinfo** pneeded = needed;
 
     for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
@@ -1874,26 +1852,26 @@ static bool soinfo_link_image(soinfo* si) {
 
 #if defined(USE_RELA)
     if (si->plt_rela != NULL) {
-        DEBUG("[ relocating %s plt ]\n", si->name );
+        DEBUG("[ relocating %s plt ]\n", si->name);
         if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count, needed)) {
             return false;
         }
     }
     if (si->rela != NULL) {
-        DEBUG("[ relocating %s ]\n", si->name );
+        DEBUG("[ relocating %s ]\n", si->name);
         if (soinfo_relocate(si, si->rela, si->rela_count, needed)) {
             return false;
         }
     }
 #else
     if (si->plt_rel != NULL) {
-        DEBUG("[ relocating %s plt ]", si->name );
+        DEBUG("[ relocating %s plt ]", si->name);
         if (soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed)) {
             return false;
         }
     }
     if (si->rel != NULL) {
-        DEBUG("[ relocating %s ]", si->name );
+        DEBUG("[ relocating %s ]", si->name);
         if (soinfo_relocate(si, si->rel, si->rel_count, needed)) {
             return false;
         }
@@ -2046,7 +2024,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
          *   expected address (wrong library or version mismatch?)
          */
         ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
-        ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>((unsigned char*) linker_base + elf_hdr->e_phoff);
+        ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
         phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
                                        &linker_soinfo.dynamic, NULL, NULL);
         insert_soinfo_into_debug_map(&linker_soinfo);
@@ -2102,11 +2080,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     si->CallConstructors();
 
 #if TIMING
-    gettimeofday(&t1,NULL);
+    gettimeofday(&t1, NULL);
     PRINT("LINKER TIME: %s: %d microseconds", args.argv[0], (int) (
                (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
-               (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)
-               ));
+               (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
     PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", args.argv[0],
@@ -2159,7 +2136,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
  */
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   ElfW(Addr) offset = elf->e_phoff;
-  const ElfW(Phdr)* phdr_table = reinterpret_cast<const ElfW(Phdr)*>((char*)elf + offset);
+  const ElfW(Phdr)* phdr_table = reinterpret_cast<const ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(elf) + offset);
   const ElfW(Phdr)* phdr_end = phdr_table + elf->e_phnum;
 
   for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_end; phdr++) {
@@ -2184,7 +2161,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
-  ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>((unsigned char*) linker_addr + elf_hdr->e_phoff);
+  ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so;
   memset(&linker_so, 0, sizeof(soinfo));
