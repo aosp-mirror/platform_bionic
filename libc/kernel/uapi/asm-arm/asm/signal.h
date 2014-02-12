@@ -21,7 +21,7 @@
 #include <linux/types.h>
 struct siginfo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NSIG 32
+#define _KERNEL_NSIG 32
 typedef unsigned long sigset_t;
 #define SIGHUP 1
 #define SIGINT 2
@@ -67,7 +67,7 @@ typedef unsigned long sigset_t;
 #define SIGUNUSED 31
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIGRTMIN 32
-#define SIGRTMAX _NSIG
+#define SIGRTMAX _KERNEL__NSIG
 #define SIGSWI 32
 #define SA_NOCLDSTOP 0x00000001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
