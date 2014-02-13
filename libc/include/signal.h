@@ -61,7 +61,9 @@ typedef int sig_atomic_t;
 #define NSIG _NSIG
 
 extern const char* const sys_siglist[];
+#if !defined(__LP64__)
 extern const char* const sys_signame[];
+#endif
 
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
