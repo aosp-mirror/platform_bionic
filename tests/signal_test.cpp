@@ -240,7 +240,7 @@ TEST(signal, sigaction) {
 }
 
 TEST(signal, sys_signame) {
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC__)
   ASSERT_TRUE(sys_signame[0] == NULL);
   ASSERT_STREQ("HUP", sys_signame[SIGHUP]);
 #else

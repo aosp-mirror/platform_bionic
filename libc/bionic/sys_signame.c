@@ -28,11 +28,7 @@
 
 #include <signal.h>
 
-#if !defined(__LP64__)
-
 const char* const sys_signame[NSIG] = {
 #define __BIONIC_SIGDEF(signal_number, unused) [ signal_number ] = #signal_number + 3,
 #include <sys/_sigdefs.h>
 };
-
-#endif
