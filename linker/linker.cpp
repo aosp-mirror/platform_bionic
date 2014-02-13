@@ -835,10 +835,7 @@ int do_dlclose(soinfo* si) {
 
 #if defined(USE_RELA)
 static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
-  ElfW(Sym)* symtab = si->symtab;
-  const char* strtab = si->strtab;
   ElfW(Sym)* s;
-  ElfW(Rela)* start = rela;
   soinfo* lsi;
 
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
@@ -853,11 +850,11 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
       continue;
     }
     if (sym != 0) {
-      sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+      sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
       s = soinfo_do_lookup(si, sym_name, &lsi, needed);
       if (s == NULL) {
         // We only allow an undefined symbol if this is a weak reference...
-        s = &symtab[sym];
+        s = &si->symtab[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
           DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, si->name);
           return -1;
@@ -1136,10 +1133,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
 #else // REL, not RELA.
 
 static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
-    ElfW(Sym)* symtab = si->symtab;
-    const char* strtab = si->strtab;
     ElfW(Sym)* s;
-    ElfW(Rel)* start = rel;
     soinfo* lsi;
 
     for (size_t idx = 0; idx < count; ++idx, ++rel) {
@@ -1155,11 +1149,11 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             continue;
         }
         if (sym != 0) {
-            sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+            sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
             s = soinfo_do_lookup(si, sym_name, &lsi, needed);
             if (s == NULL) {
                 // We only allow an undefined symbol if this is a weak reference...
-                s = &symtab[sym];
+                s = &si->symtab[sym];
                 if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
                     DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, si->name);
                     return -1;
