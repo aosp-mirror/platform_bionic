@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fc8b574_76b490fe",
+        "filename": "linker/linker_executable.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-13T17:12:50Z",
+      "side": 1,
+      "message": "$(linked_module): PRIVATE_2ND_ARCH_VAR_PREFIX :\u003d $(LOCAL_2ND_ARCH_VAR_PREFIX)",
+      "revId": "aed13525cf82723962f1c9b3158ea4e837aa32f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4fb329fa_97bf64e0",
+        "filename": "linker/linker_executable.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-13T17:12:50Z",
+      "side": 1,
+      "message": "This function relies on PRIVATE_2ND_ARCH_VAR_PREFIX",
+      "revId": "aed13525cf82723962f1c9b3158ea4e837aa32f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fae2d95_78b481fe",
+        "filename": "linker/linker_executable.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-02-13T17:12:50Z",
+      "side": 1,
+      "message": "$($(PRIVATE_2ND_ARCH_VAR_PREFIX)TARGET_OBJCOPY)",
+      "revId": "aed13525cf82723962f1c9b3158ea4e837aa32f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
