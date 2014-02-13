@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <signal.h>
 
-const char * const sys_signame[NSIG] = {
-#define  __BIONIC_SIGDEF(x,y,z)   [ SIG##x ] = #x,
+const char* const sys_siglist[NSIG] = {
+#define __BIONIC_SIGDEF(signal_number, signal_description) [ signal_number ] = signal_description,
 #include <sys/_sigdefs.h>
 };

@@ -34,7 +34,7 @@ extern "C" __LIBC_HIDDEN__ const char* __strerror_lookup(int error_number) {
 }
 
 static const Pair _sys_signal_strings[] = {
-#define  __BIONIC_SIGDEF(x,y,z)  { y, z },
+#define  __BIONIC_SIGDEF(signal_number, signal_description)  { signal_number, signal_description },
 #include <sys/_sigdefs.h>
   { 0, NULL }
 };
