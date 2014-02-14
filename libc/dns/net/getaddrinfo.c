@@ -92,6 +92,8 @@
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>
+#include "resolv_cache.h"
+#include "resolv_netid.h"
 #include "resolv_private.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -215,7 +217,7 @@ struct res_target {
 
 static int str2number(const char *);
 static int explore_fqdn(const struct addrinfo *, const char *,
-	const char *, struct addrinfo **, const char *iface, int mark);
+	const char *, struct addrinfo **, unsigned netid, unsigned mark);
 static int explore_null(const struct addrinfo *,
 	const char *, struct addrinfo **);
 static int explore_numeric(const struct addrinfo *, const char *,
@@ -358,9 +360,11 @@ str2number(const char *p)
  * the destination (e.g., no IPv4 address, no IPv6 default route, ...).
  */
 static int
-_test_connect(int pf, struct sockaddr *addr, size_t addrlen) {
+_test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
 	int s = socket(pf, SOCK_DGRAM, IPPROTO_UDP);
 	if (s < 0)
+		return 0;
+	if (mark != MARK_UNSET && setsockopt(s, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
 		return 0;
 	int ret;
 	do {
@@ -383,31 +387,31 @@ _test_connect(int pf, struct sockaddr *addr, size_t addrlen) {
  * so checking for connectivity is the next best thing.
  */
 static int
-_have_ipv6() {
+_have_ipv6(unsigned mark) {
 	static const struct sockaddr_in6 sin6_test = {
 		.sin6_family = AF_INET6,
 		.sin6_addr.s6_addr = {  // 2000::
 			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 		};
-        sockaddr_union addr = { .in6 = sin6_test };
-	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6));
+	sockaddr_union addr = { .in6 = sin6_test };
+	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6), mark);
 }
 
 static int
-_have_ipv4() {
+_have_ipv4(unsigned mark) {
 	static const struct sockaddr_in sin_test = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
 	};
-        sockaddr_union addr = { .in = sin_test };
-        return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
+	sockaddr_union addr = { .in = sin_test };
+	return _test_connect(PF_INET, &addr.generic, sizeof(addr.in), mark);
 }
 
 // Returns 0 on success, else returns on error.
 static int
 android_getaddrinfo_proxy(
     const char *hostname, const char *servname,
-    const struct addrinfo *hints, struct addrinfo **res, const char *iface)
+    const struct addrinfo *hints, struct addrinfo **res, unsigned netid)
 {
 	int sock;
 	const int one = 1;
@@ -447,14 +451,14 @@ android_getaddrinfo_proxy(
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
-	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %s",
+	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %u",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
 		    hints == NULL ? -1 : hints->ai_flags,
 		    hints == NULL ? -1 : hints->ai_family,
 		    hints == NULL ? -1 : hints->ai_socktype,
 		    hints == NULL ? -1 : hints->ai_protocol,
-		    iface == NULL ? "^" : iface) < 0) {
+		    netid) < 0) {
 		goto exit;
 	}
 	// literal NULL byte at end, required by FrameworkListener
@@ -578,12 +582,12 @@ int
 getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
 {
-	return android_getaddrinfoforiface(hostname, servname, hints, NULL, 0, res);
+	return android_getaddrinfofornet(hostname, servname, hints, NETID_UNSET, MARK_UNSET, res);
 }
 
 int
-android_getaddrinfoforiface(const char *hostname, const char *servname,
-    const struct addrinfo *hints, const char *iface, int mark, struct addrinfo **res)
+android_getaddrinfofornet(const char *hostname, const char *servname,
+    const struct addrinfo *hints, unsigned netid, unsigned mark, struct addrinfo **res)
 {
 	struct addrinfo sentinel;
 	struct addrinfo *cur;
@@ -732,7 +736,7 @@ android_getaddrinfoforiface(const char *hostname, const char *servname,
          */
 	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
 		// we're not the proxy - pass the request to them
-		return android_getaddrinfo_proxy(hostname, servname, hints, res, iface);
+		return android_getaddrinfo_proxy(hostname, servname, hints, res, netid);
 	}
 
 	/*
@@ -762,7 +766,7 @@ android_getaddrinfoforiface(const char *hostname, const char *servname,
 			pai->ai_protocol = ex->e_protocol;
 
 		error = explore_fqdn(pai, hostname, servname,
-			&cur->ai_next, iface, mark);
+			&cur->ai_next, netid, mark);
 
 		while (cur && cur->ai_next)
 			cur = cur->ai_next;
@@ -795,7 +799,7 @@ android_getaddrinfoforiface(const char *hostname, const char *servname,
  */
 static int
 explore_fqdn(const struct addrinfo *pai, const char *hostname,
-    const char *servname, struct addrinfo **res, const char *iface, int mark)
+    const char *servname, struct addrinfo **res, unsigned netid, unsigned mark)
 {
 	struct addrinfo *result;
 	struct addrinfo *cur;
@@ -821,7 +825,7 @@ explore_fqdn(const struct addrinfo *pai, const char *hostname,
 		return 0;
 
 	switch (nsdispatch(&result, dtab, NSDB_HOSTS, "getaddrinfo",
-			default_dns_files, hostname, pai, iface, mark)) {
+			default_dns_files, hostname, pai, netid, mark)) {
 	case NS_TRYAGAIN:
 		error = EAI_AGAIN;
 		goto free;
@@ -1767,7 +1771,7 @@ _rfc6724_compare(const void *ptr1, const void* ptr2)
 
 /*ARGSUSED*/
 static int
-_find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr)
+_find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned mark)
 {
 	int sock;
 	int ret;
@@ -1793,7 +1797,8 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr)
 			return -1;
 		}
 	}
-
+	if (mark != MARK_UNSET && setsockopt(sock, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
+		return 0;
 	do {
 		ret = connect(sock, addr, len);
 	} while (ret == -1 && errno == EINTR);
@@ -1818,7 +1823,7 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr)
 
 /*ARGSUSED*/
 static void
-_rfc6724_sort(struct addrinfo *list_sentinel)
+_rfc6724_sort(struct addrinfo *list_sentinel, unsigned mark)
 {
 	struct addrinfo *cur;
 	int nelem = 0, i;
@@ -1845,7 +1850,7 @@ _rfc6724_sort(struct addrinfo *list_sentinel)
 		elems[i].ai = cur;
 		elems[i].original_order = i;
 
-		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.generic);
+		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.generic, mark);
 		if (has_src_addr == -1) {
 			goto error;
 		}
@@ -1865,21 +1870,6 @@ error:
 	free(elems);
 }
 
-static bool _using_default_dns(const char *iface)
-{
-	char buf[IF_NAMESIZE+1];
-	size_t if_len;
-
-	// common case
-	if (iface == NULL || *iface == '\0') return true;
-
-	if_len = _resolv_get_default_iface(buf, sizeof(buf));
-	if (if_len != 0 && if_len + 1 <= sizeof(buf)) {
-		if (strcmp(buf, iface) == 0) return true;
-	}
-	return false;
-}
-
 /*ARGSUSED*/
 static int
 _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
@@ -1891,13 +1881,12 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct res_target q, q2;
 	res_state res;
-	const char* iface;
-	int mark;
+	unsigned netid, mark;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
-	iface = va_arg(ap, char *);
-	mark = va_arg(ap, int);
+	netid = va_arg(ap, unsigned);
+	mark = va_arg(ap, unsigned);
 	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
@@ -1926,13 +1915,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.anslen = sizeof(buf->buf);
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
-			// Only implement AI_ADDRCONFIG if the application is not
-			// using its own DNS servers, since our implementation
-			// only works on the default connection.
-			if (_using_default_dns(iface)) {
-				query_ipv6 = _have_ipv6();
-				query_ipv4 = _have_ipv4();
-			}
+			query_ipv6 = _have_ipv6(mark);
+			query_ipv4 = _have_ipv4(mark);
 		}
 		if (query_ipv6) {
 			q.qtype = T_AAAA;
@@ -1979,12 +1963,12 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		return NS_NOTFOUND;
 	}
 
-	/* this just sets our iface val in the thread private data so we don't have to
+	/* this just sets our netid val in the thread private data so we don't have to
 	 * modify the api's all the way down to res_send.c's res_nsend.  We could
 	 * fully populate the thread private data here, but if we get down there
 	 * and have a cache hit that would be wasted, so we do the rest there on miss
 	 */
-	res_setiface(res, iface);
+	res_setnetid(res, netid);
 	res_setmark(res, mark);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
@@ -2017,7 +2001,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		}
 	}
 
-	_rfc6724_sort(&sentinel);
+	_rfc6724_sort(&sentinel, netid);
 
 	__res_put_state(res);
 
@@ -2320,7 +2304,7 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 		 * the domain stuff is tried.  Will have a better
 		 * fix after thread pools are used.
 		 */
-		_resolv_populate_res_for_iface(res);
+		_resolv_populate_res_for_net(res);
 
 		for (domain = (const char * const *)res->dnsrch;
 		   *domain && !done;
