@@ -67,7 +67,6 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.53 2012/09/26 23:13:00 christos Exp $");
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#define MIN(x,y) ((x) < (y) ? (x) : (y))
 #include <stddef.h>
 #include <string.h>
 
