@@ -23,4 +23,7 @@
 #define __strong_reference(sym,aliassym) \
     extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
 
+/* digittoint is in BSD's <ctype.h>. */
+int digittoint(char ch);
+
 #endif

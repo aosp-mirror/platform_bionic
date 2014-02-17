@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _BIONIC_NAME_MEM_H
 #define _BIONIC_NAME_MEM_H
 
@@ -33,7 +34,7 @@
 
 __BEGIN_DECLS
 
-int __bionic_name_mem(void *addr, size_t len, const char *name);
+int __bionic_name_mem(void* addr, size_t len, const char* name);
 
 __END_DECLS
 

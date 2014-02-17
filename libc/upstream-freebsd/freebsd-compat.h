@@ -47,4 +47,8 @@
 /* This one is only needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
 #define _sseek __sseek
 
+/* This is in BSD's <stdlib.h>. */
+#include <stdint.h>
+extern uint32_t arc4random_uniform(uint32_t upper_bound);
+
 #endif
