@@ -40,8 +40,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX(a,b) ((a)>(b)?(a):(b))
-
 static FTSENT	*fts_alloc(FTS *, char *, size_t);
 static FTSENT	*fts_build(FTS *, int);
 static void	 fts_lfree(FTSENT *);
