@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef293d20_48c56f26",
+        "filename": "libc/bionic/__bionic_name_mem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-18T19:10:46Z",
+      "side": 1,
+      "message": "extra it.",
+      "range": {
+        "startLine": 38,
+        "startChar": 70,
+        "endLine": 38,
+        "endChar": 72
+      },
+      "revId": "d0b9648f73a26b165633fad79a7ee0a908b815e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
