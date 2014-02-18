@@ -35,6 +35,39 @@ TEST(fcntl, fcntl_smoke) {
   flags = fcntl(fd, F_GETFD);
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+
+  close(fd);
+}
+
+TEST(fcntl, open_open64) {
+  int fd;
+
+  fd = open("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+  close(fd);
+
+  fd = open64("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+  close(fd);
+}
+
+TEST(fcntl, openat_openat64) {
+  int fd;
+
+  fd = openat(AT_FDCWD, "/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+  close(fd);
+
+  fd = openat64(AT_FDCWD, "/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+  close(fd);
+}
+
+TEST(fcntl, creat_creat64) {
+  ASSERT_EQ(-1, creat("", 0666));
+  ASSERT_EQ(ENOENT, errno);
+  ASSERT_EQ(-1, creat64("", 0666));
+  ASSERT_EQ(ENOENT, errno);
 }
 
 TEST(fcntl, fallocate_EINVAL) {

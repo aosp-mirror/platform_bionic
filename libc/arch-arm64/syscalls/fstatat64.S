@@ -2,12 +2,12 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fstatfs)
+ENTRY(fstatat64)
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
 
-    mov     x8, __NR_fstatfs
+    mov     x8, __NR_newfstatat
     svc     #0
 
     ldr     x8,       [sp], #16
@@ -18,4 +18,7 @@ ENTRY(fstatfs)
     b.hi    __set_errno
 
     ret
-END(fstatfs)
+END(fstatat64)
+
+    .globl _C_LABEL(fstatat)
+    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)
