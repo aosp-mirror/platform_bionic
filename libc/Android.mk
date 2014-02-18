@@ -67,13 +67,11 @@ libc_common_src_files := \
     bionic/md5.c \
     bionic/memmem.c \
     bionic/memswap.c \
-    bionic/name_mem.c \
     bionic/pathconf.c \
     bionic/perror.c \
     bionic/ptsname.c \
     bionic/ptsname_r.c \
     bionic/pututline.c \
-    bionic/reboot.c \
     bionic/recv.c \
     bionic/sched_cpualloc.c \
     bionic/sched_cpucount.c \
@@ -212,6 +210,7 @@ libc_bionic_src_files := \
     bionic/abort.cpp \
     bionic/access.cpp \
     bionic/assert.cpp \
+    bionic/__bionic_name_mem.cpp \
     bionic/bionic_time_conversions.cpp \
     bionic/brk.cpp \
     bionic/chmod.cpp \
@@ -268,6 +267,7 @@ libc_bionic_src_files := \
     bionic/ptrace.cpp \
     bionic/raise.cpp \
     bionic/readlink.cpp \
+    bionic/reboot.cpp \
     bionic/rename.cpp \
     bionic/rmdir.cpp \
     bionic/sbrk.cpp \
