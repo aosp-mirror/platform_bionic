@@ -9,6 +9,7 @@ ifeq ($(TARGET_CPU_SMP),true)
 else
     libstdc++_cflags += -DANDROID_SMP=0
 endif
+libstdc++_cflags += -Wall -Wextra -Werror
 
 include $(CLEAR_VARS)
 
