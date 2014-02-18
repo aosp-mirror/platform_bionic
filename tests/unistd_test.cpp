@@ -18,6 +18,7 @@
 #include "ScopedSignalHandler.h"
 #include "TemporaryFile.h"
 
+#include <errno.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <unistd.h>
