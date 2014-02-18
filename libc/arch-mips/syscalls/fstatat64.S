@@ -2,11 +2,11 @@
 
 #include <asm/unistd.h>
     .text
-    .globl fstatat
+    .globl fstatat64
     .align 4
-    .ent fstatat
+    .ent fstatat64
 
-fstatat:
+fstatat64:
     .set noreorder
     .cpload $t9
     li $v0, __NR_fstatat64
@@ -20,4 +20,7 @@ fstatat:
     j $t9
     nop
     .set reorder
-    .end fstatat
+    .end fstatat64
+
+    .globl _C_LABEL(fstatat)
+    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)

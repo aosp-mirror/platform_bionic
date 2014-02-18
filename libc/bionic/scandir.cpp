@@ -113,3 +113,4 @@ int scandir(const char* dirname, dirent*** name_list,
   *name_list = names.release();
   return size;
 }
+__strong_alias(scandir64, scandir);
