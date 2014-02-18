@@ -31,8 +31,19 @@
 // This function is called from our assembler syscall stubs.
 // C/C++ code should just assign 'errno' instead.
 
-// TODO: this should be __LIBC_HIDDEN__ but was exposed in <errno.h> in the NDK.
-extern "C" int __set_errno(int n) {
+// The return type is 'long' because we use the same routine in calls
+// that return an int as in ones that return a ssize_t. On a 32-bit
+// system these are the same size, but on a 64-bit system they're not.
+// 'long' gives us 32-bit on 32-bit systems, 64-bit on 64-bit systems.
+
+#if __LP64__
+extern "C" __LIBC_HIDDEN__ long __set_errno(int);
+#else
+// __set_errno was mistakenly exposed in <errno.h> in the 32-bit NDK.
+extern "C" long __set_errno(int);
+#endif
+
+long __set_errno(int n) {
   errno = n;
   return -1;
 }
