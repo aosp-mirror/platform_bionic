@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf26394f_d63a82ac",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011653
+      },
+      "writtenOn": "2014-02-18T02:07:17Z",
+      "side": 1,
+      "message": "To build for me, __LIBC_HIDDEN__ needs to be after \u0027extern \"C\"\u0027",
+      "revId": "1a4c0676259b6ac2b34ef8ea75bcd76d0fdd82fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
