@@ -15,5 +15,5 @@ ENTRY(fstatfs64)
     ret
 END(fstatfs64)
 
-    .globl _C_LABEL(fstatfs)
-    .equ _C_LABEL(fstatfs), _C_LABEL(fstatfs64)
+    .globl fstatfs
+    .equ fstatfs, fstatfs64

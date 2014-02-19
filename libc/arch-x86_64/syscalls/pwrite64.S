@@ -16,5 +16,5 @@ ENTRY(pwrite64)
     ret
 END(pwrite64)
 
-    .globl _C_LABEL(pwrite)
-    .equ _C_LABEL(pwrite), _C_LABEL(pwrite64)
+    .globl pwrite
+    .equ pwrite, pwrite64

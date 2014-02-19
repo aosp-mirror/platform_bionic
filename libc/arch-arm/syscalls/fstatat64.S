@@ -13,5 +13,5 @@ ENTRY(fstatat64)
     b       __set_errno
 END(fstatat64)
 
-    .globl _C_LABEL(fstatat)
-    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)
+    .globl fstatat
+    .equ fstatat, fstatat64

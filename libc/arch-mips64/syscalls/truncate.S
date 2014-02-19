@@ -30,5 +30,5 @@ truncate:
     .set pop
     .end truncate
 
-    .globl _C_LABEL(truncate64)
-    .equ _C_LABEL(truncate64), _C_LABEL(truncate)
+    .globl truncate64
+    .equ truncate64, truncate
