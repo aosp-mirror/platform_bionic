@@ -1744,7 +1744,7 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_MIPS_RLD_MAP:
             // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
             {
-              r_debug** dp = reinterpret_cast<r_debug**>(d->d_un.d_ptr);
+              r_debug** dp = reinterpret_cast<r_debug**>(base + d->d_un.d_ptr);
               *dp = &_r_debug;
             }
             break;
