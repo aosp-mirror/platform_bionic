@@ -1,0 +1,163 @@
+Working on bionic
+=================
+
+What are the big pieces of bionic?
+----------------------------------
+
+libc/ --- libc.so, libc.a
+  The C library. Stuff like fopen(3) and kill(2).
+libm/ --- libm.so, libm.a
+  The math library. Traditionally Unix systems kept stuff like sin(3) and
+  cos(3) in a separate library to save space in the days before shared
+  libraries.
+libdl/ --- libdl.so
+  The dynamic linker interface library. This is actually just a bunch of
+  stubs that the dynamic linker replaces with pointers to its own
+  implementation at runtime. This is where stuff like dlopen(3) lives.
+libstdc++/ --- libstdc++.so
+  The C++ ABI support functions. The C++ compiler doesn't know how to
+  implement thread-safe static initialization and the like, so it just calls
+  functions that are supplied by the system. Stuff like __cxa_guard_acquire
+  and __cxa_pure_virtual live here.
+
+linker/ --- /system/bin/linker and /system/bin/linker64
+  The dynamic linker. When you run a dynamically-linked executable, its ELF
+  file has a DT_INTERP entry that says "use the following program to start me".
+  On Android, that's either linker or linker64 (depending on whether it's a
+  32-bit or 64-bit executable). It's responsible for loading the ELF executable
+  into memory and resolving references to symbols (so that when your code tries
+  to jump to fopen(3), say, it lands in the right place).
+
+tests/ --- unit tests
+  The tests/ directory contains unit tests. Roughly arranged as one file per
+  publicly-exported header file.
+benchmarks/ --- benchmarks
+  The benchmarks/ directory contains benchmarks.
+
+
+What's in libc/?
+----------------
+
+libc/
+  arch-arm/
+  arch-arm64/
+  arch-common/
+  arch-mips/
+  arch-mips64/
+  arch-x86/
+  arch-x86_64/
+    # Each architecture has its own subdirectory for stuff that isn't shared
+    # because it's architecture-specific. There will be a .mk file in here that
+    # drags in all the architecture-specific files.
+    bionic/
+      # Every architecture needs a handful of machine-specific assembler files.
+      # They live here.
+    include/
+      machine/
+        # The majority of header files are actually in libc/include/, but many
+        # of them pull in a <machine/something.h> for things like limits,
+        # endianness, and how floating point numbers are represented. Those
+        # headers live here.
+    string/
+      # Most architectures have a handful of optional assembler files
+      # implementing optimized versions of various routines. The <string.h>
+      # functions are particular favorites.
+    syscalls/
+      # The syscalls directories contain script-generated assembler files.
+      # See 'Adding system calls' later.
+
+  include/
+    # The public header files on everyone's include path. These are a mixture of
+    # files written by us and files taken from BSD.
+
+  kernel/
+    # The kernel uapi header files. These are scrubbed copies of the originals
+    # in external/kernel-headers/. These files must not be edited directly. The
+    # generate_uapi_headers.sh script should be used to go from a kernel tree to
+    # external/kernel-headers/ --- this takes care of the architecture-specific
+    # details. The update_all.py script should be used to regenerate bionic's
+    # scrubbed headers from external/kernel-headers/.
+
+  private/
+    # These are private header files meant for use within bionic itself.
+
+  netbsd/
+  stdio/
+  stdlib/
+  string/
+  unistd/
+  wchar/
+    # These are legacy files of unknown provenance. In the past, bionic was a
+    # mess of random versions of random files from all three of FreeBSD, NetBSD,
+    # and OpenBSD! We've been working to clean that up, but these directories
+    # are basically where all the stuff we haven't got to yet lives.
+    # The 'netbsd' directory misleadingly contains the DNS resolver (which will
+    # probably be forked sometime soon, and that directory simply renamed).
+    # The other directories contain stuff that still needs to be sorted.
+
+  upstream-dlmalloc/
+  upstream-freebsd/
+  upstream-netbsd/
+  upstream-openbsd/
+    # These directories contain unmolested upstream source. Any time we can
+    # just use a BSD implementation of something unmodified, we should.
+    # See files like netbsd-compat.h for various ways in which we manage to
+    # build BSD source in bionic.
+
+  bionic/
+    # This is the biggest mess. The C++ files are files we own, typically
+    # because the Linux kernel interface is sufficiently different that we
+    # can't use any of the BSD implementations. The C files are usually
+    # legacy mess that needs to be sorted out, either by replacing it with
+    # current upstream source in one of the upstream directories or by
+    # switching the file to C++ and cleaning it up.
+
+  tools/
+    # Various tools used to maintain bionic.
+
+  tzcode/
+    # A modified superset of the IANA tzcode. Most of the modifications relate
+    # to Android's use of a single file (with corresponding index) to contain
+    # time zone data.
+  zoneinfo/
+    # Android-format time zone data.
+    # See 'Updating tzdata' later.
+
+
+Adding system calls
+-------------------
+
+Adding a system call usually involves:
+
+  1. Add entries to SYSCALLS.TXT.
+     See SYSCALLS.TXT itself for documentation on the format.
+  2. Run the gensyscalls.py script.
+  3. Add constants (and perhaps types) to the appropriate header file.
+     Note that you should check to see whether the constants are already in
+     kernel uapi header files, in which case you just need to make sure that
+     that appropriate POSIX header file in libc/include/ includes the
+     relevant file or files.
+  4. Add function declarations to the appropriate header file.
+  5. Add at least basic tests. Even a test that deliberately supplies
+     an invalid argument helps check that we're generating the right symbol
+     and have the right declaration in the header file. (And strace(1) can
+     confirm that the correct system call is being made.)
+
+
+Updating kernel header files
+----------------------------
+
+As mentioned above, this is currently a two-step process:
+
+  1. Use generate_uapi_headers.sh to go from a Linux source tree to appropriate
+     contents for external/kernel-headers/.
+  2. Run update_all.py to scrub those headers and import them into bionic.
+
+
+Updating tzdata
+---------------
+
+This is fully automated:
+
+  1. Run update-tzdata.py.
+
