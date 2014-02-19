@@ -30,5 +30,5 @@ statfs64:
     .set pop
     .end statfs64
 
-    .globl _C_LABEL(statfs)
-    .equ _C_LABEL(statfs), _C_LABEL(statfs64)
+    .globl statfs
+    .equ statfs, statfs64
