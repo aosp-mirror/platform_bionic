@@ -43,8 +43,8 @@ __BEGIN_DECLS
   unsigned long st_ino; \
   unsigned int st_mode; \
   unsigned int st_nlink; \
-  unsigned int st_uid; \
-  unsigned int st_gid; \
+  uid_t st_uid; \
+  gid_t st_gid; \
   unsigned long st_rdev; \
   unsigned long __pad1; \
   long st_size; \
@@ -67,8 +67,8 @@ __BEGIN_DECLS
   unsigned long long st_ino; \
   unsigned int st_mode; \
   unsigned int st_nlink; \
-  unsigned int st_uid; \
-  unsigned int st_gid; \
+  uid_t st_uid; \
+  gid_t st_gid; \
   unsigned int st_rdev; \
   unsigned int __pad1[3]; \
   long long st_size; \
@@ -88,8 +88,8 @@ __BEGIN_DECLS
   unsigned long st_ino; \
   unsigned long st_nlink; \
   unsigned int st_mode; \
-  unsigned int st_uid; \
-  unsigned int st_gid; \
+  uid_t st_uid; \
+  gid_t st_gid; \
   unsigned int __pad0; \
   unsigned long st_rdev; \
   long st_size; \
@@ -110,8 +110,8 @@ __BEGIN_DECLS
   unsigned long __st_ino; \
   unsigned int st_mode; \
   unsigned int st_nlink; \
-  unsigned long st_uid; \
-  unsigned long st_gid; \
+  uid_t st_uid; \
+  gid_t st_gid; \
   unsigned long long st_rdev; \
   unsigned char __pad3[4]; \
   long long st_size; \
