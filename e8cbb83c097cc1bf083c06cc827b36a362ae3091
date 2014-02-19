@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ff0510e_838222e8",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T17:39:13Z",
+      "side": 1,
+      "message": "maybe one extra line explaining that \u003cmath.h\u003e is required to use macros rather than functions?\n\nare signbit and isfinite the only generic macros? (that is: can we lose the \"etc.\" and say what we mean, and is this the complete workaround or just the workaround so far?)",
+      "revId": "e8cbb83c097cc1bf083c06cc827b36a362ae3091",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ff0510e_63aa7665",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T17:39:13Z",
+      "side": 1,
+      "message": "i think these are two separate comment blocks.",
+      "revId": "e8cbb83c097cc1bf083c06cc827b36a362ae3091",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ff0510e_a388fe0d",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T17:39:13Z",
+      "side": 1,
+      "message": "i\u0027d either lose this comment or have it in both places. personally i think anyone who\u0027s curious will just search for test_capture_blah and then read the detailed comment there.",
+      "revId": "e8cbb83c097cc1bf083c06cc827b36a362ae3091",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
