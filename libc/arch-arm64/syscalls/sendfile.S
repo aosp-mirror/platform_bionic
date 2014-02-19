@@ -20,5 +20,5 @@ ENTRY(sendfile)
     ret
 END(sendfile)
 
-    .globl _C_LABEL(sendfile64)
-    .equ _C_LABEL(sendfile64), _C_LABEL(sendfile)
+    .globl sendfile64
+    .equ sendfile64, sendfile

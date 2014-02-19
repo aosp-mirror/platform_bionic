@@ -20,5 +20,5 @@ ENTRY(prlimit64)
     ret
 END(prlimit64)
 
-    .globl _C_LABEL(prlimit)
-    .equ _C_LABEL(prlimit), _C_LABEL(prlimit64)
+    .globl prlimit
+    .equ prlimit, prlimit64

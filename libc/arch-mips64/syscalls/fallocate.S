@@ -30,5 +30,5 @@ fallocate:
     .set pop
     .end fallocate
 
-    .globl _C_LABEL(fallocate64)
-    .equ _C_LABEL(fallocate64), _C_LABEL(fallocate)
+    .globl fallocate64
+    .equ fallocate64, fallocate
