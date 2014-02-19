@@ -118,17 +118,7 @@ END(%(func)s)
 # MIPS assembler templates for each syscall stub
 #
 
-mips_call = "/* " + warning + " */\n" + \
-"""
-#include <asm/unistd.h>
-#include <machine/asm.h>
-#include <machine/regdef.h>
-    .text
-    .globl %(func)s
-    .align 4
-    .ent %(func)s
-
-%(func)s:
+mips_call = syscall_stub_header + """\
     .set noreorder
     .cpload t9
     li v0, %(__NR_name)s
@@ -142,7 +132,7 @@ mips_call = "/* " + warning + " */\n" + \
     j t9
     nop
     .set reorder
-    .end %(func)s
+END(%(func)s)
 """
 
 
@@ -150,17 +140,7 @@ mips_call = "/* " + warning + " */\n" + \
 # MIPS64 assembler templates for each syscall stub
 #
 
-mips64_call = "/* " + warning + " */\n" + \
-"""
-#include <asm/unistd.h>
-#include <machine/asm.h>
-#include <machine/regdef.h>
-    .text
-    .globl %(func)s
-    .align 4
-    .ent %(func)s
-
-%(func)s:
+mips64_call = syscall_stub_header + """\
     .set push
     .set noreorder
     li v0, %(__NR_name)s
@@ -180,7 +160,7 @@ mips64_call = "/* " + warning + " */\n" + \
     j t9
     move ra, t0
     .set pop
-    .end %(func)s
+END(%(func)s)
 """
 
 
