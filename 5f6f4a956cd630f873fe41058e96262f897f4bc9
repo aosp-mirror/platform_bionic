@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cff9d9ff_a471286a",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T19:41:07Z",
+      "side": 1,
+      "message": "isnormal and fpclassify?",
+      "revId": "5f6f4a956cd630f873fe41058e96262f897f4bc9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
