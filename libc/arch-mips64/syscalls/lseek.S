@@ -30,5 +30,5 @@ lseek:
     .set pop
     .end lseek
 
-    .globl _C_LABEL(lseek64)
-    .equ _C_LABEL(lseek64), _C_LABEL(lseek)
+    .globl lseek64
+    .equ lseek64, lseek

@@ -30,5 +30,5 @@ mmap:
     .set pop
     .end mmap
 
-    .globl _C_LABEL(mmap64)
-    .equ _C_LABEL(mmap64), _C_LABEL(mmap)
+    .globl mmap64
+    .equ mmap64, mmap

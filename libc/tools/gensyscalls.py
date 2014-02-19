@@ -48,8 +48,8 @@ ENTRY(%(func)s)
 
 
 function_alias = """
-    .globl _C_LABEL(%(alias)s)
-    .equ _C_LABEL(%(alias)s), _C_LABEL(%(func)s)
+    .globl %(alias)s
+    .equ %(alias)s, %(func)s
 """
 
 
