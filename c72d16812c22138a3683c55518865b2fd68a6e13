@@ -52,6 +52,24 @@
       "revId": "c72d16812c22138a3683c55518865b2fd68a6e13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f860164_a501b69a",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-19T18:37:47Z",
+      "side": 1,
+      "message": "Yes, stlport\u0027s cmath only exposes functions that v8 / webkit needed. :-| :-| \n\nIn \u003ccmath.h\u003e isinf and isnan are both macros and functions. \nSTLP undefs the macros so the calls in our test end up static_casting our arguments to double.",
+      "parentUuid": "cff9d9ff_81497e4e",
+      "revId": "c72d16812c22138a3683c55518865b2fd68a6e13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
