@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ff0510e_86119071",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T18:20:45Z",
+      "side": 1,
+      "message": "i take it you don\u0027t have the complete list then :-)\n\nlooks from math.h like it\u0027s fpclassify, isfinite, isinf, isnan, isnormal, and signbit. do we know why we only had trouble with these two?",
+      "revId": "c72d16812c22138a3683c55518865b2fd68a6e13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
