@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf26394f_dcd7fc8c",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T00:49:12Z",
+      "side": 0,
+      "message": "this case is only used for LP32 (specifically __arm__ and __x86__) so despite the \u0027long\u0027, this is equivalent to uint32_t, which is equivalent to uid_t.",
+      "revId": "787c1f937a915feefb767d0c6a15ddb70e6de933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
