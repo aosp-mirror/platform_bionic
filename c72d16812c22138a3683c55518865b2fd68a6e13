@@ -34,6 +34,24 @@
       "revId": "c72d16812c22138a3683c55518865b2fd68a6e13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cff9d9ff_81497e4e",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-19T18:24:45Z",
+      "side": 1,
+      "message": "okay, so part of the answer seems to be \"stlport\u0027s cmath doesn\u0027t do what it\u0027s supposed to for all the generic macros\". but i must still be missing something... why do our isinf and isnan tests work?",
+      "parentUuid": "6f646d9a_3ca089b3",
+      "revId": "c72d16812c22138a3683c55518865b2fd68a6e13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
