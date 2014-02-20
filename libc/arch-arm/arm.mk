@@ -64,13 +64,8 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
-libc_arch_static_src_files_arm := \
-    arch-arm/bionic/exidx_static.c \
-
-libc_arch_dynamic_src_files_arm := \
-    arch-arm/bionic/exidx_dynamic.c \
+libc_arch_static_src_files_arm := arch-arm/bionic/exidx_static.c
+libc_arch_dynamic_src_files_arm := arch-arm/bionic/exidx_dynamic.c
 
 ## CPU variant specific source files
 ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
@@ -85,8 +80,7 @@ libc_common_additional_dependencies += $(cpu_variant_mk)
 
 cpu_variant_mk :=
 
-##########################################
-# crt-related
+
 libc_crt_target_cflags_arm := \
     -I$(LOCAL_PATH)/arch-arm/include \
     -mthumb-interwork
