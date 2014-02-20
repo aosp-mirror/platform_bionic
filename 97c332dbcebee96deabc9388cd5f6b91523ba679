@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ef985df7_bc2cc1ad",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T20:46:45Z",
+      "side": 1,
+      "message": "I\u0027ll follow up with the Chrome chaps and get their code fixed.",
+      "parentUuid": "cf6e39b0_13fdac87",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f193130_8a4517d3",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "The second number represents the size of the property space. I don\u0027t think it\u0027s used anymore.",
       "parentUuid": "4f8a499e_a29e6052",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9559be_3b14375f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T20:46:45Z",
+      "side": 1,
+      "message": "Thanks, will document.",
+      "parentUuid": "cf6e39b0_53f724a7",
       "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
