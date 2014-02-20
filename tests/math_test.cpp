@@ -16,11 +16,42 @@
 
 #define _DECLARE_C99_LDBL_MATH 1
 
+// This include (and the associated definition of __test_capture_signbit)
+// must be placed before any files that include <cmath> (gtest.h in this case).
+//
+// <math.h> is required to define generic macros signbit, isfinite and
+// several other such functions.
+//
+// <cmath> is required to undef declarations of these macros in the global
+// namespace and make equivalent functions available in namespace std. Our
+// stlport implementation does this only for signbit, isfinite, isinf and
+// isnan.
+//
+// NOTE: We don't write our test using std::signbit because we want to be
+// sure that we're testing the bionic version of signbit. The C++ libraries
+// are free to reimplement signbit or delegate to compiler builtins if they
+// please.
+#include <math.h>
+
+namespace {
+template<typename T> inline int test_capture_signbit(const T in) {
+  return signbit(in);
+}
+template<typename T> inline int test_capture_isfinite(const T in) {
+  return isfinite(in);
+}
+template<typename T> inline int test_capture_isnan(const T in) {
+  return isnan(in);
+}
+template<typename T> inline int test_capture_isinf(const T in) {
+  return isinf(in);
+}
+}
+
 #include <gtest/gtest.h>
 
 #include <fenv.h>
 #include <limits.h>
-#include <math.h>
 #include <stdint.h>
 
 float float_subnormal() {
@@ -59,27 +90,25 @@ TEST(math, fpclassify) {
   ASSERT_EQ(FP_ZERO, fpclassify(0.0));
 }
 
-/* TODO: stlport breaks the isfinite macro
 TEST(math, isfinite) {
-  ASSERT_TRUE(isfinite(123.0f));
-  ASSERT_TRUE(isfinite(123.0));
-  ASSERT_FALSE(isfinite(HUGE_VALF));
-  ASSERT_FALSE(isfinite(HUGE_VAL));
+  ASSERT_TRUE(test_capture_isfinite(123.0f));
+  ASSERT_TRUE(test_capture_isfinite(123.0));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VALF));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VAL));
 }
-*/
 
 TEST(math, isinf) {
-  ASSERT_FALSE(isinf(123.0f));
-  ASSERT_FALSE(isinf(123.0));
-  ASSERT_TRUE(isinf(HUGE_VALF));
-  ASSERT_TRUE(isinf(HUGE_VAL));
+  ASSERT_FALSE(test_capture_isinf(123.0f));
+  ASSERT_FALSE(test_capture_isinf(123.0));
+  ASSERT_TRUE(test_capture_isinf(HUGE_VALF));
+  ASSERT_TRUE(test_capture_isinf(HUGE_VAL));
 }
 
 TEST(math, isnan) {
-  ASSERT_FALSE(isnan(123.0f));
-  ASSERT_FALSE(isnan(123.0));
-  ASSERT_TRUE(isnan(nanf("")));
-  ASSERT_TRUE(isnan(nan("")));
+  ASSERT_FALSE(test_capture_isnan(123.0f));
+  ASSERT_FALSE(test_capture_isnan(123.0));
+  ASSERT_TRUE(test_capture_isnan(nanf("")));
+  ASSERT_TRUE(test_capture_isnan(nan("")));
 }
 
 TEST(math, isnormal) {
@@ -90,19 +119,16 @@ TEST(math, isnormal) {
 }
 
 // TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
-
-/* TODO: stlport breaks the signbit macro
 TEST(math, signbit) {
-  ASSERT_EQ(0, signbit(0.0f));
-  ASSERT_EQ(0, signbit(0.0));
+  ASSERT_EQ(0, test_capture_signbit(0.0f));
+  ASSERT_EQ(0, test_capture_signbit(0.0));
 
-  ASSERT_EQ(0, signbit(1.0f));
-  ASSERT_EQ(0, signbit(1.0));
+  ASSERT_EQ(0, test_capture_signbit(1.0f));
+  ASSERT_EQ(0, test_capture_signbit(1.0));
 
-  ASSERT_NE(0, signbit(-1.0f));
-  ASSERT_NE(0, signbit(-1.0));
+  ASSERT_NE(0, test_capture_signbit(-1.0f));
+  ASSERT_NE(0, test_capture_signbit(-1.0));
 }
-*/
 
 TEST(math, __fpclassifyd) {
 #if defined(__BIONIC__)
