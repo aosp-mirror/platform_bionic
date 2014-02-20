@@ -23,4 +23,4 @@ ENTRY(__timer_delete)
     move ra, t0
     .set pop
 END(__timer_delete)
-.hidden _C_LABEL(__timer_delete)
+.hidden __timer_delete

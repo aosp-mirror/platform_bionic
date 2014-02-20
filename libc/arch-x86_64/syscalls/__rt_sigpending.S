@@ -14,4 +14,4 @@ ENTRY(__rt_sigpending)
 1:
     ret
 END(__rt_sigpending)
-.hidden _C_LABEL(__rt_sigpending)
+.hidden __rt_sigpending

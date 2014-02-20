@@ -23,4 +23,4 @@ ENTRY(__openat)
     move ra, t0
     .set pop
 END(__openat)
-.hidden _C_LABEL(__openat)
+.hidden __openat

@@ -19,4 +19,4 @@ ENTRY(__syslog)
 
     ret
 END(__syslog)
-.hidden _C_LABEL(__syslog)
+.hidden __syslog

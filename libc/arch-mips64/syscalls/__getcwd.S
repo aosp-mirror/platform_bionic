@@ -23,4 +23,4 @@ ENTRY(__getcwd)
     move ra, t0
     .set pop
 END(__getcwd)
-.hidden _C_LABEL(__getcwd)
+.hidden __getcwd

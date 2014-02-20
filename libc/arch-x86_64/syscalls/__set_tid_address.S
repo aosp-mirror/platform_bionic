@@ -14,4 +14,4 @@ ENTRY(__set_tid_address)
 1:
     ret
 END(__set_tid_address)
-.hidden _C_LABEL(__set_tid_address)
+.hidden __set_tid_address

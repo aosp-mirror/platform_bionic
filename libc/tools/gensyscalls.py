@@ -288,7 +288,7 @@ def add_footer(pointer_length, stub, syscall):
 
     # Use hidden visibility for any functions beginning with underscores.
     if pointer_length == 64 and syscall["func"].startswith("__"):
-        stub += '.hidden _C_LABEL(' + syscall["func"] + ')\n'
+        stub += '.hidden ' + syscall["func"] + '\n'
 
     return stub
 
