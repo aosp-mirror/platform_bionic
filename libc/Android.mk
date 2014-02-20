@@ -156,38 +156,6 @@ libc_common_src_files := \
     wchar/wcswidth.c \
     wchar/wcsxfrm.c \
 
-
-libc_dns_src_files += \
-    netbsd/gethnamaddr.c \
-    netbsd/inet/nsap_addr.c \
-    netbsd/nameser/ns_name.c \
-    netbsd/nameser/ns_netint.c \
-    netbsd/nameser/ns_parse.c \
-    netbsd/nameser/ns_print.c \
-    netbsd/nameser/ns_samedomain.c \
-    netbsd/nameser/ns_ttl.c \
-    netbsd/net/base64.c \
-    netbsd/net/getaddrinfo.c \
-    netbsd/net/getnameinfo.c \
-    netbsd/net/getservbyname.c \
-    netbsd/net/getservbyport.c \
-    netbsd/net/getservent.c \
-    netbsd/net/nsdispatch.c \
-    netbsd/resolv/__dn_comp.c \
-    netbsd/resolv/herror.c \
-    netbsd/resolv/res_cache.c \
-    netbsd/resolv/__res_close.c \
-    netbsd/resolv/res_comp.c \
-    netbsd/resolv/res_data.c \
-    netbsd/resolv/res_debug.c \
-    netbsd/resolv/res_init.c \
-    netbsd/resolv/res_mkquery.c \
-    netbsd/resolv/res_query.c \
-    netbsd/resolv/__res_send.c \
-    netbsd/resolv/res_send.c \
-    netbsd/resolv/res_state.c \
-
-
 # Fortify implementations of libc functions.
 libc_common_src_files += \
     bionic/__FD_chk.cpp \
@@ -308,7 +276,6 @@ libc_bionic_src_files := \
     bionic/utimes.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
-
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/sleep.c \
@@ -536,13 +503,12 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(libc_dns_src_files)
+LOCAL_SRC_FILES := $(call all-c-files-under,netbsd)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for NetBSD private headers
-
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
