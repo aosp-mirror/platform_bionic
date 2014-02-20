@@ -71,15 +71,7 @@ libc_bionic_src_files_mips += \
     arch-mips/string/memset.S \
     arch-mips/string/mips_strlen.c \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
-libc_arch_static_src_files_mips :=
 
-libc_arch_dynamic_src_files_mips :=
-
-
-##########################################
-# crt-related
 libc_crt_target_cflags_mips := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
     -I$(LOCAL_PATH)/arch-mips/include

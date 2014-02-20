@@ -59,12 +59,7 @@ libc_bionic_src_files_mips64 += bionic/memcpy.c
 libc_bionic_src_files_mips64 += bionic/memset.c
 libc_bionic_src_files_mips64 += string/strlen.c
 
-libc_arch_static_src_files_mips64 :=
 
-libc_arch_dynamic_src_files_mips64 :=
-
-##########################################
-# crt-related
 libc_crt_target_cflags_mips64 := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
     -I$(LOCAL_PATH)/arch-mips/include
