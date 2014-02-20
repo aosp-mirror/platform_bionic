@@ -29,7 +29,7 @@
  *
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/regnum.h>
 #include <machine/signal.h>
 
@@ -49,13 +49,13 @@ RAOFF= FRAMESZ-1*REGSZ
         swc1    FPR, OFF(BASE)  ;       \
         mfhc1   t0, FPR         ;       \
         sw      t0, OFF+4(BASE) ;
-        
+
 #define FPREG64_L(FPR, OFF, BASE)       \
         lw      t0, OFF+4(BASE) ;       \
         lw      t1, OFF(BASE)   ;       \
         mtc1    t1, FPR         ;       \
         mthc1   t0, FPR         ;       \
-        
+
 NON_LEAF(setjmp, FRAMESZ, ra)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU sp, FRAMESZ			# allocate stack frame
@@ -154,7 +154,7 @@ LEAF(longjmp, FRAMESZ)
 	lw	a0, A0OFF(sp)
 	lw	a1, A1OFF(sp)
 
-	.set	noreorder	
+	.set	noreorder
 	REG_L	v0, SC_REGS+ZERO*REGSZ(a0)
 	bne	v0, 0xACEDBADE, botch		# jump if error
 	REG_L	ra, SC_PC(a0)
@@ -169,9 +169,9 @@ LEAF(longjmp, FRAMESZ)
 	REG_L	s8, SC_REGS+S8*REGSZ(a0)
 	REG_L	gp, SC_REGS+GP*REGSZ(a0)
 	REG_L	sp, SC_REGS+SP*REGSZ(a0)
-	
+
 #if !defined(SOFTFLOAT)
-	REG_L	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)	
+	REG_L	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)
 	ctc1	v0, $31
 #if _MIPS_FPSET == 32
         FPREG64_L($f20, SC_FPREGS+((F20-F0)*REGSZ_FP), a0)

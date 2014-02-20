@@ -25,21 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
 
-/*
- * void bzero(void *s, size_t n);
- */
-	.type	bzero, @function
-	.global	bzero
-	.align	4
-	.ent	bzero
+#include <private/bionic_asm.h>
+
+// void bzero(void*, size_t);
+ENTRY(bzero)
 	.set	noreorder
-bzero:
-	.cpload	$t9
-	move	$a2,$a1
-	la	$t9,memset
-	j	$t9
-	 move	$a1,$zero
-	.end	bzero
-
+	.cpload	t9
+	move	a2,a1
+	la	t9,memset
+	j	t9
+	 move	a1,zero
+END(bzero)

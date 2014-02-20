@@ -4,7 +4,7 @@
  * Public domain.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(memcmp)
 	pushl	%edi

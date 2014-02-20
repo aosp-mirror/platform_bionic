@@ -26,39 +26,33 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 #include <linux/sched.h>
 
 // TODO: mips' uapi signal.h is missing #ifndef __ASSEMBLY__.
 // #include <asm/signal.h>
 #define SIGCHLD 18
 
-	.text
-
-	.type	vfork, @function
-	.global	vfork
-	.align	4
-	.ent	vfork
-vfork:
+ENTRY(vfork)
 	.set	noreorder
-	.cpload	$t9
+	.cpload	t9
 
-	li	$a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
-	li	$a1, 0
-	li	$a2, 0
-	li	$a3, 0
-	subu	$sp, 8
-	sw	$0, 16($sp)
-	li	$v0, __NR_clone
+	li	a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+	li	a1, 0
+	li	a2, 0
+	li	a3, 0
+	subu	sp, 8
+	sw	$0, 16(sp)
+	li	v0, __NR_clone
 	syscall
-	addu	$sp, 8
-	bnez	$a3, 1f
-	 move	$a0, $v0
+	addu	sp, 8
+	bnez	a3, 1f
+	 move	a0, v0
 
-	j	$ra
+	j	ra
 	 nop
 1:
-	la	$t9, __set_errno
-	j	$t9
+	la	t9, __set_errno
+	j	t9
 	 nop
-	.end	vfork
+END(vfork)

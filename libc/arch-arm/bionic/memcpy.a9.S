@@ -44,7 +44,7 @@
  */
 
 #include <machine/cpu-features.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 	.syntax unified
 	/* This implementation requires ARM state.  */
