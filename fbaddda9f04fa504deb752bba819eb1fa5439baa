@@ -22,6 +22,30 @@
       "revId": "fbaddda9f04fa504deb752bba819eb1fa5439baa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f75b176_f50738e2",
+        "filename": "libc/arch-mips64/include/machine/asm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T20:20:21Z",
+      "side": 0,
+      "message": "yes, but that\u0027s never going to happen, and already wasn\u0027t consistent between architectures. plus not all mips assembler is using these macros.\n\nwhat i\u0027d really like to do is remove \u003cmachine/asm.h\u003e. there\u0027s just enough use of the mips/mips64 stuff to make that hard. though it\u0027s still possible we could get rid of all the others, and that would bring things under control. plus it would be obvious that \u003cprivate/bionic_asm.h\u003e is something we control, rather than the current weird \u003cmachine/asm.h\u003e situation where different architectures differ from upstream by varying amounts, and enhancements aren\u0027t uniformly made to all architectures (and such a thing isn\u0027t even necessarily possible because even upstream what\u0027s provided differs wildly between architectures).",
+      "parentUuid": "0f193130_fe30d56c",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 6
+      },
+      "revId": "fbaddda9f04fa504deb752bba819eb1fa5439baa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

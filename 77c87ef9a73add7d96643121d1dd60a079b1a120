@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0f75b176_75db283e",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T20:20:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef15bdf4_5d58efe8",
+      "range": {
+        "startLine": 30,
+        "startChar": 9,
+        "endLine": 30,
+        "endChar": 32
+      },
+      "revId": "77c87ef9a73add7d96643121d1dd60a079b1a120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f193130_fed2959e",
         "filename": "libc/private/bionic_asm.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-02-20T03:07:34Z",
       "side": 1,
       "message": "Would it be better to put all three of these definitions in each asm.h file? It was hard to see how things were defined at first. It\u0027s a little extra duplication, but I think it makes it a bit easier to tell what\u0027s going on.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 44
+      },
+      "revId": "77c87ef9a73add7d96643121d1dd60a079b1a120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f75b176_55ad4c7a",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T20:20:21Z",
+      "side": 1,
+      "message": "maybe. personally i think things would be clearer if \u003cmachine/asm.h\u003e went away and we dealt with every architecture in here. in particular that makes it a lot harder to change one architecture without remembering the others.",
+      "parentUuid": "0f193130_fed2959e",
       "range": {
         "startLine": 35,
         "startChar": 0,
