@@ -23,4 +23,4 @@ ENTRY(__syslog)
     move ra, t0
     .set pop
 END(__syslog)
-.hidden _C_LABEL(__syslog)
+.hidden __syslog

@@ -19,4 +19,4 @@ ENTRY(__epoll_pwait)
 
     ret
 END(__epoll_pwait)
-.hidden _C_LABEL(__epoll_pwait)
+.hidden __epoll_pwait

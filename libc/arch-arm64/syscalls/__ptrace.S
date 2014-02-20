@@ -19,4 +19,4 @@ ENTRY(__ptrace)
 
     ret
 END(__ptrace)
-.hidden _C_LABEL(__ptrace)
+.hidden __ptrace

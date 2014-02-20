@@ -23,4 +23,4 @@ ENTRY(__timer_getoverrun)
     move ra, t0
     .set pop
 END(__timer_getoverrun)
-.hidden _C_LABEL(__timer_getoverrun)
+.hidden __timer_getoverrun

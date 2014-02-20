@@ -14,4 +14,4 @@ ENTRY(__exit)
 1:
     ret
 END(__exit)
-.hidden _C_LABEL(__exit)
+.hidden __exit

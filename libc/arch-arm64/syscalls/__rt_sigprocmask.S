@@ -19,4 +19,4 @@ ENTRY(__rt_sigprocmask)
 
     ret
 END(__rt_sigprocmask)
-.hidden _C_LABEL(__rt_sigprocmask)
+.hidden __rt_sigprocmask

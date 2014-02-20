@@ -14,4 +14,4 @@ ENTRY(__rt_sigsuspend)
 1:
     ret
 END(__rt_sigsuspend)
-.hidden _C_LABEL(__rt_sigsuspend)
+.hidden __rt_sigsuspend

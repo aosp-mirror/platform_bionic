@@ -19,4 +19,4 @@ ENTRY(__getcpu)
 
     ret
 END(__getcpu)
-.hidden _C_LABEL(__getcpu)
+.hidden __getcpu

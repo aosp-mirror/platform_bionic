@@ -14,4 +14,4 @@ ENTRY(__getpriority)
 1:
     ret
 END(__getpriority)
-.hidden _C_LABEL(__getpriority)
+.hidden __getpriority

@@ -23,4 +23,4 @@ ENTRY(__rt_sigaction)
     move ra, t0
     .set pop
 END(__rt_sigaction)
-.hidden _C_LABEL(__rt_sigaction)
+.hidden __rt_sigaction
