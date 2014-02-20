@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2f1c351e_3080b869",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:33:12Z",
+      "side": 1,
+      "message": "can\u0027t we just tee the output to the console too?",
+      "parentUuid": "6f854d89_804f96a6",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f1c351e_501574cb",
         "filename": "libc/tools/genlibgcc_compat.py",
         "patchSetId": 2
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "return code is 2, and this is normal. check_output is going to throw unwanted exception.",
       "parentUuid": "ef15bdf4_4eecb7a1",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_4a1c9f7f",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:33:12Z",
+      "side": 1,
+      "message": "so why are we printing it?",
+      "parentUuid": "8f80c17a_c1dd22b0",
       "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
