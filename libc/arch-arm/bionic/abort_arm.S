@@ -40,5 +40,5 @@ ENTRY(abort)
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r3, 0
     .cfi_rel_offset r14, 4
-    bl      PIC_SYM(_C_LABEL(__libc_android_abort), PLT)
+    bl      PIC_SYM(__libc_android_abort, PLT)
 END(abort)
