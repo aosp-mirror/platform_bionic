@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef15bdf4_cef72774",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:09:14Z",
+      "side": 1,
+      "message": "what\u0027s this for?",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f1c351e_501574cb",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:09:14Z",
+      "side": 1,
+      "message": "shouldn\u0027t we check that the current target is ARM? this is only for ARM, so it\u0027s somewhere between useless and harmful to run it for a different target.",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef15bdf4_4eecb7a1",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:09:14Z",
+      "side": 1,
+      "message": "shouldn\u0027t we just use subprocess.check_output and let it throw on error?",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f1c351e_b025e83b",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:09:14Z",
+      "side": 1,
+      "message": "we should actually error out here, not just print a warning.",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
