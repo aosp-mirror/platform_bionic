@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efaa1deb_4cde9ff6",
+        "filename": "tests/sys_types_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-20T13:44:18Z",
+      "side": 1,
+      "message": "I can extract these in a different test file if you think it\u0027s a stretch to have them here.",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "5f79ed663e05b573b587b9fe8a2bfd564a3c07ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
