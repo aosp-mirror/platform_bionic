@@ -16,6 +16,24 @@
       "revId": "5f6f4a956cd630f873fe41058e96262f897f4bc9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f8a499e_3f8fc762",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T10:03:00Z",
+      "side": 1,
+      "message": "I\u0027m limiting this list to the macros undefined by our STLp version. If at some point, someone changes STLp to undefine more macros we\u0027ll know because the build will break.",
+      "parentUuid": "cff9d9ff_a471286a",
+      "revId": "5f6f4a956cd630f873fe41058e96262f897f4bc9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
