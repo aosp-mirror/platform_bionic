@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 #include <linux/sched.h>
 
 // TODO: mips' uapi signal.h is missing #ifndef __ASSEMBLY__.
@@ -46,7 +45,7 @@ LEAF(vfork,FRAMESZ)
 #if FRAMESZ!=0
 	PTR_SUBU sp, FRAMESZ
 #endif
-	SETUP_GP64(a5,vfork)
+	SETUP_GP64(a5, vfork)
 	LI	a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
 	move	a1, $0
 	move	a2, $0

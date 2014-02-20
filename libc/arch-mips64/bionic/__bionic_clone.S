@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 #include <linux/errno.h>
 #include <linux/sched.h>
 
@@ -43,8 +42,7 @@ FRAME_FN	=	FRAMESZ-3*REGSZ
 #endif
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-	.text
-LEAF(__bionic_clone,FRAMESZ)
+LEAF(__bionic_clone, FRAMESZ)
 	PTR_SUBU sp, FRAMESZ			# allocate stack frame
 	SETUP_GP64(FRAME_GP,__bionic_clone)
 	SAVE_GP(FRAME_GP)

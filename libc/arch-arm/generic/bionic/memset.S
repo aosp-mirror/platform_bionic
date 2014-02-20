@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "private/libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
         /*
          * Optimized memset() for ARM.

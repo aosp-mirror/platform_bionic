@@ -26,23 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-
-	.text
+#include <private/bionic_asm.h>
 
 // void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
+ENTRY(_exit_with_stack_teardown)
+  li	v0, __NR_munmap
+  syscall
+  // If munmap failed, we ignore the failure and exit anyway.
 
-	.type	_exit_with_stack_teardown, @function
-	.global	_exit_with_stack_teardown
-	.align	4
-	.ent	_exit_with_stack_teardown
-_exit_with_stack_teardown:
-	li	$v0, __NR_munmap
-	syscall
-	// If munmap failed, we ignore the failure and exit anyway.
-
-	li	$a0, 0
-	li	$v0, __NR_exit
-	syscall
-        // The exit syscall does not return.
-	.end	_exit_with_stack_teardown
+  li	a0, 0
+  li	v0, __NR_exit
+  syscall
+  // The exit syscall does not return.
+END(_exit_with_stack_teardown)

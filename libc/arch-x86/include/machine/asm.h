@@ -37,10 +37,6 @@
 #ifndef _I386_ASM_H_
 #define _I386_ASM_H_
 
-#ifdef _KERNEL_OPT
-#include "opt_multiprocessor.h"
-#endif
-
 #ifdef PIC
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
@@ -61,27 +57,6 @@
 #define PIC_GOTOFF(x)	x
 #endif
 
-#ifdef __ELF__
-# define _C_LABEL(x)	x
-#else
-# ifdef __STDC__
-#  define _C_LABEL(x)	_ ## x
-# else
-#  define _C_LABEL(x)	_/**/x
-# endif
-#endif
-#define	_ASM_LABEL(x)	x
-
-#define CVAROFF(x, y)		_C_LABEL(x) + y
-
-#ifdef __STDC__
-# define __CONCAT(x,y)	x ## y
-# define __STRING(x)	#x
-#else
-# define __CONCAT(x,y)	x/**/y
-# define __STRING(x)	"x"
-#endif
-
 /* let kernels and others override entrypoint alignment */
 #if !defined(_ALIGN_TEXT) && !defined(_KERNEL)
 # ifdef _STANDALONE
@@ -92,127 +67,5 @@
 #  define _ALIGN_TEXT .align 4
 # endif
 #endif
-
-#define _ENTRY(x) \
-	.text; _ALIGN_TEXT; .globl x; .type x,@function; x: .cfi_startproc;
-#define _LABEL(x) \
-	.globl x; x:
-
-#ifdef _KERNEL
-
-#define CPUVAR(off) %fs:__CONCAT(CPU_INFO_,off)
-
-/* XXX Can't use __CONCAT() here, as it would be evaluated incorrectly. */
-#ifdef __ELF__
-#ifdef __STDC__
-#define	IDTVEC(name) \
-	ALIGN_TEXT; .globl X ## name; .type X ## name,@function; X ## name:
-#define	IDTVEC_END(name) \
-	.size X ## name, . - X ## name
-#else 
-#define	IDTVEC(name) \
-	ALIGN_TEXT; .globl X/**/name; .type X/**/name,@function; X/**/name:
-#define	IDTVEC_END(name) \
-	.size X/**/name, . - X/**/name
-#endif /* __STDC__ */ 
-#else 
-#ifdef __STDC__
-#define	IDTVEC(name) \
-	ALIGN_TEXT; .globl _X ## name; .type _X ## name,@function; _X ## name: 
-#define	IDTVEC_END(name) \
-	.size _X ## name, . - _X ## name
-#else
-#define	IDTVEC(name) \
-	ALIGN_TEXT; .globl _X/**/name; .type _X/**/name,@function; _X/**/name:
-#define	IDTVEC_END(name) \
-	.size _X/**/name, . - _X/**/name
-#endif /* __STDC__ */
-#endif /* __ELF__ */
-
-#ifdef _STANDALONE
-#define ALIGN_DATA	.align	4
-#define ALIGN_TEXT	.align	4	/* 4-byte boundaries */
-#define SUPERALIGN_TEXT	.align	16	/* 15-byte boundaries */
-#elif defined __ELF__
-#define ALIGN_DATA	.align	4
-#define ALIGN_TEXT	.align	16	/* 16-byte boundaries */
-#define SUPERALIGN_TEXT	.align	16	/* 16-byte boundaries */
-#else
-#define ALIGN_DATA	.align	2
-#define ALIGN_TEXT	.align	4	/* 16-byte boundaries */
-#define SUPERALIGN_TEXT	.align	4	/* 16-byte boundaries */
-#endif /* __ELF__ */
-
-#define _ALIGN_TEXT ALIGN_TEXT
-
-#ifdef GPROF
-#ifdef __ELF__
-#define	MCOUNT_ASM	call	_C_LABEL(__mcount)
-#else /* __ELF__ */
-#define	MCOUNT_ASM	call	_C_LABEL(mcount)
-#endif /* __ELF__ */
-#else /* GPROF */
-#define	MCOUNT_ASM	/* nothing */
-#endif /* GPROF */
-
-#endif /* _KERNEL */
-
-
-
-#ifdef GPROF
-# ifdef __ELF__
-#  define _PROF_PROLOGUE	\
-	pushl %ebp; movl %esp,%ebp; call PIC_PLT(__mcount); popl %ebp
-# else 
-#  define _PROF_PROLOGUE	\
-	pushl %ebp; movl %esp,%ebp; call PIC_PLT(mcount); popl %ebp
-# endif
-#else
-# define _PROF_PROLOGUE
-#endif
-
-#define	ENTRY(y)	_ENTRY(_C_LABEL(y)); _PROF_PROLOGUE
-#define	NENTRY(y)	_ENTRY(_C_LABEL(y))
-#define	ASENTRY(y)	_ENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
-#define	LABEL(y)	_LABEL(_C_LABEL(y))
-#define	END(y)		.cfi_endproc; .size y, . - y
-
-#define	ASMSTR		.asciz
-
-#ifdef __ELF__
-#define RCSID(x)	.pushsection ".ident"; .asciz x; .popsection
-#else
-#define RCSID(x)	.text; .asciz x
-#endif
-
-#ifdef NO_KERNEL_RCSIDS
-#define	__KERNEL_RCSID(_n, _s)	/* nothing */
-#else
-#define	__KERNEL_RCSID(_n, _s)	RCSID(_s)
-#endif
-
-#ifdef __ELF__
-#define	WEAK_ALIAS(alias,sym)						\
-	.weak alias;							\
-	alias = sym
-#endif
-/*
- * STRONG_ALIAS: create a strong alias.
- */
-#define STRONG_ALIAS(alias,sym)						\
-	.globl alias;							\
-	alias = sym
-
-#ifdef __STDC__
-#define	WARN_REFERENCES(sym,msg)					\
-	.pushsection .gnu.warning. ## sym;				\
-	.ascii msg;							\
-	.popsection
-#else
-#define	WARN_REFERENCES(sym,msg)					\
-	.pushsection .gnu.warning./**/sym;				\
-	.ascii msg;							\
-	.popsection
-#endif /* __STDC__ */
 
 #endif /* !_I386_ASM_H_ */

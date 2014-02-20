@@ -27,7 +27,7 @@
  */
 
 #include <machine/cpu-features.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * Optimized memcmp16() for ARM9.
