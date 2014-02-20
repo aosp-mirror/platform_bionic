@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "4f8a499e_a29e6052",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T19:05:51Z",
+      "side": 1,
+      "message": "Yeah..... I noticed that too. I couldn\u0027t find any context or bugs describing WTF this was supposed to be..",
+      "parentUuid": "0f193130_8a4517d3",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f193130_4a265f9c",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2014-02-20T18:57:43Z",
       "side": 1,
       "message": "in other copies of this code, we\u0027ve just set fd \u003d\u003d -1. you never want to call close on -1 anyway, so there\u0027s no need for an extra bool.",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f8a499e_c2a36495",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T19:05:51Z",
+      "side": 1,
+      "message": "Needed because of the (horrible) semantics we want. get() should continue to return the existing FD, just not close it",
+      "parentUuid": "0f193130_4a265f9c",
       "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "cfa71922_0eb00bd7",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T19:05:51Z",
+      "side": 1,
+      "message": "I thought of doing that, but it ended up getting slightly uglier. I\u0027ll try to clean this up a bit more. I don\u0027t like the semantics of this method.",
+      "parentUuid": "2f1c351e_6b2d2172",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f1c351e_abba99c1",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -115,6 +169,24 @@
       "writtenOn": "2014-02-20T18:57:43Z",
       "side": 1,
       "message": "you shouldn\u0027t need this. just #include the public header. if you still have a problem, that means we need to fix the header.",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "efaa1deb_2f26a59b",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-20T19:05:51Z",
+      "side": 1,
+      "message": "Done. This was a hack to allow me to test some stuff out on host by including the cpp file directly.\n\n(Will upload another patchset after nnk takes a look)",
+      "parentUuid": "0f193130_2abde3e6",
       "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
