@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f193130_aa3bb34e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "nnk: is this still used?",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_8a4517d3",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "this is a bit weird. on my device, the value is \"9,0\". perhaps worth a comment saying that we\u0027re apparently deliberately ignoring the second half, whatever that is?",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_4a265f9c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "in other copies of this code, we\u0027ve just set fd \u003d\u003d -1. you never want to call close on -1 anyway, so there\u0027s no need for an extra bool.",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_aa71f369",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "we should add a separate CTS test to disallow this.\n\n(somewhat scarily, open(2) does appear to just ignore flags it doesn\u0027t recognize, so we would get here on such a kernel. but other places where we try to use O_CLOEXEC don\u0027t double-check.)",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f1c351e_6b2d2172",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "yeah, this is weird. after a release the fd should be invalid. maybe break this function in two and pass an int to the function representing the second half?",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f1c351e_abba99c1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "looking to see if there\u0027s any precedent for that, the internets claim that GCC gets it right with -Wstrict-aliasing\u003d3. maybe we should compile bionic with that? we have quite a few of these warnings iirc.",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_2abde3e6",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T18:57:43Z",
+      "side": 1,
+      "message": "you shouldn\u0027t need this. just #include the public header. if you still have a problem, that means we need to fix the header.",
+      "revId": "97c332dbcebee96deabc9388cd5f6b91523ba679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
