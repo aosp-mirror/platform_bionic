@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6f854d89_804f96a6",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-02-20T18:29:54Z",
+      "side": 1,
+      "message": "for information mostly, to be able to check a log while it is building",
+      "parentUuid": "ef15bdf4_cef72774",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f1c351e_501574cb",
         "filename": "libc/tools/genlibgcc_compat.py",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2014-02-20T18:09:14Z",
       "side": 1,
       "message": "shouldn\u0027t we just use subprocess.check_output and let it throw on error?",
+      "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f80c17a_c1dd22b0",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-02-20T18:29:54Z",
+      "side": 1,
+      "message": "return code is 2, and this is normal. check_output is going to throw unwanted exception.",
+      "parentUuid": "ef15bdf4_4eecb7a1",
       "revId": "acc7ea8d9f76d56803503524a25bc734dedd4aca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
