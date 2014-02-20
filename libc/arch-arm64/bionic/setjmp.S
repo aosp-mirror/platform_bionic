@@ -45,7 +45,7 @@ ENTRY(setjmp)
     stp     x0, x30, [sp, #-16]!
 
     mov     x0, xzr
-    bl      PIC_SYM(_C_LABEL(sigblock), PLT)
+    bl      PIC_SYM(sigblock, PLT)
     mov     w1, w0
 
     ldp     x0, x30, [sp], #16
@@ -117,7 +117,7 @@ ENTRY(longjmp)
 
     /* validation failed, die die die */
 botch:
-    bl      PIC_SYM(_C_LABEL(longjmperror), PLT)
-    bl      PIC_SYM(_C_LABEL(abort), PLT)
+    bl      PIC_SYM(longjmperror, PLT)
+    bl      PIC_SYM(abort, PLT)
     b       . - 8       /* Cannot get here */
 END(longjmp)

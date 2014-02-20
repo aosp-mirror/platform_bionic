@@ -35,8 +35,8 @@
  */
 
 ENTRY(sigsetjmp)
-    cbz     w1, PIC_SYM(_C_LABEL(_setjmp), PLT)
-    b       PIC_SYM(_C_LABEL(setjmp), PLT)
+    cbz     w1, PIC_SYM(_setjmp, PLT)
+    b       PIC_SYM(setjmp, PLT)
 END(sigsetjmp)
 
 .L_setjmp_magic:
@@ -46,6 +46,6 @@ ENTRY(siglongjmp)
     ldr     w2, .L_setjmp_magic
     ldr     w3, [x0]
     cmp     w2, w3
-    b.eq    PIC_SYM(_C_LABEL(_longjmp), PLT)
-    b       PIC_SYM(_C_LABEL(longjmp), PLT)
+    b.eq    PIC_SYM(_longjmp, PLT)
+    b       PIC_SYM(longjmp, PLT)
 END(siglongjmp)
