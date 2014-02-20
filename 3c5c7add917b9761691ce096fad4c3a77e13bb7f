@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f193130_3e8fe862",
+        "filename": "libc/tools/genlibgcc_compat.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-20T19:24:34Z",
+      "side": 1,
+      "message": "remove this commented-out block?",
+      "revId": "3c5c7add917b9761691ce096fad4c3a77e13bb7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
