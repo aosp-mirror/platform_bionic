@@ -53,14 +53,7 @@ libc_bionic_src_files_arm64 := \
     arch-arm64/bionic/syscall.S \
     arch-arm64/bionic/vfork.S \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
-libc_arch_static_src_files_arm64 :=
 
-libc_arch_dynamic_src_files_arm64 :=
-
-##########################################
-# crt-related
 libc_crt_target_cflags_arm64 := \
     -I$(LOCAL_PATH)/arch-arm64/include
 

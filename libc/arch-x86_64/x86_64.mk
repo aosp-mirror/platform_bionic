@@ -53,14 +53,7 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/vfork.S \
     string/memcmp16.c \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
-libc_arch_static_src_files_x86_64 :=
 
-libc_arch_dynamic_src_files_x86_64 :=
-
-##########################################
-# crt-related
 libc_crt_target_cflags_x86_64 += \
     -m64 \
     -I$(LOCAL_PATH)/arch-x86_64/include
