@@ -32,11 +32,7 @@
 #define FUTEX_WAKE 1
 
 // int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-	.type	__futex_wait, @function
-	.global	__futex_wait
-	.align	4
-	.ent	__futex_wait
-__futex_wait:
+ENTRY(__futex_wait)
 	subu	sp,4*6
 	sw	$0,20(sp)	/* val3 */
 	sw	$0,16(sp)	/* addr2 */
@@ -54,14 +50,10 @@ __futex_wait:
 	.set reorder
 	addu	sp,4*6
 	j	ra
-	.end	__futex_wait
+END(__futex_wait)
 
 // int __futex_wake(volatile void* ftx, int count)
-	.type	__futex_wake, @function
-	.globl	__futex_wake
-	.align	4
-	.ent	__futex_wake
-__futex_wake:
+ENTRY(__futex_wake)
 	subu	sp,4*6
 	sw	$0,20(sp)	/* val3 */
 	sw	$0,16(sp)	/* addr2 */
@@ -79,14 +71,10 @@ __futex_wake:
 	.set reorder
 	addu	sp,4*6
 	j	ra
-	.end	__futex_wake
+END(__futex_wake)
 
 // int __futex_syscall3(volatile void* ftx, int op, int count)
-	.type	__futex_syscall3, @function
-	.global	__futex_syscall3
-	.align	4
-	.ent	__futex_syscall3
-__futex_syscall3:
+ENTRY(__futex_syscall3)
 	subu	sp,4*6
 	sw	$0,20(sp)	/* val3 */
 	sw	$0,16(sp)	/* addr2 */
@@ -104,14 +92,10 @@ __futex_syscall3:
 	.set reorder
 	addu	sp,4*6
 	j	ra
-	.end	__futex_syscall3
+END(__futex_syscall3)
 
 // int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
-	.type	__futex_syscall4, @function
-	.global	__futex_syscall4
-	.align	4
-	.ent	__futex_syscall4
-__futex_syscall4:
+ENTRY(__futex_syscall4)
 	subu	sp,4*6
 	sw	$0,20(sp)	/* val3 */
 	sw	$0,16(sp)	/* addr2 */
@@ -129,4 +113,4 @@ __futex_syscall4:
 	.set reorder
 	addu	sp,4*6
 	j	ra
-	.end	__futex_syscall4
+END(__futex_syscall4)

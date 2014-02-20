@@ -27,7 +27,7 @@
  */
 	.text
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * u4 __memcmp16(const u2* s0, const u2* s1, size_t count);

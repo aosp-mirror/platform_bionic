@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY_PRIVATE(__rt_sigreturn)
   mov     x8, __NR_rt_sigreturn

@@ -39,13 +39,13 @@
  *  Include files
  ************************************************************************/
 
-#include "machine/asm.h"
+#include <private/bionic_asm.h>
 
 
-/* 
+/*
  * This routine could be optimized for MIPS64. The current code only
  * uses MIPS32 instructions.
- */	
+ */
 #if defined(__MIPSEB__)
 #  define LWHI	lwl		/* high part is left in big-endian	*/
 #  define SWHI	swl		/* high part is left in big-endian	*/

@@ -4,7 +4,7 @@
  * Public domain.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * NOTE: I've unrolled the loop eight times: large enough to make a
