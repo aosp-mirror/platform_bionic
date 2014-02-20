@@ -19,4 +19,4 @@ ENTRY(__getpriority)
 
     ret
 END(__getpriority)
-.hidden _C_LABEL(__getpriority)
+.hidden __getpriority

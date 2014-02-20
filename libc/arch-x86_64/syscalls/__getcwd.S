@@ -14,4 +14,4 @@ ENTRY(__getcwd)
 1:
     ret
 END(__getcwd)
-.hidden _C_LABEL(__getcwd)
+.hidden __getcwd

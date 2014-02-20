@@ -19,4 +19,4 @@ ENTRY(__rt_sigtimedwait)
 
     ret
 END(__rt_sigtimedwait)
-.hidden _C_LABEL(__rt_sigtimedwait)
+.hidden __rt_sigtimedwait

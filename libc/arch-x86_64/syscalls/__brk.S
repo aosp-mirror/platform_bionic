@@ -14,4 +14,4 @@ ENTRY(__brk)
 1:
     ret
 END(__brk)
-.hidden _C_LABEL(__brk)
+.hidden __brk

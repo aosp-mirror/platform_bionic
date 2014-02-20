@@ -23,4 +23,4 @@ ENTRY(__set_tid_address)
     move ra, t0
     .set pop
 END(__set_tid_address)
-.hidden _C_LABEL(__set_tid_address)
+.hidden __set_tid_address

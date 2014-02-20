@@ -23,4 +23,4 @@ ENTRY(__getpriority)
     move ra, t0
     .set pop
 END(__getpriority)
-.hidden _C_LABEL(__getpriority)
+.hidden __getpriority

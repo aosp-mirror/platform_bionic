@@ -23,4 +23,4 @@ ENTRY(__pselect6)
     move ra, t0
     .set pop
 END(__pselect6)
-.hidden _C_LABEL(__pselect6)
+.hidden __pselect6

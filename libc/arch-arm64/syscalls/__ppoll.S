@@ -19,4 +19,4 @@ ENTRY(__ppoll)
 
     ret
 END(__ppoll)
-.hidden _C_LABEL(__ppoll)
+.hidden __ppoll

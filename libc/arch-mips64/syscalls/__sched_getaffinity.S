@@ -23,4 +23,4 @@ ENTRY(__sched_getaffinity)
     move ra, t0
     .set pop
 END(__sched_getaffinity)
-.hidden _C_LABEL(__sched_getaffinity)
+.hidden __sched_getaffinity

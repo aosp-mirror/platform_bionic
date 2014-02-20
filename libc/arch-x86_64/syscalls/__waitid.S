@@ -15,4 +15,4 @@ ENTRY(__waitid)
 1:
     ret
 END(__waitid)
-.hidden _C_LABEL(__waitid)
+.hidden __waitid

@@ -23,4 +23,4 @@ ENTRY(__exit)
     move ra, t0
     .set pop
 END(__exit)
-.hidden _C_LABEL(__exit)
+.hidden __exit

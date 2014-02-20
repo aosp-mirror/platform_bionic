@@ -23,4 +23,4 @@ ENTRY(__ptrace)
     move ra, t0
     .set pop
 END(__ptrace)
-.hidden _C_LABEL(__ptrace)
+.hidden __ptrace
