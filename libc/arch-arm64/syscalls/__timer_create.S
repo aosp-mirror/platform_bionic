@@ -19,4 +19,4 @@ ENTRY(__timer_create)
 
     ret
 END(__timer_create)
-.hidden _C_LABEL(__timer_create)
+.hidden __timer_create

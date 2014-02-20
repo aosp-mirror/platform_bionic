@@ -23,4 +23,4 @@ ENTRY(__timer_gettime)
     move ra, t0
     .set pop
 END(__timer_gettime)
-.hidden _C_LABEL(__timer_gettime)
+.hidden __timer_gettime

@@ -19,4 +19,4 @@ ENTRY(__reboot)
 
     ret
 END(__reboot)
-.hidden _C_LABEL(__reboot)
+.hidden __reboot

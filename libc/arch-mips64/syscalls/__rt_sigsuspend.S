@@ -23,4 +23,4 @@ ENTRY(__rt_sigsuspend)
     move ra, t0
     .set pop
 END(__rt_sigsuspend)
-.hidden _C_LABEL(__rt_sigsuspend)
+.hidden __rt_sigsuspend

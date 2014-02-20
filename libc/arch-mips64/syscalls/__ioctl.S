@@ -23,4 +23,4 @@ ENTRY(__ioctl)
     move ra, t0
     .set pop
 END(__ioctl)
-.hidden _C_LABEL(__ioctl)
+.hidden __ioctl

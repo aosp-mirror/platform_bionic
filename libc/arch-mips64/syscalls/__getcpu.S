@@ -23,4 +23,4 @@ ENTRY(__getcpu)
     move ra, t0
     .set pop
 END(__getcpu)
-.hidden _C_LABEL(__getcpu)
+.hidden __getcpu

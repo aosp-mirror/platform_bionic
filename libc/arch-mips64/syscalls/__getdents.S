@@ -23,4 +23,4 @@ ENTRY(__getdents)
     move ra, t0
     .set pop
 END(__getdents)
-.hidden _C_LABEL(__getdents)
+.hidden __getdents

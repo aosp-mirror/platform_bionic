@@ -19,4 +19,4 @@ ENTRY(__openat)
 
     ret
 END(__openat)
-.hidden _C_LABEL(__openat)
+.hidden __openat

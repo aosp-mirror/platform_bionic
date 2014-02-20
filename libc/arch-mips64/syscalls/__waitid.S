@@ -23,4 +23,4 @@ ENTRY(__waitid)
     move ra, t0
     .set pop
 END(__waitid)
-.hidden _C_LABEL(__waitid)
+.hidden __waitid

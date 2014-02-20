@@ -14,4 +14,4 @@ ENTRY(__syslog)
 1:
     ret
 END(__syslog)
-.hidden _C_LABEL(__syslog)
+.hidden __syslog

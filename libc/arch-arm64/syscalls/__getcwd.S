@@ -19,4 +19,4 @@ ENTRY(__getcwd)
 
     ret
 END(__getcwd)
-.hidden _C_LABEL(__getcwd)
+.hidden __getcwd

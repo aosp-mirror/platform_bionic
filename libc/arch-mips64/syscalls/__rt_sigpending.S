@@ -23,4 +23,4 @@ ENTRY(__rt_sigpending)
     move ra, t0
     .set pop
 END(__rt_sigpending)
-.hidden _C_LABEL(__rt_sigpending)
+.hidden __rt_sigpending
