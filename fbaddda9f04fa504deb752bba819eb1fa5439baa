@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f193130_fe30d56c",
+        "filename": "libc/arch-mips64/include/machine/asm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-20T03:07:34Z",
+      "side": 0,
+      "message": "If we decide to implement gprof stuff, will we need to re-add these defines (and the similar defines in the other asm.h files)?",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 6
+      },
+      "revId": "fbaddda9f04fa504deb752bba819eb1fa5439baa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

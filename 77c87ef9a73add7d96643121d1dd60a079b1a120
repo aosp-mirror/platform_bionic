@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef15bdf4_5d58efe8",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-20T03:07:34Z",
+      "side": 1,
+      "message": "This is my fault, but my ocd is working overtime. As long as you are in this file, can you change all of the references to \u003cprivate/libc_events.h\u003e so it\u0027s consistent.",
+      "range": {
+        "startLine": 30,
+        "startChar": 9,
+        "endLine": 30,
+        "endChar": 32
+      },
+      "revId": "77c87ef9a73add7d96643121d1dd60a079b1a120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f193130_fed2959e",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-02-20T03:07:34Z",
+      "side": 1,
+      "message": "Would it be better to put all three of these definitions in each asm.h file? It was hard to see how things were defined at first. It\u0027s a little extra duplication, but I think it makes it a bit easier to tell what\u0027s going on.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 44
+      },
+      "revId": "77c87ef9a73add7d96643121d1dd60a079b1a120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
