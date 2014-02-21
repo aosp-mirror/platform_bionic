@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0f3a11a9_3c80bd69",
+        "filename": "HACKING.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T23:49:39Z",
+      "side": 1,
+      "message": "given that it only applies to arm, i was planning on leaving it out of here. (the recent multi-arch makefile changes made it even more arm-specific than it used to be.)",
+      "parentUuid": "2f1c351e_d9d7f78c",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 42,
+        "endChar": 11
+      },
+      "revId": "560cee6bffeb7ba5079d82bea75d24c420488a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef15bdf4_f7b3dacd",
         "filename": "HACKING.txt",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-02-20T00:39:27Z",
       "side": 1,
       "message": "Should this be \"the\" instead of that?",
+      "range": {
+        "startLine": 138,
+        "startChar": 5,
+        "endLine": 138,
+        "endChar": 9
+      },
+      "revId": "560cee6bffeb7ba5079d82bea75d24c420488a01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_7ca1650f",
+        "filename": "HACKING.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T23:49:39Z",
+      "side": 1,
+      "message": "done in a later change.",
+      "parentUuid": "ef15bdf4_f7b3dacd",
       "range": {
         "startLine": 138,
         "startChar": 5,
