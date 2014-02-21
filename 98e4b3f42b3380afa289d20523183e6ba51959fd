@@ -318,6 +318,24 @@
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af64a5c8_5d11ef6d",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:18:43Z",
+      "side": 1,
+      "message": "In case I wasn\u0027t clear, I do think that a template matters here for readability :) It makes it much clearer that it\u0027s a compile time decision (as enh pointed out)",
+      "parentUuid": "af64a5c8_3d143b5f",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
