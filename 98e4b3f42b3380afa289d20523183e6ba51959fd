@@ -179,6 +179,24 @@
     },
     {
       "key": {
+        "uuid": "ef985df7_ffdabb5c",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-21T18:16:31Z",
+      "side": 1,
+      "message": "I already added a comment. I think it does no harm, and might benefit others who look at the implementation, even if it applies just in this case.",
+      "parentUuid": "af64a5c8_7df5d3f4",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f5e2dff_a23c9fd1",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -279,6 +297,24 @@
       "side": 1,
       "message": "Yeah, that\u0027s a fair point. \n\nThough to be pedantic, templates make it *look* like a compile decision (and that\u0027s still a win). The compiler might or might not optimize the code away depending on the code, unless we implement the specialization ourselves.",
       "parentUuid": "0f3a11a9_f0365efd",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af64a5c8_3d143b5f",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-21T18:16:31Z",
+      "side": 1,
+      "message": "I don\u0027t think it really matters for this (small) case. I agree that it\u0027s a bit odd but it\u0027s an easy way out without duplicating or messing the other tests. \n\nHaving said that, templating sounds nice and it has the mentioned benefits, so I will change:)",
+      "parentUuid": "af64a5c8_ddfc1fe0",
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
