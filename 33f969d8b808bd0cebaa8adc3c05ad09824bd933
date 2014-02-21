@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f3a11a9_70c42ed4",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T18:54:53Z",
+      "side": 1,
+      "message": "(we really ought to add a private/.h for stuff like DISALLOW_COPY_AND_ASSIGN at some point...)",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_b08a1694",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T18:54:53Z",
+      "side": 1,
+      "message": "didn\u0027t you want to comment the format?",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f78b56e_334b7fe8",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T18:54:53Z",
+      "side": 1,
+      "message": "weren\u0027t we going to remove this? i can do that in a separate change where i\u0027ll add a unit test that checks that open(O_CLOEXEC) gives us an fd where F_GETFD returns O_CLOEXEC. though i\u0027m pretty sure we already use a lot of stuff that isn\u0027t available on \u003c 2.6 kernels anyway, so the chances of someone having a working Android system without O_CLOEXEC have to be 0.",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_1083ea78",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T18:54:53Z",
+      "side": 1,
+      "message": "i wonder when this was written?!",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
