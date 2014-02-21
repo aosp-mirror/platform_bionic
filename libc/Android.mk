@@ -345,47 +345,47 @@ libc_upstream_freebsd_src_files := \
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
     upstream-netbsd/common/lib/libc/inet/inet_addr.c \
-    upstream-netbsd/libc/gen/ftw.c \
-    upstream-netbsd/libc/gen/nftw.c \
-    upstream-netbsd/libc/gen/nice.c \
-    upstream-netbsd/libc/gen/popen.c \
-    upstream-netbsd/libc/gen/psignal.c \
-    upstream-netbsd/libc/gen/setjmperr.c \
-    upstream-netbsd/libc/gen/utime.c \
-    upstream-netbsd/libc/inet/inet_ntoa.c \
-    upstream-netbsd/libc/inet/inet_ntop.c \
-    upstream-netbsd/libc/inet/inet_pton.c \
-    upstream-netbsd/libc/isc/ev_streams.c \
-    upstream-netbsd/libc/isc/ev_timers.c \
-    upstream-netbsd/libc/regex/regcomp.c \
-    upstream-netbsd/libc/regex/regerror.c \
-    upstream-netbsd/libc/regex/regexec.c \
-    upstream-netbsd/libc/regex/regfree.c \
-    upstream-netbsd/libc/stdio/getdelim.c \
-    upstream-netbsd/libc/stdio/getline.c \
-    upstream-netbsd/libc/stdlib/bsearch.c \
-    upstream-netbsd/libc/stdlib/div.c \
-    upstream-netbsd/libc/stdlib/drand48.c \
-    upstream-netbsd/libc/stdlib/erand48.c \
-    upstream-netbsd/libc/stdlib/exit.c \
-    upstream-netbsd/libc/stdlib/jrand48.c \
-    upstream-netbsd/libc/stdlib/ldiv.c \
-    upstream-netbsd/libc/stdlib/lldiv.c \
-    upstream-netbsd/libc/stdlib/lrand48.c \
-    upstream-netbsd/libc/stdlib/mrand48.c \
-    upstream-netbsd/libc/stdlib/nrand48.c \
-    upstream-netbsd/libc/stdlib/_rand48.c \
-    upstream-netbsd/libc/stdlib/seed48.c \
-    upstream-netbsd/libc/stdlib/srand48.c \
-    upstream-netbsd/libc/stdlib/tdelete.c \
-    upstream-netbsd/libc/stdlib/tfind.c \
-    upstream-netbsd/libc/stdlib/tsearch.c \
-    upstream-netbsd/libc/string/memccpy.c \
-    upstream-netbsd/libc/string/strcasestr.c \
-    upstream-netbsd/libc/string/strcoll.c \
-    upstream-netbsd/libc/string/strxfrm.c \
-    upstream-netbsd/libc/thread-stub/__isthreaded.c \
-    upstream-netbsd/libc/unistd/killpg.c \
+    upstream-netbsd/lib/libc/gen/ftw.c \
+    upstream-netbsd/lib/libc/gen/nftw.c \
+    upstream-netbsd/lib/libc/gen/nice.c \
+    upstream-netbsd/lib/libc/gen/popen.c \
+    upstream-netbsd/lib/libc/gen/psignal.c \
+    upstream-netbsd/lib/libc/gen/setjmperr.c \
+    upstream-netbsd/lib/libc/gen/utime.c \
+    upstream-netbsd/lib/libc/inet/inet_ntoa.c \
+    upstream-netbsd/lib/libc/inet/inet_ntop.c \
+    upstream-netbsd/lib/libc/inet/inet_pton.c \
+    upstream-netbsd/lib/libc/isc/ev_streams.c \
+    upstream-netbsd/lib/libc/isc/ev_timers.c \
+    upstream-netbsd/lib/libc/regex/regcomp.c \
+    upstream-netbsd/lib/libc/regex/regerror.c \
+    upstream-netbsd/lib/libc/regex/regexec.c \
+    upstream-netbsd/lib/libc/regex/regfree.c \
+    upstream-netbsd/lib/libc/stdio/getdelim.c \
+    upstream-netbsd/lib/libc/stdio/getline.c \
+    upstream-netbsd/lib/libc/stdlib/bsearch.c \
+    upstream-netbsd/lib/libc/stdlib/div.c \
+    upstream-netbsd/lib/libc/stdlib/drand48.c \
+    upstream-netbsd/lib/libc/stdlib/erand48.c \
+    upstream-netbsd/lib/libc/stdlib/exit.c \
+    upstream-netbsd/lib/libc/stdlib/jrand48.c \
+    upstream-netbsd/lib/libc/stdlib/ldiv.c \
+    upstream-netbsd/lib/libc/stdlib/lldiv.c \
+    upstream-netbsd/lib/libc/stdlib/lrand48.c \
+    upstream-netbsd/lib/libc/stdlib/mrand48.c \
+    upstream-netbsd/lib/libc/stdlib/nrand48.c \
+    upstream-netbsd/lib/libc/stdlib/_rand48.c \
+    upstream-netbsd/lib/libc/stdlib/seed48.c \
+    upstream-netbsd/lib/libc/stdlib/srand48.c \
+    upstream-netbsd/lib/libc/stdlib/tdelete.c \
+    upstream-netbsd/lib/libc/stdlib/tfind.c \
+    upstream-netbsd/lib/libc/stdlib/tsearch.c \
+    upstream-netbsd/lib/libc/string/memccpy.c \
+    upstream-netbsd/lib/libc/string/strcasestr.c \
+    upstream-netbsd/lib/libc/string/strcoll.c \
+    upstream-netbsd/lib/libc/string/strxfrm.c \
+    upstream-netbsd/lib/libc/thread-stub/__isthreaded.c \
+    upstream-netbsd/lib/libc/unistd/killpg.c \
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
@@ -508,7 +508,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
-    -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for NetBSD private headers
+    -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include # for NetBSD private headers
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -560,7 +560,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DPOSIX_MISTAKE \
     -I$(LOCAL_PATH)/upstream-netbsd \
-    -I$(LOCAL_PATH)/upstream-netbsd/libc/include \
+    -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
     -include upstream-netbsd/netbsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
