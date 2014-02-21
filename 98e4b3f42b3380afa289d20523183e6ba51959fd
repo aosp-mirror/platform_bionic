@@ -197,6 +197,24 @@
     },
     {
       "key": {
+        "uuid": "0f3a11a9_b0fcd657",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T18:22:52Z",
+      "side": 1,
+      "message": "yeah, i think i confused things by going from the general to the specific. i was trying to be helpful, honest :-)\n\nin general: there are things you never have to worry about, like open versus open64, and the stat family. they\u0027re all clean, all the time.\n\nin general: you need to look at the function you\u0027re calling and work out the transitive closure of everything it calls and decide whether those calls are LFS64-clean. (but, as noted above, you can automatically cross open and the stats off your list.)\n\ni think my aversion to adding a comment here is that it\u0027s exactly the kind of comment that goes stale. it would be making claims about some other part of the system. that\u0027s why i\u0027ve been trying to add tests (like for the rlimit64 stuff, say), because you can\u0027t fool tests. sometimes it\u0027s hard though.\n\n\n\nhere\u0027s where it gets more confusing: i was about to give an example of a very similar function where it might matter (in a world where our open !\u003d open64)... and realized that that function is mkstemp, which returns an int.\n\nthis, in case you\u0027re wondering, is why i said you should never redeclare functions and must always #include the declaring header file :-)\n\n\n\n\nso going back to the tests: you can use fcntl F_GETFL  to check that the fd you get back is an O_LARGEFILE fd, right? i think that\u0027s the right way to give ourselves confidence in our LFS64 stuff.",
+      "parentUuid": "af64a5c8_7df5d3f4",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f5e2dff_a23c9fd1",
         "filename": "tests/Android.mk",
         "patchSetId": 1
