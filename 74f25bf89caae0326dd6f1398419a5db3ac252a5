@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f78b56e_0790f9c5",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T23:44:58Z",
+      "side": 1,
+      "message": "were the old symbols in the NDK?\n\ni wonder if we shouldn\u0027t have a separate header file for the Android extensions; one that won\u0027t be exposed in the NDK by accident?",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f78b56e_a72825ac",
+        "filename": "libc/private/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T23:44:58Z",
+      "side": 1,
+      "message": "i\u0027d like to rename \u0027netbsd\u0027 to \u0027dns\u0027 or \u0027resolv\u0027 or something as soon as we can, and i\u0027d like to pull the dns-specific headers out of private and into your own directory for dns-related stuff. sounds like we should do that before we have more code poking around in bionic\u0027s \u0027private\u0027 directory. (i\u0027m tempted to add a filter-out to LOCAL_C_INCLUDES in the build system because people really seem to think that \u0027private\u0027 just means they have to explicitly add it to their include path :-( )",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
