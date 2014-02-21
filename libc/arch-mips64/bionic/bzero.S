@@ -25,9 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * void bzero(void *s, size_t n);
@@ -40,4 +39,3 @@ LEAF(bzero,0)
 	RESTORE_GP64
 	j	t9
 END(bzero)
-

@@ -4,7 +4,7 @@
  * Public domain.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * On the i486, this code is negligibly faster than the code generated

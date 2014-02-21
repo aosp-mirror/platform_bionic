@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
 FRAMESZ		=	MKFSIZ(6,0)

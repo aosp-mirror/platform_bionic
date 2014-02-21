@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/setjmp.h>
 #include <machine/cpu-features.h>
 
@@ -112,7 +112,7 @@ ENTRY(longjmp)
 
 	add	sp, sp, #4	/* unalign the stack */
 	.cfi_adjust_cfa_offset -4
-	ldmfd	sp!, {r0, r1, r14} 
+	ldmfd	sp!, {r0, r1, r14}
 	.cfi_def_cfa_offset 0
 
 #ifdef __ARM_HAVE_VFP

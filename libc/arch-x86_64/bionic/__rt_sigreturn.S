@@ -26,11 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
-ENTRY(__rt_sigreturn)
-  .hidden _C_LABEL(__rt_sigreturn) // TODO: add an ENTRY_PRIVATE macro for x86_64.
+ENTRY_PRIVATE(__rt_sigreturn)
   movl $__NR_rt_sigreturn, %eax
   syscall
 END(__rt_sigreturn)

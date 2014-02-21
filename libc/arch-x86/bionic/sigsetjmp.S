@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(sigsetjmp)
 	movl	4(%esp),%ecx

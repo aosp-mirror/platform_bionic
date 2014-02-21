@@ -26,49 +26,43 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 #include <linux/errno.h>
 #include <linux/sched.h>
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-	.text
-	.type __bionic_clone, @function
-	.global __bionic_clone
-	.align 4
-        .ent __bionic_clone
-__bionic_clone:
+ENTRY(__bionic_clone)
         .set	noreorder
-        .cpload $t9
+        .cpload t9
         .set	reorder
 
 	# set up child stack
-	subu	$a1,16
-	lw	$t0,20($sp)     # fn
-	lw	$t1,24($sp)     # arg
-	sw	$t0,0($a1)	# fn
-	sw	$t1,4($a1)	# arg
+	subu	a1,16
+	lw	t0,20(sp)     # fn
+	lw	t1,24(sp)     # arg
+	sw	t0,0(a1)	# fn
+	sw	t1,4(a1)	# arg
 
 	# remainder of arguments are correct for clone system call
-        li	$v0,__NR_clone
+        li	v0,__NR_clone
         syscall
 
-        bnez	$a3,.L__error_bc
+        bnez	a3,.L__error_bc
 
-        beqz	$v0,.L__thread_start_bc
+        beqz	v0,.L__thread_start_bc
 
-        j $ra
+        j ra
 
 .L__thread_start_bc:
-        lw	$a0,0($sp)	#  fn
-        lw	$a1,4($sp)	#  arg
+        lw	a0,0(sp)	#  fn
+        lw	a1,4(sp)	#  arg
 
 	# void __bionic_clone_entry(int (*func)(void*), void *arg)
-        la	$t9,__bionic_clone_entry
-        j	$t9
+        la	t9,__bionic_clone_entry
+        j	t9
 
 .L__error_bc:
-	move	$a0,$v0
-	la	$t9,__set_errno
-	j	$t9
-
-        .end __bionic_clone
+	move	a0,v0
+	la	t9,__set_errno
+	j	t9
+END(__bionic_clone)

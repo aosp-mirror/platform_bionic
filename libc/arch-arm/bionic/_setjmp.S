@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/setjmp.h>
 #include <machine/cpu-features.h>
 

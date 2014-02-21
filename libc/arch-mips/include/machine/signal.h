@@ -37,8 +37,6 @@
 #ifndef _MIPS_SIGNAL_H_
 #define _MIPS_SIGNAL_H_
 
-#include <machine/asm.h>
-
 #define	SC_REGMASK	(0*REGSZ)
 #define	SC_STATUS	(1*REGSZ)
 #define	SC_PC		(2*REGSZ)

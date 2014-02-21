@@ -27,7 +27,7 @@
  */
 
 #include <machine/cpu-features.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 
 #ifdef HAVE_32_BYTE_CACHE_LINE
