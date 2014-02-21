@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "af64a5c8_fd8c8370",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:58:12Z",
+      "side": 1,
+      "message": "Crap, Thanks for reminding me.",
+      "parentUuid": "0f3a11a9_b08a1694",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_334b7fe8",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "cf9559be_de4a6174",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:58:12Z",
+      "side": 1,
+      "message": "I was going to remove it in a separate change that adds the test.",
+      "parentUuid": "2f78b56e_334b7fe8",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f3a11a9_1083ea78",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -64,6 +100,24 @@
       "writtenOn": "2014-02-21T18:54:53Z",
       "side": 1,
       "message": "i wonder when this was written?!",
+      "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af64a5c8_1d92178e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:58:12Z",
+      "side": 1,
+      "message": "Earlier than 2009",
+      "parentUuid": "0f3a11a9_1083ea78",
       "revId": "33f969d8b808bd0cebaa8adc3c05ad09824bd933",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
