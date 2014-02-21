@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "af49054f_fb3643fd",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-21T23:57:56Z",
+      "side": 1,
+      "message": "No, they are not in the public header (development/ndk/platforms/android-3/include/netdb.h), nor were the symbols exported in the libc stub (development/ndk/platforms/android-XX/arch-YYY/symbols/libc.so.functions.txt).",
+      "parentUuid": "2f78b56e_0790f9c5",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_a72825ac",
         "filename": "libc/private/resolv_netid.h",
         "patchSetId": 3
