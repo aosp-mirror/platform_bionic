@@ -43,13 +43,10 @@ libc_common_src_files_mips += \
     bionic/__strcat_chk.cpp \
 
 
-# cflags
 ifneq ($(ARCH_MIPS_HAS_FPU),true)
 libc_common_cflags_mips := \
     -DSOFTFLOAT
 endif
-libc_common_cflags_mips += \
-    -fstrict-aliasing
 
 ##########################################
 ### CPU specific source files
