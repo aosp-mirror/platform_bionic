@@ -1852,9 +1852,7 @@ static void _remove_pidiface_info_locked(int pid);
 static struct resolv_pidiface_info* _get_pid_iface_info_locked(int pid);
 
 /* remove a resolv_pidiface_info structure from _res_uidiface_list */
-static int _remove_uidiface_info_locked(int uid_start, int uid_end);
-/* check if a range [low,high] overlaps with any already existing ranges in the uid=>iface map*/
-static int  _resolv_check_uid_range_overlap_locked(int uid_start, int uid_end);
+static int _remove_uidiface_info_locked(const char* iface, int uid_start, int uid_end);
 /* get a resolv_uidiface_info structure from _res_uidiface_list with a certain uid */
 static struct resolv_uidiface_info* _get_uid_iface_info_locked(int uid);
 
@@ -2433,11 +2431,11 @@ _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen)
 }
 
 static int
-_remove_uidiface_info_locked(int uid_start, int uid_end) {
+_remove_uidiface_info_locked(const char* ifname, int uid_start, int uid_end) {
     struct resolv_uidiface_info* result = _res_uidiface_list.next;
     struct resolv_uidiface_info* prev = &_res_uidiface_list;
-
-    while (result != NULL && result->uid_start != uid_start && result->uid_end != uid_end) {
+    while (result != NULL && !(result->uid_start == uid_start && result->uid_end == uid_end &&
+            !strcmp(result->ifname, ifname))) {
         prev = result;
         result = result->next;
     }
@@ -2459,19 +2457,6 @@ _get_uid_iface_info_locked(int uid)
     }
 
     return result;
-}
-
-static int
-_resolv_check_uid_range_overlap_locked(int uid_start, int uid_end)
-{
-    struct resolv_uidiface_info* cur = _res_uidiface_list.next;
-    while (cur != NULL) {
-        if (cur->uid_start <= uid_end && cur->uid_end >= uid_start) {
-            return -1;
-        }
-        cur = cur->next;
-    }
-    return 0;
 }
 
 void
@@ -2518,28 +2503,21 @@ _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
         return -1;
     }
     pthread_mutex_lock(&_res_uidiface_list_lock);
-    //check that we aren't adding an overlapping range
-    if (!_resolv_check_uid_range_overlap_locked(uid_start, uid_end)) {
-        uidiface_info = calloc(sizeof(*uidiface_info), 1);
-        if (uidiface_info) {
-            uidiface_info->uid_start = uid_start;
-            uidiface_info->uid_end = uid_end;
-            int len = sizeof(uidiface_info->ifname);
-            strncpy(uidiface_info->ifname, ifname, len - 1);
-            uidiface_info->ifname[len - 1] = '\0';
+    uidiface_info = calloc(sizeof(*uidiface_info), 1);
+    if (uidiface_info) {
+        uidiface_info->uid_start = uid_start;
+        uidiface_info->uid_end = uid_end;
+        int len = sizeof(uidiface_info->ifname);
+        strncpy(uidiface_info->ifname, ifname, len - 1);
+        uidiface_info->ifname[len - 1] = '\0';
 
-            uidiface_info->next = _res_uidiface_list.next;
-            _res_uidiface_list.next = uidiface_info;
+        uidiface_info->next = _res_uidiface_list.next;
+        _res_uidiface_list.next = uidiface_info;
 
-            XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", uid_start, uid_end,
-                    ifname);
-        } else {
-            XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
-            rv = -1;
-            errno = EINVAL;
-        }
+        XLOG("_resolv_set_iface_for_uid_range: [%d,%d], iface %s\n", uid_start, uid_end,
+                ifname);
     } else {
-        XLOG("_resolv_set_iface_for_uid_range range [%d,%d] overlaps\n", uid_start, uid_end);
+        XLOG("_resolv_set_iface_for_uid_range failing calloc\n");
         rv = -1;
         errno = EINVAL;
     }
@@ -2549,14 +2527,14 @@ _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
 }
 
 int
-_resolv_clear_iface_for_uid_range(int uid_start, int uid_end)
+_resolv_clear_iface_for_uid_range(const char* ifname, int uid_start, int uid_end)
 {
     pthread_once(&_res_cache_once, _res_cache_init);
     pthread_mutex_lock(&_res_uidiface_list_lock);
 
-    int rv = _remove_uidiface_info_locked(uid_start, uid_end);
+    int rv = _remove_uidiface_info_locked(ifname, uid_start, uid_end);
 
-    XLOG("_resolv_clear_iface_for_uid_range: [%d,%d]\n", uid_start, uid_end);
+    XLOG("_resolv_clear_iface_for_uid_range: [%d,%d] iface %s\n", uid_start, uid_end, ifname);
 
     pthread_mutex_unlock(&_res_uidiface_list_lock);
 
