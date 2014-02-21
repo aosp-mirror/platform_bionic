@@ -16,9 +16,10 @@
 
 #include <unistd.h>
 
-class TemporaryFile {
+template<int (*mk_func)(char*)>
+class GenericTemporaryFile {
  public:
-  TemporaryFile() {
+  GenericTemporaryFile() {
     // Since we might be running on the host or the target, and if we're
     // running on the host we might be running under bionic or glibc,
     // let's just try both possible temporary directories and take the
@@ -29,7 +30,7 @@ class TemporaryFile {
     }
   }
 
-  ~TemporaryFile() {
+  ~GenericTemporaryFile() {
     close(fd);
     unlink(filename);
   }
@@ -40,6 +41,8 @@ class TemporaryFile {
  private:
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
-    fd = mkstemp(filename);
+    fd = mk_func(filename);
   }
 };
+
+typedef GenericTemporaryFile<mkstemp> TemporaryFile;

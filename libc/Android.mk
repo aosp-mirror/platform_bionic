@@ -231,6 +231,7 @@ libc_bionic_src_files := \
     bionic/getcwd.cpp \
     bionic/inotify_init.cpp \
     bionic/lchown.cpp \
+    bionic/lfs64_support.cpp \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
