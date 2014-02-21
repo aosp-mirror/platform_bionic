@@ -161,6 +161,24 @@
     },
     {
       "key": {
+        "uuid": "af64a5c8_7df5d3f4",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:08:16Z",
+      "side": 1,
+      "message": "Ok, I still don\u0027t get it - First I thought it was \"widespread\" i.e , the same set of reasons are valid for several functions - and then you\u0027ve told me this needs to be checked through on a case by case basis.\n\nEither way, I still think this requires an explanatory comment as to why it\u0027s safe. If it varies from case to case, then all cases should have their corresponding explanation.\n\nI won\u0027t insist on it because I normally ignore most comments and look at code anyway. (But I still think it is generally useful)\n\nLet\u0027s move on :)",
+      "parentUuid": "0f3a11a9_b02cd6ad",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f5e2dff_a23c9fd1",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -243,6 +261,24 @@
       "side": 1,
       "message": "yeah, but the template seems less unnatural since this is a compile-time rather than run-time choice.\n\nthe other alternative would be to duplicate the code in the tests that specifically test mkstemp/mkstemp64, but that didn\u0027t seem particularly useful. (although you could then test things like \"what happens if there are too few Xs?\" or \"what happens if the path doesn\u0027t exist?\" and so on.)",
       "parentUuid": "af64a5c8_9a538d5d",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af64a5c8_ddfc1fe0",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-21T18:08:16Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s a fair point. \n\nThough to be pedantic, templates make it *look* like a compile decision (and that\u0027s still a win). The compiler might or might not optimize the code away depending on the code, unless we implement the specialization ourselves.",
+      "parentUuid": "0f3a11a9_f0365efd",
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
