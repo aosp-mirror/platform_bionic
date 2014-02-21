@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "0f3a11a9_4d523955",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T17:18:19Z",
+      "side": 1,
+      "message": "no, the stdio directory is unsorted cruft, as explained in HACKING.txt. our stuff goes in bionic/. (though not everything in bionic is ours, it\u0027s close.)\n\nalso, our stuff should be C++.",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_8d3c21f9",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T17:18:19Z",
+      "side": 1,
+      "message": "no, always #include the file you\u0027re defining stuff from instead.",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef985df7_9f029726",
         "filename": "libc/stdio/mkstemp64.c",
         "patchSetId": 1
@@ -73,6 +107,41 @@
     },
     {
       "key": {
+        "uuid": "2f78b56e_e0820b3e",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T17:18:19Z",
+      "side": 1,
+      "message": "note that in the same way we don\u0027t have a non-O_LARGEFILE open, we don\u0027t have a 32-bit struct stat; our [lf]?stat \u003d\u003d [lf]?stat64. that\u0027s why we get away with this kind of thing.\n\ni don\u0027t think it\u0027s worth commenting because it\u0027s (a) so widespread and (b) something you need to check on a case-by-case basis.\n\nwhat might be worth doing is putting all these hacks together in the same lfs64_support.cpp file?\n\n(google3-style 2-space indent for new code.)",
+      "parentUuid": "af64a5c8_ba73f1ff",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f5e2dff_a23c9fd1",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T17:18:19Z",
+      "side": 1,
+      "message": "should be in stdlib_test.cpp, which already exists. i think HACKING.txt mentions this?",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af64a5c8_9ad8edc1",
         "filename": "tests/TemporaryFile.h",
         "patchSetId": 1
@@ -84,6 +153,24 @@
       "writtenOn": "2014-02-21T16:45:35Z",
       "side": 1,
       "message": "move this variable down with the other member variables. Also, it can be const. (as can int fd)",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_6d28d5ab",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-21T17:18:19Z",
+      "side": 1,
+      "message": "this seems odd. a template that defaults to mkstemp would seem slightly less odd, i think.",
+      "parentUuid": "af64a5c8_9ad8edc1",
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
