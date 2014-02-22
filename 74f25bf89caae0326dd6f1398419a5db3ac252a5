@@ -51,6 +51,24 @@
       "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef713d8d_fd6d5b17",
+        "filename": "libc/private/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-22T00:01:35Z",
+      "side": 1,
+      "message": "I don\u0027t fully understand what you mean.\n\nBTW, this comment is very misleading (resolv.h contains only __res_state and b64_ntop/pton). The file is mostly a move of resolv_iface.h",
+      "parentUuid": "2f78b56e_a72825ac",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
