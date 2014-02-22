@@ -38,9 +38,6 @@ endif
 # =========================================================
 libc_common_src_files := \
     bionic/arc4random.c \
-    bionic/atoi.c \
-    bionic/atol.c \
-    bionic/atoll.c \
     bionic/bindresvport.c \
     bionic/clearenv.c \
     bionic/daemon.c \
@@ -50,7 +47,6 @@ libc_common_src_files := \
     bionic/fdprintf.c \
     bionic/flockfile.c \
     bionic/ftime.c \
-    bionic/ftok.c \
     bionic/fts.c \
     bionic/getdtablesize.c \
     bionic/gethostname.c \
@@ -68,7 +64,6 @@ libc_common_src_files := \
     bionic/memmem.c \
     bionic/memswap.c \
     bionic/pathconf.c \
-    bionic/perror.c \
     bionic/ptsname.c \
     bionic/ptsname_r.c \
     bionic/pututline.c \
@@ -81,7 +76,6 @@ libc_common_src_files := \
     bionic/sigblock.c \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
-    bionic/strndup.c \
     bionic/strntoimax.c \
     bionic/strntoumax.c \
     bionic/strtotimeval.c \
@@ -95,61 +89,24 @@ libc_common_src_files := \
     bionic/utmp.c \
     bionic/wcscoll.c \
     stdio/asprintf.c \
-    stdio/fflush.c \
-    stdio/fgetc.c \
     stdio/findfp.c \
     stdio/fprintf.c \
-    stdio/fputc.c \
     stdio/fread.c \
     stdio/freopen.c \
-    stdio/fscanf.c \
-    stdio/fseek.c \
-    stdio/ftell.c \
     stdio/fvwrite.c \
-    stdio/gets.c \
-    stdio/printf.c \
-    stdio/refill.c \
-    stdio/rewind.c \
-    stdio/scanf.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdio/sscanf.c \
-    stdio/stdio.c \
-    stdio/ungetc.c \
-    stdio/vasprintf.c \
     stdio/vfprintf.c \
     stdio/vfscanf.c \
-    stdio/vprintf.c \
-    stdio/vscanf.c \
-    stdio/vsnprintf.c \
-    stdio/vsprintf.c \
     stdio/vsscanf.c \
-    stdio/wbuf.c \
     stdlib/atexit.c \
     stdlib/ctype_.c \
     stdlib/getenv.c \
     stdlib/putenv.c \
     stdlib/setenv.c \
     stdlib/strtod.c \
-    stdlib/strtoimax.c \
-    stdlib/strtol.c \
-    stdlib/strtoll.c \
-    stdlib/strtoul.c \
-    stdlib/strtoull.c \
-    stdlib/strtoumax.c \
-    stdlib/tolower_.c \
-    stdlib/toupper_.c \
-    string/strcasecmp.c \
-    string/strcspn.c \
-    string/strdup.c \
-    string/strpbrk.c \
-    string/strsep.c \
-    string/strspn.c \
-    string/strstr.c \
-    string/strtok.c \
     unistd/alarm.c \
-    unistd/exec.c \
-    unistd/fnmatch.c \
     unistd/syslog.c \
     unistd/system.c \
     unistd/time.c \
@@ -280,38 +237,14 @@ libc_bionic_src_files := \
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/sleep.c \
     upstream-freebsd/lib/libc/gen/usleep.c \
-    upstream-freebsd/lib/libc/stdio/clrerr.c \
     upstream-freebsd/lib/libc/stdio/fclose.c \
-    upstream-freebsd/lib/libc/stdio/fdopen.c \
-    upstream-freebsd/lib/libc/stdio/feof.c \
-    upstream-freebsd/lib/libc/stdio/ferror.c \
-    upstream-freebsd/lib/libc/stdio/fgetln.c \
-    upstream-freebsd/lib/libc/stdio/fgetpos.c \
-    upstream-freebsd/lib/libc/stdio/fgets.c \
-    upstream-freebsd/lib/libc/stdio/fileno.c \
     upstream-freebsd/lib/libc/stdio/flags.c \
     upstream-freebsd/lib/libc/stdio/fopen.c \
-    upstream-freebsd/lib/libc/stdio/fpurge.c \
-    upstream-freebsd/lib/libc/stdio/fputs.c \
-    upstream-freebsd/lib/libc/stdio/fsetpos.c \
-    upstream-freebsd/lib/libc/stdio/funopen.c \
-    upstream-freebsd/lib/libc/stdio/fwalk.c \
     upstream-freebsd/lib/libc/stdio/fwrite.c \
-    upstream-freebsd/lib/libc/stdio/getc.c \
-    upstream-freebsd/lib/libc/stdio/getchar.c \
     upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/mktemp.c \
-    upstream-freebsd/lib/libc/stdio/putc.c \
-    upstream-freebsd/lib/libc/stdio/putchar.c \
-    upstream-freebsd/lib/libc/stdio/puts.c \
     upstream-freebsd/lib/libc/stdio/putw.c \
-    upstream-freebsd/lib/libc/stdio/remove.c \
-    upstream-freebsd/lib/libc/stdio/rget.c \
-    upstream-freebsd/lib/libc/stdio/setbuf.c \
-    upstream-freebsd/lib/libc/stdio/setbuffer.c \
     upstream-freebsd/lib/libc/stdio/setvbuf.c \
-    upstream-freebsd/lib/libc/stdio/tempnam.c \
-    upstream-freebsd/lib/libc/stdio/tmpnam.c \
     upstream-freebsd/lib/libc/stdio/wsetup.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
@@ -361,8 +294,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/regex/regerror.c \
     upstream-netbsd/lib/libc/regex/regexec.c \
     upstream-netbsd/lib/libc/regex/regfree.c \
-    upstream-netbsd/lib/libc/stdio/getdelim.c \
-    upstream-netbsd/lib/libc/stdio/getline.c \
     upstream-netbsd/lib/libc/stdlib/bsearch.c \
     upstream-netbsd/lib/libc/stdlib/div.c \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
@@ -574,6 +505,32 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_openbsd.a - upstream OpenBSD C library code
+# ========================================================
+#
+# These files are built with the openbsd-compat.h header file
+# automatically included.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(call all-c-files-under,upstream-openbsd)
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -I$(LOCAL_PATH)/upstream-openbsd \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
+    -include upstream-openbsd/openbsd-compat.h
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_openbsd
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_bionic.a - home-grown C library code
 # ========================================================
 
@@ -633,6 +590,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_dns \
     libc_freebsd \
     libc_netbsd \
+    libc_openbsd \
     libc_syscalls \
     libc_tzcode \
 
