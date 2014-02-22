@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0f3a11a9_e7e93ed5",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-22T00:13:58Z",
+      "side": 1,
+      "message": "yeah, if they\u0027re in a public header file like this at some point they\u0027ll get picked up. we should work out what the intended scope is for our extensions and move them somewhere appropriate.",
+      "parentUuid": "af49054f_7b2333b9",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_a72825ac",
         "filename": "libc/private/resolv_netid.h",
         "patchSetId": 3
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I don\u0027t fully understand what you mean.\n\nBTW, this comment is very misleading (resolv.h contains only __res_state and b64_ntop/pton). The file is mostly a move of resolv_iface.h",
       "parentUuid": "2f78b56e_a72825ac",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_07080af2",
+        "filename": "libc/private/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-22T00:13:58Z",
+      "side": 1,
+      "message": "ah, i thought you\u0027d just written the \"this will be...\" comment, and was responding to that.\n\ni still want to move the dns stuff into its own dns directory, though. that just means renaming bionic/libc/netbsd -\u003e bionic/libc/dns and picking out those bits of \u0027private\u0027 that are just dns resolver implementation details. (of which this is one. almost half of the private stuff is not generally useful to the non-dns parts of bionic.)",
+      "parentUuid": "ef713d8d_fd6d5b17",
       "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
