@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "af49054f_7b2333b9",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-22T00:08:45Z",
+      "side": 1,
+      "message": "Sorry, that\u0027s wrong. Starting with API 19, they are in the public header although AFAICT the symbols are not exported.",
+      "parentUuid": "af49054f_fb3643fd",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_a72825ac",
         "filename": "libc/private/resolv_netid.h",
         "patchSetId": 3
