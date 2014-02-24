@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "af64a5c8_bd25ab3b",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T11:55:29Z",
+      "side": 1,
+      "message": "done. sorry for this, i match in the head \"implement missing stdio\" with the stdio dir and didn\u0027t check again...",
+      "parentUuid": "0f3a11a9_4d523955",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f3a11a9_8d3c21f9",
         "filename": "libc/stdio/mkstemp64.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-21T17:18:19Z",
       "side": 1,
       "message": "no, always #include the file you\u0027re defining stuff from instead.",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9559be_9ea9b960",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T11:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f3a11a9_8d3c21f9",
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -269,6 +305,24 @@
     },
     {
       "key": {
+        "uuid": "ef985df7_df8fbfa2",
+        "filename": "libc/stdio/mkstemp64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T11:55:29Z",
+      "side": 1,
+      "message": "I moved this to bionic, renamed lfs64_support and added a short note on the impl. Thanks for the comments and the fcntl F_GETFL tip:)",
+      "parentUuid": "0f3a11a9_c18992ca",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f5e2dff_a23c9fd1",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -280,6 +334,24 @@
       "writtenOn": "2014-02-21T17:18:19Z",
       "side": 1,
       "message": "should be in stdlib_test.cpp, which already exists. i think HACKING.txt mentions this?",
+      "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af64a5c8_7d0cf3c2",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T11:55:29Z",
+      "side": 1,
+      "message": "done (my bad)",
+      "parentUuid": "6f5e2dff_a23c9fd1",
       "revId": "98e4b3f42b3380afa289d20523183e6ba51959fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
