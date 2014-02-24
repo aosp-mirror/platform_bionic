@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cf6894a_e2bf68dd",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T19:53:14Z",
+      "side": 1,
+      "message": "sorry, i meant the other way round, STL-style. so you have the completely general std::basic_string that no-one uses and a \"typedef std::basic_string\u003cchar\u003e std::string;\" so calling code gets to use the nice name unless it actually needs the generality of choosing its own char type :-)\n\nmy aim is that we should be able to leave unchanged all the callers that don\u0027t care how their temporary file is made.",
+      "revId": "e23dc01b7f629b391b0ce6dfac4dd9645244da7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
