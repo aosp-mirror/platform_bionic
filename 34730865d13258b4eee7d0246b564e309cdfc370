@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "5cf6894a_423294d1",
+        "filename": "libc/include/ftw.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T20:02:46Z",
+      "side": 1,
+      "message": "the other thing i should have said is that even having [a subset of] the LFS64 functions without _FILE_OFFSET_BITS is useful for ported code. strace, for example, will use the *64 functions itself if you tell it they\u0027re available: https://cs.corp.google.com/#android/external/strace/strace.c\u0026q\u003dfopen64\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d443\n\nthere\u0027s also a lot of code that tries to use _FILE_OFFSET_BITS: https://cs.corp.google.com/#search/\u0026q\u003d_FILE_OFFSET_BITS\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs\u0026m\u003d100\n\nit would be interesting to know how many of those would work with partial _FILE_OFFSET_BITS support.",
+      "parentUuid": "dc0199f4_fb138f74",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef469d41_f3d2df9e",
         "filename": "tests/TemporaryFile.h",
         "patchSetId": 1
