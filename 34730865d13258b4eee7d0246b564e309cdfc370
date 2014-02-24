@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f3a11a9_4fbdc4e5",
+        "filename": "libc/bionic/lfs64_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "\u003cftw.h\u003e",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef1f7d43_044bb6e7",
+        "filename": "libc/bionic/lfs64_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "type* here and elsewhere.",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_8fa08cb5",
+        "filename": "libc/include/ftw.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "personally i\u0027d clean up the declarations while i\u0027m here, but that\u0027s optional. especially for a header file where upstream hasn\u0027t changed in over a decade. we\u0027ll never be back here. (unless we go to the next level and actually add _FILE_OFFSET_BITS. given that an LFS64 stdio might not be possible, we should think about whether we\u0027d be happy offering a _FILE_OFFSET_BITS that works for everything except stdio. is that better or worse than offering nothing?)",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef469d41_f3d2df9e",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "this comment should go inside the \"else\".",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_2f26b89b",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "you could stat fpath and check that tflag is correct?\n\noh, you have a struct stat already... any time you see void* you\u0027re probably missing a template parameter :-)",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_0f21fc83",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "not really a no-op then...",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f3a11a9_ef34b0c0",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:18:24Z",
+      "side": 1,
+      "message": "(i thought there was a named constant for this, but it looks like that\u0027s a GNU extension we don\u0027t have.)",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
