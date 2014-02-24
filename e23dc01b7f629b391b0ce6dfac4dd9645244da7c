@@ -16,6 +16,24 @@
       "revId": "e23dc01b7f629b391b0ce6dfac4dd9645244da7c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0199f4_fb902f83",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T20:25:58Z",
+      "side": 1,
+      "message": "I thought the same and did the other way around...\n\nfixed.",
+      "parentUuid": "5cf6894a_e2bf68dd",
+      "revId": "e23dc01b7f629b391b0ce6dfac4dd9645244da7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
