@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "cf9559be_019e2e51",
+        "filename": "libc/include/ftw.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-24T18:06:26Z",
+      "side": 1,
+      "message": "Just to be sure I got the entire comment:\n\nBy \"clean up\" you mean typedef-ing the arg functions? And then, if we decide to add the _FILE_OFFSET_BITS to adapt(typedef/define) ftw function argument to use stat64?.\n\nHaving a partial support for _FILE_OFFSET_BITS looks less than ideal. I\u0027m not necessary against partial support but just thinking loud: As an user I\u0027m assuming (is it a good assumption?) that most of the time you\u0027ll end up needing smth from stdio and if you hit a wall there you\u0027ll be very frustrated (over and over again)...\n\nAs a related note which might worth an offline discussion: I\u0027m a bit confused about how _FILE_OFFSET_BITS (would) interact with our changes for x64 where most of the functions already operate on a 64bit off_t. Based on my current understanding the flag is used to alter the off_t size to support LFS. If we\u0027re already moving to support LFS by default on x64 does _FILE_OFFSET_BITS become redundant or it\u0027s just future proof to eventually move beyond 32/64 bits off_t.",
+      "parentUuid": "0f3a11a9_8fa08cb5",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef469d41_f3d2df9e",
         "filename": "tests/TemporaryFile.h",
         "patchSetId": 1
