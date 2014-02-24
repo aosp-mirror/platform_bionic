@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "ef1f7d43_44004e61",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:28:11Z",
+      "side": 1,
+      "message": "is the intention to make this API available directly to NDK users? if not, it shouldn\u0027t be in this header file. if so, we need to stop changing it.\n\n(but, like the rename, we can move this stuff in a later change; this patch isn\u0027t making things any worse than they already were.)",
+      "parentUuid": "af49054f_3b760b1d",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_a72825ac",
         "filename": "libc/private/resolv_netid.h",
         "patchSetId": 3
@@ -156,6 +174,24 @@
       "side": 1,
       "message": "I can do the netbsd -\u003e dns renaming, although I\u0027d prefer to do this in a subsequent change.\n\nNot sure what you mean by \"dns resolver implementation details\". This header is needed for system/netd. This is the only API available for configuring resolv.",
       "parentUuid": "0f3a11a9_07080af2",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef1f7d43_840a467d",
+        "filename": "libc/private/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T17:28:11Z",
+      "side": 1,
+      "message": "yeah, i didn\u0027t mean you should do it in this change. whenever\u0027s convenient.\n\nnote that i\u0027m not just talking about this header file --- about half of the header files in private/ are DNS resolver implementation details. all the resolv header files should go under the new directory, and we should probably separate the resolv-netd interface headers from the resolv-private headers.",
+      "parentUuid": "af49054f_fbf0034c",
       "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
