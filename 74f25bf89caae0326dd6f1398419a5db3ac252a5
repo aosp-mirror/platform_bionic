@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "af49054f_3b760b1d",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-24T17:21:22Z",
+      "side": 1,
+      "message": "So they are in the public header, but NDK would not normally allow one to link with it because the symbols are not in the libc stub.\n\nAlso note that c39214e0ac49b9f7de6fd9989331145c6e1cd584 has recently changed this interface by adding an extra argument.\n\nIs changing this API still a concern here?",
+      "parentUuid": "0f3a11a9_e7e93ed5",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f78b56e_a72825ac",
         "filename": "libc/private/resolv_netid.h",
         "patchSetId": 3
@@ -120,6 +138,24 @@
       "side": 1,
       "message": "ah, i thought you\u0027d just written the \"this will be...\" comment, and was responding to that.\n\ni still want to move the dns stuff into its own dns directory, though. that just means renaming bionic/libc/netbsd -\u003e bionic/libc/dns and picking out those bits of \u0027private\u0027 that are just dns resolver implementation details. (of which this is one. almost half of the private stuff is not generally useful to the non-dns parts of bionic.)",
       "parentUuid": "ef713d8d_fd6d5b17",
+      "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af49054f_fbf0034c",
+        "filename": "libc/private/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-24T17:21:22Z",
+      "side": 1,
+      "message": "I can do the netbsd -\u003e dns renaming, although I\u0027d prefer to do this in a subsequent change.\n\nNot sure what you mean by \"dns resolver implementation details\". This header is needed for system/netd. This is the only API available for configuring resolv.",
+      "parentUuid": "0f3a11a9_07080af2",
       "revId": "74f25bf89caae0326dd6f1398419a5db3ac252a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
