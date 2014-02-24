@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ef1f7d43_07fd7887",
+        "filename": "libc/include/ftw.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-24T18:28:27Z",
+      "side": 1,
+      "message": "sorry, no, not unless glibc has typedefs. i actually just meant losing the tabs and going with type* spacing. but don\u0027t worry about it. this isn\u0027t one of the header files we\u0027re constantly editing (which is a sign we should reformat) or one of the header files that upstream is constantly editing (which is a sign we should minimize our diffs). it really doesn\u0027t matter.\n\n_FILE_OFFSET_BITS is basically a no-op on LP64; it\u0027s just so you have source compatibility with LP32. you have two choices really: you can write your code with 64 everywhere (so \"struct stat64 sb; fstat64(fd, \u0026 sb);\"...) or you can write your code with no 64s but use _FILE_OFFSET_BITS to flip the switch so the non-64 names (via macro magic) get you the 64 types/symbols.\n\none interesting thing (that sucks for us) is that the BSDs had a 64-bit off_t even on LP32. so the stuff we\u0027re reusing just assumes that off_t and the non-64 functions are all fine. which, as you say, will be true for LP64, but is not true for LP32.\n\ni guess my thinking with this LFS64 work is that there will be a point where people are developing on LP64 by default and LP32 will be the legacy side that doesn\u0027t get the attention, so having _FILE_OFFSET_BITS would -- modulo stdio -- hopefully make things easier to port code developed on LP64 to LP32. i\u0027m not sure how much it really matters in practice, though, because (a) bionic historically hasn\u0027t had many of the LFS64 functions so you\u0027d only be able to run such code \u003e\u003d the next release and (b) we\u0027ve had surprisingly few complaints about our 32-bit off_t so it seems like there aren\u0027t that many people dealing with large files? or if they are they\u0027re just opening, reading, and closing? dunno. but if we don\u0027t implement the LFS64 functions now, i do know that if we ever do need/want to offer this, that\u0027s a whole extra release cycle developers have to wait until they can make use of this stuff.",
+      "parentUuid": "cf9559be_019e2e51",
+      "revId": "34730865d13258b4eee7d0246b564e309cdfc370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef469d41_f3d2df9e",
         "filename": "tests/TemporaryFile.h",
         "patchSetId": 1
