@@ -238,7 +238,7 @@ static int map_fd_ro(const int fd) {
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
             || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
-            || (fd_stat.st_size < sizeof(prop_area)) ) {
+            || (fd_stat.st_size < static_cast<off_t>(sizeof(prop_area))) ) {
         return -1;
     }
 
