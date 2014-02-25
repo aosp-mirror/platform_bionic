@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf89137_9539ef57",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/system.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T23:20:56Z",
+      "side": 0,
+      "message": "bsd_signal is the same as signal. (sysv_signal is the opposite.) so this isn\u0027t actually a change.",
+      "revId": "c380385f0b8826ab7c02429dd48b07670516f964",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
