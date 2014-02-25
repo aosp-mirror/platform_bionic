@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf89137_a6e3a7f7",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 1,
+      "message": "Can the caller pass in a mark of -1? If so, what will happen? Will the code just use an unmarked socket? I suppose that would indicate a bug in netd, but still, it sounds bad.\n\nAlso, this should probably be indented using tabs for consistency.",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3ac1c3_312ed010",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1799,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 1,
+      "message": "Fix indentation. Also, mark should be unsigned.",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cfb9535_488cf071",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1883,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 1,
+      "message": "And here I was thinking we were using a hash table and not a linear scan. :-)\n\nWhich makes me think: is there a way that new netids can accumulate without being deleted, thus causing memory leaks and performance hits to DNS lookups?\n\nThat\u0027s not really an issue with the current code, because new interface names don\u0027t get randomly created and deleted, but if we move to netids that are never reused, then we need to make sure they get deleted. Whose responsibility is this? netd?\n\nSpeaking of which, where\u0027s the code that frees the resolv_cache_info objects? There is code that does this, right?",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3ac1c3_f19288f9",
+        "filename": "libc/netbsd/resolv/res_send.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 1,
+      "message": "This should be unsigned, right?",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cf89137_264c3760",
+        "filename": "libc/private/resolv_private.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 1,
+      "message": "Note that if netid \u003d\u003d mark, then this needs to be unsigned, as inside the kernel the mark is a __u32.",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

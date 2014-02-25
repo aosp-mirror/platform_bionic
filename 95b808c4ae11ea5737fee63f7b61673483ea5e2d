@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf89137_26d79714",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T11:08:46Z",
+      "side": 0,
+      "message": "You\u0027re deleting this because netids will not be reused?",
+      "revId": "95b808c4ae11ea5737fee63f7b61673483ea5e2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
