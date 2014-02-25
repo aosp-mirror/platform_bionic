@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1c217195_950c64c7",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-25T02:32:27Z",
+      "side": 1,
+      "message": "If we don\u0027t change netd, then we can\u0027t remove the PID/UID-\u003eiface mappings from bionic. If we change iface to netid here, then we shouldn\u0027t need any further changes to bionic -- only to netd.",
+      "parentUuid": "ef293d20_11af9b62",
+      "range": {
+        "startLine": 216,
+        "startChar": 16,
+        "endLine": 216,
+        "endChar": 43
+      },
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef293d20_747b5d95",
         "filename": "libc/private/resolv_cache.h",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5c0f6924_1a8cf970",
+        "filename": "libc/private/resolv_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-25T02:32:27Z",
+      "side": 1,
+      "message": "Agreed, and this comment is misleading. netid\u003d\u003d0 has no special significance for bionic -- it\u0027s completely opaque.\n\nComment updated.",
+      "parentUuid": "ef293d20_747b5d95",
+      "range": {
+        "startLine": 37,
+        "startChar": 37,
+        "endLine": 37,
+        "endChar": 42
+      },
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf26394f_f28301f2",
         "filename": "libc/private/resolv_private.h",
         "patchSetId": 1
@@ -59,6 +107,24 @@
       "writtenOn": "2014-02-25T02:00:28Z",
       "side": 1,
       "message": "Can you align the variable and the comment using tabs so it\u0027s consistent with the rest?\n\n\tint     netid;\t\t\t/* NetId and SO_MARK on sockets */",
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c2475a3_b9719bb1",
+        "filename": "libc/private/resolv_private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-25T02:32:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf26394f_f28301f2",
       "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
