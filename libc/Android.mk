@@ -106,7 +106,6 @@ libc_common_src_files := \
     stdlib/strtod.c \
     unistd/alarm.c \
     unistd/syslog.c \
-    unistd/system.c \
     unistd/time.c \
 
 # Fortify implementations of libc functions.
@@ -388,6 +387,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/strtoumax.c \
     upstream-openbsd/lib/libc/stdlib/strtoll.c \
     upstream-openbsd/lib/libc/stdlib/strtol.c \
+    upstream-openbsd/lib/libc/stdlib/system.c \
     upstream-openbsd/lib/libc/locale/wcsxfrm.c \
 
 libc_arch_static_src_files := \
