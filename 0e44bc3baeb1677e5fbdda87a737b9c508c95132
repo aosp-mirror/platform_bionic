@@ -22,6 +22,30 @@
       "revId": "0e44bc3baeb1677e5fbdda87a737b9c508c95132",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cfb9535_c8c480d7",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T17:35:00Z",
+      "side": 1,
+      "message": "i actually did change them both to be hardcoded but felt guilty hardcoding something that didn\u0027t need to. the reason __page_shift is hardcoded isn\u0027t backwards compatibility (PAGE_SIZE hasn\u0027t changed) --- it\u0027s because i\u0027ve removed PAGE_SHIFT. the other C libraries don\u0027t have it, and no one was using it. shipped binaries either have a hardcoded \"12\" already or -- depending on where they came from -- a reference to __page_shift.\n\nthat\u0027s assuming anyone actually has a binary that refers to the page shift at all. when it wasn\u0027t even used within bionic, despite the fact that the constant is actually needed in a couple of places, and it can be removed without anything in the platform needing to change, you have to suspect it\u0027s not widely used. (perhaps because it\u0027s not in glibc.)",
+      "parentUuid": "dc0199f4_bbe067e6",
+      "range": {
+        "startLine": 42,
+        "startChar": 15,
+        "endLine": 42,
+        "endChar": 26
+      },
+      "revId": "0e44bc3baeb1677e5fbdda87a737b9c508c95132",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
