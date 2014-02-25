@@ -46,6 +46,30 @@
       "revId": "0e44bc3baeb1677e5fbdda87a737b9c508c95132",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c156131_dcca01e4",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-25T17:50:01Z",
+      "side": 1,
+      "message": "I was more worried about us getting into a situation where __page_size becomes, say 2048 and __page_shift remains 12. (because we forget all about ndk_cruft.cpp)\n\nThat seems exceedingly unlikely",
+      "parentUuid": "3cfb9535_c8c480d7",
+      "range": {
+        "startLine": 42,
+        "startChar": 15,
+        "endLine": 42,
+        "endChar": 26
+      },
+      "revId": "0e44bc3baeb1677e5fbdda87a737b9c508c95132",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
