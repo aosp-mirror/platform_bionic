@@ -54,6 +54,7 @@ extern int clearenv(void);
 extern char* mkdtemp(char*);
 extern char* mktemp(char*) __warnattr("mktemp possibly used unsafely; consider using mkstemp");
 extern int mkstemp(char*);
+extern int mkstemp64(char*);
 
 extern long strtol(const char *, char **, int);
 extern long long strtoll(const char *, char **, int);
