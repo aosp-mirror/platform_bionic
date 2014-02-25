@@ -44,6 +44,7 @@ libBionicStandardTests_src_files := \
     eventfd_test.cpp \
     fcntl_test.cpp \
     fenv_test.cpp \
+    ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
     inttypes_test.cpp \
