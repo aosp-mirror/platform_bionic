@@ -40,7 +40,7 @@
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
 extern "C" {
   unsigned int __page_size = PAGE_SIZE;
-  unsigned int __page_shift = PAGE_SHIFT;
+  unsigned int __page_shift = 12;
 }
 
 // TODO: remove this backward compatibility hack (for jb-mr1 strace binaries).
