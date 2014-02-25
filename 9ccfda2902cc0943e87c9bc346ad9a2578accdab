@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef293d20_11af9b62",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T02:00:28Z",
+      "side": 1,
+      "message": "Does it make it easier to transition to if we maintain shims for android_getXXXforiface that simply do this?\n\nunsigned int ifindex \u003d if_nametoindex(iface);\nreturn android_getXXXfornet(ifindex, ...);\n\nThat way this change won\u0027t depend on the netd change.",
+      "range": {
+        "startLine": 216,
+        "startChar": 16,
+        "endLine": 216,
+        "endChar": 43
+      },
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef293d20_747b5d95",
+        "filename": "libc/private/resolv_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T02:00:28Z",
+      "side": 1,
+      "message": "The default network won\u0027t have a mark of 0 though, right? So either we keep track of the default mark here, or we make sure that the caller (netd?) always specifies the right mark.",
+      "range": {
+        "startLine": 37,
+        "startChar": 37,
+        "endLine": 37,
+        "endChar": 42
+      },
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf26394f_f28301f2",
+        "filename": "libc/private/resolv_private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-02-25T02:00:28Z",
+      "side": 1,
+      "message": "Can you align the variable and the comment using tabs so it\u0027s consistent with the rest?\n\n\tint     netid;\t\t\t/* NetId and SO_MARK on sockets */",
+      "revId": "9ccfda2902cc0943e87c9bc346ad9a2578accdab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
