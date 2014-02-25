@@ -26,50 +26,33 @@
  * SUCH DAMAGE.
  */
 
-/* implement flockfile(), ftrylockfile() and funlockfile()
- *
- * we can't use the OpenBSD implementation which uses kernel-specific
- * APIs not available on Linux.
- *
- * Instead, we use a pthread_mutex_t within the FILE* internal state.
- * See fileext.h for details.
- *
- * the behaviour, if fclose() is called while the corresponding
- * file is locked is totally undefined.
- */
-#include <stdio.h>
-#include <string.h>
 #include <errno.h>
+#include <stdio.h>
+
 #include "fileext.h"
 
+// We can't use the OpenBSD implementation which uses kernel-specific
+// APIs not available on Linux. Instead we use a pthread_mutex_t within
+// struct __sfileext (see fileext.h).
 
-void
-flockfile(FILE * fp)
-{
-    if (fp != NULL) {
-        _FLOCK_LOCK(fp);
-    }
+void flockfile(FILE* fp) {
+  if (fp != NULL) {
+    pthread_mutex_lock(&_FLOCK(fp));
+  }
 }
 
+int ftrylockfile(FILE* fp) {
+  // The specification for ftrylockfile() says it returns 0 on success,
+  // or non-zero on error. So return an errno code directly on error.
+  if (fp == NULL) {
+    return EINVAL;
+  }
 
-int
-ftrylockfile(FILE *fp)
-{
-    /* The specification for ftrylockfile() says it returns 0 on success,
-     * or non-zero on error. So return an errno code directly on error.
-     */
-    int  ret = EINVAL;
-
-    if (fp != NULL) {
-        ret = _FLOCK_TRYLOCK(fp);
-    }
-    return ret;
+  return pthread_mutex_trylock(&_FLOCK(fp));
 }
 
-void
-funlockfile(FILE * fp)
-{
-    if (fp != NULL) {
-        _FLOCK_UNLOCK(fp);
-    }
+void funlockfile(FILE* fp) {
+  if (fp != NULL) {
+    pthread_mutex_unlock(&_FLOCK(fp));
+  }
 }

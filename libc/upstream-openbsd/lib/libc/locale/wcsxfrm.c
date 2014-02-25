@@ -1,7 +1,9 @@
-/*	$OpenBSD: strcpy.c,v 1.8 2005/08/08 08:05:37 espie Exp $	*/
+/*	$OpenBSD: wcsxfrm.c,v 1.2 2012/12/05 23:20:00 deraadt Exp $ */
+/*	$OpenBSD: wcsxfrm.c,v 1.2 2012/12/05 23:20:00 deraadt Exp $	*/
+/*	$NetBSD: multibyte_sb.c,v 1.4 2003/08/07 16:43:04 agc Exp $	*/
 
 /*
- * Copyright (c) 1988 Regents of the University of California.
+ * Copyright (c) 1991 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +31,12 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
+#include <wchar.h>
 
-char *
-strcpy(char *to, const char *from)
+size_t 
+wcsxfrm(wchar_t *dest, const wchar_t *src, size_t n)
 {
-	char *save = to;
-
-	for (; (*to = *from) != '\0'; ++from, ++to);
-	return(save);
+	if (n == 0)
+		return wcslen(src);
+	return wcslcpy(dest, src, n);
 }

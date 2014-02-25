@@ -84,9 +84,7 @@ libc/
   netbsd/
   stdio/
   stdlib/
-  string/
   unistd/
-  wchar/
     # These are legacy files of unknown provenance. In the past, bionic was a
     # mess of random versions of random files from all three of FreeBSD, NetBSD,
     # and OpenBSD! We've been working to clean that up, but these directories
