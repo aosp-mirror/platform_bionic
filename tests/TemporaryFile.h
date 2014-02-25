@@ -16,17 +16,21 @@
 
 #include <unistd.h>
 
-template<int (*mk_func)(char*)>
+template<int (*mk_fn)(char*)>
 class GenericTemporaryFile {
  public:
-  GenericTemporaryFile() {
-    // Since we might be running on the host or the target, and if we're
-    // running on the host we might be running under bionic or glibc,
-    // let's just try both possible temporary directories and take the
-    // first one that works.
-    init("/data/local/tmp");
-    if (fd == -1) {
-      init("/tmp");
+  GenericTemporaryFile(const char* dirpath = NULL) {
+    if (dirpath != NULL) {
+      init(dirpath);
+    } else {
+      // Since we might be running on the host or the target, and if we're
+      // running on the host we might be running under bionic or glibc,
+      // let's just try both possible temporary directories and take the
+      // first one that works.
+      init("/data/local/tmp");
+      if (fd == -1) {
+        init("/tmp");
+      }
     }
   }
 
@@ -41,8 +45,30 @@ class GenericTemporaryFile {
  private:
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
-    fd = mk_func(filename);
+    fd = mk_fn(filename);
   }
 };
 
 typedef GenericTemporaryFile<mkstemp> TemporaryFile;
+
+class TemporaryDir {
+ public:
+  TemporaryDir() {
+    if (!init("/data/local/tmp")) {
+      init("/tmp");
+    }
+  }
+
+  ~TemporaryDir() {
+    rmdir(dirname);
+  }
+
+  char dirname[1024];
+
+ private:
+  bool init(const char* tmp_dir) {
+    snprintf(dirname, sizeof(dirname), "%s/TemporaryDir-XXXXXX", tmp_dir);
+    return (mkdtemp(dirname) != NULL);
+  }
+
+};
