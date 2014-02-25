@@ -1,7 +1,5 @@
-/*	$OpenBSD: strncmp.c,v 1.7 2005/08/08 08:05:37 espie Exp $	*/
-
 /*
- * Copyright (c) 1989 The Regents of the University of California.
+ * Copyright (c) 1988 Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,22 +27,9 @@
  * SUCH DAMAGE.
  */
 
-#if !defined(_KERNEL) && !defined(_STANDALONE)
+#undef _FORTIFY_SOURCE
 #include <string.h>
-#else
-#include <lib/libkern/libkern.h>
-#endif
 
-int
-strncmp(const char *s1, const char *s2, size_t n)
-{
-	if (n == 0)
-		return (0);
-	do {
-		if (*s1 != *s2++)
-			return (*(unsigned char *)s1 - *(unsigned char *)--s2);
-		if (*s1++ == 0)
-			break;
-	} while (--n != 0);
-	return (0);
+char* strrchr(const char* p, int ch) {
+  return __strrchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }

@@ -58,15 +58,16 @@ libc_bionic_src_files_x86 += \
     arch-x86/string/strncmp.S \
     arch-x86/string/strcat.S \
     arch-x86/string/memcmp.S \
-    string/memcmp16.c \
-    string/strcpy.c \
-    string/strncat.c \
-    string/strncpy.c \
-    string/strlcat.c \
-    string/strlcpy.c \
+    bionic/__memcmp16.cpp \
     upstream-freebsd/lib/libc/string/wcscpy.c \
     upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-openbsd/lib/libc/string/strcpy.c \
+    upstream-openbsd/lib/libc/string/strlcat.c \
+    upstream-openbsd/lib/libc/string/strlcpy.c \
+    upstream-openbsd/lib/libc/string/strncat.c \
+    upstream-openbsd/lib/libc/string/strncpy.c \
+
 endif
 
 libc_bionic_src_files_x86 += \

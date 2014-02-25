@@ -30,14 +30,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stddef.h>
 
-/* Unoptimised version of __memcmp16 */
-int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n)
-{
-  size_t i;
+// Unoptimized version of __memcmp16.
+int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n) {
 
-  for (i = 0; i < n; i++) {
-    if (*ptr1 != *ptr2)
+  for (size_t i = 0; i < n; i++) {
+    if (*ptr1 != *ptr2) {
       return *ptr1 - *ptr2;
+    }
     ptr1++;
     ptr2++;
   }
