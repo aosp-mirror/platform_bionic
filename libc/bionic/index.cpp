@@ -1,6 +1,5 @@
-/*	$OpenBSD: rindex.c,v 1.6 2005/08/08 08:05:37 espie Exp $ */
-/*
- * Copyright (c) 1988 Regents of the University of California.
+/*-
+ * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,10 +27,9 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
 #include <string.h>
 
-char *
-strrchr(const char *p, int ch)
-{
-	return __strrchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+char* index(const char* p, int ch) {
+  return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }

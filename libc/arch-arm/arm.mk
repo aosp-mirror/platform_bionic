@@ -10,19 +10,13 @@ libc_bionic_src_files_arm := \
     bionic/mmap.cpp
 
 libc_common_src_files_arm += \
+    bionic/index.cpp \
     bionic/memchr.c \
     bionic/memmove.c.arm \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
-    string/bcopy.c \
-    string/index.c \
-    string/strlcat.c \
-    string/strlcpy.c \
-    string/strncat.c \
-    string/strncmp.c \
-    string/strncpy.c \
-    string/strrchr.c \
+    bionic/strrchr.cpp \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -30,6 +24,12 @@ libc_common_src_files_arm += \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-openbsd/lib/libc/string/bcopy.c \
+    upstream-openbsd/lib/libc/string/strlcat.c \
+    upstream-openbsd/lib/libc/string/strlcpy.c \
+    upstream-openbsd/lib/libc/string/strncat.c \
+    upstream-openbsd/lib/libc/string/strncmp.c \
+    upstream-openbsd/lib/libc/string/strncpy.c \
 
 # The C++ fortify function implementations for which there is an
 # arm assembler version.
