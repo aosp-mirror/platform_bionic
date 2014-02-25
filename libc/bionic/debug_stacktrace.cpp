@@ -37,6 +37,12 @@
 #include "debug_mapinfo.h"
 #include "private/libc_logging.h"
 
+#if defined(__LP64__)
+#define PAD_PTR "016" PRIxPTR
+#else
+#define PAD_PTR "08" PRIxPTR
+#endif
+
 /* depends how the system includes define this */
 #ifdef HAVE_UNWIND_CONTEXT_STRUCT
 typedef struct _Unwind_Context __unwind_context;
@@ -164,19 +170,14 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %0*" PRIxPTR "  %s (%s+%" PRIuPTR ")",
-                        i,
-                        static_cast<int>(2 * sizeof(void*)), rel_pc,
-                        soname,
-                        best_name, frames[i] - offset);
+                        "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
+                        i, rel_pc, soname, best_name, frames[i] - offset);
 
       free(demangled_symbol);
     } else {
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %0*" PRIxPTR "  %s",
-                        i,
-                        static_cast<int>(2 * sizeof(void*)), rel_pc,
-                        soname);
+                        "          #%02zd  pc %" PAD_PTR "  %s",
+                        i, rel_pc, soname);
     }
   }
 }
