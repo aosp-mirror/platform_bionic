@@ -25,5 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#define MEMCOPY
-#include "bcopy.c"
+
+#undef _FORTIFY_SOURCE
+#include <string.h>
+#include <strings.h>
+
+// Our unoptimized memcpy just calls the best bcopy available.
+// (It's this way round rather than the opposite because we're based on BSD source.)
+void* memcpy(void* dst, const void* src, size_t n) {
+  bcopy(src, dst, n);
+  return dst;
+}
