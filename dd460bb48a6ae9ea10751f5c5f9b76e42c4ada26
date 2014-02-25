@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3cfb9535_8a39c857",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T23:46:49Z",
+      "side": 1,
+      "message": "(even if you\u0027re planning on staying in sync with upstream, you\u0027ll probably want to use \"diff -wub\" anyway. if i had to work on this, i\u0027d be tempted to just convert all the tabs to spaces once and for all.)",
+      "parentUuid": "1cf89137_a6e3a7f7",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3ac1c3_312ed010",
         "filename": "libc/netbsd/net/getaddrinfo.c",
         "patchSetId": 4
