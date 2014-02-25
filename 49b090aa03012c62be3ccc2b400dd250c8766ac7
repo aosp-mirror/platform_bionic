@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf89137_3a932800",
+        "filename": "libm/arm/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "no, we need these symbols regardless.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cfb9535_6f87ae4f",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "the formatting is a bit fucked up in this file.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cf89137_5af03446",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cf89137_fa9ca00e",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "this file should probably keep the \u003csys/types.h\u003e include. in part for __BEGIN_DECLS...",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cfb9535_8fd43a32",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "i think it\u0027s a bug that this doesn\u0027t say const. fix that, and then we can move these up into the portable \u003cfenv.h\u003e.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3ac1c3_40029867",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "...but also because i think it\u0027s clearer when we use uint32_t where we can.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cf89137_9ae6bc96",
+        "filename": "libm/mips/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "formatting inconsistent in this file too.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cf89137_7aebf05f",
+        "filename": "libm/mips/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T22:31:22Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
