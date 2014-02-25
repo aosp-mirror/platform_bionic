@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc0199f4_bbe067e6",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-25T09:30:08Z",
+      "side": 1,
+      "message": "Wouldn\u0027t you want PAGE_SIZE to be set to 1ULL \u003c\u003c 12 here, just in case they get out of sync ? If we\u0027re hardcoding __page_shift for backwards compatibility, we should probably do the same for __page_size too",
+      "range": {
+        "startLine": 42,
+        "startChar": 15,
+        "endLine": 42,
+        "endChar": 26
+      },
+      "revId": "0e44bc3baeb1677e5fbdda87a737b9c508c95132",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
