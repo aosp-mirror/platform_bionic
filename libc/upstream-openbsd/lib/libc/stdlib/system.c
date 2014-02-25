@@ -29,18 +29,18 @@
  */
 
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <paths.h>
-#include <sys/wait.h>
 
 extern char **environ;
 
 int
 system(const char *command)
 {
-  pid_t pid;
+	pid_t pid;
 	sig_t intsave, quitsave;
 	sigset_t mask, omask;
 	int pstat;
@@ -61,14 +61,14 @@ system(const char *command)
 	case 0:				/* child */
 		sigprocmask(SIG_SETMASK, &omask, NULL);
 		execve(_PATH_BSHELL, argp, environ);
-    _exit(127);
-  }
+		_exit(127);
+	}
 
-	intsave = (sig_t)  bsd_signal(SIGINT, SIG_IGN);
-	quitsave = (sig_t) bsd_signal(SIGQUIT, SIG_IGN);
+	intsave = signal(SIGINT, SIG_IGN);
+	quitsave = signal(SIGQUIT, SIG_IGN);
 	pid = waitpid(pid, (int *)&pstat, 0);
 	sigprocmask(SIG_SETMASK, &omask, NULL);
-	(void)bsd_signal(SIGINT, intsave);
-	(void)bsd_signal(SIGQUIT, quitsave);
+	(void)signal(SIGINT, intsave);
+	(void)signal(SIGQUIT, quitsave);
 	return (pid == -1 ? -1 : pstat);
 }
