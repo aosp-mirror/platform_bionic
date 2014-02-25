@@ -229,8 +229,11 @@ int sysconf(int name) {
 #endif
     case _SC_ATEXIT_MAX:        return SYSTEM_ATEXIT_MAX;
     case _SC_IOV_MAX:           return SYSTEM_IOV_MAX;
-    case _SC_PAGESIZE:          return PAGE_SIZE;
-    case _SC_PAGE_SIZE:         return PAGE_SIZE;
+
+    case _SC_PAGESIZE:
+    case _SC_PAGE_SIZE:
+        return PAGE_SIZE;
+
 #ifdef _XOPEN_UNIX
     case _SC_XOPEN_UNIX:        return _XOPEN_UNIX;
 #endif

@@ -20,11 +20,11 @@
 #include <unistd.h>
 
 TEST(sys_mman, mmap_negative) {
-  off_t off = -sysconf(_SC_PAGESIZE); // Aligned but negative.
+  off_t off = -sysconf(_SC_PAGE_SIZE); // Aligned but negative.
   ASSERT_EQ(MAP_FAILED, mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, off));
 }
 
 TEST(sys_mman, mmap64_negative) {
-  off64_t off64 = -sysconf(_SC_PAGESIZE); // Aligned but negative.
+  off64_t off64 = -sysconf(_SC_PAGE_SIZE); // Aligned but negative.
   ASSERT_EQ(MAP_FAILED, mmap64(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, off64));
 }
