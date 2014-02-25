@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cfb9535_4a9bc060",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-25T23:33:31Z",
+      "side": 1,
+      "message": "i\u0027ve grepped, but i can\u0027t yet find anywhere else in bionic we need this. otherwise i\u0027d have put it in \"private/libc_logging.h\".",
+      "revId": "ba76572789740ec1a04da30dd89121ef5cb0bf44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
