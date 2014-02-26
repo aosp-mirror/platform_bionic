@@ -16,6 +16,24 @@
       "revId": "95b808c4ae11ea5737fee63f7b61673483ea5e2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0f6924_cb54753e",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 0,
+      "message": "I removed this because it was never called.",
+      "parentUuid": "1cf89137_26d79714",
+      "revId": "95b808c4ae11ea5737fee63f7b61673483ea5e2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

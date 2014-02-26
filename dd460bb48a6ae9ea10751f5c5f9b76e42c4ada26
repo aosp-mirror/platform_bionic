@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3c2475a3_0ac94b68",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 1,
+      "message": "I\u0027m thinking we should make mark unsigned and always apply it here (no condition on mark value).\n\nThis way, if someone uses bionic without netd and sticks to netid \u003d\u003d 0, we end up using the sockets \"unmarked\".",
+      "parentUuid": "1cf89137_a6e3a7f7",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3ac1c3_312ed010",
         "filename": "libc/netbsd/net/getaddrinfo.c",
         "patchSetId": 4
@@ -48,6 +66,24 @@
       "writtenOn": "2014-02-25T11:08:46Z",
       "side": 1,
       "message": "Fix indentation. Also, mark should be unsigned.",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0f6924_8b0afdef",
+        "filename": "libc/netbsd/net/getaddrinfo.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1799,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c3ac1c3_312ed010",
       "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "3c2475a3_6a431f84",
+        "filename": "libc/netbsd/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1883,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 1,
+      "message": "There is no code to free resolv_cache_info nor resolv_cache objects.\n\nI changed __get_res_cache above to not allocate cache if it does not exist. Only _resolv_set_nameservers_for_net can create the cache if it does not exist.\n\nresolv_cache objects are not refcounted nor leased so deleting them without crashing the threads waiting in res_send would be a non-trivial change (need to hold the cache list lock while reading/writing the cache), so I\u0027d rather punt on it for now.",
+      "parentUuid": "3cfb9535_488cf071",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3ac1c3_f19288f9",
         "filename": "libc/netbsd/resolv/res_send.c",
         "patchSetId": 4
@@ -88,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "5c0f6924_0b326d1e",
+        "filename": "libc/netbsd/resolv/res_send.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c3ac1c3_f19288f9",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cf89137_264c3760",
         "filename": "libc/private/resolv_private.h",
         "patchSetId": 4
@@ -99,6 +171,24 @@
       "writtenOn": "2014-02-25T11:08:46Z",
       "side": 1,
       "message": "Note that if netid \u003d\u003d mark, then this needs to be unsigned, as inside the kernel the mark is a __u32.",
+      "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c217195_7ed085e5",
+        "filename": "libc/private/resolv_private.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003988
+      },
+      "writtenOn": "2014-02-26T23:46:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf89137_264c3760",
       "revId": "dd460bb48a6ae9ea10751f5c5f9b76e42c4ada26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
