@@ -177,7 +177,9 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
-libm_common_src_files += fake_long_double.c
+libm_common_src_files += \
+    fake_long_double.c \
+    upstream-freebsd/lib/msun/src/s_modfl.c \
 
 # TODO: on Android, "long double" is "double".
 #    upstream-freebsd/lib/msun/src/e_acosl.c \
@@ -204,7 +206,6 @@ libm_common_src_files += fake_long_double.c
 #    upstream-freebsd/lib/msun/src/s_logbl.c \
 #    upstream-freebsd/lib/msun/src/s_lrintl.c \
 #    upstream-freebsd/lib/msun/src/s_lroundl.c \
-#    upstream-freebsd/lib/msun/src/s_modfl.c \
 #    upstream-freebsd/lib/msun/src/s_nextafterl.c \
 #    upstream-freebsd/lib/msun/src/s_nexttoward.c \
 #    upstream-freebsd/lib/msun/src/s_remquol.c \
@@ -217,18 +218,12 @@ libm_common_src_files += fake_long_double.c
 
 # TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
-libm_common_cflags := -DFLT_EVAL_METHOD=0
+libm_common_cflags := \
+    -DFLT_EVAL_METHOD=0 \
+    -std=c99 \
+    -include $(LOCAL_PATH)/freebsd-compat.h \
+
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
-
-libm_arm_includes := $(LOCAL_PATH)/arm
-libm_arm_src_files := arm/fenv.c
-
-libm_x86_includes := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
-libm_x86_src_files := i387/fenv.c
-
-libm_mips_cflags := -fno-builtin-rintf -fno-builtin-rint
-libm_mips_includes := $(LOCAL_PATH)/mips
-libm_mips_src_files := mips/fenv.c
 
 #
 # libm.a for target.
@@ -237,10 +232,32 @@ include $(CLEAR_VARS)
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ARM_MODE := arm
-LOCAL_CFLAGS := $(libm_common_cflags) $(libm_$(TARGET_ARCH)_cflags)
-LOCAL_C_INCLUDES += $(libm_common_includes) $(libm_$(TARGET_ARCH)_includes)
-LOCAL_SRC_FILES := $(libm_common_src_files) $(libm_$(TARGET_ARCH)_src_files)
+LOCAL_CFLAGS := $(libm_common_cflags)
+LOCAL_C_INCLUDES += $(libm_common_includes)
+LOCAL_SRC_FILES := $(libm_common_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+
+# arch-specific settings
+LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
+LOCAL_SRC_FILES_arm := arm/fenv.c
+
+LOCAL_C_INCLUDES_arm64 := $(LOCAL_PATH)/arm64
+LOCAL_SRC_FILES_arm64 := arm64/fenv.c
+
+LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
+LOCAL_SRC_FILES_x86 := i387/fenv.c
+
+LOCAL_C_INCLUDES_x86_64 := $(LOCAL_PATH)/amd64
+LOCAL_SRC_FILES_x86_64 := amd64/fenv.c
+
+LOCAL_CFLAGS_mips := -fno-builtin-rintf -fno-builtin-rint
+LOCAL_C_INCLUDES_mips := $(LOCAL_PATH)/mips
+LOCAL_SRC_FILES_mips := mips/fenv.c
+
+LOCAL_CFLAGS_mips64 := -fno-builtin-rintf -fno-builtin-rint
+LOCAL_C_INCLUDES_mips64 := $(LOCAL_PATH)/mips
+LOCAL_SRC_FILES_mips64 := mips/fenv.c
+
 include $(BUILD_STATIC_LIBRARY)
 
 #

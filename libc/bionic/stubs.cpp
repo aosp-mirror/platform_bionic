@@ -447,6 +447,16 @@ mntent* getmntent(FILE* /*f*/) {
   return NULL;
 }
 
+FILE* setmntent(const char*, const char*) {
+  UNIMPLEMENTED;
+  return NULL;
+}
+
+int endmntent(FILE*) {
+  UNIMPLEMENTED;
+  return 1; /* Allways returns 1 according to man */
+}
+
 char* ttyname(int /*fd*/) { // NOLINT: implementing bad function.
   UNIMPLEMENTED;
   return NULL;
@@ -468,4 +478,9 @@ void setusershell() {
 
 void endusershell() {
   UNIMPLEMENTED;
+}
+
+// Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
+int getpagesize() {
+  return sysconf(_SC_PAGE_SIZE);
 }

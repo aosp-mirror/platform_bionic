@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
         /*
          * Optimized memset() for ARM.
@@ -130,4 +130,4 @@ END(memset)
 
         .data
 error_string:
-        .string     "memset buffer overflow"
+        .string     "memset: prevented write past end of buffer"

@@ -222,13 +222,13 @@ int	 getchar(void);
 ssize_t	 getdelim(char ** __restrict, size_t * __restrict, int,
 	    FILE * __restrict);
 ssize_t	 getline(char ** __restrict, size_t * __restrict, FILE * __restrict);
-char	*gets(char *);
+
 #if __BSD_VISIBLE && !defined(__SYS_ERRLIST)
 #define __SYS_ERRLIST
-
 extern int sys_nerr;			/* perror(3) external variables */
 extern char *sys_errlist[];
 #endif
+
 void	 perror(const char *);
 int	 printf(const char * __restrict, ...)
 		__printflike(1, 2);
@@ -251,16 +251,20 @@ int	 vprintf(const char * __restrict, __va_list)
 		__printflike(1, 0);
 
 #ifndef __AUDIT__
-char	*gets(char *);
-int	 sprintf(char * __restrict, const char * __restrict, ...)
-		__printflike(2, 3);
-char	*tmpnam(char *);
-int	 vsprintf(char * __restrict, const char * __restrict,
-    __va_list)
-		__printflike(2, 0);
+char* gets(char*) __warnattr("gets is very unsafe; consider using fgets");
+int sprintf(char* __restrict, const char* __restrict, ...)
+    __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
+char* tmpnam(char*) __warnattr("tmpnam possibly used unsafely; consider using mkstemp");
+int vsprintf(char* __restrict, const char* __restrict, __va_list)
+    __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
+#if __XPG_VISIBLE
+char* tempnam(const char*, const char*)
+    __warnattr("tempnam possibly used unsafely; consider using mkstemp");
+#endif
 #endif
 
-int	 rename (const char *, const char *);
+extern int rename(const char*, const char*);
+extern int renameat(int, const char*, int, const char*);
 
 int	 fgetpos(FILE * __restrict, fpos_t * __restrict);
 int	 fsetpos(FILE *, const fpos_t *);
@@ -319,9 +323,6 @@ int	 putc_unlocked(int, FILE *);
 int	 putchar_unlocked(int);
 #endif /* __POSIX_VISIBLE >= 199506 */
 
-#if __XPG_VISIBLE
-char	*tempnam(const char *, const char *);
-#endif
 __END_DECLS
 
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
@@ -469,7 +470,8 @@ int vsprintf(char *dest, const char *format, __va_list ap)
 }
 
 #if defined(__clang__)
-#define snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
+#define __wrap_snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
+#define snprintf(...) __wrap_snprintf(__VA_ARGS__)
 #else
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 4)
@@ -481,7 +483,8 @@ int snprintf(char *dest, size_t size, const char *format, ...)
 #endif
 
 #if defined(__clang__)
-#define sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
+#define __wrap_sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
+#define sprintf(...) __wrap_sprintf(__VA_ARGS__)
 #else
 __BIONIC_FORTIFY_INLINE
 __printflike(2, 3)
@@ -492,16 +495,15 @@ int sprintf(char *dest, const char *format, ...)
 }
 #endif
 
-#if !defined(__clang__)
-extern char *__fgets_real(char *, int, FILE *)
-    __asm__(__USER_LABEL_PREFIX__ "fgets");
+extern char* __fgets_chk(char*, int, FILE*, size_t);
+extern char* __fgets_real(char*, int, FILE*) __asm__(__USER_LABEL_PREFIX__ "fgets");
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
-extern char *__fgets_chk(char *, int, FILE *, size_t);
+
+#if !defined(__clang__)
 
 __BIONIC_FORTIFY_INLINE
-char *fgets(char *dest, int size, FILE *stream)
-{
+char *fgets(char* dest, int size, FILE* stream) {
     size_t bos = __bos(dest);
 
     // Compiler can prove, at compile time, that the passed in size

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,9 @@
  */
 
 #include <sys/types.h>
-#include <private/libc_logging.h>
 #include <stdio.h>
+
+#include "private/libc_logging.h"
 
 /*
  * This source file should only be included by libc.so, its purpose is

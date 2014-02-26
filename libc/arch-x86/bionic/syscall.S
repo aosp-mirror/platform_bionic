@@ -10,8 +10,7 @@
  *	%ebp: arg5                -   callee save
  */
 
-#include <asm/unistd.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(syscall)
     # Push the callee save registers.
@@ -34,7 +33,7 @@ ENTRY(syscall)
     int     $0x80
 
     # Error?
-    cmpl    $-4095, %eax
+    cmpl    $-MAX_ERRNO, %eax
     jb      1f
     # Yes, so set errno.
     negl    %eax

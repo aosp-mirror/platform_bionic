@@ -29,11 +29,12 @@
 #define _PRIVATE_BIONIC_AUXV_H_
 
 #include <elf.h>
+#include <link.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-extern Elf32_auxv_t* __libc_auxv;
+extern ElfW(auxv_t)* __libc_auxv;
 
 __END_DECLS
 

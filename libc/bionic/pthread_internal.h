@@ -29,63 +29,72 @@
 #define _PTHREAD_INTERNAL_H_
 
 #include <pthread.h>
-#include <stdbool.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+struct pthread_internal_t {
+  struct pthread_internal_t* next;
+  struct pthread_internal_t* prev;
 
-typedef struct pthread_internal_t
-{
-    struct pthread_internal_t*  next;
-    struct pthread_internal_t*  prev;
-    pthread_attr_t              attr;
-    pid_t                       tid;
-    bool                        allocated_on_heap;
-    pthread_cond_t              join_cond;
-    void*                       return_value;
-    int                         internal_flags;
-    __pthread_cleanup_t*        cleanup_stack;
-    void**                      tls;         /* thread-local storage area */
+  pid_t tid;
 
-    void* alternate_signal_stack;
+  void** tls;
 
-    /*
-     * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
-     * per-thread buffer by simply using malloc(3) and free(3).
-     */
+  pthread_attr_t attr;
+
+  __pthread_cleanup_t* cleanup_stack;
+
+  void* (*start_routine)(void*);
+  void* start_routine_arg;
+  void* return_value;
+
+  void* alternate_signal_stack;
+
+  /*
+   * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
+   * per-thread buffer by simply using malloc(3) and free(3).
+   */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
-    char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
-} pthread_internal_t;
+  char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
+};
 
-int _init_thread(pthread_internal_t* thread, bool add_to_thread_list);
-void __init_tls(pthread_internal_t* thread);
-void _pthread_internal_add(pthread_internal_t* thread);
-pthread_internal_t* __get_thread(void);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
+__LIBC_HIDDEN__ pthread_internal_t* __get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
-#define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
+#define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
 /* Was the thread's stack allocated by the user rather than by us? */
-#define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
+#define PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK 0x00000002
 
 /* Has the thread been joined by another thread? */
-#define PTHREAD_ATTR_FLAG_JOINED        0x00000004
+#define PTHREAD_ATTR_FLAG_JOINED 0x00000004
 
-/* Has the thread already exited but not been joined? */
-#define PTHREAD_ATTR_FLAG_ZOMBIE        0x00000008
+/* Is this the main thread? */
+#define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
+
+/*
+ * Traditionally we give threads a 1MiB stack. When we started
+ * allocating per-thread alternate signal stacks to ease debugging of
+ * stack overflows, we subtracted the same amount we were using there
+ * from the default thread stack size. This should keep memory usage
+ * roughly constant.
+ */
+#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
 
 __LIBC_HIDDEN__ extern pthread_internal_t* gThreadList;
 __LIBC_HIDDEN__ extern pthread_mutex_t gThreadListLock;
 
-/* needed by fork.c */
-extern void __timer_table_start_stop(int  stop);
-extern void __bionic_atfork_run_prepare();
-extern void __bionic_atfork_run_child();
-extern void __bionic_atfork_run_parent();
+__LIBC_HIDDEN__ int __timespec_to_absolute(timespec*, const timespec*, clockid_t);
 
-__END_DECLS
+/* needed by fork.c */
+__LIBC_HIDDEN__ extern void __timer_table_start_stop(int);
+__LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
+__LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
+__LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
 
 #endif /* _PTHREAD_INTERNAL_H_ */

@@ -29,8 +29,6 @@
 #ifndef _LINKER_DEBUG_H_
 #define _LINKER_DEBUG_H_
 
-#include <stdio.h>
-
 // You can increase the verbosity of debug traces by defining the LD_DEBUG
 // environment variable to a numeric value from 0 to 2 (corresponding to
 // INFO, TRACE, and DEBUG calls in the source). This will only
@@ -55,20 +53,17 @@
  * To enable/disable specific debug options, change the defines above
  *********************************************************************/
 
-
-/*********************************************************************/
-
 #include "private/libc_logging.h"
 
 __LIBC_HIDDEN__ extern int gLdDebugVerbosity;
 
 #if LINKER_DEBUG_TO_LOG
-#define _PRINTVF(v,x...) \
+#define _PRINTVF(v, x...) \
     do { \
-      if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v),"linker",x); \
+      if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v), "linker", x); \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
-#define _PRINTVF(v,x...) \
+#define _PRINTVF(v, x...) \
     do { \
       if (gLdDebugVerbosity > (v)) { __libc_format_fd(1, x); write(1, "\n", 1); } \
     } while (0)
@@ -84,6 +79,6 @@ __LIBC_HIDDEN__ extern int gLdDebugVerbosity;
 #define DEBUG(x...)          do {} while (0)
 #endif /* TRACE_DEBUG */
 
-#define TRACE_TYPE(t,x...)   do { if (DO_TRACE_##t) { TRACE(x); } } while (0)
+#define TRACE_TYPE(t, x...)   do { if (DO_TRACE_##t) { TRACE(x); } } while (0)
 
 #endif /* _LINKER_DEBUG_H_ */

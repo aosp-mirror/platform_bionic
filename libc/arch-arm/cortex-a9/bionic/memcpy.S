@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
 /*
  * This code assumes it is running on a processor that supports all arm v7
@@ -41,31 +41,30 @@
         .thumb_func
 
 ENTRY(__memcpy_chk)
-        .cfi_startproc
         cmp         r2, r3
-        bgt         __memcpy_chk_fail
+        bhi         __memcpy_chk_fail
 
         // Fall through to memcpy...
-        .cfi_endproc
 END(__memcpy_chk)
 
 ENTRY(memcpy)
-        .cfi_startproc
         pld     [r1, #0]
         stmfd   sp!, {r0, lr}
+        .save   {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
         pld     [r1, #64]
-
-        #include "memcpy_base.S"
-        .cfi_endproc
 END(memcpy)
 
-        .cfi_startproc
-__memcpy_chk_fail:
+#define MEMCPY_BASE         __memcpy_base
+#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
+#include "memcpy_base.S"
+
+ENTRY_PRIVATE(__memcpy_chk_fail)
         // Preserve lr for backtrace.
         push    {lr}
+        .save   {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
 
@@ -78,8 +77,8 @@ error_code:
         .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 error_message:
         .word   error_string-(1b+4)
-        .cfi_endproc
+END(__memcpy_chk_fail)
 
         .data
 error_string:
-        .string     "memcpy buffer overflow"
+        .string     "memcpy: prevented write past end of buffer"

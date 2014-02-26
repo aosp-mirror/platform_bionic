@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
     .syntax unified
     .fpu    neon
@@ -37,9 +37,9 @@
 // Get the length of the source string first, then do a memcpy of the data
 // instead of a strcpy.
 ENTRY(__strcpy_chk)
-    .cfi_startproc
     pld     [r0, #0]
     push    {r0, lr}
+    .save   {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
@@ -152,27 +152,36 @@ ENTRY(__strcpy_chk)
     pld     [r1, #64]
     ldr     r0, [sp]
     cmp     r3, lr
-    bge     .L_fortify_check_failed
+    bhs     __strcpy_chk_fail
 
     // Add 1 for copy length to get the string terminator.
     add     r2, r3, #1
 
-    #include "memcpy_base.S"
+    // Fall through into the memcpy_base function.
+END(__strcpy_chk)
 
-.L_fortify_check_failed:
+#define MEMCPY_BASE         __strcpy_chk_memcpy_base
+#define MEMCPY_BASE_ALIGNED __strcpy_chk_memcpy_base_aligned
+#include "memcpy_base.S"
+
+ENTRY_PRIVATE(__strcpy_chk_fail)
+    .save   {r0, lr}
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset r0, 0
+    .cfi_rel_offset lr, 4
+
     ldr     r0, error_message
     ldr     r1, error_code
 1:
     add     r0, pc
     bl      __fortify_chk_fail
+
 error_code:
     .word   BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
-
-    .cfi_endproc
-END(__strcpy_chk)
+END(__strcpy_chk_fail)
 
     .data
 error_string:
-    .string "strcpy buffer overflow"
+    .string "strcpy: prevented write past end of buffer"

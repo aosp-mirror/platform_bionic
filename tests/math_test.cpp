@@ -16,11 +16,42 @@
 
 #define _DECLARE_C99_LDBL_MATH 1
 
+// This include (and the associated definition of __test_capture_signbit)
+// must be placed before any files that include <cmath> (gtest.h in this case).
+//
+// <math.h> is required to define generic macros signbit, isfinite and
+// several other such functions.
+//
+// <cmath> is required to undef declarations of these macros in the global
+// namespace and make equivalent functions available in namespace std. Our
+// stlport implementation does this only for signbit, isfinite, isinf and
+// isnan.
+//
+// NOTE: We don't write our test using std::signbit because we want to be
+// sure that we're testing the bionic version of signbit. The C++ libraries
+// are free to reimplement signbit or delegate to compiler builtins if they
+// please.
+#include <math.h>
+
+namespace {
+template<typename T> inline int test_capture_signbit(const T in) {
+  return signbit(in);
+}
+template<typename T> inline int test_capture_isfinite(const T in) {
+  return isfinite(in);
+}
+template<typename T> inline int test_capture_isnan(const T in) {
+  return isnan(in);
+}
+template<typename T> inline int test_capture_isinf(const T in) {
+  return isinf(in);
+}
+}
+
 #include <gtest/gtest.h>
 
 #include <fenv.h>
 #include <limits.h>
-#include <math.h>
 #include <stdint.h>
 
 float float_subnormal() {
@@ -59,27 +90,25 @@ TEST(math, fpclassify) {
   ASSERT_EQ(FP_ZERO, fpclassify(0.0));
 }
 
-/* TODO: stlport breaks the isfinite macro
 TEST(math, isfinite) {
-  ASSERT_TRUE(isfinite(123.0f));
-  ASSERT_TRUE(isfinite(123.0));
-  ASSERT_FALSE(isfinite(HUGE_VALF));
-  ASSERT_FALSE(isfinite(HUGE_VAL));
+  ASSERT_TRUE(test_capture_isfinite(123.0f));
+  ASSERT_TRUE(test_capture_isfinite(123.0));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VALF));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VAL));
 }
-*/
 
 TEST(math, isinf) {
-  ASSERT_FALSE(isinf(123.0f));
-  ASSERT_FALSE(isinf(123.0));
-  ASSERT_TRUE(isinf(HUGE_VALF));
-  ASSERT_TRUE(isinf(HUGE_VAL));
+  ASSERT_FALSE(test_capture_isinf(123.0f));
+  ASSERT_FALSE(test_capture_isinf(123.0));
+  ASSERT_TRUE(test_capture_isinf(HUGE_VALF));
+  ASSERT_TRUE(test_capture_isinf(HUGE_VAL));
 }
 
 TEST(math, isnan) {
-  ASSERT_FALSE(isnan(123.0f));
-  ASSERT_FALSE(isnan(123.0));
-  ASSERT_TRUE(isnan(nanf("")));
-  ASSERT_TRUE(isnan(nan("")));
+  ASSERT_FALSE(test_capture_isnan(123.0f));
+  ASSERT_FALSE(test_capture_isnan(123.0));
+  ASSERT_TRUE(test_capture_isnan(nanf("")));
+  ASSERT_TRUE(test_capture_isnan(nan("")));
 }
 
 TEST(math, isnormal) {
@@ -90,75 +119,84 @@ TEST(math, isnormal) {
 }
 
 // TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
-
-/* TODO: stlport breaks the signbit macro
 TEST(math, signbit) {
-  ASSERT_EQ(0, signbit(0.0f));
-  ASSERT_EQ(0, signbit(0.0));
+  ASSERT_EQ(0, test_capture_signbit(0.0f));
+  ASSERT_EQ(0, test_capture_signbit(0.0));
 
-  ASSERT_EQ(0, signbit(1.0f));
-  ASSERT_EQ(0, signbit(1.0));
+  ASSERT_EQ(0, test_capture_signbit(1.0f));
+  ASSERT_EQ(0, test_capture_signbit(1.0));
 
-  ASSERT_NE(0, signbit(-1.0f));
-  ASSERT_NE(0, signbit(-1.0));
+  ASSERT_NE(0, test_capture_signbit(-1.0f));
+  ASSERT_NE(0, test_capture_signbit(-1.0));
 }
-*/
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyd) {
+#if defined(__BIONIC__)
   ASSERT_EQ(FP_INFINITE, __fpclassifyd(HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassifyd(nan("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyd(1.0));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyd(double_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyd(0.0));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyf) {
+#if defined(__BIONIC__)
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(HUGE_VALF));
   ASSERT_EQ(FP_NAN, __fpclassifyf(nanf("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyf(1.0f));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyf(float_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyf(0.0f));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __fpclassifyl) {
+#if defined(__BIONIC__)
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(HUGE_VALL));
   EXPECT_EQ(FP_NAN, __fpclassifyl(nanl("")));
   EXPECT_EQ(FP_NORMAL, __fpclassifyl(1.0));
   EXPECT_EQ(FP_SUBNORMAL, __fpclassifyl(double_subnormal()));
   EXPECT_EQ(FP_ZERO, __fpclassifyl(0.0));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, finitef) {
   ASSERT_TRUE(finitef(123.0f));
   ASSERT_FALSE(finitef(HUGE_VALF));
 }
 
-#if defined(__BIONIC__)
 TEST(math, __isfinite) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinite(123.0));
   ASSERT_FALSE(__isfinite(HUGE_VAL));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isfinitef) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinitef(123.0f));
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isfinitel) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isfinitel(123.0f));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, finite) {
   ASSERT_TRUE(finite(123.0));
@@ -190,26 +228,32 @@ TEST(math, isnanf) {
   ASSERT_TRUE(isnanf(nanf("")));
 }
 
-#if defined(__BIONIC__)
 TEST(math, __isnormal) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isnormalf) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, __isnormall) {
+#if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0));
   ASSERT_FALSE(__isnormall(double_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, __signbit) {
   ASSERT_EQ(0, __signbit(0.0));
@@ -485,14 +529,23 @@ TEST(math, expm1l) {
 }
 
 TEST(math, pow) {
+  ASSERT_TRUE(isnan(pow(nan(""), 3.0)));
+  ASSERT_FLOAT_EQ(1.0, (pow(1.0, nan(""))));
+  ASSERT_TRUE(isnan(pow(2.0, nan(""))));
   ASSERT_FLOAT_EQ(8.0, pow(2.0, 3.0));
 }
 
 TEST(math, powf) {
+  ASSERT_TRUE(isnanf(powf(nanf(""), 3.0f)));
+  ASSERT_FLOAT_EQ(1.0f, (powf(1.0f, nanf(""))));
+  ASSERT_TRUE(isnanf(powf(2.0f, nanf(""))));
   ASSERT_FLOAT_EQ(8.0f, powf(2.0f, 3.0f));
 }
 
 TEST(math, powl) {
+  ASSERT_TRUE(__isnanl(powl(nanl(""), 3.0)));
+  ASSERT_FLOAT_EQ(1.0, (powl(1.0, nanl(""))));
+  ASSERT_TRUE(__isnanl(powl(2.0, nanl(""))));
   ASSERT_FLOAT_EQ(8.0, powl(2.0, 3.0));
 }
 
@@ -996,21 +1049,25 @@ TEST(math, gammaf) {
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f));
 }
 
-#if defined(__BIONIC__)
 TEST(math, gamma_r) {
+#if defined(__BIONIC__)
   int sign;
   ASSERT_FLOAT_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if defined(__BIONIC__)
 TEST(math, gammaf_r) {
+#if defined(__BIONIC__)
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(math, lgamma) {
   ASSERT_FLOAT_EQ(log(24.0), lgamma(5.0));

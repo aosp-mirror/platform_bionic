@@ -27,8 +27,9 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
 #include <string.h>
 
-extern "C" char* strchr(const char* p, int ch) {
+char* strchr(const char* p, int ch) {
   return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }

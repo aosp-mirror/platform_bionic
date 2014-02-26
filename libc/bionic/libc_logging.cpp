@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <../private/libc_logging.h> // Relative path so we can #include this .cpp file for testing.
-#include <../private/ScopedPthreadMutexLocker.h>
+#include "../private/libc_logging.h" // Relative path so we can #include this .cpp file for testing.
+#include "../private/ScopedPthreadMutexLocker.h"
 
 #include <assert.h>
 #include <errno.h>
@@ -419,9 +419,34 @@ int __libc_format_fd(int fd, const char* format, ...) {
   return os.total;
 }
 
+static int __libc_write_stderr(const char* tag, const char* msg) {
+  int fd = TEMP_FAILURE_RETRY(open("/dev/stderr", O_CLOEXEC | O_WRONLY));
+  if (fd == -1) {
+    return -1;
+  }
+
+  iovec vec[4];
+  vec[0].iov_base = const_cast<char*>(tag);
+  vec[0].iov_len = strlen(tag);
+  vec[1].iov_base = const_cast<char*>(": ");
+  vec[1].iov_len = 2;
+  vec[2].iov_base = const_cast<char*>(msg);
+  vec[2].iov_len = strlen(msg) + 1;
+  vec[3].iov_base = const_cast<char*>("\n");
+  vec[3].iov_len = 1;
+
+  int result = TEMP_FAILURE_RETRY(writev(fd, vec, 4));
+  close(fd);
+  return result;
+}
+
 static int __libc_write_log(int priority, const char* tag, const char* msg) {
   int main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
   if (main_log_fd == -1) {
+    if (errno == ENOTDIR) {
+      // /dev/log isn't a directory? Maybe we're running on the host? Try stderr instead.
+      return __libc_write_stderr(tag, msg);
+    }
     return -1;
   }
 
@@ -479,7 +504,7 @@ void __libc_android_log_event_uid(int32_t tag) {
   __libc_android_log_event_int(tag, getuid());
 }
 
-void __fortify_chk_fail(const char *msg, uint32_t tag) {
+void __fortify_chk_fail(const char* msg, uint32_t tag) {
   if (tag != 0) {
     __libc_android_log_event_uid(tag);
   }

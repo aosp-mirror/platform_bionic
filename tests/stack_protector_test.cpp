@@ -27,17 +27,13 @@
 #include <unistd.h>
 #include <set>
 
-#ifdef __GLIBC__
-
+#if defined(__GLIBC__)
 // glibc doesn't expose gettid(2).
 pid_t gettid() { return syscall(__NR_gettid); }
-
-#endif
-
-#ifdef __i386__
+#endif // __GLIBC__
 
 // For x86, bionic and glibc have per-thread stack guard values (all identical).
-
+#if defined(__i386__)
 static uint32_t GetGuardFromTls() {
   uint32_t guard;
   asm ("mov %%gs:0x14, %0": "=d" (guard));
@@ -71,8 +67,10 @@ static void* ThreadGuardHelper(void* arg) {
   checker->Check();
   return NULL;
 }
+#endif // __i386__
 
 TEST(stack_protector, same_guard_per_thread) {
+#if defined(__i386__)
   stack_protector_checker checker;
   size_t thread_count = 10;
   for (size_t i = 0; i < thread_count; ++i) {
@@ -86,23 +84,18 @@ TEST(stack_protector, same_guard_per_thread) {
 
   // bionic and glibc use the same guard for every thread.
   ASSERT_EQ(1U, checker.guards.size());
+#else // __i386__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __i386__
 }
 
-#endif
-
-#if defined(__BIONIC__) || defined(__arm__) || defined(__mips__)
-
 // For ARM and MIPS, glibc has a global stack check guard value.
+#if defined(__BIONIC__) || defined(__arm__) || defined(__mips__)
+#define TEST_STACK_CHK_GUARD
 
 // Bionic has the global for x86 too, to support binaries that can run on
 // Android releases that didn't implement the TLS guard value.
-
 extern "C" uintptr_t __stack_chk_guard;
-
-TEST(stack_protector, global_guard) {
-  ASSERT_NE(0, gettid());
-  ASSERT_NE(0U, __stack_chk_guard);
-}
 
 /*
  * When this function returns, the stack canary will be inconsistent
@@ -116,10 +109,22 @@ __attribute__ ((noinline))
 static void do_modify_stack_chk_guard() {
   __stack_chk_guard = 0x12345678;
 }
+#endif
 
-TEST(stack_protector_DeathTest, modify_stack_protector) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+TEST(stack_protector, global_guard) {
+#if defined(TEST_STACK_CHK_GUARD)
+  ASSERT_NE(0, gettid());
+  ASSERT_NE(0U, __stack_chk_guard);
+#else // TEST_STACK_CHK_GUARD
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // TEST_STACK_CHK_GUARD
 }
 
-#endif
+TEST(stack_protector_DeathTest, modify_stack_protector) {
+#if defined(TEST_STACK_CHK_GUARD)
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+#else // TEST_STACK_CHK_GUARD
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // TEST_STACK_CHK_GUARD
+}

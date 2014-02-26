@@ -20,8 +20,11 @@
 #include <math.h>
 #include <string.h>
 
+#include "buffer_tests.h"
+
 #define KB 1024
 #define SMALL 1*KB
+#define MEDIUM 4*KB
 #define LARGE 64*KB
 
 static int signum(int i) {
@@ -43,14 +46,16 @@ TEST(string, strerror) {
   ASSERT_STREQ("Unknown error 1234", strerror(1234));
 }
 
-#if __BIONIC__ // glibc's strerror isn't thread safe, only its strsignal.
-
+#if defined(__BIONIC__)
 static void* ConcurrentStrErrorFn(void*) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
+#endif // __BIONIC__
 
+// glibc's strerror isn't thread safe, only its strsignal.
 TEST(string, strerror_concurrent) {
+#if defined(__BIONIC__)
   const char* strerror1001 = strerror(1001);
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 
@@ -61,12 +66,13 @@ TEST(string, strerror_concurrent) {
   ASSERT_TRUE(static_cast<bool>(result));
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
 
-#endif
-
-#if __BIONIC__ // glibc's strerror_r doesn't even have the same signature as the POSIX one.
 TEST(string, strerror_r) {
+#if defined(__BIONIC__) // glibc's strerror_r doesn't even have the same signature as the POSIX one.
   char buf[256];
 
   // Valid.
@@ -84,8 +90,10 @@ TEST(string, strerror_r) {
   // Buffer too small.
   ASSERT_EQ(-1, strerror_r(0, buf, 2));
   ASSERT_EQ(ERANGE, errno);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, strsignal) {
   // A regular signal.
@@ -475,8 +483,8 @@ TEST(string, strcpy) {
 }
 
 
-#if __BIONIC__
 TEST(string, strlcat) {
+#if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
     for (size_t j = 0; j < POS_ITER; j++) {
@@ -501,11 +509,13 @@ TEST(string, strlcat) {
       ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) == 0);
     }
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__
 TEST(string, strlcpy) {
+#if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
   for (size_t j = 0; j < POS_ITER; j++) {
     state.NewIteration();
@@ -536,8 +546,10 @@ TEST(string, strlcpy) {
     ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, strncat) {
   StringTestState<char> state(SMALL);
@@ -729,10 +741,10 @@ TEST(string, memcmp) {
   }
 }
 
-#if defined(__BIONIC__)
 extern "C" int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n);
 
 TEST(string, __memcmp16) {
+#if defined(__BIONIC__)
   StringTestState<unsigned short> state(SMALL);
 
   for (size_t i = 0; i < state.n; i++) {
@@ -755,8 +767,10 @@ TEST(string, __memcmp16) {
       ASSERT_EQ(expected, actual);
     }
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(string, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);
@@ -884,4 +898,208 @@ TEST(string, bzero) {
 
     ASSERT_EQ(0, memcmp(state.ptr1, state.ptr2, state.MAX_LEN));
   }
+}
+
+static void DoMemcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  memset(src, (len % 255) + 1, len);
+  memset(dst, 0, len);
+
+  ASSERT_EQ(dst, memcpy(dst, src, len));
+  ASSERT_TRUE(memcmp(src, dst, len) == 0);
+}
+
+TEST(string, memcpy_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoMemcpyTest);
+}
+
+TEST(string, memcpy_overread) {
+  RunSrcDstBufferOverreadTest(DoMemcpyTest);
+}
+
+static void DoMemsetTest(uint8_t* buf, size_t len) {
+  for (size_t i = 0; i < len; i++) {
+    buf[i] = 0;
+  }
+  int value = (len % 255) + 1;
+  ASSERT_EQ(buf, memset(buf, value, len));
+  for (size_t i = 0; i < len; i++) {
+    ASSERT_EQ(value, buf[i]);
+  }
+}
+
+TEST(string, memset_align) {
+  RunSingleBufferAlignTest(LARGE, DoMemsetTest);
+}
+
+static void DoStrlenTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    memset(buf, (32 + (len % 96)), len - 1);
+    buf[len-1] = '\0';
+    ASSERT_EQ(len-1, strlen(reinterpret_cast<char*>(buf)));
+  }
+}
+
+TEST(string, strlen_align) {
+  RunSingleBufferAlignTest(LARGE, DoStrlenTest);
+}
+
+TEST(string, strlen_overread) {
+  RunSingleBufferOverreadTest(DoStrlenTest);
+}
+
+static void DoStrcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    memset(src, (32 + (len % 96)), len - 1);
+    src[len-1] = '\0';
+    memset(dst, 0, len);
+    ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcpy(reinterpret_cast<char*>(dst),
+                                                     reinterpret_cast<char*>(src))));
+    ASSERT_TRUE(memcmp(src, dst, len) == 0);
+  }
+}
+
+TEST(string, strcpy_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoStrcpyTest);
+}
+
+TEST(string, strcpy_overread) {
+  RunSrcDstBufferOverreadTest(DoStrcpyTest);
+}
+
+// Use our own incrementer to cut down on the total number of calls.
+static size_t LargeSetIncrement(size_t len) {
+  if (len >= 4096) {
+    return 4096;
+  } else if (len >= 1024) {
+    return 1024;
+  } else if (len >= 256) {
+    return 256;
+  }
+  return 1;
+}
+
+#define STRCAT_DST_LEN  128
+
+static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    int value = 32 + (len % 96);
+    memset(src, value, len - 1);
+    src[len-1] = '\0';
+
+    if (len >= STRCAT_DST_LEN) {
+      // Create a small buffer for doing quick compares in each loop.
+      uint8_t cmp_buf[STRCAT_DST_LEN];
+      // Make sure dst string contains a different value then the src string.
+      int value2 = 32 + (value + 2) % 96;
+      memset(cmp_buf, value2, sizeof(cmp_buf));
+
+      for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
+        memset(dst, value2, i-1);
+        memset(dst+i-1, 0, len-i);
+        src[len-i] = '\0';
+        ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
+                                                         reinterpret_cast<char*>(src))));
+        ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
+        ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+      }
+    } else {
+      dst[0] = '\0';
+      ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
+                                                       reinterpret_cast<char*>(src))));
+      ASSERT_TRUE(memcmp(src, dst, len) == 0);
+    }
+  }
+}
+
+TEST(string, strcat_align) {
+  RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, LargeSetIncrement);
+}
+
+TEST(string, strcat_overread) {
+  RunSrcDstBufferOverreadTest(DoStrcatTest);
+}
+
+static void DoStrcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
+  if (len >= 1) {
+    memset(buf1, (32 + (len % 96)), len - 1);
+    buf1[len-1] = '\0';
+    memset(buf2, (32 + (len % 96)), len - 1);
+    buf2[len-1] = '\0';
+    ASSERT_EQ(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+  }
+}
+
+static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+  // Do string length differences.
+  int c = (32 + (len1 % 96));
+  memset(buf1, c, len1 - 1);
+  buf1[len1-1] = '\0';
+  memset(buf2, c, len2 - 1);
+  buf2[len2-1] = '\0';
+  ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                      reinterpret_cast<char*>(buf2)));
+
+  // Do single character differences.
+  size_t len;
+  if (len1 > len2) {
+    len = len2;
+  } else {
+    len = len1;
+  }
+  // Need at least a two character buffer to do this test.
+  if (len > 1) {
+    buf1[len-1] = '\0';
+    buf2[len-1] = '\0';
+    int diff_c = (c + 1) % 96;
+
+    buf1[len-2] = diff_c;
+    ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+
+    buf1[len-2] = c;
+    buf2[len-2] = diff_c;
+    ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
+                        reinterpret_cast<char*>(buf2)));
+  }
+}
+
+TEST(string, strcmp_align) {
+  RunCmpBufferAlignTest(MEDIUM, DoStrcmpTest, DoStrcmpFailTest, LargeSetIncrement);
+}
+
+TEST(string, strcmp_overread) {
+  RunCmpBufferOverreadTest(DoStrcmpTest, DoStrcmpFailTest);
+}
+
+static void DoMemcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
+  memset(buf1, len+1, len);
+  memset(buf2, len+1, len);
+  ASSERT_EQ(0, memcmp(buf1, buf2, len));
+}
+
+static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+  size_t len;
+  if (len1 > len2) {
+    len = len2;
+  } else {
+    len = len1;
+  }
+
+  memset(buf1, len2+1, len);
+  buf1[len-1] = len2;
+  memset(buf2, len2+1, len);
+  ASSERT_NE(0, memcmp(buf1, buf2, len));
+
+  buf1[len-1] = len2+1;
+  buf2[len-1] = len2;
+  ASSERT_NE(0, memcmp(buf1, buf2, len));
+}
+
+TEST(string, memcmp_align) {
+  RunCmpBufferAlignTest(MEDIUM, DoMemcmpTest, DoMemcmpFailTest, LargeSetIncrement);
+}
+
+TEST(string, memcmp_overread) {
+  RunCmpBufferOverreadTest(DoMemcmpTest, DoMemcmpFailTest);
 }

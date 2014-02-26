@@ -26,9 +26,11 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
+
 #include <string.h>
 #include <stdlib.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * Runtime implementation of __builtin____memset_chk.
@@ -41,11 +43,11 @@
  * This memset check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" void *__memset_chk (void *dest, int c, size_t n, size_t dest_len) {
-    if (__predict_false(n > dest_len)) {
-        __fortify_chk_fail("memset buffer overflow",
-                             BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
-    }
+extern "C" void* __memset_chk (void* dest, int c, size_t n, size_t dest_len) {
+  if (__predict_false(n > dest_len)) {
+    __fortify_chk_fail("memset: prevented write past end of buffer",
+                       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
+  }
 
-    return memset(dest, c, n);
+  return memset(dest, c, n);
 }

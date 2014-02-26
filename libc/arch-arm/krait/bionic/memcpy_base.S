@@ -35,6 +35,12 @@
 
 // Assumes neon instructions and a cache line size of 32 bytes.
 
+ENTRY_PRIVATE(MEMCPY_BASE)
+        .save {r0, lr}
+        .cfi_def_cfa_offset 8
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset lr, 4
+
         /* do we have at least 16-bytes to copy (needed for alignment below) */
         cmp         r2, #16
         blo         5f
@@ -72,7 +78,7 @@
 1:      /* The main loop copies 64 bytes at a time */
         vld1.8      {d0  - d3},   [r1]!
         vld1.8      {d4  - d7},   [r1]!
-        pld         [r1, #(32*2)]
+        pld         [r1, #(32*8)]
         subs        r2, r2, #64
         vst1.8      {d0  - d3},   [r0, :128]!
         vst1.8      {d4  - d7},   [r0, :128]!
@@ -115,3 +121,4 @@
 
         ldmfd       sp!, {r0, lr}
         bx          lr
+END(MEMCPY_BASE)

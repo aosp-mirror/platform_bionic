@@ -27,8 +27,8 @@
  */
 
 #include <machine/cpu-features.h>
-#include <machine/asm.h>
-#include "libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
 /*
  * This code assumes it is running on a processor that supports all arm v7
@@ -39,11 +39,11 @@
     .fpu    neon
 
 ENTRY(__memset_chk)
-        .cfi_startproc
         cmp         r2, r3
         bls         .L_done
 
         // Preserve lr for backtrace.
+        .save       {lr}
         push        {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
@@ -57,23 +57,19 @@ error_code:
         .word       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW
 error_message:
         .word       error_string-(1b+8)
-
-        .cfi_endproc
 END(__memset_chk)
 
 ENTRY(bzero)
-        .cfi_startproc
         mov     r2, r1
         mov     r1, #0
 
 .L_done:
         // Fall through to memset...
-        .cfi_endproc
 END(bzero)
 
 /* memset() returns its first argument.  */
 ENTRY(memset)
-        .cfi_startproc
+        .save       {r0}
         stmfd       sp!, {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0
@@ -109,9 +105,8 @@ ENTRY(memset)
         strcsb      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
-        .cfi_endproc
 END(memset)
 
         .data
 error_string:
-        .string     "memset buffer overflow"
+        .string     "memset: prevented write past end of buffer"

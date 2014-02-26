@@ -35,7 +35,7 @@
 
 #define _ALIGN_TEXT .align 0
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/setjmp.h>
 
 /*
@@ -50,8 +50,8 @@
 
 ENTRY(sigsetjmp)
 	teq	r1, #0
-	beq	PIC_SYM(_C_LABEL(_setjmp), PLT)
-	b	PIC_SYM(_C_LABEL(setjmp), PLT)
+	beq	PIC_SYM(_setjmp, PLT)
+	b	PIC_SYM(setjmp, PLT)
 END(sigsetjmp)
 
 .L_setjmp_magic:
@@ -61,6 +61,6 @@ ENTRY(siglongjmp)
 	ldr	r2, .L_setjmp_magic
 	ldr	r3, [r0]
 	teq	r2, r3
-	beq	PIC_SYM(_C_LABEL(_longjmp), PLT)
-	b	PIC_SYM(_C_LABEL(longjmp), PLT)
+	beq	PIC_SYM(_longjmp, PLT)
+	b	PIC_SYM(longjmp, PLT)
 END(siglongjmp)

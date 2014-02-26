@@ -29,12 +29,19 @@
 #include "debug_stacktrace.h"
 
 #include <dlfcn.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <unwind.h>
 #include <sys/types.h>
 
 #include "debug_mapinfo.h"
-#include "libc_logging.h"
+#include "private/libc_logging.h"
+
+#if defined(__LP64__)
+#define PAD_PTR "016" PRIxPTR
+#else
+#define PAD_PTR "08" PRIxPTR
+#endif
 
 /* depends how the system includes define this */
 #ifdef HAVE_UNWIND_CONTEXT_STRUCT
@@ -79,6 +86,18 @@ struct stack_crawl_state_t {
       : frames(frames), frame_count(0), max_depth(max_depth), have_skipped_self(false) {
   }
 };
+
+#if defined(__arm__) && !defined(_Unwind_GetIP)
+// Older versions of Clang don't provide a definition of _Unwind_GetIP(), so
+// we include an appropriate version of our own. Once we have updated to
+// Clang 3.4, this code can be removed.
+static __inline__
+uintptr_t _Unwind_GetIP(struct _Unwind_Context *__context) {
+  uintptr_t __ip = 0;
+  _Unwind_VRS_Get(__context, _UVRSC_CORE, 15, _UVRSD_UINT32, &__ip);
+  return __ip & ~0x1;
+}
+#endif
 
 static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
   stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
@@ -130,12 +149,12 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
                     "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 
   for (size_t i = 0 ; i < frame_count; ++i) {
-    void* offset = 0;
+    uintptr_t offset = 0;
     const char* symbol = NULL;
 
     Dl_info info;
     if (dladdr((void*) frames[i], &info) != 0) {
-      offset = info.dli_saddr;
+      offset = reinterpret_cast<uintptr_t>(info.dli_saddr);
       symbol = info.dli_sname;
     }
 
@@ -150,12 +169,14 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       char* demangled_symbol = demangle(symbol);
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
-      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s (%s+0x%x)",
-                        i, rel_pc, soname, best_name, frames[i] - (uintptr_t) offset);
+      __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                        "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
+                        i, rel_pc, soname, best_name, frames[i] - offset);
 
       free(demangled_symbol);
     } else {
-      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02d  pc %08x  %s",
+      __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                        "          #%02zd  pc %" PAD_PTR "  %s",
                         i, rel_pc, soname);
     }
   }

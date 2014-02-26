@@ -334,8 +334,10 @@
 
 #if __GNUC_PREREQ__(4, 3)
 #define __errordecl(name, msg) extern void name(void) __attribute__((__error__(msg)))
+#define __warnattr(msg) __attribute__((__warning__(msg)))
 #else
 #define __errordecl(name, msg) extern void name(void)
+#define __warnattr(msg)
 #endif
 
 /*
@@ -526,6 +528,14 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
+/*
+ * When _FORTIFY_SOURCE is defined, automatic bounds checking is
+ * added to commonly used libc functions. If a buffer overrun is
+ * detected, the program is safely aborted.
+ *
+ * See
+ * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
+ */
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
 #define __BIONIC_FORTIFY 1
 #if _FORTIFY_SOURCE == 2
@@ -533,19 +543,13 @@
 #else
 #define __bos(s) __builtin_object_size((s), 0)
 #endif
+#define __bos0(s) __builtin_object_size((s), 0)
 
 #define __BIONIC_FORTIFY_INLINE \
-    extern inline \
+    extern __inline__ \
     __attribute__ ((always_inline)) \
     __attribute__ ((gnu_inline))
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
-
-/* Android-added: for FreeBSD's libm. */
-#define __weak_reference(sym,alias) \
-    __asm__(".weak " #alias); \
-    __asm__(".equ "  #alias ", " #sym)
-#define __strong_reference(sym,aliassym) \
-    extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
 
 #endif /* !_SYS_CDEFS_H_ */

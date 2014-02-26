@@ -17,8 +17,11 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
+#include <signal.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 TEST(pthread, pthread_key_create) {
@@ -29,14 +32,23 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
-#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
+#if defined(__BIONIC__) // glibc uses keys internally that its sysconf value doesn't account for.
+  // POSIX says PTHREAD_KEYS_MAX should be at least 128.
+  ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+
+  int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
+
+  // sysconf shouldn't return a smaller value.
+  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
+
   // We can allocate _SC_THREAD_KEYS_MAX keys.
+  sysconf_max -= 2; // (Except that gtest takes two for itself.)
   std::vector<pthread_key_t> keys;
-  for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
+  for (int i = 0; i < sysconf_max; ++i) {
     pthread_key_t key;
     // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
-    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf(_SC_THREAD_KEYS_MAX);
+    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf_max;
     keys.push_back(key);
   }
 
@@ -48,15 +60,17 @@ TEST(pthread, pthread_key_create_lots) {
   for (size_t i = 0; i < keys.size(); ++i) {
     ASSERT_EQ(0, pthread_key_delete(keys[i]));
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 static void* IdFn(void* arg) {
   return arg;
 }
 
 static void* SleepFn(void* arg) {
-  sleep(reinterpret_cast<unsigned int>(arg));
+  sleep(reinterpret_cast<uintptr_t>(arg));
   return NULL;
 }
 
@@ -140,7 +154,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
 TEST(pthread, pthread_join_self) {
@@ -148,22 +162,48 @@ TEST(pthread, pthread_join_self) {
   ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), &result));
 }
 
-#if __BIONIC__ // For some reason, gtest on bionic can cope with this but gtest on glibc can't.
+struct TestBug37410 {
+  pthread_t main_thread;
+  pthread_mutex_t mutex;
 
-static void TestBug37410() {
-  pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, JoinFn, reinterpret_cast<void*>(pthread_self())));
-  pthread_exit(NULL);
-}
+  static void main() {
+    TestBug37410 data;
+    data.main_thread = pthread_self();
+    ASSERT_EQ(0, pthread_mutex_init(&data.mutex, NULL));
+    ASSERT_EQ(0, pthread_mutex_lock(&data.mutex));
+
+    pthread_t t;
+    ASSERT_EQ(0, pthread_create(&t, NULL, TestBug37410::thread_fn, reinterpret_cast<void*>(&data)));
+
+    // Wait for the thread to be running...
+    ASSERT_EQ(0, pthread_mutex_lock(&data.mutex));
+    ASSERT_EQ(0, pthread_mutex_unlock(&data.mutex));
+
+    // ...and exit.
+    pthread_exit(NULL);
+  }
+
+ private:
+  static void* thread_fn(void* arg) {
+    TestBug37410* data = reinterpret_cast<TestBug37410*>(arg);
+
+    // Let the main thread know we're running.
+    pthread_mutex_unlock(&data->mutex);
+
+    // And wait for the main thread to exit.
+    pthread_join(data->main_thread, NULL);
+
+    return NULL;
+  }
+};
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
 TEST(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(TestBug37410(), ::testing::ExitedWithCode(0), "");
+  ASSERT_EXIT(TestBug37410::main(), ::testing::ExitedWithCode(0), "");
 }
-#endif
 
 static void* SignalHandlerFn(void* arg) {
   sigset_t wait_set;
@@ -172,11 +212,27 @@ static void* SignalHandlerFn(void* arg) {
 }
 
 TEST(pthread, pthread_sigmask) {
+  // Check that SIGUSR1 isn't blocked.
+  sigset_t original_set;
+  sigemptyset(&original_set);
+  ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, NULL, &original_set));
+  ASSERT_FALSE(sigismember(&original_set, SIGUSR1));
+
   // Block SIGUSR1.
   sigset_t set;
   sigemptyset(&set);
   sigaddset(&set, SIGUSR1);
   ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, &set, NULL));
+
+  // Check that SIGUSR1 is blocked.
+  sigset_t final_set;
+  sigemptyset(&final_set);
+  ASSERT_EQ(0, pthread_sigmask(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember(&final_set, SIGUSR1));
+  // ...and that sigprocmask agrees with pthread_sigmask.
+  sigemptyset(&final_set);
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember(&final_set, SIGUSR1));
 
   // Spawn a thread that calls sigwait and tells us what it received.
   pthread_t signal_thread;
@@ -190,33 +246,46 @@ TEST(pthread, pthread_sigmask) {
   void* join_result;
   ASSERT_EQ(0, pthread_join(signal_thread, &join_result));
   ASSERT_EQ(SIGUSR1, received_signal);
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
+
+  // Restore the original signal mask.
+  ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
-#if __BIONIC__
-extern "C" int  __pthread_clone(void* (*fn)(void*), void* child_stack, int flags, void* arg);
-TEST(pthread, __pthread_clone) {
+#if defined(__BIONIC__)
+extern "C" pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
+#endif // __BIONIC__
+
+TEST(pthread, __bionic_clone) {
+#if defined(__BIONIC__)
+  // Check that our hand-written clone assembler sets errno correctly on failure.
   uintptr_t fake_child_stack[16];
   errno = 0;
-  ASSERT_EQ(-1, __pthread_clone(NULL, &fake_child_stack[0], CLONE_THREAD, NULL));
+  ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[16], NULL, NULL, NULL, NULL, NULL));
   ASSERT_EQ(EINVAL, errno);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__too_long) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__self) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__other) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   // Emulator kernels don't currently support setting the name of other threads.
   char* filename = NULL;
   asprintf(&filename, "/proc/self/task/%d/comm", gettid());
@@ -231,18 +300,22 @@ TEST(pthread, pthread_setname_np__other) {
   } else {
     fprintf(stderr, "skipping test: this kernel doesn't have /proc/self/task/tid/comm files!\n");
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__no_such_thread) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
   ASSERT_EQ(ESRCH, pthread_setname_np(dead_thread, "short 3"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(pthread, pthread_kill__0) {
   // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.
@@ -264,11 +337,13 @@ static void pthread_kill__in_signal_handler_helper(int signal_number) {
 
 TEST(pthread, pthread_kill__in_signal_handler) {
   struct sigaction action;
+  struct sigaction original_action;
   sigemptyset(&action.sa_mask);
   action.sa_flags = 0;
   action.sa_handler = pthread_kill__in_signal_handler_helper;
-  sigaction(SIGALRM, &action, NULL);
+  ASSERT_EQ(0, sigaction(SIGALRM, &action, &original_action));
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
+  ASSERT_EQ(0, sigaction(SIGALRM, &original_action, NULL));
 }
 
 TEST(pthread, pthread_detach__no_such_thread) {
@@ -348,7 +423,25 @@ TEST(pthread, pthread_join__multijoin) {
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
-  ASSERT_EQ(0, reinterpret_cast<int>(join_result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
+}
+
+TEST(pthread, pthread_join__race) {
+  // http://b/11693195 --- pthread_join could return before the thread had actually exited.
+  // If the joiner unmapped the thread's stack, that could lead to SIGSEGV in the thread.
+  for (size_t i = 0; i < 1024; ++i) {
+    size_t stack_size = 64*1024;
+    void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
+
+    pthread_attr_t a;
+    pthread_attr_init(&a);
+    pthread_attr_setstack(&a, stack, stack_size);
+
+    pthread_t t;
+    ASSERT_EQ(0, pthread_create(&t, &a, IdFn, NULL));
+    ASSERT_EQ(0, pthread_join(t, NULL));
+    ASSERT_EQ(0, munmap(stack, stack_size));
+  }
 }
 
 static void* GetActualGuardSizeFn(void* arg) {
@@ -434,11 +527,73 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
   ASSERT_EQ(32*1024U + 1, stack_size);
-#if __BIONIC__
+#if defined(__BIONIC__)
   // Bionic rounds up, which is what POSIX allows.
   ASSERT_EQ(GetActualStackSize(attributes), (32 + 4)*1024U);
-#else
+#else // __BIONIC__
   // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
   ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
-#endif
+#endif // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_smoke) {
+  pthread_rwlock_t l;
+  ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
+
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  ASSERT_EQ(0, pthread_rwlock_destroy(&l));
+}
+
+static int gOnceFnCallCount = 0;
+static void OnceFn() {
+  ++gOnceFnCallCount;
+}
+
+TEST(pthread, pthread_once_smoke) {
+  pthread_once_t once_control = PTHREAD_ONCE_INIT;
+  ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
+  ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
+  ASSERT_EQ(1, gOnceFnCallCount);
+}
+
+static int gAtForkPrepareCalls = 0;
+static void AtForkPrepare1() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 1; }
+static void AtForkPrepare2() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 2; }
+static int gAtForkParentCalls = 0;
+static void AtForkParent1() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 1; }
+static void AtForkParent2() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 2; }
+static int gAtForkChildCalls = 0;
+static void AtForkChild1() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 1; }
+static void AtForkChild2() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 2; }
+
+TEST(pthread, pthread_atfork) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // Child and parent calls are made in the order they were registered.
+  if (pid == 0) {
+    ASSERT_EQ(0x12, gAtForkChildCalls);
+    _exit(0);
+  }
+  ASSERT_EQ(0x12, gAtForkParentCalls);
+
+  // Prepare calls are made in the reverse order.
+  ASSERT_EQ(0x21, gAtForkPrepareCalls);
+}
+
+TEST(pthread, pthread_attr_getscope) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  int scope;
+  ASSERT_EQ(0, pthread_attr_getscope(&attr, &scope));
+  ASSERT_EQ(PTHREAD_SCOPE_SYSTEM, scope);
 }

@@ -23,14 +23,9 @@
  * memory barrier needs to be issued inline rather than as a function
  * call.
  *
- * Most code should not use these.
- *
- * Anything that does include this file must set ANDROID_SMP to either
- * 0 or 1, indicating compilation for UP or SMP, respectively.
- *
  * Macros defined in this header:
  *
- * void ANDROID_MEMBAR_FULL(void)
+ * void ANDROID_MEMBAR_FULL()
  *   Full memory barrier.  Provides a compiler reordering barrier, and
  *   on SMP systems emits an appropriate instruction.
  */
@@ -49,8 +44,10 @@ extern "C" {
  */
 #define  __ATOMIC_INLINE__  static __inline__ __attribute__((always_inline))
 
-#ifdef __arm__
+#if defined(__arm__)
 #  include "bionic_atomic_arm.h"
+#elif defined(__aarch64__)
+#  include "bionic_atomic_arm64.h"
 #elif defined(__i386__)
 #  include "bionic_atomic_x86.h"
 #elif defined(__mips__)

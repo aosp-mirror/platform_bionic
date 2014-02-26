@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include "libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
     .syntax unified
     .fpu    neon
@@ -38,13 +38,14 @@
 // Check that the two lengths together don't exceed the threshold, then
 // do a memcpy of the data.
 ENTRY(__strcat_chk)
-    .cfi_startproc
     pld     [r0, #0]
     push    {r0, lr}
+    .save   {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
     push    {r4, r5}
+    .save   {r4, r5}
     .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r4, 0
     .cfi_rel_offset r5, 4
@@ -181,7 +182,7 @@ ENTRY(__strcat_chk)
 .L_strlen_done:
     add     r2, r3, r4
     cmp     r2, lr
-    bgt     .L_fortify_check_failed
+    bhi     __strcat_chk_fail
 
     // Set up the registers for the memcpy code.
     mov     r1, r5
@@ -189,13 +190,20 @@ ENTRY(__strcat_chk)
     mov     r2, r4
     add     r0, r0, r3
     pop     {r4, r5}
-    .cfi_adjust_cfa_offset -8
-    .cfi_restore r4
-    .cfi_restore r5
 
-    #include "memcpy_base.S"
+    // Fall through into the memcpy_base function.
+END(__strcat_chk)
 
-.L_fortify_check_failed:
+#define MEMCPY_BASE         __strcat_chk_memcpy_base
+#define MEMCPY_BASE_ALIGNED __strcat_chk_memcpy_base_aligned
+#include "memcpy_base.S"
+
+ENTRY_PRIVATE(__strcat_chk_fail)
+    .save   {r0, lr}
+    .save   {r4, r5}
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset r0, 0
+    .cfi_rel_offset lr, 4
     .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r4, 0
     .cfi_rel_offset r5, 4
@@ -209,10 +217,8 @@ error_code:
     .word   BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
-
-    .cfi_endproc
-END(__strcat_chk)
+END(__strcat_chk_fail)
 
     .data
 error_string:
-    .string "strcat buffer overflow"
+    .string "strcat: prevented write past end of buffer"

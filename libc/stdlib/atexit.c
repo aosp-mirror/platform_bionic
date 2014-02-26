@@ -35,7 +35,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "atexit.h"
-#include "thread_private.h"
+#include "private/thread_private.h"
 
 int __atexit_invalid = 1;
 struct atexit *__atexit;

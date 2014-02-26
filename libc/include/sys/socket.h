@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_SOCKET_H_
 #define _SYS_SOCKET_H_
 
@@ -32,6 +33,7 @@
 #include <sys/types.h>
 #include <linux/socket.h>
 
+#include <asm/fcntl.h>
 #include <asm/socket.h>
 #include <linux/sockios.h>
 #include <linux/uio.h>
@@ -41,8 +43,7 @@
 __BEGIN_DECLS
 
 #define sockaddr_storage __kernel_sockaddr_storage
-typedef __sa_family_t sa_family_t;
-typedef int socklen_t;
+typedef unsigned short sa_family_t;
 
 #ifdef __mips__
 #define SOCK_DGRAM      1
@@ -61,13 +62,15 @@ typedef int socklen_t;
 #define SOCK_PACKET      10
 #endif
 
-/* BIONIC: second argument to shutdown() */
+#define SOCK_CLOEXEC O_CLOEXEC
+#define SOCK_NONBLOCK O_NONBLOCK
+
 enum {
-    SHUT_RD = 0,        /* no more receptions */
+  SHUT_RD = 0,
 #define SHUT_RD         SHUT_RD
-    SHUT_WR,            /* no more transmissions */
+  SHUT_WR,
 #define SHUT_WR         SHUT_WR
-    SHUT_RDWR           /* no more receptions or transmissions */
+  SHUT_RDWR
 #define SHUT_RDWR       SHUT_RDWR
 };
 
@@ -292,6 +295,40 @@ extern  ssize_t  recv(int, void *, size_t, unsigned int);
 
 __socketcall ssize_t sendto(int, const void *, size_t, int, const struct sockaddr *, socklen_t);
 __socketcall ssize_t recvfrom(int, void *, size_t, unsigned int, const struct sockaddr *, socklen_t *);
+
+#if defined(__BIONIC_FORTIFY)
+__errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
+extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, unsigned int, const struct sockaddr*, socklen_t *);
+extern ssize_t __recvfrom_real(int, void *, size_t, unsigned int, const struct sockaddr*, socklen_t*)
+    __asm__(__USER_LABEL_PREFIX__ "recvfrom");
+
+__BIONIC_FORTIFY_INLINE
+ssize_t recvfrom(int fd, void* buf, size_t len, unsigned int flags, const struct sockaddr* src_addr, socklen_t* addrlen) {
+  size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    return __recvfrom_real(fd, buf, len, flags, src_addr, addrlen);
+  }
+
+  if (__builtin_constant_p(len) && (len <= bos)) {
+    return __recvfrom_real(fd, buf, len, flags, src_addr, addrlen);
+  }
+
+  if (__builtin_constant_p(len) && (len > bos)) {
+    __recvfrom_error();
+  }
+#endif
+
+  return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addrlen);
+}
+
+__BIONIC_FORTIFY_INLINE
+ssize_t recv(int socket, void *buf, size_t buflen, unsigned int flags) {
+  return recvfrom(socket, buf, buflen, flags, NULL, 0);
+}
+
+#endif /* __BIONIC_FORTIFY */
 
 #undef __socketcall
 

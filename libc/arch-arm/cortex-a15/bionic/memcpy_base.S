@@ -53,6 +53,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+ENTRY_PRIVATE(MEMCPY_BASE)
+        .save   {r0, lr}
+        .cfi_def_cfa_offset 8
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset lr, 4
+
         // Assumes that n >= 0, and dst, src are valid pointers.
         // For any sizes less than 832 use the neon code that doesn't
         // care about the src alignment. This avoids any checks
@@ -67,8 +73,10 @@
         cmp     r2, #16
         blo     .L_copy_less_than_16_unknown_align
 
-        cmp     r2, #832
-        bge     .L_check_alignment
+        // TODO: The aligned copy code is extremely slow copying some large
+        //       buffers so always go through the unaligned path for now.
+        //cmp     r2, #832
+        //bge     .L_check_alignment
 
 .L_copy_unknown_alignment:
         // Unknown alignment of src and dst.
@@ -161,21 +169,32 @@
         eor     r3, r0, r1
         ands    r3, r3, #0x3
         bne     .L_copy_unknown_alignment
+END(MEMCPY_BASE)
+
+ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
+        .save   {r0, lr}
+        .cfi_def_cfa_offset 8
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset lr, 4
 
         // To try and improve performance, stack layout changed,
         // i.e., not keeping the stack looking like users expect
         // (highest numbered register at highest address).
-        // TODO: Add debug frame directives.
-        // We don't need exception unwind directives, because the code below
-        // does not throw any exceptions and does not call any other functions.
-        // Generally, newlib functions like this lack debug information for
-        // assembler source.
-        .save   {r4, r5}
         strd    r4, r5, [sp, #-8]!
-        .save   {r6, r7}
+        .save   {r4, r5}
+        .cfi_adjust_cfa_offset 8
+        .cfi_rel_offset r4, 0
+        .cfi_rel_offset r5, 4
         strd    r6, r7, [sp, #-8]!
-        .save   {r8, r9}
+        .save   {r6, r7}
+        .cfi_adjust_cfa_offset 8
+        .cfi_rel_offset r6, 0
+        .cfi_rel_offset r7, 0
         strd    r8, r9, [sp, #-8]!
+        .save   {r8, r9}
+        .cfi_adjust_cfa_offset 8
+        .cfi_rel_offset r8, 0
+        .cfi_rel_offset r9, 4
 
         // Optimized for already aligned dst code.
         ands    ip, r0, #3
@@ -301,3 +320,4 @@
 
         // Src is guaranteed to be at least word aligned by this point.
         b       .L_word_aligned
+END(MEMCPY_BASE_ALIGNED)

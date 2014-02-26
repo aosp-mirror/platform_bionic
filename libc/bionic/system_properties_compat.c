@@ -48,6 +48,7 @@ struct prop_area_compat {
     unsigned volatile serial;
     unsigned magic;
     unsigned version;
+    unsigned reserved[4];
     unsigned toc[1];
 };
 
@@ -100,7 +101,7 @@ int __system_property_read_compat(const prop_info *_pi, char *name, char *value)
     for(;;) {
         serial = pi->serial;
         while(SERIAL_DIRTY(serial)) {
-            __futex_wait((volatile void *)&pi->serial, serial, 0);
+            __futex_wait((volatile void *)&pi->serial, serial, NULL);
             serial = pi->serial;
         }
         len = SERIAL_VALUE_LEN(serial);

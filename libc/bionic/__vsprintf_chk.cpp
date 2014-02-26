@@ -26,10 +26,12 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 /*
  * Runtime implementation of __builtin____vsprintf_chk.
@@ -42,20 +44,13 @@
  * This vsprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" int __vsprintf_chk(
-        char *dest,
-        int /*flags*/,
-        size_t dest_len_from_compiler,
-        const char *format,
-        va_list va)
-{
-    int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
-
-    if ((size_t) ret >= dest_len_from_compiler) {
-        __fortify_chk_fail("vsprintf buffer overflow", 0);
-    }
-
-    return ret;
+extern "C" int __vsprintf_chk(char* dest, int /*flags*/,
+                              size_t dest_len_from_compiler, const char* format, va_list va) {
+  int result = vsnprintf(dest, dest_len_from_compiler, format, va);
+  if ((size_t) result >= dest_len_from_compiler) {
+    __fortify_chk_fail("vsprintf: prevented write past end of buffer", 0);
+  }
+  return result;
 }
 
 /*
@@ -69,19 +64,11 @@ extern "C" int __vsprintf_chk(
  * This sprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" int __sprintf_chk(
-        char *dest,
-        int flags,
-        size_t dest_len_from_compiler,
-        const char *format, ...)
-{
-    va_list va;
-    int retval;
-
-    va_start(va, format);
-    retval = __vsprintf_chk(dest, flags,
-                             dest_len_from_compiler, format, va);
-    va_end(va);
-
-    return retval;
+extern "C" int __sprintf_chk(char* dest, int flags,
+                             size_t dest_len_from_compiler, const char* format, ...) {
+  va_list va;
+  va_start(va, format);
+  int result = __vsprintf_chk(dest, flags, dest_len_from_compiler, format, va);
+  va_end(va);
+  return result;
 }

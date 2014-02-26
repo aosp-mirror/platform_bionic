@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * Coding the abort function in assembly so that registers are guaranteed to
@@ -36,7 +36,9 @@
  * sequence when the crash happens.
  */
 ENTRY(abort)
-    .save   {r3, r14}
     stmfd   sp!, {r3, r14}
-    bl      PIC_SYM(_C_LABEL(__libc_android_abort), PLT)
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset r3, 0
+    .cfi_rel_offset r14, 4
+    bl      PIC_SYM(__libc_android_abort, PLT)
 END(abort)

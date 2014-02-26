@@ -38,7 +38,7 @@ static const char   sccsid[] = "@(#)strftime.c  5.4 (Berkeley) 3/14/89";
 #include "locale.h"
 #include <ctype.h>
 #include <time64.h>
-#include <bionic_time.h>  /* for strftime_tz */
+#include "private/bionic_time.h"  /* for strftime_tz */
 
 /* struct lc_time_T is now defined as strftime_locale
  * in <time.h>
@@ -592,7 +592,7 @@ label:
                 continue;
             case 'z':
                 {
-                int     diff;
+                long     diff;
                 char const *    sign;
 
                 if (t->tm_isdst < 0)
@@ -601,7 +601,7 @@ label:
                 diff = t->TM_GMTOFF;
 #else /* !defined TM_GMTOFF */
                 /*
-                ** C99 says that the UTC offset must
+                ** C99 says that the UT offset must
                 ** be computed by looking only at
                 ** tm_isdst. This requirement is
                 ** incorrect, since it means the code

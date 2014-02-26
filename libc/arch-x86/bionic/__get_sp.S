@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(__get_sp)
   mov  %esp, %eax

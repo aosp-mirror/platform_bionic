@@ -29,12 +29,9 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
-#include <unistd.h>
-#include <sys/types.h>
 #include <elf.h>
-#include <sys/exec_elf.h>
-
 #include <link.h>
+#include <unistd.h>
 
 #include "private/libc_logging.h"
 
@@ -53,6 +50,25 @@
       __libc_format_fd(2, "\n"); \
     } while (false)
 
+#if defined(__LP64__)
+#define ELFW(what) ELF64_ ## what
+#else
+#define ELFW(what) ELF32_ ## what
+#endif
+
+// mips64 interprets Elf64_Rel structures' r_info field differently.
+// bionic (like other C libraries) has macros that assume regular ELF files,
+// but the dynamic linker needs to be able to load mips64 ELF files.
+#if defined(__mips__) && defined(__LP64__)
+#undef ELF64_R_SYM
+#undef ELF64_R_TYPE
+#undef ELF64_R_INFO
+#define ELF64_R_SYM(info)   (((info) >> 0) & 0xffffffff)
+#define ELF64_R_SSYM(info)  (((info) >> 32) & 0xff)
+#define ELF64_R_TYPE3(info) (((info) >> 40) & 0xff)
+#define ELF64_R_TYPE2(info) (((info) >> 48) & 0xff)
+#define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
+#endif
 
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
@@ -64,31 +80,6 @@
 // itself at the start of a page.
 #define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
-// Magic shared structures that GDB knows about.
-
-struct link_map_t {
-  uintptr_t l_addr;
-  char*  l_name;
-  uintptr_t l_ld;
-  link_map_t* l_next;
-  link_map_t* l_prev;
-};
-
-// Values for r_debug->state
-enum {
-  RT_CONSISTENT,
-  RT_ADD,
-  RT_DELETE
-};
-
-struct r_debug {
-  int32_t r_version;
-  link_map_t* r_map;
-  void (*r_brk)(void);
-  int32_t r_state;
-  uintptr_t r_ldbase;
-};
-
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
@@ -97,40 +88,61 @@ struct r_debug {
 
 typedef void (*linker_function_t)();
 
+// Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
+#if defined(__aarch64__) || defined(__x86_64__)
+#define USE_RELA 1
+#endif
+
 struct soinfo {
  public:
   char name[SOINFO_NAME_LEN];
-  const Elf32_Phdr* phdr;
+  const ElfW(Phdr)* phdr;
   size_t phnum;
-  Elf32_Addr entry;
-  Elf32_Addr base;
-  unsigned size;
+  ElfW(Addr) entry;
+  ElfW(Addr) base;
+  size_t size;
 
+#ifndef __LP64__
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
+#endif
 
-  Elf32_Dyn* dynamic;
+  ElfW(Dyn)* dynamic;
 
+#ifndef __LP64__
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
+#endif
 
   soinfo* next;
   unsigned flags;
 
   const char* strtab;
-  Elf32_Sym* symtab;
+  ElfW(Sym)* symtab;
 
   size_t nbucket;
   size_t nchain;
   unsigned* bucket;
   unsigned* chain;
 
-  unsigned* plt_got;
+#if defined(__mips__) || !defined(__LP64__)
+  // This is only used by mips and mips64, but needs to be here for
+  // all 32-bit architectures to preserve binary compatibility.
+  ElfW(Addr)** plt_got;
+#endif
 
-  Elf32_Rel* plt_rel;
+#if defined(USE_RELA)
+  ElfW(Rela)* plt_rela;
+  size_t plt_rela_count;
+
+  ElfW(Rela)* rela;
+  size_t rela_count;
+#else
+  ElfW(Rel)* plt_rel;
   size_t plt_rel_count;
 
-  Elf32_Rel* rel;
+  ElfW(Rel)* rel;
   size_t rel_count;
+#endif
 
   linker_function_t* preinit_array;
   size_t preinit_array_count;
@@ -143,26 +155,28 @@ struct soinfo {
   linker_function_t init_func;
   linker_function_t fini_func;
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
   // ARM EABI section used for stack unwinding.
   unsigned* ARM_exidx;
   size_t ARM_exidx_count;
-#elif defined(ANDROID_MIPS_LINKER)
+#elif defined(__mips__)
   unsigned mips_symtabno;
   unsigned mips_local_gotno;
   unsigned mips_gotsym;
 #endif
 
   size_t ref_count;
-  link_map_t link_map;
+  link_map link_map_head;
 
   bool constructors_called;
 
   // When you read a virtual address from the ELF file, add this
   // value to get the corresponding address in the process' address space.
-  Elf32_Addr load_bias;
+  ElfW(Addr) load_bias;
 
+#if !defined(__LP64__)
   bool has_text_relocations;
+#endif
   bool has_DT_SYMBOLIC;
 
   void CallConstructors();
@@ -176,23 +190,16 @@ struct soinfo {
 
 extern soinfo libdl_info;
 
-// These aren't defined in <sys/exec_elf.h>.
-#ifndef DT_PREINIT_ARRAY
-#define DT_PREINIT_ARRAY   32
-#endif
-#ifndef DT_PREINIT_ARRAYSZ
-#define DT_PREINIT_ARRAYSZ 33
-#endif
-
+void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
 
-Elf32_Sym* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
-Elf32_Sym* dladdr_find_symbol(soinfo* si, const void* addr);
-Elf32_Sym* dlsym_handle_lookup(soinfo* si, const char* name);
+ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr);
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* gAbortMessage;

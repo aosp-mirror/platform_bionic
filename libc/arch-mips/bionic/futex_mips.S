@@ -26,117 +26,91 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 
 #define FUTEX_WAIT 0
 #define FUTEX_WAKE 1
 
-/*
- * __futex_wait(*ftx, val, *timespec)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
-	.type	__futex_wait, @function
-	.global	__futex_wait
-	.align	4
-	.ent	__futex_wait
-__futex_wait:
-	subu	$sp,4*6
-	sw	$0,20($sp)	/* val3 */
-	sw	$0,16($sp)	/* addr2 */
-	move	$a3,$a2		/* timespec */
-	move	$a2,$a1		/* val */
-	li	$a1,FUTEX_WAIT	/* op */
-#	move	$a0,$a0		/* ftx */
-	li	$v0,__NR_futex
+// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
+ENTRY(__futex_wait)
+	subu	sp,4*6
+	sw	$0,20(sp)	/* val3 */
+	sw	$0,16(sp)	/* addr2 */
+	move	a3,a2		/* timespec */
+	move	a2,a1		/* val */
+	li	a1,FUTEX_WAIT	/* op */
+#	move	a0,a0		/* ftx */
+	li	v0,__NR_futex
 	syscall
 	.set noreorder
-	bnez	$a3, 1f		/* Check for error */
-         neg	$v0		/* Negate error number if it's valid */
-	move	$v0,$0		/* Otherwise return 0 */
+	bnez	a3, 1f		/* Check for error */
+         neg	v0		/* Negate error number if it's valid */
+	move	v0,$0		/* Otherwise return 0 */
 1:
 	.set reorder
-	addu	$sp,4*6
-	j	$ra
-	.end	__futex_wait
+	addu	sp,4*6
+	j	ra
+END(__futex_wait)
 
-/*
- * int __futex_wake(volatile void *ftx, int count)
- * int futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
-	.type	__futex_wake, @function
-	.globl	__futex_wake
-	.align	4
-	.ent	__futex_wake
-__futex_wake:
-	subu	$sp,4*6
-	sw	$0,20($sp)	/* val3 */
-	sw	$0,16($sp)	/* addr2 */
-	move	$a3,$0		/* timespec */
-	move	$a2,$a1		/* val */
-	li	$a1,FUTEX_WAKE	/* op */
-#	move	$a0,$a0		/* ftx */
-	li	$v0,__NR_futex
+// int __futex_wake(volatile void* ftx, int count)
+ENTRY(__futex_wake)
+	subu	sp,4*6
+	sw	$0,20(sp)	/* val3 */
+	sw	$0,16(sp)	/* addr2 */
+	move	a3,$0		/* timespec */
+	move	a2,a1		/* val */
+	li	a1,FUTEX_WAKE	/* op */
+#	move	a0,a0		/* ftx */
+	li	v0,__NR_futex
 	syscall
 	.set noreorder
-	bnez	$a3, 1f		/* Check for error */
-         neg	$v0		/* Negate error number if it's valid */
-	move	$v0,$0		/* Otherwise return 0 */
+	bnez	a3, 1f		/* Check for error */
+         neg	v0		/* Negate error number if it's valid */
+	move	v0,$0		/* Otherwise return 0 */
 1:
 	.set reorder
-	addu	$sp,4*6
-	j	$ra
-	.end	__futex_wake
+	addu	sp,4*6
+	j	ra
+END(__futex_wake)
 
-/* __futex_syscall3(*ftx, op, val)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
-	.type	__futex_syscall3, @function
-	.global	__futex_syscall3
-	.align	4
-	.ent	__futex_syscall3
-__futex_syscall3:
-	subu	$sp,4*6
-	sw	$0,20($sp)	/* val3 */
-	sw	$0,16($sp)	/* addr2 */
-	move	$a3,$0		/* timespec */
-#	move	$a2,$a2		/* val */
-#	li	$a1,$a1		/* op */
-#	move	$a0,$a0		/* ftx */
-	li	$v0,__NR_futex
+// int __futex_syscall3(volatile void* ftx, int op, int count)
+ENTRY(__futex_syscall3)
+	subu	sp,4*6
+	sw	$0,20(sp)	/* val3 */
+	sw	$0,16(sp)	/* addr2 */
+	move	a3,$0		/* timespec */
+#	move	a2,a2		/* val */
+#	li	a1,a1		/* op */
+#	move	a0,a0		/* ftx */
+	li	v0,__NR_futex
 	syscall
 	.set noreorder
-	bnez	$a3, 1f		/* Check for error */
-         neg	$v0		/* Negate error number if it's valid */
-	move	$v0,$0		/* Otherwise return 0 */
+	bnez	a3, 1f		/* Check for error */
+         neg	v0		/* Negate error number if it's valid */
+	move	v0,$0		/* Otherwise return 0 */
 1:
 	.set reorder
-	addu	$sp,4*6
-	j	$ra
-	.end	__futex_syscall3
+	addu	sp,4*6
+	j	ra
+END(__futex_syscall3)
 
-/* __futex_syscall4(*ftx, op, val)
- * futex_syscall(*ftx, op, val, *timespec, *addr2, val3)
- */
-	.type	__futex_syscall4, @function
-	.global	__futex_syscall4
-	.align	4
-	.ent	__futex_syscall4
-__futex_syscall4:
-	subu	$sp,4*6
-	sw	$0,20($sp)	/* val3 */
-	sw	$0,16($sp)	/* addr2 */
-#	move	$a3,$a3		/* timespec */
-#	move	$a2,$a2		/* val */
-#	li	$a1,$a1		/* op */
-#	move	$a0,$a0		/* ftx */
-	li	$v0,__NR_futex
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
+ENTRY(__futex_syscall4)
+	subu	sp,4*6
+	sw	$0,20(sp)	/* val3 */
+	sw	$0,16(sp)	/* addr2 */
+#	move	a3,a3		/* timespec */
+#	move	a2,a2		/* val */
+#	li	a1,a1		/* op */
+#	move	a0,a0		/* ftx */
+	li	v0,__NR_futex
 	syscall
 	.set noreorder
-	bnez	$a3, 1f		/* Check for error */
-         neg	$v0		/* Negate error number if it's valid */
-	move	$v0,$0		/* Otherwise return 0 */
+	bnez	a3, 1f		/* Check for error */
+         neg	v0		/* Negate error number if it's valid */
+	move	v0,$0		/* Otherwise return 0 */
 1:
 	.set reorder
-	addu	$sp,4*6
-	j	$ra
-	.end	__futex_syscall4
+	addu	sp,4*6
+	j	ra
+END(__futex_syscall4)

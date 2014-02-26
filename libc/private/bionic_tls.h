@@ -25,10 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_TLS_H
-#define _SYS_TLS_H
+
+#ifndef __BIONIC_PRIVATE_BIONIC_TLS_H_
+#define __BIONIC_PRIVATE_BIONIC_TLS_H_
 
 #include <sys/cdefs.h>
+#include <sys/limits.h>
+#include "__get_tls.h"
 
 __BEGIN_DECLS
 
@@ -49,6 +52,11 @@ enum {
   TLS_SLOT_THREAD_ID,
   TLS_SLOT_ERRNO,
 
+  /* This slot in the child's TLS is used to synchronize the parent and child
+   * during thread initialization. The child finishes with this mutex before
+   * running any code that can set errno, so we can reuse the errno slot. */
+  TLS_SLOT_START_MUTEX = TLS_SLOT_ERRNO,
+
   /* These two aren't used by bionic itself, but allow the graphics code to
    * access TLS directly rather than using the pthread API. */
   TLS_SLOT_OPENGL_API = 3,
@@ -67,54 +75,27 @@ enum {
 };
 
 /*
- * Maximum number of elements in the TLS array.
- * POSIX says this must be at least 128, but Android has traditionally had only 64, minus those
- * ones used internally by bionic itself.
  * There are two kinds of slot used internally by bionic --- there are the well-known slots
  * enumerated above, and then there are those that are allocated during startup by calls to
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
-/*
- * This is PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
- * rounded up to maintain stack alignment.
- */
+
 #define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(128 + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
 
-/* syscall only, do not call directly */
-extern int __set_tls(void* ptr);
-
-/* get the TLS */
-#if defined(__arm__)
-# define __get_tls() \
-    ({ register unsigned int __val; \
-       asm ("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); \
-       (volatile void*) __val; })
-#elif defined(__mips__)
-# define __get_tls() \
-    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register unsigned int __val asm("v1"); \
-       asm ("   .set    push\n" \
-            "   .set    mips32r2\n" \
-            "   rdhwr   %0,$29\n" \
-            "   .set    pop\n" : "=r"(__val)); \
-       (volatile void*) __val; })
-#elif defined(__i386__)
-# define __get_tls() \
-    ({ register void* __val; \
-       asm ("movl %%gs:0, %0" : "=r"(__val)); \
-       (volatile void*) __val; })
-#else
-#error unsupported architecture
-#endif
+/*
+ * Maximum number of elements in the TLS array.
+ * This includes space for pthread keys and our own internal slots.
+ * We need to round up to maintain stack alignment.
+ */
+#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
 
 __END_DECLS
 
 #if defined(__cplusplus)
-struct KernelArgumentBlock;
+class KernelArgumentBlock;
 extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
 #endif
 
-#endif /* _SYS_TLS_H */
+#endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */

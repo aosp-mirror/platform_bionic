@@ -23,8 +23,7 @@
 #include <limits.h>
 #include <unistd.h>
 
-#if __BIONIC__
-
+#if defined(__BIONIC__)
 #define CHECK_GETPWNAM_FOR(username, uid, uid_type) \
     SCOPED_TRACE(username); \
     ASSERT_NO_FATAL_FAILURE(check_getpwnam(username, uid, uid_type));
@@ -51,6 +50,10 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type)
 
   EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
+#else
+#define CHECK_GETPWNAM_FOR(username, uid, uid_type) \
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
 
 TEST(getpwnam, system_id_root) {
   CHECK_GETPWNAM_FOR("root", 0, TYPE_SYSTEM);
@@ -104,5 +107,3 @@ TEST(getpwnam, app_id_u1_a0) {
 TEST(getpwnam, app_id_u1_i0) {
   CHECK_GETPWNAM_FOR("u1_i0", 199000, TYPE_APP);
 }
-
-#endif /* __BIONIC__ */

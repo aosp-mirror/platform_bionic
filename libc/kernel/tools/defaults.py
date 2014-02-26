@@ -7,7 +7,7 @@ from utils import *
 
 # the list of supported architectures
 #
-kernel_archs = [ 'arm', 'x86', 'mips' ]
+kernel_archs = [ 'arm', 'arm64', 'mips', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -33,6 +33,8 @@ kernel_known_macros = {
     "__KERNEL_STRICT_NAMES":"1",
     "__CHECKER__": kCppUndefinedMacro,
     "__CHECK_ENDIAN__": kCppUndefinedMacro,
+    "CONFIG_X86_32": "__i386__",
+    "__EXPORTED_HEADERS__": "1",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -44,37 +46,49 @@ kernel_remove_config_macros = True
 # toolchain preprocessor
 kernel_default_arch_macros = {
     "arm": {},
-    "x86": {"__i386__": "1", "CONFIG_X86_32": "1"},
+    "arm64": {},
     "mips": {"CONFIG_32BIT":"1"},
+    "x86": {},
     }
 
 kernel_arch_token_replacements = {
     "arm": {},
-    "x86": {},
+    "arm64": {},
     "mips": {"off_t":"__kernel_off_t"},
+    "x86": {},
     }
+
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
     "asm": "__asm__",
-    "__unused": "__linux_unused", # The kernel usage of __unused conflicts with the macro defined in sys/cdefs.h
+    # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
+    "__unused": "__linux_unused",
+    # The kernel's _NSIG/NSIG are one less than the userspace value, so we need to move them aside.
+    "_NSIG": "_KERNEL__NSIG",
+    "NSIG": "_KERNEL_NSIG",
     }
 
 # this is the set of known static inline functions that we want to keep
 # in the final ARM headers. this is only used to keep optimized byteswapping
 # static functions and stuff like that.
 kernel_known_arm_statics = set(
-       [ "___arch__swab32",    # asm-arm/byteorder.h
-       ]
+        [ "___arch__swab32",    # asm-arm/byteorder.h
+        ]
     )
 
-kernel_known_x86_statics = set(
-        [ "___arch__swab32",  # asm-x86/byteorder.h
-          "___arch__swab64",  # asm-x86/byteorder.h
+kernel_known_arm64_statics = set(
+        [
         ]
     )
 
 kernel_known_mips_statics = set(
         [
+        ]
+    )
+
+kernel_known_x86_statics = set(
+        [ "___arch__swab32",  # asm-x86/byteorder.h
+          "___arch__swab64",  # asm-x86/byteorder.h
         ]
     )
 
@@ -92,8 +106,9 @@ kernel_known_generic_statics = set(
 #
 kernel_known_statics = {
         "arm" : kernel_known_arm_statics,
+        "arm64" : kernel_known_arm64_statics,
+        "mips" : kernel_known_mips_statics,
         "x86" : kernel_known_x86_statics,
-        "mips" : kernel_known_mips_statics
     }
 
 # this is a list of macros which we want to specifically exclude from

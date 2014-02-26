@@ -49,7 +49,7 @@ void __libc_fini(void* finit_array);
 __END_DECLS
 
 #if defined(__cplusplus)
-struct KernelArgumentBlock;
+class KernelArgumentBlock;
 void __LIBC_HIDDEN__ __libc_init_common(KernelArgumentBlock& args);
 #endif
 

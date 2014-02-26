@@ -126,7 +126,7 @@ static struct hostent *_gethtbyname2(const char *, int);
 static int _dns_gethtbyaddr(void *, void *, va_list);
 static int _dns_gethtbyname(void *, void *, va_list);
 
-static struct hostent *gethostbyname_internal(const char *, int, res_state, const char *);
+static struct hostent *gethostbyname_internal(const char *, int, res_state, const char *, int);
 
 static const ns_src default_dns_files[] = {
 	{ NSSRC_FILES, 	NS_SUCCESS },
@@ -497,13 +497,13 @@ gethostbyname(const char *name)
 
 	/* try IPv6 first - if that fails do IPv4 */
 	if (res->options & RES_USE_INET6) {
-		hp = gethostbyname_internal(name, AF_INET6, res, NULL);
+		hp = gethostbyname_internal(name, AF_INET6, res, NULL, 0);
 		if (hp) {
 			__res_put_state(res);
 			return hp;
 		}
 	}
-	hp = gethostbyname_internal(name, AF_INET, res, NULL);
+	hp = gethostbyname_internal(name, AF_INET, res, NULL, 0);
 	__res_put_state(res);
 	return hp;
 }
@@ -511,18 +511,18 @@ gethostbyname(const char *name)
 struct hostent *
 gethostbyname2(const char *name, int af)
 {
-	return android_gethostbynameforiface(name, af, NULL);
+	return android_gethostbynameforiface(name, af, NULL, 0);
 }
 
 struct hostent *
-android_gethostbynameforiface(const char *name, int af, const char *iface)
+android_gethostbynameforiface(const char *name, int af, const char *iface, int mark)
 {
 	struct hostent *hp;
 	res_state res = __res_get_state();
 
 	if (res == NULL)
 		return NULL;
-	hp = gethostbyname_internal(name, af, res, iface);
+	hp = gethostbyname_internal(name, af, res, iface, mark);
 	__res_put_state(res);
 	return hp;
 }
@@ -741,7 +741,7 @@ gethostbyname_internal_real(const char *name, int af, res_state res)
 
 // very similar in proxy-ness to android_getaddrinfo_proxy
 static struct hostent *
-gethostbyname_internal(const char *name, int af, res_state res, const char *iface)
+gethostbyname_internal(const char *name, int af, res_state res, const char *iface, int mark)
 {
 	const char *cache_mode = getenv("ANDROID_DNS_MODE");
 	FILE* proxy = NULL;
@@ -749,6 +749,7 @@ gethostbyname_internal(const char *name, int af, res_state res, const char *ifac
 
 	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
 		res_setiface(res, iface);
+		res_setmark(res, mark);
 		return gethostbyname_internal_real(name, af, res);
 	}
 
@@ -780,7 +781,7 @@ exit:
 
 struct hostent *
 android_gethostbyaddrforiface_proxy(const void *addr,
-    socklen_t len, int af, const char* iface)
+    socklen_t len, int af, const char* iface, int mark)
 {
 	struct hostent *result = NULL;
 	FILE* proxy = android_open_proxy();
@@ -810,7 +811,7 @@ exit:
 
 struct hostent *
 android_gethostbyaddrforiface_real(const void *addr,
-    socklen_t len, int af, const char* iface)
+    socklen_t len, int af, const char* iface, int mark)
 {
 	const u_char *uaddr = (const u_char *)addr;
 	socklen_t size;
@@ -858,28 +859,28 @@ android_gethostbyaddrforiface_real(const void *addr,
 	hp = NULL;
 	h_errno = NETDB_INTERNAL;
 	if (nsdispatch(&hp, dtab, NSDB_HOSTS, "gethostbyaddr",
-	    default_dns_files, uaddr, len, af, iface) != NS_SUCCESS)
+		default_dns_files, uaddr, len, af, iface, mark) != NS_SUCCESS)
 		return NULL;
 	h_errno = NETDB_SUCCESS;
 	return hp;
 }
 
 struct hostent *
-android_gethostbyaddrforiface(const void *addr, socklen_t len, int af, const char* iface)
+android_gethostbyaddrforiface(const void *addr, socklen_t len, int af, const char* iface, int mark)
 {
 	const char *cache_mode = getenv("ANDROID_DNS_MODE");
 
 	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
-		return android_gethostbyaddrforiface_proxy(addr, len, af, iface);
+		return android_gethostbyaddrforiface_proxy(addr, len, af, iface, mark);
 	} else {
-		return android_gethostbyaddrforiface_real(addr,len, af,iface);
+		return android_gethostbyaddrforiface_real(addr,len, af, iface, mark);
 	}
 }
 
 struct hostent *
 gethostbyaddr(const void *addr, socklen_t len, int af)
 {
-	return android_gethostbyaddrforiface(addr, len, af, NULL);
+	return android_gethostbyaddrforiface(addr, len, af, NULL, 0);
 }
 
 
@@ -1315,6 +1316,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	int len, af, advance;
 	res_state res;
 	const char* iface;
+	int mark;
 	res_static rs = __res_get_static();
 
 	assert(rv != NULL);
@@ -1323,6 +1325,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	len = va_arg(ap, int);
 	af = va_arg(ap, int);
 	iface = va_arg(ap, char *);
+	mark = va_arg(ap, int);
 
 	switch (af) {
 	case AF_INET:
@@ -1365,6 +1368,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		return NS_NOTFOUND;
 	}
 	res_setiface(res, iface);
+	res_setmark(res, mark);
 	n = res_nquery(res, qbuf, C_IN, T_PTR, buf->buf, sizeof(buf->buf));
 	if (n < 0) {
 		free(buf);

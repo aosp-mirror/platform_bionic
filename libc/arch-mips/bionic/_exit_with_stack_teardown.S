@@ -26,26 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 
-	.text
-
-/* void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode) */
-
-	.type	_exit_with_stack_teardown, @function
-	.global	_exit_with_stack_teardown
-	.align	4
-	.ent	_exit_with_stack_teardown
-_exit_with_stack_teardown:
-	move	$s0,$a2		/* preserve retCode for exit() call */
-
-	li	$v0,__NR_munmap
-	syscall			/* the stack is destroyed by this call */
-	move	$a0,$s0
-	li	$v0,__NR_exit
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
+ENTRY(_exit_with_stack_teardown)
+	li	v0, __NR_munmap
 	syscall
+	// If munmap failed, we ignore the failure and exit anyway.
 
-	/* exit() should never return, cause a crash if it does */
-	move	$a0,$0
-	lw	$a0,($a0)
-	.end	_exit_with_stack_teardown
+	li	a0, 0
+	li	v0, __NR_exit
+	syscall
+        // The exit syscall does not return.
+END(_exit_with_stack_teardown)

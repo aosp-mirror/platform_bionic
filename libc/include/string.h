@@ -46,7 +46,10 @@ extern void   memswap(void *, void *, size_t);
 
 extern char*  index(const char *, int) __purefunc;
 extern char*  strchr(const char *, int) __purefunc;
+extern char* __strchr_chk(const char *, int, size_t);
+
 extern char*  strrchr(const char *, int) __purefunc;
+extern char* __strrchr_chk(const char *, int, size_t);
 
 extern size_t strlen(const char *) __purefunc;
 extern size_t __strlen_chk(const char *, size_t);
@@ -94,8 +97,8 @@ __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     char *d = (char *) dest;
     const char *s = (const char *) src;
-    size_t s_len = __builtin_object_size(s, 0);
-    size_t d_len = __builtin_object_size(d, 0);
+    size_t s_len = __bos0(s);
+    size_t d_len = __bos0(d);
 
     if (__builtin_constant_p(copy_amount) && (copy_amount > d_len)) {
         __memcpy_dest_size_error();
@@ -110,7 +113,7 @@ void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amou
 
 __BIONIC_FORTIFY_INLINE
 void* memmove(void *dest, const void *src, size_t len) {
-    return __builtin___memmove_chk(dest, src, len, __builtin_object_size (dest, 0));
+    return __builtin___memmove_chk(dest, src, len, __bos0(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -119,14 +122,30 @@ char* strcpy(char* __restrict dest, const char* __restrict src) {
 }
 
 __errordecl(__strncpy_error, "strncpy called with size bigger than buffer");
+extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
-    size_t bos = __bos(dest);
-    if (__builtin_constant_p(n) && (n > bos)) {
+    size_t bos_dest = __bos(dest);
+    size_t bos_src = __bos(src);
+    if (__builtin_constant_p(n) && (n > bos_dest)) {
         __strncpy_error();
     }
-    return __builtin___strncpy_chk(dest, src, n, bos);
+
+    if (bos_src == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
+    if (__builtin_constant_p(n) && (n <= bos_src)) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
+    size_t slen = __builtin_strlen(src);
+    if (__builtin_constant_p(slen)) {
+        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+    }
+
+    return __strncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -141,7 +160,7 @@ char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
 
 __BIONIC_FORTIFY_INLINE
 void* memset(void *s, int c, size_t n) {
-    return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
+    return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
@@ -226,8 +245,6 @@ size_t strlen(const char *s) {
     return __strlen_chk(s, bos);
 }
 
-extern char* __strchr_chk(const char *, int, size_t);
-
 __BIONIC_FORTIFY_INLINE
 char* strchr(const char *s, int c) {
     size_t bos = __bos(s);
@@ -246,8 +263,6 @@ char* strchr(const char *s, int c) {
 
     return __strchr_chk(s, c, bos);
 }
-
-extern char* __strrchr_chk(const char *, int, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {

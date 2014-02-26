@@ -28,7 +28,7 @@
 
 #include <pthread.h>
 
-#include "bionic_tls.h"
+#include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
 /* A technical note regarding our thread-local-storage (TLS) implementation:
@@ -133,7 +133,7 @@ class ScopedTlsMapAccess {
   // from this thread's TLS area. This must call the destructor of all keys
   // that have a non-NULL data value and a non-NULL destructor.
   void CleanAll() {
-    void** tls = (void**)__get_tls();
+    void** tls = __get_tls();
 
     // Because destructors can do funky things like deleting/creating other
     // keys, we need to implement this in a loop.
@@ -215,10 +215,10 @@ int pthread_key_delete(pthread_key_t key) {
     // Skip zombie threads. They don't have a valid TLS area any more.
     // Similarly, it is possible to have t->tls == NULL for threads that
     // were just recently created through pthread_create() but whose
-    // startup trampoline (__thread_entry) hasn't been run yet by the
+    // startup trampoline (__pthread_start) hasn't been run yet by the
     // scheduler. t->tls will also be NULL after a thread's stack has been
     // unmapped but before the ongoing pthread_join() is finished.
-    if ((t->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) || t->tls == NULL) {
+    if (t->tid == 0 || t->tls == NULL) {
       continue;
     }
 
@@ -239,7 +239,7 @@ void* pthread_getspecific(pthread_key_t key) {
   // to check that the key is properly allocated. If the key was not
   // allocated, the value read from the TLS should always be NULL
   // due to pthread_key_delete() clearing the values for all threads.
-  return (void *)(((unsigned *)__get_tls())[key]);
+  return __get_tls()[key];
 }
 
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
@@ -249,6 +249,6 @@ int pthread_setspecific(pthread_key_t key, const void* ptr) {
     return EINVAL;
   }
 
-  ((uint32_t *)__get_tls())[key] = (uint32_t)ptr;
+  __get_tls()[key] = const_cast<void*>(ptr);
   return 0;
 }

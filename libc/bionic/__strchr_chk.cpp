@@ -28,12 +28,12 @@
  */
 
 #include <string.h>
-#include "libc_logging.h"
+#include "private/libc_logging.h"
 
 extern "C" char* __strchr_chk(const char* p, int ch, size_t s_len) {
   for (;; ++p, s_len--) {
     if (__predict_false(s_len == 0)) {
-      __fortify_chk_fail("read beyond buffer", 0);
+      __fortify_chk_fail("strchr: prevented read past end of buffer", 0);
     }
     if (*p == static_cast<char>(ch)) {
       return const_cast<char*>(p);
