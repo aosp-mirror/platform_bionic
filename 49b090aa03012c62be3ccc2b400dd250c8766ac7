@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dc0199f4_c19c660f",
+        "filename": "libm/arm/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf89137_3a932800",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cfb9535_6f87ae4f",
         "filename": "libm/arm64/fenv.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-25T22:31:22Z",
       "side": 1,
       "message": "the formatting is a bit fucked up in this file.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c0a6d15_3e0571a6",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Got screwed during copy paste due to tab/space usage... and the text editor I\u0027m using doesn\u0027t do the job for me. I\u0027ll be more careful.",
+      "parentUuid": "3cfb9535_6f87ae4f",
       "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "7c0a6d15_1e0aadb6",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf89137_5af03446",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cf89137_fa9ca00e",
         "filename": "libm/include/amd64/machine/fenv.h",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-02-25T22:31:22Z",
       "side": 1,
       "message": "this file should probably keep the \u003csys/types.h\u003e include. in part for __BEGIN_DECLS...",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c156131_3f1c4ff8",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "I removed it initially because we didn\u0027t actually use it.",
+      "parentUuid": "1cf89137_fa9ca00e",
       "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "dc0199f4_618b52c5",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "It probably got away because the define below cast it to const anyway.\n\nI was a bit reluctant to push this to the common fenv.h since it disrupts the perfect open-bsd copy but given it is (and will be) the same for all arch it\u0027s a good thing.",
+      "parentUuid": "3cfb9535_8fd43a32",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3ac1c3_40029867",
         "filename": "libm/include/amd64/machine/fenv.h",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2014-02-25T22:31:22Z",
       "side": 1,
       "message": "...but also because i think it\u0027s clearer when we use uint32_t where we can.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0199f4_81865ebb",
+        "filename": "libm/include/amd64/machine/fenv.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c3ac1c3_40029867",
       "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "9c156131_5f394354",
+        "filename": "libm/mips/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf89137_9ae6bc96",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cf89137_7aebf05f",
         "filename": "libm/mips/fenv.c",
         "patchSetId": 2
@@ -132,6 +258,24 @@
       "writtenOn": "2014-02-25T22:31:22Z",
       "side": 1,
       "message": "same.",
+      "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0199f4_41029667",
+        "filename": "libm/mips/fenv.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-02-26T12:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf89137_7aebf05f",
       "revId": "49b090aa03012c62be3ccc2b400dd250c8766ac7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
