@@ -24,16 +24,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef	_AMD64_FENV_H_
-#define	_AMD64_FENV_H_
+#ifndef _AMD64_FENV_H_
+#define _AMD64_FENV_H_
 
 #include <sys/types.h>
-
-/*
- * This file combines the OpenBSD include/fenv.h and machine/fenv.h to fit
- * the style of the other architectures (where we couldn't just take an
- * upstream fenv.h and had to write our own).
- */
 
 __BEGIN_DECLS
 
@@ -44,20 +38,20 @@ __BEGIN_DECLS
  *
  * We use such values that allow direct bitwise operations on FPU/SSE registers.
  */
-#define	FE_INVALID		0x01
-#define	FE_DENORMAL		0x02
-#define	FE_DIVBYZERO		0x04
-#define	FE_OVERFLOW		0x08
-#define	FE_UNDERFLOW		0x10
-#define	FE_INEXACT		0x20
+#define FE_INVALID    0x01
+#define FE_DENORMAL   0x02
+#define FE_DIVBYZERO  0x04
+#define FE_OVERFLOW   0x08
+#define FE_UNDERFLOW  0x10
+#define FE_INEXACT    0x20
 
 /*
  * The following symbol is simply the bitwise-inclusive OR of all floating-point
  * exception constants defined above.
  */
-#define	FE_ALL_EXCEPT		(FE_INVALID | FE_DENORMAL | FE_DIVBYZERO | \
-				 FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
-#define	_SSE_MASK_SHIFT		7
+#define FE_ALL_EXCEPT   (FE_INVALID | FE_DENORMAL | FE_DIVBYZERO | \
+                         FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
+#define _SSE_MASK_SHIFT 7
 
 /*
  * Each symbol representing the rounding direction, expands to an integer
@@ -65,43 +59,31 @@ __BEGIN_DECLS
  *
  * We use such values that allow direct bitwise operations on FPU/SSE registers.
  */
-#define	FE_TONEAREST		0x000
-#define	FE_DOWNWARD		0x400
-#define	FE_UPWARD		0x800
-#define	FE_TOWARDZERO		0xc00
+#define FE_TONEAREST  0x000
+#define FE_DOWNWARD   0x400
+#define FE_UPWARD     0x800
+#define FE_TOWARDZERO 0xc00
 
 /*
  * The following symbol is simply the bitwise-inclusive OR of all floating-point
  * rounding direction constants defined above.
  */
-#define	_X87_ROUND_MASK		(FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | \
-				 FE_TOWARDZERO)
-#define	_SSE_ROUND_SHIFT	3
+#define _X87_ROUND_MASK  (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | \
+                          FE_TOWARDZERO)
+#define _SSE_ROUND_SHIFT 3
 
 /*
  * fenv_t represents the entire floating-point environment.
  */
-typedef	struct {
-	struct {
-		unsigned int __control;		/* Control word register */
-		unsigned int __status;		/* Status word register */
-		unsigned int __tag;		/* Tag word register */
-		unsigned int __others[4];	/* EIP, Pointer Selector, etc */
-	} __x87;
-	unsigned int __mxcsr;			/* Control, status register */
+typedef struct {
+  struct {
+    __uint32_t __control;   /* Control word register */
+    __uint32_t __status;    /* Status word register */
+    __uint32_t __tag;       /* Tag word register */
+    __uint32_t __others[4]; /* EIP, Pointer Selector, etc */
+  } __x87;
+  __uint32_t __mxcsr;       /* Control, status register */
 } fenv_t;
-
-/*
- * The following constant represents the default floating-point environment
- * (that is, the one installed at program startup) and has type pointer to
- * const-qualified fenv_t.
- *
- * It can be used as an argument to the functions within the <fenv.h> header
- * that manage the floating-point environment, namely fesetenv() and
- * feupdateenv().
- */
-extern	fenv_t			__fe_dfl_env;
-#define	FE_DFL_ENV		((const fenv_t *)&__fe_dfl_env)
 
 /*
  * fexcept_t represents the floating-point status flags collectively, including
@@ -115,33 +97,8 @@ extern	fenv_t			__fe_dfl_env;
  * A floating-point control mode is a system variable whose value may be set by
  * the user to affect the subsequent behavior of floating-point arithmetic.
  */
-typedef	unsigned int		fexcept_t;
-
-/* C99 floating-point exception functions */
-int feclearexcept(int excepts);
-int fegetexceptflag(fexcept_t *flagp, int excepts);
-int fesetexceptflag(const fexcept_t *flagp, int excepts);
-/* feraiseexcept does not set the inexact flag on overflow/underflow */
-int feraiseexcept(int excepts);
-int fetestexcept(int excepts);
-
-/* C99 rounding control functions */
-int fegetround(void);
-int fesetround(int round);
-
-/* C99 floating-point environment functions */
-int fegetenv(fenv_t *__envp);
-int feholdexcept(fenv_t *__envp);
-int fesetenv(const fenv_t *envp);
-int feupdateenv(const fenv_t *__envp);
-
-#if __BSD_VISIBLE
-/* Additional support functions to set/query floating point traps */
-int feenableexcept(int __mask);
-int fedisableexcept(int __mask);
-int fegetexcept(void);
-#endif /* __BSD_VISIBLE */
+typedef __uint_32 fexcept_t;
 
 __END_DECLS
 
-#endif	/* !_AMD64_FENV_H_ */
+#endif /* !_AMD64_FENV_H_ */
