@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c0f6924_064b84a2",
+        "filename": "libc/netbsd/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-27T00:58:15Z",
+      "side": 1,
+      "message": "don\u0027t we have the same problem here?",
+      "revId": "3e39465bf02f2347897d7ef217041d8ae95f9a5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
