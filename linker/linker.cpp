@@ -65,7 +65,7 @@
  *   and NOEXEC
  */
 
-static bool soinfo_link_image(soinfo* si);
+static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo);
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 // We can't use malloc(3) in the dynamic linker. We use a linked list of anonymous
@@ -760,7 +760,7 @@ static soinfo* find_library_internal(const char* name, const android_dlextinfo* 
   TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
         reinterpret_cast<void*>(si->base), si->size, si->name);
 
-  if (!soinfo_link_image(si)) {
+  if (!soinfo_link_image(si, extinfo)) {
     munmap(reinterpret_cast<void*>(si->base), si->size);
     soinfo_free(si);
     return NULL;
@@ -1566,7 +1566,7 @@ static int nullify_closed_stdio() {
     return return_value;
 }
 
-static bool soinfo_link_image(soinfo* si) {
+static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     /* "base" might wrap around UINT32_MAX. */
     ElfW(Addr) base = si->load_bias;
     const ElfW(Phdr)* phdr = si->phdr;
@@ -1902,6 +1902,23 @@ static bool soinfo_link_image(soinfo* si) {
         return false;
     }
 
+    /* Handle serializing/sharing the RELRO segment */
+    if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
+      if (phdr_table_serialize_gnu_relro(si->phdr, si->phnum, si->load_bias,
+                                         extinfo->relro_fd) < 0) {
+        DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
+               si->name, strerror(errno));
+        return false;
+      }
+    } else if (extinfo && (extinfo->flags & ANDROID_DLEXT_USE_RELRO)) {
+      if (phdr_table_map_gnu_relro(si->phdr, si->phnum, si->load_bias,
+                                   extinfo->relro_fd) < 0) {
+        DL_ERR("failed mapping GNU RELRO section for \"%s\": %s",
+               si->name, strerror(errno));
+        return false;
+      }
+    }
+
     notify_gdb_of_load(si);
     return true;
 }
@@ -2055,7 +2072,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     somain = si;
 
-    if (!soinfo_link_image(si)) {
+    if (!soinfo_link_image(si, NULL)) {
         __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
         exit(EXIT_FAILURE);
     }
@@ -2172,7 +2189,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!soinfo_link_image(&linker_so)) {
+  if (!soinfo_link_image(&linker_so, NULL)) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
