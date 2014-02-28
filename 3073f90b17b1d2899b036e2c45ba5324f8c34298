@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c156131_9300f420",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-02-28T13:17:49Z",
+      "side": 1,
+      "message": "ah, \"register\" ... nice. Been a while...",
+      "revId": "3073f90b17b1d2899b036e2c45ba5324f8c34298",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
