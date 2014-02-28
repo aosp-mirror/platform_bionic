@@ -16,6 +16,24 @@
       "revId": "3073f90b17b1d2899b036e2c45ba5324f8c34298",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c58ad41_1c664536",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-02-28T16:19:22Z",
+      "side": 1,
+      "message": "they had a minor flamewar about that last year, but decided to keep them all in out of respect for the dinosaurs.",
+      "parentUuid": "9c156131_9300f420",
+      "revId": "3073f90b17b1d2899b036e2c45ba5324f8c34298",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
