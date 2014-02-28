@@ -81,7 +81,6 @@ libc/
   private/
     # These are private header files meant for use within bionic itself.
 
-  netbsd/
   stdio/
   stdlib/
   unistd/
@@ -89,9 +88,8 @@ libc/
     # mess of random versions of random files from all three of FreeBSD, NetBSD,
     # and OpenBSD! We've been working to clean that up, but these directories
     # are basically where all the stuff we haven't got to yet lives.
-    # The 'netbsd' directory misleadingly contains the DNS resolver (which will
-    # probably be forked sometime soon, and that directory simply renamed).
-    # The other directories contain stuff that still needs to be sorted.
+  dns/
+    # Contains the DNS resolver (originates from NetBSD code).
 
   upstream-dlmalloc/
   upstream-freebsd/

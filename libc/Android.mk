@@ -509,7 +509,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-c-files-under,netbsd)
+LOCAL_SRC_FILES := $(call all-c-files-under,dns)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DINET6 \
