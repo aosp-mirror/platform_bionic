@@ -371,9 +371,8 @@ tzload(register const char* name, register struct state* const sp,
         goto oops;
     int toread;
     fid = __bionic_open_tzdata(name, &toread);
-    if (fid < 0) {
-        return -1;
-    }
+    if (fid < 0)
+        goto oops;
     nread = read(fid, up->buf, toread);
     if (close(fid) < 0 || nread <= 0)
         goto oops;
