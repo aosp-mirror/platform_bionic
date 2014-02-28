@@ -2167,26 +2167,40 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   }
 
   off_t specific_zone_offset = -1;
+  ssize_t index_size = ntohl(header.data_offset) - ntohl(header.index_offset);
+  char* index = malloc(index_size);
+  if (TEMP_FAILURE_RETRY(read(fd, index, index_size)) != index_size) {
+    fprintf(stderr, "%s: could not read index of \"%s\": %s\n",
+            __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
+    free(index);
+    close(fd);
+    return -1;
+  }
 
   static const size_t NAME_LENGTH = 40;
-  unsigned char buf[NAME_LENGTH + 3 * sizeof(int32_t)];
+  struct index_entry_t {
+    char buf[NAME_LENGTH];
+    int32_t start;
+    int32_t length;
+    int32_t raw_gmt_offset;
+  };
 
-  size_t id_count = (ntohl(header.data_offset) - ntohl(header.index_offset)) / sizeof(buf);
+  size_t id_count = (ntohl(header.data_offset) - ntohl(header.index_offset)) / sizeof(struct index_entry_t);
+  struct index_entry_t* entry = (struct index_entry_t*) index;
   for (size_t i = 0; i < id_count; ++i) {
-    if (TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf))) != (ssize_t) sizeof(buf)) {
-      break;
-    }
-
     char this_id[NAME_LENGTH + 1];
-    memcpy(this_id, buf, NAME_LENGTH);
+    memcpy(this_id, entry->buf, NAME_LENGTH);
     this_id[NAME_LENGTH] = '\0';
 
     if (strcmp(this_id, olson_id) == 0) {
-      specific_zone_offset = to_int(buf + NAME_LENGTH) + ntohl(header.data_offset);
-      *data_size = to_int(buf + NAME_LENGTH + sizeof(int32_t));
+      specific_zone_offset = ntohl(entry->start) + ntohl(header.data_offset);
+      *data_size = ntohl(entry->length);
       break;
     }
+
+    ++entry;
   }
+  free(index);
 
   if (specific_zone_offset == -1) {
     XLOG(("%s: couldn't find zone \"%s\"\n", __FUNCTION__, olson_id));
