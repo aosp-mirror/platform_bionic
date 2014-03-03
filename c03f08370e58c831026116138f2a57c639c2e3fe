@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc35c5d3_ac581fe8",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T19:09:39Z",
+      "side": 1,
+      "message": "you only need this in libbionic.a (not to be confused with libbionic_ssp.a :-) ). but we\u0027re going to remove this in a few weeks?",
+      "revId": "c03f08370e58c831026116138f2a57c639c2e3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
