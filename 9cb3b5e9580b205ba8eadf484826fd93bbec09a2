@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c0a6d15_62e34747",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T19:03:47Z",
+      "side": 1,
+      "message": "Changed to static_cast\u003cint\u003e(COND_IS_SHARED());",
+      "parentUuid": "bc35c5d3_4c91b336",
+      "revId": "9cb3b5e9580b205ba8eadf484826fd93bbec09a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc35c5d3_cc8483f8",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "dc0199f4_64b35bcd",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T19:03:47Z",
+      "side": 1,
+      "message": "Done, great catch with the extern \"c\".",
+      "parentUuid": "bc35c5d3_cc8483f8",
+      "revId": "9cb3b5e9580b205ba8eadf484826fd93bbec09a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc32ddef_150a96b6",
         "filename": "libc/include/pthread.h",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2014-03-03T18:55:24Z",
       "side": 1,
       "message": "switch to t* while you\u0027re there?",
+      "revId": "9cb3b5e9580b205ba8eadf484826fd93bbec09a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c971504_81d43c32",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T19:03:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc32ddef_150a96b6",
       "revId": "9cb3b5e9580b205ba8eadf484826fd93bbec09a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
