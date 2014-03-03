@@ -467,9 +467,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector -Werror
-ifeq ($(TARGET_USES_LOGD),yes)
-LOCAL_CFLAGS += -DTARGET_USES_LOGD
-endif
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -625,6 +622,10 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Set -DPTHREAD_DEBUG_ENABLED=true to enable support for pthread deadlock prediction.
 # Since this code is experimental it is disabled by default.
 LOCAL_CFLAGS += -DPTHREAD_DEBUG_ENABLED=false
+
+ifeq ($(TARGET_USES_LOGD),true)
+LOCAL_CFLAGS += -DTARGET_USES_LOGD
+endif
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
