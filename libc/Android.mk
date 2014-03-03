@@ -513,6 +513,7 @@ LOCAL_SRC_FILES := $(call all-c-files-under,dns)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DINET6 \
+    -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include # for NetBSD private headers
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
