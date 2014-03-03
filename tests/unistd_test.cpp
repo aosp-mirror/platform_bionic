@@ -112,3 +112,7 @@ TEST(unistd, read_EBADF) {
   ASSERT_EQ(-1, read(-1, buf, sizeof(buf)));
   ASSERT_EQ(EBADF, errno);
 }
+
+TEST(unistd, alarm) {
+  ASSERT_EQ(0U, alarm(0));
+}
