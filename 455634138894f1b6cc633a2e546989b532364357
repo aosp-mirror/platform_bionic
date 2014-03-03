@@ -2,6 +2,74 @@
   "comments": [
     {
       "key": {
+        "uuid": "fc32ddef_3596b239",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "why do i care?",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc32ddef_159bb661",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "this was already explained at the top of the file.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc32ddef_759c3a5b",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "these should be at the top of the file. if we took the -\u003evalue out, we could use them for pthread_condattr_t as well.\n\nhaving SET macros as well as GET macros would let us put all the shifts amounts in one place too.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bce78593_6cbd8448",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "add to the comment at the top pointing out that pthread_cond_t uses the same layout as pthread_condattr_t for its contents, and that the code assumes that?",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c971504_5e3e15f1",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
@@ -30,6 +98,58 @@
       "writtenOn": "2014-03-03T17:39:47Z",
       "side": 1,
       "message": "enh: What\u0027s the design plan here ? \n\n__nonnull not only means that the compiler will warn if -Wnonnull , but it will also elide any null checks the function might have. (I discovered while writing a unit test for the new functions).\n\nIf we want an EINVAL and not a crash, we\u0027ll have to remove these attributes. We can\u0027t force all callers to use -Werror\u003dnonnull.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc35c5d3_0cd72b14",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "i\u0027m happy without the EINVAL. that\u0027s what glibc does. and it\u0027s easier to catch your bug that way. we know from experience that most callers don\u0027t check the return value.\n\nthat said, the compilers do a shit job of catching these bugs. just having \"t* v \u003d NULL; f(v);\" is enough to fool them. i\u0027m not sure how common an error passing a literal NULL is. is anyone that stupid? i actually think that \"failing hard is easier to find and fix\" is the best reason for maintaining the status quo.\n\n(but, yes, we should remove the misleading code that tries to return EINVAL. i thought i had, but judging by a quick grep i either didn\u0027t, or i did an exceptionally bad job!)",
+      "parentUuid": "7c0a6d15_df730c27",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc32ddef_15961630",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "__attribute__(__deprecated__) on these two.\n\nor we could remove the declarations and just keep the definitions for binary compatibility...",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bce78593_ccc490d7",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-03T18:11:51Z",
+      "side": 1,
+      "message": "we should stop defining this too.",
       "revId": "455634138894f1b6cc633a2e546989b532364357",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
