@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c971504_5e3e15f1",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T17:39:47Z",
+      "side": 1,
+      "message": "How do you usually write unit-tests that test implementations ? I want to write a unit test that makes sure the decrement works as expected (and that flag values are preserved etc.)",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c0a6d15_df730c27",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T17:39:47Z",
+      "side": 1,
+      "message": "enh: What\u0027s the design plan here ? \n\n__nonnull not only means that the compiler will warn if -Wnonnull , but it will also elide any null checks the function might have. (I discovered while writing a unit test for the new functions).\n\nIf we want an EINVAL and not a crash, we\u0027ll have to remove these attributes. We can\u0027t force all callers to use -Werror\u003dnonnull.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
