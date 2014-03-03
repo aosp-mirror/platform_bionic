@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3c971504_81575c1d",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "If these values were anything other than 0 / 1, the statement on line 111 becomes incorrect. I guess I could roll into the comment at the top.",
+      "parentUuid": "fc32ddef_3596b239",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc32ddef_159bb661",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-03T18:11:51Z",
       "side": 1,
       "message": "this was already explained at the top of the file.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0199f4_a46e0388",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc32ddef_159bb661",
       "revId": "455634138894f1b6cc633a2e546989b532364357",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "3c971504_21876850",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc32ddef_759c3a5b",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bce78593_6cbd8448",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2014-03-03T18:11:51Z",
       "side": 1,
       "message": "add to the comment at the top pointing out that pthread_cond_t uses the same layout as pthread_condattr_t for its contents, and that the code assumes that?",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c0a6d15_3f668836",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce78593_6cbd8448",
       "revId": "455634138894f1b6cc633a2e546989b532364357",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -122,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "dc0199f4_e4a9ab73",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Done. I think crashing is the right thing to do. \n\nYeah, it was all the NULL returns that fooled me.",
+      "parentUuid": "bc35c5d3_0cd72b14",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc32ddef_15961630",
         "filename": "libc/include/pthread.h",
         "patchSetId": 3
@@ -139,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "7c0a6d15_5f613c1c",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "fc32ddef_15961630",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bce78593_ccc490d7",
         "filename": "libc/include/pthread.h",
         "patchSetId": 3
@@ -150,6 +258,24 @@
       "writtenOn": "2014-03-03T18:11:51Z",
       "side": 1,
       "message": "we should stop defining this too.",
+      "revId": "455634138894f1b6cc633a2e546989b532364357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c0a6d15_7f5c006a",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-03T18:34:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce78593_ccc490d7",
       "revId": "455634138894f1b6cc633a2e546989b532364357",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
