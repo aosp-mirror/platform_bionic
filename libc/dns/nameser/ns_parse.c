@@ -31,7 +31,7 @@ __RCSID("$NetBSD: ns_parse.c,v 1.2 2004/05/20 20:35:05 christos Exp $");
 #include <sys/types.h>
 
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <errno.h>
 #ifdef ANDROID_CHANGES

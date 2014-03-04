@@ -20,7 +20,7 @@
 #include "namespace.h"
 #include <sys/cdefs.h>
 #include <time.h>
-#include "private/arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #define ISC_FORMAT_PRINTF(a,b) __printflike(a,b)
 #define ISC_SOCKLEN_T socklen_t
