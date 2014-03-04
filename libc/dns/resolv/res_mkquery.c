@@ -86,7 +86,7 @@ __RCSID("$NetBSD: res_mkquery.c,v 1.6 2006/01/24 17:40:32 christos Exp $");
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"

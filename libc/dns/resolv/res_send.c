@@ -95,7 +95,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <sys/uio.h>
 
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <arpa/inet.h>
 
 #include <errno.h>

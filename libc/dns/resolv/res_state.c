@@ -28,7 +28,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <netdb.h>
 #include "resolv_private.h"
 #include "resolv_cache.h"
