@@ -60,27 +60,18 @@ extern pthread_internal_t* __get_thread(void);
 
 int pthread_rwlockattr_init(pthread_rwlockattr_t *attr)
 {
-    if (!attr)
-        return EINVAL;
-
     *attr = PTHREAD_PROCESS_PRIVATE;
     return 0;
 }
 
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr)
 {
-    if (!attr)
-        return EINVAL;
-
     *attr = -1;
     return 0;
 }
 
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int  pshared)
 {
-    if (!attr)
-        return EINVAL;
-
     switch (pshared) {
     case PTHREAD_PROCESS_PRIVATE:
     case PTHREAD_PROCESS_SHARED:
@@ -92,9 +83,6 @@ int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int  pshared)
 }
 
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t* attr, int* pshared) {
-    if (!attr || !pshared)
-        return EINVAL;
-
     *pshared = *attr;
     return 0;
 }
@@ -106,9 +94,6 @@ int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *at
     pthread_mutexattr_t   lock_attr0;
     pthread_condattr_t    cond_attr0;
     int                   ret;
-
-    if (rwlock == NULL)
-        return EINVAL;
 
     if (attr && *attr == PTHREAD_PROCESS_SHARED) {
         lock_attr = &lock_attr0;
@@ -140,9 +125,6 @@ int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *at
 
 int pthread_rwlock_destroy(pthread_rwlock_t *rwlock)
 {
-    if (rwlock == NULL)
-        return EINVAL;
-
     if (rwlock->numLocks > 0)
         return EBUSY;
 
@@ -197,10 +179,6 @@ static void _pthread_rwlock_pulse(pthread_rwlock_t *rwlock)
 static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
   int ret = 0;
 
-  if (rwlock == NULL) {
-    return EINVAL;
-  }
-
   pthread_mutex_lock(&rwlock->lock);
   int tid = __get_thread()->tid;
   if (__predict_false(!read_precondition(rwlock, tid))) {
@@ -221,10 +199,6 @@ EXIT:
 
 static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
   int ret = 0;
-
-  if (rwlock == NULL) {
-    return EINVAL;
-  }
 
   pthread_mutex_lock(&rwlock->lock);
   int tid = __get_thread()->tid;
@@ -256,9 +230,6 @@ int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock)
 {
     int ret = 0;
 
-    if (rwlock == NULL)
-        return EINVAL;
-
     pthread_mutex_lock(&rwlock->lock);
     if (__predict_false(!read_precondition(rwlock, __get_thread()->tid)))
         ret = EBUSY;
@@ -281,9 +252,6 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock)
 {
     int ret = 0;
 
-    if (rwlock == NULL)
-        return EINVAL;
-
     pthread_mutex_lock(&rwlock->lock);
     int tid = __get_thread()->tid;
     if (__predict_false(!write_precondition(rwlock, tid))) {
@@ -303,9 +271,6 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock)
 {
     int  ret = 0;
-
-    if (rwlock == NULL)
-        return EINVAL;
 
     pthread_mutex_lock(&rwlock->lock);
 
