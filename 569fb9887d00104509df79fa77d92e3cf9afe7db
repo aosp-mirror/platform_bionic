@@ -16,6 +16,24 @@
       "revId": "569fb9887d00104509df79fa77d92e3cf9afe7db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_6f300d01",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-04T17:53:09Z",
+      "side": 1,
+      "message": "yep. i\u0027ll follow up with other CLs.",
+      "parentUuid": "dc76f9c4_07f2864d",
+      "revId": "569fb9887d00104509df79fa77d92e3cf9afe7db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
