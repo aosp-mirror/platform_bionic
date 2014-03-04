@@ -89,7 +89,7 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <ctype.h>
 #include <stdio.h>

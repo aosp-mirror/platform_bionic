@@ -35,7 +35,7 @@ __RCSID("$NetBSD: res_data.c,v 1.8 2004/06/09 18:07:03 christos Exp $");
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <ctype.h>
 #include <netdb.h>

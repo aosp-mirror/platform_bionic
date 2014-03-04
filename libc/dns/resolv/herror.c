@@ -65,7 +65,7 @@ __RCSID("$NetBSD: herror.c,v 1.4 2004/05/23 05:09:52 christos Exp $");
 #include <sys/uio.h>
 
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
