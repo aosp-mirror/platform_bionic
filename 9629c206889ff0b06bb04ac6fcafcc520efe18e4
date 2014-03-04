@@ -50,6 +50,24 @@
       "revId": "9629c206889ff0b06bb04ac6fcafcc520efe18e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_0b5e1d2a",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-04T10:19:43Z",
+      "side": 1,
+      "message": "I\u0027ve removed these in my change that implements setclock and getclock. There aren\u0027t many callers, so i\u0027ll fix them all today.",
+      "parentUuid": "3c80f5c3_96cc8ca8",
+      "revId": "9629c206889ff0b06bb04ac6fcafcc520efe18e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
