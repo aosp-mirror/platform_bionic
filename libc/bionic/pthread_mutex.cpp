@@ -207,55 +207,42 @@ extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
 int pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
-    if (attr) {
-        *attr = PTHREAD_MUTEX_DEFAULT;
-        return 0;
-    } else {
-        return EINVAL;
-    }
+    *attr = PTHREAD_MUTEX_DEFAULT;
+    return 0;
 }
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 {
-    if (attr) {
-        *attr = -1;
-        return 0;
-    } else {
-        return EINVAL;
-    }
+    *attr = -1;
+    return 0;
 }
 
-int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)
+int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type_p)
 {
-    if (attr) {
-        int  atype = (*attr & MUTEXATTR_TYPE_MASK);
+    int type = (*attr & MUTEXATTR_TYPE_MASK);
 
-         if (atype >= PTHREAD_MUTEX_NORMAL &&
-             atype <= PTHREAD_MUTEX_ERRORCHECK) {
-            *type = atype;
-            return 0;
-        }
+    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK) {
+        return EINVAL;
     }
-    return EINVAL;
+
+    *type_p = type;
+    return 0;
 }
 
 int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
 {
-    if (attr && type >= PTHREAD_MUTEX_NORMAL &&
-                type <= PTHREAD_MUTEX_ERRORCHECK ) {
-        *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
-        return 0;
+    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK ) {
+        return EINVAL;
     }
-    return EINVAL;
+
+    *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
+    return 0;
 }
 
 /* process-shared mutexes are not supported at the moment */
 
 int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
 {
-    if (!attr)
-        return EINVAL;
-
     switch (pshared) {
     case PTHREAD_PROCESS_PRIVATE:
         *attr &= ~MUTEXATTR_SHARED_MASK;
@@ -274,11 +261,7 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
 }
 
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared) {
-    if (!attr || !pshared)
-        return EINVAL;
-
-    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED
-                                               : PTHREAD_PROCESS_PRIVATE;
+    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
     return 0;
 }
 
