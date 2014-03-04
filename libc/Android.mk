@@ -104,7 +104,6 @@ libc_common_src_files := \
     stdlib/putenv.c \
     stdlib/setenv.c \
     stdlib/strtod.c \
-    unistd/alarm.c \
     unistd/syslog.c \
     unistd/time.c \
 
@@ -316,6 +315,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/unistd/killpg.c \
 
 libc_upstream_openbsd_src_files := \
+    upstream-openbsd/lib/libc/gen/alarm.c \
     upstream-openbsd/lib/libc/gen/exec.c \
     upstream-openbsd/lib/libc/gen/fnmatch.c \
     upstream-openbsd/lib/libc/gen/ftok.c \
