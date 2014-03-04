@@ -86,7 +86,7 @@ __RCSID("$NetBSD: res_query.c,v 1.7 2006/01/24 17:41:25 christos Exp $");
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>

@@ -59,7 +59,7 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include "resolv_private.h"
 #include "resolv_cache.h"
 #include <assert.h>

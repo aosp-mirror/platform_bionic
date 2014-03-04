@@ -82,7 +82,7 @@ __RCSID("$NetBSD: res_comp.c,v 1.6 2004/05/22 23:47:09 christos Exp $");
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <ctype.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"

@@ -61,7 +61,7 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.53 2012/09/26 23:13:00 christos Exp $");
 #include <assert.h>
 #include <limits.h>
 #include <netdb.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include "resolv_private.h"
 #include <sys/system_properties.h>
 #include <stdlib.h>

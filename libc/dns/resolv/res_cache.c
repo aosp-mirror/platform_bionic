@@ -34,7 +34,7 @@
 #include "pthread.h"
 
 #include <errno.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <sys/system_properties.h>
 #include <net/if.h>
 #include <netdb.h>

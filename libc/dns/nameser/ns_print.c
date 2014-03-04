@@ -32,7 +32,7 @@ __RCSID("$NetBSD: ns_print.c,v 1.5 2004/11/07 02:19:49 christos Exp $");
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 #include <arpa/inet.h>
 
 #include <isc/assertions.h>
