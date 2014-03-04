@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc76f9c4_07f2864d",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-04T16:40:36Z",
+      "side": 1,
+      "message": "we should probably try to get these header files in sync with upstream.",
+      "revId": "569fb9887d00104509df79fa77d92e3cf9afe7db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
