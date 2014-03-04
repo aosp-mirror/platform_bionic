@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc79fdb5_d4451c65",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-04T00:48:05Z",
+      "side": 1,
+      "message": "other than pulling out the initial setup of the timespec, this is just whitespace changes.",
+      "revId": "9629c206889ff0b06bb04ac6fcafcc520efe18e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc79fdb5_943fa4c5",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-04T00:48:05Z",
+      "side": 1,
+      "message": "although POSIX always says CLOCK_REALTIME, this function was (amongst other weirdnesses) using CLOCK_MONOTONIC. since it\u0027s only here for binary compatibility anyway, i\u0027ve retained that.",
+      "revId": "9629c206889ff0b06bb04ac6fcafcc520efe18e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c80f5c3_96cc8ca8",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-04T00:48:05Z",
+      "side": 1,
+      "message": "actually deprecating these breaks the build, so let\u0027s come back to that.",
+      "revId": "9629c206889ff0b06bb04ac6fcafcc520efe18e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
