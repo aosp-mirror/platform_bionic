@@ -185,7 +185,7 @@ int __pthread_cond_timedwait(pthread_cond_t* cond, pthread_mutex_t* mutex, const
   timespec* tsp;
 
   if (abstime != NULL) {
-    if (__timespec_to_absolute(&ts, abstime, clock) < 0) {
+    if (__timespec_from_absolute(&ts, abstime, clock) < 0) {
       return ETIMEDOUT;
     }
     tsp = &ts;
