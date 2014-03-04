@@ -69,7 +69,7 @@ typedef __ino_t ino_t;
 typedef __uint32_t __nlink_t;
 typedef __nlink_t nlink_t;
 
-typedef int __timer_t;
+typedef void* __timer_t;
 typedef __timer_t timer_t;
 
 typedef __int32_t __suseconds_t;
