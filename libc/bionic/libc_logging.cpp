@@ -478,6 +478,11 @@ static int __libc_open_log_socket()
 
   return log_fd;
 }
+
+struct log_time { // Wire format
+  uint32_t tv_sec;
+  uint32_t tv_nsec;
+};
 #endif
 
 static int __libc_write_log(int priority, const char* tag, const char* msg) {
@@ -493,8 +498,11 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   char log_id = LOG_ID_MAIN;
   vec[0].iov_base = &log_id;
   vec[0].iov_len = sizeof(log_id);
-  timespec realtime_ts;
-  clock_gettime(CLOCK_REALTIME, &realtime_ts);
+  timespec ts;
+  clock_gettime(CLOCK_REALTIME, &ts);
+  log_time realtime_ts;
+  realtime_ts.tv_sec = ts.tv_sec;
+  realtime_ts.tv_nsec = ts.tv_nsec;
   vec[1].iov_base = &realtime_ts;
   vec[1].iov_len = sizeof(realtime_ts);
 
@@ -549,8 +557,11 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   char log_id = LOG_ID_EVENTS;
   vec[0].iov_base = &log_id;
   vec[0].iov_len = sizeof(log_id);
-  timespec realtime_ts;
-  clock_gettime(CLOCK_REALTIME, &realtime_ts);
+  timespec ts;
+  clock_gettime(CLOCK_REALTIME, &ts);
+  log_time realtime_ts;
+  realtime_ts.tv_sec = ts.tv_sec;
+  realtime_ts.tv_nsec = ts.tv_nsec;
   vec[1].iov_base = &realtime_ts;
   vec[1].iov_len = sizeof(realtime_ts);
 
