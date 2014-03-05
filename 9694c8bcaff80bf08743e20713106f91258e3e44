@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc2511e_730f9801",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-05T16:14:32Z",
+      "side": 1,
+      "message": "netbsd doesn\u0027t provide an implementation by default for these function. However it does implement them as part of the libbind library. Should we maybe port the implementation from there? or just remove them? Thoughts?",
+      "range": {
+        "startLine": 643,
+        "startChar": 0,
+        "endLine": 661,
+        "endChar": 20
+      },
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
