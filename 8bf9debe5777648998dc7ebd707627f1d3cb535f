@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dc76f9c4_e8f62d00",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-05T20:37:59Z",
+      "side": 1,
+      "message": "well, timer_create isn\u0027t on the list of async-safe functions you\u0027re allowed to call from a pthread_atfork callback. but one of the nice things about the new system is that the kernel does all our fork cleanup for us for free.",
+      "parentUuid": "dccb593b_0e914b37",
+      "revId": "8bf9debe5777648998dc7ebd707627f1d3cb535f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cc2511e_b03e5637",
         "filename": "tests/time_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-05T10:57:19Z",
       "side": 1,
       "message": "Not sure how this test framework works, but don\u0027t you have to wait for the child and check its exit status?\n\n(do the ASSERTs in the child have any effect on the parent process\u0027 test result at all?)",
+      "revId": "8bf9debe5777648998dc7ebd707627f1d3cb535f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc76f9c4_68fa1de3",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-05T20:37:59Z",
+      "side": 1,
+      "message": "yes, you\u0027re right. this would have printed failures but the test runner wouldn\u0027t have counted them for its final exit status. will fix...",
+      "parentUuid": "1cc2511e_b03e5637",
       "revId": "8bf9debe5777648998dc7ebd707627f1d3cb535f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
