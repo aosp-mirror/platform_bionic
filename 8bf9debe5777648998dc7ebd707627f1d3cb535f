@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dccb593b_0e914b37",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-05T10:57:19Z",
+      "side": 1,
+      "message": "I think this is too late to be registering this callback. The user or another library might already have registered their own atfork callbacks. If any of those would create new timers, we\u0027ll end up in a very strange situation: their table entries will be freed and cleared, but their threads will still be running...",
+      "revId": "8bf9debe5777648998dc7ebd707627f1d3cb535f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc2511e_b03e5637",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-05T10:57:19Z",
+      "side": 1,
+      "message": "Not sure how this test framework works, but don\u0027t you have to wait for the child and check its exit status?\n\n(do the ASSERTs in the child have any effect on the parent process\u0027 test result at all?)",
+      "revId": "8bf9debe5777648998dc7ebd707627f1d3cb535f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
