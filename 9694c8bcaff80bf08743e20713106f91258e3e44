@@ -246,6 +246,24 @@
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fca73d88_ce99f41c",
+        "filename": "libc/include/arpa/nameser_compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:27:13Z",
+      "side": 1,
+      "message": "the trouble with defining __linux is that we can only do that for uses within bionic; we want this header to work for anyone who #includes it.\n\nwhen we try to upstream the overflow fixes, it might be worth trying to upstream this too. it looks like they tried to support linux but got the wrong #define?",
+      "parentUuid": "fcce5d4a_7543fa83",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
