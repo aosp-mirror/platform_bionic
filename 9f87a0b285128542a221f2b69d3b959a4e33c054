@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1cc2511e_1661621d",
+        "filename": "libc/include/stdint.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2014-03-06T17:57:32Z",
+      "side": 1,
+      "message": "Can we define this chunk in separate header like glibc does in bits/types.h? In -ffreestanding mode GCC replacing stdint.h with it\u0027s own copy which defines own [u]intX_t types but doesn\u0027t have __[u]intX_t defined and that leads to:\n\nsys/types.h:45:1: error: unknown type name \u0027__uint32_t\u0027",
+      "revId": "9f87a0b285128542a221f2b69d3b959a4e33c054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf01d9f4_9ef479fb",
         "filename": "libc/include/sys/un.h",
         "patchSetId": 1
