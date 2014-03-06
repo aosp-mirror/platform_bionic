@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1cc2511e_d6243a96",
+        "filename": "libc/dns/nameser/ns_samedomain.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T13:05:58Z",
+      "side": 1,
+      "message": "netbsd pathces claims that this is not usually build in libc. As we don\u0027t define _LIBRESOLV but we do define _LIBC (based on make showcommands) the statements are equivalent.\n\nI\u0027m not sure why it was done like this. IMO we can define these in libc.",
+      "parentUuid": "dca43989_09686d79",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c7df19f_fd76e9e6",
         "filename": "libc/dns/nameser/ns_samedomain.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-06T03:51:10Z",
       "side": 1,
       "message": "and this?",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_753d3aa1",
+        "filename": "libc/dns/nameser/ns_samedomain.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T13:05:58Z",
+      "side": 1,
+      "message": "_LIBC is defined for us",
+      "parentUuid": "1c7df19f_fd76e9e6",
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -83,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fcce5d4a_b542c227",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T13:05:58Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "dca43989_895bfde4",
+      "range": {
+        "startLine": 643,
+        "startChar": 0,
+        "endLine": 661,
+        "endChar": 20
+      },
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fca73d88_93a9e674",
         "filename": "libc/include/arpa/nameser.h",
         "patchSetId": 1
@@ -100,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "dccb593b_343a56e1",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T13:05:58Z",
+      "side": 1,
+      "message": "removed. this is not actually used. the only ref is in res_cache.c where is undefined and then defined again.",
+      "parentUuid": "fca73d88_93a9e674",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fca73d88_b3a662a0",
         "filename": "libc/include/arpa/nameser_compat.h",
         "patchSetId": 1
@@ -111,6 +189,24 @@
       "writtenOn": "2014-03-06T03:51:10Z",
       "side": 1,
       "message": "is __linux defined for us?",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc2511e_b62bae61",
+        "filename": "libc/include/arpa/nameser_compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T13:05:58Z",
+      "side": 1,
+      "message": "no, I restored the include. Is there an agreement how to handle the ifdefs during sync ups if we don\u0027t define the flags or we don\u0027t care in general? Remove or live them be for easier updates?",
+      "parentUuid": "fca73d88_b3a662a0",
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
