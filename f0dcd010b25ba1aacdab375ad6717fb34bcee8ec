@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c348108_8aebcf5e",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-06T22:51:06Z",
+      "side": 1,
+      "message": "Should you continue on all errors, or only if errno is EAGAIN or EINTR?",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 19
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c398d00_80a9f630",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-06T22:51:06Z",
+      "side": 1,
+      "message": "I think this means a timer fired with code SI_TIMER, correct? Or am I parsing this incorrectly?",
+      "range": {
+        "startLine": 88,
+        "startChar": 44,
+        "endLine": 88,
+        "endChar": 48
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c348108_ca4af79c",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-06T22:51:06Z",
+      "side": 1,
+      "message": "Should errno be set to something here? Or is the assumption that malloc is doing that?",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 14
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c348108_4a3ee7f0",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-06T22:51:06Z",
+      "side": 1,
+      "message": "Same as above, is __timer_create setting errno?",
+      "range": {
+        "startLine": 119,
+        "startChar": 6,
+        "endLine": 119,
+        "endChar": 22
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dca43989_82a42f58",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-06T22:51:06Z",
+      "side": 1,
+      "message": "Is this safe to call if the thread terminates before this call happens?",
+      "range": {
+        "startLine": 179,
+        "startChar": 2,
+        "endLine": 179,
+        "endChar": 55
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
