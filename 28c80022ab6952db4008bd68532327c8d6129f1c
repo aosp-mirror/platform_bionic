@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fca73d88_c7248096",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T00:54:30Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "28c80022ab6952db4008bd68532327c8d6129f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
