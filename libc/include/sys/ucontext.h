@@ -34,7 +34,86 @@
 
 __BEGIN_DECLS
 
-#if defined(__x86_64__)
+#if defined(__arm__)
+
+#error TODO
+
+#elif defined(__arm64__)
+
+#error TODO
+
+#elif defined(__i386__)
+
+enum {
+  REG_GS = 0,
+  REG_FS,
+  REG_ES,
+  REG_DS,
+  REG_EDI,
+  REG_ESI,
+  REG_EBP,
+  REG_ESP,
+  REG_EBX,
+  REG_EDX,
+  REG_ECX,
+  REG_EAX,
+  REG_TRAPNO,
+  REG_ERR,
+  REG_EIP,
+  REG_CS,
+  REG_EFL,
+  REG_UESP,
+  REG_SS,
+  NGREG
+};
+
+typedef int greg_t;
+typedef greg_t gregset_t[NGREG];
+
+struct _libc_fpreg {
+  unsigned short significand[4];
+  unsigned short exponent;
+};
+
+struct _libc_fpstate {
+  unsigned long cw;
+  unsigned long sw;
+  unsigned long tag;
+  unsigned long ipoff;
+  unsigned long cssel;
+  unsigned long dataoff;
+  unsigned long datasel;
+  struct _libc_fpreg _st[8];
+  unsigned long status;
+};
+
+typedef struct _libc_fpstate* fpregset_t;
+
+typedef struct {
+  gregset_t gregs;
+  fpregset_t fpregs;
+  unsigned long oldmask;
+  unsigned long cr2;
+} mcontext_t;
+
+typedef struct ucontext {
+  unsigned long uc_flags;
+  struct ucontext* uc_link;
+  stack_t uc_stack;
+  mcontext_t uc_mcontext;
+  sigset_t uc_sigmask;
+  /* TODO: __fpregs_mem? */
+} ucontext_t;
+
+#elif defined(__mips__)
+
+#error TODO
+
+#elif defined(__mips64__)
+
+#error TODO
+
+#elif defined(__x86_64__)
 
 enum {
   REG_R8 = 0,
@@ -83,7 +162,7 @@ typedef struct ucontext {
   /* TODO: __fpregs_mem? */
 } ucontext_t;
 
-#endif /* x86_64 */
+#endif
 
 __END_DECLS
 
