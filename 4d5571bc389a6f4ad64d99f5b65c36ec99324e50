@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc2511e_3666de36",
+        "filename": "libc/dns/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T17:58:42Z",
+      "side": 1,
+      "message": "no dangers of optimizing these away (as far as I could find) because there\u0027s no standard overflow check here.",
+      "range": {
+        "startLine": 456,
+        "startChar": 6,
+        "endLine": 456,
+        "endChar": 51
+      },
+      "revId": "4d5571bc389a6f4ad64d99f5b65c36ec99324e50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_94feaa18",
+        "filename": "libc/dns/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T17:58:42Z",
+      "side": 1,
+      "message": "while looking into this I found http://lwn.net/Articles/278137/ which provides an interesting discussion on the topic.",
+      "range": {
+        "startLine": 478,
+        "startChar": 6,
+        "endLine": 478,
+        "endChar": 22
+      },
+      "revId": "4d5571bc389a6f4ad64d99f5b65c36ec99324e50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
