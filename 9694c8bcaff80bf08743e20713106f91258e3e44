@@ -210,6 +210,24 @@
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fca73d88_0eadcc7f",
+        "filename": "libc/include/arpa/nameser_compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:02:59Z",
+      "side": 1,
+      "message": "i don\u0027t know what you mean by \"restored the include\". this looks the same as my copy of upstream to me.\n\nwhat i was asking here is basically \"it looks like we used to have #include \u003cendian.h\u003e before the BYTE_ORDER check; was that something Android added, and is it necessary?\". obviously, if we have __linux defined, we\u0027ll get the upstream #include and everything\u0027s fine.\n\nat least L90 means things will blow up otherwise, but i\u0027m curious whether you now have to #include \u003cendian.h\u003e before this. (arm and aarch64 aren\u0027t on the little-endian list starting on L57.)",
+      "parentUuid": "1cc2511e_b62bae61",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
