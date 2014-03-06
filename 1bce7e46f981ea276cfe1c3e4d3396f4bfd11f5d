@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fca73d88_4e0984f8",
+        "filename": "libc/dns/nameser/ns_samedomain.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:03:09Z",
+      "side": 1,
+      "message": "as long as we\u0027re not losing any symbols compared to before, that\u0027s all i was worried about. i\u0027m in no particular rush to add stuff no one seems to need :-)",
+      "revId": "1bce7e46f981ea276cfe1c3e4d3396f4bfd11f5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
