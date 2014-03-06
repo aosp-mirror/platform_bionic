@@ -228,6 +228,24 @@
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_7543fa83",
+        "filename": "libc/include/arpa/nameser_compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T18:22:56Z",
+      "side": 1,
+      "message": "hmm, change was not uploaded. I will upload again.\n\nbasically I added #include \u003cendian.h\u003e again. It was needed because of the same reason you gave (e.g. arm is not in the endian list below). Including \u003cendian.h\u003e in the beginning before the check will actually define BYTE_ORDER so the entire check will be skip.\n\nWe can alternatively define __linux and get the same result if you think it\u0027s better. Though it\u0027s just one use and we also have __linux__ somewhere else (I didn\u0027t check what we use for yet).",
+      "parentUuid": "fca73d88_0eadcc7f",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
