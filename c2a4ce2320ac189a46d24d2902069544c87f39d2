@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "fcce5d4a_40e87e21",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-06T18:54:40Z",
+      "side": 1,
+      "message": "It\u0027s a bit of a shame that we can\u0027t tell if a timer_t is invalid here... but I guess we\u0027ll either segfault or get EINVAL from the kernel (mostly, but not always), so it\u0027s not too bad.\n\nExcept if the user accidentally uses an inherited timer_t... those pointers will still be valid, and if we\u0027ve created new timers, we might get kernel timer id collisions.\n\nMight make for some hard-to-find bugs in user code when they mess up their POSIX compliance. But I can\u0027t really think of a good way to solve it in this implementation. Maybe by using pthread_kill() to check that the thread is still alive?",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc2511e_81de6a81",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-06T18:54:40Z",
+      "side": 1,
+      "message": "Thread was already detached on create (detaching again is \"unspecified behavior\", according to my manpages).",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_74df7ea7",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-06T18:54:40Z",
+      "side": 1,
+      "message": "Can\u0027t join a detached thread -- its resources are automatically freed when the thread exits.\n\nSo maybe we don\u0027t want to make the timer thread detached? There\u0027s a comment in the old code saying that we must, but I think that\u0027s a misunderstanding. POSIX says:\n\n\u003e [the threads] are created detached, or in an unspecified way if the thread attribute\u0027s detachstate is PTHREAD_CREATE_JOINABLE. In neither case is it valid to call pthread_join() [for the user]\n\nhttp://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html\n\nMy interpretation is that this choice could be left to the user. This implementation could adhere to that that by only joining if the thread was created as joinable (which is the default).\n\nAn implementation that always creates detached threads would also be compliant, but then you can\u0027t join them at all.",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccb593b_d1f4443c",
         "filename": "libc/bionic/timer.cpp",
         "patchSetId": 5
@@ -136,6 +187,29 @@
       "side": 1,
       "message": "d\u0027oh! in the old system there was nothing to remove for non-SIGEV_THREAD timers.",
       "parentUuid": "1cc2511e_56004a1f",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc2511e_a1284697",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-06T18:54:40Z",
+      "side": 1,
+      "message": "Our woes with the join above also means that this could be unsafe. Regrettably, I think it will have to be done in the thread.",
+      "range": {
+        "startLine": 213,
+        "startChar": 9,
+        "endLine": 213,
+        "endChar": 14
+      },
       "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
