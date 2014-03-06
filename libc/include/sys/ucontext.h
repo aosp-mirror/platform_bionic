@@ -143,7 +143,52 @@ typedef struct ucontext {
 
 #elif defined(__mips__)
 
-#error TODO
+/* glibc doesn't have names for MIPS registers. */
+
+#define NGREG 32
+#define NFPREG 32
+
+typedef unsigned long long greg_t;
+typedef greg_t gregset_t[NGREG];
+
+typedef struct fpregset {
+  union {
+    double fp_dregs[NFPREG];
+    struct {
+      float _fp_fregs;
+      unsigned _fp_pad;
+    } fp_fregs[NFPREG];
+  } fp_r;
+} fpregset_t;
+
+typedef struct {
+  unsigned regmask;
+  unsigned status;
+  greg_t pc;
+  gregset_t gregs;
+  fpregset_t fpregs;
+  unsigned fp_owned;
+  unsigned fpc_csr;
+  unsigned fpc_eir;
+  unsigned used_math;
+  unsigned dsp;
+  greg_t mdhi;
+  greg_t mdlo;
+  unsigned long hi1;
+  unsigned long lo1;
+  unsigned long hi2;
+  unsigned long lo2;
+  unsigned long hi3;
+  unsigned long lo3;
+} mcontext_t;
+
+typedef struct ucontext {
+  unsigned long uc_flags;
+  struct ucontext* uc_link;
+  stack_t uc_stack;
+  mcontext_t uc_mcontext;
+  sigset_t uc_sigmask;
+} ucontext_t;
 
 #elif defined(__mips64__)
 
