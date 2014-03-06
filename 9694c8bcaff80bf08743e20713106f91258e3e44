@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "dca43989_09686d79",
+        "filename": "libc/dns/nameser/ns_samedomain.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T03:51:10Z",
+      "side": 1,
+      "message": "do we need to define this?",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c7df19f_fd76e9e6",
+        "filename": "libc/dns/nameser/ns_samedomain.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T03:51:10Z",
+      "side": 1,
+      "message": "and this?",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cc2511e_730f9801",
         "filename": "libc/include/arpa/nameser.h",
         "patchSetId": 1
@@ -19,6 +53,64 @@
         "endLine": 661,
         "endChar": 20
       },
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dca43989_895bfde4",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T03:51:10Z",
+      "side": 1,
+      "message": "may as well just leave them as they are until they cause trouble. no one\u0027s asked for them so far.",
+      "parentUuid": "1cc2511e_730f9801",
+      "range": {
+        "startLine": 643,
+        "startChar": 0,
+        "endLine": 661,
+        "endChar": 20
+      },
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fca73d88_93a9e674",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T03:51:10Z",
+      "side": 1,
+      "message": "remove this? (or move it into the private headers?)",
+      "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fca73d88_b3a662a0",
+        "filename": "libc/include/arpa/nameser_compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T03:51:10Z",
+      "side": 1,
+      "message": "is __linux defined for us?",
       "revId": "9694c8bcaff80bf08743e20713106f91258e3e44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
