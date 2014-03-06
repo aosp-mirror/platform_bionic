@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "dccb593b_d4cd12fe",
+        "filename": "libc/dns/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-06T18:30:52Z",
+      "side": 1,
+      "message": "ya, it\u0027s still possible to overflow. The reason I didn\u0027t modify this is that this pattern is actually used in other places in this file (all without checking for overflow). So if we\u0027are gonna change we should do it everywhere not just here.\n\nI targeted the CL just to fix the issue described comment, i.e. the possibility of the compiler to optimize explicit overflow checks.",
+      "parentUuid": "9c348108_41d9b299",
+      "range": {
+        "startLine": 456,
+        "startChar": 6,
+        "endLine": 456,
+        "endChar": 51
+      },
+      "revId": "4d5571bc389a6f4ad64d99f5b65c36ec99324e50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccb593b_94feaa18",
         "filename": "libc/dns/nameser/ns_name.c",
         "patchSetId": 1
