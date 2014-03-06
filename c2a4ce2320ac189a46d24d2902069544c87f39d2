@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fca73d88_eeee309d",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:20:19Z",
+      "side": 1,
+      "message": "yes. it implements the POSIX behavior:\n\nIf the evp argument is NULL, the effect is as if the evp argument pointed to a sigevent structure with the sigev_notify member having the value SIGEV_SIGNAL, the sigev_signo having a default signal number, and the sigev_value member having the value of the timer ID.\nhttp://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html\n\n(i include a unit test for this too, just to be sure.)",
+      "parentUuid": "dccb593b_d1f4443c",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcce5d4a_f58daa6c",
         "filename": "libc/bionic/timer.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-06T12:07:39Z",
       "side": 1,
       "message": "Where does the thread try to block TIMER_SIGNAL ?",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dca43989_7d8af799",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:20:19Z",
+      "side": 1,
+      "message": "L168. (threads inherit signal masks.) the comment\u0027s trying to explain that we set the mask here so there\u0027s no race between us starting the timer and the thread having blocked the signal itself.",
+      "parentUuid": "fcce5d4a_f58daa6c",
       "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "fca73d88_4e21842b",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:20:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcce5d4a_75821a41",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cc2511e_56004a1f",
         "filename": "libc/bionic/timer.cpp",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2014-03-06T12:07:39Z",
       "side": 1,
       "message": "You should probably free timer() outside the SIGEV_THREAD check.",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c348108_21574e1f",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-06T18:20:19Z",
+      "side": 1,
+      "message": "d\u0027oh! in the old system there was nothing to remove for non-SIGEV_THREAD timers.",
+      "parentUuid": "1cc2511e_56004a1f",
       "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
