@@ -473,11 +473,14 @@ ns_name_unpack2(const u_char *msg, const u_char *eom, const u_char *src,
 				_DIAGASSERT(__type_fit(int, srcp - src + 1));
 				len = (int)(srcp - src + 1);
 			}
-			srcp = msg + (((n & 0x3f) << 8) | (*srcp & 0xff));
-			if (srcp < msg || srcp >= eom) {  /* Out of range. */
+			// BEGIN android-changed: safer pointer overflow check
+			l = (((n & 0x3f) << 8) | (*srcp & 0xff));
+			if (l >= eom - msg) {  /* Out of range. */
 				errno = EMSGSIZE;
 				return (-1);
 			}
+			srcp = msg + l;
+			// END android-changed
 			checked += 2;
 			/*
 			 * Check for loops in the compressed name;
