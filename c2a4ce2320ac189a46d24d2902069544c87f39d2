@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dccb593b_d1f4443c",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-06T12:07:39Z",
+      "side": 1,
+      "message": "Is the kernel happy with a NULL evp ?",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_f58daa6c",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-06T12:07:39Z",
+      "side": 1,
+      "message": "Where does the thread try to block TIMER_SIGNAL ?",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_75821a41",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-06T12:07:39Z",
+      "side": 1,
+      "message": "chance",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc2511e_56004a1f",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-06T12:07:39Z",
+      "side": 1,
+      "message": "You should probably free timer() outside the SIGEV_THREAD check.",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
