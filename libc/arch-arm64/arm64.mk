@@ -4,13 +4,8 @@ libc_common_src_files_arm64 := \
     bionic/index.cpp \
     bionic/memchr.c \
     bionic/__memcmp16.cpp \
-    bionic/memcmp.c \
-    bionic/memcpy.cpp \
-    bionic/memmove.c \
     bionic/memrchr.c \
-    bionic/memset.c \
     bionic/strchr.cpp \
-    bionic/strnlen.c \
     bionic/strrchr.cpp \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
@@ -21,13 +16,10 @@ libc_common_src_files_arm64 := \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/strcat.c \
-    upstream-openbsd/lib/libc/string/strcmp.c \
     upstream-openbsd/lib/libc/string/strcpy.c \
     upstream-openbsd/lib/libc/string/strlcat.c \
     upstream-openbsd/lib/libc/string/strlcpy.c \
-    upstream-openbsd/lib/libc/string/strlen.c \
     upstream-openbsd/lib/libc/string/strncat.c \
-    upstream-openbsd/lib/libc/string/strncmp.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
 
 # Fortify implementations of libc functions.
@@ -62,3 +54,5 @@ libc_crt_target_crtbegin_file_arm64 := \
 
 libc_crt_target_crtbegin_so_file_arm64 := \
     $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
+
+include $(LOCAL_PATH)/arch-arm64/generic/generic.mk
