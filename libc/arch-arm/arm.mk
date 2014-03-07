@@ -41,10 +41,7 @@ libc_common_src_files_arm += \
 #    bionic/__strcpy_chk.cpp \
 #    bionic/__strcat_chk.cpp \
 
-# cflags
-libc_common_cflags_arm := \
-    -DSOFTFLOAT \
-    -fstrict-aliasing
+libc_common_cflags_arm := -DSOFTFLOAT
 
 ##########################################
 ### CPU specific source files
