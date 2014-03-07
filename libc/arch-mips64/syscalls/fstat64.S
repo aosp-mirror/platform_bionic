@@ -4,11 +4,11 @@
 #include <machine/asm.h>
 #include <machine/regdef.h>
     .text
-    .globl fstat
+    .globl fstat64
     .align 4
-    .ent fstat
+    .ent fstat64
 
-fstat:
+fstat64:
     .set push
     .set noreorder
     li v0, __NR_fstat
@@ -28,4 +28,7 @@ fstat:
     j t9
     move ra, t0
     .set pop
-    .end fstat
+    .end fstat64
+
+    .globl _C_LABEL(fstat)
+    .equ _C_LABEL(fstat), _C_LABEL(fstat64)

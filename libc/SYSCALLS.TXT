@@ -127,8 +127,6 @@ int         fdatasync(int) all
 int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
 void        sync(void)  all
-int         __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
-int         fstatfs(int, struct statfs*)  arm64,mips64,x86_64
 int         fsetxattr(int, const char*, const void*, size_t, int) all
 ssize_t     fgetxattr(int, const char*, void*, size_t) all
 ssize_t     flistxattr(int, char*, size_t) all
@@ -145,8 +143,8 @@ int __openat:openat(int, const char*, int, mode_t) all
 int faccessat(int, const char*, int, int)  all
 int fchmodat(int, const char*, mode_t, int)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
-int fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86
-int fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,mips64,x86_64
+int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86
+int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,mips64,x86_64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
@@ -179,12 +177,18 @@ void* mmap|mmap64(void*, size_t, int, int, int, off_t)  arm64,mips64,x86_64
 int fallocate64:fallocate(int, int, off64_t, off64_t) arm,mips,x86
 int fallocate|fallocate64(int, int, off_t, off_t) arm64,mips64,x86_64
 
+int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
+int fstatfs64|fstatfs:fstatfs(int, struct statfs*)  arm64,mips64,x86_64
+int __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
+int statfs64|statfs:statfs(const char*, struct statfs*)  arm64,mips64,x86_64
+
+int     fstat64|fstat:fstat64(int, struct stat*)    arm,mips,x86
+int     fstat64|fstat:fstat(int, struct stat*)    arm64,mips64,x86_64
+
 # file system
 int     chdir(const char*)              all
 int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
 int     umount2(const char*, int)  all
-int     fstat:fstat64(int, struct stat*)    arm,mips,x86
-int     fstat(int, struct stat*)    arm64,mips64,x86_64
 int     __getcwd:getcwd(char* buf, size_t size)  all
 int     fchdir(int)    all
 int     setxattr(const char*, const char*, const void*, size_t, int) all
@@ -195,8 +199,6 @@ ssize_t listxattr(const char*, char*, size_t) all
 ssize_t llistxattr(const char*, char*, size_t) all
 int     removexattr(const char*, const char*) all
 int     lremovexattr(const char*, const char*) all
-int     __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
-int     statfs(const char*, struct statfs*)  arm64,mips64,x86_64
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
 

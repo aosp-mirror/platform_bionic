@@ -105,6 +105,7 @@ dirent* readdir(DIR* d) {
   ScopedPthreadMutexLocker locker(&d->mutex_);
   return __readdir_locked(d);
 }
+__strong_alias(readdir64, readdir);
 
 int readdir_r(DIR* d, dirent* entry, dirent** result) {
   ErrnoRestorer errno_restorer;
@@ -125,6 +126,7 @@ int readdir_r(DIR* d, dirent* entry, dirent** result) {
   }
   return 0;
 }
+__strong_alias(readdir64_r, readdir_r);
 
 int closedir(DIR* d) {
   if (d == NULL) {
@@ -147,3 +149,4 @@ void rewinddir(DIR* d) {
 int alphasort(const dirent** a, const dirent** b) {
   return strcoll((*a)->d_name, (*b)->d_name);
 }
+__strong_alias(alphasort64, alphasort);

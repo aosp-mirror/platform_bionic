@@ -130,7 +130,7 @@ class SysCallsTxtParser:
                 if arch in all_arches:
                     t[arch] = True
                 else:
-                    E("invalid syscall architecture list in '%s'" % line)
+                    E("invalid syscall architecture '%s' in '%s'" % (arch, line))
                     return
 
         self.syscalls.append(t)

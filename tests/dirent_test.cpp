@@ -37,21 +37,31 @@ static void CheckProcSelf(std::set<std::string>& names) {
   ASSERT_TRUE(names.find("stat") != names.end());
 }
 
-TEST(dirent, scandir) {
+template <typename DirEntT>
+void ScanEntries(DirEntT** entries, int entry_count,
+                 std::set<std::string>& name_set, std::vector<std::string>& name_list) {
+  for (size_t i = 0; i < static_cast<size_t>(entry_count); ++i) {
+    name_set.insert(entries[i]->d_name);
+    name_list.push_back(entries[i]->d_name);
+    free(entries[i]);
+  }
+  free(entries);
+}
+
+TEST(dirent, scandir_scandir64) {
   // Get everything from /proc/self...
   dirent** entries;
   int entry_count = scandir("/proc/self", &entries, NULL, alphasort);
   ASSERT_GE(entry_count, 0);
 
+  dirent64** entries64;
+  int entry_count64 = scandir64("/proc/self", &entries64, NULL, alphasort64);
+  ASSERT_EQ(entry_count, entry_count64);
+
   // Turn the directory entries into a set and vector of the names.
   std::set<std::string> name_set;
   std::vector<std::string> unsorted_name_list;
-  for (size_t i = 0; i < static_cast<size_t>(entry_count); ++i) {
-    name_set.insert(entries[i]->d_name);
-    unsorted_name_list.push_back(entries[i]->d_name);
-    free(entries[i]);
-  }
-  free(entries);
+  ScanEntries(entries, entry_count, name_set, unsorted_name_list);
 
   // No duplicates.
   ASSERT_EQ(name_set.size(), unsorted_name_list.size());
@@ -60,6 +70,13 @@ TEST(dirent, scandir) {
   std::vector<std::string> sorted_name_list(unsorted_name_list);
   std::sort(sorted_name_list.begin(), sorted_name_list.end());
   ASSERT_EQ(sorted_name_list, unsorted_name_list);
+
+  // scandir64 returned the same results as scandir.
+  std::set<std::string> name_set64;
+  std::vector<std::string> unsorted_name_list64;
+  ScanEntries(entries64, entry_count64, name_set64, unsorted_name_list64);
+  ASSERT_EQ(name_set, name_set64);
+  ASSERT_EQ(unsorted_name_list, unsorted_name_list64);
 
   CheckProcSelf(name_set);
 }
@@ -133,6 +150,23 @@ TEST(dirent, readdir) {
   CheckProcSelf(name_set);
 }
 
+TEST(dirent, readdir64) {
+  DIR* d = opendir("/proc/self");
+  ASSERT_TRUE(d != NULL);
+  std::set<std::string> name_set;
+  errno = 0;
+  dirent64* e;
+  while ((e = readdir64(d)) != NULL) {
+    name_set.insert(e->d_name);
+  }
+  // Reading to the end of the directory is not an error.
+  // readdir64(3) returns NULL, but leaves errno as 0.
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(closedir(d), 0);
+
+  CheckProcSelf(name_set);
+}
+
 TEST(dirent, readdir_r) {
   DIR* d = opendir("/proc/self");
   ASSERT_TRUE(d != NULL);
@@ -145,6 +179,24 @@ TEST(dirent, readdir_r) {
   }
   // Reading to the end of the directory is not an error.
   // readdir_r(3) returns NULL, but leaves errno as 0.
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(closedir(d), 0);
+
+  CheckProcSelf(name_set);
+}
+
+TEST(dirent, readdir64_r) {
+  DIR* d = opendir("/proc/self");
+  ASSERT_TRUE(d != NULL);
+  std::set<std::string> name_set;
+  errno = 0;
+  dirent64 storage;
+  dirent64* e = NULL;
+  while (readdir64_r(d, &storage, &e) == 0 && e != NULL) {
+    name_set.insert(e->d_name);
+  }
+  // Reading to the end of the directory is not an error.
+  // readdir64_r(3) returns NULL, but leaves errno as 0.
   ASSERT_EQ(0, errno);
   ASSERT_EQ(closedir(d), 0);
 

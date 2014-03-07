@@ -53,6 +53,7 @@ int statvfs(const char* path, struct statvfs* result) {
   __statfs_to_statvfs(tmp, result);
   return 0;
 }
+__strong_alias(statvfs64, statvfs);
 
 int fstatvfs(int fd, struct statvfs* result) {
   struct statfs tmp;
@@ -63,3 +64,4 @@ int fstatvfs(int fd, struct statvfs* result) {
   __statfs_to_statvfs(tmp, result);
   return 0;
 }
+__strong_alias(fstatvfs64, fstatvfs);

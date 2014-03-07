@@ -59,7 +59,6 @@ libBionicStandardTests_src_files := \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
     stack_unwinding_test_impl.c \
-    statvfs_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \
@@ -71,9 +70,11 @@ libBionicStandardTests_src_files := \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
     sys_stat_test.cpp \
+    sys_statvfs_test.cpp \
     sys_syscall_test.cpp \
     sys_time_test.cpp \
     sys_types_test.cpp \
+    sys_vfs_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
     unistd_test.cpp \
