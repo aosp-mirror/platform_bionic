@@ -30,5 +30,5 @@ getrlimit:
     .set pop
     .end getrlimit
 
-    .globl _C_LABEL(getrlimit64)
-    .equ _C_LABEL(getrlimit64), _C_LABEL(getrlimit)
+    .globl getrlimit64
+    .equ getrlimit64, getrlimit

@@ -30,5 +30,5 @@ setrlimit:
     .set pop
     .end setrlimit
 
-    .globl _C_LABEL(setrlimit64)
-    .equ _C_LABEL(setrlimit64), _C_LABEL(setrlimit)
+    .globl setrlimit64
+    .equ setrlimit64, setrlimit

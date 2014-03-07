@@ -30,5 +30,5 @@ fstat64:
     .set pop
     .end fstat64
 
-    .globl _C_LABEL(fstat)
-    .equ _C_LABEL(fstat), _C_LABEL(fstat64)
+    .globl fstat
+    .equ fstat, fstat64

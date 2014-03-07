@@ -22,5 +22,5 @@ fstatat64:
     .set reorder
     .end fstatat64
 
-    .globl _C_LABEL(fstatat)
-    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)
+    .globl fstatat
+    .equ fstatat, fstatat64
