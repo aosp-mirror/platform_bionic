@@ -512,13 +512,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := \
-    tzcode/asctime.c \
-    tzcode/difftime.c \
-    tzcode/localtime.c \
-    tzcode/strftime.c \
-    tzcode/strptime.c \
-
+LOCAL_SRC_FILES := $(call all-c-files-under,tzcode)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DSTD_INSPIRED=1 \
