@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc4c9db4_395c9869",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-07T23:52:39Z",
+      "side": 1,
+      "message": "Nit, it might be nice to reference the discussion about whether posix really specifies this so when we come back to this code later we will know why we detached. Either that, or add a comment down below where you state why the thread is created as detached and leave off the POSIX bit in this comment.",
+      "range": {
+        "startLine": 103,
+        "startChar": 5,
+        "endLine": 103,
+        "endChar": 91
+      },
+      "revId": "6018b4bef8bf207b4b9bd5d1dedac5250a22f15c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c526d52_d21e2477",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-07T23:52:39Z",
+      "side": 1,
+      "message": "Is 32 large enough if the value of id gets to be large? My calculation for a 64 bit int says it should be 41 (but 42 is a much cooler number).\n\n\"POSIX interval timer \" \u003d 21\nMAX_INT requires 19 chars (assuming no negative values)\n1 for the nul terminator\n\nI know that it\u0027s unlikely this value will ever approach the max, but it seems better safe than sorry.",
+      "range": {
+        "startLine": 179,
+        "startChar": 12,
+        "endLine": 179,
+        "endChar": 14
+      },
+      "revId": "6018b4bef8bf207b4b9bd5d1dedac5250a22f15c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4c9db4_f970701c",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-07T23:52:39Z",
+      "side": 1,
+      "message": "Nit, there is an extra 2 spaces of indentation here.",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 6
+      },
+      "revId": "6018b4bef8bf207b4b9bd5d1dedac5250a22f15c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
