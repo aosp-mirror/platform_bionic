@@ -206,14 +206,14 @@ extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond, pthread_mu
 extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
   return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
 }
-#endif // !defined(__LP64__)
 
-int pthread_cond_timedwait_relative_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* reltime) {
+extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* reltime) {
   return __pthread_cond_timedwait_relative(cond, mutex, reltime);
 }
 
-int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsigned ms) {
+extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsigned ms) {
   timespec ts;
   timespec_from_ms(ts, ms);
   return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
+#endif // !defined(__LP64__)
