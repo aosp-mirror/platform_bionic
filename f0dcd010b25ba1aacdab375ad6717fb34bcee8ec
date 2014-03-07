@@ -116,6 +116,24 @@
     },
     {
       "key": {
+        "uuid": "dccb593b_5f005b1f",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:53:39Z",
+      "side": 1,
+      "message": "Worst-case scenario here, you\u0027ll be busy-looping for quite a while, even though the variable is volatile; some multi-core architectures have no guarantees for when a write is propagated from another node unless you\u0027re barrier:ing.",
+      "parentUuid": "dccb593b_ffe90724",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c348108_ca4af79c",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -162,6 +180,23 @@
     },
     {
       "key": {
+        "uuid": "1cc2511e_c1c31224",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:53:39Z",
+      "side": 1,
+      "message": "IMO, should use the default, or what the user specified. Store that (or a bool joinable), so that we know to join or not on delete.",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dca43989_82a42f58",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -196,6 +231,40 @@
       "writtenOn": "2014-03-07T08:21:01Z",
       "side": 1,
       "message": "How about just letting the thread free the timer instead?",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_bff37f0e",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:53:39Z",
+      "side": 1,
+      "message": "What happens if one of these asserts fail? I\u0027m guessing the assert throws some exception, which is caught in the runner... won\u0027t that mean that the child continues running the rest of the tests before exiting? Not a problem if it\u0027s still fast, I guess...",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_00227687",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:53:39Z",
+      "side": 1,
+      "message": "So here, the memory pointed to by timer_id has been freed. We can\u0027t be sure that it\u0027ll yield an EINVAL.\n\nOf course, we can\u0027t keep all old timer structs... so do we need a global list of valid pointers in timer.cpp? Or maybe checking a magic value in the struct -- zeroed before free -- would be good enough?\n\nI know we can\u0027t guard against all invalid timer_t:s, but it\u0027d be nice to catch most of them.",
       "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
