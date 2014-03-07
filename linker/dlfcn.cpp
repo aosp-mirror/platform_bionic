@@ -131,13 +131,13 @@ int dladdr(const void* addr, Dl_info* info) {
 
   info->dli_fname = si->name;
   // Address at which the shared object is loaded.
-  info->dli_fbase = (void*) si->base;
+  info->dli_fbase = reinterpret_cast<void*>(si->base);
 
   // Determine if any symbol in the library contains the specified address.
   ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
   if (sym != NULL) {
     info->dli_sname = si->strtab + sym->st_name;
-    info->dli_saddr = (void*)(si->load_bias + sym->st_value);
+    info->dli_saddr = reinterpret_cast<void*>(si->load_bias + sym->st_value);
   }
 
   return 1;
