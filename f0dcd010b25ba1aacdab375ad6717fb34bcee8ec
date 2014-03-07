@@ -215,6 +215,24 @@
     },
     {
       "key": {
+        "uuid": "fcce5d4a_40c4fe50",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T09:59:18Z",
+      "side": 1,
+      "message": "\u003e why you\u0027re creating a detached thread to begin with\n\nElliott interprets POSIX as saying it must be detached. I interpret POSIX as saying the user should be allowed to specify that it should be detached.\n\nI would also prefer to *not* wait for the thread to exit if it was created DETACHED. That way, the user\u0027s choice of JOINABLE/DETACHED is meaningful in timer_delete() ; JOINABLE would mean timer_delete() doesn\u0027t return until the thread is dead, while DETACHED would make no such guarantee.\n\n\u003e but it\u0027s still an error not to call timer_delete to free up all resources associated with the timer\n\nIt depends. A fork() child should *not* call timer_delete with inherited timer_t:s. With this implementation, that means we\u0027ll leak the inherited PosixTimer objects.",
+      "parentUuid": "dccb593b_9f280398",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dca43989_82a42f58",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
