@@ -34,7 +34,7 @@
 
 /*
  *      from nameser.h	8.1 (Berkeley) 6/2/93
- *	Id: nameser_compat.h,v 1.1.2.3.4.2 2004/07/01 04:43:41 marka Exp
+ *	Id: nameser_compat.h,v 1.8 2006/05/19 02:33:40 marka Exp
  */
 
 #ifndef _ARPA_NAMESER_COMPAT_
@@ -48,7 +48,7 @@
 #if (BSD >= 199103)
 # include <machine/endian.h>
 #else
-#ifdef __linux
+#ifdef __linux__
 # include <endian.h>
 #else
 #define	LITTLE_ENDIAN	1234	/* least-significant byte first (vax, pc) */
@@ -57,7 +57,9 @@
 
 #if defined(vax) || defined(ns32000) || defined(sun386) || defined(i386) || \
     defined(MIPSEL) || defined(_MIPSEL) || defined(BIT_ZERO_ON_RIGHT) || \
-    defined(__alpha__) || defined(__alpha) || \
+    defined(__i386__) || defined(__i386) || defined(__amd64__) || \
+    defined(__x86_64__) || defined(MIPSEL) || defined(_MIPSEL) || \
+    defined(BIT_ZERO_ON_RIGHT) || defined(__alpha__) || defined(__alpha) || \
     (defined(__Lynx__) && defined(__x86__))
 #define BYTE_ORDER	LITTLE_ENDIAN
 #endif

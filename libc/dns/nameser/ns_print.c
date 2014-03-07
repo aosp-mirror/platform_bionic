@@ -1,4 +1,4 @@
-/*	$NetBSD: ns_print.c,v 1.5 2004/11/07 02:19:49 christos Exp $	*/
+/*	$NetBSD: ns_print.c,v 1.11 2012/03/13 21:13:39 christos Exp $	*/
 
 /*
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
@@ -20,9 +20,9 @@
 #include <sys/cdefs.h>
 #ifndef lint
 #ifdef notdef
-static const char rcsid[] = "Id: ns_print.c,v 1.3.2.1.4.5 2004/07/28 20:16:45 marka Exp";
+static const char rcsid[] = "Id: ns_print.c,v 1.12 2009/03/03 05:29:58 each Exp";
 #else
-__RCSID("$NetBSD: ns_print.c,v 1.5 2004/11/07 02:19:49 christos Exp $");
+__RCSID("$NetBSD: ns_print.c,v 1.11 2012/03/13 21:13:39 christos Exp $");
 #endif
 #endif
 
@@ -37,20 +37,21 @@ __RCSID("$NetBSD: ns_print.c,v 1.5 2004/11/07 02:19:49 christos Exp $");
 
 #include <isc/assertions.h>
 #include <isc/dst.h>
+#include <assert.h>
 #include <errno.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"
 #else
 #include <resolv.h>
 #endif
+#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
-#include <assert.h>
 
 #ifdef SPRINTF_CHAR
-# define SPRINTF(x) strlen(sprintf/**/x)
+# define SPRINTF(x) ((int)strlen(sprintf/**/x))
 #else
-# define SPRINTF(x) ((size_t)sprintf x)
+# define SPRINTF(x) (sprintf x)
 #endif
 
 #ifndef MIN
@@ -79,12 +80,13 @@ static int	addtab(size_t len, size_t target, int spaced,
 			return (-1); \
 	} while (/*CONSTCOND*/0)
 
+static const char base32hex[] =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUV=0123456789abcdefghijklmnopqrstuv";
 /* Public. */
 
 /*
- * int
- * ns_sprintrr(handle, rr, name_ctx, origin, buf, buflen)
  *	Convert an RR to presentation format.
+ *
  * return:
  *	Number of characters written to buf, or -1 (check errno).
  */
@@ -103,10 +105,8 @@ ns_sprintrr(const ns_msg *handle, const ns_rr *rr,
 }
 
 /*
- * int
- * ns_sprintrrf(msg, msglen, name, class, type, ttl, rdata, rdlen,
- *	       name_ctx, origin, buf, buflen)
  *	Convert the fields of an RR into presentation format.
+ *
  * return:
  *	Number of characters written to buf, or -1 (check errno).
  */
@@ -131,7 +131,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 	if (name_ctx != NULL && ns_samename(name_ctx, name) == 1) {
 		T(addstr("\t\t\t", (size_t)3, &buf, &buflen));
 	} else {
-		len = prune_origin(name, origin);
+		len = (int)prune_origin(name, origin);
 		if (*name == '\0') {
 			goto root;
 		} else if (len == 0) {
@@ -166,7 +166,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 	case ns_t_a:
 		if (rdlen != (size_t)NS_INADDRSZ)
 			goto formerr;
-		(void) inet_ntop(AF_INET, rdata, buf, buflen);
+		(void) inet_ntop(AF_INET, rdata, buf, (socklen_t)buflen);
 		addlen(strlen(buf), &buf, &buflen);
 		break;
 
@@ -265,7 +265,8 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 
 	case ns_t_mx:
 	case ns_t_afsdb:
-	case ns_t_rt: {
+	case ns_t_rt:
+	case ns_t_kx: {
 		u_int t;
 
 		if (rdlen < (size_t)NS_INT16SZ)
@@ -313,6 +314,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 
 	case ns_t_txt:
+	case ns_t_spf:
 		while (rdata < edata) {
 			T(len = charstr(rdata, edata, &buf, &buflen));
 			if (len == 0)
@@ -334,7 +336,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 	case ns_t_aaaa:
 		if (rdlen != (size_t)NS_IN6ADDRSZ)
 			goto formerr;
-		(void) inet_ntop(AF_INET6, rdata, buf, buflen);
+		(void) inet_ntop(AF_INET6, rdata, buf, (socklen_t)buflen);
 		addlen(strlen(buf), &buf, &buflen);
 		break;
 
@@ -425,7 +427,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 			goto formerr;
 
 		/* Address. */
-		(void) inet_ntop(AF_INET, rdata, buf, buflen);
+		(void) inet_ntop(AF_INET, rdata, buf, (socklen_t)buflen);
 		addlen(strlen(buf), &buf, &buflen);
 		rdata += NS_INADDRSZ;
 
@@ -459,7 +461,8 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 	    }
 
-	case ns_t_key: {
+	case ns_t_key:
+	case ns_t_dnskey: {
 		char base64_key[NS_MD5RSA_MAX_BASE64];
 		u_int keyflags, protocol, algorithm, key_id;
 		const char *leader;
@@ -505,7 +508,8 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 	    }
 
-	case ns_t_sig: {
+	case ns_t_sig:
+	case ns_t_rrsig: {
 		char base64_key[NS_MD5RSA_MAX_BASE64];
 		u_int typ, algorithm, labels, footprint;
 		const char *leader;
@@ -566,7 +570,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 	    }
 
 	case ns_t_nxt: {
-		int n, c;
+		ptrdiff_t n, c;
 
 		/* Next domain name. */
 		T(addname(msg, msglen, &rdata, origin, &buf, &buflen));
@@ -575,7 +579,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		n = edata - rdata;
 		for (c = 0; c < n*8; c++)
 			if (NS_NXT_BIT_ISSET(c, rdata)) {
-				len = SPRINTF((tmp, " %s", p_type(c)));
+				len = SPRINTF((tmp, " %s", p_type((int)c)));
 				T(addstr(tmp, (size_t)len, &buf, &buflen));
 			}
 		break;
@@ -584,7 +588,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 	case ns_t_cert: {
 		u_int c_type, key_tag, alg;
 		int n;
-		unsigned int siz;
+		size_t siz;
 		char base64_cert[8192], tmp1[40];
 		const char *leader;
 
@@ -690,7 +694,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 			if (rdata + pbyte >= edata) goto formerr;
 			memset(&a, 0, sizeof(a));
 			memcpy(&a.s6_addr[pbyte], rdata, sizeof(a) - pbyte);
-			(void) inet_ntop(AF_INET6, &a, buf, buflen);
+			(void) inet_ntop(AF_INET6, &a, buf, (socklen_t)buflen);
 			addlen(strlen(buf), &buf, &buflen);
 			rdata += sizeof(a) - pbyte;
 		}
@@ -711,25 +715,368 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 	    }
 
+	case ns_t_ds:
+	case ns_t_dlv:
+	case ns_t_sshfp: {
+		u_int t;
+
+		if (type == ns_t_ds || type == ns_t_dlv) {
+			if (rdlen < 4U) goto formerr;
+			t = ns_get16(rdata);
+			rdata += NS_INT16SZ;
+			len = SPRINTF((tmp, "%u ", t));
+			T(addstr(tmp, (size_t)len, &buf, &buflen));
+		} else
+			if (rdlen < 2U) goto formerr;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		while (rdata < edata) {
+			len = SPRINTF((tmp, "%02X", *rdata));
+			T(addstr(tmp, (size_t)len, &buf, &buflen));
+			rdata++;
+		}
+		break;
+	    }
+
+	case ns_t_nsec3:
+	case ns_t_nsec3param: {
+		u_int t, w, l, j, k, c;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		t = ns_get16(rdata);
+		rdata += NS_INT16SZ;
+		len = SPRINTF((tmp, "%u ", t));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+
+		t = *rdata++;
+		if (t == 0) {
+			T(addstr("-", 1, &buf, &buflen));
+		} else {
+			while (t-- > 0) {
+				len = SPRINTF((tmp, "%02X", *rdata));
+				T(addstr(tmp, (size_t)len, &buf, &buflen));
+				rdata++;
+			}
+		}
+		if (type == ns_t_nsec3param)
+			break;
+		T(addstr(" ", 1, &buf, &buflen));
+
+		t = *rdata++;
+		while (t > 0) {
+			switch (t) {
+			case 1:
+				tmp[0] = base32hex[(((uint32_t)rdata[0]>>3)&0x1f)];
+				tmp[1] = base32hex[(((uint32_t)rdata[0]<<2)&0x1c)];
+				tmp[2] = tmp[3] = tmp[4] = '=';
+				tmp[5] = tmp[6] = tmp[7] = '=';
+				break;
+			case 2:
+				tmp[0] = base32hex[(((uint32_t)rdata[0]>>3)&0x1f)];
+				tmp[1] = base32hex[(((uint32_t)rdata[0]<<2)&0x1c)|
+						   (((uint32_t)rdata[1]>>6)&0x03)];
+				tmp[2] = base32hex[(((uint32_t)rdata[1]>>1)&0x1f)];
+				tmp[3] = base32hex[(((uint32_t)rdata[1]<<4)&0x10)];
+				tmp[4] = tmp[5] = tmp[6] = tmp[7] = '=';
+				break;
+			case 3:
+				tmp[0] = base32hex[(((uint32_t)rdata[0]>>3)&0x1f)];
+				tmp[1] = base32hex[(((uint32_t)rdata[0]<<2)&0x1c)|
+						   (((uint32_t)rdata[1]>>6)&0x03)];
+				tmp[2] = base32hex[(((uint32_t)rdata[1]>>1)&0x1f)];
+				tmp[3] = base32hex[(((uint32_t)rdata[1]<<4)&0x10)|
+						   (((uint32_t)rdata[2]>>4)&0x0f)];
+				tmp[4] = base32hex[(((uint32_t)rdata[2]<<1)&0x1e)];
+				tmp[5] = tmp[6] = tmp[7] = '=';
+				break;
+			case 4:
+				tmp[0] = base32hex[(((uint32_t)rdata[0]>>3)&0x1f)];
+				tmp[1] = base32hex[(((uint32_t)rdata[0]<<2)&0x1c)|
+						   (((uint32_t)rdata[1]>>6)&0x03)];
+				tmp[2] = base32hex[(((uint32_t)rdata[1]>>1)&0x1f)];
+				tmp[3] = base32hex[(((uint32_t)rdata[1]<<4)&0x10)|
+						   (((uint32_t)rdata[2]>>4)&0x0f)];
+				tmp[4] = base32hex[(((uint32_t)rdata[2]<<1)&0x1e)|
+						   (((uint32_t)rdata[3]>>7)&0x01)];
+				tmp[5] = base32hex[(((uint32_t)rdata[3]>>2)&0x1f)];
+				tmp[6] = base32hex[((uint32_t)rdata[3]<<3)&0x18];
+				tmp[7] = '=';
+				break;
+			default:
+				tmp[0] = base32hex[(((uint32_t)rdata[0]>>3)&0x1f)];
+				tmp[1] = base32hex[(((uint32_t)rdata[0]<<2)&0x1c)|
+						   (((uint32_t)rdata[1]>>6)&0x03)];
+				tmp[2] = base32hex[(((uint32_t)rdata[1]>>1)&0x1f)];
+				tmp[3] = base32hex[(((uint32_t)rdata[1]<<4)&0x10)|
+						   (((uint32_t)rdata[2]>>4)&0x0f)];
+				tmp[4] = base32hex[(((uint32_t)rdata[2]<<1)&0x1e)|
+						   (((uint32_t)rdata[3]>>7)&0x01)];
+				tmp[5] = base32hex[(((uint32_t)rdata[3]>>2)&0x1f)];
+				tmp[6] = base32hex[(((uint32_t)rdata[3]<<3)&0x18)|
+						   (((uint32_t)rdata[4]>>5)&0x07)];
+				tmp[7] = base32hex[(rdata[4]&0x1f)];
+				break;
+			}
+			T(addstr(tmp, 8, &buf, &buflen));
+			if (t >= 5) {
+				rdata += 5;
+				t -= 5;
+			} else {
+				rdata += t;
+				t -= t;
+			}
+		}
+
+		while (rdata < edata) {
+			w = *rdata++;
+			l = *rdata++;
+			for (j = 0; j < l; j++) {
+				if (rdata[j] == 0)
+					continue;
+				for (k = 0; k < 8; k++) {
+					if ((rdata[j] & (0x80 >> k)) == 0)
+						continue;
+					c = w * 256 + j * 8 + k;
+					len = SPRINTF((tmp, " %s", p_type((ns_type)c)));
+					T(addstr(tmp, (size_t)len, &buf, &buflen));
+				}
+			}
+			rdata += l;
+		}
+		break;
+	    }
+
+	case ns_t_nsec: {
+		u_int w, l, j, k, c;
+
+		T(addname(msg, msglen, &rdata, origin, &buf, &buflen));
+
+		while (rdata < edata) {
+			w = *rdata++;
+			l = *rdata++;
+			for (j = 0; j < l; j++) {
+				if (rdata[j] == 0)
+					continue;
+				for (k = 0; k < 8; k++) {
+					if ((rdata[j] & (0x80 >> k)) == 0)
+						continue;
+					c = w * 256 + j * 8 + k;
+					len = SPRINTF((tmp, " %s", p_type((ns_type)c)));
+					T(addstr(tmp, (size_t)len, &buf, &buflen));
+				}
+			}
+			rdata += l;
+		}
+		break;
+	    }
+
+	case ns_t_dhcid: {
+		int n;
+		unsigned int siz;
+		char base64_dhcid[8192];
+		const char *leader;
+
+		siz = (int)(edata-rdata)*4/3 + 4; /* "+4" accounts for trailing \0 */
+		if (siz > sizeof(base64_dhcid) * 3/4) {
+			const char *str = "record too long to print";
+			T(addstr(str, strlen(str), &buf, &buflen));
+		} else {
+			len = b64_ntop(rdata, (size_t)(edata-rdata),
+			    base64_dhcid, siz);
+
+			if (len < 0)
+				goto formerr;
+
+			else if (len > 15) {
+				T(addstr(" (", 2, &buf, &buflen));
+				leader = "\n\t\t";
+				spaced = 0;
+			}
+			else
+				leader = " ";
+
+			for (n = 0; n < len; n += 48) {
+				T(addstr(leader, strlen(leader),
+					 &buf, &buflen));
+				T(addstr(base64_dhcid + n,
+				    (size_t)MIN(len - n, 48), &buf, &buflen));
+			}
+			if (len > 15)
+				T(addstr(" )", 2, &buf, &buflen));
+		}
+		break;
+	}
+
+	case ns_t_ipseckey: {
+		int n;
+		unsigned int siz;
+		char base64_key[8192];
+		const char *leader;
+
+		if (rdlen < 2)
+			goto formerr;
+
+		switch (rdata[1]) {
+		case 0:
+		case 3:
+			if (rdlen < 3)
+				goto formerr;
+			break;
+		case 1:
+			if (rdlen < 7)
+				goto formerr;
+			break;
+		case 2:
+			if (rdlen < 19)
+				goto formerr;
+			break;
+		default:
+			comment = "unknown IPSECKEY gateway type";
+			goto hexify;
+		}
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		len = SPRINTF((tmp, "%u ", *rdata));
+		T(addstr(tmp, (size_t)len, &buf, &buflen));
+		rdata++;
+
+		switch (rdata[-2]) {
+		case 0:
+			T(addstr(".", 1, &buf, &buflen));
+			break;
+		case 1:
+			(void) inet_ntop(AF_INET, rdata, buf, (socklen_t)buflen);
+			addlen(strlen(buf), &buf, &buflen);
+			rdata += 4;
+			break;
+		case 2:
+			(void) inet_ntop(AF_INET6, rdata, buf, (socklen_t)buflen);
+			addlen(strlen(buf), &buf, &buflen);
+			rdata += 16;
+			break;
+		case 3:
+			T(addname(msg, msglen, &rdata, origin, &buf, &buflen));
+			break;
+		}
+
+		if (rdata >= edata)
+			break;
+
+		siz = (int)(edata-rdata)*4/3 + 4; /* "+4" accounts for trailing \0 */
+		if (siz > sizeof(base64_key) * 3/4) {
+			const char *str = "record too long to print";
+			T(addstr(str, strlen(str), &buf, &buflen));
+		} else {
+			len = b64_ntop(rdata, (size_t)(edata-rdata),
+			    base64_key, siz);
+
+			if (len < 0)
+				goto formerr;
+
+			else if (len > 15) {
+				T(addstr(" (", 2, &buf, &buflen));
+				leader = "\n\t\t";
+				spaced = 0;
+			}
+			else
+				leader = " ";
+
+			for (n = 0; n < len; n += 48) {
+				T(addstr(leader, strlen(leader),
+					 &buf, &buflen));
+				T(addstr(base64_key + n,
+				    (size_t)MIN(len - n, 48), &buf, &buflen));
+			}
+			if (len > 15)
+				T(addstr(" )", 2, &buf, &buflen));
+		}
+		break;
+	}
+
+	case ns_t_hip: {
+		unsigned int i, hip_len, algorithm, key_len;
+		char base64_key[NS_MD5RSA_MAX_BASE64];
+		unsigned int siz;
+		const char *leader = "\n\t\t\t\t\t";
+
+		hip_len = *rdata++;
+		algorithm = *rdata++;
+		key_len = ns_get16(rdata);
+		rdata += NS_INT16SZ;
+
+		siz = key_len*4/3 + 4; /* "+4" accounts for trailing \0 */
+		if (siz > sizeof(base64_key) * 3/4) {
+			const char *str = "record too long to print";
+			T(addstr(str, strlen(str), &buf, &buflen));
+		} else {
+			len = sprintf(tmp, "( %u ", algorithm);
+			T(addstr(tmp, (size_t)len, &buf, &buflen));
+
+			for (i = 0; i < hip_len; i++) {
+				len = sprintf(tmp, "%02X", *rdata);
+				T(addstr(tmp, (size_t)len, &buf, &buflen));
+				rdata++;
+			}
+			T(addstr(leader, strlen(leader), &buf, &buflen));
+
+			len = b64_ntop(rdata, key_len, base64_key, siz);
+			if (len < 0)
+				goto formerr;
+
+			T(addstr(base64_key, (size_t)len, &buf, &buflen));
+
+			rdata += key_len;
+			while (rdata < edata) {
+				T(addstr(leader, strlen(leader), &buf, &buflen));
+				T(addname(msg, msglen, &rdata, origin,
+					  &buf, &buflen));
+			}
+			T(addstr(" )", 2, &buf, &buflen));
+		}
+		break;
+	    }
+
 	default:
 		comment = "unknown RR type";
 		goto hexify;
 	}
-	return (buf - obuf);
+	_DIAGASSERT(__type_fit(int, buf - obuf));
+	return (int)(buf - obuf);
  formerr:
 	comment = "RR format error";
  hexify: {
 	int n, m;
 	char *p;
 
-	len = SPRINTF((tmp, "\\# %tu%s\t; %s", edata - rdata,
-		       rdlen != 0 ? " (" : "", comment));
+	len = SPRINTF((tmp, "\\# %u%s\t; %s", (unsigned)(edata - rdata),
+		       rdlen != 0U ? " (" : "", comment));
 	T(addstr(tmp, (size_t)len, &buf, &buflen));
 	while (rdata < edata) {
 		p = tmp;
 		p += SPRINTF((p, "\n\t"));
 		spaced = 0;
-		n = MIN(16, edata - rdata);
+		n = MIN(16, (int)(edata - rdata));
 		for (m = 0; m < n; m++)
 			p += SPRINTF((p, "%02x ", rdata[m]));
 		T(addstr(tmp, (size_t)(p - tmp), &buf, &buflen));
@@ -746,7 +1093,8 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		T(addstr(tmp, (size_t)(p - tmp), &buf, &buflen));
 		rdata += n;
 	}
-	return (buf - obuf);
+	_DIAGASSERT(__type_fit(int, buf - obuf));
+	return (int)(buf - obuf);
     }
 }
 
@@ -822,7 +1170,8 @@ charstr(const u_char *rdata, const u_char *edata, char **buf, size_t *buflen) {
 	}
 	if (addstr("\"", (size_t)1, buf, buflen) < 0)
 		goto enospc;
-	return (rdata - odata);
+	_DIAGASSERT(__type_fit(int, rdata - odata));
+	return (int)(rdata - odata);
  enospc:
 	errno = ENOSPC;
 	*buf = save_buf;
@@ -866,7 +1215,8 @@ addname(const u_char *msg, size_t msglen,
 	*pp += n;
 	addlen(newlen, buf, buflen);
 	**buf = '\0';
-	return (newlen);
+	_DIAGASSERT(__type_fit(int, newlen));
+	return (int)newlen;
  enospc:
 	errno = ENOSPC;
 	*buf = save_buf;
@@ -897,7 +1247,7 @@ static int
 addtab(size_t len, size_t target, int spaced, char **buf, size_t *buflen) {
 	size_t save_buflen = *buflen;
 	char *save_buf = *buf;
-	int t;
+	ptrdiff_t t;
 
 	if (spaced || len >= target - 1) {
 		T(addstr("  ", (size_t)2, buf, buflen));
