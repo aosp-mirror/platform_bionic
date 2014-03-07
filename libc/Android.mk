@@ -1,16 +1,12 @@
 LOCAL_PATH := $(call my-dir)
 
-include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
-
 # Make everything depend on any changes to included makefiles.
 libc_common_additional_dependencies := \
-    $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk \
     $(LOCAL_PATH)/Android.mk \
 
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
-	$(syscall_src) \
 	unistd/alarm.c \
 	unistd/exec.c \
 	unistd/fnmatch.c \
@@ -929,6 +925,20 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_syscalls.a
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(call all-S-files-under,arch-$(TARGET_ARCH)/syscalls)
+LOCAL_MODULE := libc_syscalls
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_common.a
 # ========================================================
 
@@ -947,6 +957,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_dns \
     libc_freebsd \
     libc_netbsd \
+    libc_syscalls \
     libc_tzcode \
 
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
