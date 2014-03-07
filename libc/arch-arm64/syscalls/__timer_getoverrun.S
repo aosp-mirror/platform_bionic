@@ -19,4 +19,4 @@ ENTRY(__timer_getoverrun)
 
     ret
 END(__timer_getoverrun)
-.hidden _C_LABEL(__timer_getoverrun)
+.hidden __timer_getoverrun

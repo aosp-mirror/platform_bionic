@@ -23,4 +23,4 @@ ENTRY(__set_thread_area)
     move ra, t0
     .set pop
 END(__set_thread_area)
-.hidden _C_LABEL(__set_thread_area)
+.hidden __set_thread_area

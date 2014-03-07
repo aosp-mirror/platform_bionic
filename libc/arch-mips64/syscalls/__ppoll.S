@@ -23,4 +23,4 @@ ENTRY(__ppoll)
     move ra, t0
     .set pop
 END(__ppoll)
-.hidden _C_LABEL(__ppoll)
+.hidden __ppoll

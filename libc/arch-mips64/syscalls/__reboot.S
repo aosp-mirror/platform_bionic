@@ -23,4 +23,4 @@ ENTRY(__reboot)
     move ra, t0
     .set pop
 END(__reboot)
-.hidden _C_LABEL(__reboot)
+.hidden __reboot
