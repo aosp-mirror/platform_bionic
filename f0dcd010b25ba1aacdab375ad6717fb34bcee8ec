@@ -197,6 +197,24 @@
     },
     {
       "key": {
+        "uuid": "dccb593b_9f280398",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-07T09:45:51Z",
+      "side": 1,
+      "message": "I don\u0027t understand why you\u0027re creating a detached thread to begin with. Looks like we\u0027re always going to wait for it to finish when the timer is deleted, which means we can free up after it. (Sure we don\u0027t immediately free up if someone manually sends a TKILL to the thread, but it\u0027s still an error not to call timer_delete to free up all resources associated with the timer, isn\u0027t it ?)",
+      "parentUuid": "1cc2511e_c1c31224",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dca43989_82a42f58",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
