@@ -42,12 +42,14 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
     kernel_new_action.sa_flags = bionic_new_action->sa_flags;
     kernel_new_action.sa_handler = bionic_new_action->sa_handler;
     kernel_new_action.sa_mask = bionic_new_action->sa_mask;
+#ifdef SA_RESTORER
     kernel_new_action.sa_restorer = bionic_new_action->sa_restorer;
 
     if (!(kernel_new_action.sa_flags & SA_RESTORER)) {
       kernel_new_action.sa_flags |= SA_RESTORER;
       kernel_new_action.sa_restorer = &__rt_sigreturn;
     }
+#endif
   }
 
   __kernel_sigaction kernel_old_action;
@@ -60,11 +62,13 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
     bionic_old_action->sa_flags = kernel_old_action.sa_flags;
     bionic_old_action->sa_handler = kernel_old_action.sa_handler;
     bionic_old_action->sa_mask = kernel_old_action.sa_mask;
+#ifdef SA_RESTORER
     bionic_old_action->sa_restorer = kernel_old_action.sa_restorer;
 
     if (bionic_old_action->sa_restorer == &__rt_sigreturn) {
       bionic_old_action->sa_flags &= ~SA_RESTORER;
     }
+#endif
   }
 
   return result;
