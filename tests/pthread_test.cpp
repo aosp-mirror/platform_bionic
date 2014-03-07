@@ -20,6 +20,7 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
+#include <signal.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -31,8 +32,8 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
-#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
+#if defined(__BIONIC__) // glibc uses keys internally that its sysconf value doesn't account for.
   // POSIX says PTHREAD_KEYS_MAX should be at least 128.
   ASSERT_GE(PTHREAD_KEYS_MAX, 128);
 
@@ -59,8 +60,10 @@ TEST(pthread, pthread_key_create_lots) {
   for (size_t i = 0; i < keys.size(); ++i) {
     ASSERT_EQ(0, pthread_key_delete(keys[i]));
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 static void* IdFn(void* arg) {
   return arg;
@@ -249,31 +252,40 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
-#if __BIONIC__
+#if defined(__BIONIC__)
 extern "C" pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
+#endif // __BIONIC__
+
 TEST(pthread, __bionic_clone) {
+#if defined(__BIONIC__)
   // Check that our hand-written clone assembler sets errno correctly on failure.
   uintptr_t fake_child_stack[16];
   errno = 0;
   ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[16], NULL, NULL, NULL, NULL, NULL));
   ASSERT_EQ(EINVAL, errno);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__too_long) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__self) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__other) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   // Emulator kernels don't currently support setting the name of other threads.
   char* filename = NULL;
   asprintf(&filename, "/proc/self/task/%d/comm", gettid());
@@ -288,18 +300,22 @@ TEST(pthread, pthread_setname_np__other) {
   } else {
     fprintf(stderr, "skipping test: this kernel doesn't have /proc/self/task/tid/comm files!\n");
   }
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__no_such_thread) {
+#if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
   ASSERT_EQ(ESRCH, pthread_setname_np(dead_thread, "short 3"));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
 
 TEST(pthread, pthread_kill__0) {
   // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.
@@ -511,13 +527,13 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
   ASSERT_EQ(32*1024U + 1, stack_size);
-#if __BIONIC__
+#if defined(__BIONIC__)
   // Bionic rounds up, which is what POSIX allows.
   ASSERT_EQ(GetActualStackSize(attributes), (32 + 4)*1024U);
-#else
+#else // __BIONIC__
   // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
   ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
-#endif
+#endif // __BIONIC__
 }
 
 TEST(pthread, pthread_rwlock_smoke) {

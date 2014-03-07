@@ -42,7 +42,6 @@ TEST(sys_sendfile, sendfile) {
   ASSERT_STREQ("ll", buf);
 }
 
-#if __BIONIC__
 TEST(sys_sendfile, sendfile64) {
   TemporaryFile src_file;
   ASSERT_EQ(5, TEMP_FAILURE_RETRY(write(src_file.fd, "hello", 5)));
@@ -61,4 +60,3 @@ TEST(sys_sendfile, sendfile64) {
   ASSERT_EQ(2, TEMP_FAILURE_RETRY(read(dst_file.fd, &buf, 2)));
   ASSERT_STREQ("ll", buf);
 }
-#endif
