@@ -66,6 +66,8 @@ extern const char* const sys_signame[]; /* BSD compatibility. */
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
+#define si_timerid si_tid /* glibc compatibility. */
+
 #if defined(__LP64__)
 
 struct sigaction {
