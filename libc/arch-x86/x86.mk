@@ -84,15 +84,7 @@ libc_bionic_src_files_x86 += \
     arch-x86/string/sse2-wcslen-atom.S \
     arch-x86/string/sse2-wcscmp-atom.S \
 
-# These are used by the static and dynamic versions of the libc
-# respectively.
-libc_arch_static_src_files_x86 :=
 
-libc_arch_dynamic_src_files_x86 :=
-
-
-##########################################
-# crt-related
 libc_crt_target_cflags_x86 := \
     -m32 \
     -I$(LOCAL_PATH)/arch-x86/include
