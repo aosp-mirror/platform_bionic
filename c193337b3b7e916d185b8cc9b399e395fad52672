@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc2511e_81ae6a67",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T07:41:24Z",
+      "side": 1,
+      "message": "This fix is still needed in some form, even if the timer implementation is rewritten. Could probably be done as an atfork callback instead.",
+      "revId": "c193337b3b7e916d185b8cc9b399e395fad52672",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
