@@ -57,10 +57,15 @@ kernel_arch_token_replacements = {
     "mips": {"off_t":"__kernel_off_t"},
     "x86": {},
     }
+
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
     "asm": "__asm__",
-    "__unused": "__linux_unused", # The kernel usage of __unused conflicts with the macro defined in sys/cdefs.h
+    # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
+    "__unused": "__linux_unused",
+    # The kernel's _NSIG/NSIG are one less than the userspace value, so we need to move them aside.
+    "_NSIG": "_KERNEL__NSIG",
+    "NSIG": "_KERNEL_NSIG",
     }
 
 # this is the set of known static inline functions that we want to keep

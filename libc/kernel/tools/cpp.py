@@ -1521,7 +1521,7 @@ class BlockList:
         """replace tokens according to the given dict
            """
         for b in self.blocks:
-            if not b.isDirective():
+            if (not b.isDirective()) or b.isDefine():
                 for tok in b.tokens:
                     if tok.id == tokIDENT:
                         if tok.value in replacements:
