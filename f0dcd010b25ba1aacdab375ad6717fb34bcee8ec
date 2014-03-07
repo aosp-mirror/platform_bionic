@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "bc586570_00168aa4",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "does anyone see a problem with my getpid() idea?",
+      "parentUuid": "fcce5d4a_201bf25a",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c348108_8aebcf5e",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -47,6 +65,30 @@
       "writtenOn": "2014-03-06T22:51:06Z",
       "side": 1,
       "message": "Should you continue on all errors, or only if errno is EAGAIN or EINTR?",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 19
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c526d52_3bcf83a3",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "i think those are the only possible errors (given that we supply a NULL timeout and we know we\u0027re not passing bad addresses).",
+      "parentUuid": "9c348108_8aebcf5e",
       "range": {
         "startLine": 83,
         "startChar": 4,
@@ -82,6 +124,47 @@
     },
     {
       "key": {
+        "uuid": "bc586570_406402f8",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "i\u0027ll rewrite to \"// This signal was sent because a timer fired.\"\n\nwhen the kernel sends a signal because a timer fires, it fills si_code in the siginfo_t with SI_TIMER. (as opposed to SI_TKILL from kill or tgkill or whatever.)",
+      "parentUuid": "7c398d00_80a9f630",
+      "range": {
+        "startLine": 88,
+        "startChar": 44,
+        "endLine": 88,
+        "endChar": 48
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c526d52_1bbb9fef",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "\"// This signal was sent because someone wants us to exit.\"",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccb593b_3fe8ef20",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -93,6 +176,24 @@
       "writtenOn": "2014-03-07T08:21:01Z",
       "side": 1,
       "message": "I disagree with this interpretation of POSIX. I interpret it as saying that *user* can\u0027t join it, but that the user gets to choose which type of thread it will be.",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4c9db4_1629ac9a",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "for the others, i think this is the paragraph we\u0027re talking about:\n\n\"The reason for this is that the threads created in response to a timer expiration are created detached, or in an unspecified way if the thread attribute\u0027s detachstate is PTHREAD_CREATE_JOINABLE. In neither case is it valid to call pthread_join(), which makes it impossible to determine the lifetime of the created thread which thus means the stack memory cannot be reused.\"\n\nhttp://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html\n\ni still think detached is the safer way to go.\n\nwe can argue about whether POSIX allows the opposite, but it\u0027s 100% clear they allow detached.\n\nwe can\u0027t stop (and POSIX doesn\u0027t explicitly disallow) a callback from calling pthread_detach(pthread_self()).",
+      "parentUuid": "dccb593b_3fe8ef20",
       "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -134,6 +235,24 @@
     },
     {
       "key": {
+        "uuid": "bc586570_c04772db",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "yes, this is the down side of the current implementation. i did think about using a futex but thought YAGNI. i\u0027ll have a look...",
+      "parentUuid": "dccb593b_5f005b1f",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c348108_ca4af79c",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -157,6 +276,30 @@
     },
     {
       "key": {
+        "uuid": "7c526d52_5b96b730",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "yes, that\u0027s malloc\u0027s job.",
+      "parentUuid": "9c348108_ca4af79c",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 14
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c348108_4a3ee7f0",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -168,6 +311,30 @@
       "writtenOn": "2014-03-06T22:51:06Z",
       "side": 1,
       "message": "Same as above, is __timer_create setting errno?",
+      "range": {
+        "startLine": 119,
+        "startChar": 6,
+        "endLine": 119,
+        "endChar": 22
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4c9db4_cb9841ed",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "yes, it\u0027s a regular system call.",
+      "parentUuid": "9c348108_4a3ee7f0",
       "range": {
         "startLine": 119,
         "startChar": 6,
@@ -233,6 +400,24 @@
     },
     {
       "key": {
+        "uuid": "fc4c9db4_b6bf18de",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "i think we have to wait. i think there could still be outstanding signals queued that cause us to enter user code before the thread actually exits.\n\nposix does explicitly say it\u0027s undefined, but it seems unreasonable to me that your callback can still get called _after_ timer_delete returns. i can\u0027t see that ever being helpful, but i can see that being a source of obscure bugs.\n\n(amusingly, despite all the trouble that recurring timers cause in the implementation, in the whole Android codebase they\u0027re only used in tests of the timer implementation itself. \"real\" code seems to only use one-shot timers.)",
+      "parentUuid": "fcce5d4a_40c4fe50",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dca43989_82a42f58",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -244,6 +429,30 @@
       "writtenOn": "2014-03-06T22:51:06Z",
       "side": 1,
       "message": "Is this safe to call if the thread terminates before this call happens?",
+      "range": {
+        "startLine": 179,
+        "startChar": 2,
+        "endLine": 179,
+        "endChar": 55
+      },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc586570_40d082e5",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "yes, it\u0027ll just return ESRCH.",
+      "parentUuid": "dca43989_82a42f58",
       "range": {
         "startLine": 179,
         "startChar": 2,
@@ -273,6 +482,24 @@
     },
     {
       "key": {
+        "uuid": "7c526d52_db5807ea",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "because there isn\u0027t necessarily a thread at all. that was the bug i had earlier that narayan spotted :-)",
+      "parentUuid": "fcce5d4a_6011fa38",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccb593b_bff37f0e",
         "filename": "tests/time_test.cpp",
         "patchSetId": 8
@@ -290,6 +517,24 @@
     },
     {
       "key": {
+        "uuid": "7c526d52_7bbd7b48",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "no, there are no exceptions. i tested with a false assertion when you pointed out my missing _exit before, and the new code seemed to work.",
+      "parentUuid": "dccb593b_bff37f0e",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcce5d4a_00227687",
         "filename": "tests/time_test.cpp",
         "patchSetId": 8
@@ -301,6 +546,24 @@
       "writtenOn": "2014-03-07T08:53:39Z",
       "side": 1,
       "message": "So here, the memory pointed to by timer_id has been freed. We can\u0027t be sure that it\u0027ll yield an EINVAL.\n\nOf course, we can\u0027t keep all old timer structs... so do we need a global list of valid pointers in timer.cpp? Or maybe checking a magic value in the struct -- zeroed before free -- would be good enough?\n\nI know we can\u0027t guard against all invalid timer_t:s, but it\u0027d be nice to catch most of them.",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc586570_00c84ae9",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T19:03:26Z",
+      "side": 1,
+      "message": "yeah, i like the magic idea.",
+      "parentUuid": "fcce5d4a_00227687",
       "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
