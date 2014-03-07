@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,28 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#include "private/bionic_name_mem.h"
+#include <unistd.h>
+#include <sys/reboot.h>
 
-/*
- * Local definitions of custom prctl arguments to set a vma name in some kernels
- */
-#define BIONIC_PR_SET_VMA               0x53564d41
-#define BIONIC_PR_SET_VMA_ANON_NAME     0
+extern "C" int __reboot(int, int, int, void*);
 
-/*
- * Names a region of memory.  The name is expected to show up in /proc/pid/maps
- * and /proc/pid/smaps.  There is no guarantee that it will work, and it if it
- * does work it is likely to only work on memory that was allocated with
- * mmap(MAP_ANONYMOUS), and only on regions that are page aligned.  name should
- * be a pointer to a string that is valid for as long as the memory is mapped,
- * preferably a compile-time constant string.
- *
- * Returns -1 on error and sets errno.  If it returns an error naming page
- * aligned anonymous memory the kernel doesn't support naming, and an alternate
- * method of naming memory should be used (like ashmem).
- */
-int __bionic_name_mem(void *addr, size_t len, const char *name)
-{
-    return prctl(BIONIC_PR_SET_VMA, BIONIC_PR_SET_VMA_ANON_NAME,
-                 addr, len, name);
+int reboot(int mode) {
+  return __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, NULL);
 }
