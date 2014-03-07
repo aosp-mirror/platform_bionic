@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dccb593b_5fd93b99",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T07:50:13Z",
+      "side": 1,
+      "message": "We had an application with a library that \u0027suddenly\u0027 was using a SIGEV_THREAD timer for timeouts. That timer was deleted in a destructor, which was called when the child exited (using exit(), not _exit()). And that\u0027s where we got the deadlock in the old implementation.\n\nSince it happened based on a race, it was hard to reproduce and debug.\n\nSomething that would happily delete a timer that the new process has created could\u0027ve made the problem even harder to find.\n\nSo if it\u0027s possible to ensure that all inherited timer_t:s yield EINVAL without unreasonable cost, that\u0027d probably be a good idea. IMHO.",
+      "parentUuid": "9c348108_67ffa6d1",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cc2511e_81de6a81",
         "filename": "libc/bionic/timer.cpp",
         "patchSetId": 5
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "yeah, so i think i have to give up on using pthread_join and basically roll my own equivalent.",
       "parentUuid": "dccb593b_74df7ea7",
+      "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_7fde7784",
+        "filename": "libc/bionic/timer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T07:50:13Z",
+      "side": 1,
+      "message": "Or leave it up to the user; don\u0027t join if user specified DETACHED, join if user specified JOINABLE (or nothing).",
+      "parentUuid": "fca73d88_64081f89",
       "revId": "c2a4ce2320ac189a46d24d2902069544c87f39d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
