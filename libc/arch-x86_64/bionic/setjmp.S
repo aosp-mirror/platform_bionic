@@ -54,9 +54,9 @@ ENTRY(setjmp)
 	pushq	%rdi
 	xorq	%rdi,%rdi
 #ifdef __PIC__
-	call	PIC_PLT(_C_LABEL(sigblock))
+	call	PIC_PLT(sigblock)
 #else
-	call	_C_LABEL(sigblock)
+	call	sigblock
 #endif
 	popq	%rdi
 	movq	%rax,(_JB_SIGMASK * 8)(%rdi)
@@ -82,9 +82,9 @@ ENTRY(longjmp)
 	movq	(_JB_SIGMASK * 8)(%rdi),%rdi
 	pushq	%r8
 #ifdef __PIC__
-	call	PIC_PLT(_C_LABEL(sigsetmask))
+	call	PIC_PLT(sigsetmask)
 #else
-	call	_C_LABEL(sigsetmask)
+	call	sigsetmask
 #endif
 	popq	%r8
 	movq	(_JB_RBX * 8)(%r12),%rbx
