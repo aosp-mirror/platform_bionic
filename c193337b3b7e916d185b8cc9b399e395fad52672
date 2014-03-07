@@ -16,6 +16,24 @@
       "revId": "c193337b3b7e916d185b8cc9b399e395fad52672",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4c9db4_705c78b8",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-07T17:30:50Z",
+      "side": 1,
+      "message": "yeah, this seemed an independent bug we should fix separately.\n\n(one reason for not abandoning this change was a reminder to myself to actually come back and fix this bug too. i\u0027ve raised https://code.google.com/p/android/issues/detail?id\u003d66813 instead.)",
+      "parentUuid": "1cc2511e_81ae6a67",
+      "revId": "c193337b3b7e916d185b8cc9b399e395fad52672",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
