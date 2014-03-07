@@ -169,6 +169,9 @@ int truncate|truncate64(const char*, off_t) arm64,x86_64
 # (mmap only gets two lines because we only used the 64-bit variant on 32-bit systems.)
 void* __mmap2:mmap2(void*, size_t, int, int, int, long)   arm,mips,x86
 void* mmap|mmap64(void*, size_t, int, int, int, off_t)  arm64,x86_64
+# (fallocate only gets two lines because there is no 32-bit variant.)
+int fallocate64:fallocate(int, int, off64_t, off64_t) arm,mips,x86
+int fallocate|fallocate64(int, int, off_t, off_t) arm64,x86_64
 
 # file system
 int     chdir(const char*)              all

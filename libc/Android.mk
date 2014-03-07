@@ -232,6 +232,7 @@ libc_bionic_src_files := \
     bionic/pause.cpp \
     bionic/pipe.cpp \
     bionic/poll.cpp \
+    bionic/posix_fallocate.cpp \
     bionic/pthread_atfork.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_cond.cpp \
