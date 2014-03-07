@@ -187,17 +187,17 @@ size_t linker_get_error_buffer_size() {
  */
 extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
 
-static r_debug _r_debug = {1, NULL, &rtld_db_dlactivity, RT_CONSISTENT, 0};
-static link_map_t* r_debug_tail = 0;
+static r_debug _r_debug = {1, NULL, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
+static link_map* r_debug_tail = 0;
 
 static pthread_mutex_t gDebugMutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void insert_soinfo_into_debug_map(soinfo * info) {
+static void insert_soinfo_into_debug_map(soinfo* info) {
     // Copy the necessary fields into the debug structure.
-    link_map_t* map = &(info->link_map);
+    link_map* map = &(info->link_map_head);
     map->l_addr = info->load_bias;
     map->l_name = (char*) info->name;
-    map->l_ld = (uintptr_t)info->dynamic;
+    map->l_ld = info->dynamic;
 
     /* Stick the new library at the end of the list.
      * gdb tends to care more about libc than it does
@@ -217,7 +217,7 @@ static void insert_soinfo_into_debug_map(soinfo * info) {
 }
 
 static void remove_soinfo_from_debug_map(soinfo* info) {
-    link_map_t* map = &(info->link_map);
+    link_map* map = &(info->link_map_head);
 
     if (r_debug_tail == map) {
         r_debug_tail = map->l_prev;
@@ -239,12 +239,12 @@ static void notify_gdb_of_load(soinfo* info) {
 
     ScopedPthreadMutexLocker locker(&gDebugMutex);
 
-    _r_debug.r_state = RT_ADD;
+    _r_debug.r_state = r_debug::RT_ADD;
     rtld_db_dlactivity();
 
     insert_soinfo_into_debug_map(info);
 
-    _r_debug.r_state = RT_CONSISTENT;
+    _r_debug.r_state = r_debug::RT_CONSISTENT;
     rtld_db_dlactivity();
 }
 
@@ -256,20 +256,20 @@ static void notify_gdb_of_unload(soinfo* info) {
 
     ScopedPthreadMutexLocker locker(&gDebugMutex);
 
-    _r_debug.r_state = RT_DELETE;
+    _r_debug.r_state = r_debug::RT_DELETE;
     rtld_db_dlactivity();
 
     remove_soinfo_from_debug_map(info);
 
-    _r_debug.r_state = RT_CONSISTENT;
+    _r_debug.r_state = r_debug::RT_CONSISTENT;
     rtld_db_dlactivity();
 }
 
 void notify_gdb_of_libraries() {
-    _r_debug.r_state = RT_ADD;
-    rtld_db_dlactivity();
-    _r_debug.r_state = RT_CONSISTENT;
-    rtld_db_dlactivity();
+  _r_debug.r_state = r_debug::RT_ADD;
+  rtld_db_dlactivity();
+  _r_debug.r_state = r_debug::RT_CONSISTENT;
+  rtld_db_dlactivity();
 }
 
 static bool ensure_free_list_non_empty() {
@@ -439,8 +439,8 @@ dl_iterate_phdr(int (*cb)(dl_phdr_info *info, size_t size, void *data),
     int rv = 0;
     for (soinfo* si = solist; si != NULL; si = si->next) {
         dl_phdr_info dl_info;
-        dl_info.dlpi_addr = si->link_map.l_addr;
-        dl_info.dlpi_name = si->link_map.l_name;
+        dl_info.dlpi_addr = si->link_map_head.l_addr;
+        dl_info.dlpi_name = si->link_map_head.l_name;
         dl_info.dlpi_phdr = si->phdr;
         dl_info.dlpi_phnum = si->phnum;
         rv = cb(&dl_info, sizeof(dl_phdr_info), data);
@@ -2038,7 +2038,7 @@ static Elf_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf_Add
 
     /* bootstrap the link map, the main exe always needs to be first */
     si->flags |= FLAG_EXE;
-    link_map_t* map = &(si->link_map);
+    link_map* map = &(si->link_map_head);
 
     map->l_addr = 0;
     map->l_name = args.argv[0];
