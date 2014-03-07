@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fcce5d4a_80166630",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:21:01Z",
+      "side": 1,
+      "message": "suggestion: bool joinable;",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_201bf25a",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:21:01Z",
+      "side": 1,
+      "message": "\u003e did you actually have this problem? is that how you found the bugs in the original implementation?\n\nWe had an application with a library that \u0027suddenly\u0027 was using a SIGEV_THREAD timer for timeouts. That timer was deleted in a destructor, which was called when the child exited (using exit(), not _exit()). And that\u0027s where we got the deadlock in the old implementation.\n\nSince it happened based on a race, it was hard to reproduce and debug.\n\nSomething that would happily delete a timer that the new process has created could\u0027ve made the problem even harder to find.\n\nSo if it\u0027s possible to ensure that all inherited timer_t:s yield EINVAL without unreasonable cost, that\u0027d probably be a good idea. IMHO.",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c348108_8aebcf5e",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 8
@@ -42,6 +76,40 @@
         "endLine": 88,
         "endChar": 48
       },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_3fe8ef20",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:21:01Z",
+      "side": 1,
+      "message": "I disagree with this interpretation of POSIX. I interpret it as saying that *user* can\u0027t join it, but that the user gets to choose which type of thread it will be.",
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dccb593b_ffe90724",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:21:01Z",
+      "side": 1,
+      "message": "...so we should either pthread_join or do nothing here (depending on if the thread is JOINABLE or DETACHED).",
       "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -111,6 +179,23 @@
         "endLine": 179,
         "endChar": 55
       },
+      "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcce5d4a_6011fa38",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1041495
+      },
+      "writtenOn": "2014-03-07T08:21:01Z",
+      "side": 1,
+      "message": "How about just letting the thread free the timer instead?",
       "revId": "f0dcd010b25ba1aacdab375ad6717fb34bcee8ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
