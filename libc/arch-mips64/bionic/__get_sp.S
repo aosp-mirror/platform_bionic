@@ -25,15 +25,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
 
-/* void *__get_sp(void) */
+#include <private/bionic_asm.h>
 
-	.type	__get_sp, @function
-	.global	__get_sp
-	.align	4
-	.ent	__get_sp
-__get_sp:
-	move	$v0, $sp
-	j	$ra
-	.end	__get_sp
+ENTRY(__get_sp)
+  move v0, sp
+  j ra
+END(__get_sp)

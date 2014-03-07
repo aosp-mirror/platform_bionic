@@ -29,20 +29,32 @@
 #ifndef _PRIVATE_BIONIC_ASM_H_
 #define _PRIVATE_BIONIC_ASM_H_
 
-#include <machine/asm.h>
-
 #include <asm/unistd.h> /* For system call numbers. */
 #define MAX_ERRNO 4095  /* For recognizing system call error returns. */
 
-#if __mips__
-/* mips/mips64 don't have ENTRY like the others. */
-#define ENTRY(f) .text; .globl f; .align 4; .type f, @function; .ent f; f: .cfi_startproc
-/* mips/mips64 do have END, but we want a better one, more like the others. */
-#undef END
-#define END(f) .cfi_endproc; .size f, .-f; .end f
-#endif
+#define __bionic_asm_custom_entry(f)
+#define __bionic_asm_custom_end(f)
+#define __bionic_asm_function_type @function
 
-/* TODO: add ENTRY_PRIVATE. */
-/* TODO: add ASM_ALIAS macro. */
+#include <machine/asm.h>
+
+#define ENTRY(f) \
+    .text; \
+    .globl f; \
+    _ALIGN_TEXT; \
+    .type f, __bionic_asm_function_type; \
+    f: \
+    __bionic_asm_custom_entry(f); \
+    .cfi_startproc \
+
+#define END(f) \
+    .cfi_endproc; \
+    .size f, .-f; \
+    __bionic_asm_custom_end(f) \
+
+/* Like ENTRY, but with hidden visibility. */
+#define ENTRY_PRIVATE(f) \
+    ENTRY(f); \
+    .hidden f \
 
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

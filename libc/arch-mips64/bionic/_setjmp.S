@@ -2,7 +2,7 @@
 
 /*
  * Copyright (c) 2002 Opsycon AB  (www.opsycon.se / www.opsycon.com)
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -29,7 +29,7 @@
  *
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/regnum.h>
 #include <machine/signal.h>
 
@@ -48,13 +48,13 @@ GPOFF= FRAMESZ-2*REGSZ
         swc1    FPR, OFF(BASE)  ;       \
         mfhc1   t0, FPR         ;       \
         sw      t0, OFF+4(BASE) ;
-        
+
 #define FPREG64_L(FPR, OFF, BASE)       \
         lw      t0, OFF+4(BASE) ;       \
         lw      t1, OFF(BASE)   ;       \
         mtc1    t1, FPR         ;       \
         mthc1   t0, FPR         ;       \
-        
+
 LEAF(_setjmp, FRAMESZ)
 	PTR_SUBU sp, FRAMESZ
 	SETUP_GP64(GPOFF, _setjmp)
@@ -185,4 +185,3 @@ botch:
 	RESTORE_GP64
 	PTR_ADDU sp, FRAMESZ
 END(_longjmp)
-

@@ -30,7 +30,7 @@
  */
 
 #include <machine/cpu-features.h>
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 ENTRY(strcpy)
 	pld	[r1, #0]

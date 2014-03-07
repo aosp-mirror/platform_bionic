@@ -26,9 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/cpu-features.h>
-#include <machine/asm.h>
-#include "private/libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
 /*
  * This code assumes it is running on a processor that supports all arm v7

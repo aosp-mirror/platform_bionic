@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 
 /*
  * Coding the abort function in assembly so that registers are guaranteed to

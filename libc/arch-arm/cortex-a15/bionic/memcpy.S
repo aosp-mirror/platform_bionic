@@ -55,8 +55,8 @@
 
 // Prototype: void *memcpy (void *dst, const void *src, size_t count).
 
-#include <machine/asm.h>
-#include "private/libc_events.h"
+#include <private/bionic_asm.h>
+#include <private/libc_events.h>
 
         .text
         .syntax unified

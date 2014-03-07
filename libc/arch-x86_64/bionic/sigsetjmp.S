@@ -37,7 +37,7 @@
  */
 
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <machine/setjmp.h>
 
 /*

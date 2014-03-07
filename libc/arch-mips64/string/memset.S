@@ -39,12 +39,12 @@
  *  Include files
  ************************************************************************/
 
-#include "machine/asm.h"
+#include <private/bionic_asm.h>
 
-/* 
+/*
  * This routine could be optimized for MIPS64. The current code only
  * uses MIPS32 instructions.
- */	
+ */
 
 #if defined(__MIPSEB__)
 #  define SWHI	swl		/* high part is left in big-endian	*/
@@ -220,7 +220,7 @@ LEAF(memset,0)
 	sw	a1,-36(a0)
 	nop
 	nop			# the extra nop instructions help to balance
-	nop			# cycles needed for "store" + "fill" + "evict" 
+	nop			# cycles needed for "store" + "fill" + "evict"
 	nop			# For 64byte store there are needed 8 fill
 	nop			# and 8 evict cycles, i.e. at least 32 instr.
 	nop
@@ -320,4 +320,3 @@ END(memset)
 /************************************************************************
  *  Implementation : Static functions
  ************************************************************************/
-
