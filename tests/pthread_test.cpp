@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
+#include <malloc.h>
 #include <pthread.h>
 #include <signal.h>
 #include <sys/mman.h>
@@ -348,6 +349,35 @@ TEST(pthread, pthread_detach__no_such_thread) {
   MakeDeadThread(dead_thread);
 
   ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
+}
+
+TEST(pthread, pthread_detach__leak) {
+  size_t initial_bytes = mallinfo().uordblks;
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
+
+  std::vector<pthread_t> threads;
+  for (size_t i = 0; i < 32; ++i) {
+    pthread_t t;
+    ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, NULL));
+    threads.push_back(t);
+  }
+
+  sleep(1);
+
+  for (size_t i = 0; i < 32; ++i) {
+    ASSERT_EQ(0, pthread_detach(threads[i])) << i;
+  }
+
+  size_t final_bytes = mallinfo().uordblks;
+
+  int leaked_bytes = (final_bytes - initial_bytes);
+
+  // User code (like this test) doesn't know how large pthread_internal_t is.
+  // We can be pretty sure it's more than 128 bytes.
+  ASSERT_LT(leaked_bytes, 32 /*threads*/ * 128 /*bytes*/);
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
