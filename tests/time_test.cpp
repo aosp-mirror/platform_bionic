@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-#include <sys/cdefs.h>
+#include <time.h>
+
+#include <errno.h>
 #include <features.h>
 #include <gtest/gtest.h>
+#include <signal.h>
 
-#include <time.h>
+#include "ScopedSignalHandler.h"
 
 #if defined(__BIONIC__) // mktime_tz is a bionic extension.
 #include <libc/private/bionic_time.h>
@@ -91,4 +94,209 @@ TEST(time, mktime_10310929) {
   ASSERT_EQ(static_cast<time_t>(4108348800U), mktime_tz(&t, "America/Los_Angeles"));
 #endif
 #endif
+}
+
+void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
+  itimerspec ts;
+  ts.it_value.tv_sec = value_s;
+  ts.it_value.tv_nsec = value_ns;
+  ts.it_interval.tv_sec = interval_s;
+  ts.it_interval.tv_nsec = interval_ns;
+  ASSERT_EQ(0, timer_settime(t, TIMER_ABSTIME, &ts, NULL));
+}
+
+static void NoOpNotifyFunction(sigval_t) {
+}
+
+TEST(time, timer_create) {
+  sigevent_t se;
+  memset(&se, 0, sizeof(se));
+  se.sigev_notify = SIGEV_THREAD;
+  se.sigev_notify_function = NoOpNotifyFunction;
+  timer_t timer_id;
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
+
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    // Timers are not inherited by the child.
+    ASSERT_EQ(-1, timer_delete(timer_id));
+    ASSERT_EQ(EINVAL, errno);
+    _exit(0);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
+
+  ASSERT_EQ(0, timer_delete(timer_id));
+}
+
+static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
+static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
+  ++timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
+  ASSERT_EQ(SIGUSR1, signal_number);
+}
+
+TEST(time, timer_create_SIGEV_SIGNAL) {
+  sigevent_t se;
+  memset(&se, 0, sizeof(se));
+  se.sigev_notify = SIGEV_SIGNAL;
+  se.sigev_signo = SIGUSR1;
+
+  timer_t timer_id;
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
+
+  ScopedSignalHandler ssh(SIGUSR1, timer_create_SIGEV_SIGNAL_signal_handler);
+
+  ASSERT_EQ(0, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
+
+  itimerspec ts;
+  ts.it_value.tv_sec =  0;
+  ts.it_value.tv_nsec = 1;
+  ts.it_interval.tv_sec = 0;
+  ts.it_interval.tv_nsec = 0;
+  ASSERT_EQ(0, timer_settime(timer_id, TIMER_ABSTIME, &ts, NULL));
+
+  usleep(500000);
+  ASSERT_EQ(1, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
+}
+
+struct Counter {
+  volatile int value;
+  timer_t timer_id;
+  sigevent_t se;
+
+  Counter(void (*fn)(sigval_t)) : value(0) {
+    memset(&se, 0, sizeof(se));
+    se.sigev_notify = SIGEV_THREAD;
+    se.sigev_notify_function = fn;
+    se.sigev_value.sival_ptr = this;
+  }
+
+  void Create() {
+    ASSERT_EQ(0, timer_create(CLOCK_REALTIME, &se, &timer_id));
+  }
+
+  ~Counter() {
+    if (timer_delete(timer_id) != 0) {
+      abort();
+    }
+  }
+
+  static void CountNotifyFunction(sigval_t value) {
+    Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
+    ++cd->value;
+  }
+
+  static void CountAndDisarmNotifyFunction(sigval_t value) {
+    Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
+    ++cd->value;
+
+    // Setting the initial expiration time to 0 disarms the timer.
+    SetTime(cd->timer_id, 0, 0, 1, 0);
+  }
+};
+
+TEST(time, timer_settime_0) {
+  Counter counter(Counter::CountAndDisarmNotifyFunction);
+  counter.Create();
+
+  ASSERT_EQ(0, counter.value);
+
+  SetTime(counter.timer_id, 0, 1, 1, 0);
+  usleep(500000);
+
+  // The count should just be 1 because we disarmed the timer the first time it fired.
+  ASSERT_EQ(1, counter.value);
+}
+
+TEST(time, timer_settime_repeats) {
+  Counter counter(Counter::CountNotifyFunction);
+  counter.Create();
+
+  ASSERT_EQ(0, counter.value);
+
+  SetTime(counter.timer_id, 0, 1, 0, 10);
+  usleep(500000);
+
+  // The count should just be > 1 because we let the timer repeat.
+  ASSERT_GT(counter.value, 1);
+}
+
+static int timer_create_NULL_signal_handler_invocation_count = 0;
+static void timer_create_NULL_signal_handler(int signal_number) {
+  ++timer_create_NULL_signal_handler_invocation_count;
+  ASSERT_EQ(SIGALRM, signal_number);
+}
+
+TEST(time, timer_create_NULL) {
+  // A NULL sigevent* is equivalent to asking for SIGEV_SIGNAL for SIGALRM.
+  timer_t timer_id;
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
+
+  ScopedSignalHandler ssh(SIGALRM, timer_create_NULL_signal_handler);
+
+  ASSERT_EQ(0, timer_create_NULL_signal_handler_invocation_count);
+
+  SetTime(timer_id, 0, 1, 0, 0);
+  usleep(500000);
+
+  ASSERT_EQ(1, timer_create_NULL_signal_handler_invocation_count);
+}
+
+TEST(time, timer_create_EINVAL) {
+  clockid_t invalid_clock = 16;
+
+  // A SIGEV_SIGNAL timer is easy; the kernel does all that.
+  timer_t timer_id;
+  ASSERT_EQ(-1, timer_create(invalid_clock, NULL, &timer_id));
+  ASSERT_EQ(EINVAL, errno);
+
+  // A SIGEV_THREAD timer is more interesting because we have stuff to clean up.
+  sigevent_t se;
+  memset(&se, 0, sizeof(se));
+  se.sigev_notify = SIGEV_THREAD;
+  se.sigev_notify_function = NoOpNotifyFunction;
+  ASSERT_EQ(-1, timer_create(invalid_clock, &se, &timer_id));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(time, timer_delete_multiple) {
+  timer_t timer_id;
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
+  ASSERT_EQ(0, timer_delete(timer_id));
+  ASSERT_EQ(-1, timer_delete(timer_id));
+  ASSERT_EQ(EINVAL, errno);
+
+  sigevent_t se;
+  memset(&se, 0, sizeof(se));
+  se.sigev_notify = SIGEV_THREAD;
+  se.sigev_notify_function = NoOpNotifyFunction;
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
+  ASSERT_EQ(0, timer_delete(timer_id));
+  ASSERT_EQ(-1, timer_delete(timer_id));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(time, timer_create_multiple) {
+  Counter counter1(Counter::CountNotifyFunction);
+  counter1.Create();
+  Counter counter2(Counter::CountNotifyFunction);
+  counter2.Create();
+  Counter counter3(Counter::CountNotifyFunction);
+  counter3.Create();
+
+  ASSERT_EQ(0, counter1.value);
+  ASSERT_EQ(0, counter2.value);
+  ASSERT_EQ(0, counter3.value);
+
+  SetTime(counter2.timer_id, 0, 1, 0, 0);
+  usleep(500000);
+
+  EXPECT_EQ(0, counter1.value);
+  EXPECT_EQ(1, counter2.value);
+  EXPECT_EQ(0, counter3.value);
 }
