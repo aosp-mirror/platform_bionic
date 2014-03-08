@@ -20,6 +20,8 @@
 #include <features.h>
 #include <gtest/gtest.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "ScopedSignalHandler.h"
 
