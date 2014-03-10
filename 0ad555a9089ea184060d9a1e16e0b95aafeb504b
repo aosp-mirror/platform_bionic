@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcce5d4a_1bed07e3",
+        "filename": "libc/dns/resolv/res_debug.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-10T11:20:06Z",
+      "side": 1,
+      "message": "We should also define RES_NSID here and return \"nsid\" as the upstream does but to do so the changes extends to a few more files that includes https://android-review.googlesource.com/#/c/82360. So I think it\u0027s best to include them in another CL.",
+      "range": {
+        "startLine": 691,
+        "startChar": 34,
+        "endLine": 691,
+        "endChar": 36
+      },
+      "revId": "0ad555a9089ea184060d9a1e16e0b95aafeb504b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
