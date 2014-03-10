@@ -44,9 +44,6 @@
 #define	LONGLONG_MAX	9223372036854775807LL
 #define	ULONGLONG_MAX	18446744073709551615ULL
 
-#ifndef	SIZE_MAX
-#define	SIZE_MAX	ULONGLONG_MAX	/* max value for a size_t */
-#endif
 #ifndef SSIZE_MAX
 #define	SSIZE_MAX	LONGLONG_MAX		/* max value for a ssize_t */
 #endif

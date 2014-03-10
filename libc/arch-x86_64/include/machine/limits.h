@@ -37,9 +37,6 @@
 #include <sys/cdefs.h>
 
 #if __POSIX_VISIBLE || __XPG_VISIBLE
-#ifndef	SIZE_MAX
-#define SIZE_MAX	ULONG_MAX	/* max value for a size_t */
-#endif
 #define SSIZE_MAX	LONG_MAX	/* max value for a ssize_t */
 #endif
 
