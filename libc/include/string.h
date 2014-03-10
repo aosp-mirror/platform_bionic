@@ -42,7 +42,6 @@ extern void*  memcpy(void* __restrict, const void* __restrict, size_t);
 extern void*  memmove(void *, const void *, size_t);
 extern void*  memset(void *, int, size_t);
 extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
-extern void   memswap(void *, void *, size_t);
 
 extern char*  index(const char *, int) __purefunc;
 extern char*  strchr(const char *, int) __purefunc;

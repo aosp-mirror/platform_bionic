@@ -59,4 +59,18 @@ extern "C" void** __get_tls() {
   return __get_tls();
 }
 
+// This non-standard function was in our <string.h> for some reason.
+extern "C" void memswap(void* m1, void* m2, size_t n) {
+  char* p = reinterpret_cast<char*>(m1);
+  char* p_end = p + n;
+  char* q = reinterpret_cast<char*>(m2);
+  while (p < p_end) {
+    char tmp = *p;
+    *p = *q;
+    *q = tmp;
+    p++;
+    q++;
+  }
+}
+
 #endif
