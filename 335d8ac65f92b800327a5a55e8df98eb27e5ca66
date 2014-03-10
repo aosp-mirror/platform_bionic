@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcf7d997_e5671a7c",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-10T19:25:37Z",
+      "side": 1,
+      "message": "we can. we just choose not to.\n\ni think if you want a comment, \"// Removed in POSIX 2008.\" is probably the best.\n\nbut i think i was wrong about 0 being the right value. i now think -1 *without setting errno* is the right behavior. the POSIX documentation is vague enough i think you could interpret it either way, but there are hints in there that there\u0027s more to the story, and the linux manual page seems to specifically and clearly distinguish options (like this) from limits.",
+      "revId": "335d8ac65f92b800327a5a55e8df98eb27e5ca66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
