@@ -84,7 +84,6 @@ libc_common_src_files := \
     bionic/umount.c \
     bionic/unlockpt.c \
     bionic/utmp.c \
-    bionic/wcscoll.c \
     stdio/asprintf.c \
     stdio/findfp.c \
     stdio/fprintf.c \
@@ -322,6 +321,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/setprogname.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
+    upstream-openbsd/lib/libc/locale/wcscoll.c \
     upstream-openbsd/lib/libc/string/strstr.c \
     upstream-openbsd/lib/libc/string/strsep.c \
     upstream-openbsd/lib/libc/string/wcslcpy.c \
