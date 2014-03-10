@@ -12,9 +12,10 @@
  */
 
 #include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
 
 #include <sys/types.h>
-#include <endian.h>
+#include <machine/endian.h>
 #include <math.h>
 
 /* Bit fiddling routines copied from msun/src/math_private.h,v 1.15 */
