@@ -61,7 +61,6 @@ libc_common_src_files := \
     bionic/ldexp.c \
     bionic/md5.c \
     bionic/memmem.c \
-    bionic/memswap.c \
     bionic/pathconf.c \
     bionic/ptsname.c \
     bionic/ptsname_r.c \
