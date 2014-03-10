@@ -82,7 +82,6 @@ libc_common_src_files := \
     bionic/time64.c \
     bionic/umount.c \
     bionic/unlockpt.c \
-    bionic/utmp.c \
     stdio/asprintf.c \
     stdio/findfp.c \
     stdio/fprintf.c \
@@ -279,6 +278,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/gen/psignal.c \
     upstream-netbsd/lib/libc/gen/setjmperr.c \
     upstream-netbsd/lib/libc/gen/utime.c \
+    upstream-netbsd/lib/libc/gen/utmp.c \
     upstream-netbsd/lib/libc/inet/inet_ntoa.c \
     upstream-netbsd/lib/libc/inet/inet_ntop.c \
     upstream-netbsd/lib/libc/inet/inet_pton.c \
