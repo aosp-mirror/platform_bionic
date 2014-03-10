@@ -58,7 +58,6 @@ libc_common_src_files := \
     bionic/ioctl.c \
     bionic/isatty.c \
     bionic/issetugid.c \
-    bionic/ldexp.c \
     bionic/md5.c \
     bionic/memmem.c \
     bionic/pathconf.c \
@@ -230,6 +229,7 @@ libc_bionic_src_files := \
     bionic/wchar.cpp \
 
 libc_upstream_freebsd_src_files := \
+    upstream-freebsd/lib/libc/gen/ldexp.c \
     upstream-freebsd/lib/libc/gen/sleep.c \
     upstream-freebsd/lib/libc/gen/usleep.c \
     upstream-freebsd/lib/libc/stdio/fclose.c \
