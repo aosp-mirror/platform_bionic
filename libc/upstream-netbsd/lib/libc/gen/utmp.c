@@ -1,3 +1,5 @@
+/*	$NetBSD: utmp.c,v 1.10 2011/10/15 23:00:02 christos Exp $	 */
+
 /*-
  * Copyright (c) 2002 The NetBSD Foundation, Inc.
  * All rights reserved.
@@ -13,13 +15,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *        This product includes software developed by the NetBSD
- *        Foundation, Inc. and its contributors.
- * 4. Neither the name of The NetBSD Foundation nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -35,12 +30,18 @@
  */
 #include <sys/cdefs.h>
 
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: utmp.c,v 1.10 2011/10/15 23:00:02 christos Exp $");
+#endif /* LIBC_SCCS and not lint */
+
+#include "namespace.h"
 #include <sys/types.h>
 #include <sys/param.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <utmp.h>
+#include <sys/stat.h>
 
 static struct utmp utmp;
 static FILE *ut;
@@ -58,11 +59,23 @@ struct utmp *
 getutent(void)
 {
 	if (ut == NULL) {
-		if ((ut = fopen(utfile, "r")) == NULL)
+		struct stat st;
+		off_t numentries;
+		if ((ut = fopen(utfile, "re")) == NULL)
 			return NULL;
+		if (fstat(fileno(ut), &st) == -1)
+			goto out;
+		/*
+		 * If we have a an old version utmp file bail.
+		 */
+		numentries = st.st_size / sizeof(utmp);
+		if ((off_t)(numentries * sizeof(utmp)) != st.st_size)
+			goto out;
 	}
 	if (fread(&utmp, sizeof(utmp), 1, ut) == 1)
 		return &utmp;
+out:
+	(void)fclose(ut);
 	return NULL;
 }
 
