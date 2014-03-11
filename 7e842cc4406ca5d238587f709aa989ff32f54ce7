@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c2ba1c2_f7cd02fe",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T18:04:39Z",
+      "side": 1,
+      "message": "can we just replace __uint32_t with uint32_t (et cetera) in this file instead?",
+      "revId": "7e842cc4406ca5d238587f709aa989ff32f54ce7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
