@@ -96,7 +96,6 @@ libc_common_src_files := \
     stdlib/setenv.c \
     stdlib/strtod.c \
     unistd/syslog.c \
-    unistd/time.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
@@ -125,6 +124,7 @@ libc_bionic_src_files := \
     bionic/brk.cpp \
     bionic/chmod.cpp \
     bionic/chown.cpp \
+    bionic/clock.cpp \
     bionic/clone.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
@@ -319,6 +319,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/ftok.c \
     upstream-openbsd/lib/libc/gen/getprogname.c \
     upstream-openbsd/lib/libc/gen/setprogname.c \
+    upstream-openbsd/lib/libc/gen/time.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
     upstream-openbsd/lib/libc/locale/wcscoll.c \
