@@ -96,9 +96,6 @@ int pthread_condattr_setclock(pthread_condattr_t* attr, clockid_t clock) {
 }
 
 int pthread_condattr_destroy(pthread_condattr_t* attr) {
-  if (attr == NULL) {
-    return EINVAL;
-  }
   *attr = 0xdeada11d;
   return 0;
 }
@@ -112,10 +109,6 @@ int pthread_condattr_destroy(pthread_condattr_t* attr) {
 // XXX then the signal will be lost.
 
 int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
-  if (cond == NULL) {
-    return EINVAL;
-  }
-
   if (attr != NULL) {
     cond->value = (*attr & COND_FLAGS_MASK);
   } else {
@@ -126,10 +119,6 @@ int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
 }
 
 int pthread_cond_destroy(pthread_cond_t* cond) {
-  if (cond == NULL) {
-    return EINVAL;
-  }
-
   cond->value = 0xdeadc04d;
   return 0;
 }
@@ -138,10 +127,6 @@ int pthread_cond_destroy(pthread_cond_t* cond) {
 // pthread_cond_signal to atomically decrement the counter
 // then wake up 'counter' threads.
 static int __pthread_cond_pulse(pthread_cond_t* cond, int counter) {
-  if (__predict_false(cond == NULL)) {
-    return EINVAL;
-  }
-
   int flags = (cond->value & COND_FLAGS_MASK);
   while (true) {
     int old_value = cond->value;

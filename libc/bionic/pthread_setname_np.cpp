@@ -46,10 +46,6 @@
 int pthread_setname_np(pthread_t t, const char* thread_name) {
   ErrnoRestorer errno_restorer;
 
-  if (thread_name == NULL) {
-    return EINVAL;
-  }
-
   size_t thread_name_len = strlen(thread_name);
   if (thread_name_len >= MAX_TASK_COMM_LEN) {
     return ERANGE;
