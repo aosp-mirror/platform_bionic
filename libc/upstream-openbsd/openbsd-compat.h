@@ -18,5 +18,6 @@
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
 #define _GNU_SOURCE
+#define __USE_BSD
 
 #endif

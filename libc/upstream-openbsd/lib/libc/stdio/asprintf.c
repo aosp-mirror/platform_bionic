@@ -1,4 +1,4 @@
-/*	$OpenBSD: asprintf.c,v 1.15 2005/10/10 12:00:52 espie Exp $	*/
+/*	$OpenBSD: asprintf.c,v 1.19 2011/05/30 18:48:33 martynas Exp $	*/
 
 /*
  * Copyright (c) 1997 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -23,14 +23,17 @@
 #include <stdarg.h>
 #include "local.h"
 
+/* PRINTFLIKE2 */
 int
 asprintf(char **str, const char *fmt, ...)
 {
 	int ret;
 	va_list ap;
 	FILE f;
+	struct __sfileext fext;
 	unsigned char *_base;
 
+	_FILEEXT_SETUP(&f, &fext);
 	f._file = -1;
 	f._flags = __SWR | __SSTR | __SALC;
 	f._bf._base = f._p = (unsigned char *)malloc(128);
@@ -50,7 +53,10 @@ asprintf(char **str, const char *fmt, ...)
 	return (ret);
 
 err:
-	free(f._bf._base);
+	if (f._bf._base) {
+		free(f._bf._base);
+		f._bf._base = NULL;
+	}
 	*str = NULL;
 	errno = ENOMEM;
 	return (-1);
