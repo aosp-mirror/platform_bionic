@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c2ba1c2_c01c72fb",
+        "filename": "libc/bionic/clock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T21:27:43Z",
+      "side": 1,
+      "message": "This makes me a bit nervous, but currently _SC_CLK_TCK divides evenly into CLOCKS_PER_SEC so it\u0027s not a problem. If it didn\u0027t, it would probably make sense to convert this value to a double.",
+      "range": {
+        "startLine": 37,
+        "startChar": 40,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "cccfe1e17c47799deee67fa23f48d8c860390ac8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
