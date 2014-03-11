@@ -25,6 +25,7 @@
 #define __type_fit(t, a) (0 == 0)
 
 #define _GNU_SOURCE
+#define __USE_BSD
 
 // TODO: we don't yet have thread-safe environment variables.
 #define __readlockenv() 0
