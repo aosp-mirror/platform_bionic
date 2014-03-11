@@ -1,4 +1,4 @@
-/*	$OpenBSD: freopen.c,v 1.9 2005/08/08 08:05:36 espie Exp $ */
+/*	$OpenBSD: freopen.c,v 1.13 2009/11/09 00:18:27 kurt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -31,19 +31,18 @@
  * SUCH DAMAGE.
  */
 
-#define __USE_BSD
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <limits.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "local.h"
 
-/*
- * Re-direct an existing, open (probably) file to some other file.
+/* 
+ * Re-direct an existing, open (probably) file to some other file. 
  * ANSI is written such that the original file gets closed if at
  * all possible, no matter what.
  */
@@ -139,6 +138,14 @@ freopen(const char *file, const char *mode, FILE *fp)
 			(void) close(f);
 			f = wantfd;
 		}
+	}
+
+	/* _file is only a short */
+	if (f > SHRT_MAX) {
+		fp->_flags = 0;		/* set it free */
+		FUNLOCKFILE(fp);
+		errno = EMFILE;
+		return (NULL);
 	}
 
 	fp->_flags = flags;

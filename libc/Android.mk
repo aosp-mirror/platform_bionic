@@ -77,11 +77,8 @@ libc_common_src_files := \
     bionic/tcsetpgrp.c \
     bionic/time64.c \
     bionic/unlockpt.c \
-    stdio/asprintf.c \
     stdio/findfp.c \
-    stdio/fprintf.c \
     stdio/fread.c \
-    stdio/freopen.c \
     stdio/fvwrite.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
@@ -323,74 +320,77 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
     upstream-openbsd/lib/libc/locale/wcscoll.c \
-    upstream-openbsd/lib/libc/string/strstr.c \
-    upstream-openbsd/lib/libc/string/strsep.c \
-    upstream-openbsd/lib/libc/string/wcslcpy.c \
-    upstream-openbsd/lib/libc/string/strcasecmp.c \
-    upstream-openbsd/lib/libc/string/strdup.c \
-    upstream-openbsd/lib/libc/string/strcspn.c \
-    upstream-openbsd/lib/libc/string/strtok.c \
-    upstream-openbsd/lib/libc/string/strpbrk.c \
-    upstream-openbsd/lib/libc/string/strspn.c \
-    upstream-openbsd/lib/libc/string/wcswidth.c \
-    upstream-openbsd/lib/libc/string/strndup.c \
-    upstream-openbsd/lib/libc/stdio/ungetc.c \
-    upstream-openbsd/lib/libc/stdio/vsnprintf.c \
-    upstream-openbsd/lib/libc/stdio/tmpnam.c \
-    upstream-openbsd/lib/libc/stdio/setbuffer.c \
-    upstream-openbsd/lib/libc/stdio/fsetpos.c \
-    upstream-openbsd/lib/libc/stdio/setbuf.c \
-    upstream-openbsd/lib/libc/stdio/vprintf.c \
-    upstream-openbsd/lib/libc/stdio/perror.c \
-    upstream-openbsd/lib/libc/stdio/remove.c \
-    upstream-openbsd/lib/libc/stdio/getc.c \
-    upstream-openbsd/lib/libc/stdio/funopen.c \
-    upstream-openbsd/lib/libc/stdio/ferror.c \
-    upstream-openbsd/lib/libc/stdio/putchar.c \
-    upstream-openbsd/lib/libc/stdio/vscanf.c \
-    upstream-openbsd/lib/libc/stdio/fflush.c \
-    upstream-openbsd/lib/libc/stdio/fpurge.c \
-    upstream-openbsd/lib/libc/stdio/fputs.c \
-    upstream-openbsd/lib/libc/stdio/tempnam.c \
-    upstream-openbsd/lib/libc/stdio/printf.c \
-    upstream-openbsd/lib/libc/stdio/fileno.c \
-    upstream-openbsd/lib/libc/stdio/stdio.c \
-    upstream-openbsd/lib/libc/stdio/getdelim.c \
-    upstream-openbsd/lib/libc/stdio/fseek.c \
-    upstream-openbsd/lib/libc/stdio/fputc.c \
-    upstream-openbsd/lib/libc/stdio/fgetln.c \
-    upstream-openbsd/lib/libc/stdio/fdopen.c \
-    upstream-openbsd/lib/libc/stdio/fgets.c \
-    upstream-openbsd/lib/libc/stdio/fgetc.c \
-    upstream-openbsd/lib/libc/stdio/feof.c \
-    upstream-openbsd/lib/libc/stdio/vasprintf.c \
-    upstream-openbsd/lib/libc/stdio/refill.c \
-    upstream-openbsd/lib/libc/stdio/getline.c \
-    upstream-openbsd/lib/libc/stdio/rewind.c \
-    upstream-openbsd/lib/libc/stdio/wbuf.c \
-    upstream-openbsd/lib/libc/stdio/gets.c \
-    upstream-openbsd/lib/libc/stdio/fgetpos.c \
-    upstream-openbsd/lib/libc/stdio/fscanf.c \
-    upstream-openbsd/lib/libc/stdio/putc.c \
-    upstream-openbsd/lib/libc/stdio/vsprintf.c \
-    upstream-openbsd/lib/libc/stdio/rget.c \
+    upstream-openbsd/lib/libc/locale/wcsxfrm.c \
+    upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
-    upstream-openbsd/lib/libc/stdio/scanf.c \
-    upstream-openbsd/lib/libc/stdio/puts.c \
-    upstream-openbsd/lib/libc/stdio/getchar.c \
+    upstream-openbsd/lib/libc/stdio/fdopen.c \
+    upstream-openbsd/lib/libc/stdio/feof.c \
+    upstream-openbsd/lib/libc/stdio/ferror.c \
+    upstream-openbsd/lib/libc/stdio/fflush.c \
+    upstream-openbsd/lib/libc/stdio/fgetc.c \
+    upstream-openbsd/lib/libc/stdio/fgetln.c \
+    upstream-openbsd/lib/libc/stdio/fgetpos.c \
+    upstream-openbsd/lib/libc/stdio/fgets.c \
+    upstream-openbsd/lib/libc/stdio/fileno.c \
+    upstream-openbsd/lib/libc/stdio/fprintf.c \
+    upstream-openbsd/lib/libc/stdio/fpurge.c \
+    upstream-openbsd/lib/libc/stdio/fputc.c \
+    upstream-openbsd/lib/libc/stdio/fputs.c \
+    upstream-openbsd/lib/libc/stdio/freopen.c \
+    upstream-openbsd/lib/libc/stdio/fscanf.c \
+    upstream-openbsd/lib/libc/stdio/fseek.c \
+    upstream-openbsd/lib/libc/stdio/fsetpos.c \
     upstream-openbsd/lib/libc/stdio/ftell.c \
+    upstream-openbsd/lib/libc/stdio/funopen.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
+    upstream-openbsd/lib/libc/stdio/getc.c \
+    upstream-openbsd/lib/libc/stdio/getchar.c \
+    upstream-openbsd/lib/libc/stdio/getdelim.c \
+    upstream-openbsd/lib/libc/stdio/getline.c \
+    upstream-openbsd/lib/libc/stdio/gets.c \
+    upstream-openbsd/lib/libc/stdio/perror.c \
+    upstream-openbsd/lib/libc/stdio/printf.c \
+    upstream-openbsd/lib/libc/stdio/putc.c \
+    upstream-openbsd/lib/libc/stdio/putchar.c \
+    upstream-openbsd/lib/libc/stdio/puts.c \
+    upstream-openbsd/lib/libc/stdio/refill.c \
+    upstream-openbsd/lib/libc/stdio/remove.c \
+    upstream-openbsd/lib/libc/stdio/rewind.c \
+    upstream-openbsd/lib/libc/stdio/rget.c \
+    upstream-openbsd/lib/libc/stdio/scanf.c \
+    upstream-openbsd/lib/libc/stdio/setbuf.c \
+    upstream-openbsd/lib/libc/stdio/setbuffer.c \
+    upstream-openbsd/lib/libc/stdio/stdio.c \
+    upstream-openbsd/lib/libc/stdio/tempnam.c \
+    upstream-openbsd/lib/libc/stdio/tmpnam.c \
+    upstream-openbsd/lib/libc/stdio/ungetc.c \
+    upstream-openbsd/lib/libc/stdio/vasprintf.c \
+    upstream-openbsd/lib/libc/stdio/vprintf.c \
+    upstream-openbsd/lib/libc/stdio/vscanf.c \
+    upstream-openbsd/lib/libc/stdio/vsnprintf.c \
+    upstream-openbsd/lib/libc/stdio/vsprintf.c \
+    upstream-openbsd/lib/libc/stdio/wbuf.c \
+    upstream-openbsd/lib/libc/stdlib/atoi.c \
+    upstream-openbsd/lib/libc/stdlib/atol.c \
+    upstream-openbsd/lib/libc/stdlib/atoll.c \
+    upstream-openbsd/lib/libc/stdlib/strtoimax.c \
+    upstream-openbsd/lib/libc/stdlib/strtol.c \
+    upstream-openbsd/lib/libc/stdlib/strtoll.c \
     upstream-openbsd/lib/libc/stdlib/strtoul.c \
     upstream-openbsd/lib/libc/stdlib/strtoull.c \
-    upstream-openbsd/lib/libc/stdlib/atoi.c \
-    upstream-openbsd/lib/libc/stdlib/atoll.c \
-    upstream-openbsd/lib/libc/stdlib/atol.c \
-    upstream-openbsd/lib/libc/stdlib/strtoimax.c \
     upstream-openbsd/lib/libc/stdlib/strtoumax.c \
-    upstream-openbsd/lib/libc/stdlib/strtoll.c \
-    upstream-openbsd/lib/libc/stdlib/strtol.c \
     upstream-openbsd/lib/libc/stdlib/system.c \
-    upstream-openbsd/lib/libc/locale/wcsxfrm.c \
+    upstream-openbsd/lib/libc/string/strcasecmp.c \
+    upstream-openbsd/lib/libc/string/strcspn.c \
+    upstream-openbsd/lib/libc/string/strdup.c \
+    upstream-openbsd/lib/libc/string/strndup.c \
+    upstream-openbsd/lib/libc/string/strpbrk.c \
+    upstream-openbsd/lib/libc/string/strsep.c \
+    upstream-openbsd/lib/libc/string/strspn.c \
+    upstream-openbsd/lib/libc/string/strstr.c \
+    upstream-openbsd/lib/libc/string/strtok.c \
+    upstream-openbsd/lib/libc/string/wcslcpy.c \
+    upstream-openbsd/lib/libc/string/wcswidth.c \
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
