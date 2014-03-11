@@ -71,6 +71,7 @@ libBionicStandardTests_src_files := \
     sys_resource_test.cpp \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
+    sys_socket_test.cpp \
     sys_stat_test.cpp \
     sys_statvfs_test.cpp \
     sys_syscall_test.cpp \
