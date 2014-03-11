@@ -5,7 +5,7 @@ libc_common_src_files_arm64 := \
     bionic/memchr.c \
     bionic/__memcmp16.cpp \
     bionic/memcmp.c \
-    bionic/memcpy.c \
+    bionic/memcpy.cpp \
     bionic/memmove.c \
     bionic/memrchr.c \
     bionic/memset.c \

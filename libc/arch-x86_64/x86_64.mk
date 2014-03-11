@@ -4,7 +4,7 @@ libc_common_src_files_x86_64 := \
     bionic/index.cpp \
     bionic/memchr.c \
     bionic/memcmp.c \
-    bionic/memcpy.c \
+    bionic/memcpy.cpp \
     bionic/memmove.c \
     bionic/memrchr.c \
     bionic/memset.c \
