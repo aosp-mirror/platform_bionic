@@ -16,6 +16,24 @@
       "revId": "335d8ac65f92b800327a5a55e8df98eb27e5ca66",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dce519f4_7b639fed",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-11T10:48:27Z",
+      "side": 1,
+      "message": ":) I was ready to push back on having 0 in the first place but you convinced me with \"i know what you\u0027re talking about, but i can\u0027t provide it\" rationale which seems reasonable to me.\n\nAfter reading the man page as well I also agree that -1 is better.",
+      "parentUuid": "dcf7d997_e5671a7c",
+      "revId": "335d8ac65f92b800327a5a55e8df98eb27e5ca66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
