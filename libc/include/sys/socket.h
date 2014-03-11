@@ -295,37 +295,37 @@ __socketcall int getsockname(int, struct sockaddr*, socklen_t*);
 __socketcall int getsockopt(int, int, int, void*, socklen_t*);
 __socketcall int listen(int, int);
 __socketcall int recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*);
-__socketcall int recvmsg(int, struct msghdr*, unsigned int);
+__socketcall int recvmsg(int, struct msghdr*, int);
 __socketcall int sendmmsg(int, const struct mmsghdr*, unsigned int, int);
-__socketcall int sendmsg(int, const struct msghdr*, unsigned int);
+__socketcall int sendmsg(int, const struct msghdr*, int);
 __socketcall int setsockopt(int, int, int, const void*, socklen_t);
 __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
 
-extern ssize_t send(int, const void*, size_t, unsigned int);
-extern ssize_t recv(int, void*, size_t, unsigned int);
+extern ssize_t send(int, const void*, size_t, int);
+extern ssize_t recv(int, void*, size_t, int);
 
 __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
-__socketcall ssize_t recvfrom(int, void*, size_t, unsigned int, const struct sockaddr*, socklen_t*);
+__socketcall ssize_t recvfrom(int, void*, size_t, int, const struct sockaddr*, socklen_t*);
 
 #if defined(__BIONIC_FORTIFY)
 __errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, unsigned int, const struct sockaddr*, socklen_t*);
-extern ssize_t __recvfrom_real(int, void*, size_t, unsigned int, const struct sockaddr*, socklen_t*)
+extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*);
+extern ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*)
     __asm__(__USER_LABEL_PREFIX__ "recvfrom");
 
 __BIONIC_FORTIFY_INLINE
-ssize_t recvfrom(int fd, void* buf, size_t len, unsigned int flags, const struct sockaddr* src_addr, socklen_t* addrlen) {
+ssize_t recvfrom(int fd, void* buf, size_t len, int flags, const struct sockaddr* src_addr, socklen_t* addr_len) {
   size_t bos = __bos0(buf);
 
 #if !defined(__clang__)
   if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-    return __recvfrom_real(fd, buf, len, flags, src_addr, addrlen);
+    return __recvfrom_real(fd, buf, len, flags, src_addr, addr_len);
   }
 
   if (__builtin_constant_p(len) && (len <= bos)) {
-    return __recvfrom_real(fd, buf, len, flags, src_addr, addrlen);
+    return __recvfrom_real(fd, buf, len, flags, src_addr, addr_len);
   }
 
   if (__builtin_constant_p(len) && (len > bos)) {
@@ -333,12 +333,12 @@ ssize_t recvfrom(int fd, void* buf, size_t len, unsigned int flags, const struct
   }
 #endif
 
-  return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addrlen);
+  return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
 }
 
 __BIONIC_FORTIFY_INLINE
-ssize_t recv(int socket, void* buf, size_t buflen, unsigned int flags) {
-  return recvfrom(socket, buf, buflen, flags, NULL, 0);
+ssize_t recv(int socket, void* buf, size_t len, int flags) {
+  return recvfrom(socket, buf, len, flags, NULL, 0);
 }
 
 #endif /* __BIONIC_FORTIFY */

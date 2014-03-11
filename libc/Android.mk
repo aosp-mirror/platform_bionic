@@ -49,7 +49,6 @@ libc_common_src_files := \
     bionic/fts.c \
     bionic/getdtablesize.c \
     bionic/gethostname.c \
-    bionic/getpgrp.c \
     bionic/getpriority.c \
     bionic/getpt.c \
     bionic/if_indextoname.c \
@@ -64,12 +63,9 @@ libc_common_src_files := \
     bionic/ptsname.c \
     bionic/ptsname_r.c \
     bionic/pututline.c \
-    bionic/recv.c \
     bionic/sched_cpualloc.c \
     bionic/sched_cpucount.c \
     bionic/semaphore.c \
-    bionic/send.c \
-    bionic/setpgrp.c \
     bionic/sigblock.c \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
@@ -80,7 +76,6 @@ libc_common_src_files := \
     bionic/tcgetpgrp.c \
     bionic/tcsetpgrp.c \
     bionic/time64.c \
-    bionic/umount.c \
     bionic/unlockpt.c \
     stdio/asprintf.c \
     stdio/findfp.c \
@@ -145,6 +140,7 @@ libc_bionic_src_files := \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
+    bionic/getpgrp.cpp \
     bionic/inotify_init.cpp \
     bionic/lchown.cpp \
     bionic/lfs64_support.cpp \
@@ -186,15 +182,18 @@ libc_bionic_src_files := \
     bionic/raise.cpp \
     bionic/readlink.cpp \
     bionic/reboot.cpp \
+    bionic/recv.cpp \
     bionic/rename.cpp \
     bionic/rmdir.cpp \
     bionic/sbrk.cpp \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
     bionic/sched_getcpu.cpp \
+    bionic/send.cpp \
     bionic/setegid.cpp \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
+    bionic/setpgrp.cpp \
     bionic/setlocale.cpp \
     bionic/sigaction.cpp \
     bionic/sigaddset.cpp \
@@ -222,6 +221,7 @@ libc_bionic_src_files := \
     bionic/tdestroy.cpp \
     bionic/thread_atexit.cpp \
     bionic/tmpfile.cpp \
+    bionic/umount.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
     bionic/wait.cpp \

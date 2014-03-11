@@ -25,9 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
 
-pid_t  getpgrp(void) 
-{
-  return getpgid(0);
+#include <sys/mount.h>
+
+int umount(const char* target) {
+  return umount2(target, 0);
 }

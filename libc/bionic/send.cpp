@@ -25,11 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
 
-extern int  umount2(const char*, int);
+#include <sys/socket.h>
 
-int  umount(const char*  dir)
-{
-  return umount2(dir, 0);
+ssize_t send(int socket, const void* buf, size_t len, int flags) {
+  return sendto(socket, buf, len, flags, NULL, 0);
 }
