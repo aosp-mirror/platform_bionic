@@ -480,7 +480,7 @@ void endusershell() {
   UNIMPLEMENTED;
 }
 
-// Portable code should use sysconf(_SC_PAGESIZE) directly instead.
+// Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
-  return sysconf(_SC_PAGESIZE);
+  return sysconf(_SC_PAGE_SIZE);
 }
