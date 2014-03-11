@@ -25,10 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <stddef.h>
+
 #include <sys/socket.h>
 
-ssize_t recv(int socket, void *buf, size_t buflen, unsigned int flags)
-{
-    return recvfrom(socket, buf, buflen, flags, NULL, 0);
+ssize_t recv(int socket, void *buf, size_t len, int flags) {
+  return recvfrom(socket, buf, len, flags, NULL, 0);
 }

@@ -25,9 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <unistd.h>
 
-int setpgrp(void)
-{
-  return setpgid(0,0);
+int setpgrp() {
+  return setpgid(0, 0);
 }
