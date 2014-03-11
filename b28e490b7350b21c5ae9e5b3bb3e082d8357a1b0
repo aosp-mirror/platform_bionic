@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcf7d997_266f5ed0",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T19:40:06Z",
+      "side": 1,
+      "message": "If you are ignoring the result, is the compiler optimizing away this call?",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 19
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c2ba1c2_3d0e5950",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T19:40:06Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf7d997_06250290",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T19:40:06Z",
+      "side": 1,
+      "message": "What is this one benchmarking? Is this trying to benchmark the speed of fread assuming getting data out of the device is nearly zero?",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf7d997_8638d2b3",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T19:40:06Z",
+      "side": 1,
+      "message": "Same question as above, what is this attempting to benchmark?",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 27
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fce81dcd_d1e00eb1",
+        "filename": "benchmarks/unistd_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T19:40:06Z",
+      "side": 1,
+      "message": "There is a good chance this might be optimized away.",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 13
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
