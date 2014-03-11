@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <ftw.h>
 #include <stdlib.h>
 
 int mkstemp64(char* filename) {
@@ -21,4 +22,18 @@ int mkstemp64(char* filename) {
   // are already 64-bit ready. In particular, we don't have non-O_LARGEFILE
   // open (our open is actually open64) and stat and stat64 are the same.
   return mkstemp(filename);
+}
+
+typedef int (*ftw_fn)(const char*, const struct stat*, int);
+typedef int (*nftw_fn)(const char*, const struct stat*, int, struct FTW*);
+
+int ftw64(const char *dirpath,
+    int (*fn)(const char*, const struct stat64*, int), int nopenfd) {
+  return ftw(dirpath, reinterpret_cast<ftw_fn>(fn), nopenfd);
+}
+
+int nftw64(const char * dirpath,
+    int (*fn)(const char*, const struct stat64*, int, struct FTW*),
+    int nopenfd, int flags) {
+  return nftw(dirpath, reinterpret_cast<nftw_fn>(fn), nopenfd, flags);
 }
