@@ -317,10 +317,12 @@ libc_upstream_netbsd_src_files := \
 
 libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/exec.c \
-    upstream-openbsd/lib/libc/gen/ftok.c \
     upstream-openbsd/lib/libc/gen/fnmatch.c \
-    upstream-openbsd/lib/libc/gen/toupper_.c \
+    upstream-openbsd/lib/libc/gen/ftok.c \
+    upstream-openbsd/lib/libc/gen/getprogname.c \
+    upstream-openbsd/lib/libc/gen/setprogname.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
+    upstream-openbsd/lib/libc/gen/toupper_.c \
     upstream-openbsd/lib/libc/string/strstr.c \
     upstream-openbsd/lib/libc/string/strsep.c \
     upstream-openbsd/lib/libc/string/wcslcpy.c \

@@ -153,6 +153,10 @@ typedef struct {
 
 extern lldiv_t   lldiv(long long, long long);
 
+/* BSD compatibility. */
+extern const char* getprogname(void);
+extern void setprogname(const char*);
+
 #if 1 /* MISSING FROM BIONIC - ENABLED FOR STLPort and libstdc++-v3 */
 /* make STLPort happy */
 extern int      mblen(const char *, size_t);
