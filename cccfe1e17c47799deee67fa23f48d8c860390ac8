@@ -22,6 +22,30 @@
       "revId": "cccfe1e17c47799deee67fa23f48d8c860390ac8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c17b18c_cb2829b0",
+        "filename": "libc/bionic/clock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T21:36:00Z",
+      "side": 1,
+      "message": "yeah, CLOCKS_PER_SEC can only have one value, and i think CLK_TCK is more of a theoretical variable than an actual one. certainly bionic thinks it\u0027s always 100. if that ever changes, we\u0027ll probably have to audit ever caller anyway...",
+      "parentUuid": "9c2ba1c2_c01c72fb",
+      "range": {
+        "startLine": 37,
+        "startChar": 40,
+        "endLine": 37,
+        "endChar": 77
+      },
+      "revId": "cccfe1e17c47799deee67fa23f48d8c860390ac8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
