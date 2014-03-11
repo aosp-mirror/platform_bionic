@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c17b18c_0ebb6fef",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T23:10:27Z",
+      "side": 1,
+      "message": "(i don\u0027t know what the \u0027optional\u0027 in \u0027optional_actions\u0027 means, but this is what posix calls it.)",
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
