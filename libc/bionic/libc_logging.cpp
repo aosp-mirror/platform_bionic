@@ -38,7 +38,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/uio.h>
+#include <sys/un.h>
+#include <time.h>
 #include <unistd.h>
 
 static pthread_mutex_t gAbortMsgLock = PTHREAD_MUTEX_INITIALIZER;
@@ -136,7 +140,7 @@ static unsigned parse_decimal(const char *format, int *ppos) {
 
     for (;;) {
         int ch = *p;
-        unsigned d = (unsigned)(ch - '0');
+        unsigned d = static_cast<unsigned>(ch - '0');
 
         if (d >= 10U) {
             break;
@@ -289,13 +293,13 @@ static void out_vformat(Out& o, const char* format, va_list args) {
         /* parse field width */
         if ((c >= '0' && c <= '9')) {
             nn --;
-            width = (int)parse_decimal(format, &nn);
+            width = static_cast<int>(parse_decimal(format, &nn));
             c = format[nn++];
         }
 
         /* parse precision */
         if (c == '.') {
-            prec = (int)parse_decimal(format, &nn);
+            prec = static_cast<int>(parse_decimal(format, &nn));
             c = format[nn++];
         }
 
@@ -340,10 +344,10 @@ static void out_vformat(Out& o, const char* format, va_list args) {
         } else if (c == 'c') {
             /* character */
             /* NOTE: char is promoted to int when passed through the stack */
-            buffer[0] = (char) va_arg(args, int);
+            buffer[0] = static_cast<char>(va_arg(args, int));
             buffer[1] = '\0';
         } else if (c == 'p') {
-            uint64_t  value = (uintptr_t) va_arg(args, void*);
+            uint64_t  value = reinterpret_cast<uintptr_t>(va_arg(args, void*));
             buffer[0] = '0';
             buffer[1] = 'x';
             format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
@@ -356,8 +360,8 @@ static void out_vformat(Out& o, const char* format, va_list args) {
              *       through the stack
              */
             switch (bytelen) {
-            case 1: value = (uint8_t)  va_arg(args, int); break;
-            case 2: value = (uint16_t) va_arg(args, int); break;
+            case 1: value = static_cast<uint8_t>(va_arg(args, int)); break;
+            case 2: value = static_cast<uint16_t>(va_arg(args, int)); break;
             case 4: value = va_arg(args, uint32_t); break;
             case 8: value = va_arg(args, uint64_t); break;
             default: return;  /* should not happen */
@@ -366,7 +370,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
             /* sign extension, if needed */
             if (is_signed) {
                 int shift = 64 - 8*bytelen;
-                value = (uint64_t)(((int64_t)(value << shift)) >> shift);
+                value = static_cast<uint64_t>((static_cast<int64_t>(value << shift)) >> shift);
             }
 
             /* format the number properly into our buffer */
@@ -440,7 +444,67 @@ static int __libc_write_stderr(const char* tag, const char* msg) {
   return result;
 }
 
+#ifdef TARGET_USES_LOGD
+static int __libc_open_log_socket()
+{
+  // ToDo: Ideally we want this to fail if the gid of the current
+  // process is AID_LOGD, but will have to wait until we have
+  // registered this in private/android_filesystem_config.h. We have
+  // found that all logd crashes thus far have had no problem stuffing
+  // the UNIX domain socket and moving on so not critical *today*.
+
+  int log_fd = TEMP_FAILURE_RETRY(socket(PF_UNIX, SOCK_DGRAM, 0));
+  if (log_fd < 0) {
+    return -1;
+  }
+
+  if (fcntl(log_fd, F_SETFL, O_NONBLOCK) == -1) {
+    close(log_fd);
+    return -1;
+  }
+
+  union {
+    struct sockaddr    addr;
+    struct sockaddr_un addrUn;
+  } u;
+  memset(&u, 0, sizeof(u));
+  u.addrUn.sun_family = AF_UNIX;
+  strlcpy(u.addrUn.sun_path, "/dev/socket/logdw", sizeof(u.addrUn.sun_path));
+
+  if (TEMP_FAILURE_RETRY(connect(log_fd, &u.addr, sizeof(u.addrUn))) != 0) {
+    close(log_fd);
+    return -1;
+  }
+
+  return log_fd;
+}
+#endif
+
 static int __libc_write_log(int priority, const char* tag, const char* msg) {
+#ifdef TARGET_USES_LOGD
+  int main_log_fd = __libc_open_log_socket();
+
+  if (main_log_fd == -1) {
+    // Try stderr instead.
+    return __libc_write_stderr(tag, msg);
+  }
+
+  iovec vec[5];
+  char log_id = LOG_ID_MAIN;
+  vec[0].iov_base = &log_id;
+  vec[0].iov_len = sizeof(log_id);
+  timespec realtime_ts;
+  clock_gettime(CLOCK_REALTIME, &realtime_ts);
+  vec[1].iov_base = &realtime_ts;
+  vec[1].iov_len = sizeof(realtime_ts);
+
+  vec[2].iov_base = &priority;
+  vec[2].iov_len = 1;
+  vec[3].iov_base = const_cast<char*>(tag);
+  vec[3].iov_len = strlen(tag) + 1;
+  vec[4].iov_base = const_cast<char*>(msg);
+  vec[4].iov_len = strlen(msg) + 1;
+#else
   int main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
   if (main_log_fd == -1) {
     if (errno == ENOTDIR) {
@@ -457,8 +521,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[1].iov_len = strlen(tag) + 1;
   vec[2].iov_base = const_cast<char*>(msg);
   vec[2].iov_len = strlen(msg) + 1;
+#endif
 
-  int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, 3));
+  int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, sizeof(vec) / sizeof(vec[0])));
   close(main_log_fd);
   return result;
 }
@@ -479,6 +544,25 @@ int __libc_format_log(int priority, const char* tag, const char* format, ...) {
 }
 
 static int __libc_android_log_event(int32_t tag, char type, const void* payload, size_t len) {
+#ifdef TARGET_USES_LOGD
+  iovec vec[5];
+  char log_id = LOG_ID_EVENTS;
+  vec[0].iov_base = &log_id;
+  vec[0].iov_len = sizeof(log_id);
+  timespec realtime_ts;
+  clock_gettime(CLOCK_REALTIME, &realtime_ts);
+  vec[1].iov_base = &realtime_ts;
+  vec[1].iov_len = sizeof(realtime_ts);
+
+  vec[2].iov_base = &tag;
+  vec[2].iov_len = sizeof(tag);
+  vec[3].iov_base = &type;
+  vec[3].iov_len = sizeof(type);
+  vec[4].iov_base = const_cast<void*>(payload);
+  vec[4].iov_len = len;
+
+  int event_log_fd = __libc_open_log_socket();
+#else
   iovec vec[3];
   vec[0].iov_base = &tag;
   vec[0].iov_len = sizeof(tag);
@@ -488,10 +572,12 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   vec[2].iov_len = len;
 
   int event_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/events", O_CLOEXEC | O_WRONLY));
+#endif
+
   if (event_log_fd == -1) {
     return -1;
   }
-  int result = TEMP_FAILURE_RETRY(writev(event_log_fd, vec, 3));
+  int result = TEMP_FAILURE_RETRY(writev(event_log_fd, vec, sizeof(vec) / sizeof(vec[0])));
   close(event_log_fd);
   return result;
 }
