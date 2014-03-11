@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "9cb9e1da_dcf8215f",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T23:34:17Z",
+      "side": 1,
+      "message": "Since this is a new file, probably best to use 2014 here.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cb9e1da_3c0d9d98",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T23:34:17Z",
+      "side": 1,
+      "message": "Since this is exactly the same function as cfgetispeed, did you want to make an alias instead?",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cb9e1da_9c1b09cf",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T23:34:17Z",
+      "side": 1,
+      "message": "Same question as above, would an alias be better?",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 15
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fce81dcd_3c2bc69a",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T23:34:17Z",
+      "side": 1,
+      "message": "I assume the ioctl call always expects a 32 bit value regardless of whether this is a 64 bit arch, correct?",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 28
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fce81dcd_9c513a29",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-11T23:34:17Z",
+      "side": 1,
+      "message": "This value is 32 bits or 64 bits depending on the arch. I assume that\u0027s okay, correct?",
+      "range": {
+        "startLine": 73,
+        "startChar": 27,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c17b18c_0ebb6fef",
         "filename": "libc/bionic/termios.cpp",
         "patchSetId": 1
