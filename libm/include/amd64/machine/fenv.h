@@ -97,7 +97,7 @@ typedef struct {
  * A floating-point control mode is a system variable whose value may be set by
  * the user to affect the subsequent behavior of floating-point arithmetic.
  */
-typedef __uint_32 fexcept_t;
+typedef __uint32_t fexcept_t;
 
 __END_DECLS
 

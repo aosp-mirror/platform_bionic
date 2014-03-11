@@ -42,7 +42,7 @@
  * x87 fpu registers are 16bit wide. The upper bits, 31-16, are marked as
  * RESERVED.
  */
-fenv_t __fe_dfl_env = {
+const fenv_t __fe_dfl_env = {
   {
     0xffff0000 | __INITIAL_NPXCW__, /* Control word register */
     0xffff0000,                     /* Status word register */
