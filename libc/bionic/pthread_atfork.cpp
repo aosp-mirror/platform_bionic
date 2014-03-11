@@ -48,14 +48,12 @@ struct atfork_list_t {
 static atfork_list_t gAtForkList = { NULL, NULL };
 
 void __bionic_atfork_run_prepare() {
-  // We will lock this here, and unlock it in the parent and child functions.
+  // We lock the atfork list here, unlock it in the parent, and reset it in the child.
   // This ensures that nobody can modify the handler array between the calls
   // to the prepare and parent/child handlers.
   //
-  // TODO: If a handler mucks with the list, it could cause problems.  Right
-  //       now it's ok because all they can do is add new items to the end
-  //       of the list, but if/when we implement cleanup in dlclose() things
-  //       will get more interesting...
+  // TODO: If a handler tries to mutate the list, they'll block. We should probably copy
+  // the list before forking, and have prepare, parent, and child all work on the consistent copy.
   pthread_mutex_lock(&gAtForkListMutex);
 
   // Call pthread_atfork() prepare handlers. POSIX states that the prepare
@@ -75,10 +73,7 @@ void __bionic_atfork_run_child() {
     }
   }
 
-  pthread_mutexattr_t attr;
-  pthread_mutexattr_init(&attr);
-  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&gAtForkListMutex, &attr);
+  gAtForkListMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 }
 
 void __bionic_atfork_run_parent() {

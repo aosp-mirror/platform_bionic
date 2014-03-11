@@ -91,8 +91,7 @@ __LIBC_HIDDEN__ extern pthread_mutex_t gThreadListLock;
 
 __LIBC_HIDDEN__ int __timespec_from_absolute(timespec*, const timespec*, clockid_t);
 
-/* needed by fork.c */
-__LIBC_HIDDEN__ extern void __timer_table_start_stop(int);
+/* Needed by fork. */
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();

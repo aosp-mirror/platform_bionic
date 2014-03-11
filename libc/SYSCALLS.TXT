@@ -213,11 +213,11 @@ int           clock_getres(clockid_t clk_id, struct timespec* res)   all
 int           clock_nanosleep(clockid_t clock_id, int flags, const struct timespec* req, struct timespec* rem)  all
 int           getitimer(int, const struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
-int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, timer_t* timerid)    all
-int           __timer_settime:timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*) all
-int           __timer_gettime:timer_gettime(timer_t, struct itimerspec*)                                all
-int           __timer_getoverrun:timer_getoverrun(timer_t)                                              all
-int           __timer_delete:timer_delete(timer_t)                                                      all
+int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
+int           __timer_settime:timer_settime(__kernel_timer_t, int, const struct itimerspec*, struct itimerspec*) all
+int           __timer_gettime:timer_gettime(__kernel_timer_t, struct itimerspec*)                                all
+int           __timer_getoverrun:timer_getoverrun(__kernel_timer_t)                                              all
+int           __timer_delete:timer_delete(__kernel_timer_t)                                                      all
 int           timerfd_create(clockid_t, int)   all
 int           timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
 int           timerfd_gettime(int, struct itimerspec*)   all

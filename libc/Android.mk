@@ -165,6 +165,7 @@ libc_bionic_src_files := \
     bionic/pipe.cpp \
     bionic/poll.cpp \
     bionic/posix_fallocate.cpp \
+    bionic/posix_timers.cpp \
     bionic/pthread_atfork.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_cond.cpp \
@@ -224,7 +225,6 @@ libc_bionic_src_files := \
     bionic/sys_signame.c \
     bionic/tdestroy.cpp \
     bionic/thread_atexit.cpp \
-    bionic/timer.cpp \
     bionic/tmpfile.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
