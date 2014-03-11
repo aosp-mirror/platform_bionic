@@ -76,7 +76,7 @@
 __BEGIN_DECLS
 
 typedef __uint32_t fenv_t;
-typedef __uint32_t lfexcept_t;
+typedef __uint32_t fexcept_t;
 
 /* Exception flags */
 #define FE_INVALID    0x40
