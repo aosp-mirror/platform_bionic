@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "dcf7d997_e6ac3686",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T19:47:01Z",
+      "side": 1,
+      "message": "(caliper actually has detection of cases where your benchmark has been optimized out. we could add that to our native benchmarking if we want.)",
+      "parentUuid": "fce81dcd_31221235",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 19
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c2ba1c2_3d0e5950",
         "filename": "benchmarks/pthread_benchmark.cpp",
         "patchSetId": 2
