@@ -45,6 +45,8 @@ __BEGIN_DECLS
 #define sockaddr_storage __kernel_sockaddr_storage
 typedef unsigned short sa_family_t;
 
+struct timespec;
+
 #ifdef __mips__
 #define SOCK_DGRAM      1
 #define SOCK_STREAM     2
