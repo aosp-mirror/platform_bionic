@@ -1,6 +1,7 @@
-/*	$OpenBSD: index.c,v 1.5 2005/08/08 08:05:37 espie Exp $ */
-/*-
- * Copyright (c) 1990 The Regents of the University of California.
+/*	$OpenBSD: strcpy.c,v 1.8 2005/08/08 08:05:37 espie Exp $	*/
+
+/*
+ * Copyright (c) 1988 Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,16 +29,22 @@
  * SUCH DAMAGE.
  */
 
+#if !defined(_KERNEL) && !defined(_STANDALONE)
 #include <string.h>
+#else
+#include <lib/libkern/libkern.h>
+#endif
+
+#if defined(APIWARN)
+__warn_references(strcpy,
+    "warning: strcpy() is almost always misused, please use strlcpy()");
+#endif
 
 char *
-index(const char *p, int ch)
+strcpy(char *to, const char *from)
 {
-	for (;; ++p) {
-		if (*p == (char) ch)
-			return((char *)p);
-		if (!*p)
-			return((char *)NULL);
-	}
-	/* NOTREACHED */
+	char *save = to;
+
+	for (; (*to = *from) != '\0'; ++from, ++to);
+	return(save);
 }

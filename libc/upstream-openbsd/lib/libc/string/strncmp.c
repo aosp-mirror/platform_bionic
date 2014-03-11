@@ -1,7 +1,8 @@
-/*-
- * Copyright (c) 1995 Alex Tatmanjants <alex@elvisti.kiev.ua>
- *		at Electronni Visti IA, Kiev, Ukraine.
- *			All rights reserved.
+/*	$OpenBSD: strncmp.c,v 1.7 2005/08/08 08:05:37 espie Exp $	*/
+
+/*
+ * Copyright (c) 1989 The Regents of the University of California.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -11,11 +12,14 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
@@ -25,33 +29,23 @@
  * SUCH DAMAGE.
  */
 
-#include <wchar.h>
+#if !defined(_KERNEL) && !defined(_STANDALONE)
+#include <string.h>
+#else
+#include <lib/libkern/libkern.h>
+#endif
 
-/*
- * Placeholder wcsxfrm() implementation. See wcscoll.c for a description of
- * the logic used.
- */
-size_t
-wcsxfrm(wchar_t * __restrict dest, const wchar_t * __restrict src, size_t len)
+int
+strncmp(const char *s1, const char *s2, size_t n)
 {
-    int prim, sec, l;
-    size_t slen;
-    char *mbsrc, *s, *ss;
 
-    if (*src == L'\0') {
-        if (len != 0)
-            *dest = L'\0';
-        return (0);
-    }
-
-    slen = wcslen(src);
-    if (len > 0) {
-        if (slen < len)
-            wcscpy(dest, src);
-        else {
-            wcsncpy(dest, src, len - 1);
-            dest[len - 1] = L'\0';
-        }
-    }
-    return (slen);
+	if (n == 0)
+		return (0);
+	do {
+		if (*s1 != *s2++)
+			return (*(unsigned char *)s1 - *(unsigned char *)--s2);
+		if (*s1++ == 0)
+			break;
+	} while (--n != 0);
+	return (0);
 }

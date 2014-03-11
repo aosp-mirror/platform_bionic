@@ -10,23 +10,14 @@ libc_bionic_src_files_mips += \
      bionic/mmap.cpp
 
 libc_common_src_files_mips += \
+    bionic/index.cpp \
     bionic/memchr.c \
     bionic/memcmp.c \
     bionic/memmove.c \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
-    string/bcopy.c \
-    string/index.c \
-    string/strcat.c \
-    string/strcmp.c \
-    string/strcpy.c \
-    string/strlcat.c \
-    string/strlcpy.c \
-    string/strncat.c \
-    string/strncmp.c \
-    string/strncpy.c \
-    string/strrchr.c \
+    bionic/strrchr.cpp \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -34,6 +25,15 @@ libc_common_src_files_mips += \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-openbsd/lib/libc/string/bcopy.c \
+    upstream-openbsd/lib/libc/string/strcat.c \
+    upstream-openbsd/lib/libc/string/strcmp.c \
+    upstream-openbsd/lib/libc/string/strcpy.c \
+    upstream-openbsd/lib/libc/string/strlcat.c \
+    upstream-openbsd/lib/libc/string/strlcpy.c \
+    upstream-openbsd/lib/libc/string/strncat.c \
+    upstream-openbsd/lib/libc/string/strncmp.c \
+    upstream-openbsd/lib/libc/string/strncpy.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files_mips += \

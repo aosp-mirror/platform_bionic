@@ -49,6 +49,7 @@ extern char*  strchr(const char *, int) __purefunc;
 extern char* __strchr_chk(const char *, int, size_t);
 
 extern char*  strrchr(const char *, int) __purefunc;
+extern char* __strrchr_chk(const char *, int, size_t);
 
 extern size_t strlen(const char *) __purefunc;
 extern size_t __strlen_chk(const char *, size_t);
@@ -262,8 +263,6 @@ char* strchr(const char *s, int c) {
 
     return __strchr_chk(s, c, bos);
 }
-
-extern char* __strrchr_chk(const char *, int, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {
