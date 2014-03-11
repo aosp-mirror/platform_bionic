@@ -79,7 +79,6 @@ libc_common_src_files := \
     bionic/strntoimax.c \
     bionic/strntoumax.c \
     bionic/strtotimeval.c \
-    bionic/system_properties.c \
     bionic/system_properties_compat.c \
     bionic/tcgetpgrp.c \
     bionic/tcsetpgrp.c \
@@ -223,6 +222,7 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
+    bionic/system_properties.cpp \
     bionic/sys_siglist.c \
     bionic/sys_signame.c \
     bionic/tdestroy.cpp \
