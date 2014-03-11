@@ -98,6 +98,45 @@ TEST(time, mktime_10310929) {
 #endif
 }
 
+TEST(time, strftime) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 200;
+  t.tm_mon = 2;
+  t.tm_mday = 10;
+
+  char buf[64];
+
+  // Seconds since the epoch.
+#if defined(__BIONIC__) || defined(__LP64__) // Not 32-bit glibc.
+  EXPECT_EQ(10U, strftime(buf, sizeof(buf), "%s", &t));
+  EXPECT_STREQ("4108320000", buf);
+#endif
+
+  // Date and time as text.
+  EXPECT_EQ(24U, strftime(buf, sizeof(buf), "%c", &t));
+  EXPECT_STREQ("Sun Mar 10 00:00:00 2100", buf);
+}
+
+TEST(time, strptime) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  char buf[64];
+
+  memset(&t, 0, sizeof(t));
+  strptime("11:14", "%R", &t);
+  strftime(buf, sizeof(buf), "%H:%M", &t);
+  EXPECT_STREQ("11:14", buf);
+
+  memset(&t, 0, sizeof(t));
+  strptime("09:41:53", "%T", &t);
+  strftime(buf, sizeof(buf), "%H:%M:%S", &t);
+  EXPECT_STREQ("09:41:53", buf);
+}
+
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
   itimerspec ts;
   ts.it_value.tv_sec = value_s;
