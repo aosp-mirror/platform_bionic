@@ -75,7 +75,7 @@ pid_t __pthread_gettid(pthread_t t) {
 
 // Initialize 'ts' with the difference between 'abstime' and the current time
 // according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
-int __timespec_to_absolute(timespec* ts, const timespec* abstime, clockid_t clock) {
+int __timespec_from_absolute(timespec* ts, const timespec* abstime, clockid_t clock) {
   clock_gettime(clock, ts);
   ts->tv_sec  = abstime->tv_sec - ts->tv_sec;
   ts->tv_nsec = abstime->tv_nsec - ts->tv_nsec;

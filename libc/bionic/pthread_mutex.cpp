@@ -667,140 +667,133 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex)
     return err;
 }
 
-/* initialize 'abstime' to the current time according to 'clock' plus 'msecs'
- * milliseconds.
- */
-static void __timespec_to_relative_msec(timespec* abstime, unsigned msecs, clockid_t clock) {
-    clock_gettime(clock, abstime);
-    abstime->tv_sec  += msecs/1000;
-    abstime->tv_nsec += (msecs%1000)*1000000;
-    if (abstime->tv_nsec >= 1000000000) {
-        abstime->tv_sec++;
-        abstime->tv_nsec -= 1000000000;
+static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_timeout, clockid_t clock) {
+  timespec ts;
+
+  int mvalue = mutex->value;
+  int mtype  = (mvalue & MUTEX_TYPE_MASK);
+  int shared = (mvalue & MUTEX_SHARED_MASK);
+
+  // Handle common case first.
+  if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
+    const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
+    const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+    const int locked_contended   = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+
+    // Fast path for uncontended lock. Note: MUTEX_TYPE_BITS_NORMAL is 0.
+    if (__bionic_cmpxchg(unlocked, locked_uncontended, &mutex->value) == 0) {
+      ANDROID_MEMBAR_FULL();
+      return 0;
     }
-}
 
-__LIBC_HIDDEN__
-int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
-{
-    clockid_t        clock = CLOCK_MONOTONIC;
-    timespec  abstime;
-    timespec  ts;
-    int               mvalue, mtype, tid, shared;
+    // Loop while needed.
+    while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
+      if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+        return ETIMEDOUT;
+      }
+      __futex_wait_ex(&mutex->value, shared, locked_contended, &ts);
+    }
+    ANDROID_MEMBAR_FULL();
+    return 0;
+  }
 
-    /* compute absolute expiration time */
-    __timespec_to_relative_msec(&abstime, msecs, clock);
+  // Do we already own this recursive or error-check mutex?
+  pid_t tid = __get_thread()->tid;
+  if (tid == MUTEX_OWNER_FROM_BITS(mvalue)) {
+    return _recursive_increment(mutex, mvalue, mtype);
+  }
 
+  // The following implements the same loop as pthread_mutex_lock_impl
+  // but adds checks to ensure that the operation never exceeds the
+  // absolute expiration time.
+  mtype |= shared;
+
+  // First try a quick lock.
+  if (mvalue == mtype) {
+    mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+    if (__predict_true(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
+      ANDROID_MEMBAR_FULL();
+      return 0;
+    }
     mvalue = mutex->value;
-    mtype  = (mvalue & MUTEX_TYPE_MASK);
-    shared = (mvalue & MUTEX_SHARED_MASK);
+  }
 
-    /* Handle common case first */
-    if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) )
-    {
-        const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
-        const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
-        const int locked_contended   = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
-
-        /* fast path for uncontended lock. Note: MUTEX_TYPE_BITS_NORMAL is 0 */
-        if (__bionic_cmpxchg(unlocked, locked_uncontended, &mutex->value) == 0) {
-            ANDROID_MEMBAR_FULL();
-            return 0;
-        }
-
-        /* loop while needed */
-        while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
-            if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
-                return EBUSY;
-
-            __futex_wait_ex(&mutex->value, shared, locked_contended, &ts);
-        }
+  while (true) {
+    // If the value is 'unlocked', try to acquire it directly.
+    // NOTE: put state to 2 since we know there is contention.
+    if (mvalue == mtype) { // Unlocked.
+      mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+      if (__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0) {
         ANDROID_MEMBAR_FULL();
         return 0;
+      }
+      // The value changed before we could lock it. We need to check
+      // the time to avoid livelocks, reload the value, then loop again.
+      if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+        return ETIMEDOUT;
+      }
+
+      mvalue = mutex->value;
+      continue;
     }
 
-    /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->tid;
-    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
-        return _recursive_increment(mutex, mvalue, mtype);
-
-    /* the following implements the same loop than pthread_mutex_lock_impl
-     * but adds checks to ensure that the operation never exceeds the
-     * absolute expiration time.
-     */
-    mtype |= shared;
-
-    /* first try a quick lock */
-    if (mvalue == mtype) {
-        mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
-        if (__predict_true(__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0)) {
-            ANDROID_MEMBAR_FULL();
-            return 0;
-        }
+    // The value is locked. If 'uncontended', try to switch its state
+    // to 'contented' to ensure we get woken up later.
+    if (MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(mvalue)) {
+      int newval = MUTEX_STATE_BITS_FLIP_CONTENTION(mvalue);
+      if (__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0) {
+        // This failed because the value changed, reload it.
         mvalue = mutex->value;
+      } else {
+        // This succeeded, update mvalue.
+        mvalue = newval;
+      }
     }
 
-    for (;;) {
-        timespec ts;
-
-        /* if the value is 'unlocked', try to acquire it directly */
-        /* NOTE: put state to 2 since we know there is contention */
-        if (mvalue == mtype) /* unlocked */ {
-            mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_CONTENDED;
-            if (__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0) {
-                ANDROID_MEMBAR_FULL();
-                return 0;
-            }
-            /* the value changed before we could lock it. We need to check
-             * the time to avoid livelocks, reload the value, then loop again. */
-            if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
-                return EBUSY;
-
-            mvalue = mutex->value;
-            continue;
-        }
-
-        /* The value is locked. If 'uncontended', try to switch its state
-         * to 'contented' to ensure we get woken up later. */
-        if (MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(mvalue)) {
-            int newval = MUTEX_STATE_BITS_FLIP_CONTENTION(mvalue);
-            if (__bionic_cmpxchg(mvalue, newval, &mutex->value) != 0) {
-                /* this failed because the value changed, reload it */
-                mvalue = mutex->value;
-            } else {
-                /* this succeeded, update mvalue */
-                mvalue = newval;
-            }
-        }
-
-        /* check time and update 'ts' */
-        if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
-            return EBUSY;
-
-        /* Only wait to be woken up if the state is '2', otherwise we'll
-         * simply loop right now. This can happen when the second cmpxchg
-         * in our loop failed because the mutex was unlocked by another
-         * thread.
-         */
-        if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(mvalue)) {
-            if (__futex_wait_ex(&mutex->value, shared, mvalue, &ts) == -ETIMEDOUT) {
-                return EBUSY;
-            }
-            mvalue = mutex->value;
-        }
+    // Check time and update 'ts'.
+    if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+      return ETIMEDOUT;
     }
-    /* NOTREACHED */
+
+    // Only wait to be woken up if the state is '2', otherwise we'll
+    // simply loop right now. This can happen when the second cmpxchg
+    // in our loop failed because the mutex was unlocked by another thread.
+    if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(mvalue)) {
+      if (__futex_wait_ex(&mutex->value, shared, mvalue, &ts) == -ETIMEDOUT) {
+        return ETIMEDOUT;
+      }
+      mvalue = mutex->value;
+    }
+  }
+  /* NOTREACHED */
 }
 
-int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
-{
-    int err = pthread_mutex_lock_timeout_np_impl(mutex, msecs);
-    if (PTHREAD_DEBUG_ENABLED) {
-        if (!err) {
-            pthread_debug_mutex_lock_check(mutex);
-        }
+#if !defined(__LP64__)
+extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned ms) {
+  timespec abs_timeout;
+  clock_gettime(CLOCK_MONOTONIC, &abs_timeout);
+  abs_timeout.tv_sec  += ms / 1000;
+  abs_timeout.tv_nsec += (ms % 1000) * 1000000;
+  if (abs_timeout.tv_nsec >= 1000000000) {
+    abs_timeout.tv_sec++;
+    abs_timeout.tv_nsec -= 1000000000;
+  }
+
+  int err = __pthread_mutex_timedlock(mutex, &abs_timeout, CLOCK_MONOTONIC);
+  if (err == ETIMEDOUT) {
+    err = EBUSY;
+  }
+  if (PTHREAD_DEBUG_ENABLED) {
+    if (!err) {
+      pthread_debug_mutex_lock_check(mutex);
     }
-    return err;
+  }
+  return err;
+}
+#endif
+
+int pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_timeout) {
+  return __pthread_mutex_timedlock(mutex, abs_timeout, CLOCK_REALTIME);
 }
 
 int pthread_mutex_destroy(pthread_mutex_t *mutex)
