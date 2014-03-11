@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fce81dcd_31221235",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T19:46:05Z",
+      "side": 1,
+      "message": "judging from the output, no.",
+      "parentUuid": "dcf7d997_266f5ed0",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 19
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c2ba1c2_3d0e5950",
         "filename": "benchmarks/pthread_benchmark.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "fce81dcd_711c9af9",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T19:46:05Z",
+      "side": 1,
+      "message": "same.",
+      "parentUuid": "9c2ba1c2_3d0e5950",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcf7d997_06250290",
         "filename": "benchmarks/stdio_benchmark.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2014-03-11T19:40:06Z",
       "side": 1,
       "message": "What is this one benchmarking? Is this trying to benchmark the speed of fread assuming getting data out of the device is nearly zero?",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "b28e490b7350b21c5ae9e5b3bb3e082d8357a1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fce81dcd_d112cee0",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-11T19:46:05Z",
+      "side": 1,
+      "message": "i think so. it basically shows that \"fread(3) costs roughly the same as memcpy if the read(2) is more or less free\".\n\ni\u0027m not claiming any of these benchmarks are particularly useful. we can worry about that later. this is just so i can remove them (like the tests) from system/extras where they\u0027re no use to anyone.",
+      "parentUuid": "dcf7d997_06250290",
       "range": {
         "startLine": 27,
         "startChar": 0,
