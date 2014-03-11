@@ -32,7 +32,7 @@ __RCSID("$NetBSD: nsap_addr.c,v 1.2 2004/05/20 23:12:33 christos Exp $");
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <assert.h>
 #include <ctype.h>

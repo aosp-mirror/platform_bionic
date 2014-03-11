@@ -52,7 +52,7 @@ __RCSID("$NetBSD: base64.c,v 1.8 2002/11/11 01:15:17 thorpej Exp $");
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <assert.h>
 #include <ctype.h>

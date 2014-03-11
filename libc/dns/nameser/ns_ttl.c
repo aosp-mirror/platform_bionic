@@ -28,7 +28,7 @@ __RCSID("$NetBSD: ns_ttl.c,v 1.2 2004/05/20 20:35:05 christos Exp $");
 
 /* Import. */
 
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <ctype.h>
 #include <errno.h>

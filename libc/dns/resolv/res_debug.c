@@ -113,7 +113,7 @@ __RCSID("$NetBSD: res_debug.c,v 1.7 2004/11/07 02:25:01 christos Exp $");
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 #include <ctype.h>
 #include <errno.h>

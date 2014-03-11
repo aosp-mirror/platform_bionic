@@ -28,7 +28,7 @@ __RCSID("$NetBSD: ns_netint.c,v 1.2 2004/05/20 20:19:00 christos Exp $");
 
 /* Import. */
 
-#include "arpa_nameser.h"
+#include <arpa/nameser.h>
 
 /* Public. */
 
