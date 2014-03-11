@@ -94,22 +94,6 @@ int pthread_attr_getstacksize(const pthread_attr_t* attr, size_t* stack_size) {
   return 0;
 }
 
-#if !defined(__LP64__)
-// TODO: this exists only for backward binary compatibility on 32 bit platforms.
-extern "C" int pthread_attr_setstackaddr(pthread_attr_t*, void*) {
-  // This was removed from POSIX.1-2008, and is not implemented on bionic.
-  // Needed for ABI compatibility with the NDK.
-  return ENOSYS;
-}
-
-extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stack_addr) {
-  // This was removed from POSIX.1-2008.
-  // Needed for ABI compatibility with the NDK.
-  *stack_addr = (char*)attr->stack_base + attr->stack_size;
-  return 0;
-}
-#endif // !defined(__LP64__)
-
 int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_size) {
   if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
     return EINVAL;
