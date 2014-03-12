@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fce81dcd_17a3431b",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-12T01:05:44Z",
+      "side": 1,
+      "message": "Given Colin\u0027s information, this should probably be cast to a long, along with all of the other ioctl calls passing an int (even if TCSBRK doesn\u0027t actually use the value).",
+      "range": {
+        "startLine": 71,
+        "startChar": 27,
+        "endLine": 71,
+        "endChar": 33
+      },
+      "revId": "b797ea6ef90fa2bb19d73298d1a50a2edb6b9938",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
