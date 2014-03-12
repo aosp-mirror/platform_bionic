@@ -172,3 +172,15 @@ TEST(stdlib, mkstemp64) {
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
   ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
+
+TEST(stdlib, system) {
+  int status;
+
+  status = system("exit 0");
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
+
+  status = system("exit 1");
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(1, WEXITSTATUS(status));
+}
