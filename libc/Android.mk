@@ -73,8 +73,6 @@ libc_common_src_files := \
     bionic/strntoumax.c \
     bionic/strtotimeval.c \
     bionic/system_properties_compat.c \
-    bionic/tcgetpgrp.c \
-    bionic/tcsetpgrp.c \
     bionic/time64.c \
     bionic/unlockpt.c \
     stdio/findfp.c \
@@ -216,6 +214,7 @@ libc_bionic_src_files := \
     bionic/sys_siglist.c \
     bionic/sys_signame.c \
     bionic/tdestroy.cpp \
+    bionic/termios.cpp \
     bionic/thread_atexit.cpp \
     bionic/tmpfile.cpp \
     bionic/umount.cpp \
