@@ -114,6 +114,7 @@ libc_bionic_src_files := \
     bionic/abort.cpp \
     bionic/access.cpp \
     bionic/assert.cpp \
+    bionic/atof.cpp \
     bionic/__bionic_name_mem.cpp \
     bionic/bionic_time_conversions.cpp \
     bionic/brk.cpp \
@@ -188,8 +189,8 @@ libc_bionic_src_files := \
     bionic/setegid.cpp \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
-    bionic/setpgrp.cpp \
     bionic/setlocale.cpp \
+    bionic/setpgrp.cpp \
     bionic/sigaction.cpp \
     bionic/sigaddset.cpp \
     bionic/sigdelset.cpp \
@@ -207,12 +208,14 @@ libc_bionic_src_files := \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
     bionic/strsignal.cpp \
+    bionic/strtof.cpp \
+    bionic/strtold.cpp \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
-    bionic/system_properties.cpp \
     bionic/sys_siglist.c \
     bionic/sys_signame.c \
+    bionic/system_properties.cpp \
     bionic/tdestroy.cpp \
     bionic/termios.cpp \
     bionic/thread_atexit.cpp \
