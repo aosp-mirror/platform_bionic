@@ -60,23 +60,17 @@ extern long strtol(const char *, char **, int);
 extern long long strtoll(const char *, char **, int);
 extern unsigned long strtoul(const char *, char **, int);
 extern unsigned long long strtoull(const char *, char **, int);
-extern double strtod(const char *nptr, char **endptr);
 
 extern int posix_memalign(void **memptr, size_t alignment, size_t size);
 
-static __inline__ float strtof(const char *nptr, char **endptr)
-{
-    return (float)strtod(nptr, endptr);
-}
+extern double atof(const char*);
+extern double strtod(const char*, char**);
+extern float strtof(const char*, char**);
+extern long double strtold(const char*, char**);
 
-extern int atoi(const char *) __purefunc;
-extern long atol(const char *) __purefunc;
-extern long long atoll(const char *) __purefunc;
-
-static __inline__ double atof(const char *nptr)
-{
-    return (strtod(nptr, NULL));
-}
+extern int atoi(const char*) __purefunc;
+extern long atol(const char*) __purefunc;
+extern long long atoll(const char*) __purefunc;
 
 extern int abs(int) __pure2;
 extern long labs(long) __pure2;
