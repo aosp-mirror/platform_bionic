@@ -624,7 +624,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Since this code is experimental it is disabled by default.
 LOCAL_CFLAGS += -DPTHREAD_DEBUG_ENABLED=false
 
-ifeq ($(TARGET_USES_LOGD),true)
+ifneq ($(TARGET_USES_LOGD),false)
 LOCAL_CFLAGS += -DTARGET_USES_LOGD
 endif
 
