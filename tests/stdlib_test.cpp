@@ -186,3 +186,19 @@ TEST(stdlib, system) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(1, WEXITSTATUS(status));
 }
+
+TEST(stdlib, atof) {
+  ASSERT_EQ(1.23, atof("1.23"));
+}
+
+TEST(stdlib, strtod) {
+  ASSERT_EQ(1.23, strtod("1.23", NULL));
+}
+
+TEST(stdlib, strtof) {
+  ASSERT_EQ(1.23, strtod("1.23", NULL));
+}
+
+TEST(stdlib, strtold) {
+  ASSERT_EQ(1.23, strtold("1.23", NULL));
+}
