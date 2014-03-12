@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "7c20adde_dc6e2dd2",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-03-12T00:26:03Z",
+      "side": 1,
+      "message": "ioctl itself takes an unsigned long from the kernel\u0027s perspective, so the size varies between 32-bit and 64-bit platforms.  The TCSBRK ignores the argument.",
+      "parentUuid": "7c20adde_3c00291f",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 28
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fce81dcd_9c513a29",
         "filename": "libc/bionic/termios.cpp",
         "patchSetId": 1
@@ -177,6 +201,30 @@
       "writtenOn": "2014-03-11T23:34:17Z",
       "side": 1,
       "message": "This value is 32 bits or 64 bits depending on the arch. I assume that\u0027s okay, correct?",
+      "range": {
+        "startLine": 73,
+        "startChar": 27,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "055a48aa3f3bd7d9c915a5547e9abcb5129a2b07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfadd80_3b3823b2",
+        "filename": "libc/bionic/termios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-03-12T00:26:03Z",
+      "side": 1,
+      "message": "yes, ioctl expects a pointer-sized value.",
+      "parentUuid": "fce81dcd_9c513a29",
       "range": {
         "startLine": 73,
         "startChar": 27,
