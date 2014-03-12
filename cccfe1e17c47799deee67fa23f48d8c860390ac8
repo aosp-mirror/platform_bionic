@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fce81dcd_6eb67108",
+        "filename": "libc/bionic/clock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-12T16:29:15Z",
+      "side": 1,
+      "message": "yes and no. i tend to leave them in when the implementation is non-obvious. but i do wonder whether we should have a more explicit policy. \"always\", \"never\", or \"if \u003crule\u003e\"...\n\none problem is that afaik there\u0027s no link to their \"latest\" copy. (but even there, which is more useful: a link to the latest, or a link to the version we were reading when we implemented the function?)",
+      "parentUuid": "3c1ab5b4_af133975",
+      "revId": "cccfe1e17c47799deee67fa23f48d8c860390ac8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c2ba1c2_c01c72fb",
         "filename": "libc/bionic/clock.cpp",
         "patchSetId": 1
