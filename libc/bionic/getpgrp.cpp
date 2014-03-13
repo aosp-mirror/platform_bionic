@@ -25,10 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <stddef.h>
-#include <sys/socket.h>
 
-ssize_t send(int socket, const void *buf, size_t buflen, unsigned int flags)
-{
-    return (ssize_t) sendto(socket, buf, buflen, flags, NULL, 0);
+#include <unistd.h>
+
+pid_t getpgrp() {
+  return getpgid(0);
 }
