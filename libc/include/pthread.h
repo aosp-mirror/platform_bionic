@@ -234,10 +234,6 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
 
 #if !defined(__LP64__)
 
-/* Deprecated by POSIX. TODO: support for LP64 but add deprecated attribute instead? */
-int pthread_attr_getstackaddr(const pthread_attr_t*, void**) __nonnull((1, 2)); /* deprecated */
-int pthread_attr_setstackaddr(pthread_attr_t*, void*) __nonnull((1)); /* deprecated */
-
 // Bionic additions that are deprecated even in the 32-bit ABI.
 //
 // TODO: Remove them once chromium_org / NFC have switched over.
