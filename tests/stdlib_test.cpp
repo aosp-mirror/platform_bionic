@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 TEST(stdlib, drand48) {
   srand48(0x01020304);
