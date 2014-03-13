@@ -609,23 +609,17 @@ const prop_info *__system_property_find(const char *name)
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
-    unsigned serial, len;
-
     if (__predict_false(compat_mode)) {
         return __system_property_read_compat(pi, name, value);
     }
 
-    for(;;) {
-        serial = pi->serial;
-        while(SERIAL_DIRTY(serial)) {
-            __futex_wait((volatile void *)&pi->serial, serial, NULL);
-            serial = pi->serial;
-        }
-        len = SERIAL_VALUE_LEN(serial);
+    while (true) {
+        uint32_t serial = __system_property_serial(pi);
+        size_t len = SERIAL_VALUE_LEN(serial);
         memcpy(value, pi->value, len + 1);
         ANDROID_MEMBAR_FULL();
-        if(serial == pi->serial) {
-            if(name != 0) {
+        if (serial == pi->serial) {
+            if (name != 0) {
                 strcpy(name, pi->name);
             }
             return len;
@@ -678,7 +672,7 @@ int __system_property_wait(const prop_info *pi)
         const uint32_t n = pi->serial;
         do {
             __futex_wait((volatile void *)&pi->serial, n, NULL);
-        } while(n == pi->serial);
+        } while (n == pi->serial);
     }
     return 0;
 }
@@ -702,6 +696,7 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 
     return 0;
 }
+
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
@@ -726,7 +721,12 @@ int __system_property_add(const char *name, unsigned int namelen,
 
 unsigned int __system_property_serial(const prop_info *pi)
 {
-    return pi->serial;
+    uint32_t serial = pi->serial;
+    while (SERIAL_DIRTY(serial)) {
+        __futex_wait(const_cast<volatile uint32_t*>(&pi->serial), serial, NULL);
+        serial = pi->serial;
+    }
+    return serial;
 }
 
 unsigned int __system_property_wait_any(unsigned int serial)
@@ -735,7 +735,7 @@ unsigned int __system_property_wait_any(unsigned int serial)
 
     do {
         __futex_wait(&pa->serial, serial, NULL);
-    } while(pa->serial == serial);
+    } while (pa->serial == serial);
 
     return pa->serial;
 }
