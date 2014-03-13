@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcb4e5de_209c8e5a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-13T10:20:49Z",
+      "side": 1,
+      "message": "Please prefer \"unsigned int serial \u003d pi-\u003eserial\";",
+      "revId": "b55e4f2f364af1917fad93ff3c6bef40f44e192f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcb4e5de_6096863a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-13T10:20:49Z",
+      "side": 1,
+      "message": "return serial ?",
+      "revId": "b55e4f2f364af1917fad93ff3c6bef40f44e192f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
