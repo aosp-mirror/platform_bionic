@@ -1,4 +1,4 @@
-/*	$OpenBSD: vfscanf.c,v 1.21 2006/01/13 21:33:28 millert Exp $ */
+/*	$OpenBSD: vfscanf.c,v 1.30 2013/04/17 17:40:35 tedu Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -32,11 +32,13 @@
  */
 
 #include <ctype.h>
+#include <wctype.h>
 #include <inttypes.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "local.h"
 
 #ifdef FLOATING_POINT
@@ -49,7 +51,7 @@
  * Flags used during conversion.
  */
 #define	LONG		0x00001	/* l: long or double */
-#define	LONGDBL		0x00002	/* L: long double; unimplemented */
+#define	LONGDBL		0x00002	/* L: long double */
 #define	SHORT		0x00004	/* h: short */
 #define	SHORTSHORT	0x00008	/* hh: 8 bit integer */
 #define LLONG		0x00010	/* ll: long long (+ deprecated q: quad) */
@@ -90,15 +92,11 @@
 
 static u_char *__sccl(char *, u_char *);
 
-#if !defined(VFSCANF)
-#define VFSCANF	vfscanf
-#endif
-
 /*
- * vfscanf
+ * Internal, unlocked version of vfscanf
  */
 int
-VFSCANF(FILE *fp, const char *fmt0, __va_list ap)
+__svfscanf(FILE *fp, const char *fmt0, __va_list ap)
 {
 	u_char *fmt = (u_char *)fmt0;
 	int c;		/* character from format, or conversion */
@@ -112,12 +110,16 @@ VFSCANF(FILE *fp, const char *fmt0, __va_list ap)
 	int base;		/* base argument to strtoimax/strtouimax */
 	char ccltab[256];	/* character class table for %[...] */
 	char buf[BUF];		/* buffer for numeric conversions */
+#ifdef SCANF_WIDE_CHAR
+	wchar_t *wcp;		/* handy wide character pointer */
+	size_t nconv;		/* length of multibyte sequence converted */
+	mbstate_t mbs;
+#endif
 
 	/* `basefix' is used to avoid `if' tests in the integer scanner */
 	static short basefix[17] =
 		{ 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
-	FLOCKFILE(fp);
 	_SET_ORIENTATION(fp, -1);
 
 	nassigned = 0;
@@ -125,10 +127,8 @@ VFSCANF(FILE *fp, const char *fmt0, __va_list ap)
 	base = 0;		/* XXX just to keep gcc happy */
 	for (;;) {
 		c = *fmt++;
-		if (c == 0) {
-			FUNLOCKFILE(fp);
+		if (c == 0)
 			return (nassigned);
-		}
 		if (isspace(c)) {
 			while ((fp->_r > 0 || __srefill(fp) == 0) &&
 			    isspace(*fp->_p))
@@ -162,13 +162,7 @@ literal:
 			flags |= MAXINT;
 			goto again;
 		case 'L':
-			flags |=
-				(*fmt == 'd') ? LLONG :
-				(*fmt == 'i') ? LLONG :
-				(*fmt == 'o') ? LLONG :
-				(*fmt == 'u') ? LLONG :
-				(*fmt == 'x') ? LLONG :
-				LONGDBL;
+			flags |= LONGDBL;
 			goto again;
 		case 'h':
 			if (*fmt == 'h') {
@@ -245,11 +239,10 @@ literal:
 			break;
 
 #ifdef FLOATING_POINT
-		case 'E':
-		case 'G':
-		case 'e': 
-		case 'f': 
-		case 'g':
+		case 'e': case 'E':
+		case 'f': case 'F':
+		case 'g': case 'G':
+		case 'a': case 'A':
 			c = CT_FLOAT;
 			break;
 #endif
@@ -301,7 +294,6 @@ literal:
 		 * Disgusting backwards compatibility hacks.	XXX
 		 */
 		case '\0':	/* compat */
-			FUNLOCKFILE(fp);
 			return (EOF);
 
 		default:	/* compat */
@@ -346,10 +338,52 @@ literal:
 			/* scan arbitrary characters (sets NOSKIP) */
 			if (width == 0)
 				width = 1;
+#ifdef SCANF_WIDE_CHAR
+			if (flags & LONG) {
+				if ((flags & SUPPRESS) == 0)
+					wcp = va_arg(ap, wchar_t *);
+				else
+					wcp = NULL;
+				n = 0;
+				while (width != 0) {
+					if (n == MB_CUR_MAX) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					buf[n++] = *fp->_p;
+					fp->_p++;
+					fp->_r--;
+					bzero(&mbs, sizeof(mbs));
+					nconv = mbrtowc(wcp, buf, n, &mbs);
+					if (nconv == (size_t)-1) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					if (nconv == 0 && !(flags & SUPPRESS))
+						*wcp = L'\0';
+					if (nconv != (size_t)-2) {
+						nread += n;
+						width--;
+						if (!(flags & SUPPRESS))
+							wcp++;
+						n = 0;
+					}
+					if (fp->_r <= 0 && __srefill(fp)) {
+						if (n != 0) {
+							fp->_flags |= __SERR;
+							goto input_failure;
+						}
+						break;
+					}
+				}
+				if (!(flags & SUPPRESS))
+					nassigned++;
+			} else
+#endif /* SCANF_WIDE_CHAR */
 			if (flags & SUPPRESS) {
 				size_t sum = 0;
 				for (;;) {
-					if ((n = fp->_r) < (int)width) {
+					if ((n = fp->_r) < width) {
 						sum += n;
 						width -= n;
 						fp->_p += n;
@@ -381,6 +415,72 @@ literal:
 			/* scan a (nonempty) character class (sets NOSKIP) */
 			if (width == 0)
 				width = (size_t)~0;	/* `infinity' */
+#ifdef SCANF_WIDE_CHAR
+			/* take only those things in the class */
+			if (flags & LONG) {
+				wchar_t twc;
+				int nchars;
+
+				if ((flags & SUPPRESS) == 0)
+					wcp = va_arg(ap, wchar_t *);
+				else
+					wcp = &twc;
+				n = 0;
+				nchars = 0;
+				while (width != 0) {
+					if (n == MB_CUR_MAX) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					buf[n++] = *fp->_p;
+					fp->_p++;
+					fp->_r--;
+					bzero(&mbs, sizeof(mbs));
+					nconv = mbrtowc(wcp, buf, n, &mbs);
+					if (nconv == (size_t)-1) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					if (nconv == 0)
+						*wcp = L'\0';
+					if (nconv != (size_t)-2) {
+						if (wctob(*wcp) != EOF &&
+						    !ccltab[wctob(*wcp)]) {
+							while (n != 0) {
+								n--;
+								ungetc(buf[n],
+								    fp);
+							}
+							break;
+						}
+						nread += n;
+						width--;
+						if (!(flags & SUPPRESS))
+							wcp++;
+						nchars++;
+						n = 0;
+					}
+					if (fp->_r <= 0 && __srefill(fp)) {
+						if (n != 0) {
+							fp->_flags |= __SERR;
+							goto input_failure;
+						}
+						break;
+					}
+				}
+				if (n != 0) {
+					fp->_flags |= __SERR;
+					goto input_failure;
+				}
+				n = nchars;
+				if (n == 0)
+					goto match_failure;
+				if (!(flags & SUPPRESS)) {
+					*wcp = L'\0';
+					nassigned++;
+				}
+			} else
+#endif /* SCANF_WIDE_CHAR */
 			/* take only those things in the class */
 			if (flags & SUPPRESS) {
 				n = 0;
@@ -422,6 +522,60 @@ literal:
 			/* like CCL, but zero-length string OK, & no NOSKIP */
 			if (width == 0)
 				width = (size_t)~0;
+#ifdef SCANF_WIDE_CHAR
+			if (flags & LONG) {
+				wchar_t twc;
+
+				if ((flags & SUPPRESS) == 0)
+					wcp = va_arg(ap, wchar_t *);
+				else
+					wcp = &twc;
+				n = 0;
+				while (!isspace(*fp->_p) && width != 0) {
+					if (n == MB_CUR_MAX) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					buf[n++] = *fp->_p;
+					fp->_p++;
+					fp->_r--;
+					bzero(&mbs, sizeof(mbs));
+					nconv = mbrtowc(wcp, buf, n, &mbs);
+					if (nconv == (size_t)-1) {
+						fp->_flags |= __SERR;
+						goto input_failure;
+					}
+					if (nconv == 0)
+						*wcp = L'\0';
+					if (nconv != (size_t)-2) {
+						if (iswspace(*wcp)) {
+							while (n != 0) {
+								n--;
+								ungetc(buf[n],
+								    fp);
+							}
+							break;
+						}
+						nread += n;
+						width--;
+						if (!(flags & SUPPRESS))
+							wcp++;
+						n = 0;
+					}
+					if (fp->_r <= 0 && __srefill(fp)) {
+						if (n != 0) {
+							fp->_flags |= __SERR;
+							goto input_failure;
+						}
+						break;
+					}
+				}
+				if (!(flags & SUPPRESS)) {
+					*wcp = L'\0';
+					nassigned++;
+				}
+			} else
+#endif /* SCANF_WIDE_CHAR */
 			if (flags & SUPPRESS) {
 				n = 0;
 				while (!isspace(*fp->_p)) {
@@ -681,16 +835,18 @@ literal:
 				(void) ungetc(c, fp);
 			}
 			if ((flags & SUPPRESS) == 0) {
-				double res;
-
 				*p = '\0';
-				res = strtod(buf, (char **) NULL);
-				if (flags & LONGDBL)
+				if (flags & LONGDBL) {
+					long double res = strtold(buf,
+					    (char **)NULL);
 					*va_arg(ap, long double *) = res;
-				else if (flags & LONG)
+				} else if (flags & LONG) {
+					double res = strtod(buf, (char **)NULL);
 					*va_arg(ap, double *) = res;
-				else
+				} else {
+					float res = strtof(buf, (char **)NULL);
 					*va_arg(ap, float *) = res;
+				}
 				nassigned++;
 			}
 			nread += p - buf;
@@ -702,7 +858,6 @@ input_failure:
 	if (nassigned == 0)
 		nassigned = -1;
 match_failure:
-	FUNLOCKFILE(fp);
 	return (nassigned);
 }
 
@@ -800,4 +955,15 @@ doswitch:
 		}
 	}
 	/* NOTREACHED */
+}
+
+int
+vfscanf(FILE *fp, const char *fmt0, __va_list ap)
+{
+	int r;
+
+	FLOCKFILE(fp);
+	r = __svfscanf(fp, fmt0, ap);
+	FUNLOCKFILE(fp);
+	return (r);
 }

@@ -372,3 +372,14 @@ TEST(stdio, putc) {
   ASSERT_EQ(EOF, putc('x', fp));
   fclose(fp);
 }
+
+TEST(stdio, sscanf) {
+  char s1[123];
+  int i1;
+  double d1;
+  char s2[123];
+  ASSERT_EQ(3, sscanf("  hello 123 1.23 ", "%s %i %lf %s", s1, &i1, &d1, s2));
+  ASSERT_STREQ("hello", s1);
+  ASSERT_EQ(123, i1);
+  ASSERT_EQ(1.23, d1);
+}
