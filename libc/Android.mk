@@ -80,10 +80,7 @@ libc_common_src_files := \
     stdio/fvwrite.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    stdio/sscanf.c \
     stdio/vfprintf.c \
-    stdio/vfscanf.c \
-    stdio/vsscanf.c \
     stdlib/atexit.c \
     stdlib/ctype_.c \
     stdlib/getenv.c \
@@ -362,15 +359,18 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/scanf.c \
     upstream-openbsd/lib/libc/stdio/setbuf.c \
     upstream-openbsd/lib/libc/stdio/setbuffer.c \
+    upstream-openbsd/lib/libc/stdio/sscanf.c \
     upstream-openbsd/lib/libc/stdio/stdio.c \
     upstream-openbsd/lib/libc/stdio/tempnam.c \
     upstream-openbsd/lib/libc/stdio/tmpnam.c \
     upstream-openbsd/lib/libc/stdio/ungetc.c \
     upstream-openbsd/lib/libc/stdio/vasprintf.c \
+    upstream-openbsd/lib/libc/stdio/vfscanf.c \
     upstream-openbsd/lib/libc/stdio/vprintf.c \
     upstream-openbsd/lib/libc/stdio/vscanf.c \
     upstream-openbsd/lib/libc/stdio/vsnprintf.c \
     upstream-openbsd/lib/libc/stdio/vsprintf.c \
+    upstream-openbsd/lib/libc/stdio/vsscanf.c \
     upstream-openbsd/lib/libc/stdio/wbuf.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
