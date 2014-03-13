@@ -233,7 +233,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/fwrite.c \
     upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/mktemp.c \
-    upstream-freebsd/lib/libc/stdio/putw.c \
     upstream-freebsd/lib/libc/stdio/setvbuf.c \
     upstream-freebsd/lib/libc/stdio/wsetup.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
@@ -352,6 +351,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/putc.c \
     upstream-openbsd/lib/libc/stdio/putchar.c \
     upstream-openbsd/lib/libc/stdio/puts.c \
+    upstream-openbsd/lib/libc/stdio/putw.c \
     upstream-openbsd/lib/libc/stdio/refill.c \
     upstream-openbsd/lib/libc/stdio/remove.c \
     upstream-openbsd/lib/libc/stdio/rewind.c \

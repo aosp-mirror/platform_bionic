@@ -17,9 +17,6 @@
 #ifndef _BIONIC_FREEBSD_LIBC_PRIVATE_H_included
 #define _BIONIC_FREEBSD_LIBC_PRIVATE_H_included
 
-#define FLOCKFILE(fp)   do { if (__isthreaded) flockfile(fp); } while (0)
-#define FUNLOCKFILE(fp) do { if (__isthreaded) funlockfile(fp); } while (0)
-
 #define STDIO_THREAD_LOCK()   /* TODO: until we have the FreeBSD findfp.c, this is useless. */
 #define STDIO_THREAD_UNLOCK() /* TODO: until we have the FreeBSD findfp.c, this is useless. */
 

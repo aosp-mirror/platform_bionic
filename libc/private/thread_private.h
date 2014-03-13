@@ -15,11 +15,6 @@
  */
 
 /*
- * This variable is 0 until a second thread is created.
- */
-extern int __isthreaded;
-
-/*
  * helper macro to make unique names in the thread namespace
  */
 #define __THREAD_NAME(name)	__CONCAT(_thread_tagname_,name)
@@ -39,13 +34,7 @@ struct __thread_private_tag_t {
 void	_thread_atexit_lock(void);
 void	_thread_atexit_unlock(void);
 
-#define _ATEXIT_LOCK()		do {					\
-					if (__isthreaded)		\
-						_thread_atexit_lock();	\
-				} while (0)
-#define _ATEXIT_UNLOCK()	do {					\
-					if (__isthreaded)		\
-						_thread_atexit_unlock();\
-				} while (0)
+#define _ATEXIT_LOCK() _thread_atexit_lock()
+#define _ATEXIT_UNLOCK() _thread_atexit_unlock()
 
 #endif /* _THREAD_PRIVATE_H_ */

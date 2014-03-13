@@ -54,6 +54,8 @@ static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
 
+extern "C" int __isthreaded;
+
 // This code is used both by each new pthread and the code that initializes the main thread.
 void __init_tls(pthread_internal_t* thread) {
   // Zero-initialize all the slots after TLS_SLOT_SELF and TLS_SLOT_THREAD_ID.
@@ -169,11 +171,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;
 
-  // Inform the rest of the C library that at least one thread
-  // was created. This will enforce certain functions to acquire/release
-  // locks (e.g. atexit()) to protect shared global structures.
-  // This works because pthread_create() is not called by the C library
-  // initialization routine that sets up the main thread's data structures.
+  // Inform the rest of the C library that at least one thread was created.
   __isthreaded = 1;
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(calloc(sizeof(*thread), 1));
