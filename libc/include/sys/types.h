@@ -42,7 +42,7 @@ typedef __kernel_uid32_t __uid_t;
 typedef __uid_t uid_t;
 typedef __kernel_pid_t __pid_t;
 typedef __pid_t pid_t;
-typedef __uint32_t __id_t;
+typedef uint32_t __id_t;
 typedef __id_t id_t;
 
 typedef unsigned long blkcnt_t;
@@ -63,19 +63,19 @@ typedef __mode_t mode_t;
 typedef __kernel_key_t __key_t;
 typedef __key_t key_t;
 
-typedef __uint32_t __ino_t;
+typedef uint32_t __ino_t;
 typedef __ino_t ino_t;
 
-typedef __uint32_t __nlink_t;
+typedef uint32_t __nlink_t;
 typedef __nlink_t nlink_t;
 
 typedef void* __timer_t;
 typedef __timer_t timer_t;
 
-typedef __int32_t __suseconds_t;
+typedef int32_t __suseconds_t;
 typedef __suseconds_t suseconds_t;
 
-typedef __uint32_t __useconds_t;
+typedef uint32_t __useconds_t;
 typedef __useconds_t useconds_t;
 
 #if !defined(__LP64__)
@@ -113,10 +113,10 @@ typedef  .... pthread_t;
 
 #if !defined(__LP64__)
 /* This historical accident means that we had a signed socklen_t on 32-bit architectures. */
-typedef __int32_t __socklen_t;
+typedef int32_t __socklen_t;
 #else
 /* LP64 still has a 32-bit socklen_t. */
-typedef __uint32_t __socklen_t;
+typedef uint32_t __socklen_t;
 #endif
 typedef __socklen_t socklen_t;
 
