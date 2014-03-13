@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cb3e9f9_ba428d59",
+        "filename": "libm/upstream-freebsd/lib/msun/src/s_fma.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-13T16:31:00Z",
+      "side": 1,
+      "message": "oh, good. seeing that warning every time i rebuild bionic has been annoying me for months!",
+      "revId": "bd3155dc5ddf09647388ad7f8fdbe6df123fbd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
