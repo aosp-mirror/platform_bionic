@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_TIMES_H_
-#define _SYS_TIMES_H_
+#include <time.h>
+#include <sys/sysconf.h>
+#include <sys/times.h>
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <linux/times.h>
-
-__BEGIN_DECLS
-
-extern clock_t times(struct tms*);
-
-__END_DECLS
-
-#endif /* _SYS_TIMES_H_ */
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html
+clock_t clock() {
+  tms t;
+  times(&t);
+  return (t.tms_utime + t.tms_stime) * (CLOCKS_PER_SEC / sysconf(_SC_CLK_TCK));
+}
