@@ -33,8 +33,12 @@ benchmark_src_files = \
     benchmark_main.cpp \
     math_benchmark.cpp \
     property_benchmark.cpp \
+    pthread_benchmark.cpp \
+    semaphore_benchmark.cpp \
+    stdio_benchmark.cpp \
     string_benchmark.cpp \
     time_benchmark.cpp \
+    unistd_benchmark.cpp \
 
 # Build benchmarks for the device (with bionic's .so). Run with:
 #   adb shell bionic-benchmarks
