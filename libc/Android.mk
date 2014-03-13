@@ -455,7 +455,7 @@ endef
 
 
 # ========================================================
-# libbionic_ssp.a - stack protector code
+# libc_stack_protector.a - stack protector code
 # ========================================================
 #
 # The stack protector code needs to be compiled
@@ -469,7 +469,7 @@ LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector -Werror
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-LOCAL_MODULE := libbionic_ssp
+LOCAL_MODULE := libc_stack_protector
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
@@ -664,12 +664,12 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := \
-    libbionic_ssp \
     libc_bionic \
     libc_dns \
     libc_freebsd \
     libc_netbsd \
     libc_openbsd \
+    libc_stack_protector \
     libc_syscalls \
     libc_tzcode \
 
