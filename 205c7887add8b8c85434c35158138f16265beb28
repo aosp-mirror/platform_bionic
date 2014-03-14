@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc965d57_2c39f355",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2014-03-14T07:15:35Z",
+      "side": 1,
+      "message": "This change broke aosp_arm64\n\nexternal/stlport/stlport/stl/_clocale.h:33:9: error: \u0027::lconv\u0027 has not been declared\n using _STLP_VENDOR_CSTD::lconv;\n         ^\nmake: *** [out/target/product/generic_arm64/obj/SHARED_LIBRARIES/libstlport_intermediates/src/locale.o] Error 1",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 6
+      },
+      "revId": "205c7887add8b8c85434c35158138f16265beb28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
