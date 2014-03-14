@@ -400,7 +400,6 @@ libc_arch_static_src_files := \
 # Define some common cflags
 # ========================================================
 libc_common_cflags := \
-    -DANDROID_CHANGES \
     -D_LIBC=1 \
     -Wall -Wextra \
 
@@ -513,6 +512,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(call all-c-files-under,dns)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -DANDROID_CHANGES \
     -DINET6 \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
