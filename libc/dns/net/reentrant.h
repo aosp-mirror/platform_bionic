@@ -38,49 +38,49 @@
 
 /*
  * Requirements:
- * 
+ *
  * 1. The thread safe mechanism should be lightweight so the library can
  *    be used by non-threaded applications without unreasonable overhead.
- * 
+ *
  * 2. There should be no dependency on a thread engine for non-threaded
  *    applications.
- * 
+ *
  * 3. There should be no dependency on any particular thread engine.
- * 
+ *
  * 4. The library should be able to be compiled without support for thread
  *    safety.
- * 
- * 
+ *
+ *
  * Rationale:
- * 
+ *
  * One approach for thread safety is to provide discrete versions of the
  * library: one thread safe, the other not.  The disadvantage of this is
  * that libc is rather large, and two copies of a library which are 99%+
  * identical is not an efficent use of resources.
- * 
+ *
  * Another approach is to provide a single thread safe library.  However,
  * it should not add significant run time or code size overhead to non-
  * threaded applications.
- * 
+ *
  * Since the NetBSD C library is used in other projects, it should be
  * easy to replace the mutual exclusion primitives with ones provided by
  * another system.  Similarly, it should also be easy to remove all
  * support for thread safety completely if the target environment does
  * not support threads.
- * 
- * 
+ *
+ *
  * Implementation Details:
- * 
+ *
  * The thread primitives used by the library (mutex_t, mutex_lock, etc.)
  * are macros which expand to the cooresponding primitives provided by
  * the thread engine or to nothing.  The latter is used so that code is
  * not unreasonably cluttered with #ifdefs when all thread safe support
  * is removed.
- * 
+ *
  * The thread macros can be directly mapped to the mutex primitives from
  * pthreads, however it should be reasonably easy to wrap another mutex
  * implementation so it presents a similar interface.
- * 
+ *
  * The thread functions operate by dispatching to symbols which are, by
  * default, weak-aliased to no-op functions in thread-stub/thread-stub.c
  * (some uses of thread operations are conditional on __isthreaded, but
@@ -212,8 +212,6 @@ void	__libc_thr_create(thr_t *, const thrattr_t *,
 void	__libc_thr_exit(void *) __attribute__((__noreturn__));
 int	*__libc_thr_errno(void);
 int	__libc_thr_setcancelstate(int, int *);
-
-extern int __isthreaded;
 __END_DECLS
 
 #define	thr_once(o, f)		__libc_thr_once((o), (f))
@@ -223,7 +221,6 @@ __END_DECLS
 #define	thr_create(tp, ta, f, a) __libc_thr_create((tp), (ta), (f), (a))
 #define	thr_exit(v)		__libc_thr_exit((v))
 #define	thr_errno()		__libc_thr_errno()
-#define	thr_enabled()		(__isthreaded)
 #define thr_setcancelstate(n, o) __libc_thr_setcancelstate((n),(o))
 #endif /* __LIBC_THREAD_STUBS */
 
@@ -263,7 +260,7 @@ __END_DECLS
 #define	thr_self()
 #define	thr_errno()
 
-#define	FLOCKFILE(fp)		
-#define	FUNLOCKFILE(fp)		
+#define	FLOCKFILE(fp)
+#define	FUNLOCKFILE(fp)
 
 #endif /* _REENTRANT */

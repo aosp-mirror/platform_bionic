@@ -91,7 +91,25 @@ extern int __sdidinit;
 	(fp)->_lb._base = NULL; \
 }
 
-#define FLOCKFILE(fp)   do { if (__isthreaded) flockfile(fp); } while (0)
-#define FUNLOCKFILE(fp) do { if (__isthreaded) funlockfile(fp); } while (0)
+#define FLOCKFILE(fp)   flockfile(fp)
+#define FUNLOCKFILE(fp) funlockfile(fp)
 
 #define FLOATING_POINT
+
+/* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
+__BEGIN_DECLS
+int __srget(FILE*);
+int __swbuf(int, FILE*);
+__END_DECLS
+#define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
+#define __sferror(p)   (((p)->_flags & __SERR) != 0)
+#define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
+#define __sfileno(p)   ((p)->_file)
+#define __sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
+static __inline int __sputc(int _c, FILE* _p) {
+  if (--_p->_w >= 0 || (_p->_w >= _p->_lbfsize && (char)_c != '\n')) {
+    return (*_p->_p++ = _c);
+  } else {
+    return (__swbuf(_c, _p));
+  }
+}
