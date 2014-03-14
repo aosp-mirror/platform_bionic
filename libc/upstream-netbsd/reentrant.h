@@ -28,6 +28,8 @@
 
 #define MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 #define mutex_t pthread_mutex_t
+#define mutex_lock(x) pthread_mutex_lock(x)
+#define mutex_unlock(x) pthread_mutex_unlock(x)
 
 #define RWLOCK_INITIALIZER PTHREAD_RWLOCK_INITIALIZER
 #define rwlock_t pthread_rwlock_t
