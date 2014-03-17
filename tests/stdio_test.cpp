@@ -381,5 +381,5 @@ TEST(stdio, sscanf) {
   ASSERT_EQ(3, sscanf("  hello 123 1.23 ", "%s %i %lf %s", s1, &i1, &d1, s2));
   ASSERT_STREQ("hello", s1);
   ASSERT_EQ(123, i1);
-  ASSERT_EQ(1.23, d1);
+  ASSERT_DOUBLE_EQ(1.23, d1);
 }
