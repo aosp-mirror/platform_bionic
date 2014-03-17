@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcb1990e_3800501f",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "The netid should be %u.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_1805942e",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "%u",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdfd954_4e75b39b",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1325,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "unsigned?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_fd42da7e",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "Any reason why you use netid in some places and mark in others? Should the code just use netid everywhere?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_9d32b61d",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "Any reason to reorder the arguments here? The previous argument order matches the public signature of getaddrinfo, so it might be more readable.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdfd954_6e918f85",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "The netid is unsigned, so %u.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_392978b2",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1800,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "%u",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_d965f432",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "netid_size",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_9811a46f",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "This should compare to NETID_UNSET, right?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdfd954_6eaaaf9b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "Compare to NETID_UNSET?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_d9d3b49f",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 1,
+      "message": "Why is this needed here? The other functions in this file seem to be for external consumption, but this one is internal, right?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

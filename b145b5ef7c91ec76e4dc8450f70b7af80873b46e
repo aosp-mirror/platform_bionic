@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcb1990e_78f7f8fc",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 0,
+      "message": "Simply deleting the call to _using_default_dns without first putting proper routing in place may break apps that use startUsingNetworkFeature - they\u0027ll think they are on a secondary network and expect both IPv4 and IPv6 lookups to happen, but instead they\u0027ll just make lookups for the IP address families that the default interface has (because of our implementation of AI_ADDRCONFIG).\n\nOnce routing is in place this will start to work again, but is there something we can do about it in the meantime? Maybe have netd pass down a special \"unknown\" netid value that always causes both IPv4 and IPv6 lookups to happen?",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_9932cc1d",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-17T15:31:33Z",
+      "side": 0,
+      "message": "How do we deal with this now?",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
