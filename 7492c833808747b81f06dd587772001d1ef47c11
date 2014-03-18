@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c13a1db_af01bd63",
+        "filename": "libm/amd64/_fpmath.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "Is there a more recent FreeBSD version of the file we should take instead rather than modify this one?\n\nSame question for the other _fpmath.h file.",
+      "range": {
+        "startLine": 29,
+        "startChar": 3,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0da9ba_0aa1dbb8",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "This comment is a bit confusing. I think you mean that since FreeBSD defines these functions as imprecise for long double values (where sizeof(long double) !\u003d sizeof(double)), then we are going to use the precise double versions instead. Is that correct?",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fccd7da7_bb958824",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "Should there be a LP64 and non-LP64 version of this function? I don\u0027t all of the ins and outs so it might be that there isn\u0027t an easy way to create a LP64 version.",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0da9ba_2a401f51",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "As long as you are in here, can you change all of the ones that don\u0027t reference the specific float type to be ASSERT_DOUBLE_EQ. Most of the following should have been DOUBLE instead of FLOAT.",
+      "range": {
+        "startLine": 305,
+        "startChar": 9,
+        "endLine": 305,
+        "endChar": 14
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fccd7da7_9b93ecfe",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "For some of these you set them to 2.0l, some you set to just 2.0. I don\u0027t think it matters too much since they are eventually cast to a double, but it\u0027s probably good to be consistent and always use the l.",
+      "range": {
+        "startLine": 649,
+        "startChar": 19,
+        "endLine": 649,
+        "endChar": 22
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fccd7da7_3b9a9811",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-18T22:29:09Z",
+      "side": 1,
+      "message": "Pedantic small nit. You mostly use lower case l, so should probably use one or the other to be consistent.",
+      "range": {
+        "startLine": 969,
+        "startChar": 22,
+        "endLine": 969,
+        "endChar": 23
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
