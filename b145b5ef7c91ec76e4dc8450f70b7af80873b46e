@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dcb1990e_22bb76f0",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-18T07:00:42Z",
+      "side": 0,
+      "message": "Actually, we might be able to fix this by simply doing:\n\n    static bool _using_default_dns(unsigned netid) {\n        return netid \u003d\u003d NETID_UNSET;\n    }\n\n...\n\n    if (_using_default_dns(netid)) {\n        query_ipv6 \u003d _have_ipv6(netid);\n        query_ipv4 \u003d _have_ipv4(netid);\n    }\n\nThis will cause any code that sets the netid to cause superfluous DNS lookups (e.g., asking for AAAA records even if the netid doesn\u0027t have IPv6), but that\u0027s a lot better than not doing DNS lookups that might be required for things to work.",
+      "parentUuid": "dcb1990e_78f7f8fc",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9

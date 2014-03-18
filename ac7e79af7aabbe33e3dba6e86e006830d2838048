@@ -121,6 +121,23 @@
     },
     {
       "key": {
+        "uuid": "bc0ea5b3_f168b7cd",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1811,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-18T07:00:42Z",
+      "side": 1,
+      "message": "Who frees this? If netids aren\u0027t reused, then these caches will accumulate over time.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_d965f432",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 9
