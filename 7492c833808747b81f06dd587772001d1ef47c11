@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1ca891a1_66ec04a4",
+        "filename": "libm/amd64/_fpmath.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "Unfortunately not. Both assume that the long doubles are 80-bits (with padding until 128-bits) which is not the case for us.\n\nI ended up in the current form after quite a bit of debugging and reverse engineering since I couldn\u0027t find a source of true for them.\n\nI think they\u0027re ok now but I\u0027m happy to take advice here.",
+      "parentUuid": "9c13a1db_af01bd63",
+      "range": {
+        "startLine": 29,
+        "startChar": 3,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c0da9ba_0aa1dbb8",
         "filename": "libm/fake_long_double.c",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-03-18T22:29:09Z",
       "side": 1,
       "message": "This comment is a bit confusing. I think you mean that since FreeBSD defines these functions as imprecise for long double values (where sizeof(long double) !\u003d sizeof(double)), then we are going to use the precise double versions instead. Is that correct?",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cd4752d_aa509723",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "Yes. I will fix.",
+      "parentUuid": "5c0da9ba_0aa1dbb8",
       "range": {
         "startLine": 25,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3cd4752d_8a46fb6e",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "As it is right now it should create a valid subnormal for both but now I think it will be clearer with different versions. I\u0027ll update.",
+      "parentUuid": "fccd7da7_bb958824",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c0da9ba_2a401f51",
         "filename": "tests/math_test.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2014-03-18T22:29:09Z",
       "side": 1,
       "message": "As long as you are in here, can you change all of the ones that don\u0027t reference the specific float type to be ASSERT_DOUBLE_EQ. Most of the following should have been DOUBLE instead of FLOAT.",
+      "range": {
+        "startLine": 305,
+        "startChar": 9,
+        "endLine": 305,
+        "endChar": 14
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cba6def_01e1b07f",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "Ok, will do it.",
+      "parentUuid": "5c0da9ba_2a401f51",
       "range": {
         "startLine": 305,
         "startChar": 9,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7cba6def_2171541f",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "Ah, sorry. I made them consistent in the a PS but then I lost the file (as you noticed:) ) and when I re-imported it from an older PS I forgot about it. Will fix.",
+      "parentUuid": "fccd7da7_9b93ecfe",
+      "range": {
+        "startLine": 649,
+        "startChar": 19,
+        "endLine": 649,
+        "endChar": 22
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fccd7da7_3b9a9811",
         "filename": "tests/math_test.cpp",
         "patchSetId": 6
@@ -128,6 +248,30 @@
       "writtenOn": "2014-03-18T22:29:09Z",
       "side": 1,
       "message": "Pedantic small nit. You mostly use lower case l, so should probably use one or the other to be consistent.",
+      "range": {
+        "startLine": 969,
+        "startChar": 22,
+        "endLine": 969,
+        "endChar": 23
+      },
+      "revId": "7492c833808747b81f06dd587772001d1ef47c11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cd4752d_6a439f60",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-18T22:50:35Z",
+      "side": 1,
+      "message": "Same as before. Will fix.",
+      "parentUuid": "fccd7da7_3b9a9811",
       "range": {
         "startLine": 969,
         "startChar": 22,
