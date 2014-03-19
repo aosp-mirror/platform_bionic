@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c02b58d_c0ecc2e8",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-19T18:15:08Z",
+      "side": 1,
+      "message": "Better to name this something like TEST_FLAGS. It\u0027s probably also useful to update the comment to indicate that this is a value that is either empty or comes from a user.",
+      "range": {
+        "startLine": 255,
+        "startChar": 52,
+        "endLine": 255,
+        "endChar": 54
+      },
+      "revId": "024a213d816842c4683a55fca608b87b80b81fdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
