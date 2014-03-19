@@ -248,11 +248,12 @@ include $(LOCAL_PATH)/Android.build.mk
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # Use the current target out directory as ANDROID_DATA.
+# BIONIC_TEST_FLAGS is either empty or it comes from the user.
 bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
-		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc
+		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc $(BIONIC_TEST_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Run the unit tests built against x86 bionic on an x86 host.
@@ -267,6 +268,7 @@ endif
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
+# BIONIC_TEST_FLAGS is either empty or it comes from the user.
 bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
 	if [ ! -d /system -o ! -d /system/bin ]; then \
 	  echo "Attempting to create /system/bin"; \
@@ -278,7 +280,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests
+		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests $(BIONIC_TEST_FLAGS)
 endif
 endif
 
