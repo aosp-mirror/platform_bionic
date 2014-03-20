@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1c2df129_f82f6da2",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 0,
+      "message": "Three comments:\n1. Ironically _using_default_dns() will always return true at present because nobody passes a non-NULL iface down.  So in this regard removing _using_default_dns() is the correct thing to do, but this makes adding the netid parameter to _have_ipv[46]() incorrect as you note.\n2. Your _using_default_dns() suggestion unfortunately won\u0027t work because netid\u0027s set to NETID_UNSET will have been converted to the default netid back in netd, see:\n https://android-review.googlesource.com/#/c/87542/1/DnsProxyListener.cpp@211\n3. The manual page says configured addresses are checked on the \"local system\" while RFC2553 says configured source addresses on the \"node\" are checked.  We\u0027re kind of in a grey area because we\u0027re trying to do interface/netid-specific lookup.\n\nMy suggestion:\nWe get rid of _using_default_dns() because it didn\u0027t do anything in the past and we put _have_ipv[46]() back to the way they were (without netid param) so as not to mess with the old working behavior.\nWDYT?",
+      "parentUuid": "dcb1990e_22bb76f0",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
@@ -48,6 +66,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 0,
       "message": "How do we deal with this now?",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c2df129_98e2f941",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 0,
+      "message": "I don\u0027t think we\u0027re changing behavior.  _resolv_cache_reset() was never called so |generation| was never set.  This is how resolv cache gets flushed before and after this change:\nConnectivityService calls\nmNetd.flushInterfaceDnsCache() sends\n\"resovler flushif\" to netd, calls\nCommandListener.cpp calls\nsResolverCtrl-\u003eflushInterfaceDnsCache() calls\n_resolv_flush_cache_for_iface() calls \n_flush_cache_for_iface_locked() calls \n_cache_flush_locked() who clears everything in the interface\u0027s cache while locking it.",
+      "parentUuid": "fcb49dfd_9932cc1d",
       "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false

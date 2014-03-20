@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bc1ce5fb_bddd6b55",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done; also updated DnsProxyListener.cpp.",
+      "parentUuid": "dcb1990e_3800501f",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcb1990e_1805942e",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 9
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 1,
       "message": "%u",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc1ce5fb_5dc3ef78",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done; also updated DnsProxyListener.cpp.",
+      "parentUuid": "dcb1990e_1805942e",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1c2df129_958e44aa",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1325,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcdfd954_4e75b39b",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcb1990e_fd42da7e",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 9
@@ -64,6 +118,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 1,
       "message": "Any reason why you use netid in some places and mark in others? Should the code just use netid everywhere?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc1ce5fb_3df5db9a",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "While netids are the same as marks this looks weird, but when they aren\u0027t equivalent this division will make more sense.  Please see my email from 3/11/2014.",
+      "parentUuid": "dcb1990e_fd42da7e",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "bc1ce5fb_7dc0336b",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcb1990e_9d32b61d",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcdfd954_6e918f85",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 9
@@ -98,6 +188,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 1,
       "message": "The netid is unsigned, so %u.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c16eddd_fb81ab3b",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done; also updated DnsProxyListener.cpp.",
+      "parentUuid": "dcdfd954_6e918f85",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "7c16eddd_5b91b784",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1800,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcb49dfd_392978b2",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc0ea5b3_f168b7cd",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
@@ -132,6 +258,24 @@
       "writtenOn": "2014-03-18T07:00:42Z",
       "side": 1,
       "message": "Who frees this? If netids aren\u0027t reused, then these caches will accumulate over time.",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c16eddd_bb6253e8",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1811,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Szymon previously replied to this concern.  I\u0027ll summarize:\nFor now we aren\u0027t freeing these caches.  Previously we were also not freeing these caches.  We currently have just one cache per interface, just like we previously did.  Freeing the caches will require reworking the locking mechanism significantly and I plan on doing this soon after this commit, but for now when we have just one cache per interface it\u0027s not worth it.  Please see my email thread from 3/4/14.",
+      "parentUuid": "bc0ea5b3_f168b7cd",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "7c16eddd_7b759b9b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcb49dfd_d965f432",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcb1990e_9811a46f",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 9
@@ -166,6 +328,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 1,
       "message": "This should compare to NETID_UNSET, right?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c2df129_9560841b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done; I also updated the initializer.",
+      "parentUuid": "dcb1990e_9811a46f",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "1c2df129_554bcca1",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcdfd954_6eaaaf9b",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_d9d3b49f",
         "filename": "libc/include/netdb.h",
         "patchSetId": 9
@@ -200,6 +398,24 @@
       "writtenOn": "2014-03-17T15:31:33Z",
       "side": 1,
       "message": "Why is this needed here? The other functions in this file seem to be for external consumption, but this one is internal, right?",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c2df129_78435d60",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T17:03:36Z",
+      "side": 1,
+      "message": "All the android_*() functions aren\u0027t available for external consumption because they\u0027re missing from the libc stub library (see development/ndk/platforms/android-19/arch-arm/symbols/libc.so.functions.txt) though an avid developer could add them to the list, rebuild the libc stub library and link their programs with the rebuilt library and voila access the android_*() functions, but I think we\u0027re counting on this not happening as we\u0027re changing the prototypes.\nI added android_gethostbyaddrfornet_proxy() here as it was used unprototyped elsewhere in the resolver itself.\n\nHow about we move all the android_*() function prototypes into libc/dns/include/resolv_netid.h so users aren\u0027t tricked into using unavailable functions? WDYT?",
+      "parentUuid": "fcb49dfd_d9d3b49f",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
