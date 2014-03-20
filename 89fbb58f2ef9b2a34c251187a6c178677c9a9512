@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5c904999_4f7b4d4c",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-20T12:18:12Z",
+      "side": 1,
+      "message": "Looks like. Do you think we should replace them with a macro? Though I can\u0027t see a common header for the files that use this...",
+      "parentUuid": "dc26f94e_b3503824",
+      "revId": "89fbb58f2ef9b2a34c251187a6c178677c9a9512",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc26f94e_934bbc7b",
         "filename": "libc/include/sys/socket.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-20T08:24:19Z",
       "side": 1,
       "message": "Does this need to be removed as well ?",
+      "revId": "89fbb58f2ef9b2a34c251187a6c178677c9a9512",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c904999_4f4cad60",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-20T12:18:12Z",
+      "side": 1,
+      "message": "We probably could but given that it\u0027s a bit more complex it will be awkward to manually inline it. Given that this is static anyway it doesn\u0027t really matter.",
+      "parentUuid": "dc26f94e_934bbc7b",
       "revId": "89fbb58f2ef9b2a34c251187a6c178677c9a9512",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
