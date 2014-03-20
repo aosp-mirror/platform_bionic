@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc26f94e_b3503824",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-20T08:24:19Z",
+      "side": 1,
+      "message": "Looks like we have several copies of this scattered over our codebase.",
+      "revId": "89fbb58f2ef9b2a34c251187a6c178677c9a9512",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc26f94e_934bbc7b",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-20T08:24:19Z",
+      "side": 1,
+      "message": "Does this need to be removed as well ?",
+      "revId": "89fbb58f2ef9b2a34c251187a6c178677c9a9512",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
