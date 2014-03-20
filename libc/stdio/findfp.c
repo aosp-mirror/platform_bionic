@@ -41,6 +41,9 @@
 #include "glue.h"
 #include "private/thread_private.h"
 
+#define ALIGNBYTES (sizeof(uintptr_t) - 1)
+#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+
 int	__sdidinit;
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
