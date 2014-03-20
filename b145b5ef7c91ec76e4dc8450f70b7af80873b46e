@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "1c2df129_f8420d7f",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-20T20:26:37Z",
+      "side": 0,
+      "message": "Oh wait, marking sockets doesn\u0027t do anything in AOSP to the best of my knowledge at the moment, so in this case I say leave the change as it stands now.",
+      "parentUuid": "1c2df129_f82f6da2",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
