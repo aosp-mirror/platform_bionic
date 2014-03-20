@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc6a2564_0a5c5bdb",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-20T22:59:33Z",
+      "side": 1,
+      "message": "Couldn\u0027t you write ALIGNBYTES like so:\n\n#define ALIGNBYTES (sizeof(uintptr_t) - 1)\n\nThis way you don\u0027t need the #if __LP64__ stuff.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 6
+      },
+      "revId": "03bef19197e36688a0d10dcc131b96320c680c3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
