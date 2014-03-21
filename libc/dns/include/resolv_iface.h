@@ -79,13 +79,12 @@ extern void _resolv_clear_iface_pid_mapping();
 extern int _resolv_get_pids_associated_interface(int pid, char* buff, int buffLen);
 
 
-/** set a uid range to use the name servers of the specified interface
- *  If [low,high] overlaps with an already existing rule -1 is returned */
+/** set a uid range to use the name servers of the specified interface */
 extern int _resolv_set_iface_for_uid_range(const char* ifname, int uid_start, int uid_end);
 
-/* clear a uid range from being associated with an interface
- * If the range given is not mapped -1 is returned. */
-extern int _resolv_clear_iface_for_uid_range(int uid_start, int uid_end);
+/** Remove a mapping added by _resolv_set_iface_for_uid_range.
+ *  If no such rule exists -1 is returned. */
+extern int _resolv_clear_iface_for_uid_range(const char* ifname, int uid_start, int uid_end);
 
 /* clear the entire mapping of uid ranges to interfaces. */
 extern void _resolv_clear_iface_uid_range_mapping();
@@ -94,6 +93,7 @@ extern void _resolv_clear_iface_uid_range_mapping();
  *  On error, -1 is returned.
  *  If no interface is found, 0 is returned and buff is set to empty ('\0').
  *  If an interface is found, the name is copied to buff and the length of the name is returned.
+ *  If there are multiple rules covering uid the most recently added rule will be returned.
  *  Arguments:   uid The uid to find an interface for
  *               buff A buffer to copy the result to
  *               buffLen Length of buff. An interface is at most IF_NAMESIZE in length */
