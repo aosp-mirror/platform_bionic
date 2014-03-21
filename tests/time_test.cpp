@@ -341,3 +341,49 @@ TEST(time, timer_create_multiple) {
   EXPECT_EQ(1, counter2.value);
   EXPECT_EQ(0, counter3.value);
 }
+
+struct TimerDeleteData {
+  timer_t timer_id;
+  pthread_t thread_id;
+  volatile bool complete;
+};
+
+static void TimerDeleteCallback(sigval_t value) {
+  TimerDeleteData* tdd = reinterpret_cast<TimerDeleteData*>(value.sival_ptr);
+
+  tdd->thread_id = pthread_self();
+  timer_delete(tdd->timer_id);
+  tdd->complete = true;
+}
+
+TEST(time, timer_delete_from_timer_thread) {
+  TimerDeleteData tdd;
+  sigevent_t se;
+
+  memset(&se, 0, sizeof(se));
+  se.sigev_notify = SIGEV_THREAD;
+  se.sigev_notify_function = TimerDeleteCallback;
+  se.sigev_value.sival_ptr = &tdd;
+
+  tdd.complete = false;
+  ASSERT_EQ(0, timer_create(CLOCK_REALTIME, &se, &tdd.timer_id));
+
+  itimerspec ts;
+  ts.it_value.tv_sec = 0;
+  ts.it_value.tv_nsec = 100;
+  ts.it_interval.tv_sec = 0;
+  ts.it_interval.tv_nsec = 0;
+  ASSERT_EQ(0, timer_settime(tdd.timer_id, TIMER_ABSTIME, &ts, NULL));
+
+  time_t cur_time = time(NULL);
+  while (!tdd.complete && (time(NULL) - cur_time) < 5);
+  ASSERT_TRUE(tdd.complete);
+
+#if defined(__BIONIC__)
+  // Since bionic timers are implemented by creating a thread to handle the
+  // callback, verify that the thread actually completes.
+  cur_time = time(NULL);
+  while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5);
+  ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
+#endif
+}
