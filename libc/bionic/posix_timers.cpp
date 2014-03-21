@@ -100,11 +100,14 @@ static void* __timer_thread_start(void* arg) {
 static void __timer_thread_stop(PosixTimer* timer) {
   pthread_kill(timer->callback_thread, TIMER_SIGNAL);
 
-  // We can't pthread_join because POSIX says "the threads created in response to a timer
-  // expiration are created detached, or in an unspecified way if the thread attribute's
-  // detachstate is PTHREAD_CREATE_JOINABLE".
-  while (timer->exiting == 0) {
-    __futex_wait(&timer->exiting, 0, NULL);
+  // If this is being called from within the callback thread, do nothing else.
+  if (pthread_self() != timer->callback_thread) {
+    // We can't pthread_join because POSIX says "the threads created in response to a timer
+    // expiration are created detached, or in an unspecified way if the thread attribute's
+    // detachstate is PTHREAD_CREATE_JOINABLE".
+    while (timer->exiting == 0) {
+      __futex_wait(&timer->exiting, 0, NULL);
+    }
   }
 }
 
