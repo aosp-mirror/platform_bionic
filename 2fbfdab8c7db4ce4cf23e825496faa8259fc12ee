@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c5e35d0_e39b2562",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1916,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2014-03-22T00:08:49Z",
+      "side": 1,
+      "message": "is this a netid or a mark?  Seems like you\u0027re using them interchangeably.  It would be better to probably call it mark throughout since at the end you use it as a mark.\n\nAlternatively, in call sites where you need a mark, use a macro to get mark for the netid and have that be a noop with a comment about why.",
+      "range": {
+        "startLine": 1916,
+        "startChar": 27,
+        "endLine": 1916,
+        "endChar": 32
+      },
+      "revId": "2fbfdab8c7db4ce4cf23e825496faa8259fc12ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
