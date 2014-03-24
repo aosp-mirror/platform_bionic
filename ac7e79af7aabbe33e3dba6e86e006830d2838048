@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "9cb2c15a_e0366cc2",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-24T15:32:29Z",
+      "side": 1,
+      "message": "Replied in email.",
+      "parentUuid": "bc1ce5fb_3df5db9a",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcb1990e_9d32b61d",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 9
@@ -416,6 +434,24 @@
       "side": 1,
       "message": "All the android_*() functions aren\u0027t available for external consumption because they\u0027re missing from the libc stub library (see development/ndk/platforms/android-19/arch-arm/symbols/libc.so.functions.txt) though an avid developer could add them to the list, rebuild the libc stub library and link their programs with the rebuilt library and voila access the android_*() functions, but I think we\u0027re counting on this not happening as we\u0027re changing the prototypes.\nI added android_gethostbyaddrfornet_proxy() here as it was used unprototyped elsewhere in the resolver itself.\n\nHow about we move all the android_*() function prototypes into libc/dns/include/resolv_netid.h so users aren\u0027t tricked into using unavailable functions? WDYT?",
       "parentUuid": "fcb49dfd_d9d3b49f",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cb7cd4c_334c5260",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-24T15:32:29Z",
+      "side": 1,
+      "message": "There\u0027s a difference between the android_* functions and the android_*_proxy functions: the latter can only be used in netd. So they\u0027re really an implementation detail that doesn\u0027t belong here.\n\nMoving the android_* out of netdb.h also seems reasonable, but I\u0027m not sure about those. Do we know why they were put here initially, as opposed to, say, resolv_private.h?",
+      "parentUuid": "1c2df129_78435d60",
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false

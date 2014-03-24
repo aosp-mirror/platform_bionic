@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "bcdf857e_b39de70a",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-03-24T15:32:29Z",
+      "side": 0,
+      "message": "1. Are you 100% sure it didn\u0027t do anything? IIRC _using_default_dns() was added because _have_ipv4 and_have_ipv6 check routing on the default interface rather than addresses. So the system would, for example, not request AAAA records on the IPv6-only IMS connection if the default conection was an IPv4-only wifi. See http://b/5468224 and internal change ID If4f017573d313a6ad8354574076de6d63d43b444 for more detail.\n\nI don\u0027t think that problem has gone away. Why do you say iface is always null? It\u0027s passed in with the mark by android_getaddrinfoforiface, right?\n\n3. I think the problem is not so much that we check routing even though the RFC says to check addresses, the problem is that we checking routing on the default network, and not necessarily on the network we\u0027re doing the DNS lookup on. I think routing is actually a reasonable proxy of what we want to do here.",
+      "parentUuid": "1c2df129_f82f6da2",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
