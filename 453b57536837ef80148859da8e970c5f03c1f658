@@ -22,6 +22,30 @@
       "revId": "453b57536837ef80148859da8e970c5f03c1f658",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ce98d2a_a35124a3",
+        "filename": "libm/amd64/_fpmath.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-24T11:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cf0910e_20ad0480",
+      "range": {
+        "startLine": 29,
+        "startChar": 3,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "453b57536837ef80148859da8e970c5f03c1f658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
