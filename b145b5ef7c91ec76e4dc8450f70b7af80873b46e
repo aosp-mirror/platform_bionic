@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "bc0865da_23a4f831",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-24T22:26:12Z",
+      "side": 0,
+      "message": "Actually that won\u0027t work.  The netId passed down needs to be explicit (not NETID_UNSET) now that we\u0027ve moved the UID/PID overriding into netd.\nHow about instead just adding _resolv_set_default_netid() and having _using_default_dns() use that?",
+      "parentUuid": "9c0d61ec_e2083cf8",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
