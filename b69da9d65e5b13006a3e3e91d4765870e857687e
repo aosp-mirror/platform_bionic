@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfc9dee_a5b924d0",
+        "filename": "libc/arch-arm/denver/bionic/memcpy_base.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-24T23:27:56Z",
+      "side": 1,
+      "message": "Use ENTRY_PRIVATE instead of ENTRY.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 5
+      },
+      "revId": "b69da9d65e5b13006a3e3e91d4765870e857687e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cb2c15a_b33cbba6",
+        "filename": "libc/arch-arm/denver/bionic/memcpy_base.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-24T23:27:56Z",
+      "side": 1,
+      "message": "For hand-coded assembler, we\u0027ve standardized on cfi directives only. So you can remove this one and any others like it.",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "b69da9d65e5b13006a3e3e91d4765870e857687e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca1d50c_2e7a2700",
+        "filename": "libc/arch-arm/denver/bionic/memcpy_base.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-24T23:27:56Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 158,
+        "startChar": 28,
+        "endLine": 158,
+        "endChar": 29
+      },
+      "revId": "b69da9d65e5b13006a3e3e91d4765870e857687e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cbcc931_18d4c90b",
+        "filename": "libc/arch-arm/denver/bionic/memset.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-24T23:27:56Z",
+      "side": 1,
+      "message": "Same as the other arm only directives, these aren\u0027t necessary.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 24
+      },
+      "revId": "b69da9d65e5b13006a3e3e91d4765870e857687e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cbcc931_98e71903",
+        "filename": "libc/arch-arm/denver/bionic/memset.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-24T23:27:56Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 95,
+        "startChar": 50,
+        "endLine": 95,
+        "endChar": 51
+      },
+      "revId": "b69da9d65e5b13006a3e3e91d4765870e857687e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
