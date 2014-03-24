@@ -455,6 +455,24 @@
       "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0865da_235fd8d3",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-24T20:08:56Z",
+      "side": 1,
+      "message": "The commit comment implies the android_* functions were intended for apps to use.\nhttps://googleplex-android.git.corp.google.com/platform/bionic/+/c63e59039d28c352e3053bb81319e960c392dbd4\nI think for now we should move all android_* declarations to resolv_private.h, at least until apps have a way to get a netId. WDYT?",
+      "parentUuid": "7cb7cd4c_334c5260",
+      "revId": "ac7e79af7aabbe33e3dba6e86e006830d2838048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
