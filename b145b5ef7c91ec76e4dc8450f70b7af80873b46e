@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "9c0d61ec_e2083cf8",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-24T21:28:58Z",
+      "side": 0,
+      "message": "Oops, I missed the tiny but very significant PID/UID override code in the DnsProxyListener... Duh.  Hmm, we could bring back the whole _resolv_set_default_iface interface, or how about this:\n1. We make DnsProxyListener pass the netId as:\n        netId \u003d\u003d mNetCtrl-\u003egetDefaultNetwork() ? NETID_UNSET : netId\n2. And make _using_default_dns() compare against NETID_UNSET like you proposed a couple comments back.\nWDYT?",
+      "parentUuid": "bcdf857e_b39de70a",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
