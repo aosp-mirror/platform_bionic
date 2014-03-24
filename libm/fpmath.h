@@ -27,6 +27,9 @@
  * $FreeBSD: src/lib/libc/include/fpmath.h,v 1.3 2005/02/06 03:23:31 das Exp $
  */
 
+#ifndef _FPMATH_
+#define _FPMATH_
+
 #include <endian.h>
 #include "_fpmath.h"
 
@@ -76,9 +79,15 @@ union IEEEd2bits {
  * Android works around those cases by replacing the broken functions with our own trivial stubs
  * that call the regular "double" function.
  */
+#ifndef __LP64__
+
 #define __fpclassifyl __broken__fpclassify
 #define __isfinitel __broken__isfinitel
 #define __isinfl __broken__isinfl
 #define __isnanl __broken__isnanl
 #define __isnormall __broken__isnormall
 #define __signbitl __broken_signbitl
+
+#endif // __LP64__
+
+#endif // _FPMATH_
