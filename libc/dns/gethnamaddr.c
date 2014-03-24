@@ -72,6 +72,9 @@
 #include <syslog.h>
 #include <unistd.h>
 
+#define ALIGNBYTES (sizeof(uintptr_t) - 1)
+#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+
 #ifndef LOG_AUTH
 # define LOG_AUTH 0
 #endif
