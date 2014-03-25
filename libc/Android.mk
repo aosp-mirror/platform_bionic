@@ -771,6 +771,10 @@ LOCAL_MODULE:= libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_REQUIRED_MODULES := tzdata
 
+# Leave the symbols in the shared library so that stack unwinders can produce
+# meaningful name resolution.
+LOCAL_STRIP_MODULE := keep_symbols
+
 # WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
 # make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
 # ensures that symbols that are pulled into those new libraries from libgcc.a are not declared
