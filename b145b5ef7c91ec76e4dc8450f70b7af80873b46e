@@ -145,6 +145,24 @@
     },
     {
       "key": {
+        "uuid": "7c850d89_c00c3e9e",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-25T15:12:06Z",
+      "side": 0,
+      "message": "Was this discussed?\nAnother simpler option instead of _resolv_set_default_netid() is to clear AI_ADDRCONFIG in DnsProxyListener when netId !\u003d mNetCtrl-\u003egetDefaultNetwork().",
+      "parentUuid": "9cb2c15a_d0217531",
+      "revId": "b145b5ef7c91ec76e4dc8450f70b7af80873b46e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb49dfd_9932cc1d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 9
