@@ -34,6 +34,24 @@
       "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c26359d_66262ecb",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-25T18:15:12Z",
+      "side": 1,
+      "message": "It means there\u0027s a symbol in our library that we\u0027re stuck providing forever..",
+      "parentUuid": "7c2c2d7b_a8d39b48",
+      "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
