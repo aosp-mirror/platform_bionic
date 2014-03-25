@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "3c8f15af_fe064178",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2014-03-25T14:43:47Z",
+      "side": 1,
+      "message": "fixed",
+      "parentUuid": "bc64e5c8_daafc5a9",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 13
+      },
+      "revId": "78c5b092cedb645876a22aeba7d63f38112c396e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c8f15af_3ec0a96a",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "3c8f15af_1e1ccdc5",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2014-03-25T14:43:47Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "3c8f15af_3ec0a96a",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 45
+      },
+      "revId": "78c5b092cedb645876a22aeba7d63f38112c396e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c8f15af_5ecd75a1",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
@@ -76,6 +124,30 @@
       "writtenOn": "2014-03-25T10:37:05Z",
       "side": 1,
       "message": "Do you plan to add this as well? If so it would be good to be part of the same CL. Some commented usage could then be fixed (e.g. in strod.c)",
+      "range": {
+        "startLine": 82,
+        "startChar": 14,
+        "endLine": 82,
+        "endChar": 24
+      },
+      "revId": "78c5b092cedb645876a22aeba7d63f38112c396e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c8c11b9_7dfcf71f",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1010578
+      },
+      "writtenOn": "2014-03-25T14:43:47Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "3c8f15af_5ecd75a1",
       "range": {
         "startLine": 82,
         "startChar": 14,
