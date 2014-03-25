@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cb2c15a_7359b3eb",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-25T00:56:11Z",
+      "side": 1,
+      "message": "Would it be possible to change this so that it\u0027s something like:\n\n#ifdef __LP64__\n#ifdef F_GETLK64\n#undef F_GETLK64\n#define F_GETLK64\n.\n.\n.\n\nAnd move the include back to the top? Otherwise, you\u0027ll redefine these values in some cases. For example, if any of the other includes accidentally include linux/fcntl.h. Or if some code tried to include linux/fcntl.h before this file.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 6
+      },
+      "revId": "fc82900249b06a54f0dc77fc7d369f6dd7a69f21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c850d89_a0ff3ad2",
+        "filename": "tests/fcntl_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-25T00:56:11Z",
+      "side": 1,
+      "message": "Stricly speaking, I don\u0027t think this belongs here. This is really a check if fcntl is fundamentally broken. I think a new test, something like fcntl_lock, that tests all three of the defines would be better.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 19
+      },
+      "revId": "fc82900249b06a54f0dc77fc7d369f6dd7a69f21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
