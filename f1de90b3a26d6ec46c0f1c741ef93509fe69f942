@@ -52,6 +52,24 @@
       "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c3129d0_876326f0",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-25T18:29:03Z",
+      "side": 1,
+      "message": "hmm, wasn\u0027t inline more of a suggestion for the actual inline? I think the main purpose of inline is to make the definition visible to the current translation unit only. Since we also have static for this purpose there shouldn\u0027t be any practical diff.",
+      "parentUuid": "3c26359d_66262ecb",
+      "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
