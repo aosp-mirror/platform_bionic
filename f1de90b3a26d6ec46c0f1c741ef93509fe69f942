@@ -70,6 +70,24 @@
       "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c2c2d7b_682c437a",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-25T18:33:36Z",
+      "side": 1,
+      "message": "Yeah, you\u0027re right. There\u0027s still the static.",
+      "parentUuid": "5c3129d0_876326f0",
+      "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
