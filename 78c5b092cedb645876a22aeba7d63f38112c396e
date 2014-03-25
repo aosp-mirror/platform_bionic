@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c8f15af_1ec3ed79",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-25T10:33:02Z",
+      "side": 1,
+      "message": "Isn\u0027t this breaking binary compatibility for 32 bit ? Struct lconv was 0 (or 4 bytes) in size before this change.",
+      "revId": "78c5b092cedb645876a22aeba7d63f38112c396e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
