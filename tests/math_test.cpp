@@ -51,6 +51,7 @@ template<typename T> inline int test_capture_isinf(const T in) {
 #include <gtest/gtest.h>
 
 #include <fenv.h>
+#include <float.h>
 #include <limits.h>
 #include <stdint.h>
 
