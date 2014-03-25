@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c26359d_e61f7e42",
+        "filename": "libc/include/sys/localedef.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-25T20:57:20Z",
+      "side": 1,
+      "message": "I wonder if it is not better to actually get rid of what we don\u0027t use and add them as we implement them (especially since they are in a public header).",
+      "range": {
+        "startLine": 49,
+        "startChar": 30,
+        "endLine": 49,
+        "endChar": 52
+      },
+      "revId": "b0e9f54955e41febc5db781b1c1a4786d8079a71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
