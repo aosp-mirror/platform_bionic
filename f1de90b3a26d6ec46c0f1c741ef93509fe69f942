@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c3129d0_271c3a7d",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-25T18:06:03Z",
+      "side": 1,
+      "message": "remind me again, what are the semantics for a static inline function in a header file ? Does each compilation unit get its own copy ? \n\n(If we ever switch to building with clang, we lose inline.)",
+      "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
