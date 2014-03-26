@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c23318f_314c6b60",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-26T17:36:35Z",
+      "side": 1,
+      "message": "I think this comment got lost in translation. Do you mean the first 6 decimals in all cases? For example, what would 1.234567 return? That might make a good test case too.",
+      "range": {
+        "startLine": 399,
+        "startChar": 18,
+        "endLine": 399,
+        "endChar": 40
+      },
+      "revId": "5044f9782302fc9b0741ff735df0ce72d7a7a34f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "392487a3_3667d83d",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-26T17:36:35Z",
+      "side": 1,
+      "message": "Since this is a bionic exclusive, it\u0027s probably a good idea to keep doing what it\u0027s doing, but we might want to check to see if there is documentation about what the function is supposed to do.",
+      "range": {
+        "startLine": 401,
+        "startChar": 2,
+        "endLine": 401,
+        "endChar": 69
+      },
+      "revId": "5044f9782302fc9b0741ff735df0ce72d7a7a34f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "392487a3_d69424b8",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-26T17:36:35Z",
+      "side": 1,
+      "message": "Can you add an:\n#else\n  GTEST_LOG_(INFO) \u003c\u003c \"This test does nothing.\\n\";\n\nHere.",
+      "range": {
+        "startLine": 433,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 1
+      },
+      "revId": "5044f9782302fc9b0741ff735df0ce72d7a7a34f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
