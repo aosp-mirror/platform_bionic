@@ -298,6 +298,7 @@ __socketcall int setsockopt(int, int, int, const void*, socklen_t);
 __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
+__socketcall int accept4(int, struct sockaddr*, socklen_t*, int);
 
 extern ssize_t send(int, const void*, size_t, int);
 extern ssize_t recv(int, void*, size_t, int);
