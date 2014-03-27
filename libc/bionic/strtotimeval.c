@@ -30,34 +30,29 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-char * strtotimeval (const char *str, struct timeval *ts)
-{
-    int n;
-    char *s, *s0;
-    long  fs;	/* Fractional seconds */
+char * strtotimeval(const char *str, struct timeval *ts) {
+  char *s;
+  long fs = 0; /* fractional seconds */
 
-    ts->tv_sec = strtoumax(str, &s, 10);
-    fs = 0;
+  ts->tv_sec = strtoumax(str, &s, 10);
 
-    if ( *s == '.' ) {
-	int  count;
+  if (*s == '.') {
+    s++;
+    int count = 0;
 
-        s0 = s+1;
-
-	/* read up to 6 digits */
-	fs    = 0;
-	count = 0;
-	while ( *s && isdigit(*s) )
-	{
-            if ( ++count < 7 )
-	        fs = fs*10 + (*s - '0');
-	    s++;
-	}
-
-	for ( ; count < 6; count++ )
-	    fs *= 10;
+    /* read up to 6 digits (microseconds) */
+    while (*s && isdigit(*s)) {
+      if (++count < 7) {
+        fs = fs*10 + (*s - '0');
+      }
+      s++;
     }
 
-    ts->tv_usec = fs;
-    return s;
+    for (; count < 6; count++) {
+      fs *= 10;
+    }
+  }
+
+  ts->tv_usec = fs;
+  return s;
 }
