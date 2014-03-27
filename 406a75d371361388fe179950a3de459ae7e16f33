@@ -16,6 +16,24 @@
       "revId": "406a75d371361388fe179950a3de459ae7e16f33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590f7b24_19f4fe39",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-03-27T18:11:06Z",
+      "side": 1,
+      "message": "it\u0027s part of build/core/executable.mk, which has to be duplicated here because linker_executable.mk goes directly to build/core/dynamic_binary.mk.\n\nIt removes the variables that were created by the first include of dynamic_binary.mk so it can be included again.  Otherwise you get errors.",
+      "parentUuid": "19f8a337_23342e5b",
+      "revId": "406a75d371361388fe179950a3de459ae7e16f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
