@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f904af03_ffcedbf7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-27T12:34:37Z",
+      "side": 1,
+      "message": "I\u0027d prefer a slightly more detailed commit message. especially since you\u0027ve conflated this change with a general cleanup. Mention what the issue was \u0026 the fact that you\u0027ve done a general style sweep too.",
+      "revId": "8d65b7143deed5fcd94b3996d77ae65e73173149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ec937b_24931cd2",
+        "filename": "libc/bionic/strtotimeval.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-27T12:34:37Z",
+      "side": 1,
+      "message": "Move brace to the previous line ?",
+      "revId": "8d65b7143deed5fcd94b3996d77ae65e73173149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
