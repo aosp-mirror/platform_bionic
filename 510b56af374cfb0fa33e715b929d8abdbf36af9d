@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f904af03_22f1cabb",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-27T15:41:32Z",
+      "side": 1,
+      "message": "Ok. I will rephrase it.\nThis is about why we test against 0.45600000000000307 instead of just 0.456. It\u0027s because ASSERT_DOUBLE will actually compare the string representation and they are obtained using more decimals than the double precision (weird imo). The same applies for the float case , hence the reference.",
+      "parentUuid": "19f8a337_03793299",
+      "revId": "510b56af374cfb0fa33e715b929d8abdbf36af9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f904af03_e2a762cf",
         "filename": "tests/math_test.cpp",
         "patchSetId": 1
