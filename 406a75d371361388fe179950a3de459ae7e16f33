@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19f8a337_23342e5b",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-03-27T18:09:30Z",
+      "side": 1,
+      "message": "Why are these variables being blanked out here ? Is it to avoid including $(CLEAR_VARS) and setting everything up again ?",
+      "revId": "406a75d371361388fe179950a3de459ae7e16f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
