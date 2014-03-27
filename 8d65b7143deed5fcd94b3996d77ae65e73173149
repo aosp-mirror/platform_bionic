@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f904af03_e2be42e1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-27T14:58:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f904af03_ffcedbf7",
+      "revId": "8d65b7143deed5fcd94b3996d77ae65e73173149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99ec937b_24931cd2",
         "filename": "libc/bionic/strtotimeval.c",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-27T12:34:37Z",
       "side": 1,
       "message": "Move brace to the previous line ?",
+      "revId": "8d65b7143deed5fcd94b3996d77ae65e73173149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ec937b_a76f2ecd",
+        "filename": "libc/bionic/strtotimeval.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-03-27T14:58:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99ec937b_24931cd2",
       "revId": "8d65b7143deed5fcd94b3996d77ae65e73173149",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
