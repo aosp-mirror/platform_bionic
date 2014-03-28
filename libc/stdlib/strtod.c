@@ -1332,13 +1332,14 @@ strtod
 	Bigint *bb1, *bd0;
 	Bigint *bb = NULL, *bd = NULL, *bs = NULL, *delta = NULL;/* pacify gcc */
 
-	CONST char decimal_point = '.';
-#if 0 /* BEGIN android-changed: no localeconv. */
+#if defined(__LP64__) /* BEGIN android-changed: no localeconv for ILP32. */
 #ifndef KR_headers
 	CONST char decimal_point = localeconv()->decimal_point[0];
 #else
 	CONST char decimal_point = '.';
 #endif
+#else
+	CONST char decimal_point = '.';
 #endif /* END android-changed */
 
 	sign = nz0 = nz = 0;
