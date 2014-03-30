@@ -163,11 +163,10 @@ static unsigned bitmask[4096];
         write(2, msg, strlen(msg)); \
         abort(); \
     }
-#define UNUSED __attribute__((unused))
-DISALLOW_ALLOCATION(void*, malloc, (size_t u UNUSED));
-DISALLOW_ALLOCATION(void, free, (void* u UNUSED));
-DISALLOW_ALLOCATION(void*, realloc, (void* u1 UNUSED, size_t u2 UNUSED));
-DISALLOW_ALLOCATION(void*, calloc, (size_t u1 UNUSED, size_t u2 UNUSED));
+DISALLOW_ALLOCATION(void*, malloc, (size_t u __unused));
+DISALLOW_ALLOCATION(void, free, (void* u __unused));
+DISALLOW_ALLOCATION(void*, realloc, (void* u1 __unused, size_t u2 __unused));
+DISALLOW_ALLOCATION(void*, calloc, (size_t u1 __unused, size_t u2 __unused));
 
 static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
@@ -1413,7 +1412,7 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
 }
 #endif
 
-void soinfo::CallArray(const char* array_name UNUSED, linker_function_t* functions, size_t count, bool reverse) {
+void soinfo::CallArray(const char* array_name __unused, linker_function_t* functions, size_t count, bool reverse) {
   if (functions == NULL) {
     return;
   }
@@ -1432,7 +1431,7 @@ void soinfo::CallArray(const char* array_name UNUSED, linker_function_t* functio
   TRACE("[ Done calling %s for '%s' ]", array_name, name);
 }
 
-void soinfo::CallFunction(const char* function_name UNUSED, linker_function_t function) {
+void soinfo::CallFunction(const char* function_name __unused, linker_function_t function) {
   if (function == NULL || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
     return;
   }
@@ -1908,7 +1907,7 @@ static bool soinfo_link_image(soinfo* si) {
  * It helps to stack unwinding through signal handlers.
  * Also, it makes bionic more like glibc.
  */
-static void add_vdso(KernelArgumentBlock& args UNUSED) {
+static void add_vdso(KernelArgumentBlock& args __unused) {
 #if defined(AT_SYSINFO_EHDR)
   ElfW(Ehdr)* ehdr_vdso = reinterpret_cast<ElfW(Ehdr)*>(args.getauxval(AT_SYSINFO_EHDR));
   if (ehdr_vdso == NULL) {
