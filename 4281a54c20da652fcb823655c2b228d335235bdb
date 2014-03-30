@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f94bcf71_b972a3b3",
+        "filename": "libc/dns/resolv/res_init.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2014-03-30T16:40:24Z",
+      "side": 1,
+      "message": "init the new mark field?",
+      "range": {
+        "startLine": 187,
+        "startChar": 28,
+        "endLine": 187,
+        "endChar": 29
+      },
+      "revId": "4281a54c20da652fcb823655c2b228d335235bdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
