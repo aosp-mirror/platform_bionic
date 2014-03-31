@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f94bcf71_415f3525",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T17:41:48Z",
+      "side": 1,
+      "message": "do we really need to set LOCAL_PATH twice?",
+      "revId": "406a75d371361388fe179950a3de459ae7e16f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19f8a337_23342e5b",
         "filename": "linker/Android.mk",
         "patchSetId": 1
