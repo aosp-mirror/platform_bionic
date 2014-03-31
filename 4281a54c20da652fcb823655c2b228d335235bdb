@@ -22,6 +22,30 @@
       "revId": "4281a54c20da652fcb823655c2b228d335235bdb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3929e785_a22a665b",
+        "filename": "libc/dns/resolv/res_init.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-03-31T16:15:30Z",
+      "side": 1,
+      "message": "The mark field isn\u0027t new, it existed before this CL.  The data structure is calloc\u0027ed so it should be initialized to 0.  I\u0027ve initialized it as it\u0027s safer and more explicit; see latest patch set.  Please review.",
+      "parentUuid": "f94bcf71_b972a3b3",
+      "range": {
+        "startLine": 187,
+        "startChar": 28,
+        "endLine": 187,
+        "endChar": 29
+      },
+      "revId": "4281a54c20da652fcb823655c2b228d335235bdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
