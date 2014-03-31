@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "199423fe_a09b7413",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T18:55:22Z",
+      "side": 1,
+      "message": "is there a reason why we didn\u0027t just add this to sys_socket_test.cpp?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 16
+      },
+      "revId": "9cea3775056d0a8d04d49c3983440b89d82a462b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
