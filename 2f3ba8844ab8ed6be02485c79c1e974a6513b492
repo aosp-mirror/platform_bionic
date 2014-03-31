@@ -51,6 +51,24 @@
       "revId": "2f3ba8844ab8ed6be02485c79c1e974a6513b492",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d99d2b27_fbe84f20",
+        "filename": "tests/accept4_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T18:58:18Z",
+      "side": 1,
+      "message": "weird that they\u0027re all (in this change) after GTEST_LOG. damn you, gerrit...",
+      "parentUuid": "199423fe_c0c80093",
+      "revId": "2f3ba8844ab8ed6be02485c79c1e974a6513b492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
