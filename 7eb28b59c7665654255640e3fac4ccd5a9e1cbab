@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79db5f06_13cbae3b",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T21:47:02Z",
+      "side": 1,
+      "message": "is there any work on fixing clang so we can switch clang over to the macro-free implementation GCC uses?",
+      "revId": "7eb28b59c7665654255640e3fac4ccd5a9e1cbab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
