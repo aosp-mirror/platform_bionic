@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9d157e4_9b27b7c7",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T23:14:03Z",
+      "side": 1,
+      "message": "i wonder if we should -include the NetBSD compatibility .h, and have this in there?",
+      "revId": "c20de902875dcaebde0ccd0b7a8351598f254d4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
