@@ -88,6 +88,24 @@
       "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79db5f06_366ca01c",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T23:11:05Z",
+      "side": 1,
+      "message": "i actually meant taking all this crap out of line. glibc has symbols for these.",
+      "parentUuid": "7c2c2d7b_682c437a",
+      "revId": "f1de90b3a26d6ec46c0f1c741ef93509fe69f942",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
