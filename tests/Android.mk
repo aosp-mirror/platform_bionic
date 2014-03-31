@@ -39,7 +39,6 @@ test_cflags = \
     -fno-builtin \
 
 libBionicStandardTests_src_files := \
-    accept4_test.cpp \
     buffer_tests.cpp \
     dirent_test.cpp \
     eventfd_test.cpp \
