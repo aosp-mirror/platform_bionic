@@ -284,6 +284,7 @@ struct ucred {
 #endif
 
 __socketcall int accept(int, struct sockaddr*, socklen_t*);
+__socketcall int accept4(int, struct sockaddr*, socklen_t*, int);
 __socketcall int bind(int, const struct sockaddr*, int);
 __socketcall int connect(int, const struct sockaddr*, socklen_t);
 __socketcall int getpeername(int, struct sockaddr*, socklen_t*);
@@ -298,7 +299,6 @@ __socketcall int setsockopt(int, int, int, const void*, socklen_t);
 __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
-__socketcall int accept4(int, struct sockaddr*, socklen_t*, int);
 
 extern ssize_t send(int, const void*, size_t, int);
 extern ssize_t recv(int, void*, size_t, int);
