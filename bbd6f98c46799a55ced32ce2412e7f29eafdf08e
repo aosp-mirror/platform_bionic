@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f94bcf71_794c2b0c",
+        "filename": "libc/arch-arm/denver/denver.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-31T03:43:02Z",
+      "side": 1,
+      "message": "I\u0027m not a big fan of this method. Please implement this by creating a generic memmove similar to all of the other optimized libc routines.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "bbd6f98c46799a55ced32ce2412e7f29eafdf08e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f94bcf71_59516fa0",
+        "filename": "libc/bionic/memmove.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-03-31T03:43:02Z",
+      "side": 1,
+      "message": "It would be better to simply do something like this all in assembler. And then you don\u0027t need you can create a memmove.S. You can either include the memcpy_base.S or make a call to memcpy itself, depending on your preference.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 1
+      },
+      "revId": "bbd6f98c46799a55ced32ce2412e7f29eafdf08e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
