@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79db5f06_b313c2b3",
+        "filename": "libm/Android.mk",
+        "patchSetId": 11
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T22:34:43Z",
+      "side": 1,
+      "message": "worth a comment explaining why x86-64 needs this?",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79db5f06_165f1c26",
+        "filename": "libm/upstream-freebsd/lib/msun/src/imprecise.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T22:34:43Z",
+      "side": 1,
+      "message": "shouldn\u0027t we be using these rather than the ones in fake_....cpp? the warning seems like a good thing, and hopefully BSD will replace these at some point.\n\nlooks like we should build this file (seems like we currently don\u0027t?) and move the fake_long_double definitions into the !defined(__LP64__) section? actually, shouldn\u0027t we just use these all the time?",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ae4766_6951e1a0",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T22:34:43Z",
+      "side": 1,
+      "message": "(nit: i\u0027d have preferred to use L rather than l, because the latter is a little too like 1 for use in numbers.)",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ae4766_2934495b",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T22:34:43Z",
+      "side": 1,
+      "message": "oops.",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ae4766_a93fd932",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-03-31T22:34:43Z",
+      "side": 1,
+      "message": "you didn\u0027t want to fix them all?",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
