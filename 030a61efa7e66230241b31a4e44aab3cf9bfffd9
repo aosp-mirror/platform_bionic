@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39ae4766_00a83a9d",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T05:05:01Z",
+      "side": 1,
+      "message": "reinterpret_cast?",
+      "range": {
+        "startLine": 90,
+        "startChar": 57,
+        "endLine": 90,
+        "endChar": 61
+      },
+      "revId": "030a61efa7e66230241b31a4e44aab3cf9bfffd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19ab4358_4b23b939",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T05:05:01Z",
+      "side": 1,
+      "message": "reinterpret_cast?",
+      "range": {
+        "startLine": 90,
+        "startChar": 57,
+        "endLine": 90,
+        "endChar": 61
+      },
+      "revId": "030a61efa7e66230241b31a4e44aab3cf9bfffd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ae4766_80bc2ae6",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T05:05:01Z",
+      "side": 1,
+      "message": "ASSERT_EQ(0, ... ?",
+      "revId": "030a61efa7e66230241b31a4e44aab3cf9bfffd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19ab4358_0b1dc1f3",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T05:05:01Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "030a61efa7e66230241b31a4e44aab3cf9bfffd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_64282a13",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T05:05:01Z",
+      "side": 1,
+      "message": "for (size_t i \u003d 0; i \u003c 3; ++i) {\n    io[i].iov_base \u003d reinterpret_cast\u003cvoid*\u003e(bufs[i]);\n    io[i].iov_len \u003d strlen(bufs[i]) + 1;\n    msgs[i].msg_hdr.msg_iov \u003d \u0026io[i];\n    msgs[i].msg_hdr.msg_iovlen \u003d 1;\n    msgs[i].msg_len \u003d sizeof(struct msghdr);\n  }\n\nmaybe for recvmmsg too, but this one was longer and more repetitive, and the + 1 wasn\u0027t obvious to me at first glance (whereas the \"use the whole buffer\" in the recv case was obvious).",
+      "revId": "030a61efa7e66230241b31a4e44aab3cf9bfffd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
