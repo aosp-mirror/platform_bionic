@@ -39,9 +39,6 @@
 
 #define	MB_LEN_MAX	1		/* no multibyte characters */
 
-#ifndef	SIZE_MAX
-#define	SIZE_MAX	UINT_MAX	/* max value for a size_t */
-#endif
 #ifndef SSIZE_MAX
 #define	SSIZE_MAX	INT_MAX		/* max value for a ssize_t */
 #endif
