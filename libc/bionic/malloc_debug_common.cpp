@@ -379,7 +379,7 @@ static void malloc_init_impl() {
             if (gMallocDebugBacklog == 0) {
                 gMallocDebugBacklog = BACKLOG_DEFAULT_LEN;
             }
-            so_name = "/system/lib/libc_malloc_debug_leak.so";
+            so_name = "libc_malloc_debug_leak.so";
             break;
         }
         case 20:
@@ -395,7 +395,7 @@ static void malloc_init_impl() {
                           __progname);
                 return;
             }
-            so_name = "/system/lib/libc_malloc_debug_qemu.so";
+            so_name = "libc_malloc_debug_qemu.so";
             break;
         default:
             error_log("%s: Debug level %d is unknown\n", __progname, gMallocDebugLevel);
