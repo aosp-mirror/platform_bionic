@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9a74f88_0d907933",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T18:06:29Z",
+      "side": 1,
+      "message": "fall back",
+      "revId": "a7032b68cdf5cc01be5fb819335e6d46c0f6bbba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19ab4358_f4c4c651",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T18:06:29Z",
+      "side": 1,
+      "message": "lose",
+      "revId": "a7032b68cdf5cc01be5fb819335e6d46c0f6bbba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19ab4358_14972237",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T18:06:29Z",
+      "side": 1,
+      "message": "i\u0027d also explicitly add \"On LP32 sizeof(long double) \u003d\u003d sizeof(double).\".",
+      "revId": "a7032b68cdf5cc01be5fb819335e6d46c0f6bbba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
