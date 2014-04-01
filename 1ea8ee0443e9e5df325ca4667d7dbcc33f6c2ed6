@@ -16,6 +16,24 @@
       "revId": "1ea8ee0443e9e5df325ca4667d7dbcc33f6c2ed6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b93ba9_2a1f5f45",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T16:16:39Z",
+      "side": 1,
+      "message": "I suspected a bug as well at first. Then I compared the results of glibc and it seems that we have a perfect match with them (at least for the few examples I tested). So it looks like a \"consistent\" issue. I tested with different values and they all seem to have the same precision error (i.e. DBL_DIG - 1).\n\nI also debugged the function itself and nothing seemed obviously wrong to me...\n\nI\u0027m happy to actually leave this tests failing if you think it\u0027s better.\n\nThis is true for x86 and arm. I think for mips as well but I didn\u0027t tested a failure there, just the success.",
+      "parentUuid": "39ae4766_bb507b48",
+      "revId": "1ea8ee0443e9e5df325ca4667d7dbcc33f6c2ed6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
