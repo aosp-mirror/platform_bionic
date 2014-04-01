@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "99d653da_54db62ba",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9a74f88_c71c80c8",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9a74f88_e7941cb8",
         "filename": "libc/dns/include/resolv_netid.h",
         "patchSetId": 15
@@ -30,6 +48,24 @@
       "writtenOn": "2014-04-01T15:06:08Z",
       "side": 1,
       "message": "Somehow this still seems to be the odd one out. Everything else here could plausibly be called by things outside bionic/netd, but the xxx_proxy functions are really only internal.\n\nI guess the question is why is this here? And if this is here, why are all the other xxx_proxy functions not here too?",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39c56724_34f1f8bb",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "As the comment at the top of this file states, I don\u0027t think this file is meant to be included outside netd; remember I moved these declarations.  I put the one xxx_proxy function here because it\u0027s used between files (so it should be declared in a shared header).  When we expose these functions back to apps (by moving them to netdb.h and adding to libc stub) we\u0027ll leave the xxx_proxy one here.",
+      "parentUuid": "f9a74f88_e7941cb8",
       "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "39c56724_718c72db",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19ab4358_8e7a1fcb",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9a74f88_67b7cc6b",
         "filename": "libc/dns/net/getnameinfo.c",
         "patchSetId": 15
@@ -64,6 +118,24 @@
       "writtenOn": "2014-04-01T15:06:08Z",
       "side": 1,
       "message": "Line length?",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39c56724_710eb295",
+        "filename": "libc/dns/net/getnameinfo.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9a74f88_67b7cc6b",
       "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "d9a44b89_633ee29f",
+        "filename": "libc/dns/net/getnameinfo.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "This function only confuses matters.  The comment above it isn\u0027t accurate either.  I\u0027ve removed the function and comment.",
+      "parentUuid": "39ae4766_5b238739",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39ae4766_fb5cb3b6",
         "filename": "libc/dns/net/getnameinfo.c",
         "patchSetId": 15
@@ -98,6 +188,24 @@
       "writtenOn": "2014-04-01T15:06:08Z",
       "side": 1,
       "message": "Pre-existing, but I can\u0027t seem to make any sense of this. If I\u0027m reading the (previous) code correctly, then:\n\n  1. We do a query using android_gethostbyaddr_proxy.\n  2. This calls android_gethostbyaddrforiface_proxy.\n  3. If android_gethostbyaddrforiface_proxy succeeds, then it\n     returns a non-NULL result. Then android_gethostbyaddr_proxy\n     returns the length of the name, and then hostnamelen\n     \u003e\u003d 0. We return a (possibly truncated to MAXDNAME\n     characters) name. Fair enough.\n  4. If android_gethostbyaddrforiface_proxy fails, it returns\n     NULL. Then android_gethostbyaddr_proxy returns 0, and\n     then hostnamelen \u003d 0. hp \u003d NULL. So far so good.\n  5. Having covered the case where hostnamelen \u003e 0, and\n     then the case where !hostnamelen (i.e., hostnamelen \u003d\u003d\n     0), we now proceed to say, \"} else {...\" So we\u0027re checking\n     if hostnamelen \u003c 0... but that cannot happen, because\n     android_gethostbyaddr_proxy either returns 0 or\n     strlen(hostResult-\u003eh_name), which can never be negative.\n  6. In this case that cannot happen, we turn around and retry\n     the same query using android_gethostbyaddrforiface\n     directly, as if we hoping that doing so would possibly lead\n     to a result that was different from the one obtained in step\n     3.\n\nIs that analysis make sense? Or am I missing something?\n\nIf the analysis is incorrect and that extra branch does nothing, then what should we do here?\n\nWe don\u0027t necessarily have to fix it in this change, but if the code doesn\u0027t make sense then we should at least put a TODO in to fix it.",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39c56724_313eeaec",
+        "filename": "libc/dns/net/getnameinfo.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "The final else clause is useless given the present implementation of android_gethostbyaddr_proxy.  I\u0027m going to assume it was implemented differently in the past given the comment above android_gethostbyaddr_proxy describing returning -1.  I cleaned it up.",
+      "parentUuid": "39ae4766_fb5cb3b6",
       "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "99d653da_f7be18e1",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "CacheInfo is unused; removed.  Cache is used several times (in the \"skipped common lines\") so I left it alone.  Would be nice if the code consistently used Cache or \"struct resolv_cache_info\" but that\u0027s really a task for another refactoring CL I feel.",
+      "parentUuid": "19ab4358_79dd2f84",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19ab4358_19e2fb43",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 15
@@ -138,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "d9a44b89_434c060c",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "19ab4358_19e2fb43",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39ae4766_bb663b81",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 15
@@ -149,6 +293,24 @@
       "writtenOn": "2014-04-01T15:06:08Z",
       "side": 1,
       "message": "I don\u0027t understand this comment. Does it mean that every time we do a DNS lookup on a network that is different from the previous network we did a DNS lookup on, we throw away and repopulate the resolve private data?\n\nIf so, perhaps we should add a TODO to stop doing that, and just maintain one copy of res_state per network.",
+      "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39c56724_34b6d805",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1016583
+      },
+      "writtenOn": "2014-04-01T20:32:20Z",
+      "side": 1,
+      "message": "I believe you are correct.  I don\u0027t think this is terribly critical as the res_state is very small (I think _resolv_populate_res_for_net() just copies a couple IP addresses and one string) especially when compared to the RTT to the DNS server.  Then again if apps launch queries on alternating interfaces we\u0027ll waste more time here.  I\u0027ve added a TODO at the declaration of _nres.",
+      "parentUuid": "39ae4766_bb663b81",
       "revId": "79f2a6e6c5e68a399de4bd91f79e916b36a97237",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
