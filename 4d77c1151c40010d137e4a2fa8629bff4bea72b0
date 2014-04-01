@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "79b43fb0_c8cecff8",
+        "filename": "libm/Android.mk",
+        "patchSetId": 11
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T17:07:37Z",
+      "side": 1,
+      "message": "Oups... actually this shouldn\u0027t be here. It\u0027s a remnant of one of my experiments.",
+      "parentUuid": "79db5f06_b313c2b3",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79db5f06_165f1c26",
         "filename": "libm/upstream-freebsd/lib/msun/src/imprecise.c",
         "patchSetId": 11
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-31T22:34:43Z",
       "side": 1,
       "message": "shouldn\u0027t we be using these rather than the ones in fake_....cpp? the warning seems like a good thing, and hopefully BSD will replace these at some point.\n\nlooks like we should build this file (seems like we currently don\u0027t?) and move the fake_long_double definitions into the !defined(__LP64__) section? actually, shouldn\u0027t we just use these all the time?",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b43fb0_286c4b1c",
+        "filename": "libm/upstream-freebsd/lib/msun/src/imprecise.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T17:07:37Z",
+      "side": 1,
+      "message": "this shouldn\u0027t be here... however I update our fakes to emit warnings: https://android-review.googlesource.com/#/c/89602/",
+      "parentUuid": "79db5f06_165f1c26",
       "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "99bf338c_2c645bf5",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T17:07:37Z",
+      "side": 1,
+      "message": "fixed in another CL.",
+      "parentUuid": "39ae4766_6951e1a0",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39ae4766_2934495b",
         "filename": "tests/math_test.cpp",
         "patchSetId": 11
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "99bf338c_8c7227b4",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T17:07:37Z",
+      "side": 1,
+      "message": "hmm?",
+      "parentUuid": "39ae4766_2934495b",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39ae4766_a93fd932",
         "filename": "tests/math_test.cpp",
         "patchSetId": 11
@@ -81,6 +153,24 @@
       "writtenOn": "2014-03-31T22:34:43Z",
       "side": 1,
       "message": "you didn\u0027t want to fix them all?",
+      "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b93ba9_cab003d9",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-01T17:07:37Z",
+      "side": 1,
+      "message": "this one escaped:). fixed in another CL.",
+      "parentUuid": "39ae4766_a93fd932",
       "revId": "4d77c1151c40010d137e4a2fa8629bff4bea72b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
