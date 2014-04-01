@@ -292,6 +292,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/ldiv.c \
     upstream-netbsd/lib/libc/stdlib/lldiv.c \
     upstream-netbsd/lib/libc/stdlib/lrand48.c \
+    upstream-netbsd/lib/libc/stdlib/lsearch.c \
     upstream-netbsd/lib/libc/stdlib/mrand48.c \
     upstream-netbsd/lib/libc/stdlib/nrand48.c \
     upstream-netbsd/lib/libc/stdlib/_rand48.c \
