@@ -43,6 +43,32 @@ TEST(sys_select, fd_set_smoke) {
   EXPECT_FALSE(FD_ISSET(1, &fds));
 }
 
+#define DELAY_MSG "1234"
+
+static void DelayedWrite(int* pid, int* fd) {
+  int fds[2];
+  ASSERT_EQ(0, pipe(fds));
+
+  if ((*pid = fork()) == 0) {
+    close(fds[0]);
+    usleep(5000);
+    EXPECT_EQ(5, write(fds[1], DELAY_MSG, sizeof(DELAY_MSG)));
+    close(fds[1]);
+    exit(0);
+  }
+  ASSERT_LT(0, *pid);
+  close(fds[1]);
+
+  *fd = fds[0];
+}
+
+static void DelayedWriteCleanup(int pid, int fd) {
+  char buf[sizeof(DELAY_MSG)];
+  ASSERT_EQ(static_cast<ssize_t>(sizeof(DELAY_MSG)), read(fd, buf, sizeof(DELAY_MSG)));
+  ASSERT_STREQ(DELAY_MSG, buf);
+  ASSERT_EQ(pid, waitpid(pid, NULL, 0));
+}
+
 TEST(sys_select, select_smoke) {
   fd_set r;
   FD_ZERO(&r);
@@ -72,8 +98,17 @@ TEST(sys_select, select_smoke) {
 
   // Valid timeout...
   tv.tv_sec = 1;
-  ASSERT_EQ(2, select(max, &r, &w, &e, &tv));
-  ASSERT_NE(0, tv.tv_usec); // ...which got updated.
+  int pid, fd;
+  DelayedWrite(&pid, &fd);
+
+  FD_ZERO(&r);
+  FD_SET(fd, &r);
+  ASSERT_EQ(1, select(fd+1, &r, NULL, NULL, &tv));
+  // Both tv_sec and tv_nsec should have been updated.
+  ASSERT_EQ(0, tv.tv_sec);
+  ASSERT_NE(0, tv.tv_usec);
+
+  DelayedWriteCleanup(pid, fd);
 }
 
 TEST(sys_select, pselect_smoke) {
@@ -109,6 +144,15 @@ TEST(sys_select, pselect_smoke) {
 
   // Valid timeout...
   tv.tv_sec = 1;
-  ASSERT_EQ(2, pselect(max, &r, &w, &e, &tv, &ss));
-  ASSERT_EQ(0, tv.tv_nsec); // ...which did _not_ get updated.
+  int pid, fd;
+  DelayedWrite(&pid, &fd);
+
+  FD_ZERO(&r);
+  FD_SET(fd, &r);
+  ASSERT_EQ(1, pselect(fd+1, &r, NULL, NULL, &tv, NULL));
+  // Neither tv_sec nor tv_nsec should have been updated.
+  ASSERT_EQ(1, tv.tv_sec);
+  ASSERT_EQ(0, tv.tv_nsec);
+
+  DelayedWriteCleanup(pid, fd);
 }
