@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b92f97b4_6852d72d",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T21:32:50Z",
+      "side": 1,
+      "message": "why can\u0027t we allocate here? oh, because we never reset the dispatch table? i didn\u0027t realize we didn\u0027t do that. seems like we should fix that if we go this route.",
+      "revId": "3e433efb3424b821c6ffa1c36e9e58e102c97521",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
