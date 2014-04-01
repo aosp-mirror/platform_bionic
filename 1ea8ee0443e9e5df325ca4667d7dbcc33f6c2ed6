@@ -34,6 +34,24 @@
       "revId": "1ea8ee0443e9e5df325ca4667d7dbcc33f6c2ed6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_f3205a81",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T20:58:36Z",
+      "side": 1,
+      "message": "hmm. does this mean we just picked a bad value with 123.456; one that isn\u0027t exactly representable? can we sidestep this whole thing by finding a \"better\" test value? all the modf family should be exact in the sense of returning the mantissa, right? so this is a case where the closest representable mantissa to the one we asked for is different (except for ld128)?\n\ni guess the #ifery in modfl is because glibc uses ld80, and that\u0027s good enough too?",
+      "parentUuid": "59b93ba9_2a1f5f45",
+      "revId": "1ea8ee0443e9e5df325ca4667d7dbcc33f6c2ed6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
