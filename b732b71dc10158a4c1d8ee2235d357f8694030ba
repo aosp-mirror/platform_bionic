@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39ae4766_201d36f4",
+        "filename": "tests/sys_select_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T06:09:43Z",
+      "side": 0,
+      "message": "the trouble is that this part of the test was meant to show one of the select/pselect differences: that one updates the timeout and the other doesn\u0027t. clearly the current test isn\u0027t good, but i\u0027d rather fix it than lose that aspect.\n\ni guess we need a timer that writes to a pipe after a certain interval?\n\nor simpler might be something like \"turn tv into a double timeout_s, and assert that it\u0027s \u003d\u003d 1s or less\"?",
+      "revId": "b732b71dc10158a4c1d8ee2235d357f8694030ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
