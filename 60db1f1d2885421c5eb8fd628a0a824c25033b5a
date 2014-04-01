@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b92f97b4_881d9bf6",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "you can\u0027t hardcode this. wrong for LP64.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_a7ea4e85",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "what does \"resolve\" mean in the context of these functions?\n\ns/buff/buffer/ (or \u0027buf\u0027 if there\u0027s some reason to abbreviate)",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_a75feed0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "don\u0027t invert tests.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_dec1a571",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "this comment adds no value.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_47238239",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "now there are multiple buffers in play, \"buf\" is no longer a good name.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b92f97b4_484c330c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "if (",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_87cbca39",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "can you boot an old Nexus 7 with this change?\n\nalso, don\u0027t remove useful comments.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_7e151125",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "with_",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_675b26c0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "what?",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_de4c4562",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "what?",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b92f97b4_0817cba2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "where does this come from?",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a74f88_be43892d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "don\u0027t just abort. see what other code does.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_27a3de51",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1902,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "we really need to stop duplicating this everywhere.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_87a8ea2a",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T22:03:05Z",
+      "side": 1,
+      "message": "this will be broken on LP64.",
+      "revId": "60db1f1d2885421c5eb8fd628a0a824c25033b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
