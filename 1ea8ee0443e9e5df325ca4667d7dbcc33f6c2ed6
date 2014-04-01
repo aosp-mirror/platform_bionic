@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39ae4766_bb507b48",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-01T16:05:16Z",
+      "side": 1,
+      "message": "this still worries me. why are we more than 4ULP out? isn\u0027t that a bug? is this true on mips and x86 or just ARM?",
+      "revId": "1ea8ee0443e9e5df325ca4667d7dbcc33f6c2ed6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
