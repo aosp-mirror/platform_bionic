@@ -51,7 +51,35 @@
 #include "local.h"
 #include "fvwrite.h"
 
-static void __find_arguments(const char *fmt0, va_list ap, va_list **argtable,
+union arg {
+	int			intarg;
+	unsigned int		uintarg;
+	long			longarg;
+	unsigned long		ulongarg;
+	long long		longlongarg;
+	unsigned long long	ulonglongarg;
+	ptrdiff_t		ptrdiffarg;
+	size_t			sizearg;
+	size_t			ssizearg;
+	intmax_t		intmaxarg;
+	uintmax_t		uintmaxarg;
+	void			*pvoidarg;
+	char			*pchararg;
+	signed char		*pschararg;
+	short			*pshortarg;
+	int			*pintarg;
+	long			*plongarg;
+	long long		*plonglongarg;
+	ptrdiff_t		*pptrdiffarg;
+	size_t			*pssizearg;
+	intmax_t		*pintmaxarg;
+#ifdef FLOATING_POINT
+	double			doublearg;
+	long double		longdoublearg;
+#endif
+};
+
+static int __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
     size_t *argtablesiz);
 static int __grow_type_table(unsigned char **typetable, int *tablesize);
 
@@ -169,13 +197,13 @@ vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 int
 __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 {
-	char *fmt;	/* format string */
-	int ch;	/* character from fmt */
-	int n, m, n2;	/* handy integers (short term usage) */
-	char *cp;	/* handy char pointer (short term usage) */
-	char *cp_free = NULL;  /* BIONIC: copy of cp to be freed after usage */
-	struct __siov *iovp;/* for PRINT macro */
-	int flags;	/* flags as above */
+	char *fmt;		/* format string */
+	int ch;			/* character from fmt */
+	int n, m, n2;		/* handy integers (short term usage) */
+	char *cp;		/* handy char pointer (short term usage) */
+	char *cp_free = NULL;	/* BIONIC: copy of cp to be freed after usage */
+	struct __siov *iovp;	/* for PRINT macro */
+	int flags;		/* flags as above */
 	int ret;		/* return value accumulator */
 	int width;		/* width from format (%8d), or 0 */
 	int prec;		/* precision from format (%.3d), or -1 */
@@ -203,8 +231,8 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	struct __siov iov[NIOV];/* ... and individual io vectors */
 	char buf[BUF];		/* space for %c, %[diouxX], %[eEfgG] */
 	char ox[2];		/* space for 0x hex-prefix */
-	va_list *argtable;	/* args, built due to positional arg */
-	va_list statargtable[STATIC_ARG_TBL_SIZE];
+	union arg *argtable;	/* args, built due to positional arg */
+	union arg statargtable[STATIC_ARG_TBL_SIZE];
 	size_t argtablesiz;
 	int nextarg;		/* 1-based argument index */
 	va_list orgap;		/* original argument pointer */
@@ -303,8 +331,8 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 * argument (and arguments must be gotten sequentially).
 */
 #define GETARG(type) \
-	(((argtable != NULL) ? (void)(ap = argtable[nextarg]) : (void)0), \
-	 nextarg++, va_arg(ap, type))
+	((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : \
+		(nextarg++, va_arg(ap, type)))
 
 	_SET_ORIENTATION(fp, -1);
 	/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
@@ -548,15 +576,16 @@ reswitch:	switch (ch) {
 					size = expt;
 					if (prec || flags & ALT)
 						size += prec + 1;
-				} else	/* "0.X" */
+				} else { /* "0.X" */
 					size = prec + 2;
+				}
 			} else if (expt >= ndig) {	/* fixed g fmt */
 				size = expt;
 				if (flags & ALT)
 					++size;
-			} else
-				size = ndig + (expt > 0 ?
-					1 : 2 - expt);
+			} else {
+				size = ndig + (expt > 0 ?  1 : 2 - expt);
+			}
 
 			if (softsign)
 				sign = '-';
@@ -624,10 +653,12 @@ reswitch:	switch (ch) {
 					size = p - cp;
 					if (size > prec)
 						size = prec;
-				} else
+				} else {
 					size = prec;
-			} else
+				}
+			} else {
 				size = strlen(cp);
+			}
 			sign = '\0';
 			break;
 		case 'U':
@@ -793,11 +824,13 @@ number:			if ((dprec = prec) >= 0)
 					PRINT(ox, 2);
 					if (_double) {
 						PRINT(cp, ndig-1);
-					} else	/* 0.[0..] */
+					} else {/* 0.[0..] */
 						/* __dtoa irregularity */
 						PAD(ndig - 1, zeroes);
-				} else	/* XeYYY */
+					}
+				} else { /* XeYYY */
 					PRINT(cp, 1);
+				}
 				PRINT(expstr, expsize);
 			}
 		}
@@ -874,15 +907,15 @@ error:
  * used since we are attempting to make snprintf thread safe, and alloca is
  * problematic since we have nested functions..)
  */
-static void
-__find_arguments(const char *fmt0, va_list ap, va_list **argtable,
+static int
+__find_arguments(const char *fmt0, va_list ap, union arg **argtable,
     size_t *argtablesiz)
 {
-	char *fmt;	/* format string */
-	int ch;	/* character from fmt */
-	int n, n2;	/* handy integer (short term usage) */
-	char *cp;	/* handy char pointer (short term usage) */
-	int flags;	/* flags as above */
+	char *fmt;		/* format string */
+	int ch;			/* character from fmt */
+	int n, n2;		/* handy integer (short term usage) */
+	char *cp;		/* handy char pointer (short term usage) */
+	int flags;		/* flags as above */
 	unsigned char *typetable; /* table of types */
 	unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
 	int tablesize;		/* current size of type table */
@@ -1105,86 +1138,89 @@ done:
 	 * Build the argument table.
 	 */
 	if (tablemax >= STATIC_ARG_TBL_SIZE) {
-		*argtablesiz = sizeof (va_list) * (tablemax + 1);
-		*argtable = (va_list *)mmap(NULL, *argtablesiz,
+		*argtablesiz = sizeof(union arg) * (tablemax + 1);
+		*argtable = mmap(NULL, *argtablesiz,
 		    PROT_WRITE|PROT_READ, MAP_ANON|MAP_PRIVATE, -1, 0);
+		if (*argtable == MAP_FAILED)
+			return (-1);
 	}
 
 #if 0
 	/* XXX is this required? */
-	(*argtable) [0] = NULL;
+	(*argtable)[0].intarg = 0;
 #endif
 	for (n = 1; n <= tablemax; n++) {
-		va_copy((*argtable)[n], ap);
 		switch (typetable[n]) {
 		case T_UNUSED:
-			(void) va_arg(ap, int);
+			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case T_SHORT:
-			(void) va_arg(ap, int);
+			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case T_U_SHORT:
-			(void) va_arg(ap, int);
+			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case TP_SHORT:
-			(void) va_arg(ap, short *);
+			(*argtable)[n].pshortarg = va_arg(ap, short *);
 			break;
 		case T_INT:
-			(void) va_arg(ap, int);
+			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case T_U_INT:
-			(void) va_arg(ap, unsigned int);
+			(*argtable)[n].uintarg = va_arg(ap, unsigned int);
 			break;
 		case TP_INT:
-			(void) va_arg(ap, int *);
+			(*argtable)[n].pintarg = va_arg(ap, int *);
 			break;
 		case T_LONG:
-			(void) va_arg(ap, long);
+			(*argtable)[n].longarg = va_arg(ap, long);
 			break;
 		case T_U_LONG:
-			(void) va_arg(ap, unsigned long);
+			(*argtable)[n].ulongarg = va_arg(ap, unsigned long);
 			break;
 		case TP_LONG:
-			(void) va_arg(ap, long *);
+			(*argtable)[n].plongarg = va_arg(ap, long *);
 			break;
 		case T_LLONG:
-			(void) va_arg(ap, long long);
+			(*argtable)[n].longlongarg = va_arg(ap, long long);
 			break;
 		case T_U_LLONG:
-			(void) va_arg(ap, unsigned long long);
+			(*argtable)[n].ulonglongarg = va_arg(ap, unsigned long long);
 			break;
 		case TP_LLONG:
-			(void) va_arg(ap, long long *);
+			(*argtable)[n].plonglongarg = va_arg(ap, long long *);
 			break;
+#ifdef FLOATING_POINT
 		case T_DOUBLE:
-			(void) va_arg(ap, double);
+			(*argtable)[n].doublearg = va_arg(ap, double);
 			break;
 		case T_LONG_DOUBLE:
-			(void) va_arg(ap, long double);
+			(*argtable)[n].longdoublearg = va_arg(ap, long double);
 			break;
+#endif
 		case TP_CHAR:
-			(void) va_arg(ap, char *);
+			(*argtable)[n].pchararg = va_arg(ap, char *);
 			break;
 		case TP_VOID:
-			(void) va_arg(ap, void *);
+			(*argtable)[n].pvoidarg = va_arg(ap, void *);
 			break;
 		case T_PTRINT:
-			(void) va_arg(ap, ptrdiff_t);
+			(*argtable)[n].ptrdiffarg = va_arg(ap, ptrdiff_t);
 			break;
 		case TP_PTRINT:
-			(void) va_arg(ap, ptrdiff_t *);
+			(*argtable)[n].pptrdiffarg = va_arg(ap, ptrdiff_t *);
 			break;
 		case T_SIZEINT:
-			(void) va_arg(ap, size_t);
+			(*argtable)[n].sizearg = va_arg(ap, size_t);
 			break;
 		case T_SSIZEINT:
-			(void) va_arg(ap, ssize_t);
+			(*argtable)[n].ssizearg = va_arg(ap, ssize_t);
 			break;
 		case TP_SSIZEINT:
-			(void) va_arg(ap, ssize_t *);
+			(*argtable)[n].pssizearg = va_arg(ap, ssize_t *);
 			break;
 		case TP_MAXINT:
-			(void) va_arg(ap, intmax_t *);
+			(*argtable)[n].intmaxarg = va_arg(ap, intmax_t);
 			break;
 		}
 	}
@@ -1193,6 +1229,7 @@ done:
 		munmap(typetable, *argtablesiz);
 		typetable = NULL;
 	}
+	return (0);
 }
 
 /*
@@ -1205,24 +1242,24 @@ __grow_type_table(unsigned char **typetable, int *tablesize)
 	int newsize = *tablesize * 2;
 
 	if (*tablesize == STATIC_ARG_TBL_SIZE) {
-		*typetable = (unsigned char *)mmap(NULL,
-		    sizeof (unsigned char) * newsize, PROT_WRITE|PROT_READ,
+		*typetable = mmap(NULL, newsize, PROT_WRITE|PROT_READ,
 		    MAP_ANON|MAP_PRIVATE, -1, 0);
-		/* XXX unchecked */
+		if (*typetable == MAP_FAILED)
+			return (-1);
 		memcpy( *typetable, oldtable, *tablesize);
 	} else {
-		unsigned char *new = (unsigned char *)mmap(NULL,
-		    sizeof (unsigned char) * newsize, PROT_WRITE|PROT_READ,
+		unsigned char *new = mmap(NULL, newsize, PROT_WRITE|PROT_READ,
 		    MAP_ANON|MAP_PRIVATE, -1, 0);
+		if (new == MAP_FAILED)
+			return (-1);
 		memmove(new, *typetable, *tablesize);
 		munmap(*typetable, *tablesize);
 		*typetable = new;
-		/* XXX unchecked */
 	}
 	memset(*typetable + *tablesize, T_UNUSED, (newsize - *tablesize));
 
 	*tablesize = newsize;
-	return(0);
+	return (0);
 }
 
 
@@ -1256,7 +1293,7 @@ cvt(double value, int ndigits, int flags, char *sign, int *decpt, int ch,
 	} else
 		*sign = '\000';
 	digits = __dtoa(value, mode, ndigits, decpt, &dsgn, &rve);
-	if ((ch != 'g' && ch != 'G') || flags & ALT) {	/* Print trailing zeros */
+	if ((ch != 'g' && ch != 'G') || flags & ALT) {/* Print trailing zeros */
 		bp = digits + ndigits;
 		if (ch == 'f') {
 			if (*digits == '0' && value)
@@ -1283,8 +1320,7 @@ exponent(char *p0, int exp, int fmtch)
 	if (exp < 0) {
 		exp = -exp;
 		*p++ = '-';
-	}
-	else
+	} else
 		*p++ = '+';
 	t = expbuf + MAXEXP;
 	if (exp > 9) {
@@ -1292,9 +1328,9 @@ exponent(char *p0, int exp, int fmtch)
 			*--t = to_char(exp % 10);
 		} while ((exp /= 10) > 9);
 		*--t = to_char(exp);
-		for (; t < expbuf + MAXEXP; *p++ = *t++);
-	}
-	else {
+		for (; t < expbuf + MAXEXP; *p++ = *t++)
+			/* nothing */;
+	} else {
 		*p++ = '0';
 		*p++ = to_char(exp);
 	}
