@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79399f00_da4805ee",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-02T21:21:29Z",
+      "side": 1,
+      "message": "This isn\u0027t used anywhere. Is there a reason to submit this ahead of anything that uses it?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
