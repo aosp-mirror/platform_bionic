@@ -70,6 +70,30 @@
       "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ba379a_de9765ba",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-02T22:42:31Z",
+      "side": 1,
+      "message": "I think the common case is to apply this flag on single library. But it can be applied to everything (except bionic).",
+      "parentUuid": "79399f00_3515c226",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
