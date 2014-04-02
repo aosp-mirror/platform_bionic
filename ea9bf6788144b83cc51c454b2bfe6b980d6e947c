@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ce6f4a_d58f4e63",
+        "filename": "libc/dns/resolv/res_state.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002609
+      },
+      "writtenOn": "2014-04-02T00:04:36Z",
+      "side": 1,
+      "message": "alternatively, have threadpools tied to networks so we don\u0027t have to repop frequently and don\u0027t have to go through thread init overhead.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 88
+      },
+      "revId": "ea9bf6788144b83cc51c454b2bfe6b980d6e947c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
