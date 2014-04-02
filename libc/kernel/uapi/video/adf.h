@@ -62,7 +62,7 @@ struct adf_event {
 struct adf_vsync_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct adf_event base;
- __u64 timestamp;
+ __aligned_u64 timestamp;
 };
 struct adf_hotplug_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -77,12 +77,12 @@ struct adf_buffer_config {
  __u32 h;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 format;
- __s64 fd[ADF_MAX_PLANES];
+ __s32 fd[ADF_MAX_PLANES];
  __u32 offset[ADF_MAX_PLANES];
  __u32 pitch[ADF_MAX_PLANES];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 n_planes;
- __s64 acquire_fence;
+ __s32 acquire_fence;
 };
 #define ADF_MAX_BUFFERS (4096 / sizeof(struct adf_buffer_config))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -94,7 +94,7 @@ struct adf_post_config {
  struct adf_buffer_config __user *bufs;
  size_t custom_data_size;
  void __user *custom_data;
- __s64 complete_fence;
+ __s32 complete_fence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ADF_MAX_INTERFACES (4096 / sizeof(__u32))
@@ -103,7 +103,7 @@ struct adf_simple_buffer_alloc {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 h;
  __u32 format;
- __s64 fd;
+ __s32 fd;
  __u32 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 pitch;
@@ -111,7 +111,7 @@ struct adf_simple_buffer_alloc {
 struct adf_simple_post_config {
  struct adf_buffer_config buf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s64 complete_fence;
+ __s32 complete_fence;
 };
 struct adf_attachment_config {
  __u32 overlay_engine;
@@ -161,18 +161,20 @@ struct adf_overlay_engine_data {
 };
 #define ADF_MAX_SUPPORTED_FORMATS (4096 / sizeof(__u32))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ADF_SET_EVENT _IOW('D', 0, struct adf_set_event)
-#define ADF_BLANK _IOW('D', 1, __u8)
-#define ADF_POST_CONFIG _IOW('D', 2, struct adf_post_config)
-#define ADF_SET_MODE _IOW('D', 3, struct drm_mode_modeinfo)
+#define ADF_IOCTL_TYPE 'D'
+#define ADF_IOCTL_NR_CUSTOM 128
+#define ADF_SET_EVENT _IOW(ADF_IOCTL_TYPE, 0, struct adf_set_event)
+#define ADF_BLANK _IOW(ADF_IOCTL_TYPE, 1, __u8)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ADF_GET_DEVICE_DATA _IOR('D', 4, struct adf_device_data)
-#define ADF_GET_INTERFACE_DATA _IOR('D', 5, struct adf_interface_data)
-#define ADF_GET_OVERLAY_ENGINE_DATA   _IOR('D', 6, struct adf_overlay_engine_data)
-#define ADF_SIMPLE_POST_CONFIG _IOW('D', 7, struct adf_simple_post_config)
+#define ADF_POST_CONFIG _IOW(ADF_IOCTL_TYPE, 2, struct adf_post_config)
+#define ADF_SET_MODE _IOW(ADF_IOCTL_TYPE, 3,   struct drm_mode_modeinfo)
+#define ADF_GET_DEVICE_DATA _IOR(ADF_IOCTL_TYPE, 4, struct adf_device_data)
+#define ADF_GET_INTERFACE_DATA _IOR(ADF_IOCTL_TYPE, 5,   struct adf_interface_data)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ADF_SIMPLE_BUFFER_ALLOC _IOW('D', 8, struct adf_simple_buffer_alloc)
-#define ADF_ATTACH _IOW('D', 9, struct adf_attachment_config)
-#define ADF_DETACH _IOW('D', 10, struct adf_attachment_config)
+#define ADF_GET_OVERLAY_ENGINE_DATA   _IOR(ADF_IOCTL_TYPE, 6,   struct adf_overlay_engine_data)
+#define ADF_SIMPLE_POST_CONFIG _IOW(ADF_IOCTL_TYPE, 7,   struct adf_simple_post_config)
+#define ADF_SIMPLE_BUFFER_ALLOC _IOW(ADF_IOCTL_TYPE, 8,   struct adf_simple_buffer_alloc)
+#define ADF_ATTACH _IOW(ADF_IOCTL_TYPE, 9,   struct adf_attachment_config)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ADF_DETACH _IOW(ADF_IOCTL_TYPE, 10,   struct adf_attachment_config)
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
