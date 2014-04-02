@@ -63,7 +63,6 @@ struct PosixTimer {
   pthread_t callback_thread;
   void (*callback)(sigval_t);
   sigval_t callback_argument;
-  volatile int exiting;
 };
 
 static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
@@ -90,8 +89,7 @@ static void* __timer_thread_start(void* arg) {
       timer->callback(timer->callback_argument);
     } else if (si.si_code == SI_TKILL) {
       // This signal was sent because someone wants us to exit.
-      timer->exiting = 1;
-      __futex_wake(&timer->exiting, INT32_MAX);
+      free(timer);
       return NULL;
     }
   }
@@ -99,46 +97,35 @@ static void* __timer_thread_start(void* arg) {
 
 static void __timer_thread_stop(PosixTimer* timer) {
   pthread_kill(timer->callback_thread, TIMER_SIGNAL);
-
-  // If this is being called from within the callback thread, do nothing else.
-  if (pthread_self() != timer->callback_thread) {
-    // We can't pthread_join because POSIX says "the threads created in response to a timer
-    // expiration are created detached, or in an unspecified way if the thread attribute's
-    // detachstate is PTHREAD_CREATE_JOINABLE".
-    while (timer->exiting == 0) {
-      __futex_wait(&timer->exiting, 0, NULL);
-    }
-  }
 }
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html
 int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
-  PosixTimer* new_timer = reinterpret_cast<PosixTimer*>(malloc(sizeof(PosixTimer)));
-  if (new_timer == NULL) {
+  PosixTimer* timer = reinterpret_cast<PosixTimer*>(malloc(sizeof(PosixTimer)));
+  if (timer == NULL) {
     return -1;
   }
 
-  new_timer->sigev_notify = (evp == NULL) ? SIGEV_SIGNAL : evp->sigev_notify;
+  timer->sigev_notify = (evp == NULL) ? SIGEV_SIGNAL : evp->sigev_notify;
 
   // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
-  if (new_timer->sigev_notify != SIGEV_THREAD) {
-    if (__timer_create(clock_id, evp, &new_timer->kernel_timer_id) == -1) {
-      free(new_timer);
+  if (timer->sigev_notify != SIGEV_THREAD) {
+    if (__timer_create(clock_id, evp, &timer->kernel_timer_id) == -1) {
+      free(timer);
       return -1;
     }
 
-    *timer_id = new_timer;
+    *timer_id = timer;
     return 0;
   }
 
   // Otherwise, this must be SIGEV_THREAD timer...
-  new_timer->callback = evp->sigev_notify_function;
-  new_timer->callback_argument = evp->sigev_value;
-  new_timer->exiting = 0;
+  timer->callback = evp->sigev_notify_function;
+  timer->callback_argument = evp->sigev_value;
 
   // Check arguments that the kernel doesn't care about but we do.
-  if (new_timer->callback == NULL) {
-    free(new_timer);
+  if (timer->callback == NULL) {
+    free(timer);
     errno = EINVAL;
     return -1;
   }
@@ -159,12 +146,12 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   kernel_sigset_t old_sigset;
   pthread_sigmask(SIG_BLOCK, sigset.get(), old_sigset.get());
 
-  int rc = pthread_create(&new_timer->callback_thread, &thread_attributes, __timer_thread_start, new_timer);
+  int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
 
   pthread_sigmask(SIG_SETMASK, old_sigset.get(), NULL);
 
   if (rc != 0) {
-    free(new_timer);
+    free(timer);
     errno = rc;
     return -1;
   }
@@ -172,20 +159,19 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   sigevent se = *evp;
   se.sigev_signo = TIMER_SIGNAL;
   se.sigev_notify = SIGEV_THREAD_ID;
-  se.sigev_notify_thread_id = __pthread_gettid(new_timer->callback_thread);
-  if (__timer_create(clock_id, &se, &new_timer->kernel_timer_id) == -1) {
-    __timer_thread_stop(new_timer);
-    free(new_timer);
+  se.sigev_notify_thread_id = __pthread_gettid(timer->callback_thread);
+  if (__timer_create(clock_id, &se, &timer->kernel_timer_id) == -1) {
+    __timer_thread_stop(timer);
     return -1;
   }
 
   // Give the thread a meaningful name.
   // It can't do this itself because the kernel timer isn't created until after it's running.
   char name[32];
-  snprintf(name, sizeof(name), "POSIX interval timer %d", to_kernel_timer_id(new_timer));
-  pthread_setname_np(new_timer->callback_thread, name);
+  snprintf(name, sizeof(name), "POSIX interval timer %d", to_kernel_timer_id(timer));
+  pthread_setname_np(timer->callback_thread, name);
 
-  *timer_id = new_timer;
+  *timer_id = timer;
   return 0;
 }
 
@@ -197,13 +183,13 @@ int timer_delete(timer_t id) {
   }
 
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(id);
-
-  // Make sure the timer's thread has exited before we free the timer data.
   if (timer->sigev_notify == SIGEV_THREAD) {
+    // Stopping the timer's thread frees the timer data when it's safe.
     __timer_thread_stop(timer);
+  } else {
+    // For timers without threads, we can just free right away.
+    free(timer);
   }
-
-  free(timer);
 
   return 0;
 }
