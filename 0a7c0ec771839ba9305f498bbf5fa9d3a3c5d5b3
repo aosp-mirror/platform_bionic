@@ -94,6 +94,30 @@
       "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "995d7362_19d3ab4b",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-02T23:05:25Z",
+      "side": 1,
+      "message": "The way you are doing this right now, I suspect that it can only be on all of the time, or off all of the time.\n\nI think you might want to have it be LOCAL_GCOV_ENABLE and then have it cleared when doing an include $(CLEAR_VARS) (modify build/core/clear_vars.mk I think).",
+      "parentUuid": "b9ba379a_de9765ba",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
