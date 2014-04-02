@@ -20,6 +20,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/select.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 TEST(sys_select, fd_set_smoke) {
   fd_set fds;
