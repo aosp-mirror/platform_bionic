@@ -22,6 +22,30 @@
       "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3943a782_e1ce006d",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-02T21:27:47Z",
+      "side": 1,
+      "message": "This is addition to this: https://android-review.googlesource.com/#/c/84010/",
+      "parentUuid": "79399f00_da4805ee",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "0a7c0ec771839ba9305f498bbf5fa9d3a3c5d5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
