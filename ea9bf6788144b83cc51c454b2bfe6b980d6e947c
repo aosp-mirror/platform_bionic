@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "f9a74f88_840e7b92",
+        "filename": "libc/dns/net/getnameinfo.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-04-02T13:51:03Z",
+      "side": 1,
+      "message": "Nice. :-)",
+      "revId": "ea9bf6788144b83cc51c454b2bfe6b980d6e947c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99349308_eaaa5697",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-04-02T13:51:03Z",
+      "side": 1,
+      "message": "I get the feeling that in the places where we *check* marks we should compare mark to to zero, not to MARK_UNSET. But unless/until we change MARK_UNSET to something nonzero it doesn\u0027t matter, and when we do, we can think about it properly.",
+      "revId": "ea9bf6788144b83cc51c454b2bfe6b980d6e947c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9ce6f4a_d58f4e63",
         "filename": "libc/dns/resolv/res_state.c",
         "patchSetId": 18
