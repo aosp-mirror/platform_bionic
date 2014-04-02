@@ -38,9 +38,6 @@
 
 #define	MB_LEN_MAX	6		/* Allow 31 bit UTF2 */
 
-#ifndef	SIZE_MAX
-#define	SIZE_MAX	ULONG_MAX	/* max value for a size_t */
-#endif
 #define	SSIZE_MAX	LONG_MAX	/* max value for a ssize_t */
 
 #if __BSD_VISIBLE
