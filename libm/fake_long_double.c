@@ -22,16 +22,34 @@ int (isinf)(double a1) { return __isinf(a1); }
 
 int (isnanf)(float a1) { return __isnanf(a1); }
 
-// FreeBSD falls back to the double variants of these functions as well.
-long double coshl(long double a1) { return cosh(a1); }
-long double erfcl(long double a1) { return erfc(a1); }
-long double erfl(long double a1) { return erf(a1); }
-long double lgammal(long double a1) { return lgamma(a1); }
+/*
+ * On LP64 sizeof(long double) > sizeof(double) so functions which fall back
+ * to their double variants lose precision. Emit a warning whenever something
+ * links against such functions.
+ * On LP32 sizeof(long double) == sizeof(double) so we don't need to warn.
+ */
+#ifdef __LP64__
+#define WARN_IMPRECISE(x) \
+  __warn_references(x, # x " has lower than advertised precision");
+#else
+#define WARN_IMPRECISE(x)
+#endif //__LP64__
+
+#define DECLARE_IMPRECISE(f) \
+  long double f ## l(long double v) { return f(v); } \
+  WARN_IMPRECISE(x)
+
+DECLARE_IMPRECISE(cosh);
+DECLARE_IMPRECISE(erfc);
+DECLARE_IMPRECISE(erf);
+DECLARE_IMPRECISE(lgamma);
+DECLARE_IMPRECISE(sinh);
+DECLARE_IMPRECISE(tanh);
+DECLARE_IMPRECISE(tgamma);
+DECLARE_IMPRECISE(significand);
+
 long double powl(long double a1, long double a2) { return pow(a1, a2); }
-long double sinhl(long double a1) { return sinh(a1); }
-long double tanhl(long double a1) { return tanh(a1); }
-long double tgammal(long double a1) { return tgamma(a1); }
-long double significandl(long double a1) { return significand(a1); }
+WARN_IMPRECISE(powl)
 
 #ifndef __LP64__
 /*
