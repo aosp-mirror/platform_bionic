@@ -142,7 +142,7 @@ struct res_sym {
 struct __res_state_ext;
 
 struct __res_state {
-	char	iface[IF_NAMESIZE+1];
+	unsigned	netid;			/* NetId: cache key and socket mark */
 	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
 #ifdef sun
@@ -175,7 +175,7 @@ struct __res_state {
 	res_send_qhook qhook;		/* query hook */
 	res_send_rhook rhook;		/* response hook */
 	int	res_h_errno;		/* last one set for this context */
-	int _mark;          /* If non-0 SET_MARK to _mark on all request sockets */
+	unsigned _mark;			/* If non-0 SET_MARK to _mark on all request sockets */
 	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
 	u_int	_flags;			/* PRIVATE: see below */
 	u_int	_pad;			/* make _u 64 bit aligned */
@@ -490,8 +490,8 @@ void		res_setservers(res_state,
 int		res_getservers(res_state,
 				    union res_sockaddr_union *, int);
 
-void res_setiface();
-void res_setmark();
+void res_setnetid(res_state, unsigned);
+void res_setmark(res_state, unsigned);
 u_int  res_randomid(void);
 
 __END_DECLS
