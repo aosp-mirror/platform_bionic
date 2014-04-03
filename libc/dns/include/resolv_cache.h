@@ -34,61 +34,15 @@
 struct __res_state;
 struct resolv_cache;  /* forward */
 
-/* gets the cache for an interface. Set ifname argument to NULL or
- * empty buffer ('\0') to get cache for default interface.
- * returned cache might be NULL*/
+/* Gets the cache for a network. Returned cache might be NULL. */
 __LIBC_HIDDEN__
-extern struct resolv_cache*  __get_res_cache(const char* ifname);
-
-/* this gets called everytime we detect some changes in the DNS configuration
- * and will flush the cache */
-__LIBC_HIDDEN__
-extern void  _resolv_cache_reset( unsigned  generation );
-
-/* Gets the address of the n:th name server for the default interface
- * Return length of address on success else 0.
- * Note: The first name server is at n = 1 */
-__LIBC_HIDDEN__
-extern int _resolv_cache_get_nameserver(int n, char* addr, int addrLen);
-
-/* Gets the address of the n:th name server for a certain interface
- * Return length of address on success else 0.
- * Note: The first name server is at n = 1 */
-__LIBC_HIDDEN__
-extern int _resolv_cache_get_nameserver_for_iface(const char* ifname, int n,
-        char* addr, int addrLen);
-
-/* Gets addrinfo of the n:th name server associated with an interface.
- * NULL is returned if no address if found.
- * Note: The first name server is at n = 1. */
-__LIBC_HIDDEN__
-extern struct addrinfo* _resolv_cache_get_nameserver_addr_for_iface(const char* ifname, int n);
-
-/* Gets addrinfo of the n:th name server associated with the default interface
- * NULL is returned if no address if found.
- * Note: The first name server is at n = 1. */
-__LIBC_HIDDEN__
-extern struct addrinfo* _resolv_cache_get_nameserver_addr(int n);
-
-/* gets the address associated with the default interface */
-__LIBC_HIDDEN__
-extern struct in_addr* _resolv_get_addr_of_default_iface();
-
-/* gets the address associated with the specified interface */
-__LIBC_HIDDEN__
-extern struct in_addr* _resolv_get_addr_of_iface(const char* ifname);
-
-/* Copy the name of the default interface to the provided buffer.
- * Returns the string length of the default interface,
- * be that less or more than the buffLen, or 0 if nothing had been written */
-__LIBC_HIDDEN__
- extern size_t _resolv_get_default_iface(char* buff, size_t buffLen);
+extern struct resolv_cache* __get_res_cache(unsigned netid);
 
 /* sets the name server addresses to the provided res_state structure. The
  * name servers are retrieved from the cache which is associated
- * with the interface to which the res_state structure is associated */
+ * with the network to which the res_state structure is associated */
 __LIBC_HIDDEN__
-extern void _resolv_populate_res_for_iface(struct __res_state* statp);
+extern void _resolv_populate_res_for_net(struct __res_state* statp);
 
 typedef enum {
     RESOLV_CACHE_UNSUPPORTED,  /* the cache can't handle that kind of queries */

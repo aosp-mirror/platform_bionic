@@ -102,6 +102,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <fcntl.h>
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
+#include "resolv_netid.h"
 #include "resolv_private.h"
 #else
 #include <resolv.h>
@@ -388,8 +389,8 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-	// get the cache associated with the interface
-	cache = __get_res_cache(statp->iface);
+	// get the cache associated with the network
+	cache = __get_res_cache(statp->netid);
 	if (cache != NULL) {
 		int  anslen = 0;
 		cache_status = _resolv_cache_lookup(
@@ -399,9 +400,9 @@ res_nsend(res_state statp,
 		if (cache_status == RESOLV_CACHE_FOUND) {
 			return anslen;
 		} else {
-			// had a cache miss for a known interface, so populate the thread private
+			// had a cache miss for a known network, so populate the thread private
 			// data so the normal resolve path can do its thing
-			_resolv_populate_res_for_iface(statp);
+			_resolv_populate_res_for_net(statp);
 		}
 	}
 
@@ -762,7 +763,7 @@ send_vc(res_state statp,
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_storage peer;
 		socklen_t size = sizeof peer;
-		int old_mark;
+		unsigned old_mark;
 		int mark_size = sizeof(old_mark);
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)(void *)&peer, &size) < 0 ||
@@ -798,7 +799,7 @@ send_vc(res_state statp,
 				return (-1);
 			}
 		}
-		if (statp->_mark != 0) {
+		if (statp->_mark != MARK_UNSET) {
 			if (setsockopt(statp->_vcsock, SOL_SOCKET,
 				        SO_MARK, &statp->_mark, sizeof(statp->_mark)) < 0) {
 				*terrno = errno;
@@ -1082,7 +1083,7 @@ send_dg(res_state statp,
 			}
 		}
 
-		if (statp->_mark != 0) {
+		if (statp->_mark != MARK_UNSET) {
 			if (setsockopt(EXT(statp).nssocks[ns], SOL_SOCKET,
 					SO_MARK, &(statp->_mark), sizeof(statp->_mark)) < 0) {
 				res_nclose(statp);
