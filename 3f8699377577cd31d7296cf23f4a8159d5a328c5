@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19c5035d_7b52b72d",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-04T00:33:24Z",
+      "side": 1,
+      "message": "this should be submitted upstream first.",
+      "revId": "3f8699377577cd31d7296cf23f4a8159d5a328c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39c80775_7cdd5152",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-04T00:33:24Z",
+      "side": 1,
+      "message": "this should be fixed by using the PRI macros instead.",
+      "revId": "3f8699377577cd31d7296cf23f4a8159d5a328c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
