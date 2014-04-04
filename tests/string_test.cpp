@@ -222,7 +222,7 @@ TEST(string, strcat) {
 TEST(string, strcpy2) {
   char buf[1];
   char* orig = strdup("");
-  strcpy(buf, orig);
+  ASSERT_EQ(buf, strcpy(buf, orig));
   ASSERT_EQ('\0', buf[0]);
   free(orig);
 }
@@ -232,13 +232,8 @@ TEST(string, strcpy3) {
   char buf[10];
   char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
-  strcpy(buf, orig);
-  ASSERT_EQ('1',  buf[0]);
-  ASSERT_EQ('2',  buf[1]);
-  ASSERT_EQ('3',  buf[2]);
-  ASSERT_EQ('4',  buf[3]);
-  ASSERT_EQ('5',  buf[4]);
-  ASSERT_EQ('\0', buf[5]);
+  ASSERT_EQ(buf, strcpy(buf, orig));
+  ASSERT_STREQ("12345", buf);
   ASSERT_EQ('A',  buf[6]);
   ASSERT_EQ('A',  buf[7]);
   ASSERT_EQ('A',  buf[8]);
@@ -251,17 +246,41 @@ TEST(string, strcpy4) {
   char buf[10];
   char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
-  strcpy(buf, orig);
-  ASSERT_EQ('1',  buf[0]);
-  ASSERT_EQ('2',  buf[1]);
-  ASSERT_EQ('3',  buf[2]);
-  ASSERT_EQ('4',  buf[3]);
-  ASSERT_EQ('5',  buf[4]);
-  ASSERT_EQ('6',  buf[5]);
-  ASSERT_EQ('7',  buf[6]);
-  ASSERT_EQ('8',  buf[7]);
-  ASSERT_EQ('9',  buf[8]);
-  ASSERT_EQ('\0', buf[9]);
+  ASSERT_EQ(buf, strcpy(buf, orig));
+  ASSERT_STREQ("123456789", buf);
+  free(orig);
+}
+
+// one byte target with "\0" source
+TEST(string, stpcpy2) {
+  char buf[1];
+  char* orig = strdup("");
+  ASSERT_EQ(buf, stpcpy(buf, orig));
+  ASSERT_EQ('\0', buf[0]);
+  free(orig);
+}
+
+// multibyte target where we under fill target
+TEST(string, stpcpy3) {
+  char buf[10];
+  char* orig = strdup("12345");
+  memset(buf, 'A', sizeof(buf));
+  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  ASSERT_STREQ("12345", buf);
+  ASSERT_EQ('A',  buf[6]);
+  ASSERT_EQ('A',  buf[7]);
+  ASSERT_EQ('A',  buf[8]);
+  ASSERT_EQ('A',  buf[9]);
+  free(orig);
+}
+
+// multibyte target where we fill target exactly
+TEST(string, stpcpy4) {
+  char buf[10];
+  char* orig = strdup("123456789");
+  memset(buf, 'A', sizeof(buf));
+  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  ASSERT_STREQ("123456789", buf);
   free(orig);
 }
 
@@ -272,13 +291,7 @@ TEST(string, strcat2) {
   buf[1] = '\0';
   char* res = strcat(buf, "01234");
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('\0', buf[6]);
+  ASSERT_STREQ("a01234", buf);
   ASSERT_EQ('A',  buf[7]);
   ASSERT_EQ('A',  buf[8]);
   ASSERT_EQ('A',  buf[9]);
@@ -291,16 +304,7 @@ TEST(string, strcat3) {
   buf[1] = '\0';
   char* res = strcat(buf, "01234567");
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('5', buf[6]);
-  ASSERT_EQ('6',  buf[7]);
-  ASSERT_EQ('7',  buf[8]);
-  ASSERT_EQ('\0',  buf[9]);
+  ASSERT_STREQ("a01234567", buf);
 }
 
 TEST(string, strncat2) {
@@ -310,13 +314,7 @@ TEST(string, strncat2) {
   buf[1] = '\0';
   char* res = strncat(buf, "01234", sizeof(buf) - strlen(buf) - 1);
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('\0', buf[6]);
+  ASSERT_STREQ("a01234", buf);
   ASSERT_EQ('A',  buf[7]);
   ASSERT_EQ('A',  buf[8]);
   ASSERT_EQ('A',  buf[9]);
@@ -329,13 +327,7 @@ TEST(string, strncat3) {
   buf[1] = '\0';
   char* res = strncat(buf, "0123456789", 5);
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('\0', buf[6]);
+  ASSERT_STREQ("a01234", buf);
   ASSERT_EQ('A',  buf[7]);
   ASSERT_EQ('A',  buf[8]);
   ASSERT_EQ('A',  buf[9]);
@@ -348,16 +340,7 @@ TEST(string, strncat4) {
   buf[1] = '\0';
   char* res = strncat(buf, "01234567", 8);
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('5', buf[6]);
-  ASSERT_EQ('6',  buf[7]);
-  ASSERT_EQ('7',  buf[8]);
-  ASSERT_EQ('\0',  buf[9]);
+  ASSERT_STREQ("a01234567", buf);
 }
 
 TEST(string, strncat5) {
@@ -367,16 +350,7 @@ TEST(string, strncat5) {
   buf[1] = '\0';
   char* res = strncat(buf, "01234567", 9);
   ASSERT_EQ(buf, res);
-  ASSERT_EQ('a',  buf[0]);
-  ASSERT_EQ('0',  buf[1]);
-  ASSERT_EQ('1',  buf[2]);
-  ASSERT_EQ('2',  buf[3]);
-  ASSERT_EQ('3',  buf[4]);
-  ASSERT_EQ('4',  buf[5]);
-  ASSERT_EQ('5', buf[6]);
-  ASSERT_EQ('6',  buf[7]);
-  ASSERT_EQ('7',  buf[8]);
-  ASSERT_EQ('\0',  buf[9]);
+  ASSERT_STREQ("a01234567", buf);
 }
 
 TEST(string, strchr_with_0) {
@@ -456,6 +430,32 @@ TEST(string, strcmp) {
   }
 }
 
+TEST(string, stpcpy) {
+  StringTestState<char> state(SMALL);
+  for (size_t j = 0; j < POS_ITER; j++) {
+    state.NewIteration();
+
+    size_t pos = random() % state.MAX_LEN;
+
+    memset(state.ptr1, '\2', pos);
+    state.ptr1[pos] = '\0';
+    state.ptr1[state.MAX_LEN - 1] = '\0';
+
+    memcpy(state.ptr, state.ptr1, state.MAX_LEN);
+
+    memset(state.ptr2, '\1', state.MAX_LEN);
+    state.ptr2[state.MAX_LEN - 1] = '\0';
+
+    memset(state.ptr + state.MAX_LEN, '\1', state.MAX_LEN);
+    memcpy(state.ptr + state.MAX_LEN, state.ptr1, pos + 1);
+    state.ptr[2 * state.MAX_LEN - 1] = '\0';
+
+    ASSERT_TRUE(stpcpy(state.ptr2, state.ptr1) == state.ptr2 + strlen(state.ptr1));
+    ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN)) != 0 ||
+                 (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
+  }
+}
+
 TEST(string, strcpy) {
   StringTestState<char> state(SMALL);
   for (size_t j = 0; j < POS_ITER; j++) {
@@ -481,7 +481,6 @@ TEST(string, strcpy) {
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
 }
-
 
 TEST(string, strlcat) {
 #if defined(__BIONIC__)
@@ -614,30 +613,81 @@ TEST(string, strncmp) {
   }
 }
 
+TEST(string, stpncpy) {
+  StringTestState<char> state(SMALL);
+  for (size_t j = 0; j < ITER; j++) {
+    state.NewIteration();
+
+    // Choose a random value to fill the string, except \0 (string terminator),
+    // or \1 (guarantees it's different from anything in ptr2).
+    memset(state.ptr1, (random() % 254) + 2, state.MAX_LEN);
+    // Choose a random size for our src buffer.
+    size_t ptr1_len = random() % state.MAX_LEN;
+    state.ptr1[ptr1_len] = '\0';
+    // Copy ptr1 into ptr, used to verify that ptr1 does not get modified.
+    memcpy(state.ptr, state.ptr1, state.MAX_LEN);
+    // Init ptr2 to a set value.
+    memset(state.ptr2, '\1', state.MAX_LEN);
+
+    // Choose a random amount of data to copy.
+    size_t copy_len = random() % state.MAX_LEN;
+
+    // Set the second half of ptr to the expected pattern in ptr2.
+    memset(state.ptr + state.MAX_LEN, '\1', state.MAX_LEN);
+    memcpy(state.ptr + state.MAX_LEN, state.ptr1, copy_len);
+    size_t expected_end;
+    if (copy_len > ptr1_len) {
+      memset(state.ptr + state.MAX_LEN + ptr1_len, '\0', copy_len - ptr1_len);
+      expected_end = ptr1_len;
+    } else {
+      expected_end = copy_len;
+    }
+
+    ASSERT_EQ(state.ptr2 + expected_end, stpncpy(state.ptr2, state.ptr1, copy_len));
+
+    // Verify ptr1 was not modified.
+    ASSERT_EQ(0, memcmp(state.ptr1, state.ptr, state.MAX_LEN));
+    // Verify ptr2 contains the expected data.
+    ASSERT_EQ(0, memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN));
+  }
+}
+
 TEST(string, strncpy) {
   StringTestState<char> state(SMALL);
   for (size_t j = 0; j < ITER; j++) {
     state.NewIteration();
 
-    memset(state.ptr1, random() & 255, state.MAX_LEN);
-    state.ptr1[random () % state.MAX_LEN] = '\0';
+    // Choose a random value to fill the string, except \0 (string terminator),
+    // or \1 (guarantees it's different from anything in ptr2).
+    memset(state.ptr1, (random() % 254) + 2, state.MAX_LEN);
+    // Choose a random size for our src buffer.
+    size_t ptr1_len = random() % state.MAX_LEN;
+    state.ptr1[ptr1_len] = '\0';
+    // Copy ptr1 into ptr, used to verify that ptr1 does not get modified.
     memcpy(state.ptr, state.ptr1, state.MAX_LEN);
-
+    // Init ptr2 to a set value.
     memset(state.ptr2, '\1', state.MAX_LEN);
 
-    size_t pos;
-    if (memchr(state.ptr1, 0, state.MAX_LEN)) {
-      pos = strlen(state.ptr1);
+    // Choose a random amount of data to copy.
+    size_t copy_len = random() % state.MAX_LEN;
+
+    // Set the second half of ptr to the expected pattern in ptr2.
+    memset(state.ptr + state.MAX_LEN, '\1', state.MAX_LEN);
+    memcpy(state.ptr + state.MAX_LEN, state.ptr1, copy_len);
+    size_t expected_end;
+    if (copy_len > ptr1_len) {
+      memset(state.ptr + state.MAX_LEN + ptr1_len, '\0', copy_len - ptr1_len);
+      expected_end = ptr1_len;
     } else {
-      pos = state.MAX_LEN - 1;
+      expected_end = copy_len;
     }
 
-    memset(state.ptr + state.MAX_LEN, '\0', state.MAX_LEN);
-    memcpy(state.ptr + state.MAX_LEN, state.ptr1, pos + 1);
+    ASSERT_EQ(state.ptr2 + expected_end, stpncpy(state.ptr2, state.ptr1, copy_len));
 
-    ASSERT_TRUE(strncpy(state.ptr2, state.ptr1, state.MAX_LEN) == state.ptr2);
-    ASSERT_FALSE(memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0 ||
-                 memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0);
+    // Verify ptr1 was not modified.
+    ASSERT_EQ(0, memcmp(state.ptr1, state.ptr, state.MAX_LEN));
+    // Verify ptr2 contains the expected data.
+    ASSERT_EQ(0, memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN));
   }
 }
 
@@ -964,6 +1014,25 @@ TEST(string, strcpy_align) {
 
 TEST(string, strcpy_overread) {
   RunSrcDstBufferOverreadTest(DoStrcpyTest);
+}
+
+static void DoStpcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    memset(src, (32 + (len % 96)), len - 1);
+    src[len-1] = '\0';
+    memset(dst, 0, len);
+    ASSERT_EQ(dst+len-1, reinterpret_cast<uint8_t*>(stpcpy(reinterpret_cast<char*>(dst),
+                                                           reinterpret_cast<char*>(src))));
+    ASSERT_TRUE(memcmp(src, dst, len) == 0);
+  }
+}
+
+TEST(string, stpcpy_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoStpcpyTest);
+}
+
+TEST(string, stpcpy_overread) {
+  RunSrcDstBufferOverreadTest(DoStpcpyTest);
 }
 
 // Use our own incrementer to cut down on the total number of calls.

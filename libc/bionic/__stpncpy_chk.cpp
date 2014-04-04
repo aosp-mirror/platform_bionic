@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,23 +33,60 @@
 #include "private/libc_logging.h"
 
 /*
- * Runtime implementation of __builtin____strcpy_chk.
+ * Runtime implementation of __builtin____stpncpy_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
  *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This strcpy check is called if _FORTIFY_SOURCE is defined and
+ * This stpncpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strcpy_chk(char* dest, const char* src, size_t dest_len) {
-  // TODO: optimize so we don't scan src twice.
-  size_t src_len = strlen(src) + 1;
-  if (__predict_false(src_len > dest_len)) {
-    __fortify_chk_fail("strcpy: prevented write past end of buffer",
-                       BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
+extern "C" char* __stpncpy_chk(char* __restrict dest, const char* __restrict src,
+                               size_t len, size_t dest_len) {
+  if (__predict_false(len > dest_len)) {
+    __fortify_chk_fail("stpncpy: prevented write past end of buffer",
+                       BIONIC_EVENT_STPNCPY_BUFFER_OVERFLOW);
   }
 
-  return strcpy(dest, src);
+  return stpncpy(dest, src, len);
+}
+
+/*
+ * __stpncpy_chk2
+ *
+ * This is a variant of __stpncpy_chk, but it also checks to make
+ * sure we don't read beyond the end of "src". The code for this is
+ * based on the original version of stpncpy, but modified to check
+ * how much we read from "src" at the end of the copy operation.
+ */
+extern "C" char* __stpncpy_chk2(char* __restrict dst, const char* __restrict src,
+              size_t n, size_t dest_len, size_t src_len)
+{
+  if (__predict_false(n > dest_len)) {
+    __fortify_chk_fail("stpncpy: prevented write past end of buffer",
+                       BIONIC_EVENT_STPNCPY_BUFFER_OVERFLOW);
+  }
+  if (n != 0) {
+    char* d = dst;
+    const char* s = src;
+
+    do {
+      if ((*d++ = *s++) == 0) {
+        /* NUL pad the remaining n-1 bytes */
+        while (--n != 0) {
+          *d++ = 0;
+        }
+        break;
+      }
+    } while (--n != 0);
+
+    size_t s_copy_len = static_cast<size_t>(s - src);
+    if (__predict_false(s_copy_len > src_len)) {
+      __fortify_chk_fail("stpncpy: prevented read past end of buffer", 0);
+    }
+  }
+
+  return dst;
 }

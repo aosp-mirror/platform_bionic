@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,23 +33,23 @@
 #include "private/libc_logging.h"
 
 /*
- * Runtime implementation of __builtin____strcpy_chk.
+ * Runtime implementation of __builtin____stpcpy_chk.
  *
  * See
  *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
  *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
  * for details.
  *
- * This strcpy check is called if _FORTIFY_SOURCE is defined and
+ * This stpcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strcpy_chk(char* dest, const char* src, size_t dest_len) {
+extern "C" char* __stpcpy_chk(char* dest, const char* src, size_t dest_len) {
   // TODO: optimize so we don't scan src twice.
   size_t src_len = strlen(src) + 1;
   if (__predict_false(src_len > dest_len)) {
-    __fortify_chk_fail("strcpy: prevented write past end of buffer",
-                       BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
+    __fortify_chk_fail("stpcpy: prevented write past end of buffer",
+                       BIONIC_EVENT_STPCPY_BUFFER_OVERFLOW);
   }
 
-  return strcpy(dest, src);
+  return stpcpy(dest, src);
 }
