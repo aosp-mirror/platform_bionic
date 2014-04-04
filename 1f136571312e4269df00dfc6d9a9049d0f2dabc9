@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39c80775_1c237d3a",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-04T01:05:33Z",
+      "side": 0,
+      "message": "this is upstream source. we should work to switch to the current upstream source, not make more local modifications to an ancient copy.",
+      "revId": "1f136571312e4269df00dfc6d9a9049d0f2dabc9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
