@@ -54,6 +54,7 @@ static pthread_once_t  _res_once = PTHREAD_ONCE_INIT;
 
 typedef struct {
     int                  _h_errno;
+    // TODO: Have one __res_state per network so we don't have to repopulate frequently.
     struct __res_state  _nres[1];
     unsigned             _serial;
     struct prop_info*   _pi;

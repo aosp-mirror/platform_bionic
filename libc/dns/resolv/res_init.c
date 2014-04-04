@@ -110,6 +110,7 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 
 /* ensure that sockaddr_in6 and IN6ADDR_ANY_INIT are declared / defined */
 #ifdef ANDROID_CHANGES
+#include "resolv_netid.h"
 #include "resolv_private.h"
 #else
 #include <resolv.h>
@@ -183,10 +184,12 @@ __res_vinit(res_state statp, int preinit) {
                 res_ndestroy(statp);
 
 	if (!preinit) {
+		statp->netid = NETID_UNSET;
 		statp->retrans = RES_TIMEOUT;
 		statp->retry = RES_DFLRETRY;
 		statp->options = RES_DEFAULT;
 		statp->id = res_randomid();
+		statp->_mark = MARK_UNSET;
 	}
 
 	memset(u, 0, sizeof(u));
@@ -793,24 +796,18 @@ res_getservers(res_state statp, union res_sockaddr_union *set, int cnt) {
 }
 
 #ifdef ANDROID_CHANGES
-void res_setiface(res_state statp, const char* iface)
+void res_setnetid(res_state statp, unsigned netid)
 {
 	if (statp != NULL) {
-		// set interface
-		if (iface && iface[0] != '\0') {
-			int len = sizeof(statp->iface);
-			strncpy(statp->iface, iface, len - 1);
-			statp->iface[len - 1] = '\0';
-		} else {
-			statp->iface[0] = '\0';
-		}
+		statp->netid = netid;
 	}
 }
 
-void res_setmark(res_state statp, int mark)
+void res_setmark(res_state statp, unsigned mark)
 {
 	if (statp != NULL) {
 		statp->_mark = mark;
 	}
 }
+
 #endif /* ANDROID_CHANGES */
