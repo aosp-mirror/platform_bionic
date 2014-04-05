@@ -22,6 +22,30 @@
       "revId": "64a7fb1db460d98f065654d37300441e003e6c1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f96f4f39_07ced8a4",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-05T06:13:15Z",
+      "side": 1,
+      "message": "i don\u0027t think so, unless i\u0027ve misunderstood. s \u003d\u003d NULL is used to reset the implicit state. (i think this is supposed to be implemented the opposite way round, where wctomb is a call to wcrtomb with a global mbstate_t.)",
+      "parentUuid": "39764713_756c921d",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 18
+      },
+      "revId": "64a7fb1db460d98f065654d37300441e003e6c1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
