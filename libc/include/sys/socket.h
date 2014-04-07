@@ -107,7 +107,7 @@ struct cmsghdr {
   int cmsg_type;
 };
 
-#define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr((mhdr)->msg_control, (mhdr)->msg_controllen, (cmsg))
+#define CMSG_NXTHDR(mhdr, cmsg) cmsg_nxthdr((mhdr), (cmsg))
 #define CMSG_ALIGN(len) ( ((len)+sizeof(long)-1) & ~(sizeof(long)-1) )
 #define CMSG_DATA(cmsg) ((void*)((char*)(cmsg) + CMSG_ALIGN(sizeof(struct cmsghdr))))
 #define CMSG_SPACE(len) (CMSG_ALIGN(sizeof(struct cmsghdr)) + CMSG_ALIGN(len))
@@ -117,22 +117,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-#ifdef __GNUC__
-#define __KINLINE static __inline__
-#elif defined(__cplusplus)
-#define __KINLINE static inline
-#else
-#define __KINLINE static
-#endif
-
-__KINLINE struct cmsghdr* __cmsg_nxthdr(void* __ctl, size_t __size, struct cmsghdr* __cmsg) {
-  struct cmsghdr* __ptr;
-  __ptr = (struct cmsghdr*)(((unsigned char*) __cmsg) + CMSG_ALIGN(__cmsg->cmsg_len));
-  if ((unsigned long)((char*)(__ptr+1) - (char*) __ctl) > __size) {
-    return NULL;
-  }
-  return __ptr;
-}
+struct cmsghdr* cmsg_nxthdr(struct msghdr*, struct cmsghdr*);
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02

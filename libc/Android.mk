@@ -119,6 +119,7 @@ libc_bionic_src_files := \
     bionic/chown.cpp \
     bionic/clock.cpp \
     bionic/clone.cpp \
+    bionic/cmsg_nxthdr.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
