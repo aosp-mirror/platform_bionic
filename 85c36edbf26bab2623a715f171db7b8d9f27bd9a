@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9b4affd_9c940529",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T20:57:15Z",
+      "side": 1,
+      "message": "can\u0027t we just unconditionally #undef? (not least because we know that \u003clinux/fcntl.h\u003e #defined these, but even if it didn\u0027t, i don\u0027t think there\u0027s any circumstance in which you can get an error/warning from #undef on something that isn\u0027t defined.)",
+      "revId": "85c36edbf26bab2623a715f171db7b8d9f27bd9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
