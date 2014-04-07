@@ -86,7 +86,7 @@ typedef struct ucontext {
   struct ucontext *uc_link;
   stack_t uc_stack;
   sigset_t uc_sigmask;
-  char __unused[128 - sizeof(sigset_t)];
+  char __padding[128 - sizeof(sigset_t)];
   mcontext_t uc_mcontext;
 } ucontext_t;
 
