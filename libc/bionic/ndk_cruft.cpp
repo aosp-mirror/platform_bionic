@@ -29,6 +29,8 @@
 // This file perpetuates the mistakes of the past, but only for 32-bit targets.
 #if !defined(__LP64__)
 
+#include <ctype.h>
+#include <inttypes.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <sys/resource.h>
@@ -85,6 +87,33 @@ extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stac
   // Needed for ABI compatibility with the NDK.
   *stack_addr = (char*)attr->stack_base + attr->stack_size;
   return 0;
+}
+
+// Non-standard cruft that should only ever have been in system/core/toolbox.
+extern "C" char* strtotimeval(const char* str, struct timeval* ts) {
+  char* s;
+  ts->tv_sec = strtoumax(str, &s, 10);
+
+  long fractional_seconds = 0;
+  if (*s == '.') {
+    s++;
+    int count = 0;
+
+    // Read up to 6 digits (microseconds).
+    while (*s && isdigit(*s)) {
+      if (++count < 7) {
+        fractional_seconds = fractional_seconds*10 + (*s - '0');
+      }
+      s++;
+    }
+
+    for (; count < 6; count++) {
+      fractional_seconds *= 10;
+    }
+  }
+
+  ts->tv_usec = fractional_seconds;
+  return s;
 }
 
 #endif
