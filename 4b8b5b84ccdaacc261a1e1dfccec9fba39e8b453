@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19734325_c2b023d9",
+        "filename": "libc/bionic/__stpcpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "no #undef?",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_22cf376b",
+        "filename": "libc/bionic/__stpcpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "__stpcpy_chk(",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_4286f306",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "s/buffer/destination/",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_e276ff61",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "oops. this one too. i thought we\u0027d fixed all these.",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_0284fbf5",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "hmm. maybe we should just come back later :-)",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_c262e398",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "is that true? it looked like you had clang support in the header?",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9b4affd_a2631aee",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "why not STREQ here?",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19734325_82cb8b39",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T22:51:55Z",
+      "side": 1,
+      "message": "StringTestState (deliberately) sets the seed to a known value for reproduceability.",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
