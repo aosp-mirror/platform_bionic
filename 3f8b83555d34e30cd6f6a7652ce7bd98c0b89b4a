@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19734325_f10ed34d",
+        "filename": "libc/bionic/__cmsg_nxthdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T19:02:07Z",
+      "side": 1,
+      "message": "no need for \u0027struct\u0027 in C++.\n\nno need for __-prefixed names in non-inline code.",
+      "revId": "3f8b83555d34e30cd6f6a7652ce7bd98c0b89b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a69bd4_88b15bdd",
+        "filename": "libc/bionic/__cmsg_nxthdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T19:02:07Z",
+      "side": 1,
+      "message": "C++ casts?",
+      "revId": "3f8b83555d34e30cd6f6a7652ce7bd98c0b89b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a69bd4_488473f6",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-07T19:02:07Z",
+      "side": 1,
+      "message": "no need for parameter names in declarations.",
+      "revId": "3f8b83555d34e30cd6f6a7652ce7bd98c0b89b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
