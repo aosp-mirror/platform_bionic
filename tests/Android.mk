@@ -82,6 +82,7 @@ libBionicStandardTests_src_files := \
     system_properties_test.cpp \
     time_test.cpp \
     unistd_test.cpp \
+    wchar_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
