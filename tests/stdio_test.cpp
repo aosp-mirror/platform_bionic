@@ -297,6 +297,9 @@ TEST(stdio, snprintf_smoke) {
 
   snprintf(buf, sizeof(buf), "a_%g_b", 3.14);
   EXPECT_STREQ("a_3.14_b", buf);
+
+  snprintf(buf, sizeof(buf), "%1$s %1$s", "print_me_twice");
+  EXPECT_STREQ("print_me_twice print_me_twice", buf);
 }
 
 TEST(stdio, snprintf_d_INT_MAX) {
