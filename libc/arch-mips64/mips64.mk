@@ -60,7 +60,7 @@ libc_bionic_src_files_mips64 := \
 # FIXME TODO
 ## libc_bionic_src_files_mips64 += arch-mips64/string/memcpy.S
 ## libc_bionic_src_files_mips64 += arch-mips64/string/memset.S
-libc_bionic_src_files_mips64 += bionic/memcpy.c
+libc_bionic_src_files_mips64 += bionic/memcpy.cpp
 libc_bionic_src_files_mips64 += bionic/memset.c
 
 
