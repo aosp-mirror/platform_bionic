@@ -16,6 +16,23 @@
       "revId": "b7c734b0f2646c066585492e1fd06c76b488c01e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9cd8fa7_9492a4cb",
+        "filename": "tests/fcntl_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T18:21:13Z",
+      "side": 1,
+      "message": "this should be a struct flock64. i\u0027ll fix that too.",
+      "revId": "b7c734b0f2646c066585492e1fd06c76b488c01e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
