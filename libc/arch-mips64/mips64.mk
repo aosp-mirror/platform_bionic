@@ -16,11 +16,6 @@ libc_common_src_files_mips64 := \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
-    upstream-openbsd/lib/libc/locale/_def_numeric.c \
-    upstream-openbsd/lib/libc/locale/_def_messages.c \
-    upstream-openbsd/lib/libc/locale/_def_monetary.c \
-    upstream-openbsd/lib/libc/locale/_def_time.c \
-    upstream-openbsd/lib/libc/locale/localeconv.c \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/strcat.c \
     upstream-openbsd/lib/libc/string/strcmp.c \

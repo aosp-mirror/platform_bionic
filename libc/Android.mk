@@ -142,6 +142,7 @@ libc_bionic_src_files := \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
     bionic/link.cpp \
+    bionic/locale.cpp \
     bionic/lstat.cpp \
     bionic/mkdir.cpp \
     bionic/mkfifo.cpp \
@@ -187,7 +188,6 @@ libc_bionic_src_files := \
     bionic/setegid.cpp \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
-    bionic/setlocale.cpp \
     bionic/setpgrp.cpp \
     bionic/sigaction.cpp \
     bionic/sigaddset.cpp \
