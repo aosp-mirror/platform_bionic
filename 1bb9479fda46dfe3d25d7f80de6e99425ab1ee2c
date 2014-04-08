@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59f4dbd0_2fc6e937",
+        "filename": "libc/bionic/cmsg_nxthdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T18:14:30Z",
+      "side": 1,
+      "message": "20??",
+      "revId": "1bb9479fda46dfe3d25d7f80de6e99425ab1ee2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79efdfff_30df68f2",
+        "filename": "libc/bionic/cmsg_nxthdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T18:14:30Z",
+      "side": 1,
+      "message": "missing blank line between #includes and code.",
+      "revId": "1bb9479fda46dfe3d25d7f80de6e99425ab1ee2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9cd8fa7_541accca",
+        "filename": "libc/bionic/cmsg_nxthdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T18:14:30Z",
+      "side": 1,
+      "message": "why unsigned char when the others are just char?",
+      "revId": "1bb9479fda46dfe3d25d7f80de6e99425ab1ee2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59f4dbd0_efd0e1e8",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T18:14:30Z",
+      "side": 1,
+      "message": "no need for parameter names on a declaration.",
+      "revId": "1bb9479fda46dfe3d25d7f80de6e99425ab1ee2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
