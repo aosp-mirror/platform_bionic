@@ -16,6 +16,24 @@
       "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79efdfff_90073476",
+        "filename": "libc/include/features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-08T19:49:14Z",
+      "side": 1,
+      "message": "I\u0027ll look in to it. This change set isn\u0027t intended to be submitted as is (just so that timmurray could cherry pick), and this is one of the things I still need to deal with.",
+      "parentUuid": "590dbbba_ca8aa307",
+      "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
