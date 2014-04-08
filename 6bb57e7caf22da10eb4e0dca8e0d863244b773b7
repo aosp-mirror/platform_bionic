@@ -34,6 +34,23 @@
       "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d4872d_c568647c",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T20:37:00Z",
+      "side": 1,
+      "message": "yeah, this whole lconv change was a mess. i\u0027ll work on fixing that up now.",
+      "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
