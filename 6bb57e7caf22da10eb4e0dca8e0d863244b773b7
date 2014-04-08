@@ -51,6 +51,24 @@
       "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39d4872d_d096e438",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T21:36:05Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/#/c/90418/",
+      "parentUuid": "39d4872d_c568647c",
+      "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
