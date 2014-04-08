@@ -65,6 +65,9 @@ extern void _resolv_set_nameservers_for_net(unsigned netid,
 /* flush the cache associated with a certain network */
 extern void _resolv_flush_cache_for_net(unsigned netid);
 
+/* delete the cache associated with a certain network */
+extern void _resolv_delete_cache_for_net(unsigned netid);
+
 __END_DECLS
 
 #endif /* _RESOLV_NETID_H */

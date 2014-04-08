@@ -1218,7 +1218,6 @@ typedef struct resolv_cache {
     int              max_entries;
     int              num_entries;
     Entry            mru_list;
-    pthread_mutex_t  lock;
     int              last_id;
     Entry*           entries;
     PendingReqInfo   pending_requests;
@@ -1235,6 +1234,15 @@ struct resolv_cache_info {
 };
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
+
+static pthread_once_t        _res_cache_once = PTHREAD_ONCE_INIT;
+static void _res_cache_init(void);
+
+// lock protecting everything in the _resolve_cache_info structs (next ptr, etc)
+static pthread_mutex_t _res_cache_list_lock;
+
+/* gets cache associated with a network, or NULL if none exists */
+static struct resolv_cache* _find_named_cache_locked(unsigned netid);
 
 static void
 _cache_flush_pending_requests_locked( struct resolv_cache* cache )
@@ -1256,18 +1264,18 @@ _cache_flush_pending_requests_locked( struct resolv_cache* cache )
     }
 }
 
-/* return 0 if no pending request is found matching the key
- * if a matching request is found the calling thread will wait
- * and return 1 when released */
+/* Return 0 if no pending request is found matching the key.
+ * If a matching request is found the calling thread will wait until
+ * the matching request completes, then update *cache and return 1. */
 static int
-_cache_check_pending_request_locked( struct resolv_cache* cache, Entry* key )
+_cache_check_pending_request_locked( struct resolv_cache** cache, Entry* key, unsigned netid )
 {
     struct pending_req_info *ri, *prev;
     int exist = 0;
 
-    if (cache && key) {
-        ri = cache->pending_requests.next;
-        prev = &cache->pending_requests;
+    if (*cache && key) {
+        ri = (*cache)->pending_requests.next;
+        prev = &(*cache)->pending_requests;
         while (ri) {
             if (ri->hash == key->hash) {
                 exist = 1;
@@ -1288,7 +1296,9 @@ _cache_check_pending_request_locked( struct resolv_cache* cache, Entry* key )
             struct timespec ts = {0,0};
             XLOG("Waiting for previous request");
             ts.tv_sec = _time_now() + PENDING_REQUEST_TIMEOUT;
-            pthread_cond_timedwait(&ri->cond, &cache->lock, &ts);
+            pthread_cond_timedwait(&ri->cond, &_res_cache_list_lock, &ts);
+            /* Must update *cache as it could have been deleted. */
+            *cache = _find_named_cache_locked(netid);
         }
     }
 
@@ -1325,17 +1335,25 @@ _cache_notify_waiting_tid_locked( struct resolv_cache* cache, Entry* key )
 
 /* notify the cache that the query failed */
 void
-_resolv_cache_query_failed( struct resolv_cache* cache,
+_resolv_cache_query_failed( unsigned    netid,
                    const void* query,
                    int         querylen)
 {
     Entry    key[1];
+    Cache*   cache;
 
-    if (cache && entry_init_key(key, query, querylen)) {
-        pthread_mutex_lock(&cache->lock);
+    if (!entry_init_key(key, query, querylen))
+        return;
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    cache = _find_named_cache_locked(netid);
+
+    if (cache) {
         _cache_notify_waiting_tid_locked(cache, key);
-        pthread_mutex_unlock(&cache->lock);
     }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
 }
 
 static void
@@ -1391,7 +1409,6 @@ _resolv_cache_create( void )
         cache->max_entries = _res_cache_get_max_entries();
         cache->entries = calloc(sizeof(*cache->entries), cache->max_entries);
         if (cache->entries) {
-            pthread_mutex_init( &cache->lock, NULL );
             cache->mru_list.mru_prev = cache->mru_list.mru_next = &cache->mru_list;
             XLOG("%s: cache created\n", __FUNCTION__);
         } else {
@@ -1586,7 +1603,7 @@ static void _cache_remove_expired(Cache* cache) {
 }
 
 ResolvCacheStatus
-_resolv_cache_lookup( struct resolv_cache*  cache,
+_resolv_cache_lookup( unsigned              netid,
                       const void*           query,
                       int                   querylen,
                       void*                 answer,
@@ -1597,6 +1614,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
     Entry**    lookup;
     Entry*     e;
     time_t     now;
+    Cache*     cache;
 
     ResolvCacheStatus  result = RESOLV_CACHE_NOTFOUND;
 
@@ -1609,7 +1627,14 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
         return RESOLV_CACHE_UNSUPPORTED;
     }
     /* lookup cache */
-    pthread_mutex_lock( &cache->lock );
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    cache = _find_named_cache_locked(netid);
+    if (cache == NULL) {
+        result = RESOLV_CACHE_UNSUPPORTED;
+        goto Exit;
+    }
 
     /* see the description of _lookup_p to understand this.
      * the function always return a non-NULL pointer.
@@ -1621,7 +1646,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
         XLOG( "NOT IN CACHE");
         // calling thread will wait if an outstanding request is found
         // that matching this query
-        if (!_cache_check_pending_request_locked(cache, key)) {
+        if (!_cache_check_pending_request_locked(&cache, key, netid) || cache == NULL) {
             goto Exit;
         } else {
             lookup = _cache_lookup_p(cache, key);
@@ -1662,13 +1687,13 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
     result = RESOLV_CACHE_FOUND;
 
 Exit:
-    pthread_mutex_unlock( &cache->lock );
+    pthread_mutex_unlock(&_res_cache_list_lock);
     return result;
 }
 
 
 void
-_resolv_cache_add( struct resolv_cache*  cache,
+_resolv_cache_add( unsigned              netid,
                    const void*           query,
                    int                   querylen,
                    const void*           answer,
@@ -1678,6 +1703,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
     Entry*   e;
     Entry**  lookup;
     u_long   ttl;
+    Cache*   cache = NULL;
 
     /* don't assume that the query has already been cached
      */
@@ -1686,7 +1712,12 @@ _resolv_cache_add( struct resolv_cache*  cache,
         return;
     }
 
-    pthread_mutex_lock( &cache->lock );
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    cache = _find_named_cache_locked(netid);
+    if (cache == NULL) {
+        goto Exit;
+    }
 
     XLOG( "%s: query:", __FUNCTION__ );
     XLOG_QUERY(query,querylen);
@@ -1732,8 +1763,10 @@ _resolv_cache_add( struct resolv_cache*  cache,
     _cache_dump_mru(cache);
 #endif
 Exit:
-    _cache_notify_waiting_tid_locked(cache, key);
-    pthread_mutex_unlock( &cache->lock );
+    if (cache != NULL) {
+      _cache_notify_waiting_tid_locked(cache, key);
+    }
+    pthread_mutex_unlock(&_res_cache_list_lock);
 }
 
 /****************************************************************************/
@@ -1744,20 +1777,13 @@ Exit:
 /****************************************************************************/
 /****************************************************************************/
 
-static pthread_once_t        _res_cache_once = PTHREAD_ONCE_INIT;
-
 // Head of the list of caches.  Protected by _res_cache_list_lock.
 static struct resolv_cache_info _res_cache_list;
-
-// lock protecting everything in the _resolve_cache_info structs (next ptr, etc)
-static pthread_mutex_t _res_cache_list_lock;
 
 /* insert resolv_cache_info into the list of resolv_cache_infos */
 static void _insert_cache_info_locked(struct resolv_cache_info* cache_info);
 /* creates a resolv_cache_info */
 static struct resolv_cache_info* _create_cache_info( void );
-/* gets cache associated with a network, or NULL if none exists */
-static struct resolv_cache* _find_named_cache_locked(unsigned netid);
 /* gets a resolv_cache_info associated with a network, or NULL if not found */
 static struct resolv_cache_info* _find_cache_info_locked(unsigned netid);
 /* look up the named cache, and creates one if needed */
@@ -1783,22 +1809,6 @@ _res_cache_init(void)
 
     memset(&_res_cache_list, 0, sizeof(_res_cache_list));
     pthread_mutex_init(&_res_cache_list_lock, NULL);
-}
-
-struct resolv_cache*
-__get_res_cache(unsigned netid)
-{
-    struct resolv_cache *cache;
-
-    pthread_once(&_res_cache_once, _res_cache_init);
-    pthread_mutex_lock(&_res_cache_list_lock);
-
-    /* Does NOT create a cache if it does not exist. */
-    cache = _find_named_cache_locked(netid);
-
-    pthread_mutex_unlock(&_res_cache_list_lock);
-    XLOG("%s: netid=%u, cache=%p\n", __FUNCTION__, netid, cache);
-    return cache;
 }
 
 static struct resolv_cache*
@@ -1837,10 +1847,34 @@ _flush_cache_for_net_locked(unsigned netid)
 {
     struct resolv_cache* cache = _find_named_cache_locked(netid);
     if (cache) {
-        pthread_mutex_lock(&cache->lock);
         _cache_flush_locked(cache);
-        pthread_mutex_unlock(&cache->lock);
     }
+}
+
+void _resolv_delete_cache_for_net(unsigned netid)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* prev_cache_info = &_res_cache_list;
+
+    while (prev_cache_info->next) {
+        struct resolv_cache_info* cache_info = prev_cache_info->next;
+
+        if (cache_info->netid == netid) {
+            prev_cache_info->next = cache_info->next;
+            _cache_flush_locked(cache_info->cache);
+            free(cache_info->cache->entries);
+            free(cache_info->cache);
+            _free_nameservers_locked(cache_info);
+            free(cache_info);
+            break;
+        }
+
+        prev_cache_info = prev_cache_info->next;
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
 }
 
 static struct resolv_cache_info*
