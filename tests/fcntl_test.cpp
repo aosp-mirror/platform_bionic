@@ -116,3 +116,19 @@ TEST(fcntl, fallocate) {
   ASSERT_EQ(0, fstat(tf.fd, &sb));
   ASSERT_EQ(4, sb.st_size);
 }
+
+TEST(fcntl, f_getlk64) {
+  int fd = open64("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+
+  struct flock64 check_lock;
+  check_lock.l_type = F_WRLCK;
+  check_lock.l_start = 0;
+  check_lock.l_whence = SEEK_SET;
+  check_lock.l_len = 0;
+
+  int rc = fcntl(fd, F_GETLK64, &check_lock);
+  ASSERT_EQ(0, rc);
+
+  close(fd);
+}
