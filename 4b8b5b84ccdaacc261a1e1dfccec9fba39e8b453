@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "999e536b_a532561d",
+        "filename": "libc/bionic/__stpcpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "I copied from strcpy_chk, so fixed there and here.",
+      "parentUuid": "19734325_c2b023d9",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19734325_22cf376b",
         "filename": "libc/bionic/__stpcpy_chk.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-04-07T22:51:55Z",
       "side": 1,
       "message": "__stpcpy_chk(",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9995785_01c6b4de",
+        "filename": "libc/bionic/__stpcpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "Fixed in both files.",
+      "parentUuid": "19734325_22cf376b",
       "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b9995785_e1a1b013",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "I changed these to match the messages in the other fortify functions.",
+      "parentUuid": "19734325_4286f306",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19734325_e276ff61",
         "filename": "libc/include/string.h",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-04-07T22:51:55Z",
       "side": 1,
       "message": "oops. this one too. i thought we\u0027d fixed all these.",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "999e536b_60e21c45",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "Same as above.",
+      "parentUuid": "19734325_e276ff61",
       "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "d9be0bc6_4de0dd63",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "Same as above.",
+      "parentUuid": "19734325_0284fbf5",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19734325_c262e398",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2014-04-07T22:51:55Z",
       "side": 1,
       "message": "is that true? it looked like you had clang support in the header?",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "999e536b_80e70052",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "I have to admit, I\u0027m not so sure about this. I just copied all of the strcpy/strncpy tests in their current form.\n\nHow about I leave it like this for this change, but I\u0027ll see if I can remove these restrictions. We\u0027ve updated a lot of the clang stuff, so maybe this works now.",
+      "parentUuid": "19734325_c262e398",
       "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "b9995785_6167803c",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "Because I\u0027m lazy?\n\nOkay, I fixed all of these to use STREQ as much as possible so that this multiple ASSERT_EQ thing is not as bad.",
+      "parentUuid": "f9b4affd_a2631aee",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19734325_82cb8b39",
         "filename": "tests/string_test.cpp",
         "patchSetId": 1
@@ -132,6 +258,24 @@
       "writtenOn": "2014-04-07T22:51:55Z",
       "side": 1,
       "message": "StringTestState (deliberately) sets the seed to a known value for reproduceability.",
+      "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9995785_816c641e",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-08T00:03:08Z",
+      "side": 1,
+      "message": "Removed now.",
+      "parentUuid": "19734325_82cb8b39",
       "revId": "4b8b5b84ccdaacc261a1e1dfccec9fba39e8b453",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
