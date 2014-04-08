@@ -95,6 +95,8 @@ libc_common_src_files += \
     bionic/__memmove_chk.cpp \
     bionic/__read_chk.cpp \
     bionic/__recvfrom_chk.cpp \
+    bionic/__stpcpy_chk.cpp \
+    bionic/__stpncpy_chk.cpp \
     bionic/__strchr_chk.cpp \
     bionic/__strlcat_chk.cpp \
     bionic/__strlcpy_chk.cpp \
@@ -382,6 +384,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/strtoull.c \
     upstream-openbsd/lib/libc/stdlib/strtoumax.c \
     upstream-openbsd/lib/libc/stdlib/system.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/stpncpy.c \
     upstream-openbsd/lib/libc/string/strcasecmp.c \
     upstream-openbsd/lib/libc/string/strcspn.c \
     upstream-openbsd/lib/libc/string/strdup.c \
