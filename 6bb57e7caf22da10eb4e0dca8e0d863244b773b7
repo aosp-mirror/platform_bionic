@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "19d6e33f_305d26d8",
+        "filename": "libc/include/features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-08T22:24:06Z",
+      "side": 1,
+      "message": "+1 . That would be extremely useful. That way we don\u0027t have to bend over backwards and introduce obviously broken / duplicate / pointless stuff in bionic just to keep libcxx happy.",
+      "parentUuid": "79efdfff_90073476",
+      "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39d4872d_c568647c",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
