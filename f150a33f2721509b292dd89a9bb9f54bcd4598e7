@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9b4affd_85d6e815",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T00:09:08Z",
+      "side": 1,
+      "message": "we\u0027re on clang 3.4 now, right? can\u0027t we just remove this?",
+      "revId": "f150a33f2721509b292dd89a9bb9f54bcd4598e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
