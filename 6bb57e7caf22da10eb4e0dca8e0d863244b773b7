@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590dbbba_ca8aa307",
+        "filename": "libc/include/features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T19:25:48Z",
+      "side": 1,
+      "message": "isn\u0027t there a way to use a bionic-specific configuration instead of the glibc one? presumably they already support glibc versus Mac?",
+      "revId": "6bb57e7caf22da10eb4e0dca8e0d863244b773b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
