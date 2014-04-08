@@ -6,20 +6,16 @@ import time, os, sys
 from utils import *
 
 # the list of supported architectures
-#
 kernel_archs = [ 'arm', 'arm64', 'mips', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
-#
 kernel_dirs = [ "linux", "asm", "asm-generic", "mtd" ]
 
 # path to the directory containing the original kernel headers
-#
 kernel_original_path = os.path.normpath( find_program_dir() + '/../../../../external/kernel-headers/original' )
 
 # path to the default location of the cleaned-up headers
-#
 kernel_cleaned_path = os.path.normpath( find_program_dir() + '/..' )
 
 # a special value that is used to indicate that a given macro is known to be
@@ -33,6 +29,7 @@ kernel_known_macros = {
     "__KERNEL_STRICT_NAMES":"1",
     "__CHECKER__": kCppUndefinedMacro,
     "__CHECK_ENDIAN__": kCppUndefinedMacro,
+    "CONFIG_64BIT": "__LP64__",
     "CONFIG_X86_32": "__i386__",
     "__EXPORTED_HEADERS__": "1",
     }
@@ -71,6 +68,7 @@ kernel_token_replacements = {
 # this is the set of known static inline functions that we want to keep
 # in the final ARM headers. this is only used to keep optimized byteswapping
 # static functions and stuff like that.
+# TODO: this isn't working!
 kernel_known_arm_statics = set(
         [ "___arch__swab32",    # asm-arm/byteorder.h
         ]
@@ -93,11 +91,9 @@ kernel_known_x86_statics = set(
     )
 
 kernel_known_generic_statics = set(
-        [ "__invalid_size_argument_for_IOC",  # asm-generic/ioctl.h
-          "__cmsg_nxthdr",                    # linux/socket.h
-          "cmsg_nxthdr",                      # linux/socket.h
-          "ipt_get_target",
-          "ip6t_get_target",
+        [
+          "ipt_get_target",  # uapi/linux/netfilter_ipv4/ip_tables.h
+          "ip6t_get_target", # uapi/linux/netfilter_ipv6/ip6_tables.h
         ]
     )
 
