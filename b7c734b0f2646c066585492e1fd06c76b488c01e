@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39d4872d_5c8f95d3",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-08T16:57:33Z",
+      "side": 1,
+      "message": "thanks. it struck me as weird that the kernel headers don\u0027t handle this better. i can understand them not defining these, but to define them wrong seemed odd. looking at the _unmolested_ headers in external/kernel-headers, i see that they\u0027re guarded by an #ifndef CONFIG_64BIT. so the first thing i should do is fix our header scrubber to define that for the 64-bit architectures...",
+      "revId": "b7c734b0f2646c066585492e1fd06c76b488c01e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
