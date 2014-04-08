@@ -49,9 +49,6 @@ enum {
     LC_IDENTIFICATION = 12
 };
 
-extern char* setlocale(int, const char*);
-
-#if defined(__LP64__)
 struct lconv {
     char* decimal_point;
     char* thousands_sep;
@@ -71,7 +68,6 @@ struct lconv {
     char  n_sep_by_space;
     char  p_sign_posn;
     char  n_sign_posn;
-    /* ISO-C99 */
     char  int_p_cs_precedes;
     char  int_p_sep_by_space;
     char  int_n_cs_precedes;
@@ -79,12 +75,9 @@ struct lconv {
     char  int_p_sign_posn;
     char  int_n_sign_posn;
 };
-#else
-// Keep old declaration for ILP32 for compatibility
-struct lconv { };
-#endif
 
 struct lconv* localeconv(void);
+extern char* setlocale(int, const char*);
 
 __END_DECLS
 

@@ -16,13 +16,32 @@
 
 #include <gtest/gtest.h>
 
+#include <limits.h>
 #include <locale.h>
 
 TEST(locale, localeconv) {
-#ifdef __LP64__
-  ASSERT_STREQ(".", localeconv()->decimal_point);
-  ASSERT_STREQ("", localeconv()->currency_symbol);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
+  EXPECT_STREQ(".", localeconv()->decimal_point);
+  EXPECT_STREQ("", localeconv()->thousands_sep);
+  EXPECT_STREQ("", localeconv()->grouping);
+  EXPECT_STREQ("", localeconv()->int_curr_symbol);
+  EXPECT_STREQ("", localeconv()->currency_symbol);
+  EXPECT_STREQ("", localeconv()->mon_decimal_point);
+  EXPECT_STREQ("", localeconv()->mon_thousands_sep);
+  EXPECT_STREQ("", localeconv()->mon_grouping);
+  EXPECT_STREQ("", localeconv()->positive_sign);
+  EXPECT_STREQ("", localeconv()->negative_sign);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_frac_digits);
+  EXPECT_EQ(CHAR_MAX, localeconv()->frac_digits);
+  EXPECT_EQ(CHAR_MAX, localeconv()->p_cs_precedes);
+  EXPECT_EQ(CHAR_MAX, localeconv()->p_sep_by_space);
+  EXPECT_EQ(CHAR_MAX, localeconv()->n_cs_precedes);
+  EXPECT_EQ(CHAR_MAX, localeconv()->n_sep_by_space);
+  EXPECT_EQ(CHAR_MAX, localeconv()->p_sign_posn);
+  EXPECT_EQ(CHAR_MAX, localeconv()->n_sign_posn);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_p_cs_precedes);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_p_sep_by_space);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_n_cs_precedes);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_n_sep_by_space);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_p_sign_posn);
+  EXPECT_EQ(CHAR_MAX, localeconv()->int_n_sign_posn);
 }

@@ -27,9 +27,48 @@
  */
 
 #include <locale.h>
+#include <pthread.h>
 #include <stdlib.h>
+
+static pthread_once_t locale_once = PTHREAD_ONCE_INIT;
+static lconv locale;
+
+static void __locale_init() {
+  locale.decimal_point = const_cast<char*>(".");
+
+  char* not_available = const_cast<char*>("");
+  locale.thousands_sep = not_available;
+  locale.grouping = not_available;
+  locale.int_curr_symbol = not_available;
+  locale.currency_symbol = not_available;
+  locale.mon_decimal_point = not_available;
+  locale.mon_thousands_sep = not_available;
+  locale.mon_grouping = not_available;
+  locale.positive_sign = not_available;
+  locale.negative_sign = not_available;
+
+  locale.int_frac_digits = CHAR_MAX;
+  locale.frac_digits = CHAR_MAX;
+  locale.p_cs_precedes = CHAR_MAX;
+  locale.p_sep_by_space = CHAR_MAX;
+  locale.n_cs_precedes = CHAR_MAX;
+  locale.n_sep_by_space = CHAR_MAX;
+  locale.p_sign_posn = CHAR_MAX;
+  locale.n_sign_posn = CHAR_MAX;
+  locale.int_p_cs_precedes = CHAR_MAX;
+  locale.int_p_sep_by_space = CHAR_MAX;
+  locale.int_n_cs_precedes = CHAR_MAX;
+  locale.int_n_sep_by_space = CHAR_MAX;
+  locale.int_p_sign_posn = CHAR_MAX;
+  locale.int_n_sign_posn = CHAR_MAX;
+}
+
+lconv* localeconv() {
+  pthread_once(&locale_once, __locale_init);
+  return &locale;
+}
 
 // setlocale(3) always fails on bionic.
 char* setlocale(int /*category*/, char const* /*locale*/) {
-    return NULL;
+  return NULL;
 }
