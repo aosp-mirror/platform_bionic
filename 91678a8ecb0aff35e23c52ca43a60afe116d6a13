@@ -22,6 +22,47 @@
       "revId": "91678a8ecb0aff35e23c52ca43a60afe116d6a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9cd8fa7_7dab6b9d",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-09T02:32:53Z",
+      "side": 1,
+      "message": "no, because this gets run once per process, not per thread. but you\u0027re right that there\u0027s a bug here :-)",
+      "parentUuid": "19ffc3b9_8beef16b",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 1
+      },
+      "revId": "91678a8ecb0aff35e23c52ca43a60afe116d6a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79efdfff_16c69cde",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-09T02:32:53Z",
+      "side": 1,
+      "message": "i think our choices are either \"if (old_locale \u003d\u003d NULL) old_locale \u003d LC_GLOBAL_LOCALE;\" or adding something to the TLS initialization code. for now it seems like uselocale(3) is unlikely to be used much, so i\u0027ll stick it here. and add the missing test.",
+      "revId": "91678a8ecb0aff35e23c52ca43a60afe116d6a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
