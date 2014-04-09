@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <errno.h>
 #include <limits.h>
 #include <locale.h>
 
@@ -44,4 +45,63 @@ TEST(locale, localeconv) {
   EXPECT_EQ(CHAR_MAX, localeconv()->int_n_sep_by_space);
   EXPECT_EQ(CHAR_MAX, localeconv()->int_p_sign_posn);
   EXPECT_EQ(CHAR_MAX, localeconv()->int_n_sign_posn);
+}
+
+TEST(locale, setlocale) {
+  EXPECT_STREQ("C", setlocale(LC_ALL, NULL));
+  EXPECT_STREQ("C", setlocale(LC_CTYPE, NULL));
+
+  errno = 0;
+  EXPECT_EQ(NULL, setlocale(-1, NULL));
+  EXPECT_EQ(EINVAL, errno);
+  errno = 0;
+  EXPECT_EQ(NULL, setlocale(13, NULL));
+  EXPECT_EQ(EINVAL, errno);
+
+#if __BIONIC__
+  // The "" locale is implementation-defined. For bionic, it's the C locale.
+  // glibc will give us something like "en_US.UTF-8", depending on the user's configuration.
+  EXPECT_STREQ("C", setlocale(LC_ALL, ""));
+#endif
+  EXPECT_STREQ("C", setlocale(LC_ALL, "C"));
+  EXPECT_STREQ("C", setlocale(LC_ALL, "POSIX"));
+
+  errno = 0;
+  EXPECT_EQ(NULL, setlocale(LC_ALL, "this-is-not-a-locale"));
+  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+}
+
+TEST(locale, newlocale) {
+  errno = 0;
+  EXPECT_EQ(0, newlocale(1 << 20, "C", 0));
+  EXPECT_EQ(EINVAL, errno);
+
+  locale_t l = newlocale(LC_ALL, "C", 0);
+  ASSERT_TRUE(l != NULL);
+  freelocale(l);
+
+  errno = 0;
+  EXPECT_EQ(0, newlocale(LC_ALL, "this-is-not-a-locale", 0));
+  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+}
+
+TEST(locale, duplocale) {
+  locale_t cloned_global = duplocale(LC_GLOBAL_LOCALE);
+  ASSERT_TRUE(cloned_global != NULL);
+  freelocale(cloned_global);
+}
+
+TEST(locale, uselocale) {
+  locale_t original = uselocale(NULL);
+  EXPECT_FALSE(original == 0);
+  EXPECT_EQ(LC_GLOBAL_LOCALE, original);
+
+  locale_t n = newlocale(LC_ALL, "C", 0);
+  EXPECT_FALSE(n == 0);
+  EXPECT_FALSE(n == original);
+
+  locale_t old = uselocale(n);
+  EXPECT_TRUE(old == original);
+
+  EXPECT_EQ(n, uselocale(NULL));
 }
