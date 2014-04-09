@@ -116,3 +116,17 @@ TEST(unistd, read_EBADF) {
 TEST(unistd, alarm) {
   ASSERT_EQ(0U, alarm(0));
 }
+
+TEST(unistd, _exit) {
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    _exit(99);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(99, WEXITSTATUS(status));
+}
