@@ -308,7 +308,7 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset_t
 
 int eventfd:eventfd2(unsigned int, int)  all
 
-void _exit:exit_group(int)  all
+void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
 
 int futex(void*, int, int, void*, void*, int)  all
