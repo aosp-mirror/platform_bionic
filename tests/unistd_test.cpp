@@ -22,6 +22,8 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
