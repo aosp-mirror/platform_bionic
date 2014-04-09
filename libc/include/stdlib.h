@@ -41,8 +41,9 @@ __BEGIN_DECLS
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
-extern __noreturn void exit(int);
 extern __noreturn void abort(void);
+extern __noreturn void exit(int);
+extern __noreturn void _Exit(int);
 extern int atexit(void (*)(void));
 
 extern char *getenv(const char *);

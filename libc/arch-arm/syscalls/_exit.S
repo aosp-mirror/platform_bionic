@@ -12,3 +12,6 @@ ENTRY(_exit)
     neg     r0, r0
     b       __set_errno
 END(_exit)
+
+    .globl _Exit
+    .equ _Exit, _exit

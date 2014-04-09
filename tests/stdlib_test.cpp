@@ -202,3 +202,17 @@ TEST(stdlib, strtof) {
 TEST(stdlib, strtold) {
   ASSERT_DOUBLE_EQ(1.23, strtold("1.23", NULL));
 }
+
+TEST(unistd, _Exit) {
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    _Exit(99);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(99, WEXITSTATUS(status));
+}
