@@ -67,6 +67,7 @@ libBionicStandardTests_src_files := \
     string_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
+    sstream_test.cpp \
     sys_epoll_test.cpp \
     sys_mman_test.cpp \
     sys_resource_test.cpp \
