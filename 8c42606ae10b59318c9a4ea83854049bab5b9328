@@ -22,6 +22,30 @@
       "revId": "8c42606ae10b59318c9a4ea83854049bab5b9328",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "996f3376_d2c27546",
+        "filename": "tests/sstream_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-10T20:23:33Z",
+      "side": 1,
+      "message": "yeah, i\u0027m writing more tests after finding that libcxx doesn\u0027t test this area properly either. looks like there are more bugs in stlport too...",
+      "parentUuid": "b9df977e_e294c629",
+      "range": {
+        "startLine": 25,
+        "startChar": 2,
+        "endLine": 25,
+        "endChar": 8
+      },
+      "revId": "8c42606ae10b59318c9a4ea83854049bab5b9328",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
