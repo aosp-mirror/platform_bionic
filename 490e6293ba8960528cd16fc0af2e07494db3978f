@@ -22,6 +22,23 @@
       "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f97e6f24_f20f80fd",
+        "filename": "libc/include/features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-10T02:39:00Z",
+      "side": 1,
+      "message": "this should be fixed by adding defined(__GLIBC__) to the existing test and optionally adding a __BIONIC__-specific test if needed.",
+      "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
