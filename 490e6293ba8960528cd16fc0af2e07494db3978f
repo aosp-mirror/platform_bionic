@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "195b43e2_25f38e12",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-10T00:06:00Z",
+      "side": 1,
+      "message": "Change these tabs to 2 spaces.",
+      "range": {
+        "startLine": 493,
+        "startChar": 0,
+        "endLine": 493,
+        "endChar": 1
+      },
+      "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
