@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79e99f2a_e06322ed",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1043486
+      },
+      "writtenOn": "2014-04-10T09:46:20Z",
+      "side": 1,
+      "message": "This works ok for the signal handler case, but not for the getcontext case. As getcontext takes a pointer to a ucontext to fill in it is necessary for it to be as least as large as the library expects. Since getcontext itself is still missing maybe we don\u0027t care about this.",
+      "range": {
+        "startLine": 255,
+        "startChar": 25,
+        "endLine": 255,
+        "endChar": 27
+      },
+      "revId": "c5992a036ba380f56e5be3d2d6b1abb34064b20e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
