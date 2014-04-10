@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f97e6f24_69608269",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-10T22:22:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "195b43e2_25f38e12",
+      "range": {
+        "startLine": 493,
+        "startChar": 0,
+        "endLine": 493,
+        "endChar": 1
+      },
+      "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f97e6f24_f20f80fd",
         "filename": "libc/include/features.h",
         "patchSetId": 2
@@ -53,6 +77,24 @@
       "writtenOn": "2014-04-10T08:49:10Z",
       "side": 1,
       "message": "Also, please upstream those changes to libcxx. They are generally useful, even beyond android.\n\nMoreover, I don\u0027t think we should be adding a bunch of bionic hacks (or adding weird support headers like in the NDK) to support libcxx.",
+      "parentUuid": "f97e6f24_f20f80fd",
+      "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f97e6f24_c9ee566d",
+        "filename": "libc/include/features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-10T22:22:02Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "f97e6f24_f20f80fd",
       "revId": "490e6293ba8960528cd16fc0af2e07494db3978f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
