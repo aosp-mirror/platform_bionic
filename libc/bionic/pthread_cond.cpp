@@ -41,7 +41,6 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
-#include "private/thread_private.h"
 
 // We use one bit in pthread_condattr_t (long) values as the 'shared' flag
 // and one bit for the clock type (CLOCK_REALTIME is ((clockid_t) 1), and
