@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9544bb3_095d4dd7",
+        "filename": "tests/sstream_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-11T01:20:44Z",
+      "side": 1,
+      "message": "I think this test is invalid. It\u0027s really just converting the first character in the string it encounters. So \"-128\" is 45 because it\u0027s really just \"-\", \"127\" and \"128\" are the same because it\u0027s just doing \"1\".",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 72
+      },
+      "revId": "7f2da1479450536008fa4785b7be1f6fb48da1bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
