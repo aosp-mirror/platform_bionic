@@ -22,6 +22,30 @@
       "revId": "7f2da1479450536008fa4785b7be1f6fb48da1bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99b2d35a_d75a14bb",
+        "filename": "tests/sstream_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-11T03:40:56Z",
+      "side": 1,
+      "message": "yeah, i don\u0027t think there\u0027s anything useful to test here. i\u0027ll remove it.",
+      "parentUuid": "d9544bb3_095d4dd7",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 72
+      },
+      "revId": "7f2da1479450536008fa4785b7be1f6fb48da1bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
