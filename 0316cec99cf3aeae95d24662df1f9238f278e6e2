@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39f3a71c_c4df12bd",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-12T07:56:48Z",
+      "side": 1,
+      "message": "any reason you\u0027re not writing this as:\n\n    return (__fpclassifyd(d) \u003d\u003d FP_IFINITE)\n\n(applies to __isinff / __isnan / __isnanf too)",
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39f3a71c_a4e48690",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-12T07:56:48Z",
+      "side": 1,
+      "message": "I assume there\u0027s no ieee_ struct for this ? (ieee754 does define quadruple precision formats, aka binary128).",
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
