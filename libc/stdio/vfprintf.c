@@ -146,6 +146,7 @@ __sbprintf(FILE *fp, const char *fmt, va_list ap)
 #define	DEFPREC		6
 
 static char *cvt(double, int, int, char *, int *, int, int *);
+extern void  freedtoa(char *);
 static int exponent(char *, int, int);
 #else /* no FLOATING_POINT */
 #define	BUF		40
@@ -201,7 +202,6 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	int ch;			/* character from fmt */
 	int n, m, n2;		/* handy integers (short term usage) */
 	char *cp;		/* handy char pointer (short term usage) */
-	char *cp_free = NULL;	/* BIONIC: copy of cp to be freed after usage */
 	struct __siov *iovp;	/* for PRINT macro */
 	int flags;		/* flags as above */
 	int ret;		/* return value accumulator */
@@ -218,6 +218,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	int expsize = 0;	/* character count for expstr */
 	int ndig;		/* actual number of digits returned by cvt */
 	char expstr[7];		/* buffer for exponent string */
+	char *dtoaresult = NULL;
 #endif
 
 	uintmax_t _umax;	/* integer arguments %[diouxX] */
@@ -555,10 +556,10 @@ reswitch:	switch (ch) {
 				break;
 			}
 
+			if (dtoaresult != NULL) freedtoa(dtoaresult);
 			flags |= FPT;
-			cp = cvt(_double, prec, flags, &softsign,
+			dtoaresult = cp = cvt(_double, prec, flags, &softsign,
 				&expt, ch, &ndig);
-		    cp_free = cp;
 			if (ch == 'g' || ch == 'G') {
 				if (expt <= -4 || expt > prec)
 					ch = (ch == 'g') ? 'e' : 'E';
@@ -845,21 +846,14 @@ number:			if ((dprec = prec) >= 0)
 		ret += width > realsz ? width : realsz;
 
 		FLUSH();	/* copy out the I/O vectors */
-#if 1   /* BIONIC: remove memory leak when printing doubles */
-		if (cp_free) {
-		  free(cp_free);
-		  cp_free = NULL;
-		}
-#endif
 	}
 done:
 	FLUSH();
 error:
-#if 1   /* BIONIC: remove memory leak when printing doubles */
-    if (cp_free) {
-        free(cp_free);
-        cp_free = NULL;
-    }
+#ifdef FLOATING_POINT
+	if (dtoaresult != NULL) {
+	  freedtoa(dtoaresult);
+	}
 #endif
 	if (argtable != NULL && argtable != statargtable) {
 		munmap(argtable, argtablesiz);
