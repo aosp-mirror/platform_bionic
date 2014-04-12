@@ -17,11 +17,6 @@
 #include <float.h>
 #include <math.h>
 
-extern int __isinf(double); /* isinf.c */
-int (isinf)(double a1) { return __isinf(a1); }
-
-int (isnanf)(float a1) { return __isnanf(a1); }
-
 /*
  * On LP64 sizeof(long double) > sizeof(double) so functions which fall back
  * to their double variants lose precision. Emit a warning whenever something
@@ -58,10 +53,7 @@ WARN_IMPRECISE(powl)
  * that call the regular "double" function.
  */
 
-int __fpclassifyl(long double a1) { return __fpclassifyd(a1); }
 int __isfinitel(long double a1) { return __isfinite(a1); }
-int __isinfl(long double a1) { return __isinf(a1); }
-int __isnanl(long double a1) { return (isnan)(a1); }
 int __isnormall(long double a1) { return __isnormal(a1); }
 int __signbitl(long double a1) { return __signbit(a1); }
 

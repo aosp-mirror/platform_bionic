@@ -60,3 +60,112 @@ static void BM_math_logb(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_math_logb);
+
+static void BM_math_isinf_NORMAL(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = 1234.0; // FP_NORMAL
+  for (int i = 0; i < iters; ++i) {
+    d += (isinf)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_isinf_NORMAL);
+
+static void BM_math_isinf_NAN(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = nan(""); // FP_NAN
+  for (int i = 0; i < iters; ++i) {
+    d += (isinf)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_isinf_NAN);
+
+static void BM_math_isinf_INFINITE(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = HUGE_VAL; // FP_INFINITE
+  for (int i = 0; i < iters; ++i) {
+    d += (isinf)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_isinf_INFINITE);
+
+static void BM_math_isinf_ZERO(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = 0.0; // FP_ZERO
+  for (int i = 0; i < iters; ++i) {
+    d += (isinf)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_isinf_ZERO);
+
+
+
+
+
+
+static void BM_math_fpclassify_NORMAL(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = 1234.0; // FP_NORMAL
+  for (int i = 0; i < iters; ++i) {
+    d += fpclassify(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_fpclassify_NORMAL);
+
+static void BM_math_fpclassify_NAN(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = nan(""); // FP_NAN
+  for (int i = 0; i < iters; ++i) {
+    d += fpclassify(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_fpclassify_NAN);
+
+static void BM_math_fpclassify_INFINITE(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = HUGE_VAL; // FP_INFINITE
+  for (int i = 0; i < iters; ++i) {
+    d += fpclassify(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_fpclassify_INFINITE);
+
+static void BM_math_fpclassify_ZERO(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = 0.0; // FP_ZERO
+  for (int i = 0; i < iters; ++i) {
+    d += fpclassify(v);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_fpclassify_ZERO);
