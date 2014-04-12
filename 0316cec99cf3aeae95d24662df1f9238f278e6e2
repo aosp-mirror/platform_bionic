@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "79d0bf88_9169bed1",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-12T18:03:25Z",
+      "side": 1,
+      "message": "i almost did, but then i worried about the extra work that fpclassify does.\n\n(glibc\u0027s isinf family distinguishes between + and - infinity, which fpclassify and the BSD isinf family don\u0027t. POSIX doesn\u0027t care, and BSD -- and thus old version s of bionic -- behave like this.)\n\ni was going to try to benchmark (now you\u0027ve asked), but my device appears to have fallen off USB :-( i\u0027ll upload the benchmark and look on Monday.",
+      "parentUuid": "39f3a71c_c4df12bd",
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39f3a71c_a4e48690",
         "filename": "libc/bionic/fpclassify.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-04-12T07:56:48Z",
       "side": 1,
       "message": "I assume there\u0027s no ieee_ struct for this ? (ieee754 does define quadruple precision formats, aka binary128).",
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c7c3d6_85fea24b",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-12T18:03:25Z",
+      "side": 1,
+      "message": "yeah, there\u0027s ieee_ext. they\u0027re a bit less convenient because they don\u0027t use any type larger than 32-bits, but i should be using them anyway.",
+      "parentUuid": "39f3a71c_a4e48690",
       "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
