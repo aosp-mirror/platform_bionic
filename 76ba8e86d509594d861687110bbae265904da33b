@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9982ff7_3c4a7144",
+        "filename": "libc/arch-arm64/include/machine/ieee.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-14T22:38:32Z",
+      "side": 0,
+      "message": "basically, armv8 is like arm vfp...",
+      "revId": "76ba8e86d509594d861687110bbae265904da33b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9982ff7_7c44f935",
+        "filename": "libc/arch-arm64/include/machine/ieee.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-14T22:38:32Z",
+      "side": 0,
+      "message": "...but we\u0027re using ld128 on Android.",
+      "revId": "76ba8e86d509594d861687110bbae265904da33b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
