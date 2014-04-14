@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -300,6 +301,24 @@ TEST(stdio, snprintf_smoke) {
 
   snprintf(buf, sizeof(buf), "%1$s %1$s", "print_me_twice");
   EXPECT_STREQ("print_me_twice print_me_twice", buf);
+}
+
+TEST(stdio, snprintf_f_special) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%f", nanf(""));
+  EXPECT_STREQ("NaN", buf);
+
+  snprintf(buf, sizeof(buf), "%f", HUGE_VALF);
+  EXPECT_STREQ("Inf", buf);
+}
+
+TEST(stdio, snprintf_g_special) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%g", nan(""));
+  EXPECT_STREQ("NaN", buf);
+
+  snprintf(buf, sizeof(buf), "%g", HUGE_VAL);
+  EXPECT_STREQ("Inf", buf);
 }
 
 TEST(stdio, snprintf_d_INT_MAX) {
