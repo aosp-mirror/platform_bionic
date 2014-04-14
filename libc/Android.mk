@@ -132,6 +132,7 @@ libc_bionic_src_files := \
     bionic/ffs.cpp \
     bionic/flockfile.cpp \
     bionic/fork.cpp \
+    bionic/fpclassify.cpp \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
@@ -547,7 +548,7 @@ LOCAL_SRC_FILES := $(libc_upstream_freebsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -I$(LOCAL_PATH)/upstream-freebsd \
-    -I$(LOCAL_PATH)/upstream-freebsd/libc/include \
+    -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
     -include upstream-freebsd/freebsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)

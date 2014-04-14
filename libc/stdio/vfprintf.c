@@ -154,12 +154,6 @@ static int exponent(char *, int, int);
 
 #define STATIC_ARG_TBL_SIZE 8	/* Size of static argument table. */
 
-/* BIONIC: do not link libm for only two rather simple functions */
-#ifdef FLOATING_POINT
-static  int  _my_isinf(double);
-static  int  _my_isnan(double);
-#endif
-
 /*
  * Macros for converting digits to letters and vice versa
  */
@@ -543,14 +537,14 @@ reswitch:	switch (ch) {
 			}
 
 			/* do this before tricky precision changes */
-			if (_my_isinf(_double)) {
+			if (isinf(_double)) {
 				if (_double < 0)
 					sign = '-';
 				cp = "Inf";
 				size = 3;
 				break;
 			}
-			if (_my_isnan(_double)) {
+			if (isnan(_double)) {
 				cp = "NaN";
 				size = 3;
 				break;
@@ -1331,29 +1325,4 @@ exponent(char *p0, int exp, int fmtch)
 	return (p - p0);
 }
 
-
-/* BIONIC */
-#include <machine/ieee.h>
-typedef union {
-    double              d;
-    struct ieee_double  i;
-} ieee_u;
-
-static int
-_my_isinf (double  value)
-{
-    ieee_u   u;
-
-    u.d = value;
-    return (u.i.dbl_exp == 2047 && u.i.dbl_frach == 0 && u.i.dbl_fracl == 0);
-}
-
-static int
-_my_isnan (double  value)
-{
-    ieee_u   u;
-
-    u.d = value;
-    return (u.i.dbl_exp == 2047 && (u.i.dbl_frach != 0 || u.i.dbl_fracl != 0));
-}
 #endif /* FLOATING_POINT */
