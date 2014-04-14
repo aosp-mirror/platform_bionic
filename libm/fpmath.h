@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: src/lib/libc/include/fpmath.h,v 1.3 2005/02/06 03:23:31 das Exp $
+ * $FreeBSD$
  */
 
 #ifndef _FPMATH_
@@ -33,10 +33,14 @@
 #include <endian.h>
 #include "_fpmath.h"
 
+#ifndef _IEEE_WORD_ORDER
+#define	_IEEE_WORD_ORDER	_BYTE_ORDER
+#endif
+
 union IEEEf2bits {
 	float	f;
 	struct {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#if _BYTE_ORDER == _LITTLE_ENDIAN
 		unsigned int	man	:23;
 		unsigned int	exp	:8;
 		unsigned int	sign	:1;
@@ -54,18 +58,17 @@ union IEEEf2bits {
 union IEEEd2bits {
 	double	d;
 	struct {
-/* #ifdef __ARMEB__ */
-#if (__BYTE_ORDER == __BIG_ENDIAN) || (defined(__arm__) && !defined(__VFP_FP__))
+#if _BYTE_ORDER == _LITTLE_ENDIAN
+#if _IEEE_WORD_ORDER == _LITTLE_ENDIAN
+		unsigned int	manl	:32;
+#endif
 		unsigned int	manh	:20;
 		unsigned int	exp	:11;
 		unsigned int	sign	:1;
+#if _IEEE_WORD_ORDER == _BIG_ENDIAN
 		unsigned int	manl	:32;
-#elif  __BYTE_ORDER == __LITTLE_ENDIAN
-		unsigned int	manl	:32;
-		unsigned int	manh	:20;
-		unsigned int	exp	:11;
-		unsigned int	sign	:1;
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#endif
+#else /* _BIG_ENDIAN */
 		unsigned int	sign	:1;
 		unsigned int	exp	:11;
 		unsigned int	manh	:20;
