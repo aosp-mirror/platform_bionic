@@ -239,6 +239,12 @@ TEST(math, finite) {
   ASSERT_FALSE(finite(HUGE_VAL));
 }
 
+TEST(math, isinf_function) {
+  // The isinf macro deals with all three types; the isinf function is for doubles.
+  ASSERT_FALSE((isinf)(123.0));
+  ASSERT_TRUE((isinf)(HUGE_VAL));
+}
+
 TEST(math, __isinff) {
   ASSERT_FALSE(__isinff(123.0f));
   ASSERT_TRUE(__isinff(HUGE_VALF));
@@ -247,6 +253,12 @@ TEST(math, __isinff) {
 TEST(math, __isinfl) {
   ASSERT_FALSE(__isinfl(123.0L));
   ASSERT_TRUE(__isinfl(HUGE_VALL));
+}
+
+TEST(math, isnan_function) {
+  // The isnan macro deals with all three types; the isnan function is for doubles.
+  ASSERT_FALSE((isnan)(123.0));
+  ASSERT_TRUE((isnan)(nan("")));
 }
 
 TEST(math, __isnanf) {
