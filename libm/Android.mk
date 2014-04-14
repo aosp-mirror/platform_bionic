@@ -1,10 +1,10 @@
 LOCAL_PATH:= $(call my-dir)
 
-# TODO: these come from from upstream's libc, not libm!
+# TODO: this comes from from upstream's libc, not libm, but it's an
+# implementation detail that should have hidden visibility, so it needs
+# to be in whatever library the math code is in.
 libm_common_src_files := \
     digittoint.c  \
-    fpclassify.c \
-    isinf.c  \
 
 # TODO: this is not in the BSDs.
 libm_common_src_files += \
@@ -129,7 +129,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_ilogb.c \
     upstream-freebsd/lib/msun/src/s_ilogbf.c \
     upstream-freebsd/lib/msun/src/s_isfinite.c \
-    upstream-freebsd/lib/msun/src/s_isnan.c \
     upstream-freebsd/lib/msun/src/s_isnormal.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
     upstream-freebsd/lib/msun/src/s_llrintf.c \
@@ -237,6 +236,7 @@ libm_common_cflags := \
     -include $(LOCAL_PATH)/freebsd-compat.h \
 
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
+
 libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
 #
