@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "198c23b9_f5a1f390",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-15T23:09:20Z",
+      "side": 1,
+      "message": "this stuff isn\u0027t in either FreeBSD or NetBSD, and OpenBSD doesn\u0027t have the _CTYPE prefix.",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "198c23b9_f58ad306",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-15T23:09:20Z",
+      "side": 1,
+      "message": "can we remove these inlines, and just update the out of line copies?",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c3cfc8_8ae4ef90",
+        "filename": "libc/stdlib/ctype_.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-15T23:09:20Z",
+      "side": 1,
+      "message": "yeah, this is what upstream has in the public .h file.",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "795efffe_7899611a",
+        "filename": "libc/stdlib/ctype_.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-15T23:09:20Z",
+      "side": 1,
+      "message": "this kind of inconsistency is why we should have one copy :-)\n\neven though _A \u003d\u003d _U|_L. i actually think i prefer this form where we use the canonical flags rather than the compound ones.",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
