@@ -97,6 +97,7 @@ int swscanf(const wchar_t* /*s*/, const wchar_t* /*format*/, ... ) {
 
 int iswalnum(wint_t wc) { return isalnum(wc); }
 int iswalpha(wint_t wc) { return isalpha(wc); }
+int iswblank(wint_t wc) { return isblank(wc); }
 int iswcntrl(wint_t wc) { return iscntrl(wc); }
 int iswdigit(wint_t wc) { return isdigit(wc); }
 int iswgraph(wint_t wc) { return isgraph(wc); }

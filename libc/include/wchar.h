@@ -70,6 +70,7 @@ extern int               fwprintf(FILE *, const wchar_t *, ...);
 extern int               fwscanf(FILE *, const wchar_t *, ...);
 extern int               iswalnum(wint_t);
 extern int               iswalpha(wint_t);
+extern int               iswblank(wint_t);
 extern int               iswcntrl(wint_t);
 extern int               iswdigit(wint_t);
 extern int               iswgraph(wint_t);
