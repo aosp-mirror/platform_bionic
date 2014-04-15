@@ -22,6 +22,30 @@
       "revId": "5eb670462ab9e7d8a6363861e063cad4b5dfe7d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b175f_3679b09a",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 853,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-15T15:50:01Z",
+      "side": 1,
+      "message": "it\u0027s (theoretically) possible to build the BSD C library without floating point support. this is the flag they use.",
+      "parentUuid": "59ee9b35_537aa447",
+      "range": {
+        "startLine": 853,
+        "startChar": 7,
+        "endLine": 853,
+        "endChar": 21
+      },
+      "revId": "5eb670462ab9e7d8a6363861e063cad4b5dfe7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
