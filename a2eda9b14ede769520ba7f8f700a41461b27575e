@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d9544bb3_310f434c",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-15T23:32:20Z",
+      "side": 1,
+      "message": "FreeBSD and NetBSD both define them outside ctype.h, but they do define them. Looks like you\u0027re right about OpenBSD though (judging by #ifdefs in libc++).\n\nhttps://github.com/freebsd/freebsd-head/blob/master/include/_ctype.h\n\nhttps://github.com/rumpkernel/rumpkernel-netbsd-src/blob/c97654c382762a26d37fafe03e5c18d2511ff3a1/sys/sys/ctype_bits.h",
+      "parentUuid": "795efffe_78724126",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "198c23b9_f58ad306",
         "filename": "libc/include/ctype.h",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "writtenOn": "2014-04-15T23:09:20Z",
       "side": 1,
       "message": "can we remove these inlines, and just update the out of line copies?",
+      "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99e49352_fe0a98ef",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-15T23:32:20Z",
+      "side": 1,
+      "message": "Are you asking for these to go away entirely, or just to leave the inlined funcs unchanged? Judging by your comment in ctype_.c, I\u0027m guessing the former.",
+      "parentUuid": "198c23b9_f58ad306",
       "revId": "a2eda9b14ede769520ba7f8f700a41461b27575e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
