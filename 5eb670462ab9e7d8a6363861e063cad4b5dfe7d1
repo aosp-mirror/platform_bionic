@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59ee9b35_537aa447",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 853,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-15T10:55:03Z",
+      "side": 1,
+      "message": "what\u0027s the purpose of the FLOATING_POINT flag? (I see that it\u0027s being defined in local.h)",
+      "range": {
+        "startLine": 853,
+        "startChar": 7,
+        "endLine": 853,
+        "endChar": 21
+      },
+      "revId": "5eb670462ab9e7d8a6363861e063cad4b5dfe7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
