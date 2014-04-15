@@ -179,7 +179,9 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
   memset(&ts, 0, sizeof(ts));
   ts.tv_sec = 5;
   ts.tv_nsec = 0;
-  ASSERT_EQ(NUM_RECV_MSGS, recvmmsg(fd_acc, msgs, NUM_RECV_MSGS, 0, &ts)) << strerror(errno);
+  ASSERT_EQ(NUM_RECV_MSGS,
+            static_cast<size_t>(recvmmsg(fd_acc, msgs, NUM_RECV_MSGS, 0, &ts)))
+           << strerror(errno);
   for (size_t i = 0; i < NUM_RECV_MSGS; i++) {
     ASSERT_STREQ(g_RecvMsgs[i], bufs[i]);
   }
@@ -247,7 +249,8 @@ static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
     tv.tv_usec = 0;
     ASSERT_LT(0, select(fd_acc+1, &read_set, NULL, NULL, &tv));
     char buffer[100];
-    ASSERT_EQ(strlen(g_SendMsgs[i]) + 1, recv(fd_acc, buffer, sizeof(buffer), 0));
+    ASSERT_EQ(strlen(g_SendMsgs[i]) + 1,
+              static_cast<size_t>(recv(fd_acc, buffer, sizeof(buffer), 0)));
     ASSERT_STREQ(g_SendMsgs[i], buffer);
   }
 
