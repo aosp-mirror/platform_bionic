@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f9c3cfc8_67c60c39",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-15T10:24:13Z",
+      "side": 1,
+      "message": "it would be nice to use *_EXP_INFNAN here and in the other places",
+      "range": {
+        "startLine": 54,
+        "startChar": 24,
+        "endLine": 54,
+        "endChar": 28
+      },
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39f3a71c_c4df12bd",
         "filename": "libc/bionic/fpclassify.cpp",
         "patchSetId": 2
@@ -66,6 +89,24 @@
       "side": 1,
       "message": "yeah, there\u0027s ieee_ext. they\u0027re a bit less convenient because they don\u0027t use any type larger than 32-bits, but i should be using them anyway.",
       "parentUuid": "39f3a71c_a4e48690",
+      "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59ee9b35_b3b850ca",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-15T10:24:13Z",
+      "side": 1,
+      "message": "We should use ieee stuff here as well. e.g. this def doesn\u0027t cover all mips cases.\n\nI can fix the ieee_ext struct and change this as well (I postponed it so far since there where no real users)",
+      "parentUuid": "19c7c3d6_85fea24b",
       "revId": "0316cec99cf3aeae95d24662df1f9238f278e6e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
