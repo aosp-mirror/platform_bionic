@@ -45,65 +45,74 @@
  *	@(#)ieee.h	8.1 (Berkeley) 6/11/93
  */
 
-#define	SNG_EXPBITS	8
-#define	SNG_FRACBITS	23
+#ifndef _MACHINE_IEEE_H_
+#define _MACHINE_IEEE_H_
 
-#define	DBL_EXPBITS	11
-#define	DBL_FRACHBITS	20
-#define	DBL_FRACLBITS	32
-#define	DBL_FRACBITS	52
+#include <sys/types.h>
 
-#define	EXT_EXPBITS	15
-#define	EXT_FRACHBITS	16
-#define	EXT_FRACHMBITS	32
-#define	EXT_FRACLMBITS	32
-#define	EXT_FRACLBITS	32
-#define	EXT_FRACBITS	112
+__BEGIN_DECLS
 
-#define	EXT_IMPLICIT_NBIT
+#define SNG_EXPBITS	8
+#define SNG_FRACBITS	23
 
-#define	EXT_TO_ARRAY32(p, a) do {		\
-	(a)[0] = (uint32_t)(p)->ext_fracl;	\
-	(a)[1] = (uint32_t)(p)->ext_fraclm;	\
-	(a)[2] = (uint32_t)(p)->ext_frachm;	\
-	(a)[3] = (uint32_t)(p)->ext_frach;	\
-} while(0)
+#define SNG_EXP_INFNAN	255
+#define SNG_EXP_BIAS	127
 
 struct ieee_single {
-	u_int	sng_frac:23;
-	u_int	sng_exp:8;
-	u_int	sng_sign:1;
+  unsigned sng_frac:23;
+  unsigned sng_exp:8;
+  unsigned sng_sign:1;
 };
+
+#define DBL_EXPBITS	11
+#define DBL_FRACHBITS	20
+#define DBL_FRACLBITS	32
+#define DBL_FRACBITS	52
+
+#define DBL_EXP_INFNAN	2047
+#define DBL_EXP_BIAS	1023
 
 struct ieee_double {
-	u_int	dbl_fracl;
-	u_int	dbl_frach:20;
-	u_int	dbl_exp:11;
-	u_int	dbl_sign:1;
+  unsigned dbl_fracl;
+  unsigned dbl_frach:20;
+  unsigned dbl_exp:11;
+  unsigned dbl_sign:1;
 };
+
+#if __LP64__
+
+/* 64-bit Android uses ld128 long doubles. */
+
+#define EXT_EXPBITS	15
+#define EXT_FRACHBITS	16
+#define EXT_FRACHMBITS	32
+#define EXT_FRACLMBITS	32
+#define EXT_FRACLBITS	32
+#define EXT_FRACBITS	112
+
+#define EXT_EXP_INFNAN	32767
+#define EXT_EXP_BIAS	16383
+
+#define EXT_IMPLICIT_NBIT
+
+#define EXT_TO_ARRAY32(p, a) do { \
+  (a)[0] = (uint32_t)(p)->ext_fracl; \
+  (a)[1] = (uint32_t)(p)->ext_fraclm; \
+  (a)[2] = (uint32_t)(p)->ext_frachm; \
+  (a)[3] = (uint32_t)(p)->ext_frach; \
+} while(0)
 
 struct ieee_ext {
-	u_int	ext_fracl;
-	u_int	ext_fraclm;
-	u_int	ext_frachm;
-	u_int	ext_frach:16;
-	u_int	ext_exp:15;
-	u_int	ext_sign:1;
+  unsigned ext_fracl;
+  unsigned ext_fraclm;
+  unsigned ext_frachm;
+  unsigned ext_frach:16;
+  unsigned ext_exp:15;
+  unsigned ext_sign:1;
 };
 
-/*
- * Floats whose exponent is in [1..INFNAN) (of whatever type) are
- * `normal'.  Floats whose exponent is INFNAN are either Inf or NaN.
- * Floats whose exponent is zero are either zero (iff all fraction
- * bits are zero) or subnormal values.
- */
-#define	SNG_EXP_INFNAN	255
-#define	DBL_EXP_INFNAN	2047
-#define	EXT_EXP_INFNAN	32767
+#endif
 
-/*
- * Exponent biases.
- */
-#define	SNG_EXP_BIAS	127
-#define	DBL_EXP_BIAS	1023
-#define	EXT_EXP_BIAS	16383
+__END_DECLS
+
+#endif /* _MACHINE_IEEE_H_ */
