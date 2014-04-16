@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9436b32_745a5ee1",
+        "filename": "libc/bionic/strtold.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-16T22:39:35Z",
+      "side": 1,
+      "message": "Is this TODO still relevant?",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "4bd97cee28dd815fff54fc97560be60d566c1fa5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
