@@ -87,6 +87,23 @@
       "revId": "cca51ff4638a3e1eb88ba4bec962c77713392a05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "993733c3_4fa5c1c5",
+        "filename": "libc/arch-arm64/include/machine/ieee.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T17:04:31Z",
+      "side": 1,
+      "message": "this is the little-endian mips64/sparc64 structure; they\u0027re the only BSD architectures that use ld128.",
+      "revId": "cca51ff4638a3e1eb88ba4bec962c77713392a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
