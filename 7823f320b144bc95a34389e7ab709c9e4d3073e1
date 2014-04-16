@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "994e5355_b1b6a06c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T02:36:24Z",
+      "side": 1,
+      "message": "turns out these should have been case-insensitive comparisons to pass on glibc. i\u0027ve included that fix in my gdtoa change.",
+      "revId": "7823f320b144bc95a34389e7ab709c9e4d3073e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
