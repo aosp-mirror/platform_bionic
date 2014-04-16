@@ -22,6 +22,30 @@
       "revId": "4bd97cee28dd815fff54fc97560be60d566c1fa5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25f61b4a_b3fe507d",
+        "filename": "libc/bionic/strtold.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T23:02:04Z",
+      "side": 1,
+      "message": "i don\u0027t know. BSD usually uses FLT_ROUNDS but we don\u0027t have that. glibc says:\n\n       The value of FLT_ROUNDS should reflect the current rounding mode as set\n       by fesetround() (but see BUGS).\n\n...\n\n  BUGS\n       C99 specifies that the value of FLT_ROUNDS should  reflect  changes  to\n       the  current  rounding  mode,  as set by fesetround().  Currently, this\n       does not occur: FLT_ROUNDS always has the value 1.\n\ni\u0027ll upload another change that makes us no worse than glibc and wait until someone complains that our FLT_ROUNDS sucks...",
+      "parentUuid": "d9436b32_745a5ee1",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "4bd97cee28dd815fff54fc97560be60d566c1fa5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
