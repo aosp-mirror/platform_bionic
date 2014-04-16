@@ -46,6 +46,30 @@
       "revId": "cb65cc3fb4a8d7dfbbcbdfdb9140ab59baada28e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9466f41_c0698ed0",
+        "filename": "libc/include/machine/ieee.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-16T23:58:59Z",
+      "side": 1,
+      "message": "I don\u0027t know, there might be some project we pull in that wants to use these definitions. I think it\u0027s okay to leave it here unless we really do not want anybody to use it.",
+      "parentUuid": "e5f7a345_8c1faf4d",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cb65cc3fb4a8d7dfbbcbdfdb9140ab59baada28e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
