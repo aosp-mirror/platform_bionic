@@ -146,7 +146,7 @@ __sbprintf(FILE *fp, const char *fmt, va_list ap)
 #define	DEFPREC		6
 
 static char *cvt(double, int, int, char *, int *, int, int *);
-extern void  freedtoa(char *);
+extern void __freedtoa(char *);
 static int exponent(char *, int, int);
 #else /* no FLOATING_POINT */
 #define	BUF		40
@@ -550,7 +550,7 @@ reswitch:	switch (ch) {
 				break;
 			}
 
-			if (dtoaresult != NULL) freedtoa(dtoaresult);
+			if (dtoaresult != NULL) __freedtoa(dtoaresult);
 			flags |= FPT;
 			dtoaresult = cp = cvt(_double, prec, flags, &softsign,
 				&expt, ch, &ndig);
@@ -846,7 +846,7 @@ done:
 error:
 #ifdef FLOATING_POINT
 	if (dtoaresult != NULL) {
-	  freedtoa(dtoaresult);
+		__freedtoa(dtoaresult);
 	}
 #endif
 	if (argtable != NULL && argtable != statargtable) {
