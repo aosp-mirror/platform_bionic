@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19750377_3b1b5f87",
+        "filename": "libc/Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T03:28:10Z",
+      "side": 1,
+      "message": "i should include the bug number of the bug this is a workaround for...",
+      "revId": "cca51ff4638a3e1eb88ba4bec962c77713392a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
