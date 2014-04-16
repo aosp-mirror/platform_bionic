@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91c4b54_8334fe5f",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T16:27:12Z",
+      "side": 1,
+      "message": "cferris: are we going to support running the dl tests on the host?",
+      "revId": "5289e59824cb3fb20440583257dde388b86cd0e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85e7c793_c2bea2ef",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T16:27:12Z",
+      "side": 1,
+      "message": "i\u0027m still not really sure this is a useful thing. what do the others think?",
+      "revId": "5289e59824cb3fb20440583257dde388b86cd0e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
