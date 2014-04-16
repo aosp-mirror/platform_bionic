@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9466f41_0052b62c",
+        "filename": "libc/include/machine/ieee.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-16T23:51:16Z",
+      "side": 1,
+      "message": "Is this needed? I don\u0027t see anything obviously that requires it, but I\u0027m probably just missing it.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cb65cc3fb4a8d7dfbbcbdfdb9140ab59baada28e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
