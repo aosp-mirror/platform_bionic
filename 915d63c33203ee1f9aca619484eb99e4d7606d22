@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "993733c3_8c9d0710",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T16:23:57Z",
+      "side": 1,
+      "message": "reserved address space %zd smaller than %zd bytes needed for \\\"%s\\\"?",
+      "range": {
+        "startLine": 318,
+        "startChar": 36,
+        "endLine": 318,
+        "endChar": 37
+      },
+      "revId": "915d63c33203ee1f9aca619484eb99e4d7606d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d91c4b54_431126dc",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-16T16:23:57Z",
+      "side": 1,
+      "message": "i think you\u0027ve done this the best way. cferris?",
+      "revId": "915d63c33203ee1f9aca619484eb99e4d7606d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
