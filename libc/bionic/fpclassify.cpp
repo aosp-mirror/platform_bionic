@@ -96,22 +96,19 @@ __strong_alias(isnanf, __isnanf);
 
 union long_double_u {
   long double ld;
-  struct {
-    unsigned long fracl:64;
-    unsigned long frach:48;
-    unsigned int exp:15;
-    unsigned int sign:1;
-  } bits;
+  ieee_ext bits;
 };
+
+#define zero_frac(b) ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
 
 int __fpclassifyl(long double ld) {
   long_double_u u;
   u.ld = ld;
-  if (u.bits.exp == 0) {
-    return ((u.bits.fracl | u.bits.frach) == 0) ? FP_ZERO : FP_SUBNORMAL;
+  if (u.bits.ext_exp == 0) {
+    return zero_frac(u.bits) ? FP_ZERO : FP_SUBNORMAL;
   }
-  if (u.bits.exp == EXT_EXP_INFNAN) {
-    return ((u.bits.fracl | u.bits.frach) == 0) ? FP_INFINITE : FP_NAN;
+  if (u.bits.ext_exp == EXT_EXP_INFNAN) {
+    return zero_frac(u.bits) ? FP_INFINITE : FP_NAN;
   }
   return FP_NORMAL;
 }
