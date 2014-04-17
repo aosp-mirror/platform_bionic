@@ -90,6 +90,28 @@ int __isnanf(float f) {
 }
 __strong_alias(isnanf, __isnanf);
 
+int __isfinite(double d) {
+  int type = __fpclassifyd(d);
+  return ((type != FP_NAN) && (type != FP_INFINITE));
+}
+__strong_alias(isfinite, __isfinite);
+
+int __isfinitef(float f) {
+  int type = __fpclassifyf(f);
+  return ((type != FP_NAN) && (type != FP_INFINITE));
+}
+__strong_alias(isfinitef, __isfinitef);
+
+int __isnormal(double d) {
+  return (__fpclassifyd(d) == FP_NORMAL);
+}
+__strong_alias(isnormal, __isnormal);
+
+int __isnormalf(float f) {
+  return (__fpclassifyf(f) == FP_NORMAL);
+}
+__strong_alias(isnormalf, __isnormalf);
+
 #if __LP64__
 
 // LP64 uses 128-bit long doubles.
@@ -121,6 +143,15 @@ int __isnanl(long double ld) {
   return (__fpclassifyl(ld) == FP_NAN);
 }
 
+int __isfinitel(long double ld) {
+  int type = __fpclassifyl(ld);
+  return ((type != FP_NAN) && (type != FP_INFINITE));
+}
+
+int __isnormall(long double ld) {
+  return (__fpclassifyl(ld) == FP_NORMAL);
+}
+
 #else
 
 // LP32 uses double as long double.
@@ -128,8 +159,12 @@ int __isnanl(long double ld) {
 __strong_alias(__fpclassifyl, __fpclassify);
 __strong_alias(__isinfl, __isinf);
 __strong_alias(__isnanl, __isnan);
+__strong_alias(__isfinitel, __isfinite);
+__strong_alias(__isnormall, __isnormal);
 
 #endif
 
 __strong_alias(isinfl, __isinfl);
 __strong_alias(isnanl, __isnanl);
+__strong_alias(isfinitel, __isfinitel);
+__strong_alias(isnormall, __isnormall);
