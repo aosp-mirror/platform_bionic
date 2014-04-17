@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45586f41_1c6f657e",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T20:36:09Z",
+      "side": 1,
+      "message": "presumably unneeded?",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "853507d4_1cbbdab2",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T20:36:09Z",
+      "side": 1,
+      "message": "i don\u0027t think this is correct. this is ld80. did we support that? i thought all three architectures were long double \u003d\u003d double? (if not, we probably have bugs elsewhere, and our whole existing fake_long_double.cpp situation is wrong for x86. which might be the case, but either way, something probably needs to change.)",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45586f41_5cd39de7",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T20:36:09Z",
+      "side": 1,
+      "message": "does the libm code actually use IEEEl2bits when long double \u003d\u003d double? that seems like a bug. (like for the \u003cieee.h\u003e equivalent.) we probably need to look quite carefully at any code that\u0027s trying to use IEEEl2bits for LP32.",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45586f41_1ccd2540",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T20:36:09Z",
+      "side": 1,
+      "message": "the comment here is a bit misleading since this is the end of all three of arm, mips, and x86.",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
