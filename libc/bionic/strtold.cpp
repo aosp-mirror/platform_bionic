@@ -28,7 +28,16 @@
 
 #include <stdlib.h>
 
+extern "C" int __strtorQ(const char*, char**, int, void*);
+
 long double strtold(const char* s, char** end_ptr) {
-  // TODO: this is fine for LP32 where double == long double, but is broken on LP64.
+#if __LP64__
+  long double result;
+  // TODO: use the current rounding mode?
+  __strtorQ(s, end_ptr, 1 /* FPI_Round_near */, &result);
+  return result;
+#else
+  // This is fine for LP32 where long double is just double.
   return strtod(s, end_ptr);
+#endif
 }
