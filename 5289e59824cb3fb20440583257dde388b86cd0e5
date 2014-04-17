@@ -33,6 +33,24 @@
       "revId": "5289e59824cb3fb20440583257dde388b86cd0e5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250ffb25_370eb806",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2014-04-17T11:27:20Z",
+      "side": 1,
+      "message": "Yeah, the more I think about this the more it doesn\u0027t seem worth it; for this to actually be useful it would have to also not actually make the library available at all to the calling process (just set up the relocation file for another process to use), and supporting that would be a much more intrusive change to the linker for a use case that\u0027s not entirely clear at this point. I\u0027ll just drop this when I update the CL and always map it if we\u0027re writing it.",
+      "parentUuid": "85e7c793_c2bea2ef",
+      "revId": "5289e59824cb3fb20440583257dde388b86cd0e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
