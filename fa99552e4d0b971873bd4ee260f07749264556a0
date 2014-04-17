@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c51d3f5e_0e4ddfa6",
+        "filename": "libc/stdlib/ctype_.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T20:11:42Z",
+      "side": 1,
+      "message": "i think we need a\n\n  __strong_alias(_toupper, toupper);\n  __strong_alias(_tolower, tolower);\n\nhere.\n\ni also think we need to strip the #ifs from this file and always build the currently-optional symbols. (that\u0027s not a bug you introduced; it\u0027s always been wrong.)",
+      "revId": "fa99552e4d0b971873bd4ee260f07749264556a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
