@@ -306,19 +306,19 @@ TEST(stdio, snprintf_smoke) {
 TEST(stdio, snprintf_f_special) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%f", nanf(""));
-  EXPECT_STREQ("NaN", buf);
+  EXPECT_STRCASEEQ("NaN", buf);
 
   snprintf(buf, sizeof(buf), "%f", HUGE_VALF);
-  EXPECT_STREQ("Inf", buf);
+  EXPECT_STRCASEEQ("Inf", buf);
 }
 
 TEST(stdio, snprintf_g_special) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%g", nan(""));
-  EXPECT_STREQ("NaN", buf);
+  EXPECT_STRCASEEQ("NaN", buf);
 
   snprintf(buf, sizeof(buf), "%g", HUGE_VAL);
-  EXPECT_STREQ("Inf", buf);
+  EXPECT_STRCASEEQ("Inf", buf);
 }
 
 TEST(stdio, snprintf_d_INT_MAX) {
@@ -363,6 +363,16 @@ TEST(stdio, snprintf_lld_LLONG_MIN) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%lld", LLONG_MIN);
   EXPECT_STREQ("-9223372036854775808", buf);
+}
+
+TEST(stdio, snprintf_e) {
+  char buf[BUFSIZ];
+
+  snprintf(buf, sizeof(buf), "%e", 1.5);
+  EXPECT_STREQ("1.500000e+00", buf);
+
+  snprintf(buf, sizeof(buf), "%Le", 1.5l);
+  EXPECT_STREQ("1.500000e+00", buf);
 }
 
 TEST(stdio, popen) {

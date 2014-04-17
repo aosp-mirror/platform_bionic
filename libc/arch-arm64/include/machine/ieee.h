@@ -45,11 +45,6 @@
  *	@(#)ieee.h	8.1 (Berkeley) 6/11/93
  */
 
-/*
- * ieee.h defines the machine-dependent layout of the machine's IEEE
- * floating point.
- */
-
 #define	SNG_EXPBITS	8
 #define	SNG_FRACBITS	23
 
@@ -57,6 +52,22 @@
 #define	DBL_FRACHBITS	20
 #define	DBL_FRACLBITS	32
 #define	DBL_FRACBITS	52
+
+#define	EXT_EXPBITS	15
+#define	EXT_FRACHBITS	16
+#define	EXT_FRACHMBITS	32
+#define	EXT_FRACLMBITS	32
+#define	EXT_FRACLBITS	32
+#define	EXT_FRACBITS	112
+
+#define	EXT_IMPLICIT_NBIT
+
+#define	EXT_TO_ARRAY32(p, a) do {		\
+	(a)[0] = (uint32_t)(p)->ext_fracl;	\
+	(a)[1] = (uint32_t)(p)->ext_fraclm;	\
+	(a)[2] = (uint32_t)(p)->ext_frachm;	\
+	(a)[3] = (uint32_t)(p)->ext_frach;	\
+} while(0)
 
 struct ieee_single {
 	u_int	sng_frac:23;
@@ -71,14 +82,20 @@ struct ieee_double {
 	u_int	dbl_sign:1;
 };
 
+struct ieee_ext {
+	u_int	ext_fracl;
+	u_int	ext_fraclm;
+	u_int	ext_frachm;
+	u_int	ext_frach:16;
+	u_int	ext_exp:15;
+	u_int	ext_sign:1;
+};
+
 /*
  * Floats whose exponent is in [1..INFNAN) (of whatever type) are
  * `normal'.  Floats whose exponent is INFNAN are either Inf or NaN.
  * Floats whose exponent is zero are either zero (iff all fraction
  * bits are zero) or subnormal values.
- *
- * A NaN is a `signalling NaN' if its QUIETNAN bit is clear in its
- * high fraction; if the bit is set, it is a `quiet NaN'.
  */
 #define	SNG_EXP_INFNAN	255
 #define	DBL_EXP_INFNAN	2047
