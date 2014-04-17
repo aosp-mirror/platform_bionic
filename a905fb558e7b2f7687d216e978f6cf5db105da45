@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "a51a0b65_764c2e87",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-17T20:43:25Z",
+      "side": 1,
+      "message": "ah, ya, forgot to add [WIP] especially because of this and I was too succinct in my previous comment... As you said something doesn\u0027t seem good here. I want to properly test and check why this is different.",
+      "parentUuid": "853507d4_1cbbdab2",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45586f41_5cd39de7",
         "filename": "libm/fpmath.h",
         "patchSetId": 3
@@ -47,6 +65,24 @@
       "writtenOn": "2014-04-17T20:36:09Z",
       "side": 1,
       "message": "does the libm code actually use IEEEl2bits when long double \u003d\u003d double? that seems like a bug. (like for the \u003cieee.h\u003e equivalent.) we probably need to look quite carefully at any code that\u0027s trying to use IEEEl2bits for LP32.",
+      "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250ffb25_7afe55d7",
+        "filename": "libm/fpmath.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-17T20:43:25Z",
+      "side": 1,
+      "message": "I got a compiler error  but don\u0027t remember for which functions, so it\u0027s used. Again, forgot [WIP].",
+      "parentUuid": "45586f41_5cd39de7",
       "revId": "a905fb558e7b2f7687d216e978f6cf5db105da45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
