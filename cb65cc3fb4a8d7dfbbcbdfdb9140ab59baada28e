@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "45586f41_a8013bd1",
+        "filename": "libc/include/machine/ieee.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-17T16:20:45Z",
+      "side": 1,
+      "message": "no: that would imply that you\u0027re trying to build LP64 code for LP32, which seems like a mistake. worse, you\u0027d need to have a different set of fields and/or different values for the #defines, so you\u0027d have no guarantee that code written for ld128 ieee_ext would actually work. it\u0027s a bit of a mess really; they should have called this ieee_quad or something to make it unambiguous which of the various \"extended\" float types they meant.",
+      "parentUuid": "f9466f41_c0698ed0",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cb65cc3fb4a8d7dfbbcbdfdb9140ab59baada28e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25445b56_af3939f0",
         "filename": "libc/include/machine/ieee.h",
         "patchSetId": 1
