@@ -20,4 +20,16 @@
 #define _GNU_SOURCE
 #define __USE_BSD
 
+/* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
+ * Additionally, we changed the numeric/digit type from N to D for libcxx.
+ */
+#define _U _CTYPE_U
+#define _L _CTYPE_L
+#define _N _CTYPE_D
+#define _S _CTYPE_S
+#define _P _CTYPE_P
+#define _C _CTYPE_C
+#define _X _CTYPE_X
+#define _B _CTYPE_B
+
 #endif

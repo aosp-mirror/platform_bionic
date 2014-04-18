@@ -40,6 +40,7 @@ test_cflags = \
 
 libBionicStandardTests_src_files := \
     buffer_tests.cpp \
+    ctype_test.cpp \
     dirent_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
