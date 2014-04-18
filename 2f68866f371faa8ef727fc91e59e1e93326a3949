@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e54ec381_5ff273c0",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-18T21:15:30Z",
+      "side": 1,
+      "message": "Are there any ordering issues when using the statically linked version of libc?\n\nSpecifically, is there any pthread initialization code that need to happen before this create call?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "2f68866f371faa8ef727fc91e59e1e93326a3949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
