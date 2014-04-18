@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "858347c4_c2ac828e",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-18T23:18:26Z",
+      "side": 1,
+      "message": "can\u0027t you say [] \u003d { ... ? do we actually need the function?",
+      "revId": "9ce763321f35cf1b21d66b72d1aefdb5d982b5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "458dcff1_80519620",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-18T23:18:26Z",
+      "side": 1,
+      "message": "trailing whitespace.",
+      "revId": "9ce763321f35cf1b21d66b72d1aefdb5d982b5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
