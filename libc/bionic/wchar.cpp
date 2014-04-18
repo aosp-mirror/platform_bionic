@@ -250,6 +250,9 @@ size_t wcsrtombs(char* dst, const wchar_t** src, size_t n, mbstate_t* /*ps*/) {
     // TODO: UTF-8 support.
     if ((*src)[i] > 0x7f) {
       errno = EILSEQ;
+      if (dst != NULL) {
+        *src = &(*src)[i];
+      }
       return static_cast<size_t>(-1);
     }
     if (dst != NULL) {
