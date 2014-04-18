@@ -22,6 +22,30 @@
       "revId": "0549371bd74ba7c7a5a16c2a7d6cc17dbe0e6f97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "255d3b32_617d9af7",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-18T18:19:20Z",
+      "side": 1,
+      "message": "no, this is the output side, so these are actually just bytes.\n\n(you might argue that it should be \u0027\\0\u0027 then, and that all the other 0s in this function should be L\u0027\\0\u0027, but -- with the exception of NULL -- i\u0027ve gone the Stroustrup \"all zeros are the same\" route.)",
+      "parentUuid": "e54ec381_0bfe011b",
+      "range": {
+        "startLine": 266,
+        "startChar": 13,
+        "endLine": 266,
+        "endChar": 15
+      },
+      "revId": "0549371bd74ba7c7a5a16c2a7d6cc17dbe0e6f97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

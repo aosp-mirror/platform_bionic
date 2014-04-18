@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e54ec381_ce6a37ba",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-18T18:19:20Z",
+      "side": 0,
+      "message": "btw, i meant to say that i\u0027ve worked out why most of our wc/mb functions don\u0027t work --- look at these casts. most of the functions we haven\u0027t recently rewritten have casts like these, and presumably date to ancient times when our compilers had sizeof(char) \u003d\u003d sizeof(wchar_t) and these casts would have made sense. sadly, they didn\u0027t write any tests, so when they fixed the compiler they didn\u0027t have anything to remind them to fix all their code.\n\nif you look, there are a lot of reinterpret_casts left in this file.",
+      "revId": "8da69a25b7840db23846d4bb303ef84a1775c1e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
