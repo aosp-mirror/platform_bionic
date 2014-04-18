@@ -79,7 +79,6 @@ libc_common_src_files := \
     stdio/fvwrite.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    stdio/vfprintf.c \
     stdlib/atexit.c \
     stdlib/ctype_.c \
     stdlib/getenv.c \
@@ -394,6 +393,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/tmpnam.c \
     upstream-openbsd/lib/libc/stdio/ungetc.c \
     upstream-openbsd/lib/libc/stdio/vasprintf.c \
+    upstream-openbsd/lib/libc/stdio/vfprintf.c \
     upstream-openbsd/lib/libc/stdio/vfscanf.c \
     upstream-openbsd/lib/libc/stdio/vprintf.c \
     upstream-openbsd/lib/libc/stdio/vscanf.c \

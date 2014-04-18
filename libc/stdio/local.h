@@ -95,6 +95,8 @@ extern int __sdidinit;
 #define FUNLOCKFILE(fp) funlockfile(fp)
 
 #define FLOATING_POINT
+#define PRINTF_WIDE_CHAR
+#define SCANF_WIDE_CHAR
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
 __BEGIN_DECLS
