@@ -39,8 +39,11 @@ struct __locale_t {
 static pthread_once_t gLocaleOnce = PTHREAD_ONCE_INIT;
 static lconv gLocale;
 
-static pthread_once_t gUselocaleKeyOnce = PTHREAD_ONCE_INIT;
+// We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
 static pthread_key_t gUselocaleKey;
+__attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
+  pthread_key_create(&gUselocaleKey, NULL);
+}
 
 static void __locale_init() {
   gLocale.decimal_point = const_cast<char*>(".");
@@ -70,10 +73,6 @@ static void __locale_init() {
   gLocale.int_n_sep_by_space = CHAR_MAX;
   gLocale.int_p_sign_posn = CHAR_MAX;
   gLocale.int_n_sign_posn = CHAR_MAX;
-}
-
-static void __uselocale_key_init() {
-  pthread_key_create(&gUselocaleKey, NULL);
 }
 
 static bool __is_supported_locale(const char* locale) {
@@ -139,8 +138,6 @@ char* setlocale(int category, char const* locale_name) {
 }
 
 locale_t uselocale(locale_t new_locale) {
-  pthread_once(&gUselocaleKeyOnce, __uselocale_key_init);
-
   locale_t old_locale = static_cast<locale_t>(pthread_getspecific(gUselocaleKey));
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
