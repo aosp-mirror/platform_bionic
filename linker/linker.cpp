@@ -1833,8 +1833,10 @@ static bool soinfo_link_image(soinfo* si) {
     if (si->has_text_relocations) {
         // Make segments writable to allow text relocations to work properly. We will later call
         // phdr_table_protect_segments() after all of them are applied and all constructors are run.
+#if !defined(__i386__) // The platform itself has too many text relocations on x86.
         DL_WARN("%s has text relocations. This is wasting memory and prevents "
                 "security hardening. Please fix.", si->name);
+#endif
         if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
             DL_ERR("can't unprotect loadable segments for \"%s\": %s",
                    si->name, strerror(errno));
