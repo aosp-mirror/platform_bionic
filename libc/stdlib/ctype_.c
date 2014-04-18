@@ -38,7 +38,7 @@
 
 #define _U _CTYPE_U
 #define _L _CTYPE_L
-#define _N _CTYPE_N
+#define _D _CTYPE_D
 #define _S _CTYPE_S
 #define _P _CTYPE_P
 #define _C _CTYPE_C
@@ -53,8 +53,8 @@ const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C,
    _S|(char)_B,	_P,	_P,	_P,	_P,	_P,	_P,	_P,
 	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P,
-	_N,	_N,	_N,	_N,	_N,	_N,	_N,	_N,
-	_N,	_N,	_P,	_P,	_P,	_P,	_P,	_P,
+	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
+	_D,	_D,	_P,	_P,	_P,	_P,	_P,	_P,
 	_P,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U,
 	_U,	_U,	_U,	_U,	_U,	_U,	_U,	_U,
 	_U,	_U,	_U,	_U,	_U,	_U,	_U,	_U,
@@ -85,13 +85,9 @@ const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 
 const char *_ctype_ = _C_ctype_;
 
-
-// TODO: fix the header file so we don't have to duplicate all this inlined stuff.
-
-#if 1 /* ndef NDEBUG */
 int isalnum(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L|_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L|_D)));
 }
 
 int isalpha(int c)
@@ -106,12 +102,12 @@ int iscntrl(int c)
 
 int isdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _N));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _D));
 }
 
 int isgraph(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_D)));
 }
 
 int islower(int c)
@@ -121,7 +117,7 @@ int islower(int c)
 
 int isprint(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_N|_B)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_D|_B)));
 }
 
 int ispunct(int c)
@@ -141,18 +137,14 @@ int isupper(int c)
 
 int isxdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_N|_X)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_D|_X)));
 }
 
-#if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __POSIX_VISIBLE > 200112 \
-    || __XPG_VISIBLE > 600
 int isblank(int c)
 {
 	return (c == ' ' || c == '\t');
 }
-#endif
 
-#if __BSD_VISIBLE || __XPG_VISIBLE
 int isascii(int c)
 {
 	return ((unsigned int)c <= 0177);
@@ -163,6 +155,5 @@ int toascii(int c)
 	return (c & 0177);
 }
 
-#endif /* __BSD_VISIBLE || __XPG_VISIBLE */
-
-#endif /* !NDBEUG */
+__strong_alias(_toupper, toupper);
+__strong_alias(_tolower, tolower);
