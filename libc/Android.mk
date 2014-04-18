@@ -81,7 +81,6 @@ libc_common_src_files := \
     stdio/sprintf.c \
     stdio/vfprintf.c \
     stdlib/atexit.c \
-    stdlib/ctype_.c \
     stdlib/getenv.c \
     stdlib/putenv.c \
     stdlib/setenv.c \
@@ -338,10 +337,12 @@ libc_upstream_openbsd_gdtoa_src_files_64 := \
 
 libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/alarm.c \
+    upstream-openbsd/lib/libc/gen/ctype_.c \
     upstream-openbsd/lib/libc/gen/exec.c \
     upstream-openbsd/lib/libc/gen/fnmatch.c \
     upstream-openbsd/lib/libc/gen/ftok.c \
     upstream-openbsd/lib/libc/gen/getprogname.c \
+    upstream-openbsd/lib/libc/gen/isctype.c \
     upstream-openbsd/lib/libc/gen/setprogname.c \
     upstream-openbsd/lib/libc/gen/time.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \

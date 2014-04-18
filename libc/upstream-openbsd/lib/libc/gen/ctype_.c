@@ -1,4 +1,4 @@
-/*	$OpenBSD: ctype_.c,v 1.9 2005/08/08 08:05:33 espie Exp $ */
+/*	$OpenBSD: ctype_.c,v 1.10 2011/09/22 09:06:10 stsp Exp $ */
 /*
  * Copyright (c) 1989 The Regents of the University of California.
  * All rights reserved.
@@ -36,15 +36,6 @@
 #include <ctype.h>
 #include "ctype_private.h"
 
-#define _U _CTYPE_U
-#define _L _CTYPE_L
-#define _D _CTYPE_D
-#define _S _CTYPE_S
-#define _P _CTYPE_P
-#define _C _CTYPE_C
-#define _X _CTYPE_X
-#define _B _CTYPE_B
-
 const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 	0,
 	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C,
@@ -53,8 +44,8 @@ const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C,
    _S|(char)_B,	_P,	_P,	_P,	_P,	_P,	_P,	_P,
 	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P,
-	_D,	_D,	_D,	_D,	_D,	_D,	_D,	_D,
-	_D,	_D,	_P,	_P,	_P,	_P,	_P,	_P,
+	_N,	_N,	_N,	_N,	_N,	_N,	_N,	_N,
+	_N,	_N,	_P,	_P,	_P,	_P,	_P,	_P,
 	_P,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U|_X,	_U,
 	_U,	_U,	_U,	_U,	_U,	_U,	_U,	_U,
 	_U,	_U,	_U,	_U,	_U,	_U,	_U,	_U,
@@ -62,98 +53,24 @@ const char _C_ctype_[1 + CTYPE_NUM_CHARS] = {
 	_P,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L|_X,	_L,
 	_L,	_L,	_L,	_L,	_L,	_L,	_L,	_L,
 	_L,	_L,	_L,	_L,	_L,	_L,	_L,	_L,
-	/* determine printability based on the IS0 8859 8-bit standard */
 	_L,	_L,	_L,	_P,	_P,	_P,	_P,	_C,
 
-	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, /* 80 */
-	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, /* 88 */
-	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, /* 90 */
-	_C,	_C,	_C,	_C,	_C,	_C,	_C,	_C, /* 98 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* A0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* A8 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* B0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* B8 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* C0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* C8 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* D0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* D8 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* E0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* E8 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P, /* F0 */
-	_P,	_P,	_P,	_P,	_P,	_P,	_P,	_P  /* F8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* 80 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* 88 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* 90 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* 98 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* A0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* A8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* B0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* B8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* C0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* C8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* D0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* D8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* E0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* E8 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0, /* F0 */
+	 0,	 0,	 0,	 0,	 0,	 0,	 0,	 0  /* F8 */
 };
 
 const char *_ctype_ = _C_ctype_;
-
-int isalnum(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L|_D)));
-}
-
-int isalpha(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_U|_L)));
-}
-
-int iscntrl(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _C));
-}
-
-int isdigit(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _D));
-}
-
-int isgraph(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_D)));
-}
-
-int islower(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _L));
-}
-
-int isprint(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_P|_U|_L|_D|_B)));
-}
-
-int ispunct(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _P));
-}
-
-int isspace(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _S));
-}
-
-int isupper(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _U));
-}
-
-int isxdigit(int c)
-{
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_D|_X)));
-}
-
-int isblank(int c)
-{
-	return (c == ' ' || c == '\t');
-}
-
-int isascii(int c)
-{
-	return ((unsigned int)c <= 0177);
-}
-
-int toascii(int c)
-{
-	return (c & 0177);
-}
-
-__strong_alias(_toupper, toupper);
-__strong_alias(_tolower, tolower);
