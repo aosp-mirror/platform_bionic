@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e54ec381_0bfe011b",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-18T18:07:46Z",
+      "side": 1,
+      "message": "Should this be L\u0027\\0\u0027? I\u0027m not an expert in this area, but this just looks odd to me.",
+      "range": {
+        "startLine": 266,
+        "startChar": 13,
+        "endLine": 266,
+        "endChar": 15
+      },
+      "revId": "0549371bd74ba7c7a5a16c2a7d6cc17dbe0e6f97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
