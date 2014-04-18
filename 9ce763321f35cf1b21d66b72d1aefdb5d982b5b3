@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "658813e3_4152b29a",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2014-04-18T23:37:04Z",
+      "side": 1,
+      "message": "Either way is fine with me as they won\u0027t incur any runtime overhead.",
+      "parentUuid": "858347c4_c2ac828e",
+      "revId": "9ce763321f35cf1b21d66b72d1aefdb5d982b5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "458dcff1_80519620",
         "filename": "libc/arch-arm/bionic/libgcc_compat.c",
         "patchSetId": 1
