@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "255d3b32_d6de4aec",
+        "filename": "libc/stdlib/ctype_.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-18T17:34:19Z",
+      "side": 0,
+      "message": "aliasing only works if the definition you\u0027re aliasing to is in the same file. (and there\u0027s no warning.) so these two lines had no effect. the tests i suggested would have caught this, which is why i suggested them.",
+      "revId": "0e351e4011bc98cacc3e37292bfb0e86c3a3bb5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
