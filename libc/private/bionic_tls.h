@@ -80,7 +80,7 @@ enum {
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
+#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
 
 #define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
 
