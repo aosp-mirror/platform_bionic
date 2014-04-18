@@ -1,4 +1,4 @@
-/*	$OpenBSD: vfprintf.c,v 1.37 2006/01/13 17:56:18 millert Exp $	*/
+/*	$OpenBSD: vfprintf.c,v 1.63 2013/03/02 19:40:08 guenther Exp $	*/
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -41,12 +41,16 @@
 #include <sys/mman.h>
 
 #include <errno.h>
+#include <langinfo.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <wchar.h>
 
 #include "local.h"
 #include "fvwrite.h"
@@ -60,7 +64,7 @@ union arg {
 	unsigned long long	ulonglongarg;
 	ptrdiff_t		ptrdiffarg;
 	size_t			sizearg;
-	size_t			ssizearg;
+	ssize_t			ssizearg;
 	intmax_t		intmaxarg;
 	uintmax_t		uintmaxarg;
 	void			*pvoidarg;
@@ -71,11 +75,15 @@ union arg {
 	long			*plongarg;
 	long long		*plonglongarg;
 	ptrdiff_t		*pptrdiffarg;
-	size_t			*pssizearg;
+	ssize_t			*pssizearg;
 	intmax_t		*pintmaxarg;
 #ifdef FLOATING_POINT
 	double			doublearg;
 	long double		longdoublearg;
+#endif
+#ifdef PRINTF_WIDE_CHAR
+	wint_t			wintarg;
+	wchar_t			*pwchararg;
 #endif
 };
 
@@ -136,23 +144,97 @@ __sbprintf(FILE *fp, const char *fmt, va_list ap)
 	return (ret);
 }
 
+#ifdef PRINTF_WIDE_CHAR
+/*
+ * Convert a wide character string argument for the %ls format to a multibyte
+ * string representation. If not -1, prec specifies the maximum number of
+ * bytes to output, and also means that we can't assume that the wide char
+ * string is null-terminated.
+ */
+static char *
+__wcsconv(wchar_t *wcsarg, int prec)
+{
+	mbstate_t mbs;
+	char buf[MB_LEN_MAX];
+	wchar_t *p;
+	char *convbuf;
+	size_t clen, nbytes;
+
+	/* Allocate space for the maximum number of bytes we could output. */
+	if (prec < 0) {
+		memset(&mbs, 0, sizeof(mbs));
+		p = wcsarg;
+		nbytes = wcsrtombs(NULL, (const wchar_t **)&p, 0, &mbs);
+		if (nbytes == (size_t)-1) {
+			errno = EILSEQ;
+			return (NULL);
+		}
+	} else {
+		/*
+		 * Optimisation: if the output precision is small enough,
+		 * just allocate enough memory for the maximum instead of
+		 * scanning the string.
+		 */
+		if (prec < 128)
+			nbytes = prec;
+		else {
+			nbytes = 0;
+			p = wcsarg;
+			memset(&mbs, 0, sizeof(mbs));
+			for (;;) {
+				clen = wcrtomb(buf, *p++, &mbs);
+				if (clen == 0 || clen == (size_t)-1 ||
+				    nbytes + clen > (size_t)prec)
+					break;
+				nbytes += clen;
+			}
+			if (clen == (size_t)-1) {
+				errno = EILSEQ;
+				return (NULL);
+			}
+		}
+	}
+	if ((convbuf = malloc(nbytes + 1)) == NULL)
+		return (NULL);
+
+	/* Fill the output buffer. */
+	p = wcsarg;
+	memset(&mbs, 0, sizeof(mbs));
+	if ((nbytes = wcsrtombs(convbuf, (const wchar_t **)&p,
+	    nbytes, &mbs)) == (size_t)-1) {
+		free(convbuf);
+		errno = EILSEQ;
+		return (NULL);
+	}
+	convbuf[nbytes] = '\0';
+	return (convbuf);
+}
+#endif
 
 #ifdef FLOATING_POINT
+#include <float.h>
 #include <locale.h>
 #include <math.h>
 #include "floatio.h"
 
-#define	BUF		(MAXEXP+MAXFRACT+1)	/* + decimal point */
 #define	DEFPREC		6
 
-static char *cvt(double, int, int, char *, int *, int, int *);
-extern void __freedtoa(char *);
+extern char *__dtoa(double, int, int, int *, int *, char **);
+extern void  __freedtoa(char *);
 static int exponent(char *, int, int);
-#else /* no FLOATING_POINT */
-#define	BUF		40
 #endif /* FLOATING_POINT */
 
+/*
+ * The size of the buffer we use as scratch space for integer
+ * conversions, among other things.  Technically, we would need the
+ * most space for base 10 conversions with thousands' grouping
+ * characters between each pair of digits.  100 bytes is a
+ * conservative overestimate even for a 128-bit uintmax_t.
+ */
+#define BUF	100
+
 #define STATIC_ARG_TBL_SIZE 8	/* Size of static argument table. */
+
 
 /*
  * Macros for converting digits to letters and vice versa
@@ -165,9 +247,8 @@ static int exponent(char *, int, int);
  * Flags used during conversion.
  */
 #define	ALT		0x0001		/* alternate form */
-#define	HEXPREFIX	0x0002		/* add 0x or 0X prefix */
 #define	LADJUST		0x0004		/* left adjustment */
-#define	LONGDBL		0x0008		/* long double; unimplemented */
+#define	LONGDBL		0x0008		/* long double */
 #define	LONGINT		0x0010		/* long integer */
 #define	LLONGINT	0x0020		/* long long integer */
 #define	SHORTINT	0x0040		/* short integer */
@@ -194,53 +275,80 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 {
 	char *fmt;		/* format string */
 	int ch;			/* character from fmt */
-	int n, m, n2;		/* handy integers (short term usage) */
+	int n, n2;		/* handy integers (short term usage) */
 	char *cp;		/* handy char pointer (short term usage) */
 	struct __siov *iovp;	/* for PRINT macro */
 	int flags;		/* flags as above */
 	int ret;		/* return value accumulator */
 	int width;		/* width from format (%8d), or 0 */
-	int prec;		/* precision from format (%.3d), or -1 */
+	int prec;		/* precision from format; <0 for N/A */
 	char sign;		/* sign prefix (' ', '+', '-', or \0) */
 	wchar_t wc;
-	void* ps;
+	mbstate_t ps;
 #ifdef FLOATING_POINT
-	char *decimal_point = ".";
-	char softsign;		/* temporary negative sign for floats */
-	double _double = 0.;	/* double precision arguments %[eEfgG] */
+	/*
+	 * We can decompose the printed representation of floating
+	 * point numbers into several parts, some of which may be empty:
+	 *
+	 * [+|-| ] [0x|0X] MMM . NNN [e|E|p|P] [+|-] ZZ
+	 *    A       B     ---C---      D       E   F
+	 *
+	 * A:	'sign' holds this value if present; '\0' otherwise
+	 * B:	ox[1] holds the 'x' or 'X'; '\0' if not hexadecimal
+	 * C:	cp points to the string MMMNNN.  Leading and trailing
+	 *	zeros are not in the string and must be added.
+	 * D:	expchar holds this character; '\0' if no exponent, e.g. %f
+	 * F:	at least two digits for decimal, at least one digit for hex
+	 */
+	char *decimal_point = NULL;
+	int signflag;		/* true if float is negative */
+	union {			/* floating point arguments %[aAeEfFgG] */
+		double dbl;
+		long double ldbl;
+	} fparg;
 	int expt;		/* integer value of exponent */
-	int expsize = 0;	/* character count for expstr */
-	int ndig;		/* actual number of digits returned by cvt */
-	char expstr[7];		/* buffer for exponent string */
+	char expchar;		/* exponent character: [eEpP\0] */
+	char *dtoaend;		/* pointer to end of converted digits */
+	int expsize;		/* character count for expstr */
+	int lead;		/* sig figs before decimal or group sep */
+	int ndig;		/* actual number of digits returned by dtoa */
+	char expstr[MAXEXPDIG+2];	/* buffer for exponent string: e+ZZZ */
 	char *dtoaresult = NULL;
 #endif
 
 	uintmax_t _umax;	/* integer arguments %[diouxX] */
-	enum { OCT, DEC, HEX } base;/* base for [diouxX] conversion */
-	int dprec;		/* a copy of prec if [diouxX], 0 otherwise */
+	enum { OCT, DEC, HEX } base;	/* base for %[diouxX] conversion */
+	int dprec;		/* a copy of prec if %[diouxX], 0 otherwise */
 	int realsz;		/* field size expanded by dprec */
 	int size;		/* size of converted field or string */
-	char* xdigs = NULL;		/* digits for [xX] conversion */
+	const char *xdigs;	/* digits for %[xX] conversion */
 #define NIOV 8
 	struct __suio uio;	/* output information: summary */
 	struct __siov iov[NIOV];/* ... and individual io vectors */
-	char buf[BUF];		/* space for %c, %[diouxX], %[eEfgG] */
-	char ox[2];		/* space for 0x hex-prefix */
+	char buf[BUF];		/* buffer with space for digits of uintmax_t */
+	char ox[2];		/* space for 0x; ox[1] is either x, X, or \0 */
 	union arg *argtable;	/* args, built due to positional arg */
 	union arg statargtable[STATIC_ARG_TBL_SIZE];
 	size_t argtablesiz;
 	int nextarg;		/* 1-based argument index */
 	va_list orgap;		/* original argument pointer */
+#ifdef PRINTF_WIDE_CHAR
+	char *convbuf;		/* buffer for wide to multi-byte conversion */
+#endif
+
 	/*
 	 * Choose PADSIZE to trade efficiency vs. size.  If larger printf
 	 * fields occur frequently, increase PADSIZE and make the initialisers
 	 * below longer.
 	 */
 #define	PADSIZE	16		/* pad chunk size */
-	static const char blanks[PADSIZE] =
+	static char blanks[PADSIZE] =
 	 {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
-	static const char zeroes[PADSIZE] =
+	static char zeroes[PADSIZE] =
 	 {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+
+	static const char xdigs_lower[16] = "0123456789abcdef";
+	static const char xdigs_upper[16] = "0123456789ABCDEF";
 
 	/*
 	 * BEWARE, these `goto error' on error, and PAD uses `n'.
@@ -265,6 +373,14 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 		PRINT(with, n); \
 	} \
 } while (0)
+#define	PRINTANDPAD(p, ep, len, with) do {	\
+	n2 = (ep) - (p);       			\
+	if (n2 > (len))				\
+		n2 = (len);			\
+	if (n2 > 0)				\
+		PRINT((p), n2);			\
+	PAD((len) - (n2 > 0 ? n2 : 0), (with));	\
+} while(0)
 #define	FLUSH() do { \
 	if (uio.uio_resid && __sprint(fp, &uio)) \
 		goto error; \
@@ -295,6 +411,18 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	    flags&CHARINT ? (unsigned char)GETARG(int) : \
 	    GETARG(unsigned int)))
 
+	/*
+	 * Append a digit to a value and check for overflow.
+	 */
+#define APPEND_DIGIT(val, dig) do { \
+	if ((val) > INT_MAX / 10) \
+		goto overflow; \
+	(val) *= 10; \
+	if ((val) > INT_MAX - to_digit((dig))) \
+		goto overflow; \
+	(val) += to_digit((dig)); \
+} while (0)
+
 	 /*
 	  * Get * arguments, including the form *nn$.  Preserve the nextarg
 	  * that the argument can be gotten once the type is determined.
@@ -303,7 +431,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	n2 = 0; \
 	cp = fmt; \
 	while (is_digit(*cp)) { \
-		n2 = 10 * n2 + to_digit(*cp); \
+		APPEND_DIGIT(n2, *cp); \
 		cp++; \
 	} \
 	if (*cp == '$') { \
@@ -349,6 +477,9 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	uio.uio_resid = 0;
 	uio.uio_iovcnt = 0;
 	ret = 0;
+#ifdef PRINTF_WIDE_CHAR
+	convbuf = NULL;
+#endif
 
 	memset(&ps, 0, sizeof(ps));
 	/*
@@ -356,16 +487,6 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	 */
 	for (;;) {
 		cp = fmt;
-#if 1  /* BIONIC */
-                n = -1;
-                while ( (wc = *fmt) != 0 ) {
-                    if (wc == '%') {
-                        n = 1;
-                        break;
-                    }
-                    fmt++;
-                }
-#else
 		while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
 			fmt += n;
 			if (wc == '%') {
@@ -373,8 +494,10 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 				break;
 			}
 		}
-#endif
-		if ((m = fmt - cp) != 0) {
+		if (fmt != cp) {
+			ptrdiff_t m = fmt - cp;
+			if (m < 0 || m > INT_MAX - ret)
+				goto overflow;
 			PRINT(cp, m);
 			ret += m;
 		}
@@ -387,6 +510,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 		width = 0;
 		prec = -1;
 		sign = '\0';
+		ox[1] = '\0';
 
 rflag:		ch = *fmt++;
 reswitch:	switch (ch) {
@@ -402,6 +526,9 @@ reswitch:	switch (ch) {
 		case '#':
 			flags |= ALT;
 			goto rflag;
+		case '\'':
+			/* grouping not implemented */
+			goto rflag;
 		case '*':
 			/*
 			 * ``A negative field width argument is taken as a
@@ -412,6 +539,8 @@ reswitch:	switch (ch) {
 			GETASTER(width);
 			if (width >= 0)
 				goto rflag;
+			if (width == INT_MIN)
+				goto overflow;
 			width = -width;
 			/* FALLTHROUGH */
 		case '-':
@@ -428,7 +557,7 @@ reswitch:	switch (ch) {
 			}
 			n = 0;
 			while (is_digit(ch)) {
-				n = 10 * n + to_digit(ch);
+				APPEND_DIGIT(n, ch);
 				ch = *fmt++;
 			}
 			if (ch == '$') {
@@ -440,7 +569,7 @@ reswitch:	switch (ch) {
 				}
 				goto rflag;
 			}
-			prec = n < 0 ? -1 : n;
+			prec = n;
 			goto reswitch;
 		case '0':
 			/*
@@ -454,7 +583,7 @@ reswitch:	switch (ch) {
 		case '5': case '6': case '7': case '8': case '9':
 			n = 0;
 			do {
-				n = 10 * n + to_digit(ch);
+				APPEND_DIGIT(n, ch);
 				ch = *fmt++;
 			} while (is_digit(ch));
 			if (ch == '$') {
@@ -502,8 +631,28 @@ reswitch:	switch (ch) {
 			flags |= SIZEINT;
 			goto rflag;
 		case 'c':
-			*(cp = buf) = GETARG(int);
-			size = 1;
+#ifdef PRINTF_WIDE_CHAR
+			if (flags & LONGINT) {
+				mbstate_t mbs;
+				size_t mbseqlen;
+
+				memset(&mbs, 0, sizeof(mbs));
+				mbseqlen = wcrtomb(buf,
+				    (wchar_t)GETARG(wint_t), &mbs);
+				if (mbseqlen == (size_t)-1) {
+					fp->_flags |= __SERR;
+					errno = EILSEQ;
+					goto error;
+				}
+				cp = buf;
+				size = (int)mbseqlen;
+			} else {
+#endif
+				*(cp = buf) = GETARG(int);
+				size = 1;
+#ifdef PRINTF_WIDE_CHAR
+			}
+#endif
 			sign = '\0';
 			break;
 		case 'D':
@@ -519,79 +668,140 @@ reswitch:	switch (ch) {
 			base = DEC;
 			goto number;
 #ifdef FLOATING_POINT
+		case 'a':
+		case 'A':
+			if (ch == 'a') {
+				ox[1] = 'x';
+				xdigs = xdigs_lower;
+				expchar = 'p';
+			} else {
+				ox[1] = 'X';
+				xdigs = xdigs_upper;
+				expchar = 'P';
+			}
+			if (prec >= 0)
+				prec++;
+			if (dtoaresult)
+				__freedtoa(dtoaresult);
+			if (flags & LONGDBL) {
+				fparg.ldbl = GETARG(long double);
+				dtoaresult = cp =
+				    __hldtoa(fparg.ldbl, xdigs, prec,
+				    &expt, &signflag, &dtoaend);
+				if (dtoaresult == NULL) {
+					errno = ENOMEM;
+					goto error;
+				}
+			} else {
+				fparg.dbl = GETARG(double);
+				dtoaresult = cp =
+				    __hdtoa(fparg.dbl, xdigs, prec,
+				    &expt, &signflag, &dtoaend);
+				if (dtoaresult == NULL) {
+					errno = ENOMEM;
+					goto error;
+				}
+			}
+			if (prec < 0)
+				prec = dtoaend - cp;
+			if (expt == INT_MAX)
+				ox[1] = '\0';
+			goto fp_common;
 		case 'e':
 		case 'E':
+			expchar = ch;
+			if (prec < 0)	/* account for digit before decpt */
+				prec = DEFPREC + 1;
+			else
+				prec++;
+			goto fp_begin;
 		case 'f':
+		case 'F':
+			expchar = '\0';
+			goto fp_begin;
 		case 'g':
 		case 'G':
-			if (prec == -1) {
+			expchar = ch - ('g' - 'e');
+ 			if (prec == 0)
+ 				prec = 1;
+fp_begin:
+			if (prec < 0)
 				prec = DEFPREC;
-			} else if ((ch == 'g' || ch == 'G') && prec == 0) {
-				prec = 1;
-			}
-
+			if (dtoaresult)
+				__freedtoa(dtoaresult);
 			if (flags & LONGDBL) {
-				_double = (double) GETARG(long double);
-			} else {
-				_double = GETARG(double);
-			}
-
-			/* do this before tricky precision changes */
-			if (isinf(_double)) {
-				if (_double < 0)
-					sign = '-';
-				cp = "Inf";
-				size = 3;
-				break;
-			}
-			if (isnan(_double)) {
-				cp = "NaN";
-				size = 3;
-				break;
-			}
-
-			if (dtoaresult != NULL) __freedtoa(dtoaresult);
-			flags |= FPT;
-			dtoaresult = cp = cvt(_double, prec, flags, &softsign,
-				&expt, ch, &ndig);
-			if (ch == 'g' || ch == 'G') {
-				if (expt <= -4 || expt > prec)
-					ch = (ch == 'g') ? 'e' : 'E';
-				else
-					ch = 'g';
-			}
-			if (ch <= 'e') {	/* 'e' or 'E' fmt */
-				--expt;
-				expsize = exponent(expstr, expt, ch);
-				size = expsize + ndig;
-				if (ndig > 1 || flags & ALT)
-					++size;
-			} else if (ch == 'f') {		/* f fmt */
-				if (expt > 0) {
-					size = expt;
-					if (prec || flags & ALT)
-						size += prec + 1;
-				} else { /* "0.X" */
-					size = prec + 2;
+				fparg.ldbl = GETARG(long double);
+				dtoaresult = cp =
+				    __ldtoa(&fparg.ldbl, expchar ? 2 : 3, prec,
+				    &expt, &signflag, &dtoaend);
+				if (dtoaresult == NULL) {
+					errno = ENOMEM;
+					goto error;
 				}
-			} else if (expt >= ndig) {	/* fixed g fmt */
-				size = expt;
-				if (flags & ALT)
-					++size;
 			} else {
-				size = ndig + (expt > 0 ?  1 : 2 - expt);
-			}
-
-			if (softsign)
+				fparg.dbl = GETARG(double);
+				dtoaresult = cp =
+				    __dtoa(fparg.dbl, expchar ? 2 : 3, prec,
+				    &expt, &signflag, &dtoaend);
+				if (dtoaresult == NULL) {
+					errno = ENOMEM;
+					goto error;
+				}
+				if (expt == 9999)
+					expt = INT_MAX;
+ 			}
+fp_common:
+			if (signflag)
 				sign = '-';
+			if (expt == INT_MAX) {	/* inf or nan */
+				if (*cp == 'N') {
+					cp = (ch >= 'a') ? "nan" : "NAN";
+					sign = '\0';
+				} else
+					cp = (ch >= 'a') ? "inf" : "INF";
+ 				size = 3;
+				flags &= ~ZEROPAD;
+ 				break;
+ 			}
+			flags |= FPT;
+			ndig = dtoaend - cp;
+ 			if (ch == 'g' || ch == 'G') {
+				if (expt > -4 && expt <= prec) {
+					/* Make %[gG] smell like %[fF] */
+					expchar = '\0';
+					if (flags & ALT)
+						prec -= expt;
+					else
+						prec = ndig - expt;
+					if (prec < 0)
+						prec = 0;
+				} else {
+					/*
+					 * Make %[gG] smell like %[eE], but
+					 * trim trailing zeroes if no # flag.
+					 */
+					if (!(flags & ALT))
+						prec = ndig;
+				}
+ 			}
+			if (expchar) {
+				expsize = exponent(expstr, expt - 1, expchar);
+				size = expsize + prec;
+				if (prec > 1 || flags & ALT)
+ 					++size;
+			} else {
+				/* space for digits before decimal point */
+				if (expt > 0)
+					size = expt;
+				else	/* "0" */
+					size = 1;
+				/* space for decimal pt and following digits */
+				if (prec || flags & ALT)
+					size += prec + 1;
+				lead = expt;
+			}
 			break;
 #endif /* FLOATING_POINT */
-/* the Android security team suggests removing support for %n
- * since it has no real practical value, and could lead to
- * running malicious code (for really buggy programs that
- * send to printf() user-generated formatting strings).
- */
-#if 0
 		case 'n':
 			if (flags & LLONGINT)
 				*GETARG(long long *) = ret;
@@ -610,7 +820,6 @@ reswitch:	switch (ch) {
 			else
 				*GETARG(int *) = ret;
 			continue;	/* no output */
-#endif
 		case 'O':
 			flags |= LONGINT;
 			/*FALLTHROUGH*/
@@ -629,11 +838,30 @@ reswitch:	switch (ch) {
 			/* NOSTRICT */
 			_umax = (u_long)GETARG(void *);
 			base = HEX;
-			xdigs = "0123456789abcdef";
-			flags |= HEXPREFIX;
-			ch = 'x';
+			xdigs = xdigs_lower;
+			ox[1] = 'x';
 			goto nosign;
 		case 's':
+#ifdef PRINTF_WIDE_CHAR
+			if (flags & LONGINT) {
+				wchar_t *wcp;
+
+				if (convbuf != NULL) {
+					free(convbuf);
+					convbuf = NULL;
+				}
+				if ((wcp = GETARG(wchar_t *)) == NULL) {
+					cp = "(null)";
+				} else {
+					convbuf = __wcsconv(wcp, prec);
+					if (convbuf == NULL) {
+						fp->_flags = __SERR;
+						goto error;
+					}
+					cp = convbuf;
+				}
+			} else
+#endif /* PRINTF_WIDE_CHAR */
 			if ((cp = GETARG(char *)) == NULL)
 				cp = "(null)";
 			if (prec >= 0) {
@@ -644,15 +872,13 @@ reswitch:	switch (ch) {
 				 */
 				char *p = memchr(cp, 0, prec);
 
-				if (p != NULL) {
-					size = p - cp;
-					if (size > prec)
-						size = prec;
-				} else {
-					size = prec;
-				}
+				size = p ? (p - cp) : prec;
 			} else {
-				size = strlen(cp);
+				size_t len;
+
+				if ((len = strlen(cp)) > INT_MAX)
+					goto overflow;
+				size = (int)len;
 			}
 			sign = '\0';
 			break;
@@ -664,15 +890,15 @@ reswitch:	switch (ch) {
 			base = DEC;
 			goto nosign;
 		case 'X':
-			xdigs = "0123456789ABCDEF";
+			xdigs = xdigs_upper;
 			goto hex;
 		case 'x':
-			xdigs = "0123456789abcdef";
+			xdigs = xdigs_lower;
 hex:			_umax = UARG();
 			base = HEX;
 			/* leading 0x/X only if non-zero */
 			if (flags & ALT && _umax != 0)
-				flags |= HEXPREFIX;
+				ox[1] = ch;
 
 			/* unsigned conversions */
 nosign:			sign = '\0';
@@ -730,6 +956,8 @@ number:			if ((dprec = prec) >= 0)
 				}
 			}
 			size = buf + BUF - cp;
+			if (size > BUF)	/* should never happen */
+				abort();
 		skipsize:
 			break;
 		default:	/* "%?" prints ?, unless ? is NUL */
@@ -750,7 +978,7 @@ number:			if ((dprec = prec) >= 0)
 		 * first be prefixed by any sign or other prefix; otherwise,
 		 * it should be blank padded before the prefix is emitted.
 		 * After any left-hand padding and prefixing, emit zeroes
-		 * required by a decimal [diouxX] precision, then print the
+		 * required by a decimal %[diouxX] precision, then print the
 		 * string proper, then emit zeroes required by any leftover
 		 * floating precision; finally, if LADJUST, pad with blanks.
 		 *
@@ -760,7 +988,7 @@ number:			if ((dprec = prec) >= 0)
 		realsz = dprec > size ? dprec : size;
 		if (sign)
 			realsz++;
-		else if (flags & HEXPREFIX)
+		if (ox[1])
 			realsz+= 2;
 
 		/* right-adjusting blank padding */
@@ -768,11 +996,10 @@ number:			if ((dprec = prec) >= 0)
 			PAD(width - realsz, blanks);
 
 		/* prefix */
-		if (sign) {
+		if (sign)
 			PRINT(&sign, 1);
-		} else if (flags & HEXPREFIX) {
+		if (ox[1]) {	/* ox[1] is either x, X, or \0 */
 			ox[0] = '0';
-			ox[1] = ch;
 			PRINT(ox, 2);
 		}
 
@@ -788,41 +1015,30 @@ number:			if ((dprec = prec) >= 0)
 		if ((flags & FPT) == 0) {
 			PRINT(cp, size);
 		} else {	/* glue together f_p fragments */
-			if (ch >= 'f') {	/* 'f' or 'g' */
-				if (_double == 0) {
-					/* kludge for __dtoa irregularity */
-					PRINT("0", 1);
-					if (expt < ndig || (flags & ALT) != 0) {
+			if (decimal_point == NULL)
+				decimal_point = nl_langinfo(RADIXCHAR);
+			if (!expchar) {	/* %[fF] or sufficiently short %[gG] */
+				if (expt <= 0) {
+					PRINT(zeroes, 1);
+					if (prec || flags & ALT)
 						PRINT(decimal_point, 1);
-						PAD(ndig - 1, zeroes);
-					}
-				} else if (expt <= 0) {
-					PRINT("0", 1);
-					PRINT(decimal_point, 1);
 					PAD(-expt, zeroes);
-					PRINT(cp, ndig);
-				} else if (expt >= ndig) {
-					PRINT(cp, ndig);
-					PAD(expt - ndig, zeroes);
-					if (flags & ALT)
-						PRINT(".", 1);
-				} else {
-					PRINT(cp, expt);
-					cp += expt;
-					PRINT(".", 1);
-					PRINT(cp, ndig-expt);
+					/* already handled initial 0's */
+					prec += expt;
+ 				} else {
+					PRINTANDPAD(cp, dtoaend, lead, zeroes);
+					cp += lead;
+					if (prec || flags & ALT)
+						PRINT(decimal_point, 1);
 				}
-			} else {	/* 'e' or 'E' */
-				if (ndig > 1 || flags & ALT) {
-					ox[0] = *cp++;
-					ox[1] = '.';
-					PRINT(ox, 2);
-					if (_double) {
-						PRINT(cp, ndig-1);
-					} else {/* 0.[0..] */
-						/* __dtoa irregularity */
-						PAD(ndig - 1, zeroes);
-					}
+				PRINTANDPAD(cp, dtoaend, prec, zeroes);
+			} else {	/* %[eE] or sufficiently long %[gG] */
+				if (prec > 1 || flags & ALT) {
+					buf[0] = *cp++;
+					buf[1] = *decimal_point;
+					PRINT(buf, 2);
+					PRINT(cp, ndig-1);
+					PAD(prec - ndig, zeroes);
 				} else { /* XeYYY */
 					PRINT(cp, 1);
 				}
@@ -837,25 +1053,40 @@ number:			if ((dprec = prec) >= 0)
 			PAD(width - realsz, blanks);
 
 		/* finally, adjust ret */
-		ret += width > realsz ? width : realsz;
+		if (width < realsz)
+			width = realsz;
+		if (width > INT_MAX - ret)
+			goto overflow;
+		ret += width;
 
 		FLUSH();	/* copy out the I/O vectors */
 	}
 done:
 	FLUSH();
 error:
+	va_end(orgap);
+	if (__sferror(fp))
+		ret = -1;
+	goto finish;
+
+overflow:
+	errno = ENOMEM;
+	ret = -1;
+
+finish:
+#ifdef PRINTF_WIDE_CHAR
+	if (convbuf)
+		free(convbuf);
+#endif
 #ifdef FLOATING_POINT
-	if (dtoaresult != NULL) {
+	if (dtoaresult)
 		__freedtoa(dtoaresult);
-	}
 #endif
 	if (argtable != NULL && argtable != statargtable) {
 		munmap(argtable, argtablesiz);
 		argtable = NULL;
 	}
-        va_end(orgap);
-	return (__sferror(fp) ? EOF : ret);
-	/* NOTREACHED */
+	return (ret);
 }
 
 /*
@@ -886,6 +1117,10 @@ error:
 #define T_MAXINT	22
 #define T_MAXUINT	23
 #define TP_MAXINT	24
+#define T_CHAR		25
+#define T_U_CHAR	26
+#define T_WINT		27
+#define TP_WCHAR	28
 
 /*
  * Find all arguments when a positional parameter is encountered.  Returns a
@@ -909,8 +1144,9 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 	int tablesize;		/* current size of type table */
 	int tablemax;		/* largest used index in table */
 	int nextarg;		/* 1-based argument index */
+	int ret = 0;		/* return value */
 	wchar_t wc;
-	void* ps;
+	mbstate_t ps;
 
 	/*
 	 * Add an argument type to the table, expanding if necessary.
@@ -927,7 +1163,8 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 	    ((flags&SIZEINT) ? ADDTYPE(T_SSIZEINT) : \
 	    ((flags&LLONGINT) ? ADDTYPE(T_LLONG) : \
 	    ((flags&LONGINT) ? ADDTYPE(T_LONG) : \
-	    ((flags&SHORTINT) ? ADDTYPE(T_SHORT) : ADDTYPE(T_INT)))))))
+	    ((flags&SHORTINT) ? ADDTYPE(T_SHORT) : \
+	    ((flags&CHARINT) ? ADDTYPE(T_CHAR) : ADDTYPE(T_INT))))))))
 
 #define	ADDUARG() \
         ((flags&MAXINT) ? ADDTYPE(T_MAXUINT) : \
@@ -935,7 +1172,8 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 	    ((flags&SIZEINT) ? ADDTYPE(T_SIZEINT) : \
 	    ((flags&LLONGINT) ? ADDTYPE(T_U_LLONG) : \
 	    ((flags&LONGINT) ? ADDTYPE(T_U_LONG) : \
-	    ((flags&SHORTINT) ? ADDTYPE(T_U_SHORT) : ADDTYPE(T_U_INT)))))))
+	    ((flags&SHORTINT) ? ADDTYPE(T_U_SHORT) : \
+	    ((flags&CHARINT) ? ADDTYPE(T_U_CHAR) : ADDTYPE(T_U_INT))))))))
 
 	/*
 	 * Add * arguments to the type array.
@@ -944,7 +1182,7 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 	n2 = 0; \
 	cp = fmt; \
 	while (is_digit(*cp)) { \
-		n2 = 10 * n2 + to_digit(*cp); \
+		APPEND_DIGIT(n2, *cp); \
 		cp++; \
 	} \
 	if (*cp == '$') { \
@@ -969,16 +1207,6 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 	 */
 	for (;;) {
 		cp = fmt;
-#if 1  /* BIONIC */
-                n = -1;
-                while ((wc = *fmt) != 0) {
-                    if (wc == '%') {
-                        n = 1;
-                        break;
-                    }
-                    fmt++;
-                }
-#else
 		while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
 			fmt += n;
 			if (wc == '%') {
@@ -986,7 +1214,6 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 				break;
 			}
 		}
-#endif
 		if (n <= 0)
 			goto done;
 		fmt++;		/* skip over '%' */
@@ -997,6 +1224,7 @@ rflag:		ch = *fmt++;
 reswitch:	switch (ch) {
 		case ' ':
 		case '#':
+		case '\'':
 			goto rflag;
 		case '*':
 			ADDASTER();
@@ -1019,7 +1247,7 @@ reswitch:	switch (ch) {
 		case '5': case '6': case '7': case '8': case '9':
 			n = 0;
 			do {
-				n = 10 * n + to_digit(ch);
+				APPEND_DIGIT(n ,ch);
 				ch = *fmt++;
 			} while (is_digit(ch));
 			if (ch == '$') {
@@ -1040,6 +1268,9 @@ reswitch:	switch (ch) {
 				flags |= SHORTINT;
 			}
 			goto rflag;
+		case 'j':
+			flags |= MAXINT;
+			goto rflag;
 		case 'l':
 			if (*fmt == 'l') {
 				fmt++;
@@ -1058,7 +1289,12 @@ reswitch:	switch (ch) {
 			flags |= SIZEINT;
 			goto rflag;
 		case 'c':
-			ADDTYPE(T_INT);
+#ifdef PRINTF_WIDE_CHAR
+			if (flags & LONGINT)
+				ADDTYPE(T_WINT);
+			else
+#endif
+				ADDTYPE(T_INT);
 			break;
 		case 'D':
 			flags |= LONGINT;
@@ -1068,9 +1304,12 @@ reswitch:	switch (ch) {
 			ADDSARG();
 			break;
 #ifdef FLOATING_POINT
+		case 'a':
+		case 'A':
 		case 'e':
 		case 'E':
 		case 'f':
+		case 'F':
 		case 'g':
 		case 'G':
 			if (flags & LONGDBL)
@@ -1105,7 +1344,12 @@ reswitch:	switch (ch) {
 			ADDTYPE(TP_VOID);
 			break;
 		case 's':
-			ADDTYPE(TP_CHAR);
+#ifdef PRINTF_WIDE_CHAR
+			if (flags & LONGINT)
+				ADDTYPE(TP_WCHAR);
+			else
+#endif
+				ADDTYPE(TP_CHAR);
 			break;
 		case 'U':
 			flags |= LONGINT;
@@ -1140,19 +1384,15 @@ done:
 	for (n = 1; n <= tablemax; n++) {
 		switch (typetable[n]) {
 		case T_UNUSED:
-			(*argtable)[n].intarg = va_arg(ap, int);
-			break;
+		case T_CHAR:
+		case T_U_CHAR:
 		case T_SHORT:
-			(*argtable)[n].intarg = va_arg(ap, int);
-			break;
 		case T_U_SHORT:
+		case T_INT:
 			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case TP_SHORT:
 			(*argtable)[n].pshortarg = va_arg(ap, short *);
-			break;
-		case T_INT:
-			(*argtable)[n].intarg = va_arg(ap, int);
 			break;
 		case T_U_INT:
 			(*argtable)[n].uintarg = va_arg(ap, unsigned int);
@@ -1207,17 +1447,37 @@ done:
 		case TP_SSIZEINT:
 			(*argtable)[n].pssizearg = va_arg(ap, ssize_t *);
 			break;
-		case TP_MAXINT:
+		case T_MAXINT:
 			(*argtable)[n].intmaxarg = va_arg(ap, intmax_t);
 			break;
+		case T_MAXUINT:
+			(*argtable)[n].uintmaxarg = va_arg(ap, uintmax_t);
+			break;
+		case TP_MAXINT:
+			(*argtable)[n].pintmaxarg = va_arg(ap, intmax_t *);
+			break;
+#ifdef PRINTF_WIDE_CHAR
+		case T_WINT:
+			(*argtable)[n].wintarg = va_arg(ap, wint_t);
+			break;
+		case TP_WCHAR:
+			(*argtable)[n].pwchararg = va_arg(ap, wchar_t *);
+			break;
+#endif
 		}
 	}
+	goto finish;
 
+overflow:
+	errno = ENOMEM;
+	ret = -1;
+
+finish:
 	if (typetable != NULL && typetable != stattypetable) {
 		munmap(typetable, *argtablesiz);
 		typetable = NULL;
 	}
-	return (0);
+	return (ret);
 }
 
 /*
@@ -1229,12 +1489,15 @@ __grow_type_table(unsigned char **typetable, int *tablesize)
 	unsigned char *oldtable = *typetable;
 	int newsize = *tablesize * 2;
 
+	if (newsize < getpagesize())
+		newsize = getpagesize();
+
 	if (*tablesize == STATIC_ARG_TBL_SIZE) {
 		*typetable = mmap(NULL, newsize, PROT_WRITE|PROT_READ,
 		    MAP_ANON|MAP_PRIVATE, -1, 0);
 		if (*typetable == MAP_FAILED)
 			return (-1);
-		memcpy( *typetable, oldtable, *tablesize);
+		bcopy(oldtable, *typetable, *tablesize);
 	} else {
 		unsigned char *new = mmap(NULL, newsize, PROT_WRITE|PROT_READ,
 		    MAP_ANON|MAP_PRIVATE, -1, 0);
@@ -1250,58 +1513,13 @@ __grow_type_table(unsigned char **typetable, int *tablesize)
 	return (0);
 }
 
-
+ 
 #ifdef FLOATING_POINT
-
-extern char *__dtoa(double, int, int, int *, int *, char **);
-
-static char *
-cvt(double value, int ndigits, int flags, char *sign, int *decpt, int ch,
-    int *length)
-{
-	int mode, dsgn;
-	char *digits, *bp, *rve;
-
-	if (ch == 'f') {
-		mode = 3;		/* ndigits after the decimal point */
-	} else {
-		/* To obtain ndigits after the decimal point for the 'e'
-		 * and 'E' formats, round to ndigits + 1 significant
-		 * figures.
-		 */
-		if (ch == 'e' || ch == 'E') {
-			ndigits++;
-		}
-		mode = 2;		/* ndigits significant digits */
-	}
-
-	if (value < 0) {
-		value = -value;
-		*sign = '-';
-	} else
-		*sign = '\000';
-	digits = __dtoa(value, mode, ndigits, decpt, &dsgn, &rve);
-	if ((ch != 'g' && ch != 'G') || flags & ALT) {/* Print trailing zeros */
-		bp = digits + ndigits;
-		if (ch == 'f') {
-			if (*digits == '0' && value)
-				*decpt = -ndigits + 1;
-			bp += *decpt;
-		}
-		if (value == 0)	/* kludge for __dtoa irregularity */
-			rve = bp;
-		while (rve < bp)
-			*rve++ = '0';
-	}
-	*length = rve - digits;
-	return (digits);
-}
-
 static int
 exponent(char *p0, int exp, int fmtch)
 {
 	char *p, *t;
-	char expbuf[MAXEXP];
+	char expbuf[MAXEXPDIG];
 
 	p = p0;
 	*p++ = fmtch;
@@ -1310,19 +1528,25 @@ exponent(char *p0, int exp, int fmtch)
 		*p++ = '-';
 	} else
 		*p++ = '+';
-	t = expbuf + MAXEXP;
+	t = expbuf + MAXEXPDIG;
 	if (exp > 9) {
 		do {
 			*--t = to_char(exp % 10);
 		} while ((exp /= 10) > 9);
 		*--t = to_char(exp);
-		for (; t < expbuf + MAXEXP; *p++ = *t++)
+		for (; t < expbuf + MAXEXPDIG; *p++ = *t++)
 			/* nothing */;
 	} else {
-		*p++ = '0';
+		/*
+		 * Exponents for decimal floating point conversions
+		 * (%[eEgG]) must be at least two characters long,
+		 * whereas exponents for hexadecimal conversions can
+		 * be only one character long.
+		 */
+		if (fmtch == 'e' || fmtch == 'E')
+			*p++ = '0';
 		*p++ = to_char(exp);
 	}
 	return (p - p0);
 }
-
 #endif /* FLOATING_POINT */
