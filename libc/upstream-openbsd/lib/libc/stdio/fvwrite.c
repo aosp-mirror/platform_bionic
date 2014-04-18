@@ -1,4 +1,4 @@
-/*	$OpenBSD: fvwrite.c,v 1.14 2005/08/08 08:05:36 espie Exp $ */
+/*	$OpenBSD: fvwrite.c,v 1.17 2009/11/09 00:18:27 kurt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -44,11 +44,11 @@
  * This routine is large and unsightly, but most of the ugliness due
  * to the three different kinds of output buffering is handled here.
  */
-__LIBC_HIDDEN__ int
+int
 __sfvwrite(FILE *fp, struct __suio *uio)
 {
 	size_t len;
-	const char *p;
+	char *p;
 	struct __siov *iov;
 	int w, s;
 	char *nl;
@@ -82,11 +82,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 		 */
 		do {
 			GETIOV(;);
-#if 1  /* BIONIC: don't limit to 1KB writes */
-			w = (*fp->_write)(fp->_cookie, p, len);
-#else
-			w = (*fp->_write)(fp->_cookie, p, MIN(len, BUFSIZ2));
-#endif
+			w = (*fp->_write)(fp->_cookie, p, MIN(len, BUFSIZ));
 			if (w <= 0)
 				goto err;
 			p += w;
@@ -107,7 +103,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 		do {
 			GETIOV(;);
 			if ((fp->_flags & (__SALC | __SSTR)) ==
-			    (__SALC | __SSTR) && fp->_w < (int)len) {
+			    (__SALC | __SSTR) && fp->_w < len) {
 				size_t blen = fp->_p - fp->_bf._base;
 				unsigned char *_base;
 				int _size;
@@ -116,7 +112,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 				_size = fp->_bf._size;
 				do {
 					_size = (_size << 1) + 1;
-				} while (_size < (int)(blen + len));
+				} while (_size < blen + len);
 				_base = realloc(fp->_bf._base, _size + 1);
 				if (_base == NULL)
 					goto err;
@@ -127,20 +123,20 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 			}
 			w = fp->_w;
 			if (fp->_flags & __SSTR) {
-				if ((int)len < w)
+				if (len < w)
 					w = len;
 				COPY(w);	/* copy MIN(fp->_w,len), */
 				fp->_w -= w;
 				fp->_p += w;
 				w = len;	/* but pretend copied all */
-			} else if (fp->_p > fp->_bf._base && (int)len > w) {
+			} else if (fp->_p > fp->_bf._base && len > w) {
 				/* fill and flush */
 				COPY(w);
 				/* fp->_w -= w; */ /* unneeded */
 				fp->_p += w;
-				if (fflush(fp))
+				if (__sflush(fp))
 					goto err;
-			} else if ((int)len >= (w = fp->_bf._size)) {
+			} else if (len >= (w = fp->_bf._size)) {
 				/* write directly */
 				w = (*fp->_write)(fp->_cookie, p, w);
 				if (w <= 0)
@@ -169,21 +165,21 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 			GETIOV(nlknown = 0);
 			if (!nlknown) {
 				nl = memchr((void *)p, '\n', len);
-				nldist = nl ? nl + 1 - p : (int)len + 1;
+				nldist = nl ? nl + 1 - p : len + 1;
 				nlknown = 1;
 			}
-			s = MIN((int)len, nldist);
+			s = MIN(len, nldist);
 			w = fp->_w + fp->_bf._size;
 			if (fp->_p > fp->_bf._base && s > w) {
 				COPY(w);
 				/* fp->_w -= w; */
 				fp->_p += w;
-				if (fflush(fp))
+				if (__sflush(fp))
 					goto err;
 			} else if (s >= (w = fp->_bf._size)) {
 				w = (*fp->_write)(fp->_cookie, p, w);
 				if (w <= 0)
-					goto err;
+				 	goto err;
 			} else {
 				w = s;
 				COPY(w);
@@ -192,7 +188,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 			}
 			if ((nldist -= w) == 0) {
 				/* copied the newline: flush and forget */
-				if (fflush(fp))
+				if (__sflush(fp))
 					goto err;
 				nlknown = 0;
 			}
