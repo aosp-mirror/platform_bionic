@@ -75,8 +75,6 @@ libc_common_src_files := \
     bionic/time64.c \
     bionic/unlockpt.c \
     stdio/findfp.c \
-    stdio/fread.c \
-    stdio/fvwrite.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdlib/atexit.c \
@@ -363,12 +361,14 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
     upstream-openbsd/lib/libc/stdio/fputs.c \
+    upstream-openbsd/lib/libc/stdio/fread.c \
     upstream-openbsd/lib/libc/stdio/freopen.c \
     upstream-openbsd/lib/libc/stdio/fscanf.c \
     upstream-openbsd/lib/libc/stdio/fseek.c \
     upstream-openbsd/lib/libc/stdio/fsetpos.c \
     upstream-openbsd/lib/libc/stdio/ftell.c \
     upstream-openbsd/lib/libc/stdio/funopen.c \
+    upstream-openbsd/lib/libc/stdio/fvwrite.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
     upstream-openbsd/lib/libc/stdio/getc.c \
     upstream-openbsd/lib/libc/stdio/getchar.c \
