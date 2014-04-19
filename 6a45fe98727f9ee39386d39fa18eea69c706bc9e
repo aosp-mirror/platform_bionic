@@ -34,6 +34,24 @@
       "revId": "6a45fe98727f9ee39386d39fa18eea69c706bc9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "458dcff1_466886fb",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000234
+      },
+      "writtenOn": "2014-04-19T05:49:49Z",
+      "side": 1,
+      "message": "Actually I think the proper type should be \"char *\", as all function names are pointer types.",
+      "parentUuid": "658813e3_c76492ed",
+      "revId": "6a45fe98727f9ee39386d39fa18eea69c706bc9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
