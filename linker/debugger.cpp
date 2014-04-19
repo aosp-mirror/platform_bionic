@@ -29,6 +29,7 @@
 #include "linker.h"
 
 #include <errno.h>
+#include <inttypes.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,12 +48,12 @@ extern "C" int tgkill(int tgid, int tid, int sig);
 #endif
 
 enum debugger_action_t {
-    // dump a crash
-    DEBUGGER_ACTION_CRASH,
-    // dump a tombstone file
-    DEBUGGER_ACTION_DUMP_TOMBSTONE,
-    // dump a backtrace only back to the socket
-    DEBUGGER_ACTION_DUMP_BACKTRACE,
+  // dump a crash
+  DEBUGGER_ACTION_CRASH,
+  // dump a tombstone file
+  DEBUGGER_ACTION_DUMP_TOMBSTONE,
+  // dump a backtrace only back to the socket
+  DEBUGGER_ACTION_DUMP_BACKTRACE,
 };
 
 /* message sent over the socket */
@@ -69,40 +70,39 @@ struct debugger_msg_t {
 #define MAX_TASK_NAME_LEN (16)
 
 static int socket_abstract_client(const char* name, int type) {
-    sockaddr_un addr;
+  sockaddr_un addr;
 
-    // Test with length +1 for the *initial* '\0'.
-    size_t namelen = strlen(name);
-    if ((namelen + 1) > sizeof(addr.sun_path)) {
-        errno = EINVAL;
-        return -1;
-    }
+  // Test with length +1 for the *initial* '\0'.
+  size_t namelen = strlen(name);
+  if ((namelen + 1) > sizeof(addr.sun_path)) {
+    errno = EINVAL;
+    return -1;
+  }
 
-    /* This is used for abstract socket namespace, we need
-     * an initial '\0' at the start of the Unix socket path.
-     *
-     * Note: The path in this case is *not* supposed to be
-     * '\0'-terminated. ("man 7 unix" for the gory details.)
-     */
-    memset(&addr, 0, sizeof(addr));
-    addr.sun_family = AF_LOCAL;
-    addr.sun_path[0] = 0;
-    memcpy(addr.sun_path + 1, name, namelen);
+  // This is used for abstract socket namespace, we need
+  // an initial '\0' at the start of the Unix socket path.
+  //
+  // Note: The path in this case is *not* supposed to be
+  // '\0'-terminated. ("man 7 unix" for the gory details.)
+  memset(&addr, 0, sizeof(addr));
+  addr.sun_family = AF_LOCAL;
+  addr.sun_path[0] = 0;
+  memcpy(addr.sun_path + 1, name, namelen);
 
-    socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
+  socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
-    int s = socket(AF_LOCAL, type, 0);
-    if (s == -1) {
-        return -1;
-    }
+  int s = socket(AF_LOCAL, type, 0);
+  if (s == -1) {
+    return -1;
+  }
 
-    int rc = TEMP_FAILURE_RETRY(connect(s, reinterpret_cast<sockaddr*>(&addr), alen));
-    if (rc == -1) {
-        close(s);
-        return -1;
-    }
+  int rc = TEMP_FAILURE_RETRY(connect(s, reinterpret_cast<sockaddr*>(&addr), alen));
+  if (rc == -1) {
+    close(s);
+    return -1;
+  }
 
-    return s;
+  return s;
 }
 
 /*
@@ -115,65 +115,88 @@ static int socket_abstract_client(const char* name, int type) {
  * could allocate memory or hold a lock.
  */
 static void log_signal_summary(int signum, const siginfo_t* info) {
-    const char* signal_name;
-    switch (signum) {
-        case SIGILL:    signal_name = "SIGILL";     break;
-        case SIGABRT:   signal_name = "SIGABRT";    break;
-        case SIGBUS:    signal_name = "SIGBUS";     break;
-        case SIGFPE:    signal_name = "SIGFPE";     break;
-        case SIGSEGV:   signal_name = "SIGSEGV";    break;
+  const char* signal_name = "???";
+  bool has_address = false;
+  switch (signum) {
+    case SIGILL:
+      signal_name = "SIGILL";
+      has_address = true;
+      break;
+    case SIGABRT:
+      signal_name = "SIGABRT";
+      break;
+    case SIGBUS:
+      signal_name = "SIGBUS";
+      has_address = true;
+      break;
+    case SIGFPE:
+      signal_name = "SIGFPE";
+      has_address = true;
+      break;
+    case SIGSEGV:
+      signal_name = "SIGSEGV";
+      has_address = true;
+      break;
 #if defined(SIGSTKFLT)
-        case SIGSTKFLT: signal_name = "SIGSTKFLT";  break;
+    case SIGSTKFLT:
+      signal_name = "SIGSTKFLT";
+      break;
 #endif
-        case SIGPIPE:   signal_name = "SIGPIPE";    break;
-        default:        signal_name = "???";        break;
-    }
+    case SIGPIPE:
+      signal_name = "SIGPIPE";
+      break;
+  }
 
-    char thread_name[MAX_TASK_NAME_LEN + 1]; // one more for termination
-    if (prctl(PR_GET_NAME, (unsigned long)thread_name, 0, 0, 0) != 0) {
-        strcpy(thread_name, "<name unknown>");
-    } else {
-        // short names are null terminated by prctl, but the man page
-        // implies that 16 byte names are not.
-        thread_name[MAX_TASK_NAME_LEN] = 0;
-    }
+  char thread_name[MAX_TASK_NAME_LEN + 1]; // one more for termination
+  if (prctl(PR_GET_NAME, (unsigned long)thread_name, 0, 0, 0) != 0) {
+    strcpy(thread_name, "<name unknown>");
+  } else {
+    // short names are null terminated by prctl, but the man page
+    // implies that 16 byte names are not.
+    thread_name[MAX_TASK_NAME_LEN] = 0;
+  }
 
-    // "info" will be NULL if the siginfo_t information was not available.
-    if (info != NULL) {
-        __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                          "Fatal signal %d (%s) at %p (code=%d), thread %d (%s)",
-                          signum, signal_name, info->si_addr, info->si_code,
-                          gettid(), thread_name);
-    } else {
-        __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                          "Fatal signal %d (%s), thread %d (%s)",
-                          signum, signal_name, gettid(), thread_name);
+  // "info" will be NULL if the siginfo_t information was not available.
+  // Many signals don't have an address or a code.
+  char code_desc[32]; // ", code -6"
+  char addr_desc[32]; // ", fault addr 0x1234"
+  addr_desc[0] = code_desc[0] = 0;
+  if (info != NULL) {
+    // For a rethrown signal, this si_code will be right and the one debuggerd shows will
+    // always be SI_TKILL.
+    snprintf(code_desc, sizeof(code_desc), ", code %d", info->si_code);
+    if (has_address) {
+      snprintf(addr_desc, sizeof(addr_desc), ", fault addr %p", info->si_addr);
     }
+  }
+  __libc_format_log(ANDROID_LOG_FATAL, "libc",
+                    "Fatal signal %d (%s)%s%s in tid %d (%s)",
+                    signum, signal_name, code_desc, addr_desc, gettid(), thread_name);
 }
 
 /*
  * Returns true if the handler for signal "signum" has SA_SIGINFO set.
  */
 static bool have_siginfo(int signum) {
-    struct sigaction old_action, new_action;
+  struct sigaction old_action, new_action;
 
-    memset(&new_action, 0, sizeof(new_action));
-    new_action.sa_handler = SIG_DFL;
-    new_action.sa_flags = SA_RESTART;
-    sigemptyset(&new_action.sa_mask);
+  memset(&new_action, 0, sizeof(new_action));
+  new_action.sa_handler = SIG_DFL;
+  new_action.sa_flags = SA_RESTART;
+  sigemptyset(&new_action.sa_mask);
 
-    if (sigaction(signum, &new_action, &old_action) < 0) {
-      __libc_format_log(ANDROID_LOG_WARN, "libc", "Failed testing for SA_SIGINFO: %s",
-                        strerror(errno));
-      return false;
-    }
-    bool result = (old_action.sa_flags & SA_SIGINFO) != 0;
+  if (sigaction(signum, &new_action, &old_action) < 0) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "Failed testing for SA_SIGINFO: %s",
+                      strerror(errno));
+    return false;
+  }
+  bool result = (old_action.sa_flags & SA_SIGINFO) != 0;
 
-    if (sigaction(signum, &old_action, NULL) == -1) {
-      __libc_format_log(ANDROID_LOG_WARN, "libc", "Restore failed in test for SA_SIGINFO: %s",
-                        strerror(errno));
-    }
-    return result;
+  if (sigaction(signum, &old_action, NULL) == -1) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "Restore failed in test for SA_SIGINFO: %s",
+                      strerror(errno));
+  }
+  return result;
 }
 
 /*
@@ -181,87 +204,87 @@ static bool have_siginfo(int signum) {
  * we crash.
  */
 void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
-    // It's possible somebody cleared the SA_SIGINFO flag, which would mean
-    // our "info" arg holds an undefined value.
-    if (!have_siginfo(signal_number)) {
-        info = NULL;
+  // It's possible somebody cleared the SA_SIGINFO flag, which would mean
+  // our "info" arg holds an undefined value.
+  if (!have_siginfo(signal_number)) {
+    info = NULL;
+  }
+
+  log_signal_summary(signal_number, info);
+
+  int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
+  if (s != -1) {
+    // debuggerd knows our pid from the credentials on the
+    // local socket but we need to tell it the tid of the crashing thread.
+    // debuggerd will be paranoid and verify that we sent a tid
+    // that's actually in our process.
+    debugger_msg_t msg;
+    msg.action = DEBUGGER_ACTION_CRASH;
+    msg.tid = gettid();
+    msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
+    int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
+    if (ret == sizeof(msg)) {
+      // If the write failed, there is no point trying to read a response.
+      char debuggerd_ack;
+      ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
+      int saved_errno = errno;
+      notify_gdb_of_libraries();
+      errno = saved_errno;
     }
 
-    log_signal_summary(signal_number, info);
-
-    int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
-    if (s != -1) {
-        // debuggerd knows our pid from the credentials on the
-        // local socket but we need to tell it the tid of the crashing thread.
-        // debuggerd will be paranoid and verify that we sent a tid
-        // that's actually in our process.
-        debugger_msg_t msg;
-        msg.action = DEBUGGER_ACTION_CRASH;
-        msg.tid = gettid();
-        msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
-        int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
-        if (ret == sizeof(msg)) {
-            // If the write failed, there is no point trying to read a response.
-            char debuggerd_ack;
-            ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
-            int saved_errno = errno;
-            notify_gdb_of_libraries();
-            errno = saved_errno;
-        }
-
-        if (ret < 0) {
-            // read or write failed -- broken connection?
-            __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
-                              strerror(errno));
-        }
-
-        close(s);
-    } else {
-        // socket failed; maybe process ran out of fds?
-        __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
-                          strerror(errno));
+    if (ret < 0) {
+      // read or write failed -- broken connection?
+      __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
+                        strerror(errno));
     }
 
-    // Remove our net so we fault for real when we return.
-    signal(signal_number, SIG_DFL);
+    close(s);
+  } else {
+    // socket failed; maybe process ran out of fds?
+    __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
+                      strerror(errno));
+  }
 
-    // These signals are not re-thrown when we resume.  This means that
-    // crashing due to (say) SIGPIPE doesn't work the way you'd expect it
-    // to.  We work around this by throwing them manually.  We don't want
-    // to do this for *all* signals because it'll screw up the address for
-    // faults like SIGSEGV.
-    switch (signal_number) {
-        case SIGABRT:
-        case SIGFPE:
-        case SIGPIPE:
+  // Remove our net so we fault for real when we return.
+  signal(signal_number, SIG_DFL);
+
+  // These signals are not re-thrown when we resume.  This means that
+  // crashing due to (say) SIGPIPE doesn't work the way you'd expect it
+  // to.  We work around this by throwing them manually.  We don't want
+  // to do this for *all* signals because it'll screw up the address for
+  // faults like SIGSEGV.
+  switch (signal_number) {
+    case SIGABRT:
+    case SIGFPE:
+    case SIGPIPE:
 #if defined(SIGSTKFLT)
-        case SIGSTKFLT:
+    case SIGSTKFLT:
 #endif
-            tgkill(getpid(), gettid(), signal_number);
-            break;
-        default:    // SIGILL, SIGBUS, SIGSEGV
-            break;
-    }
+      tgkill(getpid(), gettid(), signal_number);
+      break;
+    default:    // SIGILL, SIGBUS, SIGSEGV
+      break;
+  }
 }
 
 void debuggerd_init() {
-    struct sigaction action;
-    memset(&action, 0, sizeof(action));
-    sigemptyset(&action.sa_mask);
-    action.sa_sigaction = debuggerd_signal_handler;
-    action.sa_flags = SA_RESTART | SA_SIGINFO;
+  struct sigaction action;
+  memset(&action, 0, sizeof(action));
+  sigemptyset(&action.sa_mask);
+  action.sa_sigaction = debuggerd_signal_handler;
+  action.sa_flags = SA_RESTART | SA_SIGINFO;
 
-    // Use the alternate signal stack if available so we can catch stack overflows.
-    action.sa_flags |= SA_ONSTACK;
+  // Use the alternate signal stack if available so we can catch stack overflows.
+  action.sa_flags |= SA_ONSTACK;
 
-    sigaction(SIGABRT, &action, NULL);
-    sigaction(SIGBUS, &action, NULL);
-    sigaction(SIGFPE, &action, NULL);
-    sigaction(SIGILL, &action, NULL);
-    sigaction(SIGPIPE, &action, NULL);
-    sigaction(SIGSEGV, &action, NULL);
+  sigaction(SIGABRT, &action, NULL);
+  sigaction(SIGBUS, &action, NULL);
+  sigaction(SIGFPE, &action, NULL);
+  sigaction(SIGILL, &action, NULL);
+  sigaction(SIGPIPE, &action, NULL);
+  sigaction(SIGSEGV, &action, NULL);
 #if defined(SIGSTKFLT)
-    sigaction(SIGSTKFLT, &action, NULL);
+  sigaction(SIGSTKFLT, &action, NULL);
 #endif
-    sigaction(SIGTRAP, &action, NULL);
+  sigaction(SIGTRAP, &action, NULL);
 }
