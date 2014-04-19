@@ -52,6 +52,24 @@
       "revId": "6a45fe98727f9ee39386d39fa18eea69c706bc9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "458dcff1_694c7d87",
+        "filename": "libc/arch-arm/bionic/libgcc_compat.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-19T15:52:52Z",
+      "side": 1,
+      "message": "i\u0027m still a bit confused about how we got here in the first place. is popcount being an OBJECT rather than a FUNC an aarch64-only thing?\n\n  $ readelf -a -W /lib/x86_64-linux-gnu/libgcc_s.so.1  | grep OBJECT\n    28: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.0\n    32: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.3\n    33: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.4\n    44: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.4.2\n    48: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.4.4\n    73: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_4.2.0\n   100: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_4.3.0\n   113: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_4.0.0\n   128: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS GCC_3.3.1\n\nah, looks like it\u0027s just the \"tabs\" in aarch64:\n\n    13: 0000000000000000   256 OBJECT  GLOBAL DEFAULT    4 __clz_tab\n    13: 0000000000000000   256 OBJECT  GLOBAL DEFAULT    4 __popcount_tab\n\ncould we use readelf to distinguish FUNC from OBJECT and type each item appropriately?",
+      "parentUuid": "458dcff1_466886fb",
+      "revId": "6a45fe98727f9ee39386d39fa18eea69c706bc9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
