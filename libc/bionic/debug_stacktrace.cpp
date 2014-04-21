@@ -87,18 +87,6 @@ struct stack_crawl_state_t {
   }
 };
 
-#if defined(__arm__) && !defined(_Unwind_GetIP)
-// Older versions of Clang don't provide a definition of _Unwind_GetIP(), so
-// we include an appropriate version of our own. Once we have updated to
-// Clang 3.4, this code can be removed.
-static __inline__
-uintptr_t _Unwind_GetIP(struct _Unwind_Context *__context) {
-  uintptr_t __ip = 0;
-  _Unwind_VRS_Get(__context, _UVRSC_CORE, 15, _UVRSD_UINT32, &__ip);
-  return __ip & ~0x1;
-}
-#endif
-
 static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
   stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
 
