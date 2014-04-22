@@ -17,8 +17,14 @@
 #include <gtest/gtest.h>
 
 #include <dlfcn.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include <android/dlext.h>
 #include <sys/mman.h>
+#include <sys/wait.h>
 
 
 #define ASSERT_DL_NOTNULL(ptr) \
@@ -27,10 +33,14 @@
 #define ASSERT_DL_ZERO(i) \
     ASSERT_EQ(0, i) << "dlerror: " << dlerror()
 
+#define ASSERT_NOERROR(i) \
+    ASSERT_NE(-1, i) << "errno: " << strerror(errno)
+
 
 typedef int (*fn)(void);
 #define LIBNAME "libdlext_test.so"
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
+#define RELRO_FILE "/data/local/tmp/libdlext_test.relro"
 
 
 class DlExtTest : public ::testing::Test {
@@ -132,5 +142,51 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   ASSERT_DL_NOTNULL(f);
   EXPECT_TRUE(f < start || (reinterpret_cast<void*>(f) >=
                             reinterpret_cast<char*>(start) + PAGE_SIZE));
+  EXPECT_EQ(4, f());
+}
+
+TEST_F(DlExtTest, RelroShareChildWrites) {
+  void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+                     -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  android_dlextinfo extinfo;
+  extinfo.reserved_addr = start;
+  extinfo.reserved_size = LIBSIZE;
+
+  int relro_fd;
+  relro_fd = open(RELRO_FILE, O_CREAT | O_RDWR | O_TRUNC, 0644);
+  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_WRITE_RELRO;
+  ASSERT_NOERROR(relro_fd);
+  extinfo.relro_fd = relro_fd;
+
+  pid_t pid = fork();
+  if (pid == 0) {
+    // child process
+    void* handle = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+    if (handle == NULL) {
+      fprintf(stderr, "in child: %s\n", dlerror());
+      exit(1);
+    }
+    exit(0);
+  }
+
+  // continuing in parent
+  ASSERT_NOERROR(close(relro_fd));
+  ASSERT_NOERROR(pid);
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
+
+  relro_fd = open(RELRO_FILE, O_RDONLY);
+  ASSERT_NOERROR(relro_fd);
+  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_USE_RELRO;
+  extinfo.relro_fd = relro_fd;
+  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  ASSERT_NOERROR(close(relro_fd));
+
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
   EXPECT_EQ(4, f());
 }
