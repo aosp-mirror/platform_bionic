@@ -28,6 +28,10 @@ THE SOFTWARE.
 
 /* See http://code.google.com/p/y2038 for this code's origin */
 
+#if defined(__LP64__)
+#error This cruft should be LP32 only!
+#endif
+
 /*
 
 Programmers who have available to them 64-bit time values as a 'long
@@ -268,7 +272,7 @@ static int check_tm(struct TM *tm)
 
     assert(tm->tm_wday >= 0);
     assert(tm->tm_wday <= 6);
-   
+
     assert(tm->tm_yday >= 0);
     assert(tm->tm_yday <= length_of_year[IS_LEAP(tm->tm_year)]);
 

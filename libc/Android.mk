@@ -72,7 +72,6 @@ libc_common_src_files := \
     bionic/strntoimax.c \
     bionic/strntoumax.c \
     bionic/system_properties_compat.c \
-    bionic/time64.c \
     bionic/unlockpt.c \
     stdio/findfp.c \
     stdio/snprintf.c\
