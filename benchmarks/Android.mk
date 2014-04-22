@@ -44,6 +44,9 @@ benchmark_src_files = \
 #   adb shell bionic-benchmarks
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-benchmarks
+LOCAL_MODULE_STEM_32 := bionic-benchmarks32
+LOCAL_MODULE_STEM_64 := bionic-benchmarks64
+LOCAL_MULTILIB := both
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
 LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
