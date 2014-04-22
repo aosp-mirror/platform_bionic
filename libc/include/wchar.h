@@ -34,7 +34,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <time.h>
-#include <malloc.h>
+
+#include <machine/wchar_limits.h>
 
 __BEGIN_DECLS
 
@@ -57,11 +58,6 @@ typedef enum {
     WC_TYPE_XDIGIT,
     WC_TYPE_MAX
 } wctype_t;
-
-#ifndef WCHAR_MAX
-#define  WCHAR_MAX   INT_MAX
-#define  WCHAR_MIN   INT_MIN
-#endif
 
 #define  WEOF        ((wint_t)(-1))
 
