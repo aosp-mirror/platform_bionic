@@ -231,6 +231,24 @@
       "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25b9bbaa_6af237c1",
+        "filename": "libm/s_signbit.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-22T19:48:13Z",
+      "side": 1,
+      "message": "it\u0027s actually the same with __isfinite, just that glibc exposes __finite (without \u0027is\u0027) for the same purspose.",
+      "parentUuid": "e5aa4352_1fc89b2f",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
