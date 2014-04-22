@@ -653,6 +653,7 @@ LOCAL_SRC_FILES_32 := $(libc_upstream_openbsd_gdtoa_src_files_32)
 LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -fvisibility=hidden \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -include openbsd-compat.h \
