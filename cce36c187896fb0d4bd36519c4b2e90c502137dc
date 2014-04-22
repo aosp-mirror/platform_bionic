@@ -22,6 +22,30 @@
       "revId": "cce36c187896fb0d4bd36519c4b2e90c502137dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5aa4352_ba8b95c7",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T20:42:35Z",
+      "side": 1,
+      "message": "yeah, i think that\u0027s probably the way we should go. but i don\u0027t think it makes sense to do it all at once, especially because our headers are still full of stupid shit from the old days. i definitely don\u0027t want to just run a script over them and expose everything --- that would be the same stupidity that happened with the NDK\u0027s .txt files.",
+      "parentUuid": "e5aa4352_3a52459a",
+      "range": {
+        "startLine": 71,
+        "startChar": 48,
+        "endLine": 71,
+        "endChar": 67
+      },
+      "revId": "cce36c187896fb0d4bd36519c4b2e90c502137dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
