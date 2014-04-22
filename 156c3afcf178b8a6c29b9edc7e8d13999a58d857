@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5620b22_7693ce46",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T22:31:36Z",
+      "side": 1,
+      "message": "should we build both variants of the glibc tests?",
+      "revId": "156c3afcf178b8a6c29b9edc7e8d13999a58d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
