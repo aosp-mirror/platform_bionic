@@ -190,6 +190,18 @@ include $(LOCAL_PATH)/Android.build.mk
 endif
 
 # -----------------------------------------------------------------------------
+# Library used by dlext tests.
+# -----------------------------------------------------------------------------
+libdlext_test_src_files := \
+    dlext_test_library.cpp \
+
+module := libdlext_test
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Tests for the device using bionic's .so. Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 # -----------------------------------------------------------------------------
@@ -197,6 +209,7 @@ bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests_src_files := \
+    dlext_test.cpp \
     dlfcn_test.cpp \
 
 bionic-unit-tests_ldflags := \

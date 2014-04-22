@@ -24,12 +24,27 @@ __BEGIN_DECLS
 
 /* bitfield definitions for android_dlextinfo.flags */
 enum {
+  /* When set, the reserved_addr and reserved_size fields must point to an
+   * already-reserved region of address space which will be used to load the
+   * library if it fits. If the reserved region is not large enough, the load
+   * will fail.
+   */
+  ANDROID_DLEXT_RESERVED_ADDRESS      = 0x1,
+
+  /* As DLEXT_RESERVED_ADDRESS, but if the reserved region is not large enough,
+   * the linker will choose an available address instead.
+   */
+  ANDROID_DLEXT_RESERVED_ADDRESS_HINT = 0x2,
+
   /* Mask of valid bits */
-  ANDROID_DLEXT_VALID_FLAG_BITS = 0,
+  ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
+                                        ANDROID_DLEXT_RESERVED_ADDRESS_HINT,
 };
 
 typedef struct {
   int     flags;
+  void*   reserved_addr;
+  size_t  reserved_size;
 } android_dlextinfo;
 
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
