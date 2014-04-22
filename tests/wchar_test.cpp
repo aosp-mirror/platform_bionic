@@ -155,3 +155,7 @@ TEST(wchar, wcstombs_wcrtombs) {
   bytes[3] = 0;
   EXPECT_STREQ("hix", bytes);
 }
+
+TEST(wchar, limits) {
+  ASSERT_LT(WCHAR_MIN, WCHAR_MAX);
+}
