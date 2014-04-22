@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "45b4efaf_5d70575f",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in the #ifndef below?",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5a4cb87_ec639a94",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "oh, i see. that\u0027s hard to read. i think you should write this out longhand.\n\nactually, can\u0027t we just implement significandl correctly?",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5a7ff88_87ea08c0",
         "filename": "libm/freebsd-compat.h",
         "patchSetId": 4
@@ -36,6 +70,30 @@
       "writtenOn": "2014-04-22T18:11:45Z",
       "side": 1,
       "message": "This basically reverts: https://android-review.googlesource.com/#/c/73057/.\n\nI\u0027m not sure I understand what exactly was not supported by aarch64 toolchain. For me it works fine; what am I missing?",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 38
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5aa4352_5f70535f",
+        "filename": "libm/freebsd-compat.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "that we\u0027ve updated the toolchain several times since then. if it works now, that\u0027s all that matters.",
+      "parentUuid": "c5a7ff88_87ea08c0",
       "range": {
         "startLine": 20,
         "startChar": 0,
@@ -71,6 +129,30 @@
     },
     {
       "key": {
+        "uuid": "45b4efaf_3d1b2308",
+        "filename": "libm/s_cbrt.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "just put it in the file that gets -included. that\u0027s what that file\u0027s for.",
+      "parentUuid": "e53fa3e6_4046d037",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e53fa3e6_204bc43f",
         "filename": "libm/s_isfinite.c",
         "patchSetId": 4
@@ -88,6 +170,64 @@
         "endLine": 62,
         "endChar": 18
       },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5aa4352_ffb7bfc1",
+        "filename": "libm/s_isfinite.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "even if we did define IEEEl2bits for LP32, this would be wrong. that was my point. there\u0027s no way that IEEEl2bits code can work for LP32. (here, for example, the comparison against 32767 assumes that the exponent is 15 bits, which it isn\u0027t for LP32.)\n\nwe shouldn\u0027t copy the unchanged stuff out. just add a new file for isfinite. alternatively, glibc has all this stuff in libc and it\u0027s trivially implemented with the existing fpclassify.cpp stuff, so we could probably just delete s_isfinite.c instead and keep more of this stuff in the same place.",
+      "parentUuid": "e53fa3e6_204bc43f",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5a4cb87_8cfa2657",
+        "filename": "libm/s_isnormal.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "glibc actually has no symbols for this; they just inline fpclassify.\n\nwhatever we do, i don\u0027t think we should do this.",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5aa4352_1fc89b2f",
+        "filename": "libm/s_signbit.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-22T18:54:01Z",
+      "side": 1,
+      "message": "(somewhat bizarrely, glibc has these in both libc and libm!)",
       "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
