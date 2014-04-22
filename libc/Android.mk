@@ -306,7 +306,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/unistd/killpg.c \
 
 libc_upstream_openbsd_gdtoa_src_files := \
-    upstream-openbsd/gdtoa_support.cpp \
+    upstream-openbsd/android/gdtoa_support.cpp \
     upstream-openbsd/lib/libc/gdtoa/dmisc.c \
     upstream-openbsd/lib/libc/gdtoa/dtoa.c \
     upstream-openbsd/lib/libc/gdtoa/gdtoa.c \
@@ -549,7 +549,7 @@ LOCAL_CFLAGS := \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -include upstream-netbsd/netbsd-compat.h
+    -include upstream-netbsd/android/include/netbsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -573,9 +573,9 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_freebsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -I$(LOCAL_PATH)/upstream-freebsd \
+    -I$(LOCAL_PATH)/upstream-freebsd/android/include \
     -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
-    -include upstream-freebsd/freebsd-compat.h
+    -include freebsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -600,9 +600,9 @@ LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DPOSIX_MISTAKE \
-    -I$(LOCAL_PATH)/upstream-netbsd \
+    -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -include upstream-netbsd/netbsd-compat.h
+    -include netbsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -626,9 +626,9 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -I$(LOCAL_PATH)/upstream-openbsd \
+    -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
-    -include upstream-openbsd/openbsd-compat.h
+    -include openbsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -653,9 +653,9 @@ LOCAL_SRC_FILES_32 := $(libc_upstream_openbsd_gdtoa_src_files_32)
 LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -I$(LOCAL_PATH)/upstream-openbsd \
+    -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
-    -include upstream-openbsd/openbsd-compat.h \
+    -include openbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)

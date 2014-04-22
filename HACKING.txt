@@ -97,8 +97,14 @@ libc/
   upstream-openbsd/
     # These directories contain unmolested upstream source. Any time we can
     # just use a BSD implementation of something unmodified, we should.
-    # See files like netbsd-compat.h for various ways in which we manage to
-    # build BSD source in bionic.
+    # The structure under these directories mimics the upstream tree,
+    # but there's also...
+    android/
+      include/
+        # This is where we keep the hacks necessary to build BSD source
+        # in our world. The *-compat.h files are automatically included
+        # using -include, but we also provide equivalents for missing
+        # header/source files needed by the BSD implementation.
 
   bionic/
     # This is the biggest mess. The C++ files are files we own, typically
