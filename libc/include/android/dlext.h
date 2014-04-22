@@ -36,15 +36,31 @@ enum {
    */
   ANDROID_DLEXT_RESERVED_ADDRESS_HINT = 0x2,
 
+  /* When set, write the GNU RELRO section of the mapped library to relro_fd
+   * after relocation has been performed, to allow it to be reused by another
+   * process loading the same library at the same address. This implies
+   * ANDROID_DLEXT_USE_RELRO.
+   */
+  ANDROID_DLEXT_WRITE_RELRO           = 0x4,
+
+  /* When set, compare the GNU RELRO section of the mapped library to relro_fd
+   * after relocation has been performed, and replace any relocated pages that
+   * are identical with a version mapped from the file.
+   */
+  ANDROID_DLEXT_USE_RELRO             = 0x8,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
-                                        ANDROID_DLEXT_RESERVED_ADDRESS_HINT,
+                                        ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
+                                        ANDROID_DLEXT_WRITE_RELRO |
+                                        ANDROID_DLEXT_USE_RELRO,
 };
 
 typedef struct {
   int     flags;
   void*   reserved_addr;
   size_t  reserved_size;
+  int     relro_fd;
 } android_dlextinfo;
 
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
