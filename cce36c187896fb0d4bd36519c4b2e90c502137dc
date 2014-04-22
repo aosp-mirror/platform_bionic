@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5aa4352_3a52459a",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-22T20:34:19Z",
+      "side": 1,
+      "message": "Should all api functions be marked this way? It\u0027s a bit odd to only have these three marked this way, even though I\u0027m pretty sure I understand why only these three need it.",
+      "range": {
+        "startLine": 71,
+        "startChar": 48,
+        "endLine": 71,
+        "endChar": 67
+      },
+      "revId": "cce36c187896fb0d4bd36519c4b2e90c502137dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
