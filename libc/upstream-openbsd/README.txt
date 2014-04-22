@@ -1,4 +1,4 @@
-This directory contains upstream NetBSD source. You should not edit these
+This directory contains upstream OpenBSD source. You should not edit these
 files directly. Make fixes upstream and then pull down the new version of
 the file.
 
