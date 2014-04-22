@@ -132,11 +132,11 @@ ElfReader::~ElfReader() {
   }
 }
 
-bool ElfReader::Load() {
+bool ElfReader::Load(const android_dlextinfo* extinfo) {
   return ReadElfHeader() &&
          VerifyElfHeader() &&
          ReadProgramHeader() &&
-         ReserveAddressSpace() &&
+         ReserveAddressSpace(extinfo) &&
          LoadSegments() &&
          FindPhdr();
 }
@@ -291,7 +291,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 // Reserve a virtual address range big enough to hold all loadable
 // segments of a program header table. This is done by creating a
 // private anonymous mmap() with PROT_NONE.
-bool ElfReader::ReserveAddressSpace() {
+bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   ElfW(Addr) min_vaddr;
   load_size_ = phdr_table_get_load_size(phdr_table_, phdr_num_, &min_vaddr);
   if (load_size_ == 0) {
@@ -300,11 +300,33 @@ bool ElfReader::ReserveAddressSpace() {
   }
 
   uint8_t* addr = reinterpret_cast<uint8_t*>(min_vaddr);
-  int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-  void* start = mmap(addr, load_size_, PROT_NONE, mmap_flags, -1, 0);
-  if (start == MAP_FAILED) {
-    DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_);
-    return false;
+  void* start;
+  size_t reserved_size = 0;
+  bool reserved_hint = true;
+
+  if (extinfo != NULL) {
+    if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
+      reserved_size = extinfo->reserved_size;
+      reserved_hint = false;
+    } else if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_HINT) {
+      reserved_size = extinfo->reserved_size;
+    }
+  }
+
+  if (load_size_ > reserved_size) {
+    if (!reserved_hint) {
+      DL_ERR("reserved address space %zd smaller than %zd bytes needed for \"%s\"",
+             reserved_size - load_size_, load_size_, name_);
+      return false;
+    }
+    int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
+    start = mmap(addr, load_size_, PROT_NONE, mmap_flags, -1, 0);
+    if (start == MAP_FAILED) {
+      DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_);
+      return false;
+    }
+  } else {
+    start = extinfo->reserved_addr;
   }
 
   load_start_ = start;
