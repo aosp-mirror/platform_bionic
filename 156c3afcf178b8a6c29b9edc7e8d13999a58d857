@@ -16,6 +16,24 @@
       "revId": "156c3afcf178b8a6c29b9edc7e8d13999a58d857",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5620b22_b663a695",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-22T22:34:24Z",
+      "side": 1,
+      "message": "I don\u0027t think the host stuff allows you to build both a host 32 and a host 64.\n\nBy the way, do you know if this still works if the host is 64 bit?",
+      "parentUuid": "a5620b22_7693ce46",
+      "revId": "156c3afcf178b8a6c29b9edc7e8d13999a58d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
