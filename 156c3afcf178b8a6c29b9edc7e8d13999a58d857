@@ -34,6 +34,24 @@
       "revId": "156c3afcf178b8a6c29b9edc7e8d13999a58d857",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2557fb42_bd9b8794",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-22T23:00:47Z",
+      "side": 1,
+      "message": "looks like libc test isn\u0027t built for 2nd arch... but naming convention is still in place",
+      "parentUuid": "a5620b22_b663a695",
+      "revId": "156c3afcf178b8a6c29b9edc7e8d13999a58d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
