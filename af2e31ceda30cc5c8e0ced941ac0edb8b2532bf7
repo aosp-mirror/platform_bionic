@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5a7ff88_c7e000e4",
+        "filename": "libm/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-22T18:11:45Z",
+      "side": 1,
+      "message": "This triggered another compilation error for LP32 without IEEEl2bits.",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 51
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5a7ff88_87ea08c0",
+        "filename": "libm/freebsd-compat.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-22T18:11:45Z",
+      "side": 1,
+      "message": "This basically reverts: https://android-review.googlesource.com/#/c/73057/.\n\nI\u0027m not sure I understand what exactly was not supported by aarch64 toolchain. For me it works fine; what am I missing?",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 38
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e53fa3e6_4046d037",
+        "filename": "libm/s_cbrt.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-22T18:11:45Z",
+      "side": 1,
+      "message": "It\u0027s needed for LDBL_MANT_DIG.\nI will try to upstream the patch but until it gets in this allows us to move forward.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e53fa3e6_204bc43f",
+        "filename": "libm/s_isfinite.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-22T18:11:45Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this is the best way to do it since it diverges from the upstream but I can\u0027t really see another sensible way. (we no longer define IEEEl2bits for LP32)",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
