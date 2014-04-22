@@ -1946,7 +1946,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->flags = 0;
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  soinfo_link_image(si);
+  soinfo_link_image(si, NULL);
 #endif
 }
 
