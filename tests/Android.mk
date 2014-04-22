@@ -252,6 +252,17 @@ include $(LOCAL_PATH)/Android.build.mk
 # Tests to run on the host and linked against glibc. Run with:
 #   cd bionic/tests; mm bionic-unit-tests-glibc-run
 # -----------------------------------------------------------------------------
+
+ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+ifeq ($(TARGET_ARCH),x86)
+LINKER = linker
+NATIVE_TEST_SUFFIX=32
+else
+LINKER = linker64
+NATIVE_TEST_SUFFIX=64
+endif
+
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
 
@@ -272,18 +283,12 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
-		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc $(BIONIC_TEST_FLAGS)
+		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Run the unit tests built against x86 bionic on an x86 host.
 # -----------------------------------------------------------------------------
-ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-ifeq ($(TARGET_ARCH),x86)
-LINKER = linker
-else
-LINKER = linker64
-endif
+
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
@@ -299,7 +304,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests $(BIONIC_TEST_FLAGS)
+		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 endif
 endif
 
