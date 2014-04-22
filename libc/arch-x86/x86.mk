@@ -4,6 +4,7 @@
 libc_common_src_files_x86 := \
     bionic/legacy_32_bit_support.cpp \
     bionic/ndk_cruft.cpp \
+    bionic/time64.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files_x86 += \
