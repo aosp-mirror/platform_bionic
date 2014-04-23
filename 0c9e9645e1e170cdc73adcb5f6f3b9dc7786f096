@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "652bb3c3_8c83e740",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-23T17:37:08Z",
+      "side": 1,
+      "message": "This is explicitly discouraged in the google3 style guide. What happens if you add field whose type is 8 chars long ? You\u0027ll have to reformat every other member ....",
+      "parentUuid": "05f117a2_2ea74798",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45078f52_334cd286",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
