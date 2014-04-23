@@ -69,8 +69,6 @@ libc_common_src_files := \
     bionic/sigblock.c \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
-    bionic/strntoimax.c \
-    bionic/strntoumax.c \
     bionic/system_properties_compat.c \
     bionic/unlockpt.c \
     stdio/findfp.c \
