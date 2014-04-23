@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "652bb3c3_ccbb1ffd",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:47:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5ede3ca_cdb7a970",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45078f52_534b566c",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "652bb3c3_8cb12721",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:47:51Z",
+      "side": 1,
+      "message": "I got complains from the compiler that reserved is not initialized:\nerror: missing initializer for member \u0027pthread_mutex_t::reserved\u0027 [-Werror\u003dmissing-field-initializers]",
+      "parentUuid": "45078f52_534b566c",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05f117a2_ce5a03d6",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-04-23T17:16:20Z",
       "side": 1,
       "message": "i\u0027d use leading __ for fields like this, so they don\u0027t collide with anything in user code. (and if they do, it\u0027s their fault for wandering into our __-prefixed space.)\n\ni don\u0027t think the comment is useful; the name says it all.",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8526e7f6_ad9b4994",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:47:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05f117a2_ce5a03d6",
       "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -106,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "8526e7f6_6da2f1cd",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:47:51Z",
+      "side": 1,
+      "message": "Got it. Based on other files I thought that actually we prefer this sort of alignment.",
+      "parentUuid": "45078f52_d38d866d",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45078f52_334cd286",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -117,6 +189,24 @@
       "writtenOn": "2014-04-23T17:16:20Z",
       "side": 1,
       "message": "huh. we should probably fix this name while we\u0027re here.",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652bb3c3_2ca8fbad",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:47:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45078f52_334cd286",
       "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
