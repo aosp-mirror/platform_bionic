@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5620b22_27a762af",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-23T01:42:12Z",
+      "side": 1,
+      "message": "This should probably be PATH_MAX.",
+      "range": {
+        "startLine": 156,
+        "startChar": 18,
+        "endLine": 156,
+        "endChar": 21
+      },
+      "revId": "67b015622f9e486c4f6c32adea3577773745ea1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5620b22_278e421f",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-23T01:42:12Z",
+      "side": 1,
+      "message": "You should use ASSERT_TRUE(android !\u003d NULL) instead. The ASSERT_DL_NOTNULL macro prints out the dlerror which is not applicable in this case.",
+      "range": {
+        "startLine": 158,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 19
+      },
+      "revId": "67b015622f9e486c4f6c32adea3577773745ea1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
