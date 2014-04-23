@@ -254,14 +254,6 @@ include $(LOCAL_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-ifeq ($(TARGET_ARCH),x86)
-LINKER = linker
-NATIVE_TEST_SUFFIX=32
-else
-LINKER = linker64
-NATIVE_TEST_SUFFIX=64
-endif
 
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
@@ -274,6 +266,14 @@ module_tag := optional
 build_type := host
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
+
+ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
+LINKER = linker64
+NATIVE_TEST_SUFFIX=64
+else
+LINKER = linker
+NATIVE_TEST_SUFFIX=32
+endif
 
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
@@ -289,6 +289,7 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 # Run the unit tests built against x86 bionic on an x86 host.
 # -----------------------------------------------------------------------------
 
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 # gtest needs ANDROID_DATA/local/tmp for death test output.
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
@@ -306,6 +307,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
 		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 endif
-endif
+
+endif # linux-x86
 
 endif # !BUILD_TINY_ANDROID
