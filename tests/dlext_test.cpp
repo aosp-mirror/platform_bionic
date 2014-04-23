@@ -40,7 +40,6 @@
 typedef int (*fn)(void);
 #define LIBNAME "libdlext_test.so"
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
-#define RELRO_FILE "/data/local/tmp/libdlext_test.relro"
 
 
 class DlExtTest : public ::testing::Test {
@@ -154,7 +153,11 @@ TEST_F(DlExtTest, RelroShareChildWrites) {
   extinfo.reserved_size = LIBSIZE;
 
   int relro_fd;
-  relro_fd = open(RELRO_FILE, O_CREAT | O_RDWR | O_TRUNC, 0644);
+  char relro_file[PATH_MAX];
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != NULL);
+  snprintf(relro_file, sizeof(relro_file), "%s/local/tmp/libdlext_test.relro", android_data);
+  relro_fd = open(relro_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_WRITE_RELRO;
   ASSERT_NOERROR(relro_fd);
   extinfo.relro_fd = relro_fd;
@@ -178,7 +181,7 @@ TEST_F(DlExtTest, RelroShareChildWrites) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(0, WEXITSTATUS(status));
 
-  relro_fd = open(RELRO_FILE, O_RDONLY);
+  relro_fd = open(relro_file, O_RDONLY);
   ASSERT_NOERROR(relro_fd);
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_USE_RELRO;
   extinfo.relro_fd = relro_fd;
