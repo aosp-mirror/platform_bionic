@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "45078f52_d38d866d",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-23T17:39:14Z",
+      "side": 1,
+      "message": "exactly. i haven\u0027t been through and cleaned everything up, but whenever i change a struct i reformat it in canonical style. (that\u0027s why these two were correct but pthread_rwlock_t was wrong.)",
+      "parentUuid": "652bb3c3_8c83e740",
+      "revId": "0c9e9645e1e170cdc73adcb5f6f3b9dc7786f096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45078f52_334cd286",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
