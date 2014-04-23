@@ -26,17 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-extern char** environ;
-
-int clearenv(void)
-{
-    char **P = environ;
-
-    if (P != NULL) {
-        for (; *P; ++P)
-            *P = NULL;
+int clearenv() {
+  char** e = environ;
+  if (e != NULL) {
+    for (; *e; ++e) {
+      *e = NULL;
     }
-    return 0;
+  }
+  return 0;
 }

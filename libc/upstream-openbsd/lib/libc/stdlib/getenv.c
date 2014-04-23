@@ -1,7 +1,7 @@
-/*	$OpenBSD: putenv.c,v 1.5 2005/08/08 08:05:37 espie Exp $ */
-/*-
- * Copyright (c) 1988, 1993
- *     The Regents of the University of California.  All rights reserved.
+/*	$OpenBSD: getenv.c,v 1.10 2010/08/23 22:31:50 millert Exp $ */
+/*
+ * Copyright (c) 1987, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,20 +31,51 @@
 #include <stdlib.h>
 #include <string.h>
 
-int
-putenv(const char *str)
-{
-	char *p, *equal;
-	int rval;
+char *__findenv(const char *name, int len, int *offset);
 
-	if ((p = strdup(str)) == NULL)
-		return (-1);
-	if ((equal = strchr(p, '=')) == NULL) {
-		(void)free(p);
-		return (-1);
+/*
+ * __findenv --
+ *	Returns pointer to value associated with name, if any, else NULL.
+ *	Starts searching within the environmental array at offset.
+ *	Sets offset to be the offset of the name/value combination in the
+ *	environmental array, for use by putenv(3), setenv(3) and unsetenv(3).
+ *	Explicitly removes '=' in argument name.
+ *
+ *	This routine *should* be a static; don't use it.
+ */
+char *
+__findenv(const char *name, int len, int *offset)
+{
+	extern char **environ;
+	int i;
+	const char *np;
+	char **p, *cp;
+
+	if (name == NULL || environ == NULL)
+		return (NULL);
+	for (p = environ + *offset; (cp = *p) != NULL; ++p) {
+		for (np = name, i = len; i && *cp; i--)
+			if (*cp++ != *np++)
+				break;
+		if (i == 0 && *cp++ == '=') {
+			*offset = p - environ;
+			return (cp);
+		}
 	}
-	*equal = '\0';
-	rval = setenv(p, equal + 1, 1);
-	(void)free(p);
-	return (rval);
+	return (NULL);
+}
+
+/*
+ * getenv --
+ *	Returns ptr to value associated with name, if any, else NULL.
+ */
+char *
+getenv(const char *name)
+{
+	int offset = 0;
+	const char *np;
+
+	for (np = name; *np && *np != '='; ++np)
+		;
+	return (__findenv(name, (int)(np - name), &offset));
 }
