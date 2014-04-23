@@ -39,7 +39,6 @@ endif
 libc_common_src_files := \
     bionic/arc4random.c \
     bionic/bindresvport.c \
-    bionic/clearenv.c \
     bionic/daemon.c \
     bionic/err.c \
     bionic/ether_aton.c \
@@ -75,9 +74,6 @@ libc_common_src_files := \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdlib/atexit.c \
-    stdlib/getenv.c \
-    stdlib/putenv.c \
-    stdlib/setenv.c \
     unistd/syslog.c \
 
 # Fortify implementations of libc functions.
@@ -110,6 +106,7 @@ libc_bionic_src_files := \
     bionic/brk.cpp \
     bionic/chmod.cpp \
     bionic/chown.cpp \
+    bionic/clearenv.cpp \
     bionic/clock.cpp \
     bionic/clone.cpp \
     bionic/cmsg_nxthdr.cpp \
@@ -402,6 +399,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
+    upstream-openbsd/lib/libc/stdlib/getenv.c \
+    upstream-openbsd/lib/libc/stdlib/setenv.c \
     upstream-openbsd/lib/libc/stdlib/strtoimax.c \
     upstream-openbsd/lib/libc/stdlib/strtol.c \
     upstream-openbsd/lib/libc/stdlib/strtoll.c \

@@ -46,10 +46,10 @@ extern __noreturn void exit(int);
 extern __noreturn void _Exit(int);
 extern int atexit(void (*)(void));
 
-extern char *getenv(const char *);
-extern int putenv(const char *);
-extern int setenv(const char *, const char *, int);
-extern int unsetenv(const char *);
+extern char* getenv(const char*);
+extern int putenv(char*);
+extern int setenv(const char*, const char*, int);
+extern int unsetenv(const char*);
 extern int clearenv(void);
 
 extern char* mkdtemp(char*);
