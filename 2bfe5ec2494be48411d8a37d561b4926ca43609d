@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2557fb42_ebd899ff",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-23T01:12:27Z",
+      "side": 1,
+      "message": "Is this guaranteed to work? For example, could clearenv free all of the memory associated with the values in environ?",
+      "range": {
+        "startLine": 235,
+        "startChar": 17,
+        "endLine": 235,
+        "endChar": 23
+      },
+      "revId": "2bfe5ec2494be48411d8a37d561b4926ca43609d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
