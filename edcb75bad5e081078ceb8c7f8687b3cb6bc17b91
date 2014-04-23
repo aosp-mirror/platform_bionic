@@ -16,6 +16,24 @@
       "revId": "edcb75bad5e081078ceb8c7f8687b3cb6bc17b91",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652bb3c3_6ccb1386",
+        "filename": "libm/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T17:39:07Z",
+      "side": 1,
+      "message": "Thanks!\n\nBecause it uses IEEEl2bits for computations.\n\nWhat I did wrong is to misread that s_nextafter.c creates an alias for nextafter which it doesn\u0027t (my bad). We should implement this in fake_doubles. Somethine like below looks acceptable to me:\n\nfloat nexttowardf(float x, long double y) {\n  return nextafterf(x, (float) y);\n}\n\nI\u0027ll also add tests for nextoward*. Would have helped catching this during verification.",
+      "parentUuid": "05f117a2_2ece2740",
+      "revId": "edcb75bad5e081078ceb8c7f8687b3cb6bc17b91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
