@@ -132,3 +132,111 @@ TEST(unistd, _exit) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(99, WEXITSTATUS(status));
 }
+
+TEST(unistd, getenv_unsetenv) {
+  ASSERT_EQ(0, setenv("test-variable", "hello", 1));
+  ASSERT_STREQ("hello", getenv("test-variable"));
+  ASSERT_EQ(0, unsetenv("test-variable"));
+  ASSERT_TRUE(getenv("test-variable") == NULL);
+}
+
+TEST(unistd, unsetenv_EINVAL) {
+  EXPECT_EQ(-1, unsetenv(NULL));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, unsetenv(""));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, unsetenv("a=b"));
+  EXPECT_EQ(EINVAL, errno);
+}
+
+TEST(unistd, setenv_EINVAL) {
+  EXPECT_EQ(-1, setenv(NULL, "value", 0));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, setenv(NULL, "value", 1));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, setenv("", "value", 0));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, setenv("", "value", 1));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, setenv("a=b", "value", 0));
+  EXPECT_EQ(EINVAL, errno);
+  EXPECT_EQ(-1, setenv("a=b", "value", 1));
+  EXPECT_EQ(EINVAL, errno);
+}
+
+TEST(unistd, setenv) {
+  ASSERT_EQ(0, unsetenv("test-variable"));
+
+  char a[] = "a";
+  char b[] = "b";
+  char c[] = "c";
+
+  // New value.
+  EXPECT_EQ(0, setenv("test-variable", a, 0));
+  EXPECT_STREQ(a, getenv("test-variable"));
+
+  // Existing value, no overwrite.
+  EXPECT_EQ(0, setenv("test-variable", b, 0));
+  EXPECT_STREQ(a, getenv("test-variable"));
+
+  // Existing value, overwrite.
+  EXPECT_EQ(0, setenv("test-variable", c, 1));
+  EXPECT_STREQ(c, getenv("test-variable"));
+  // But the arrays backing the values are unchanged.
+  EXPECT_EQ('a', a[0]);
+  EXPECT_EQ('b', b[0]);
+  EXPECT_EQ('c', c[0]);
+
+  ASSERT_EQ(0, unsetenv("test-variable"));
+}
+
+TEST(unistd, putenv) {
+  ASSERT_EQ(0, unsetenv("a"));
+
+  char* s1 = strdup("a=b");
+  ASSERT_EQ(0, putenv(s1));
+
+  ASSERT_STREQ("b", getenv("a"));
+  s1[2] = 'c';
+  ASSERT_STREQ("c", getenv("a"));
+
+  char* s2 = strdup("a=b");
+  ASSERT_EQ(0, putenv(s2));
+
+  ASSERT_STREQ("b", getenv("a"));
+  ASSERT_EQ('c', s1[2]);
+
+  ASSERT_EQ(0, unsetenv("a"));
+  free(s1);
+  free(s2);
+}
+
+TEST(unistd, clearenv) {
+  extern char** environ;
+
+  // Guarantee that environ is not initially empty...
+  ASSERT_EQ(0, setenv("test-variable", "a", 1));
+
+  // Stash a copy.
+  std::vector<char*> old_environ;
+  for (size_t i = 0; environ[i] != NULL; ++i) {
+    old_environ.push_back(strdup(environ[i]));
+  }
+
+  ASSERT_EQ(0, clearenv());
+
+  EXPECT_TRUE(environ == NULL || environ[0] == NULL);
+  EXPECT_EQ(NULL, getenv("test-variable"));
+  EXPECT_EQ(0, setenv("test-variable", "post-clear", 1));
+  EXPECT_STREQ("post-clear", getenv("test-variable"));
+
+  // Put the old environment back.
+  for (size_t i = 0; i < old_environ.size(); ++i) {
+    EXPECT_EQ(0, putenv(old_environ[i]));
+  }
+
+  // Check it wasn't overwritten.
+  EXPECT_STREQ("a", getenv("test-variable"));
+
+  EXPECT_EQ(0, unsetenv("test-variable"));
+}
