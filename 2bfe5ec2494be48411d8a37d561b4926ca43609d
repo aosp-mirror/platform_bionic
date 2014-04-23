@@ -22,6 +22,30 @@
       "revId": "2bfe5ec2494be48411d8a37d561b4926ca43609d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5620b22_e7a56a28",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-23T02:09:14Z",
+      "side": 1,
+      "message": "interesting question. i think the only guarantees are:\n\n* anything ever returned by getenv(3) cannot be freed.\n* anything passed to putenv(3) cannot be freed by the system.\n\nthis test actually fails on glibc because after clearenv(3) on glibc, environ \u003d\u003d NULL. so i\u0027ll fix that, and i\u0027ll change this to take copies when i do.",
+      "parentUuid": "2557fb42_ebd899ff",
+      "range": {
+        "startLine": 235,
+        "startChar": 17,
+        "endLine": 235,
+        "endChar": 23
+      },
+      "revId": "2bfe5ec2494be48411d8a37d561b4926ca43609d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
