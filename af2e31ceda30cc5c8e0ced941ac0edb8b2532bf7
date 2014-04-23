@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "8526e7f6_0ad35be8",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T14:03:11Z",
+      "side": 1,
+      "message": "see comment below",
+      "parentUuid": "45b4efaf_5d70575f",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5a4cb87_ec639a94",
         "filename": "libm/fake_long_double.c",
         "patchSetId": 4
@@ -53,6 +71,24 @@
       "writtenOn": "2014-04-22T18:54:01Z",
       "side": 1,
       "message": "oh, i see. that\u0027s hard to read. i think you should write this out longhand.\n\nactually, can\u0027t we just implement significandl correctly?",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652bb3c3_29890d17",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T14:03:11Z",
+      "side": 1,
+      "message": "Actually we can. I\u0027m not sure why this is not done in the upstream. Presumably because they lack scalbl. However they do offer scalbnl which does the same thing when the exponent is an int. (scalb* are obsolete anyway).",
+      "parentUuid": "a5a4cb87_ec639a94",
       "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -153,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "652bb3c3_098ec91e",
+        "filename": "libm/s_cbrt.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T14:03:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45b4efaf_3d1b2308",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e53fa3e6_204bc43f",
         "filename": "libm/s_isfinite.c",
         "patchSetId": 4
@@ -200,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "a5f76b98_cbc15510",
+        "filename": "libm/s_isfinite.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T14:03:11Z",
+      "side": 1,
+      "message": "ya, I\u0027m aware that it wouldn\u0027t have work. I was just thinking about a workaround for compilation like we did with broken_isfinitel (which would have been pretty bad anyway).\n\nI moved this to libc.",
+      "parentUuid": "e5aa4352_ffb7bfc1",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 18
+      },
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5a4cb87_8cfa2657",
         "filename": "libm/s_isnormal.c",
         "patchSetId": 4
@@ -211,6 +295,24 @@
       "writtenOn": "2014-04-22T18:54:01Z",
       "side": 1,
       "message": "glibc actually has no symbols for this; they just inline fpclassify.\n\nwhatever we do, i don\u0027t think we should do this.",
+      "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8526e7f6_aa3def4e",
+        "filename": "libm/s_isnormal.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-23T14:03:11Z",
+      "side": 1,
+      "message": "I moved this to libc and kept the symbol. I find it odd that only this has no symbol in glibc and the others do (e.g. isnan).",
+      "parentUuid": "a5a4cb87_8cfa2657",
       "revId": "af2e31ceda30cc5c8e0ced941ac0edb8b2532bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
