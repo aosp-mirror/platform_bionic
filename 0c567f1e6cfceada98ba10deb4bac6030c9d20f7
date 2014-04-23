@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85fd0775_41bd3c58",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-23T02:23:53Z",
+      "side": 1,
+      "message": "these ones really are x86/x86-64-only...",
+      "revId": "0c567f1e6cfceada98ba10deb4bac6030c9d20f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
