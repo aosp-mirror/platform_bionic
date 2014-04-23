@@ -34,6 +34,24 @@
       "revId": "edcb75bad5e081078ceb8c7f8687b3cb6bc17b91",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45078f52_53599634",
+        "filename": "libm/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-23T17:42:44Z",
+      "side": 1,
+      "message": "yeah, that sounds right. (that\u0027s a stupid naming convention to have chosen, even if they don\u0027t have overloading!)",
+      "parentUuid": "652bb3c3_6ccb1386",
+      "revId": "edcb75bad5e081078ceb8c7f8687b3cb6bc17b91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
