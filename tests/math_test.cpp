@@ -1015,9 +1015,26 @@ TEST(math, nextafterl) {
   ASSERT_DOUBLE_EQ(0.0L, nextafterl(0.0L, -1.0L));
 }
 
-// TODO: nexttoward
-// TODO: nexttowardf
-// TODO: nexttowardl
+TEST(math, nexttoward) {
+  ASSERT_DOUBLE_EQ(0.0, nexttoward(0.0, 0.0L));
+  ASSERT_DOUBLE_EQ(4.9406564584124654e-324, nexttoward(0.0, 1.0L));
+  ASSERT_DOUBLE_EQ(0.0, nexttoward(0.0, -1.0L));
+}
+
+TEST(math, nexttowardf) {
+  ASSERT_FLOAT_EQ(0.0f, nexttowardf(0.0f, 0.0L));
+  ASSERT_FLOAT_EQ(1.4012985e-45f, nexttowardf(0.0f, 1.0L));
+  ASSERT_FLOAT_EQ(0.0f, nexttowardf(0.0f, -1.0L));
+}
+
+TEST(math, nexttowardl) {
+  ASSERT_DOUBLE_EQ(0.0L, nexttowardl(0.0L, 0.0L));
+  // Use a runtime value to accomodate the case when
+  // sizeof(double) == sizeof(long double)
+  long double smallest_positive = ldexpl(1.0L, LDBL_MIN_EXP - LDBL_MANT_DIG);
+  ASSERT_DOUBLE_EQ(smallest_positive, nexttowardl(0.0L, 1.0L));
+  ASSERT_DOUBLE_EQ(0.0L, nexttowardl(0.0L, -1.0L));
+}
 
 TEST(math, copysign) {
   ASSERT_DOUBLE_EQ(0.0, copysign(0.0, 1.0));
