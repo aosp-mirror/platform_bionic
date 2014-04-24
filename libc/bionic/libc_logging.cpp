@@ -614,7 +614,7 @@ void __fortify_chk_fail(const char* msg, uint32_t tag) {
   __libc_fatal("FORTIFY_SOURCE: %s. Calling abort().", msg);
 }
 
-static void __libc_fatal(const char* format, va_list args) {
+static void __libc_fatal(const char* tag, const char* format, va_list args) {
   char msg[1024];
   BufferOutputStream os(msg, sizeof(msg));
   out_vformat(os, format, args);
@@ -622,7 +622,7 @@ static void __libc_fatal(const char* format, va_list args) {
   // TODO: log to stderr for the benefit of "adb shell" users.
 
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
-  __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
+  __libc_write_log(ANDROID_LOG_FATAL, tag, msg);
 
   __libc_set_abort_message(msg);
 }
@@ -630,14 +630,23 @@ static void __libc_fatal(const char* format, va_list args) {
 void __libc_fatal_no_abort(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  __libc_fatal(format, args);
+  __libc_fatal("libc", format, args);
   va_end(args);
 }
 
 void __libc_fatal(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  __libc_fatal(format, args);
+  __libc_fatal("libc", format, args);
+  va_end(args);
+  abort();
+}
+
+// This is used by liblog to implement LOG_ALWAYS_FATAL and LOG_ALWAYS_FATAL_IF.
+void __android_fatal(const char* tag, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  __libc_fatal(tag, format, args);
   va_end(args);
   abort();
 }
