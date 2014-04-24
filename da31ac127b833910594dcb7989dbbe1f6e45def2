@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05c83774_b92ffb79",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-24T16:39:03Z",
+      "side": 1,
+      "message": "maybe \"unused\" might be slightly better phrasing than \"not used\"  ?",
+      "revId": "da31ac127b833910594dcb7989dbbe1f6e45def2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
