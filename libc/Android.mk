@@ -445,7 +445,6 @@ libc_common_cppflags := \
 # ========================================================
 libc_common_c_includes := \
     $(LOCAL_PATH)/stdlib  \
-    $(LOCAL_PATH)/string  \
     $(LOCAL_PATH)/stdio   \
     external/safe-iop/include
 
