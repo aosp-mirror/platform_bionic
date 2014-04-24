@@ -1,5 +1,5 @@
-/*-
- * Copyright (c) 2002, 2003 David Schultz <das@FreeBSD.ORG>
+/*
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,45 +23,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD$
  */
 
-#if defined(__VFP_FP__)
-#define	_IEEE_WORD_ORDER	_BYTE_ORDER
-#else
-#define	_IEEE_WORD_ORDER	_BIG_ENDIAN
-#endif
+#include <math.h>
 
-union IEEEl2bits {
-	long double	e;
-	struct {
-#if _BYTE_ORDER == _LITTLE_ENDIAN
-#if _IEEE_WORD_ORDER == _LITTLE_ENDIAN
-		unsigned int	manl	:32;
-#endif
-		unsigned int	manh	:20;
-		unsigned int	exp	:11;
-		unsigned int	sign	:1;
-#if _IEEE_WORD_ORDER == _BIG_ENDIAN
-		unsigned int	manl	:32;
-#endif
-#else	/* _BYTE_ORDER == _LITTLE_ENDIAN */
-		unsigned int		sign	:1;
-		unsigned int		exp	:11;
-		unsigned int		manh	:20;
-		unsigned int		manl	:32;
-#endif
-	} bits;
-};
-
-#define	LDBL_NBIT	0
-#define	LDBL_IMPLICIT_NBIT
-#define	mask_nbit_l(u)	((void)0)
-
-#define	LDBL_MANH_SIZE	20
-#define	LDBL_MANL_SIZE	32
-
-#define	LDBL_TO_ARRAY32(u, a) do {			\
-	(a)[0] = (uint32_t)(u).bits.manl;		\
-	(a)[1] = (uint32_t)(u).bits.manh;		\
-} while(0)
+long double significandl(long double x) {
+  return scalbnl(x, -ilogbl(x));
+}

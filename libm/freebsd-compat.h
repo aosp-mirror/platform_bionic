@@ -17,8 +17,11 @@
 #ifndef _BIONIC_LIBM_FREEBSD_COMPAT_H_included
 #define _BIONIC_LIBM_FREEBSD_COMPAT_H_included
 
-#define __weak_reference(sym,alias) \
-    /* We don't use __weak_reference; see "fake_long_double.c". */
+#include <float.h>
+
+#define __weak_reference(sym,alias)     \
+    __asm__(".weak " #alias);           \
+    __asm__(".equ "  #alias ", " #sym)
 
 #define __strong_reference(sym,aliassym) \
     extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
