@@ -668,10 +668,12 @@ TEST(DEATHTEST, recv_fortified) {
 }
 
 TEST(DEATHTEST, FD_ISSET_fortified) {
+#ifdef __BIONIC__ // glibc catches this at compile-time.
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   fd_set set;
   memset(&set, 0, sizeof(set));
   ASSERT_EXIT(FD_ISSET(-1, &set), testing::KilledBySignal(SIGABRT), "");
+#endif
 }
 
 TEST(DEATHTEST, FD_ISSET_2_fortified) {
@@ -681,11 +683,14 @@ TEST(DEATHTEST, FD_ISSET_2_fortified) {
   ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
 }
 
+// gtest's ASSERT_EXIT needs a valid expression, but glibc has a do-while macro.
+static void FD_ZERO_function(fd_set* s) { FD_ZERO(s); }
+
 TEST(DEATHTEST, FD_ZERO_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   fd_set* set = (fd_set*) buf;
-  ASSERT_EXIT(FD_ZERO(set), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(FD_ZERO_function(set), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST(DEATHTEST, read_fortified) {
