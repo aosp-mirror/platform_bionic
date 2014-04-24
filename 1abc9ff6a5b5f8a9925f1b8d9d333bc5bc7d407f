@@ -16,6 +16,24 @@
       "revId": "1abc9ff6a5b5f8a9925f1b8d9d333bc5bc7d407f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25b37bfb_17a2749e",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-24T10:12:48Z",
+      "side": 1,
+      "message": "The intention was to have a one liner. The comment ruined it :) but I still think this is good enough.",
+      "parentUuid": "056cb713_bc0f09bf",
+      "revId": "1abc9ff6a5b5f8a9925f1b8d9d333bc5bc7d407f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
