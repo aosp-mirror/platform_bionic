@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "250d3bbc_ca18634e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-25T23:13:56Z",
+      "side": 1,
+      "message": "This was implemented before I noticed that there is NOLOAD flag which was not supported at the time. Will fix.",
+      "parentUuid": "6538135d_a13f7ea6",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6538135d_e1eca6e4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "c5fb7fcc_04a67633",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-25T23:13:56Z",
+      "side": 1,
+      "message": "file_stat can be null if function is called for [vsdo] or for executable (root).\n\nrealname is not absolute. it is in most cases relative and not normalized. basically it is name that opens().",
+      "parentUuid": "6538135d_e1eca6e4",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "250d3bbc_270a9aae",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "return early here instead.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_847026ee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-25T23:13:56Z",
+      "side": 1,
+      "message": "ok.",
+      "parentUuid": "250d3bbc_270a9aae",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -132,6 +186,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "why is this just a warning?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_8a6eeb7e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-25T23:13:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure... It isn\u0027t fatal at this point, but it may become fatal if someone tries to fopen(realname)",
+      "parentUuid": "c5fb7fcc_447a2e46",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -217,6 +289,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "oh, do we have to use i386 rather than x86? why?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_c7dbc087",
+        "filename": "linker/linker_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-25T23:13:56Z",
+      "side": 1,
+      "message": "I tried to find if standard names for platforms... It looks like everyone uses their own thing. I will take another look.",
+      "parentUuid": "6538135d_41f0f270",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
