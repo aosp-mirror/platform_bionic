@@ -1,0 +1,276 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "250d3bbc_e7f4826d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "we don\u0027t use anonymous namespaces. use \u0027static\u0027 like the rest of the code.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6538135d_a13f7ea6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "why can\u0027t you just use the regular dlopen flags?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6538135d_e1eca6e4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "what does \u0027realname\u0027 mean? should this be \u0027absolute_path\u0027?\n\nwhen can \u0027file_stat\u0027 be NULL?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_270a9aae",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "return early here instead.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_673e524b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "don\u0027t DL_ERR strings all start lower case?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_a4920241",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "no trailing punctuation; these get concatenated and punctuation breaks that.\n\n\"\u0027%s\u0027 not loaded\"",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_647d2a3c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "why don\u0027t we put the fd in the ElfReader straight away?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_447a2e46",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "why is this just a warning?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_e4a6ba99",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1845,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "i don\u0027t like that we\u0027re setting this everywhere. why isn\u0027t this in soinfo_alloc or the soinfo constructor?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_04d9d601",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2084,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "don\u0027t move stuff about in a large functional change. i\u0027ve no idea what if anything has changed here. if you want to move stuff, do that in a separate change.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6538135d_e1f4a66d",
+        "filename": "linker/linker_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "don\u0027t duplicate this.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_240a92ae",
+        "filename": "linker/linker_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "can we -D this in the makefile, where the names should already be the names we want to use?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6538135d_41f0f270",
+        "filename": "linker/linker_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "oh, do we have to use i386 rather than x86? why?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_a44c42fd",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "two space indents. (in the other files too.)",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_0754362f",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "i doubt this passes on glibc...",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_24617264",
+        "filename": "tests/dlopen_testlib_referenced.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-25T22:50:00Z",
+      "side": 1,
+      "message": "every file should have a copyright header.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
