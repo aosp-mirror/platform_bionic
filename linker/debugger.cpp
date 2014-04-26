@@ -64,6 +64,9 @@ struct debugger_msg_t {
 
   // version 2 added:
   uintptr_t abort_msg_address;
+
+  // version 3 added:
+  int32_t original_si_code;
 };
 
 // see man(2) prctl, specifically the section about PR_GET_NAME
@@ -199,11 +202,44 @@ static bool have_siginfo(int signum) {
   return result;
 }
 
+static void send_debuggerd_packet(siginfo_t* info) {
+  int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
+  if (s == -1) {
+    __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
+                      strerror(errno));
+    return;
+  }
+
+  // debuggerd knows our pid from the credentials on the
+  // local socket but we need to tell it the tid of the crashing thread.
+  // debuggerd will be paranoid and verify that we sent a tid
+  // that's actually in our process.
+  debugger_msg_t msg;
+  msg.action = DEBUGGER_ACTION_CRASH;
+  msg.tid = gettid();
+  msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
+  msg.original_si_code = (info != NULL) ? info->si_code : 0;
+  int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
+  if (ret == sizeof(msg)) {
+    char debuggerd_ack;
+    ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
+    int saved_errno = errno;
+    notify_gdb_of_libraries();
+    errno = saved_errno;
+  } else {
+    // read or write failed -- broken connection?
+    __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
+                      strerror(errno));
+  }
+
+  close(s);
+}
+
 /*
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
-void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
+static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
   // It's possible somebody cleared the SA_SIGINFO flag, which would mean
   // our "info" arg holds an undefined value.
   if (!have_siginfo(signal_number)) {
@@ -212,38 +248,7 @@ void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
 
   log_signal_summary(signal_number, info);
 
-  int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
-  if (s != -1) {
-    // debuggerd knows our pid from the credentials on the
-    // local socket but we need to tell it the tid of the crashing thread.
-    // debuggerd will be paranoid and verify that we sent a tid
-    // that's actually in our process.
-    debugger_msg_t msg;
-    msg.action = DEBUGGER_ACTION_CRASH;
-    msg.tid = gettid();
-    msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
-    int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
-    if (ret == sizeof(msg)) {
-      // If the write failed, there is no point trying to read a response.
-      char debuggerd_ack;
-      ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
-      int saved_errno = errno;
-      notify_gdb_of_libraries();
-      errno = saved_errno;
-    }
-
-    if (ret < 0) {
-      // read or write failed -- broken connection?
-      __libc_format_log(ANDROID_LOG_FATAL, "libc", "Failed while talking to debuggerd: %s",
-                        strerror(errno));
-    }
-
-    close(s);
-  } else {
-    // socket failed; maybe process ran out of fds?
-    __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
-                      strerror(errno));
-  }
+  send_debuggerd_packet(info);
 
   // Remove our net so we fault for real when we return.
   signal(signal_number, SIG_DFL);
@@ -251,8 +256,9 @@ void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
   // These signals are not re-thrown when we resume.  This means that
   // crashing due to (say) SIGPIPE doesn't work the way you'd expect it
   // to.  We work around this by throwing them manually.  We don't want
-  // to do this for *all* signals because it'll screw up the address for
-  // faults like SIGSEGV.
+  // to do this for *all* signals because it'll screw up the si_addr for
+  // faults like SIGSEGV. It does screw up the si_code, which is why we
+  // passed that to debuggerd above.
   switch (signal_number) {
     case SIGABRT:
     case SIGFPE:
@@ -267,7 +273,7 @@ void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) {
   }
 }
 
-void debuggerd_init() {
+__LIBC_HIDDEN__ void debuggerd_init() {
   struct sigaction action;
   memset(&action, 0, sizeof(action));
   sigemptyset(&action.sa_mask);
