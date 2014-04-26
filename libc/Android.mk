@@ -171,7 +171,6 @@ libc_bionic_src_files := \
     bionic/recv.cpp \
     bionic/rename.cpp \
     bionic/rmdir.cpp \
-    bionic/sbrk.cpp \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
     bionic/sched_getcpu.cpp \
