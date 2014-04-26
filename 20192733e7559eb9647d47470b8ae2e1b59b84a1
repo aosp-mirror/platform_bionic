@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a5268b4d_130c8c57",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-26T04:48:47Z",
+      "side": 1,
+      "message": "d\u0027oh. hard to switch to C.",
+      "parentUuid": "6538135d_cafbb799",
+      "range": {
+        "startLine": 2119,
+        "startChar": 8,
+        "endLine": 2119,
+        "endChar": 12
+      },
+      "revId": "20192733e7559eb9647d47470b8ae2e1b59b84a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6538135d_aac43344",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-04-26T02:16:12Z",
       "side": 1,
       "message": "I know gotos are bad, but this function has so many outs that a common cleanup might be better. Either that or perhaps a refactor that allocates path then calls another function with path to do this work, so path can always be freed right after the call.",
+      "range": {
+        "startLine": 2124,
+        "startChar": 4,
+        "endLine": 2124,
+        "endChar": 15
+      },
+      "revId": "20192733e7559eb9647d47470b8ae2e1b59b84a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4516afdd_983f55a7",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-26T04:48:47Z",
+      "side": 1,
+      "message": "i\u0027ve been meaning to pull our code out of this file. if i do that, we can switch to C++ and program like grownups. i\u0027ve fixed the two unchecked malloc calls for now (in case this is blocking the Chrome folks) and i\u0027ll add the deep clean to my todo list. (tzcode is probably another easy corner to switch to hidden visibility too.)",
+      "parentUuid": "6538135d_aac43344",
       "range": {
         "startLine": 2124,
         "startChar": 4,
