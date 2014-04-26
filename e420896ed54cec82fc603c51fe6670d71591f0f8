@@ -158,6 +158,24 @@
     },
     {
       "key": {
+        "uuid": "c5fb7fcc_ca4747d8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_a4920241",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5fb7fcc_647d2a3c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -169,6 +187,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "why don\u0027t we put the fd in the ElfReader straight away?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_d047f2d7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_647d2a3c",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -210,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "6538135d_8a84cf49",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_447a2e46",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5fb7fcc_e4a6ba99",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -221,6 +275,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "i don\u0027t like that we\u0027re setting this everywhere. why isn\u0027t this in soinfo_alloc or the soinfo constructor?",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_50542282",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1845,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_e4a6ba99",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -244,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "250d3bbc_3061ae64",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2084,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_04d9d601",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6538135d_e1f4a66d",
         "filename": "linker/linker_util.cpp",
         "patchSetId": 1
@@ -255,6 +345,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "don\u0027t duplicate this.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5fb7fcc_0a355f60",
+        "filename": "linker/linker_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "hmm where is the first one?",
+      "parentUuid": "6538135d_e1f4a66d",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -330,6 +438,24 @@
     },
     {
       "key": {
+        "uuid": "250d3bbc_503b0259",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_a44c42fd",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "250d3bbc_0754362f",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
@@ -358,6 +484,24 @@
       "writtenOn": "2014-04-25T22:50:00Z",
       "side": 1,
       "message": "every file should have a copyright header.",
+      "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "250d3bbc_10358a60",
+        "filename": "tests/dlopen_testlib_referenced.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-26T01:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5fb7fcc_24617264",
       "revId": "e420896ed54cec82fc603c51fe6670d71591f0f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
