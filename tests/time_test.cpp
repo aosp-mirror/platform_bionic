@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <features.h>
 #include <gtest/gtest.h>
+#include <pthread.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -63,6 +64,37 @@ TEST(time, gmtime) {
   ASSERT_EQ(1, broken_down->tm_mday);
   ASSERT_EQ(0, broken_down->tm_mon);
   ASSERT_EQ(1970, broken_down->tm_year + 1900);
+}
+
+static void* gmtime_no_stack_overflow_14313703_fn(void*) {
+  const char* original_tz = getenv("TZ");
+  // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
+  setenv("TZ", "gmtime_stack_overflow_14313703", 1);
+  tzset();
+  if (original_tz != NULL) {
+    setenv("TZ", original_tz, 1);
+  }
+  tzset();
+  return NULL;
+}
+
+TEST(time, gmtime_no_stack_overflow_14313703) {
+  // Is it safe to call tzload on a thread with a small stack?
+  // http://b/14313703
+  // https://code.google.com/p/android/issues/detail?id=61130
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+#if defined(__BIONIC__)
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, PTHREAD_STACK_MIN));
+#else
+  // PTHREAD_STACK_MIN not currently in the host GCC sysroot.
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 4 * getpagesize()));
+#endif
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attributes, gmtime_no_stack_overflow_14313703_fn, NULL));
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
 }
 
 TEST(time, mktime_10310929) {
