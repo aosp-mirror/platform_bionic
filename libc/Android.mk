@@ -511,12 +511,19 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(call all-c-files-under,tzcode)
-LOCAL_CFLAGS := \
-    $(libc_common_cflags) \
-    -DSTD_INSPIRED=1 \
-    -DTZDIR=\"/system/usr/share/zoneinfo\" \
-    -DTM_GMTOFF=tm_gmtoff \
-    -DUSG_COMPAT=1
+
+LOCAL_CFLAGS := $(libc_common_cflags)
+# Don't use ridiculous amounts of stack.
+LOCAL_CFLAGS += -DALL_STATE
+# Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
+LOCAL_CFLAGS += -DSTD_INSPIRED
+# The name of the tm_gmtoff field in our struct tm.
+LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
+# Where we store our tzdata.
+LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
+# Include timezone and daylight globals.
+LOCAL_CFLAGS += -DUSG_COMPAT=1
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
