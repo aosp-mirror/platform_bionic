@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e55a43dc_08d9c72a",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-28T18:04:06Z",
+      "side": 1,
+      "message": "Small nit, this should be in alpha order so come before the str named files.",
+      "range": {
+        "startLine": 34,
+        "startChar": 37,
+        "endLine": 34,
+        "endChar": 43
+      },
+      "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e55a43dc_a8c9935d",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-28T18:04:06Z",
+      "side": 1,
+      "message": "I think it\u0027s time to follow the pattern that the arm code uses for the support of different cpu architectures and create a new directory for each different architecture supported.\n\nIt might not be necessary to have a TARGET_CPU_VARIANT as for arm, but it should be some version of that.\n\nIs atom the only platform that is going to use these ssse3 optimized versions?",
+      "range": {
+        "startLine": 35,
+        "startChar": 7,
+        "endLine": 35,
+        "endChar": 38
+      },
+      "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
