@@ -296,12 +296,6 @@ unsigned long int wcstoul(const wchar_t* nptr, wchar_t** endptr, int base) {
   return strtoul(reinterpret_cast<const char*>(nptr), reinterpret_cast<char**>(endptr), base);
 }
 
-wchar_t* wcswcs(const wchar_t* ws1, const wchar_t* ws2) {
-  const char* s1 = reinterpret_cast<const char*>(ws1);
-  const char* s2 = reinterpret_cast<const char*>(ws2);
-  return reinterpret_cast<wchar_t*>(strstr(s1, s2));
-}
-
 int wctob(wint_t c) {
   return c;
 }

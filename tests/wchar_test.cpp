@@ -159,3 +159,18 @@ TEST(wchar, wcstombs_wcrtombs) {
 TEST(wchar, limits) {
   ASSERT_LT(WCHAR_MIN, WCHAR_MAX);
 }
+
+TEST(wchar, wcsstr_wcswcs) {
+  const wchar_t* haystack = L"matches hello world, not the second hello world";
+  const wchar_t* empty_needle = L"";
+  const wchar_t* good_needle = L"ll";
+  const wchar_t* bad_needle = L"wort";
+
+  ASSERT_EQ(haystack, wcsstr(haystack, empty_needle));
+  ASSERT_EQ(&haystack[10], wcsstr(haystack, good_needle));
+  ASSERT_EQ(NULL, wcsstr(haystack, bad_needle));
+
+  ASSERT_EQ(haystack, wcswcs(haystack, empty_needle));
+  ASSERT_EQ(&haystack[10], wcswcs(haystack, good_needle));
+  ASSERT_EQ(NULL, wcswcs(haystack, bad_needle));
+}
