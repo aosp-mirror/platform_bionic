@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8508a7da_4003e272",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-28T23:43:46Z",
+      "side": 1,
+      "message": "I don\u0027t think it matters too much, but it might be nice to have a test case where the needle appears twice in the haystack. This guarantees it finds the first occurrence, not the second. But given the implementation, it\u0027s probably not terribly interesting.",
+      "range": {
+        "startLine": 163,
+        "startChar": 12,
+        "endLine": 163,
+        "endChar": 25
+      },
+      "revId": "28321e2d237497a2acf37494759d789d7beaa795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
