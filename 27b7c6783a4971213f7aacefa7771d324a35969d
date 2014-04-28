@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0575973d_f150e21c",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-28T16:15:14Z",
+      "side": 1,
+      "message": "Is this just for x86_64 kernel builds or all 64 bit kernel builds ? Use __LP64__ if it\u0027s the latter.",
+      "revId": "27b7c6783a4971213f7aacefa7771d324a35969d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c529bf20_f47698ea",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-28T16:15:14Z",
+      "side": 1,
+      "message": "does glibc define EPOLL_PACKED ?",
+      "revId": "27b7c6783a4971213f7aacefa7771d324a35969d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
