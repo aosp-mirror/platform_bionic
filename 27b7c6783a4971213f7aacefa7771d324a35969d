@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4516afdd_a16b0401",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-28T16:24:33Z",
+      "side": 1,
+      "message": "no, it actually is just x86-64. we might want to get more of this from the uapi header, though we\u0027d have to move the kernel epoll_event out of the way because it declares \u0027data\u0027 as a uint64_t rather than the union userspace expects.",
+      "parentUuid": "0575973d_f150e21c",
+      "revId": "27b7c6783a4971213f7aacefa7771d324a35969d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c529bf20_f47698ea",
         "filename": "libc/include/sys/epoll.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-04-28T16:15:14Z",
       "side": 1,
       "message": "does glibc define EPOLL_PACKED ?",
+      "revId": "27b7c6783a4971213f7aacefa7771d324a35969d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5268b4d_dc7141f5",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-28T16:24:33Z",
+      "side": 1,
+      "message": "no, the glibc owners know they\u0027re supposed to use leading __ for implementation details :-)",
+      "parentUuid": "c529bf20_f47698ea",
       "revId": "27b7c6783a4971213f7aacefa7771d324a35969d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
