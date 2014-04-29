@@ -164,16 +164,12 @@ size_t mbrlen(const char* s, size_t n, mbstate_t* /*ps*/) {
 
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* /*ps*/) {
   if (s == NULL) {
-    s   = "";
-    pwc = NULL;
+    return 0;
   }
   if (n == 0) {
-    if (pwc) {
-      *pwc = 0;
-      return 0;
-    }
+    return 0;
   }
-  if (pwc) {
+  if (pwc != NULL) {
     *pwc = *s;
   }
   return (*s != 0);
