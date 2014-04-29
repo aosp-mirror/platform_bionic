@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "05caf7dd_633715fa",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T23:57:08Z",
+      "side": 1,
+      "message": "heh. that\u0027s how it used to be, but now wcio.h is the upstream file. that\u0027s a problem because that uses mbstate_t without #include\u0027ing \u003cwchar.h\u003e. so rather than start copying that into our files, i removed it instead. upstream conveniently always #includes stuff in the right order by using \"local.h\" instead, where we now do have the right thing (and which also brings that file closer to upstream).",
+      "parentUuid": "05caf7dd_b04795d8",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "01ae00f3170ad0e36c1657f6ff8c89dfa730fd37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c37fc9_3eb1b980",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-04-29T23:39:40Z",
       "side": 1,
       "message": "Incredibly small nit, but this should be a tab to match the rest of the file.",
+      "range": {
+        "startLine": 59,
+        "startChar": 6,
+        "endLine": 59,
+        "endChar": 7
+      },
+      "revId": "01ae00f3170ad0e36c1657f6ff8c89dfa730fd37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_19169763",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T23:57:08Z",
+      "side": 1,
+      "message": "believe it or not, this is a space in the upstream file (revision 1.20, 2011-11-08)!",
+      "parentUuid": "c5c37fc9_3eb1b980",
       "range": {
         "startLine": 59,
         "startChar": 6,
