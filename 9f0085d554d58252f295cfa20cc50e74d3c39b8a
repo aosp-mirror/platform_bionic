@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45d06f88_6fff027b",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T21:53:17Z",
+      "side": 1,
+      "message": "oops. now you know how i write my tests :-)",
+      "revId": "9f0085d554d58252f295cfa20cc50e74d3c39b8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
