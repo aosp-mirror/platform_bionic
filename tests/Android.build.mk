@@ -18,8 +18,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := $(module)
 LOCAL_MODULE_TAGS := $(module_tag)
-LOCAL_MULTILIB := $(multilib)
-ifeq ($(multilib),both)
+LOCAL_MULTILIB := $($(module)_multilib)
+ifeq ($(LOCAL_MULTILIB),both)
     LOCAL_MODULE_STEM_32 := $(module)32
     LOCAL_MODULE_STEM_64 := $(module)64
 endif
