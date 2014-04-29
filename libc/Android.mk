@@ -343,12 +343,14 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/locale/wcscoll.c \
     upstream-openbsd/lib/libc/locale/wcstod.c \
     upstream-openbsd/lib/libc/locale/wcstof.c \
+    upstream-openbsd/lib/libc/locale/wcstoimax.c \
     upstream-openbsd/lib/libc/locale/wcstol.c \
     upstream-openbsd/lib/libc/locale/wcstold.c \
     upstream-openbsd/lib/libc/locale/wcstoll.c \
     upstream-openbsd/lib/libc/locale/wcstombs.c \
     upstream-openbsd/lib/libc/locale/wcstoul.c \
     upstream-openbsd/lib/libc/locale/wcstoull.c \
+    upstream-openbsd/lib/libc/locale/wcstoumax.c \
     upstream-openbsd/lib/libc/locale/wcsxfrm.c \
     upstream-openbsd/lib/libc/locale/wctob.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
@@ -361,6 +363,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetln.c \
     upstream-openbsd/lib/libc/stdio/fgetpos.c \
     upstream-openbsd/lib/libc/stdio/fgets.c \
+    upstream-openbsd/lib/libc/stdio/fgetwc.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
@@ -375,6 +378,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/funopen.c \
     upstream-openbsd/lib/libc/stdio/fvwrite.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
+    upstream-openbsd/lib/libc/stdio/fwscanf.c \
     upstream-openbsd/lib/libc/stdio/getc.c \
     upstream-openbsd/lib/libc/stdio/getchar.c \
     upstream-openbsd/lib/libc/stdio/getdelim.c \
@@ -395,18 +399,24 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/setbuffer.c \
     upstream-openbsd/lib/libc/stdio/sscanf.c \
     upstream-openbsd/lib/libc/stdio/stdio.c \
+    upstream-openbsd/lib/libc/stdio/swscanf.c \
     upstream-openbsd/lib/libc/stdio/tempnam.c \
     upstream-openbsd/lib/libc/stdio/tmpnam.c \
     upstream-openbsd/lib/libc/stdio/ungetc.c \
+    upstream-openbsd/lib/libc/stdio/ungetwc.c \
     upstream-openbsd/lib/libc/stdio/vasprintf.c \
     upstream-openbsd/lib/libc/stdio/vfprintf.c \
     upstream-openbsd/lib/libc/stdio/vfscanf.c \
+    upstream-openbsd/lib/libc/stdio/vfwscanf.c \
     upstream-openbsd/lib/libc/stdio/vprintf.c \
     upstream-openbsd/lib/libc/stdio/vscanf.c \
     upstream-openbsd/lib/libc/stdio/vsnprintf.c \
     upstream-openbsd/lib/libc/stdio/vsprintf.c \
     upstream-openbsd/lib/libc/stdio/vsscanf.c \
+    upstream-openbsd/lib/libc/stdio/vswscanf.c \
+    upstream-openbsd/lib/libc/stdio/vwscanf.c \
     upstream-openbsd/lib/libc/stdio/wbuf.c \
+    upstream-openbsd/lib/libc/stdio/wscanf.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
