@@ -174,3 +174,41 @@ TEST(wchar, wcsstr_wcswcs) {
   ASSERT_EQ(&haystack[10], wcswcs(haystack, good_needle));
   ASSERT_EQ(NULL, wcswcs(haystack, bad_needle));
 }
+
+TEST(wchar, mbtowc) {
+  wchar_t out[8];
+
+  out[0] = 'x';
+  ASSERT_EQ(0, mbtowc(out, "hello", 0));
+  ASSERT_EQ('x', out[0]);
+
+  ASSERT_EQ(0, mbtowc(out, "hello", 0));
+  ASSERT_EQ(0, mbtowc(out, "", 0));
+  ASSERT_EQ(1, mbtowc(out, "hello", 1));
+  ASSERT_EQ(L'h', out[0]);
+
+  ASSERT_EQ(0, mbtowc(NULL, "hello", 0));
+  ASSERT_EQ(0, mbtowc(NULL, "", 0));
+  ASSERT_EQ(1, mbtowc(NULL, "hello", 1));
+
+  ASSERT_EQ(0, mbtowc(NULL, NULL, 0));
+}
+
+TEST(wchar, mbrtowc) {
+  wchar_t out[8];
+
+  out[0] = 'x';
+  ASSERT_EQ(0U, mbrtowc(out, "hello", 0, NULL));
+  ASSERT_EQ('x', out[0]);
+
+  ASSERT_EQ(0U, mbrtowc(out, "hello", 0, NULL));
+  ASSERT_EQ(0U, mbrtowc(out, "", 0, NULL));
+  ASSERT_EQ(1U, mbrtowc(out, "hello", 1, NULL));
+  ASSERT_EQ(L'h', out[0]);
+
+  ASSERT_EQ(0U, mbrtowc(NULL, "hello", 0, NULL));
+  ASSERT_EQ(0U, mbrtowc(NULL, "", 0, NULL));
+  ASSERT_EQ(1U, mbrtowc(NULL, "hello", 1, NULL));
+
+  ASSERT_EQ(0U, mbrtowc(NULL, NULL, 0, NULL));
+}
