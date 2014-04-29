@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "857b475f_e54cf0fe",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Yep, the new code should work fine.\n\nDone now.",
+      "parentUuid": "45d06f88_1705bedc",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45d06f88_77eb5ac6",
         "filename": "libc/include/sched.h",
         "patchSetId": 2
@@ -77,6 +95,24 @@
       "writtenOn": "2014-04-29T19:56:57Z",
       "side": 1,
       "message": "this is now wrong.",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "857b475f_453bdc58",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45d06f88_77eb5ac6",
       "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -100,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "857b475f_0552b499",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Unfortunately...",
+      "parentUuid": "c5c37fc9_8d740954",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_9a76fde9",
         "filename": "libc/include/sched.h",
         "patchSetId": 2
@@ -111,6 +165,24 @@
       "writtenOn": "2014-04-29T19:56:57Z",
       "side": 1,
       "message": "looks like we\u0027re missing CPU_ALLOC_SIZE?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5c04bc0_e6f680b1",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "It\u0027s just above, L145 :)",
+      "parentUuid": "05caf7dd_9a76fde9",
       "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -134,6 +206,24 @@
     },
     {
       "key": {
+        "uuid": "a5c04bc0_c6fb8499",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "It is. As with the #if above I didn\u0027t clean-up the existing code.\n\nDone now.",
+      "parentUuid": "45d06f88_97a6ceaf",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_fac611db",
         "filename": "libc/include/sched.h",
         "patchSetId": 2
@@ -145,6 +235,24 @@
       "writtenOn": "2014-04-29T19:56:57Z",
       "side": 1,
       "message": "isn\u0027t this just a __builtin_memcmp?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5c04bc0_66ebb0c6",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05caf7dd_fac611db",
       "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -168,6 +276,24 @@
     },
     {
       "key": {
+        "uuid": "857b475f_a5290815",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "I removed \u0027_\u0027 from x_ args since it shouldn\u0027t matter and it provides better readability IMO.",
+      "parentUuid": "45d06f88_f7690a7a",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45d06f88_578456f6",
         "filename": "libc/include/sched.h",
         "patchSetId": 2
@@ -185,6 +311,24 @@
     },
     {
       "key": {
+        "uuid": "a5c04bc0_26e1b8e6",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Ya, I noticed as well. \n\nDone now.",
+      "parentUuid": "45d06f88_578456f6",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45d06f88_57c29614",
         "filename": "tests/sched_test.cpp",
         "patchSetId": 2
@@ -196,6 +340,24 @@
       "writtenOn": "2014-04-29T19:56:57Z",
       "side": 1,
       "message": "worth testing that we silently do nothing/return false when out-of-range indexes are passed to these? (that seems to be what both we and glibc do.)",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "857b475f_253ed849",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45d06f88_57c29614",
       "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
