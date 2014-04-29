@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5c37fc9_ad90e5fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "for external bugs, paste the link in here. (instead of above, as you\u0027ve done.)",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_d5a686de",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "always use type* instead of type *",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_97952eed",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "always use explicit \"!\u003d NULL\"\n\nalways use explicit {}",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_2d8515b6",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "\u0027original\u0027 is probably more intention-revealing than \u0027stored\u0027.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_97f36e53",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "really? this is different from all the BSDs, which seems surprising.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_75eb52c6",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "do we have a test to show that this the right order? (rather than having repeated passes through the whole list until it\u0027s empty.)",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_b5130a30",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "spurious whitespace after (",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_d5120629",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "can we write this without the goto? if we\u0027re taking ownership of this code (which it looks like we are), we should switch to C++ at some point. (not in this change though. i\u0027m just trying to make our future lives easier.)",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_b5a66a98",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "you should add a comment explaining this.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_772ebac6",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "i think it would be clearer to use string concatenation rather than have to work out from the final value what order things executed in.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_95ab6e62",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T20:27:18Z",
+      "side": 1,
+      "message": "?",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
