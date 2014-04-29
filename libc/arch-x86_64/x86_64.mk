@@ -3,11 +3,7 @@
 libc_common_src_files_x86_64 := \
     bionic/index.cpp \
     bionic/memchr.c \
-    bionic/memcmp.c \
-    bionic/memcpy.cpp \
-    bionic/memmove.c \
     bionic/memrchr.c \
-    bionic/memset.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
@@ -18,18 +14,8 @@ libc_common_src_files_x86_64 := \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
-    upstream-openbsd/lib/libc/string/bcopy.c \
-    upstream-openbsd/lib/libc/string/stpcpy.c \
-    upstream-openbsd/lib/libc/string/stpncpy.c \
-    upstream-openbsd/lib/libc/string/strcat.c \
-    upstream-openbsd/lib/libc/string/strcmp.c \
-    upstream-openbsd/lib/libc/string/strcpy.c \
     upstream-openbsd/lib/libc/string/strlcat.c \
     upstream-openbsd/lib/libc/string/strlcpy.c \
-    upstream-openbsd/lib/libc/string/strlen.c \
-    upstream-openbsd/lib/libc/string/strncat.c \
-    upstream-openbsd/lib/libc/string/strncmp.c \
-    upstream-openbsd/lib/libc/string/strncpy.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files_x86_64 += \
@@ -54,6 +40,23 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/syscall.S \
     arch-x86_64/bionic/vfork.S \
     bionic/__memcmp16.cpp \
+
+libc_bionic_src_files_x86_64 += \
+    arch-x86_64/string/sse2-bcopy-slm.S \
+    arch-x86_64/string/sse2-bzero-slm.S \
+    arch-x86_64/string/sse2-memcpy-slm.S \
+    arch-x86_64/string/sse2-memmove-slm.S \
+    arch-x86_64/string/sse2-memset-slm.S \
+    arch-x86_64/string/sse2-stpcpy-slm.S \
+    arch-x86_64/string/sse2-stpncpy-slm.S \
+    arch-x86_64/string/sse2-strcat-slm.S \
+    arch-x86_64/string/sse2-strcpy-slm.S \
+    arch-x86_64/string/sse2-strlen-slm.S \
+    arch-x86_64/string/sse2-strncat-slm.S \
+    arch-x86_64/string/sse2-strncpy-slm.S \
+    arch-x86_64/string/sse4-memcmp-slm.S \
+    arch-x86_64/string/ssse3-strcmp-slm.S \
+    arch-x86_64/string/ssse3-strncmp-slm.S \
 
 libc_crt_target_cflags_x86_64 += \
     -m64 \
