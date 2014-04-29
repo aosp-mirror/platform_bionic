@@ -29,15 +29,12 @@
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 
 /* stubs for wide-char functions */
-
-wint_t btowc(int c) {
-  return (c == EOF) ? WEOF : c;
-}
 
 int fwprintf(FILE* stream, const wchar_t* format, ...) {
   va_list args;
@@ -158,10 +155,6 @@ int mbsinit(const mbstate_t* /*ps*/) {
   return 1;
 }
 
-size_t mbrlen(const char* s, size_t n, mbstate_t* /*ps*/) {
-  return (n == 0 || s[0] == 0) ? 0 : 1;
-}
-
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* /*ps*/) {
   if (s == NULL) {
     return 0;
@@ -175,24 +168,44 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* /*ps*/) {
   return (*s != 0);
 }
 
-size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* /*ps*/) {
-  const char* s  = *src;
-  const char* s2 = reinterpret_cast<const char*>(memchr(s, 0, len));
-
-  if (s2 != NULL) {
-    len = (size_t)(s2 - s) + 1U;
+size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t n, size_t dst_size, mbstate_t* /*ps*/) {
+  size_t i = 0; // Number of input bytes read.
+  size_t o = 0; // Number of output characters written.
+  for (; i < n && (*src)[i] != 0; ++i) {
+    // TODO: UTF-8 support.
+    if ((*src)[i] > 0x7f) {
+      errno = EILSEQ;
+      if (dst != NULL) {
+        *src = &(*src)[i];
+      }
+      return static_cast<size_t>(-1);
+    }
+    if (dst != NULL) {
+      if (o + 1 > dst_size) {
+        break;
+      }
+      dst[o++] = static_cast<wchar_t>((*src)[i]);
+    } else {
+      ++o;
+    }
   }
-
-  if (dst) {
-    memcpy(reinterpret_cast<char*>(dst), s, len );
+  // If we consumed all the input, terminate the output.
+  if (dst != NULL && o < dst_size) {
+    dst[o] = 0;
   }
-
-  *src = s + len;
-  return len;
+  // If we were actually consuming input, record how far we got.
+  if (dst != NULL) {
+    if ((*src)[i] != 0) {
+      *src = &(*src)[i]; // This is where the next call should pick up.
+    } else {
+      *src = NULL; // We consumed everything.
+    }
+  }
+  return o;
 }
 
-size_t mbstowcs(wchar_t* dst, const char* src, size_t len) {
-  return mbsrtowcs(dst, &src, len, NULL);
+size_t mbsrtowcs(wchar_t* dst, const char** src, size_t dst_size, mbstate_t* ps) {
+  return mbsnrtowcs(dst, src, SIZE_MAX, dst_size, ps);
 }
 
 wint_t putwc(wchar_t wc, FILE* stream) {
@@ -239,10 +252,10 @@ size_t wcsftime(wchar_t* wcs, size_t maxsize, const wchar_t* format,  const stru
   return strftime(reinterpret_cast<char*>(wcs), maxsize, reinterpret_cast<const char*>(format), timptr);
 }
 
-size_t wcsrtombs(char* dst, const wchar_t** src, size_t n, mbstate_t* /*ps*/) {
+size_t wcsnrtombs(char* dst, const wchar_t** src, size_t n, size_t dst_size, mbstate_t* /*ps*/) {
   size_t i = 0; // Number of input characters read.
   size_t o = 0; // Number of output bytes written.
-  for (; (*src)[i] != 0; ++i) {
+  for (; i < n && (*src)[i] != 0; ++i) {
     // TODO: UTF-8 support.
     if ((*src)[i] > 0x7f) {
       errno = EILSEQ;
@@ -252,7 +265,7 @@ size_t wcsrtombs(char* dst, const wchar_t** src, size_t n, mbstate_t* /*ps*/) {
       return static_cast<size_t>(-1);
     }
     if (dst != NULL) {
-      if (o + 1 > n) {
+      if (o + 1 > dst_size) {
         break;
       }
       dst[o++] = static_cast<char>((*src)[i]);
@@ -261,7 +274,7 @@ size_t wcsrtombs(char* dst, const wchar_t** src, size_t n, mbstate_t* /*ps*/) {
     }
   }
   // If we consumed all the input, terminate the output.
-  if (dst != NULL && o < n) {
+  if (dst != NULL && o < dst_size) {
     dst[o] = 0;
   }
   // If we were actually consuming input, record how far we got.
@@ -275,25 +288,8 @@ size_t wcsrtombs(char* dst, const wchar_t** src, size_t n, mbstate_t* /*ps*/) {
   return o;
 }
 
-size_t wcstombs(char* dst, const wchar_t* src, size_t len) {
-  const wchar_t* p = src;
-  return wcsrtombs(dst, &p, len, NULL);
-}
-
-double wcstod(const wchar_t* nptr, wchar_t** endptr) {
-  return strtod(reinterpret_cast<const char*>(nptr), reinterpret_cast<char**>(endptr));
-}
-
-long int wcstol(const wchar_t* nptr, wchar_t** endptr, int base) {
-  return strtol(reinterpret_cast<const char*>(nptr), reinterpret_cast<char**>(endptr), base);
-}
-
-unsigned long int wcstoul(const wchar_t* nptr, wchar_t** endptr, int base) {
-  return strtoul(reinterpret_cast<const char*>(nptr), reinterpret_cast<char**>(endptr), base);
-}
-
-int wctob(wint_t c) {
-  return c;
+size_t wcsrtombs(char* dst, const wchar_t** src, size_t dst_size, mbstate_t* ps) {
+  return wcsnrtombs(dst, src, SIZE_MAX, dst_size, ps);
 }
 
 wctype_t wctype(const char* property) {

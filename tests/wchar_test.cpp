@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <stdint.h>
 #include <wchar.h>
 
 TEST(wchar, sizeof_wchar_t) {
@@ -211,4 +212,57 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(1U, mbrtowc(NULL, "hello", 1, NULL));
 
   ASSERT_EQ(0U, mbrtowc(NULL, NULL, 0, NULL));
+}
+
+TEST(wchar, wcstod) {
+  ASSERT_DOUBLE_EQ(1.23, wcstod(L"1.23", NULL));
+}
+
+TEST(wchar, wcstof) {
+  ASSERT_FLOAT_EQ(1.23f, wcstof(L"1.23", NULL));
+}
+
+TEST(wchar, wcstol) {
+  ASSERT_EQ(123L, wcstol(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstoll) {
+  ASSERT_EQ(123LL, wcstol(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstold) {
+  ASSERT_DOUBLE_EQ(1.23L, wcstold(L"1.23", NULL));
+}
+
+TEST(wchar, wcstoul) {
+  ASSERT_EQ(123UL, wcstoul(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstoull) {
+  ASSERT_EQ(123ULL, wcstoul(L"123", NULL, 0));
+}
+
+TEST(wchar, mbsnrtowcs) {
+  wchar_t dst[128];
+  const char* s = "hello, world!";
+  const char* src;
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(0U, mbsnrtowcs(dst, &src, 0, 0, NULL));
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(2U, mbsnrtowcs(dst, &src, 2, 123, NULL)); // glibc chokes on SIZE_MAX here.
+  ASSERT_EQ(L'h', dst[0]);
+  ASSERT_EQ(L'e', dst[1]);
+  ASSERT_EQ(&s[2], src);
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(3U, mbsnrtowcs(dst, &src, SIZE_MAX, 3, NULL));
+  ASSERT_EQ(L'h', dst[0]);
+  ASSERT_EQ(L'e', dst[1]);
+  ASSERT_EQ(L'l', dst[2]);
+  ASSERT_EQ(&s[3], src);
 }
