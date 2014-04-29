@@ -111,6 +111,30 @@
       "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e58b23a1_80931879",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T16:36:13Z",
+      "side": 1,
+      "message": "They use 4 bytes to store the actual data and 4 bytes to maintain a count of how many bytes have. The actual implementation of the conversion functions is fairly convoluted and didn\u0027t seem that it worth investing more time in it.\n\nThe glitch that crossed my mind is that I somehow expected to see at least 6 bytes in their data (to accommodate UTF-8 upper limit). However I don\u0027t think this is critical since if we end up using 6 bytes, the remaining 2 bytes are enough to index into the inner data array if really needed. \n\nOn the other hand I think we might go away with just 6 bytes for UTF-8 since it\u0027s a stateless encoding.\n\nLet me know if you feel that we need more info on this.",
+      "parentUuid": "857b475f_65bf00ec",
+      "range": {
+        "startLine": 48,
+        "startChar": 18,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
