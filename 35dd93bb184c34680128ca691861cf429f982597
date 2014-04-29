@@ -87,6 +87,24 @@
     },
     {
       "key": {
+        "uuid": "45d06f88_e2030aa2",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-29T21:02:08Z",
+      "side": 1,
+      "message": "\u0026__dsa_handle is identifier of the .so file. It is not in any way related to the type of atexit handler. I think the confusion comes from here but I\u0027m not sure: https://refspecs.linuxfoundation.org/LSB_2.0.1/LSB-generic/LSB-generic/baselib---cxa-atexit.html",
+      "parentUuid": "45d06f88_97f36e53",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_75eb52c6",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 2
