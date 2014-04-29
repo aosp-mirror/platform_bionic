@@ -1,8 +1,7 @@
-/*	$OpenBSD: wcio.h,v 1.2 2013/04/17 17:40:35 tedu Exp $	*/
-/* $NetBSD: wcio.h,v 1.3 2003/01/18 11:30:00 thorpej Exp $ */
+/* $OpenBSD: swscanf.c,v 1.2 2012/12/05 23:20:01 deraadt Exp $ */
 
 /*-
- * Copyright (c)2001 Citrus Project,
+ * Copyright (c) 2002 Tim J. Robbins
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,57 +24,21 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- * $Citrus$
  */
 
-#ifndef _WCIO_H_
-#define _WCIO_H_
+#include <stdarg.h>
+#include <stdio.h>
+#include <wchar.h>
 
-/* minimal requirement of SUSv2 */
-#define WCIO_UNGETWC_BUFSIZE 1
+int
+swscanf(const wchar_t * __restrict str, const wchar_t * __restrict fmt, ...)
+{
+	va_list ap;
+	int r;
 
-struct wchar_io_data {
-	mbstate_t wcio_mbstate_in;
-	mbstate_t wcio_mbstate_out;
+	va_start(ap, fmt);
+	r = vswscanf(str, fmt, ap);
+	va_end(ap);
 
-	wchar_t wcio_ungetwc_buf[WCIO_UNGETWC_BUFSIZE];
-	size_t wcio_ungetwc_inbuf;
-
-	int wcio_mode; /* orientation */
-};
-
-#define WCIO_GET(fp) \
-	(_EXT(fp) ? &(_EXT(fp)->_wcio) : (struct wchar_io_data *)0)
-
-#define _SET_ORIENTATION(fp, mode) \
-do {\
-	struct wchar_io_data *_wcio = WCIO_GET(fp); \
-	if (_wcio && _wcio->wcio_mode == 0) \
-		_wcio->wcio_mode = (mode);\
-} while (0)
-
-/*
- * WCIO_FREE should be called by fclose
- */
-#define WCIO_FREE(fp) \
-do {\
-	struct wchar_io_data *_wcio = WCIO_GET(fp); \
-	if (_wcio) { \
-		_wcio->wcio_mode = 0;\
-		_wcio->wcio_ungetwc_inbuf = 0;\
-	} \
-} while (0)
-
-#define WCIO_FREEUB(fp) \
-do {\
-	struct wchar_io_data *_wcio = WCIO_GET(fp); \
-	if (_wcio) { \
-		_wcio->wcio_ungetwc_inbuf = 0;\
-	} \
-} while (0)
-
-#define WCIO_INIT(fp) \
-	memset(&(_EXT(fp)->_wcio), 0, sizeof(struct wchar_io_data))
-
-#endif /*_WCIO_H_*/
+	return (r);
+}

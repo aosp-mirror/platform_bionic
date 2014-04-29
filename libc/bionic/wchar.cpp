@@ -74,24 +74,6 @@ int vswprintf(wchar_t* /*s*/, size_t /*n*/, const wchar_t* /*format*/, va_list /
   return -1;
 }
 
-int fwscanf(FILE* /*stream*/, const wchar_t* /*format*/, ... ) {
-  errno = ENOTSUP;
-  return -1;
-}
-
-int wscanf(const wchar_t* format, ... ) {
-  va_list args;
-  va_start (args, format);
-  int result = fwscanf(stdout, format, args );
-  va_end (args);
-  return result;
-}
-
-int swscanf(const wchar_t* /*s*/, const wchar_t* /*format*/, ... ) {
-  errno = ENOTSUP;
-  return -1;
-}
-
 int iswalnum(wint_t wc) { return isalnum(wc); }
 int iswalpha(wint_t wc) { return isalpha(wc); }
 int iswblank(wint_t wc) { return isblank(wc); }
@@ -121,10 +103,6 @@ int iswctype(wint_t wc, wctype_t char_class) {
     case WC_TYPE_XDIGIT: return isxdigit(wc);
     default: return 0;
   }
-}
-
-wint_t fgetwc(FILE* stream) {
-  return static_cast<wint_t>(fgetc(stream));
 }
 
 wchar_t* fgetws(wchar_t* ws, int n, FILE* stream) {
@@ -222,10 +200,6 @@ wint_t towlower(wint_t wc) {
 
 wint_t towupper(wint_t wc) {
   return toupper(wc);
-}
-
-wint_t ungetwc(wint_t wc, FILE* stream) {
-  return ungetc(static_cast<char>(wc), stream);
 }
 
 int wctomb(char* s, wchar_t wc) {

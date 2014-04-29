@@ -61,11 +61,7 @@ static struct glue uglue = { 0, FOPEN_MAX - 3, usual };
 static struct glue *lastglue = &uglue;
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
-static struct __sfileext __sFext[3] = {
-	_FILEEXT_INITIALIZER,
-	_FILEEXT_INITIALIZER,
-	_FILEEXT_INITIALIZER,
-};
+static struct __sfileext __sFext[3];
 
 FILE __sF[3] = {
 	std(__SRD, STDIN_FILENO),		/* stdin */
