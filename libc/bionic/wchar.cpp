@@ -173,7 +173,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t n, size_t dst_size, mbs
   size_t o = 0; // Number of output characters written.
   for (; i < n && (*src)[i] != 0; ++i) {
     // TODO: UTF-8 support.
-    if ((*src)[i] > 0x7f) {
+    if (static_cast<uint8_t>((*src)[i]) > 0x7f) {
       errno = EILSEQ;
       if (dst != NULL) {
         *src = &(*src)[i];
