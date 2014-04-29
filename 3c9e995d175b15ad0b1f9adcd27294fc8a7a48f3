@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "857b475f_051b9407",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-04-29T19:33:41Z",
+      "side": 1,
+      "message": "Preferred to keep this as well to preserve abi compatibility between external libraries. Let me know if you think it\u0027s not worth doing it.",
+      "range": {
+        "startLine": 67,
+        "startChar": 20,
+        "endLine": 67,
+        "endChar": 22
+      },
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
