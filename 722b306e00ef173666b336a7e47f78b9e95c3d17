@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "45d06f88_ebcacd80",
+        "filename": "libc/include/limits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T16:17:24Z",
+      "side": 1,
+      "message": "6 is enough for a 31-bit character, so that should be okay.",
+      "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "857b475f_25125879",
         "filename": "libc/include/wchar.h",
         "patchSetId": 2
@@ -13,6 +30,30 @@
       "writtenOn": "2014-04-29T15:01:21Z",
       "side": 1,
       "message": "glibc also uses a 8 byte structure and I relied on its completeness when choosing the value.",
+      "range": {
+        "startLine": 48,
+        "startChar": 18,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_46215202",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T16:17:24Z",
+      "side": 1,
+      "message": "sgtm.",
+      "parentUuid": "857b475f_25125879",
       "range": {
         "startLine": 48,
         "startChar": 18,
