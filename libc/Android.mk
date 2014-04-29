@@ -246,7 +246,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wcsnlen.c \
     upstream-freebsd/lib/libc/string/wcspbrk.c \
     upstream-freebsd/lib/libc/string/wcsspn.c \
-    upstream-freebsd/lib/libc/string/wcsstr.c \
     upstream-freebsd/lib/libc/string/wcstok.c \
     upstream-freebsd/lib/libc/string/wmemchr.c \
     upstream-freebsd/lib/libc/string/wmemcpy.c \
@@ -419,6 +418,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/string/strstr.c \
     upstream-openbsd/lib/libc/string/strtok.c \
     upstream-openbsd/lib/libc/string/wcslcpy.c \
+    upstream-openbsd/lib/libc/string/wcsstr.c \
+    upstream-openbsd/lib/libc/string/wcswcs.c \
     upstream-openbsd/lib/libc/string/wcswidth.c \
 
 libc_arch_static_src_files := \
