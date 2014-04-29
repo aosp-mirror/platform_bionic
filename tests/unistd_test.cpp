@@ -18,8 +18,6 @@
 #include "ScopedSignalHandler.h"
 #include "TemporaryFile.h"
 
-#define __STDC_LIMIT_MACROS // For glibc.
-
 #include <errno.h>
 #include <fcntl.h>
 #include <stdint.h>

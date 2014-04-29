@@ -336,9 +336,21 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/time.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
+    upstream-openbsd/lib/libc/locale/btowc.c \
+    upstream-openbsd/lib/libc/locale/mbrlen.c \
+    upstream-openbsd/lib/libc/locale/mbstowcs.c \
     upstream-openbsd/lib/libc/locale/mbtowc.c \
     upstream-openbsd/lib/libc/locale/wcscoll.c \
+    upstream-openbsd/lib/libc/locale/wcstod.c \
+    upstream-openbsd/lib/libc/locale/wcstof.c \
+    upstream-openbsd/lib/libc/locale/wcstol.c \
+    upstream-openbsd/lib/libc/locale/wcstold.c \
+    upstream-openbsd/lib/libc/locale/wcstoll.c \
+    upstream-openbsd/lib/libc/locale/wcstombs.c \
+    upstream-openbsd/lib/libc/locale/wcstoul.c \
+    upstream-openbsd/lib/libc/locale/wcstoull.c \
     upstream-openbsd/lib/libc/locale/wcsxfrm.c \
+    upstream-openbsd/lib/libc/locale/wctob.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/fdopen.c \
