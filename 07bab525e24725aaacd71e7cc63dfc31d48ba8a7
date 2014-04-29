@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05caf7dd_9b471fd9",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T21:52:21Z",
+      "side": 0,
+      "message": "if you\u0027re eagle-eyed enough to notice that this function disappears (which i think is very non-obvious from the diff), it\u0027s already declared in \u003cstdlib.h\u003e, which is where it\u0027s supposed to be declared.",
+      "revId": "07bab525e24725aaacd71e7cc63dfc31d48ba8a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
