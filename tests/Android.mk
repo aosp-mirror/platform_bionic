@@ -38,6 +38,8 @@ test_cflags = \
     -Werror \
     -fno-builtin \
 
+test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
+
 libBionicStandardTests_src_files := \
     buffer_tests.cpp \
     ctype_test.cpp \
