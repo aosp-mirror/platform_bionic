@@ -22,6 +22,183 @@
       "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_17577ee0",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "makes sense to me, hopefully 32-bit backwards compatibility will be dead before we have to deal with \u003e32 cores.",
+      "parentUuid": "857b475f_051b9407",
+      "range": {
+        "startLine": 67,
+        "startChar": 20,
+        "endLine": 67,
+        "endChar": 22
+      },
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_1705bedc",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "why keep this?\n\nas usual, i\u0027d be happier if everyone\u0027s running the new code because it maximizes our testing of it. and there\u0027s no ABI issue with the new code, right?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_77eb5ac6",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "this is now wrong.",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_8d740954",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "so these never worked? nice.",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_9a76fde9",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "looks like we\u0027re missing CPU_ALLOC_SIZE?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_97a6ceaf",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "isn\u0027t this just a __builtin_memset?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_fac611db",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "isn\u0027t this just a __builtin_memcmp?",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_f7690a7a",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "really we should be using __x in the C library. that\u0027s the namespace that\u0027s guaranteed to be ours. x_ is just some google3 class data member thing.",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_578456f6",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "looks like we\u0027re missing CPU_AND_S, CPU_OR_S, CPU_XOR_S.",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_57c29614",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-29T19:56:57Z",
+      "side": 1,
+      "message": "worth testing that we silently do nothing/return false when out-of-range indexes are passed to these? (that seems to be what both we and glibc do.)",
+      "revId": "3c9e995d175b15ad0b1f9adcd27294fc8a7a48f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
