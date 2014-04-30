@@ -135,6 +135,30 @@
       "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "857b475f_45575cdf",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-30T09:13:40Z",
+      "side": 1,
+      "message": "Yes, my internal reasoning was that we\u0027d need a maximum of 5 bytes from the previous multibyte sequence (if any) and 1 byte to keep track of how many bytes we have in the buffer.\n\nI didn\u0027t know if there was some other bizarre corner cases we needed to tend to (There always tend to be, when it comes to these things... sigh).",
+      "parentUuid": "45d06f88_0bb3e1f0",
+      "range": {
+        "startLine": 48,
+        "startChar": 18,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "722b306e00ef173666b336a7e47f78b9e95c3d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
