@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "4af15c4f_2fe53544",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ae7d493_c85483dd",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ae7d493_a8513feb",
         "filename": "tests/Android.mk",
         "patchSetId": 3
@@ -99,6 +117,24 @@
       "writtenOn": "2014-04-30T18:08:29Z",
       "side": 1,
       "message": "why no module_tag?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6aec607a_6aa8cb7c",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "the default value for module_tag is \u0027optional\u0027",
+      "parentUuid": "8ae7d493_a8513feb",
       "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -139,6 +175,24 @@
     },
     {
       "key": {
+        "uuid": "6aec607a_aaba53f7",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4af15c4f_262a0204",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4af15c4f_c6247617",
         "filename": "tests/atexit_test.cpp",
         "patchSetId": 3
@@ -156,6 +210,24 @@
     },
     {
       "key": {
+        "uuid": "6aec607a_6a4c4b55",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4af15c4f_c6247617",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4af15c4f_86178ead",
         "filename": "tests/atexit_test.cpp",
         "patchSetId": 3
@@ -167,6 +239,24 @@
       "writtenOn": "2014-04-30T18:08:29Z",
       "side": 1,
       "message": "can you explain what\u0027s missing? (i.e. \"how does someone who comes along later fix this TODO?\")",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_748d5020",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "the test of atexit handlers on exit(.) is missing. This is when __cxa_finalize(NULL) is called.",
+      "parentUuid": "4af15c4f_86178ead",
       "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -201,6 +291,24 @@
       "writtenOn": "2014-04-30T18:08:29Z",
       "side": 1,
       "message": "i don\u0027t understand this. i know you\u0027re trying to check whether the C++ static destructor gets called, but what\u0027s the \"remember_this\" trying to test? can you find names that actually explain what you\u0027re testing?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_cff3690e",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T22:09:32Z",
+      "side": 1,
+      "message": "renamed to valid_this",
+      "parentUuid": "6aec607a_e76bf6bb",
       "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
