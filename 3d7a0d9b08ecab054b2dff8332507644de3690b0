@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "053d979e_ceb0e3d0",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1010082
+      },
+      "writtenOn": "2014-04-30T09:55:53Z",
+      "side": 1,
+      "message": "This fails to build for me:\nbionic/libc/bionic/wchar.cpp:176:21: error: comparison is always false due to limited range of data type [-Werror\u003dtype-limits]\n     if ((*src)[i] \u003e 0x7f) {\ncc1plus: all warnings being treated as errors",
+      "range": {
+        "startLine": 176,
+        "startChar": 20,
+        "endLine": 176,
+        "endChar": 24
+      },
+      "revId": "3d7a0d9b08ecab054b2dff8332507644de3690b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
