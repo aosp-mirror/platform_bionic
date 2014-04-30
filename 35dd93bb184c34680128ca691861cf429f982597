@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "45d06f88_cfcd4e44",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5c37fc9_ad90e5fc",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_d5a686de",
         "filename": "libc/arch-common/bionic/atexit.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-04-29T20:27:18Z",
       "side": 1,
       "message": "always use type* instead of type *",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_cf6f0e7e",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05caf7dd_d5a686de",
       "revId": "35dd93bb184c34680128ca691861cf429f982597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c5c37fc9_d36e9e7f",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45d06f88_97952eed",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c37fc9_2d8515b6",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-04-29T20:27:18Z",
       "side": 1,
       "message": "\u0027original\u0027 is probably more intention-revealing than \u0027stored\u0027.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_8fb076e3",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5c37fc9_2d8515b6",
       "revId": "35dd93bb184c34680128ca691861cf429f982597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -122,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "05caf7dd_a32e2d18",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "It\u0027s not until it\u0027s empty. if dso is not null, __cxa_finalize executes and removes only selected subset atexit handlers.\nHaving said that - there is a way to optimize it. For example we do not need to revisit [original, current] range.",
+      "parentUuid": "05caf7dd_75eb52c6",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_b5130a30",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 2
@@ -133,6 +223,24 @@
       "writtenOn": "2014-04-29T20:27:18Z",
       "side": 1,
       "message": "spurious whitespace after (",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_593acfbb",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05caf7dd_b5130a30",
       "revId": "35dd93bb184c34680128ca691861cf429f982597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -156,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "05caf7dd_43cf795f",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "ok, I\u0027ll keep this in mind.",
+      "parentUuid": "05caf7dd_d5120629",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_b5a66a98",
         "filename": "tests/atexit_testlib.cpp",
         "patchSetId": 2
@@ -167,6 +293,24 @@
       "writtenOn": "2014-04-29T20:27:18Z",
       "side": 1,
       "message": "you should add a comment explaining this.",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_e39f8508",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "05caf7dd_b5a66a98",
       "revId": "35dd93bb184c34680128ca691861cf429f982597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -190,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "c5c37fc9_99f1e7bd",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45d06f88_772ebac6",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_95ab6e62",
         "filename": "tests/atexit_testlib.cpp",
         "patchSetId": 2
@@ -201,6 +363,24 @@
       "writtenOn": "2014-04-29T20:27:18Z",
       "side": 1,
       "message": "?",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_59512fe8",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-04-30T00:16:44Z",
+      "side": 1,
+      "message": "removed.",
+      "parentUuid": "05caf7dd_95ab6e62",
       "revId": "35dd93bb184c34680128ca691861cf429f982597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
