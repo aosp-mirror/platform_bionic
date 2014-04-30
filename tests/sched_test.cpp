@@ -202,9 +202,9 @@ TEST(sched, cpu_op_s_macros) {
   size_t size2 = CPU_ALLOC_SIZE(set_size2);
   size_t size3 = CPU_ALLOC_SIZE(set_size3);
 
-  cpu_set_t* set1 = CPU_ALLOC(size1);
-  cpu_set_t* set2 = CPU_ALLOC(size2);
-  cpu_set_t* set3 = CPU_ALLOC(size3);
+  cpu_set_t* set1 = CPU_ALLOC(set_size1);
+  cpu_set_t* set2 = CPU_ALLOC(set_size2);
+  cpu_set_t* set3 = CPU_ALLOC(set_size3);
   CPU_ZERO_S(size1, set1);
   CPU_ZERO_S(size2, set2);
   CPU_ZERO_S(size3, set3);
@@ -239,8 +239,8 @@ TEST(sched, cpu_equal_s) {
   size_t size1 = CPU_ALLOC_SIZE(set_size1);
   size_t size2 = CPU_ALLOC_SIZE(set_size2);
 
-  cpu_set_t* set1 = CPU_ALLOC(size1);
-  cpu_set_t* set2 = CPU_ALLOC(size2);
+  cpu_set_t* set1 = CPU_ALLOC(set_size1);
+  cpu_set_t* set2 = CPU_ALLOC(set_size2);
 
   CPU_ZERO_S(size1, set1);
   CPU_ZERO_S(size2, set2);
