@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05caf7dd_a1bbc55e",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T01:59:41Z",
+      "side": 1,
+      "message": "i don\u0027t understand. why would we want to support this? why not just insist that the tests are built with C++11 and if they\u0027re not, fail at compile time?",
+      "revId": "1265a6aa32a763e357edb2e0321bc238f7e8a49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
