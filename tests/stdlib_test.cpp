@@ -203,6 +203,52 @@ TEST(stdlib, strtold) {
   ASSERT_DOUBLE_EQ(1.23, strtold("1.23", NULL));
 }
 
+TEST(stdlib, quick_exit) {
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    quick_exit(99);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(99, WEXITSTATUS(status));
+}
+
+static int quick_exit_status = 0;
+
+static void quick_exit_1(void) {
+  ASSERT_EQ(quick_exit_status, 0);
+  quick_exit_status = 1;
+}
+
+static void quick_exit_2(void) {
+  ASSERT_EQ(quick_exit_status, 1);
+}
+
+static void not_run(void) {
+  FAIL();
+}
+
+TEST(stdlib, at_quick_exit) {
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    ASSERT_EQ(at_quick_exit(quick_exit_2), 0);
+    ASSERT_EQ(at_quick_exit(quick_exit_1), 0);
+    atexit(not_run);
+    quick_exit(99);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(99, WEXITSTATUS(status));
+}
+
 TEST(unistd, _Exit) {
   int pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
