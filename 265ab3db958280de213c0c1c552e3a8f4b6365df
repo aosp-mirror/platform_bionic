@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "0afbe434_c42eb2c4",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-30T22:04:18Z",
+      "side": 1,
+      "message": "Nit, but this should be NULL so it\u0027s immediately obvious func is a pointer and not a number.",
+      "range": {
+        "startLine": 35,
+        "startChar": 14,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca046c04_c280e66e",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-30T22:04:18Z",
+      "side": 1,
+      "message": "Another nit, but you should probably use tabs like the rest of the file. It\u0027s strange to see tabs, then spaces.",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 6
+      },
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca046c04_024c8ea8",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-04-30T22:04:18Z",
+      "side": 1,
+      "message": "Might be nice to convert all tabs into spaces in this file rather than have the split format.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 3
+      },
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ae7d493_c85483dd",
         "filename": "tests/Android.mk",
         "patchSetId": 3
