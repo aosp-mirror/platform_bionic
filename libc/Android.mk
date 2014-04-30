@@ -364,11 +364,14 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetpos.c \
     upstream-openbsd/lib/libc/stdio/fgets.c \
     upstream-openbsd/lib/libc/stdio/fgetwc.c \
+    upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
     upstream-openbsd/lib/libc/stdio/fputs.c \
+    upstream-openbsd/lib/libc/stdio/fputwc.c \
+    upstream-openbsd/lib/libc/stdio/fputws.c \
     upstream-openbsd/lib/libc/stdio/fread.c \
     upstream-openbsd/lib/libc/stdio/freopen.c \
     upstream-openbsd/lib/libc/stdio/fscanf.c \
@@ -378,18 +381,23 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/funopen.c \
     upstream-openbsd/lib/libc/stdio/fvwrite.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
+    upstream-openbsd/lib/libc/stdio/fwide.c \
     upstream-openbsd/lib/libc/stdio/fwscanf.c \
     upstream-openbsd/lib/libc/stdio/getc.c \
     upstream-openbsd/lib/libc/stdio/getchar.c \
     upstream-openbsd/lib/libc/stdio/getdelim.c \
     upstream-openbsd/lib/libc/stdio/getline.c \
     upstream-openbsd/lib/libc/stdio/gets.c \
+    upstream-openbsd/lib/libc/stdio/getwc.c \
+    upstream-openbsd/lib/libc/stdio/getwchar.c \
     upstream-openbsd/lib/libc/stdio/perror.c \
     upstream-openbsd/lib/libc/stdio/printf.c \
     upstream-openbsd/lib/libc/stdio/putc.c \
     upstream-openbsd/lib/libc/stdio/putchar.c \
     upstream-openbsd/lib/libc/stdio/puts.c \
     upstream-openbsd/lib/libc/stdio/putw.c \
+    upstream-openbsd/lib/libc/stdio/putwc.c \
+    upstream-openbsd/lib/libc/stdio/putwchar.c \
     upstream-openbsd/lib/libc/stdio/refill.c \
     upstream-openbsd/lib/libc/stdio/remove.c \
     upstream-openbsd/lib/libc/stdio/rewind.c \
