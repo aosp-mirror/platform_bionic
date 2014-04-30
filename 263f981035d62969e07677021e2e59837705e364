@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05caf7dd_219515ba",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T02:07:58Z",
+      "side": 1,
+      "message": "we may as well lose this comment.",
+      "revId": "263f981035d62969e07677021e2e59837705e364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_fefd5e1e",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T02:07:58Z",
+      "side": 1,
+      "message": "clr",
+      "revId": "263f981035d62969e07677021e2e59837705e364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d06f88_7e0a0e86",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T02:07:58Z",
+      "side": 1,
+      "message": "quick smoke test of all the _S functions, so we at least have one use of each macro.",
+      "revId": "263f981035d62969e07677021e2e59837705e364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
