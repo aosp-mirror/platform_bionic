@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ae7d493_c85483dd",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "\"Library used by atexit tests.\" like all the others.",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ae7d493_a8513feb",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "why no module_tag?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_a9ff0579",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "we can\u0027t write a test that works on glibc too?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_262a0204",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "what?\n\ni\u0027m not sure what you\u0027re using \"control\" to mean, but it\u0027s pretty confusing in all this code.\n\natexit_call_sequence would probably be clearer than \"control_atexit_sequence\", for example.",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_c6247617",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "lol. i was expecting \"123\" :-)\n\n(if you\u0027re using a std::string you can just use ASSERT_EQ.)",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af15c4f_86178ead",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "can you explain what\u0027s missing? (i.e. \"how does someone who comes along later fix this TODO?\")",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6aec607a_875b0a30",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "why use leading underscores in test code?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6aec607a_e76bf6bb",
+        "filename": "tests/atexit_testlib.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T18:08:29Z",
+      "side": 1,
+      "message": "i don\u0027t understand this. i know you\u0027re trying to check whether the C++ static destructor gets called, but what\u0027s the \"remember_this\" trying to test? can you find names that actually explain what you\u0027re testing?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
