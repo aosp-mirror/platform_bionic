@@ -22,6 +22,30 @@
       "revId": "3d7a0d9b08ecab054b2dff8332507644de3690b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5461f42_2cdfb3e9",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-04-30T09:57:42Z",
+      "side": 1,
+      "message": "Isn\u0027t this fixed with https://android-review.googlesource.com/#/c/92727/1/libc/bionic/wchar.cpp ? Automerger issues ?",
+      "parentUuid": "053d979e_ceb0e3d0",
+      "range": {
+        "startLine": 176,
+        "startChar": 20,
+        "endLine": 176,
+        "endChar": 24
+      },
+      "revId": "3d7a0d9b08ecab054b2dff8332507644de3690b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
