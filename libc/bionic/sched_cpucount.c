@@ -28,13 +28,14 @@
 #define _GNU_SOURCE 1
 #include <sched.h>
 
-int __sched_cpucount(size_t setsize, cpu_set_t* set)
-{
-    int nn = 0, nn_max = setsize / sizeof(__CPU_BITTYPE);
-    int count = 0;
+int __sched_cpucount(size_t setsize, cpu_set_t* set) {
+  int nn = 0;
+  int nn_max = setsize / sizeof(__CPU_BITTYPE);
+  int count = 0;
 
-    for ( ; nn < nn_max; nn++ )
-        count += __builtin_popcount(set->__bits[nn]);
+  for ( ; nn < nn_max; nn++ ) {
+    count += __builtin_popcountl(set->__bits[nn]);
+  }
 
-    return count;
+  return count;
 }
