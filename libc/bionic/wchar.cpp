@@ -105,30 +105,6 @@ int iswctype(wint_t wc, wctype_t char_class) {
   }
 }
 
-wchar_t* fgetws(wchar_t* ws, int n, FILE* stream) {
-  return reinterpret_cast<wchar_t*>(fgets(reinterpret_cast<char*>(ws), n, stream));
-}
-
-wint_t fputwc(wchar_t wc, FILE* stream) {
-  return static_cast<wint_t>(fputc(static_cast<char>(wc), stream));
-}
-
-int fputws(const wchar_t* str, FILE* stream) {
-  return fputs(reinterpret_cast<const char*>(str), stream );
-}
-
-int fwide(FILE* /*stream*/, int mode) {
-  return mode;
-}
-
-wint_t getwc(FILE* stream) {
-  return getc(stream);
-}
-
-wint_t getwchar() {
-  return getchar();
-}
-
 int mbsinit(const mbstate_t* /*ps*/) {
   return 1;
 }
@@ -184,14 +160,6 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t n, size_t dst_size, mbs
 
 size_t mbsrtowcs(wchar_t* dst, const char** src, size_t dst_size, mbstate_t* ps) {
   return mbsnrtowcs(dst, src, SIZE_MAX, dst_size, ps);
-}
-
-wint_t putwc(wchar_t wc, FILE* stream) {
-  return fputc(static_cast<char>(wc), stream);
-}
-
-wint_t putwchar(wchar_t wc) {
-  return putchar(static_cast<char>(wc));
 }
 
 wint_t towlower(wint_t wc) {
