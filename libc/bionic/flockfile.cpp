@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "fileext.h"
+#include "local.h"
 
 // We can't use the OpenBSD implementation which uses kernel-specific
 // APIs not available on Linux. Instead we use a pthread_mutex_t within

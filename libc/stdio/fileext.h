@@ -30,7 +30,6 @@
  */
 
 #include <pthread.h>
-#include "wcio.h"
 
 /*
  * file extension
