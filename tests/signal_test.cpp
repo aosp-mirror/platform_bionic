@@ -252,3 +252,21 @@ TEST(signal, sys_siglist) {
   ASSERT_TRUE(sys_siglist[0] == NULL);
   ASSERT_STREQ("Hangup", sys_siglist[SIGHUP]);
 }
+
+TEST(signal, limits) {
+  // This comes from the kernel.
+  ASSERT_EQ(32, __SIGRTMIN);
+
+  // We reserve a non-zero number at the bottom for ourselves.
+  ASSERT_GT(SIGRTMIN, __SIGRTMIN);
+
+  // MIPS has more signals than everyone else.
+#if defined(__mips__)
+  ASSERT_EQ(128, __SIGRTMAX);
+#else
+  ASSERT_EQ(64, __SIGRTMAX);
+#endif
+
+  // We don't currently reserve any at the top.
+  ASSERT_EQ(SIGRTMAX, __SIGRTMAX);
+}
