@@ -46,6 +46,11 @@ extern __noreturn void exit(int);
 extern __noreturn void _Exit(int);
 extern int atexit(void (*)(void));
 
+#if __ISO_C_VISIBLE >= 2011 || __cplusplus >= 201103L
+int at_quick_exit(void (*)(void));
+void quick_exit(int) __noreturn;
+#endif
+
 extern char* getenv(const char*);
 extern int putenv(char*);
 extern int setenv(const char*, const char*, int);
