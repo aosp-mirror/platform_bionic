@@ -52,7 +52,7 @@ extern "C" int __timer_settime(__kernel_timer_t, int, const itimerspec*, itimers
 // end up with one of our POSIX timer threads handling it (meaning that the intended recipient
 // doesn't). glibc uses SIGRTMIN for its POSIX timer implementation, so in the absence of any
 // reason to use anything else, we use that too.
-static const int TIMER_SIGNAL = SIGRTMIN;
+static const int TIMER_SIGNAL = (__SIGRTMIN + 0);
 
 struct PosixTimer {
   __kernel_timer_t kernel_timer_id;

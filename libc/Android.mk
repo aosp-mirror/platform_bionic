@@ -129,6 +129,8 @@ libc_bionic_src_files := \
     bionic/inotify_init.cpp \
     bionic/lchown.cpp \
     bionic/lfs64_support.cpp \
+    bionic/__libc_current_sigrtmax.cpp \
+    bionic/__libc_current_sigrtmin.cpp \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
