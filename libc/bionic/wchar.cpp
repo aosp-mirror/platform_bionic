@@ -36,44 +36,6 @@
 
 /* stubs for wide-char functions */
 
-int fwprintf(FILE* stream, const wchar_t* format, ...) {
-  va_list args;
-  va_start(args, format);
-  int result = vfwprintf(stream, format, args);
-  va_end(args);
-  return result;
-}
-
-int wprintf(const wchar_t* format, ...) {
-  va_list args;
-  va_start(args, format);
-  int result = vwprintf(format, args);
-  va_end(args);
-  return result;
-}
-
-int swprintf(wchar_t* s, size_t n, const wchar_t* format, ...) {
-  va_list args;
-  va_start(args, format);
-  int result = vswprintf(s, n, format, args);
-  va_end(args);
-  return result;
-}
-
-int vwprintf(const wchar_t* format, va_list arg) {
-  return vfwprintf(stdout, format, arg);
-}
-
-int vfwprintf(FILE* /*stream*/, const wchar_t* /*format*/, va_list /*arg*/) {
-  errno = ENOTSUP;
-  return -1;
-}
-
-int vswprintf(wchar_t* /*s*/, size_t /*n*/, const wchar_t* /*format*/, va_list /*arg*/) {
-  errno = ENOTSUP;
-  return -1;
-}
-
 int iswalnum(wint_t wc) { return isalnum(wc); }
 int iswalpha(wint_t wc) { return isalpha(wc); }
 int iswblank(wint_t wc) { return isblank(wc); }
