@@ -39,8 +39,15 @@
 
 __BEGIN_DECLS
 
-typedef __WINT_TYPE__           wint_t;
-typedef struct { int  dummy; }  mbstate_t;
+typedef __WINT_TYPE__  wint_t;
+typedef struct {
+#ifdef __LP32__
+  int dummy;
+#else
+  // 8 bytes should be enough to support at least UTF-8
+  char __reserved[8];
+#endif
+} mbstate_t;
 
 typedef enum {
     WC_TYPE_INVALID = 0,
