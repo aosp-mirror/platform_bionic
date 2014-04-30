@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e53963b5_4d38795b",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1045543
+      },
+      "writtenOn": "2014-04-30T11:58:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e55a43dc_08d9c72a",
+      "range": {
+        "startLine": 34,
+        "startChar": 37,
+        "endLine": 34,
+        "endChar": 43
+      },
+      "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e55a43dc_a8c9935d",
         "filename": "libc/arch-x86/x86.mk",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-04-28T18:04:06Z",
       "side": 1,
       "message": "I think it\u0027s time to follow the pattern that the arm code uses for the support of different cpu architectures and create a new directory for each different architecture supported.\n\nIt might not be necessary to have a TARGET_CPU_VARIANT as for arm, but it should be some version of that.\n\nIs atom the only platform that is going to use these ssse3 optimized versions?",
+      "range": {
+        "startLine": 35,
+        "startChar": 7,
+        "endLine": 35,
+        "endChar": 38
+      },
+      "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5461f42_8cbc275e",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1045543
+      },
+      "writtenOn": "2014-04-30T11:58:09Z",
+      "side": 1,
+      "message": "It seems reasonable to separate different architectures now. I\u0027m working on it and updated patch would be uploaded soon. *-atom.S versions were optimized for Atom, but some of them are still the best ones for other platforms. It\u0027s also true for some ssse3 versions. So, I\u0027m going to eliminate \"atom\" from names of such functions and put them in the directory that would be common for all x86 architectures.",
+      "parentUuid": "e55a43dc_a8c9935d",
       "range": {
         "startLine": 35,
         "startChar": 7,
