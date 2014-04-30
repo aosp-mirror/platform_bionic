@@ -16,6 +16,24 @@
       "revId": "1265a6aa32a763e357edb2e0321bc238f7e8a49f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_2be69abd",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-04-30T02:17:25Z",
+      "side": 1,
+      "message": "Alright, that\u0027s fine by me. I thought it would be worth keeping the tests buildable in a non-C++11 environment as C++11 isn\u0027t strictly a requirement for bionic (or so I thought).",
+      "parentUuid": "05caf7dd_a1bbc55e",
+      "revId": "1265a6aa32a763e357edb2e0321bc238f7e8a49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
