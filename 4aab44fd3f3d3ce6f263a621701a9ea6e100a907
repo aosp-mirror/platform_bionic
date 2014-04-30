@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05caf7dd_a6c11bc7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "quick_exit(3), not at_exit(3)",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_597dafc0",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_a6959bec",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "we usually put the __noreturn at the end because it\u0027s less unreadable.",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_194a178f",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "braces",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_59548f30",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "we usually explicitly write static.",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5c37fc9_b93f83f8",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "good idea. i didn\u0027t think to test that.",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05caf7dd_2669ab36",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-04-30T00:58:52Z",
+      "side": 1,
+      "message": "i think cferris has a particular stanza he uses for tests that are non-functional on glibc. (which i assume is what you\u0027re doing here?)",
+      "revId": "4aab44fd3f3d3ce6f263a621701a9ea6e100a907",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
