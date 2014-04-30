@@ -591,9 +591,12 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
     return -1;
   }
   off_t file_size = file_stat.st_size;
-  void* temp_mapping = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
-  if (temp_mapping == MAP_FAILED) {
-    return -1;
+  void* temp_mapping = NULL;
+  if (file_size > 0) {
+    temp_mapping = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (temp_mapping == MAP_FAILED) {
+      return -1;
+    }
   }
   size_t file_offset = 0;
 
@@ -613,6 +616,13 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
     char* mem_base = reinterpret_cast<char*>(seg_page_start);
     size_t match_offset = 0;
     size_t size = seg_page_end - seg_page_start;
+
+    if (file_size - file_offset < size) {
+      // File is too short to compare to this segment. The contents are likely
+      // different as well (it's probably for a different library version) so
+      // just don't bother checking.
+      break;
+    }
 
     while (match_offset < size) {
       // Skip over dissimilar pages.

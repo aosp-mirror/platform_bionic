@@ -190,12 +190,27 @@ include $(LOCAL_PATH)/Android.build.mk
 endif
 
 # -----------------------------------------------------------------------------
-# Library used by dlext tests.
+# Library used by dlext tests - with/without GNU RELRO program header
 # -----------------------------------------------------------------------------
 libdlext_test_src_files := \
     dlext_test_library.cpp \
 
+libdlext_test_ldflags := \
+    -Wl,-z,relro \
+
 module := libdlext_test
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+libdlext_test_norelro_src_files := \
+    dlext_test_library.cpp \
+
+libdlext_test_norelro_ldflags := \
+    -Wl,-z,norelro \
+
+module := libdlext_test_norelro
 module_tag := optional
 build_type := target
 build_target := SHARED_LIBRARY
