@@ -100,11 +100,9 @@ TEST(string, strsignal) {
   ASSERT_STREQ("Hangup", strsignal(1));
 
   // A real-time signal.
-#ifdef __GLIBC__ // glibc reserves real-time signals for internal use, and doesn't count those.
-  ASSERT_STREQ("Real-time signal 14", strsignal(48));
-#else
-  ASSERT_STREQ("Real-time signal 16", strsignal(48));
-#endif
+  ASSERT_STREQ("Real-time signal 14", strsignal(SIGRTMIN + 14));
+  // One of the signals the C library keeps to itself.
+  ASSERT_STREQ("Unknown signal 32", strsignal(__SIGRTMIN));
 
   // Errors.
   ASSERT_STREQ("Unknown signal -1", strsignal(-1)); // Too small.

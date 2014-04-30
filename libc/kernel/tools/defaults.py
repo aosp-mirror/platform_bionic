@@ -63,6 +63,9 @@ kernel_token_replacements = {
     # The kernel's _NSIG/NSIG are one less than the userspace value, so we need to move them aside.
     "_NSIG": "_KERNEL__NSIG",
     "NSIG": "_KERNEL_NSIG",
+    # The kernel's SIGRTMIN/SIGRTMAX are absolute limits; userspace steals a few.
+    "SIGRTMIN": "__SIGRTMIN",
+    "SIGRTMAX": "__SIGRTMAX",
     }
 
 # this is the set of known static inline functions that we want to keep
