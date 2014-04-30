@@ -46,6 +46,30 @@
       "revId": "3d7a0d9b08ecab054b2dff8332507644de3690b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "053d979e_4edcf3f2",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1010082
+      },
+      "writtenOn": "2014-04-30T10:15:24Z",
+      "side": 1,
+      "message": "Yeah, that looks like the fix. According the automerger it should have made it down (as far as I can tell), but I don\u0027t see it in the tree yet :-/",
+      "parentUuid": "c5461f42_2cdfb3e9",
+      "range": {
+        "startLine": 176,
+        "startChar": 20,
+        "endLine": 176,
+        "endChar": 24
+      },
+      "revId": "3d7a0d9b08ecab054b2dff8332507644de3690b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
