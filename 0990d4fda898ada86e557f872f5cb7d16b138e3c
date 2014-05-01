@@ -16,6 +16,24 @@
       "revId": "0990d4fda898ada86e557f872f5cb7d16b138e3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a3f9cb5_040946f9",
+        "filename": "libc/kernel/uapi/asm-generic/signal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-01T16:38:10Z",
+      "side": 1,
+      "message": "luckily, yes, because we include this file and then later define our SIGRTMAX. but that looks like another bug in the header scrubber...\n\nlooks like it was a hack to avoid replacing \"#include \u003casm-generic/...\u003e\" with \"#include \u003c__asm__-generic/...\u003e\". those scripts are such a fucking fragile mess but i\u0027ll keep looking.",
+      "parentUuid": "ea25b0a9_4d7779b1",
+      "revId": "0990d4fda898ada86e557f872f5cb7d16b138e3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
