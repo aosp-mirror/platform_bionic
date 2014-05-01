@@ -7,7 +7,7 @@ from utils import *
 
 noUpdate = 1
 
-def  cleanupFile( path, original_path):
+def cleanupFile(path, original_path):
     """reads an original header and perform the cleanup operation on it
        this functions returns the destination path and the clean header
        as a single string"""

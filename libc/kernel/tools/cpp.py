@@ -685,9 +685,9 @@ class CppExpr:
         # we have the defined keyword, check the rest
         self.i += 1
         self.skip_spaces()
-        use_parens = 0
+        used_parens = 0
         if self.i < self.n and self.tok[self.i].id == tokLPAREN:
-            use_parens = 1
+            used_parens = 1
             self.i += 1
             self.skip_spaces()
 
@@ -699,7 +699,7 @@ class CppExpr:
             self.throw(CppConstantExpected,i,"### 'defined' must be followed by macro name")
 
         self.i += 1
-        if use_parens:
+        if used_parens:
             self.expectId(tokRPAREN)
 
         return ("defined", t.value)
@@ -1162,7 +1162,7 @@ class Block:
         return self.directive in ["if","ifdef","ifndef","elif"]
 
     def isInclude(self):
-        """checks wether this is a #include directive. if true, then returns the
+        """checks whether this is a #include directive. if true, then returns the
            corresponding file name (with brackets or double-qoutes). None otherwise"""
         if self.directive != "include":
             return None
@@ -1517,15 +1517,20 @@ class BlockList:
         tokens = tokens[:-1]  # remove trailing tokLN
         self.blocks = [ Block(tokens) ] + self.blocks
 
-    def replaceTokens(self,replacements=dict()):
-        """replace tokens according to the given dict
-           """
+    def replaceTokens(self,replacements):
+        """replace tokens according to the given dict"""
         for b in self.blocks:
-            if (not b.isDirective()) or b.isDefine():
+            made_change = False
+            if b.isInclude() == None:
                 for tok in b.tokens:
                     if tok.id == tokIDENT:
                         if tok.value in replacements:
                             tok.value = replacements[tok.value]
+                            made_change = True
+
+            if made_change and b.isIf():
+                # Keep 'expr' in sync with 'tokens'.
+                b.expr = CppExpr(b.tokens)
 
 class BlockParser:
     """a class used to convert an input source file into a BlockList object"""
@@ -1798,6 +1803,10 @@ def  test_optimizeAll():
 #define X
 #endif
 
+#ifndef SIGRTMAX
+#define SIGRTMAX 123
+#endif /* SIGRTMAX */
+
 #if 0
 #if 1
 #define  BAD_6
@@ -1817,12 +1826,17 @@ def  test_optimizeAll():
 #define X
 #endif
 
+#ifndef __SIGRTMAX
+#define __SIGRTMAX 123
+#endif
+
 """
 
     out = StringOutput()
     lines = string.split(text, '\n')
     list = BlockParser().parse( CppLinesTokenizer(lines) )
     #D_setlevel(2)
+    list.replaceTokens( kernel_token_replacements )
     list.optimizeAll( {"__KERNEL__":kCppUndefinedMacro} )
     list.write(out)
     if out.get() != expected:
