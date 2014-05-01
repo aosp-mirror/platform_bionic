@@ -54,4 +54,27 @@ LOCAL_SHARED_LIBRARIES += libstlport
 LOCAL_SRC_FILES := $(benchmark_src_files)
 include $(BUILD_EXECUTABLE)
 
+ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
+ifeq ($(TARGET_ARCH),x86)
+LINKER = linker
+NATIVE_SUFFIX=32
+else
+LINKER = linker64
+NATIVE_SUFFIX=64
+endif
+
+bionic-benchmarks-run-on-host: bionic-benchmarks $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+	if [ ! -d /system -o ! -d /system/bin ]; then \
+	  echo "Attempting to create /system/bin"; \
+	  sudo mkdir -p -m 0777 /system/bin; \
+	fi
+	mkdir -p $(TARGET_OUT_DATA)/local/tmp
+	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
+	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
+	ANDROID_DATA=$(TARGET_OUT_DATA) \
+	ANDROID_ROOT=$(TARGET_OUT) \
+	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
+		$(TARGET_OUT_EXECUTABLES)/bionic-benchmarks$(NATIVE_SUFFIX) $(BIONIC_BENCHMARKS_FLAGS)
+endif # linux-x86
+
 endif # !BUILD_TINY_ANDROID
