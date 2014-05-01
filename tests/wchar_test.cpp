@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <locale.h>
 #include <stdint.h>
 #include <wchar.h>
 
@@ -49,18 +50,46 @@ TEST(wchar, wctomb_wcrtomb) {
   EXPECT_EQ(1U, wcrtomb(bytes, L'\0', NULL));
 
   // ...and for regular characters.
-  bytes[0] = 'x';
+  memset(bytes, 0, sizeof(bytes));
   EXPECT_EQ(1, wctomb(bytes, L'h'));
   EXPECT_EQ('h', bytes[0]);
-
-  bytes[0] = 'x';
+  memset(bytes, 0, sizeof(bytes));
   EXPECT_EQ(1U, wcrtomb(bytes, L'h', NULL));
   EXPECT_EQ('h', bytes[0]);
+
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  // 1-byte UTF-8.
+  memset(bytes, 0, sizeof(bytes));
+  EXPECT_EQ(1U, wcrtomb(bytes, L'h', NULL));
+  EXPECT_EQ('h', bytes[0]);
+  // 2-byte UTF-8.
+  memset(bytes, 0, sizeof(bytes));
+  EXPECT_EQ(2U, wcrtomb(bytes, 0x00a2, NULL));
+  EXPECT_EQ('\xc2', bytes[0]);
+  EXPECT_EQ('\xa2', bytes[1]);
+  // 3-byte UTF-8.
+  memset(bytes, 0, sizeof(bytes));
+  EXPECT_EQ(3U, wcrtomb(bytes, 0x20ac, NULL));
+  EXPECT_EQ('\xe2', bytes[0]);
+  EXPECT_EQ('\x82', bytes[1]);
+  EXPECT_EQ('\xac', bytes[2]);
+  // 4-byte UTF-8.
+  memset(bytes, 0, sizeof(bytes));
+  EXPECT_EQ(4U, wcrtomb(bytes, 0x24b62, NULL));
+  EXPECT_EQ('\xf0', bytes[0]);
+  EXPECT_EQ('\xa4', bytes[1]);
+  EXPECT_EQ('\xad', bytes[2]);
+  EXPECT_EQ('\xa2', bytes[3]);
+  // Invalid code point.
+  EXPECT_EQ(static_cast<size_t>(-1), wcrtomb(bytes, 0xffffffff, NULL));
+  EXPECT_EQ(EILSEQ, errno);
 }
 
 TEST(wchar, wcstombs_wcrtombs) {
   const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
-  const wchar_t bad_chars[] = { L'h', L'i', 666, 0 };
+  const wchar_t bad_chars[] = { L'h', L'i', 0xffffffff, 0 };
   const wchar_t* src;
   char bytes[BUFSIZ];
 
@@ -212,6 +241,30 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(1U, mbrtowc(NULL, "hello", 1, NULL));
 
   ASSERT_EQ(0U, mbrtowc(NULL, NULL, 0, NULL));
+
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  // 1-byte UTF-8.
+  ASSERT_EQ(1U, mbrtowc(out, "abcdef", 6, NULL));
+  ASSERT_EQ(L'a', out[0]);
+  // 2-byte UTF-8.
+  ASSERT_EQ(2U, mbrtowc(out, "\xc2\xa2" "cdef", 6, NULL));
+  ASSERT_EQ(0x00a2, out[0]);
+  // 3-byte UTF-8.
+  ASSERT_EQ(3U, mbrtowc(out, "\xe2\x82\xac" "def", 6, NULL));
+  ASSERT_EQ(0x20ac, out[0]);
+  // 4-byte UTF-8.
+  ASSERT_EQ(4U, mbrtowc(out, "\xf0\xa4\xad\xa2" "ef", 6, NULL));
+  ASSERT_EQ(0x24b62, out[0]);
+#if __BIONIC__ // glibc allows this.
+  // Illegal 5-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, NULL));
+  ASSERT_EQ(EILSEQ, errno);
+#endif
+  // Illegal over-long sequence.
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf0\x82\x82\xac" "ef", 6, NULL));
+  ASSERT_EQ(EILSEQ, errno);
 }
 
 TEST(wchar, wcstod) {
