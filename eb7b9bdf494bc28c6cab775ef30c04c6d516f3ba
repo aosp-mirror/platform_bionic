@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2a5d0832_aab00fe3",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-01T20:40:40Z",
+      "side": 1,
+      "message": "it\u0027s changed quite a bit, not least because i merged their several layers of abstraction into one. it\u0027s going to get worse when i come back to try to use just 4 bytes of state. (using 0 was easier, because we can just ignore the \ninteresting cases.)",
+      "parentUuid": "4a3f9cb5_059ee0dc",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 9
+      },
+      "revId": "eb7b9bdf494bc28c6cab775ef30c04c6d516f3ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a587c41_ee34db1a",
         "filename": "libc/bionic/wctype.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-01T20:30:47Z",
       "side": 1,
       "message": "Is there a reason you didn\u0027t use the old code\u0027s implementation of this? Was it broken?",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 10
+      },
+      "revId": "eb7b9bdf494bc28c6cab775ef30c04c6d516f3ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca32acf0_72a6909d",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-01T20:40:40Z",
+      "side": 1,
+      "message": "yeah, it was complete nonsense. the last of the reinterpret_cast\u003cchar*\u003e code. this is currently the only completely broken function we have, i think. (the rest of this file is ASCII-only, but at least that means it works for some inputs!)\n\ni think the easiest thing to do here is to convert the wcs format string into an mbs string, call strftime, and then convert the mbs string back into a wcs string. we can just allocate a temporary buffer 3*maxsize bytes long. i think that\u0027ll work, but that\u0027s still complicated enough that i didn\u0027t want to do it in this change.",
+      "parentUuid": "4a587c41_ee34db1a",
       "range": {
         "startLine": 90,
         "startChar": 2,
