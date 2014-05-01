@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa1ad864_56aed2ba",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-01T17:24:37Z",
+      "side": 1,
+      "message": "Might as well clean up the space between \"(\" and \"path\" while you\u0027re here...",
+      "revId": "8b6a7dbd1fc6cbc5280cfeccca21acbef96834e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
