@@ -214,6 +214,7 @@ libc_bionic_src_files := \
     bionic/utimes.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
+    bionic/wctype.cpp \
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/ldexp.c \
@@ -356,6 +357,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/locale/wcstoumax.c \
     upstream-openbsd/lib/libc/locale/wcsxfrm.c \
     upstream-openbsd/lib/libc/locale/wctob.c \
+    upstream-openbsd/lib/libc/locale/wctomb.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/fdopen.c \
