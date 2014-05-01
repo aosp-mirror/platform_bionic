@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a587c41_2ef673b4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1625,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-01T20:04:18Z",
+      "side": 1,
+      "message": "It also happens for symlinks. I think it is better to extend soinfo with dt_needed array of pointers and remove fs-dependent code from this method",
+      "revId": "8bf6c91e86455526c3061d1427d32443687bcc3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
