@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a3f9cb5_059ee0dc",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-01T20:30:47Z",
+      "side": 1,
+      "message": "Is it possible to mark the changes to this file that you made? I assume that the old code works well, so only the changes require attention.",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 9
+      },
+      "revId": "eb7b9bdf494bc28c6cab775ef30c04c6d516f3ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a587c41_ee34db1a",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-01T20:30:47Z",
+      "side": 1,
+      "message": "Is there a reason you didn\u0027t use the old code\u0027s implementation of this? Was it broken?",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 10
+      },
+      "revId": "eb7b9bdf494bc28c6cab775ef30c04c6d516f3ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
