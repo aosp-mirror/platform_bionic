@@ -75,8 +75,12 @@ static void __locale_init() {
   gLocale.int_n_sign_posn = CHAR_MAX;
 }
 
+static bool __bionic_current_locale_is_utf8 = false;
+
 static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 || strcmp(locale, "C") == 0 || strcmp(locale, "POSIX") == 0);
+  return (strcmp(locale, "") == 0 ||
+          strcmp(locale, "C") == 0 || strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "POSIX") == 0);
 }
 
 static locale_t __new_locale() {
@@ -115,26 +119,24 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
   return __new_locale();
 }
 
-char* setlocale(int category, char const* locale_name) {
+char* setlocale(int category, const char* locale_name) {
   // Is 'category' valid?
   if (category < LC_CTYPE || category > LC_IDENTIFICATION) {
     errno = EINVAL;
     return NULL;
   }
 
-  // Caller just wants to query the current locale?
-  if (locale_name == NULL) {
-    return const_cast<char*>("C");
+  // Caller wants to set the locale rather than just query?
+  if (locale_name != NULL) {
+    if (!__is_supported_locale(locale_name)) {
+      // We don't support this locale.
+      errno = ENOENT;
+      return NULL;
+    }
+    __bionic_current_locale_is_utf8 = (strstr(locale_name, "UTF-8") != NULL);
   }
 
-  // Caller wants one of the mandatory POSIX locales?
-  if (__is_supported_locale(locale_name)) {
-    return const_cast<char*>("C");
-  }
-
-  // We don't support any other locales.
-  errno = ENOENT;
-  return NULL;
+  return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
 }
 
 locale_t uselocale(locale_t new_locale) {
