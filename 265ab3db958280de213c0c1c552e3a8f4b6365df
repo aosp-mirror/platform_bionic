@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0a292485_ee83bfb1",
+        "filename": "libc/arch-common/bionic/atexit.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-01T00:04:34Z",
+      "side": 1,
+      "message": "NULL is not really defined at this point (this file is included by crtbegin_so.c)",
+      "parentUuid": "0afbe434_c42eb2c4",
+      "range": {
+        "startLine": 35,
+        "startChar": 14,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca046c04_c280e66e",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 3
@@ -152,6 +176,24 @@
       "writtenOn": "2014-04-30T18:08:29Z",
       "side": 1,
       "message": "we can\u0027t write a test that works on glibc too?",
+      "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea205093_752b080b",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-01T00:04:34Z",
+      "side": 1,
+      "message": "Done: enabled for glibc nonstatic",
+      "parentUuid": "4af15c4f_a9ff0579",
       "revId": "265ab3db958280de213c0c1c552e3a8f4b6365df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
