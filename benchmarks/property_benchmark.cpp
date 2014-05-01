@@ -15,6 +15,9 @@
  */
 
 #include "benchmark.h"
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
@@ -32,10 +35,17 @@ struct LocalPropertyTestState {
     LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
         static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_";
 
-        char dir_template[] = "/data/local/tmp/prop-XXXXXX";
+        const char* android_data = getenv("ANDROID_DATA");
+        if (android_data == NULL) {
+          printf("ANDROID_DATA environment variable not set\n");
+          return;
+        }
+        char dir_template[PATH_MAX];
+        snprintf(dir_template, sizeof(dir_template), "%s/local/tmp/prop-XXXXXX", android_data);
         char *dirname = mkdtemp(dir_template);
         if (!dirname) {
-            perror("making temp file for test state failed (is /data/local/tmp writable?)");
+            printf("making temp file for test state failed (is %s/local/tmp writable?): %s\n",
+                   android_data, strerror(errno));
             return;
         }
 
