@@ -1,215 +1,307 @@
-/*
- * Copyright (C) 2008 The Android Open Source Project
+/*	$OpenBSD: citrus_utf8.c,v 1.6 2012/12/05 23:19:59 deraadt Exp $ */
+
+/*-
+ * Copyright (c) 2002-2004 Tim J. Robbins
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *  * Redistributions of source code must retain the above copyright
+ * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
 #include <errno.h>
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <wchar.h>
 
-/* stubs for wide-char functions */
+//
+// This file is basically OpenBSD's citrus_utf8.c but rewritten to not require a 12-byte mbstate_t
+// so we're backwards-compatible with our LP32 ABI where mbstate_t was only 4 bytes. An additional
+// advantage of this is that callers who don't supply their own mbstate_t won't be accessing shared
+// state.
+//
+// We also implement the POSIX interface directly rather than being accessed via function pointers.
+//
 
-int iswalnum(wint_t wc) { return isalnum(wc); }
-int iswalpha(wint_t wc) { return isalpha(wc); }
-int iswblank(wint_t wc) { return isblank(wc); }
-int iswcntrl(wint_t wc) { return iscntrl(wc); }
-int iswdigit(wint_t wc) { return isdigit(wc); }
-int iswgraph(wint_t wc) { return isgraph(wc); }
-int iswlower(wint_t wc) { return islower(wc); }
-int iswprint(wint_t wc) { return isprint(wc); }
-int iswpunct(wint_t wc) { return ispunct(wc); }
-int iswspace(wint_t wc) { return isspace(wc); }
-int iswupper(wint_t wc) { return isupper(wc); }
-int iswxdigit(wint_t wc) { return isxdigit(wc); }
+#define ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
+#define ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
 
-int iswctype(wint_t wc, wctype_t char_class) {
-  switch (char_class) {
-    case WC_TYPE_ALNUM: return isalnum(wc);
-    case WC_TYPE_ALPHA: return isalpha(wc);
-    case WC_TYPE_BLANK: return isblank(wc);
-    case WC_TYPE_CNTRL: return iscntrl(wc);
-    case WC_TYPE_DIGIT: return isdigit(wc);
-    case WC_TYPE_GRAPH: return isgraph(wc);
-    case WC_TYPE_LOWER: return islower(wc);
-    case WC_TYPE_PRINT: return isprint(wc);
-    case WC_TYPE_PUNCT: return ispunct(wc);
-    case WC_TYPE_SPACE: return isspace(wc);
-    case WC_TYPE_UPPER: return isupper(wc);
-    case WC_TYPE_XDIGIT: return isxdigit(wc);
-    default: return 0;
-  }
-}
-
-int mbsinit(const mbstate_t* /*ps*/) {
+int mbsinit(const mbstate_t*) {
+  // We have no state, so we're always in the initial state.
   return 1;
 }
 
-size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* /*ps*/) {
+size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
   if (s == NULL) {
-    return 0;
+    s = "";
+    n = 1;
+    pwc = NULL;
   }
+
   if (n == 0) {
     return 0;
   }
-  if (pwc != NULL) {
-    *pwc = *s;
-  }
-  return (*s != 0);
-}
 
-size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t n, size_t dst_size, mbstate_t* /*ps*/) {
-  size_t i = 0; // Number of input bytes read.
-  size_t o = 0; // Number of output characters written.
-  for (; i < n && (*src)[i] != 0; ++i) {
-    // TODO: UTF-8 support.
-    if (static_cast<uint8_t>((*src)[i]) > 0x7f) {
-      errno = EILSEQ;
-      if (dst != NULL) {
-        *src = &(*src)[i];
-      }
-      return static_cast<size_t>(-1);
+  int ch;
+  if (((ch = static_cast<uint8_t>(*s)) & ~0x7f) == 0) {
+    // Fast path for plain ASCII characters.
+    if (pwc != NULL) {
+      *pwc = ch;
     }
-    if (dst != NULL) {
-      if (o + 1 > dst_size) {
-        break;
-      }
-      dst[o++] = static_cast<wchar_t>((*src)[i]);
-    } else {
-      ++o;
-    }
+    return (ch != '\0' ? 1 : 0);
   }
-  // If we consumed all the input, terminate the output.
-  if (dst != NULL && o < dst_size) {
-    dst[o] = 0;
-  }
-  // If we were actually consuming input, record how far we got.
-  if (dst != NULL) {
-    if ((*src)[i] != 0) {
-      *src = &(*src)[i]; // This is where the next call should pick up.
-    } else {
-      *src = NULL; // We consumed everything.
-    }
-  }
-  return o;
-}
 
-size_t mbsrtowcs(wchar_t* dst, const char** src, size_t dst_size, mbstate_t* ps) {
-  return mbsnrtowcs(dst, src, SIZE_MAX, dst_size, ps);
-}
+  // Determine the number of octets that make up this character
+  // from the first octet, and a mask that extracts the
+  // interesting bits of the first octet. We already know
+  // the character is at least two bytes long.
+  int length;
+  int mask;
 
-wint_t towlower(wint_t wc) {
-  return tolower(wc);
-}
+  // We also specify a lower bound for the character code to
+  // detect redundant, non-"shortest form" encodings. For
+  // example, the sequence C0 80 is _not_ a legal representation
+  // of the null character. This enforces a 1-to-1 mapping
+  // between character codes and their multibyte representations.
+  wchar_t lower_bound;
 
-wint_t towupper(wint_t wc) {
-  return toupper(wc);
-}
-
-int wctomb(char* s, wchar_t wc) {
-  if (s == NULL) {
-    return 0;
-  }
-  if (wc <= 0xff) {
-    *s = static_cast<char>(wc);
+  ch = static_cast<uint8_t>(*s);
+  if ((ch & 0x80) == 0) {
+    mask = 0x7f;
+    length = 1;
+    lower_bound = 0;
+  } else if ((ch & 0xe0) == 0xc0) {
+    mask = 0x1f;
+    length = 2;
+    lower_bound = 0x80;
+  } else if ((ch & 0xf0) == 0xe0) {
+    mask = 0x0f;
+    length = 3;
+    lower_bound = 0x800;
+  } else if ((ch & 0xf8) == 0xf0) {
+    mask = 0x07;
+    length = 4;
+    lower_bound = 0x10000;
   } else {
-    *s = '?';
+    // Malformed input; input is not UTF-8. See RFC 3629.
+    errno = EILSEQ;
+    return ERR_ILLEGAL_SEQUENCE;
   }
-  return 1;
-}
 
-size_t wcrtomb(char* s, wchar_t wc, mbstate_t* /*ps*/) {
-  if (s == NULL) {
-    char buf[MB_LEN_MAX];
-    return wctomb(buf, L'\0');
-  }
-  return wctomb(s, wc);
-}
-
-size_t wcsftime(wchar_t* wcs, size_t maxsize, const wchar_t* format,  const struct tm* timptr) {
-  return strftime(reinterpret_cast<char*>(wcs), maxsize, reinterpret_cast<const char*>(format), timptr);
-}
-
-size_t wcsnrtombs(char* dst, const wchar_t** src, size_t n, size_t dst_size, mbstate_t* /*ps*/) {
-  size_t i = 0; // Number of input characters read.
-  size_t o = 0; // Number of output bytes written.
-  for (; i < n && (*src)[i] != 0; ++i) {
-    // TODO: UTF-8 support.
-    if ((*src)[i] > 0x7f) {
+  // Decode the octet sequence representing the character in chunks
+  // of 6 bits, most significant first.
+  wchar_t wch = static_cast<uint8_t>(*s++) & mask;
+  int i;
+  for (i = 1; i < MIN(length, n); i++) {
+    if ((*s & 0xc0) != 0x80) {
+      // Malformed input; bad characters in the middle of a character.
       errno = EILSEQ;
-      if (dst != NULL) {
-        *src = &(*src)[i];
+      return ERR_ILLEGAL_SEQUENCE;
+    }
+    wch <<= 6;
+    wch |= *s++ & 0x3f;
+  }
+  if (i < length) {
+    return ERR_INCOMPLETE_SEQUENCE;
+  }
+  if (wch < lower_bound) {
+    // Malformed input; redundant encoding.
+    errno = EILSEQ;
+    return ERR_ILLEGAL_SEQUENCE;
+  }
+  if ((wch >= 0xd800 && wch <= 0xdfff) || wch == 0xfffe || wch == 0xffff) {
+    // Malformed input; invalid code points.
+    errno = EILSEQ;
+    return ERR_ILLEGAL_SEQUENCE;
+  }
+  if (pwc != NULL) {
+    *pwc = wch;
+  }
+  return (wch == L'\0' ? 0 : length);
+}
+
+size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstate_t* ps) {
+  size_t i, o, r;
+
+  if (dst == NULL) {
+    for (i = o = 0; i < nmc; i += r, o++) {
+      if (static_cast<uint8_t>((*src)[i]) < 0x80) {
+        // Fast path for plain ASCII characters.
+        if ((*src)[i] == '\0') {
+          return o;
+        }
+        r = 1;
+      } else {
+        r = mbrtowc(NULL, *src + i, nmc - i, ps);
+        if (r == ERR_ILLEGAL_SEQUENCE) {
+          return r;
+        }
+        if (r == ERR_INCOMPLETE_SEQUENCE) {
+          return o;
+        }
+        if (r == 0) {
+          return o;
+        }
       }
-      return static_cast<size_t>(-1);
     }
-    if (dst != NULL) {
-      if (o + 1 > dst_size) {
-        break;
+    return o;
+  }
+
+  for (i = o = 0; i < nmc && o < len; i += r, o++) {
+    if (static_cast<uint8_t>((*src)[i]) < 0x80) {
+      // Fast path for plain ASCII characters.
+      dst[o] = (*src)[i];
+      if ((*src)[i] == '\0') {
+        *src = NULL;
+        return o;
       }
-      dst[o++] = static_cast<char>((*src)[i]);
+      r = 1;
     } else {
-      ++o;
+      r = mbrtowc(dst + o, *src + i, nmc - i, ps);
+      if (r == ERR_ILLEGAL_SEQUENCE) {
+        *src += i;
+        return r;
+      }
+      if (r == ERR_INCOMPLETE_SEQUENCE) {
+        *src += nmc;
+        return o;
+      }
+      if (r == 0) {
+        *src = NULL;
+        return o;
+      }
     }
   }
-  // If we consumed all the input, terminate the output.
-  if (dst != NULL && o < dst_size) {
-    dst[o] = 0;
-  }
-  // If we were actually consuming input, record how far we got.
-  if (dst != NULL) {
-    if ((*src)[i] != 0) {
-      *src = &(*src)[i]; // This is where the next call should pick up.
-    } else {
-      *src = NULL; // We consumed everything.
-    }
-  }
+  *src += i;
   return o;
 }
 
-size_t wcsrtombs(char* dst, const wchar_t** src, size_t dst_size, mbstate_t* ps) {
-  return wcsnrtombs(dst, src, SIZE_MAX, dst_size, ps);
+size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
+  return mbsnrtowcs(dst, src, SIZE_MAX, len, ps);
 }
 
-wctype_t wctype(const char* property) {
-  static const char* const  properties[WC_TYPE_MAX] = {
-    "<invalid>",
-    "alnum", "alpha", "blank", "cntrl", "digit", "graph",
-    "lower", "print", "punct", "space", "upper", "xdigit"
-  };
-  for (size_t i = 0; i < WC_TYPE_MAX; ++i) {
-    if (!strcmp(properties[i], property)) {
-      return static_cast<wctype_t>(i);
+size_t wcrtomb(char* s, wchar_t wc, mbstate_t*) {
+  unsigned char lead;
+  int i, len;
+
+  if (s == NULL) {
+    // Reset to initial shift state (no-op).
+    return 1;
+  }
+
+  if ((wc & ~0x7f) == 0) {
+    // Fast path for plain ASCII characters.
+    *s = wc;
+    return 1;
+  }
+
+  // Determine the number of octets needed to represent this character.
+  // We always output the shortest sequence possible. Also specify the
+  // first few bits of the first octet, which contains the information
+  // about the sequence length.
+  if ((wc & ~0x7f) == 0) {
+    lead = 0;
+    len = 1;
+  } else if ((wc & ~0x7ff) == 0) {
+    lead = 0xc0;
+    len = 2;
+  } else if ((wc & ~0xffff) == 0) {
+    lead = 0xe0;
+    len = 3;
+  } else if ((wc & ~0x1fffff) == 0) {
+    lead = 0xf0;
+    len = 4;
+  } else {
+    errno = EILSEQ;
+    return ERR_ILLEGAL_SEQUENCE;
+  }
+
+  // Output the octets representing the character in chunks
+  // of 6 bits, least significant last. The first octet is
+  // a special case because it contains the sequence length
+  // information.
+  for (i = len - 1; i > 0; i--) {
+    s[i] = (wc & 0x3f) | 0x80;
+    wc >>= 6;
+  }
+  *s = (wc & 0xff) | lead;
+
+  return len;
+}
+
+size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstate_t* ps) {
+  char buf[MB_LEN_MAX];
+  size_t i, o, r;
+  if (dst == NULL) {
+    for (i = o = 0; i < nwc; i++, o += r) {
+      wchar_t wc = (*src)[i];
+      if (wc < 0x80) {
+        // Fast path for plain ASCII characters.
+        if (wc == 0) {
+          return o;
+        }
+        r = 1;
+      } else {
+        r = wcrtomb(buf, wc, ps);
+        if (r == ERR_ILLEGAL_SEQUENCE) {
+          return r;
+        }
+      }
+    }
+    return o;
+  }
+
+  for (i = o = 0; i < nwc && o < len; i++, o += r) {
+    wchar_t wc = (*src)[i];
+    if (wc < 0x80) {
+      // Fast path for plain ASCII characters.
+      dst[o] = wc;
+      if (wc == 0) {
+        *src = NULL;
+        return o;
+      }
+      r = 1;
+    } else if (len - o >= sizeof(buf)) {
+      // Enough space to translate in-place.
+      r = wcrtomb(dst + o, wc, ps);
+      if (r == ERR_ILLEGAL_SEQUENCE) {
+        *src += i;
+        return r;
+      }
+    } else {
+      // May not be enough space; use temp buffer.
+      r = wcrtomb(buf, wc, ps);
+      if (r == ERR_ILLEGAL_SEQUENCE) {
+        *src += i;
+        return r;
+      }
+      if (r > len - o) {
+        break;
+      }
+      memcpy(dst + o, buf, r);
     }
   }
-  return static_cast<wctype_t>(0);
+  *src += i;
+  return o;
 }
 
-int wcwidth(wchar_t wc) {
-  return (wc > 0);
+size_t wcsrtombs(char* dst, const wchar_t** src, size_t len, mbstate_t* ps) {
+  return wcsnrtombs(dst, src, SIZE_MAX, len, ps);
 }
