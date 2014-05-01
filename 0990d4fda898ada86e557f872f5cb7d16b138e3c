@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea25b0a9_4d7779b1",
+        "filename": "libc/kernel/uapi/asm-generic/signal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-01T08:25:06Z",
+      "side": 1,
+      "message": "Is this #ifndef still correct ?",
+      "revId": "0990d4fda898ada86e557f872f5cb7d16b138e3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
