@@ -319,3 +319,18 @@ TEST(wchar, mbsnrtowcs) {
   ASSERT_EQ(L'l', dst[2]);
   ASSERT_EQ(&s[3], src);
 }
+
+TEST(wchar, wcsftime) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 200;
+  t.tm_mon = 2;
+  t.tm_mday = 10;
+
+  wchar_t buf[64];
+
+  EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
+  EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
+}
