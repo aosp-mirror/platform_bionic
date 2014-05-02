@@ -198,9 +198,6 @@ size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
 }
 
 size_t wcrtomb(char* s, wchar_t wc, mbstate_t*) {
-  unsigned char lead;
-  int i, len;
-
   if (s == NULL) {
     // Reset to initial shift state (no-op).
     return 1;
@@ -216,18 +213,20 @@ size_t wcrtomb(char* s, wchar_t wc, mbstate_t*) {
   // We always output the shortest sequence possible. Also specify the
   // first few bits of the first octet, which contains the information
   // about the sequence length.
+  uint8_t lead;
+  size_t length;
   if ((wc & ~0x7f) == 0) {
     lead = 0;
-    len = 1;
+    length = 1;
   } else if ((wc & ~0x7ff) == 0) {
     lead = 0xc0;
-    len = 2;
+    length = 2;
   } else if ((wc & ~0xffff) == 0) {
     lead = 0xe0;
-    len = 3;
+    length = 3;
   } else if ((wc & ~0x1fffff) == 0) {
     lead = 0xf0;
-    len = 4;
+    length = 4;
   } else {
     errno = EILSEQ;
     return ERR_ILLEGAL_SEQUENCE;
@@ -237,13 +236,13 @@ size_t wcrtomb(char* s, wchar_t wc, mbstate_t*) {
   // of 6 bits, least significant last. The first octet is
   // a special case because it contains the sequence length
   // information.
-  for (i = len - 1; i > 0; i--) {
+  for (size_t i = length - 1; i > 0; i--) {
     s[i] = (wc & 0x3f) | 0x80;
     wc >>= 6;
   }
   *s = (wc & 0xff) | lead;
 
-  return len;
+  return length;
 }
 
 size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstate_t* ps) {
@@ -252,7 +251,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
   if (dst == NULL) {
     for (i = o = 0; i < nwc; i++, o += r) {
       wchar_t wc = (*src)[i];
-      if (wc < 0x80) {
+      if (static_cast<uint32_t>(wc) < 0x80) {
         // Fast path for plain ASCII characters.
         if (wc == 0) {
           return o;
@@ -270,7 +269,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
 
   for (i = o = 0; i < nwc && o < len; i++, o += r) {
     wchar_t wc = (*src)[i];
-    if (wc < 0x80) {
+    if (static_cast<uint32_t>(wc) < 0x80) {
       // Fast path for plain ASCII characters.
       dst[o] = wc;
       if (wc == 0) {
