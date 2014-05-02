@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a6c34f2_5a1e1552",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-02T16:33:42Z",
+      "side": 1,
+      "message": "Commit message should say what this is change is about.",
+      "revId": "54172323b65465321d1741abec2355860bcaf6e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
