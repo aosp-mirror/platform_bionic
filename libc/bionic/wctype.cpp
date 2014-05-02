@@ -84,8 +84,3 @@ wctype_t wctype(const char* property) {
 int wcwidth(wchar_t wc) {
   return (wc > 0);
 }
-
-// TODO: implement wcsftime.
-size_t wcsftime(wchar_t* wcs, size_t maxsize, const wchar_t* format,  const struct tm* timptr) {
-  abort();
-}
