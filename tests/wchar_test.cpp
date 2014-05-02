@@ -89,7 +89,7 @@ TEST(wchar, wctomb_wcrtomb) {
 
 TEST(wchar, wcstombs_wcrtombs) {
   const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
-  const wchar_t bad_chars[] = { L'h', L'i', 0xffffffff, 0 };
+  const wchar_t bad_chars[] = { L'h', L'i', static_cast<wchar_t>(0xffffffff), 0 };
   const wchar_t* src;
   char bytes[BUFSIZ];
 
