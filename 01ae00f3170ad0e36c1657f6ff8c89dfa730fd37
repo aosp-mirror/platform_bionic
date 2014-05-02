@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "4a66bc13_fed59978",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-02T16:39:51Z",
+      "side": 1,
+      "message": "since i think we\u0027re always going to have local modifications in these files (if only because the BSDs implement file locking in a very different way), i don\u0027t mind making the headers stand-alone. but shouldn\u0027t it only be headers under include/ that you\u0027re feeding to the analysis tools? shouldn\u0027t they drag these ones in themselves when they compile the corresponding source?",
+      "parentUuid": "aa9d7827_bbff2779",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "01ae00f3170ad0e36c1657f6ff8c89dfa730fd37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c37fc9_3eb1b980",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
