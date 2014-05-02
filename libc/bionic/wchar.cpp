@@ -72,7 +72,7 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
   // from the first octet, and a mask that extracts the
   // interesting bits of the first octet. We already know
   // the character is at least two bytes long.
-  int length;
+  size_t length;
   int mask;
 
   // We also specify a lower bound for the character code to
@@ -108,7 +108,7 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
   // Decode the octet sequence representing the character in chunks
   // of 6 bits, most significant first.
   wchar_t wch = static_cast<uint8_t>(*s++) & mask;
-  int i;
+  size_t i;
   for (i = 1; i < MIN(length, n); i++) {
     if ((*s & 0xc0) != 0x80) {
       // Malformed input; bad characters in the middle of a character.
