@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "aa9d7827_bbff2779",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-02T11:15:57Z",
+      "side": 1,
+      "message": "Unfortunately this also have the nasty side effect of screwing up analysis tools which try to compile headers.",
+      "parentUuid": "05caf7dd_633715fa",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "01ae00f3170ad0e36c1657f6ff8c89dfa730fd37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c37fc9_3eb1b980",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
