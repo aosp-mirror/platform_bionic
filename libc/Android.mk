@@ -554,6 +554,8 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(call all-c-files-under,tzcode)
+# tzcode doesn't include wcsftime, so we use the OpenBSD one.
+LOCAL_SRC_FILES += upstream-openbsd/lib/libc/time/wcsftime.c
 
 LOCAL_CFLAGS := $(libc_common_cflags)
 # Don't use ridiculous amounts of stack.
@@ -569,7 +571,7 @@ LOCAL_CFLAGS += -DUSG_COMPAT=1
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) $(LOCAL_PATH)/tzcode/
 LOCAL_MODULE := libc_tzcode
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
