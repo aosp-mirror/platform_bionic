@@ -680,6 +680,9 @@ static int open_library(const char* name) {
       return fd;
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
+#if defined(__LP64__)
+    return -1;
+#endif
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
