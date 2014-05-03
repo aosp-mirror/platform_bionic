@@ -227,7 +227,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/mktemp.c \
     upstream-freebsd/lib/libc/stdio/setvbuf.c \
-    upstream-freebsd/lib/libc/stdio/wsetup.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
     upstream-freebsd/lib/libc/stdlib/imaxabs.c \
@@ -436,6 +435,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/wbuf.c \
     upstream-openbsd/lib/libc/stdio/wprintf.c \
     upstream-openbsd/lib/libc/stdio/wscanf.c \
+    upstream-openbsd/lib/libc/stdio/wsetup.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
