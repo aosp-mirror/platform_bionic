@@ -673,6 +673,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
     -include openbsd-compat.h
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
