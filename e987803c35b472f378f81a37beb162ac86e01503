@@ -16,6 +16,24 @@
       "revId": "e987803c35b472f378f81a37beb162ac86e01503",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ab988aa_87dc46f3",
+        "filename": "libc/upstream-openbsd/lib/libc/stdio/wsetup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-03T22:49:37Z",
+      "side": 0,
+      "message": "Do we have a test for this?",
+      "parentUuid": "8aba749a_cd31fde1",
+      "revId": "e987803c35b472f378f81a37beb162ac86e01503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
