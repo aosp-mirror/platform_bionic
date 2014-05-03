@@ -1,5 +1,4 @@
-/*	$OpenBSD: fvwrite.h,v 1.5 2003/06/02 20:18:37 millert Exp $	*/
-
+/*	$OpenBSD: fwrite.c,v 1.11 2014/05/01 16:40:36 deraadt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -32,17 +31,58 @@
  * SUCH DAMAGE.
  */
 
-/*
- * I/O descriptors for __sfvwrite().
- */
-struct __siov {
-	const void	*iov_base;
-	size_t	iov_len;
-};
-struct __suio {
-	struct	__siov *uio_iov;
-	int	uio_iovcnt;
-	int	uio_resid;
-};
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <errno.h>
+#include "local.h"
+#include "fvwrite.h"
 
-extern int __sfvwrite(FILE *, struct __suio *);
+#define MUL_NO_OVERFLOW	(1UL << (sizeof(size_t) * 4))
+
+/*
+ * Write `count' objects (each size `size') from memory to the given file.
+ * Return the number of whole objects written.
+ */
+size_t
+fwrite(const void *buf, size_t size, size_t count, FILE *fp)
+{
+	size_t n;
+	struct __suio uio;
+	struct __siov iov;
+	int ret;
+
+	/*
+	 * Extension:  Catch integer overflow
+	 */
+	if ((size >= MUL_NO_OVERFLOW || count >= MUL_NO_OVERFLOW) &&
+	    size > 0 && SIZE_MAX / size < count) {
+		errno = EOVERFLOW;
+		fp->_flags |= __SERR;
+		return (0);
+	}
+
+	/*
+	 * ANSI and SUSv2 require a return value of 0 if size or count are 0.
+	 */
+	if ((n = count * size) == 0)
+		return (0);
+
+	iov.iov_base = (void *)buf;
+	uio.uio_resid = iov.iov_len = n;
+	uio.uio_iov = &iov;
+	uio.uio_iovcnt = 1;
+
+	/*
+	 * The usual case is success (__sfvwrite returns 0);
+	 * skip the divide if this happens, since divides are
+	 * generally slow and since this occurs whenever size==0.
+	 */
+	FLOCKFILE(fp);
+	_SET_ORIENTATION(fp, -1);
+	ret = __sfvwrite(fp, &uio);
+	FUNLOCKFILE(fp);
+	if (ret == 0)
+		return (count);
+	return ((n - uio.uio_resid) / size);
+}

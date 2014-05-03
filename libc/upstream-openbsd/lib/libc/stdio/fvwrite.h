@@ -1,3 +1,5 @@
+/*	$OpenBSD: fvwrite.h,v 1.6 2013/11/12 07:04:35 deraadt Exp $	*/
+
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,67 +32,18 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)fwrite.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
-#include "namespace.h"
-#include <errno.h>
-#include <stdint.h>
-#include <stdio.h>
-#include "un-namespace.h"
-#include "local.h"
-#include "fvwrite.h"
-#include "libc_private.h"
-
 /*
- * Write `count' objects (each size `size') from memory to the given file.
- * Return the number of whole objects written.
+ * I/O descriptors for __sfvwrite().
  */
-size_t
-fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __restrict fp)
-{
-	size_t n;
-	struct __suio uio;
-	struct __siov iov;
+struct __siov {
+	void	*iov_base;
+	size_t	iov_len;
+};
+struct __suio {
+	struct	__siov *uio_iov;
+	int	uio_iovcnt;
+	int	uio_resid;
+};
 
-	/*
-	 * ANSI and SUSv2 require a return value of 0 if size or count are 0.
-	 */
-	if ((count == 0) || (size == 0))
-		return (0);
-
-	/*
-	 * Check for integer overflow.  As an optimization, first check that
-	 * at least one of {count, size} is at least 2^16, since if both
-	 * values are less than that, their product can't possible overflow
-	 * (size_t is always at least 32 bits on FreeBSD).
-	 */
-	if (((count | size) > 0xFFFF) &&
-	    (count > SIZE_MAX / size)) {
-		errno = EINVAL;
-		fp->_flags |= __SERR;
-		return (0);
-	}
-
-	n = count * size;
-
-	iov.iov_base = (void *)buf;
-	uio.uio_resid = iov.iov_len = n;
-	uio.uio_iov = &iov;
-	uio.uio_iovcnt = 1;
-
-	FLOCKFILE(fp);
-	ORIENT(fp, -1);
-	/*
-	 * The usual case is success (__sfvwrite returns 0);
-	 * skip the divide if this happens, since divides are
-	 * generally slow and since this occurs whenever size==0.
-	 */
-	if (__sfvwrite(fp, &uio) != 0)
-	    count = (n - uio.uio_resid) / size;
-	FUNLOCKFILE(fp);
-	return (count);
-}
+extern int __sfvwrite(FILE *, struct __suio *);
+wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
