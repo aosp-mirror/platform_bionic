@@ -31,7 +31,7 @@
 #include <string.h>
 #include <wchar.h>
 
-// TODO: these only work for the ASCII range; rewrite to dlsym icu4c?
+// TODO: these only work for the ASCII range; rewrite to dlsym icu4c? http://b/14499654
 
 int iswalnum(wint_t wc) { return isalnum(wc); }
 int iswalpha(wint_t wc) { return isalpha(wc); }
@@ -48,18 +48,18 @@ int iswxdigit(wint_t wc) { return isxdigit(wc); }
 
 int iswctype(wint_t wc, wctype_t char_class) {
   switch (char_class) {
-    case WC_TYPE_ALNUM: return isalnum(wc);
-    case WC_TYPE_ALPHA: return isalpha(wc);
-    case WC_TYPE_BLANK: return isblank(wc);
-    case WC_TYPE_CNTRL: return iscntrl(wc);
-    case WC_TYPE_DIGIT: return isdigit(wc);
-    case WC_TYPE_GRAPH: return isgraph(wc);
-    case WC_TYPE_LOWER: return islower(wc);
-    case WC_TYPE_PRINT: return isprint(wc);
-    case WC_TYPE_PUNCT: return ispunct(wc);
-    case WC_TYPE_SPACE: return isspace(wc);
-    case WC_TYPE_UPPER: return isupper(wc);
-    case WC_TYPE_XDIGIT: return isxdigit(wc);
+    case WC_TYPE_ALNUM: return iswalnum(wc);
+    case WC_TYPE_ALPHA: return iswalpha(wc);
+    case WC_TYPE_BLANK: return iswblank(wc);
+    case WC_TYPE_CNTRL: return iswcntrl(wc);
+    case WC_TYPE_DIGIT: return iswdigit(wc);
+    case WC_TYPE_GRAPH: return iswgraph(wc);
+    case WC_TYPE_LOWER: return iswlower(wc);
+    case WC_TYPE_PRINT: return iswprint(wc);
+    case WC_TYPE_PUNCT: return iswpunct(wc);
+    case WC_TYPE_SPACE: return iswspace(wc);
+    case WC_TYPE_UPPER: return iswupper(wc);
+    case WC_TYPE_XDIGIT: return iswxdigit(wc);
     default: return 0;
   }
 }
