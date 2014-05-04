@@ -223,7 +223,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/fclose.c \
     upstream-freebsd/lib/libc/stdio/flags.c \
     upstream-freebsd/lib/libc/stdio/fopen.c \
-    upstream-freebsd/lib/libc/stdio/fwrite.c \
     upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/mktemp.c \
     upstream-freebsd/lib/libc/stdio/setvbuf.c \
@@ -388,6 +387,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
     upstream-openbsd/lib/libc/stdio/fwide.c \
     upstream-openbsd/lib/libc/stdio/fwprintf.c \
+    upstream-openbsd/lib/libc/stdio/fwrite.c \
     upstream-openbsd/lib/libc/stdio/fwscanf.c \
     upstream-openbsd/lib/libc/stdio/getc.c \
     upstream-openbsd/lib/libc/stdio/getchar.c \
