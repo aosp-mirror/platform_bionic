@@ -46,6 +46,30 @@
       "revId": "eb6aa8b67ad1e1bcf5b2a9b53c998cf0721271a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_a595b5ed",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-05T23:08:39Z",
+      "side": 1,
+      "message": "I don\u0027t think this works then. This structure doesn\u0027t do regex matching unless you explicitly use the regex stuff. Otherwise, you could rewrite a few of the other checks up above too.",
+      "parentUuid": "eaaa1052_6ba8f57c",
+      "range": {
+        "startLine": 63,
+        "startChar": 12,
+        "endLine": 63,
+        "endChar": 36
+      },
+      "revId": "eb6aa8b67ad1e1bcf5b2a9b53c998cf0721271a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
