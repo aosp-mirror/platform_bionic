@@ -41,11 +41,52 @@ int __atexit_invalid = 1;
 struct atexit *__atexit;
 
 /*
+ * TODO: Read this before upstreaming:
+ *
+ * As of Apr 2014 there is a bug regaring function type detection logic in
+ * Free/Open/NetBSD implementations of __cxa_finalize().
+ *
+ * What it is about:
+ * First of all there are two kind of atexit handlers:
+ *  1) void handler(void) - this is the regular type
+ *     available for to user via atexit(.) function call.
+ *
+ *  2) void internal_handler(void*) - this is the type
+ *     __cxa_atexit() function expects. This handler is used
+ *     by C++ compiler to register static destructor calls.
+ *     Note that calling this function as the handler of type (1)
+ *     results in incorrect this pointer in static d-tors.
+ *
+ * What is wrong with BSD implementations:
+ *
+ *  They use dso argument to identify the handler type. The problem
+ *  with it is dso is also used to identify the handlers associated
+ *  with particular dynamic library and allow __cxa_finalize to call correct
+ *  set of functions on dlclose(). And it cannot identify both.
+ *
+ * What is correct way to identify function type?
+ *
+ *  Consider this:
+ *  1. __cxa_finalize and __cxa_atexit are part of libc and do not have access to hidden
+ *     &__dso_handle.
+ *  2. __cxa_atexit has only 3 arguments: function pointer, function argument, dso.
+ *     none of them can be reliably used to pass information about handler type.
+ *  3. following http://www.codesourcery.com/cxx-abi/abi.html#dso-dtor (3.3.5.3 - B)
+ *     translation of user atexit -> __cxa_atexit(f, NULL, NULL) results in crashes
+ *     on exit() after dlclose() of a library with an atexit() call.
+ *
+ *  One way to resolve this is to always call second form of handler, which will
+ *  result in storing unused argument in register/stack depending on architecture
+ *  and should not present any problems.
+ *
+ *  Another way is to make them dso-local in one way or the other.
+ */
+
+/*
  * Function pointers are stored in a linked list of pages. The list
  * is initially empty, and pages are allocated on demand. The first
  * function pointer in the first allocated page (the last one in
  * the linked list) was reserved for the cleanup function.
- * TODO: switch to the regular FreeBSD/NetBSD atexit implementation.
  *
  * Outside the following functions, all pages are mprotect()'ed
  * to prevent unintentional/malicious corruption.
@@ -94,7 +135,7 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 			__atexit_invalid = 0;
 	}
 	fnp = &p->fns[p->ind++];
-	fnp->fn_ptr.cxa_func = func;
+	fnp->cxa_func = func;
 	fnp->fn_arg = arg;
 	fnp->fn_dso = dso;
 	if (mprotect(p, pgsize, PROT_READ))
@@ -113,57 +154,59 @@ unlock:
 void
 __cxa_finalize(void *dso)
 {
-	struct atexit *p, *q;
+	struct atexit *p, *q, *original_atexit;
 	struct atexit_fn fn;
-	int n, pgsize = getpagesize();
+	int n, pgsize = getpagesize(), original_ind;
 	static int call_depth;
 
 	if (__atexit_invalid)
 		return;
-
 	_ATEXIT_LOCK();
 	call_depth++;
 
-	for (p = __atexit; p != NULL; p = p->next) {
-		for (n = p->ind; --n >= 0;) {
-			if (p->fns[n].fn_ptr.cxa_func == NULL)
-				continue;	/* already called */
-			if (dso != NULL && dso != p->fns[n].fn_dso)
-				continue;	/* wrong DSO */
-
+	p = original_atexit = __atexit;
+	n = original_ind = p != NULL ? p->ind : 0;
+	while (p != NULL) {
+		if (p->fns[n].cxa_func != NULL /* not called */
+				&& (dso == NULL || dso == p->fns[n].fn_dso)) { /* correct DSO */
 			/*
 			 * Mark handler as having been already called to avoid
 			 * dupes and loops, then call the appropriate function.
 			 */
 			fn = p->fns[n];
 			if (mprotect(p, pgsize, PROT_READ | PROT_WRITE) == 0) {
-				p->fns[n].fn_ptr.cxa_func = NULL;
+				p->fns[n].cxa_func = NULL;
 				mprotect(p, pgsize, PROT_READ);
 			}
+
 			_ATEXIT_UNLOCK();
-#if ANDROID
-                        /* it looks like we should always call the function
-                         * with an argument, even if dso is not NULL. Otherwise
-                         * static destructors will not be called properly on
-                         * the ARM.
-                         */
-                        (*fn.fn_ptr.cxa_func)(fn.fn_arg);
-#else /* !ANDROID */
-			if (dso != NULL)
-				(*fn.fn_ptr.cxa_func)(fn.fn_arg);
-			else
-				(*fn.fn_ptr.std_func)();
-#endif /* !ANDROID */
+			(*fn.cxa_func)(fn.fn_arg);
 			_ATEXIT_LOCK();
+			// check for new atexit handlers
+			if ((__atexit->ind != original_ind) || (__atexit != original_atexit)) {
+				// need to restart now to preserve correct
+				// call order - LIFO
+				p = original_atexit = __atexit;
+				n = original_ind = p->ind;
+				continue;
+			}
+		}
+		if (n == 0) {
+			p = p->next;
+			n = p != NULL ? p->ind : 0;
+		} else {
+			--n;
 		}
 	}
+
+	--call_depth;
 
 	/*
 	 * If called via exit(), unmap the pages since we have now run
 	 * all the handlers.  We defer this until calldepth == 0 so that
 	 * we don't unmap things prematurely if called recursively.
 	 */
-	if (dso == NULL && --call_depth == 0) {
+	if (dso == NULL && call_depth == 0) {
 		for (p = __atexit; p != NULL; ) {
 			q = p;
 			p = p->next;
