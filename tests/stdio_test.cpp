@@ -436,3 +436,45 @@ TEST(stdio, sscanf) {
   ASSERT_EQ(123, i1);
   ASSERT_DOUBLE_EQ(1.23, d1);
 }
+
+TEST(stdio, cantwrite_EBADF) {
+  // If we open a file read-only...
+  FILE* fp = fopen("/proc/version", "r");
+
+  // ...all attempts to write to that file should return failure.
+
+  // They should also set errno to EBADF. This isn't POSIX, but it's traditional.
+  // glibc gets the wide-character functions wrong.
+
+  errno = 0;
+  EXPECT_EQ(EOF, putc('x', fp));
+  EXPECT_EQ(EBADF, errno);
+
+  errno = 0;
+  EXPECT_EQ(EOF, fprintf(fp, "hello"));
+  EXPECT_EQ(EBADF, errno);
+
+  errno = 0;
+  EXPECT_EQ(EOF, fwprintf(fp, L"hello"));
+#if !defined(__GLIBC__)
+  EXPECT_EQ(EBADF, errno);
+#endif
+
+  errno = 0;
+  EXPECT_EQ(EOF, putw(1234, fp));
+  EXPECT_EQ(EBADF, errno);
+
+  errno = 0;
+  EXPECT_EQ(0U, fwrite("hello", 1, 2, fp));
+  EXPECT_EQ(EBADF, errno);
+
+  errno = 0;
+  EXPECT_EQ(EOF, fputs("hello", fp));
+  EXPECT_EQ(EBADF, errno);
+
+  errno = 0;
+  EXPECT_EQ(WEOF, fputwc(L'x', fp));
+#if !defined(__GLIBC__)
+  EXPECT_EQ(EBADF, errno);
+#endif
+}
