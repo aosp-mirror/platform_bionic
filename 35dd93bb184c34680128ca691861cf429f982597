@@ -282,6 +282,24 @@
     },
     {
       "key": {
+        "uuid": "8aba749a_24a30ed3",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-05T17:14:04Z",
+      "side": 1,
+      "message": "removed goto.",
+      "parentUuid": "05caf7dd_43cf795f",
+      "revId": "35dd93bb184c34680128ca691861cf429f982597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05caf7dd_b5a66a98",
         "filename": "tests/atexit_testlib.cpp",
         "patchSetId": 2
