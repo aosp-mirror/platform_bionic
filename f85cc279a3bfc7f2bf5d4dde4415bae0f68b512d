@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8aba749a_a4e93ecd",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-05T17:25:33Z",
+      "side": 1,
+      "message": "while (",
+      "revId": "f85cc279a3bfc7f2bf5d4dde4415bae0f68b512d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a2fd4b4_652a0005",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-05T17:25:33Z",
+      "side": 1,
+      "message": "can you add to the checkin comment explaining a couple of things:\n\n1. why we don\u0027t just null out the functions as we call them and have a simpler outer loop that says \"keep going through the whole list until you have a pass where there\u0027s nothing left to call\"?\n\n2. why the old code with two function pointers was wrong.\n\nthis will be useful either next time we\u0027re looking at this code or if we decide to try to upstream this. (because these are both bugs that should affect OpenBSD too, right?)",
+      "revId": "f85cc279a3bfc7f2bf5d4dde4415bae0f68b512d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aacbb83b_00ad9420",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-05T17:25:33Z",
+      "side": 1,
+      "message": "(we should probably decide whether we\u0027re going to try to upstream our fixes and get back in sync or fork the atexit implementation before reformatting. [and then if we reformat, reformat completely.])",
+      "revId": "f85cc279a3bfc7f2bf5d4dde4415bae0f68b512d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
