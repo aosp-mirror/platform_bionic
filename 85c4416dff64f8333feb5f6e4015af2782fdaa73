@@ -16,6 +16,24 @@
       "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_81a2de9a",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:42:35Z",
+      "side": 1,
+      "message": "I\u0027d prefer it this way. To keep __atexit structure separate and __cxa_atext()... __cxa_finalize cycle clear and decoupled from test.",
+      "parentUuid": "8aba749a_610faa01",
+      "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
