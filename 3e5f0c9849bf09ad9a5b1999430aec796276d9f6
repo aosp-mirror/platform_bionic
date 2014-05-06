@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a346007_8ffd941f",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T18:28:32Z",
+      "side": 1,
+      "message": "This doesn\u0027t appear to be used anywhere below, is it needed?",
+      "range": {
+        "startLine": 842,
+        "startChar": 2,
+        "endLine": 842,
+        "endChar": 15
+      },
+      "revId": "3e5f0c9849bf09ad9a5b1999430aec796276d9f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
