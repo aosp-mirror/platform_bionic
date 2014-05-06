@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8aba749a_56cb51e3",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T03:04:26Z",
+      "side": 1,
+      "message": "leave these as NULL.",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_f6d845b1",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T03:04:26Z",
+      "side": 1,
+      "message": "can\u0027t we write this as a death test and have gtest do all the forking and collecting of output for us?",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a3ee8ea_8828fb74",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T03:04:26Z",
+      "side": 1,
+      "message": "copyright header.",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a346007_cd484c97",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T03:04:26Z",
+      "side": 1,
+      "message": "i didn\u0027t really like the last instance of this, but at least it was short. i think here we should really just have \"1\", \"2\", et cetera.",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
