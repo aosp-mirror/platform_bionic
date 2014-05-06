@@ -39,6 +39,7 @@
 
 typedef int (*fn)(void);
 #define LIBNAME "libdlext_test.so"
+#define LIBNAME_NORELRO "libdlext_test_norelro.so"
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
 
@@ -144,52 +145,88 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   EXPECT_EQ(4, f());
 }
 
-TEST_F(DlExtTest, RelroShareChildWrites) {
-  void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
-  ASSERT_TRUE(start != MAP_FAILED);
-  android_dlextinfo extinfo;
-  extinfo.reserved_addr = start;
-  extinfo.reserved_size = LIBSIZE;
+class DlExtRelroSharingTest : public DlExtTest {
+protected:
+  virtual void SetUp() {
+    DlExtTest::SetUp();
+    void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+                       -1, 0);
+    ASSERT_TRUE(start != MAP_FAILED);
+    extinfo_.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
+    extinfo_.reserved_addr = start;
+    extinfo_.reserved_size = LIBSIZE;
+    extinfo_.relro_fd = -1;
 
-  int relro_fd;
-  char relro_file[PATH_MAX];
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != NULL);
-  snprintf(relro_file, sizeof(relro_file), "%s/local/tmp/libdlext_test.relro", android_data);
-  relro_fd = open(relro_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
-  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_WRITE_RELRO;
-  ASSERT_NOERROR(relro_fd);
-  extinfo.relro_fd = relro_fd;
-
-  pid_t pid = fork();
-  if (pid == 0) {
-    // child process
-    void* handle = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
-    if (handle == NULL) {
-      fprintf(stderr, "in child: %s\n", dlerror());
-      exit(1);
-    }
-    exit(0);
+    const char* android_data = getenv("ANDROID_DATA");
+    ASSERT_TRUE(android_data != NULL);
+    snprintf(relro_file_, sizeof(relro_file_), "%s/local/tmp/libdlext_test.relro", android_data);
   }
 
-  // continuing in parent
-  ASSERT_NOERROR(close(relro_fd));
-  ASSERT_NOERROR(pid);
-  int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(0, WEXITSTATUS(status));
+  virtual void TearDown() {
+    DlExtTest::TearDown();
+    if (extinfo_.relro_fd != -1) {
+      ASSERT_NOERROR(close(extinfo_.relro_fd));
+    }
+  }
 
-  relro_fd = open(relro_file, O_RDONLY);
+  void CreateRelroFile(const char* lib) {
+    int relro_fd = open(relro_file_, O_CREAT | O_RDWR | O_TRUNC, 0644);
+    ASSERT_NOERROR(relro_fd);
+
+    pid_t pid = fork();
+    if (pid == 0) {
+      // child process
+      extinfo_.flags |= ANDROID_DLEXT_WRITE_RELRO;
+      extinfo_.relro_fd = relro_fd;
+      void* handle = android_dlopen_ext(lib, RTLD_NOW, &extinfo_);
+      if (handle == NULL) {
+        fprintf(stderr, "in child: %s\n", dlerror());
+        exit(1);
+      }
+      exit(0);
+    }
+
+    // continuing in parent
+    ASSERT_NOERROR(close(relro_fd));
+    ASSERT_NOERROR(pid);
+    int status;
+    ASSERT_EQ(pid, waitpid(pid, &status, 0));
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+
+    // reopen file for reading so it can be used
+    relro_fd = open(relro_file_, O_RDONLY);
+    ASSERT_NOERROR(relro_fd);
+    extinfo_.flags |= ANDROID_DLEXT_USE_RELRO;
+    extinfo_.relro_fd = relro_fd;
+  }
+
+  void TryUsingRelro(const char* lib) {
+    handle_ = android_dlopen_ext(lib, RTLD_NOW, &extinfo_);
+    ASSERT_DL_NOTNULL(handle_);
+    fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+    ASSERT_DL_NOTNULL(f);
+    EXPECT_EQ(4, f());
+  }
+
+  android_dlextinfo extinfo_;
+  char relro_file_[PATH_MAX];
+};
+
+TEST_F(DlExtRelroSharingTest, ChildWritesGoodData) {
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
+}
+
+TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME_NORELRO));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME_NORELRO));
+}
+
+TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
+  int relro_fd = open(relro_file_, O_CREAT | O_RDWR | O_TRUNC, 0644);
   ASSERT_NOERROR(relro_fd);
-  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_USE_RELRO;
-  extinfo.relro_fd = relro_fd;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
   ASSERT_NOERROR(close(relro_fd));
 
-  ASSERT_DL_NOTNULL(handle_);
-  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
-  ASSERT_DL_NOTNULL(f);
-  EXPECT_EQ(4, f());
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
 }
