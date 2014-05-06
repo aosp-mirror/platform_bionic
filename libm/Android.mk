@@ -234,6 +234,11 @@ libm_common_cflags := \
     -DFLT_EVAL_METHOD=0 \
     -std=c99 \
     -include $(LOCAL_PATH)/freebsd-compat.h \
+    -Wno-missing-braces \
+    -Wno-parentheses \
+    -Wno-sign-compare \
+    -Wno-uninitialized \
+    -Wno-unknown-pragmas \
 
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
