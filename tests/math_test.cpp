@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#define _DECLARE_C99_LDBL_MATH 1
-
 // This include (and the associated definition of __test_capture_signbit)
 // must be placed before any files that include <cmath> (gtest.h in this case).
 //
