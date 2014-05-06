@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "4adb1c06_93023ed4",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-06T10:56:31Z",
+      "side": 1,
+      "message": "I should use only the include/ dirs and ignore the rest but it\u0027s helpful to also look at internal headers for an in depth analysis. Most of things are implemented internally more or less the same across different libc, so looking at them could reveal inconsistencies with the upstream. \n\nThe other thing is that some public headers drag private/machine specific headers with them. So ignoring them it will produce just partial results for some types (e.g. for ones that resolves in the uapi headers).",
+      "parentUuid": "4a66bc13_fed59978",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "01ae00f3170ad0e36c1657f6ff8c89dfa730fd37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5c37fc9_3eb1b980",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
