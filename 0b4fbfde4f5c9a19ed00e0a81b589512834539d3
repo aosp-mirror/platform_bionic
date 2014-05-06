@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a346007_b4c43146",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a346007_7973c2fd",
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a43e481_5ecfd58f",
         "filename": "tests/atexit_test.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2014-05-06T16:39:17Z",
       "side": 1,
       "message": "Is there a reason it\u0027s a ssize_t instead of size_t? I don\u0027t immediately see a way for it to legally be a negative value.",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 11
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_e18f1a63",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:35:36Z",
+      "side": 1,
+      "message": "I moved that part of code to ASSERT_EXIT...",
+      "parentUuid": "0a43e481_5ecfd58f",
       "range": {
         "startLine": 80,
         "startChar": 4,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "8aba749a_018d8e6a",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:35:36Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "2ab988aa_903b1abe",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 10
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8aba749a_9e79df0d",
         "filename": "tests/atexit_testbin.cpp",
         "patchSetId": 3
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "8aba749a_a1c04263",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8aba749a_9e79df0d",
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a43e481_beb37928",
         "filename": "tests/atexit_testbin.cpp",
         "patchSetId": 3
@@ -93,6 +177,30 @@
       "writtenOn": "2014-05-06T16:39:17Z",
       "side": 1,
       "message": "This is a bit confusing. I think this is testing that a static descructor gets called with the correct this.\n\nCould you change the wording slightly, maybe something like static desctructor called with incorrect this pointer. This is a minor nit though.",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 52
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a346007_94148d17",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T17:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a43e481_beb37928",
       "range": {
         "startLine": 32,
         "startChar": 16,
