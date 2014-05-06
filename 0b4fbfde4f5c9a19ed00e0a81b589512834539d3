@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "6a346007_7973c2fd",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T17:05:10Z",
+      "side": 1,
+      "message": "you can make assertions about how the test exits and what, if anything, is output. see the examples here: https://code.google.com/p/googletest/wiki/AdvancedGuide#Death_Tests",
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a43e481_5ecfd58f",
         "filename": "tests/atexit_test.cpp",
         "patchSetId": 3
@@ -42,6 +59,23 @@
         "endLine": 83,
         "endChar": 10
       },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_9e79df0d",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T17:05:10Z",
+      "side": 1,
+      "message": "s/valid/expected/",
       "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
