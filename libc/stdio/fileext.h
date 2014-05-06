@@ -29,6 +29,9 @@
  * $Citrus$
  */
 
+#ifndef _FILEEXT_H_
+#define _FILEEXT_H_
+
 #include <pthread.h>
 
 /*
@@ -59,3 +62,5 @@ do { \
 	(f)->_ext._base = (unsigned char *)(fext); \
 	_FILEEXT_INIT(f); \
 } while (0)
+
+#endif /* _FILEEXT_H_ */
