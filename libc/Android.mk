@@ -568,6 +568,7 @@ LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
 LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
 # Include timezone and daylight globals.
 LOCAL_CFLAGS += -DUSG_COMPAT=1
+LOCAL_CFLAGS += -DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -618,6 +619,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_freebsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -Wno-sign-compare -Wno-uninitialized \
     -I$(LOCAL_PATH)/upstream-freebsd/android/include \
     -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
     -include freebsd-compat.h
@@ -644,6 +646,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -Wno-sign-compare -Wno-uninitialized \
     -DPOSIX_MISTAKE \
     -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
@@ -671,6 +674,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -Wno-sign-compare -Wno-uninitialized \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
@@ -699,6 +703,7 @@ LOCAL_SRC_FILES_32 := $(libc_upstream_openbsd_gdtoa_src_files_32)
 LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
+    -Wno-sign-compare -Wno-uninitialized \
     -fvisibility=hidden \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
