@@ -17,8 +17,10 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
 #include <sys/epoll.h>
+#include <unistd.h>
 
 TEST(sys_epoll, smoke) {
   int epoll_fd = epoll_create(1);
@@ -36,4 +38,31 @@ TEST(sys_epoll, smoke) {
   sigemptyset(&ss);
   sigaddset(&ss, SIGPIPE);
   ASSERT_EQ(0, epoll_pwait(epoll_fd, events, 1, 1, &ss));
+}
+
+TEST(sys_epoll, epoll_event_data) {
+  int epoll_fd = epoll_create(1);
+  ASSERT_NE(-1, epoll_fd) << strerror(errno);
+
+  int fds[2];
+  ASSERT_NE(-1, pipe(fds));
+
+  const uint64_t expected = 0x123456789abcdef0;
+
+  // Get ready to poll on read end of pipe.
+  epoll_event ev;
+  ev.events = EPOLLIN;
+  ev.data.u64 = expected;
+  ASSERT_NE(-1, epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fds[0], &ev));
+
+  // Ensure there's something in the pipe.
+  ASSERT_EQ(1, write(fds[1], "\n", 1));
+
+  // Poll.
+  epoll_event events[1];
+  ASSERT_EQ(1, epoll_wait(epoll_fd, events, 1, 1));
+  ASSERT_EQ(expected, events[0].data.u64);
+
+  close(fds[0]);
+  close(fds[1]);
 }
