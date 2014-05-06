@@ -93,6 +93,30 @@
       "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4adb1c06_53e5b66d",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1045543
+      },
+      "writtenOn": "2014-05-06T14:22:51Z",
+      "side": 1,
+      "message": "Done.\narch-x86 now contains 3 directories: atom, silvermont and generic. \u0027atom\u0027 and \u0027slm\u0027 suffixes remained in functions names just to mark for which architecture they were optimized.",
+      "parentUuid": "c5461f42_8cbc275e",
+      "range": {
+        "startLine": 35,
+        "startChar": 7,
+        "endLine": 35,
+        "endChar": 38
+      },
+      "revId": "83548ccfb0f4b2e5da9d41d51f8593a39bd4305e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
