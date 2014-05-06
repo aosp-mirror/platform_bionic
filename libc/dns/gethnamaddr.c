@@ -828,27 +828,27 @@ android_gethostbyaddrfornet_real(const void *addr,
 
 	assert(addr != NULL);
 
-	if (af == AF_INET6 && len == IN6ADDRSZ &&
-	    (IN6_IS_ADDR_LINKLOCAL((const struct in6_addr *)(const void *)uaddr) ||
-	     IN6_IS_ADDR_SITELOCAL((const struct in6_addr *)(const void *)uaddr))) {
+	if (af == AF_INET6 && len == NS_IN6ADDRSZ &&
+	    (IN6_IS_ADDR_LINKLOCAL((const struct in6_addr *)addr) ||
+	     IN6_IS_ADDR_SITELOCAL((const struct in6_addr *)addr))) {
 		h_errno = HOST_NOT_FOUND;
 		return NULL;
 	}
-	if (af == AF_INET6 && len == IN6ADDRSZ &&
-	    (IN6_IS_ADDR_V4MAPPED((const struct in6_addr *)(const void *)uaddr) ||
-	     IN6_IS_ADDR_V4COMPAT((const struct in6_addr *)(const void *)uaddr))) {
+	if (af == AF_INET6 && len == NS_IN6ADDRSZ &&
+	    (IN6_IS_ADDR_V4MAPPED((const struct in6_addr *)addr) ||
+	     IN6_IS_ADDR_V4COMPAT((const struct in6_addr *)addr))) {
 		/* Unmap. */
-		addr += IN6ADDRSZ - INADDRSZ;
-		uaddr += IN6ADDRSZ - INADDRSZ;
+		uaddr += NS_IN6ADDRSZ - NS_INADDRSZ;
+		addr = uaddr;
 		af = AF_INET;
-		len = INADDRSZ;
+		len = NS_INADDRSZ;
 	}
 	switch (af) {
 	case AF_INET:
-		size = INADDRSZ;
+		size = NS_INADDRSZ;
 		break;
 	case AF_INET6:
-		size = IN6ADDRSZ;
+		size = NS_IN6ADDRSZ;
 		break;
 	default:
 		errno = EAFNOSUPPORT;
