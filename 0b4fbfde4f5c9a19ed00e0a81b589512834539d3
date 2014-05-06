@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a43e481_5ecfd58f",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T16:39:17Z",
+      "side": 1,
+      "message": "Is there a reason it\u0027s a ssize_t instead of size_t? I don\u0027t immediately see a way for it to legally be a negative value.",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 11
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ab988aa_903b1abe",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T16:39:17Z",
+      "side": 1,
+      "message": "Small nit, you\u0027ve got two extra spaces here.",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 10
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a43e481_beb37928",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T16:39:17Z",
+      "side": 1,
+      "message": "This is a bit confusing. I think this is testing that a static descructor gets called with the correct this.\n\nCould you change the wording slightly, maybe something like static desctructor called with incorrect this pointer. This is a minor nit though.",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 52
+      },
+      "revId": "0b4fbfde4f5c9a19ed00e0a81b589512834539d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
