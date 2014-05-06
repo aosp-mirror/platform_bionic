@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8aba749a_f81ef378",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T04:02:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8aba749a_56cb51e3",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8aba749a_f6d845b1",
         "filename": "tests/atexit_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-06T03:04:26Z",
       "side": 1,
       "message": "can\u0027t we write this as a death test and have gtest do all the forking and collecting of output for us?",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a346007_80144b17",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T04:02:36Z",
+      "side": 1,
+      "message": "I\u0027m not sure.. looks like death test expect a functor as parameter. It is not clear to me how to define static d-tor correctly and ensure that it was triggered on child exit(.)",
+      "parentUuid": "8aba749a_f6d845b1",
       "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2a3ee8ea_481d53fb",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T04:02:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a3ee8ea_8828fb74",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a346007_cd484c97",
         "filename": "tests/atexit_testbin.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-06T03:04:26Z",
       "side": 1,
       "message": "i didn\u0027t really like the last instance of this, but at least it was short. i think here we should really just have \"1\", \"2\", et cetera.",
+      "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a346007_80a8cbab",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T04:02:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a346007_cd484c97",
       "revId": "5231598c48ccef2add6a6bcc59be2bf303ba35ff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
