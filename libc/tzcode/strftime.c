@@ -37,7 +37,12 @@ static const char   sccsid[] = "@(#)strftime.c  5.4 (Berkeley) 3/14/89";
 #include "fcntl.h"
 #include "locale.h"
 #include <ctype.h>
+#if defined(__LP64__)
+#define time64_t time_t
+#define mktime64 mktime
+#else
 #include <time64.h>
+#endif
 #include "private/bionic_time.h"  /* for strftime_tz */
 
 /* struct lc_time_T is now defined as strftime_locale
