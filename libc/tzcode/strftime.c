@@ -160,7 +160,7 @@ const struct strftime_locale *locale;
     tzset();
     warn = IN_NONE;
     p = _fmt(((format == NULL) ? "%c" : format), t, s, s + maxsize, &warn, locale);
-#if 0  /* ifndef NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU */
+#ifndef NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
     if (warn != IN_NONE && getenv(YEAR_2000_NAME) != NULL) {
         (void) fprintf(stderr, "\n");
         if (format == NULL)

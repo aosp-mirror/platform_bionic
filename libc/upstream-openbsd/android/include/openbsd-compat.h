@@ -17,7 +17,6 @@
 #ifndef _BIONIC_OPENBSD_COMPAT_H_included
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
-#define _GNU_SOURCE
 #define __USE_BSD
 
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
