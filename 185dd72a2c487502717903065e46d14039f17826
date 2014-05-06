@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a346007_20dd7fee",
+        "filename": "libm/include/math.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-06T04:24:32Z",
+      "side": 0,
+      "message": "danalbert: you shouldn\u0027t need to #define this in libcxx after this change goes in.",
+      "revId": "185dd72a2c487502717903065e46d14039f17826",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
