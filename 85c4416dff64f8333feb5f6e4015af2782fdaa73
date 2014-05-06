@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "6a346007_2fd8c824",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-06T18:18:48Z",
+      "side": 1,
+      "message": "Yep, I\u0027m worried that after fork() it might call clean thinks it shouldn\u0027t. Like shared __atexit list.. or misplaced static d-tor call.\nI\u0027m not sure if this is the case. But would prefer to keep things separate.",
+      "parentUuid": "8aba749a_41d62686",
+      "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8aba749a_a17362fc",
         "filename": "tests/atexit_testbin.cpp",
         "patchSetId": 4
