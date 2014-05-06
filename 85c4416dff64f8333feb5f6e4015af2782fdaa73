@@ -34,6 +34,47 @@
       "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_41d62686",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T18:09:10Z",
+      "side": 1,
+      "message": "Are you worried about the testing infrastructure messing with these values?\n\nIt does seem cleaner to do it as a DeathTest, rather than having all of the other code.\n\nI did a quick test, and it all works as a DeathTest (I only checked the glibc version though).",
+      "parentUuid": "8aba749a_81a2de9a",
+      "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_a17362fc",
+        "filename": "tests/atexit_testbin.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-06T18:09:10Z",
+      "side": 1,
+      "message": "You could make this a static class variable to avoid the need for the forward declaration. However, it\u0027s about the same since you still need to initalize the value separately.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 59
+      },
+      "revId": "85c4416dff64f8333feb5f6e4015af2782fdaa73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
