@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2ae0a8ae_9238fa5a",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-06T16:48:30Z",
+      "side": 1,
+      "message": "I think it\u0027s a good idea and I don\u0027t think it makes a difference. I used explicit types because most of the things here used them.",
+      "parentUuid": "eaaa1052_ae083b8b",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 25
+      },
+      "revId": "4528fe47b348add93f798c5c34c10193e48c083e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ab988aa_10caca80",
         "filename": "libc/include/sys/types.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-06T16:24:52Z",
       "side": 1,
       "message": "The kernel headers have this as __kernel_long_t, should we follow the same?\n\nI do see that two arch\u0027s use int instead, but neither are ones we care about.",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 15
+      },
+      "revId": "4528fe47b348add93f798c5c34c10193e48c083e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ae0a8ae_b235fe63",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-06T16:48:30Z",
+      "side": 1,
+      "message": "same comment as above.",
+      "parentUuid": "2ab988aa_10caca80",
       "range": {
         "startLine": 81,
         "startChar": 8,
