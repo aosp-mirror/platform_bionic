@@ -33,12 +33,7 @@ Modified for Bionic by the Android Open Source Project
 
 #if defined(__LP64__)
 
-/* TODO: remove this when external/chromium_org is fixed. */
-#define time64_t time_t
-#define gmtime64_r gmtime_r
-#define localtime64_r localtime_r
-#define mktime64 mktime
-#define timegm64 timegm
+#error Your time_t is already 64-bit.
 
 #else
 
