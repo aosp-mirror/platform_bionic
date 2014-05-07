@@ -306,6 +306,7 @@ bionic-unit-tests-glibc_ldlibs := \
 
 module := bionic-unit-tests-glibc
 module_tag := optional
+bionic-unit-tests-glibc_multilib := both
 build_type := host
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
