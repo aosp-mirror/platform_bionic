@@ -495,7 +495,7 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   }
 
   iovec vec[6];
-  char log_id = LOG_ID_MAIN;
+  char log_id = (priority == ANDROID_LOG_FATAL) ? LOG_ID_CRASH : LOG_ID_MAIN;
   vec[0].iov_base = &log_id;
   vec[0].iov_len = sizeof(log_id);
   uint16_t tid = gettid();
