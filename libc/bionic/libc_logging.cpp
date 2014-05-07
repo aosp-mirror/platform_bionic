@@ -614,7 +614,7 @@ void __fortify_chk_fail(const char* msg, uint32_t tag) {
   __libc_fatal("FORTIFY_SOURCE: %s. Calling abort().", msg);
 }
 
-static void __libc_fatal(const char* tag, const char* format, va_list args) {
+static void __libc_fatal(const char* format, va_list args) {
   char msg[1024];
   BufferOutputStream os(msg, sizeof(msg));
   out_vformat(os, format, args);
@@ -622,50 +622,53 @@ static void __libc_fatal(const char* tag, const char* format, va_list args) {
   // TODO: log to stderr for the benefit of "adb shell" users.
 
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
-  __libc_write_log(ANDROID_LOG_FATAL, tag, msg);
+  __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
 
-  __libc_set_abort_message(msg);
+  __android_set_abort_message(msg);
 }
 
 void __libc_fatal_no_abort(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  __libc_fatal("libc", format, args);
+  __libc_fatal(format, args);
   va_end(args);
 }
 
 void __libc_fatal(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  __libc_fatal("libc", format, args);
+  __libc_fatal(format, args);
   va_end(args);
   abort();
 }
 
-// This is used by liblog to implement LOG_ALWAYS_FATAL and LOG_ALWAYS_FATAL_IF.
-void __android_fatal(const char* tag, const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-  __libc_fatal(tag, format, args);
-  va_end(args);
-  abort();
-}
+void __android_set_abort_message(const char* msg) {
+  ScopedPthreadMutexLocker locker(&gAbortMsgLock);
 
-void __libc_set_abort_message(const char* msg) {
+  if (__abort_message_ptr == NULL) {
+    // We must have crashed _very_ early.
+    return;
+  }
+
+  if (*__abort_message_ptr != NULL) {
+    // We already have an abort message.
+    // Assume that the first crash is the one most worth reporting.
+    return;
+  }
+
   size_t size = sizeof(abort_msg_t) + strlen(msg) + 1;
   void* map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (map == MAP_FAILED) {
     return;
   }
 
-  if (__abort_message_ptr != NULL) {
-    ScopedPthreadMutexLocker locker(&gAbortMsgLock);
-    if (*__abort_message_ptr != NULL) {
-      munmap(*__abort_message_ptr, (*__abort_message_ptr)->size);
-    }
-    abort_msg_t* new_abort_message = reinterpret_cast<abort_msg_t*>(map);
-    new_abort_message->size = size;
-    strcpy(new_abort_message->msg, msg);
-    *__abort_message_ptr = new_abort_message;
+  // TODO: if we stick to the current "one-shot" scheme, we can remove this code and
+  // stop storing the size.
+  if (*__abort_message_ptr != NULL) {
+    munmap(*__abort_message_ptr, (*__abort_message_ptr)->size);
   }
+  abort_msg_t* new_abort_message = reinterpret_cast<abort_msg_t*>(map);
+  new_abort_message->size = size;
+  strcpy(new_abort_message->msg, msg);
+  *__abort_message_ptr = new_abort_message;
 }
