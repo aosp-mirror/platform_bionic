@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a523c52_32f96063",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-07T18:28:03Z",
+      "side": 1,
+      "message": "can you actually try writing this as a death test? i\u0027d rather not have extra executables unless necessary.\n\n(and if we are going to go that route, we should try to do it in a cleaner way where we have a directory of helper executables and a separate makefile that builds them all for target and host. speaking of which, it\u0027s probably high time we tried to clean up our helper .so files...)",
+      "revId": "851cd16a20b2abdc74eccfb4d845c40db492b3a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
