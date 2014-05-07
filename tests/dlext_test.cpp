@@ -24,7 +24,10 @@
 #include <unistd.h>
 #include <android/dlext.h>
 #include <sys/mman.h>
+#include <sys/types.h>
 #include <sys/wait.h>
+
+#include <pagemap/pagemap.h>
 
 
 #define ASSERT_DL_NOTNULL(ptr) \
@@ -209,6 +212,8 @@ protected:
     EXPECT_EQ(4, f());
   }
 
+  void SpawnChildrenAndMeasurePss(const char* lib, bool share_relro, size_t* pss_out);
+
   android_dlextinfo extinfo_;
   char relro_file_[PATH_MAX];
 };
@@ -229,4 +234,122 @@ TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
   ASSERT_NOERROR(close(relro_fd));
 
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
+}
+
+TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME));
+  int relro_fd = open(relro_file_, O_RDONLY);
+  ASSERT_NOERROR(relro_fd);
+  extinfo_.flags |= ANDROID_DLEXT_USE_RELRO;
+  extinfo_.relro_fd = relro_fd;
+  int pipefd[2];
+  ASSERT_NOERROR(pipe(pipefd));
+
+  size_t without_sharing, with_sharing;
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(LIBNAME, false, &without_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(LIBNAME, true, &with_sharing));
+
+  // We expect the sharing to save at least 10% of the total PSS. In practice
+  // it saves 40%+ for this test.
+  size_t expected_size = without_sharing - (without_sharing/10);
+  EXPECT_LT(with_sharing, expected_size);
+}
+
+void getPss(pid_t pid, size_t* pss_out) {
+  pm_kernel_t* kernel;
+  ASSERT_EQ(0, pm_kernel_create(&kernel));
+
+  pm_process_t* process;
+  ASSERT_EQ(0, pm_process_create(kernel, pid, &process));
+
+  pm_map_t** maps;
+  size_t num_maps;
+  ASSERT_EQ(0, pm_process_maps(process, &maps, &num_maps));
+
+  size_t total_pss = 0;
+  for (size_t i = 0; i < num_maps; i++) {
+    pm_memusage_t usage;
+    ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
+    total_pss += usage.pss;
+  }
+  *pss_out = total_pss;
+
+  free(maps);
+  pm_process_destroy(process);
+  pm_kernel_destroy(kernel);
+}
+
+void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool share_relro,
+                                                       size_t* pss_out) {
+  const int CHILDREN = 20;
+
+  // Create children
+  pid_t childpid[CHILDREN];
+  int childpipe[CHILDREN];
+  for (int i=0; i<CHILDREN; ++i) {
+    char read_buf;
+    int child_done_pipe[2], parent_done_pipe[2];
+    ASSERT_NOERROR(pipe(child_done_pipe));
+    ASSERT_NOERROR(pipe(parent_done_pipe));
+
+    pid_t child = fork();
+    if (child == 0) {
+      // close the 'wrong' ends of the pipes in the child
+      close(child_done_pipe[0]);
+      close(parent_done_pipe[1]);
+
+      // open the library
+      void* handle;
+      if (share_relro) {
+        handle = android_dlopen_ext(lib, RTLD_NOW, &extinfo_);
+      } else {
+        handle = dlopen(lib, RTLD_NOW);
+      }
+      if (handle == NULL) {
+        fprintf(stderr, "in child: %s\n", dlerror());
+        exit(1);
+      }
+
+      // close write end of child_done_pipe to signal the parent that we're done.
+      close(child_done_pipe[1]);
+
+      // wait for the parent to close parent_done_pipe, then exit
+      read(parent_done_pipe[0], &read_buf, 1);
+      exit(0);
+    }
+
+    ASSERT_NOERROR(child);
+
+    // close the 'wrong' ends of the pipes in the parent
+    close(child_done_pipe[1]);
+    close(parent_done_pipe[0]);
+
+    // wait for the child to be done
+    read(child_done_pipe[0], &read_buf, 1);
+    close(child_done_pipe[0]);
+
+    // save the child's pid and the parent_done_pipe
+    childpid[i] = child;
+    childpipe[i] = parent_done_pipe[1];
+  }
+
+  // Sum the PSS of all the children
+  size_t total_pss = 0;
+  for (int i=0; i<CHILDREN; ++i) {
+    size_t child_pss;
+    ASSERT_NO_FATAL_FAILURE(getPss(childpid[i], &child_pss));
+    total_pss += child_pss;
+  }
+  *pss_out = total_pss;
+
+  // Close pipes and wait for children to exit
+  for (int i=0; i<CHILDREN; ++i) {
+    ASSERT_NOERROR(close(childpipe[i]));
+  }
+  for (int i=0; i<CHILDREN; ++i) {
+    int status;
+    ASSERT_EQ(childpid[i], waitpid(childpid[i], &status, 0));
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
 }

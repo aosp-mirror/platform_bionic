@@ -252,8 +252,12 @@ bionic-unit-tests_ldflags := \
     -Wl,--export-dynamic \
     -Wl,-u,DlSymTestFunction \
 
+bionic-unit-tests_c_includes := \
+    $(call include-path-for, libpagemap) \
+
 bionic-unit-tests_shared_libraries_target := \
     libdl \
+    libpagemap \
 
 module := bionic-unit-tests
 module_tag := optional
