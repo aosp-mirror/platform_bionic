@@ -24,7 +24,7 @@
 
 #include <string>
 
-TEST(atexit, combined_test) {
+TEST(atexit, dlclose) {
   std::string atexit_call_sequence;
   bool valid_this_in_static_dtor = false;
   void* handle = dlopen("libtest_atexit.so", RTLD_NOW);
@@ -40,5 +40,57 @@ TEST(atexit, combined_test) {
   ASSERT_TRUE(valid_this_in_static_dtor);
 }
 
-// TODO: test for static dtor calls from from exit(.) -> __cxa_finalize(NULL)
+class TestMainStaticDtorClass {
+ public:
+  TestMainStaticDtorClass() {
+    expected_this = this;
+  }
+
+  ~TestMainStaticDtorClass() {
+    if (this != expected_this) {
+      fprintf(stderr, "\nerror: static d-tor called with incorrect this pointer: %p, expected: %p\n", this, expected_this);
+    } else {
+      fprintf(stderr, "6");
+    }
+  }
+ private:
+  static const TestMainStaticDtorClass* expected_this;
+};
+
+const TestMainStaticDtorClass* TestMainStaticDtorClass::expected_this = NULL;
+
+static void atexit_func5() {
+  fprintf(stderr, "5");
+}
+
+static void atexit_func4() {
+  fprintf(stderr, "4");
+}
+
+static void atexit_func3() {
+  fprintf(stderr, "3");
+  atexit(atexit_func4);
+}
+
+static void atexit_func2() {
+  fprintf(stderr, "2");
+}
+
+static void atexit_func1() {
+  fprintf(stderr, "1");
+}
+
+static void atexit_main() {
+  // This should result in "123456" output to stderr
+  static TestMainStaticDtorClass static_obj;
+  atexit(atexit_func5);
+  atexit(atexit_func3);
+  atexit(atexit_func2);
+  atexit(atexit_func1);
+  exit(0);
+}
+
+TEST(atexit, exit) {
+  ASSERT_EXIT(atexit_main(), testing::ExitedWithCode(0), "123456");
+}
 
