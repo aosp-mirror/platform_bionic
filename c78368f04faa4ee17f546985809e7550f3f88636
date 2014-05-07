@@ -22,6 +22,30 @@
       "revId": "c78368f04faa4ee17f546985809e7550f3f88636",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ab988aa_d6b3ca27",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-07T04:04:24Z",
+      "side": 1,
+      "message": "yeah, internal-only stuff tends to be called __libc_ or __bionic. if it\u0027s standard stuff, obviously it has the standard name. and if it\u0027s non-standard and deliberately exposed seems to be android_. but this is non-standard and only exposed for liblog. so __android_ seemed like the obvious choice :-)\n\ni really wish ELF had \"friend\"!",
+      "parentUuid": "8a58b470_2ed45fcf",
+      "range": {
+        "startLine": 627,
+        "startChar": 2,
+        "endLine": 627,
+        "endChar": 35
+      },
+      "revId": "c78368f04faa4ee17f546985809e7550f3f88636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
