@@ -91,7 +91,7 @@ typedef struct {
 typedef long pthread_mutexattr_t;
 typedef long pthread_condattr_t;
 
-typedef int pthread_rwlockattr_t;
+typedef long pthread_rwlockattr_t;
 
 typedef struct {
   pthread_mutex_t lock;
