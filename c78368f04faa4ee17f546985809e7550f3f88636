@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a58b470_2ed45fcf",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2014-05-07T03:53:23Z",
+      "side": 1,
+      "message": "such an odd mix of __libc_ and __android_",
+      "range": {
+        "startLine": 627,
+        "startChar": 2,
+        "endLine": 627,
+        "endChar": 35
+      },
+      "revId": "c78368f04faa4ee17f546985809e7550f3f88636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
