@@ -68,14 +68,13 @@ struct abort_msg_t {
   char msg[0];
 };
 
-__LIBC_HIDDEN__ void __libc_set_abort_message(const char* msg);
+void __android_set_abort_message(const char* msg);
 
 //
 // Formats a message to the log (priority 'fatal'), then aborts.
 //
 
 __LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...) __printflike(1, 2);
-__noreturn void __android_fatal(const char* tag, const char* format, ...) __printflike(2, 3);
 
 //
 // Formats a message to the log (priority 'fatal'), but doesn't abort.
