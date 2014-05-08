@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaa49887_77dbf887",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T13:51:27Z",
+      "side": 1,
+      "message": "It\u0027s not particular clear to me why the state would be useful in this function. Please correct me if I\u0027m wrong.",
+      "range": {
+        "startLine": 241,
+        "startChar": 2,
+        "endLine": 241,
+        "endChar": 27
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

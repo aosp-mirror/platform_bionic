@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaa49887_17e08433",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T13:51:27Z",
+      "side": 0,
+      "message": "POSIX states that these function can be called with a NULL state in which case an internal one should be used.",
+      "range": {
+        "startLine": 36,
+        "startChar": 85,
+        "endLine": 38,
+        "endChar": 9
+      },
+      "revId": "0e9d7fccb9c3b688992f2ef9ac1cfd1f456b1ed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
