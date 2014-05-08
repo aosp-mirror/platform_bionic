@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa62d821_5f717e63",
+        "filename": "libc/arch-arm64/arm64.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T21:25:18Z",
+      "side": 1,
+      "message": "can we do something to avoid having a copy of this for every architecture?",
+      "revId": "01cf4683c86603dee1f26b2c8b0f7f9452f899c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
