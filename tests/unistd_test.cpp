@@ -275,3 +275,46 @@ TEST(unistd, clearenv) {
 
   EXPECT_EQ(0, unsetenv("test-variable"));
 }
+
+static void TestFsyncFunction(int (*fn)(int)) {
+  int fd;
+
+  // Can't sync an invalid fd.
+  errno = 0;
+  EXPECT_EQ(-1, fn(-1));
+  EXPECT_EQ(EBADF, errno);
+
+  // It doesn't matter whether you've opened a file for write or not.
+  TemporaryFile tf;
+  ASSERT_NE(-1, tf.fd);
+
+  EXPECT_EQ(0, fn(tf.fd));
+
+  ASSERT_NE(-1, fd = open(tf.filename, O_RDONLY));
+  EXPECT_EQ(0, fn(fd));
+  close(fd);
+
+  ASSERT_NE(-1, fd = open(tf.filename, O_RDWR));
+  EXPECT_EQ(0, fn(fd));
+  close(fd);
+
+  // The fd can even be a directory.
+  ASSERT_NE(-1, fd = open("/", O_RDONLY));
+  EXPECT_EQ(0, fn(fd));
+  close(fd);
+
+  // But some file systems may choose to be fussy...
+  errno = 0;
+  ASSERT_NE(-1, fd = open("/proc/version", O_RDONLY));
+  EXPECT_EQ(-1, fn(fd));
+  EXPECT_EQ(EINVAL, errno);
+  close(fd);
+}
+
+TEST(unistd, fdatasync) {
+  TestFsyncFunction(fdatasync);
+}
+
+TEST(unistd, fsync) {
+  TestFsyncFunction(fsync);
+}
