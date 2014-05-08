@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "2ae0a8ae_c38236ec",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T17:26:24Z",
+      "side": 1,
+      "message": "ya... pretty surprising\n\nexecuting with bionic-unit-tests-glibc-run \n\"pos_after_seek.__pos\" will be 0 \nand\nASSERT_EQ(mb_two_bytes, static_cast\u003cwchar_t\u003e(fgetwc(fp))) will pass...",
+      "parentUuid": "eaedb0ca_334210cc",
+      "range": {
+        "startLine": 528,
+        "startChar": 4,
+        "endLine": 528,
+        "endChar": 62
+      },
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa49887_37fee0d2",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
