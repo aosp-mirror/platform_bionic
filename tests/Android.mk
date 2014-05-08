@@ -40,6 +40,10 @@ test_cflags = \
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
+ifeq ($(MALLOC_IMPL),jemalloc)
+test_cflags += -DUSE_JEMALLOC
+endif
+
 test_cppflags = \
     -std=gnu++11 \
 
