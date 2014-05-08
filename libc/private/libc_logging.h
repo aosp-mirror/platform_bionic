@@ -53,14 +53,15 @@ enum {
 };
 
 enum {
-    LOG_ID_MIN = 0,
+  LOG_ID_MIN = 0,
 
-    LOG_ID_MAIN = 0,
-    LOG_ID_RADIO = 1,
-    LOG_ID_EVENTS = 2,
-    LOG_ID_SYSTEM = 3,
+  LOG_ID_MAIN = 0,
+  LOG_ID_RADIO = 1,
+  LOG_ID_EVENTS = 2,
+  LOG_ID_SYSTEM = 3,
+  LOG_ID_CRASH = 4,
 
-    LOG_ID_MAX
+  LOG_ID_MAX
 };
 
 struct abort_msg_t {
