@@ -250,13 +250,13 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(L'a', out[0]);
   // 2-byte UTF-8.
   ASSERT_EQ(2U, mbrtowc(out, "\xc2\xa2" "cdef", 6, NULL));
-  ASSERT_EQ(0x00a2, out[0]);
+  ASSERT_EQ(static_cast<wchar_t>(0x00a2), out[0]);
   // 3-byte UTF-8.
   ASSERT_EQ(3U, mbrtowc(out, "\xe2\x82\xac" "def", 6, NULL));
-  ASSERT_EQ(0x20ac, out[0]);
+  ASSERT_EQ(static_cast<wchar_t>(0x20ac), out[0]);
   // 4-byte UTF-8.
   ASSERT_EQ(4U, mbrtowc(out, "\xf0\xa4\xad\xa2" "ef", 6, NULL));
-  ASSERT_EQ(0x24b62, out[0]);
+  ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[0]);
 #if __BIONIC__ // glibc allows this.
   // Illegal 5-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, NULL));
