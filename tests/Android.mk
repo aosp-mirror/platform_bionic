@@ -212,6 +212,19 @@ build_type := target
 build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 
+# -----------------------------------------------------------------------------
+# create symlink to libdlext_test.so for symlink test
+# -----------------------------------------------------------------------------
+libdlext_origin := $(LOCAL_INSTALLED_MODULE)
+libdlext_sym := $(subst libdlext_test,libdlext_test_v2,$(libdlext_origin))
+$(libdlext_sym): $(libdlext_origin)
+	@echo "Symlink: $@ -> $(notdir $<)"
+	@mkdir -p $(dir $@)
+	$(hide) ln -sf $(notdir $<) $@
+
+ALL_MODULES := \
+  $(ALL_MODULES) $(libdlext_sym)
+
 libdlext_test_norelro_src_files := \
     dlext_test_library.cpp \
 
