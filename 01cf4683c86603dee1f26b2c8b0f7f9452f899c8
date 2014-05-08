@@ -52,6 +52,24 @@
       "revId": "01cf4683c86603dee1f26b2c8b0f7f9452f899c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa62d821_1f81c670",
+        "filename": "libc/arch-arm64/arm64.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-08T21:46:23Z",
+      "side": 1,
+      "message": "I\u0027ll have to think if there is an easy way to hook this, but it\u0027s only in two files right now so it\u0027s probably not worth making this generic.\n\nHowever, the intel folks are using a variant of this so after that\u0027s submitted I\u0027ll look to see if I can unify all of this.",
+      "parentUuid": "aa62d821_5f421ecc",
+      "revId": "01cf4683c86603dee1f26b2c8b0f7f9452f899c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
