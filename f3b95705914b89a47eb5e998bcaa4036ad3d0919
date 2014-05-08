@@ -2,6 +2,74 @@
   "comments": [
     {
       "key": {
+        "uuid": "6a2b80c3_ac318be2",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T17:09:42Z",
+      "side": 1,
+      "message": "if the test is that specific, give the test a more specific name.",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a6cc413_f0ad2088",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T17:09:42Z",
+      "side": 1,
+      "message": "(we\u0027re starting to use this enough that i wonder whether we should add another helper like TemporaryFile. not in this change though.)",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a6cc413_308dd821",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T17:09:42Z",
+      "side": 1,
+      "message": "add a comment saying that bionic\u0027s fpos_t is just an offset but glibc includes an mbstate_t? (we should probably always say why we have a bionic/glibc difference.)",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a2b80c3_cc383fc3",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T17:09:42Z",
+      "side": 1,
+      "message": "would just going backwards be as good a test?",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ae0a8ae_d834611b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
@@ -36,6 +104,30 @@
       "writtenOn": "2014-05-08T14:08:10Z",
       "side": 1,
       "message": "glibc will have this at the beginning of the file.",
+      "range": {
+        "startLine": 528,
+        "startChar": 4,
+        "endLine": 528,
+        "endChar": 62
+      },
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaedb0ca_334210cc",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-08T17:09:42Z",
+      "side": 1,
+      "message": "really? so if you fgetwc here, you get mb_two_byte? that seems unexpected.",
+      "parentUuid": "aaa49887_77045836",
       "range": {
         "startLine": 528,
         "startChar": 4,
