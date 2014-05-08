@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaa49887_17f644b4",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T16:05:11Z",
+      "side": 1,
+      "message": "can you use static_cast? \n\nASSERT_EQ(static_cast\u003cwchar_t\u003e(0x00a2), out[0]);\n\nsame for the others.",
+      "range": {
+        "startLine": 253,
+        "startChar": 20,
+        "endLine": 253,
+        "endChar": 25
+      },
+      "revId": "9fda970c2fe28e6da83806520630975f92227949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
