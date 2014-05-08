@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ae0a8ae_d834611b",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T14:08:10Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this tests actually adds any value.The main goal here is to test whether or not we can get a fpos_t which is inside a multi-byte character. As expected, we can do it in the current implementation. However I\u0027m not sure if it\u0027s a valid use case. The documentation is not clear wrt this but I assume that outside f*pos functions it\u0027s the user responsibility if he/she breaks thing.\n\nThoughts?",
+      "range": {
+        "startLine": 502,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 30
+      },
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa49887_77045836",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T14:08:10Z",
+      "side": 1,
+      "message": "glibc will have this at the beginning of the file.",
+      "range": {
+        "startLine": 528,
+        "startChar": 4,
+        "endLine": 528,
+        "endChar": 62
+      },
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa49887_37fee0d2",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-08T14:08:10Z",
+      "side": 1,
+      "message": "glibc reads the first character while we will read starting from the 5th byte.",
+      "range": {
+        "startLine": 534,
+        "startChar": 2,
+        "endLine": 534,
+        "endChar": 13
+      },
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
