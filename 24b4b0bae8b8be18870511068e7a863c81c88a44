@@ -2,6 +2,268 @@
   "comments": [
     {
       "key": {
+        "uuid": "eac4d062_184d4982",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "has",
+      "range": {
+        "startLine": 40,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_f21ee678",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "need",
+      "range": {
+        "startLine": 41,
+        "startChar": 32,
+        "endLine": 41,
+        "endChar": 35
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_f2098647",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "i don\u0027t think this is right. i think it\u0027s supposed to be per-function, not global.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_522ed2b1",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "oh, you\u0027ve only added state to one function. in that case, move the definition inside this function. no need for it to be global. (and that\u0027s misleading if/when we need to add state to another function.)",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_957bc647",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "state",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 34
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_556b1e70",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "what if you see a sequence like c2 20 split across two calls?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac4d062_386045dd",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "is an int really the most convenient representation? i was expecting char[]. did you try that and it worked out worse?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_55b07ece",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "this i isn\u0027t used after the loop.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_751ca2fd",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "i think this might be clearer if we had a mbstate_internal_t that we cast to and it had member functions that let us say things like \"(state-\u003e__seq !\u003d 0)\" in a more intention-revealing fashion. i thought this was wrong, for example, until i translated it to \"if (BytesSoFar() \u003e 0 \u0026\u0026 ...\". actually, don\u0027t we already have a local \u0027state_length\u0027?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac4d062_f865ede8",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "is this right?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac4d062_384cc554",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "interesting. i\u0027d assumed we\u0027d actually loop through the bytes in \u0027state\u0027 (if any) and then switch to reading new characters when we\u0027d run through all the state. this means we\u0027re kind of always on the slow path. but i guess it doesn\u0027t matter because we assume most of the bytes we\u0027ll actually see are just ASCII anyway, and we dealt with them already.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_1247ea34",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "if we had an internal type, it could have a reset member function.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_72467636",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "don\u0027t we have the \"c2 20\" bug here too? i think this needs to take the mbstate_t into account.",
+      "range": {
+        "startLine": 185,
+        "startChar": 6,
+        "endLine": 185,
+        "endChar": 8
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aa8a88f_925afa06",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa49887_77dbf887",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -19,6 +281,47 @@
         "endLine": 241,
         "endChar": 27
       },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_b53b6a56",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "i think in both of these last two functions you need to check whether we\u0027re part way through decoding and ERR_ILLEGAL_SEQUENCE if we are.",
+      "parentUuid": "aaa49887_77dbf887",
+      "range": {
+        "startLine": 241,
+        "startChar": 2,
+        "endLine": 241,
+        "endChar": 27
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac4d062_f81ecd78",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T00:43:11Z",
+      "side": 1,
+      "message": "uint32_t\n\nthough like i said, i kind of expected char[] to lead to a more comfortable implementation.",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
