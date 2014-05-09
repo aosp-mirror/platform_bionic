@@ -70,3 +70,4 @@ ENTRY(__bionic_clone)
 2:
         ret
 END(__bionic_clone)
+.hidden __bionic_clone
