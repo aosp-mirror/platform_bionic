@@ -35,29 +35,36 @@ ENTRY(__bionic_clone)
     mov     x29,  sp
     str     x8,       [sp, #-16]!
 
-    /* store thread pointer & args in child stack */
+    # Align 'child_stack' to 16 bytes.
+    and     x1, x1, #~0xf
+
+    # Copy 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]
 
-    /* sys_clone */
+    # Zero out the top 32 bits of 'flags'. (Is this necessary?)
     uxtw    x0, w0
+
+    # Make the system call.
     mov     x8, __NR_clone
     svc     #0
 
-    /* check for child/parent */
-    cbz     x0,1f
+    # Are we the child?
+    cbz     x0, .L_bc_child
 
     ldr     x8,       [sp], #16
     ldp     x29, x30, [sp], #16
 
+    # Set errno if something went wrong.
     cmn     x0, #(MAX_ERRNO + 1)
     cneg    x0, x0, hi
     b.hi    __set_errno
 
     ret
 
-    /* thread initialization - set the end of the frame record chain */
-1:
+.L_bc_child:
+    # We're in the child now. Set the end of the frame record chain...
     mov     x29, xzr
+    # ...and call __bionic_clone_entry with the 'fn' and 'arg' we stored on the child stack.
     ldp     x0, x1, [sp, #-16]
     b       __bionic_clone_entry
 END(__bionic_clone)
