@@ -73,7 +73,7 @@ ENTRY(_longjmp)
     ldr     w9, .L_setjmp_magic
     ldr     w10, [x0, #(_JB_MAGIC * 4)]
     cmp     w9, w10
-    b.ne    botch
+    b.ne    .L_fail
 
     /* restore core registers */
     ldp     x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
@@ -93,10 +93,10 @@ ENTRY(_longjmp)
 
     /* validate sp (sp mod 16 = 0) and lr (lr mod 4 = 0) */
     tst     x30, #3
-    b.ne    botch
+    b.ne    .L_fail
     mov     x10, sp
     tst     x10, #15
-    b.ne    botch
+    b.ne    .L_fail
 
     /* set return value */
     cmp     w1, wzr
@@ -104,7 +104,7 @@ ENTRY(_longjmp)
     ret
 
     /* validation failed, die die die */
-botch:
+.L_fail:
     bl      PIC_SYM(longjmperror, PLT)
     bl      PIC_SYM(abort, PLT)
     b        . - 8       /* Cannot get here */
