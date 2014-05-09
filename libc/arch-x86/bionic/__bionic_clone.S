@@ -51,3 +51,4 @@ bc_return:
         popl    %ebx
         ret
 END(__bionic_clone)
+.hidden __bionic_clone
