@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_8b7bad47",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eac4d062_184d4982",
+      "range": {
+        "startLine": 40,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa8a88f_f21ee678",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "need",
+      "range": {
+        "startLine": 41,
+        "startChar": 32,
+        "endLine": 41,
+        "endChar": 35
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa93b868_ab78694b",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa8a88f_f21ee678",
       "range": {
         "startLine": 41,
         "startChar": 32,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "8a827417_ca96836b",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. I added state just in mbrtow and I slipped moving this to it\u0027s proper place.",
+      "parentUuid": "2aa8a88f_f2098647",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa8a88f_522ed2b1",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -76,6 +142,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "oh, you\u0027ve only added state to one function. in that case, move the definition inside this function. no need for it to be global. (and that\u0027s misleading if/when we need to add state to another function.)",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a827417_ea934778",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa8a88f_522ed2b1",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "8a827417_0a47bb34",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a999485_957bc647",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 34
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a999485_556b1e70",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -116,6 +224,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "what if you see a sequence like c2 20 split across two calls?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a827417_4a41b31b",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Thanks! fixed.",
+      "parentUuid": "8a999485_556b1e70",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -139,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_cb8db5dd",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "I didn\u0027t try char as it went pretty straightforward with the int. For extra clarity I switch to an array of uint8_t.",
+      "parentUuid": "eac4d062_386045dd",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a999485_55b07ece",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -150,6 +294,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "this i isn\u0027t used after the loop.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a827417_6a467736",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "used at L160 and should have been used at L153",
+      "parentUuid": "8a999485_55b07ece",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -173,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "6a87002a_0cd6f761",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "ok. I didn\u0027t use an explicit type but added some wrappers around the state operations.",
+      "parentUuid": "8a999485_751ca2fd",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eac4d062_f865ede8",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -184,6 +364,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "is this right?",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa93b868_ab8069a6",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "It\u0027s wrong. Tkanks again. Should have been \u0027i\u0027 instead on \u0027n\u0027. I find it funny that all the tests I write didn\u0027t catch this...",
+      "parentUuid": "eac4d062_f865ede8",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -207,6 +405,24 @@
     },
     {
       "key": {
+        "uuid": "6a87002a_493b810a",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "I think I had the two loops merged at some point but it didn\u0027t look clear to me. If my slow path you mean that we actually traverse two times the bytes, ya, this is the case. \n\nGiven that the loops have at most 4 iteration I didn\u0027t bother to merge them.",
+      "parentUuid": "eac4d062_384cc554",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa8a88f_1247ea34",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -218,6 +434,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "if we had an internal type, it could have a reset member function.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a827417_ea634752",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa8a88f_1247ea34",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -247,6 +481,30 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_eb8271eb",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa8a88f_72467636",
+      "range": {
+        "startLine": 185,
+        "startChar": 6,
+        "endLine": 185,
+        "endChar": 8
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aa8a88f_925afa06",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 2
@@ -258,6 +516,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "same.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa93b868_0b717d64",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa8a88f_925afa06",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -311,6 +587,30 @@
     },
     {
       "key": {
+        "uuid": "6a87002a_2c29fba8",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a999485_b53b6a56",
+      "range": {
+        "startLine": 241,
+        "startChar": 2,
+        "endLine": 241,
+        "endChar": 27
+      },
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eac4d062_f81ecd78",
         "filename": "libc/include/wchar.h",
         "patchSetId": 2
@@ -322,6 +622,24 @@
       "writtenOn": "2014-05-09T00:43:11Z",
       "side": 1,
       "message": "uint32_t\n\nthough like i said, i kind of expected char[] to lead to a more comfortable implementation.",
+      "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a87002a_e92b55b1",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eac4d062_f81ecd78",
       "revId": "24b4b0bae8b8be18870511068e7a863c81c88a44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
