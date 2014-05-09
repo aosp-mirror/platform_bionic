@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_0b589d6a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:33:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a2b80c3_ac318be2",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a6cc413_f0ad2088",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-08T17:09:42Z",
       "side": 1,
       "message": "(we\u0027re starting to use this enough that i wonder whether we should add another helper like TemporaryFile. not in this change though.)",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a87002a_ec6523e9",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:33:10Z",
+      "side": 1,
+      "message": "it will be a good idea.",
+      "parentUuid": "0a6cc413_f0ad2088",
       "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_cb80556f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:33:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a6cc413_308dd821",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a2b80c3_cc383fc3",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-08T17:09:42Z",
       "side": 1,
       "message": "would just going backwards be as good a test?",
+      "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa93b868_6b7201f8",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:33:10Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand.\nThe flow below already tests for moving the position forward and backward, and we also have the rewind. Is that what you mean?",
+      "parentUuid": "6a2b80c3_cc383fc3",
       "revId": "f3b95705914b89a47eb5e998bcaa4036ad3d0919",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
