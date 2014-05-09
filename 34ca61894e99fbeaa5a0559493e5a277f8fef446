@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eac4d062_8ffbc998",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T16:36:06Z",
+      "side": 1,
+      "message": "i meant that \"random\" bothers me (especially since this isn\u0027t random). would this be any worse a test if you go pos5, pos4, pos3, pos2, pos1? the reader doesn\u0027t have to wonder where that order came from or if there\u0027s anything subtle about it.",
+      "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a999485_ecd7e7f5",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T16:36:06Z",
+      "side": 1,
+      "message": "have you had chance to dig deeper with what glibc\u0027s up to here?",
+      "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
