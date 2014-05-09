@@ -457,6 +457,13 @@ long double	tgammal(long double);
 long double	truncl(long double);
 
 #endif /* __ISO_C_VISIBLE >= 1999 */
+
+#if defined(_GNU_SOURCE)
+void sincos(double, double*, double*);
+void sincosf(float, float*, float*);
+void sincosl(long double, long double*, long double*);
+#endif /* _GNU_SOURCE */
+
 __END_DECLS
 
 #endif /* !_MATH_H_ */
