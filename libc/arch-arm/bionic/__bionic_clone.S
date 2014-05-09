@@ -71,3 +71,4 @@ ENTRY(__bionic_clone)
     ldr    r1, [sp, #-8]
     b      __bionic_clone_entry
 END(__bionic_clone)
+.hidden __bionic_clone
