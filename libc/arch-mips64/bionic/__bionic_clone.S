@@ -95,3 +95,4 @@ LEAF(__bionic_clone, FRAMESZ)
 	PTR_ADDU sp,FRAMESZ
 	j	t9
 	END(__bionic_clone)
+.hidden __bionic_clone

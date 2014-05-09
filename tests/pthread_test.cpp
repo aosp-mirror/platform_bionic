@@ -256,22 +256,6 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
-#if defined(__BIONIC__)
-extern "C" pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-#endif // __BIONIC__
-
-TEST(pthread, __bionic_clone) {
-#if defined(__BIONIC__)
-  // Check that our hand-written clone assembler sets errno correctly on failure.
-  uintptr_t fake_child_stack[16];
-  errno = 0;
-  ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[16], NULL, NULL, NULL, NULL, NULL));
-  ASSERT_EQ(EINVAL, errno);
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
-}
-
 TEST(pthread, pthread_setname_np__too_long) {
 #if defined(__BIONIC__) // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
