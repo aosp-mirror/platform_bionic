@@ -30,7 +30,7 @@
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
-        # Enforce 16-byte alignment for child stack.
+        # Align 'child_stack' to 16 bytes.
         andq    $~15, %rsi
 
         # Copy 'fn' and 'arg' onto the child stack.
