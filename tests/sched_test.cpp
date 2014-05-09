@@ -51,6 +51,14 @@ TEST(sched, clone) {
 }
 #endif
 
+TEST(sched, clone_errno) {
+  // Check that our hand-written clone assembler sets errno correctly on failure.
+  uintptr_t fake_child_stack[16];
+  errno = 0;
+  ASSERT_EQ(-1, clone(NULL, &fake_child_stack[16], CLONE_THREAD, NULL));
+  ASSERT_EQ(EINVAL, errno);
+}
+
 TEST(sched, cpu_set) {
   cpu_set_t set;
 

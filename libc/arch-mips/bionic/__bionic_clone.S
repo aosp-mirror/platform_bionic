@@ -66,3 +66,4 @@ ENTRY(__bionic_clone)
 	la	t9,__set_errno
 	j	t9
 END(__bionic_clone)
+.hidden __bionic_clone
