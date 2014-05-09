@@ -59,5 +59,10 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   }
   va_end(args);
 
+  // Align 'child_stack' to 16 bytes.
+  uintptr_t child_stack_addr = reinterpret_cast<uintptr_t>(child_stack);
+  child_stack_addr &= ~0xf;
+  child_stack = reinterpret_cast<void*>(child_stack_addr);
+
   return __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
 }

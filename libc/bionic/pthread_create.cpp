@@ -39,14 +39,17 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
-extern "C" int __set_tls(void*);
-
 // Used by gdb to track thread creation. See libthread_db.
 #ifdef __i386__
 extern "C" __attribute__((noinline)) __attribute__((fastcall)) void _thread_created_hook(pid_t) {}
 #else
 extern "C" __attribute__((noinline)) void _thread_created_hook(pid_t) {}
+#endif
+
+// x86 uses segment descriptors rather than a direct pointer to TLS.
+#if __i386__
+#include <asm/ldt.h>
+extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 #endif
 
 static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
@@ -61,10 +64,6 @@ void __init_tls(pthread_internal_t* thread) {
   for (size_t i = TLS_SLOT_ERRNO; i < BIONIC_TLS_SLOTS; ++i) {
     thread->tls[i] = NULL;
   }
-
-#if defined(__i386__)
-  __set_tls(thread->tls);
-#endif
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
@@ -148,8 +147,7 @@ static int __pthread_start(void* arg) {
   pthread_mutex_t* start_mutex = (pthread_mutex_t*) &thread->tls[TLS_SLOT_START_MUTEX];
   pthread_mutex_lock(start_mutex);
   pthread_mutex_destroy(start_mutex);
-
-  __init_tls(thread);
+  thread->tls[TLS_SLOT_START_MUTEX] = NULL;
 
   __init_alternate_signal_stack(thread);
 
@@ -208,6 +206,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // At offsets < 0, we have the child stack.
   thread->tls = (void**)((uint8_t*)(thread->attr.stack_base) + thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
   void* child_stack = thread->tls;
+  __init_tls(thread);
 
   // Create a mutex for the thread in TLS to wait on once it starts so we can keep
   // it from doing anything until after we notify the debugger about it
@@ -219,20 +218,20 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   pthread_mutex_init(start_mutex, NULL);
   pthread_mutex_lock(start_mutex);
 
-  thread->tls[TLS_SLOT_THREAD_ID] = thread;
-
   thread->start_routine = start_routine;
   thread->start_routine_arg = arg;
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
       CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+  void* tls = thread->tls;
 #if defined(__i386__)
   // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc rather than
-  // a pointer to the TLS itself. Rather than try to deal with that here, we just let x86 set
-  // the TLS manually in __init_tls, like all architectures used to.
-  flags &= ~CLONE_SETTLS;
+  // a pointer to the TLS itself.
+  user_desc tls_descriptor;
+  __init_user_desc(&tls_descriptor, false, tls);
+  tls = &tls_descriptor;
 #endif
-  int rc = __bionic_clone(flags, child_stack, &(thread->tid), thread->tls, &(thread->tid), __pthread_start, thread);
+  int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
