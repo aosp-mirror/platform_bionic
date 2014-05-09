@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aa93b868_0b417d6e",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:40:37Z",
+      "side": 1,
+      "message": "Ah, right. The intention was to exercise both back and forth movements. I\u0027ll rephrase.",
+      "parentUuid": "eac4d062_8ffbc998",
+      "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a999485_ecd7e7f5",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-09T16:36:06Z",
       "side": 1,
       "message": "have you had chance to dig deeper with what glibc\u0027s up to here?",
+      "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa93b868_2b463987",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:40:37Z",
+      "side": 1,
+      "message": "In progress :). I\u0027ll update with comments after I finish.",
+      "parentUuid": "8a999485_ecd7e7f5",
       "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
