@@ -242,3 +242,11 @@ TEST(dlfcn, rtld_next_known_symbol) {
   void* addr = dlsym(RTLD_NEXT, "fopen");
   ASSERT_TRUE(addr != NULL);
 }
+
+TEST(dlfcn, dlopen_symlink) {
+  void* handle1 = dlopen("libdlext_test.so", RTLD_NOW);
+  void* handle2 = dlopen("libdlext_test_v2.so", RTLD_NOW);
+  ASSERT_TRUE(handle1 != NULL);
+  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_EQ(handle1, handle2);
+}
