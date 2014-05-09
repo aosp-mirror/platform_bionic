@@ -69,6 +69,24 @@
       "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a827417_ed09a147",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T17:06:53Z",
+      "side": 1,
+      "message": "I didn\u0027t finish looking into this but maybe it worth mentioning that the current feeling is that glibc doesn\u0027t support fseek when wchar comes into play.\n\nIf only \"normal\" char functions are used (e.g fputc) then fseek/ftell/fgetpos etc... works as expected. As soon as I switch to wide char variants (fputwc), fgetpos/ftell will only advance after fgetwc(). The odd behavior is that using fseek with fputwc will reset the position to 0...\n\nIt\u0027s like telling that \"if you want to use wide chars then seeking won\u0027t work\". Which is not unreasonable IMO.\n\nI\u0027ll keep looking to see if I find any proper docs on this and if not I\u0027ll look into the source code.",
+      "parentUuid": "aa93b868_2b463987",
+      "revId": "34ca61894e99fbeaa5a0559493e5a277f8fef446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
