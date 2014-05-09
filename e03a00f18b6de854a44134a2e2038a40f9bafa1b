@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aab1f80e_5eff9113",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-09T21:25:28Z",
+      "side": 1,
+      "message": "spurious blank line.",
+      "revId": "e03a00f18b6de854a44134a2e2038a40f9bafa1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
