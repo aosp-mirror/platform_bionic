@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a827417_2ddbb988",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-09T16:32:56Z",
+      "side": 1,
+      "message": "docs say that we return ILLEGAL in these cases.",
+      "range": {
+        "startLine": 220,
+        "startChar": 16,
+        "endLine": 220,
+        "endChar": 57
+      },
+      "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
