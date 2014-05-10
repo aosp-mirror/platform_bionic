@@ -34,6 +34,24 @@
       "revId": "8eac9af24ea7e570e0b297bcd6ac8a46ba3ecc39",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_ee5a1f2c",
+        "filename": "libc/private/bionic_macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T04:02:42Z",
+      "side": 1,
+      "message": "tbh, I cannot see any good reason why it should not comply with C++ signature of operator\u003d.",
+      "parentUuid": "ead5b033_90e4da48",
+      "revId": "8eac9af24ea7e570e0b297bcd6ac8a46ba3ecc39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
