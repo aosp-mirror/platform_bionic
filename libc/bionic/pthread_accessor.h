@@ -19,6 +19,7 @@
 
 #include <pthread.h>
 
+#include "private/bionic_macros.h"
 #include "pthread_internal.h"
 
 class pthread_accessor {
@@ -57,9 +58,7 @@ class pthread_accessor {
     is_locked_ = true;
   }
 
-  // Disallow copy and assignment.
-  pthread_accessor(const pthread_accessor&);
-  void operator=(const pthread_accessor&);
+  DISALLOW_COPY_AND_ASSIGN(pthread_accessor);
 };
 
 #endif // PTHREAD_ACCESSOR_H
