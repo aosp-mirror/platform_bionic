@@ -123,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "aadf3855_ebbb3163",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T02:03:12Z",
+      "side": 1,
+      "message": "we should just use PAGE_SIZE here. we know it\u0027s 4KiB on all our architectures, and we\u0027re inside the dynamic linker anyway.",
+      "parentUuid": "aadf3855_6b02a171",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadf3855_cb94f5f1",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 1
@@ -274,6 +292,24 @@
       "side": 1,
       "message": "it works as long as we do not use bionic-specific PAGE_SIZE as a replacement for sysconf(_SC_PAGESIZE)",
       "parentUuid": "aadf3855_8b9eed0b",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_abc529d2",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T02:03:12Z",
+      "side": 1,
+      "message": "i think building linker tests against glibc is a mistake, and especially if it makes the linker code harder to understand as a result.",
+      "parentUuid": "aadf3855_2b25b910",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
