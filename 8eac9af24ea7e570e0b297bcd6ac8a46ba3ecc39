@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ead5b033_cd45297b",
+        "filename": "libc/private/bionic_macros.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T03:01:40Z",
+      "side": 1,
+      "message": "TypeName\u0026",
+      "revId": "8eac9af24ea7e570e0b297bcd6ac8a46ba3ecc39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
