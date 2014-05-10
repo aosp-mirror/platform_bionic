@@ -16,6 +16,24 @@
       "revId": "f606beee6c114c95d9700e95e6c1127a1a26a084",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead5b033_50155256",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T03:56:04Z",
+      "side": 1,
+      "message": "hmm, I just copied this code from find_library to avoid relocation and relinking in case of symlink (see fstat related code above).",
+      "parentUuid": "4aef9cff_93805e39",
+      "revId": "f606beee6c114c95d9700e95e6c1127a1a26a084",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
