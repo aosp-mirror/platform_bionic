@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <sys/auxv.h>
 
+#include "private/bionic_macros.h"
+
 struct abort_msg_t;
 
 // When the kernel starts the dynamic linker, it passes a pointer to a block
@@ -73,9 +75,7 @@ class KernelArgumentBlock {
   abort_msg_t** abort_message_ptr;
 
  private:
-  // Disallow copy and assignment.
-  KernelArgumentBlock(const KernelArgumentBlock&);
-  void operator=(const KernelArgumentBlock&);
+  DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
 };
 
 #endif // KERNEL_ARGUMENT_BLOCK_H

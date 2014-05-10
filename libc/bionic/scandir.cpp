@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include "private/bionic_macros.h"
 #include "private/ScopedReaddir.h"
 
 // A smart pointer to the scandir dirent**.
@@ -84,9 +85,7 @@ class ScandirResult {
     return copy;
   }
 
-  // Disallow copy and assignment.
-  ScandirResult(const ScandirResult&);
-  void operator=(const ScandirResult&);
+  DISALLOW_COPY_AND_ASSIGN(ScandirResult);
 };
 
 int scandir(const char* dirname, dirent*** name_list,

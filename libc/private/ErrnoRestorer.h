@@ -19,6 +19,8 @@
 
 #include <errno.h>
 
+#include "bionic_macros.h"
+
 class ErrnoRestorer {
  public:
   explicit ErrnoRestorer() : saved_errno_(errno) {
@@ -35,9 +37,7 @@ class ErrnoRestorer {
  private:
   int saved_errno_;
 
-  // Disallow copy and assignment.
-  ErrnoRestorer(const ErrnoRestorer&);
-  void operator=(const ErrnoRestorer&);
+  DISALLOW_COPY_AND_ASSIGN(ErrnoRestorer);
 };
 
 #endif // ERRNO_RESTORER_H
