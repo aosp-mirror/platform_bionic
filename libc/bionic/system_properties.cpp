@@ -54,6 +54,7 @@
 #include <sys/atomics.h>
 
 #include "private/bionic_atomic_inline.h"
+#include "private/bionic_macros.h"
 
 #define ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
 
@@ -100,9 +101,7 @@ struct prop_bt {
     }
 
 private:
-    // Disallow copy and assign.
-    prop_bt(const prop_bt&);
-    prop_bt& operator=(const prop_bt&);
+    DISALLOW_COPY_AND_ASSIGN(prop_bt);
 };
 
 struct prop_area {
@@ -121,9 +120,7 @@ struct prop_area {
     }
 
 private:
-    // Disallow copy and assign.
-    prop_area(const prop_area&);
-    prop_area& operator=(const prop_area&);
+    DISALLOW_COPY_AND_ASSIGN(prop_area);
 };
 
 struct prop_info {
@@ -141,9 +138,7 @@ struct prop_info {
         ANDROID_MEMBAR_FULL();
     }
 private:
-    // Disallow copy and assign.
-    prop_info(const prop_info&);
-    prop_info& operator=(const prop_info&);
+    DISALLOW_COPY_AND_ASSIGN(prop_info);
 };
 
 struct find_nth_cookie {
