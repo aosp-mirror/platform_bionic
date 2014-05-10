@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4aef9cff_3039a85e",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "those comments add no value.",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_cbf87561",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "these utilities should be in a different file. shouldn\u0027t the container type be a template parameter too?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_1036a46e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "shouldn\u0027t we abort instead?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead5b033_0d5d71a4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "put the \u0026\u0026 on the end of the first line so the reader knows it\u0027s continued...",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_909e140c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "ouch! i wonder if we should have a mode where every allocation is in its own mmap?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead5b033_ad241d39",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "again, i think we should just abort at the site of the failed allocation.",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_108b44c9",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "this needs a better name or some documentation.",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_abc88930",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:34:43Z",
+      "side": 1,
+      "message": "of what?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
