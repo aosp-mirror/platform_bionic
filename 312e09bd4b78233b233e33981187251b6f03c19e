@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "ead5b033_4dadb91f",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "Same reason as for explanation about c-tor.",
+      "parentUuid": "aadf3855_2b39395e",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aef9cff_d0c01cc4",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 1
@@ -81,6 +99,24 @@
       "writtenOn": "2014-05-10T01:49:05Z",
       "side": 1,
       "message": "why isn\u0027t this just the constructor?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_6b02a171",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "linker, when it starts and initializes it\u0027s global variables does not have access to sysconf(_SC_PAGESIZE) yet. I made this initially to be explicit constructor, but linker initialization cycle prevents us from doing natural thing here. And I didn\u0027t want to use PAGE_SIZE define because, it is not really glibc-compliant.",
+      "parentUuid": "4aef9cff_d0c01cc4",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +157,24 @@
     },
     {
       "key": {
+        "uuid": "4aef9cff_f0e44074",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "I hope nobody.. this is done to separate code in *.cpp. And make BlockAllocator interface more readable.",
+      "parentUuid": "4aef9cff_f01680b0",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aef9cff_f0bb2063",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 1
@@ -132,6 +186,24 @@
       "writtenOn": "2014-05-10T01:49:05Z",
       "side": 1,
       "message": "why isn\u0027t this just the constructor?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_cb1bd5d6",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "4aef9cff_f0bb2063",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +227,24 @@
     },
     {
       "key": {
+        "uuid": "aadf3855_4b2805e9",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "It isn\u0027t, attempt to copy will produce compile time error because of implicit call to copy-constructor for block_allocator_, but I got the point - will make it explicitly visible.",
+      "parentUuid": "4aef9cff_300c089f",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadf3855_8b9eed0b",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -166,6 +256,24 @@
       "writtenOn": "2014-05-10T01:49:05Z",
       "side": 1,
       "message": "hmm. i think we should probably just have a linker/tests directory with its own gtests. what happens with the glibc test build?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_2b25b910",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:00:35Z",
+      "side": 1,
+      "message": "it works as long as we do not use bionic-specific PAGE_SIZE as a replacement for sysconf(_SC_PAGESIZE)",
+      "parentUuid": "aadf3855_8b9eed0b",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
