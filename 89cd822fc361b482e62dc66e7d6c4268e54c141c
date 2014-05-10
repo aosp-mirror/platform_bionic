@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4aef9cff_506aec2a",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aef9cff_3039a85e",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadf3855_cbf87561",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-10T01:34:43Z",
       "side": 1,
       "message": "these utilities should be in a different file. shouldn\u0027t the container type be a template parameter too?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_eb41f1c7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "it is specific to linked-list-with-array so yes, predicate only. I know the name might suggest this is std::remove_if specialization but it is not (std:: works with iterators and, well, I do not think we need it here).",
+      "parentUuid": "aadf3855_cbf87561",
       "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "aadf3855_0b5d5da4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "This error is handled by caller (produces DL_ERR and unloads library associated with soinfo in question).",
+      "parentUuid": "4aef9cff_1036a46e",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ead5b033_0d5d71a4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-10T01:34:43Z",
       "side": 1,
       "message": "put the \u0026\u0026 on the end of the first line so the reader knows it\u0027s continued...",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_eb2a1106",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ead5b033_0d5d71a4",
       "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "ead5b033_4dfff913",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "I made change that mprotects page after free - in allocator refactoring CL.",
+      "parentUuid": "4aef9cff_909e140c",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ead5b033_ad241d39",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-10T01:34:43Z",
       "side": 1,
       "message": "again, i think we should just abort at the site of the failed allocation.",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead5b033_ed16a5b0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "My only concern is failing on dlopen(.), where convention is to return NULL handle with dlerror in case of failure. On the other hand oom is not just any error.\n\nDone.",
+      "parentUuid": "ead5b033_ad241d39",
       "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "4aef9cff_107ea4bd",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "nothing else comes to mind other than soinfo_arcs ... which is pretty much the same.\n\nAdded comment.",
+      "parentUuid": "4aef9cff_108b44c9",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadf3855_abc88930",
         "filename": "linker/linker.h",
         "patchSetId": 1
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-10T01:34:43Z",
       "side": 1,
       "message": "of what?",
+      "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_70873088",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-10T02:58:52Z",
+      "side": 1,
+      "message": "Done - renamed",
+      "parentUuid": "aadf3855_abc88930",
       "revId": "89cd822fc361b482e62dc66e7d6c4268e54c141c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
