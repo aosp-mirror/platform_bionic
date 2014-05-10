@@ -35,9 +35,6 @@ ENTRY(__bionic_clone)
     mov     x29,  sp
     str     x8,       [sp, #-16]!
 
-    # Align 'child_stack' to 16 bytes.
-    and     x1, x1, #~0xf
-
     # Copy 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]
 

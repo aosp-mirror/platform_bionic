@@ -6,9 +6,12 @@ ENTRY(__bionic_clone)
         pushl   %esi
         pushl   %edi
 
-        # Align 'child_stack' to 16 bytes.
-        movl    20(%esp), %ecx
-        andl    $~15, %ecx
+        # Load system call arguments into registers.
+        movl    16(%esp), %ebx   # flags
+        movl    20(%esp), %ecx   # child_stack
+        movl    24(%esp), %edx   # parent_tid
+        movl    28(%esp), %esi   # tls
+        movl    32(%esp), %edi   # child_tid
 
         # Copy 'fn' and 'arg' onto the child stack
         movl    36(%esp), %eax   # Read 'fn'.
@@ -19,11 +22,6 @@ ENTRY(__bionic_clone)
 
         # Make the system call.
         movl    $__NR_clone, %eax
-        movl    16(%esp), %ebx  # flags
-        #movl   %ecx, %ecx      # child stack (already there)
-        movl    24(%esp), %edx  # parent_tid
-        movl    28(%esp), %esi  # tls
-        movl    32(%esp), %edi  # child_tid
         int     $0x80
 
         # Check result.

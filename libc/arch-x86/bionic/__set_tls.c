@@ -25,77 +25,50 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <limits.h>
 #include <pthread.h>
+#include <stdbool.h>
 
+#include <asm/ldt.h>
 
-struct user_desc {
-    unsigned int    entry_number;
-    unsigned long   base_addr;
-    unsigned int    limit;
-    unsigned int    seg_32bit:1;
-    unsigned int    contents:2;
-    unsigned int    read_exec_only:1;
-    unsigned int    limit_in_pages:1;
-    unsigned int    seg_not_present:1;
-    unsigned int    useable:1;
-    unsigned int    empty:25;
-};
+extern int __set_thread_area(struct user_desc*);
 
-extern int __set_thread_area(struct user_desc *u_info);
+__LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, void* base_addr) {
+  if (allocate) {
+    // Let the kernel choose.
+    result->entry_number = -1;
+  } else {
+    // Get the existing entry number from %gs.
+    uint32_t gs;
+    __asm__ __volatile__("movw %%gs, %w0" : "=q"(gs) /*output*/);
+    result->entry_number = (gs & 0xffff) >> 3;
+  }
 
-/* the following can't be const, since the first call will
- * update the 'entry_number' field
- */
-static struct user_desc  _tls_desc =
-{
-    -1,
-    0,
-    0x1000,
-    1,
-    0,
-    0,
-    1,
-    0,
-    1,
-    0
-};
+  result->base_addr = (uintptr_t) base_addr;
 
-static pthread_mutex_t  _tls_desc_lock = PTHREAD_MUTEX_INITIALIZER;
+  result->limit = PAGE_SIZE;
 
-struct _thread_area_head {
-    void *self;
-};
-
-/* we implement thread local storage through the gs: segment descriptor
- * we create a segment descriptor for the tls
- */
-int __set_tls(void *ptr)
-{
-    int   rc, segment;
-
-    pthread_mutex_lock(&_tls_desc_lock);
-    _tls_desc.base_addr = (unsigned long)ptr;
-
-    /* We also need to write the location of the tls to ptr[0] */
-    ((struct _thread_area_head *)ptr)->self = ptr;
-
-    rc = __set_thread_area( &_tls_desc );
-    if (rc != 0)
-    {
-        /* could not set thread local area */
-        pthread_mutex_unlock(&_tls_desc_lock);
-        return -1;
-    }
-
-    /* this weird computation comes from GLibc */
-    segment = _tls_desc.entry_number*8 + 3;
-    asm __volatile__ (
-        "   movw %w0, %%gs" :: "q"(segment)
-    );
-    pthread_mutex_unlock(&_tls_desc_lock);
-
-    return 0;
+  result->seg_32bit = 1;
+  result->contents = MODIFY_LDT_CONTENTS_DATA;
+  result->read_exec_only = 0;
+  result->limit_in_pages = 1;
+  result->seg_not_present = 0;
+  result->useable = 1;
 }
 
+int __set_tls(void* ptr) {
+  struct user_desc tls_descriptor;
+  __init_user_desc(&tls_descriptor, true, ptr);
 
+  int rc = __set_thread_area(&tls_descriptor);
+  if (rc != -1) {
+    // Change %gs to be new GDT entry.
+    uint16_t table_indicator = 0;  // GDT
+    uint16_t rpl = 3;  // Requested privilege level
+    uint16_t selector = (tls_descriptor.entry_number << 3) | table_indicator | rpl;
+    __asm__ __volatile__("movw %w0, %%gs" : /*output*/ : "q"(selector) /*input*/ : /*clobber*/);
+  }
 
+  return rc;
+}
