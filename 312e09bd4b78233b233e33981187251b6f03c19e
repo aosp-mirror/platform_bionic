@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aadf3855_2b0b79b2",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_d0f25c50",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "i think we should probably just switch to a more C++ model where the allocator aborts if unable to allocate.",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead5b033_6d02b571",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "\u003d\u003d -1 is more obviously the failure case.",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_2b39395e",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "why not have the page size as a template parameter?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_d0c01cc4",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "why isn\u0027t this just the constructor?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_cb94f5f1",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "passing in the flags like before would halve the number of functions.",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_f01680b0",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "why are there two classes here? why would i ever want a LinkerBlockAllocator?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_f0bb2063",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "why isn\u0027t this just the constructor?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aef9cff_300c089f",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "why is this class copyable?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadf3855_8b9eed0b",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-10T01:49:05Z",
+      "side": 1,
+      "message": "hmm. i think we should probably just have a linker/tests directory with its own gtests. what happens with the glibc test build?",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
