@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aa4d7811_7b535f9d",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-11T06:44:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aadf3855_2b0b79b2",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aef9cff_d0f25c50",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-10T01:49:05Z",
       "side": 1,
       "message": "i think we should probably just switch to a more C++ model where the allocator aborts if unable to allocate.",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_1b601b60",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-11T06:44:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aef9cff_d0f25c50",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -135,6 +171,24 @@
       "side": 1,
       "message": "we should just use PAGE_SIZE here. we know it\u0027s 4KiB on all our architectures, and we\u0027re inside the dynamic linker anyway.",
       "parentUuid": "aadf3855_6b02a171",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_fb944ff1",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-11T06:44:39Z",
+      "side": 1,
+      "message": "ok, I switched code to the PAGE_SIZE, there is other problem with moving this code to constructor... linker does not call c-tors for it\u0027s own global variables. so couldn\u0027t get rid of init anyways.",
+      "parentUuid": "aadf3855_ebbb3163",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -310,6 +364,24 @@
       "side": 1,
       "message": "i think building linker tests against glibc is a mistake, and especially if it makes the linker code harder to understand as a result.",
       "parentUuid": "aadf3855_2b25b910",
+      "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a16bcdd_1839055e",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-11T06:44:39Z",
+      "side": 1,
+      "message": "moved to bionic",
+      "parentUuid": "aadf3855_abc529d2",
       "revId": "312e09bd4b78233b233e33981187251b6f03c19e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
