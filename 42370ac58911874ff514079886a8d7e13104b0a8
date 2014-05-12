@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "aa7bb835_d1d5a455",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:33:03Z",
+      "side": 1,
+      "message": "i meant that i think you should be able to use TemporaryFile and fdopen to open the same temporary file twice.",
+      "parentUuid": "6a862067_547c423f",
+      "revId": "42370ac58911874ff514079886a8d7e13104b0a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a21c030_08a8cf7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 6
