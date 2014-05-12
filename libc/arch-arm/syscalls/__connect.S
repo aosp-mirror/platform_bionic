@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(connect)
+ENTRY(__connect)
     mov     ip, r7
     ldr     r7, =__NR_connect
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(connect)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(connect)
+END(__connect)
