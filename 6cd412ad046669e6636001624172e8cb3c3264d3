@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa7bb835_94de2a9d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "i was going to say \"the style is gCamelCase\", but it looks like the style guide doesn\u0027t say that any more. we should stick with the prevailing style (gCamelCase) for now, but feel free to upload a separate change that switches all bionic\u0027s globals over to g_underscore_names instead.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_8413677d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "useless comment. what _would_ be useful is explaining that the linker can\u0027t run global constructors on its own data, so we have an init function rather than a constructor for our allocator.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_ea19c74f",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "when does this happen?",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_e4326b16",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "can\u0027t this go in the .cpp file? don\u0027t we only need \u0027struct LinkerAllocatorPage;\u0027 here?",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_2ad59fed",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "did you accidentally upload a half-way point? i don\u0027t understand why we have both LinkerBlockAllocator and LinkerAllocator, since the latter does nothing except forward to the former.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_443b1fe7",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T21:08:59Z",
+      "side": 1,
+      "message": "no, i meant that we should have a platform/bionic/linker/tests/ for tests of linker internals.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
