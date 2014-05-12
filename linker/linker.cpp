@@ -59,7 +59,6 @@
  *
  * open issues / todo:
  *
- * - are we doing everything we should for ARM_COPY relocations?
  * - cleaner error reporting
  * - after linking, set as much stuff as possible to READONLY
  *   and NOEXEC
@@ -1024,52 +1023,21 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
         break;
 
     case R_AARCH64_COPY:
-        if ((si->flags & FLAG_EXE) == 0) {
-            /*
-              * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
-              *
-              * Section 4.7.1.10 "Dynamic relocations"
-              * R_AARCH64_COPY may only appear in executable objects where e_type is
-              * set to ET_EXEC.
-              *
-              * FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
-              * We should explicitly disallow ET_DYN executables from having
-              * R_AARCH64_COPY relocations.
-              */
-            DL_ERR("%s R_AARCH64_COPY relocations only supported for ET_EXEC", si->name);
-            return -1;
-        }
-        count_relocation(kRelocCopy);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO COPY %16llx <- %lld @ %16llx %s\n",
-                   reloc,
-                   s->st_size,
-                   (sym_addr + rela->r_addend),
-                   sym_name);
-        if (reloc == (sym_addr + rela->r_addend)) {
-            ElfW(Sym)* src = soinfo_do_lookup(NULL, sym_name, &lsi, needed);
-
-            if (src == NULL) {
-                DL_ERR("%s R_AARCH64_COPY relocation source cannot be resolved", si->name);
-                return -1;
-            }
-            if (lsi->has_DT_SYMBOLIC) {
-                DL_ERR("%s invalid R_AARCH64_COPY relocation against DT_SYMBOLIC shared "
-                       "library %s (built with -Bsymbolic?)", si->name, lsi->name);
-                return -1;
-            }
-            if (s->st_size < src->st_size) {
-                DL_ERR("%s R_AARCH64_COPY relocation size mismatch (%lld < %lld)",
-                       si->name, s->st_size, src->st_size);
-                return -1;
-            }
-            memcpy(reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
-        } else {
-            DL_ERR("%s R_AARCH64_COPY relocation target cannot be resolved", si->name);
-            return -1;
-        }
-        break;
+        /*
+         * ET_EXEC is not supported so this should not happen.
+         *
+         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+         *
+         * Section 4.7.1.10 "Dynamic relocations"
+         * R_AARCH64_COPY may only appear in executable objects where e_type is
+         * set to ET_EXEC.
+         *
+         * FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
+         * We should explicitly disallow ET_DYN executables from having
+         * R_AARCH64_COPY relocations.
+         */
+        DL_ERR("%s R_AARCH64_COPY relocations are not supported", si->name);
+        return -1;
     case R_AARCH64_TLS_TPREL64:
         TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
                    reloc, (sym_addr + rela->r_addend), rela->r_offset);
@@ -1247,48 +1215,18 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
             break;
         case R_ARM_COPY:
-            if ((si->flags & FLAG_EXE) == 0) {
-                /*
-                 * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
-                 *
-                 * Section 4.7.1.10 "Dynamic relocations"
-                 * R_ARM_COPY may only appear in executable objects where e_type is
-                 * set to ET_EXEC.
-                 *
-                 * TODO: FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
-                 * We should explicitly disallow ET_DYN executables from having
-                 * R_ARM_COPY relocations.
-                 */
-                DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", si->name);
-                return -1;
-            }
-            count_relocation(kRelocCopy);
-            MARK(rel->r_offset);
-            TRACE_TYPE(RELO, "RELO %08x <- %d @ %08x %s", reloc, s->st_size, sym_addr, sym_name);
-            if (reloc == sym_addr) {
-                ElfW(Sym)* src = soinfo_do_lookup(NULL, sym_name, &lsi, needed);
-
-                if (src == NULL) {
-                    DL_ERR("%s R_ARM_COPY relocation source cannot be resolved", si->name);
-                    return -1;
-                }
-                if (lsi->has_DT_SYMBOLIC) {
-                    DL_ERR("%s invalid R_ARM_COPY relocation against DT_SYMBOLIC shared "
-                           "library %s (built with -Bsymbolic?)", si->name, lsi->name);
-                    return -1;
-                }
-                if (s->st_size < src->st_size) {
-                    DL_ERR("%s R_ARM_COPY relocation size mismatch (%d < %d)",
-                           si->name, s->st_size, src->st_size);
-                    return -1;
-                }
-                memcpy(reinterpret_cast<void*>(reloc),
-                       reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
-            } else {
-                DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", si->name);
-                return -1;
-            }
-            break;
+            /*
+             * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+             *
+             * Section 4.7.1.10 "Dynamic relocations"
+             * R_ARM_COPY may only appear in executable objects where e_type is
+             * set to ET_EXEC.
+             *
+             * We explicitly disallow ET_DYN executables from having
+             * R_ARM_COPY relocations.
+             */
+            DL_ERR("%s R_ARM_COPY relocations are not supported", si->name);
+            return -1;
 #elif defined(__i386__)
         case R_386_JMP_SLOT:
             count_relocation(kRelocAbsolute);
