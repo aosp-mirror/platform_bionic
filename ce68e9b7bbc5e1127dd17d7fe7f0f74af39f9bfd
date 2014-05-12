@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "6a21c030_c8b417c4",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:17:21Z",
+      "side": 1,
+      "message": ".",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7bb835_4e56f38e",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:17:21Z",
+      "side": 1,
+      "message": "s/shit/shift/",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a862067_519e94dd",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 5
@@ -13,6 +47,30 @@
       "writtenOn": "2014-05-12T13:33:36Z",
       "side": 1,
       "message": "OpenBSD returns EINVAL in this case while Glibc returns EILSEQ. Since the doc do not enforce anything here I opted to go with the glibc variant even if our base is OpenBSD. If you think we should keep EINVAL let me know.",
+      "range": {
+        "startLine": 289,
+        "startChar": 36,
+        "endLine": 289,
+        "endChar": 42
+      },
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_0aabe362",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:17:21Z",
+      "side": 1,
+      "message": "when in doubt, i do what glibc does because that\u0027s more likely to be what callers are expecting.",
+      "parentUuid": "6a862067_519e94dd",
       "range": {
         "startLine": 289,
         "startChar": 36,
@@ -42,6 +100,40 @@
         "endLine": 339,
         "endChar": 42
       },
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_2ac49f1f",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:17:21Z",
+      "side": 1,
+      "message": "reset.",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7bb835_ce8f43d9",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T18:17:21Z",
+      "side": 1,
+      "message": "\"invalid\", while strictly true, seems a bit misleading here. maybe something more like \"Any non-initial state is invalid when calling wcsrtombs.\"?",
       "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
