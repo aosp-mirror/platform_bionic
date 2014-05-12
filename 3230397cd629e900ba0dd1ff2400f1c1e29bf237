@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a862067_7162b894",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:27:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aadf3855_6b6d0141",
+      "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a827417_2ddbb988",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 4
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "6a862067_1186cc01",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:27:59Z",
+      "side": 1,
+      "message": "Tested in wchar_test.cpp @ L349.",
+      "parentUuid": "aadf3855_4bffe513",
+      "range": {
+        "startLine": 220,
+        "startChar": 16,
+        "endLine": 220,
+        "endChar": 57
+      },
+      "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ead5b033_0db7b173",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 4
@@ -83,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "8a81944e_7262b894",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:27:59Z",
+      "side": 1,
+      "message": "Tested is in wchar_test.cpp @ L354.\n\nThe docs do not state what should happen if the sequence is incomplete. However it mentions that the only error code that should be returned is (size_t)-1. So handling of incomplete sequences are left to the implementation. Glibc sets errno in this case and return -1 (see the test which passes when linking against glibc).\n\nIMO an incomplete sequence does not form a valid character so we comply with: \"If the input conversion encounters a sequence of bytes that do not form a valid character, an encoding error occurs\".",
+      "parentUuid": "ead5b033_0db7b173",
+      "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadf3855_ab1089b3",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 4
@@ -94,6 +154,24 @@
       "writtenOn": "2014-05-10T02:00:16Z",
       "side": 1,
       "message": "(same comments as above.)",
+      "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa26584d_f37d50f7",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:27:59Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "aadf3855_ab1089b3",
       "revId": "3230397cd629e900ba0dd1ff2400f1c1e29bf237",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
