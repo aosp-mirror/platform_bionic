@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ca29cc20_b713422e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7bb835_94de2a9d",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa4d7811_8413677d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-12T21:08:59Z",
       "side": 1,
       "message": "useless comment. what _would_ be useful is explaining that the linker can\u0027t run global constructors on its own data, so we have an init function rather than a constructor for our allocator.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca50eca6_7fffcb13",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa4d7811_8413677d",
       "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ca50eca6_5fe8cf89",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "\u003c0 shouldn\u0027t happen - removed. \n% block_size !\u003d 0 can happen in case of invalid argument",
+      "parentUuid": "8a6a7464_ea19c74f",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa4d7811_e4326b16",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-12T21:08:59Z",
       "side": 1,
       "message": "can\u0027t this go in the .cpp file? don\u0027t we only need \u0027struct LinkerAllocatorPage;\u0027 here?",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea43f0df_e3f34684",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa4d7811_e4326b16",
       "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "ca50eca6_3f0863b2",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "templates force moving part of the code to header files, I wanted to 1. keep header file clear. 2. use templates 3. keep all actual code in .cpp file.\n\nThis is why there are 2 classes. even tho BlockAllocator is not very useful.",
+      "parentUuid": "8a6a7464_2ad59fed",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa4d7811_443b1fe7",
         "filename": "tests/Android.mk",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-12T21:08:59Z",
       "side": 1,
       "message": "no, i meant that we should have a platform/bionic/linker/tests/ for tests of linker internals.",
+      "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa4d7811_1a8d6c20",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T23:35:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa4d7811_443b1fe7",
       "revId": "6cd412ad046669e6636001624172e8cb3c3264d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
