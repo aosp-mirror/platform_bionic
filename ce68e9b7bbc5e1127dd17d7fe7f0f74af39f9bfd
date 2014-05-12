@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8a81944e_35365a6f",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T23:31:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a21c030_c8b417c4",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7bb835_4e56f38e",
         "filename": "libc/bionic/wchar.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-12T18:17:21Z",
       "side": 1,
       "message": "s/shit/shift/",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a81944e_d58fced8",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T23:31:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7bb835_4e56f38e",
       "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -123,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "6a862067_b41b2e05",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T23:31:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa4d7811_2ac49f1f",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7bb835_ce8f43d9",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 5
@@ -134,6 +188,24 @@
       "writtenOn": "2014-05-12T18:17:21Z",
       "side": 1,
       "message": "\"invalid\", while strictly true, seems a bit misleading here. maybe something more like \"Any non-initial state is invalid when calling wcsrtombs.\"?",
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a862067_5411a2e3",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T23:31:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7bb835_ce8f43d9",
       "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
