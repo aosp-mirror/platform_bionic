@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "aa7bb835_dfe4cb74",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T22:04:52Z",
+      "side": 1,
+      "message": "struct soinfo already has member functions. some of which you call in this patch :-)",
+      "parentUuid": "ea43f0df_235feec7",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7bb835_b4fc8621",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
