@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a862067_519e94dd",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:33:36Z",
+      "side": 1,
+      "message": "OpenBSD returns EINVAL in this case while Glibc returns EILSEQ. Since the doc do not enforce anything here I opted to go with the glibc variant even if our base is OpenBSD. If you think we should keep EINVAL let me know.",
+      "range": {
+        "startLine": 289,
+        "startChar": 36,
+        "endLine": 289,
+        "endChar": 42
+      },
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa26584d_363896e8",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T13:33:36Z",
+      "side": 1,
+      "message": "same as above.",
+      "range": {
+        "startLine": 339,
+        "startChar": 36,
+        "endLine": 339,
+        "endChar": 42
+      },
+      "revId": "ce68e9b7bbc5e1127dd17d7fe7f0f74af39f9bfd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
