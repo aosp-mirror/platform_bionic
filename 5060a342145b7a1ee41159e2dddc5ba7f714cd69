@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa4d7811_b0dede9c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T20:58:49Z",
+      "side": 1,
+      "message": "we should either generalize these or make them soinfo_links member functions.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7bb835_3464165b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T20:58:49Z",
+      "side": 1,
+      "message": "we should just abort here. we shouldn\u0027t have an interface where every caller has to remember to check and abort.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_8aa28bcc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T20:58:49Z",
+      "side": 1,
+      "message": "anything that starts soinfo_ should probably be a soinfo member function.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7bb835_b4fc8621",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-12T20:58:49Z",
+      "side": 1,
+      "message": "oh, so _this_ is where we should really be aborting.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
