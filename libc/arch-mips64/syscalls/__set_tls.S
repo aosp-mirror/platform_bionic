@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__set_thread_area)
+ENTRY(__set_tls)
     .set push
     .set noreorder
     li v0, __NR_set_thread_area
@@ -22,5 +22,5 @@ ENTRY(__set_thread_area)
     j t9
     move ra, t0
     .set pop
-END(__set_thread_area)
-.hidden __set_thread_area
+END(__set_tls)
+.hidden __set_tls

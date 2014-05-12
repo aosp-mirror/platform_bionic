@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__set_thread_area)
+ENTRY(__set_tls)
     .set noreorder
     .cpload t9
     li v0, __NR_set_thread_area
@@ -16,4 +16,4 @@ ENTRY(__set_thread_area)
     j t9
     nop
     .set reorder
-END(__set_thread_area)
+END(__set_tls)
