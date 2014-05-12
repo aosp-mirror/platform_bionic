@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a862067_547c423f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T18:24:30Z",
+      "side": 1,
+      "message": "Do you mean to use fdopen on the same fd? I\u0027m not sure how to get the fd out ot the FILE. Also, I\u0027m not sure about the behavior of fdopen() when used with the same fd twice. Does it overwrite the association with the previous stream? Do I need to close them both?",
+      "parentUuid": "6a21c030_48d567ec",
+      "revId": "42370ac58911874ff514079886a8d7e13104b0a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a21c030_08a8cf7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-12T18:10:54Z",
       "side": 1,
       "message": "weird!\n\nif we replace the gtest main() with one that calls setlocale before doing any stdio stuff, does it work then?",
+      "revId": "42370ac58911874ff514079886a8d7e13104b0a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa26584d_16679a62",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-12T18:24:30Z",
+      "side": 1,
+      "message": "yep.. I already expanded my comments on this. I\u0027ll try your suggestion.",
+      "parentUuid": "6a21c030_08a8cf7b",
       "revId": "42370ac58911874ff514079886a8d7e13104b0a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
