@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ca29cc20_b7a7c2db",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T21:45:20Z",
+      "side": 1,
+      "message": "if we make them soinfo_links member function we will have to add null checks before calls, and I would like to avoid that.\n\nAlso, they walk the list of soinfo_links, so I do not think they can be members of soinfo_links.\n\nThis can be solved by introducing another class which will hold head of soinfo_links list, remove_if and for_each methods.",
+      "parentUuid": "aa4d7811_b0dede9c",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7bb835_3464165b",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-12T20:58:49Z",
       "side": 1,
       "message": "we should just abort here. we shouldn\u0027t have an interface where every caller has to remember to check and abort.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca50eca6_bf29d310",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T21:45:20Z",
+      "side": 1,
+      "message": "see below",
+      "parentUuid": "aa7bb835_3464165b",
       "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ea43f0df_235feec7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T21:45:20Z",
+      "side": 1,
+      "message": "It would suggest changing soinfo from struct to class. I am all for that, just not sure this should be part of this change.",
+      "parentUuid": "8a6a7464_8aa28bcc",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7bb835_b4fc8621",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-12T20:58:49Z",
       "side": 1,
       "message": "oh, so _this_ is where we should really be aborting.",
+      "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca50eca6_9f24173a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-12T21:45:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7bb835_b4fc8621",
       "revId": "5060a342145b7a1ee41159e2dddc5ba7f714cd69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
