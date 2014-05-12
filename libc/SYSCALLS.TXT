@@ -61,7 +61,6 @@ int     kill(pid_t, int)           all
 int     tkill(pid_t tid, int sig)  all
 int     tgkill(pid_t tgid, pid_t tid, int sig)  all
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
-int     __set_thread_area:set_thread_area(void*  user_desc)  mips,mips64,x86
 
 # <sys/resource.h>
 int getrusage(int, struct rusage*)  all
@@ -331,3 +330,7 @@ int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # MIPS-specific
 int     _flush_cache:cacheflush(char* addr, const int nbytes, const int op) mips,mips64
+int     __set_tls:set_thread_area(void*) mips,mips64
+
+# x86-specific
+int     __set_thread_area:set_thread_area(void*) x86
