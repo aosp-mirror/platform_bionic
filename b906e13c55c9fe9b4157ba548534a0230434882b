@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2cd02f_586f81ca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-05-12T18:15:39Z",
+      "side": 1,
+      "message": "This sentence is no longer relevant and can be deleted.",
+      "revId": "b906e13c55c9fe9b4157ba548534a0230434882b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a30447d_16a8fcfe",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-05-12T18:15:39Z",
+      "side": 1,
+      "message": "I\u0027d update this entire block to match what is written in the comment above (post modification). This particular sentence doesn\u0027t make sense to me.",
+      "revId": "b906e13c55c9fe9b4157ba548534a0230434882b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
