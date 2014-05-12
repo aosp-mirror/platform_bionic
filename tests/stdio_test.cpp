@@ -102,14 +102,12 @@ TEST(stdio, getdelim_invalid) {
   ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
 
-  // The stream can't be closed.
-  fclose(fp);
+  // The underlying fd can't be closed.
+  ASSERT_EQ(0, close(fileno(fp)));
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
-  // glibc sometimes doesn't set errno in this particular case.
-#if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
-#endif // __BIONIC__
+  fclose(fp);
 }
 
 TEST(stdio, getline) {
@@ -171,14 +169,12 @@ TEST(stdio, getline_invalid) {
   ASSERT_EQ(getline(&buffer, NULL, fp), -1);
   ASSERT_EQ(EINVAL, errno);
 
-  // The stream can't be closed.
-  fclose(fp);
+  // The underlying fd can't be closed.
+  ASSERT_EQ(0, close(fileno(fp)));
   errno = 0;
   ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
-  // glibc sometimes doesn't set errno in this particular case.
-#if defined(__BIONIC__)
   ASSERT_EQ(EBADF, errno);
-#endif // __BIONIC__
+  fclose(fp);
 }
 
 TEST(stdio, printf_ssize_t) {
