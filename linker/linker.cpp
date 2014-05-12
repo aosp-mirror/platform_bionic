@@ -1031,10 +1031,6 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
          * Section 4.7.1.10 "Dynamic relocations"
          * R_AARCH64_COPY may only appear in executable objects where e_type is
          * set to ET_EXEC.
-         *
-         * FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
-         * We should explicitly disallow ET_DYN executables from having
-         * R_AARCH64_COPY relocations.
          */
         DL_ERR("%s R_AARCH64_COPY relocations are not supported", si->name);
         return -1;
@@ -1216,14 +1212,13 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             break;
         case R_ARM_COPY:
             /*
+             * ET_EXEC is not supported so this should not happen.
+             *
              * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
              *
              * Section 4.7.1.10 "Dynamic relocations"
              * R_ARM_COPY may only appear in executable objects where e_type is
              * set to ET_EXEC.
-             *
-             * We explicitly disallow ET_DYN executables from having
-             * R_ARM_COPY relocations.
              */
             DL_ERR("%s R_ARM_COPY relocations are not supported", si->name);
             return -1;
