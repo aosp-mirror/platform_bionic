@@ -41,6 +41,10 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type)
   EXPECT_STREQ(username, pwd->pw_name);
   EXPECT_EQ(uid, pwd->pw_uid);
   EXPECT_EQ(uid, pwd->pw_gid);
+  ASSERT_EQ(NULL, pwd->pw_passwd);
+#ifdef __LP64__
+  ASSERT_EQ(NULL, pwd->pw_gecos);
+#endif
 
   if (uid_type == TYPE_SYSTEM) {
     EXPECT_STREQ("/", pwd->pw_dir);
