@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a64fc99_b196e234",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1957,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T04:38:37Z",
+      "side": 1,
+      "message": "explicitly\n\ncan\u0027t you configure your editor to check spelling? if not, you might want to switch to one that can.",
+      "revId": "197dbf00529a6f0ca16201d3f5f0c91a7ad4199c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_adcd2940",
+        "filename": "linker/tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T04:38:37Z",
+      "side": 1,
+      "message": "hang on... why do you need this at all?",
+      "revId": "197dbf00529a6f0ca16201d3f5f0c91a7ad4199c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
