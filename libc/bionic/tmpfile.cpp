@@ -57,22 +57,23 @@ class ScopedSignalBlocker {
 };
 
 static FILE* __tmpfile_dir(const char* tmp_dir) {
-  char buf[PATH_MAX];
-  int path_length = snprintf(buf, sizeof(buf), "%s/tmp.XXXXXXXXXX", tmp_dir);
-  if (path_length >= static_cast<int>(sizeof(buf))) {
+  char* path = NULL;
+  if (asprintf(&path, "%s/tmp.XXXXXXXXXX", tmp_dir) == -1) {
     return NULL;
   }
 
   int fd;
   {
     ScopedSignalBlocker ssb;
-    fd = mkstemp(buf);
+    fd = mkstemp(path);
     if (fd == -1) {
+      free(path);
       return NULL;
     }
 
     // Unlink the file now so that it's removed when closed.
-    unlink(buf);
+    unlink(path);
+    free(path);
 
     // Can we still use the file now it's unlinked?
     // File systems without hard link support won't have the usual Unix semantics.
