@@ -288,7 +288,7 @@ TEST(wchar, mbrtowc) {
   // 4-byte UTF-8.
   ASSERT_EQ(4U, mbrtowc(out, "\xf0\xa4\xad\xa2" "ef", 6, NULL));
   ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[0]);
-#if __BIONIC__ // glibc allows this.
+#if defined(__BIONIC__) // glibc allows this.
   // Illegal 5-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, NULL));
   ASSERT_EQ(EILSEQ, errno);

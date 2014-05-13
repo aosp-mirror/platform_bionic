@@ -67,7 +67,7 @@ TEST(unistd, sbrk_ENOMEM) {
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(-(current_brk + 1)));
   ASSERT_EQ(ENOMEM, errno);
 
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   // The maximum negative value is an interesting special case that glibc gets wrong.
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN));
   ASSERT_EQ(ENOMEM, errno);

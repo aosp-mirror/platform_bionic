@@ -219,7 +219,7 @@ TEST(stdio, snprintf_ls) {
 }
 
 TEST(stdio, snprintf_n) {
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   // http://b/14492135
   char buf[32];
   int i = 1234;
@@ -460,7 +460,7 @@ TEST(stdio, cantwrite_EBADF) {
 
   errno = 0;
   EXPECT_EQ(EOF, fwprintf(fp, L"hello"));
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   EXPECT_EQ(EBADF, errno);
 #endif
 
@@ -478,7 +478,7 @@ TEST(stdio, cantwrite_EBADF) {
 
   errno = 0;
   EXPECT_EQ(WEOF, fputwc(L'x', fp));
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   EXPECT_EQ(EBADF, errno);
 #endif
 }
@@ -521,7 +521,7 @@ TEST(stdio, consistent_fpos_t) {
   ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
   EXPECT_EQ(0, fgetpos(fp, &pos5));
 
-#ifdef __BIONIC__
+#if defined(__BIONIC__)
   // Bionic's fpos_t is just an alias for off_t. This is inherited from OpenBSD
   // upstream. Glibc differs by storing the mbstate_t inside its fpos_t. In
   // Bionic (and upstream OpenBSD) the mbstate_t is stored inside the FILE
@@ -586,9 +586,9 @@ TEST(stdio, fpos_t_and_seek) {
   // Store the "inside multi byte" position.
   fpos_t pos_inside_mb;
   ASSERT_EQ(0, fgetpos(fp, &pos_inside_mb));
-  #ifdef __BIONIC__
-    ASSERT_EQ(offset_inside_mb, static_cast<off_t>(pos_inside_mb));
-  #endif
+#if defined(__BIONIC__)
+  ASSERT_EQ(offset_inside_mb, static_cast<off_t>(pos_inside_mb));
+#endif
 
   // Reading from within a byte should produce an error.
   ASSERT_EQ(WEOF, fgetwc(fp));

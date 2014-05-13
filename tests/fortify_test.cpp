@@ -668,7 +668,7 @@ TEST(DEATHTEST, recv_fortified) {
 }
 
 TEST(DEATHTEST, FD_ISSET_fortified) {
-#ifdef __BIONIC__ // glibc catches this at compile-time.
+#if defined(__BIONIC__) // glibc catches this at compile-time.
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   fd_set set;
   memset(&set, 0, sizeof(set));
