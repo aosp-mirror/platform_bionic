@@ -47,7 +47,6 @@ libc_bionic_src_files_mips64 := \
     arch-mips64/bionic/memcmp16.S \
     arch-mips64/bionic/_setjmp.S \
     arch-mips64/bionic/setjmp.S \
-    arch-mips64/bionic/__set_tls.c \
     arch-mips64/bionic/sigsetjmp.S \
     arch-mips64/bionic/syscall.S \
     arch-mips64/bionic/vfork.S \
