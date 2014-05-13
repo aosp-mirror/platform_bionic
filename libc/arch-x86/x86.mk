@@ -32,60 +32,15 @@ libc_bionic_src_files_x86 += \
     arch-x86/bionic/syscall.S \
     arch-x86/bionic/vfork.S \
 
-ifeq ($(ARCH_X86_HAVE_SSSE3),true)
-libc_bionic_src_files_x86 += \
-    arch-x86/string/ssse3-memcpy-atom.S \
-    arch-x86/string/ssse3-memmove-atom.S \
-    arch-x86/string/ssse3-bcopy-atom.S \
-    arch-x86/string/ssse3-strncat-atom.S \
-    arch-x86/string/ssse3-strncpy-atom.S \
-    arch-x86/string/ssse3-strlcat-atom.S \
-    arch-x86/string/ssse3-strlcpy-atom.S \
-    arch-x86/string/ssse3-strcmp-atom.S \
-    arch-x86/string/ssse3-strncmp-atom.S \
-    arch-x86/string/ssse3-strcat-atom.S \
-    arch-x86/string/ssse3-strcpy-atom.S \
-    arch-x86/string/ssse3-memcmp-atom.S \
-    arch-x86/string/ssse3-wmemcmp-atom.S \
-    arch-x86/string/ssse3-memcmp16-atom.S \
-    arch-x86/string/ssse3-wcscat-atom.S \
-    arch-x86/string/ssse3-wcscpy-atom.S
-else
-libc_bionic_src_files_x86 += \
-    arch-x86/string/memcpy.S \
-    arch-x86/string/memmove.S \
-    arch-x86/string/bcopy.S \
-    arch-x86/string/strcmp.S \
-    arch-x86/string/strncmp.S \
-    arch-x86/string/strcat.S \
-    arch-x86/string/memcmp.S \
-    bionic/__memcmp16.cpp \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-    upstream-openbsd/lib/libc/string/strcpy.c \
-    upstream-openbsd/lib/libc/string/strlcat.c \
-    upstream-openbsd/lib/libc/string/strlcpy.c \
-    upstream-openbsd/lib/libc/string/strncat.c \
-    upstream-openbsd/lib/libc/string/strncpy.c \
-
+## ARCH variant specific source files
+arch_variant_mk := $(LOCAL_PATH)/arch-x86/$(TARGET_ARCH_VARIANT)/$(TARGET_ARCH_VARIANT).mk
+ifeq ($(wildcard $(arch_variant_mk)),)
+    arch_variant_mk := $(LOCAL_PATH)/arch-x86/generic/generic.mk
 endif
+include $(arch_variant_mk)
+libc_common_additional_dependencies += $(arch_variant_mk)
 
-libc_bionic_src_files_x86 += \
-    arch-x86/string/sse2-memset-atom.S \
-    arch-x86/string/sse2-bzero-atom.S \
-    arch-x86/string/sse2-memchr-atom.S \
-    arch-x86/string/sse2-memrchr-atom.S \
-    arch-x86/string/sse2-strchr-atom.S \
-    arch-x86/string/sse2-strrchr-atom.S \
-    arch-x86/string/sse2-index-atom.S \
-    arch-x86/string/sse2-strlen-atom.S \
-    arch-x86/string/sse2-strnlen-atom.S \
-    arch-x86/string/sse2-wcschr-atom.S \
-    arch-x86/string/sse2-wcsrchr-atom.S \
-    arch-x86/string/sse2-wcslen-atom.S \
-    arch-x86/string/sse2-wcscmp-atom.S \
-
+arch_variant_mk :=
 
 libc_crt_target_cflags_x86 := \
     -m32 \
