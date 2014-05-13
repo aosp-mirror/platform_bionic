@@ -15,17 +15,8 @@
  */
 
 #include <private/NetdClient.h>
+#include <sys/socket.h>
 
-#ifdef __i386__
-#define __socketcall __attribute__((__cdecl__))
-#else
-#define __socketcall
-#endif
-
-extern "C" __socketcall int __accept(int, sockaddr*, socklen_t*);
-extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
-
-NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
-    __accept,
-    __connect,
-};
+int accept(int sockfd, sockaddr* addr, socklen_t* addrlen) {
+    return __netdClientDispatch.accept(sockfd, addr, addrlen);
+}
