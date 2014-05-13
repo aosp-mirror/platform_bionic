@@ -87,6 +87,29 @@ TEST(wchar, wctomb_wcrtomb) {
   EXPECT_EQ(EILSEQ, errno);
 }
 
+TEST(wchar, wcrtomb_start_state) {
+  char out[MB_LEN_MAX];
+  mbstate_t ps;
+
+  // Any non-initial state is invalid when calling wcrtomb.
+  memset(&ps, 0, sizeof(ps));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(NULL, "\xc2", 1, &ps));
+  EXPECT_EQ(static_cast<size_t>(-1), wcrtomb(out, 0x00a2, &ps));
+  EXPECT_EQ(EILSEQ, errno);
+
+  // If the first argument to wcrtomb is NULL or the second is L'\0' the shift
+  // state should be reset.
+  memset(&ps, 0, sizeof(ps));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(NULL, "\xc2", 1, &ps));
+  EXPECT_EQ(1U, wcrtomb(NULL, 0x00a2, &ps));
+  EXPECT_TRUE(mbsinit(&ps));
+
+  memset(&ps, 0, sizeof(ps));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(NULL, "\xf0\xa4", 1, &ps));
+  EXPECT_EQ(1U, wcrtomb(out, L'\0', &ps));
+  EXPECT_TRUE(mbsinit(&ps));
+}
+
 TEST(wchar, wcstombs_wcrtombs) {
   const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
   const wchar_t bad_chars[] = { L'h', L'i', static_cast<wchar_t>(0xffffffff), 0 };
@@ -184,6 +207,14 @@ TEST(wchar, wcstombs_wcrtombs) {
   EXPECT_EQ(EILSEQ, errno);
   bytes[3] = 0;
   EXPECT_STREQ("hix", bytes);
+
+  // Any non-initial state is invalid when calling wcsrtombs.
+  mbstate_t ps;
+  src = chars;
+  memset(&ps, 0, sizeof(ps));
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(NULL, "\xc2", 1, &ps));
+  EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(NULL, &src, 0, &ps));
+  EXPECT_EQ(EILSEQ, errno);
 }
 
 TEST(wchar, limits) {
@@ -265,6 +296,83 @@ TEST(wchar, mbrtowc) {
   // Illegal over-long sequence.
   ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf0\x82\x82\xac" "ef", 6, NULL));
   ASSERT_EQ(EILSEQ, errno);
+}
+
+void test_mbrtowc_incomplete(mbstate_t* ps) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  wchar_t out;
+  // 2-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "cdef", 5, ps));
+  ASSERT_EQ(0x00a2, out);
+  ASSERT_TRUE(mbsinit(ps));
+  // 3-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xe2", 1, ps));
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\x82", 1, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xac" "def", 4, ps));
+  ASSERT_EQ(0x20ac, out);
+  ASSERT_TRUE(mbsinit(ps));
+  // 4-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xf0", 1, ps));
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xa4\xad", 2, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "ef", 3, ps));
+  ASSERT_EQ(0x24b62, out);
+  ASSERT_TRUE(mbsinit(ps));
+
+  // Invalid 2-byte
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(&out, "\x20" "cdef", 5, ps));
+  ASSERT_EQ(EILSEQ, errno);
+}
+
+TEST(wchar, mbrtowc_incomplete) {
+  mbstate_t ps;
+  memset(&ps, 0, sizeof(ps));
+
+  test_mbrtowc_incomplete(&ps);
+  test_mbrtowc_incomplete(NULL);
+}
+
+void test_mbsrtowcs(mbstate_t* ps) {
+  wchar_t out[4];
+
+  const char* valid = "A" "\xc2\xa2" "\xe2\x82\xac" "\xf0\xa4\xad\xa2" "ef";
+  ASSERT_EQ(4U, mbsrtowcs(out, &valid, 4, ps));
+  ASSERT_EQ(L'A', out[0]);
+  ASSERT_EQ(0x00a2, out[1]);
+  ASSERT_EQ(0x20ac, out[2]);
+  ASSERT_EQ(0x24b62, out[3]);
+  ASSERT_EQ('e', *valid);
+
+  const char* invalid = "A" "\xc2\x20" "ef";
+  ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &invalid, 4, ps));
+  EXPECT_EQ(EILSEQ, errno);
+  ASSERT_EQ('\xc2', *invalid);
+
+  const char* incomplete = "A" "\xc2";
+  ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &incomplete, 2, ps));
+  EXPECT_EQ(EILSEQ, errno);
+  ASSERT_EQ('\xc2', *incomplete);
+}
+
+TEST(wchar, mbsrtowcs) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  mbstate_t ps;
+  memset(&ps, 0, sizeof(ps));
+  test_mbsrtowcs(&ps);
+  test_mbsrtowcs(NULL);
+
+  // Invalid multi byte continuation.
+  const char* invalid = "\x20";
+  wchar_t out;
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, &ps));
+  ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(&out, &invalid, 1, &ps));
+  EXPECT_EQ(EILSEQ, errno);
+  ASSERT_EQ('\x20', *invalid);
 }
 
 TEST(wchar, wcstod) {
