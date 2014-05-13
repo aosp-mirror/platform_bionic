@@ -140,6 +140,7 @@ libc_bionic_src_files := \
     bionic/mkdir.cpp \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
+    bionic/mntent.cpp \
     bionic/open.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
