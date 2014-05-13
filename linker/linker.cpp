@@ -48,6 +48,7 @@
 #include "linker_debug.h"
 #include "linker_environ.h"
 #include "linker_phdr.h"
+#include "linker_allocator.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -69,14 +70,8 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 // We can't use malloc(3) in the dynamic linker. We use a linked list of anonymous
 // maps, each a single page in size. The pages are broken up into as many struct soinfo
-// objects as will fit, and they're all threaded together on a free list.
-#define SOINFO_PER_POOL ((PAGE_SIZE - sizeof(soinfo_pool_t*)) / sizeof(soinfo))
-struct soinfo_pool_t {
-  soinfo_pool_t* next;
-  soinfo info[SOINFO_PER_POOL];
-};
-static struct soinfo_pool_t* gSoInfoPools = NULL;
-static soinfo* gSoInfoFreeList = NULL;
+// objects as will fit.
+static LinkerAllocator<soinfo> gSoInfoAllocator;
 
 static soinfo* solist = &libdl_info;
 static soinfo* sonext = &libdl_info;
@@ -269,56 +264,13 @@ void notify_gdb_of_libraries() {
   rtld_db_dlactivity();
 }
 
-static bool ensure_free_list_non_empty() {
-  if (gSoInfoFreeList != NULL) {
-    return true;
-  }
-
-  // Allocate a new pool.
-  soinfo_pool_t* pool = reinterpret_cast<soinfo_pool_t*>(mmap(NULL, sizeof(*pool),
-                                                              PROT_READ|PROT_WRITE,
-                                                              MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
-  if (pool == MAP_FAILED) {
-    return false;
-  }
-
-  // Add the pool to our list of pools.
-  pool->next = gSoInfoPools;
-  gSoInfoPools = pool;
-
-  // Chain the entries in the new pool onto the free list.
-  gSoInfoFreeList = &pool->info[0];
-  soinfo* next = NULL;
-  for (int i = SOINFO_PER_POOL - 1; i >= 0; --i) {
-    pool->info[i].next = next;
-    next = &pool->info[i];
-  }
-
-  return true;
-}
-
-static void set_soinfo_pool_protection(int protection) {
-  for (soinfo_pool_t* p = gSoInfoPools; p != NULL; p = p->next) {
-    if (mprotect(p, sizeof(*p), protection) == -1) {
-      abort(); // Can't happen.
-    }
-  }
-}
-
 static soinfo* soinfo_alloc(const char* name) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return NULL;
   }
 
-  if (!ensure_free_list_non_empty()) {
-    DL_ERR("out of memory when loading \"%s\"", name);
-    return NULL;
-  }
-
-  // Take the head element off the free list.
-  soinfo* si = gSoInfoFreeList;
-  gSoInfoFreeList = gSoInfoFreeList->next;
+  soinfo* si = gSoInfoAllocator.alloc();
 
   // Initialize the new element.
   memset(si, 0, sizeof(soinfo));
@@ -357,8 +309,8 @@ static void soinfo_free(soinfo* si) {
     if (si == sonext) {
         sonext = prev;
     }
-    si->next = gSoInfoFreeList;
-    gSoInfoFreeList = si;
+
+    gSoInfoAllocator.free(si);
 }
 
 
@@ -794,8 +746,8 @@ static int soinfo_unload(soinfo* si) {
 
     munmap(reinterpret_cast<void*>(si->base), si->size);
     notify_gdb_of_unload(si);
-    soinfo_free(si);
     si->ref_count = 0;
+    soinfo_free(si);
   } else {
     si->ref_count--;
     TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
@@ -822,19 +774,19 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     DL_ERR("invalid extended flags to android_dlopen_ext: %x", extinfo->flags);
     return NULL;
   }
-  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
+  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name, extinfo);
   if (si != NULL) {
     si->CallConstructors();
   }
-  set_soinfo_pool_protection(PROT_READ);
+  gSoInfoAllocator.protect_all(PROT_READ);
   return si;
 }
 
 int do_dlclose(soinfo* si) {
-  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
+  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
   int result = soinfo_unload(si);
-  set_soinfo_pool_protection(PROT_READ);
+  gSoInfoAllocator.protect_all(PROT_READ);
   return result;
 }
 
@@ -1382,7 +1334,7 @@ void soinfo::CallFunction(const char* function_name __unused, linker_function_t 
 
   // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
   // are still writable. This happens with our debug malloc (see http://b/7941716).
-  set_soinfo_pool_protection(PROT_READ | PROT_WRITE);
+  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
 }
 
 void soinfo::CallPreInitConstructors() {
@@ -1933,6 +1885,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       ldpreload_env = linker_env_get("LD_PRELOAD");
     }
 
+    // Linker does not call constructors for its own
+    // global variables so we need to initialize
+    // the allocator explicitly.
+    gSoInfoAllocator.init();
+
     INFO("[ android linker & debugger ]");
 
     soinfo* si = soinfo_alloc(args.argv[0]);
@@ -2150,7 +2107,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   args.abort_message_ptr = &gAbortMessage;
   ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
 
-  set_soinfo_pool_protection(PROT_READ);
+  gSoInfoAllocator.protect_all(PROT_READ);
 
   // Return the address that the calling assembly stub should jump to.
   return start_address;
