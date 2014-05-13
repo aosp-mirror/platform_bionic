@@ -28,7 +28,7 @@ TEST(regex, smoke) {
 
   char buf[80];
   regerror(REG_NOMATCH, &re, buf, sizeof(buf));
-#if __BIONIC__
+#if defined(__BIONIC__)
   ASSERT_STREQ("regexec() failed to match", buf);
 #else
   ASSERT_STREQ("No match", buf);

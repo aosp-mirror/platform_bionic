@@ -42,7 +42,7 @@ TEST(stdlib, lrand48_random_rand) {
   EXPECT_EQ(902267124, lrand48());
   EXPECT_EQ(132366131, lrand48());
 
-#if __BIONIC__
+#if defined(__BIONIC__)
   // On bionic, random(3) is equivalent to lrand48...
   srandom(0x01020304);
   EXPECT_EQ(1409163720, random());
