@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa26584d_dc7141be",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-13T16:30:29Z",
+      "side": 0,
+      "message": "is __LP32__ a thing ? Do any toolchains define it at all ? (Just wondering if we should fix the toolchain)",
+      "revId": "38967f3d1fbc9326beb7eef8c084b334e9bd65f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
