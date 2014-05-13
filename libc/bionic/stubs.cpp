@@ -444,21 +444,6 @@ void endpwent() {
   UNIMPLEMENTED;
 }
 
-mntent* getmntent(FILE* /*f*/) {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-FILE* setmntent(const char*, const char*) {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-int endmntent(FILE*) {
-  UNIMPLEMENTED;
-  return 1; /* Allways returns 1 according to man */
-}
-
 char* ttyname(int /*fd*/) { // NOLINT: implementing bad function.
   UNIMPLEMENTED;
   return NULL;

@@ -59,6 +59,7 @@ libBionicStandardTests_src_files := \
     locale_test.cpp \
     malloc_test.cpp \
     math_test.cpp \
+    mntent_test.cpp \
     netdb_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
