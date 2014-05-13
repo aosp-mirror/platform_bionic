@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a5e84cf_0f0d4d53",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "this comment might be better in linker_allocator.h. we should probably move DISALLOW_ALLOCATION there too. (that sounds like a stand-alone change though.)",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a5e84cf_2fbb69ff",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "i still think the allocator should be handing out guaranteed-clean memory. (and probably scrubbing it on free too.)",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_9ca2d1cc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "it\u0027s not the allocators we\u0027re protecting; it\u0027s our data.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_5c9d3986",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "member function.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_fcbe6dc2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "maybe it\u0027s time this became a member function too. i keep having to translate \u0027si\u0027 to \u0027this\u0027 when i read this...",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_4f525ef0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1996,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "the",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_2ff28a7c",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "represent",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_dc4cc987",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "Answers",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_bc4b156b",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": ".\n\ntypically, we write variable names in quotes, like \u0027children\u0027 and \u0027parents\u0027.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_2f0b6ab2",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "does our life get easier if we just have one soinfo* per struct? now we have a more general allocator that shouldn\u0027t be a problem. i\u0027m uncomfortable with the weird mix of C and C++ styles we\u0027re adding here. it\u0027s a bug that the existing code is a mix!\n\nalternatively, does any of the \u003csys/queue.h\u003e stuff help?",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a5e84cf_0f3b0de8",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "probably worth a blank line between the old and new stuff.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_8fddb628",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": "This",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_dc7129be",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T18:12:58Z",
+      "side": 1,
+      "message": ".\n\nset where?\n\ni still think this should be hidden behind accessors. (a) because new stuff we add ought to be private, and (b) because we now have this situation where some stuff is optional and might not be there at all.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
