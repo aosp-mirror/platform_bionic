@@ -24,6 +24,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <locale.h>
+
+#include "TemporaryFile.h"
 
 TEST(stdio, tmpfile_fileno_fprintf_rewind_fgets) {
   FILE* fp = tmpfile();
@@ -478,4 +481,128 @@ TEST(stdio, cantwrite_EBADF) {
 #if !defined(__GLIBC__)
   EXPECT_EQ(EBADF, errno);
 #endif
+}
+
+// Tests that we can only have a consistent and correct fpos_t when using
+// f*pos functions (i.e. fpos doesn't get inside a multi byte character).
+TEST(stdio, consistent_fpos_t) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  FILE* fp = tmpfile();
+  ASSERT_TRUE(fp != NULL);
+
+  wchar_t mb_one_bytes = L'h';
+  wchar_t mb_two_bytes = 0x00a2;
+  wchar_t mb_three_bytes = 0x20ac;
+  wchar_t mb_four_bytes = 0x24b62;
+
+  // Write to file.
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fputwc(mb_one_bytes, fp)));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, fp)));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, fp)));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, fp)));
+
+  rewind(fp);
+
+  // Record each character position.
+  fpos_t pos1;
+  fpos_t pos2;
+  fpos_t pos3;
+  fpos_t pos4;
+  fpos_t pos5;
+  EXPECT_EQ(0, fgetpos(fp, &pos1));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  EXPECT_EQ(0, fgetpos(fp, &pos2));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  EXPECT_EQ(0, fgetpos(fp, &pos3));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  EXPECT_EQ(0, fgetpos(fp, &pos4));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  EXPECT_EQ(0, fgetpos(fp, &pos5));
+
+#ifdef __BIONIC__
+  // Bionic's fpos_t is just an alias for off_t. This is inherited from OpenBSD
+  // upstream. Glibc differs by storing the mbstate_t inside its fpos_t. In
+  // Bionic (and upstream OpenBSD) the mbstate_t is stored inside the FILE
+  // structure.
+  ASSERT_EQ(0, static_cast<off_t>(pos1));
+  ASSERT_EQ(1, static_cast<off_t>(pos2));
+  ASSERT_EQ(3, static_cast<off_t>(pos3));
+  ASSERT_EQ(6, static_cast<off_t>(pos4));
+  ASSERT_EQ(10, static_cast<off_t>(pos5));
+#endif
+
+  // Exercise back and forth movements of the position.
+  ASSERT_EQ(0, fsetpos(fp, &pos2));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  ASSERT_EQ(0, fsetpos(fp, &pos1));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  ASSERT_EQ(0, fsetpos(fp, &pos4));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  ASSERT_EQ(0, fsetpos(fp, &pos3));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(fp)));
+  ASSERT_EQ(0, fsetpos(fp, &pos5));
+  ASSERT_EQ(WEOF, fgetwc(fp));
+
+  fclose(fp);
+}
+
+// Exercise the interaction between fpos and seek.
+TEST(stdio, fpos_t_and_seek) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  // For glibc we need to close and re-open the file in order for fseek to work
+  // after using setlocale(LC_CTYPE, "C.UTF-8") and fputwc.
+  // TODO: find out if this is expected or a bug in glibc.
+  TemporaryFile tf;
+  FILE* fp = fdopen(tf.fd, "w+");
+  ASSERT_TRUE(fp != NULL);
+
+  wchar_t mb_two_bytes = 0x00a2;
+  wchar_t mb_three_bytes = 0x20ac;
+  wchar_t mb_four_bytes = 0x24b62;
+
+  // Write to file.
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, fp)));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, fp)));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, fp)));
+
+  fflush(fp);
+  fclose(fp);
+
+  fp = fopen(tf.filename, "r");
+  ASSERT_TRUE(fp != NULL);
+
+  // Store a valid position.
+  fpos_t mb_two_bytes_pos;
+  ASSERT_EQ(0, fgetpos(fp, &mb_two_bytes_pos));
+
+  // Move inside mb_four_bytes with fseek.
+  long offset_inside_mb = 6;
+  ASSERT_EQ(0, fseek(fp, offset_inside_mb, SEEK_SET));
+
+  // Store the "inside multi byte" position.
+  fpos_t pos_inside_mb;
+  ASSERT_EQ(0, fgetpos(fp, &pos_inside_mb));
+  #ifdef __BIONIC__
+    ASSERT_EQ(offset_inside_mb, static_cast<off_t>(pos_inside_mb));
+  #endif
+
+  // Reading from within a byte should produce an error.
+  ASSERT_EQ(WEOF, fgetwc(fp));
+  ASSERT_EQ(EILSEQ, errno);
+
+  // Reverting to a valid position should work.
+  ASSERT_EQ(0, fsetpos(fp, &mb_two_bytes_pos));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
+
+  // Moving withing a multi byte with fsetpos should work but reading should
+  // produce an error.
+  ASSERT_EQ(0, fsetpos(fp, &pos_inside_mb));
+  ASSERT_EQ(WEOF, fgetwc(fp));
+  ASSERT_EQ(EILSEQ, errno);
+
+  fclose(fp);
 }
