@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Intel Corporation
+Copyright (c) 2014, Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,15 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if defined(__slm__)
-/* Values are optimized for Silvermont */
-#define SHARED_CACHE_SIZE	(1024*1024)			/* Silvermont L2 Cache */
-#define DATA_CACHE_SIZE		(24*1024)			/* Silvermont L1 Data Cache */
-#else
-/* Values are optimized for Atom */
-#define SHARED_CACHE_SIZE	(512*1024)			/* Atom L2 Cache */
-#define DATA_CACHE_SIZE		(24*1024)			/* Atom L1 Data Cache */
-#endif
 
-#define SHARED_CACHE_SIZE_HALF	(SHARED_CACHE_SIZE / 2)
-#define DATA_CACHE_SIZE_HALF	(DATA_CACHE_SIZE / 2)
+#define MEMMOVE	bcopy
+#define USE_AS_BCOPY
+#include "sse2-memmove-slm.S"
