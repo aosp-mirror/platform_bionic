@@ -2,9 +2,9 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(connect)
+ENTRY(__connect)
+    .set push
     .set noreorder
-    .cpload t9
     li v0, __NR_connect
     syscall
     bnez a3, 1f
@@ -12,8 +12,15 @@ ENTRY(connect)
     j ra
     nop
 1:
-    la t9,__set_errno
-    j t9
+    move t0, ra
+    bal     2f
     nop
-    .set reorder
-END(connect)
+2:
+    .cpsetup ra, t1, 2b
+    LA t9,__set_errno
+    .cpreturn
+    j t9
+    move ra, t0
+    .set pop
+END(__connect)
+.hidden __connect

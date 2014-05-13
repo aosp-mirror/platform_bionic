@@ -110,6 +110,7 @@ libc_bionic_src_files := \
     bionic/clock.cpp \
     bionic/clone.cpp \
     bionic/cmsg_nxthdr.cpp \
+    bionic/connect.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
@@ -141,6 +142,7 @@ libc_bionic_src_files := \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
+    bionic/NetdClient.cpp \
     bionic/open.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
