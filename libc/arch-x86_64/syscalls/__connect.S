@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(connect)
+ENTRY(__connect)
     movl    $__NR_connect, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -13,4 +13,5 @@ ENTRY(connect)
     orq     $-1, %rax
 1:
     ret
-END(connect)
+END(__connect)
+.hidden __connect

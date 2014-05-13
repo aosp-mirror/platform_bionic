@@ -58,6 +58,7 @@ extern "C" {
   extern void pthread_debug_init(void);
   extern void malloc_debug_init(void);
   extern void malloc_debug_fini(void);
+  extern void netdClientInit(void);
 };
 
 // We flag the __libc_preinit function as a constructor to ensure
@@ -79,6 +80,9 @@ __attribute__((constructor)) static void __libc_preinit() {
   // Hooks for the debug malloc and pthread libraries to let them know that we're starting up.
   pthread_debug_init();
   malloc_debug_init();
+
+  // Hook for the netd client library to let it know that we're starting up.
+  netdClientInit();
 }
 
 __LIBC_HIDDEN__ void __libc_postfini() {
