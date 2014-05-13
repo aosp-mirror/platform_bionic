@@ -98,6 +98,7 @@ libc_common_src_files += \
 
 libc_bionic_src_files := \
     bionic/abort.cpp \
+    bionic/accept.cpp \
     bionic/access.cpp \
     bionic/assert.cpp \
     bionic/atof.cpp \

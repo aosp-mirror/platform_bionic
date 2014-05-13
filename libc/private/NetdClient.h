@@ -20,6 +20,7 @@
 #include <sys/socket.h>
 
 struct NetdClientDispatch {
+    int (*accept)(int, sockaddr*, socklen_t*);
     int (*connect)(int, const sockaddr*, socklen_t);
 };
 
