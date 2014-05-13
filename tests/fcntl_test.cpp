@@ -73,7 +73,7 @@ TEST(fcntl, creat_creat64) {
 TEST(fcntl, fallocate_EINVAL) {
   TemporaryFile tf;
 
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   errno = 0;
   ASSERT_EQ(-1, fallocate(tf.fd, 0, 0, -1));
   ASSERT_EQ(EINVAL, errno);
@@ -98,7 +98,7 @@ TEST(fcntl, fallocate) {
   ASSERT_EQ(0, fstat(tf.fd, &sb));
   ASSERT_EQ(0, sb.st_size);
 
-#if !defined(__GLIBC__)
+#if defined(__BIONIC__)
   ASSERT_EQ(0, fallocate(tf.fd, 0, 0, 1));
   ASSERT_EQ(0, fstat(tf.fd, &sb));
   ASSERT_EQ(1, sb.st_size);
