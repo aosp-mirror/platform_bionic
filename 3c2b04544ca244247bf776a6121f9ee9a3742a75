@@ -1,0 +1,259 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a64fc99_8e4b7fe4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "constructors\ns/his/its/",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_ee46bbdd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "whitespace",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_7effd913",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1957,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "_the_ allocator\n\nexplicit__ly",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_4d134d7e",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "uint8_t?",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_6d109170",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "isn\u0027t this a bug too? we already excluded the block \u003d\u003d NULL case above (which i think is fine). but i think we should treat attempts to free things we didn\u0027t hand out as errors. it\u0027s really hard to debug linker failures, especially if we don\u0027t fail hard!",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_0e60ef5f",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "i think aborting would be more reasonable, since this would imply a bug in the caller.",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_8e729f26",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "do we want to scrub freed blocks? we don\u0027t do much freeing, right? only on dlclose?",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_4e6d8740",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "i don\u0027t think it should ever be valid to find_page(NULL).",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_6e6acb2b",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "while (",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_ad320915",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "abort. this is an internal API and i don\u0027t think it\u0027s ever reasonable to find_page something that we didn\u0027t hand out.",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_4dea6d14",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "is a",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_6de7314b",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "the interface",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_2e5db3a4",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": ".",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_fe1bc9d5",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "remember\n\nbut i think this whole comment should be more like \"A simple allocator for the dynamic linker. An allocator allocates instances of a single fixed-size type. Allocations are backed by page-sized private anonymous mmaps.\"",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a64fc99_2e64d35a",
+        "filename": "linker/tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-13T03:11:24Z",
+      "side": 1,
+      "message": "LOCAL_C_INCLUDES instead of -I",
+      "revId": "3c2b04544ca244247bf776a6121f9ee9a3742a75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
