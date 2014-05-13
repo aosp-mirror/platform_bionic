@@ -725,7 +725,10 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_bionic_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags) -Werror
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -Werror \
+    -Wframe-larger-than=2048 \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
