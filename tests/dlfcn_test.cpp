@@ -53,7 +53,7 @@ TEST(dlfcn, dlsym_in_self) {
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
-#if __BIONIC__
+#if defined(__BIONIC__)
   ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found", dlerror());
 #else
   ASSERT_STREQ("/does/not/exist: cannot open shared object file: No such file or directory", dlerror());
@@ -92,14 +92,14 @@ TEST(dlfcn, dlsym_failures) {
   // NULL handle.
   sym = dlsym(NULL, "test");
   ASSERT_TRUE(sym == NULL);
-#if __BIONIC__
+#if defined(__BIONIC__)
   ASSERT_SUBSTR("dlsym library handle is null", dlerror());
 #else
   ASSERT_SUBSTR("undefined symbol: test", dlerror()); // glibc isn't specific about the failure.
 #endif
 
   // NULL symbol name.
-#if __BIONIC__
+#if defined(__BIONIC__)
   // glibc marks this parameter non-null and SEGVs if you cheat.
   sym = dlsym(self, NULL);
   ASSERT_TRUE(sym == NULL);
@@ -206,7 +206,7 @@ TEST(dlfcn, dlopen_bad_flags) {
   dlerror(); // Clear any pending errors.
   void* handle;
 
-#ifdef __GLIBC__
+#if defined(__GLIBC__)
   // glibc was smart enough not to define RTLD_NOW as 0, so it can detect missing flags.
   handle = dlopen(NULL, 0);
   ASSERT_TRUE(handle == NULL);
