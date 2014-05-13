@@ -21,7 +21,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#ifdef __BIONIC__
+#if defined(__BIONIC__)
 static int child_fn(void* i_ptr) {
   *reinterpret_cast<int*>(i_ptr) = 42;
   return 123;
