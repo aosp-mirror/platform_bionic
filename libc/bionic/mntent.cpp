@@ -25,32 +25,24 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _MNTENT_H_
-#define _MNTENT_H_
 
-#include <stdio.h>
-#include <sys/cdefs.h>
-#include <paths.h>  /* for _PATH_MOUNTED */
+#include <mntent.h>
 
-#define MOUNTED _PATH_MOUNTED
-#define MNTTYPE_IGNORE "ignore"
+mntent* getmntent(FILE*) {
+  return NULL;
+}
 
-struct mntent {
-  char* mnt_fsname;
-  char* mnt_dir;
-  char* mnt_type;
-  char* mnt_opts;
-  int mnt_freq;
-  int mnt_passno;
-};
+mntent* getmntent_r(FILE*, struct mntent*, char*, int) {
+  return NULL;
+}
 
-__BEGIN_DECLS
+FILE* setmntent(const char* path, const char* mode) {
+  return fopen(path, mode);
+}
 
-int endmntent(FILE*);
-struct mntent* getmntent(FILE*);
-struct mntent* getmntent_r(FILE*, struct mntent*, char*, int);
-FILE* setmntent(const char*, const char*);
-
-__END_DECLS
-
-#endif
+int endmntent(FILE* fp) {
+  if (fp != NULL) {
+    fclose(fp);
+  }
+  return 1;
+}
