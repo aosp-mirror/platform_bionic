@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a81944e_380091cb",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-13T11:51:05Z",
+      "side": 1,
+      "message": "isn\u0027t this different from glibc \u0026 openbsd ? (On 64 bit platforms, they\u0027ll have 64 bit wide wctype_ts)",
+      "revId": "0c472479a2b34f67b606e6419c506ddfdcf1a403",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
