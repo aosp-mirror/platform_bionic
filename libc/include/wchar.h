@@ -64,7 +64,7 @@ enum {
     WC_TYPE_MAX
 };
 
-typedef int wctype_t;
+typedef long wctype_t;
 
 #define  WEOF        ((wint_t)(-1))
 
