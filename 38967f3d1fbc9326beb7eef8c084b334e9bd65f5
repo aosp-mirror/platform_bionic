@@ -16,6 +16,24 @@
       "revId": "38967f3d1fbc9326beb7eef8c084b334e9bd65f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa26584d_5c869154",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-13T16:38:38Z",
+      "side": 0,
+      "message": "I don\u0027t think so. It was my (bad?) assumptions that if we have __LP64__ we should also have __LP32__. \n\nOn the other hand I can see __LP32__ being used in a couple of places in external/chromium_org and external/openssl.",
+      "parentUuid": "aa26584d_dc7141be",
+      "revId": "38967f3d1fbc9326beb7eef8c084b334e9bd65f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
