@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2a698874_6d0e51c3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1957,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-13T04:45:12Z",
+      "side": 1,
+      "message": "err, yep.. will look into it. vi should have a spellchecker.",
+      "parentUuid": "4a64fc99_b196e234",
+      "revId": "197dbf00529a6f0ca16201d3f5f0c91a7ad4199c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a698874_adcd2940",
         "filename": "linker/tests/Android.mk",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-13T04:38:37Z",
       "side": 1,
       "message": "hang on... why do you need this at all?",
+      "revId": "197dbf00529a6f0ca16201d3f5f0c91a7ad4199c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a6a7464_59b46f10",
+        "filename": "linker/tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-13T04:45:12Z",
+      "side": 1,
+      "message": "../linker_allocator.h -\u003e includes private/bionic_macros.h",
+      "parentUuid": "2a698874_adcd2940",
       "revId": "197dbf00529a6f0ca16201d3f5f0c91a7ad4199c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
