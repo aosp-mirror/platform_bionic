@@ -16,6 +16,24 @@
       "revId": "680ca4d187ffca1431bd1f865e7878061099697d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_d3597e36",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T19:58:39Z",
+      "side": 1,
+      "message": "ok, let me fix that...",
+      "parentUuid": "2ad50879_ad146919",
+      "revId": "680ca4d187ffca1431bd1f865e7878061099697d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
