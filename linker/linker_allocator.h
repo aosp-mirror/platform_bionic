@@ -37,7 +37,6 @@ class LinkerBlockAllocator {
   void init(size_t block_size);
   void* alloc();
   void free(void* block);
-  void protect_page(void* block, int prot);
   void protect_all(int prot);
 
  private:
@@ -63,7 +62,6 @@ class LinkerAllocator {
   void init() { block_allocator_.init(sizeof(T)); }
   T* alloc() { return reinterpret_cast<T*>(block_allocator_.alloc()); }
   void free(T* t) { block_allocator_.free(t); }
-  void protect_page(T* t, int prot) { block_allocator_.protect_page(t, prot); }
   void protect_all(int prot) { block_allocator_.protect_all(prot); }
  private:
   LinkerBlockAllocator block_allocator_;
