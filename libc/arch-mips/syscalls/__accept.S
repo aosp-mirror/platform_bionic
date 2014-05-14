@@ -2,9 +2,9 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept)
-    .set push
+ENTRY(__accept)
     .set noreorder
+    .cpload t9
     li v0, __NR_accept
     syscall
     bnez a3, 1f
@@ -12,14 +12,8 @@ ENTRY(accept)
     j ra
     nop
 1:
-    move t0, ra
-    bal     2f
-    nop
-2:
-    .cpsetup ra, t1, 2b
-    LA t9,__set_errno
-    .cpreturn
+    la t9,__set_errno
     j t9
-    move ra, t0
-    .set pop
-END(accept)
+    nop
+    .set reorder
+END(__accept)
