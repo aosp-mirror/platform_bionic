@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaf9f8ff_6138b2e9",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T14:36:37Z",
+      "side": 1,
+      "message": "i think this just means that you\u0027re using a glibc-specific getcontext. i still think that actually implementing getcontext makes more sense, but you could argue that having the exact same layout as glibc means we can use someone else\u0027s getcontext (though i haven\u0027t understood why libunwind has a glibc getcontext --- why not just use glibc\u0027s one if you\u0027re building against glibc?).",
+      "revId": "c6b1fdc77e13d833e907dd315f255ebf0370df16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
