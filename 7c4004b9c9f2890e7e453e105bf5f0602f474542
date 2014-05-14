@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ad50879_e7dfa270",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "don\u0027t we usually include the strerror?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ad50879_a7d5aa56",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "Check",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa73822_1462da92",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "for (",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac690d8_e5df9670",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "do we need this? won\u0027t the regular if/else take care of this? wouldn\u0027t it be bad if we\u0027re LP64 but FLAG_NEW_SOINFO isn\u0027t set?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_2ae05fe2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "since we\u0027ve lost this logging on the LP64 path, we should either decide it\u0027s not useful on either (and remove this copy) or that it is useful (and put it back for LP64).",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ad50879_8703462e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1493,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "This is a\n\nreturn from",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ad50879_0710f66e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "s/are not X/does not have X set/",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_2ace9f62",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": ".",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa73822_b4b946de",
+        "filename": "linker/linker.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "(for LP64 we may as well switch to using LinkedList for the soinfo lists too. hopefully people will stop messing with our internal data structures on LP64 devices anyway...)",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_ca59c336",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "we use static rather than anonymous namespaces.",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa73822_34b716df",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "why is it LinkedList but linked_list_entry?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_8ac4eb76",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "can\u0027t you just use new and delete in here?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa73822_94a7eaad",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T17:19:43Z",
+      "side": 1,
+      "message": "const\u0026?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
