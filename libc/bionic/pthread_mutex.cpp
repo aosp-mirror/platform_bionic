@@ -445,9 +445,7 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
     }
 }
 
-__LIBC_HIDDEN__
-int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
-{
+int pthread_mutex_lock(pthread_mutex_t* mutex) {
     int mvalue, mtype, tid, shared;
 
     mvalue = mutex->value;
@@ -523,20 +521,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
     /* NOTREACHED */
 }
 
-int pthread_mutex_lock(pthread_mutex_t *mutex)
-{
-    int err = pthread_mutex_lock_impl(mutex);
-    if (PTHREAD_DEBUG_ENABLED) {
-        if (!err) {
-            pthread_debug_mutex_lock_check(mutex);
-        }
-    }
-    return err;
-}
-
-__LIBC_HIDDEN__
-int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
-{
+int pthread_mutex_unlock(pthread_mutex_t* mutex) {
     int mvalue, mtype, tid, shared;
 
     mvalue = mutex->value;
@@ -588,17 +573,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     return 0;
 }
 
-int pthread_mutex_unlock(pthread_mutex_t *mutex)
-{
-    if (PTHREAD_DEBUG_ENABLED) {
-        pthread_debug_mutex_unlock_check(mutex);
-    }
-    return pthread_mutex_unlock_impl(mutex);
-}
-
-__LIBC_HIDDEN__
-int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
-{
+int pthread_mutex_trylock(pthread_mutex_t* mutex) {
     int mvalue, mtype, tid, shared;
 
     mvalue = mutex->value;
@@ -636,17 +611,6 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     }
 
     return EBUSY;
-}
-
-int pthread_mutex_trylock(pthread_mutex_t *mutex)
-{
-    int err = pthread_mutex_trylock_impl(mutex);
-    if (PTHREAD_DEBUG_ENABLED) {
-        if (!err) {
-            pthread_debug_mutex_lock_check(mutex);
-        }
-    }
-    return err;
 }
 
 static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_timeout, clockid_t clock) {
@@ -761,16 +725,11 @@ extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned ms
     abs_timeout.tv_nsec -= 1000000000;
   }
 
-  int err = __pthread_mutex_timedlock(mutex, &abs_timeout, CLOCK_MONOTONIC);
-  if (err == ETIMEDOUT) {
-    err = EBUSY;
+  int error = __pthread_mutex_timedlock(mutex, &abs_timeout, CLOCK_MONOTONIC);
+  if (error == ETIMEDOUT) {
+    error = EBUSY;
   }
-  if (PTHREAD_DEBUG_ENABLED) {
-    if (!err) {
-      pthread_debug_mutex_lock_check(mutex);
-    }
-  }
-  return err;
+  return error;
 }
 #endif
 
@@ -778,16 +737,12 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_timeout)
   return __pthread_mutex_timedlock(mutex, abs_timeout, CLOCK_REALTIME);
 }
 
-int pthread_mutex_destroy(pthread_mutex_t *mutex)
-{
-    int ret;
-
-    /* use trylock to ensure that the mutex value is
-     * valid and is not already locked. */
-    ret = pthread_mutex_trylock_impl(mutex);
-    if (ret != 0)
-        return ret;
-
-    mutex->value = 0xdead10cc;
-    return 0;
+int pthread_mutex_destroy(pthread_mutex_t* mutex) {
+  // Use trylock to ensure that the mutex is valid and not already locked.
+  int error = pthread_mutex_trylock(mutex);
+  if (error != 0) {
+    return error;
+  }
+  mutex->value = 0xdead10cc;
+  return 0;
 }
