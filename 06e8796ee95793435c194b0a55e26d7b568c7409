@@ -16,6 +16,24 @@
       "revId": "06e8796ee95793435c194b0a55e26d7b568c7409",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaf9f8ff_9e2f1915",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1031429
+      },
+      "writtenOn": "2014-05-14T00:01:34Z",
+      "side": 1,
+      "message": "No, I want it here because it provides the definition for __netdClientDispatch. Otherwise, I don\u0027t actually need it here.",
+      "parentUuid": "6ae46051_3058b60e",
+      "revId": "06e8796ee95793435c194b0a55e26d7b568c7409",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
