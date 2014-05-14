@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "2abc2831_2f13497f",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T01:21:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ae95c2a_12e5aa6e",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ae46051_b077a6e7",
         "filename": "linker/linked_list.h",
         "patchSetId": 8
@@ -47,6 +65,24 @@
       "writtenOn": "2014-05-14T00:46:35Z",
       "side": 1,
       "message": "push_back",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ab79c4c_f0464064",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T01:21:25Z",
+      "side": 1,
+      "message": "people will start confusing this with std::list.. also it doesn\u0027t really push back, more like push_front.\n\nDone.",
+      "parentUuid": "6ae46051_b077a6e7",
       "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "4ab79c4c_10830444",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T01:21:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aeee834_39b1bf20",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aeee834_793987c4",
         "filename": "linker/linker.cpp",
         "patchSetId": 8
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "2aeee834_b422f694",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2027,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T01:21:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aeee834_793987c4",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ae95c2a_12412a6f",
         "filename": "linker/linker.h",
         "patchSetId": 8
@@ -98,6 +170,24 @@
       "writtenOn": "2014-05-14T00:46:35Z",
       "side": 1,
       "message": "linked_list_t is actually removing some value here. soinfo_list_t would be more intention revealing.",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2abc2831_0f15a557",
+        "filename": "linker/linker.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T01:21:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ae95c2a_12412a6f",
       "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
