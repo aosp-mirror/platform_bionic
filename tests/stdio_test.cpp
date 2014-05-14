@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
@@ -405,6 +406,28 @@ TEST(stdio, snprintf_negative_zero_5084292) {
 
   snprintf(buf, sizeof(buf), "%f", -0.0);
   EXPECT_STREQ("-0.000000", buf);
+}
+
+TEST(stdio, fprintf_failures_7229520) {
+  FILE* fp;
+
+  // Unbuffered case where the fprintf(3) itself fails.
+  ASSERT_NE(nullptr, fp = tmpfile());
+  setbuf(fp, NULL);
+  ASSERT_EQ(4, fprintf(fp, "epic"));
+  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_EQ(-1, fprintf(fp, "fail"));
+  ASSERT_EQ(-1, fclose(fp));
+
+  // Buffered case where we won't notice until the fclose(3).
+  // It's likely this is what was actually seen in http://b/7229520,
+  // and that expecting fprintf to fail is setting yourself up for
+  // disappointment. Remember to check fclose(3)'s return value, kids!
+  ASSERT_NE(nullptr, fp = tmpfile());
+  ASSERT_EQ(4, fprintf(fp, "epic"));
+  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_EQ(4, fprintf(fp, "fail"));
+  ASSERT_EQ(-1, fclose(fp));
 }
 
 TEST(stdio, popen) {
