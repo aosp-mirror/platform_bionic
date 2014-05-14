@@ -400,6 +400,13 @@ TEST(stdio, snprintf_e) {
   EXPECT_STREQ("1.500000e+00", buf);
 }
 
+TEST(stdio, snprintf_negative_zero_5084292) {
+  char buf[BUFSIZ];
+
+  snprintf(buf, sizeof(buf), "%f", -0.0);
+  EXPECT_STREQ("-0.000000", buf);
+}
+
 TEST(stdio, popen) {
   FILE* fp = popen("cat /proc/version", "r");
   ASSERT_TRUE(fp != NULL);
