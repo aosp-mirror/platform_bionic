@@ -217,7 +217,7 @@ static void send_debuggerd_packet(siginfo_t* info) {
   debugger_msg_t msg;
   msg.action = DEBUGGER_ACTION_CRASH;
   msg.tid = gettid();
-  msg.abort_msg_address = reinterpret_cast<uintptr_t>(gAbortMessage);
+  msg.abort_msg_address = reinterpret_cast<uintptr_t>(g_abort_message);
   msg.original_si_code = (info != NULL) ? info->si_code : 0;
   int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
   if (ret == sizeof(msg)) {
