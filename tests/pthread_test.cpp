@@ -572,6 +572,26 @@ TEST(pthread, pthread_once_smoke) {
   ASSERT_EQ(1, g_once_fn_call_count);
 }
 
+static std::string pthread_once_1934122_result = "";
+
+static void Routine2() {
+  pthread_once_1934122_result += "2";
+}
+
+static void Routine1() {
+  pthread_once_t once_control_2 = PTHREAD_ONCE_INIT;
+  pthread_once_1934122_result += "1";
+  pthread_once(&once_control_2, &Routine2);
+}
+
+TEST(pthread, pthread_once_1934122) {
+  // Very old versions of Android couldn't call pthread_once from a
+  // pthread_once init routine. http://b/1934122.
+  pthread_once_t once_control_1 = PTHREAD_ONCE_INIT;
+  ASSERT_EQ(0, pthread_once(&once_control_1, &Routine1));
+  ASSERT_EQ("12", pthread_once_1934122_result);
+}
+
 static int g_atfork_prepare_calls = 0;
 static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1; }
 static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2; }
