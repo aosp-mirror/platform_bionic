@@ -40,6 +40,7 @@ static void netdClientInitImpl() {
         // default implementations of functions that it would've overridden.
         return;
     }
+    netdClientInitFunction(netdClientHandle, "netdClientInitAccept", &__netdClientDispatch.accept);
     netdClientInitFunction(netdClientHandle, "netdClientInitConnect",
                            &__netdClientDispatch.connect);
 }

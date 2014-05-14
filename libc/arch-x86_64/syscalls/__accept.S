@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept)
+ENTRY(__accept)
     movl    $__NR_accept, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -13,4 +13,5 @@ ENTRY(accept)
     orq     $-1, %rax
 1:
     ret
-END(accept)
+END(__accept)
+.hidden __accept
