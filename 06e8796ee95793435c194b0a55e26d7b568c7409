@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ae46051_3058b60e",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:00:01Z",
+      "side": 1,
+      "message": "did you really want this? oh, you wanted it compiled here so LIBC_STATIC is defined. i see.",
+      "revId": "06e8796ee95793435c194b0a55e26d7b568c7409",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
