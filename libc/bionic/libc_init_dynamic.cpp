@@ -55,7 +55,6 @@
 #include "private/KernelArgumentBlock.h"
 
 extern "C" {
-  extern void pthread_debug_init(void);
   extern void malloc_debug_init(void);
   extern void malloc_debug_fini(void);
   extern void netdClientInit(void);
@@ -77,11 +76,8 @@ __attribute__((constructor)) static void __libc_preinit() {
 
   __libc_init_common(*args);
 
-  // Hooks for the debug malloc and pthread libraries to let them know that we're starting up.
-  pthread_debug_init();
+  // Hooks for various libraries to let them know that we're starting up.
   malloc_debug_init();
-
-  // Hook for the netd client library to let it know that we're starting up.
   netdClientInit();
 }
 
