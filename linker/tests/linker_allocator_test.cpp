@@ -61,8 +61,6 @@ TEST(linker_allocator, test_nominal) {
 
   ptr1->value = 42;
 
-  allocator.protect_page(ptr1, PROT_READ);
-
   allocator.free(ptr1);
   allocator.free(ptr2);
 }
@@ -91,8 +89,6 @@ TEST(linker_allocator, test_larger) {
 
   ASSERT_EQ(ptr1+1, ptr2);
 
-  allocator.protect_page(ptr2, PROT_READ);
-
   // lets allocate until we reach next page.
   size_t n = kPageSize/sizeof(test_struct_larger) + 1 - 2;
 
@@ -100,31 +96,6 @@ TEST(linker_allocator, test_larger) {
     ASSERT_TRUE(allocator.alloc() != nullptr);
   }
 
-}
-
-static void protect_one_page() {
-  LinkerAllocator<test_struct_larger> allocator;
-  allocator.init();
-
-  // number of allocs to reach the end of first page
-  size_t n = kPageSize/sizeof(test_struct_larger) - 1;
-  test_struct_larger* page1_ptr = allocator.alloc();
-
-  for (size_t i=0; i<n; ++i) {
-    allocator.alloc();
-  }
-
-  test_struct_larger* page2_ptr = allocator.alloc();
-
-  allocator.protect_page(page2_ptr, PROT_READ);
-
-  // check that we still have access to page1
-  page1_ptr->dummy_str[17] = 52;
-
-  fprintf(stderr, "trying to access protected page");
-
-  // this should result in segmentation fault
-  page2_ptr->dummy_str[12] = 3;
 }
 
 static void protect_all() {
@@ -155,7 +126,6 @@ static void protect_all() {
 
 TEST(linker_allocator, test_protect) {
   testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(protect_one_page(), testing::KilledBySignal(SIGSEGV), "trying to access protected page");
   ASSERT_EXIT(protect_all(), testing::KilledBySignal(SIGSEGV), "trying to access protected page");
 }
 
