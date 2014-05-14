@@ -236,7 +236,7 @@ int           socketpair(int, int, int, int*)    arm,arm64,mips,mips64,x86_64
 int           bind(int, struct sockaddr*, int)  arm,arm64,mips,mips64,x86_64
 int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,arm64,mips,mips64,x86_64
 int           listen(int, int)                   arm,arm64,mips,mips64,x86_64
-int           accept(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
+int           __accept:accept(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
 int           getsockname(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           getpeername(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
@@ -255,7 +255,7 @@ int           socket:socketcall:1(int, int, int) x86
 int           bind:socketcall:2(int, struct sockaddr*, int)  x86
 int           __connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
 int           listen:socketcall:4(int, int)                   x86
-int           accept:socketcall:5(int, struct sockaddr*, socklen_t*)  x86
+int           __accept:socketcall:5(int, struct sockaddr*, socklen_t*)  x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
 int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
 int           socketpair:socketcall:8(int, int, int, int*)    x86
