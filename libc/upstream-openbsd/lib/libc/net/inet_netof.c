@@ -1,5 +1,4 @@
-/*	$NetBSD: inet_ntoa.c,v 1.2 2012/03/13 21:13:38 christos Exp $	*/
-
+/*	$OpenBSD: inet_netof.c,v 1.6 2005/08/06 20:30:03 espie Exp $ */
 /*
  * Copyright (c) 1983, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -29,36 +28,23 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)inet_ntoa.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: inet_ntoa.c,v 1.2 2012/03/13 21:13:38 christos Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
-#include "namespace.h"
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <stdio.h>
-#include <string.h>
-
-#ifdef __weak_alias
-__weak_alias(inet_ntoa,_inet_ntoa)
-#endif
 
 /*
- * Convert network-format internet address
- * to base 256 d.d.d.d representation.
+ * Return the network number from an internet
+ * address; handles class a/b/c network #'s.
  */
-/*const*/ char *
-inet_ntoa(struct in_addr in) {
-	static char ret[18];
+in_addr_t
+inet_netof(struct in_addr in)
+{
+	in_addr_t i = ntohl(in.s_addr);
 
-	strlcpy(ret, "[inet_ntoa error]", sizeof(ret));
-	(void) inet_ntop(AF_INET, &in, ret, (socklen_t)sizeof ret);
-	return ret;
+	if (IN_CLASSA(i))
+		return (((i)&IN_CLASSA_NET) >> IN_CLASSA_NSHIFT);
+	else if (IN_CLASSB(i))
+		return (((i)&IN_CLASSB_NET) >> IN_CLASSB_NSHIFT);
+	else
+		return (((i)&IN_CLASSC_NET) >> IN_CLASSC_NSHIFT);
 }
