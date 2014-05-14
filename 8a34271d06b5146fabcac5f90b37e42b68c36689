@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ae46051_90a8a201",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "(there\u0027s a bug somewhere to move that stuff into libc and have libstdc++ empty. it\u0027s kind of crazy that we can\u0027t use this.)",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ae95c2a_12e5aa6e",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "isn\u0027t the usual way to do this to have an allocator type and then just access allocator::alloc and allocator::free in the body? i\u0027m not sure why you have the class above but then break it in two here rather than internally.",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ae46051_b077a6e7",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "push_back",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aeee834_39b1bf20",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "blank line between functions.",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aeee834_793987c4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2027,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "why not pull this out into a function? especially since the scope of the soinfo was only supposed to be these {}.",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ae95c2a_12412a6f",
+        "filename": "linker/linker.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:46:35Z",
+      "side": 1,
+      "message": "linked_list_t is actually removing some value here. soinfo_list_t would be more intention revealing.",
+      "revId": "8a34271d06b5146fabcac5f90b37e42b68c36689",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
