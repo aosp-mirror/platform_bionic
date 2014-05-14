@@ -53,8 +53,8 @@
 #include "private/ScopedPthreadMutexLocker.h"
 
 /* libc.debug.malloc.backlog */
-extern unsigned int gMallocDebugBacklog;
-extern int gMallocDebugLevel;
+extern unsigned int g_malloc_debug_backlog;
+extern int g_malloc_debug_level;
 
 #define MAX_BACKTRACE_DEPTH 16
 #define ALLOCATION_TAG      0x1ee7d00d
@@ -108,8 +108,10 @@ static inline const hdr_t* const_meta(const void* user) {
     return reinterpret_cast<const hdr_t*>(user) - 1;
 }
 
-
-static unsigned gAllocatedBlockCount;
+// TODO: introduce a struct for this global state.
+// There are basically two lists here, the regular list and the backlog list.
+// We should be able to remove the duplication.
+static unsigned g_allocated_block_count;
 static hdr_t* tail;
 static hdr_t* head;
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -188,7 +190,7 @@ static inline void add(hdr_t* hdr, size_t size) {
     hdr->size = size;
     init_front_guard(hdr);
     init_rear_guard(hdr);
-    ++gAllocatedBlockCount;
+    ++g_allocated_block_count;
     add_locked(hdr, &tail, &head);
 }
 
@@ -199,7 +201,7 @@ static inline int del(hdr_t* hdr) {
 
     ScopedPthreadMutexLocker locker(&lock);
     del_locked(hdr, &tail, &head);
-    --gAllocatedBlockCount;
+    --g_allocated_block_count;
     return 0;
 }
 
@@ -306,7 +308,7 @@ static inline void del_from_backlog(hdr_t* hdr) {
 
 static inline int del_leak(hdr_t* hdr, int* safe) {
     ScopedPthreadMutexLocker locker(&lock);
-    return del_and_check_locked(hdr, &tail, &head, &gAllocatedBlockCount, safe);
+    return del_and_check_locked(hdr, &tail, &head, &g_allocated_block_count, safe);
 }
 
 static inline void add_to_backlog(hdr_t* hdr) {
@@ -316,7 +318,7 @@ static inline void add_to_backlog(hdr_t* hdr) {
     add_locked(hdr, &backlog_tail, &backlog_head);
     poison(hdr);
     /* If we've exceeded the maximum backlog, clear it up */
-    while (backlog_num > gMallocDebugBacklog) {
+    while (backlog_num > g_malloc_debug_backlog) {
         hdr_t* gone = backlog_tail;
         del_from_backlog_locked(gone);
         dlfree(gone->base);
@@ -508,7 +510,7 @@ extern "C" size_t chk_malloc_usable_size(const void* ptr) {
 
 static void ReportMemoryLeaks() {
   // We only track leaks at level 10.
-  if (gMallocDebugLevel != 10) {
+  if (g_malloc_debug_level != 10) {
     return;
   }
 
@@ -522,13 +524,13 @@ static void ReportMemoryLeaks() {
     exe[count] = '\0';
   }
 
-  if (gAllocatedBlockCount == 0) {
+  if (g_allocated_block_count == 0) {
     log_message("+++ %s did not leak", exe);
     return;
   }
 
   size_t index = 1;
-  const size_t total = gAllocatedBlockCount;
+  const size_t total = g_allocated_block_count;
   while (head != NULL) {
     int safe;
     hdr_t* block = head;

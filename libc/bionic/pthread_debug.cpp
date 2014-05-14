@@ -127,9 +127,9 @@ extern const char* __progname;
  * level    2 : deadlock prediction enabled w/ call stacks
  */
 #define CAPTURE_CALLSTACK 2
-static int sPthreadDebugLevel = 0;
-static pid_t sPthreadDebugDisabledThread = -1;
-static pthread_mutex_t sDbgLock = PTHREAD_MUTEX_INITIALIZER;
+static int g_pthread_debug_level = 0;
+static pid_t g_pthread_debug_disabled_thread = -1;
+static pthread_mutex_t g_dbg_lock = PTHREAD_MUTEX_INITIALIZER;
 
 /****************************************************************************/
 
@@ -138,23 +138,23 @@ static pthread_mutex_t sDbgLock = PTHREAD_MUTEX_INITIALIZER;
  */
 
 #define DBG_ALLOC_BLOCK_SIZE PAGESIZE
-static size_t sDbgAllocOffset = DBG_ALLOC_BLOCK_SIZE;
-static char* sDbgAllocPtr = NULL;
+static size_t g_dbg_alloc_offset = DBG_ALLOC_BLOCK_SIZE;
+static char* g_dbg_alloc_ptr = NULL;
 
 template <typename T>
 static T* DbgAllocLocked(size_t count = 1) {
     size_t size = sizeof(T) * count;
-    if ((sDbgAllocOffset + size) > DBG_ALLOC_BLOCK_SIZE) {
-        sDbgAllocOffset = 0;
-        sDbgAllocPtr = reinterpret_cast<char*>(mmap(NULL, DBG_ALLOC_BLOCK_SIZE,
+    if ((g_dbg_alloc_offset + size) > DBG_ALLOC_BLOCK_SIZE) {
+        g_dbg_alloc_offset = 0;
+        g_dbg_alloc_ptr = reinterpret_cast<char*>(mmap(NULL, DBG_ALLOC_BLOCK_SIZE,
                                                     PROT_READ|PROT_WRITE,
                                                     MAP_ANON | MAP_PRIVATE, 0, 0));
-        if (sDbgAllocPtr == MAP_FAILED) {
+        if (g_dbg_alloc_ptr == MAP_FAILED) {
             return NULL;
         }
     }
-    void* addr = sDbgAllocPtr + sDbgAllocOffset;
-    sDbgAllocOffset += size;
+    void* addr = g_dbg_alloc_ptr + g_dbg_alloc_offset;
+    g_dbg_alloc_offset += size;
     return reinterpret_cast<T*>(addr);
 }
 
@@ -365,7 +365,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
         uintptr_t addrs[STACK_TRACE_DEPTH];
 
         /* Turn off prediction temporarily in this thread while logging */
-        sPthreadDebugDisabledThread = gettid();
+        g_pthread_debug_disabled_thread = gettid();
 
         backtrace_startup();
 
@@ -384,7 +384,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
             MutexInfo* parent = cur->parents.list[i];
             if (parent->owner == ourtid) {
                 LOGW("--- pthread_mutex_t at %p\n", parent->mutex);
-                if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
+                if (g_pthread_debug_level >= CAPTURE_CALLSTACK) {
                     log_backtrace(parent->stackTrace, parent->stackDepth);
                 }
                 cur = parent;
@@ -405,7 +405,7 @@ static int traverseTree(MutexInfo* obj, MutexInfo const* objParent)
         MutexInfo* child = pList->list[i];
         if (!traverseTree(child,  obj)) {
             LOGW("--- pthread_mutex_t at %p\n", obj->mutex);
-            if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
+            if (g_pthread_debug_level >= CAPTURE_CALLSTACK) {
                 int index = historyListHas(&obj->parents, objParent);
                 if ((size_t)index < (size_t)obj->stacks.count) {
                     log_backtrace(obj->stacks.stack[index].addrs, obj->stacks.stack[index].depth);
@@ -435,7 +435,7 @@ static void mutex_lock_checked(MutexInfo* mrl, MutexInfo* object)
     object->owner = tid;
     object->lockCount = 0;
 
-    if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
+    if (g_pthread_debug_level >= CAPTURE_CALLSTACK) {
         // always record the call stack when acquiring a lock.
         // it's not efficient, but is useful during diagnostics
         object->stackDepth = get_backtrace(object->stackTrace, STACK_TRACE_DEPTH);
@@ -451,7 +451,7 @@ static void mutex_lock_checked(MutexInfo* mrl, MutexInfo* object)
     if (historyListHas(&mrl->children, object) >= 0)
         return;
 
-    pthread_mutex_lock_unchecked(&sDbgLock);
+    pthread_mutex_lock_unchecked(&g_dbg_lock);
 
     linkParentToChild(mrl, object);
     if (!traverseTree(object, mrl)) {
@@ -459,20 +459,20 @@ static void mutex_lock_checked(MutexInfo* mrl, MutexInfo* object)
         LOGW("%s\n", kEndBanner);
         unlinkParentFromChild(mrl, object);
         // reenable pthread debugging for this thread
-        sPthreadDebugDisabledThread = -1;
+        g_pthread_debug_disabled_thread = -1;
     } else {
         // record the call stack for this link
         // NOTE: the call stack is added at the same index
         // as mrl in object->parents[]
         // ie: object->parents.count == object->stacks.count, which is
         // also the index.
-        if (sPthreadDebugLevel >= CAPTURE_CALLSTACK) {
+        if (g_pthread_debug_level >= CAPTURE_CALLSTACK) {
             callstackListAdd(&object->stacks,
                     object->stackDepth, object->stackTrace);
         }
     }
 
-    pthread_mutex_unlock_unchecked(&sDbgLock);
+    pthread_mutex_unlock_unchecked(&g_dbg_lock);
 }
 
 static void mutex_unlock_checked(MutexInfo* object)
@@ -509,8 +509,8 @@ struct HashTable {
     HashEntry* slots[HASHTABLE_SIZE];
 };
 
-static HashTable sMutexMap;
-static HashTable sThreadMap;
+static HashTable g_mutex_map;
+static HashTable g_thread_map;
 
 /****************************************************************************/
 
@@ -593,9 +593,9 @@ static int MutexInfo_equals(void const* data, void const* key) {
 
 static MutexInfo* get_mutex_info(pthread_mutex_t *mutex)
 {
-    pthread_mutex_lock_unchecked(&sDbgLock);
+    pthread_mutex_lock_unchecked(&g_dbg_lock);
 
-    HashEntry* entry = hashmap_lookup(&sMutexMap,
+    HashEntry* entry = hashmap_lookup(&g_mutex_map,
             &mutex, sizeof(mutex),
             &MutexInfo_equals);
     if (entry->data == NULL) {
@@ -604,7 +604,7 @@ static MutexInfo* get_mutex_info(pthread_mutex_t *mutex)
         initMutexInfo(mutex_info, mutex);
     }
 
-    pthread_mutex_unlock_unchecked(&sDbgLock);
+    pthread_mutex_unlock_unchecked(&g_dbg_lock);
 
     return (MutexInfo *)entry->data;
 }
@@ -617,9 +617,9 @@ static int ThreadInfo_equals(void const* data, void const* key) {
 
 static ThreadInfo* get_thread_info(pid_t pid)
 {
-    pthread_mutex_lock_unchecked(&sDbgLock);
+    pthread_mutex_lock_unchecked(&g_dbg_lock);
 
-    HashEntry* entry = hashmap_lookup(&sThreadMap,
+    HashEntry* entry = hashmap_lookup(&g_thread_map,
             &pid, sizeof(pid),
             &ThreadInfo_equals);
     if (entry->data == NULL) {
@@ -628,7 +628,7 @@ static ThreadInfo* get_thread_info(pid_t pid)
         initThreadInfo(thread_info, pid);
     }
 
-    pthread_mutex_unlock_unchecked(&sDbgLock);
+    pthread_mutex_unlock_unchecked(&g_dbg_lock);
 
     return (ThreadInfo *)entry->data;
 }
@@ -672,9 +672,9 @@ static MutexInfo* get_most_recently_locked() {
 
 extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex)
 {
-    if (sPthreadDebugLevel == 0) return;
+    if (g_pthread_debug_level == 0) return;
     // prediction disabled for this thread
-    if (sPthreadDebugDisabledThread == gettid())
+    if (g_pthread_debug_disabled_thread == gettid())
         return;
     MutexInfo* object = get_mutex_info(mutex);
     MutexInfo* mrl = get_most_recently_locked();
@@ -689,9 +689,9 @@ extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_lock_check(pthread_mutex_t *
 
 extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex)
 {
-    if (sPthreadDebugLevel == 0) return;
+    if (g_pthread_debug_level == 0) return;
     // prediction disabled for this thread
-    if (sPthreadDebugDisabledThread == gettid())
+    if (g_pthread_debug_disabled_thread == gettid())
         return;
     MutexInfo* object = get_mutex_info(mutex);
     remove_most_recently_locked(object);
@@ -709,8 +709,8 @@ extern "C" __LIBC_HIDDEN__ void pthread_debug_init() {
         if (level) {
             LOGI("pthread deadlock detection level %d enabled for pid %d (%s)",
                     level, getpid(), __progname);
-            hashmap_init(&sMutexMap);
-            sPthreadDebugLevel = level;
+            hashmap_init(&g_mutex_map);
+            g_pthread_debug_level = level;
         }
     }
 #endif

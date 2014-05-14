@@ -77,7 +77,7 @@ static size_t get_main_thread_stack_size() {
  * apply to linker-private copies and will not be visible from libc later on.
  *
  * Note: this function creates a pthread_internal_t for the initial thread and
- * stores the pointer in TLS, but does not add it to pthread's gThreadList. This
+ * stores the pointer in TLS, but does not add it to pthread's thread list. This
  * has to be done later from libc itself (see __libc_init_common).
  *
  * This function also stores a pointer to the kernel argument block in a TLS slot to be
