@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aeee834_735c08d1",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "tab?\n\nwhy is this in the _common_ includes? shouldn\u0027t this just be in the malloc wrapper?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ae95c2a_52c9f232",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "tab?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aeee834_4e9e7bdd",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "i don\u0027t understand what this is for.",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aeee834_ee714ff3",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "ah. this would be useful with the implementation too.",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ae95c2a_b2083eb4",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "and move this up?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ae46051_f0fc8e22",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "we should account for these when we allocate the space for the keys. they shouldn\u0027t be user-visible.",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ae46051_30ff1615",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T00:25:49Z",
+      "side": 1,
+      "message": "how many are used when there\u0027s more than one thread?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
