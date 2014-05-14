@@ -16,6 +16,24 @@
       "revId": "c6b1fdc77e13d833e907dd315f255ebf0370df16",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a1cc41d_79ea23c2",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-14T14:51:07Z",
+      "side": 1,
+      "message": "I forgot to add that we do the same with the arm64 struct (L89). I assume it was for the same purpose. Wasn\u0027t it?\n\nre: using someone else\u0027s getcontext(): I think the changes that we\u0027d need to do because of this are minor so this is hardly an argument.",
+      "parentUuid": "aaf9f8ff_6138b2e9",
+      "revId": "c6b1fdc77e13d833e907dd315f255ebf0370df16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
