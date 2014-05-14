@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
+#ifdef LIBC_STATIC
+#error NetdClient.cpp should NOT be included in static libc builds.
+#endif
+
 #include <private/NetdClient.h>
 #include <private/libc_logging.h>
 #include <pthread.h>
-
-#ifdef __i386__
-#define __socketcall __attribute__((__cdecl__))
-#else
-#define __socketcall
-#endif
-
-extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
-
-NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
-    __connect
-};
-
-#ifndef LIBC_STATIC
 
 #include <dlfcn.h>
 
@@ -56,13 +46,9 @@ static void netdClientInitImpl() {
 
 static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
 
-#endif  // LIBC_STATIC
-
 extern "C" __LIBC_HIDDEN__ void netdClientInit() {
-#ifndef LIBC_STATIC
     if (pthread_once(&netdClientInitOnce, netdClientInitImpl)) {
         __libc_format_log(ANDROID_LOG_ERROR, "netdClient",
                           "Unable to initialize netd_client component.");
     }
-#endif  // LIBC_STATIC
 }

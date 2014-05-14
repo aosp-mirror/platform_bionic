@@ -142,6 +142,7 @@ libc_bionic_src_files := \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
+    bionic/NetdClientDispatch.cpp \
     bionic/open.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
@@ -847,7 +848,6 @@ LOCAL_SRC_FILES := \
     bionic/dlmalloc.c \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_static.cpp \
-    bionic/NetdClient.cpp \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC
