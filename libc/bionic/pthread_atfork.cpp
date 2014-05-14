@@ -29,8 +29,6 @@
 #include <errno.h>
 #include <pthread.h>
 
-static pthread_mutex_t gAtForkListMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
-
 struct atfork_t {
   atfork_t* next;
   atfork_t* prev;
@@ -45,7 +43,8 @@ struct atfork_list_t {
   atfork_t* last;
 };
 
-static atfork_list_t gAtForkList = { NULL, NULL };
+static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+static atfork_list_t g_atfork_list = { NULL, NULL };
 
 void __bionic_atfork_run_prepare() {
   // We lock the atfork list here, unlock it in the parent, and reset it in the child.
@@ -54,12 +53,12 @@ void __bionic_atfork_run_prepare() {
   //
   // TODO: If a handler tries to mutate the list, they'll block. We should probably copy
   // the list before forking, and have prepare, parent, and child all work on the consistent copy.
-  pthread_mutex_lock(&gAtForkListMutex);
+  pthread_mutex_lock(&g_atfork_list_mutex);
 
   // Call pthread_atfork() prepare handlers. POSIX states that the prepare
   // handlers should be called in the reverse order of the parent/child
   // handlers, so we iterate backwards.
-  for (atfork_t* it = gAtForkList.last; it != NULL; it = it->prev) {
+  for (atfork_t* it = g_atfork_list.last; it != NULL; it = it->prev) {
     if (it->prepare != NULL) {
       it->prepare();
     }
@@ -67,23 +66,23 @@ void __bionic_atfork_run_prepare() {
 }
 
 void __bionic_atfork_run_child() {
-  for (atfork_t* it = gAtForkList.first; it != NULL; it = it->next) {
+  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
     if (it->child != NULL) {
       it->child();
     }
   }
 
-  gAtForkListMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+  g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 }
 
 void __bionic_atfork_run_parent() {
-  for (atfork_t* it = gAtForkList.first; it != NULL; it = it->next) {
+  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
     if (it->parent != NULL) {
       it->parent();
     }
   }
 
-  pthread_mutex_unlock(&gAtForkListMutex);
+  pthread_mutex_unlock(&g_atfork_list_mutex);
 }
 
 int pthread_atfork(void (*prepare)(void), void (*parent)(void), void(*child)(void)) {
@@ -96,20 +95,20 @@ int pthread_atfork(void (*prepare)(void), void (*parent)(void), void(*child)(voi
   entry->parent = parent;
   entry->child = child;
 
-  pthread_mutex_lock(&gAtForkListMutex);
+  pthread_mutex_lock(&g_atfork_list_mutex);
 
   // Append 'entry' to the list.
   entry->next = NULL;
-  entry->prev = gAtForkList.last;
+  entry->prev = g_atfork_list.last;
   if (entry->prev != NULL) {
     entry->prev->next = entry;
   }
-  if (gAtForkList.first == NULL) {
-    gAtForkList.first = entry;
+  if (g_atfork_list.first == NULL) {
+    g_atfork_list.first = entry;
   }
-  gAtForkList.last = entry;
+  g_atfork_list.last = entry;
 
-  pthread_mutex_unlock(&gAtForkListMutex);
+  pthread_mutex_unlock(&g_atfork_list_mutex);
 
   return 0;
 }

@@ -55,17 +55,17 @@
 
 #include "private/libc_logging.h"
 
-__LIBC_HIDDEN__ extern int gLdDebugVerbosity;
+__LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
 
 #if LINKER_DEBUG_TO_LOG
 #define _PRINTVF(v, x...) \
     do { \
-      if (gLdDebugVerbosity > (v)) __libc_format_log(5-(v), "linker", x); \
+      if (g_ld_debug_verbosity > (v)) __libc_format_log(5-(v), "linker", x); \
     } while (0)
 #else /* !LINKER_DEBUG_TO_LOG */
 #define _PRINTVF(v, x...) \
     do { \
-      if (gLdDebugVerbosity > (v)) { __libc_format_fd(1, x); write(1, "\n", 1); } \
+      if (g_ld_debug_verbosity > (v)) { __libc_format_fd(1, x); write(1, "\n", 1); } \
     } while (0)
 #endif /* !LINKER_DEBUG_TO_LOG */
 

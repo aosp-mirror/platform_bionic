@@ -560,27 +560,27 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
-static int gOnceFnCallCount = 0;
+static int g_once_fn_call_count = 0;
 static void OnceFn() {
-  ++gOnceFnCallCount;
+  ++g_once_fn_call_count;
 }
 
 TEST(pthread, pthread_once_smoke) {
   pthread_once_t once_control = PTHREAD_ONCE_INIT;
   ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
   ASSERT_EQ(0, pthread_once(&once_control, OnceFn));
-  ASSERT_EQ(1, gOnceFnCallCount);
+  ASSERT_EQ(1, g_once_fn_call_count);
 }
 
-static int gAtForkPrepareCalls = 0;
-static void AtForkPrepare1() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 1; }
-static void AtForkPrepare2() { gAtForkPrepareCalls = (gAtForkPrepareCalls << 4) | 2; }
-static int gAtForkParentCalls = 0;
-static void AtForkParent1() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 1; }
-static void AtForkParent2() { gAtForkParentCalls = (gAtForkParentCalls << 4) | 2; }
-static int gAtForkChildCalls = 0;
-static void AtForkChild1() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 1; }
-static void AtForkChild2() { gAtForkChildCalls = (gAtForkChildCalls << 4) | 2; }
+static int g_atfork_prepare_calls = 0;
+static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1; }
+static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2; }
+static int g_atfork_parent_calls = 0;
+static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 1; }
+static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 2; }
+static int g_atfork_child_calls = 0;
+static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 1; }
+static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
 
 TEST(pthread, pthread_atfork) {
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
@@ -591,13 +591,13 @@ TEST(pthread, pthread_atfork) {
 
   // Child and parent calls are made in the order they were registered.
   if (pid == 0) {
-    ASSERT_EQ(0x12, gAtForkChildCalls);
+    ASSERT_EQ(0x12, g_atfork_child_calls);
     _exit(0);
   }
-  ASSERT_EQ(0x12, gAtForkParentCalls);
+  ASSERT_EQ(0x12, g_atfork_parent_calls);
 
   // Prepare calls are made in the reverse order.
-  ASSERT_EQ(0x21, gAtForkPrepareCalls);
+  ASSERT_EQ(0x21, g_atfork_prepare_calls);
 }
 
 TEST(pthread, pthread_attr_getscope) {

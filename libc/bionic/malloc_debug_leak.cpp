@@ -61,8 +61,8 @@
 
 // Global variables defined in malloc_debug_common.c
 extern int gMallocLeakZygoteChild;
-extern pthread_mutex_t gAllocationsMutex;
-extern HashTable gHashTable;
+extern pthread_mutex_t g_allocations_mutex;
+extern HashTable g_hash_table;
 
 // =============================================================================
 // stack trace functions
@@ -138,7 +138,7 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         size |= SIZE_FLAG_ZYGOTE_CHILD;
     }
 
-    HashEntry* entry = find_entry(&gHashTable, slot, backtrace, numEntries, size);
+    HashEntry* entry = find_entry(&g_hash_table, slot, backtrace, numEntries, size);
 
     if (entry != NULL) {
         entry->allocations++;
@@ -151,20 +151,20 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         entry->allocations = 1;
         entry->slot = slot;
         entry->prev = NULL;
-        entry->next = gHashTable.slots[slot];
+        entry->next = g_hash_table.slots[slot];
         entry->numEntries = numEntries;
         entry->size = size;
 
         memcpy(entry->backtrace, backtrace, numEntries * sizeof(uintptr_t));
 
-        gHashTable.slots[slot] = entry;
+        g_hash_table.slots[slot] = entry;
 
         if (entry->next != NULL) {
             entry->next->prev = entry;
         }
 
         // we just added an entry, increase the size of the hashtable
-        gHashTable.count++;
+        g_hash_table.count++;
     }
 
     return entry;
@@ -174,7 +174,7 @@ static int is_valid_entry(HashEntry* entry) {
     if (entry != NULL) {
         int i;
         for (i = 0 ; i < HASHTABLE_SIZE ; i++) {
-            HashEntry* e1 = gHashTable.slots[i];
+            HashEntry* e1 = g_hash_table.slots[i];
 
             while (e1 != NULL) {
                 if (e1 == entry) {
@@ -198,11 +198,11 @@ static void remove_entry(HashEntry* entry) {
 
     if (prev == NULL) {
         // we are the head of the list. set the head to be next
-        gHashTable.slots[entry->slot] = entry->next;
+        g_hash_table.slots[entry->slot] = entry->next;
     }
 
     // we just removed and entry, decrease the size of the hashtable
-    gHashTable.count--;
+    g_hash_table.count--;
 }
 
 // =============================================================================
@@ -277,7 +277,7 @@ extern "C" void* leak_malloc(size_t bytes) {
 
     void* base = dlmalloc(size);
     if (base != NULL) {
-        ScopedPthreadMutexLocker locker(&gAllocationsMutex);
+        ScopedPthreadMutexLocker locker(&g_allocations_mutex);
 
         uintptr_t backtrace[BACKTRACE_SIZE];
         size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
@@ -296,7 +296,7 @@ extern "C" void* leak_malloc(size_t bytes) {
 
 extern "C" void leak_free(void* mem) {
     if (mem != NULL) {
-        ScopedPthreadMutexLocker locker(&gAllocationsMutex);
+        ScopedPthreadMutexLocker locker(&g_allocations_mutex);
 
         // check the guard to make sure it is valid
         AllocationEntry* header = to_header(mem);

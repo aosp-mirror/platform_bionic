@@ -26,7 +26,7 @@ class pthread_accessor {
  public:
   explicit pthread_accessor(pthread_t desired_thread) {
     Lock();
-    for (thread_ = gThreadList; thread_ != NULL; thread_ = thread_->next) {
+    for (thread_ = g_thread_list; thread_ != NULL; thread_ = thread_->next) {
       if (thread_ == reinterpret_cast<pthread_internal_t*>(desired_thread)) {
         break;
       }
@@ -41,7 +41,7 @@ class pthread_accessor {
     if (is_locked_) {
       is_locked_ = false;
       thread_ = NULL;
-      pthread_mutex_unlock(&gThreadListLock);
+      pthread_mutex_unlock(&g_thread_list_lock);
     }
   }
 
@@ -54,7 +54,7 @@ class pthread_accessor {
   bool is_locked_;
 
   void Lock() {
-    pthread_mutex_lock(&gThreadListLock);
+    pthread_mutex_lock(&g_thread_list_lock);
     is_locked_ = true;
   }
 
