@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ad50879_ad146919",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T19:34:40Z",
+      "side": 1,
+      "message": "there\u0027s no real difference between \u0027class\u0027 and \u0027struct\u0027 other than the default access. they don\u0027t get different naming conventions. (other than public struct fields.)",
+      "revId": "680ca4d187ffca1431bd1f865e7878061099697d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
