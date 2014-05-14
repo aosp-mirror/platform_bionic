@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ae95c2a_1558f46a",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T01:25:56Z",
+      "side": 1,
+      "message": "oh, yeah, duh... this is push_front.",
+      "revId": "2c703a7c2c1b6578552d8bfff63b430724341f88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea9db0d4_10102a6f",
+        "filename": "linker/linker.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T01:25:56Z",
+      "side": 1,
+      "message": "since this uses the soinfo allocator, the name is misleading. it\u0027s really only the soinfo list allocator.",
+      "revId": "2c703a7c2c1b6578552d8bfff63b430724341f88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
