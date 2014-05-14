@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca71cc8d_57d8ee25",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2287,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-14T23:55:48Z",
+      "side": 1,
+      "message": "(i assumed we\u0027d leave these until we can move the Android turds out into their own file where we can use C++.)",
+      "revId": "8a8b0c9bfcd80c67154ed2aca1e60d815c822acb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
