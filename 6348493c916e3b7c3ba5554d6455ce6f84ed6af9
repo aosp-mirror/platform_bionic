@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ca29cc20_48b7af72",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a5e84cf_0f0d4d53",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a5e84cf_2fbb69ff",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": "i still think the allocator should be handing out guaranteed-clean memory. (and probably scrubbing it on free too.)",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca29cc20_e8e47b74",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a5e84cf_2fbb69ff",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ea18502e_f54bd8e2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a698874_9ca2d1cc",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a698874_5c9d3986",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": "member function.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca154cf5_343270e6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a698874_5c9d3986",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "ca154cf5_142f747a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "this function modifies list, on order to make it member we are going to need new class that incapsulates linked list of soinfos",
+      "parentUuid": "2a698874_fcbe6dc2",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a64fc99_4f525ef0",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": "the",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca154cf5_5439ecc3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1996,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a64fc99_4f525ef0",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "ca29cc20_08ea173e",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a64fc99_2ff28a7c",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a698874_dc4cc987",
         "filename": "linker/linker.h",
         "patchSetId": 7
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": "Answers",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca154cf5_b4468035",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a698874_dc4cc987",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "ca29cc20_a8de839c",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a698874_bc4b156b",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a64fc99_2f0b6ab2",
         "filename": "linker/linker.h",
         "patchSetId": 7
@@ -166,6 +328,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": "does our life get easier if we just have one soinfo* per struct? now we have a more general allocator that shouldn\u0027t be a problem. i\u0027m uncomfortable with the weird mix of C and C++ styles we\u0027re adding here. it\u0027s a bug that the existing code is a mix!\n\nalternatively, does any of the \u003csys/queue.h\u003e stuff help?",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ae46051_41e8128a",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "1 soinfo* per struct it is.\n\nI would rather not use sys/queue.h, adding c macros to the mix is where I draw a line. :) Also they do not have remove_if",
+      "parentUuid": "4a64fc99_2f0b6ab2",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "4ae95c2a_60da72f7",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a5e84cf_0f3b0de8",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a64fc99_8fddb628",
         "filename": "linker/linker.h",
         "patchSetId": 7
@@ -206,6 +404,24 @@
     },
     {
       "key": {
+        "uuid": "4ae95c2a_c0f37e84",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a64fc99_8fddb628",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a698874_dc7129be",
         "filename": "linker/linker.h",
         "patchSetId": 7
@@ -217,6 +433,24 @@
       "writtenOn": "2014-05-13T18:12:58Z",
       "side": 1,
       "message": ".\n\nset where?\n\ni still think this should be hidden behind accessors. (a) because new stuff we add ought to be private, and (b) because we now have this situation where some stuff is optional and might not be there at all.",
+      "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aeee834_ff91ff3f",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T00:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a698874_dc7129be",
       "revId": "6348493c916e3b7c3ba5554d6455ce6f84ed6af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
