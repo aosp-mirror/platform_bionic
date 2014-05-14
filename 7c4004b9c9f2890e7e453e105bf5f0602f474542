@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2ad50879_27b09a7c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ad50879_e7dfa270",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ad50879_a7d5aa56",
         "filename": "linker/linker.cpp",
         "patchSetId": 11
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": "Check",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac690d8_25d9aeb4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ad50879_a7d5aa56",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "8ad6f480_0db13520",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaa73822_1462da92",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eac690d8_e5df9670",
         "filename": "linker/linker.cpp",
         "patchSetId": 11
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": "do we need this? won\u0027t the regular if/else take care of this? wouldn\u0027t it be bad if we\u0027re LP64 but FLAG_NEW_SOINFO isn\u0027t set?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_6dbef1ef",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done. Right haven\u0027t thought about folks who might mess with internal structures. But I eventually want to get rid of current form of find_loaded_library() and replace it with find_library(.., RTLD_NOLOAD)",
+      "parentUuid": "eac690d8_e5df9670",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "8ad6f480_6d971168",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ad6f480_2ae05fe2",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ad50879_8703462e",
         "filename": "linker/linker.cpp",
         "patchSetId": 11
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": "This is a\n\nreturn from",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ad50879_67a8d200",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1493,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ad50879_8703462e",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "eac690d8_a5575e3c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ad50879_0710f66e",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ad6f480_2ace9f62",
         "filename": "linker/linker.cpp",
         "patchSetId": 11
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": ".",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_ed40211b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2192,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ad6f480_2ace9f62",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "0af3e41b_c44c3288",
+        "filename": "linker/linker.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "I wouldn\u0027t bet on it..",
+      "parentUuid": "aaa73822_b4b946de",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ad6f480_ca59c336",
         "filename": "linker/tests/linked_list_test.cpp",
         "patchSetId": 11
@@ -166,6 +328,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": "we use static rather than anonymous namespaces.",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ad6f480_aa40cf6b",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "afaik, you cannot define static classes and structures in term of limiting visibility, only global variables and functions. I think we should allow usage of anonymous namespaces.",
+      "parentUuid": "8ad6f480_ca59c336",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "0af3e41b_e44b2e6a",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "linked list entry is struct... LinkedList is class.",
+      "parentUuid": "aaa73822_34b716df",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ad6f480_8ac4eb76",
         "filename": "linker/tests/linked_list_test.cpp",
         "patchSetId": 11
@@ -206,6 +404,24 @@
     },
     {
       "key": {
+        "uuid": "aaf9f8ff_010f2e01",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "delete/new calls c-tors and d-tors, and this is not really allocator\u0027s responsibility to do that.",
+      "parentUuid": "8ad6f480_8ac4eb76",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaa73822_94a7eaad",
         "filename": "linker/tests/linked_list_test.cpp",
         "patchSetId": 11
@@ -217,6 +433,24 @@
       "writtenOn": "2014-05-14T17:19:43Z",
       "side": 1,
       "message": "const\u0026?",
+      "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eac690d8_45082ab3",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-14T18:04:13Z",
+      "side": 1,
+      "message": "this would require const version of for_each()",
+      "parentUuid": "aaa73822_94a7eaad",
       "revId": "7c4004b9c9f2890e7e453e105bf5f0602f474542",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
