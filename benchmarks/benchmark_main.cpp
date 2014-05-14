@@ -25,13 +25,13 @@
 
 #include <inttypes.h>
 
-static int64_t gBytesProcessed;
-static int64_t gBenchmarkTotalTimeNs;
-static int64_t gBenchmarkStartTimeNs;
+static int64_t g_bytes_processed;
+static int64_t g_benchmark_total_time_ns;
+static int64_t g_benchmark_start_time_ns;
 
 typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
-static BenchmarkMap gBenchmarks;
+static BenchmarkMap g_benchmarks;
 
 static int Round(int n) {
   int base = 1;
@@ -96,7 +96,7 @@ void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int
     exit(EXIT_FAILURE);
   }
 
-  gBenchmarks.insert(std::make_pair(name, this));
+  g_benchmarks.insert(std::make_pair(name, this));
 }
 
 void Benchmark::Run() {
@@ -114,16 +114,16 @@ void Benchmark::Run() {
 }
 
 void Benchmark::RunRepeatedlyWithArg(int iterations, int arg) {
-  gBytesProcessed = 0;
-  gBenchmarkTotalTimeNs = 0;
-  gBenchmarkStartTimeNs = NanoTime();
+  g_bytes_processed = 0;
+  g_benchmark_total_time_ns = 0;
+  g_benchmark_start_time_ns = NanoTime();
   if (fn_ != NULL) {
     fn_(iterations);
   } else {
     fn_range_(iterations, arg);
   }
-  if (gBenchmarkStartTimeNs != 0) {
-    gBenchmarkTotalTimeNs += NanoTime() - gBenchmarkStartTimeNs;
+  if (g_benchmark_start_time_ns != 0) {
+    g_benchmark_total_time_ns += NanoTime() - g_benchmark_start_time_ns;
   }
 }
 
@@ -131,12 +131,12 @@ void Benchmark::RunWithArg(int arg) {
   // run once in case it's expensive
   int iterations = 1;
   RunRepeatedlyWithArg(iterations, arg);
-  while (gBenchmarkTotalTimeNs < 1e9 && iterations < 1e9) {
+  while (g_benchmark_total_time_ns < 1e9 && iterations < 1e9) {
     int last = iterations;
-    if (gBenchmarkTotalTimeNs/iterations == 0) {
+    if (g_benchmark_total_time_ns/iterations == 0) {
       iterations = 1e9;
     } else {
-      iterations = 1e9 / (gBenchmarkTotalTimeNs/iterations);
+      iterations = 1e9 / (g_benchmark_total_time_ns/iterations);
     }
     iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
@@ -145,9 +145,9 @@ void Benchmark::RunWithArg(int arg) {
 
   char throughput[100];
   throughput[0] = '\0';
-  if (gBenchmarkTotalTimeNs > 0 && gBytesProcessed > 0) {
-    double mib_processed = static_cast<double>(gBytesProcessed)/1e6;
-    double seconds = static_cast<double>(gBenchmarkTotalTimeNs)/1e9;
+  if (g_benchmark_total_time_ns > 0 && g_bytes_processed > 0) {
+    double mib_processed = static_cast<double>(g_bytes_processed)/1e6;
+    double seconds = static_cast<double>(g_benchmark_total_time_ns)/1e9;
     snprintf(throughput, sizeof(throughput), " %8.2f MiB/s", mib_processed/seconds);
   }
 
@@ -165,37 +165,37 @@ void Benchmark::RunWithArg(int arg) {
   }
 
   printf("%-20s %10d %10" PRId64 "%s\n", full_name,
-         iterations, gBenchmarkTotalTimeNs/iterations, throughput);
+         iterations, g_benchmark_total_time_ns/iterations, throughput);
   fflush(stdout);
 }
 
 }  // namespace testing
 
 void SetBenchmarkBytesProcessed(int64_t x) {
-  gBytesProcessed = x;
+  g_bytes_processed = x;
 }
 
 void StopBenchmarkTiming() {
-  if (gBenchmarkStartTimeNs != 0) {
-    gBenchmarkTotalTimeNs += NanoTime() - gBenchmarkStartTimeNs;
+  if (g_benchmark_start_time_ns != 0) {
+    g_benchmark_total_time_ns += NanoTime() - g_benchmark_start_time_ns;
   }
-  gBenchmarkStartTimeNs = 0;
+  g_benchmark_start_time_ns = 0;
 }
 
 void StartBenchmarkTiming() {
-  if (gBenchmarkStartTimeNs == 0) {
-    gBenchmarkStartTimeNs = NanoTime();
+  if (g_benchmark_start_time_ns == 0) {
+    g_benchmark_start_time_ns = NanoTime();
   }
 }
 
 int main(int argc, char* argv[]) {
-  if (gBenchmarks.empty()) {
+  if (g_benchmarks.empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
     exit(EXIT_FAILURE);
   }
 
   bool need_header = true;
-  for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
+  for (BenchmarkMapIt it = g_benchmarks.begin(); it != g_benchmarks.end(); ++it) {
     ::testing::Benchmark* b = it->second;
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
   if (need_header) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
-    for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
+    for (BenchmarkMapIt it = g_benchmarks.begin(); it != g_benchmarks.end(); ++it) {
       fprintf(stderr, "  %s\n", it->second->Name());
     }
     exit(EXIT_FAILURE);

@@ -27,9 +27,9 @@
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
-static bool gCalled = false;
+static bool g_called = false;
 extern "C" void DlSymTestFunction() {
-  gCalled = true;
+  g_called = true;
 }
 
 TEST(dlfcn, dlsym_in_self) {
@@ -43,9 +43,9 @@ TEST(dlfcn, dlsym_in_self) {
 
   void (*function)() = reinterpret_cast<void(*)()>(sym);
 
-  gCalled = false;
+  g_called = false;
   function();
-  ASSERT_TRUE(gCalled);
+  ASSERT_TRUE(g_called);
 
   ASSERT_EQ(0, dlclose(self));
 }

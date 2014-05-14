@@ -71,13 +71,13 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 // We can't use malloc(3) in the dynamic linker. We use a linked list of anonymous
 // maps, each a single page in size. The pages are broken up into as many struct soinfo
 // objects as will fit.
-static LinkerAllocator<soinfo> gSoInfoAllocator;
+static LinkerAllocator<soinfo> g_soinfo_allocator;
 
 static soinfo* solist = &libdl_info;
 static soinfo* sonext = &libdl_info;
 static soinfo* somain; /* main process, always the one after libdl_info */
 
-static const char* const gDefaultLdPaths[] = {
+static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
   "/vendor/lib64",
   "/system/lib64",
@@ -94,17 +94,17 @@ static const char* const gDefaultLdPaths[] = {
 #define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
 #define LDPRELOAD_MAX 8
 
-static char gLdPathsBuffer[LDPATH_BUFSIZE];
-static const char* gLdPaths[LDPATH_MAX + 1];
+static char g_ld_library_paths_buffer[LDPATH_BUFSIZE];
+static const char* g_ld_library_paths[LDPATH_MAX + 1];
 
-static char gLdPreloadsBuffer[LDPRELOAD_BUFSIZE];
-static const char* gLdPreloadNames[LDPRELOAD_MAX + 1];
+static char g_ld_preloads_buffer[LDPRELOAD_BUFSIZE];
+static const char* g_ld_preload_names[LDPRELOAD_MAX + 1];
 
-static soinfo* gLdPreloads[LDPRELOAD_MAX + 1];
+static soinfo* g_ld_preloads[LDPRELOAD_MAX + 1];
 
-__LIBC_HIDDEN__ int gLdDebugVerbosity;
+__LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
-__LIBC_HIDDEN__ abort_msg_t* gAbortMessage = NULL; // For debuggerd.
+__LIBC_HIDDEN__ abort_msg_t* g_abort_message = NULL; // For debuggerd.
 
 enum RelocationKind {
     kRelocAbsolute = 0,
@@ -179,10 +179,9 @@ size_t linker_get_error_buffer_size() {
  */
 extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
 
+static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
 static r_debug _r_debug = {1, NULL, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
 static link_map* r_debug_tail = 0;
-
-static pthread_mutex_t gDebugMutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void insert_soinfo_into_debug_map(soinfo* info) {
     // Copy the necessary fields into the debug structure.
@@ -229,7 +228,7 @@ static void notify_gdb_of_load(soinfo* info) {
         return;
     }
 
-    ScopedPthreadMutexLocker locker(&gDebugMutex);
+    ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
 
     _r_debug.r_state = r_debug::RT_ADD;
     rtld_db_dlactivity();
@@ -246,7 +245,7 @@ static void notify_gdb_of_unload(soinfo* info) {
         return;
     }
 
-    ScopedPthreadMutexLocker locker(&gDebugMutex);
+    ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
 
     _r_debug.r_state = r_debug::RT_DELETE;
     rtld_db_dlactivity();
@@ -270,7 +269,7 @@ static soinfo* soinfo_alloc(const char* name) {
     return NULL;
   }
 
-  soinfo* si = gSoInfoAllocator.alloc();
+  soinfo* si = g_soinfo_allocator.alloc();
 
   // Initialize the new element.
   memset(si, 0, sizeof(soinfo));
@@ -310,7 +309,7 @@ static void soinfo_free(soinfo* si) {
         sonext = prev;
     }
 
-    gSoInfoAllocator.free(si);
+    g_soinfo_allocator.free(si);
 }
 
 
@@ -340,14 +339,14 @@ static void parse_path(const char* path, const char* delimiters,
 }
 
 static void parse_LD_LIBRARY_PATH(const char* path) {
-  parse_path(path, ":", gLdPaths,
-             gLdPathsBuffer, sizeof(gLdPathsBuffer), LDPATH_MAX);
+  parse_path(path, ":", g_ld_library_paths,
+             g_ld_library_paths_buffer, sizeof(g_ld_library_paths_buffer), LDPATH_MAX);
 }
 
 static void parse_LD_PRELOAD(const char* path) {
   // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-  parse_path(path, " :", gLdPreloadNames,
-             gLdPreloadsBuffer, sizeof(gLdPreloadsBuffer), LDPRELOAD_MAX);
+  parse_path(path, " :", g_ld_preload_names,
+             g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), LDPRELOAD_MAX);
 }
 
 #if defined(__arm__)
@@ -505,10 +504,10 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
     }
 
     /* Next, look for it in the preloads list */
-    for (int i = 0; gLdPreloads[i] != NULL; i++) {
-        s = soinfo_elf_lookup(gLdPreloads[i], elf_hash, name);
+    for (int i = 0; g_ld_preloads[i] != NULL; i++) {
+        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
         if (s != NULL) {
-            *lsi = gLdPreloads[i];
+            *lsi = g_ld_preloads[i];
             goto done;
         }
     }
@@ -637,9 +636,9 @@ static int open_library(const char* name) {
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_path(name, gLdPaths);
+  int fd = open_library_on_path(name, g_ld_library_paths);
   if (fd == -1) {
-    fd = open_library_on_path(name, gDefaultLdPaths);
+    fd = open_library_on_path(name, kDefaultLdPaths);
   }
   return fd;
 }
@@ -756,7 +755,7 @@ static int soinfo_unload(soinfo* si) {
 }
 
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
-  snprintf(buffer, buffer_size, "%s:%s", gDefaultLdPaths[0], gDefaultLdPaths[1]);
+  snprintf(buffer, buffer_size, "%s:%s", kDefaultLdPaths[0], kDefaultLdPaths[1]);
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
@@ -774,19 +773,19 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     DL_ERR("invalid extended flags to android_dlopen_ext: %x", extinfo->flags);
     return NULL;
   }
-  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
+  g_soinfo_allocator.protect_all(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name, extinfo);
   if (si != NULL) {
     si->CallConstructors();
   }
-  gSoInfoAllocator.protect_all(PROT_READ);
+  g_soinfo_allocator.protect_all(PROT_READ);
   return si;
 }
 
 int do_dlclose(soinfo* si) {
-  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
+  g_soinfo_allocator.protect_all(PROT_READ | PROT_WRITE);
   int result = soinfo_unload(si);
-  gSoInfoAllocator.protect_all(PROT_READ);
+  g_soinfo_allocator.protect_all(PROT_READ);
   return result;
 }
 
@@ -1334,7 +1333,7 @@ void soinfo::CallFunction(const char* function_name __unused, linker_function_t 
 
   // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
   // are still writable. This happens with our debug malloc (see http://b/7941716).
-  gSoInfoAllocator.protect_all(PROT_READ | PROT_WRITE);
+  g_soinfo_allocator.protect_all(PROT_READ | PROT_WRITE);
 }
 
 void soinfo::CallPreInitConstructors() {
@@ -1688,16 +1687,16 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
 
     // If this is the main executable, then load all of the libraries from LD_PRELOAD now.
     if (si->flags & FLAG_EXE) {
-        memset(gLdPreloads, 0, sizeof(gLdPreloads));
+        memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
         size_t preload_count = 0;
-        for (size_t i = 0; gLdPreloadNames[i] != NULL; i++) {
-            soinfo* lsi = find_library(gLdPreloadNames[i], NULL);
+        for (size_t i = 0; g_ld_preload_names[i] != NULL; i++) {
+            soinfo* lsi = find_library(g_ld_preload_names[i], NULL);
             if (lsi != NULL) {
-                gLdPreloads[preload_count++] = lsi;
+                g_ld_preloads[preload_count++] = lsi;
             } else {
                 // As with glibc, failure to load an LD_PRELOAD library is just a warning.
                 DL_WARN("could not load library \"%s\" from LD_PRELOAD for \"%s\"; caused by %s",
-                        gLdPreloadNames[i], si->name, linker_get_error_buffer());
+                        g_ld_preload_names[i], si->name, linker_get_error_buffer());
             }
         }
     }
@@ -1873,7 +1872,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     // Get a few environment variables.
     const char* LD_DEBUG = linker_env_get("LD_DEBUG");
     if (LD_DEBUG != NULL) {
-      gLdDebugVerbosity = atoi(LD_DEBUG);
+      g_ld_debug_verbosity = atoi(LD_DEBUG);
     }
 
     // Normally, these are cleaned by linker_env_init, but the test
@@ -1888,7 +1887,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     // Linker does not call constructors for its own
     // global variables so we need to initialize
     // the allocator explicitly.
-    gSoInfoAllocator.init();
+    g_soinfo_allocator.init();
 
     INFO("[ android linker & debugger ]");
 
@@ -1982,8 +1981,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     si->CallPreInitConstructors();
 
-    for (size_t i = 0; gLdPreloads[i] != NULL; ++i) {
-        gLdPreloads[i]->CallConstructors();
+    for (size_t i = 0; g_ld_preloads[i] != NULL; ++i) {
+        g_ld_preloads[i]->CallConstructors();
     }
 
     /* After the link_image, the si->load_bias is initialized.
@@ -2104,10 +2103,10 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
-  args.abort_message_ptr = &gAbortMessage;
+  args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
 
-  gSoInfoAllocator.protect_all(PROT_READ);
+  g_soinfo_allocator.protect_all(PROT_READ);
 
   // Return the address that the calling assembly stub should jump to.
   return start_address;

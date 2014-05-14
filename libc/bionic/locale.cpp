@@ -36,43 +36,43 @@ struct __locale_t {
   // Because we only support one locale, these are just tokens with no data.
 };
 
-static pthread_once_t gLocaleOnce = PTHREAD_ONCE_INIT;
-static lconv gLocale;
+static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
+static lconv g_locale;
 
 // We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
-static pthread_key_t gUselocaleKey;
+static pthread_key_t g_uselocale_key;
 __attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
-  pthread_key_create(&gUselocaleKey, NULL);
+  pthread_key_create(&g_uselocale_key, NULL);
 }
 
 static void __locale_init() {
-  gLocale.decimal_point = const_cast<char*>(".");
+  g_locale.decimal_point = const_cast<char*>(".");
 
   char* not_available = const_cast<char*>("");
-  gLocale.thousands_sep = not_available;
-  gLocale.grouping = not_available;
-  gLocale.int_curr_symbol = not_available;
-  gLocale.currency_symbol = not_available;
-  gLocale.mon_decimal_point = not_available;
-  gLocale.mon_thousands_sep = not_available;
-  gLocale.mon_grouping = not_available;
-  gLocale.positive_sign = not_available;
-  gLocale.negative_sign = not_available;
+  g_locale.thousands_sep = not_available;
+  g_locale.grouping = not_available;
+  g_locale.int_curr_symbol = not_available;
+  g_locale.currency_symbol = not_available;
+  g_locale.mon_decimal_point = not_available;
+  g_locale.mon_thousands_sep = not_available;
+  g_locale.mon_grouping = not_available;
+  g_locale.positive_sign = not_available;
+  g_locale.negative_sign = not_available;
 
-  gLocale.int_frac_digits = CHAR_MAX;
-  gLocale.frac_digits = CHAR_MAX;
-  gLocale.p_cs_precedes = CHAR_MAX;
-  gLocale.p_sep_by_space = CHAR_MAX;
-  gLocale.n_cs_precedes = CHAR_MAX;
-  gLocale.n_sep_by_space = CHAR_MAX;
-  gLocale.p_sign_posn = CHAR_MAX;
-  gLocale.n_sign_posn = CHAR_MAX;
-  gLocale.int_p_cs_precedes = CHAR_MAX;
-  gLocale.int_p_sep_by_space = CHAR_MAX;
-  gLocale.int_n_cs_precedes = CHAR_MAX;
-  gLocale.int_n_sep_by_space = CHAR_MAX;
-  gLocale.int_p_sign_posn = CHAR_MAX;
-  gLocale.int_n_sign_posn = CHAR_MAX;
+  g_locale.int_frac_digits = CHAR_MAX;
+  g_locale.frac_digits = CHAR_MAX;
+  g_locale.p_cs_precedes = CHAR_MAX;
+  g_locale.p_sep_by_space = CHAR_MAX;
+  g_locale.n_cs_precedes = CHAR_MAX;
+  g_locale.n_sep_by_space = CHAR_MAX;
+  g_locale.p_sign_posn = CHAR_MAX;
+  g_locale.n_sign_posn = CHAR_MAX;
+  g_locale.int_p_cs_precedes = CHAR_MAX;
+  g_locale.int_p_sep_by_space = CHAR_MAX;
+  g_locale.int_n_cs_precedes = CHAR_MAX;
+  g_locale.int_n_sep_by_space = CHAR_MAX;
+  g_locale.int_p_sign_posn = CHAR_MAX;
+  g_locale.int_n_sign_posn = CHAR_MAX;
 }
 
 static bool __bionic_current_locale_is_utf8 = false;
@@ -88,8 +88,8 @@ static locale_t __new_locale() {
 }
 
 lconv* localeconv() {
-  pthread_once(&gLocaleOnce, __locale_init);
-  return &gLocale;
+  pthread_once(&g_locale_once, __locale_init);
+  return &g_locale;
 }
 
 locale_t duplocale(locale_t l) {
@@ -140,7 +140,7 @@ char* setlocale(int category, const char* locale_name) {
 }
 
 locale_t uselocale(locale_t new_locale) {
-  locale_t old_locale = static_cast<locale_t>(pthread_getspecific(gUselocaleKey));
+  locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
@@ -148,7 +148,7 @@ locale_t uselocale(locale_t new_locale) {
   }
 
   if (new_locale != NULL) {
-    pthread_setspecific(gUselocaleKey, new_locale);
+    pthread_setspecific(g_uselocale_key, new_locale);
   }
 
   return old_locale;

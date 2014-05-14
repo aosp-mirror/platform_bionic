@@ -52,9 +52,9 @@ extern "C" __attribute__((noinline)) void _thread_created_hook(pid_t) {}
 extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 #endif
 
-static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_pthread_stack_creation_ock = PTHREAD_MUTEX_INITIALIZER;
 
-static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_debugger_notification_lock = PTHREAD_MUTEX_INITIALIZER;
 
 extern "C" int __isthreaded;
 
@@ -111,7 +111,7 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
 }
 
 static void* __create_thread_stack(pthread_internal_t* thread) {
-  ScopedPthreadMutexLocker lock(&gPthreadStackCreationLock);
+  ScopedPthreadMutexLocker lock(&g_pthread_stack_creation_ock);
 
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
@@ -258,7 +258,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   // Notify any debuggers about the new thread.
   {
-    ScopedPthreadMutexLocker debugger_locker(&gDebuggerNotificationLock);
+    ScopedPthreadMutexLocker debugger_locker(&g_debugger_notification_lock);
     _thread_created_hook(thread->tid);
   }
 

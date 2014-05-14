@@ -30,7 +30,7 @@
 
 #include <pthread.h>
 
-static pthread_mutex_t gAtExitLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_atexit_lock = PTHREAD_MUTEX_INITIALIZER;
 
 __BEGIN_DECLS
 __LIBC_HIDDEN__ void _thread_atexit_lock();
@@ -38,9 +38,9 @@ __LIBC_HIDDEN__ void _thread_atexit_unlock();
 __END_DECLS
 
 void _thread_atexit_lock() {
-  pthread_mutex_lock(&gAtExitLock);
+  pthread_mutex_lock(&g_atexit_lock);
 }
 
 void _thread_atexit_unlock() {
-  pthread_mutex_unlock(&gAtExitLock);
+  pthread_mutex_unlock(&g_atexit_lock);
 }

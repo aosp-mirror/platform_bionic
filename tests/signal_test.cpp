@@ -146,10 +146,10 @@ TEST(signal, sigwait) {
   ASSERT_EQ(SIGALRM, received_signal);
 }
 
-static int gSigSuspendTestHelperCallCount = 0;
+static int g_sigsuspend_test_helper_call_count = 0;
 
 static void SigSuspendTestHelper(int) {
-  ++gSigSuspendTestHelperCallCount;
+  ++g_sigsuspend_test_helper_call_count;
 }
 
 TEST(signal, sigsuspend_sigpending) {
@@ -172,7 +172,7 @@ TEST(signal, sigsuspend_sigpending) {
 
   // Raise SIGALRM and check our signal handler wasn't called.
   raise(SIGALRM);
-  ASSERT_EQ(0, gSigSuspendTestHelperCallCount);
+  ASSERT_EQ(0, g_sigsuspend_test_helper_call_count);
 
   // We should now have a pending SIGALRM but nothing else.
   sigemptyset(&pending);
@@ -188,7 +188,7 @@ TEST(signal, sigsuspend_sigpending) {
   ASSERT_EQ(-1, sigsuspend(&not_SIGALRM));
   ASSERT_EQ(EINTR, errno);
   // ...and check that we now receive our pending SIGALRM.
-  ASSERT_EQ(1, gSigSuspendTestHelperCallCount);
+  ASSERT_EQ(1, g_sigsuspend_test_helper_call_count);
 
   // Restore the original set.
   ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));

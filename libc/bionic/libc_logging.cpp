@@ -45,7 +45,7 @@
 #include <time.h>
 #include <unistd.h>
 
-static pthread_mutex_t gAbortMsgLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
 __LIBC_HIDDEN__ abort_msg_t** __abort_message_ptr; // Accessible to __libc_init_common.
 
@@ -643,7 +643,7 @@ void __libc_fatal(const char* format, ...) {
 }
 
 void __android_set_abort_message(const char* msg) {
-  ScopedPthreadMutexLocker locker(&gAbortMsgLock);
+  ScopedPthreadMutexLocker locker(&g_abort_msg_lock);
 
   if (__abort_message_ptr == NULL) {
     // We must have crashed _very_ early.

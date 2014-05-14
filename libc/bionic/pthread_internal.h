@@ -86,8 +86,8 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
  */
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
 
-__LIBC_HIDDEN__ extern pthread_internal_t* gThreadList;
-__LIBC_HIDDEN__ extern pthread_mutex_t gThreadListLock;
+__LIBC_HIDDEN__ extern pthread_internal_t* g_thread_list;
+__LIBC_HIDDEN__ extern pthread_mutex_t g_thread_list_lock;
 
 __LIBC_HIDDEN__ int __timespec_from_absolute(timespec*, const timespec*, clockid_t);
 
