@@ -44,6 +44,7 @@ test_cppflags = \
     -std=gnu++11 \
 
 libBionicStandardTests_src_files := \
+    arpa_inet_test.cpp \
     buffer_tests.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
