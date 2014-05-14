@@ -39,6 +39,8 @@
 #include <sys/cdefs.h>
 #include <machine/endian.h>
 
+#include <stdint.h>
+
 #define _LITTLE_ENDIAN	1234
 #define _BIG_ENDIAN	4321
 #define _PDP_ENDIAN	3412
