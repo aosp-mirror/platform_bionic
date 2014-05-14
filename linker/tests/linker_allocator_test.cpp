@@ -96,6 +96,9 @@ TEST(linker_allocator, test_larger) {
     ASSERT_TRUE(allocator.alloc() != nullptr);
   }
 
+  test_struct_larger* ptr_to_free = allocator.alloc();
+  ASSERT_TRUE(ptr_to_free != nullptr);
+  allocator.free(ptr1);
 }
 
 static void protect_all() {

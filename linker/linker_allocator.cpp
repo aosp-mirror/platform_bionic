@@ -117,8 +117,8 @@ LinkerAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
   }
 
   LinkerAllocatorPage* page = page_list_;
-  const uint8_t* page_ptr = reinterpret_cast<const uint8_t*>(page);
   while (page != nullptr) {
+    const uint8_t* page_ptr = reinterpret_cast<const uint8_t*>(page);
     if (block >= (page_ptr + sizeof(page->next)) && block < (page_ptr + PAGE_SIZE)) {
       return page;
     }
