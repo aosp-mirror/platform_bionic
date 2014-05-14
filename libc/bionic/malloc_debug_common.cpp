@@ -54,8 +54,8 @@
  */
 int gMallocLeakZygoteChild = 0;
 
-pthread_mutex_t gAllocationsMutex = PTHREAD_MUTEX_INITIALIZER;
-HashTable gHashTable;
+pthread_mutex_t g_allocations_mutex = PTHREAD_MUTEX_INITIALIZER;
+HashTable g_hash_table;
 
 // =============================================================================
 // output functions
@@ -122,9 +122,9 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     }
     *totalMemory = 0;
 
-    ScopedPthreadMutexLocker locker(&gAllocationsMutex);
+    ScopedPthreadMutexLocker locker(&g_allocations_mutex);
 
-    if (gHashTable.count == 0) {
+    if (g_hash_table.count == 0) {
         *info = NULL;
         *overallSize = 0;
         *infoSize = 0;
@@ -132,12 +132,12 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         return;
     }
 
-    HashEntry** list = static_cast<HashEntry**>(dlmalloc(sizeof(void*) * gHashTable.count));
+    HashEntry** list = static_cast<HashEntry**>(dlmalloc(sizeof(void*) * g_hash_table.count));
 
     // get the entries into an array to be sorted
     int index = 0;
     for (size_t i = 0 ; i < HASHTABLE_SIZE ; ++i) {
-        HashEntry* entry = gHashTable.slots[i];
+        HashEntry* entry = g_hash_table.slots[i];
         while (entry != NULL) {
             list[index] = entry;
             *totalMemory = *totalMemory +
@@ -149,7 +149,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
 
     // XXX: the protocol doesn't allow variable size for the stack trace (yet)
     *infoSize = (sizeof(size_t) * 2) + (sizeof(uintptr_t) * BACKTRACE_SIZE);
-    *overallSize = *infoSize * gHashTable.count;
+    *overallSize = *infoSize * g_hash_table.count;
     *backtraceSize = BACKTRACE_SIZE;
 
     // now get a byte array big enough for this
@@ -161,10 +161,10 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         return;
     }
 
-    qsort(list, gHashTable.count, sizeof(void*), hash_entry_compare);
+    qsort(list, g_hash_table.count, sizeof(void*), hash_entry_compare);
 
     uint8_t* head = *info;
-    const int count = gHashTable.count;
+    const int count = g_hash_table.count;
     for (int i = 0 ; i < count ; ++i) {
         HashEntry* entry = list[i];
         size_t entrySize = (sizeof(size_t) * 2) + (sizeof(uintptr_t) * entry->numEntries);
@@ -253,7 +253,7 @@ extern "C" size_t malloc_usable_size(const void* mem) {
 #include "private/libc_logging.h"
 
 /* Table for dispatching malloc calls, depending on environment. */
-static MallocDebug gMallocUse __attribute__((aligned(32))) = {
+static MallocDebug g_malloc_dispatch_table __attribute__((aligned(32))) = {
     dlmalloc, dlfree, dlcalloc, dlrealloc, dlmemalign, dlmalloc_usable_size
 };
 
@@ -286,11 +286,11 @@ static void* libc_malloc_impl_handle = NULL;
  * backlog we use to detect multiple frees.  If the property is not set, the
  * backlog length defaults to BACKLOG_DEFAULT_LEN.
  */
-unsigned int gMallocDebugBacklog;
+unsigned int g_malloc_debug_backlog;
 #define BACKLOG_DEFAULT_LEN 100
 
 /* The value of libc.debug.malloc. */
-int gMallocDebugLevel;
+int g_malloc_debug_level;
 
 template<typename FunctionType>
 static void InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
@@ -304,7 +304,7 @@ static void InitMallocFunction(void* malloc_impl_handler, FunctionType* func, co
 
 static void InitMalloc(void* malloc_impl_handler, MallocDebug* table, const char* prefix) {
     __libc_format_log(ANDROID_LOG_INFO, "libc", "%s: using libc.debug.malloc %d (%s)\n",
-                      __progname, gMallocDebugLevel, prefix);
+                      __progname, g_malloc_debug_level, prefix);
 
     InitMallocFunction<MallocDebugMalloc>(malloc_impl_handler, &table->malloc, prefix, "malloc");
     InitMallocFunction<MallocDebugFree>(malloc_impl_handler, &table->free, prefix, "free");
@@ -332,7 +332,7 @@ static void malloc_init_impl() {
         if (__system_property_get("ro.kernel.memcheck", memcheck_tracing)) {
             if (memcheck_tracing[0] != '0') {
                 // Emulator has started with memory tracing enabled. Enforce it.
-                gMallocDebugLevel = 20;
+                g_malloc_debug_level = 20;
                 memcheck_enabled = 1;
             }
         }
@@ -340,13 +340,13 @@ static void malloc_init_impl() {
 
     /* If debug level has not been set by memcheck option in the emulator,
      * lets grab it from libc.debug.malloc system property. */
-    if (gMallocDebugLevel == 0 && __system_property_get("libc.debug.malloc", env)) {
-        gMallocDebugLevel = atoi(env);
+    if (g_malloc_debug_level == 0 && __system_property_get("libc.debug.malloc", env)) {
+        g_malloc_debug_level = atoi(env);
     }
 
     /* Debug level 0 means that we should use dlxxx allocation
      * routines (default). */
-    if (gMallocDebugLevel == 0) {
+    if (g_malloc_debug_level == 0) {
         return;
     }
 
@@ -360,24 +360,24 @@ static void malloc_init_impl() {
     }
 
     // mksh is way too leaky. http://b/7291287.
-    if (gMallocDebugLevel >= 10) {
+    if (g_malloc_debug_level >= 10) {
         if (strcmp(__progname, "sh") == 0 || strcmp(__progname, "/system/bin/sh") == 0) {
             return;
         }
     }
 
     // Choose the appropriate .so for the requested debug level.
-    switch (gMallocDebugLevel) {
+    switch (g_malloc_debug_level) {
         case 1:
         case 5:
         case 10: {
             char debug_backlog[PROP_VALUE_MAX];
             if (__system_property_get("libc.debug.malloc.backlog", debug_backlog)) {
-                gMallocDebugBacklog = atoi(debug_backlog);
-                info_log("%s: setting backlog length to %d\n", __progname, gMallocDebugBacklog);
+                g_malloc_debug_backlog = atoi(debug_backlog);
+                info_log("%s: setting backlog length to %d\n", __progname, g_malloc_debug_backlog);
             }
-            if (gMallocDebugBacklog == 0) {
-                gMallocDebugBacklog = BACKLOG_DEFAULT_LEN;
+            if (g_malloc_debug_backlog == 0) {
+                g_malloc_debug_backlog = BACKLOG_DEFAULT_LEN;
             }
             so_name = "libc_malloc_debug_leak.so";
             break;
@@ -386,7 +386,7 @@ static void malloc_init_impl() {
             // Quick check: debug level 20 can only be handled in emulator.
             if (!qemu_running) {
                 error_log("%s: Debug level %d can only be set in emulator\n",
-                          __progname, gMallocDebugLevel);
+                          __progname, g_malloc_debug_level);
                 return;
             }
             // Make sure that memory checking has been enabled in emulator.
@@ -398,7 +398,7 @@ static void malloc_init_impl() {
             so_name = "libc_malloc_debug_qemu.so";
             break;
         default:
-            error_log("%s: Debug level %d is unknown\n", __progname, gMallocDebugLevel);
+            error_log("%s: Debug level %d is unknown\n", __progname, g_malloc_debug_level);
             return;
     }
 
@@ -406,7 +406,7 @@ static void malloc_init_impl() {
     void* malloc_impl_handle = dlopen(so_name, RTLD_LAZY);
     if (malloc_impl_handle == NULL) {
         error_log("%s: Missing module %s required for malloc debug level %d: %s",
-                  __progname, so_name, gMallocDebugLevel, dlerror());
+                  __progname, so_name, g_malloc_debug_level, dlerror());
         return;
     }
 
@@ -424,7 +424,7 @@ static void malloc_init_impl() {
         return;
     }
 
-    if (gMallocDebugLevel == 20) {
+    if (g_malloc_debug_level == 20) {
         // For memory checker we need to do extra initialization.
         typedef int (*MemCheckInit)(int, const char*);
         MemCheckInit memcheck_initialize =
@@ -445,35 +445,35 @@ static void malloc_init_impl() {
 
 
     // Initialize malloc dispatch table with appropriate routines.
-    switch (gMallocDebugLevel) {
+    switch (g_malloc_debug_level) {
         case 1:
-            InitMalloc(malloc_impl_handle, &gMallocUse, "leak");
+            InitMalloc(malloc_impl_handle, &g_malloc_dispatch_table, "leak");
             break;
         case 5:
-            InitMalloc(malloc_impl_handle, &gMallocUse, "fill");
+            InitMalloc(malloc_impl_handle, &g_malloc_dispatch_table, "fill");
             break;
         case 10:
-            InitMalloc(malloc_impl_handle, &gMallocUse, "chk");
+            InitMalloc(malloc_impl_handle, &g_malloc_dispatch_table, "chk");
             break;
         case 20:
-            InitMalloc(malloc_impl_handle, &gMallocUse, "qemu_instrumented");
+            InitMalloc(malloc_impl_handle, &g_malloc_dispatch_table, "qemu_instrumented");
             break;
         default:
             break;
     }
 
     // Make sure dispatch table is initialized
-    if ((gMallocUse.malloc == NULL) ||
-        (gMallocUse.free == NULL) ||
-        (gMallocUse.calloc == NULL) ||
-        (gMallocUse.realloc == NULL) ||
-        (gMallocUse.memalign == NULL) ||
-        (gMallocUse.malloc_usable_size == NULL)) {
+    if ((g_malloc_dispatch_table.malloc == NULL) ||
+        (g_malloc_dispatch_table.free == NULL) ||
+        (g_malloc_dispatch_table.calloc == NULL) ||
+        (g_malloc_dispatch_table.realloc == NULL) ||
+        (g_malloc_dispatch_table.memalign == NULL) ||
+        (g_malloc_dispatch_table.malloc_usable_size == NULL)) {
         error_log("%s: some symbols for libc.debug.malloc level %d were not found (see above)",
-                  __progname, gMallocDebugLevel);
+                  __progname, g_malloc_debug_level);
         dlclose(malloc_impl_handle);
     } else {
-        __libc_malloc_dispatch = &gMallocUse;
+        __libc_malloc_dispatch = &g_malloc_dispatch_table;
         libc_malloc_impl_handle = malloc_impl_handle;
     }
 }

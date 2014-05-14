@@ -114,18 +114,18 @@ TEST(unistd, ftruncate64) {
   ASSERT_EQ(123, sb.st_size);
 }
 
-static bool gPauseTestFlag = false;
+static bool g_pause_test_flag = false;
 static void PauseTestSignalHandler(int) {
-  gPauseTestFlag = true;
+  g_pause_test_flag = true;
 }
 
 TEST(unistd, pause) {
   ScopedSignalHandler handler(SIGALRM, PauseTestSignalHandler);
 
   alarm(1);
-  ASSERT_FALSE(gPauseTestFlag);
+  ASSERT_FALSE(g_pause_test_flag);
   ASSERT_EQ(-1, pause());
-  ASSERT_TRUE(gPauseTestFlag);
+  ASSERT_TRUE(g_pause_test_flag);
 }
 
 TEST(unistd, read) {

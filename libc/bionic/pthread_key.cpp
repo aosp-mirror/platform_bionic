@@ -210,8 +210,8 @@ int pthread_key_delete(pthread_key_t key) {
   }
 
   // Clear value in all threads.
-  pthread_mutex_lock(&gThreadListLock);
-  for (pthread_internal_t*  t = gThreadList; t != NULL; t = t->next) {
+  pthread_mutex_lock(&g_thread_list_lock);
+  for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
     // Skip zombie threads. They don't have a valid TLS area any more.
     // Similarly, it is possible to have t->tls == NULL for threads that
     // were just recently created through pthread_create() but whose
@@ -226,7 +226,7 @@ int pthread_key_delete(pthread_key_t key) {
   }
   tls_map.DeleteKey(key);
 
-  pthread_mutex_unlock(&gThreadListLock);
+  pthread_mutex_unlock(&g_thread_list_lock);
   return 0;
 }
 

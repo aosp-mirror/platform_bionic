@@ -2255,12 +2255,12 @@ static int __bionic_tzload_cached(const char* name, struct state* const sp, cons
   _tzLock();
 
   // Our single-item cache.
-  static char* gCachedTimeZoneName;
-  static struct state gCachedTimeZone;
+  static char* g_cached_time_zone_name;
+  static struct state g_cached_time_zone;
 
   // Do we already have this timezone cached?
-  if (gCachedTimeZoneName != NULL && strcmp(name, gCachedTimeZoneName) == 0) {
-    *sp = gCachedTimeZone;
+  if (g_cached_time_zone_name != NULL && strcmp(name, g_cached_time_zone_name) == 0) {
+    *sp = g_cached_time_zone;
     _tzUnlock();
     return 0;
   }
@@ -2269,9 +2269,9 @@ static int __bionic_tzload_cached(const char* name, struct state* const sp, cons
   int rc = tzload(name, sp, doextend);
   if (rc == 0) {
     // Update the cache.
-    free(gCachedTimeZoneName);
-    gCachedTimeZoneName = strdup(name);
-    gCachedTimeZone = *sp;
+    free(g_cached_time_zone_name);
+    g_cached_time_zone_name = strdup(name);
+    g_cached_time_zone = *sp;
   }
 
   _tzUnlock();

@@ -33,8 +33,8 @@
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-pthread_internal_t* gThreadList = NULL;
-pthread_mutex_t gThreadListLock = PTHREAD_MUTEX_INITIALIZER;
+pthread_internal_t* g_thread_list = NULL;
+pthread_mutex_t g_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
 
 void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->next != NULL) {
@@ -43,7 +43,7 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->prev != NULL) {
     thread->prev->next = thread->next;
   } else {
-    gThreadList = thread->next;
+    g_thread_list = thread->next;
   }
 
   // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
@@ -54,15 +54,15 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
 }
 
 void _pthread_internal_add(pthread_internal_t* thread) {
-  ScopedPthreadMutexLocker locker(&gThreadListLock);
+  ScopedPthreadMutexLocker locker(&g_thread_list_lock);
 
   // We insert at the head.
-  thread->next = gThreadList;
+  thread->next = g_thread_list;
   thread->prev = NULL;
   if (thread->next != NULL) {
     thread->next->prev = thread;
   }
-  gThreadList = thread;
+  g_thread_list = thread;
 }
 
 pthread_internal_t* __get_thread(void) {

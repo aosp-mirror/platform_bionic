@@ -203,7 +203,7 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr);
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name);
 
 void debuggerd_init();
-extern "C" abort_msg_t* gAbortMessage;
+extern "C" abort_msg_t* g_abort_message;
 extern "C" void notify_gdb_of_libraries();
 
 char* linker_get_error_buffer();

@@ -29,7 +29,7 @@
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
-static pthread_mutex_t gDlMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 static const char* __bionic_set_dlerror(char* new_value) {
   char** dlerror_slot = &reinterpret_cast<char**>(__get_tls())[TLS_SLOT_DLERROR];
@@ -56,18 +56,18 @@ const char* dlerror() {
 }
 
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   do_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
 }
 
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
 void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo)
 {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   soinfo* result = do_dlopen(filename, flags, extinfo);
   if (result == NULL) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
@@ -81,7 +81,7 @@ void* dlopen(const char* filename, int flags) {
 }
 
 void* dlsym(void* handle, const char* symbol) {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
   if (handle == NULL) {
     __bionic_format_dlerror("dlsym library handle is null", NULL);
@@ -125,7 +125,7 @@ void* dlsym(void* handle, const char* symbol) {
 }
 
 int dladdr(const void* addr, Dl_info* info) {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
   // Determine if this address can be found in any library currently mapped.
   soinfo* si = find_containing_library(addr);
@@ -150,7 +150,7 @@ int dladdr(const void* addr, Dl_info* info) {
 }
 
 int dlclose(void* handle) {
-  ScopedPthreadMutexLocker locker(&gDlMutex);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   return do_dlclose(reinterpret_cast<soinfo*>(handle));
 }
 
@@ -187,7 +187,7 @@ int dlclose(void* handle) {
 #  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
 #endif
 
-static ElfW(Sym) gLibDlSymtab[] = {
+static ElfW(Sym) g_libdl_symtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
@@ -209,20 +209,20 @@ static ElfW(Sym) gLibDlSymtab[] = {
 
 // Fake out a hash table with a single bucket.
 //
-// A search of the hash table will look through gLibDlSymtab starting with index 1, then
-// use gLibDlChains to find the next index to look at. gLibDlChains should be set up to
-// walk through every element in gLibDlSymtab, and then end with 0 (sentinel value).
+// A search of the hash table will look through g_libdl_symtab starting with index 1, then
+// use g_libdl_chains to find the next index to look at. g_libdl_chains should be set up to
+// walk through every element in g_libdl_symtab, and then end with 0 (sentinel value).
 //
-// That is, gLibDlChains should look like { 0, 2, 3, ... N, 0 } where N is the number
-// of actual symbols, or nelems(gLibDlSymtab)-1 (since the first element of gLibDlSymtab is not
+// That is, g_libdl_chains should look like { 0, 2, 3, ... N, 0 } where N is the number
+// of actual symbols, or nelems(g_libdl_symtab)-1 (since the first element of g_libdl_symtab is not
 // a real symbol). (See soinfo_elf_lookup().)
 //
 // Note that adding any new symbols here requires stubbing them out in libdl.
-static unsigned gLibDlBuckets[1] = { 1 };
+static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 #else
-static unsigned gLibDlChains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
@@ -250,12 +250,12 @@ soinfo libdl_info = {
     .flags = FLAG_LINKED,
 
     .strtab = ANDROID_LIBDL_STRTAB,
-    .symtab = gLibDlSymtab,
+    .symtab = g_libdl_symtab,
 
-    .nbucket = sizeof(gLibDlBuckets)/sizeof(unsigned),
-    .nchain = sizeof(gLibDlChains)/sizeof(unsigned),
-    .bucket = gLibDlBuckets,
-    .chain = gLibDlChains,
+    .nbucket = sizeof(g_libdl_buckets)/sizeof(unsigned),
+    .nchain = sizeof(g_libdl_chains)/sizeof(unsigned),
+    .bucket = g_libdl_buckets,
+    .chain = g_libdl_chains,
 
 #if defined(USE_RELA)
     .plt_rela = 0,
