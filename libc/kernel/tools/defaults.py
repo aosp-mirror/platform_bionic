@@ -42,9 +42,9 @@ kernel_remove_config_macros = True
 # maps an architecture to a set of default macros that would be provided by
 # toolchain preprocessor
 kernel_default_arch_macros = {
-    "arm": {},
+    "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
-    "mips": {"CONFIG_32BIT":"1"},
+    "mips": {"CONFIG_32BIT":"1", "__MIPSEB__": kCppUndefinedMacro, "__MIPSEL__": "1"},
     "x86": {},
     }
 
