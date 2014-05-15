@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ff1cc50_a6bf3298",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-15T23:22:12Z",
+      "side": 1,
+      "message": "If library is located under standard lib its name should be enough. And we can get rid of #if ...",
+      "range": {
+        "startLine": 378,
+        "startChar": 43,
+        "endLine": 378,
+        "endChar": 57
+      },
+      "revId": "6da4105b6cbdaf2d28d9b63f2d363133c97e4f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
