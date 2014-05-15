@@ -238,7 +238,7 @@ enum {
 typedef long greg_t;
 typedef greg_t gregset_t[NGREG];
 
-typedef struct user_i387_struct* fpregset_t;
+typedef struct user_fpregs_struct* fpregset_t;
 
 typedef struct {
   gregset_t gregs;
