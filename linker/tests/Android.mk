@@ -30,6 +30,7 @@ LOCAL_CFLAGS += -g -Wall -Wextra -Werror -std=gnu++11
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
+  linked_list_test.cpp \
   linker_allocator_test.cpp \
   ../linker_allocator.cpp
 

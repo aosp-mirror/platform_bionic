@@ -33,8 +33,10 @@
 #include <link.h>
 #include <unistd.h>
 #include <android/dlext.h>
+#include <sys/stat.h>
 
 #include "private/libc_logging.h"
+#include "linked_list.h"
 
 #define DL_ERR(fmt, x...) \
     do { \
@@ -84,6 +86,7 @@
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
+#define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
 #define SOINFO_NAME_LEN 128
 
@@ -94,7 +97,20 @@ typedef void (*linker_function_t)();
 #define USE_RELA 1
 #endif
 
+struct soinfo;
+
+class SoinfoListAllocator {
+public:
+  static LinkedListEntry<soinfo>* alloc();
+  static void free(LinkedListEntry<soinfo>* entry);
+private:
+  // unconstructable
+  DISALLOW_IMPLICIT_CONSTRUCTORS(SoinfoListAllocator);
+};
+
 struct soinfo {
+ public:
+  typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
  public:
   char name[SOINFO_NAME_LEN];
   const ElfW(Phdr)* phdr;
@@ -179,17 +195,39 @@ struct soinfo {
   bool has_text_relocations;
 #endif
   bool has_DT_SYMBOLIC;
-
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
 
+  void add_child(soinfo* child);
+  void remove_all_links();
+
+  void set_st_dev(dev_t st_dev);
+  void set_st_ino(ino_t st_ino);
+  ino_t get_st_ino();
+  dev_t get_st_dev();
+
+  soinfo_list_t& get_children();
+
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
+
+ private:
+  // This part of the structure is only available
+  // when FLAG_NEW_SOINFO is set in this->flags.
+  unsigned int version;
+
+  dev_t st_dev;
+  ino_t st_ino;
+
+  // dependency graph
+  soinfo_list_t children;
+  soinfo_list_t parents;
+
 };
 
-extern soinfo libdl_info;
+extern soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
