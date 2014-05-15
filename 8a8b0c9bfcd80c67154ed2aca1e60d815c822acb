@@ -16,6 +16,24 @@
       "revId": "8a8b0c9bfcd80c67154ed2aca1e60d815c822acb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a4e2058_94142a1a",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2287,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-15T00:00:37Z",
+      "side": 1,
+      "message": "My motto is better safe than sorry. Stack bugs are usually hard to figure out so it didn\u0027t seem too bad to fix them (even though the code is not ideal).",
+      "parentUuid": "ca71cc8d_57d8ee25",
+      "revId": "8a8b0c9bfcd80c67154ed2aca1e60d815c822acb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
