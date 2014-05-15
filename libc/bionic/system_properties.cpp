@@ -655,23 +655,6 @@ int __system_property_set(const char *key, const char *value)
     return 0;
 }
 
-int __system_property_wait(const prop_info *pi)
-{
-    if (pi == 0) {
-        prop_area *pa = __system_property_area__;
-        const uint32_t n = pa->serial;
-        do {
-            __futex_wait(&pa->serial, n, NULL);
-        } while (n == pa->serial);
-    } else {
-        const uint32_t n = pi->serial;
-        do {
-            __futex_wait((volatile void *)&pi->serial, n, NULL);
-        } while (n == pi->serial);
-    }
-    return 0;
-}
-
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
     prop_area *pa = __system_property_area__;
