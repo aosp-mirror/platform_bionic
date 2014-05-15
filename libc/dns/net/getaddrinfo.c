@@ -92,6 +92,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>
+#include "NetdClientDispatch.h"
 #include "resolv_cache.h"
 #include "resolv_netid.h"
 #include "resolv_private.h"
@@ -448,6 +449,8 @@ android_getaddrinfo_proxy(
 		close(sock);
 		return EAI_NODATA;
 	}
+
+	netid = __netdClientDispatch.netIdForResolv(netid);
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");

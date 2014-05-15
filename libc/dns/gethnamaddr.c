@@ -60,6 +60,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include "NetdClientDispatch.h"
 #include "resolv_netid.h"
 #include "resolv_private.h"
 #include "resolv_cache.h"
@@ -760,6 +761,8 @@ gethostbyname_internal(const char *name, int af, res_state res, unsigned netid, 
 	proxy = android_open_proxy();
 	if (proxy == NULL) goto exit;
 
+	netid = __netdClientDispatch.netIdForResolv(netid);
+
 	/* This is writing to system/netd/DnsProxyListener.cpp and changes
 	 * here need to be matched there */
 	if (fprintf(proxy, "gethostbyname %u %s %d",
@@ -795,6 +798,8 @@ android_gethostbyaddrfornet_proxy(const void *addr,
 	char buf[INET6_ADDRSTRLEN];  //big enough for IPv4 and IPv6
 	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
 	if (addrStr == NULL) goto exit;
+
+	netid = __netdClientDispatch.netIdForResolv(netid);
 
 	if (fprintf(proxy, "gethostbyaddr %s %d %d %u",
 			addrStr, len, af, netid) < 0) {
