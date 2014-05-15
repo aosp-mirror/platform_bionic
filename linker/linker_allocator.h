@@ -51,6 +51,8 @@ class LinkerBlockAllocator {
 };
 
 /*
+ * We can't use malloc(3) in the dynamic linker.
+ *
  * A simple allocator for the dynamic linker. An allocator allocates instances
  * of a single fixed-size type. Allocations are backed by page-sized private
  * anonymous mmaps.

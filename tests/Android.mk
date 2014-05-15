@@ -227,6 +227,19 @@ $(libdlext_sym): $(libdlext_origin)
 ALL_MODULES := \
   $(ALL_MODULES) $(libdlext_sym)
 
+ifneq ($(TARGET_2ND_ARCH),)
+# link 64 bit .so
+libdlext_origin := $(TARGET_OUT)/lib64/libdlext_test.so
+libdlext_sym := $(subst libdlext_test,libdlext_test_v2,$(libdlext_origin))
+$(libdlext_sym): $(libdlext_origin)
+	@echo "Symlink: $@ -> $(notdir $<)"
+	@mkdir -p $(dir $@)
+	$(hide) ln -sf $(notdir $<) $@
+
+ALL_MODULES := \
+  $(ALL_MODULES) $(libdlext_sym)
+endif
+
 libdlext_test_norelro_src_files := \
     dlext_test_library.cpp \
 

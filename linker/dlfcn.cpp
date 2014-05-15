@@ -225,78 +225,26 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
+// Defined as global because we do not yet have access
+// to synchronization functions __cxa_guard_* needed
+// to define statics inside functions.
+static soinfo __libdl_info;
+
 // This is used by the dynamic linker. Every process gets these symbols for free.
-soinfo libdl_info = {
-    "libdl.so",
+soinfo* get_libdl_info() {
+  if (__libdl_info.name[0] == '\0') {
+    // initialize
+    strncpy(__libdl_info.name, "libdl.so", sizeof(__libdl_info.name));
+    __libdl_info.flags = FLAG_LINKED | FLAG_NEW_SOINFO;
+    __libdl_info.strtab = ANDROID_LIBDL_STRTAB;
+    __libdl_info.symtab = g_libdl_symtab;
+    __libdl_info.nbucket = sizeof(g_libdl_buckets)/sizeof(unsigned);
+    __libdl_info.nchain = sizeof(g_libdl_chains)/sizeof(unsigned);
+    __libdl_info.bucket = g_libdl_buckets;
+    __libdl_info.chain = g_libdl_chains;
+    __libdl_info.has_DT_SYMBOLIC = true;
+  }
 
-    .phdr = 0,
-    .phnum = 0,
-    .entry = 0,
-    .base = 0,
-    .size = 0,
+  return &__libdl_info;
+}
 
-#if !defined(__LP64__)
-    .unused1 = 0,
-#endif
-
-    .dynamic = 0,
-
-#if !defined(__LP64__)
-    .unused2 = 0, .unused3 = 0,
-#endif
-
-    .next = 0,
-
-    .flags = FLAG_LINKED,
-
-    .strtab = ANDROID_LIBDL_STRTAB,
-    .symtab = g_libdl_symtab,
-
-    .nbucket = sizeof(g_libdl_buckets)/sizeof(unsigned),
-    .nchain = sizeof(g_libdl_chains)/sizeof(unsigned),
-    .bucket = g_libdl_buckets,
-    .chain = g_libdl_chains,
-
-#if defined(USE_RELA)
-    .plt_rela = 0,
-    .plt_rela_count = 0,
-    .rela = 0,
-    .rela_count = 0,
-#else
-    .plt_got = 0,
-    .plt_rel = 0,
-    .plt_rel_count = 0,
-    .rel = 0,
-    .rel_count = 0,
-#endif
-
-    .preinit_array = 0,
-    .preinit_array_count = 0,
-
-    .init_array = 0,
-    .init_array_count = 0,
-
-    .fini_array = 0,
-    .fini_array_count = 0,
-
-    .init_func = 0,
-    .fini_func = 0,
-
-#if defined(__arm__)
-    .ARM_exidx = 0,
-    .ARM_exidx_count = 0,
-#elif defined(__mips__)
-    .mips_symtabno = 0,
-    .mips_local_gotno = 0,
-    .mips_gotsym = 0,
-#endif
-
-    .ref_count = 0,
-    { .l_addr = 0, .l_name = 0, .l_ld = 0, .l_next = 0, .l_prev = 0, },
-    .constructors_called = false,
-    .load_bias = 0,
-#if !defined(__LP64__)
-    .has_text_relocations = false,
-#endif
-    .has_DT_SYMBOLIC = true,
-};
