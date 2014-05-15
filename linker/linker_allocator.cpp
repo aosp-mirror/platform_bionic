@@ -55,8 +55,7 @@ void* LinkerBlockAllocator::alloc() {
     free_block_list_ = block_info->next_block;
   }
 
-  block_info->next_block = nullptr;
-  block_info->num_free_blocks = 0;
+  memset(block_info, 0, block_size_);
 
   return block_info;
 }
@@ -77,6 +76,8 @@ void LinkerBlockAllocator::free(void* block) {
   if (offset % block_size_ != 0) {
     abort();
   }
+
+  memset(block, 0, block_size_);
 
   FreeBlockInfo* block_info = reinterpret_cast<FreeBlockInfo*>(block);
 
@@ -100,6 +101,7 @@ void LinkerBlockAllocator::create_new_page() {
   if (page == MAP_FAILED) {
     abort(); // oom
   }
+  memset(page, 0, PAGE_SIZE);
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
