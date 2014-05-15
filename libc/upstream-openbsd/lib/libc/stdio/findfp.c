@@ -1,4 +1,4 @@
-/*	$OpenBSD: findfp.c,v 1.9 2005/08/08 08:05:36 espie Exp $ */
+/*	$OpenBSD: findfp.c,v 1.15 2013/12/17 16:33:27 deraadt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -54,7 +54,7 @@ int	__sdidinit;
 /*	 p r w flags file _bf z  cookie      close    read    seek    write
 	 ext */
 
-/* the usual - (stdin + stdout + stderr) */
+				/* the usual - (stdin + stdout + stderr) */
 static FILE usual[FOPEN_MAX - 3];
 static struct __sfileext usualext[FOPEN_MAX - 3];
 static struct glue uglue = { 0, FOPEN_MAX - 3, usual };
@@ -62,7 +62,6 @@ static struct glue *lastglue = &uglue;
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
 static struct __sfileext __sFext[3];
-
 FILE __sF[3] = {
 	std(__SRD, STDIN_FILENO),		/* stdin */
 	std(__SWR, STDOUT_FILENO),		/* stdout */
@@ -144,35 +143,11 @@ found:
 	return (fp);
 }
 
-#if 0
-#define getdtablesize()	sysconf(_SC_OPEN_MAX)
-
 /*
- * XXX.  Force immediate allocation of internal memory.  Not used by stdio,
- * but documented historically for certain applications.  Bad applications.
- */
-void
-f_prealloc(void)
-{
-	struct glue *g;
-	int n;
-
-	n = getdtablesize() - FOPEN_MAX + 20;		/* 20 for slop. */
-	for (g = &__sglue; (n -= g->niobs) > 0 && g->next; g = g->next)
-		/* void */;
-	if (n > 0 && ((g = moreglue(n)) != NULL)) {
-		_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
-		lastglue->next = g;
-		lastglue = g;
-		_THREAD_PRIVATE_MUTEX_UNLOCK(__sfp_mutex);
-	}
-}
-#endif
-
-/*
- * exit() calls _cleanup() through *__cleanup, set whenever we
- * open or buffer a file.  This chicanery is done so that programs
- * that do not use stdio need not link it all in.
+ * exit() and abort() call _cleanup() through the callback registered
+ * with __atexit_register_cleanup(), set whenever we open or buffer a
+ * file. This chicanery is done so that programs that do not use stdio
+ * need not link it all in.
  *
  * The name `_cleanup' is, alas, fairly well known outside stdio.
  */
@@ -199,7 +174,7 @@ __sinit(void)
 		_FILEEXT_SETUP(usual+i, usualext+i);
 	}
 	/* make sure we clean up on exit */
-	__cleanup = _cleanup; /* conservative */
+	__atexit_register_cleanup(_cleanup); /* conservative */
 	__sdidinit = 1;
 out:
 	_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);

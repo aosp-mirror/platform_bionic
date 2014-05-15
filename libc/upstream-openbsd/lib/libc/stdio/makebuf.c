@@ -1,3 +1,4 @@
+/*	$OpenBSD: makebuf.c,v 1.8 2005/12/28 18:50:22 millert Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,21 +31,11 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)makebuf.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
-#include "namespace.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "un-namespace.h"
-
-#include "libc_private.h"
 #include "local.h"
 
 /*
@@ -52,7 +43,7 @@ __FBSDID("$FreeBSD$");
  * Per the ANSI C standard, ALL tty devices default to line buffered.
  *
  * As a side effect, we set __SOPT or __SNPT (en/dis-able fseek
- * optimisation) right after the _fstat() that finds the buffer size.
+ * optimisation) right after the fstat() that finds the buffer size.
  */
 void
 __smakebuf(FILE *fp)
@@ -74,7 +65,7 @@ __smakebuf(FILE *fp)
 		fp->_bf._size = 1;
 		return;
 	}
-	__cleanup = _cleanup;
+	__atexit_register_cleanup(_cleanup);
 	flags |= __SMBF;
 	fp->_bf._base = fp->_p = p;
 	fp->_bf._size = size;
@@ -91,15 +82,15 @@ __swhatbuf(FILE *fp, size_t *bufsize, int *couldbetty)
 {
 	struct stat st;
 
-	if (fp->_file < 0 || _fstat(fp->_file, &st) < 0) {
+	if (fp->_file < 0 || fstat(fp->_file, &st) < 0) {
 		*couldbetty = 0;
 		*bufsize = BUFSIZ;
 		return (__SNPT);
 	}
 
 	/* could be a tty iff it is a character device */
-	*couldbetty = (st.st_mode & S_IFMT) == S_IFCHR;
-	if (st.st_blksize <= 0) {
+	*couldbetty = S_ISCHR(st.st_mode);
+	if (st.st_blksize == 0) {
 		*bufsize = BUFSIZ;
 		return (__SNPT);
 	}
