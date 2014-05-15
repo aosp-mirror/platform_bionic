@@ -25,7 +25,12 @@
 extern "C" __socketcall int __accept(int, sockaddr*, socklen_t*);
 extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
 
+static unsigned fallBackNetIdForResolv(unsigned netId) {
+    return netId;
+}
+
 NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
     __accept,
     __connect,
+    fallBackNetIdForResolv,
 };

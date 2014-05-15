@@ -17,13 +17,19 @@
 #ifndef PRIVATE_NETD_CLIENT_H
 #define PRIVATE_NETD_CLIENT_H
 
+#include <sys/cdefs.h>
 #include <sys/socket.h>
 
+__BEGIN_DECLS
+
 struct NetdClientDispatch {
-    int (*accept)(int, sockaddr*, socklen_t*);
-    int (*connect)(int, const sockaddr*, socklen_t);
+    int (*accept)(int, struct sockaddr*, socklen_t*);
+    int (*connect)(int, const struct sockaddr*, socklen_t);
+    unsigned (*netIdForResolv)(unsigned);
 };
 
-extern NetdClientDispatch __netdClientDispatch;
+extern struct NetdClientDispatch __netdClientDispatch;
+
+__END_DECLS
 
 #endif  // PRIVATE_NETD_CLIENT_H
