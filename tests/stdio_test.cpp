@@ -583,9 +583,11 @@ TEST(stdio, fpos_t_and_seek) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  // For glibc we need to close and re-open the file in order for fseek to work
-  // after using setlocale(LC_CTYPE, "C.UTF-8") and fputwc.
-  // TODO: find out if this is expected or a bug in glibc.
+  // In glibc-2.16 fseek doesn't work properly in wide mode
+  // (https://sourceware.org/bugzilla/show_bug.cgi?id=14543). One workaround is
+  // to close and re-open the file. We do it in order to make the test pass
+  // with all glibcs.
+
   TemporaryFile tf;
   FILE* fp = fdopen(tf.fd, "w+");
   ASSERT_TRUE(fp != NULL);
