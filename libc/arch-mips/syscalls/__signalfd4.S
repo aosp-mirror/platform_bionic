@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     .set noreorder
     .cpload t9
     li v0, __NR_signalfd4
@@ -16,4 +16,4 @@ ENTRY(signalfd4)
     j t9
     nop
     .set reorder
-END(signalfd4)
+END(__signalfd4)
