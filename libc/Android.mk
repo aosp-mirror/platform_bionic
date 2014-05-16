@@ -816,8 +816,8 @@ include $(BUILD_STATIC_LIBRARY)
 # This is a version of the static C library that does not
 # include malloc. It's useful in situations when the user wants
 # to provide their own malloc implementation, or wants to
-# explicitly disallow the use of the use of malloc,
-# such as in the dynamic loader.
+# explicitly disallow the use of malloc, such as in the
+# dynamic linker.
 
 include $(CLEAR_VARS)
 
