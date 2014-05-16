@@ -113,7 +113,9 @@ static int hash_entry_compare(const void* arg1, const void* arg2) {
  *   not include heap overhead
  * "*backtraceSize" is set to the maximum number of entries in the back trace
  */
-extern "C" __LIBC_HIDDEN__ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
+
+// Exported for use by ddms.
+extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         size_t* infoSize, size_t* totalMemory, size_t* backtraceSize) {
     // don't do anything if we have invalid arguments
     if (info == NULL || overallSize == NULL || infoSize == NULL ||
@@ -182,7 +184,8 @@ extern "C" __LIBC_HIDDEN__ void get_malloc_leak_info(uint8_t** info, size_t* ove
     dlfree(list);
 }
 
-extern "C" __LIBC_HIDDEN__ void free_malloc_leak_info(uint8_t* info) {
+// Exported for use by ddms.
+extern "C" void free_malloc_leak_info(uint8_t* info) {
     dlfree(info);
 }
 
