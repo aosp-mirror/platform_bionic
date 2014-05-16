@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f10a43e_6098e621",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-16T22:55:41Z",
+      "side": 1,
+      "message": "Does this work for all platforms, or only if you are x86_64/x86?",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 47
+      },
+      "revId": "2be922b4674a904b9cbe779c0dda57f1373238fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
