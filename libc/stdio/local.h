@@ -63,10 +63,7 @@ int	__svfscanf(FILE * __restrict, const char * __restrict, __va_list);
 int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 
-/*
- * Function to clean up streams, called from abort() and exit().
- */
-extern void (*__cleanup)(void);
+extern void __atexit_register_cleanup(void (*)(void));
 extern int __sdidinit;
 
 /*
