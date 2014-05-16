@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
@@ -18,4 +18,5 @@ ENTRY(signalfd4)
     b.hi    __set_errno
 
     ret
-END(signalfd4)
+END(__signalfd4)
+.hidden __signalfd4

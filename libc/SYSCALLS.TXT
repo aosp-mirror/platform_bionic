@@ -228,7 +228,7 @@ int     __rt_sigpending:rt_sigpending(sigset_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t)  all
 int     __rt_sigsuspend:rt_sigsuspend(const sigset_t*, size_t)  all
 int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, struct timespec_t*, size_t)  all
-int     signalfd4(int, const sigset_t*, size_t, int)  all
+int     __signalfd4:signalfd4(int, const sigset_t*, size_t, int)  all
 
 # sockets
 int           socket(int, int, int)              arm,arm64,mips,mips64,x86_64
