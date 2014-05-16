@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     .set push
     .set noreorder
     li v0, __NR_signalfd4
@@ -22,4 +22,5 @@ ENTRY(signalfd4)
     j t9
     move ra, t0
     .set pop
-END(signalfd4)
+END(__signalfd4)
+.hidden __signalfd4
