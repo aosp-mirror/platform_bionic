@@ -1,3 +1,4 @@
+/*	$OpenBSD: setvbuf.c,v 1.11 2009/11/09 00:18:27 kurt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,25 +31,16 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)setvbuf.c	8.2 (Berkeley) 11/16/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
-#include "namespace.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "un-namespace.h"
 #include "local.h"
-#include "libc_private.h"
 
 /*
  * Set one of the three kinds of buffering, optionally including
  * a buffer.
  */
 int
-setvbuf(FILE * __restrict fp, char * __restrict buf, int mode, size_t size)
+setvbuf(FILE *fp, char *buf, int mode, size_t size)
 {
 	int ret, flags;
 	size_t iosize;
@@ -63,22 +55,23 @@ setvbuf(FILE * __restrict fp, char * __restrict buf, int mode, size_t size)
 		if ((mode != _IOFBF && mode != _IOLBF) || (int)size < 0)
 			return (EOF);
 
-	FLOCKFILE(fp);
 	/*
 	 * Write current buffer, if any.  Discard unread input (including
 	 * ungetc data), cancel line buffering, and free old buffer if
 	 * malloc()ed.  We also clear any eof condition, as if this were
 	 * a seek.
 	 */
+	FLOCKFILE(fp);
 	ret = 0;
 	(void)__sflush(fp);
 	if (HASUB(fp))
 		FREEUB(fp);
+	WCIO_FREE(fp);
 	fp->_r = fp->_lbfsize = 0;
 	flags = fp->_flags;
 	if (flags & __SMBF)
 		free((void *)fp->_bf._base);
-	flags &= ~(__SLBF | __SNBF | __SMBF | __SOPT | __SOFF | __SNPT | __SEOF);
+	flags &= ~(__SLBF | __SNBF | __SMBF | __SOPT | __SNPT | __SEOF);
 
 	/* If setting unbuffered mode, skip all the hard work. */
 	if (mode == _IONBF)
@@ -154,8 +147,8 @@ nbf:
 		/* begin/continue reading, or stay in intermediate state */
 		fp->_w = 0;
 	}
-	__cleanup = _cleanup;
-
 	FUNLOCKFILE(fp);
+	__atexit_register_cleanup(_cleanup);
+
 	return (ret);
 }

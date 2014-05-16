@@ -1,8 +1,7 @@
-/*	$NetBSD: exit.c,v 1.15 2011/05/18 19:36:36 dsl Exp $	*/
-
+/*	$OpenBSD: exit.c,v 1.12 2007/09/03 14:40:16 millert Exp $ */
 /*-
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 1990 The Regents of the University of California.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,23 +28,11 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)exit.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: exit.c,v 1.15 2011/05/18 19:36:36 dsl Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
+#include <sys/types.h>
+#include <sys/mman.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef _LIBC
-#include "reentrant.h"
 #include "atexit.h"
-#endif
-
-void (*__cleanup)(void);
 
 /*
  * Exit, flushing stdio buffers if necessary.
@@ -53,11 +40,10 @@ void (*__cleanup)(void);
 void
 exit(int status)
 {
-
-#ifdef _LIBC
+	/*
+	 * Call functions registered by atexit() or _cxa_atexit()
+	 * (including the stdio cleanup routine) and then _exit().
+	 */
 	__cxa_finalize(NULL);
-#endif
-	if (__cleanup)
-		(*__cleanup)();
 	_exit(status);
 }
