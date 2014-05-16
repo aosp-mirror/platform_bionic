@@ -54,8 +54,8 @@
  */
 int gMallocLeakZygoteChild = 0;
 
-pthread_mutex_t g_allocations_mutex = PTHREAD_MUTEX_INITIALIZER;
-HashTable g_hash_table;
+__LIBC_HIDDEN__ pthread_mutex_t g_allocations_mutex = PTHREAD_MUTEX_INITIALIZER;
+__LIBC_HIDDEN__ HashTable g_hash_table;
 
 // =============================================================================
 // output functions
@@ -113,7 +113,7 @@ static int hash_entry_compare(const void* arg1, const void* arg2) {
  *   not include heap overhead
  * "*backtraceSize" is set to the maximum number of entries in the back trace
  */
-extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
+extern "C" __LIBC_HIDDEN__ void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         size_t* infoSize, size_t* totalMemory, size_t* backtraceSize) {
     // don't do anything if we have invalid arguments
     if (info == NULL || overallSize == NULL || infoSize == NULL ||
@@ -182,7 +182,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     dlfree(list);
 }
 
-extern "C" void free_malloc_leak_info(uint8_t* info) {
+extern "C" __LIBC_HIDDEN__ void free_malloc_leak_info(uint8_t* info) {
     dlfree(info);
 }
 
@@ -286,11 +286,11 @@ static void* libc_malloc_impl_handle = NULL;
  * backlog we use to detect multiple frees.  If the property is not set, the
  * backlog length defaults to BACKLOG_DEFAULT_LEN.
  */
-unsigned int g_malloc_debug_backlog;
+__LIBC_HIDDEN__ unsigned int g_malloc_debug_backlog;
 #define BACKLOG_DEFAULT_LEN 100
 
 /* The value of libc.debug.malloc. */
-int g_malloc_debug_level;
+__LIBC_HIDDEN__ int g_malloc_debug_level;
 
 template<typename FunctionType>
 static void InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
