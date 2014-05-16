@@ -29,7 +29,7 @@
 #include <private/bionic_asm.h>
 
 // void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
-ENTRY(_exit_with_stack_teardown)
+ENTRY_PRIVATE(_exit_with_stack_teardown)
   mov $__NR_munmap, %eax
   syscall
   // If munmap failed, we ignore the failure and exit anyway.
