@@ -39,23 +39,11 @@ extern int __futex_wake(volatile void *ftx, int count);
 extern int __futex_syscall3(volatile void *ftx, int op, int val);
 extern int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout);
 
-#ifndef FUTEX_PRIVATE_FLAG
-#define FUTEX_PRIVATE_FLAG  128
-#endif
-
-#ifndef FUTEX_WAIT_PRIVATE
-#define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
-#endif
-
-#ifndef FUTEX_WAKE_PRIVATE
-#define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
-#endif
-
 /* Like __futex_wait/wake, but take an additional 'pshared' argument.
  * when non-0, this will use normal futexes. Otherwise, private futexes.
  */
-extern int __futex_wake_ex(volatile void *ftx, int pshared, int val);
-extern int __futex_wait_ex(volatile void *ftx, int pshared, int val, const struct timespec *timeout);
+__LIBC_HIDDEN__ int __futex_wake_ex(volatile void* ftx, int pshared, int val);
+__LIBC_HIDDEN__ int __futex_wait_ex(volatile void* ftx, int pshared, int val, const struct timespec* timeout);
 
 __END_DECLS
 
