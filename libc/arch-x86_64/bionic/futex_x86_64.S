@@ -32,7 +32,7 @@
 #define FUTEX_WAKE 1
 
 // int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-ENTRY(__futex_wait)
+ENTRY_PRIVATE(__futex_wait)
     mov     %rdx, %r10           /* timeout */
     mov     %esi, %edx           /* val */
     mov     $FUTEX_WAIT, %esi    /* op */
@@ -42,7 +42,7 @@ ENTRY(__futex_wait)
 END(__futex_wait)
 
 // int __futex_wake(volatile void* ftx, int count)
-ENTRY(__futex_wake)
+ENTRY_PRIVATE(__futex_wake)
     mov     %esi, %edx
     mov     $FUTEX_WAKE, %esi
     mov     $__NR_futex, %eax
