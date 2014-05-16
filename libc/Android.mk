@@ -272,8 +272,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/gen/psignal.c \
     upstream-netbsd/lib/libc/gen/utime.c \
     upstream-netbsd/lib/libc/gen/utmp.c \
-    upstream-netbsd/lib/libc/isc/ev_streams.c \
-    upstream-netbsd/lib/libc/isc/ev_timers.c \
     upstream-netbsd/lib/libc/regex/regcomp.c \
     upstream-netbsd/lib/libc/regex/regerror.c \
     upstream-netbsd/lib/libc/regex/regexec.c \
@@ -617,15 +615,21 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-c-files-under,dns)
+LOCAL_SRC_FILES := \
+    $(call all-c-files-under,dns) \
+    upstream-netbsd/lib/libc/isc/ev_streams.c \
+    upstream-netbsd/lib/libc/isc/ev_timers.c \
+
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DANDROID_CHANGES \
     -DINET6 \
+    -fvisibility=hidden \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -include upstream-netbsd/android/include/netbsd-compat.h \
+    -I$(LOCAL_PATH)/upstream-netbsd/android/include \
+    -include netbsd-compat.h \
 #    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
