@@ -1,9 +1,20 @@
 /*
- * Copyright 2006 The Android Open Source Project
+ * Copyright (C) 2006 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #include <stddef.h>
-#include <sys/atomics.h>
 #include <endian.h>
 
 #include "private/bionic_atomic_inline.h"
@@ -33,41 +44,34 @@
 // There is no C++ ABI available for other ARCH. But the gcc source
 // shows all other ARCH follow the definition of Itanium/x86 C++ ABI.
 
-
 #if defined(__arm__)
-// The ARM C++ ABI mandates that guard variable are
-// 32-bit aligned, 32-bit values. And only its LSB is tested by
-// the compiler-generated code before calling
+// The ARM C++ ABI mandates that guard variables are 32-bit aligned, 32-bit
+// values. The LSB is tested by the compiler-generated code before calling
 // __cxa_guard_acquire.
-//
-typedef union {
+union _guard_t {
     int volatile state;
     int32_t aligner;
-} _guard_t;
+};
 
 const static int ready = 0x1;
 const static int pending = 0x2;
 const static int waiting = 0x6;
 
-#else   // GCC sources indicates all none-arm follow the same ABI
-// The Itanium/x86 C++ ABI mandates that guard variables
-// are 64-bit aligned, 64-bit values. Also, the least-significant
-// byte is tested by the compiler-generated code before, we calling
-// __cxa_guard_acquire. We can access it through the first
-// 32-bit word in the union below.
-//
-typedef union {
+#else
+// The Itanium/x86 C++ ABI (used by all other architectures) mandates that
+// guard variables are 64-bit aligned, 64-bit values. The LSB is tested by
+// the compiler-generated code before calling __cxa_guard_acquire.
+union _guard_t {
     int volatile state;
     int64_t aligner;
-} _guard_t;
+};
 
 const static int ready     = letoh32(0x1);
 const static int pending   = letoh32(0x100);
 const static int waiting   = letoh32(0x10000);
 #endif
 
-extern "C" int __cxa_guard_acquire(_guard_t* gv)
-{
+extern "C" int __cxa_guard_acquire(_guard_t* gv) {
     // 0 -> pending, return 1
     // pending -> waiting, wait and return 0
     // waiting: untouched, wait and return 0
@@ -81,15 +85,16 @@ retry:
     __bionic_cmpxchg(pending, waiting, &gv->state); // Indicate there is a waiter
     __futex_wait(&gv->state, waiting, NULL);
 
-    if (gv->state != ready) // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
+    if (gv->state != ready) {
+        // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
         goto retry;
+    }
 
     ANDROID_MEMBAR_FULL();
     return 0;
 }
 
-extern "C" void __cxa_guard_release(_guard_t* gv)
-{
+extern "C" void __cxa_guard_release(_guard_t* gv) {
     // pending -> ready
     // waiting -> ready, and wake
 
@@ -102,8 +107,7 @@ extern "C" void __cxa_guard_release(_guard_t* gv)
     __futex_wake(&gv->state, 0x7fffffff);
 }
 
-extern "C" void __cxa_guard_abort(_guard_t* gv)
-{
+extern "C" void __cxa_guard_abort(_guard_t* gv) {
     ANDROID_MEMBAR_FULL();
     gv->state= 0;
     __futex_wake(&gv->state, 0x7fffffff);
