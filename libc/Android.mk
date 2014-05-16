@@ -111,6 +111,8 @@ libc_bionic_src_files := \
     bionic/clone.cpp \
     bionic/cmsg_nxthdr.cpp \
     bionic/connect.cpp \
+    bionic/__cxa_guard.cpp \
+    bionic/__cxa_pure_virtual.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
@@ -143,6 +145,7 @@ libc_bionic_src_files := \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
     bionic/NetdClientDispatch.cpp \
+    bionic/new.cpp \
     bionic/open.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
@@ -212,6 +215,7 @@ libc_bionic_src_files := \
     bionic/termios.cpp \
     bionic/thread_atexit.cpp \
     bionic/tmpfile.cpp \
+    bionic/typeinfo.cpp \
     bionic/umount.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
