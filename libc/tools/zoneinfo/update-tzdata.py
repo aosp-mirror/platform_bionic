@@ -1,35 +1,39 @@
 #!/usr/bin/python
 
-"""Updates the tzdata file."""
+"""Updates the timezone data held in bionic and ICU."""
 
 import ftplib
+import glob
 import httplib
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 
-# Find the bionic directory, searching upward from this script.
-bionic_libc_tools_zoneinfo_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
-bionic_libc_tools_dir = os.path.dirname(bionic_libc_tools_zoneinfo_dir)
-bionic_libc_dir = os.path.dirname(bionic_libc_tools_dir)
-bionic_dir = os.path.dirname(bionic_libc_dir)
-bionic_libc_zoneinfo_dir = '%s/libc/zoneinfo' % bionic_dir
-
-if not os.path.isdir(bionic_libc_tools_zoneinfo_dir):
-  print "Couldn't find bionic/libc/tools/zoneinfo!"
-  sys.exit(1)
-if not os.path.isdir(bionic_libc_zoneinfo_dir):
-  print "Couldn't find bionic/libc/zoneinfo!"
-  sys.exit(1)
-
-print 'Found bionic in %s...' % bionic_dir
-
-
 regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward',
            'etcetera', 'europe', 'northamerica', 'southamerica']
+
+def CheckDirExists(dir, dirname):
+  if not os.path.isdir(dir):
+    print "Couldn't find %s (%s)!" % (dirname, dir)
+    sys.exit(1)
+
+bionic_libc_tools_zoneinfo_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
+
+# Find the bionic directory, searching upward from this script.
+bionic_dir = os.path.realpath('%s/../../..' % bionic_libc_tools_zoneinfo_dir)
+bionic_libc_zoneinfo_dir = '%s/libc/zoneinfo' % bionic_dir
+CheckDirExists(bionic_libc_zoneinfo_dir, 'bionic/libc/zoneinfo')
+CheckDirExists(bionic_libc_tools_zoneinfo_dir, 'bionic/libc/tools/zoneinfo')
+print 'Found bionic in %s ...' % bionic_dir
+
+# Find the icu4c directory.
+icu_dir = os.path.realpath('%s/../external/icu4c' % bionic_dir)
+CheckDirExists(icu_dir, 'external/icu4c')
+print 'Found icu in %s ...' % icu_dir
 
 
 def GetCurrentTzDataVersion():
@@ -65,56 +69,86 @@ def SwitchToNewTemporaryDirectory():
   print 'Created temporary directory "%s"...' % tmp_dir
 
 
-def FtpRetrieve(ftp, filename):
+def FtpRetrieveFile(ftp, filename):
   ftp.retrbinary('RETR %s' % filename, open(filename, 'wb').write)
 
 
-def FtpUpgrade(ftp, data_filename):
+def FtpRetrieveFileAndSignature(ftp, data_filename):
   """Downloads and repackages the given data from the given FTP server."""
-  SwitchToNewTemporaryDirectory()
-
   print 'Downloading data...'
-  FtpRetrieve(ftp, data_filename)
+  FtpRetrieveFile(ftp, data_filename)
 
   print 'Downloading signature...'
   signature_filename = '%s.asc' % data_filename
-  FtpRetrieve(ftp, signature_filename)
-
-  ExtractAndCompile(data_filename)
+  FtpRetrieveFile(ftp, signature_filename)
 
 
-def HttpRetrieve(http, path, output_filename):
+def HttpRetrieveFile(http, path, output_filename):
   http.request("GET", path)
   f = open(output_filename, 'wb')
   f.write(http.getresponse().read())
   f.close()
 
 
-def HttpUpgrade(http, data_filename):
+def HttpRetrieveFileAndSignature(http, data_filename):
   """Downloads and repackages the given data from the given HTTP server."""
-  SwitchToNewTemporaryDirectory()
-
   path = "/time-zones/repository/releases/%s" % data_filename
 
   print 'Downloading data...'
-  HttpRetrieve(http, path, data_filename)
+  HttpRetrieveFile(http, path, data_filename)
 
   print 'Downloading signature...'
   signature_filename = '%s.asc' % data_filename
-  HttpRetrieve(http, "%s.asc" % path, signature_filename)
-
-  ExtractAndCompile(data_filename)
+  HttpRetrievefile(http, "%s.asc" % path, signature_filename)
 
 
-def ExtractAndCompile(data_filename):
-  new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
+def BuildIcuToolsAndData(data_filename):
+  # Keep track of the original cwd so we can go back to it at the end.
+  original_working_dir = os.getcwd()
 
+  # Create a directory to run 'make' from.
+  icu_working_dir = '%s/icu' % original_working_dir
+  os.mkdir(icu_working_dir)
+  os.chdir(icu_working_dir)
+
+  # Build the ICU tools.
+  print 'Configuring ICU tools...'
+  subprocess.check_call(['%s/runConfigureICU' % icu_dir, 'Linux'])
+  print 'Making ICU tools...'
+  subprocess.check_call(['make', '-j6'])
+
+  # Run the ICU tools.
+  os.chdir('tools/tzcode')
+  shutil.copyfile('%s/%s' % (original_working_dir, data_filename), data_filename)
+  print 'Making ICU data...'
+  subprocess.check_call(['make'])
+
+  # Copy the output files to their ultimate destination.
+  icu_txt_data_dir = '%s/data/misc' % icu_dir
+  print 'Copying zoneinfo64.txt to %s ...' % icu_txt_data_dir
+  shutil.copy('zoneinfo64.txt', icu_txt_data_dir)
+
+  os.chdir(icu_working_dir)
+  icu_dat_data_dir = '%s/stubdata' % icu_dir
+  for file in glob.glob('data/out/tmp/*.dat'):
+    print 'Copying %s to %s ...' % (file, icu_dat_data_dir)
+    shutil.copy(file, icu_dat_data_dir)
+
+  # Switch back to the original working cwd.
+  os.chdir(original_working_dir)
+
+
+def CheckSignature(data_filename):
   signature_filename = '%s.asc' % data_filename
   print 'Verifying signature...'
   # If this fails for you, you probably need to import Paul Eggert's public key:
   # gpg --recv-keys ED97E90E62AA7E34
   subprocess.check_call(['gpg', '--trusted-key=ED97E90E62AA7E34', '--verify',
                          signature_filename, data_filename])
+
+
+def BuildBionicToolsAndData(data_filename):
+  new_version = re.search('(tzdata.+)\\.tar\\.gz', data_filename).group(1)
 
   print 'Extracting...'
   os.mkdir('extracted')
@@ -175,10 +209,16 @@ def main():
   for filename in tzdata_filenames:
     if filename > current_filename:
       print 'Found new tzdata: %s' % filename
+      SwitchToNewTemporaryDirectory()
       if use_ftp:
-        FtpUpgrade(ftp, filename)
+        FtpRetrieveFileAndSignature(ftp, filename)
       else:
-        HttpUpgrade(http, filename)
+        HttpRetrieveFileAndSignature(http, filename)
+
+      CheckSignature(filename)
+      BuildIcuToolsAndData(filename)
+      BuildBionicToolsAndData(filename)
+      print 'Look in %s and %s for new data files' % (bionic_dir, icu_dir)
       sys.exit(0)
 
   print 'You already have the latest tzdata (%s)!' % current_version
