@@ -51,7 +51,7 @@ ENTRY(__futex_syscall3)
 END(__futex_syscall3)
 
 // int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-ENTRY(__futex_wait)
+ENTRY_PRIVATE(__futex_wait)
   stp x29, x30, [sp, #-16]!
   mov x29, sp
 
@@ -69,7 +69,7 @@ ENTRY(__futex_wait)
 END(__futex_wait)
 
 // int __futex_wake(volatile void* ftx, int count)
-ENTRY(__futex_wake)
+ENTRY_PRIVATE(__futex_wake)
   stp x29, x30, [sp, #-16]!
   mov x29, sp
 
