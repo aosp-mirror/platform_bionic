@@ -171,19 +171,6 @@ arc4_getbyte(void)
         return (rs.s[(si + sj) & 0xff]);
 }
 
-u_int8_t
-__arc4_getbyte(void)
-{
-        u_int8_t val;
-
-        _ARC4_LOCK();
-        if (--arc4_count == 0 || !rs_initialized)
-                arc4_stir();
-        val = arc4_getbyte();
-        _ARC4_UNLOCK();
-        return val;
-}
-
 static inline u_int32_t
 arc4_getword(void)
 {
