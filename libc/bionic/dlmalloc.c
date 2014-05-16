@@ -34,10 +34,7 @@ static void* named_anonymous_mmap(size_t length);
 // Ugly inclusion of C file so that bionic specific #defines configure dlmalloc.
 #include "../upstream-dlmalloc/malloc.c"
 
-extern void (*__cleanup)();
-
 static void __bionic_heap_corruption_error(const char* function) {
-  __cleanup = NULL; // The heap is corrupt. We can forget trying to shut down stdio.
   __libc_fatal("heap corruption detected by %s", function);
 }
 
