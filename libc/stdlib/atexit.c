@@ -104,10 +104,10 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
 	struct atexit *p = __atexit;
 	struct atexit_fn *fnp;
-	int pgsize = getpagesize();
+	size_t pgsize = sysconf(_SC_PAGESIZE);
 	int ret = -1;
 
-	if (pgsize < (int)sizeof(*p))
+	if (pgsize < sizeof(*p))
 		return (-1);
 	_ATEXIT_LOCK();
 	p = __atexit;
@@ -216,3 +216,41 @@ __cxa_finalize(void *dso)
 	}
 	_ATEXIT_UNLOCK();
 }
+
+/*
+ * Register the cleanup function
+ */
+void
+__atexit_register_cleanup(void (*func)(void))
+{
+        struct atexit *p;
+        size_t pgsize = sysconf(_SC_PAGESIZE);
+
+        if (pgsize < sizeof(*p))
+                return;
+        _ATEXIT_LOCK();
+        p = __atexit;
+        while (p != NULL && p->next != NULL)
+                p = p->next;
+        if (p == NULL) {
+                p = mmap(NULL, pgsize, PROT_READ | PROT_WRITE,
+                    MAP_ANON | MAP_PRIVATE, -1, 0);
+                if (p == MAP_FAILED)
+                        goto unlock;
+                p->ind = 1;
+                p->max = (pgsize - ((char *)&p->fns[0] - (char *)p)) /
+                    sizeof(p->fns[0]);
+                p->next = NULL;
+                __atexit = p;
+        } else {
+                if (mprotect(p, pgsize, PROT_READ | PROT_WRITE))
+                        goto unlock;
+        }
+        p->fns[0].cxa_func = (void (*)(void*))func;
+        p->fns[0].fn_arg = NULL;
+        p->fns[0].fn_dso = NULL;
+        mprotect(p, pgsize, PROT_READ);
+unlock:
+        _ATEXIT_UNLOCK();
+}
+

@@ -70,7 +70,6 @@ libc_common_src_files := \
     bionic/sigsetmask.c \
     bionic/system_properties_compat.c \
     bionic/unlockpt.c \
-    stdio/findfp.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdlib/atexit.c \
@@ -227,9 +226,7 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/fclose.c \
     upstream-freebsd/lib/libc/stdio/flags.c \
     upstream-freebsd/lib/libc/stdio/fopen.c \
-    upstream-freebsd/lib/libc/stdio/makebuf.c \
     upstream-freebsd/lib/libc/stdio/mktemp.c \
-    upstream-freebsd/lib/libc/stdio/setvbuf.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
     upstream-freebsd/lib/libc/stdlib/imaxabs.c \
@@ -279,7 +276,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/div.c \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
     upstream-netbsd/lib/libc/stdlib/erand48.c \
-    upstream-netbsd/lib/libc/stdlib/exit.c \
     upstream-netbsd/lib/libc/stdlib/jrand48.c \
     upstream-netbsd/lib/libc/stdlib/ldiv.c \
     upstream-netbsd/lib/libc/stdlib/lldiv.c \
@@ -381,6 +377,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetwc.c \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
+    upstream-openbsd/lib/libc/stdio/findfp.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
@@ -407,6 +404,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/gets.c \
     upstream-openbsd/lib/libc/stdio/getwc.c \
     upstream-openbsd/lib/libc/stdio/getwchar.c \
+    upstream-openbsd/lib/libc/stdio/makebuf.c \
     upstream-openbsd/lib/libc/stdio/perror.c \
     upstream-openbsd/lib/libc/stdio/printf.c \
     upstream-openbsd/lib/libc/stdio/putc.c \
@@ -422,6 +420,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/scanf.c \
     upstream-openbsd/lib/libc/stdio/setbuf.c \
     upstream-openbsd/lib/libc/stdio/setbuffer.c \
+    upstream-openbsd/lib/libc/stdio/setvbuf.c \
     upstream-openbsd/lib/libc/stdio/sscanf.c \
     upstream-openbsd/lib/libc/stdio/stdio.c \
     upstream-openbsd/lib/libc/stdio/swprintf.c \
@@ -451,6 +450,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
+    upstream-openbsd/lib/libc/stdlib/exit.c \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
     upstream-openbsd/lib/libc/stdlib/setenv.c \
     upstream-openbsd/lib/libc/stdlib/strtoimax.c \
