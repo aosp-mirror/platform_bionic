@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ff1cc50_6f5d7d21",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-16T02:07:49Z",
+      "side": 1,
+      "message": "s/loader/linker/?",
+      "revId": "32580fae6b124887d17723ab83ce11b58f636f3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
