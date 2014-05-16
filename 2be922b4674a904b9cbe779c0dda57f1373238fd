@@ -22,6 +22,47 @@
       "revId": "2be922b4674a904b9cbe779c0dda57f1373238fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f10a43e_23e43848",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-16T23:10:43Z",
+      "side": 1,
+      "message": "that\u0027s the nice thing about readelf; ELF files are the same everywhere.",
+      "parentUuid": "7f10a43e_6098e621",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 47
+      },
+      "revId": "2be922b4674a904b9cbe779c0dda57f1373238fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f15a02d_bc5e2da0",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-16T23:10:43Z",
+      "side": 1,
+      "message": "this, though, means you\u0027re always comparing against the x86-64 glibc. but it\u0027s not like anyone has other architectures lying around.",
+      "revId": "2be922b4674a904b9cbe779c0dda57f1373238fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
