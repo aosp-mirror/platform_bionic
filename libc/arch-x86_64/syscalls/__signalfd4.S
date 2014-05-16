@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     movq    %rcx, %r10
     movl    $__NR_signalfd4, %eax
     syscall
@@ -14,4 +14,5 @@ ENTRY(signalfd4)
     orq     $-1, %rax
 1:
     ret
-END(signalfd4)
+END(__signalfd4)
+.hidden __signalfd4

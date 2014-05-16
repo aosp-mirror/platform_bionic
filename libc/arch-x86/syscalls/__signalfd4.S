@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
@@ -31,4 +31,4 @@ ENTRY(signalfd4)
     popl    %ecx
     popl    %ebx
     ret
-END(signalfd4)
+END(__signalfd4)
