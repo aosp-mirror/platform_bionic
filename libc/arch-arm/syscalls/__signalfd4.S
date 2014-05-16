@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(signalfd4)
+ENTRY(__signalfd4)
     mov     ip, r7
     ldr     r7, =__NR_signalfd4
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(signalfd4)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(signalfd4)
+END(__signalfd4)
