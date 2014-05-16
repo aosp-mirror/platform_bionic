@@ -1,7 +1,7 @@
 #include <private/bionic_asm.h>
 
 // void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
-ENTRY(_exit_with_stack_teardown)
+ENTRY_PRIVATE(_exit_with_stack_teardown)
   // We can trash registers because this function never returns.
   mov 4(%esp), %ebx             // stackBase
   mov 8(%esp), %ecx             // stackSize
