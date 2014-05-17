@@ -269,6 +269,7 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
 #if defined(SIGSTKFLT)
     case SIGSTKFLT:
 #endif
+    case SIGTRAP:
       tgkill(getpid(), gettid(), signal_number);
       break;
     default:    // SIGILL, SIGBUS, SIGSEGV
