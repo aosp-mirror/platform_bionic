@@ -121,10 +121,6 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
   const char* signal_name = "???";
   bool has_address = false;
   switch (signum) {
-    case SIGILL:
-      signal_name = "SIGILL";
-      has_address = true;
-      break;
     case SIGABRT:
       signal_name = "SIGABRT";
       break;
@@ -136,6 +132,13 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
       signal_name = "SIGFPE";
       has_address = true;
       break;
+    case SIGILL:
+      signal_name = "SIGILL";
+      has_address = true;
+      break;
+    case SIGPIPE:
+      signal_name = "SIGPIPE";
+      break;
     case SIGSEGV:
       signal_name = "SIGSEGV";
       has_address = true;
@@ -145,8 +148,8 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
       signal_name = "SIGSTKFLT";
       break;
 #endif
-    case SIGPIPE:
-      signal_name = "SIGPIPE";
+    case SIGTRAP:
+      signal_name = "SIGTRAP";
       break;
   }
 
