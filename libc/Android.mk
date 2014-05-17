@@ -609,7 +609,9 @@ LOCAL_CFLAGS := \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -include upstream-netbsd/android/include/netbsd-compat.h
+    -include upstream-netbsd/android/include/netbsd-compat.h \
+#    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -636,7 +638,9 @@ LOCAL_CFLAGS := \
     -Wno-sign-compare -Wno-uninitialized \
     -I$(LOCAL_PATH)/upstream-freebsd/android/include \
     -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
-    -include freebsd-compat.h
+    -include freebsd-compat.h \
+#    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -661,10 +665,12 @@ LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
+    -Werror \
     -DPOSIX_MISTAKE \
     -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -include netbsd-compat.h
+    -include netbsd-compat.h \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -689,10 +695,12 @@ LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
+    -Werror \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
-    -include openbsd-compat.h
+    -include openbsd-compat.h \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -718,6 +726,7 @@ LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
+    -Werror \
     -fvisibility=hidden \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
@@ -832,7 +841,9 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
-                -DLIBC_STATIC
+    -DLIBC_STATIC \
+    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
@@ -859,7 +870,9 @@ LOCAL_SRC_FILES := \
     bionic/libc_init_static.cpp \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
-                -DLIBC_STATIC
+    -DLIBC_STATIC \
+    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -878,7 +891,7 @@ include $(BUILD_STATIC_LIBRARY)
 # ========================================================
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_CFLAGS := $(libc_common_cflags) -Werror
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -942,7 +955,9 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -DMALLOC_LEAK_CHECK
+    -DMALLOC_LEAK_CHECK \
+    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
@@ -976,7 +991,9 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -DMALLOC_QEMU_INSTRUMENT
+    -DMALLOC_QEMU_INSTRUMENT \
+    -Werror \
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
