@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#include <private/NetdClient.h>
+#include "private/NetdClientDispatch.h"
+
 #include <sys/socket.h>
 
 int connect(int sockfd, const sockaddr* addr, socklen_t addrlen) {

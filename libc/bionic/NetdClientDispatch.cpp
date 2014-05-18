@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <private/NetdClient.h>
+#include "private/NetdClientDispatch.h"
 
 #ifdef __i386__
 #define __socketcall __attribute__((__cdecl__))
@@ -25,7 +25,9 @@
 extern "C" __socketcall int __accept(int, sockaddr*, socklen_t*);
 extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
 
-NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
+// This structure is modified only at startup (when libc.so is loaded) and never
+// afterwards, so it's okay that it's read later at runtime without a lock.
+__LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
     __accept,
     __connect,
 };
