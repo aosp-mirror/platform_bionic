@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa1c9852_cc8e1ead",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "maybe move this up to the \"which malloc\" test at the top and set bionic_malloc_wrapper_src or somthing and then just $() it down here rather than write it out twice?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f0fa825_2ba9b1b1",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "BIONIC_ALIGN?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_cc77fee6",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "roundup?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_2c87b288",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "maybe \"safe\" or \"rounding\" instead of the overly-vague \"wrapper\"?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a3274d1_4a620894",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "or __BEGIN_DECLS/__END_DECLS?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f0fa825_2b2c1189",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:22:20Z",
+      "side": 1,
+      "message": "#if 0?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
