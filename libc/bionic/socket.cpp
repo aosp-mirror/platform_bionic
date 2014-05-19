@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+#include "private/NetdClientDispatch.h"
+
 #include <sys/socket.h>
 
-int accept(int sockfd, sockaddr* addr, socklen_t* addrlen) {
-    return accept4(sockfd, addr, addrlen, 0);
+int socket(int domain, int type, int protocol) {
+    return __netdClientDispatch.socket(domain, type, protocol);
 }

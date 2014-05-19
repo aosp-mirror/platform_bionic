@@ -23,8 +23,9 @@
 __BEGIN_DECLS
 
 struct NetdClientDispatch {
-    int (*accept)(int, struct sockaddr*, socklen_t*);
+    int (*accept4)(int, struct sockaddr*, socklen_t*, int);
     int (*connect)(int, const struct sockaddr*, socklen_t);
+    int (*socket)(int, int, int);
     unsigned (*netIdForResolv)(unsigned);
 };
 

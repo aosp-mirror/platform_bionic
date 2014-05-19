@@ -40,18 +40,19 @@ static void netdClientInitImpl() {
         // default implementations of functions that it would've overridden.
         return;
     }
-    netdClientInitFunction(netdClientHandle, "netdClientInitAccept", &__netdClientDispatch.accept);
+    netdClientInitFunction(netdClientHandle, "netdClientInitAccept4",
+                           &__netdClientDispatch.accept4);
     netdClientInitFunction(netdClientHandle, "netdClientInitConnect",
                            &__netdClientDispatch.connect);
     netdClientInitFunction(netdClientHandle, "netdClientInitNetIdForResolv",
                            &__netdClientDispatch.netIdForResolv);
+    netdClientInitFunction(netdClientHandle, "netdClientInitSocket", &__netdClientDispatch.socket);
 }
 
 static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
 
 extern "C" __LIBC_HIDDEN__ void netdClientInit() {
     if (pthread_once(&netdClientInitOnce, netdClientInitImpl)) {
-        __libc_format_log(ANDROID_LOG_ERROR, "netdClient",
-                          "Unable to initialize netd_client component.");
+        __libc_format_log(ANDROID_LOG_ERROR, "netdClient", "Failed to initialize netd_client");
     }
 }
