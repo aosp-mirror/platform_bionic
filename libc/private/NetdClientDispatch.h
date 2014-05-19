@@ -25,6 +25,7 @@ __BEGIN_DECLS
 struct NetdClientDispatch {
     int (*accept)(int, struct sockaddr*, socklen_t*);
     int (*connect)(int, const struct sockaddr*, socklen_t);
+    unsigned (*netIdForResolv)(unsigned);
 };
 
 extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
