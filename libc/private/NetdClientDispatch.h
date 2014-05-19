@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef PRIVATE_NETD_CLIENT_H
-#define PRIVATE_NETD_CLIENT_H
+#ifndef PRIVATE_NETD_CLIENT_DISPATCH_H
+#define PRIVATE_NETD_CLIENT_DISPATCH_H
 
 #include <sys/cdefs.h>
 #include <sys/socket.h>
@@ -28,8 +28,8 @@ struct NetdClientDispatch {
     unsigned (*netIdForResolv)(unsigned);
 };
 
-extern struct NetdClientDispatch __netdClientDispatch;
+extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
 
 __END_DECLS
 
-#endif  // PRIVATE_NETD_CLIENT_H
+#endif  // PRIVATE_NETD_CLIENT_DISPATCH_H

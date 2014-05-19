@@ -18,11 +18,11 @@
 #error NetdClient.cpp should NOT be included in static libc builds.
 #endif
 
-#include <private/NetdClient.h>
-#include <private/libc_logging.h>
-#include <pthread.h>
+#include "private/libc_logging.h"
+#include "private/NetdClientDispatch.h"
 
 #include <dlfcn.h>
+#include <pthread.h>
 
 template <typename FunctionType>
 static void netdClientInitFunction(void* handle, const char* symbol, FunctionType* function) {
