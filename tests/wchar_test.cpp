@@ -306,19 +306,19 @@ void test_mbrtowc_incomplete(mbstate_t* ps) {
   // 2-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
   ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "cdef", 5, ps));
-  ASSERT_EQ(0x00a2, out);
+  ASSERT_EQ(static_cast<wchar_t>(0x00a2), out);
   ASSERT_TRUE(mbsinit(ps));
   // 3-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xe2", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\x82", 1, ps));
   ASSERT_EQ(1U, mbrtowc(&out, "\xac" "def", 4, ps));
-  ASSERT_EQ(0x20ac, out);
+  ASSERT_EQ(static_cast<wchar_t>(0x20ac), out);
   ASSERT_TRUE(mbsinit(ps));
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xf0", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xa4\xad", 2, ps));
   ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "ef", 3, ps));
-  ASSERT_EQ(0x24b62, out);
+  ASSERT_EQ(static_cast<wchar_t>(0x24b62), out);
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
@@ -341,9 +341,9 @@ void test_mbsrtowcs(mbstate_t* ps) {
   const char* valid = "A" "\xc2\xa2" "\xe2\x82\xac" "\xf0\xa4\xad\xa2" "ef";
   ASSERT_EQ(4U, mbsrtowcs(out, &valid, 4, ps));
   ASSERT_EQ(L'A', out[0]);
-  ASSERT_EQ(0x00a2, out[1]);
-  ASSERT_EQ(0x20ac, out[2]);
-  ASSERT_EQ(0x24b62, out[3]);
+  ASSERT_EQ(static_cast<wchar_t>(0x00a2), out[1]);
+  ASSERT_EQ(static_cast<wchar_t>(0x20ac), out[2]);
+  ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[3]);
   ASSERT_EQ('e', *valid);
 
   const char* invalid = "A" "\xc2\x20" "ef";
