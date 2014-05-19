@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f0aac14_b28d30e0",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T16:42:15Z",
+      "side": 1,
+      "message": "to",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df20b093_fb1a6786",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T16:42:15Z",
+      "side": 1,
+      "message": "(you\u0027re missing the final . on most of your comments.)",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df20b093_3b7b3f9b",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T16:42:15Z",
+      "side": 1,
+      "message": "there are multiple files? or is this just to avoid having to know the version number and endianness? i prefer to use [0] when i\u0027m assuming a single result.",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
