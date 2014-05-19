@@ -2,13 +2,13 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(socket)
+ENTRY(__accept4)
     mov     ip, r7
-    ldr     r7, =__NR_socket
+    ldr     r7, =__NR_accept4
     swi     #0
     mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(socket)
+END(__accept4)

@@ -98,6 +98,7 @@ libc_common_src_files += \
 libc_bionic_src_files := \
     bionic/abort.cpp \
     bionic/accept.cpp \
+    bionic/accept4.cpp \
     bionic/access.cpp \
     bionic/assert.cpp \
     bionic/atof.cpp \
@@ -199,6 +200,7 @@ libc_bionic_src_files := \
     bionic/sigprocmask.cpp \
     bionic/sigsuspend.cpp \
     bionic/sigwait.cpp \
+    bionic/socket.cpp \
     bionic/stat.cpp \
     bionic/statvfs.cpp \
     bionic/strerror.cpp \
