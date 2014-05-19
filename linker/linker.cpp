@@ -65,6 +65,19 @@
  *   and NOEXEC
  */
 
+#if defined(__LP64__)
+#define SEARCH_NAME(x) x
+#else
+// Nvidia drivers are relying on the bug:
+// http://code.google.com/p/android/issues/detail?id=6670
+// so we continue to use base-name lookup for lp32
+static const char* get_base_name(const char* name) {
+  const char* bname = strrchr(name, '/');
+  return bname ? bname + 1 : name;
+}
+#define SEARCH_NAME(x) get_base_name(x)
+#endif
+
 static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo);
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -656,7 +669,8 @@ static int open_library(const char* name) {
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
 #if defined(__LP64__)
-    return -1;
+    // TODO: uncomment this after bug b/7465467 is fixed.
+    // return -1;
 #endif
   }
 
@@ -701,8 +715,7 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
         return NULL;
     }
 
-    const char* bname = strrchr(name, '/');
-    soinfo* si = soinfo_alloc(bname ? bname + 1 : name, &file_stat);
+    soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat);
     if (si == NULL) {
         return NULL;
     }
@@ -725,19 +738,14 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
     return si;
 }
 
-static soinfo *find_loaded_library(const char* name) {
-    // TODO: don't use basename only for determining libraries
-    // http://code.google.com/p/android/issues/detail?id=6670
-
-    const char* bname = strrchr(name, '/');
-    bname = bname ? bname + 1 : name;
-
-    for (soinfo* si = solist; si != NULL; si = si->next) {
-        if (!strcmp(bname, si->name)) {
-            return si;
-        }
+static soinfo *find_loaded_library_by_name(const char* name) {
+  const char* search_name = SEARCH_NAME(name);
+  for (soinfo* si = solist; si != NULL; si = si->next) {
+    if (!strcmp(search_name, si->name)) {
+      return si;
     }
-    return NULL;
+  }
+  return NULL;
 }
 
 static soinfo* find_library_internal(const char* name, const android_dlextinfo* extinfo) {
@@ -745,7 +753,7 @@ static soinfo* find_library_internal(const char* name, const android_dlextinfo* 
     return somain;
   }
 
-  soinfo* si = find_loaded_library(name);
+  soinfo* si = find_loaded_library_by_name(name);
   if (si != NULL) {
     if (si->flags & FLAG_LINKED) {
       return si;
@@ -781,7 +789,7 @@ static int soinfo_unload(soinfo* si) {
         if (d->d_tag == DT_NEEDED) {
           const char* library_name = si->strtab + d->d_un.d_val;
           TRACE("%s needs to unload %s", si->name, library_name);
-          soinfo_unload(find_loaded_library(library_name));
+          soinfo_unload(find_loaded_library_by_name(library_name));
         }
       }
     }
