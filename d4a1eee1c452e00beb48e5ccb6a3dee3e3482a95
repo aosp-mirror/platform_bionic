@@ -46,6 +46,30 @@
       "revId": "d4a1eee1c452e00beb48e5ccb6a3dee3e3482a95",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_9700e6cd",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-19T18:16:15Z",
+      "side": 1,
+      "message": "time_test.cpp directly includes \u003clibc/private/bionic_time.h\u003e. It was previously being included because stlport.mk adds -Ibionic/. It seemed odd to add that globally, so I didn\u0027t include it in libcxx.mk.",
+      "parentUuid": "1f0fa825_cb6595eb",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 1
+      },
+      "revId": "d4a1eee1c452e00beb48e5ccb6a3dee3e3482a95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
