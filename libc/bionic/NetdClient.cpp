@@ -43,6 +43,8 @@ static void netdClientInitImpl() {
     netdClientInitFunction(netdClientHandle, "netdClientInitAccept", &__netdClientDispatch.accept);
     netdClientInitFunction(netdClientHandle, "netdClientInitConnect",
                            &__netdClientDispatch.connect);
+    netdClientInitFunction(netdClientHandle, "netdClientInitNetIdForResolv",
+                           &__netdClientDispatch.netIdForResolv);
 }
 
 static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
