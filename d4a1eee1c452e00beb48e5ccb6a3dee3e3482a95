@@ -70,6 +70,30 @@
       "revId": "d4a1eee1c452e00beb48e5ccb6a3dee3e3482a95",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f10a43e_159a83e6",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-19T18:28:39Z",
+      "side": 1,
+      "message": "yeah, we definitely don\u0027t want this more exposed. it might be clearer to have\n\n    bionic/libc/private/ \\\n\nhere, and change time_test.cpp to #include \"bionic_time.h\".\n\ni wish we could kill this stuff, but i doubt we\u0027ll get round to it in time for LP64.",
+      "parentUuid": "bf1dbc5e_9700e6cd",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 1
+      },
+      "revId": "d4a1eee1c452e00beb48e5ccb6a3dee3e3482a95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
