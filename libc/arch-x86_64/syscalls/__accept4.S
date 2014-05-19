@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept4)
+ENTRY(__accept4)
     movq    %rcx, %r10
     movl    $__NR_accept4, %eax
     syscall
@@ -14,4 +14,5 @@ ENTRY(accept4)
     orq     $-1, %rax
 1:
     ret
-END(accept4)
+END(__accept4)
+.hidden __accept4
