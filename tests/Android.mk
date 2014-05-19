@@ -59,6 +59,20 @@ libBionicStandardTests_src_files := \
     libgen_test.cpp \
     locale_test.cpp \
     malloc_test.cpp \
+    math_cos_test.cpp \
+    math_cosf_test.cpp \
+    math_exp_test.cpp \
+    math_expf_test.cpp \
+    math_log_test.cpp \
+    math_logf_test.cpp \
+    math_pow_test.cpp \
+    math_powf_test.cpp \
+    math_sin_test.cpp \
+    math_sinf_test.cpp \
+    math_sincos_test.cpp \
+    math_sincosf_test.cpp \
+    math_tan_test.cpp \
+    math_tanf_test.cpp \
     math_test.cpp \
     mntent_test.cpp \
     netdb_test.cpp \
