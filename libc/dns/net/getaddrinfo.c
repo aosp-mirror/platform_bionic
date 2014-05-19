@@ -92,7 +92,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>
-#include "NetdClient.h"
+#include "NetdClientDispatch.h"
 #include "resolv_cache.h"
 #include "resolv_netid.h"
 #include "resolv_private.h"

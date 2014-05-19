@@ -60,7 +60,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
-#include "NetdClient.h"
+#include "NetdClientDispatch.h"
 #include "resolv_netid.h"
 #include "resolv_private.h"
 #include "resolv_cache.h"
