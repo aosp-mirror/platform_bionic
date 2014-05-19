@@ -1067,8 +1067,6 @@ TEST(math, significandf) {
   ASSERT_FLOAT_EQ(1.5375f, significandf(12.3f));
 }
 
-extern "C" long double significandl(long double); // BSD's <math.h> doesn't declare this.
-
 TEST(math, significandl) {
   ASSERT_DOUBLE_EQ(0.0L, significandl(0.0L));
   ASSERT_DOUBLE_EQ(1.2L, significandl(1.2L));
