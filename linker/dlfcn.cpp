@@ -65,10 +65,10 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
-void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo)
-{
+static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo, const void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  soinfo* result = do_dlopen(filename, flags, extinfo);
+  soinfo* caller_soinfo = find_containing_library(caller_addr);
+  soinfo* result = do_dlopen(filename, flags, caller_soinfo, extinfo);
   if (result == NULL) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return NULL;
@@ -76,8 +76,14 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
   return result;
 }
 
+void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
+  void* caller_addr = __builtin_return_address(0);
+  return dlopen_ext(filename, flags, extinfo, caller_addr);
+}
+
 void* dlopen(const char* filename, int flags) {
-  return android_dlopen_ext(filename, flags, NULL);
+  void* caller_addr = __builtin_return_address(0);
+  return dlopen_ext(filename, flags, NULL, caller_addr);
 }
 
 void* dlsym(void* handle, const char* symbol) {
@@ -97,8 +103,8 @@ void* dlsym(void* handle, const char* symbol) {
   if (handle == RTLD_DEFAULT) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
   } else if (handle == RTLD_NEXT) {
-    void* ret_addr = __builtin_return_address(0);
-    soinfo* si = find_containing_library(ret_addr);
+    void* caller_addr = __builtin_return_address(0);
+    soinfo* si = find_containing_library(caller_addr);
 
     sym = NULL;
     if (si && si->next) {
@@ -151,7 +157,9 @@ int dladdr(const void* addr, Dl_info* info) {
 
 int dlclose(void* handle) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  return do_dlclose(reinterpret_cast<soinfo*>(handle));
+  do_dlclose(reinterpret_cast<soinfo*>(handle));
+  // dlclose has no defined errors.
+  return 0;
 }
 
 // name_offset: starting index of the name in libdl_info.strtab
