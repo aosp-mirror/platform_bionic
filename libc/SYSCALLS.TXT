@@ -231,13 +231,12 @@ int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, st
 int     __signalfd4:signalfd4(int, const sigset_t*, size_t, int)  all
 
 # sockets
-int           socket(int, int, int)              arm,arm64,mips,mips64,x86_64
+int           __socket:socket(int, int, int)              arm,arm64,mips,mips64,x86_64
 int           socketpair(int, int, int, int*)    arm,arm64,mips,mips64,x86_64
 int           bind(int, struct sockaddr*, int)  arm,arm64,mips,mips64,x86_64
 int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,arm64,mips,mips64,x86_64
 int           listen(int, int)                   arm,arm64,mips,mips64,x86_64
-int           __accept:accept(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
-int           accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
+int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
 int           getsockname(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           getpeername(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
@@ -251,11 +250,10 @@ int           recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct tim
 int           sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,arm64,mips,mips64,x86_64
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
-int           socket:socketcall:1(int, int, int) x86
+int           __socket:socketcall:1(int, int, int) x86
 int           bind:socketcall:2(int, struct sockaddr*, int)  x86
 int           __connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
 int           listen:socketcall:4(int, int)                   x86
-int           __accept:socketcall:5(int, struct sockaddr*, socklen_t*)  x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
 int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
 int           socketpair:socketcall:8(int, int, int, int*)    x86
@@ -266,7 +264,7 @@ int           setsockopt:socketcall:14(int, int, int, const void*, socklen_t)  x
 int           getsockopt:socketcall:15(int, int, int, void*, socklen_t*)    x86
 int           sendmsg:socketcall:16(int, const struct msghdr*, unsigned int)  x86
 int           recvmsg:socketcall:17(int, struct msghdr*, unsigned int)   x86
-int           accept4:socketcall:18(int, struct sockaddr*, socklen_t*, int)  x86
+int           __accept4:socketcall:18(int, struct sockaddr*, socklen_t*, int)  x86
 int           recvmmsg:socketcall:19(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   x86
 int           sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
 

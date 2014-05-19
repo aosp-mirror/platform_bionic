@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__accept)
+ENTRY(__socket)
     .set push
     .set noreorder
-    li v0, __NR_accept
+    li v0, __NR_socket
     syscall
     bnez a3, 1f
     move a0, v0
@@ -22,5 +22,5 @@ ENTRY(__accept)
     j t9
     move ra, t0
     .set pop
-END(__accept)
-.hidden __accept
+END(__socket)
+.hidden __socket
