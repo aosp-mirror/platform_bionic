@@ -107,9 +107,6 @@ libBionicStandardTests_src_files := \
     unistd_test.cpp \
     wchar_test.cpp \
 
-libBionicStandardTests_c_includes := \
-    bionic/libc/private \
-
 libBionicStandardTests_cflags := \
     $(test_cflags) \
 
@@ -322,9 +319,10 @@ bionic-unit-tests-static_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests-static_static_libraries := \
+    libstlport_static \
     libm \
     libc \
-    libc++ \
+    libstdc++ \
 
 bionic-unit-tests-static_force_static_executable := true
 
