@@ -77,7 +77,7 @@ LOCAL_LDLIBS := \
     $($(module)_ldlibs_$(build_type)) \
 
 ifeq ($(build_type),target)
-  include external/libcxx/libcxx.mk
+  include external/stlport/libstlport.mk
 
   include $(BUILD_$(build_target))
 endif
