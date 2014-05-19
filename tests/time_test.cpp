@@ -27,7 +27,7 @@
 #include "ScopedSignalHandler.h"
 
 #if defined(__BIONIC__) // mktime_tz is a bionic extension.
-#include <libc/private/bionic_time.h>
+#include <bionic_time.h>
 #endif // __BIONIC__
 
 TEST(time, mktime_tz) {
