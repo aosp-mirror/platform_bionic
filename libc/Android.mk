@@ -271,7 +271,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/gen/setjmperr.c \
     upstream-netbsd/lib/libc/gen/utime.c \
     upstream-netbsd/lib/libc/gen/utmp.c \
-    upstream-netbsd/lib/libc/inet/inet_ntop.c \
     upstream-netbsd/lib/libc/isc/ev_streams.c \
     upstream-netbsd/lib/libc/isc/ev_timers.c \
     upstream-netbsd/lib/libc/regex/regcomp.c \
@@ -367,6 +366,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/net/inet_netof.c \
     upstream-openbsd/lib/libc/net/inet_network.c \
     upstream-openbsd/lib/libc/net/inet_ntoa.c \
+    upstream-openbsd/lib/libc/net/inet_ntop.c \
     upstream-openbsd/lib/libc/net/inet_pton.c \
     upstream-openbsd/lib/libc/net/ntohl.c \
     upstream-openbsd/lib/libc/net/ntohs.c \
