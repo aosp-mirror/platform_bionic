@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aaf9f8ff_1ed66984",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "So many of the module below include the malloc stuff that it made more sense to put it here.",
+      "parentUuid": "2aeee834_735c08d1",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ae95c2a_52c9f232",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-14T00:25:49Z",
       "side": 1,
       "message": "tab?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0af3e41b_e145e028",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ae95c2a_52c9f232",
       "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "aaf9f8ff_7ed32d94",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "I added a more descriptive comment in ps3. Essentially, memalign is supposed to disallow a boundary that is not a power of 2. So je_memalign does that. But both glibc and dlmalloc round up and don\u0027t error, so this make it conform to that behavior.",
+      "parentUuid": "2aeee834_4e9e7bdd",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2aeee834_ee714ff3",
         "filename": "libc/bionic/jemalloc.h",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-14T00:25:49Z",
       "side": 1,
       "message": "ah. this would be useful with the implementation too.",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cafc6cef_1cadd520",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aeee834_ee714ff3",
       "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "0af3e41b_e113202d",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ae95c2a_b2083eb4",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ae46051_f0fc8e22",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 1
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "0af3e41b_81033cd9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "This is hidden now.",
+      "parentUuid": "6ae46051_f0fc8e22",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ae46051_30ff1615",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 1
@@ -115,6 +223,24 @@
       "writtenOn": "2014-05-14T00:25:49Z",
       "side": 1,
       "message": "how many are used when there\u0027s more than one thread?",
+      "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaf9f8ff_fe93bdd5",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-19T17:38:52Z",
+      "side": 1,
+      "message": "Apparently I\u0027m a liar. I wrote a test to count the number of keys before any threads are created and after a thread is created and it\u0027s always the same. I\u0027m not sure what caused the temporary extra one, but I am a little worried there is a race in the tests somewhere.\n\nI suspect a previously failing test didn\u0027t clean something up and I incorrectly associated that with a key per thread.",
+      "parentUuid": "6ae46051_30ff1615",
       "revId": "19ab60d069c2296ea49d0dab96be4a29b8550372",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
