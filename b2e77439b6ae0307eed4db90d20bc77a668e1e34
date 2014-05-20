@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f1ab865_954e9780",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "btw, glibc uses non-zero for RTLD_NOW. LP64 might be our last chance to change that if there\u0027s any advantage to doing so.",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f3a00c6_1ab3dc87",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "should we change these to -1 and -2 for LP64?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_d53befe3",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "static",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f440856_f29cc6e4",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "caller_addr is a better name.",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f3a00c6_1a9d1cdf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "of ... .",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f3a00c6_7a7548dc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "s/Locating/Trying harder/?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f440856_b27d1ec3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "we should lose the \"OOPS\"; this text ends up in the dlerror(3) string.",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_f5b38b23",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "s/error/warning/, since we can\u0027t actually make this an error and we\u0027re just going to ignore it.\n\nor abort?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_7522db98",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "yeah, POSIX says \"no errors are defined\". so you could even make this void and just have the \"return 0\" up in dlclose itself if you like. (i don\u0027t have a strong opinion either way. a comment might be a good idea though, so it\u0027s clear we\u0027re not just missing some error checking.)",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f3a00c6_9d27c6d8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1455,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "on a second call to dlopen",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f3a00c6_bd060a38",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "after a library has been unloaded with RTLD_NODELETE.",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_f506ebea",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "is 0 right?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_d503efd8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1852,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "is 0 right?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_b54e3349",
+        "filename": "tests/dlopen_testlib_simple.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:42:35Z",
+      "side": 1,
+      "message": "doesn\u0027t have to be in this change, but can we move the dlfcn-related test helpers into their own directory?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
