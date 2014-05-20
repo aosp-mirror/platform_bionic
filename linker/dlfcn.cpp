@@ -102,7 +102,7 @@ void* dlsym(void* handle, const char* symbol) {
   ElfW(Sym)* sym = NULL;
   if (handle == RTLD_DEFAULT) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
-  } else if (handle == RTLD_NEXT) {
+  } else if (handle == RTLD_NEXT || handle == (void*)0xffffffffL) {
     void* caller_addr = __builtin_return_address(0);
     soinfo* si = find_containing_library(caller_addr);
 
