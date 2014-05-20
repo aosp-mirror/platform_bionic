@@ -239,6 +239,7 @@ libm_common_cflags := \
     -Wno-sign-compare \
     -Wno-uninitialized \
     -Wno-unknown-pragmas \
+    -fvisibility=hidden \
 
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
