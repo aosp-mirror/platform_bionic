@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f1ab865_b0b9a1dc",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done - aligned constant values for lp64 with glibc values",
+      "parentUuid": "9f1ab865_954e9780",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f3a00c6_1ab3dc87",
         "filename": "libc/include/dlfcn.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "should we change these to -1 and -2 for LP64?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f440856_784e7583",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "aligned with glibc for lp64 (default\u003d0 and next\u003d(void*) -1l)",
+      "parentUuid": "5f3a00c6_1ab3dc87",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ff281483_b1f2ba06",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f1ab865_d53befe3",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f440856_f29cc6e4",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "caller_addr is a better name.",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f440856_988b595a",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f440856_f29cc6e4",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "9f1ab865_f0f4b965",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f3a00c6_1a9d1cdf",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f3a00c6_7a7548dc",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "s/Locating/Trying harder/?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_d1b30624",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f3a00c6_7a7548dc",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "ff281483_91bd7ef2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f440856_b27d1ec3",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_f5b38b23",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "s/error/warning/, since we can\u0027t actually make this an error and we\u0027re just going to ignore it.\n\nor abort?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_90234543",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done - changed to warning, aborting here seems a bit harsh",
+      "parentUuid": "9f1ab865_f5b38b23",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "ff281483_51227698",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f1ab865_7522db98",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f3a00c6_9d27c6d8",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -166,6 +328,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "on a second call to dlopen",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_b1519ae9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1455,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f3a00c6_9d27c6d8",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "9f1ab865_f035d960",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f3a00c6_bd060a38",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_f506ebea",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -200,6 +398,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "is 0 right?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_f184c24d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "I have not decided yet, it is ok for this change since it is only used to check for RTLD_NOLOAD flag.",
+      "parentUuid": "9f1ab865_f506ebea",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +439,24 @@
     },
     {
       "key": {
+        "uuid": "9f1ab865_10b615c6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1852,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "see above.",
+      "parentUuid": "9f1ab865_d503efd8",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_b54e3349",
         "filename": "tests/dlopen_testlib_simple.cpp",
         "patchSetId": 2
@@ -234,6 +468,24 @@
       "writtenOn": "2014-05-20T17:42:35Z",
       "side": 1,
       "message": "doesn\u0027t have to be in this change, but can we move the dlfcn-related test helpers into their own directory?",
+      "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_6e146fa6",
+        "filename": "tests/dlopen_testlib_simple.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T18:52:24Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "9f1ab865_b54e3349",
       "revId": "b2e77439b6ae0307eed4db90d20bc77a668e1e34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
