@@ -909,6 +909,56 @@ TEST(string, memmove) {
   }
 }
 
+static void verify_memmove(char* src_copy, char* dst, char* src, size_t size) {
+  memset(dst, 0, size);
+  memcpy(src, src_copy, size);
+  ASSERT_EQ(dst, memmove(dst, src, size));
+  ASSERT_EQ(0, memcmp(dst, src_copy, size));
+}
+
+#define MEMMOVE_DATA_SIZE (1024*1024*3)
+
+TEST(string, memmove_check) {
+  char* buffer = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
+  ASSERT_TRUE(buffer != NULL);
+
+  char* src_data = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
+  ASSERT_TRUE(src_data != NULL);
+  // Initialize to a known pattern to copy into src for each test and
+  // to compare dst against.
+  for (size_t i = 0; i < MEMMOVE_DATA_SIZE; i++) {
+    src_data[i] = (i + 1) % 255;
+  }
+
+  // Check all different dst offsets between 0 and 127 inclusive.
+  char* src = buffer;
+  for (size_t i = 0; i < 127; i++) {
+    char* dst = buffer + 256 + i;
+    // Small copy.
+    verify_memmove(src_data, dst, src, 1024);
+
+    // Medium copy.
+    verify_memmove(src_data, dst, src, 64 * 1024);
+
+    // Medium copy.
+    verify_memmove(src_data, dst, src, 1024 * 1024 + 128 * 1024);
+  }
+
+  // Check all leftover size offsets between 1 and 127 inclusive.
+  char* dst = buffer + 256;
+  src = buffer;
+  for (size_t size = 1; size < 127; size++) {
+    // Small copy.
+    verify_memmove(src_data, dst, src, 1024);
+
+    // Medium copy.
+    verify_memmove(src_data, dst, src, 64 * 1024);
+
+    // Large copy.
+    verify_memmove(src_data, dst, src, 1024 * 1024 + 128 * 1024);
+  }
+}
+
 TEST(string, bcopy) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n; i++) {
@@ -962,6 +1012,22 @@ TEST(string, memcpy_align) {
 
 TEST(string, memcpy_overread) {
   RunSrcDstBufferOverreadTest(DoMemcpyTest);
+}
+
+static void DoMemmoveTest(uint8_t* src, uint8_t* dst, size_t len) {
+  memset(src, (len % 255) + 1, len);
+  memset(dst, 0, len);
+
+  ASSERT_EQ(dst, memmove(dst, src, len));
+  ASSERT_TRUE(memcmp(src, dst, len) == 0);
+}
+
+TEST(string, memmove_align) {
+  RunSrcDstBufferAlignTest(LARGE, DoMemmoveTest);
+}
+
+TEST(string, memmove_overread) {
+  RunSrcDstBufferOverreadTest(DoMemmoveTest);
 }
 
 static void DoMemsetTest(uint8_t* buf, size_t len) {
