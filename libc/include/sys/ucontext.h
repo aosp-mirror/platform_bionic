@@ -71,7 +71,8 @@ typedef struct ucontext {
   stack_t uc_stack;
   mcontext_t uc_mcontext;
   sigset_t uc_sigmask;
-  /* TODO: uc_regspace */
+  char __padding[128 - sizeof(sigset_t)];
+  unsigned long uc_regspace[128] __attribute__((__aligned__(8)));
 } ucontext_t;
 
 #elif defined(__aarch64__)
