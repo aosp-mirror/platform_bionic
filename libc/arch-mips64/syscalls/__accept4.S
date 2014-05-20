@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept4)
+ENTRY(__accept4)
     .set push
     .set noreorder
     li v0, __NR_accept4
@@ -22,4 +22,5 @@ ENTRY(accept4)
     j t9
     move ra, t0
     .set pop
-END(accept4)
+END(__accept4)
+.hidden __accept4

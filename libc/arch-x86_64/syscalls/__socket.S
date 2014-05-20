@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(socket)
+ENTRY(__socket)
     movl    $__NR_socket, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -13,4 +13,5 @@ ENTRY(socket)
     orq     $-1, %rax
 1:
     ret
-END(socket)
+END(__socket)
+.hidden __socket

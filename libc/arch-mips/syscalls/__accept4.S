@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(socket)
+ENTRY(__accept4)
     .set noreorder
     .cpload t9
-    li v0, __NR_socket
+    li v0, __NR_accept4
     syscall
     bnez a3, 1f
     move a0, v0
@@ -16,4 +16,4 @@ ENTRY(socket)
     j t9
     nop
     .set reorder
-END(socket)
+END(__accept4)
