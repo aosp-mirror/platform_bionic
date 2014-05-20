@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf1dbc5e_29c89558",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T01:02:51Z",
+      "side": 1,
+      "message": "these lists aren\u0027t complete, but i think i have each of the lists we\u0027ll need at this point :-)",
+      "revId": "5a93e88c7f8d8ac7de39f8020c2056816deda28c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
