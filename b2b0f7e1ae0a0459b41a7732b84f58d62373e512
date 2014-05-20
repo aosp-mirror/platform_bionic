@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f440856_ef3bc155",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-05-20T16:08:47Z",
+      "side": 0,
+      "message": "As Elliot suggested - we probably should leave the definitions for ARM, and remove them for ARM64. There might already be users of bionic + gregset_t for ARM.",
+      "revId": "b2b0f7e1ae0a0459b41a7732b84f58d62373e512",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
