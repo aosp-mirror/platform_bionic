@@ -16,6 +16,24 @@
       "revId": "0e85fb6121cf365207ee737314130a526dbe0eac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_2a6f93cb",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-20T11:07:30Z",
+      "side": 1,
+      "message": "The kernel leaves the mask last for extensibility. They don\u0027t provide a more detailed rationale but I think it\u0027s similar to the other places where sigmask is not the last (\"Allow for uc_sigmask growth. Glibc uses a 1024-bit sigset_t.\").\n\nI think we can explicitly pad this as well to ensure a consistent abi.\n\n| is glibc\u0027s sigset_t not insanely large on mips?\n\nGlibc also has an include file for the Generic/BSD version of sigset_t (unsigned long int) but it doesn\u0027t seem to be used. I couldn\u0027t find my way around their makefiles yet to be really sure which one gets used on mips.",
+      "parentUuid": "bf1dbc5e_7728aa10",
+      "revId": "0e85fb6121cf365207ee737314130a526dbe0eac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
