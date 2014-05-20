@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "ff281483_ddaf971b",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T22:46:12Z",
+      "side": 1,
+      "message": "sgtm. we have bionic_macros.h now, which sounds like a suitable home.",
+      "parentUuid": "bf1dbc5e_8e70cfee",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_cc77fee6",
         "filename": "libc/bionic/jemalloc.cpp",
         "patchSetId": 4
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Do you mean the name of the variable? Technically, I round down first, then round up in the next step, so that name seems slightly misleading.",
       "parentUuid": "aa1c9852_cc77fee6",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_7de6637e",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T22:46:12Z",
+      "side": 1,
+      "message": "no, i meant \"can you use the existing roundup macro?\".",
+      "parentUuid": "5f3a00c6_541942dc",
       "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
