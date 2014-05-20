@@ -217,7 +217,6 @@ libc_bionic_src_files := \
     bionic/termios.cpp \
     bionic/thread_atexit.cpp \
     bionic/tmpfile.cpp \
-    bionic/typeinfo.cpp \
     bionic/umount.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
