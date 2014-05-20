@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f1ab865_c72fcec2",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "I changed it to libc_malloc_src and defined it once up above and use it in the two places it needs to be included. It should not be included here.",
+      "parentUuid": "aa1c9852_cc8e1ead",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f0fa825_2ba9b1b1",
         "filename": "libc/bionic/jemalloc.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-19T18:22:20Z",
       "side": 1,
       "message": "BIONIC_ALIGN?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_8e70cfee",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "That only exists in bionic_tls.h. I think this alignment code or a version of it is in a bunch of different places. I\u0027ll do a change after this that creates a single BIONIC_ALIGN and shares amongst all of the places that use this pattern.",
+      "parentUuid": "1f0fa825_2ba9b1b1",
       "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5f3a00c6_541942dc",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "Do you mean the name of the variable? Technically, I round down first, then round up in the next step, so that name seems slightly misleading.",
+      "parentUuid": "aa1c9852_cc77fee6",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_2c87b288",
         "filename": "libc/bionic/jemalloc.h",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-19T18:22:20Z",
       "side": 1,
       "message": "maybe \"safe\" or \"rounding\" instead of the overly-vague \"wrapper\"?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_ae7a6bc6",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "I went with round_up_boundary.",
+      "parentUuid": "aa1c9852_2c87b288",
       "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "5f3a00c6_548ee2b1",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a3274d1_4a620894",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f0fa825_2b2c1189",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-19T18:22:20Z",
       "side": 1,
       "message": "#if 0?",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_4e651725",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-20T22:26:42Z",
+      "side": 1,
+      "message": "Oops, this was test code that should be deleted. It\u0027s gone now.",
+      "parentUuid": "1f0fa825_2b2c1189",
       "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
