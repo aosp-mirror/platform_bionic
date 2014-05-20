@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f1ab865_109a95e6",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T19:00:53Z",
+      "side": 1,
+      "message": "L",
+      "revId": "d244de21fe2ce160f5b01cc5a8a03073b1ec4c79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
