@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a58a819_be1bc5d6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-20T14:01:50Z",
+      "side": 0,
+      "message": "This holds only on read mode now. It might be possible to add it to write mode at the expense of extra complexity but POSIX does not mandate it.",
+      "range": {
+        "startLine": 43,
+        "startChar": 65,
+        "endLine": 43,
+        "endChar": 70
+      },
+      "revId": "9b95ea936a72532c3124963312d348c6ee453d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3da49e_9df36f85",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-20T14:01:50Z",
+      "side": 0,
+      "message": "Using only CAS operations it become more complex to hold onto this. If desired, I can try add it in a subsequent CL so that validation is easier.",
+      "range": {
+        "startLine": 48,
+        "startChar": 1,
+        "endLine": 53,
+        "endChar": 2
+      },
+      "revId": "9b95ea936a72532c3124963312d348c6ee453d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

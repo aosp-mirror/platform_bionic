@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a58a819_1e2bf1e7",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-20T14:01:50Z",
+      "side": 1,
+      "message": "I think we can clean this for LP64 (maybe for LP32 as well?) and put the extra space into __reserved. Thoughts?",
+      "range": {
+        "startLine": 97,
+        "startChar": 18,
+        "endLine": 98,
+        "endChar": 32
+      },
+      "revId": "ca2a41442f7452f987dd6688f5b4c7d99077f981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
