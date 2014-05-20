@@ -13,7 +13,6 @@ libc_bionic_src_files_arm := \
 libc_common_src_files_arm += \
     bionic/index.cpp \
     bionic/memchr.c \
-    bionic/memmove.c.arm \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
