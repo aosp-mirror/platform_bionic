@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f440856_751d6052",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T17:50:12Z",
+      "side": 1,
+      "message": "same question as before.",
+      "revId": "246c6880207539d01e84a6f049cd639139a0691a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
