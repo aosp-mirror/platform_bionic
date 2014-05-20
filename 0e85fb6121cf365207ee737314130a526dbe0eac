@@ -34,6 +34,24 @@
       "revId": "0e85fb6121cf365207ee737314130a526dbe0eac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_8a36bf6c",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-20T15:49:23Z",
+      "side": 1,
+      "message": "Based on the glibc docs and its structure sigset_t for mips is also 128 bytes.",
+      "parentUuid": "4a531cfd_2a6f93cb",
+      "revId": "0e85fb6121cf365207ee737314130a526dbe0eac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
