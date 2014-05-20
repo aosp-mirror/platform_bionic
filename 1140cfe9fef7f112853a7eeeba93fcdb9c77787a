@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1f0fa825_51c934ed",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T00:22:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf1dbc5e_6eaa1362",
+      "revId": "1140cfe9fef7f112853a7eeeba93fcdb9c77787a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_474bbee7",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-20T00:05:35Z",
       "side": 1,
       "message": "is this deliberate?",
+      "revId": "1140cfe9fef7f112853a7eeeba93fcdb9c77787a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_e554cd00",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T00:22:31Z",
+      "side": 1,
+      "message": "yes, see 7465467#15 for details",
+      "parentUuid": "9f1ab865_474bbee7",
       "revId": "1140cfe9fef7f112853a7eeeba93fcdb9c77787a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
