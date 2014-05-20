@@ -16,6 +16,24 @@
       "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f0fa825_8c4e9380",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T01:12:19Z",
+      "side": 1,
+      "message": "we have a choice basically, keep bug 6670 in place or this. I think 6670 is much more error-prone than this one. And fixing it will make visible other possible bugs with bname lookups.\n\nsee 7465467#20 for example.\n\nAnd I hope to uncomment this too eventually.",
+      "parentUuid": "5f3a00c6_f71158e2",
+      "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
