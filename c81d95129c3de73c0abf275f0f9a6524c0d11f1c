@@ -52,6 +52,24 @@
       "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_2d15410f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-20T02:15:44Z",
+      "side": 1,
+      "message": "Yes, and hopefully will prevent from future path-related mistakes. Added todo here.",
+      "parentUuid": "bf1dbc5e_9bfc8cdc",
+      "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
