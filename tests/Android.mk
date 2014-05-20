@@ -267,6 +267,18 @@ build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by dlfcn tests
+# -----------------------------------------------------------------------------
+libtest_simple_src_files := \
+    dlopen_testlib_simple.cpp
+
+module := libtest_simple
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+
+# -----------------------------------------------------------------------------
 # Library used by atexit tests
 # -----------------------------------------------------------------------------
 
