@@ -49,8 +49,7 @@ LOCAL_MODULE_STEM_64 := bionic-benchmarks64
 LOCAL_MULTILIB := both
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
-LOCAL_SHARED_LIBRARIES += libstlport
+include external/libcxx/libcxx.mk
 LOCAL_SRC_FILES := $(benchmark_src_files)
 include $(BUILD_EXECUTABLE)
 
