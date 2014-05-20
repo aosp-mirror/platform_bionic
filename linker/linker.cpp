@@ -912,6 +912,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
         case R_X86_64_JUMP_SLOT:
         case R_X86_64_GLOB_DAT:
         case R_X86_64_32:
+        case R_X86_64_64:
         case R_X86_64_RELATIVE:
           // No need to do anything.
           break;
