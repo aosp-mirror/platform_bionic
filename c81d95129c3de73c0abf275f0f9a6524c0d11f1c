@@ -34,6 +34,24 @@
       "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_9bfc8cdc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T02:00:14Z",
+      "side": 1,
+      "message": "okay, but you should probably reference the bug here.\n\ndoes checking this in let nvidia fix their blobs so we can uncomment?",
+      "parentUuid": "1f0fa825_8c4e9380",
+      "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
