@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f3a00c6_f71158e2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-20T01:04:45Z",
+      "side": 1,
+      "message": "but i don\u0027t understand how we actually get things fixed. aren\u0027t we making things worse if we back this out?",
+      "revId": "c81d95129c3de73c0abf275f0f9a6524c0d11f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
