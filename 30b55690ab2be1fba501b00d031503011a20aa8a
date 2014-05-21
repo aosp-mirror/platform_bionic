@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa1c9852_91f19708",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Aren\u0027t the atomics actually coming from include/sys/atomics.h?  That makes a crucial difference, since the sys/atomics.h atomic_ primitives are strongly ordered, but the __bionic_ primitives are not.  Since we\u0027re in the process of generally fixing this, it would be helpful to document what\u0027s actually needed.  I\u0027ve tried to do that below.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 41
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff281483_f50ca75d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Could be relaxed atomic read",
+      "range": {
+        "startLine": 131,
+        "startChar": 23,
+        "endLine": 131,
+        "endChar": 35
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_79167b20",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Needs memory_order_acquire semantics.  __atomic_cmpxchg is correct, but slow.",
+      "range": {
+        "startLine": 133,
+        "startChar": 6,
+        "endLine": 133,
+        "endChar": 77
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_a15b88af",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "I think this can get by with memory_order_relaxed ordering?  Thus the ARM fences are not needed?",
+      "range": {
+        "startLine": 144,
+        "startChar": 7,
+        "endLine": 144,
+        "endChar": 44
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_4be05bab",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "These could presumably get by with relaxed ordering",
+      "range": {
+        "startLine": 147,
+        "startChar": 11,
+        "endLine": 147,
+        "endChar": 48
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_f9ea6b84",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Needs memory_order_acquire semantics.  Currently correct, but slow.",
+      "range": {
+        "startLine": 169,
+        "startChar": 14,
+        "endLine": 169,
+        "endChar": 85
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_19276f3f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "memory_order_acquire ...",
+      "range": {
+        "startLine": 203,
+        "startChar": 12,
+        "endLine": 203,
+        "endChar": 62
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_c12facc2",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Either redundant or a clever optimization in case it\u0027s called in a loop.  I\u0027d probably leave it out, but don\u0027t care.",
+      "range": {
+        "startLine": 224,
+        "startChar": 6,
+        "endLine": 224,
+        "endChar": 20
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_71ea5bc2",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "memory_order_acquire ...",
+      "range": {
+        "startLine": 225,
+        "startChar": 7,
+        "endLine": 225,
+        "endChar": 53
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_3109c3fa",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "I think this is kind of correct, but for extremely subtle reasons that deserve a comment.  I initially thought that this could just be release store in C++11 terminology.  But that\u0027s incorrect.  It is just a store, not a cmpxchg, but it needs to be sequentially consistent, as do the reads of pendingX below.  I think that if the loads become visible to other threads before the store here, we end up with a lost wakeup.\n\nAssuming we\u0027re on x86, or the __atomic_cmpxchg is implemented with two \"dmb ish\"s on ARM, and all fields are volatile, so the compiler doesn\u0027t move things, I think we get the right ordering.  C++11 guarantees it only if both the store and the loads are sequentially consistent.\n\nBottom line: please add a comment that the cmpxchg is really intended to be a sequentially consistent store, and that the loads below should eventually become sequentially consistent loads.\n\nI\u0027m still thinking about what precisely the right ordering constraint is.",
+      "range": {
+        "startLine": 256,
+        "startChar": 6,
+        "endLine": 256,
+        "endChar": 90
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_11c9275b",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "I read the specs as stating that this is impossible.",
+      "range": {
+        "startLine": 262,
+        "startChar": 1,
+        "endLine": 265,
+        "endChar": 7
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_6850bd8e",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Again, this and the following loads need to be sequentially consistent, I suspect.",
+      "range": {
+        "startLine": 268,
+        "startChar": 13,
+        "endLine": 268,
+        "endChar": 72
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_76f7a86f",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "__unused_cond?",
+      "range": {
+        "startLine": 98,
+        "startChar": 17,
+        "endLine": 98,
+        "endChar": 32
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_e16ab02b",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "Both of these are concurrently accessed.  In a C++11 world, they should be declared atomic, and we should be using C++11 primitives to access them.  Apparently we can\u0027t yet use C++11 atomics with gcc, for reasons related to copyright for the \u003catomic\u003e headrer.  I think they should be declared volatile for now.",
+      "range": {
+        "startLine": 99,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 25
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f2f188c_d47bf244",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-21T01:07:01Z",
+      "side": 1,
+      "message": "I think these also need to at least be volatile, since they\u0027re concurrently accessed.",
+      "range": {
+        "startLine": 101,
+        "startChar": 2,
+        "endLine": 102,
+        "endChar": 25
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
