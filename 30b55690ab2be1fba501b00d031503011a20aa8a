@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2a58a819_6956093d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Yes they are. I actually forgot this here (I experimented with some \"manual\" barriers at some point - ANDROID_MEMBAR_FULL).",
+      "parentUuid": "aa1c9852_91f19708",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 41
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff281483_f50ca75d",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "Could be relaxed atomic read",
+      "range": {
+        "startLine": 131,
+        "startChar": 23,
+        "endLine": 131,
+        "endChar": 35
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_9736e36c",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m not sure what you mean here... :)",
+      "parentUuid": "ff281483_f50ca75d",
       "range": {
         "startLine": 131,
         "startChar": 23,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_a3464835",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_79167b20",
+      "range": {
+        "startLine": 133,
+        "startChar": 6,
+        "endLine": 133,
+        "endChar": 77
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3504d1_a15b88af",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "I think this can get by with memory_order_relaxed ordering?  Thus the ARM fences are not needed?",
+      "range": {
+        "startLine": 144,
+        "startChar": 7,
+        "endLine": 144,
+        "endChar": 44
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a58a819_2456e88d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Yes, I also think memory_order_relaxed should be enough.",
+      "parentUuid": "7f3504d1_a15b88af",
       "range": {
         "startLine": 144,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_032d5c82",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f1ab865_4be05bab",
+      "range": {
+        "startLine": 147,
+        "startChar": 11,
+        "endLine": 147,
+        "endChar": 48
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f3f0cb7_f9ea6b84",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "Needs memory_order_acquire semantics.  Currently correct, but slow.",
+      "range": {
+        "startLine": 169,
+        "startChar": 14,
+        "endLine": 169,
+        "endChar": 85
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_77f25f7d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_f9ea6b84",
       "range": {
         "startLine": 169,
         "startChar": 14,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "2a58a819_6460f061",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_19276f3f",
+      "range": {
+        "startLine": 203,
+        "startChar": 12,
+        "endLine": 203,
+        "endChar": 62
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3504d1_c12facc2",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -174,6 +342,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "Either redundant or a clever optimization in case it\u0027s called in a loop.  I\u0027d probably leave it out, but don\u0027t care.",
+      "range": {
+        "startLine": 224,
+        "startChar": 6,
+        "endLine": 224,
+        "endChar": 20
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a58a819_84d5d4ef",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Intended as an optimization",
+      "parentUuid": "7f3504d1_c12facc2",
       "range": {
         "startLine": 224,
         "startChar": 6,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_b71cc700",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa1c9852_71ea5bc2",
+      "range": {
+        "startLine": 225,
+        "startChar": 7,
+        "endLine": 225,
+        "endChar": 53
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_3109c3fa",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -220,6 +436,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "I think this is kind of correct, but for extremely subtle reasons that deserve a comment.  I initially thought that this could just be release store in C++11 terminology.  But that\u0027s incorrect.  It is just a store, not a cmpxchg, but it needs to be sequentially consistent, as do the reads of pendingX below.  I think that if the loads become visible to other threads before the store here, we end up with a lost wakeup.\n\nAssuming we\u0027re on x86, or the __atomic_cmpxchg is implemented with two \"dmb ish\"s on ARM, and all fields are volatile, so the compiler doesn\u0027t move things, I think we get the right ordering.  C++11 guarantees it only if both the store and the loads are sequentially consistent.\n\nBottom line: please add a comment that the cmpxchg is really intended to be a sequentially consistent store, and that the loads below should eventually become sequentially consistent loads.\n\nI\u0027m still thinking about what precisely the right ordering constraint is.",
+      "range": {
+        "startLine": 256,
+        "startChar": 6,
+        "endLine": 256,
+        "endChar": 90
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_17b593bd",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Yes, if the pendingX loads are reordered then we end up with a lost wakeup - and memory_order_release is not enough to prevent it.  We would need a StoreLoad barrier and I\u0027m not sure there\u0027s a ordering constraint for it...",
+      "parentUuid": "aa1c9852_3109c3fa",
       "range": {
         "startLine": 256,
         "startChar": 6,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_97c18312",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "cool. Could you point me to the specs? I searched but didn\u0027t find...",
+      "parentUuid": "aa1c9852_11c9275b",
+      "range": {
+        "startLine": 262,
+        "startChar": 1,
+        "endLine": 265,
+        "endChar": 7
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_6850bd8e",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 4
@@ -266,6 +530,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "Again, this and the following loads need to be sequentially consistent, I suspect.",
+      "range": {
+        "startLine": 268,
+        "startChar": 13,
+        "endLine": 268,
+        "endChar": 72
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_d7d30be7",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Yes, they do. The art implementation uses a release ordering here but I think that\u0027s a bug.",
+      "parentUuid": "9f1ab865_6850bd8e",
       "range": {
         "startLine": 268,
         "startChar": 13,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_375b770e",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_76f7a86f",
+      "range": {
+        "startLine": 98,
+        "startChar": 17,
+        "endLine": 98,
+        "endChar": 32
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3504d1_e16ab02b",
         "filename": "libc/include/pthread.h",
         "patchSetId": 4
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_03fb9c9a",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Yep, they should be volatile.",
+      "parentUuid": "7f3504d1_e16ab02b",
+      "range": {
+        "startLine": 99,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 25
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f2f188c_d47bf244",
         "filename": "libc/include/pthread.h",
         "patchSetId": 4
@@ -335,6 +671,30 @@
       "writtenOn": "2014-05-21T01:07:01Z",
       "side": 1,
       "message": "I think these also need to at least be volatile, since they\u0027re concurrently accessed.",
+      "range": {
+        "startLine": 101,
+        "startChar": 2,
+        "endLine": 102,
+        "endChar": 25
+      },
+      "revId": "30b55690ab2be1fba501b00d031503011a20aa8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3da49e_43dda425",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T16:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f2f188c_d47bf244",
       "range": {
         "startLine": 101,
         "startChar": 2,
