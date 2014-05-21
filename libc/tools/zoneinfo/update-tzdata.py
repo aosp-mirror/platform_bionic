@@ -130,9 +130,14 @@ def BuildIcuToolsAndData(data_filename):
 
   os.chdir(icu_working_dir)
   icu_dat_data_dir = '%s/stubdata' % icu_dir
-  for file in glob.glob('data/out/tmp/*.dat'):
-    print 'Copying %s to %s ...' % (file, icu_dat_data_dir)
-    shutil.copy(file, icu_dat_data_dir)
+  datfiles = glob.glob('data/out/tmp/icudt??l.dat')
+  if len(datfiles) != 1:
+    print 'ERROR: Unexpectedly found %d .dat files (%s). Halting.' % (len(datfiles), datfiles)
+    sys.exit(1)
+
+  datfile = datfiles[0]
+  print 'Copying %s to %s ...' % (datfile, icu_dat_data_dir)
+  shutil.copy(datfile, icu_dat_data_dir)
 
   # Switch back to the original working cwd.
   os.chdir(original_working_dir)
