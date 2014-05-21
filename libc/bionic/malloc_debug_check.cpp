@@ -47,7 +47,6 @@
 
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
-#include "dlmalloc.h"
 #include "private/libc_logging.h"
 #include "malloc_debug_common.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -74,7 +73,7 @@ static void log_message(const char* format, ...) {
 
 struct hdr_t {
     uint32_t tag;
-    void* base;  // Always points to the memory allocated using dlmalloc.
+    void* base;  // Always points to the memory allocated using malloc.
                  // For memory allocated in chk_memalign, this value will
                  // not be the same as the location of the start of this
                  // structure.
@@ -321,14 +320,14 @@ static inline void add_to_backlog(hdr_t* hdr) {
     while (backlog_num > g_malloc_debug_backlog) {
         hdr_t* gone = backlog_tail;
         del_from_backlog_locked(gone);
-        dlfree(gone->base);
+        Malloc(free)(gone->base);
     }
 }
 
 extern "C" void* chk_malloc(size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
-    hdr_t* hdr = static_cast<hdr_t*>(dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t)));
+    hdr_t* hdr = static_cast<hdr_t*>(Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t)));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -356,7 +355,7 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
         return NULL;
     }
 
-    void* base = dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t));
+    void* base = Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t));
     if (base != NULL) {
         // Check that the actual pointer that will be returned is aligned
         // properly.
@@ -453,25 +452,25 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
                        user(hdr), size);
             log_backtrace(bt, depth);
             // just get a whole new allocation and leak the old one
-            return dlrealloc(0, size);
-            // return dlrealloc(user(hdr), size); // assuming it was allocated externally
+            return Malloc(realloc)(0, size);
+            // return realloc(user(hdr), size); // assuming it was allocated externally
         }
     }
 
     if (hdr->base != hdr) {
         // An allocation from memalign, so create another allocation and
         // copy the data out.
-        void* newMem = dlmalloc(sizeof(hdr_t) + size + sizeof(ftr_t));
+        void* newMem = Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t));
         if (newMem) {
             memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
-            dlfree(hdr->base);
+            Malloc(free)(hdr->base);
             hdr = static_cast<hdr_t*>(newMem);
         } else {
-            dlfree(hdr->base);
+            Malloc(free)(hdr->base);
             hdr = NULL;
         }
     } else {
-        hdr = static_cast<hdr_t*>(dlrealloc(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
+        hdr = static_cast<hdr_t*>(Malloc(realloc)(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
     }
     if (hdr) {
         hdr->base = hdr;
@@ -486,7 +485,7 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
 extern "C" void* chk_calloc(int nmemb, size_t size) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     size_t total_size = nmemb * size;
-    hdr_t* hdr = static_cast<hdr_t*>(dlcalloc(1, sizeof(hdr_t) + total_size + sizeof(ftr_t)));
+    hdr_t* hdr = static_cast<hdr_t*>(Malloc(calloc)(1, sizeof(hdr_t) + total_size + sizeof(ftr_t)));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -497,7 +496,7 @@ extern "C" void* chk_calloc(int nmemb, size_t size) {
 }
 
 extern "C" size_t chk_malloc_usable_size(const void* ptr) {
-    // dlmalloc_usable_size returns 0 for NULL and unknown blocks.
+    // malloc_usable_size returns 0 for NULL and unknown blocks.
     if (ptr == NULL)
         return 0;
 

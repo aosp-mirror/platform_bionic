@@ -82,6 +82,13 @@ enum {
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
 
+#if defined(USE_JEMALLOC)
+/* jemalloc uses 5 keys for itself. */
+#define BIONIC_TLS_RESERVED_SLOTS (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 5)
+#else
+#define BIONIC_TLS_RESERVED_SLOTS GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
+#endif
+
 #define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
 
 /*
@@ -89,7 +96,7 @@ enum {
  * This includes space for pthread keys and our own internal slots.
  * We need to round up to maintain stack alignment.
  */
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
+#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS, 4)
 
 __END_DECLS
 
