@@ -297,7 +297,6 @@ int     delete_module(const char*, unsigned int)   all
 int     klogctl:syslog(int, char*, int)   all
 int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
-long    perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) all
 
 int epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
