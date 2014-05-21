@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_bdc4ab76",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-05-21T08:10:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f0aac14_b28d30e0",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df20b093_fb1a6786",
         "filename": "libc/tools/zoneinfo/update-tzdata.py",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_aa71c3be",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-05-21T08:10:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df20b093_fb1a6786",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df20b093_3b7b3f9b",
         "filename": "libc/tools/zoneinfo/update-tzdata.py",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-05-19T16:42:15Z",
       "side": 1,
       "message": "there are multiple files? or is this just to avoid having to know the version number and endianness? i prefer to use [0] when i\u0027m assuming a single result.",
+      "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3da49e_9dbfefef",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-05-21T08:10:40Z",
+      "side": 1,
+      "message": "It was intended to be a straight port of the instructions here: https://sites.google.com/a/google.com/intl-eng/update/android-and-icu-updates",
+      "parentUuid": "df20b093_3b7b3f9b",
       "revId": "766f55eab3fe82fdf9208ac6a4c80c11e5538912",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
