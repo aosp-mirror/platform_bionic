@@ -291,7 +291,6 @@ int ioprio_get(int which, int who) all
 int     uname(struct utsname*)  all
 mode_t  umask(mode_t)  all
 int     __reboot:reboot(int, int, int, void*)  all
-int     __syslog:syslog(int, char*, int)  all
 int     init_module(void*, unsigned long, const char*)  all
 int     delete_module(const char*, unsigned int)   all
 int     klogctl:syslog(int, char*, int)   all
