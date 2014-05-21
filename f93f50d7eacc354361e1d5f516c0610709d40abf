@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f48f879_38e0ed5c",
+        "filename": "libc/arch-arm64/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-21T23:31:46Z",
+      "side": 1,
+      "message": "i\u0027ve left the x8 push and pop so that you can just remove them all in your change rather than have an odd man out.",
+      "revId": "f93f50d7eacc354361e1d5f516c0610709d40abf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
