@@ -45,9 +45,20 @@
 
 #define MAX_SIZE_T           (~(size_t)0)
 
-// This must match the alignment used by dlmalloc.
+// This must match the alignment used by the malloc implementation.
 #ifndef MALLOC_ALIGNMENT
 #define MALLOC_ALIGNMENT ((size_t)(2 * sizeof(void *)))
+#endif
+
+#ifdef USE_JEMALLOC
+#include "jemalloc.h"
+#define Malloc(function)  je_ ## function
+#else
+#ifndef USE_DLMALLOC
+#error "Either one of USE_DLMALLOC or USE_JEMALLOC must be defined."
+#endif
+#include "dlmalloc.h"
+#define Malloc(function)  dl ## function
 #endif
 
 // =============================================================================

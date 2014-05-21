@@ -46,7 +46,6 @@
 #include <unwind.h>
 
 #include "debug_stacktrace.h"
-#include "dlmalloc.h"
 #include "malloc_debug_common.h"
 
 #include "private/libc_logging.h"
@@ -144,7 +143,7 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         entry->allocations++;
     } else {
         // create a new entry
-        entry = static_cast<HashEntry*>(dlmalloc(sizeof(HashEntry) + numEntries*sizeof(uintptr_t)));
+        entry = static_cast<HashEntry*>(Malloc(malloc)(sizeof(HashEntry) + numEntries*sizeof(uintptr_t)));
         if (!entry) {
             return NULL;
         }
@@ -213,11 +212,11 @@ static void remove_entry(HashEntry* entry) {
 #define CHK_SENTINEL_VALUE      0xeb
 
 extern "C" void* fill_calloc(size_t n_elements, size_t elem_size) {
-    return dlcalloc(n_elements, elem_size);
+    return Malloc(calloc)(n_elements, elem_size);
 }
 
 extern "C" void* fill_malloc(size_t bytes) {
-    void* buffer = dlmalloc(bytes);
+    void* buffer = Malloc(malloc)(bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
     }
@@ -225,17 +224,17 @@ extern "C" void* fill_malloc(size_t bytes) {
 }
 
 extern "C" void fill_free(void* mem) {
-    size_t bytes = dlmalloc_usable_size(mem);
+    size_t bytes = Malloc(malloc_usable_size)(mem);
     memset(mem, CHK_FILL_FREE, bytes);
-    dlfree(mem);
+    Malloc(free)(mem);
 }
 
 extern "C" void* fill_realloc(void* mem, size_t bytes) {
-    size_t oldSize = dlmalloc_usable_size(mem);
-    void* newMem = dlrealloc(mem, bytes);
+    size_t oldSize = Malloc(malloc_usable_size)(mem);
+    void* newMem = Malloc(realloc)(mem, bytes);
     if (newMem) {
         // If this is larger than before, fill the extra with our pattern.
-        size_t newSize = dlmalloc_usable_size(newMem);
+        size_t newSize = Malloc(malloc_usable_size)(newMem);
         if (newSize > oldSize) {
             memset(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(newMem)+oldSize), CHK_FILL_FREE, newSize-oldSize);
         }
@@ -244,7 +243,7 @@ extern "C" void* fill_realloc(void* mem, size_t bytes) {
 }
 
 extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
-    void* buffer = dlmemalign(alignment, bytes);
+    void* buffer = Malloc(memalign)(alignment, bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
     }
@@ -254,7 +253,7 @@ extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
 extern "C" size_t fill_malloc_usable_size(const void* mem) {
     // Since we didn't allocate extra bytes before or after, we can
     // report the normal usable size here.
-    return dlmalloc_usable_size(mem);
+    return Malloc(malloc_usable_size)(mem);
 }
 
 // =============================================================================
@@ -275,7 +274,7 @@ extern "C" void* leak_malloc(size_t bytes) {
         return NULL;
     }
 
-    void* base = dlmalloc(size);
+    void* base = Malloc(malloc)(size);
     if (base != NULL) {
         ScopedPthreadMutexLocker locker(&g_allocations_mutex);
 
@@ -316,11 +315,11 @@ extern "C" void leak_free(void* mem) {
             entry->allocations--;
             if (entry->allocations <= 0) {
                 remove_entry(entry);
-                dlfree(entry);
+                Malloc(free)(entry);
             }
 
             // now free the memory!
-            dlfree(header);
+            Malloc(free)(header);
         } else {
             debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
                     header->guard, header->entry);
@@ -425,7 +424,7 @@ extern "C" size_t leak_malloc_usable_size(const void* mem) {
             return 0;
         }
 
-        size_t ret = dlmalloc_usable_size(header);
+        size_t ret = Malloc(malloc_usable_size)(header);
         if (ret != 0) {
             // The usable area starts at 'mem' and stops at 'header+ret'.
             return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
