@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
 #include <asm/prctl.h>
 #include <stdint.h>
 
