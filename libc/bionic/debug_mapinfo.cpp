@@ -30,7 +30,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef USE_JEMALLOC
+#include "jemalloc.h"
+#define Malloc(function)  je_ ## function
+#else
 #include "dlmalloc.h"
+#define Malloc(function)  dl ## function
+#endif
 #include "debug_mapinfo.h"
 
 // 6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so
@@ -46,7 +52,7 @@ static mapinfo_t* parse_maps_line(char* line) {
   if (len < 50) return 0;
   if (line[20] != 'x') return 0;
 
-  mapinfo_t* mi = static_cast<mapinfo_t*>(dlmalloc(sizeof(mapinfo_t) + (len - 47)));
+  mapinfo_t* mi = static_cast<mapinfo_t*>(Malloc(malloc)(sizeof(mapinfo_t) + (len - 47)));
   if (mi == 0) return 0;
 
   mi->start = strtoul(line, 0, 16);
@@ -79,7 +85,7 @@ __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
   while (mi != NULL) {
     mapinfo_t* del = mi;
     mi = mi->next;
-    dlfree(del);
+    Malloc(free)(del);
   }
 }
 

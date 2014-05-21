@@ -46,7 +46,7 @@ TEST(malloc, memalign_multiple) {
   for (size_t i = 0; i <= 12; i++) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
       char *ptr = (char*)memalign(alignment, 100);
-      ASSERT_TRUE(ptr != NULL);
+      ASSERT_TRUE(ptr != NULL) << alignment;
       ASSERT_LE(100U, malloc_usable_size(ptr));
       ASSERT_EQ(0, (intptr_t)ptr % (1 << i));
 
@@ -232,4 +232,19 @@ TEST(malloc, calloc_multiple_realloc) {
   }
 
   free(ptr);
+}
+
+TEST(malloc, posix_memalign_non_power2) {
+  void* ptr;
+
+  ASSERT_EQ(EINVAL, posix_memalign(&ptr, 17, 1024));
+}
+
+TEST(malloc, memalign_non_power2) {
+  void* ptr;
+  for (size_t align = 0; align <= 256; align++) {
+    ptr = memalign(align, 1024);
+    ASSERT_TRUE(ptr != NULL) << "Failed at align " << align;
+    free(ptr);
+  }
 }

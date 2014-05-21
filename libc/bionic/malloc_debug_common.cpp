@@ -46,7 +46,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "dlmalloc.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
 /*
@@ -134,7 +133,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         return;
     }
 
-    HashEntry** list = static_cast<HashEntry**>(dlmalloc(sizeof(void*) * g_hash_table.count));
+    HashEntry** list = static_cast<HashEntry**>(Malloc(malloc)(sizeof(void*) * g_hash_table.count));
 
     // get the entries into an array to be sorted
     int index = 0;
@@ -155,11 +154,11 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     *backtraceSize = BACKTRACE_SIZE;
 
     // now get a byte array big enough for this
-    *info = static_cast<uint8_t*>(dlmalloc(*overallSize));
+    *info = static_cast<uint8_t*>(Malloc(malloc)(*overallSize));
 
     if (*info == NULL) {
         *overallSize = 0;
-        dlfree(list);
+        Malloc(free)(list);
         return;
     }
 
@@ -181,42 +180,36 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
         head += *infoSize;
     }
 
-    dlfree(list);
+    Malloc(free)(list);
 }
 
 // Exported for use by ddms.
 extern "C" void free_malloc_leak_info(uint8_t* info) {
-    dlfree(info);
+    Malloc(free)(info);
 }
 
 extern "C" struct mallinfo mallinfo() {
-    return dlmallinfo();
+    return Malloc(mallinfo)();
 }
 
 extern "C" void* valloc(size_t bytes) {
-    return dlvalloc(bytes);
+    return Malloc(valloc)(bytes);
 }
 
 extern "C" void* pvalloc(size_t bytes) {
-    return dlpvalloc(bytes);
+    return Malloc(pvalloc)(bytes);
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
-    return dlposix_memalign(memptr, alignment, size);
+    return Malloc(posix_memalign)(memptr, alignment, size);
 }
 
-/* Support for malloc debugging.
- * Note that if USE_DL_PREFIX is not defined, it's assumed that memory
- * allocation routines are implemented somewhere else, so all our custom
- * malloc routines should not be compiled at all.
- */
-#ifdef USE_DL_PREFIX
-
-/* Table for dispatching malloc calls, initialized with default dispatchers. */
+// Support for malloc debugging.
+// Table for dispatching malloc calls, initialized with default dispatchers.
 extern const MallocDebug __libc_malloc_default_dispatch;
 const MallocDebug __libc_malloc_default_dispatch __attribute__((aligned(32))) =
 {
-    dlmalloc, dlfree, dlcalloc, dlrealloc, dlmemalign, dlmalloc_usable_size,
+    Malloc(malloc), Malloc(free), Malloc(calloc), Malloc(realloc), Malloc(memalign), Malloc(malloc_usable_size),
 };
 
 /* Selector of dispatch table to use for dispatching malloc calls. */
@@ -257,7 +250,7 @@ extern "C" size_t malloc_usable_size(const void* mem) {
 
 /* Table for dispatching malloc calls, depending on environment. */
 static MallocDebug g_malloc_dispatch_table __attribute__((aligned(32))) = {
-    dlmalloc, dlfree, dlcalloc, dlrealloc, dlmemalign, dlmalloc_usable_size
+    Malloc(malloc), Malloc(free), Malloc(calloc), Malloc(realloc), Malloc(memalign), Malloc(malloc_usable_size)
 };
 
 extern const char* __progname;
@@ -347,8 +340,7 @@ static void malloc_init_impl() {
         g_malloc_debug_level = atoi(env);
     }
 
-    /* Debug level 0 means that we should use dlxxx allocation
-     * routines (default). */
+    /* Debug level 0 means that we should use default allocation routines. */
     if (g_malloc_debug_level == 0) {
         return;
     }
@@ -504,7 +496,6 @@ static pthread_once_t  malloc_init_once_ctl = PTHREAD_ONCE_INIT;
 static pthread_once_t  malloc_fini_once_ctl = PTHREAD_ONCE_INIT;
 
 #endif  // !LIBC_STATIC
-#endif  // USE_DL_PREFIX
 
 /* Initializes memory allocation framework.
  * This routine is called from __libc_init routines implemented
