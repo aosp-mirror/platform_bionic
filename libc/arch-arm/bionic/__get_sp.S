@@ -28,7 +28,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__get_sp)
+ENTRY_PRIVATE(__get_sp)
   mov r0, sp
   bx lr
 END(__get_sp)
