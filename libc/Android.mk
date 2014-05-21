@@ -505,7 +505,7 @@ ifeq ($(MALLOC_IMPL),jemalloc)
 else
   libc_common_cflags += -DUSE_DLMALLOC
 
-  libc_malloc_src := bionic/dlmalloc.cpp
+  libc_malloc_src := bionic/dlmalloc.c
 endif
 
 # To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
