@@ -34,6 +34,24 @@
       "revId": "246c6880207539d01e84a6f049cd639139a0691a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_f799ef26",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-05-21T15:46:38Z",
+      "side": 1,
+      "message": "Ok. Will do as a follow up.",
+      "parentUuid": "9f48f879_239a0a62",
+      "revId": "246c6880207539d01e84a6f049cd639139a0691a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
