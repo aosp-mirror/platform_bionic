@@ -73,6 +73,13 @@ FORTIFY_stuff = set([
   '__strrchr_chk',
   '__umask_chk'
 ])
+# Some symbols are used to implement public macros.
+macro_stuff = set([
+  '__assert2',
+  '__errno',
+  '__fe_dfl_env',
+  '__get_h_errno',
+])
 # bionic exposes various Linux features that glibc doesn't.
 linux_stuff = set([
   'getauxval',
@@ -114,7 +121,8 @@ for symbol in sorted(bionic):
 
 print
 print 'in bionic but not glibc:'
-for symbol in sorted((bionic - bsd_stuff - FORTIFY_stuff - linux_stuff - std_stuff - weird_stuff).difference(glibc)):
+allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff | std_stuff | weird_stuff)
+for symbol in sorted((bionic - allowed_stuff).difference(glibc)):
   print symbol
 
 sys.exit(0)
