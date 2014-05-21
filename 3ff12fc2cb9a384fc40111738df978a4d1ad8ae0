@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "7f8344c5_8819bbdf",
+        "filename": "libc/bionic/jemalloc.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-21T18:14:05Z",
+      "side": 1,
+      "message": "I only found one roundup macro in system core. It also doesn\u0027t quite do a round up to a power of 2. I\u0027ve submitted this but maybe there is another one I missed and I can use it when I do the BIONIC_ALIGN cleanup.",
+      "parentUuid": "ff281483_7de6637e",
+      "revId": "3ff12fc2cb9a384fc40111738df978a4d1ad8ae0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_2c87b288",
         "filename": "libc/bionic/jemalloc.h",
         "patchSetId": 4
