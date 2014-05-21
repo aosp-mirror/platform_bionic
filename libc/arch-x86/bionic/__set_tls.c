@@ -57,7 +57,7 @@ __LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, v
   result->useable = 1;
 }
 
-int __set_tls(void* ptr) {
+__LIBC_HIDDEN__ int __set_tls(void* ptr) {
   struct user_desc tls_descriptor;
   __init_user_desc(&tls_descriptor, true, ptr);
 
