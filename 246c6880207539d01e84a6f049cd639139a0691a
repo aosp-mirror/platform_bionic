@@ -16,6 +16,24 @@
       "revId": "246c6880207539d01e84a6f049cd639139a0691a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f48f879_239a0a62",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-21T15:36:43Z",
+      "side": 1,
+      "message": "yeah, i\u0027d rather not have the loop because i think you\u0027ve just misinterpreted the instructions. there should only be one .dat file. it would make more sense to assert that than to have a loop.",
+      "parentUuid": "1f440856_751d6052",
+      "revId": "246c6880207539d01e84a6f049cd639139a0691a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
