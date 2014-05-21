@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
-void __set_tls(void* tls) {
+#include <sys/cdefs.h>
+
+__LIBC_HIDDEN__ void __set_tls(void* tls) {
   asm("msr tpidr_el0, %0" : : "r" (tls));
 }
