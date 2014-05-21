@@ -28,7 +28,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__get_sp)
+ENTRY_PRIVATE(__get_sp)
   move v0, sp
   j ra
 END(__get_sp)
