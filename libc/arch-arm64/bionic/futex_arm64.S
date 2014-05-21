@@ -34,14 +34,18 @@
 // int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
 ENTRY(__futex_syscall4)
   stp x29, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
   mov x29, sp
 
-  str x8, [sp, #-16]!
   mov x8, __NR_futex
   svc #0
-  ldr x8, [sp], #16
 
   ldp x29, x30, [sp], #16
+  .cfi_def_cfa_offset 0
+  .cfi_restore x29
+  .cfi_restore x30
   ret
 END(__futex_syscall4)
 
@@ -53,34 +57,42 @@ END(__futex_syscall3)
 // int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
 ENTRY_PRIVATE(__futex_wait)
   stp x29, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
   mov x29, sp
 
   mov x3, x2
   mov x2, x1
   mov x1, #FUTEX_WAIT
 
-  str x8, [sp, #-16]!
   mov x8, __NR_futex
   svc #0
-  ldr x8, [sp], #16
 
   ldp x29, x30, [sp], #16
+  .cfi_def_cfa_offset 0
+  .cfi_restore x29
+  .cfi_restore x30
   ret
 END(__futex_wait)
 
 // int __futex_wake(volatile void* ftx, int count)
 ENTRY_PRIVATE(__futex_wake)
   stp x29, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
   mov x29, sp
 
   mov x2, x1
   mov x1, #FUTEX_WAKE
 
-  str x8, [sp, #-16]!
   mov x8, __NR_futex
   svc #0
-  ldr x8, [sp], #16
 
   ldp x29, x30, [sp], #16
+  .cfi_def_cfa_offset 0
+  .cfi_restore x29
+  .cfi_restore x30
   ret
 END(__futex_wake)

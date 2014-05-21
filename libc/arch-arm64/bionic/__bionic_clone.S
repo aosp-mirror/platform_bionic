@@ -32,8 +32,10 @@
 
 ENTRY(__bionic_clone)
     stp     x29, x30, [sp, #-16]!
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset x29, 0
+    .cfi_rel_offset x30, 8
     mov     x29,  sp
-    str     x8,       [sp, #-16]!
 
     # Copy 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]
@@ -48,8 +50,10 @@ ENTRY(__bionic_clone)
     # Are we the child?
     cbz     x0, .L_bc_child
 
-    ldr     x8,       [sp], #16
     ldp     x29, x30, [sp], #16
+    .cfi_def_cfa_offset 0
+    .cfi_restore x29
+    .cfi_restore x30
 
     # Set errno if something went wrong.
     cmn     x0, #(MAX_ERRNO + 1)
@@ -60,6 +64,8 @@ ENTRY(__bionic_clone)
 
 .L_bc_child:
     # We're in the child now. Set the end of the frame record chain...
+    .cfi_undefined x29
+    .cfi_undefined x30
     mov     x29, xzr
     # ...and call __bionic_clone_entry with the 'fn' and 'arg' we stored on the child stack.
     ldp     x0, x1, [sp, #-16]
