@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_9af1aa08",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T20:30:13Z",
+      "side": 1,
+      "message": "Thanks! I was relying that in practice (load/store)-tearing  \"never\" happens... I added a comment for this.",
+      "parentUuid": "7f8344c5_48e41349",
+      "range": {
+        "startLine": 134,
+        "startChar": 5,
+        "endLine": 134,
+        "endChar": 37
+      },
+      "revId": "d9fa8509dfdcc3227ea481a99fc0326e3024b7c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8344c5_88aa1b5f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-21T18:27:37Z",
       "side": 1,
       "message": "E.g. https://gcc.gnu.org/onlinedocs/gcc-4.6.4/gcc/Atomic-Builtins.html doesn\u0027t say anything about spurious failures, and that\u0027s used to implement these.  So I think it can\u0027t fail.  I would have been tempted to check that.  But as it stands, any failure would result in an easily recognizable deadlock, so it looks OK to me as is.",
+      "range": {
+        "startLine": 264,
+        "startChar": 6,
+        "endLine": 264,
+        "endChar": 76
+      },
+      "revId": "d9fa8509dfdcc3227ea481a99fc0326e3024b7c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_1ae5ba43",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-21T20:30:13Z",
+      "side": 1,
+      "message": "Ah, ok, I was aware of that doc :)",
+      "parentUuid": "7f8344c5_88aa1b5f",
       "range": {
         "startLine": 264,
         "startChar": 6,
