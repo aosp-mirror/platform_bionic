@@ -28,74 +28,8 @@
 
 #include <private/bionic_asm.h>
 
-#define FUTEX_WAIT 0
-#define FUTEX_WAKE 1
-
-// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-ENTRY(__futex_wait)
-	subu	sp,4*6
-	sw	$0,20(sp)	/* val3 */
-	sw	$0,16(sp)	/* addr2 */
-	move	a3,a2		/* timespec */
-	move	a2,a1		/* val */
-	li	a1,FUTEX_WAIT	/* op */
-#	move	a0,a0		/* ftx */
-	li	v0,__NR_futex
-	syscall
-	.set noreorder
-	bnez	a3, 1f		/* Check for error */
-         neg	v0		/* Negate error number if it's valid */
-	move	v0,$0		/* Otherwise return 0 */
-1:
-	.set reorder
-	addu	sp,4*6
-	j	ra
-END(__futex_wait)
-
-// int __futex_wake(volatile void* ftx, int count)
-ENTRY(__futex_wake)
-	subu	sp,4*6
-	sw	$0,20(sp)	/* val3 */
-	sw	$0,16(sp)	/* addr2 */
-	move	a3,$0		/* timespec */
-	move	a2,a1		/* val */
-	li	a1,FUTEX_WAKE	/* op */
-#	move	a0,a0		/* ftx */
-	li	v0,__NR_futex
-	syscall
-	.set noreorder
-	bnez	a3, 1f		/* Check for error */
-         neg	v0		/* Negate error number if it's valid */
-	move	v0,$0		/* Otherwise return 0 */
-1:
-	.set reorder
-	addu	sp,4*6
-	j	ra
-END(__futex_wake)
-
-// int __futex_syscall3(volatile void* ftx, int op, int count)
-ENTRY(__futex_syscall3)
-	subu	sp,4*6
-	sw	$0,20(sp)	/* val3 */
-	sw	$0,16(sp)	/* addr2 */
-	move	a3,$0		/* timespec */
-#	move	a2,a2		/* val */
-#	li	a1,a1		/* op */
-#	move	a0,a0		/* ftx */
-	li	v0,__NR_futex
-	syscall
-	.set noreorder
-	bnez	a3, 1f		/* Check for error */
-         neg	v0		/* Negate error number if it's valid */
-	move	v0,$0		/* Otherwise return 0 */
-1:
-	.set reorder
-	addu	sp,4*6
-	j	ra
-END(__futex_syscall3)
-
 // int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
-ENTRY(__futex_syscall4)
+ENTRY_PRIVATE(__futex_syscall4)
 	subu	sp,4*6
 	sw	$0,20(sp)	/* val3 */
 	sw	$0,16(sp)	/* addr2 */

@@ -28,37 +28,8 @@
 
 #include <private/bionic_asm.h>
 
-#define FUTEX_WAIT 0
-#define FUTEX_WAKE 1
-
-// int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-ENTRY_PRIVATE(__futex_wait)
-    mov     %rdx, %r10           /* timeout */
-    mov     %esi, %edx           /* val */
-    mov     $FUTEX_WAIT, %esi    /* op */
-    mov     $__NR_futex, %eax
-    syscall
-    ret
-END(__futex_wait)
-
-// int __futex_wake(volatile void* ftx, int count)
-ENTRY_PRIVATE(__futex_wake)
-    mov     %esi, %edx
-    mov     $FUTEX_WAKE, %esi
-    mov     $__NR_futex, %eax
-    syscall
-    ret
-END(__futex_wake)
-
-// int __futex_syscall3(volatile void* ftx, int op, int count)
-ENTRY(__futex_syscall3)
-    mov     $__NR_futex, %eax
-    syscall
-    ret
-END(__futex_syscall3)
-
 // int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
-ENTRY(__futex_syscall4)
+ENTRY_PRIVATE(__futex_syscall4)
     mov     %rcx, %r10      /* timeout */
     mov     $__NR_futex, %eax
     syscall
