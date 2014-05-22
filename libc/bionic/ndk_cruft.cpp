@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
 #include <sys/time.h>
@@ -182,6 +183,20 @@ extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_
 // This non-standard function was in our <inttypes.h> for some reason.
 extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t n) {
   return (intmax_t) strntoumax(nptr, endptr, base, n);
+}
+
+// POSIX calls this dprintf, but LP32 Android had fdprintf instead.
+extern "C" int fdprintf(int fd, const char* fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  int rc = vdprintf(fd, fmt, ap);
+  va_end(ap);
+  return rc;
+}
+
+// POSIX calls this vdprintf, but LP32 Android had fdprintf instead.
+extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
+  return vdprintf(fd, fmt, ap);
 }
 
 #endif
