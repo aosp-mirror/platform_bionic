@@ -69,6 +69,24 @@
       "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_8398c222",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:19:06Z",
+      "side": 1,
+      "message": "i think it\u0027s just relying on there not actually being a \"test\" symbol. so we might want to switch to \"a_symbol_that_does_not_exist\" for clarity.",
+      "parentUuid": "df935016_0339125d",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
