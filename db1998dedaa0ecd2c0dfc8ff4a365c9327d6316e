@@ -69,6 +69,24 @@
       "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff965405_d27a14c8",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T17:21:11Z",
+      "side": 1,
+      "message": "so let\u0027s at least fix the comment and reference the clang bug.\n\ni like the idea of forcing Mac builds to a gnu* std... that sounds like it might help reduce the amount of Mac-specific crap we have to deal with around the tree.",
+      "parentUuid": "7f3504d1_281bf48c",
+      "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
