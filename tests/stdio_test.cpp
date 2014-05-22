@@ -54,6 +54,25 @@ TEST(stdio, tmpfile_fileno_fprintf_rewind_fgets) {
   fclose(fp);
 }
 
+TEST(stdio, dprintf) {
+  TemporaryFile tf;
+
+  int rc = dprintf(tf.fd, "hello\n");
+  ASSERT_EQ(rc, 6);
+
+  lseek(tf.fd, SEEK_SET, 0);
+
+  char buf[6];
+  int bytes_to_read = 6;
+  do {
+    int bytes_read = read(tf.fd, buf, bytes_to_read);
+    ASSERT_TRUE(bytes_to_read >= 0);
+    bytes_to_read -= bytes_read;
+  } while (bytes_to_read > 0);
+
+  ASSERT_STREQ("hello\n", buf);
+}
+
 TEST(stdio, getdelim) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);
