@@ -87,6 +87,41 @@
       "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa05c5b_1c74150f",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-22T16:39:24Z",
+      "side": 1,
+      "message": "I see, there is a test for undefined symbol below. I think it is clearer if we just disable null-handle test for lp64 instead of making it about undefined symbol.",
+      "parentUuid": "df935016_8398c222",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f9d5828_7b5d1f21",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-22T16:39:24Z",
+      "side": 1,
+      "message": "this",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
