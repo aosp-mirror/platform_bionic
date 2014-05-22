@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfa05c5b_5f4e0f83",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T17:04:07Z",
+      "side": 1,
+      "message": "so it can be distinguished from the...",
+      "revId": "a054eaff8149a00b759d0d4737988bc0e3e3bf37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa05c5b_9f2497cf",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T17:04:07Z",
+      "side": 1,
+      "message": "don\u0027t bother with this. it\u0027s just noise that needs to be kept in sync. aim instead to never have more than a few lines inside a #if and avoid nesting of #ifs.",
+      "revId": "a054eaff8149a00b759d0d4737988bc0e3e3bf37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
