@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f3504d1_0818308c",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-22T03:58:07Z",
+      "side": 1,
+      "message": "I ran a clean build to see if this would be a problem, and it passed... I\u0027m going to add a guard anyway.",
+      "parentUuid": "3f8d4cf3_cfaa6972",
+      "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f8d4cf3_6f8b1d12",
         "filename": "libc/include/unistd.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-22T03:44:14Z",
       "side": 1,
       "message": "what\u0027s the GCC bug, and why is only hurting us now?",
+      "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_281bf48c",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-22T03:58:07Z",
+      "side": 1,
+      "message": "It\u0027s not a gcc bug. typeof() is a gcc extension, and isn\u0027t available on clang unless using one of the gnu -std\u0027s. I don\u0027t know how long this has been plaguing the mac build. I just saw it when I was fixing gtest earlier.\n\nAn alternative would be requiring that everyone use one of the gnu standards (even with clang), but since this often comes up with the mac build it\u0027s likely to just be forgotten...",
+      "parentUuid": "3f8d4cf3_6f8b1d12",
       "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
