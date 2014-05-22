@@ -53,22 +53,81 @@ TEST(unistd, brk_ENOMEM) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
-TEST(unistd, sbrk_ENOMEM) {
-  intptr_t current_brk = reinterpret_cast<intptr_t>(get_brk());
+#if defined(__GLIBC__)
+#define SBRK_MIN (-2147483647-1)
+#define SBRK_MAX (2147483647)
+#else
+#define SBRK_MIN PTRDIFF_MIN
+#define SBRK_MAX PTRDIFF_MAX
+#endif
 
-#if !defined(__GLIBC__)
+TEST(unistd, sbrk_ENOMEM) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  // There is no way to guarantee that all overflow conditions can be tested
+  // without manipulating the underlying values of the current break.
+  extern void* __bionic_brk;
+
+  class ScopedBrk {
+  public:
+    ScopedBrk() : saved_brk_(__bionic_brk) {}
+    virtual ~ScopedBrk() { __bionic_brk = saved_brk_; }
+
+  private:
+    void* saved_brk_;
+  };
+
+  ScopedBrk scope_brk;
+
+  // Set the current break to a point that will cause an overflow.
+  __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) + 2);
+
   // Can't increase by so much that we'd overflow.
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MAX));
   ASSERT_EQ(ENOMEM, errno);
-#endif
 
-  // Can't reduce by more than the current break.
-  ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(-(current_brk + 1)));
-  ASSERT_EQ(ENOMEM, errno);
+  // Set the current break to a point that will cause an overflow.
+  __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX));
 
-#if !defined(__GLIBC__)
-  // The maximum negative value is an interesting special case that glibc gets wrong.
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN));
   ASSERT_EQ(ENOMEM, errno);
+
+  __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) - 1);
+
+  ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN + 1));
+  ASSERT_EQ(ENOMEM, errno);
+#else
+  class ScopedBrk {
+  public:
+    ScopedBrk() : saved_brk_(get_brk()) {}
+    virtual ~ScopedBrk() { brk(saved_brk_); }
+
+  private:
+    void* saved_brk_;
+  };
+
+  ScopedBrk scope_brk;
+
+  uintptr_t cur_brk = reinterpret_cast<uintptr_t>(get_brk());
+  if (cur_brk < static_cast<uintptr_t>(-(SBRK_MIN+1))) {
+    // Do the overflow test for a max negative increment.
+    ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MIN));
+#if defined(__BIONIC__)
+    // GLIBC does not set errno in overflow case.
+    ASSERT_EQ(ENOMEM, errno);
+#endif
+  }
+
+  uintptr_t overflow_brk = static_cast<uintptr_t>(SBRK_MAX) + 2;
+  if (cur_brk < overflow_brk) {
+    // Try and move the value to PTRDIFF_MAX + 2.
+    cur_brk = reinterpret_cast<uintptr_t>(sbrk(overflow_brk));
+  }
+  if (cur_brk >= overflow_brk) {
+    ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MAX));
+#if defined(__BIONIC__)
+    // GLIBC does not set errno in overflow case.
+    ASSERT_EQ(ENOMEM, errno);
+#endif
+  }
 #endif
 }
