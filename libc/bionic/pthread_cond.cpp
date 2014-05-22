@@ -30,7 +30,6 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <sys/atomics.h>
 #include <sys/mman.h>
 #include <time.h>
 #include <unistd.h>
