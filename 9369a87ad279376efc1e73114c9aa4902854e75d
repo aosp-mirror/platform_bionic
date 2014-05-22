@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f6c24f1_5a5b7567",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "destinations usually come first, plus the name of this function implies that order with \"from\".",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_da4ea5a5",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "is this right in the NULL case? the old code would pass NULL to the futex call, but this seems to pass a pointer to the uninitialized relative timespec?",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_ddb69f16",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "type* everywhere",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_bdbdebf1",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "integer",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_86dad380",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "are you going to move off __atomic_* in a separate change?",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_fdb36323",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "losing (here and elsewhere)",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_1da417d9",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "cferris is trying to get us to be more consistent about using !defined() and defined().",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c24f1_fd9a838d",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T20:24:54Z",
+      "side": 1,
+      "message": "writing this backwards just makes it harder to understand for no benefit.",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
