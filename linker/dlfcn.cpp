@@ -89,10 +89,13 @@ void* dlopen(const char* filename, int flags) {
 void* dlsym(void* handle, const char* symbol) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
+#if !defined(__LP64__)
   if (handle == NULL) {
     __bionic_format_dlerror("dlsym library handle is null", NULL);
     return NULL;
   }
+#endif
+
   if (symbol == NULL) {
     __bionic_format_dlerror("dlsym symbol name is null", NULL);
     return NULL;
@@ -100,9 +103,9 @@ void* dlsym(void* handle, const char* symbol) {
 
   soinfo* found = NULL;
   ElfW(Sym)* sym = NULL;
-  if (handle == RTLD_DEFAULT) {
+  if (handle == RTLD_DEFAULT || handle == (void*)0xffffffffL) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
-  } else if (handle == RTLD_NEXT || handle == (void*)0xffffffffL) {
+  } else if (handle == RTLD_NEXT || handle == (void*)0xfffffffeL) {
     void* caller_addr = __builtin_return_address(0);
     soinfo* si = find_containing_library(caller_addr);
 
