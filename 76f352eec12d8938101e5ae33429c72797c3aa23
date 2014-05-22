@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_0dc9065b",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "In this case I would say that moving the sys/atomics to private/ is the fastest way. We can continue after with the stdatomic.h.",
+      "parentUuid": "ff965405_d238d4e9",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df935016_2301ae9d",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-22T16:15:10Z",
       "side": 1,
       "message": "stroustrup is sad that you used a macro rather than an inline function.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3da49e_d5778be6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df935016_2301ae9d",
       "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2a58a819_5b62e693",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df935016_e3eae684",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df935016_2318ce07",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 8
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-22T16:15:10Z",
       "side": 1,
       "message": "type* and { on same line.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a58a819_7b5faac6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df935016_2318ce07",
       "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_2dceca62",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df935016_431ddaf6",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df935016_6341f6c6",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 8
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-22T16:15:10Z",
       "side": 1,
       "message": "i feel like we already have this dance in a few other places. i wonder if we should have an AbsoluteTimespec class with a get() to return the timespec* and a bool member function for the \"is in the past\" check?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_0da2e69c",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "There are a couple of similar usages but not exactly the same. I extracted the common part in a function.",
+      "parentUuid": "df935016_6341f6c6",
       "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_75817770",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Thanks! done.",
+      "parentUuid": "ff965405_f284f04d",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfa05c5b_dcb30ded",
         "filename": "libc/include/pthread.h",
         "patchSetId": 8
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-22T16:15:10Z",
       "side": 1,
       "message": "do you want to make these LP32-only, and just add extra reserved space on the end for LP64?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_6ddd32ed",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Yeah. I moved things around. I also changed the reservation to bring us on par to glibc (note that the structure is actually smaller now on LP64)",
+      "parentUuid": "bfa05c5b_dcb30ded",
       "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_354c4fa9",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfa05c5b_1c9ad561",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfa05c5b_3c9a3159",
         "filename": "libc/include/pthread.h",
         "patchSetId": 8
@@ -172,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "2a58a819_fb4b9ae2",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Yes, this was my reasoning.",
+      "parentUuid": "bfa05c5b_3c9a3159",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df935016_a335be61",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 8
@@ -183,6 +363,24 @@
       "writtenOn": "2014-05-22T16:15:10Z",
       "side": 1,
       "message": "indentation",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_6db1b2e6",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T18:33:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df935016_a335be61",
       "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
