@@ -101,17 +101,13 @@ TEST(dlfcn, dlsym_failures) {
 
   void* sym;
 
-  // lp64 RTLD_DEFAULT=(void*)0
-#if !defined(__LP64__)
-  // NULL handle.
+#if defined(__BIONIC__) && !defined(__LP64__)
+  // RTLD_DEFAULT in lp32 bionic is not (void*)0
+  // so it can be distinguished from the NULL handle.
   sym = dlsym(NULL, "test");
   ASSERT_TRUE(sym == NULL);
-#if defined(__BIONIC__)
   ASSERT_SUBSTR("dlsym library handle is null", dlerror());
-#else
-  ASSERT_SUBSTR("undefined symbol: test", dlerror()); // glibc isn't specific about the failure.
 #endif
-#endif // !defined(__LP64__)
 
   // NULL symbol name.
 #if defined(__BIONIC__)
