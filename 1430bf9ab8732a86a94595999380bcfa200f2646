@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff965405_a4970664",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-05-22T06:02:26Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 288,
+        "startChar": 21,
+        "endLine": 288,
+        "endChar": 28
+      },
+      "revId": "1430bf9ab8732a86a94595999380bcfa200f2646",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
