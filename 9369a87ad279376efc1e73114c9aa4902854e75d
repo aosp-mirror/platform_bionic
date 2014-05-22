@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_383286e6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f6c24f1_5a5b7567",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f6c24f1_da4ea5a5",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-22T20:24:54Z",
       "side": 1,
       "message": "is this right in the NULL case? the old code would pass NULL to the futex call, but this seems to pass a pointer to the uninitialized relative timespec?",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_6dba925c",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Thanks. It\u0027s not correct as it is. I actually wanted to init the struct to 0 which I didn\u0027t... That would have been a bit inefficient anyway so I fixed this to pass NULL when needed.",
+      "parentUuid": "7f6c24f1_da4ea5a5",
       "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4a531cfd_8db7b671",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f6c24f1_ddb69f16",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f6c24f1_bdbdebf1",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-05-22T20:24:54Z",
       "side": 1,
       "message": "integer",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a58a819_1b993ef5",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f6c24f1_bdbdebf1",
       "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_d84b423c",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "yea, prefer to do it in the next CL.",
+      "parentUuid": "3f3f0cb7_86dad380",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f6c24f1_fdb36323",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2014-05-22T20:24:54Z",
       "side": 1,
       "message": "losing (here and elsewhere)",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3da49e_f840fe1a",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f6c24f1_fdb36323",
       "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "0a3da49e_5858320f",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "ack. I replaced the ifndef with !defined() as it\u0027s more readable. For the rest of ifdefs I think it\u0027s better to have another CL so that we keep file consistency intact.",
+      "parentUuid": "7f6c24f1_1da417d9",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f6c24f1_fd9a838d",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -132,6 +258,24 @@
       "writtenOn": "2014-05-22T20:24:54Z",
       "side": 1,
       "message": "writing this backwards just makes it harder to understand for no benefit.",
+      "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a531cfd_ade47a73",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-05-22T23:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f6c24f1_fd9a838d",
       "revId": "9369a87ad279376efc1e73114c9aa4902854e75d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
