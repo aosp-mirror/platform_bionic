@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ff965405_d88d55df",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T18:50:42Z",
+      "side": 1,
+      "message": "i\u0027m working my way through the other dependencies. most are fake; they include the header but don\u0027t use anything. outside bionic there\u0027s only one caller (frameworks/av as usual) so i\u0027ll switch them to the GCC builtin today. we should do the same here and then remove \u003csys/atomics.h\u003e. feel free to go straight to work on \u003cstdatomic.h\u003e if you like (unless hboehm has volunteered).",
+      "parentUuid": "4a531cfd_0dc9065b",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df935016_2301ae9d",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 8
