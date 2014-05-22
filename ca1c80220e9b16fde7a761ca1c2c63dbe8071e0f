@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ff965405_d28bf458",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-22T16:15:07Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "df935016_03dd92ed",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfa05c5b_3c431127",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-05-22T15:58:08Z",
       "side": 1,
       "message": "i don\u0027t think this is the right test change. i think you want this first part unconditional, and then you want three cases instead of two below where there was already a #if... now you\u0027ll have bionic32, bionic64, and glibc. (or a regex that makes bionic64 and glibc the same.)",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_0339125d",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-05-22T16:15:07Z",
+      "side": 1,
+      "message": "actually glibc part is interesting.. I double checked - RTLD_DEFAULT is (void*)0, so it shouldn\u0027t pass.",
+      "parentUuid": "bfa05c5b_3c431127",
       "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
