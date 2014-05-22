@@ -28,7 +28,6 @@
 #include <semaphore.h>
 #include <errno.h>
 #include <sys/time.h>
-#include <sys/atomics.h>
 #include <time.h>
 #include <limits.h>
 
