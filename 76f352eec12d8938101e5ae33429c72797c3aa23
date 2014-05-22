@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff965405_d238d4e9",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "i was actually hoping to remove \u003csys/atomics.h\u003e. there are very few callers.\n\nshould we add a new .h file to private/ that has the API we want to use internally? or do we want to go straight to implementing the C11 \u003cstdatomic.h\u003e, since we\u0027ll want it eventually?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_2301ae9d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "stroustrup is sad that you used a macro rather than an inline function.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_e3eae684",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "unnecessary.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_2318ce07",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "type* and { on same line.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_431ddaf6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "attr !\u003d NULL",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_6341f6c6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "i feel like we already have this dance in a few other places. i wonder if we should have an AbsoluteTimespec class with a get() to return the timespec* and a bool member function for the \"is in the past\" check?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff965405_f284f04d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "the futex calls don\u0027t set errno.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa05c5b_dcb30ded",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "do you want to make these LP32-only, and just add extra reserved space on the end for LP64?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa05c5b_1c9ad561",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "while we\u0027re here we should probably switch to google_style_names.",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa05c5b_3c9a3159",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "oh, i see.\n\nthis is binary compatible because it\u0027s still all 0s?",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df935016_a335be61",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:15:10Z",
+      "side": 1,
+      "message": "indentation",
+      "revId": "76f352eec12d8938101e5ae33429c72797c3aa23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
