@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfa05c5b_bc4e4149",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:00:07Z",
+      "side": 1,
+      "message": "i\u0027d probably have just used fopen/fgets/fclose to simplify this.",
+      "revId": "6afb2a9a9729bbfd70ace602342b0173f3bad328",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
