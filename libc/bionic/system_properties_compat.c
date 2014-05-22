@@ -35,7 +35,8 @@
  */
 
 #include <string.h>
-#include <sys/atomics.h>
+
+#include "private/bionic_futex.h"
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
@@ -67,7 +68,7 @@ typedef struct prop_info_compat prop_info_compat;
 
 extern prop_area *__system_property_area__;
 
-const prop_info *__system_property_find_compat(const char *name)
+__LIBC_HIDDEN__ const prop_info *__system_property_find_compat(const char *name)
 {
     prop_area_compat *pa = (prop_area_compat *)__system_property_area__;
     unsigned count = pa->count;
@@ -93,7 +94,7 @@ const prop_info *__system_property_find_compat(const char *name)
     return 0;
 }
 
-int __system_property_read_compat(const prop_info *_pi, char *name, char *value)
+__LIBC_HIDDEN__ int __system_property_read_compat(const prop_info *_pi, char *name, char *value)
 {
     unsigned serial, len;
     const prop_info_compat *pi = (const prop_info_compat *)_pi;
@@ -115,7 +116,7 @@ int __system_property_read_compat(const prop_info *_pi, char *name, char *value)
     }
 }
 
-int __system_property_foreach_compat(
+__LIBC_HIDDEN__ int __system_property_foreach_compat(
         void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {

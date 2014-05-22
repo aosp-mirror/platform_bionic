@@ -88,11 +88,3 @@ int __timespec_from_absolute(timespec* ts, const timespec* abstime, clockid_t cl
   }
   return 0;
 }
-
-int __futex_wake_ex(volatile void* ftx, int pshared, int val) {
-  return __futex_syscall3(ftx, pshared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, val);
-}
-
-int __futex_wait_ex(volatile void* ftx, int pshared, int val, const timespec* timeout) {
-  return __futex_syscall4(ftx, pshared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, val, timeout);
-}

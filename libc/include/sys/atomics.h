@@ -75,10 +75,6 @@ __atomic_inc(volatile int *ptr)
   return __sync_fetch_and_add (ptr, 1);
 }
 
-
-int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout);
-int __futex_wake(volatile void *ftx, int count);
-
 __END_DECLS
 
 #endif /* _SYS_ATOMICS_H */
