@@ -38,9 +38,6 @@ ENTRY(__bionic_clone)
     # Copy 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]
 
-    # Zero out the top 32 bits of 'flags'. (Is this necessary?)
-    uxtw    x0, w0
-
     # Make the system call.
     mov     x8, __NR_clone
     svc     #0
