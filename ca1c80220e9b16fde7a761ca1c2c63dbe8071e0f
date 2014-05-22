@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "bfa05c5b_dc278d1b",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-22T16:43:19Z",
+      "side": 1,
+      "message": "okay, let\u0027s just test bionic32 then, and add a comment saying that RTLD_DEFAULT wasn\u0027t NULL there.\n\n(this is kind of an argument for keep bionic64\u0027s RTLD_DEFAULT non-null --- using NULL means that if you don\u0027t check the result of dlopen and pass the handle straight to dlsym, you\u0027ll get RTLD_DEFAULT behavior rather than an error.)",
+      "parentUuid": "bfa05c5b_1c74150f",
+      "revId": "ca1c80220e9b16fde7a761ca1c2c63dbe8071e0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f9d5828_7b5d1f21",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
