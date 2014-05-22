@@ -51,9 +51,8 @@
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
-#include <sys/atomics.h>
-
 #include "private/bionic_atomic_inline.h"
+#include "private/bionic_futex.h"
 #include "private/bionic_macros.h"
 
 #define ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
