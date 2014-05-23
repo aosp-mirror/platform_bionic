@@ -53,7 +53,6 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/__bionic_clone.S \
     arch-arm/bionic/eabi.c \
     arch-arm/bionic/_exit_with_stack_teardown.S \
-    arch-arm/bionic/futex_arm.S \
     arch-arm/bionic/__get_sp.S \
     arch-arm/bionic/libgcc_compat.c \
     arch-arm/bionic/memcmp16.S \
