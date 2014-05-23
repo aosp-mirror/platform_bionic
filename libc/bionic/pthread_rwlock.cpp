@@ -27,7 +27,6 @@
  */
 
 #include <errno.h>
-#include <sys/atomics.h>
 
 #include "pthread_internal.h"
 #include "private/bionic_futex.h"
@@ -53,7 +52,7 @@
  *    write" cases and will deadlock in write after read case.
  *
  * TODO: VERY CAREFULLY convert this to use C++11 atomics when possible. All volatile
- * members of pthread_rwlock_t should be converted to atomics<> and __atomic_cmpxchg
+ * members of pthread_rwlock_t should be converted to atomics<> and __sync_bool_compare_and_swap
  * should be changed to compare_exchange_strong accompanied by the proper ordering
  * constraints (comments have been added with the intending ordering across the code).
  *
@@ -147,17 +146,17 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec
     int32_t cur_state = rwlock->state;  // C++11 relaxed atomic read
     if (__predict_true(cur_state >= 0)) {
       // Add as an extra reader.
-      done = __atomic_cmpxchg(cur_state, cur_state + 1, &rwlock->state) == 0;  // C++11 memory_order_aquire
+      done = __sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state + 1);  // C++11 memory_order_aquire
     } else {
       if (!timespec_from_absolute(rel_timeout, abs_timeout)) {
         return ETIMEDOUT;
       }
       // Owner holds it in write mode, hang up.
       // To avoid losing wake ups the pending_readers update and the state read should be
-      // sequentially consistent. (currently enforced by __atomic_inc which creates a full barrier)
-      __atomic_inc(&rwlock->pending_readers);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
+      // sequentially consistent. (currently enforced by __sync_fetch_and_add which creates a full barrier)
+      __sync_fetch_and_add(&rwlock->pending_readers, 1);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
       int ret = __futex_wait_ex(&rwlock->state, rwlock_is_shared(rwlock), cur_state, rel_timeout);
-      __atomic_dec(&rwlock->pending_readers);  // C++11 memory_order_relaxed
+      __sync_fetch_and_sub(&rwlock->pending_readers, 1);  // C++11 memory_order_relaxed
       if (ret == -ETIMEDOUT) {
         return ETIMEDOUT;
       }
@@ -180,17 +179,17 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec
     int32_t cur_state = rwlock->state;
     if (__predict_true(cur_state == 0)) {
       // Change state from 0 to -1.
-      done =  __atomic_cmpxchg(0 /* cur_state */, -1 /* new state */, &rwlock->state) == 0;  // C++11 memory_order_aquire
+      done =  __sync_bool_compare_and_swap(&rwlock->state, 0 /* cur state */, -1 /* new state */);  // C++11 memory_order_aquire
     } else {
       if (!timespec_from_absolute(rel_timeout, abs_timeout)) {
         return ETIMEDOUT;
       }
       // Failed to acquire, hang up.
       // To avoid losing wake ups the pending_writers update and the state read should be
-      // sequentially consistent. (currently enforced by __atomic_inc which creates a full barrier)
-      __atomic_inc(&rwlock->pending_writers);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
+      // sequentially consistent. (currently enforced by __sync_fetch_and_add which creates a full barrier)
+      __sync_fetch_and_add(&rwlock->pending_writers, 1);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
       int ret = __futex_wait_ex(&rwlock->state, rwlock_is_shared(rwlock), cur_state, rel_timeout);
-      __atomic_dec(&rwlock->pending_writers);  // C++11 memory_order_relaxed
+      __sync_fetch_and_sub(&rwlock->pending_writers, 1);  // C++11 memory_order_relaxed
       if (ret == -ETIMEDOUT) {
         return ETIMEDOUT;
       }
@@ -211,14 +210,11 @@ int pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* rwlock) {
   int32_t cur_state = rwlock->state;
-  if (cur_state >= 0) {
-    if(__atomic_cmpxchg(cur_state, cur_state + 1, &rwlock->state) != 0) {  // C++11 memory_order_acquire
-      return EBUSY;
-    }
-  } else {
-    return EBUSY;
+  if ((cur_state >= 0) &&
+      __sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state + 1)) {  // C++11 memory_order_acquire
+    return 0;
   }
-  return 0;
+  return EBUSY;
 }
 
 int pthread_rwlock_wrlock(pthread_rwlock_t* rwlock) {
@@ -232,16 +228,12 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock) {
   int tid = __get_thread()->tid;
   int32_t cur_state = rwlock->state;
-  if (cur_state == 0) {
-    if(__atomic_cmpxchg(0, -1, &rwlock->state) != 0) {  // C++11 memory_order_acquire
-      return EBUSY;
-    }
-  } else {
-    return EBUSY;
+  if ((cur_state == 0) &&
+      __sync_bool_compare_and_swap(&rwlock->state, 0 /* cur state */, -1 /* new state */)) {  // C++11 memory_order_acquire
+    rwlock->writer_thread_id = tid;
+    return 0;
   }
-
-  rwlock->writer_thread_id = tid;
-  return 0;
+  return EBUSY;
 }
 
 
@@ -260,11 +252,11 @@ int pthread_rwlock_unlock(pthread_rwlock_t* rwlock) {
       // We're no longer the owner.
       rwlock->writer_thread_id = 0;
       // Change state from -1 to 0.
-      // We use __atomic_cmpxchg to achieve sequential consistency of the state store and
+      // We use __sync_bool_compare_and_swap to achieve sequential consistency of the state store and
       // the following pendingX loads. A simple store with memory_order_release semantics
       // is not enough to guarantee that the pendingX loads are not reordered before the
       // store (which may lead to a lost wakeup).
-      __atomic_cmpxchg(-1 /* cur_state*/, 0 /* new state */, &rwlock->state);  // C++11 maybe memory_order_seq_cst?
+      __sync_bool_compare_and_swap( &rwlock->state, -1 /* cur state*/, 0 /* new state */);  // C++11 maybe memory_order_seq_cst?
 
       // Wake any waiters.
       if (__predict_false(rwlock->pending_readers > 0 || rwlock->pending_writers > 0)) {
@@ -273,8 +265,8 @@ int pthread_rwlock_unlock(pthread_rwlock_t* rwlock) {
       done = true;
     } else { // cur_state > 0
       // Reduce state by 1.
-      // See the above comment on why we need __atomic_cmpxchg.
-      done = __atomic_cmpxchg(cur_state, cur_state - 1, &rwlock->state) == 0;  // C++11 maybe memory_order_seq_cst?
+      // See the comment above on why we need __sync_bool_compare_and_swap.
+      done = __sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state - 1);  // C++11 maybe memory_order_seq_cst?
       if (done && (cur_state - 1) == 0) {
         // There are no more readers, wake any waiters.
         if (__predict_false(rwlock->pending_readers > 0 || rwlock->pending_writers > 0)) {
