@@ -58,7 +58,6 @@ libc_bionic_src_files_mips += \
     arch-mips/bionic/bzero.S \
     arch-mips/bionic/cacheflush.cpp \
     arch-mips/bionic/_exit_with_stack_teardown.S \
-    arch-mips/bionic/futex_mips.S \
     arch-mips/bionic/__get_sp.S \
     arch-mips/bionic/memcmp16.S \
     arch-mips/bionic/_setjmp.S \
