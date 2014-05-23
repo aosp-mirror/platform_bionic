@@ -58,7 +58,6 @@ int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
 void*   __brk:brk(void*)           all
 int     kill(pid_t, int)           all
-int     tkill(pid_t tid, int sig)  all
 int     tgkill(pid_t tgid, pid_t tid, int sig)  all
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
 
