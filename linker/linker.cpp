@@ -840,9 +840,6 @@ soinfo* do_dlopen(const char* name, int flags, soinfo* caller, const android_dle
   soinfo* si = find_library(name, flags, extinfo);
   if (si != NULL) {
     si->CallConstructors();
-    if (caller != NULL) {
-      caller->add_child(si);
-    }
   }
   protect_data(PROT_READ);
   return si;
