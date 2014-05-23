@@ -42,4 +42,8 @@ struct glue {
 	FILE	*iobs;
 };
 
+#pragma GCC visibility push(hidden)
+
 extern struct glue __sglue;
+
+#pragma GCC visibility pop
