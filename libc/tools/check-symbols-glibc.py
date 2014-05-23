@@ -51,10 +51,18 @@ bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
 
 # bionic includes various BSD symbols to ease porting other BSD-licensed code.
 bsd_stuff = set([
+  'basename_r',
+  'dirname_r',
+  'fgetln',
+  'fpurge',
+  'funopen',
+  'gamma_r',
+  'gammaf_r',
   'getprogname',
   'setprogname',
   'strlcat',
   'strlcpy',
+  'sys_signame',
   'wcslcat',
   'wcslcpy'
 ])
