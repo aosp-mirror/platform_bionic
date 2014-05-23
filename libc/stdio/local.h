@@ -41,6 +41,8 @@
 #include "wcio.h"
 #include "fileext.h"
 
+#pragma GCC visibility push(hidden)
+
 int	__sflush(FILE *);
 int	__sflush_locked(FILE *);
 FILE	*__sfp(void);
@@ -118,3 +120,10 @@ static __inline int __sputc(int _c, FILE* _p) {
     return (__swbuf(_c, _p));
   }
 }
+
+/* OpenBSD declares these in fvwrite.h but we want to ensure they're hidden. */
+struct __suio;
+extern int __sfvwrite(FILE *, struct __suio *);
+wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+
+#pragma GCC visibility pop
