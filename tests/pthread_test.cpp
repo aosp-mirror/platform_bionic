@@ -562,8 +562,8 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
   // Write lock
-   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
-   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
   // Try writer lock
   ASSERT_EQ(0, pthread_rwlock_trywrlock(&l));
