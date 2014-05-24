@@ -61,9 +61,9 @@ ENTRY(__bionic_clone)
 
 .L_bc_child:
     # We're in the child now. Set the end of the frame record chain...
-    .cfi_undefined x29
-    .cfi_undefined x30
     mov     x29, xzr
+    # Setting x30 to 0 will make the unwinder stop at __bionic_clone_entry
+    mov     x30, xzr
     # ...and call __bionic_clone_entry with the 'fn' and 'arg' we stored on the child stack.
     ldp     x0, x1, [sp, #-16]
     b       __bionic_clone_entry
