@@ -256,7 +256,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wcstok.c \
     upstream-freebsd/lib/libc/string/wmemchr.c \
     upstream-freebsd/lib/libc/string/wmemcpy.c \
-    upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-freebsd/lib/libc/string/wmemset.c \
 
 libc_upstream_netbsd_src_files := \
