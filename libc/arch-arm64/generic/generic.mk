@@ -1,5 +1,4 @@
 libc_bionic_src_files_arm64 += \
-    arch-arm64/generic/bionic/bcopy.S \
     arch-arm64/generic/bionic/memcmp.S \
     arch-arm64/generic/bionic/memcpy.S \
     arch-arm64/generic/bionic/memmove.S \
@@ -8,4 +7,3 @@ libc_bionic_src_files_arm64 += \
     arch-arm64/generic/bionic/strlen.S \
     arch-arm64/generic/bionic/strncmp.S \
     arch-arm64/generic/bionic/strnlen.S \
-    arch-arm64/generic/bionic/wmemmove.S
