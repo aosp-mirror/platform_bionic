@@ -87,6 +87,24 @@
       "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fb968aa_419ab659",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1031429
+      },
+      "writtenOn": "2014-05-24T19:02:53Z",
+      "side": 1,
+      "message": "I don\u0027t consider this a clang bug. I would like to use -std\u003dc++11 in my projects, and not be forced to use -std\u003dgnu++11. It\u0027s not just Mac builds either.\n\nI independently ran into this and posted a change that I\u0027ve now abandoned (https://android-review.git.corp.google.com/#/c/95695/).",
+      "parentUuid": "ff965405_d27a14c8",
+      "revId": "db1998dedaa0ecd2c0dfc8ff4a365c9327d6316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
