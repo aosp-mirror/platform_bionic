@@ -46,6 +46,30 @@
       "revId": "e6c57fcb05b0dcbfa8129bb6f7d99093f4819370",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf65bc2b_546a0cf7",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-25T17:48:13Z",
+      "side": 1,
+      "message": "(the tests are pretty useless anyway. they\u0027re really just checking that you\u0027re not using a toolchain that doesn\u0027t support this stuff. they don\u0027t try to confirm that any of the atomic stuff is actually, you know, atomic :-) )",
+      "parentUuid": "bfa77c89_e7e73cba",
+      "range": {
+        "startLine": 19,
+        "startChar": 1,
+        "endLine": 19,
+        "endChar": 23
+      },
+      "revId": "e6c57fcb05b0dcbfa8129bb6f7d99093f4819370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
