@@ -87,6 +87,7 @@ libBionicStandardTests_src_files := \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
     stack_unwinding_test_impl.c \
+    stdatomic_test.cpp \
     stdint_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
