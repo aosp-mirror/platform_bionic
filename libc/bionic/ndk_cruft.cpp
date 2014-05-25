@@ -222,4 +222,9 @@ extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec
   return __futex(ftx, FUTEX_WAIT, value, timeout);
 }
 
+// Unity's libmono uses this.
+extern "C" int tkill(pid_t tid, int sig) {
+  return syscall(__NR_tkill, tid, sig);
+}
+
 #endif
