@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fb968aa_e1540a84",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-25T00:59:02Z",
+      "side": 1,
+      "message": "we can\u0027t pollute the namespace like this. we\u0027ll have to use something like __decltype. oh, looks like GCC actually has __decltype; it\u0027s the same as decltype but works in C++98 too. clang seems to have implemented that too, but i don\u0027t know if they\u0027ve implemented it with the same \"works for C++98\" semantics. might be worth a look.",
+      "revId": "cbdb8a046c99b962319dc6fdd0a7f0e93fcc7a03",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
