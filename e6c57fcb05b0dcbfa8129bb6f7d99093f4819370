@@ -22,6 +22,30 @@
       "revId": "e6c57fcb05b0dcbfa8129bb6f7d99093f4819370",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa77c89_e7e73cba",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-25T03:17:27Z",
+      "side": 1,
+      "message": "yes. i\u0027m assuming andrewhsieh will fix http://b/15211001 straight away, so we can just remove this line (rather than add and remove the boilerplate in each test).",
+      "parentUuid": "bf65bc2b_94fdc41c",
+      "range": {
+        "startLine": 19,
+        "startChar": 1,
+        "endLine": 19,
+        "endChar": 23
+      },
+      "revId": "e6c57fcb05b0dcbfa8129bb6f7d99093f4819370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
