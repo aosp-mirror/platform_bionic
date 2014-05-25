@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf65bc2b_94fdc41c",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-05-25T02:59:38Z",
+      "side": 1,
+      "message": "Doesn\u0027t this prevent the tests from being listed for cts?",
+      "range": {
+        "startLine": 19,
+        "startChar": 1,
+        "endLine": 19,
+        "endChar": 23
+      },
+      "revId": "e6c57fcb05b0dcbfa8129bb6f7d99093f4819370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
