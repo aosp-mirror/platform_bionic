@@ -41,6 +41,18 @@
 #include "wcio.h"
 #include "fileext.h"
 
+/* Android <= KitKat had getc/putc macros in <stdio.h> that referred
+ * to __srget/__swbuf, so those symbols need to be public for LP32
+ * but can be hidden for LP64.
+ */
+#if defined(__LP64__)
+__LIBC_HIDDEN__ int __srget(FILE*);
+__LIBC_HIDDEN__ int __swbuf(int, FILE*);
+#else
+__LIBC_ABI_PUBLIC__ int __srget(FILE*);
+__LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
+#endif
+
 #pragma GCC visibility push(hidden)
 
 int	__sflush(FILE *);
@@ -104,10 +116,8 @@ extern int __sdidinit;
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
-__BEGIN_DECLS
 int __srget(FILE*);
 int __swbuf(int, FILE*);
-__END_DECLS
 #define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
 #define __sferror(p)   (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
