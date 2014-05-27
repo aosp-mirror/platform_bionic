@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f62b822_734be0e7",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-27T18:25:05Z",
+      "side": 1,
+      "message": "but doesn\u0027t GCC always allow __typeof__ too? can\u0027t we just change TEMP_FAILURE_RETRY to __typeof__ and lose the #ifs?",
+      "revId": "3f41834706d27913f9558afa622037e1e266c3e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
