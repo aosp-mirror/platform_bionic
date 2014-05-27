@@ -41,16 +41,24 @@
 #include "wcio.h"
 #include "fileext.h"
 
-/* Android <= KitKat had getc/putc macros in <stdio.h> that referred
+#if defined(__LP64__)
+/*
+ * Android <= KitKat had getc/putc macros in <stdio.h> that referred
  * to __srget/__swbuf, so those symbols need to be public for LP32
  * but can be hidden for LP64.
  */
-#if defined(__LP64__)
 __LIBC_HIDDEN__ int __srget(FILE*);
 __LIBC_HIDDEN__ int __swbuf(int, FILE*);
+
+/*
+ * The NDK apparently includes an android_support.a library that
+ * refers to __srefill in its copy of the vsnprintf implementation.
+ */
+__LIBC_HIDDEN__ int __srefill(FILE*);
 #else
 __LIBC_ABI_PUBLIC__ int __srget(FILE*);
 __LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
+__LIBC_ABI_PUBLIC__ int __srefill(FILE*);
 #endif
 
 #pragma GCC visibility push(hidden)
@@ -58,7 +66,6 @@ __LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
 int	__sflush(FILE *);
 int	__sflush_locked(FILE *);
 FILE	*__sfp(void);
-int	__srefill(FILE *);
 int	__sread(void *, char *, int);
 int	__swrite(void *, const char *, int);
 fpos_t	__sseek(void *, fpos_t, int);
