@@ -34,6 +34,24 @@
       "revId": "3f41834706d27913f9558afa622037e1e266c3e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bffa1c80_ac6d0347",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2014-05-27T19:38:42Z",
+      "side": 1,
+      "message": "I think we did a workaround elsewhere for clang by using decltype, unfortunately not all (any?) target GCCs have decltype. It\u0027d be good to have a consistent approach.",
+      "parentUuid": "dfed10cb_d6857af6",
+      "revId": "3f41834706d27913f9558afa622037e1e266c3e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
