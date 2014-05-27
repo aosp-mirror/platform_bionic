@@ -54,6 +54,9 @@ ENTRY(__bionic_clone)
         j ra
 
 .L__thread_start_bc:
+        # Clear return address in child so we don't unwind further.
+        li      ra,0
+
         lw	a0,0(sp)	#  fn
         lw	a1,4(sp)	#  arg
 

@@ -75,6 +75,9 @@ LEAF(__bionic_clone, FRAMESZ)
 	j	ra
 
 .L__thread_start_bc:
+	# Clear return address in child so we don't unwind further.
+	li	ra,0
+
 	# void __bionic_clone_entry(int (*func)(void*), void *arg)
 	PTR_L	a0,FRAME_FN(sp)		#  fn
 	PTR_L	a1,FRAME_ARG(sp)	#  arg
