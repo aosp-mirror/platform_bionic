@@ -305,6 +305,8 @@ int eventfd:eventfd2(unsigned int, int)  all
 void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
 
+int futex(void*, int, int, void*, void*, int)  all
+
 int inotify_init1(int)  all
 int inotify_add_watch(int, const char*, unsigned int)  all
 int inotify_rm_watch(int, unsigned int)  all
