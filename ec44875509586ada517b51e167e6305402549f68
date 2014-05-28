@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fd54c00_8343a024",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-28T16:16:48Z",
+      "side": 1,
+      "message": "we shouldn\u0027t pollute the namespace. __kernel_sigset_t or something. or you could just write the union inline in the two places it\u0027s needed.",
+      "revId": "ec44875509586ada517b51e167e6305402549f68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
