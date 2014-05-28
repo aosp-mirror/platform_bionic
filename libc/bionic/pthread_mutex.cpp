@@ -451,7 +451,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
     mtype = (mvalue & MUTEX_TYPE_MASK);
     shared = (mvalue & MUTEX_SHARED_MASK);
 
-    /* Handle normal case first */
+    /* Handle non-recursive case first */
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
         _normal_lock(mutex, shared);
         return 0;
