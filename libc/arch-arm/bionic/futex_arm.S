@@ -25,36 +25,14 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _BIONIC_FUTEX_H
-#define _BIONIC_FUTEX_H
 
-#include <linux/futex.h>
-#include <sys/cdefs.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include <private/bionic_asm.h>
 
-__BEGIN_DECLS
-
-struct timespec;
-
-extern int __futex_syscall4(volatile void* ftx, int op, int value, const struct timespec* timeout);
-
-static inline int __futex_wake(volatile void* ftx, int count) {
-  return __futex_syscall4(ftx, FUTEX_WAKE, count, NULL);
-}
-
-static inline int __futex_wake_ex(volatile void* ftx, bool shared, int count) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, NULL);
-}
-
-static inline int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, FUTEX_WAIT, value, timeout);
-}
-
-static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, value, timeout);
-}
-
-__END_DECLS
-
-#endif /* _BIONIC_FUTEX_H */
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
+ENTRY_PRIVATE(__futex_syscall4)
+    mov     ip, r7
+    ldr     r7, =__NR_futex
+    swi     #0
+    mov     r7, ip
+    bx      lr
+END(__futex_syscall4)
