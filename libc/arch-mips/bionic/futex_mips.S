@@ -25,36 +25,26 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _BIONIC_FUTEX_H
-#define _BIONIC_FUTEX_H
 
-#include <linux/futex.h>
-#include <sys/cdefs.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include <private/bionic_asm.h>
 
-__BEGIN_DECLS
-
-struct timespec;
-
-extern int __futex_syscall4(volatile void* ftx, int op, int value, const struct timespec* timeout);
-
-static inline int __futex_wake(volatile void* ftx, int count) {
-  return __futex_syscall4(ftx, FUTEX_WAKE, count, NULL);
-}
-
-static inline int __futex_wake_ex(volatile void* ftx, bool shared, int count) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, NULL);
-}
-
-static inline int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, FUTEX_WAIT, value, timeout);
-}
-
-static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, value, timeout);
-}
-
-__END_DECLS
-
-#endif /* _BIONIC_FUTEX_H */
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
+ENTRY_PRIVATE(__futex_syscall4)
+	subu	sp,4*6
+	sw	$0,20(sp)	/* val3 */
+	sw	$0,16(sp)	/* addr2 */
+#	move	a3,a3		/* timespec */
+#	move	a2,a2		/* val */
+#	li	a1,a1		/* op */
+#	move	a0,a0		/* ftx */
+	li	v0,__NR_futex
+	syscall
+	.set noreorder
+	bnez	a3, 1f		/* Check for error */
+         neg	v0		/* Negate error number if it's valid */
+	move	v0,$0		/* Otherwise return 0 */
+1:
+	.set reorder
+	addu	sp,4*6
+	j	ra
+END(__futex_syscall4)
