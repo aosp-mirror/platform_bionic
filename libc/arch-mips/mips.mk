@@ -26,6 +26,7 @@ libc_common_src_files_mips += \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
