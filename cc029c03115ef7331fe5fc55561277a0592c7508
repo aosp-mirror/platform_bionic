@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f25e8ee_e72442d0",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-28T00:11:01Z",
+      "side": 1,
+      "message": "Nitpicks: trailing whitespace, a few other places as well",
+      "revId": "cc029c03115ef7331fe5fc55561277a0592c7508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
