@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,36 +25,23 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _BIONIC_FUTEX_H
-#define _BIONIC_FUTEX_H
 
-#include <linux/futex.h>
-#include <sys/cdefs.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include <private/bionic_asm.h>
 
-__BEGIN_DECLS
+// int __futex_syscall4(volatile void* ftx, int op, int val, const struct timespec* timeout)
+ENTRY_PRIVATE(__futex_syscall4)
+  stp x29, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
+  mov x29, sp
 
-struct timespec;
+  mov x8, __NR_futex
+  svc #0
 
-extern int __futex_syscall4(volatile void* ftx, int op, int value, const struct timespec* timeout);
-
-static inline int __futex_wake(volatile void* ftx, int count) {
-  return __futex_syscall4(ftx, FUTEX_WAKE, count, NULL);
-}
-
-static inline int __futex_wake_ex(volatile void* ftx, bool shared, int count) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, NULL);
-}
-
-static inline int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, FUTEX_WAIT, value, timeout);
-}
-
-static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value, const struct timespec* timeout) {
-  return __futex_syscall4(ftx, shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE, value, timeout);
-}
-
-__END_DECLS
-
-#endif /* _BIONIC_FUTEX_H */
+  ldp x29, x30, [sp], #16
+  .cfi_def_cfa_offset 0
+  .cfi_restore x29
+  .cfi_restore x30
+  ret
+END(__futex_syscall4)
