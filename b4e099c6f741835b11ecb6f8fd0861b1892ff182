@@ -16,6 +16,24 @@
       "revId": "b4e099c6f741835b11ecb6f8fd0861b1892ff182",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc0a468_af9789be",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:51:44Z",
+      "side": 1,
+      "message": "this header file is used to keep the openbsd parts of bionic compiling despite our differences. they use it before checking $TMPDIR.",
+      "parentUuid": "5fc5a077_f3fb3059",
+      "revId": "b4e099c6f741835b11ecb6f8fd0861b1892ff182",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
