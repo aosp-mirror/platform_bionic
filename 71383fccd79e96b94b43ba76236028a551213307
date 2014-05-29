@@ -16,6 +16,24 @@
       "revId": "71383fccd79e96b94b43ba76236028a551213307",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc5a077_937f5433",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:38:30Z",
+      "side": 1,
+      "message": "i can try removing it and seeing what breaks. it used to be in \u003cunistd.h\u003e, so my usual rule would be \"we have to keep stuff running\", but since the old implementation was useless we could probably argue that it should be removed anyway...",
+      "parentUuid": "7fc0a468_ef4581d3",
+      "revId": "71383fccd79e96b94b43ba76236028a551213307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
