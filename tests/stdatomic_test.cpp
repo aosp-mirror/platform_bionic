@@ -100,31 +100,31 @@ TEST(stdatomic, atomic_exchange) {
 
 TEST(stdatomic, atomic_compare_exchange) {
   atomic_int i;
-  atomic_int expected;
+  int expected;
 
   atomic_store(&i, 123);
-  atomic_store(&expected, 123);
+  expected = 123;
   ASSERT_TRUE(atomic_compare_exchange_strong(&i, &expected, 456));
   ASSERT_FALSE(atomic_compare_exchange_strong(&i, &expected, 456));
-  ASSERT_EQ(456, atomic_load(&expected));
+  ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
-  atomic_store(&expected, 123);
+  expected = 123;
   ASSERT_TRUE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
   ASSERT_FALSE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_EQ(456, atomic_load(&expected));
+  ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
-  atomic_store(&expected, 123);
+  expected = 123;
   ASSERT_TRUE(atomic_compare_exchange_weak(&i, &expected, 456));
   ASSERT_FALSE(atomic_compare_exchange_weak(&i, &expected, 456));
-  ASSERT_EQ(456, atomic_load(&expected));
+  ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
-  atomic_store(&expected, 123);
+  expected = 123;
   ASSERT_TRUE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
   ASSERT_FALSE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_EQ(456, atomic_load(&expected));
+  ASSERT_EQ(456, expected);
 }
 
 TEST(stdatomic, atomic_fetch_add) {
