@@ -48,6 +48,8 @@ struct pthread_internal_t {
 
   void* alternate_signal_stack;
 
+  pthread_mutex_t startup_handshake_mutex;
+
   /*
    * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
    * per-thread buffer by simply using malloc(3) and free(3).

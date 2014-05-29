@@ -31,7 +31,6 @@
 
 #include <ctype.h>
 #include <inttypes.h>
-#include <linux/futex.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,25 +200,20 @@ extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
   return vdprintf(fd, fmt, ap);
 }
 
-static inline int __futex(volatile void* ftx, int op, int value, const struct timespec* timeout) {
-  // Our generated syscall assembler sets errno, but our callers (pthread functions) don't want to.
-  int saved_errno = errno;
-  if (syscall(__NR_futex, ftx, op, value, timeout) == 0) {
-    return 0;
-  }
-  int result = -errno;
-  errno = saved_errno;
-  return result;
-}
+#define __futex_wake __real_futex_wake
+#define __futex_wait __real_futex_wait
+#include "private/bionic_futex.h"
+#undef __futex_wake
+#undef __futex_wait
 
 // This used to be in <sys/atomics.h>.
 extern "C" int __futex_wake(volatile void* ftx, int count) {
-  return __futex(ftx, FUTEX_WAKE, count, NULL);
+  return __real_futex_wake(ftx, count);
 }
 
 // This used to be in <sys/atomics.h>.
 extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
-  return __futex(ftx, FUTEX_WAIT, value, timeout);
+  return __real_futex_wait(ftx, value, timeout);
 }
 
 // Unity's libmono uses this.
