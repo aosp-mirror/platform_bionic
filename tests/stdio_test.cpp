@@ -61,16 +61,15 @@ TEST(stdio, dprintf) {
   ASSERT_EQ(rc, 6);
 
   lseek(tf.fd, SEEK_SET, 0);
+  FILE* tfile = fdopen(tf.fd, "r");
+  ASSERT_TRUE(tfile != NULL);
 
-  char buf[6];
-  int bytes_to_read = 6;
-  do {
-    int bytes_read = read(tf.fd, buf, bytes_to_read);
-    ASSERT_TRUE(bytes_to_read >= 0);
-    bytes_to_read -= bytes_read;
-  } while (bytes_to_read > 0);
-
+  char buf[7];
+  ASSERT_EQ(buf, fgets(buf, sizeof(buf), tfile));
   ASSERT_STREQ("hello\n", buf);
+  // Make sure there isn't anything else in the file.
+  ASSERT_EQ(NULL, fgets(buf, sizeof(buf), tfile));
+  fclose(tfile);
 }
 
 TEST(stdio, getdelim) {
