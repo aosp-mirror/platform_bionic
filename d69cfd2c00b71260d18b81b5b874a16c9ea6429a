@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc5a077_a2ca0429",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T19:54:28Z",
+      "side": 1,
+      "message": "we should just rewrite this using fgets like i said in the original review. i assumed calin was going to come back and do that.",
+      "revId": "d69cfd2c00b71260d18b81b5b874a16c9ea6429a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
