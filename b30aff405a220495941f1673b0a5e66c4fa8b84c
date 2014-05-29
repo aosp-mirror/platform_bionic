@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fea00f0_b130000d",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-29T08:47:04Z",
+      "side": 1,
+      "message": "better than duplicating code i guess.",
+      "revId": "b30aff405a220495941f1673b0a5e66c4fa8b84c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfe21c19_2c3cb3db",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-05-29T08:47:04Z",
+      "side": 1,
+      "message": "This is still wrong. You\u0027re discarding non-zero return values (which are allowed for some operations, for eg when FUTEX_WAKE returns the number of woken processes).\n\nThis doesn\u0027t cause any issues *now* because it looks like all callers of __futex_wake ignore the return values or explicitly check for errors.",
+      "revId": "b30aff405a220495941f1673b0a5e66c4fa8b84c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
