@@ -34,6 +34,24 @@
       "revId": "71383fccd79e96b94b43ba76236028a551213307",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc5a077_7363a098",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-05-29T23:39:56Z",
+      "side": 1,
+      "message": "I\u0027d personally remove it, and add it back in if we got a lot of complaints...",
+      "parentUuid": "5fc5a077_937f5433",
+      "revId": "71383fccd79e96b94b43ba76236028a551213307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
