@@ -369,7 +369,7 @@ _test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
 		return 0;
 	int ret;
 	do {
-		ret = connect(s, addr, addrlen);
+		ret = __connect(s, addr, addrlen);
 	} while (ret < 0 && errno == EINTR);
 	int success = (ret == 0);
 	do {
@@ -1803,7 +1803,7 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned 
 	if (mark != MARK_UNSET && setsockopt(sock, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
 		return 0;
 	do {
-		ret = connect(sock, addr, len);
+		ret = __connect(sock, addr, len);
 	} while (ret == -1 && errno == EINTR);
 
 	if (ret == -1) {
