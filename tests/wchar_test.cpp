@@ -450,6 +450,6 @@ TEST(wchar, wmemmove) {
   wmemmove(wstr, const_wstr, sizeof(const_wstr)/sizeof(wchar_t));
   EXPECT_STREQ(const_wstr, wstr);
 
-  wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 5);
-  EXPECT_STREQ(L"This This is a test of something or other.", wstr);
+  wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
+  EXPECT_STREQ(L"This This is a test of something or other", wstr);
 }
