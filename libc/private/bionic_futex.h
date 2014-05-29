@@ -42,12 +42,12 @@ struct timespec;
 static inline __always_inline int __futex(volatile void* ftx, int op, int value, const struct timespec* timeout) {
   // Our generated syscall assembler sets errno, but our callers (pthread functions) don't want to.
   int saved_errno = errno;
-  if (__predict_false(syscall(__NR_futex, ftx, op, value, timeout) == -1)) {
-    int result = -errno;
+  int result = syscall(__NR_futex, ftx, op, value, timeout);
+  if (__predict_false(result == -1)) {
+    result = -errno;
     errno = saved_errno;
-    return result;
   }
-  return 0;
+  return result;
 }
 
 static inline int __futex_wake(volatile void* ftx, int count) {
