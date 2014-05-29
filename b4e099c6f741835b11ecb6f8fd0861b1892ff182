@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc5a077_f3fb3059",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-05-29T23:46:01Z",
+      "side": 1,
+      "message": "Do we need this? It feels like anyone referencing this function should get a compile error....",
+      "revId": "b4e099c6f741835b11ecb6f8fd0861b1892ff182",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
