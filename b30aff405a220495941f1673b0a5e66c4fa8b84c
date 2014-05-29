@@ -33,6 +33,24 @@
       "revId": "b30aff405a220495941f1673b0a5e66c4fa8b84c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_9470645c",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T17:35:12Z",
+      "side": 1,
+      "message": "d\u0027oh! fixed in https://android-review.googlesource.com/96256",
+      "parentUuid": "bfe21c19_2c3cb3db",
+      "revId": "b30aff405a220495941f1673b0a5e66c4fa8b84c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
