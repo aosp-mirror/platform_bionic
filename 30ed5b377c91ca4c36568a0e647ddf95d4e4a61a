@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fc0a468_0f1d5552",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fbaacee_6d073de8",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "we only want to do this once.",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc5a077_93e99423",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "when will it have already been opened?",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fbaacee_0d8b2113",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "what does \u0027bionic_enable\u0027 buy us?",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fbaacee_6d7cdd3d",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "how much stack does a BionicScopedTrace take? is that reasonable?",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc0a468_4f3b4dbe",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "what can go wrong here?",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fbaacee_eda90d6d",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "good question :-)\n\nwhat\u0027s the current behavior of this code? how can you see this with your test program?\n\n(as an aside, is there something we can do to help developers find this kind of bug in their code?)",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fbaacee_0dcc4147",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-29T23:09:06Z",
+      "side": 1,
+      "message": "but why?",
+      "revId": "30ed5b377c91ca4c36568a0e647ddf95d4e4a61a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
