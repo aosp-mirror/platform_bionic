@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fc0a468_ef4581d3",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-05-29T23:35:33Z",
+      "side": 1,
+      "message": "Do we need to support this in the NDK? No NDK user on Android should be writing setuid programs....",
+      "revId": "71383fccd79e96b94b43ba76236028a551213307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
