@@ -92,7 +92,6 @@ extern int setresuid(uid_t, uid_t, uid_t);
 extern int setresgid(gid_t, gid_t, gid_t);
 extern int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);
 extern int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);
-extern int issetugid(void);
 extern char* getlogin(void);
 extern char* getusershell(void);
 extern void setusershell(void);
@@ -207,7 +206,7 @@ extern int setdomainname(const char *, size_t);
 
 /* Used to retry syscalls that can return EINTR. */
 #define TEMP_FAILURE_RETRY(exp) ({         \
-    typeof (exp) _rc;                      \
+    __typeof__(exp) _rc;                   \
     do {                                   \
         _rc = (exp);                       \
     } while (_rc == -1 && errno == EINTR); \

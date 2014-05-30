@@ -54,6 +54,24 @@ TEST(stdio, tmpfile_fileno_fprintf_rewind_fgets) {
   fclose(fp);
 }
 
+TEST(stdio, dprintf) {
+  TemporaryFile tf;
+
+  int rc = dprintf(tf.fd, "hello\n");
+  ASSERT_EQ(rc, 6);
+
+  lseek(tf.fd, SEEK_SET, 0);
+  FILE* tfile = fdopen(tf.fd, "r");
+  ASSERT_TRUE(tfile != NULL);
+
+  char buf[7];
+  ASSERT_EQ(buf, fgets(buf, sizeof(buf), tfile));
+  ASSERT_STREQ("hello\n", buf);
+  // Make sure there isn't anything else in the file.
+  ASSERT_EQ(NULL, fgets(buf, sizeof(buf), tfile));
+  fclose(tfile);
+}
+
 TEST(stdio, getdelim) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);

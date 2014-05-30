@@ -34,7 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/atomics.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -841,9 +840,6 @@ soinfo* do_dlopen(const char* name, int flags, soinfo* caller, const android_dle
   soinfo* si = find_library(name, flags, extinfo);
   if (si != NULL) {
     si->CallConstructors();
-    if (caller != NULL) {
-      caller->add_child(si);
-    }
   }
   protect_data(PROT_READ);
   return si;

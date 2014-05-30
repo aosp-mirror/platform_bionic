@@ -30,7 +30,6 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <sys/atomics.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -306,9 +305,7 @@ int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* attr) 
  * "type" value is zero, so the only bits that will be set are the ones in
  * the lock state field.
  */
-static __inline__ void
-_normal_lock(pthread_mutex_t*  mutex, int shared)
-{
+static inline void _normal_lock(pthread_mutex_t* mutex, int shared) {
     /* convenience shortcuts */
     const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
     const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
@@ -336,8 +333,9 @@ _normal_lock(pthread_mutex_t*  mutex, int shared)
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
-        while (__bionic_swap(locked_contended, &mutex->value) != unlocked)
-            __futex_wait_ex(&mutex->value, shared, locked_contended, 0);
+        while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
+            __futex_wait_ex(&mutex->value, shared, locked_contended, NULL);
+        }
     }
     ANDROID_MEMBAR_FULL();
 }
@@ -346,9 +344,7 @@ _normal_lock(pthread_mutex_t*  mutex, int shared)
  * Release a non-recursive mutex.  The caller is responsible for determining
  * that we are in fact the owner of this lock.
  */
-static __inline__ void
-_normal_unlock(pthread_mutex_t*  mutex, int shared)
-{
+static inline void _normal_unlock(pthread_mutex_t* mutex, int shared) {
     ANDROID_MEMBAR_FULL();
 
     /*
@@ -410,9 +406,7 @@ _normal_unlock(pthread_mutex_t*  mutex, int shared)
  * mvalue is the current mutex value (already loaded)
  * mutex pointers to the mutex.
  */
-static __inline__ __attribute__((always_inline)) int
-_recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
-{
+static inline __always_inline int _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype) {
     if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
         /* trying to re-lock a mutex we already acquired */
         return EDEADLK;
@@ -452,7 +446,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
     mtype = (mvalue & MUTEX_TYPE_MASK);
     shared = (mvalue & MUTEX_SHARED_MASK);
 
-    /* Handle normal case first */
+    /* Handle non-recursive case first */
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
         _normal_lock(mutex, shared);
         return 0;

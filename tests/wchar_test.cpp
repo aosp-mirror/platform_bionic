@@ -442,3 +442,14 @@ TEST(wchar, wcsftime) {
   EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
+
+TEST(wchar, wmemmove) {
+  const wchar_t const_wstr[] = L"This is a test of something or other.....";
+  wchar_t* wstr = new wchar_t[sizeof(const_wstr)];
+
+  wmemmove(wstr, const_wstr, sizeof(const_wstr)/sizeof(wchar_t));
+  EXPECT_STREQ(const_wstr, wstr);
+
+  wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
+  EXPECT_STREQ(L"This This is a test of something or other", wstr);
+}

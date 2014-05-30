@@ -41,10 +41,33 @@
 #include "wcio.h"
 #include "fileext.h"
 
+#if defined(__LP64__)
+/*
+ * Android <= KitKat had getc/putc macros in <stdio.h> that referred
+ * to __srget/__swbuf, so those symbols need to be public for LP32
+ * but can be hidden for LP64.
+ */
+__LIBC_HIDDEN__ int __srget(FILE*);
+__LIBC_HIDDEN__ int __swbuf(int, FILE*);
+
+/*
+ * The NDK apparently includes an android_support.a library that
+ * refers to __srefill in its copy of the vsnprintf implementation.
+ */
+/* TODO(LP64): __LIBC_HIDDEN__ int __srefill(FILE*);*/
+/* http://b/15291317: the LP64 NDK needs to be fixed to remove that cruft. */
+__LIBC_ABI_PUBLIC__ int __srefill(FILE*);
+#else
+__LIBC_ABI_PUBLIC__ int __srget(FILE*);
+__LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
+__LIBC_ABI_PUBLIC__ int __srefill(FILE*);
+#endif
+
+#pragma GCC visibility push(hidden)
+
 int	__sflush(FILE *);
 int	__sflush_locked(FILE *);
 FILE	*__sfp(void);
-int	__srefill(FILE *);
 int	__sread(void *, char *, int);
 int	__swrite(void *, const char *, int);
 fpos_t	__sseek(void *, fpos_t, int);
@@ -102,10 +125,8 @@ extern int __sdidinit;
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
-__BEGIN_DECLS
 int __srget(FILE*);
 int __swbuf(int, FILE*);
-__END_DECLS
 #define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
 #define __sferror(p)   (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
@@ -118,3 +139,10 @@ static __inline int __sputc(int _c, FILE* _p) {
     return (__swbuf(_c, _p));
   }
 }
+
+/* OpenBSD declares these in fvwrite.h but we want to ensure they're hidden. */
+struct __suio;
+extern int __sfvwrite(FILE *, struct __suio *);
+wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+
+#pragma GCC visibility pop

@@ -43,7 +43,6 @@ libc_common_src_files := \
     bionic/err.c \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
-    bionic/fdprintf.c \
     bionic/ftime.c \
     bionic/fts.c \
     bionic/getdtablesize.c \
@@ -55,7 +54,6 @@ libc_common_src_files := \
     bionic/initgroups.c \
     bionic/ioctl.c \
     bionic/isatty.c \
-    bionic/issetugid.c \
     bionic/md5.c \
     bionic/memmem.c \
     bionic/pathconf.c \
@@ -257,7 +255,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wcstok.c \
     upstream-freebsd/lib/libc/string/wmemchr.c \
     upstream-freebsd/lib/libc/string/wmemcpy.c \
-    upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-freebsd/lib/libc/string/wmemset.c \
 
 libc_upstream_netbsd_src_files := \
@@ -371,6 +368,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/net/ntohs.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
+    upstream-openbsd/lib/libc/stdio/dprintf.c \
     upstream-openbsd/lib/libc/stdio/fdopen.c \
     upstream-openbsd/lib/libc/stdio/feof.c \
     upstream-openbsd/lib/libc/stdio/ferror.c \
@@ -435,6 +433,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/ungetc.c \
     upstream-openbsd/lib/libc/stdio/ungetwc.c \
     upstream-openbsd/lib/libc/stdio/vasprintf.c \
+    upstream-openbsd/lib/libc/stdio/vdprintf.c \
     upstream-openbsd/lib/libc/stdio/vfprintf.c \
     upstream-openbsd/lib/libc/stdio/vfscanf.c \
     upstream-openbsd/lib/libc/stdio/vfwprintf.c \

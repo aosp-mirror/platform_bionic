@@ -26,6 +26,7 @@ libc_common_src_files_mips += \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
@@ -58,7 +59,6 @@ libc_bionic_src_files_mips += \
     arch-mips/bionic/bzero.S \
     arch-mips/bionic/cacheflush.cpp \
     arch-mips/bionic/_exit_with_stack_teardown.S \
-    arch-mips/bionic/futex_mips.S \
     arch-mips/bionic/__get_sp.S \
     arch-mips/bionic/memcmp16.S \
     arch-mips/bionic/_setjmp.S \

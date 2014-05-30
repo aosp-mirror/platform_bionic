@@ -144,10 +144,8 @@ static int __pthread_start(void* arg) {
   // notify gdb about this thread before we start doing anything.
   // This also provides the memory barrier needed to ensure that all memory
   // accesses previously made by the creating thread are visible to us.
-  pthread_mutex_t* start_mutex = (pthread_mutex_t*) &thread->tls[TLS_SLOT_START_MUTEX];
-  pthread_mutex_lock(start_mutex);
-  pthread_mutex_destroy(start_mutex);
-  thread->tls[TLS_SLOT_START_MUTEX] = NULL;
+  pthread_mutex_lock(&thread->startup_handshake_mutex);
+  pthread_mutex_destroy(&thread->startup_handshake_mutex);
 
   __init_alternate_signal_stack(thread);
 
@@ -204,7 +202,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // The child stack is the same address, just growing in the opposite direction.
   // At offsets >= 0, we have the TLS slots.
   // At offsets < 0, we have the child stack.
-  thread->tls = (void**)((uint8_t*)(thread->attr.stack_base) + thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
+  thread->tls = reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
+                                         thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
   void* child_stack = thread->tls;
   __init_tls(thread);
 
@@ -214,9 +213,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // This also provides the memory barrier we need to ensure that all
   // memory accesses previously performed by this thread are visible to
   // the new thread.
-  pthread_mutex_t* start_mutex = (pthread_mutex_t*) &thread->tls[TLS_SLOT_START_MUTEX];
-  pthread_mutex_init(start_mutex, NULL);
-  pthread_mutex_lock(start_mutex);
+  pthread_mutex_init(&thread->startup_handshake_mutex, NULL);
+  pthread_mutex_lock(&thread->startup_handshake_mutex);
 
   thread->start_routine = start_routine;
   thread->start_routine_arg = arg;
@@ -237,7 +235,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
     // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
-    pthread_mutex_unlock(start_mutex);
+    pthread_mutex_unlock(&thread->startup_handshake_mutex);
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
@@ -252,7 +250,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // Letting the thread run is the easiest way to clean up its resources.
     thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
     thread->start_routine = __do_nothing;
-    pthread_mutex_unlock(start_mutex);
+    pthread_mutex_unlock(&thread->startup_handshake_mutex);
     return init_errno;
   }
 
@@ -264,7 +262,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.
   *thread_out = reinterpret_cast<pthread_t>(thread);
-  pthread_mutex_unlock(start_mutex);
+  pthread_mutex_unlock(&thread->startup_handshake_mutex);
 
   return 0;
 }

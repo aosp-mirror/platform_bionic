@@ -32,8 +32,10 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
+#include <sys/syscall.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -182,6 +184,41 @@ extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_
 // This non-standard function was in our <inttypes.h> for some reason.
 extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t n) {
   return (intmax_t) strntoumax(nptr, endptr, base, n);
+}
+
+// POSIX calls this dprintf, but LP32 Android had fdprintf instead.
+extern "C" int fdprintf(int fd, const char* fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  int rc = vdprintf(fd, fmt, ap);
+  va_end(ap);
+  return rc;
+}
+
+// POSIX calls this vdprintf, but LP32 Android had fdprintf instead.
+extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
+  return vdprintf(fd, fmt, ap);
+}
+
+#define __futex_wake __real_futex_wake
+#define __futex_wait __real_futex_wait
+#include "private/bionic_futex.h"
+#undef __futex_wake
+#undef __futex_wait
+
+// This used to be in <sys/atomics.h>.
+extern "C" int __futex_wake(volatile void* ftx, int count) {
+  return __real_futex_wake(ftx, count);
+}
+
+// This used to be in <sys/atomics.h>.
+extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
+  return __real_futex_wait(ftx, value, timeout);
+}
+
+// Unity's libmono uses this.
+extern "C" int tkill(pid_t tid, int sig) {
+  return syscall(__NR_tkill, tid, sig);
 }
 
 #endif
