@@ -38,6 +38,8 @@ ENTRY(__bionic_clone)
         jmp     .L_bc_return
 
 .L_bc_child:
+        # We don't want anyone to unwind past this point.
+        .cfi_undefined %eip
         call    __bionic_clone_entry
         hlt
 
