@@ -323,17 +323,20 @@ def x86_genstub(syscall):
     stack_bias = numparams*4 + 4
     offset = 0
     mov_result = ""
-    cfi_result = "    .cfi_def_cfa_offset %d\n" % (numparams*4)
+    first_push = True
     for register in x86_registers[:numparams]:
         result     += "    pushl   %%%s\n" % register
+        if first_push:
+          result   += "    .cfi_def_cfa_offset 8\n"
+          result   += "    .cfi_rel_offset %s, 0\n" % register
+          first_push = False
+        else:
+          result   += "    .cfi_adjust_cfa_offset 4\n"
+          result   += "    .cfi_rel_offset %s, 0\n" % register
         mov_result += "    mov     %d(%%esp), %%%s\n" % (stack_bias+offset, register)
-        cfi_result += "    .cfi_rel_offset %s, %d\n" % (register, offset)
         offset += 4
 
-    if numparams:
-        result += cfi_result
-        result += mov_result
-
+    result += mov_result
     result += x86_call % syscall
 
     for register in reversed(x86_registers[:numparams]):
@@ -353,10 +356,11 @@ def x86_genstub_socketcall(syscall):
 
     # save the regs we need
     result += "    pushl   %ebx\n"
-    result += "    pushl   %ecx\n"
     result += "    .cfi_def_cfa_offset 8\n"
     result += "    .cfi_rel_offset ebx, 0\n"
-    result += "    .cfi_rel_offset ecx, 4\n"
+    result += "    pushl   %ecx\n"
+    result += "    .cfi_adjust_cfa_offset 4\n"
+    result += "    .cfi_rel_offset ecx, 0\n"
     stack_bias = 12
 
     # set the call id (%ebx)
