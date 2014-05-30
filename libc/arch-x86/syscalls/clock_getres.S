@@ -4,10 +4,11 @@
 
 ENTRY(clock_getres)
     pushl   %ebx
-    pushl   %ecx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
-    .cfi_rel_offset ecx, 4
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
     mov     12(%esp), %ebx
     mov     16(%esp), %ecx
     movl    $__NR_clock_getres, %eax

@@ -4,14 +4,17 @@
 
 ENTRY(mremap)
     pushl   %ebx
-    pushl   %ecx
-    pushl   %edx
-    pushl   %esi
-    .cfi_def_cfa_offset 16
+    .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
-    .cfi_rel_offset ecx, 4
-    .cfi_rel_offset edx, 8
-    .cfi_rel_offset esi, 12
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
+    pushl   %edx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset edx, 0
+    pushl   %esi
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset esi, 0
     mov     20(%esp), %ebx
     mov     24(%esp), %ecx
     mov     28(%esp), %edx
