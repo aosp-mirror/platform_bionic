@@ -4,7 +4,7 @@
 
 ENTRY(setgid)
     pushl   %ebx
-    .cfi_def_cfa_offset 4
+    .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_setgid32, %eax
