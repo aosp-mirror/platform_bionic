@@ -31,4 +31,7 @@
 #define _X _CTYPE_X
 #define _B _CTYPE_B
 
+/* OpenBSD has this, but we can't really implement it correctly on Linux. */
+#define issetugid() 0
+
 #endif
