@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc5a077_16d1eddc",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "2014",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc5a077_36ccf147",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dffef0bb_ff1d1ffb",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "I believe our style is to not indent the namespace.",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_a097a0be",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "\"name\" is misleading, since this is a message.",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dffef0bb_ff799f0b",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "When is this not true?",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dffef0bb_7f3c8f4e",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "Since you\u0027re never checking endptr, why not use NULL?",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_168eacb0",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "Trailing whitespace.",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_fd153b12",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "You\u0027re writing something larger than this below...",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_609aa8e8",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "Actually configurable on linux. Can go up to MAX_INT.",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_9118868f",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:38:51Z",
+      "side": 1,
+      "message": "Never read before assign. Does it need to be set?",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
