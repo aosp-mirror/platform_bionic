@@ -4,7 +4,7 @@
 
 ENTRY(epoll_create1)
     pushl   %ebx
-    .cfi_def_cfa_offset 4
+    .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_epoll_create1, %eax
