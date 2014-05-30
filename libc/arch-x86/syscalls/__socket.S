@@ -4,10 +4,11 @@
 
 ENTRY(__socket)
     pushl   %ebx
-    pushl   %ecx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
-    .cfi_rel_offset ecx, 4
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
     mov     $1, %ebx
     mov     %esp, %ecx
     addl    $12, %ecx
