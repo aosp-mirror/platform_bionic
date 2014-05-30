@@ -138,6 +138,23 @@
     },
     {
       "key": {
+        "uuid": "dfd51034_93a18453",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-05-30T21:49:22Z",
+      "side": 1,
+      "message": "Since the string \"B|PID|\" is constant for each process, could have a static member of the class for that part and do two writes. That also lets you directly print name without bothering to allocate memory/copy it to a new buffer just for printing. If not a static class member, could be a small, constant sized char[] as you had before.",
+      "revId": "74dd511fe47e2d77c1a45fee435bca307ec76325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fbfa8df_609aa8e8",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 4
