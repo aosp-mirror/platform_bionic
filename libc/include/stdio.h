@@ -253,6 +253,8 @@ int	 vprintf(const char * __restrict, __va_list)
 int dprintf(int, const char * __restrict, ...) __printflike(2, 3);
 int vdprintf(int, const char * __restrict, __va_list) __printflike(2, 0);
 
+int fdprintf(int, const char * __restrict, ...) __printflike(2, 3); /* Note: this is only in the preview release. */
+
 #ifndef __AUDIT__
 char* gets(char*) __warnattr("gets is very unsafe; consider using fgets");
 int sprintf(char* __restrict, const char* __restrict, ...)
