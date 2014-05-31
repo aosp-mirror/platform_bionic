@@ -25,7 +25,6 @@
 #include <string>
 
 TEST(atexit, dlclose) {
-#if defined(__BIONIC__)
   std::string atexit_call_sequence;
   bool valid_this_in_static_dtor = false;
   void* handle = dlopen("libtest_atexit.so", RTLD_NOW);
@@ -39,9 +38,6 @@ TEST(atexit, dlclose) {
   // this test verifies atexit call from atexit handler. as well as the order of calls
   ASSERT_EQ("Humpty Dumpty sat on a wall", atexit_call_sequence);
   ASSERT_TRUE(valid_this_in_static_dtor);
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
 }
 
 class TestMainStaticDtorClass {
