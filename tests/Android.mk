@@ -312,8 +312,10 @@ libtest_atexit_src_files := \
     atexit_testlib.cpp
 
 module := libtest_atexit
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
