@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fbfa8df_31bac059",
+        "filename": "libc/bionic/new.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-05-31T00:04:36Z",
+      "side": 1,
+      "message": "that\u0027s always going to say \"Out of memory\", which is definitely an improvement, but how about something like:\n\n  \"new failed to allocate %zu bytes\", size\n  \"new[] failed to allocate %zu bytes\", size",
+      "revId": "8a2b625f28309504350db0c9bddb9940096e19ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
