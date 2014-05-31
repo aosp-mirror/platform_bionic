@@ -71,6 +71,5 @@ extern "C" void register_atexit(std::string* sequence, bool* valid_this_in_stati
   atexit_valid_this_in_static_dtor = valid_this_in_static_dtor;
   atexit(atexit_handler_regular);
   atexit(atexit_handler_with_atexit);
-  atexit(NULL);
 }
 
