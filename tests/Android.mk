@@ -108,6 +108,7 @@ libBionicStandardTests_src_files := \
     sys_vfs_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
+    uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
 

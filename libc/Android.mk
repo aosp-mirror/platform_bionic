@@ -103,6 +103,8 @@ libc_bionic_src_files := \
     bionic/__bionic_name_mem.cpp \
     bionic/bionic_time_conversions.cpp \
     bionic/brk.cpp \
+    bionic/c16rtomb.cpp \
+    bionic/c32rtomb.cpp \
     bionic/chmod.cpp \
     bionic/chown.cpp \
     bionic/clearenv.cpp \
@@ -139,6 +141,9 @@ libc_bionic_src_files := \
     bionic/link.cpp \
     bionic/locale.cpp \
     bionic/lstat.cpp \
+    bionic/mbrtoc16.cpp \
+    bionic/mbrtoc32.cpp \
+    bionic/mbstate.cpp \
     bionic/mkdir.cpp \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
