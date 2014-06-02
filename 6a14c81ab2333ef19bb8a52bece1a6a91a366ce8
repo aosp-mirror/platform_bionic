@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fbfa8df_7625c911",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-06-02T14:23:21Z",
+      "side": 1,
+      "message": "Strangely enough, the bug being addressed is 15297299, a kernel panic that all kernels (including upstream top of tree) are subject to by the massive increase in syscall pressure on gettid() by the new user space logger. 15315766 is a request for enhancement.\n\nI only make this comment so it is recorded, no action is required, We do *not* want to put a kernel bug fixed by user space adjustment officially, that would be _wrong_.",
+      "range": {
+        "startLine": 16,
+        "startChar": 5,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "6a14c81ab2333ef19bb8a52bece1a6a91a366ce8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fcab88f_4830eb1f",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-06-02T14:23:21Z",
+      "side": 1,
+      "message": "The neatest thing about all of this, there was only one way to skin this cat! :-)",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "6a14c81ab2333ef19bb8a52bece1a6a91a366ce8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
