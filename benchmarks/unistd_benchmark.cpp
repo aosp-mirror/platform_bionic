@@ -28,3 +28,14 @@ static void BM_unistd_getpid(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_unistd_getpid);
+
+static void BM_unistd_gettid(int iters) {
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; ++i) {
+    gettid();
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_unistd_gettid);
