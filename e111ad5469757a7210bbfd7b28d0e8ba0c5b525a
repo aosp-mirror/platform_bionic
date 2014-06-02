@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfcdbca8_3163d7e7",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-02T17:23:06Z",
+      "side": 1,
+      "message": "This is still going to always be true. It\u0027s being initialized by the declaration below, and inside this block is the only place it is written.",
+      "revId": "e111ad5469757a7210bbfd7b28d0e8ba0c5b525a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_f918aadb",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-02T17:23:06Z",
+      "side": 1,
+      "message": "Google style is space between if and parens. Happens in a few places.",
+      "revId": "e111ad5469757a7210bbfd7b28d0e8ba0c5b525a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_513c13dc",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-02T17:23:06Z",
+      "side": 1,
+      "message": "Why not just else if?",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 55,
+        "endChar": 10
+      },
+      "revId": "e111ad5469757a7210bbfd7b28d0e8ba0c5b525a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fcab88f_7c6b6831",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-02T17:23:06Z",
+      "side": 1,
+      "message": "Trailing whitespace.",
+      "revId": "e111ad5469757a7210bbfd7b28d0e8ba0c5b525a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
