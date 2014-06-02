@@ -38,7 +38,6 @@ uid_t   getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid)   arm,x86
 uid_t   getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)     arm64,mips,mips64,x86_64
 gid_t   getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid)   arm,x86
 gid_t   getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)     arm64,mips,mips64,x86_64
-pid_t   gettid()                   all
 ssize_t readahead(int, off64_t, size_t)     all
 int     getgroups:getgroups32(int, gid_t*)    arm,x86
 int     getgroups:getgroups(int, gid_t*)      arm64,mips,mips64,x86_64

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,48 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_ATOMICS_H
-#define _SYS_ATOMICS_H
 
-#include <sys/cdefs.h>
-#include <sys/time.h>
+#include <unistd.h>
 
-/* Note: this is only in the preview release. */
+#include "pthread_internal.h"
 
-__BEGIN_DECLS
-
-#define __ATOMIC_INLINE__ static __inline__ __attribute__((always_inline))
-
-__ATOMIC_INLINE__ int
-__atomic_cmpxchg(int old_value, int new_value, volatile int* ptr)
-{
-    /* We must return 0 on success */
-    return __sync_val_compare_and_swap(ptr, old_value, new_value) != old_value;
+pid_t gettid() {
+  return __get_thread()->tid;
 }
-
-__ATOMIC_INLINE__ int
-__atomic_swap(int new_value, volatile int *ptr)
-{
-    int old_value;
-    do {
-        old_value = *ptr;
-    } while (__sync_val_compare_and_swap(ptr, old_value, new_value) != old_value);
-    return old_value;
-}
-
-__ATOMIC_INLINE__ int
-__atomic_dec(volatile int *ptr)
-{
-  return __sync_fetch_and_sub (ptr, 1);
-}
-
-__ATOMIC_INLINE__ int
-__atomic_inc(volatile int *ptr)
-{
-  return __sync_fetch_and_add (ptr, 1);
-}
-
-
-__END_DECLS
-
-#endif /* _SYS_ATOMICS_H */

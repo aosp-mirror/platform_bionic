@@ -32,7 +32,7 @@
 #include <stdarg.h>
 
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
-extern "C" void __exit(int status);
+extern "C" __noreturn void __exit(int status);
 
 // Called from the __bionic_clone assembler to call the thread function then exit.
 extern "C" __LIBC_HIDDEN__ void __bionic_clone_entry(int (*fn)(void*), void* arg) {
