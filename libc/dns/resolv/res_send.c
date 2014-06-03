@@ -946,7 +946,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 	origflags = fcntl(sock, F_GETFL, 0);
 	fcntl(sock, F_SETFL, origflags | O_NONBLOCK);
 
-	res = connect(sock, nsap, salen);
+	res = __connect(sock, nsap, salen);
 	if (res < 0 && errno != EINPROGRESS) {
                 res = -1;
                 goto done;
@@ -1103,7 +1103,7 @@ send_dg(res_state statp,
 			res_nclose(statp);
 			return (0);
 		}
-		if (connect(EXT(statp).nssocks[ns], nsap, (socklen_t)nsaplen) < 0) {
+		if (__connect(EXT(statp).nssocks[ns], nsap, (socklen_t)nsaplen) < 0) {
 			Aerror(statp, stderr, "connect(dg)", errno, nsap,
 			    nsaplen);
 			res_nclose(statp);
