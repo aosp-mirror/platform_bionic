@@ -16,6 +16,24 @@
       "revId": "d286796fce1e6fff407b719a53eb2afbeb96c327",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_592c59bb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-06-03T22:47:05Z",
+      "side": 1,
+      "message": "sgtm, this was used to add arc on dlopen, which resulted in loops, because dlclose did not remove arcs.",
+      "parentUuid": "1f1b2808_37d17887",
+      "revId": "d286796fce1e6fff407b719a53eb2afbeb96c327",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
