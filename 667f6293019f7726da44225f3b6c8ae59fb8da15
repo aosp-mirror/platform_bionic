@@ -242,6 +242,24 @@
       "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_42955659",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-03T19:40:16Z",
+      "side": 1,
+      "message": "Yes, you need to at least get the test to compile otherwise these tests will not work properly in CTS.\n\nYou might need to use the trick to only include uchar.h if the glibc version is high enough since I don\u0027t think all versions of glibc support it. I think 2.17 is the first to support it but I\u0027m not positive.",
+      "parentUuid": "bfcdbca8_a6e6884d",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
