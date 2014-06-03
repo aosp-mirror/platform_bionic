@@ -16,6 +16,24 @@
       "revId": "b4f7e5f0180587f6e0499c68386c65007f96c885",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fea00f0_4bc11961",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-03T23:46:03Z",
+      "side": 1,
+      "message": "Are you saying that all LP64-compiled code should be calling __builtin___clear_cache instead of cacheflush, and so there should never be a cacheflush routine in arm64, x86_64, or mips64 libs?\n\nOr are you saying that the above deprecation msg should be adjusted?",
+      "parentUuid": "df4350e0_d235b2fb",
+      "revId": "b4f7e5f0180587f6e0499c68386c65007f96c885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
