@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_37d17887",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:23:51Z",
+      "side": 1,
+      "message": "dimitry: should we remove the \u0027caller\u0027 parameter, or are we missing a use here?",
+      "revId": "d286796fce1e6fff407b719a53eb2afbeb96c327",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
