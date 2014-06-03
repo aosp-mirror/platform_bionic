@@ -486,7 +486,7 @@ libc_arch_static_src_files := \
 # ========================================================
 libc_common_cflags := \
     -D_LIBC=1 \
-    -Wall -Wextra \
+    -Wall -Wextra -Wunused \
 
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
 libc_common_cflags += \
@@ -709,7 +709,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -Wno-sign-compare -Wno-uninitialized \
+    -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter \
     -Werror \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \

@@ -34,7 +34,7 @@ endif
 test_cflags = \
     -fstack-protector-all \
     -g \
-    -Wall -Wextra \
+    -Wall -Wextra -Wunused \
     -Werror \
     -fno-builtin \
 
