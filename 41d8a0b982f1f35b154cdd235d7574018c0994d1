@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf505ca5_02018e26",
+        "filename": "libc/bionic/memmove.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T18:48:47Z",
+      "side": 1,
+      "message": "don\u0027t you still need the #undef _FORTIFY_SOURCE? (i\u0027m not sure what exactly that was disabling in this file --- memmove, memcpy, or bcopy, or all three.)",
+      "revId": "41d8a0b982f1f35b154cdd235d7574018c0994d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dffef0bb_d3781606",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T18:48:47Z",
+      "side": 1,
+      "message": "why the (size_t)?",
+      "revId": "41d8a0b982f1f35b154cdd235d7574018c0994d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
