@@ -186,15 +186,6 @@ extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t
   return (intmax_t) strntoumax(nptr, endptr, base, n);
 }
 
-// POSIX calls this dprintf, but LP32 Android had fdprintf instead.
-extern "C" int fdprintf(int fd, const char* fmt, ...) {
-  va_list ap;
-  va_start(ap, fmt);
-  int rc = vdprintf(fd, fmt, ap);
-  va_end(ap);
-  return rc;
-}
-
 // POSIX calls this vdprintf, but LP32 Android had fdprintf instead.
 extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
   return vdprintf(fd, fmt, ap);

@@ -253,7 +253,14 @@ int	 vprintf(const char * __restrict, __va_list)
 int dprintf(int, const char * __restrict, ...) __printflike(2, 3);
 int vdprintf(int, const char * __restrict, __va_list) __printflike(2, 0);
 
-int fdprintf(int, const char * __restrict, ...) __printflike(2, 3); /* Note: this is only in the preview release. */
+static inline int fdprintf(int fd, const char* fmt, ...) {
+  /* Note: this backward compatibility shim is only in the preview release. */
+  va_list ap;
+  va_start(ap, fmt);
+  int rc = vdprintf(fd, fmt, ap);
+  va_end(ap);
+  return rc;
+}
 
 #ifndef __AUDIT__
 char* gets(char*) __warnattr("gets is very unsafe; consider using fgets");
