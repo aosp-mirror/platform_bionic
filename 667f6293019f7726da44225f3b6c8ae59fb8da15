@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7f33447f_73ae1c89",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:20:22Z",
+      "side": 1,
+      "message": "icu4c and Java use high and low, though, so we should stick to them. (that\u0027s why i\u0027d never come across leading and trailing before.)",
+      "parentUuid": "bf505ca5_df9fff51",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fbfa8df_ac7c2d3e",
         "filename": "libc/bionic/c16rtomb.cpp",
         "patchSetId": 4
