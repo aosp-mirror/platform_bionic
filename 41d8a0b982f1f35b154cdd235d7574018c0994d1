@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_c27f2683",
+        "filename": "libc/bionic/memmove.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-03T19:21:53Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure it\u0027s avoiding changing the memcpy and bcopy to their fortify versions.\n\nLooking at the bcopy.c source, it doesn\u0027t call any other functions so it doesn\u0027t need to avoid making a call to fortify sources.\n\nHowever, I think we should create a separate library for the upstream code and undef fortify source to avoid any cases where they wind up calling another library function and wind up calling the fortify version.\n\nAlso, it\u0027s a little odd to have this in libc/bionic. Does the upstream-openbsd code already have a version of this file that we can use instead?",
+      "parentUuid": "bf505ca5_02018e26",
+      "revId": "41d8a0b982f1f35b154cdd235d7574018c0994d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dffef0bb_d3781606",
         "filename": "libc/include/strings.h",
         "patchSetId": 1
