@@ -34,6 +34,24 @@
       "revId": "d05cad673cad84b064c30ef7634360162ad53a9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f212030_ede56d70",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T23:45:02Z",
+      "side": 1,
+      "message": "stdatomic_test.cpp is the odd one out; we\u0027re assuming that we\u0027ll get the prebuilt glibc fixed and remove the #if there. see https://android-review.googlesource.com/#/c/96060/ and friends. there\u0027s no chance of that happening here for years.",
+      "parentUuid": "7f33447f_99d741cb",
+      "revId": "d05cad673cad84b064c30ef7634360162ad53a9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
