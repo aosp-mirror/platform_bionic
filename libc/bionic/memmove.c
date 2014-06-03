@@ -25,22 +25,6 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#undef _FORTIFY_SOURCE
-#include <string.h>
-#include <strings.h>
 
-void *memmove(void *dst, const void *src, size_t n)
-{
-  const char *p = src;
-  char *q = dst;
-  /* We can use the optimized memcpy if the source and destination
-   * don't overlap.
-   */
-  if (__builtin_expect(((q < p) && ((size_t)(p - q) >= n))
-                    || ((p < q) && ((size_t)(q - p) >= n)), 1)) {
-    return memcpy(dst, src, n);
-  } else {
-    bcopy(src, dst, n);
-    return dst;
-  }
-}
+#define MEMMOVE
+#include "upstream-openbsd/lib/libc/string/bcopy.c"
