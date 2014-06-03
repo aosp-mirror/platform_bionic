@@ -22,6 +22,30 @@
       "revId": "cfc3012cab1668e6801a060e75032c10fdcdb700",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_ff2bdba2",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T15:13:53Z",
+      "side": 1,
+      "message": "This actually does test that interval, the interval just wraps around at the top end. Since nconv is unsigned (as all of the return values are for this family of functions), the error values are actually INT_MAX-1, INT_MAX-2, etc. nconv \u003e\u003d __MBS_ERR_INCOMPLETE_SEQUENCE will only match __MBS_ERR_INCOMPLETE_SEQUENCE or __MBS_ERR_ILLEGAL_SEQUENCE. I should probably write that out explicitly to be more clear.",
+      "parentUuid": "5fea00f0_00f7706f",
+      "range": {
+        "startLine": 81,
+        "startChar": 29,
+        "endLine": 81,
+        "endChar": 67
+      },
+      "revId": "cfc3012cab1668e6801a060e75032c10fdcdb700",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
