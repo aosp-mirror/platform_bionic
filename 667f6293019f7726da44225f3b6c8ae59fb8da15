@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fbfa8df_acdd4def",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "these are called high and low surrogates (see http://www.unicode.org/versions/Unicode6.2.0/ch03.pdf#G2630).",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_ac7c2d3e",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "type* here and elsewhere.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_466328e6",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "wouldn\u0027t this be simpler rewritten as\n\n  if (is_low_surrogate(c16)) {\n  } else if (is_high_surrogate(c16)) {\n  } else {\n  }\n\n?",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_863ff0d1",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "multibyte? do you mean surrogate pairs?",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_20425f75",
+        "filename": "libc/bionic/mbstate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "i still don\u0027t understand why these aren\u0027t member functions.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_00476384",
+        "filename": "libc/include/uchar.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "blank line between comment and #ifndef",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_8682903e",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "comment saying that these values are specified by POSIX.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_402d5bc8",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "seems odd to declare mbsinit here.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_a6e6884d",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T16:58:37Z",
+      "side": 1,
+      "message": "cferris: don\u0027t we need to use the usual #if !defined(__GLIBC__) to get these tests into CTS? (annoying though that is.)",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
