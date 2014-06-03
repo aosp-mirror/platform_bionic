@@ -24,7 +24,7 @@ LOCAL_PATH := $(call my-dir)
 
 benchmark_c_flags = \
     -O2 \
-    -Wall -Wextra \
+    -Wall -Wextra -Wunused \
     -Werror \
     -fno-builtin \
     -std=gnu++11 \

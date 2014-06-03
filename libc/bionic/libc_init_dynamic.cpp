@@ -94,7 +94,7 @@ __LIBC_HIDDEN__ void __libc_postfini() {
 // Note that the dynamic linker has also run all constructors in the
 // executable at this point.
 __noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
+                            void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
 

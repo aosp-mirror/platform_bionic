@@ -26,7 +26,7 @@ LOCAL_MODULE_STEM_64 := $(LOCAL_MODULE)64
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
-LOCAL_CFLAGS += -g -Wall -Wextra -Werror -std=gnu++11
+LOCAL_CFLAGS += -g -Wall -Wextra -Wunused -Werror -std=gnu++11
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
