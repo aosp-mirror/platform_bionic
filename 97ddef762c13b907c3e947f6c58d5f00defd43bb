@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f33447f_139a3059",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "this will be compiled out, so you should either remove it or replace it with something that will actually do something.",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_d37cc83f",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "it would probably be clearer to just flip the top-level if, return early in this case, and lose the else.",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_a2cc5a9f",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "C++ casts.",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_c2d16634",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "why no ERR here?",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dffef0bb_73596268",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "i don\u0027t understand why -3 is excluded here. this only seems to be used in one place... should we inline it there and add a comment explaining why -3 doesn\u0027t count?",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_f36b0c72",
+        "filename": "tests/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:31:01Z",
+      "side": 1,
+      "message": "cferris?",
+      "revId": "97ddef762c13b907c3e947f6c58d5f00defd43bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
