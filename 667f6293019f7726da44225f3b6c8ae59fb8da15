@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_df9fff51",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T17:33:47Z",
+      "side": 1,
+      "message": "Both seem to be correct: http://www.unicode.org/faq/utf_bom.html#utf16-2",
+      "parentUuid": "1fbfa8df_acdd4def",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fbfa8df_ac7c2d3e",
         "filename": "libc/bionic/c16rtomb.cpp",
         "patchSetId": 4
@@ -70,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "dffef0bb_730a8241",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T17:33:47Z",
+      "side": 1,
+      "message": "Strictly speaking, surrogate pairs are multibyte characters :) This comment should actually be gone completely though. It\u0027s a left over from when I was just returning 4 (incorrect for finishing incomplete sequences).",
+      "parentUuid": "df4350e0_863ff0d1",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfcdbca8_20425f75",
         "filename": "libc/bionic/mbstate.cpp",
         "patchSetId": 4
@@ -81,6 +117,24 @@
       "writtenOn": "2014-06-03T16:58:37Z",
       "side": 1,
       "message": "i still don\u0027t understand why these aren\u0027t member functions.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_dfa4df95",
+        "filename": "libc/bionic/mbstate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T17:33:47Z",
+      "side": 1,
+      "message": "That approach would make sense to me. I\u0027ll save it for another patch though.",
+      "parentUuid": "bfcdbca8_20425f75",
       "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -132,6 +186,24 @@
       "writtenOn": "2014-06-03T16:58:37Z",
       "side": 1,
       "message": "seems odd to declare mbsinit here.",
+      "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_70985295",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T17:33:47Z",
+      "side": 1,
+      "message": "Whoops. It\u0027s also in wchar.h, but definitely shouldn\u0027t be here.",
+      "parentUuid": "bfcdbca8_402d5bc8",
       "revId": "667f6293019f7726da44225f3b6c8ae59fb8da15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
