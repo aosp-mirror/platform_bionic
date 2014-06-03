@@ -81,6 +81,24 @@
       "revId": "448d5d46705251905c9c518ca28b189853d3ffc4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_2eaa6c61",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-03T15:14:02Z",
+      "side": 1,
+      "message": "Ah. That makes sense. I\u0027ll merge it with the zero length test then.",
+      "parentUuid": "bfe21c19_809da6e0",
+      "revId": "448d5d46705251905c9c518ca28b189853d3ffc4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
