@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_9a21892c",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T23:17:10Z",
+      "side": 1,
+      "message": "i think you have to touch each test. grep for existing __GLIBC__ references in the tests.",
+      "revId": "d05cad673cad84b064c30ef7634360162ad53a9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
