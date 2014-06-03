@@ -59,6 +59,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_78b121e4",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f1b2808_972644a9",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_77e93020",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -70,6 +88,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "the indentation here still doesn\u0027t match the Google C++ style guide.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_253cd4db",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df4350e0_77e93020",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -123,6 +159,54 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_e5702cb8",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df4350e0_97e63c4e",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_38aba978",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fea00f0_40bd784f",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f212030_c2fab8dc",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -134,6 +218,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "how often do we do this in a running program? what if the program has multiple threads? is there a better place to do this? when and where do we do similar things already?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_78b601c7",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Well, I thought that the static keyword meant that we would only have a single copy of this variable at any given time, and ATRACE_TAG_NOTREADY will never be a valid tag value that we might get from property_get, so I thought that, even in a multithreaded program, there would only ever be one copy even between threads.  The check will happen in each constructor, but I must be missing something in my understanding of static between threads.",
+      "parentUuid": "5f212030_c2fab8dc",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -157,6 +259,24 @@
     },
     {
       "key": {
+        "uuid": "7f33447f_3642c275",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "In the lower comment on EINTR, I mention that I think that would be one situation where O_CLOEXEC would be useful, so I think that it would be.\n\nI can\u0027t help but think it would be really nice to open this file once, though, and just close it once when it\u0027s done, but I won\u0027t pretend to have a really clear idea of what the implications of that might be in this context.",
+      "parentUuid": "1f1b2808_97c2c439",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_37d418ee",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -168,6 +288,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "i still don\u0027t think using stdio is safe here. also, you\u0027re inlining a lot of code at this point (or, more likely, the compiler isn\u0027t inlining any of this because your function is too large).",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_25c13462",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Why is it inlining it?  I don\u0027t have them declared as inline anymore (but perhaps I should?).\n\nI wasn\u0027t sure if stdio was sensible, so they\u0027re really there as a placeholder for whatever would be preferred.  If nothing would be, I can combine these two into an abort.",
+      "parentUuid": "1f1b2808_37d418ee",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -191,6 +329,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_587f7d33",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f1b2808_f7a460ac",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f212030_bf40ff69",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -202,6 +358,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "i thought you were going to use writev?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_986bd573",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "The iovec struct requires a length argument for the string, so it doesn\u0027t solve the problem I was trying to solve, i.e. allocating only enough for the exact size.  The only way I could find to actually figure out how many digits the PID was would be to just /\u003d 10 until \u003c 1 and keep a count, and I wasn\u0027t sure if that would be worth the trouble.\n\nThere may be another way, but I am not familiar with it and didn\u0027t find it looking around.",
+      "parentUuid": "5f212030_bf40ff69",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -242,6 +416,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_58ebfd89",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Well, I know it\u0027s the errno value you get if someone interrupts you, like if I were to hit ctrl+C during one of these write calls.  Right now, I just handle that dumbly below by printing the error, but if the write has been interrupted I\u0027m guessing at the very least I want to close the file (which I think O_CLOEXEC would handle if I enable it), or even do more, like clean up the write somehow.",
+      "parentUuid": "df4350e0_77429052",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_b77a5894",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -253,6 +445,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "no blank lines before \u0027else\u0027s.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_055d1821",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df4350e0_b77a5894",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -276,6 +486,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_58669da9",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Oh, meant bitwise since this is always going to be true unless one doesn\u0027t exist.  Plus the !\u003d 0 you added above.",
+      "parentUuid": "5f212030_025d1021",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_f71a2042",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -287,6 +515,24 @@
       "writtenOn": "2014-06-03T22:02:56Z",
       "side": 1,
       "message": "the problem we had before was that we leaked fds because there was no close. the problem we have now is that we open and close this fd every time we log contention. you should write a benchmark in bionic/benchmarks/ to see what a BionicScopedTrace costs.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_f63bfa07",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-06-03T22:33:28Z",
+      "side": 1,
+      "message": "Okay, I will.",
+      "parentUuid": "1f1b2808_f71a2042",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
