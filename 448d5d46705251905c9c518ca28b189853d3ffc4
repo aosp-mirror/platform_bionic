@@ -63,6 +63,24 @@
       "revId": "448d5d46705251905c9c518ca28b189853d3ffc4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfe21c19_809da6e0",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-06-03T13:06:37Z",
+      "side": 1,
+      "message": "I believe Elliot wrote this one :)\n\nIt\u0027s almost the same thing as your mbrtoc16_zero_len. The difference is: it also tests that subsequent zero length readings don\u0027t affect the internal state and that you still get the right results after them.",
+      "parentUuid": "dffef0bb_dd7a6695",
+      "revId": "448d5d46705251905c9c518ca28b189853d3ffc4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
