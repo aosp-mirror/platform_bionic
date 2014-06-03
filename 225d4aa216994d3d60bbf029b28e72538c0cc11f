@@ -25,6 +25,57 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_6c4f23a2",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "don\u0027t do this: http://en.wikipedia.org/wiki/Most_vexing_parse",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_972644a9",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "// C++ comments.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_77e93020",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "the indentation here still doesn\u0027t match the Google C++ style guide.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fea00f0_40bd784f",
         "filename": "libc/private/bionic_systrace.h",
         "patchSetId": 8
@@ -42,6 +93,200 @@
         "endLine": 35,
         "endChar": 21
       },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_97e63c4e",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "these don\u0027t go to disk. they go to the kernel. it\u0027s the kernel\u0027s problem to respect write boundaries and handle nesting.\n\nstyle: add \u0027explicit\u0027.",
+      "parentUuid": "5fea00f0_40bd784f",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f212030_c2fab8dc",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "how often do we do this in a running program? what if the program has multiple threads? is there a better place to do this? when and where do we do similar things already?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_97c2c439",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "read up on O_CLOEXEC. should we use that here? why/why not?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_37d418ee",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "i still don\u0027t think using stdio is safe here. also, you\u0027re inlining a lot of code at this point (or, more likely, the compiler isn\u0027t inlining any of this because your function is too large).",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_f7a460ac",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "((tags \u0026 ATRACE_TAG_BIONIC) !\u003d 0)",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f212030_bf40ff69",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "i thought you were going to use writev?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f212030_e257bc00",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "why is this split across two lines?\n\neven supposing you don\u0027t use writev, is there an alternative to calling strlen again?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_77429052",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "what is EINTR? when can you get that? what do you need to do when that happens?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_b77a5894",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "no blank lines before \u0027else\u0027s.",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f212030_025d1021",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "what does this line actually do?",
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_f71a2042",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T22:02:56Z",
+      "side": 1,
+      "message": "the problem we had before was that we leaked fds because there was no close. the problem we have now is that we open and close this fd every time we log contention. you should write a benchmark in bionic/benchmarks/ to see what a BionicScopedTrace costs.",
       "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
