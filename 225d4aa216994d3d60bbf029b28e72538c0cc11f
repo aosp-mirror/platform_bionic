@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd8146d_e8ae8fbb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-06-03T14:48:04Z",
+      "side": 1,
+      "message": "I think the general commit message style is:\n- avoid using first person (I). Simply try explaining what the CL does.\n- don\u0027t use upper case to emphasis. Previously I\u0027ve seen _ style (as in _could_) which is somehow better:)",
+      "range": {
+        "startLine": 16,
+        "startChar": 28,
+        "endLine": 16,
+        "endChar": 35
+      },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fea00f0_40bd784f",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-06-03T14:48:04Z",
+      "side": 1,
+      "message": "I\u0027m a bit worried about this style. Don\u0027t you content on the same underlying file when logging this? Since we\u0027re trying to log contention we should expect that we\u0027re gonna get multiple objects living at the same time without any guarantee on what\u0027s been flushed to the disk.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "225d4aa216994d3d60bbf029b28e72538c0cc11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
