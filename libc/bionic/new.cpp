@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <new>
 #include <stdlib.h>
+
+#include "private/libc_logging.h"
 
 const std::nothrow_t std::nothrow = {};
 
 void* operator new(std::size_t size) {
     void* p = malloc(size);
     if (p == NULL) {
-        abort();
+        __libc_fatal("new failed to allocate %zu bytes", size);
     }
     return p;
 }
@@ -30,7 +33,7 @@ void* operator new(std::size_t size) {
 void* operator new[](std::size_t size) {
     void* p = malloc(size);
     if (p == NULL) {
-        abort();
+        __libc_fatal("new[] failed to allocate %zu bytes", size);
     }
     return p;
 }
