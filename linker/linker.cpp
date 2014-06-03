@@ -827,7 +827,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   }
 }
 
-soinfo* do_dlopen(const char* name, int flags, soinfo* /*caller*/, const android_dlextinfo* extinfo) {
+soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return NULL;
