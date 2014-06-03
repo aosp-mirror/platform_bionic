@@ -59,7 +59,6 @@ class LinkedList {
 
   template<typename F>
   void remove_if(F&& predicate) {
-    LinkedListEntry<T>* e = head_;
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (e->element != nullptr && predicate(e->element)) {
         e->element = nullptr;

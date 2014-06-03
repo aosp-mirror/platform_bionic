@@ -26,7 +26,7 @@ LOCAL_CFLAGS += \
     -fno-stack-protector \
     -Wstrict-overflow=5 \
     -fvisibility=hidden \
-    -Wall -Wextra -Werror \
+    -Wall -Wextra -Wunused -Werror \
 
 LOCAL_CONLYFLAGS += \
     -std=gnu99 \
