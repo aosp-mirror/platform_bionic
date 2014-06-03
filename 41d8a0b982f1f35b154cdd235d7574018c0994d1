@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_e21ca258",
+        "filename": "libc/bionic/memmove.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-03T19:40:29Z",
+      "side": 1,
+      "message": "OpenBSD has trivial assembler stubs for memmove that call memcpy. FreeBSD has basically this file, but it does #include \"bcopy.c\" so for that to work we\u0027d have to switch to the FreeBSD bcopy.c.\n\ndo we actually _need_ an unoptimized memmove? who does have an optimized memset/memcpy/memmove? someone bootstrapping a new arch could always just have this kind of thing in their own tree, but no one wants to be calling this at runtime on a shipping device, so maybe we should just remove it completely?\n\ni do like the separate library idea, but that\u0027s been a good idea for a long time and -- unless i\u0027m missing something -- i think that can be a follow-on patch.",
+      "parentUuid": "bf505ca5_c27f2683",
+      "revId": "41d8a0b982f1f35b154cdd235d7574018c0994d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dffef0bb_d3781606",
         "filename": "libc/include/strings.h",
         "patchSetId": 1
