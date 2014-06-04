@@ -221,7 +221,7 @@ TEST(wchar, limits) {
   ASSERT_LT(WCHAR_MIN, WCHAR_MAX);
 }
 
-TEST(wchar, wcsstr_wcswcs) {
+TEST(wchar, wcsstr) {
   const wchar_t* haystack = L"matches hello world, not the second hello world";
   const wchar_t* empty_needle = L"";
   const wchar_t* good_needle = L"ll";
@@ -230,10 +230,6 @@ TEST(wchar, wcsstr_wcswcs) {
   ASSERT_EQ(haystack, wcsstr(haystack, empty_needle));
   ASSERT_EQ(&haystack[10], wcsstr(haystack, good_needle));
   ASSERT_EQ(NULL, wcsstr(haystack, bad_needle));
-
-  ASSERT_EQ(haystack, wcswcs(haystack, empty_needle));
-  ASSERT_EQ(&haystack[10], wcswcs(haystack, good_needle));
-  ASSERT_EQ(NULL, wcswcs(haystack, bad_needle));
 }
 
 TEST(wchar, mbtowc) {

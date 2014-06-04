@@ -40,6 +40,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <wchar.h>
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
@@ -219,6 +220,10 @@ extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec
 // Unity's libmono uses this.
 extern "C" int tkill(pid_t tid, int sig) {
   return syscall(__NR_tkill, tid, sig);
+}
+
+extern "C" wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
+  return wcsstr(haystack, needle);
 }
 
 #endif
