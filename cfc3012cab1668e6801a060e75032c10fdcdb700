@@ -46,6 +46,30 @@
       "revId": "cfc3012cab1668e6801a060e75032c10fdcdb700",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfe21c19_462596c8",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-06-04T10:06:06Z",
+      "side": 1,
+      "message": "Oh yea.. I always forget that is (-1) converted to size_t...",
+      "parentUuid": "bf505ca5_ff2bdba2",
+      "range": {
+        "startLine": 81,
+        "startChar": 29,
+        "endLine": 81,
+        "endChar": 67
+      },
+      "revId": "cfc3012cab1668e6801a060e75032c10fdcdb700",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
