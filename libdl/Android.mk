@@ -22,7 +22,7 @@ LOCAL_LDFLAGS_x86 := -Wl,--exclude-libs=libgcc_eh.a
 LOCAL_LDFLAGS_x86_64 := $(LOCAL_LDFLAGS_x86)
 
 LOCAL_SRC_FILES:= libdl.c
-LOCAL_CFLAGS := -Wall -Wextra -Werror
+LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror
 
 LOCAL_MODULE := libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
