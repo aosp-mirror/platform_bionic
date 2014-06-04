@@ -16,6 +16,24 @@
       "revId": "8e52e8fe83632c667521c1c8e4f640e94c09baed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_b299106f",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-04T21:11:38Z",
+      "side": 1,
+      "message": "Agreed.",
+      "parentUuid": "bf505ca5_31ae5288",
+      "revId": "8e52e8fe83632c667521c1c8e4f640e94c09baed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
