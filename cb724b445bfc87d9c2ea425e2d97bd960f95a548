@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f162cdd_ac00db9a",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T17:11:27Z",
+      "side": 1,
+      "message": "maybe you misunderstand: wcsstr is the standard replacement for wcswcs. and this test tested both wcsstr and wcswcs. so you want to only disable the wcswcs half. you can lose the __BIONIC__ part of your test and just have #if !defined(__LP64__) around the wcswcs half of this test. or you could probably just delete the wcswcs half.",
+      "revId": "cb724b445bfc87d9c2ea425e2d97bd960f95a548",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
