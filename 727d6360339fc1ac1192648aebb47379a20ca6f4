@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_1df5735f",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T00:29:45Z",
+      "side": 1,
+      "message": "annoyingly, i think the opposite way round -- a #if in every function -- is less error-prone when someone comes to add/remove a test.",
+      "revId": "727d6360339fc1ac1192648aebb47379a20ca6f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
