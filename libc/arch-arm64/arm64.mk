@@ -1,7 +1,6 @@
 # arm64 specific configs
 
 libc_common_src_files_arm64 := \
-    bionic/index.cpp \
     bionic/memchr.c \
     bionic/__memcmp16.cpp \
     bionic/memrchr.c \

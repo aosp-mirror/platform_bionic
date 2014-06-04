@@ -1,7 +1,6 @@
 # x86_64 specific configs
 
 libc_common_src_files_x86_64 := \
-    bionic/index.cpp \
     bionic/memchr.c \
     bionic/memrchr.c \
     bionic/strchr.cpp \

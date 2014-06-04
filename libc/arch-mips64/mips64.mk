@@ -1,7 +1,6 @@
 # mips64 specific configs
 
 libc_common_src_files_mips64 := \
-    bionic/index.cpp \
     bionic/memchr.c \
     bionic/memcmp.c \
     bionic/memmove.c \
