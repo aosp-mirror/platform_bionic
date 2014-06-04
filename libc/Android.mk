@@ -43,7 +43,6 @@ libc_common_src_files := \
     bionic/err.c \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
-    bionic/ftime.c \
     bionic/fts.c \
     bionic/getdtablesize.c \
     bionic/gethostname.c \
