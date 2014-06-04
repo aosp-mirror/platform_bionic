@@ -65,10 +65,9 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
-static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo, const void* caller_addr) {
+static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  soinfo* caller_soinfo = find_containing_library(caller_addr);
-  soinfo* result = do_dlopen(filename, flags, caller_soinfo, extinfo);
+  soinfo* result = do_dlopen(filename, flags, extinfo);
   if (result == NULL) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return NULL;
@@ -77,13 +76,11 @@ static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo
 }
 
 void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
-  void* caller_addr = __builtin_return_address(0);
-  return dlopen_ext(filename, flags, extinfo, caller_addr);
+  return dlopen_ext(filename, flags, extinfo);
 }
 
 void* dlopen(const char* filename, int flags) {
-  void* caller_addr = __builtin_return_address(0);
-  return dlopen_ext(filename, flags, NULL, caller_addr);
+  return dlopen_ext(filename, flags, NULL);
 }
 
 void* dlsym(void* handle, const char* symbol) {
@@ -258,4 +255,3 @@ soinfo* get_libdl_info() {
 
   return &__libdl_info;
 }
-
