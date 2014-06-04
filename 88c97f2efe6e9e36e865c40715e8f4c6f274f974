@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fef0c01_d76b6b72",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T16:25:11Z",
+      "side": 1,
+      "message": "this seems like an even stronger candidate for ndk_cruft.cpp...",
+      "revId": "88c97f2efe6e9e36e865c40715e8f4c6f274f974",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
