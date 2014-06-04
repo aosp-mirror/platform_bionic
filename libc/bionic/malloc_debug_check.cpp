@@ -51,10 +51,6 @@
 #include "malloc_debug_common.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-/* libc.debug.malloc.backlog */
-extern unsigned int g_malloc_debug_backlog;
-extern int g_malloc_debug_level;
-
 #define MAX_BACKTRACE_DEPTH 16
 #define ALLOCATION_TAG      0x1ee7d00d
 #define BACKLOG_TAG         0xbabecafe
@@ -119,6 +115,12 @@ static unsigned backlog_num;
 static hdr_t* backlog_tail;
 static hdr_t* backlog_head;
 static pthread_mutex_t backlog_lock = PTHREAD_MUTEX_INITIALIZER;
+
+// This variable is set to the value of property libc.debug.malloc.backlog.
+// It determines the size of the backlog we use to detect multiple frees.
+static unsigned g_malloc_debug_backlog = 100;
+
+__LIBC_HIDDEN__ HashTable* g_hash_table;
 
 static inline void init_front_guard(hdr_t* hdr) {
     memset(hdr->front_guard, FRONT_GUARD, FRONT_GUARD_LEN);
@@ -508,11 +510,6 @@ extern "C" size_t chk_malloc_usable_size(const void* ptr) {
 }
 
 static void ReportMemoryLeaks() {
-  // We only track leaks at level 10.
-  if (g_malloc_debug_level != 10) {
-    return;
-  }
-
   // Use /proc/self/exe link to obtain the program name for logging
   // purposes. If it's not available, we set it to "<unknown>".
   char exe[PATH_MAX];
@@ -546,12 +543,23 @@ static void ReportMemoryLeaks() {
   }
 }
 
-extern "C" int malloc_debug_initialize() {
+extern "C" bool malloc_debug_initialize(HashTable* hash_table) {
+  g_hash_table = hash_table;
+
+  char debug_backlog[PROP_VALUE_MAX];
+  if (__system_property_get("libc.debug.malloc.backlog", debug_backlog)) {
+    g_malloc_debug_backlog = atoi(debug_backlog);
+    info_log("%s: setting backlog length to %d\n", getprogname(), g_malloc_debug_backlog);
+  }
+
   backtrace_startup();
-  return 0;
+  return true;
 }
 
-extern "C" void malloc_debug_finalize() {
-  ReportMemoryLeaks();
+extern "C" void malloc_debug_finalize(int malloc_debug_level) {
+  // We only track leaks at level 10.
+  if (malloc_debug_level == 10) {
+    ReportMemoryLeaks();
+  }
   backtrace_shutdown();
 }

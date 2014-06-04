@@ -33,6 +33,8 @@
 #ifndef MALLOC_DEBUG_COMMON_H
 #define MALLOC_DEBUG_COMMON_H
 
+#include <pthread.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "private/libc_logging.h"
@@ -42,8 +44,6 @@
 /* flag definitions, currently sharing storage with "size" */
 #define SIZE_FLAG_ZYGOTE_CHILD  (1<<31)
 #define SIZE_FLAG_MASK          (SIZE_FLAG_ZYGOTE_CHILD)
-
-#define MAX_SIZE_T           (~(size_t)0)
 
 // This must match the alignment used by the malloc implementation.
 #ifndef MALLOC_ALIGNMENT
@@ -77,6 +77,7 @@ struct HashEntry {
 };
 
 struct HashTable {
+    pthread_mutex_t lock;
     size_t count;
     HashEntry* slots[HASHTABLE_SIZE];
 };
@@ -97,20 +98,8 @@ struct MallocDebug {
   MallocDebugMallocUsableSize malloc_usable_size;
 };
 
-/* Malloc debugging initialization and finalization routines.
- *
- * These routines must be implemented in .so modules that implement malloc
- * debugging. The are is called once per process from malloc_init_impl and
- * malloc_fini_impl respectively.
- *
- * They are implemented in bionic/libc/bionic/malloc_debug_common.c when malloc
- * debugging gets initialized for the process.
- *
- * MallocDebugInit returns:
- *    0 on success, -1 on failure.
- */
-typedef int (*MallocDebugInit)();
-typedef void (*MallocDebugFini)();
+typedef bool (*MallocDebugInit)(HashTable*);
+typedef void (*MallocDebugFini)(int);
 
 // =============================================================================
 // log functions

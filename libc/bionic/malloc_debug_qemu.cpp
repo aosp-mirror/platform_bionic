@@ -589,7 +589,7 @@ extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem);
  * Return:
  *  0 on success, or -1 on failure.
 */
-extern "C" int malloc_debug_initialize() {
+extern "C" bool malloc_debug_initialize(HashTable*) {
     /* We will be using emulator's magic page to report memory allocation
      * activities. In essence, what magic page does, it translates writes to
      * the memory mapped spaces into writes to an I/O port that emulator
@@ -598,7 +598,7 @@ extern "C" int malloc_debug_initialize() {
     int fd = open("/dev/qemu_trace", O_RDWR);
     if (fd < 0) {
         error_log("Unable to open /dev/qemu_trace");
-        return -1;
+        return false;
     } else {
         qtrace = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
         close(fd);
@@ -606,14 +606,13 @@ extern "C" int malloc_debug_initialize() {
         if (qtrace == MAP_FAILED) {
             qtrace = NULL;
             error_log("Unable to mmap /dev/qemu_trace");
-            return -1;
+            return false;
         }
     }
 
     /* Cache pid of the process this library has been initialized for. */
     malloc_pid = getpid();
-
-    return 0;
+    return true;
 }
 
 /* Completes malloc debugging instrumentation for the emulator.
@@ -759,9 +758,9 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
         return qemu_instrumented_malloc(0);
     }
 
-    /* Fail on overflow - just to be safe even though this code runs only
-     * within the debugging C library, not the production one */
-    if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
+    // Fail on overflow - just to be safe even though this code runs only
+    // within the debugging C library, not the production one.
+    if (n_elements && SIZE_MAX / n_elements < elem_size) {
         return NULL;
     }
 
