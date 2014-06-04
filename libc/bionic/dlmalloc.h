@@ -17,6 +17,9 @@
 #ifndef LIBC_BIONIC_DLMALLOC_H_
 #define LIBC_BIONIC_DLMALLOC_H_
 
+#include <sys/cdefs.h>
+#include <stddef.h>
+
 /* Configure dlmalloc. */
 #define HAVE_GETPAGESIZE 1
 #define MALLOC_INSPECT_ALL 1
@@ -28,6 +31,12 @@
 #define USE_RECURSIVE_LOCK 0
 #define USE_SPIN_LOCKS 0
 #define DEFAULT_MMAP_THRESHOLD (64U * 1024U)
+
+/* Export two symbols used by the VM. */
+__BEGIN_DECLS
+int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;
+void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void*) __LIBC_ABI_PUBLIC__;
+__END_DECLS
 
 /* Include the proper definitions. */
 #include "../upstream-dlmalloc/malloc.h"
