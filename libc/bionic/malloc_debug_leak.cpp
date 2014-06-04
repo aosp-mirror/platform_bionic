@@ -58,10 +58,8 @@
 #error MALLOC_LEAK_CHECK is not defined.
 #endif  // !MALLOC_LEAK_CHECK
 
-// Global variables defined in malloc_debug_common.c
 extern int gMallocLeakZygoteChild;
-extern pthread_mutex_t g_allocations_mutex;
-extern HashTable g_hash_table;
+extern HashTable* g_hash_table;
 
 // =============================================================================
 // stack trace functions
@@ -137,7 +135,7 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         size |= SIZE_FLAG_ZYGOTE_CHILD;
     }
 
-    HashEntry* entry = find_entry(&g_hash_table, slot, backtrace, numEntries, size);
+    HashEntry* entry = find_entry(g_hash_table, slot, backtrace, numEntries, size);
 
     if (entry != NULL) {
         entry->allocations++;
@@ -150,58 +148,54 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         entry->allocations = 1;
         entry->slot = slot;
         entry->prev = NULL;
-        entry->next = g_hash_table.slots[slot];
+        entry->next = g_hash_table->slots[slot];
         entry->numEntries = numEntries;
         entry->size = size;
 
         memcpy(entry->backtrace, backtrace, numEntries * sizeof(uintptr_t));
 
-        g_hash_table.slots[slot] = entry;
+        g_hash_table->slots[slot] = entry;
 
         if (entry->next != NULL) {
             entry->next->prev = entry;
         }
 
         // we just added an entry, increase the size of the hashtable
-        g_hash_table.count++;
+        g_hash_table->count++;
     }
 
     return entry;
 }
 
 static int is_valid_entry(HashEntry* entry) {
-    if (entry != NULL) {
-        int i;
-        for (i = 0 ; i < HASHTABLE_SIZE ; i++) {
-            HashEntry* e1 = g_hash_table.slots[i];
-
-            while (e1 != NULL) {
-                if (e1 == entry) {
-                    return 1;
-                }
-
-                e1 = e1->next;
-            }
+  if (entry != NULL) {
+    for (size_t i = 0; i < HASHTABLE_SIZE; ++i) {
+      HashEntry* e1 = g_hash_table->slots[i];
+      while (e1 != NULL) {
+        if (e1 == entry) {
+          return 1;
         }
+        e1 = e1->next;
+      }
     }
-
-    return 0;
+  }
+  return 0;
 }
 
 static void remove_entry(HashEntry* entry) {
-    HashEntry* prev = entry->prev;
-    HashEntry* next = entry->next;
+  HashEntry* prev = entry->prev;
+  HashEntry* next = entry->next;
 
-    if (prev != NULL) entry->prev->next = next;
-    if (next != NULL) entry->next->prev = prev;
+  if (prev != NULL) entry->prev->next = next;
+  if (next != NULL) entry->next->prev = prev;
 
-    if (prev == NULL) {
-        // we are the head of the list. set the head to be next
-        g_hash_table.slots[entry->slot] = entry->next;
-    }
+  if (prev == NULL) {
+    // we are the head of the list. set the head to be next
+    g_hash_table->slots[entry->slot] = entry->next;
+  }
 
-    // we just removed and entry, decrease the size of the hashtable
-    g_hash_table.count--;
+  // we just removed and entry, decrease the size of the hashtable
+  g_hash_table->count--;
 }
 
 // =============================================================================
@@ -276,7 +270,7 @@ extern "C" void* leak_malloc(size_t bytes) {
 
     void* base = Malloc(malloc)(size);
     if (base != NULL) {
-        ScopedPthreadMutexLocker locker(&g_allocations_mutex);
+        ScopedPthreadMutexLocker locker(&g_hash_table->lock);
 
         uintptr_t backtrace[BACKTRACE_SIZE];
         size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
@@ -294,43 +288,45 @@ extern "C" void* leak_malloc(size_t bytes) {
 }
 
 extern "C" void leak_free(void* mem) {
-    if (mem != NULL) {
-        ScopedPthreadMutexLocker locker(&g_allocations_mutex);
+  if (mem == NULL) {
+    return;
+  }
 
-        // check the guard to make sure it is valid
-        AllocationEntry* header = to_header(mem);
+  ScopedPthreadMutexLocker locker(&g_hash_table->lock);
 
-        if (header->guard != GUARD) {
-            // could be a memaligned block
-            if (header->guard == MEMALIGN_GUARD) {
-                // For memaligned blocks, header->entry points to the memory
-                // allocated through leak_malloc.
-                header = to_header(header->entry);
-            }
-        }
+  // check the guard to make sure it is valid
+  AllocationEntry* header = to_header(mem);
 
-        if (header->guard == GUARD || is_valid_entry(header->entry)) {
-            // decrement the allocations
-            HashEntry* entry = header->entry;
-            entry->allocations--;
-            if (entry->allocations <= 0) {
-                remove_entry(entry);
-                Malloc(free)(entry);
-            }
-
-            // now free the memory!
-            Malloc(free)(header);
-        } else {
-            debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
-                    header->guard, header->entry);
-        }
+  if (header->guard != GUARD) {
+    // could be a memaligned block
+    if (header->guard == MEMALIGN_GUARD) {
+      // For memaligned blocks, header->entry points to the memory
+      // allocated through leak_malloc.
+      header = to_header(header->entry);
     }
+  }
+
+  if (header->guard == GUARD || is_valid_entry(header->entry)) {
+    // decrement the allocations
+    HashEntry* entry = header->entry;
+    entry->allocations--;
+    if (entry->allocations <= 0) {
+      remove_entry(entry);
+      Malloc(free)(entry);
+    }
+
+    // now free the memory!
+    Malloc(free)(header);
+  } else {
+    debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
+              header->guard, header->entry);
+  }
 }
 
 extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
-    /* Fail on overflow - just to be safe even though this code runs only
-     * within the debugging C library, not the production one */
-    if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
+    // Fail on overflow - just to be safe even though this code runs only
+    // within the debugging C library, not the production one.
+    if (n_elements && SIZE_MAX / n_elements < elem_size) {
         return NULL;
     }
     size_t size = n_elements * elem_size;
