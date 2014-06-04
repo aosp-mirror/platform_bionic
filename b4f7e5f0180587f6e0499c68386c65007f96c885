@@ -34,6 +34,24 @@
       "revId": "b4f7e5f0180587f6e0499c68386c65007f96c885",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_1d89f312",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T00:21:05Z",
+      "side": 1,
+      "message": "correct: there should never be a cacheflush routine in arm64, mips64, or x86_64.\n\ni\u0027m not sure why the deprecated attribute is commented out. we should probably uncomment that. there\u0027s no reason (that i can remember) why people can\u0027t switch right now.",
+      "parentUuid": "5fea00f0_4bc11961",
+      "revId": "b4f7e5f0180587f6e0499c68386c65007f96c885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
