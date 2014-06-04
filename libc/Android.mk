@@ -500,11 +500,9 @@ endif
 
 ifeq ($(MALLOC_IMPL),jemalloc)
   libc_common_cflags += -DUSE_JEMALLOC
-
   libc_malloc_src := bionic/jemalloc.cpp
 else
   libc_common_cflags += -DUSE_DLMALLOC
-
   libc_malloc_src := bionic/dlmalloc.c
 endif
 
@@ -821,6 +819,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_dns \
     libc_freebsd \
     libc_gdtoa \
+    libc_malloc \
     libc_netbsd \
     libc_openbsd \
     libc_stack_protector \
@@ -828,8 +827,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_tzcode \
 
 ifeq ($(MALLOC_IMPL),jemalloc)
-LOCAL_WHOLE_STATIC_LIBRARIES += \
-    libjemalloc
+LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
@@ -879,6 +877,24 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
+# ========================================================
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(libc_malloc_src)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -Werror \
+    -fvisibility=hidden \
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_malloc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc.a
 # ========================================================
 include $(CLEAR_VARS)
@@ -886,7 +902,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
     $(libc_static_common_src_files) \
-    $(libc_malloc_src) \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_static.cpp \
 
@@ -919,7 +934,6 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
     $(libc_arch_dynamic_src_files) \
     $(libc_static_common_src_files) \
-    $(libc_malloc_src) \
     bionic/malloc_debug_common.cpp \
     bionic/debug_mapinfo.cpp \
     bionic/debug_stacktrace.cpp \
