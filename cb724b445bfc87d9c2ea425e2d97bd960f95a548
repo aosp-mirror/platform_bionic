@@ -16,6 +16,24 @@
       "revId": "cb724b445bfc87d9c2ea425e2d97bd960f95a548",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_d76eed40",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-04T18:57:29Z",
+      "side": 1,
+      "message": "Thought we had additional wcsstr tests elsewhere in the file. My bad.",
+      "parentUuid": "3f162cdd_ac00db9a",
+      "revId": "cb724b445bfc87d9c2ea425e2d97bd960f95a548",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
