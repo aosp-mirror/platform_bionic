@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf505ca5_51f0befe",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T19:20:37Z",
+      "side": 1,
+      "message": "maybe add a \"This was removed from POSIX 2008.\" comment?",
+      "revId": "10f7242b4696104ce022370c47c3b1ab8875d25f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_176a1500",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T19:20:37Z",
+      "side": 1,
+      "message": "if we\u0027re removing bsd_signal, should we remove sysv_signal too? that was never POSIX, and doesn\u0027t appear to be used in our tree. (modulo libpainintheass.)",
+      "revId": "10f7242b4696104ce022370c47c3b1ab8875d25f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
