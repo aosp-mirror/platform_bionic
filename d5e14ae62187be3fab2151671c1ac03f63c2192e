@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf505ca5_310bb28d",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T22:27:51Z",
+      "side": 1,
+      "message": "(we usually reformat/C++-ize when we move code in here.)",
+      "revId": "d5e14ae62187be3fab2151671c1ac03f63c2192e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
