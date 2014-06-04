@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f1c24fb_e357c000",
+        "filename": "libc/arch-arm/arm.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T16:15:41Z",
+      "side": 1,
+      "message": "alternatively you could remove wcswcs.c and add a one-liner to ndk_cruft.cpp that forwards to wcsstr...",
+      "revId": "b191f244e87b201e3d33d8d624ae8907686f0513",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fef0c01_977f2333",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T16:15:41Z",
+      "side": 0,
+      "message": "no, you want to keep the wcsstr tests.",
+      "revId": "c380189410b66dcaca5936b2fabceab4c492dd53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
