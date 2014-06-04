@@ -46,14 +46,11 @@ static void __bionic_heap_usage_error(const char* function, void* address) {
   *((int**) 0xdeadbaad) = (int*) address;
 }
 
-static void* named_anonymous_mmap(size_t length)
-{
-    void* ret;
-    ret = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-    if (ret == MAP_FAILED)
-        return ret;
-
-    __bionic_name_mem(ret, length, "libc_malloc");
-
-    return ret;
+static void* named_anonymous_mmap(size_t length) {
+  void* map = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (map == MAP_FAILED) {
+    return map;
+  }
+  __bionic_name_mem(map, length, "libc_malloc");
+  return map;
 }
