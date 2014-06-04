@@ -17,7 +17,6 @@ libc_common_src_files_mips64 := \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
-    upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
     upstream-openbsd/lib/libc/string/strcat.c \
@@ -42,7 +41,6 @@ libc_common_src_files_mips64 += \
 ### CPU specific source files
 libc_bionic_src_files_mips64 := \
     arch-mips64/bionic/__bionic_clone.S \
-    arch-mips64/bionic/bzero.S \
     arch-mips64/bionic/_exit_with_stack_teardown.S \
     arch-mips64/bionic/__get_sp.S \
     arch-mips64/bionic/getdents.cpp \
