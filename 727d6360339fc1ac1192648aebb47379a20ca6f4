@@ -16,6 +16,24 @@
       "revId": "727d6360339fc1ac1192648aebb47379a20ca6f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd8146d_c80d139c",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-06-04T10:21:11Z",
+      "side": 1,
+      "message": "Alternatively, if these were to come first (inverse #if condition) they\u0027ll be more visible and less error-prone.",
+      "parentUuid": "1f1b2808_1df5735f",
+      "revId": "727d6360339fc1ac1192648aebb47379a20ca6f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
