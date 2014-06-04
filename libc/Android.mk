@@ -481,7 +481,6 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/string/strtok.c \
     upstream-openbsd/lib/libc/string/wcslcpy.c \
     upstream-openbsd/lib/libc/string/wcsstr.c \
-    upstream-openbsd/lib/libc/string/wcswcs.c \
     upstream-openbsd/lib/libc/string/wcswidth.c \
 
 libc_arch_static_src_files := \
