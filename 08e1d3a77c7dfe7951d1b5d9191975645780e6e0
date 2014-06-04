@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f162cdd_47ea38c4",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T19:12:20Z",
+      "side": 1,
+      "message": "note that this is now hidden within the dynamically-loaded part itself. (all the malloc_debug_* files get linked together, and it\u0027s _leak.cpp that does all the initialization, but _check.cpp that does this part of the work. we can probably clean this up further at some point.)",
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_97bdc552",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T19:12:20Z",
+      "side": 1,
+      "message": "this is the part that actually goes into libc.\n\ni\u0027ve moved all the data up to the top (or into the only scope where it\u0027s used), and everything\u0027s static now.",
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
