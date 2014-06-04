@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f212030_338f4869",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-04T01:49:48Z",
+      "side": 1,
+      "message": "i think we can hide __bionic_name_mem too (and maybe rename it!) because only libjemalloc uses it, and it\u0027ll be linked with us and still have access.",
+      "revId": "9b5235d74e794d29fa912fe95ca3d5ec488dd371",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
