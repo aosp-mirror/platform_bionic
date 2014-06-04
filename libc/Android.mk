@@ -709,7 +709,6 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter \
     -Werror \
-    -Wno-error=unused-but-set-variable \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
