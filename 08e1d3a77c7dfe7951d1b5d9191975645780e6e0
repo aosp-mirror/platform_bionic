@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bf505ca5_f1fb0ae2",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-04T19:40:30Z",
+      "side": 1,
+      "message": "Isn\u0027t the current default 100? Is there a reason you are changing it to 10?",
+      "range": {
+        "startLine": 121,
+        "startChar": 41,
+        "endLine": 121,
+        "endChar": 43
+      },
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f162cdd_47ea38c4",
         "filename": "libc/bionic/malloc_debug_check.cpp",
         "patchSetId": 1
@@ -19,6 +42,29 @@
     },
     {
       "key": {
+        "uuid": "7f33447f_5a2764d8",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-04T19:40:30Z",
+      "side": 1,
+      "message": "Technically, this is slightly different than the original code. If the libc.debug.malloc.backlog is set to zero, then you get a zero. The original code set it to a default.\nI don\u0027t know if this is a problem though.",
+      "range": {
+        "startLine": 551,
+        "startChar": 4,
+        "endLine": 551,
+        "endChar": 49
+      },
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f33447f_97bdc552",
         "filename": "libc/bionic/malloc_debug_common.cpp",
         "patchSetId": 1
@@ -30,6 +76,52 @@
       "writtenOn": "2014-06-04T19:12:20Z",
       "side": 1,
       "message": "this is the part that actually goes into libc.\n\ni\u0027ve moved all the data up to the top (or into the only scope where it\u0027s used), and everything\u0027s static now.",
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_071be047",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-04T19:40:30Z",
+      "side": 1,
+      "message": "emulator",
+      "range": {
+        "startLine": 81,
+        "startChar": 54,
+        "endLine": 81,
+        "endChar": 61
+      },
+      "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_71429a52",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-04T19:40:30Z",
+      "side": 1,
+      "message": "This makes me slightly nervous. We aren\u0027t guaranteed that size_t is an unsigned long, but it is for all of our stuff so it should be okay.",
+      "range": {
+        "startLine": 329,
+        "startChar": 22,
+        "endLine": 329,
+        "endChar": 30
+      },
       "revId": "08e1d3a77c7dfe7951d1b5d9191975645780e6e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
