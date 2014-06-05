@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f33447f_671de4f6",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-05T22:18:09Z",
+      "side": 1,
+      "message": "Indent.",
+      "revId": "9ed4b600bb55656dec4b92b2e2a635ddf1e5d7ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_474b00e8",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-05T22:18:09Z",
+      "side": 1,
+      "message": "This is redundant",
+      "revId": "9ed4b600bb55656dec4b92b2e2a635ddf1e5d7ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
