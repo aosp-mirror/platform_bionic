@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_9212c1e5",
+        "filename": "libc/arch-x86/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:24:08Z",
+      "side": 1,
+      "message": "it actually is necessary here because the return is non-trivial and not duplicated in the error case.",
+      "parentUuid": "3f162cdd_d364c32b",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 12
+      },
+      "revId": "b239b74bde033fc8a874f4f34260a3a445436bb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f162cdd_33609f16",
         "filename": "libc/arch-x86_64/bionic/__bionic_clone.S",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-06-05T19:34:35Z",
       "side": 1,
       "message": "This label isn\u0027t used any more because you changed the branching. And it\u0027s also the same as .L_bc_parent.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "b239b74bde033fc8a874f4f34260a3a445436bb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_c973b627",
+        "filename": "libc/arch-x86_64/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:24:08Z",
+      "side": 1,
+      "message": "d\u0027oh!",
+      "parentUuid": "3f162cdd_33609f16",
       "range": {
         "startLine": 76,
         "startChar": 0,
