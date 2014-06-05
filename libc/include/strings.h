@@ -47,7 +47,6 @@ __BEGIN_DECLS
 #define bzero(b, len) (void)(memset((b), '\0', (len)))
 
 int	 ffs(int);
-char	*index(const char *, int);
 int	 strcasecmp(const char *, const char *);
 int	 strncasecmp(const char *, const char *, size_t);
 
