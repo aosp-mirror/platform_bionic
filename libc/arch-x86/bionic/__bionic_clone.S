@@ -25,8 +25,8 @@ ENTRY(__bionic_clone)
         int     $0x80
 
         # Check result.
-        cmpl    $0, %eax
-        je      .L_bc_child
+        testl    %eax, %eax
+        jz      .L_bc_child
         jg      .L_bc_parent
 
         # An error occurred, so set errno and return -1.
@@ -44,7 +44,7 @@ ENTRY(__bionic_clone)
         hlt
 
 .L_bc_parent:
-        # we're the parent; nothing to do.
+        # We're the parent; nothing to do.
 .L_bc_return:
         popl    %edi
         popl    %esi
