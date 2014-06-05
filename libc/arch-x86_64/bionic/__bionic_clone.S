@@ -45,17 +45,23 @@ ENTRY(__bionic_clone)
         # Make the system call.
         movl    $__NR_clone, %eax
         syscall
-        testl   %eax, %eax
-        jns     1f
+
+        # Check result.
+        testq   %rax, %rax
+        jz      .L_bc_child
+        jg      .L_bc_parent
 
         # An error occurred, set errno and return -1.
         negl    %eax
         movl    %eax, %edi
         call    __set_errno
         orl     $-1, %eax
-        jmp     2f
-1:
-        jnz     2f
+        ret
+
+.L_bc_child:
+        # We don't want anyone to unwind past this point.
+        .cfi_undefined %rip
+        .cfi_undefined %rbp
 
         # We're in the child now, so call __bionic_clone_entry
         # with the arguments from the child stack moved into
@@ -64,7 +70,9 @@ ENTRY(__bionic_clone)
         popq    %rsi  # arg
         call    __bionic_clone_entry
         hlt
-2:
+
+.L_bc_parent:
+        # We're the parent; nothing to do.
         ret
 END(__bionic_clone)
 .hidden __bionic_clone
