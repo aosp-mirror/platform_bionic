@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
@@ -224,6 +225,17 @@ extern "C" int tkill(pid_t tid, int sig) {
 
 extern "C" wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
   return wcsstr(haystack, needle);
+}
+
+// This was removed from POSIX 2008.
+extern "C" sighandler_t bsd_signal(int signum, sighandler_t handler) {
+  return signal(signum, handler);
+}
+
+// sysv_signal() was never in POSIX.
+extern sighandler_t _signal(int signum, sighandler_t handler, int flags);
+extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {
+  return _signal(signum, handler, SA_RESETHAND);
 }
 
 #endif
