@@ -909,6 +909,35 @@ TEST(string, memmove) {
   }
 }
 
+TEST(string, memmove_cache_size) {
+  size_t len = 600000;
+  int max_alignment = 31;
+  int alignments[] = {0, 5, 11, 29, 30};
+  char* ptr = reinterpret_cast<char*>(malloc(sizeof(char) * len));
+  char* ptr1 = reinterpret_cast<char*>(malloc(2 * sizeof(char) * len));
+  char* glob_ptr2 = reinterpret_cast<char*>(malloc(2 * sizeof(char) * len + max_alignment));
+  size_t pos = 64;
+
+  ASSERT_TRUE(ptr != NULL);
+  ASSERT_TRUE(ptr1 != NULL);
+  ASSERT_TRUE(glob_ptr2 != NULL);
+
+  for (int i = 0; i < 5; i++) {
+    char* ptr2 = glob_ptr2 + alignments[i];
+    memset(ptr1, random() & 255, 2 * len);
+    memset(ptr1, random() & 255, len);
+    memcpy(ptr2, ptr1, 2 * len);
+    memcpy(ptr, ptr1, len);
+    memcpy(ptr1 + pos, ptr, len);
+
+    ASSERT_TRUE(memmove(ptr2 + pos, ptr, len) == ptr2 + pos);
+    ASSERT_EQ(0, memcmp(ptr2, ptr1, 2 * len));
+  }
+  free(ptr);
+  free(ptr1);
+  free(glob_ptr2);
+}
+
 static void verify_memmove(char* src_copy, char* dst, char* src, size_t size) {
   memset(dst, 0, size);
   memcpy(src, src_copy, size);

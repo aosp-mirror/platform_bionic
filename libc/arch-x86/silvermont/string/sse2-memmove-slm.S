@@ -74,13 +74,13 @@ name:		\
 #endif
 
 #ifdef USE_AS_BCOPY
-# define SRC           PARMS
-# define DEST          SRC+4
-# define LEN           DEST+4
+# define SRC		PARMS
+# define DEST		SRC+4
+# define LEN		DEST+4
 #else
-# define DEST          PARMS
-# define SRC           DEST+4
-# define LEN           SRC+4
+# define DEST		PARMS
+# define SRC		DEST+4
+# define LEN		SRC+4
 #endif
 
 #define CFI_PUSH(REG)		\
@@ -109,15 +109,15 @@ ENTRY (MEMMOVE)
 /* Check whether we should copy backward or forward.  */
 	cmp	%eax, %edx
 	je	L(mm_return)
-	ja	L(mm_len_0_or_more_backward)
+	jg	L(mm_len_0_or_more_backward)
 
 /* Now do checks for lengths. We do [0..16], [0..32], [0..64], [0..128]
 	separately.  */
 	cmp	$16, %ecx
 	jbe	L(mm_len_0_16_bytes_forward)
 
-	cmpl    $32, %ecx
-	jg	L(mm_len_32_or_more_forward)
+	cmpl	$32, %ecx
+	ja	L(mm_len_32_or_more_forward)
 
 /* Copy [0..32] and return.  */
 	movdqu	(%eax), %xmm0
@@ -127,8 +127,8 @@ ENTRY (MEMMOVE)
 	jmp	L(mm_return)
 
 L(mm_len_32_or_more_forward):
-	cmpl    $64, %ecx
-	jg	L(mm_len_64_or_more_forward)
+	cmpl	$64, %ecx
+	ja	L(mm_len_64_or_more_forward)
 
 /* Copy [0..64] and return.  */
 	movdqu	(%eax), %xmm0
@@ -142,8 +142,8 @@ L(mm_len_32_or_more_forward):
 	jmp	L(mm_return)
 
 L(mm_len_64_or_more_forward):
-	cmpl    $128, %ecx
-	jg	L(mm_len_128_or_more_forward)
+	cmpl	$128, %ecx
+	ja	L(mm_len_128_or_more_forward)
 
 /* Copy [0..128] and return.  */
 	movdqu	(%eax), %xmm0
@@ -165,72 +165,66 @@ L(mm_len_64_or_more_forward):
 	jmp	L(mm_return)
 
 L(mm_len_128_or_more_forward):
-
-	cmp     $SHARED_CACHE_SIZE_HALF, %ecx
-	jae     L(mm_large_page_forward)
-
 	PUSH (%esi)
 	PUSH (%edi)
-	movl	%eax, %esi
-	movl	%edx, %edi
 
 /* Aligning the address of destination.  */
-	movdqu	(%esi), %xmm0
-	movdqu	16(%esi), %xmm1
-	movdqu	32(%esi), %xmm2
-	movdqu	48(%esi), %xmm3
+	movdqu	(%eax), %xmm0
+	movdqu	16(%eax), %xmm1
+	movdqu	32(%eax), %xmm2
+	movdqu	48(%eax), %xmm3
 
-	leal	64(%edi), %edx
-	andl	$-64, %edx
+	leal	64(%edx), %edi
+	andl	$-64, %edi
+	subl	%edx, %eax
 
-	movl	%esi, %eax
-	subl	%edi, %eax
+	movdqu	(%eax, %edi), %xmm4
+	movdqu	16(%eax, %edi), %xmm5
+	movdqu	32(%eax, %edi), %xmm6
+	movdqu	48(%eax, %edi), %xmm7
 
-	movdqu	(%edx, %eax), %xmm4
-	movdqu	16(%edx, %eax), %xmm5
-	movdqu	32(%edx, %eax), %xmm6
-	movdqu	48(%edx, %eax), %xmm7
+	movdqu	%xmm0, (%edx)
+	movdqu	%xmm1, 16(%edx)
+	movdqu	%xmm2, 32(%edx)
+	movdqu	%xmm3, 48(%edx)
+	movdqa	%xmm4, (%edi)
+	movaps	%xmm5, 16(%edi)
+	movaps	%xmm6, 32(%edi)
+	movaps	%xmm7, 48(%edi)
+	addl	$64, %edi
 
-	movdqu	%xmm0, (%edi)
-	movdqu	%xmm1, 16(%edi)
-	movdqu	%xmm2, 32(%edi)
-	movdqu	%xmm3, 48(%edi)
-	movdqa	%xmm4, (%edx)
-	movdqa	%xmm5, 16(%edx)
-	movdqa	%xmm6, 32(%edx)
-	movdqa	%xmm7, 48(%edx)
-	addl	$64, %edx
-
-	leal	(%edi, %ecx), %ebx
+	leal	(%edx, %ecx), %ebx
 	andl	$-64, %ebx
-
-	cmp	%edx, %ebx
+	cmp	%edi, %ebx
 	jbe	L(mm_copy_remaining_forward)
+
+	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
+	jae	L(mm_large_page_loop_forward)
 
 	.p2align 4
 L(mm_main_loop_forward):
 
-	prefetcht0 128(%edx, %eax)
+	prefetcht0 128(%eax, %edi)
 
-	movdqu	(%edx, %eax), %xmm0
-	movdqu	16(%edx, %eax), %xmm1
-	movdqu	32(%edx, %eax), %xmm2
-	movdqu	48(%edx, %eax), %xmm3
-	movdqa	%xmm0, (%edx)
-	movdqa	%xmm1, 16(%edx)
-	movdqa	%xmm2, 32(%edx)
-	movdqa	%xmm3, 48(%edx)
-	leal	64(%edx), %edx
-	cmp	%edx, %ebx
+	movdqu	(%eax, %edi), %xmm0
+	movdqu	16(%eax, %edi), %xmm1
+	movdqu	32(%eax, %edi), %xmm2
+	movdqu	48(%eax, %edi), %xmm3
+	movdqa	%xmm0, (%edi)
+	movaps	%xmm1, 16(%edi)
+	movaps	%xmm2, 32(%edi)
+	movaps	%xmm3, 48(%edi)
+	leal	64(%edi), %edi
+	cmp	%edi, %ebx
 	ja	L(mm_main_loop_forward)
 
 L(mm_copy_remaining_forward):
-	addl	%edi, %ecx
-	subl	%edx, %ecx
-/* We copied all up till %edx position in the dst.
+	addl	%edx, %ecx
+	subl	%edi, %ecx
+/* We copied all up till %edi position in the dst.
 	In %ecx now is how many bytes are left to copy.
 	Now we need to advance %esi. */
-	leal	(%edx, %eax), %esi
+	leal	(%edi, %eax), %esi
 
 L(mm_remaining_0_64_bytes_forward):
 	cmp	$32, %ecx
@@ -251,8 +245,8 @@ L(mm_remaining_0_64_bytes_forward):
 	ja	L(mm_remaining_3_4_bytes_forward)
 	movzbl	-1(%esi,%ecx), %eax
 	movzbl	(%esi), %ebx
-	movb	%al, -1(%edx,%ecx)
-	movb	%bl, (%edx)
+	movb	%al, -1(%edi,%ecx)
+	movb	%bl, (%edi)
 	jmp	L(mm_return_pop_all)
 
 L(mm_remaining_33_64_bytes_forward):
@@ -260,40 +254,39 @@ L(mm_remaining_33_64_bytes_forward):
 	movdqu	16(%esi), %xmm1
 	movdqu	-32(%esi, %ecx), %xmm2
 	movdqu	-16(%esi, %ecx), %xmm3
-	movdqu	%xmm0, (%edx)
-	movdqu	%xmm1, 16(%edx)
-	movdqu	%xmm2, -32(%edx, %ecx)
-	movdqu	%xmm3, -16(%edx, %ecx)
+	movdqu	%xmm0, (%edi)
+	movdqu	%xmm1, 16(%edi)
+	movdqu	%xmm2, -32(%edi, %ecx)
+	movdqu	%xmm3, -16(%edi, %ecx)
 	jmp	L(mm_return_pop_all)
 
 L(mm_remaining_17_32_bytes_forward):
 	movdqu	(%esi), %xmm0
 	movdqu	-16(%esi, %ecx), %xmm1
-	movdqu	%xmm0, (%edx)
-	movdqu	%xmm1, -16(%edx, %ecx)
-	jmp	L(mm_return_pop_all)
-
-L(mm_remaining_3_4_bytes_forward):
-	movzwl	-2(%esi,%ecx), %eax
-	movzwl	(%esi), %ebx
-	movw	%ax, -2(%edx,%ecx)
-	movw	%bx, (%edx)
-	jmp	L(mm_return_pop_all)
-
-L(mm_remaining_5_8_bytes_forward):
-	movl	(%esi), %eax
-	movl	-4(%esi,%ecx), %ebx
-	movl	%eax, (%edx)
-	movl	%ebx, -4(%edx,%ecx)
+	movdqu	%xmm0, (%edi)
+	movdqu	%xmm1, -16(%edi, %ecx)
 	jmp	L(mm_return_pop_all)
 
 L(mm_remaining_9_16_bytes_forward):
 	movq	(%esi), %xmm0
 	movq	-8(%esi, %ecx), %xmm1
-	movq	%xmm0, (%edx)
-	movq	%xmm1, -8(%edx, %ecx)
+	movq	%xmm0, (%edi)
+	movq	%xmm1, -8(%edi, %ecx)
 	jmp	L(mm_return_pop_all)
 
+L(mm_remaining_5_8_bytes_forward):
+	movl	(%esi), %eax
+	movl	-4(%esi,%ecx), %ebx
+	movl	%eax, (%edi)
+	movl	%ebx, -4(%edi,%ecx)
+	jmp	L(mm_return_pop_all)
+
+L(mm_remaining_3_4_bytes_forward):
+	movzwl	-2(%esi,%ecx), %eax
+	movzwl	(%esi), %ebx
+	movw	%ax, -2(%edi,%ecx)
+	movw	%bx, (%edi)
+	jmp	L(mm_return_pop_all)
 
 L(mm_len_0_16_bytes_forward):
 	testb	$24, %cl
@@ -334,15 +327,20 @@ L(mm_len_9_16_bytes_forward):
 	movq	%xmm1, -8(%edx, %ecx)
 	jmp	L(mm_return)
 
+L(mm_recalc_len):
+/* Compute in %ecx how many bytes are left to copy after
+	the main loop stops.  */
+	movl	%ebx, %ecx
+	subl	%edx, %ecx
 /* The code for copying backwards.  */
 L(mm_len_0_or_more_backward):
 
-/* Now do checks for lengths. We do [0..16], [0..32], [0..64], [0..128]
+/* Now do checks for lengths. We do [0..16], [16..32], [32..64], [64..128]
 	separately.  */
 	cmp	$16, %ecx
 	jbe	L(mm_len_0_16_bytes_backward)
 
-	cmpl    $32, %ecx
+	cmpl	$32, %ecx
 	jg	L(mm_len_32_or_more_backward)
 
 /* Copy [0..32] and return.  */
@@ -353,7 +351,7 @@ L(mm_len_0_or_more_backward):
 	jmp	L(mm_return)
 
 L(mm_len_32_or_more_backward):
-	cmpl    $64, %ecx
+	cmpl	$64, %ecx
 	jg	L(mm_len_64_or_more_backward)
 
 /* Copy [0..64] and return.  */
@@ -368,7 +366,7 @@ L(mm_len_32_or_more_backward):
 	jmp	L(mm_return)
 
 L(mm_len_64_or_more_backward):
-	cmpl    $128, %ecx
+	cmpl	$128, %ecx
 	jg	L(mm_len_128_or_more_backward)
 
 /* Copy [0..128] and return.  */
@@ -391,10 +389,6 @@ L(mm_len_64_or_more_backward):
 	jmp	L(mm_return)
 
 L(mm_len_128_or_more_backward):
-
-	cmp     $SHARED_CACHE_SIZE_HALF, %ecx
-	jae     L(mm_large_page_backward)
-
 	PUSH (%esi)
 	PUSH (%edi)
 
@@ -429,17 +423,11 @@ L(mm_len_128_or_more_backward):
 	leal	64(%edx), %ebx
 	andl	$-64, %ebx
 
-/* Compute in %ecx how many bytes are left to copy after
-	the main loop stops.  */
-	movl	%ebx, %ecx
-	subl	%edx, %ecx
-
 	cmp	%edi, %ebx
-	jb	L(mm_main_loop_backward)
+	jae	L(mm_main_loop_backward_end)
 
-	POP (%edi)
-	POP (%esi)
-	jmp	L(mm_len_0_or_more_backward)
+	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
+	jae	L(mm_large_page_loop_backward)
 
 	.p2align 4
 L(mm_main_loop_backward):
@@ -457,9 +445,10 @@ L(mm_main_loop_backward):
 	leal	-64(%edi), %edi
 	cmp	%edi, %ebx
 	jb	L(mm_main_loop_backward)
+L(mm_main_loop_backward_end):
 	POP (%edi)
 	POP (%esi)
-	jmp	L(mm_len_0_or_more_backward)
+	jmp	L(mm_recalc_len)
 
 /* Copy [0..16] and return.  */
 L(mm_len_0_16_bytes_backward):
@@ -508,151 +497,30 @@ L(mm_return):
 	RETURN
 
 L(mm_return_pop_all):
-	movl	%edi, %eax
+	movl	%edx, %eax
 	POP (%edi)
 	POP (%esi)
 	RETURN
 
 /* Big length copy forward part.  */
 
-L(mm_large_page_forward):
-/* Aligning the address of destination. We need to save
-	16 bits from the source in order not to overwrite them.  */
-
-	PUSH (%esi)
-	PUSH (%edi)
-	movl	%eax, %esi
-	movl	%edx, %edi
-
-	movdqu	(%esi), %xmm0
-	movdqu	16(%esi), %xmm1
-	movdqu	32(%esi), %xmm2
-	movdqu	48(%esi), %xmm3
-
-	leal	64(%edi), %edx
-	andl	$-64, %edx
-
-	movl	%esi, %eax
-	subl	%edi, %eax
-
-	movdqu	(%edx, %eax), %xmm4
-	movdqu	16(%edx, %eax), %xmm5
-	movdqu	32(%edx, %eax), %xmm6
-	movdqu	48(%edx, %eax), %xmm7
-
-	movdqu	%xmm0, (%edi)
-	movdqu	%xmm1, 16(%edi)
-	movdqu	%xmm2, 32(%edi)
-	movdqu	%xmm3, 48(%edi)
-	movntdq	%xmm4, (%edx)
-	movntdq	%xmm5, 16(%edx)
-	movntdq	%xmm6, 32(%edx)
-	movntdq	%xmm7, 48(%edx)
-	addl	$64, %edx
-
-	leal	(%edi, %ecx), %ebx
-	andl	$-128, %ebx
-
-	cmp	%edx, %ebx
-	jbe	L(mm_copy_remaining_forward)
-
 	.p2align 4
 L(mm_large_page_loop_forward):
-	movdqu	(%edx, %eax), %xmm0
-	movdqu	16(%edx, %eax), %xmm1
-	movdqu	32(%edx, %eax), %xmm2
-	movdqu	48(%edx, %eax), %xmm3
-	movdqu	64(%edx, %eax), %xmm4
-	movdqu	80(%edx, %eax), %xmm5
-	movdqu	96(%edx, %eax), %xmm6
-	movdqu	112(%edx, %eax), %xmm7
-	movntdq	%xmm0, (%edx)
-	movntdq	%xmm1, 16(%edx)
-	movntdq	%xmm2, 32(%edx)
-	movntdq	%xmm3, 48(%edx)
-	movntdq	%xmm4, 64(%edx)
-	movntdq	%xmm5, 80(%edx)
-	movntdq	%xmm6, 96(%edx)
-	movntdq	%xmm7, 112(%edx)
-	leal	128(%edx), %edx
-	cmp	%edx, %ebx
+	movdqu	(%eax, %edi), %xmm0
+	movdqu	16(%eax, %edi), %xmm1
+	movdqu	32(%eax, %edi), %xmm2
+	movdqu	48(%eax, %edi), %xmm3
+	movntdq	%xmm0, (%edi)
+	movntdq	%xmm1, 16(%edi)
+	movntdq	%xmm2, 32(%edi)
+	movntdq	%xmm3, 48(%edi)
+	leal	64(%edi), %edi
+	cmp	%edi, %ebx
 	ja	L(mm_large_page_loop_forward)
 	sfence
-
-	addl	%edi, %ecx
-	subl	%edx, %ecx
-/* We copied all up till %edx position in the dst.
-	In %ecx now is how many bytes are left to copy.
-	Now we need to advance %esi. */
-	leal	(%edx, %eax), %esi
-
-	cmp	$64, %ecx
-	jb	L(mm_remaining_0_64_bytes_forward)
-
-	movdqu	(%esi), %xmm0
-	movdqu	16(%esi), %xmm1
-	movdqu	32(%esi), %xmm2
-	movdqu	48(%esi), %xmm3
-	movdqu	-64(%esi, %ecx), %xmm4
-	movdqu	-48(%esi, %ecx), %xmm5
-	movdqu	-32(%esi, %ecx), %xmm6
-	movdqu	-16(%esi, %ecx), %xmm7
-	movdqu	%xmm0, (%edx)
-	movdqu	%xmm1, 16(%edx)
-	movdqu	%xmm2, 32(%edx)
-	movdqu	%xmm3, 48(%edx)
-	movdqu	%xmm4, -64(%edx, %ecx)
-	movdqu	%xmm5, -48(%edx, %ecx)
-	movdqu	%xmm6, -32(%edx, %ecx)
-	movdqu	%xmm7, -16(%edx, %ecx)
-	jmp	L(mm_return_pop_all)
-
+	jmp	L(mm_copy_remaining_forward)
 
 /* Big length copy backward part.  */
-L(mm_large_page_backward):
-/* Aligning the address of destination. We need to save
-	16 bits from the source in order not to overwrite them.  */
-
-	PUSH (%esi)
-	PUSH (%edi)
-
-	movdqu	-16(%eax, %ecx), %xmm0
-	movdqu	-32(%eax, %ecx), %xmm1
-	movdqu	-48(%eax, %ecx), %xmm2
-	movdqu	-64(%eax, %ecx), %xmm3
-
-	leal	(%edx, %ecx), %edi
-	andl	$-64, %edi
-
-	movl	%eax, %esi
-	subl	%edx, %esi
-
-	movdqu	-16(%edi, %esi), %xmm4
-	movdqu	-32(%edi, %esi), %xmm5
-	movdqu	-48(%edi, %esi), %xmm6
-	movdqu	-64(%edi, %esi), %xmm7
-
-	movdqu	%xmm0, -16(%edx, %ecx)
-	movdqu	%xmm1, -32(%edx, %ecx)
-	movdqu	%xmm2, -48(%edx, %ecx)
-	movdqu	%xmm3, -64(%edx, %ecx)
-	movntdq	%xmm4, -16(%edi)
-	movntdq	%xmm5, -32(%edi)
-	movntdq	%xmm6, -48(%edi)
-	movntdq	%xmm7, -64(%edi)
-	leal	-64(%edi), %edi
-
-	leal	128(%edx), %ebx
-	andl	$-64, %ebx
-
-/* Compute in %ecx how many bytes are left to copy after
-	the main loop stops.  */
-	movl	%ebx, %ecx
-	subl	%edx, %ecx
-
-	cmp	%edi, %ebx
-	jae	L(mm_len_0_or_more_backward)
-
 	.p2align 4
 L(mm_large_page_loop_backward):
 	movdqu	-64(%edi, %esi), %xmm0
@@ -666,8 +534,9 @@ L(mm_large_page_loop_backward):
 	leal	-64(%edi), %edi
 	cmp	%edi, %ebx
 	jb	L(mm_large_page_loop_backward)
+	sfence
 	POP (%edi)
 	POP (%esi)
-	jmp	L(mm_len_0_or_more_backward)
+	jmp	L(mm_recalc_len)
 
 END (MEMMOVE)
