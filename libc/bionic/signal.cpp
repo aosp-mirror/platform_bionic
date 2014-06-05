@@ -28,7 +28,12 @@
 
 #include <signal.h>
 
-static sighandler_t _signal(int signum, sighandler_t handler, int flags) {
+#ifdef __LP64__
+static
+#else
+__LIBC_HIDDEN__
+#endif
+sighandler_t _signal(int signum, sighandler_t handler, int flags) {
   struct sigaction sa;
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = handler;
@@ -41,14 +46,6 @@ static sighandler_t _signal(int signum, sighandler_t handler, int flags) {
   return (sighandler_t) sa.sa_handler;
 }
 
-sighandler_t bsd_signal(int signum, sighandler_t handler) {
-  return _signal(signum, handler, SA_RESTART);
-}
-
-sighandler_t sysv_signal(int signum, sighandler_t handler) {
-  return _signal(signum, handler, SA_RESETHAND);
-}
-
 sighandler_t signal(int signum, sighandler_t handler) {
-  return bsd_signal(signum, handler);
+  return _signal(signum, handler, SA_RESTART);
 }
