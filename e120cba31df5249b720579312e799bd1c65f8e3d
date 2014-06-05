@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f33447f_f2abf474",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 0,
+      "message": "can we delete these useless scripts while we\u0027re removing the documentation?",
+      "revId": "e120cba31df5249b720579312e799bd1c65f8e3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

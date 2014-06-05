@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f33447f_32b2bcea",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 1,
+      "message": "in the?",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_d2aef086",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 1,
+      "message": "\"to build\"? or \"when building\"?",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_b2900c3a",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 1,
+      "message": "is there ever any reason to run this? we should probably just stop documenting it.",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_121eb1f7",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f33447f_327ddc39",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-05T23:22:06Z",
+      "side": 1,
+      "message": "is this useful or just distracting? should we remove this (or move any useful stuff into the python scripts themselves)?",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
