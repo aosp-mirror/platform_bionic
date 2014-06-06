@@ -62,12 +62,12 @@ ENTRY(__bionic_clone)
         .cfi_undefined %rip
         .cfi_undefined %rbp
 
-        # We're in the child now, so call __bionic_clone_entry
+        # We're in the child now, so call __start_thread
         # with the arguments from the child stack moved into
         # the appropriate registers.
         popq    %rdi  # fn
         popq    %rsi  # arg
-        call    __bionic_clone_entry
+        call    __start_thread
         hlt
 
 .L_bc_parent:

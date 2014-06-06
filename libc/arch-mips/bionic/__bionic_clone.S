@@ -60,8 +60,8 @@ ENTRY(__bionic_clone)
         lw	a0,0(sp)	#  fn
         lw	a1,4(sp)	#  arg
 
-	# void __bionic_clone_entry(int (*func)(void*), void *arg)
-        la	t9,__bionic_clone_entry
+	# void __start_thread(int (*func)(void*), void *arg)
+        la	t9,__start_thread
         j	t9
 
 .L__error_bc:

@@ -60,10 +60,10 @@ ENTRY(__bionic_clone)
     b       __set_errno
 
 1:  # The child.
-    # Setting lr to 0 will make the unwinder stop at __bionic_clone_entry
+    # Setting lr to 0 will make the unwinder stop at __start_thread
     mov    lr, #0
     ldr    r0, [sp, #-4]
     ldr    r1, [sp, #-8]
-    b      __bionic_clone_entry
+    b      __start_thread
 END(__bionic_clone)
 .hidden __bionic_clone
