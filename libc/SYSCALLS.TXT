@@ -129,12 +129,7 @@ ssize_t     fgetxattr(int, const char*, void*, size_t) all
 ssize_t     flistxattr(int, char*, size_t) all
 int         fremovexattr(int, const char*) all
 
-# mips64 doesn't have getdents64 until 3.10 kernels.
-# We need this special-case hack as long as we need to support mips64 on older kernels.
-# The currently-available Debian qemu image is on a 3.2 kernel.
-int getdents:getdents64(unsigned int, struct dirent*, unsigned int)   arm,arm64,mips,x86,x86_64
-int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   mips64
-int __getdents:getdents(unsigned int, void*, unsigned int)   mips64
+int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   arm,arm64,mips,mips64,x86,x86_64
 
 int __openat:openat(int, const char*, int, mode_t) all
 int faccessat(int, const char*, int, int)  all
