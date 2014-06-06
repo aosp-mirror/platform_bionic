@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df2c3030_c3df1598",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T15:56:39Z",
+      "side": 1,
+      "message": "add a note to the features.h bug that we should come back and hide vfork from code that doesn\u0027t explicitly ask for old stuff, and replace this comment with a TODO?\n\nactually, we can replace this with #if __POSIX_VISIBLE \u003c\u003d 200809 right now, even if that\u0027s not going to hide it for anyone because our features.h is broken. (and then it comments itself.)",
+      "revId": "40a0895b977edc087ed20901424dc321c685b205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
