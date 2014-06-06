@@ -426,7 +426,26 @@ TEST(stdio, snprintf_negative_zero_5084292) {
   EXPECT_STREQ("-0.000000", buf);
 }
 
+TEST(stdio, snprintf_utf8_15439554) {
+  // http://b/15439554
+  char buf[BUFSIZ];
+
+  // 1-byte character.
+  snprintf(buf, sizeof(buf), "%dx%d", 1, 2);
+  EXPECT_STREQ("1x2", buf);
+  // 2-byte character.
+  snprintf(buf, sizeof(buf), "%d\xc2\xa2%d", 1, 2);
+  EXPECT_STREQ("1¢2", buf);
+  // 3-byte character.
+  snprintf(buf, sizeof(buf), "%d\xe2\x82\xac%d", 1, 2);
+  EXPECT_STREQ("1€2", buf);
+  // 4-byte character.
+  snprintf(buf, sizeof(buf), "%d\xf0\xa4\xad\xa2%d", 1, 2);
+  EXPECT_STREQ("1𤭢2", buf);
+}
+
 TEST(stdio, fprintf_failures_7229520) {
+  // http://b/7229520
   FILE* fp;
 
   // Unbuffered case where the fprintf(3) itself fails.
