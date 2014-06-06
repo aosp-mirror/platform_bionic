@@ -78,10 +78,10 @@ LEAF(__bionic_clone, FRAMESZ)
 	# Clear return address in child so we don't unwind further.
 	li	ra,0
 
-	# void __bionic_clone_entry(int (*func)(void*), void *arg)
+	# void __start_thread(int (*func)(void*), void *arg)
 	PTR_L	a0,FRAME_FN(sp)		#  fn
 	PTR_L	a1,FRAME_ARG(sp)	#  arg
-	LA	t9,__bionic_clone_entry
+	LA	t9,__start_thread
 	RESTORE_GP64
 	/*
 	 * For O32 etc the child stack must have space for a0..a3 to be stored
