@@ -30,6 +30,7 @@
 #if !defined(__LP64__)
 
 #include <ctype.h>
+#include <dirent.h>
 #include <inttypes.h>
 #include <pthread.h>
 #include <signal.h>
@@ -239,7 +240,8 @@ extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {
 }
 
 // This is a system call that was never in POSIX. Use readdir(3) instead.
-extern "C" int getdents(unsigned int fd, struct dirent* dirp, unsigned int count) {
+extern "C" int __getdents64(unsigned int, dirent*, unsigned int);
+extern "C" int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
   return __getdents64(fd, dirp, count);
 }
 
