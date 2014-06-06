@@ -96,7 +96,11 @@ linux_stuff = set([
 ])
 # Some standard stuff isn't yet in the versions of glibc we're using.
 std_stuff = set([
-  'at_quick_exit'
+  'at_quick_exit',
+  'c16rtomb',
+  'c32rtomb',
+  'mbrtoc16',
+  'mbrtoc32',
 ])
 # These have mangled names in glibc, with a macro taking the "obvious" name.
 weird_stuff = set([
