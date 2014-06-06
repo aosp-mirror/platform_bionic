@@ -37,6 +37,8 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
+extern "C" int __getdents64(unsigned int, struct dirent*, unsigned int);
+
 struct DIR {
   int fd_;
   size_t available_bytes_;
@@ -81,7 +83,7 @@ DIR* opendir(const char* path) {
 }
 
 static bool __fill_DIR(DIR* d) {
-  int rc = TEMP_FAILURE_RETRY(getdents(d->fd_, d->buff_, sizeof(d->buff_)));
+  int rc = TEMP_FAILURE_RETRY(__getdents64(d->fd_, d->buff_, sizeof(d->buff_)));
   if (rc <= 0) {
     return false;
   }

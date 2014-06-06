@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getdents)
+ENTRY(__getdents64)
     stp     x29, x30, [sp, #-16]!
     .cfi_def_cfa_offset 16
     .cfi_rel_offset x29, 0
@@ -22,4 +22,5 @@ ENTRY(getdents)
     b.hi    __set_errno
 
     ret
-END(getdents)
+END(__getdents64)
+.hidden __getdents64

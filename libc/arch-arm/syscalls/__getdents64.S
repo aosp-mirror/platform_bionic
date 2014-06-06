@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getdents)
+ENTRY(__getdents64)
     mov     ip, r7
     ldr     r7, =__NR_getdents64
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(getdents)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(getdents)
+END(__getdents64)
