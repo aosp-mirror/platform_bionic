@@ -39,7 +39,7 @@ ENTRY(__bionic_clone)
 .L_bc_child:
         # We don't want anyone to unwind past this point.
         .cfi_undefined %eip
-        call    __bionic_clone_entry
+        call    __start_thread
         hlt
 
 .L_bc_parent:
