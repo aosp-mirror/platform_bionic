@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf505ca5_6dd4faee",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T02:18:57Z",
+      "side": 0,
+      "message": "oh, sorry, i\u0027d misunderstood what you\u0027re doing here. it looks like you\u0027re keeping the LP32 symbols with the true vfork behavior, but new LP32 or LP64 code will use fork, and LP64 won\u0027t even have the option of vfork. in which case you want to put this line back.",
+      "revId": "9c101eb9d12a87c9b68fce9052751df75e36d172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
