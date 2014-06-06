@@ -34,6 +34,24 @@
       "revId": "26b1176b54af2440efb07577d6523263bce1d24d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_841283e5",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T02:17:46Z",
+      "side": 1,
+      "message": "i wasn\u0027t counting the bionic ones because we can just have the #define in our BSD compatibility headers for internal use. the libpcap one is just a declaration, not a use. but dhcpcd seems real, and not our code.",
+      "parentUuid": "3f162cdd_64d40fef",
+      "revId": "26b1176b54af2440efb07577d6523263bce1d24d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
