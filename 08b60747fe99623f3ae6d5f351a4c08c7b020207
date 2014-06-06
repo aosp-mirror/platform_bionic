@@ -16,6 +16,24 @@
       "revId": "08b60747fe99623f3ae6d5f351a4c08c7b020207",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf505ca5_eedec174",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T22:10:13Z",
+      "side": 1,
+      "message": "You can\u0027t get rid of this script no matter what because the update_all.py script imports clean_header.py.",
+      "parentUuid": "1f908898_d27042b8",
+      "revId": "08b60747fe99623f3ae6d5f351a4c08c7b020207",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
