@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_88585410",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T20:54:44Z",
+      "side": 1,
+      "message": "Oops, forgot I changed this portion of the readme. Fixed now.",
+      "parentUuid": "7f33447f_32b2bcea",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f33447f_d2aef086",
         "filename": "libc/kernel/README.TXT",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-05T23:22:06Z",
       "side": 1,
       "message": "\"to build\"? or \"when building\"?",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_8a8e0dd9",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T20:54:44Z",
+      "side": 1,
+      "message": "Changed the wording to hopefully indicate what I really meant.",
+      "parentUuid": "7f33447f_d2aef086",
       "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "bf505ca5_c8f89c9f",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T20:54:44Z",
+      "side": 1,
+      "message": "Probably not, but it could be used by the folks in the device/vendor directories for the frozen kernel headers.",
+      "parentUuid": "7f33447f_b2900c3a",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf505ca5_121eb1f7",
         "filename": "libc/kernel/README.TXT",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_0aa2fd55",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T20:54:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf505ca5_121eb1f7",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f33447f_327ddc39",
         "filename": "libc/kernel/README.TXT",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2014-06-05T23:22:06Z",
       "side": 1,
       "message": "is this useful or just distracting? should we remove this (or move any useful stuff into the python scripts themselves)?",
+      "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f162cdd_ca25e513",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-06T20:54:44Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s too useful here since it\u0027s unlikely most people will care about this. I\u0027ve moved this whole secrtion into the clean_header.py script. I think it\u0027s useful to put it in one place rather than break it across the different scripts since you can look in one location to see what the script should be doing.",
+      "parentUuid": "7f33447f_327ddc39",
       "revId": "3dfd6ea84502b5a03c3a20a441deca2632c39083",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
