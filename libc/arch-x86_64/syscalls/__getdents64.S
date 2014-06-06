@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getdents)
+ENTRY(__getdents64)
     movl    $__NR_getdents64, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(getdents)
     call    __set_errno
 1:
     ret
-END(getdents)
+END(__getdents64)
+.hidden __getdents64

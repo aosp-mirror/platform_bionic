@@ -238,4 +238,9 @@ extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {
   return _signal(signum, handler, SA_RESETHAND);
 }
 
+// This is a system call that was never in POSIX. Use readdir(3) instead.
+extern "C" int getdents(unsigned int fd, struct dirent* dirp, unsigned int count) {
+  return __getdents64(fd, dirp, count);
+}
+
 #endif
