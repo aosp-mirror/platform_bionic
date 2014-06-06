@@ -449,3 +449,32 @@ TEST(wchar, wmemmove) {
   wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
   EXPECT_STREQ(L"This This is a test of something or other", wstr);
 }
+
+TEST(wchar, mbrtowc_15439554) {
+  // http://b/15439554
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  ASSERT_GE(static_cast<size_t>(MB_LEN_MAX), MB_CUR_MAX);
+  ASSERT_GE(MB_CUR_MAX, 4U);
+
+  wchar_t wc;
+  size_t n;
+
+  // 1-byte character.
+  n = mbrtowc(&wc, "x", MB_CUR_MAX, NULL);
+  EXPECT_EQ(1U, n);
+  EXPECT_EQ(L'x', wc);
+  // 2-byte character.
+  n = mbrtowc(&wc, "\xc2\xa2", MB_CUR_MAX, NULL);
+  EXPECT_EQ(2U, n);
+  EXPECT_EQ(L'¢', wc);
+  // 3-byte character.
+  n = mbrtowc(&wc, "\xe2\x82\xac", MB_CUR_MAX, NULL);
+  EXPECT_EQ(3U, n);
+  EXPECT_EQ(L'€', wc);
+  // 4-byte character.
+  n = mbrtowc(&wc, "\xf0\xa4\xad\xa2", MB_CUR_MAX, NULL);
+  EXPECT_EQ(4U, n);
+  EXPECT_EQ(L'𤭢', wc);
+}
