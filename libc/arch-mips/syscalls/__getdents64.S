@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getdents)
+ENTRY(__getdents64)
     .set noreorder
     .cpload t9
     li v0, __NR_getdents64
@@ -16,4 +16,4 @@ ENTRY(getdents)
     j t9
     nop
     .set reorder
-END(getdents)
+END(__getdents64)
