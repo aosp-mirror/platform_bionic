@@ -55,7 +55,6 @@ ENTRY(__bionic_clone)
         negl    %eax
         movl    %eax, %edi
         call    __set_errno
-        orl     $-1, %eax
         ret
 
 .L_bc_child:

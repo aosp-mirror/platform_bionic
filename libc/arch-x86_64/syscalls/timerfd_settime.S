@@ -11,7 +11,6 @@ ENTRY(timerfd_settime)
     negl    %eax
     movl    %eax, %edi
     call    __set_errno
-    orq     $-1, %rax
 1:
     ret
 END(timerfd_settime)

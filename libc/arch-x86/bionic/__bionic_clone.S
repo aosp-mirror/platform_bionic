@@ -34,7 +34,6 @@ ENTRY(__bionic_clone)
         pushl   %eax
         call    __set_errno
         addl    $4, %esp
-        orl     $-1, %eax
         jmp     .L_bc_return
 
 .L_bc_child:

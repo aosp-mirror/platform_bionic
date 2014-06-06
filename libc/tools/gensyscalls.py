@@ -183,7 +183,6 @@ x86_call = """\
     pushl   %%eax
     call    __set_errno
     addl    $4, %%esp
-    orl     $-1, %%eax
 1:
 """
 
@@ -205,7 +204,6 @@ x86_64_call = """\
     negl    %%eax
     movl    %%eax, %%edi
     call    __set_errno
-    orq     $-1, %%rax
 1:
     ret
 END(%(func)s)
