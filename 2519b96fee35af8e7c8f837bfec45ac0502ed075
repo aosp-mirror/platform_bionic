@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f868066_da15b912",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T06:18:59Z",
+      "side": 1,
+      "message": "yeah, i wrote this test before i knew what the problem was and didn\u0027t come back to give it a better name. done.",
+      "parentUuid": "ffd3b444_2bea49c3",
+      "range": {
+        "startLine": 429,
+        "startChar": 12,
+        "endLine": 429,
+        "endChar": 33
+      },
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffd3b444_cb0f5502",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7f1c24fb_b5257714",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T06:18:59Z",
+      "side": 1,
+      "message": "true. i\u0027ve added 1, 2, 3, and 4 byte characters to both tests.",
+      "parentUuid": "ffd3b444_cb0f5502",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 1
+      },
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fe5041b_9cb74a12",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,24 @@
       "writtenOn": "2014-06-06T05:20:53Z",
       "side": 1,
       "message": "Can we have EXPECT_LE(4, MB_CUR_MAX); here?",
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f868066_fa1afd41",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-06T06:18:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fe5041b_9cb74a12",
       "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
