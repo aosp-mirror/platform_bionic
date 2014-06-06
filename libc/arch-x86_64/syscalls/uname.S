@@ -10,7 +10,6 @@ ENTRY(uname)
     negl    %eax
     movl    %eax, %edi
     call    __set_errno
-    orq     $-1, %rax
 1:
     ret
 END(uname)

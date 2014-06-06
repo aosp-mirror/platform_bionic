@@ -10,7 +10,6 @@ ENTRY(__timer_gettime)
     negl    %eax
     movl    %eax, %edi
     call    __set_errno
-    orq     $-1, %rax
 1:
     ret
 END(__timer_gettime)
