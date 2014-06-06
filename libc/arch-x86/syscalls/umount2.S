@@ -19,7 +19,6 @@ ENTRY(umount2)
     pushl   %eax
     call    __set_errno
     addl    $4, %esp
-    orl     $-1, %eax
 1:
     popl    %ecx
     popl    %ebx
