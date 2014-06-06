@@ -37,7 +37,7 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-extern "C" int __getdents64(unsigned int, struct dirent*, unsigned int);
+extern "C" int __getdents64(unsigned int, dirent*, unsigned int);
 
 struct DIR {
   int fd_;
