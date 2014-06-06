@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd3b444_2bea49c3",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1042793
+      },
+      "writtenOn": "2014-06-06T05:20:53Z",
+      "side": 1,
+      "message": "Actually this isn\u0027t specific to CJK. For instance, Unicode 6 emoji is also affected.\nHow about snprintf_multibyte_utf8_15439554 or something?",
+      "range": {
+        "startLine": 429,
+        "startChar": 12,
+        "endLine": 429,
+        "endChar": 33
+      },
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd3b444_cb0f5502",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1042793
+      },
+      "writtenOn": "2014-06-06T05:20:53Z",
+      "side": 1,
+      "message": "It would be great if we can have another test case which contains a 4-byte UTF-8 character.  Unicode 6 Emoji could be a good example.  What Unicode Emoji do you like best?",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 1
+      },
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fe5041b_9cb74a12",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1042793
+      },
+      "writtenOn": "2014-06-06T05:20:53Z",
+      "side": 1,
+      "message": "Can we have EXPECT_LE(4, MB_CUR_MAX); here?",
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd0b03d_84eb9089",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1042793
+      },
+      "writtenOn": "2014-06-06T05:20:53Z",
+      "side": 1,
+      "message": "Can we have another test case for 4-byte UTF-8 character? Unicode 6 Emoji could be a good example.",
+      "range": {
+        "startLine": 462,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 1
+      },
+      "revId": "2519b96fee35af8e7c8f837bfec45ac0502ed075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
