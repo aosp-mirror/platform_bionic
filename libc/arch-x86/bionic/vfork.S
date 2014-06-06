@@ -39,7 +39,6 @@ ENTRY(vfork)
   negl    %eax
   pushl   %eax
   call    __set_errno
-  orl     $-1, %eax
 1:
-    jmp     *%ecx  // Jump to the stored return address.
+  jmp     *%ecx  // Jump to the stored return address.
 END(vfork)

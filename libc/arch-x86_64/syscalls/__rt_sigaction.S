@@ -11,7 +11,6 @@ ENTRY(__rt_sigaction)
     negl    %eax
     movl    %eax, %edi
     call    __set_errno
-    orq     $-1, %rax
 1:
     ret
 END(__rt_sigaction)
