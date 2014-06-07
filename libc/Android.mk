@@ -270,7 +270,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/gen/nice.c \
     upstream-netbsd/lib/libc/gen/popen.c \
     upstream-netbsd/lib/libc/gen/psignal.c \
-    upstream-netbsd/lib/libc/gen/setjmperr.c \
     upstream-netbsd/lib/libc/gen/utime.c \
     upstream-netbsd/lib/libc/gen/utmp.c \
     upstream-netbsd/lib/libc/isc/ev_streams.c \
