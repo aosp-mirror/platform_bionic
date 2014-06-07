@@ -245,4 +245,9 @@ extern "C" int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
   return __getdents64(fd, dirp, count);
 }
 
+// This is a BSDism that we never implemented correctly. Used by Firefox.
+extern "C" int issetugid() {
+  return 0;
+}
+
 #endif
