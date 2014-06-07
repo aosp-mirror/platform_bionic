@@ -31,12 +31,6 @@
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 
 ENTRY(__bionic_clone)
-    stp     x29, x30, [sp, #-16]!
-    .cfi_def_cfa_offset 16
-    .cfi_rel_offset x29, 0
-    .cfi_rel_offset x30, 8
-    mov     x29,  sp
-
     # Copy 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]
 
@@ -46,11 +40,6 @@ ENTRY(__bionic_clone)
 
     # Are we the child?
     cbz     x0, .L_bc_child
-
-    ldp     x29, x30, [sp], #16
-    .cfi_def_cfa_offset 0
-    .cfi_restore x29
-    .cfi_restore x30
 
     # Set errno if something went wrong.
     cmn     x0, #(MAX_ERRNO + 1)
