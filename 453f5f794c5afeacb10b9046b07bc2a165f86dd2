@@ -22,6 +22,30 @@
       "revId": "453f5f794c5afeacb10b9046b07bc2a165f86dd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f696874_b0149e13",
+        "filename": "libm/amd64/fenv.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-09T21:44:13Z",
+      "side": 1,
+      "message": "i couldn\u0027t decide. the arm one i knew we\u0027d rewritten because the upstream copy was actually just a copy \u0026 paste of the mips (including mips inline assembler!). this file is closer to (but not identical to) upstream so i was less sure what to do.",
+      "parentUuid": "ff5d74d3_1a890d13",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 9
+      },
+      "revId": "453f5f794c5afeacb10b9046b07bc2a165f86dd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
