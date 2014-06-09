@@ -30,6 +30,15 @@
 #include <fenv.h>
 #include <machine/fpu.h>
 
+#define SSE_MASK_SHIFT 7
+
+/*
+ * The following symbol is simply the bitwise-inclusive OR of all floating-point
+ * rounding direction constants defined above.
+ */
+#define X87_ROUND_MASK  (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | FE_TOWARDZERO)
+#define SSE_ROUND_SHIFT 3
+
 /*
  * The following constant represents the default floating-point environment
  * (that is, the one installed at program startup) and has type pointer to
@@ -203,7 +212,7 @@ fegetround(void)
    */
   __asm__ __volatile__ ("fnstcw %0" : "=m" (control));
 
-  return (control & _X87_ROUND_MASK);
+  return (control & X87_ROUND_MASK);
 }
 
 /*
@@ -218,14 +227,14 @@ fesetround(int round)
   unsigned int mxcsr;
 
   /* Check whether requested rounding direction is supported */
-  if (round & ~_X87_ROUND_MASK)
+  if (round & ~X87_ROUND_MASK)
     return (-1);
 
   /* Store the current x87 control word register */
   __asm__ __volatile__ ("fnstcw %0" : "=m" (control));
 
   /* Set the rounding direction */
-  control &= ~_X87_ROUND_MASK;
+  control &= ~X87_ROUND_MASK;
   control |= round;
 
   /* Load the x87 control word register */
@@ -233,8 +242,8 @@ fesetround(int round)
 
   /* Same for the SSE environment */
   __asm__ __volatile__ ("stmxcsr %0" : "=m" (mxcsr));
-  mxcsr &= ~(_X87_ROUND_MASK << _SSE_ROUND_SHIFT);
-  mxcsr |= round << _SSE_ROUND_SHIFT;
+  mxcsr &= ~(X87_ROUND_MASK << SSE_ROUND_SHIFT);
+  mxcsr |= round << SSE_ROUND_SHIFT;
   __asm__ __volatile__ ("ldmxcsr %0" : : "m" (mxcsr));
 
   return (0);
@@ -291,7 +300,7 @@ feholdexcept(fenv_t *envp)
   mxcsr &= ~FE_ALL_EXCEPT;
 
   /* Mask all exceptions */
-  mxcsr |= FE_ALL_EXCEPT << _SSE_MASK_SHIFT;
+  mxcsr |= FE_ALL_EXCEPT << SSE_MASK_SHIFT;
 
   /* Store the MXCSR register */
   __asm__ __volatile__ ("ldmxcsr %0" : : "m" (mxcsr));
@@ -362,11 +371,11 @@ feenableexcept(int mask)
   __asm__ __volatile__ ("fnstcw %0" : "=m" (control));
   __asm__ __volatile__ ("stmxcsr %0" : "=m" (mxcsr));
 
-  omask = ~(control | (mxcsr >> _SSE_MASK_SHIFT)) & FE_ALL_EXCEPT;
+  omask = ~(control | (mxcsr >> SSE_MASK_SHIFT)) & FE_ALL_EXCEPT;
   control &= ~mask;
   __asm__ __volatile__ ("fldcw %0" : : "m" (control));
 
-  mxcsr &= ~(mask << _SSE_MASK_SHIFT);
+  mxcsr &= ~(mask << SSE_MASK_SHIFT);
   __asm__ __volatile__ ("ldmxcsr %0" : : "m" (mxcsr));
 
   return (omask);
@@ -383,11 +392,11 @@ fedisableexcept(int mask)
   __asm__ __volatile__ ("fnstcw %0" : "=m" (control));
   __asm__ __volatile__ ("stmxcsr %0" : "=m" (mxcsr));
 
-  omask = ~(control | (mxcsr >> _SSE_MASK_SHIFT)) & FE_ALL_EXCEPT;
+  omask = ~(control | (mxcsr >> SSE_MASK_SHIFT)) & FE_ALL_EXCEPT;
   control |= mask;
   __asm__ __volatile__ ("fldcw %0" : : "m" (control));
 
-  mxcsr |= mask << _SSE_MASK_SHIFT;
+  mxcsr |= mask << SSE_MASK_SHIFT;
   __asm__ __volatile__ ("ldmxcsr %0" : : "m" (mxcsr));
 
   return (omask);

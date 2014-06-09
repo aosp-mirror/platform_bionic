@@ -31,6 +31,8 @@
 #include "npx.h"
 #include "fenv.h"
 
+#define ROUND_MASK   (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | FE_TOWARDZERO)
+
 /*
  * As compared to the x87 control word, the SSE unit's control word
  * has the rounding control bits offset by 3 and the exception mask
@@ -327,7 +329,7 @@ fegetround(void)
    * unit on an Opteron 244.
    */
   __fnstcw(&control);
-  return (control & _ROUND_MASK);
+  return (control & ROUND_MASK);
 }
 
 int
@@ -336,16 +338,16 @@ fesetround(int round)
   __uint32_t mxcsr;
   __uint16_t control;
 
-  if (round & ~_ROUND_MASK) {
+  if (round & ~ROUND_MASK) {
     return (-1);
   } else {
     __fnstcw(&control);
-    control &= ~_ROUND_MASK;
+    control &= ~ROUND_MASK;
     control |= round;
     __fldcw(control);
     if (__HAS_SSE()) {
       __stmxcsr(&mxcsr);
-      mxcsr &= ~(_ROUND_MASK << _SSE_ROUND_SHIFT);
+      mxcsr &= ~(ROUND_MASK << _SSE_ROUND_SHIFT);
       mxcsr |= round << _SSE_ROUND_SHIFT;
       __ldmxcsr(mxcsr);
     }
