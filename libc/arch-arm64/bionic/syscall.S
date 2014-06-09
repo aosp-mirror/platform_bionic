@@ -29,13 +29,6 @@
 #include <private/bionic_asm.h>
 
 ENTRY(syscall)
-    /* create AAPCS frame pointer */
-    stp     x29, x30, [sp, #-16]!
-    .cfi_def_cfa_offset 16
-    .cfi_rel_offset x29, 0
-    .cfi_rel_offset x30, 8
-    mov     x29,  sp
-
     /* Move syscall No. from x0 to x8 */
     mov     x8, x0
     /* Move syscall parameters from x1 thru x6 to x0 thru x5 */
@@ -46,11 +39,6 @@ ENTRY(syscall)
     mov     x4, x5
     mov     x5, x6
     svc     #0
-
-    ldp     x29, x30, [sp], #16
-    .cfi_def_cfa_offset 0
-    .cfi_restore x29
-    .cfi_restore x30
 
     /* check if syscall returned successfully */
     cmn     x0, #(MAX_ERRNO + 1)
