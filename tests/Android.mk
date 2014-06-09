@@ -258,27 +258,13 @@ include $(LOCAL_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # create symlink to libdlext_test.so for symlink test
 # -----------------------------------------------------------------------------
-libdlext_origin := $(LOCAL_INSTALLED_MODULE)
-libdlext_sym := $(subst libdlext_test,libdlext_test_v2,$(libdlext_origin))
-$(libdlext_sym): $(libdlext_origin)
-	@echo "Symlink: $@ -> $(notdir $<)"
-	@mkdir -p $(dir $@)
-	$(hide) ln -sf $(notdir $<) $@
-
-ALL_MODULES := \
-  $(ALL_MODULES) $(libdlext_sym)
-
+# Use = instead of := to defer the evaluation of $@
+$(LOCAL_INSTALLED_MODULE): PRIVATE_POST_INSTALL_CMD = \
+    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 ifneq ($(TARGET_2ND_ARCH),)
 # link 64 bit .so
-libdlext_origin := $(TARGET_OUT)/lib64/libdlext_test.so
-libdlext_sym := $(subst libdlext_test,libdlext_test_v2,$(libdlext_origin))
-$(libdlext_sym): $(libdlext_origin)
-	@echo "Symlink: $@ -> $(notdir $<)"
-	@mkdir -p $(dir $@)
-	$(hide) ln -sf $(notdir $<) $@
-
-ALL_MODULES := \
-  $(ALL_MODULES) $(libdlext_sym)
+$(TARGET_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
+    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 endif
 
 libdlext_test_norelro_src_files := \
