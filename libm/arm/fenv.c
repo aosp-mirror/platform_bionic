@@ -28,10 +28,11 @@
 
 #include <fenv.h>
 
-/*
- * Hopefully the system ID byte is immutable, so it's valid to use
- * this as a default environment.
- */
+#define FPSCR_ENABLE_SHIFT 8
+#define FPSCR_ENABLE_MASK  (FE_ALL_EXCEPT << FPSCR_ENABLE_SHIFT)
+
+#define FPSCR_RMODE_SHIFT 22
+
 const fenv_t __fe_dfl_env = 0;
 
 int fegetenv(fenv_t* __envp) {
@@ -86,14 +87,14 @@ int fetestexcept(int __excepts) {
 int fegetround(void) {
   fenv_t _fpscr;
   fegetenv(&_fpscr);
-  return ((_fpscr >> _FPSCR_RMODE_SHIFT) & 0x3);
+  return ((_fpscr >> FPSCR_RMODE_SHIFT) & 0x3);
 }
 
 int fesetround(int __round) {
   fenv_t _fpscr;
   fegetenv(&_fpscr);
-  _fpscr &= ~(0x3 << _FPSCR_RMODE_SHIFT);
-  _fpscr |= (__round << _FPSCR_RMODE_SHIFT);
+  _fpscr &= ~(0x3 << FPSCR_RMODE_SHIFT);
+  _fpscr |= (__round << FPSCR_RMODE_SHIFT);
   fesetenv(&_fpscr);
   return 0;
 }
@@ -102,7 +103,7 @@ int feholdexcept(fenv_t* __envp) {
   fenv_t __env;
   fegetenv(&__env);
   *__envp = __env;
-  __env &= ~(FE_ALL_EXCEPT | _FPSCR_ENABLE_MASK);
+  __env &= ~(FE_ALL_EXCEPT | FPSCR_ENABLE_MASK);
   fesetenv(&__env);
   return 0;
 }
@@ -118,21 +119,21 @@ int feupdateenv(const fenv_t* __envp) {
 int feenableexcept(int __mask) {
   fenv_t __old_fpscr, __new_fpscr;
   fegetenv(&__old_fpscr);
-  __new_fpscr = __old_fpscr | (__mask & FE_ALL_EXCEPT) << _FPSCR_ENABLE_SHIFT;
+  __new_fpscr = __old_fpscr | (__mask & FE_ALL_EXCEPT) << FPSCR_ENABLE_SHIFT;
   fesetenv(&__new_fpscr);
-  return ((__old_fpscr >> _FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
+  return ((__old_fpscr >> FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
 }
 
 int fedisableexcept(int __mask) {
   fenv_t __old_fpscr, __new_fpscr;
   fegetenv(&__old_fpscr);
-  __new_fpscr = __old_fpscr & ~((__mask & FE_ALL_EXCEPT) << _FPSCR_ENABLE_SHIFT);
+  __new_fpscr = __old_fpscr & ~((__mask & FE_ALL_EXCEPT) << FPSCR_ENABLE_SHIFT);
   fesetenv(&__new_fpscr);
-  return ((__old_fpscr >> _FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
+  return ((__old_fpscr >> FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
 }
 
 int fegetexcept(void) {
   fenv_t __fpscr;
   fegetenv(&__fpscr);
-  return ((__fpscr & _FPSCR_ENABLE_MASK) >> _FPSCR_ENABLE_SHIFT);
+  return ((__fpscr & FPSCR_ENABLE_MASK) >> FPSCR_ENABLE_SHIFT);
 }
