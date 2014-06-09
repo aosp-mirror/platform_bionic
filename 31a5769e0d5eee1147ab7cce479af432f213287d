@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f696874_36abc678",
+        "filename": "libc/upstream-freebsd/android/include/namespace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-09T23:56:47Z",
+      "side": 1,
+      "message": "maybe add a comment saying that this was removed from POSIX 2008, and a comment above the other declaration saying that that\u0027s to hide an implementation detail?",
+      "revId": "31a5769e0d5eee1147ab7cce479af432f213287d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
