@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bffcdced_76ab5077",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-10T01:45:49Z",
+      "side": 1,
+      "message": "Is there a possibility this call will be optimized out?",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "7634db5a0657129225869c3650a992f9cbe82fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f696874_41655657",
+        "filename": "benchmarks/unistd_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-10T01:45:49Z",
+      "side": 1,
+      "message": "Same as the other, are you sure this isn\u0027t optimized out? I think the easiest way to make sure it\u0027s not optimized away is to save the value to a volatile variable.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "7634db5a0657129225869c3650a992f9cbe82fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
