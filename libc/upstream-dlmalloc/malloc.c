@@ -5317,12 +5317,19 @@ void* dlvalloc(size_t bytes) {
   return dlmemalign(pagesz, bytes);
 }
 
+/* BEGIN android-changed: added overflow check */
 void* dlpvalloc(size_t bytes) {
   size_t pagesz;
+  size_t size;
   ensure_initialization();
   pagesz = mparams.page_size;
-  return dlmemalign(pagesz, (bytes + pagesz - SIZE_T_ONE) & ~(pagesz - SIZE_T_ONE));
+  size = (bytes + pagesz - SIZE_T_ONE) & ~(pagesz - SIZE_T_ONE);
+  if (size < bytes) {
+    return NULL;
+  }
+  return dlmemalign(pagesz, size);
 }
+/* END android-change */
 
 void** dlindependent_calloc(size_t n_elements, size_t elem_size,
                             void* chunks[]) {

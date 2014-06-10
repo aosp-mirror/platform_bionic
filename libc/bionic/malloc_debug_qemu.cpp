@@ -573,12 +573,16 @@ static void test_access_violation(const MallocDesc* desc) {
 // API routines
 // =============================================================================
 
-extern "C" void* qemu_instrumented_malloc(size_t bytes);
-extern "C" void  qemu_instrumented_free(void* mem);
-extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size);
-extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes);
-extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes);
-extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem);
+extern "C" void* qemu_instrumented_calloc(size_t, size_t);
+extern "C" void  qemu_instrumented_free(void*);
+extern "C" struct mallinfo qemu_instrumented_mallinfo();
+extern "C" void* qemu_instrumented_malloc(size_t);
+extern "C" size_t qemu_instrumented_malloc_usable_size(const void*);
+extern "C" void* qemu_instrumented_memalign(size_t, size_t);
+extern "C" int qemu_instrumented_posix_memalign(void**, size_t, size_t);
+extern "C" void* qemu_instrumented_pvalloc(size_t);
+extern "C" void* qemu_instrumented_realloc(void*, size_t);
+extern "C" void* qemu_instrumented_valloc(size_t);
 
 /* Initializes malloc debugging instrumentation for the emulator.
  * This routine is called from malloc_init_impl routine implemented in
@@ -680,10 +684,17 @@ extern "C" void* qemu_instrumented_malloc(size_t bytes) {
     desc.prefix_size = DEFAULT_PREFIX_SIZE;
     desc.requested_bytes = bytes;
     desc.suffix_size = DEFAULT_SUFFIX_SIZE;
-    desc.ptr = Malloc(malloc)(mallocdesc_alloc_size(&desc));
+    size_t size = mallocdesc_alloc_size(&desc);
+    if (size < bytes) { // Overflow
+        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc: malloc(%zu) overflow caused failure.",
+                       malloc_pid, getpid(), bytes);
+        errno = ENOMEM;
+        return NULL;
+    }
+    desc.ptr = Malloc(malloc)(size);
     if (desc.ptr == NULL) {
-        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%zd): malloc(%u) failed.",
-                  malloc_pid, getpid(), bytes, mallocdesc_alloc_size(&desc));
+        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%zu): malloc(%u) failed.",
+                       malloc_pid, getpid(), bytes, size);
         return NULL;
     }
 
@@ -692,12 +703,13 @@ extern "C" void* qemu_instrumented_malloc(size_t bytes) {
         log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: malloc: notify_malloc failed for ",
                   malloc_pid, getpid());
         Malloc(free)(desc.ptr);
+        errno = ENOMEM;
         return NULL;
     } else {
 #if TEST_ACCESS_VIOLATIONS
         test_access_violation(&desc);
 #endif  // TEST_ACCESS_VIOLATIONS
-        log_mdesc(info, &desc, "+++ <libc_pid=%03u, pid=%03u> malloc(%zd) -> ",
+        log_mdesc(info, &desc, "+++ <libc_pid=%03u, pid=%03u> malloc(%zu) -> ",
                   malloc_pid, getpid(), bytes);
         return mallocdesc_user_ptr(&desc);
     }
@@ -754,13 +766,16 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     if (n_elements == 0 || elem_size == 0) {
         // Just let go zero bytes allocation.
         qemu_info_log("::: <libc_pid=%03u, pid=%03u>: Zero calloc redir to malloc",
-                 malloc_pid, getpid());
+                      malloc_pid, getpid());
         return qemu_instrumented_malloc(0);
     }
 
     // Fail on overflow - just to be safe even though this code runs only
     // within the debugging C library, not the production one.
     if (n_elements && SIZE_MAX / n_elements < elem_size) {
+        qemu_error_log("<libc_pid=%03u, pid=%03u> calloc: calloc(%zu, %zu) overflow caused failure.",
+                       malloc_pid, getpid(), n_elements, elem_size);
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -786,6 +801,12 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     }
     desc.requested_bytes = n_elements * elem_size;
     size_t total_size = desc.requested_bytes + desc.prefix_size + desc.suffix_size;
+    if (total_size < desc.requested_bytes) { // Overflow
+        qemu_error_log("<libc_pid=%03u, pid=%03u> calloc: calloc(%zu, %zu) overflow caused failure.",
+                       malloc_pid, getpid(), n_elements, elem_size);
+        errno = ENOMEM;
+        return NULL;
+    }
     size_t total_elements = total_size / elem_size;
     total_size %= elem_size;
     if (total_size != 0) {
@@ -795,22 +816,23 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     }
     desc.ptr = Malloc(calloc)(total_elements, elem_size);
     if (desc.ptr == NULL) {
-        error_log("<libc_pid=%03u, pid=%03u> calloc: calloc(%zd(%zd), %zd) (prx=%u, sfx=%u) failed.",
+        error_log("<libc_pid=%03u, pid=%03u> calloc: calloc(%zu(%zu), %zu) (prx=%u, sfx=%u) failed.",
                    malloc_pid, getpid(), n_elements, total_elements, elem_size,
                    desc.prefix_size, desc.suffix_size);
         return NULL;
     }
 
     if (notify_qemu_malloc(&desc)) {
-        log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: calloc(%zd(%zd), %zd): notify_malloc failed for ",
+        log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: calloc(%zu(%zu), %zu): notify_malloc failed for ",
                   malloc_pid, getpid(), n_elements, total_elements, elem_size);
         Malloc(free)(desc.ptr);
+        errno = ENOMEM;
         return NULL;
     } else {
 #if TEST_ACCESS_VIOLATIONS
         test_access_violation(&desc);
 #endif  // TEST_ACCESS_VIOLATIONS
-        log_mdesc(info, &desc, "### <libc_pid=%03u, pid=%03u> calloc(%zd(%zd), %zd) -> ",
+        log_mdesc(info, &desc, "### <libc_pid=%03u, pid=%03u> calloc(%zu(%zu), %zu) -> ",
                   malloc_pid, getpid(), n_elements, total_elements, elem_size);
         return mallocdesc_user_ptr(&desc);
     }
@@ -823,22 +845,17 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
  * should not expect that pointer returned after shrinking will remain the same.
  */
 extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
-    MallocDesc new_desc;
-    MallocDesc cur_desc;
-    size_t to_copy;
-    void* ret;
-
     if (mem == NULL) {
         // Nothing to realloc. just do regular malloc.
-        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %zd) redir to malloc",
-                 malloc_pid, getpid(), mem, bytes);
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %zu) redir to malloc",
+                      malloc_pid, getpid(), mem, bytes);
         return qemu_instrumented_malloc(bytes);
     }
 
     if (bytes == 0) {
         // This is a "free" condition.
-        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %zd) redir to free and malloc",
-                 malloc_pid, getpid(), mem, bytes);
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: realloc(%p, %zu) redir to free and malloc",
+                      malloc_pid, getpid(), mem, bytes);
         qemu_instrumented_free(mem);
 
         // This is what realloc does for a "free" realloc.
@@ -846,10 +863,12 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
     }
 
     // Query emulator for the reallocating block information.
+    MallocDesc cur_desc;
     if (query_qemu_malloc_info(mem, &cur_desc, 2)) {
         // Note that this violation should be already caught in the emulator.
-        error_log("<libc_pid=%03u, pid=%03u>: realloc(%p, %zd) query_info failed.",
+        error_log("<libc_pid=%03u, pid=%03u>: realloc(%p, %zu) query_info failed.",
                   malloc_pid, getpid(), mem, bytes);
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -861,8 +880,9 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
      * for this memory block. Note that this violation should be already caught
      * in the emulator.*/
     if (mem != mallocdesc_user_ptr(&cur_desc)) {
-        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zd) is invalid for ",
+        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu) is invalid for ",
                   malloc_pid, getpid(), mem, bytes);
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -872,31 +892,38 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
      * for this block that is stored in the emulator. */
 
     // Initialize descriptor for the new block.
+    MallocDesc new_desc;
     new_desc.prefix_size = DEFAULT_PREFIX_SIZE;
     new_desc.requested_bytes = bytes;
     new_desc.suffix_size = DEFAULT_SUFFIX_SIZE;
-    new_desc.ptr = Malloc(malloc)(mallocdesc_alloc_size(&new_desc));
-    if (new_desc.ptr == NULL) {
-        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zd): malloc(%u) failed on ",
-                  malloc_pid, getpid(), mem, bytes,
-                  mallocdesc_alloc_size(&new_desc));
+    size_t new_size = mallocdesc_alloc_size(&new_desc);
+    if (new_size < bytes) { // Overflow
+        qemu_error_log("<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%u) failed due to overflow",
+                       malloc_pid, getpid(), mem, bytes, new_size);
+        errno = ENOMEM;
         return NULL;
     }
-    ret = mallocdesc_user_ptr(&new_desc);
+    new_desc.ptr = Malloc(malloc)(new_size);
+    if (new_desc.ptr == NULL) {
+        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%u) failed on ",
+                  malloc_pid, getpid(), mem, bytes, new_size);
+        return NULL;
+    }
+    void* new_mem = mallocdesc_user_ptr(&new_desc);
 
     // Copy user data from old block to the new one.
-    to_copy = bytes < cur_desc.requested_bytes ? bytes :
-                                                 cur_desc.requested_bytes;
+    size_t to_copy = bytes < cur_desc.requested_bytes ? bytes : cur_desc.requested_bytes;
     if (to_copy != 0) {
-        memcpy(ret, mallocdesc_user_ptr(&cur_desc), to_copy);
+        memcpy(new_mem, mallocdesc_user_ptr(&cur_desc), to_copy);
     }
 
     // Register new block with emulator.
     if (notify_qemu_malloc(&new_desc)) {
-        log_mdesc(error, &new_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zd) notify_malloc failed -> ",
+        log_mdesc(error, &new_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu) notify_malloc failed -> ",
                   malloc_pid, getpid(), mem, bytes);
         log_mdesc(error, &cur_desc, "                                                                <- ");
         Malloc(free)(new_desc.ptr);
+        errno = ENOMEM;
         return NULL;
     }
 
@@ -906,21 +933,22 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
 
     // Free old block.
     if (notify_qemu_free(mem)) {
-        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zd): notify_free failed for ",
+        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): notify_free failed for ",
                   malloc_pid, getpid(), mem, bytes);
         /* Since we registered new decriptor with the emulator, we need
          * to unregister it before freeing newly allocated block. */
         notify_qemu_free(mallocdesc_user_ptr(&new_desc));
         Malloc(free)(new_desc.ptr);
+        errno = ENOMEM;
         return NULL;
     }
     Malloc(free)(cur_desc.ptr);
 
-    log_mdesc(info, &new_desc, "=== <libc_pid=%03u, pid=%03u>: realloc(%p, %zd) -> ",
+    log_mdesc(info, &new_desc, "=== <libc_pid=%03u, pid=%03u>: realloc(%p, %zu) -> ",
               malloc_pid, getpid(), mem, bytes);
     log_mdesc(info, &cur_desc, "                                               <- ");
 
-    return ret;
+    return new_mem;
 }
 
 /* This routine serves as entry point for 'memalign'.
@@ -931,28 +959,38 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
 
     if (bytes == 0) {
         // Just let go zero bytes allocation.
-        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: memalign(%zx, %zd) redir to malloc",
+        qemu_info_log("::: <libc_pid=%03u, pid=%03u>: memalign(%zx, %zu) redir to malloc",
                  malloc_pid, getpid(), alignment, bytes);
         return qemu_instrumented_malloc(0);
     }
 
-    /* Prefix size for aligned allocation must be equal to the alignment used
-     * for allocation in order to ensure proper alignment of the returned
-     * pointer, in case that alignment requirement is greater than prefix
-     * size. */
-    desc.prefix_size = alignment > DEFAULT_PREFIX_SIZE ? alignment :
-                                                         DEFAULT_PREFIX_SIZE;
+    // Prefix size for aligned allocation must be equal to the alignment used
+    // for allocation in order to ensure proper alignment of the returned
+    // pointer. in case that alignment requirement is greater than prefix
+    // size.
+    if (alignment < DEFAULT_PREFIX_SIZE) {
+        alignment = DEFAULT_PREFIX_SIZE;
+    } else if (alignment & (alignment - 1)) {
+        alignment = 1L << (31 - __builtin_clz(alignment));
+    }
+    desc.prefix_size = alignment;
     desc.requested_bytes = bytes;
     desc.suffix_size = DEFAULT_SUFFIX_SIZE;
-    desc.ptr = Malloc(memalign)(desc.prefix_size, mallocdesc_alloc_size(&desc));
+    size_t size = mallocdesc_alloc_size(&desc);
+    if (size < bytes) { // Overflow
+        qemu_error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%u) failed due to overflow.",
+                       malloc_pid, getpid(), alignment, bytes, size);
+
+        return NULL;
+    }
+    desc.ptr = Malloc(memalign)(desc.prefix_size, size);
     if (desc.ptr == NULL) {
-        error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zd): malloc(%u) failed.",
-                  malloc_pid, getpid(), alignment, bytes,
-                  mallocdesc_alloc_size(&desc));
+        error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%u) failed.",
+                  malloc_pid, getpid(), alignment, bytes, size);
         return NULL;
     }
     if (notify_qemu_malloc(&desc)) {
-        log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: memalign(%zx, %zd): notify_malloc failed for ",
+        log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: memalign(%zx, %zu): notify_malloc failed for ",
                   malloc_pid, getpid(), alignment, bytes);
         Malloc(free)(desc.ptr);
         return NULL;
@@ -962,7 +1000,7 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     test_access_violation(&desc);
 #endif  // TEST_ACCESS_VIOLATIONS
 
-    log_mdesc(info, &desc, "@@@ <libc_pid=%03u, pid=%03u> memalign(%zx, %zd) -> ",
+    log_mdesc(info, &desc, "@@@ <libc_pid=%03u, pid=%03u> memalign(%zx, %zu) -> ",
               malloc_pid, getpid(), alignment, bytes);
     return mallocdesc_user_ptr(&desc);
 }
@@ -989,4 +1027,35 @@ extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem) {
 
     /* during instrumentation, we can't really report anything more than requested_bytes */
     return cur_desc.requested_bytes;
+}
+
+extern "C" struct mallinfo qemu_instrumented_mallinfo() {
+  return Malloc(mallinfo)();
+}
+
+extern "C" int qemu_instrumented_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if ((alignment & (alignment - 1)) != 0) {
+    qemu_error_log("<libc_pid=%03u, pid=%03u> posix_memalign(%p, %zu, %zu): invalid alignment.",
+                   malloc_pid, getpid(), memptr, alignment, size);
+    return EINVAL;
+  }
+  int saved_errno = errno;
+  *memptr = qemu_instrumented_memalign(alignment, size);
+  errno = saved_errno;
+  return (*memptr != NULL) ? 0 : ENOMEM;
+}
+
+extern "C" void* qemu_instrumented_pvalloc(size_t bytes) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  if (size < bytes) { // Overflow
+    qemu_error_log("<libc_pid=%03u, pid=%03u> pvalloc(%zu): overflow (%zu).",
+                   malloc_pid, getpid(), bytes, size);
+    return NULL;
+  }
+  return qemu_instrumented_memalign(pagesize, size);
+}
+
+extern "C" void* qemu_instrumented_valloc(size_t size) {
+  return qemu_instrumented_memalign(sysconf(_SC_PAGESIZE), size);
 }
