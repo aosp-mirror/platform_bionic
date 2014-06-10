@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bffcdced_5cdab2a8",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-10T19:39:45Z",
+      "side": 1,
+      "message": "no. the compiler has no way of knowing what side-effects clock_gettime has.",
+      "parentUuid": "bffcdced_76ab5077",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "7634db5a0657129225869c3650a992f9cbe82fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f696874_41655657",
         "filename": "benchmarks/unistd_benchmark.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-06-10T01:45:49Z",
       "side": 1,
       "message": "Same as the other, are you sure this isn\u0027t optimized out? I think the easiest way to make sure it\u0027s not optimized away is to save the value to a volatile variable.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "7634db5a0657129225869c3650a992f9cbe82fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f696874_8984d0bb",
+        "filename": "benchmarks/unistd_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-10T19:39:45Z",
+      "side": 1,
+      "message": "when there\u0027s a compiler smart enough to work out that this random chuck of assembler that does its work via a syscall on a platform we\u0027re cross-compiling for is actually a constant, we can probably both retire :-)\n\none thing we could do is screw up the _other_ gettid benchmark by marking gettid __const. i wanted to do that when i added the caching, but i also wanted to give that change time to bake. i haven\u0027t heard any screaming, so i\u0027ll make the __const change today (and fix the other benchmark).",
+      "parentUuid": "1f696874_41655657",
       "range": {
         "startLine": 48,
         "startChar": 4,
