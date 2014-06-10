@@ -812,7 +812,7 @@ TEST(string, __memcmp16) {
       int expected = (static_cast<unsigned short>(c1) - static_cast<unsigned short>(c2));
       int actual = __memcmp16(state.ptr1, state.ptr2, (size_t) state.MAX_LEN);
 
-      ASSERT_EQ(expected, actual);
+      ASSERT_EQ(signum(expected), signum(actual));
     }
   }
 #else // __BIONIC__
