@@ -138,21 +138,21 @@ typedef struct {
     int  rem;
 } div_t;
 
-extern div_t   div(int, int);
+extern div_t   div(int, int) __pure2;
 
 typedef struct {
     long int  quot;
     long int  rem;
 } ldiv_t;
 
-extern ldiv_t   ldiv(long, long);
+extern ldiv_t   ldiv(long, long) __pure2;
 
 typedef struct {
     long long int  quot;
     long long int  rem;
 } lldiv_t;
 
-extern lldiv_t   lldiv(long long, long long);
+extern lldiv_t   lldiv(long long, long long) __pure2;
 
 /* BSD compatibility. */
 extern const char* getprogname(void);
