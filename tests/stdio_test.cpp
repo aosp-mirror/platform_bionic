@@ -532,10 +532,6 @@ TEST(stdio, cantwrite_EBADF) {
 #endif
 
   errno = 0;
-  EXPECT_EQ(EOF, putw(1234, fp));
-  EXPECT_EQ(EBADF, errno);
-
-  errno = 0;
   EXPECT_EQ(0U, fwrite("hello", 1, 2, fp));
   EXPECT_EQ(EBADF, errno);
 

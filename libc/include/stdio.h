@@ -339,8 +339,6 @@ int	 asprintf(char ** __restrict, const char * __restrict, ...)
 		__printflike(2, 3);
 char	*fgetln(FILE * __restrict, size_t * __restrict);
 int	 fpurge(FILE *);
-int	 getw(FILE *);
-int	 putw(int, FILE *);
 void	 setbuffer(FILE *, char *, int);
 int	 setlinebuf(FILE *);
 int	 vasprintf(char ** __restrict, const char * __restrict,

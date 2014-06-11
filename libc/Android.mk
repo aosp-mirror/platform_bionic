@@ -418,7 +418,6 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/putc.c \
     upstream-openbsd/lib/libc/stdio/putchar.c \
     upstream-openbsd/lib/libc/stdio/puts.c \
-    upstream-openbsd/lib/libc/stdio/putw.c \
     upstream-openbsd/lib/libc/stdio/putwc.c \
     upstream-openbsd/lib/libc/stdio/putwchar.c \
     upstream-openbsd/lib/libc/stdio/refill.c \
