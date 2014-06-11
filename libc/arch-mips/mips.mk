@@ -65,7 +65,6 @@ libc_bionic_src_files_mips += \
     arch-mips/bionic/setjmp.S \
     arch-mips/bionic/sigsetjmp.S \
     arch-mips/bionic/syscall.S \
-    arch-mips/bionic/vfork.S \
     arch-mips/string/memcpy.S \
     arch-mips/string/memset.S \
     arch-mips/string/mips_strlen.c \

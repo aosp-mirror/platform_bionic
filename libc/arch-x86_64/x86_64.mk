@@ -37,7 +37,6 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/__set_tls.c \
     arch-x86_64/bionic/sigsetjmp.S \
     arch-x86_64/bionic/syscall.S \
-    arch-x86_64/bionic/vfork.S \
     bionic/__memcmp16.cpp \
 
 libc_bionic_src_files_x86_64 += \
