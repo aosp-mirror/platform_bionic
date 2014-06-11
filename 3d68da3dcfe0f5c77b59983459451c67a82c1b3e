@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffc9f4e9_a6412672",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-11T03:54:09Z",
+      "side": 1,
+      "message": "GCC actually compiles this into\n\n  r0 \u003d pthread_self();\n  for (int i \u003d 0; i \u003c iters; ++i) {\n    t \u003d r0;\n  }\n\nso all we\u0027re really timing here is the store...",
+      "revId": "3d68da3dcfe0f5c77b59983459451c67a82c1b3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
