@@ -16,6 +16,24 @@
       "revId": "3d68da3dcfe0f5c77b59983459451c67a82c1b3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f8a489d_d7eeb7dc",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-11T22:40:17Z",
+      "side": 1,
+      "message": "You can time this but it\u0027s not perfect. If you do this:\n\nstatic __attribute__((noinline)) pthread_t force_pthread_self_call() {\n  asm(\"\");\n  return pthread_self();\n}\n\nAnd then call force_pthread_self_call, it will leave the call in the loop. I\u0027m not sure if it\u0027s worth it though since you are now timing a second call too.",
+      "parentUuid": "ffc9f4e9_a6412672",
+      "revId": "3d68da3dcfe0f5c77b59983459451c67a82c1b3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
