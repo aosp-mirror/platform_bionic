@@ -365,7 +365,7 @@ include $(LOCAL_PATH)/Android.build.mk
 #   cd bionic/tests; mm bionic-unit-tests-glibc-run
 # -----------------------------------------------------------------------------
 
-ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
+ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
 bionic-unit-tests-glibc_src_files := \
     atexit_test.cpp \
