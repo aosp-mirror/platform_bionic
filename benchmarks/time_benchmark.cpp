@@ -35,4 +35,17 @@ static void BM_time_localtime_tz(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_time_localtime_tz);
+
 #endif
+
+static void BM_time_clock_gettime(int iters) {
+  StartBenchmarkTiming();
+
+  struct timespec t;
+  for (int i = 0; i < iters; ++i) {
+    clock_gettime(CLOCK_MONOTONIC, &t);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_time_clock_gettime);

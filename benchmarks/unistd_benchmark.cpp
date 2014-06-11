@@ -16,6 +16,7 @@
 
 #include "benchmark.h"
 
+#include <sys/syscall.h>
 #include <unistd.h>
 
 static void BM_unistd_getpid(int iters) {
@@ -39,3 +40,14 @@ static void BM_unistd_gettid(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_unistd_gettid);
+
+static void BM_unistd_gettid_syscall(int iters) {
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; ++i) {
+    syscall(__NR_gettid);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_unistd_gettid_syscall);
