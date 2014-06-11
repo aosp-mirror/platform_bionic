@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f6328c5_b7522820",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-11T21:30:43Z",
+      "side": 1,
+      "message": "this doesn\u0027t match the comment. (the others weren\u0027t really right either.)\n\nthe right place for this is in libc/Android.mk. look for where we currently add in ndk_cruft.cpp; there\u0027s already other LP32 cruft.\n\nthese files are supposed to be just for architecture-specific stuff. it\u0027s a bug that we don\u0027t have a better solution for dealing with the optimized string libraries (and the fact that no one has a complete set).",
+      "revId": "ef0df94b3080d2f0bdd84c949f5efa89d5fd55d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
