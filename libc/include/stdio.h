@@ -296,12 +296,10 @@ __END_DECLS
  */
 #if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
 #define	L_ctermid	1024	/* size for ctermid(); PATH_MAX */
-#define L_cuserid	9	/* size for cuserid(); UT_NAMESIZE + 1 */
 
 __BEGIN_DECLS
 #if 0 /* MISSING FROM BIONIC */
 char	*ctermid(char *);
-char	*cuserid(char *);
 #endif /* MISSING */
 FILE	*fdopen(int, const char *);
 int	 fileno(FILE *);
