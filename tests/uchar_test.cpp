@@ -161,9 +161,9 @@ TEST(uchar, mbrtoc16_zero_len) {
 #if HAVE_UCHAR
   char16_t out;
 
-  out = 'x';
+  out = L'x';
   ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, NULL));
-  ASSERT_EQ('x', out);
+  ASSERT_EQ(L'x', out);
 
   ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, NULL));
   ASSERT_EQ(0U, mbrtoc16(&out, "", 0, NULL));
@@ -324,14 +324,14 @@ TEST(uchar, mbrtoc32) {
 #if HAVE_UCHAR
   char32_t out[8];
 
-  out[0] = 'x';
+  out[0] = L'x';
   ASSERT_EQ(0U, mbrtoc32(out, "hello", 0, NULL));
-  ASSERT_EQ('x', out[0]);
+  ASSERT_EQ(static_cast<char32_t>(L'x'), out[0]);
 
   ASSERT_EQ(0U, mbrtoc32(out, "hello", 0, NULL));
   ASSERT_EQ(0U, mbrtoc32(out, "", 0, NULL));
   ASSERT_EQ(1U, mbrtoc32(out, "hello", 1, NULL));
-  ASSERT_EQ(L'h', out[0]);
+  ASSERT_EQ(static_cast<char32_t>(L'h'), out[0]);
 
   ASSERT_EQ(0U, mbrtoc32(NULL, "hello", 0, NULL));
   ASSERT_EQ(0U, mbrtoc32(NULL, "", 0, NULL));
@@ -344,7 +344,7 @@ TEST(uchar, mbrtoc32) {
 
   // 1-byte UTF-8.
   ASSERT_EQ(1U, mbrtoc32(out, "abcdef", 6, NULL));
-  ASSERT_EQ(L'a', out[0]);
+  ASSERT_EQ(static_cast<char32_t>(L'a'), out[0]);
   // 2-byte UTF-8.
   ASSERT_EQ(2U, mbrtoc32(out, "\xc2\xa2" "cdef", 6, NULL));
   ASSERT_EQ(static_cast<char32_t>(0x00a2), out[0]);
