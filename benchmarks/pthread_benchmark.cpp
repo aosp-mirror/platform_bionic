@@ -18,11 +18,14 @@
 
 #include <pthread.h>
 
+// Stop GCC optimizing out our pure function.
+/* Must not be static! */ pthread_t (*pthread_self_fp)() = pthread_self;
+
 static void BM_pthread_self(int iters) {
   StartBenchmarkTiming();
 
   for (int i = 0; i < iters; ++i) {
-    pthread_self();
+    pthread_self_fp();
   }
 
   StopBenchmarkTiming();

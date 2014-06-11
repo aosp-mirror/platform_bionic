@@ -30,11 +30,14 @@ static void BM_unistd_getpid(int iters) {
 }
 BENCHMARK(BM_unistd_getpid);
 
+// Stop GCC optimizing out our pure function.
+/* Must not be static! */ pid_t (*gettid_fp)() = gettid;
+
 static void BM_unistd_gettid(int iters) {
   StartBenchmarkTiming();
 
   for (int i = 0; i < iters; ++i) {
-    gettid();
+    gettid_fp();
   }
 
   StopBenchmarkTiming();
