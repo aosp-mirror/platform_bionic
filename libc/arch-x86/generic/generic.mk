@@ -28,7 +28,6 @@ libc_bionic_src_files_x86 += \
     arch-x86/atom/string/ssse3-strcmp-atom.S \
     arch-x86/atom/string/ssse3-strncmp-atom.S \
     arch-x86/atom/string/ssse3-strcat-atom.S \
-    arch-x86/atom/string/ssse3-memcmp16-atom.S \
     arch-x86/atom/string/ssse3-wcscat-atom.S \
     arch-x86/atom/string/ssse3-wcscpy-atom.S
 else
@@ -36,7 +35,6 @@ libc_bionic_src_files_x86 += \
     arch-x86/generic/string/strcmp.S \
     arch-x86/generic/string/strncmp.S \
     arch-x86/generic/string/strcat.S \
-    bionic/__memcmp16.cpp \
     upstream-freebsd/lib/libc/string/wcscpy.c \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-openbsd/lib/libc/string/strlcat.c \

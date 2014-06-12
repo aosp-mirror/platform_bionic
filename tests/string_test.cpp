@@ -789,37 +789,6 @@ TEST(string, memcmp) {
   }
 }
 
-extern "C" int __memcmp16(const unsigned short *ptr1, const unsigned short *ptr2, size_t n);
-
-TEST(string, __memcmp16) {
-#if defined(__BIONIC__)
-  StringTestState<unsigned short> state(SMALL);
-
-  for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
-      unsigned short mask = 0xffff;
-      unsigned short c1 = rand() & mask;
-      unsigned short c2 = rand() & mask;
-
-      std::fill(state.ptr1, state.ptr1 + state.MAX_LEN, c1);
-      std::fill(state.ptr2, state.ptr2 + state.MAX_LEN, c1);
-
-      int pos = (state.len[i] == 0) ? 0 : (random() % state.len[i]);
-      state.ptr2[pos] = c2;
-
-      int expected = (static_cast<unsigned short>(c1) - static_cast<unsigned short>(c2));
-      int actual = __memcmp16(state.ptr1, state.ptr2, (size_t) state.MAX_LEN);
-
-      ASSERT_EQ(signum(expected), signum(actual));
-    }
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
-}
-
 TEST(string, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);
 
