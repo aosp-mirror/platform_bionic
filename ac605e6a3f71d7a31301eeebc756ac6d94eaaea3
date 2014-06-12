@@ -19,6 +19,47 @@
     },
     {
       "key": {
+        "uuid": "bf713c8e_e80d9b9b",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T22:19:54Z",
+      "side": 1,
+      "message": "Actually, this is not correct. When the alloc fails, we shouldn\u0027t free the old memory.\n\nAlso, the ENOMEM from below isn\u0027t needed.",
+      "parentUuid": "7f49844c_3252b096",
+      "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df74307d_cad9af8f",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T22:19:54Z",
+      "side": 1,
+      "message": "Not needed either, removed.",
+      "range": {
+        "startLine": 513,
+        "startChar": 4,
+        "endLine": 513,
+        "endChar": 18
+      },
+      "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf713c8e_281233e7",
         "filename": "libc/bionic/malloc_debug_leak.cpp",
         "patchSetId": 5
@@ -30,6 +71,24 @@
       "writtenOn": "2014-06-12T21:42:40Z",
       "side": 1,
       "message": "should we come back and make these __libc_fatal in another patch? seems weird to say \"hey, heap demonstrably corrupt, but i\u0027ll just carry on anyway\".",
+      "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f49844c_3569bac8",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T22:19:54Z",
+      "side": 1,
+      "message": "Yes, let me do that in a follow-on.",
+      "parentUuid": "bf713c8e_281233e7",
       "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
