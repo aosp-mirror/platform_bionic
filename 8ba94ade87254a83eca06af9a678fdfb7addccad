@@ -16,6 +16,24 @@
       "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f6328c5_23fc151f",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-12T18:43:14Z",
+      "side": 1,
+      "message": "Declaring them is how they get exposed in libc. Something to do with how dlmalloc defines the visibility on their end. It definitely does what it\u0027s supposed to do. readelf shows the symbols there for LP32 and not for LP64.\n\ncferris might be able to explain this better...",
+      "parentUuid": "1f6328c5_e3221d3f",
+      "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
