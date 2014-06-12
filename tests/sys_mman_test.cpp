@@ -17,14 +17,158 @@
 #include <gtest/gtest.h>
 
 #include <sys/mman.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-TEST(sys_mman, mmap_negative) {
-  off_t off = -sysconf(_SC_PAGE_SIZE); // Aligned but negative.
-  ASSERT_EQ(MAP_FAILED, mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, off));
+#include "TemporaryFile.h"
+
+TEST(sys_mman, mmap_std) {
+  void* map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+  ASSERT_EQ(0, munmap(map, 4096));
 }
 
-TEST(sys_mman, mmap64_negative) {
-  off64_t off64 = -sysconf(_SC_PAGE_SIZE); // Aligned but negative.
-  ASSERT_EQ(MAP_FAILED, mmap64(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, off64));
+TEST(sys_mman, mmap64_std) {
+  void* map = mmap64(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+  ASSERT_EQ(0, munmap(map, 4096));
+}
+
+TEST(sys_mman, mmap_file_bad_offset) {
+  TemporaryFile tf;
+
+  void* map = mmap(NULL, 100, PROT_READ, MAP_SHARED, tf.fd, 1);
+  ASSERT_EQ(MAP_FAILED, map);
+}
+
+TEST(sys_mman, mmap64_file_bad_offset) {
+  TemporaryFile tf;
+
+  void* map = mmap64(NULL, 100, PROT_READ, MAP_SHARED, tf.fd, 1);
+  ASSERT_EQ(MAP_FAILED, map);
+}
+
+#define STR_SSIZE(str) static_cast<ssize_t>(sizeof(str))
+
+#define STRING_MSG  "012345678\nabcdefgh\n"
+#define INITIAL_MSG "000000000\n00000000\n"
+
+TEST(sys_mman, mmap_file_read) {
+  TemporaryFile tf;
+
+  ASSERT_EQ(STR_SSIZE(STRING_MSG), write(tf.fd, STRING_MSG, sizeof(STRING_MSG)));
+
+  void* map = mmap(NULL, sizeof(STRING_MSG), PROT_READ, MAP_SHARED, tf.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  char* data = reinterpret_cast<char*>(map);
+  ASSERT_STREQ(STRING_MSG, data);
+
+  ASSERT_EQ(0, munmap(map, sizeof(STRING_MSG)));
+}
+
+TEST(sys_mman, mmap_file_write) {
+  TemporaryFile tf;
+
+  ASSERT_EQ(STR_SSIZE(INITIAL_MSG), write(tf.fd, INITIAL_MSG, sizeof(INITIAL_MSG)));
+  lseek(tf.fd, 0, SEEK_SET);
+
+  void* map = mmap(NULL, sizeof(STRING_MSG), PROT_WRITE, MAP_SHARED, tf.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+  close(tf.fd);
+
+  memcpy(map, STRING_MSG, sizeof(STRING_MSG));
+
+  ASSERT_EQ(0, munmap(map, sizeof(STRING_MSG)));
+
+  tf.reopen();
+  char buf[sizeof(STRING_MSG)];
+  memset(buf, 0, sizeof(STRING_MSG));
+  ASSERT_EQ(STR_SSIZE(STRING_MSG), read(tf.fd, buf, sizeof(STRING_MSG)));
+
+  ASSERT_STREQ(STRING_MSG, buf);
+}
+
+#define PAGE0_MSG "00PAGE00"
+#define PAGE1_MSG "111PAGE111"
+#define PAGE2_MSG "2222PAGE2222"
+#define END_MSG "E"
+
+TEST(sys_mman, mmap_file_read_at_offset) {
+  TemporaryFile tf;
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+
+  // Create the file with three pages worth of data.
+  ASSERT_EQ(STR_SSIZE(PAGE0_MSG), write(tf.fd, PAGE0_MSG, sizeof(PAGE0_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, pagesize, SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(PAGE1_MSG), write(tf.fd, PAGE1_MSG, sizeof(PAGE1_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, 2 * pagesize, SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(PAGE2_MSG), write(tf.fd, PAGE2_MSG, sizeof(PAGE2_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, 3 * pagesize - sizeof(END_MSG), SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(END_MSG), write(tf.fd, END_MSG, sizeof(END_MSG)));
+
+  ASSERT_NE(-1, lseek(tf.fd, 0, SEEK_SET));
+
+  void* map = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, tf.fd, pagesize);
+  ASSERT_NE(MAP_FAILED, map);
+
+  char* data = reinterpret_cast<char*>(map);
+  ASSERT_STREQ(PAGE1_MSG, data);
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+
+  map = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, tf.fd, 2 * pagesize);
+  ASSERT_NE(MAP_FAILED, map);
+
+  data = reinterpret_cast<char*>(map);
+  ASSERT_STREQ(PAGE2_MSG, data);
+  ASSERT_STREQ(END_MSG, data+pagesize-sizeof(END_MSG));
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+}
+
+#define NEWPAGE1_MSG "1NEW1PAGE1"
+#define NEWPAGE2_MSG "22NEW22PAGE22"
+
+TEST(sys_mman, mmap_file_write_at_offset) {
+  TemporaryFile tf;
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+
+  // Create the file with three pages worth of data.
+  ASSERT_EQ(STR_SSIZE(PAGE0_MSG), write(tf.fd, PAGE0_MSG, sizeof(PAGE0_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, pagesize, SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(PAGE1_MSG), write(tf.fd, PAGE1_MSG, sizeof(PAGE1_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, 2 * pagesize, SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(PAGE2_MSG), write(tf.fd, PAGE2_MSG, sizeof(PAGE2_MSG)));
+  ASSERT_NE(-1, lseek(tf.fd, 3 * pagesize - sizeof(END_MSG), SEEK_SET));
+  ASSERT_EQ(STR_SSIZE(END_MSG), write(tf.fd, END_MSG, sizeof(END_MSG)));
+
+  ASSERT_NE(-1, lseek(tf.fd, 0, SEEK_SET));
+
+  void* map = mmap(NULL, pagesize, PROT_WRITE, MAP_SHARED, tf.fd, pagesize);
+  ASSERT_NE(MAP_FAILED, map);
+  close(tf.fd);
+
+  memcpy(map, NEWPAGE1_MSG, sizeof(NEWPAGE1_MSG));
+  ASSERT_EQ(0, munmap(map, pagesize));
+
+  tf.reopen();
+  map = mmap(NULL, pagesize, PROT_WRITE, MAP_SHARED, tf.fd, 2 * pagesize);
+  ASSERT_NE(MAP_FAILED, map);
+  close(tf.fd);
+
+  memcpy(map, NEWPAGE2_MSG, sizeof(NEWPAGE2_MSG));
+  ASSERT_EQ(0, munmap(map, pagesize));
+
+  tf.reopen();
+  char buf[pagesize];
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
+  ASSERT_STREQ(PAGE0_MSG, buf);
+  ASSERT_NE(-1, lseek(tf.fd, pagesize, SEEK_SET));
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
+  ASSERT_STREQ(NEWPAGE1_MSG, buf);
+  ASSERT_NE(-1, lseek(tf.fd, 2 * pagesize, SEEK_SET));
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
+  ASSERT_STREQ(NEWPAGE2_MSG, buf);
+  ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
 }
