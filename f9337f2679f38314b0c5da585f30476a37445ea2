@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf713c8e_7d222bc3",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T19:59:02Z",
+      "side": 1,
+      "message": "is this necessary? wouldn\u0027t that imply that the malloc we called through to was buggy?",
+      "revId": "f9337f2679f38314b0c5da585f30476a37445ea2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df74307d_4925b111",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T19:59:02Z",
+      "side": 1,
+      "message": "surely this case isn\u0027t an error?",
+      "revId": "f9337f2679f38314b0c5da585f30476a37445ea2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
