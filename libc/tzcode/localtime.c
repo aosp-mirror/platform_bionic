@@ -281,7 +281,7 @@ settzname(void)
 #endif /* defined ALTZONE */
 #ifdef ALL_STATE
     if (sp == NULL) {
-        tzname[0] = tzname[1] = gmt;
+        tzname[0] = tzname[1] = (char *) gmt;
         return;
     }
 #endif /* defined ALL_STATE */
@@ -332,11 +332,11 @@ settzname(void)
 }
 
 static int
-differ_by_repeat(const time_t t1, const time_t t0)
+differ_by_repeat(const time_t t1 __unused, const time_t t0 __unused)
 {
     if (TYPE_BIT(time_t) - TYPE_SIGNED(time_t) < SECSPERREPEAT_BITS)
         return 0;
-#if __LP64__ // 32-bit Android only has a signed 32-bit time_t; 64-bit Android is fixed.
+#if defined(__LP64__) // 32-bit Android only has a signed 32-bit time_t; 64-bit Android is fixed.
     return t1 - t0 == SECSPERREPEAT;
 #endif
 }
@@ -2107,10 +2107,6 @@ posix2time(time_t t)
 #include <assert.h>
 #include <stdint.h>
 #include <arpa/inet.h> // For ntohl(3).
-
-static int to_int(unsigned char* s) {
-  return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
-}
 
 static int __bionic_open_tzdata_path(const char* path_prefix_variable, const char* path_suffix,
                                      const char* olson_id, int* data_size) {
