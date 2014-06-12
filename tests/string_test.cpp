@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <malloc.h>
 #include <math.h>
 #include <string.h>
 
@@ -143,9 +144,9 @@ struct StringTestState {
     int max_alignment = 64;
 
     // TODO: fix the tests to not sometimes use twice their specified "MAX_LEN".
-    glob_ptr = reinterpret_cast<Character*>(valloc(2 * sizeof(Character) * MAX_LEN + max_alignment));
-    glob_ptr1 = reinterpret_cast<Character*>(valloc(2 * sizeof(Character) * MAX_LEN + max_alignment));
-    glob_ptr2 = reinterpret_cast<Character*>(valloc(2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr1 = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr2 = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
 
     InitLenArray();
 
