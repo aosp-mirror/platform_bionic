@@ -265,6 +265,7 @@ libc_upstream_freebsd_src_files := \
 
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+    upstream-netbsd/common/lib/libc/stdlib/random.c \
     upstream-netbsd/lib/libc/gen/ftw.c \
     upstream-netbsd/lib/libc/gen/nftw.c \
     upstream-netbsd/lib/libc/gen/nice.c \
@@ -290,6 +291,8 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/mrand48.c \
     upstream-netbsd/lib/libc/stdlib/nrand48.c \
     upstream-netbsd/lib/libc/stdlib/_rand48.c \
+    upstream-netbsd/lib/libc/stdlib/rand.c \
+    upstream-netbsd/lib/libc/stdlib/rand_r.c \
     upstream-netbsd/lib/libc/stdlib/seed48.c \
     upstream-netbsd/lib/libc/stdlib/srand48.c \
     upstream-netbsd/lib/libc/stdlib/tdelete.c \

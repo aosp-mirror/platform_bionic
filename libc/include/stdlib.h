@@ -105,20 +105,15 @@ extern void arc4random_stir(void);
 extern void arc4random_addrandom(unsigned char *, int);
 
 #define RAND_MAX 0x7fffffff
-static __inline__ int rand(void) {
-    return (int)lrand48();
-}
-static __inline__ void srand(unsigned int __s) {
-    srand48(__s);
-}
-static __inline__ long random(void)
-{
-    return lrand48();
-}
-static __inline__ void srandom(unsigned int __s)
-{
-    srand48(__s);
-}
+
+int rand(void);
+int rand_r(unsigned int*);
+void srand(unsigned int);
+
+char* initstate(unsigned int, char*, size_t);
+long random(void);
+char* setstate(char*);
+void srandom(unsigned int);
 
 /* Basic PTY functions.  These only work if devpts is mounted! */
 
