@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f49844c_3252b096",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T21:42:40Z",
+      "side": 1,
+      "message": "is this right? (i was trying to work out a case where we\u0027d actually need the errno \u003d ENOMEM on L494.)",
+      "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_281233e7",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T21:42:40Z",
+      "side": 1,
+      "message": "should we come back and make these __libc_fatal in another patch? seems weird to say \"hey, heap demonstrably corrupt, but i\u0027ll just carry on anyway\".",
+      "revId": "ac605e6a3f71d7a31301eeebc756ac6d94eaaea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
