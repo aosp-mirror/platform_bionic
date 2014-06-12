@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <fcntl.h>
 #include <unistd.h>
 
 template<int (*mk_fn)(char*)>
@@ -37,6 +38,11 @@ class GenericTemporaryFile {
   ~GenericTemporaryFile() {
     close(fd);
     unlink(filename);
+  }
+
+  void reopen() {
+    close(fd);
+    fd = open(filename, O_RDWR);
   }
 
   int fd;
