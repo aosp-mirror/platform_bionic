@@ -32,6 +32,7 @@ static int64_t g_benchmark_start_time_ns;
 typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
 static BenchmarkMap g_benchmarks;
+static size_t g_name_column_width = 20;
 
 static int Round(int n) {
   int base = 1;
@@ -164,7 +165,7 @@ void Benchmark::RunWithArg(int arg) {
     snprintf(full_name, sizeof(full_name), "%s", name_);
   }
 
-  printf("%-20s %10d %10" PRId64 "%s\n", full_name,
+  printf("%-*s %10d %10" PRId64 "%s\n", g_name_column_width, full_name,
          iterations, g_benchmark_total_time_ns/iterations, throughput);
   fflush(stdout);
 }
@@ -194,12 +195,16 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  for (BenchmarkMapIt it = g_benchmarks.begin(); it != g_benchmarks.end(); ++it) {
+    g_name_column_width = std::max(g_name_column_width, strlen(it->second->Name()));
+  }
+
   bool need_header = true;
   for (BenchmarkMapIt it = g_benchmarks.begin(); it != g_benchmarks.end(); ++it) {
     ::testing::Benchmark* b = it->second;
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
-        printf("%-20s %10s %10s\n", "", "iterations", "ns/op");
+        printf("%-*s %10s %10s\n", g_name_column_width, "", "iterations", "ns/op");
         fflush(stdout);
         need_header = false;
       }
