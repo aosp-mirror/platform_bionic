@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "bf713c8e_1dda17a8",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 5322,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T20:51:30Z",
+      "side": 1,
+      "message": "I sent a note to the upstream dlmalloc maintainer.\n\nI\u0027d rather avoid putting code directly in the dispatch function. How about I leave it like this (with an ANDROID update comment) and if the dlmalloc guy accepts my small change, then I can just update the file after that? If not, we can leave it with the small comment.",
+      "parentUuid": "1f6328c5_3687f1c1",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff77347c_df7a5795",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 1
