@@ -32,7 +32,7 @@ static int64_t g_benchmark_start_time_ns;
 typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
 static BenchmarkMap g_benchmarks;
-static size_t g_name_column_width = 20;
+static int g_name_column_width = 20;
 
 static int Round(int n) {
   int base = 1;
@@ -196,7 +196,8 @@ int main(int argc, char* argv[]) {
   }
 
   for (BenchmarkMapIt it = g_benchmarks.begin(); it != g_benchmarks.end(); ++it) {
-    g_name_column_width = std::max(g_name_column_width, strlen(it->second->Name()));
+    int name_width = static_cast<int>(strlen(it->second->Name()));
+    g_name_column_width = std::max(g_name_column_width, name_width);
   }
 
   bool need_header = true;
