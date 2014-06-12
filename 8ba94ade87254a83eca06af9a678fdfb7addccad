@@ -75,6 +75,30 @@
       "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_28b953b7",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-12T21:35:55Z",
+      "side": 1,
+      "message": "srhines found that removing memalign probably isn\u0027t possible because some old versions of bionic don\u0027t include posix_memalign, making compatibility messy. Barring any other really good reason to change this, we\u0027ll just leave it for now.",
+      "parentUuid": "bf713c8e_6866ebf7",
+      "range": {
+        "startLine": 147,
+        "startChar": 44,
+        "endLine": 147,
+        "endChar": 52
+      },
+      "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
