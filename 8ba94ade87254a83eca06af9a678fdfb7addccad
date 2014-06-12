@@ -34,6 +34,47 @@
       "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_08c81759",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T21:28:08Z",
+      "side": 1,
+      "message": "Hmm, I assume that what\u0027s going on is that the dlmalloc stuff is all visibility hidden, so the linker realizes that these functions are not used anywhere and are simply removed for lp64.\n\nCan you hang off submitting this until I submit:\n\nhttps://android-review.googlesource.com/#/c/97675/\n\nI want to make sure that this doesn\u0027t cause any problems.",
+      "parentUuid": "1f6328c5_23fc151f",
+      "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_6866ebf7",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T21:28:08Z",
+      "side": 1,
+      "message": "You probably want to change these calls to posix_memalign.",
+      "range": {
+        "startLine": 147,
+        "startChar": 44,
+        "endLine": 147,
+        "endChar": 52
+      },
+      "revId": "8ba94ade87254a83eca06af9a678fdfb7addccad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
