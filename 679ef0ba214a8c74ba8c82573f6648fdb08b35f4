@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f854c8a_11482b72",
+        "filename": "libc/bionic/malloc_debug_check.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "didn\u0027t you say you were going to put an alignment macro/inline function in macros.h?",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f6328c5_c6760c59",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "how did you catch this?",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff77347c_bf759ba6",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 5322,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "don\u0027t forget to report this upstream.\n\nshould we move this check into our wrapper for now?",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff77347c_df7a5795",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "check errno?",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f854c8a_b1393fee",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "blank line.",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f6328c5_6660e08a",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-12T02:20:42Z",
+      "side": 1,
+      "message": "no blank line.\n\nchoose either style :-)",
+      "revId": "679ef0ba214a8c74ba8c82573f6648fdb08b35f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
