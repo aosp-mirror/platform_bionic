@@ -35,27 +35,34 @@ TEST(stdlib, drand48) {
   EXPECT_DOUBLE_EQ(0.061637783047395089, drand48());
 }
 
-TEST(stdlib, lrand48_random_rand) {
+TEST(stdlib, lrand48) {
   srand48(0x01020304);
   EXPECT_EQ(1409163720, lrand48());
   EXPECT_EQ(397769746, lrand48());
   EXPECT_EQ(902267124, lrand48());
   EXPECT_EQ(132366131, lrand48());
+}
 
-#if defined(__BIONIC__)
-  // On bionic, random(3) is equivalent to lrand48...
+TEST(stdlib, random) {
   srandom(0x01020304);
-  EXPECT_EQ(1409163720, random());
-  EXPECT_EQ(397769746, random());
-  EXPECT_EQ(902267124, random());
-  EXPECT_EQ(132366131, random());
+  EXPECT_EQ(55436735, random());
+  EXPECT_EQ(1399865117, random());
+  EXPECT_EQ(2032643283, random());
+  EXPECT_EQ(571329216, random());
+}
 
-  // ...and rand(3) is the bottom 32 bits.
+TEST(stdlib, rand) {
   srand(0x01020304);
-  EXPECT_EQ(static_cast<int>(1409163720), rand());
-  EXPECT_EQ(static_cast<int>(397769746), rand());
-  EXPECT_EQ(static_cast<int>(902267124), rand());
-  EXPECT_EQ(static_cast<int>(132366131), rand());
+#if defined(__BIONIC__)
+  EXPECT_EQ(1675538669, rand());
+  EXPECT_EQ(1678228258, rand());
+  EXPECT_EQ(1352350131, rand());
+  EXPECT_EQ(824068976, rand());
+#else
+  EXPECT_EQ(55436735, rand());
+  EXPECT_EQ(1399865117, rand());
+  EXPECT_EQ(2032643283, rand());
+  EXPECT_EQ(571329216, rand());
 #endif
 }
 
