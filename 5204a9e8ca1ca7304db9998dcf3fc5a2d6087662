@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df74307d_9eee21dc",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-12T18:16:27Z",
+      "side": 1,
+      "message": "There isn\u0027t a warning on the arm64 build that you\u0027ve marked this unused but it is actually used?",
+      "range": {
+        "startLine": 335,
+        "startChar": 33,
+        "endLine": 335,
+        "endChar": 41
+      },
+      "revId": "5204a9e8ca1ca7304db9998dcf3fc5a2d6087662",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
