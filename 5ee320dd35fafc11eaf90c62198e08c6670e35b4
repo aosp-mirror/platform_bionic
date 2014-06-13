@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f4e8057_d44a32e3",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-13T22:47:11Z",
+      "side": 1,
+      "message": "I realize I lied to you slightly about this working for cts/glibc. However, I think this is okay and I\u0027ll fix the problem. There is an issue about getting the right test list for 32 bit glibc/cts list executable.",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 41
+      },
+      "revId": "5ee320dd35fafc11eaf90c62198e08c6670e35b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
