@@ -34,6 +34,24 @@
       "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df74307d_72fed117",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T17:45:51Z",
+      "side": 1,
+      "message": "i think i\u0027m having trouble believing the claim that a declaration in .cpp file changes the visibility of a function defined in a different .c file.",
+      "parentUuid": "7f49844c_21b978b7",
+      "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
