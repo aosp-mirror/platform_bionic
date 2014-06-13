@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf713c8e_9e2d3acc",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T18:52:08Z",
+      "side": 1,
+      "message": "we should probably rewrite \"weird_stuff\" using glibc_to_bionic_names at some point.",
+      "revId": "e8e453439fa87d9fccf03006cc4dac76acadf44c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
