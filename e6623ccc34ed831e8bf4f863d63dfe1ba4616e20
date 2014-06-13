@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df74307d_cd79c40c",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T18:58:51Z",
+      "side": 1,
+      "message": "const char* str (ptr position)",
+      "revId": "e6623ccc34ed831e8bf4f863d63dfe1ba4616e20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_91228bc0",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T18:58:51Z",
+      "side": 1,
+      "message": "Why not __strchr_chk as before?",
+      "revId": "e6623ccc34ed831e8bf4f863d63dfe1ba4616e20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
