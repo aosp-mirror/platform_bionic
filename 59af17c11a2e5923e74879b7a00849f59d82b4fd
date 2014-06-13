@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df74307d_8d5fcc9c",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T18:55:20Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "59af17c11a2e5923e74879b7a00849f59d82b4fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_91f0cb00",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T18:55:20Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "59af17c11a2e5923e74879b7a00849f59d82b4fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_11fbdbe1",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T18:55:20Z",
+      "side": 1,
+      "message": "two #ifs and leaving everything where it used to be would probably make things easier.\n\n(also, cferris will be along shortly to say \"#if defined()\" :-) )",
+      "revId": "59af17c11a2e5923e74879b7a00849f59d82b4fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
