@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf713c8e_1ba21c56",
+        "filename": "libc/bionic/index.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T15:05:16Z",
+      "side": 1,
+      "message": "Move this to bionic/ndk_cruft.cpp as extern \"C\".",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_9b338c7b",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T15:05:16Z",
+      "side": 1,
+      "message": "See https://android-review.googlesource.com/#/c/96761/\n\nThis was removed for a reason.",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df74307d_5739c75c",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T15:05:16Z",
+      "side": 1,
+      "message": "A declaration in a header isn\u0027t necessary for binary compatibility...",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
