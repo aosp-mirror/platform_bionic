@@ -106,8 +106,8 @@ extern void arc4random_addrandom(unsigned char *, int);
 
 #define RAND_MAX 0x7fffffff
 
-/* Work around x86 libvpx build breakage caused by postproc_x86.c. */
-#if defined(__i386__) && defined(rand)
+/* Work around x86/x86-64 libvpx build breakage caused by postproc_x86.c. */
+#if (defined(__i386__) || defined(__x86_64__)) && defined(rand)
 #undef rand
 #define __rand lrand48
 #endif
