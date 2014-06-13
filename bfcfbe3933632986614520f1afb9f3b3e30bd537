@@ -52,6 +52,24 @@
       "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f49844c_cca463ad",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T18:48:08Z",
+      "side": 1,
+      "message": "Apparently this isn\u0027t necessary any more... I definitely tested this before...",
+      "parentUuid": "df74307d_72fed117",
+      "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
