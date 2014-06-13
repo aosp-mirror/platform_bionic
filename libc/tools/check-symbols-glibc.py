@@ -11,7 +11,6 @@ toolchain = os.environ['ANDROID_TOOLCHAIN']
 arch = re.sub(r'.*/linux-x86/([^/]+)/.*', r'\1', toolchain)
 
 def GetSymbolsFromSo(so_file):
-
   # Example readelf output:
   #   264: 0001623c     4 FUNC    GLOBAL DEFAULT    8 cabsf
   #   266: 00016244     4 FUNC    GLOBAL DEFAULT    8 dremf
@@ -23,13 +22,13 @@ def GetSymbolsFromSo(so_file):
   symbols = set()
 
   for line in subprocess.check_output(['readelf', '--dyn-syms', '-W', so_file]).split('\n'):
-     if ' HIDDEN ' in line or ' UND ' in line:
-       continue
-     m = r.match(line)
-     if m:
-       symbol = m.group(2)
-       symbol = re.sub('@.*', '', symbol)
-       symbols.add(symbol)
+    if ' HIDDEN ' in line or ' UND ' in line:
+      continue
+    m = r.match(line)
+    if m:
+      symbol = m.group(2)
+      symbol = re.sub('@.*', '', symbol)
+      symbols.add(symbol)
 
   return symbols
 
@@ -46,8 +45,22 @@ def GetSymbolsFromSystemSo(*files):
     symbols = symbols | GetSymbolsFromSo(f)
   return symbols
 
+def MangleGlibcNameToBionic(name):
+  if name in glibc_to_bionic_names:
+    return glibc_to_bionic_names[name]
+  return name
+
+glibc_to_bionic_names = {
+  '__res_init': 'res_init',
+  '__res_mkquery': 'res_mkquery',
+  '__res_query': 'res_query',
+  '__res_search': 'res_search',
+}
+
 glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
 bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
+
+glibc = map(MangleGlibcNameToBionic, glibc)
 
 # bionic includes various BSD symbols to ease porting other BSD-licensed code.
 bsd_stuff = set([
