@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df74307d_329ff951",
+        "filename": "libc/bionic/index.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-06-13T17:15:22Z",
+      "side": 1,
+      "message": "Are you sure? This would remove the implementation from 64-bit systems.\nGiven that there can\u0027t be a index() macro definition, that would break source compatibility.",
+      "parentUuid": "bf713c8e_1ba21c56",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf713c8e_9b338c7b",
         "filename": "libc/include/string.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7f49844c_e173f026",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-06-13T17:15:22Z",
+      "side": 1,
+      "message": "As suggested in the commit message, this is here to preserve source compatibility for third-party applications that expect this to be in \u003cstring.h\u003e.\n\nDo you really think creating a potential problem for NDK developers for such a small issue is worth it?",
+      "parentUuid": "bf713c8e_9b338c7b",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df74307d_5739c75c",
         "filename": "libc/include/strings.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-06-13T15:05:16Z",
       "side": 1,
       "message": "A declaration in a header isn\u0027t necessary for binary compatibility...",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df74307d_12959d27",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-06-13T17:15:22Z",
+      "side": 1,
+      "message": "It is for _source_ compatibility, i.e. if the current version of the header was copied to ndk/platforms/... you wouldn\u0027t be able to compile many third-party projects (e.g. Google Earth) at all.\n\nAnd I assume you care about source compatibility, otherwise you would not have added macros for bcopy and bzero.",
+      "parentUuid": "df74307d_5739c75c",
       "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
