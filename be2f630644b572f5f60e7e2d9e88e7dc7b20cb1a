@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "bf713c8e_9ed7faca",
+        "filename": "libc/bionic/index.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T18:18:03Z",
+      "side": 1,
+      "message": "That\u0027s the idea. index(3) isn\u0027t POSIX (was removed from POSIX 2008). It\u0027s a direct map from index(3) to strchr(3), so it\u0027s a trivial source update.",
+      "parentUuid": "df74307d_329ff951",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf713c8e_9b338c7b",
         "filename": "libc/include/string.h",
         "patchSetId": 1
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "It is for _source_ compatibility, i.e. if the current version of the header was copied to ndk/platforms/... you wouldn\u0027t be able to compile many third-party projects (e.g. Google Earth) at all.\n\nAnd I assume you care about source compatibility, otherwise you would not have added macros for bcopy and bzero.",
       "parentUuid": "df74307d_5739c75c",
+      "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_3eeb468b",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T18:18:03Z",
+      "side": 1,
+      "message": "Your comment on this decl suggests that is is for binary compatibility.\n\nWe added the macros for bcopy/bzero because POSIX suggests it: http://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xsh_chap03.html\n\nThey suggest doing the same for index, but that isn\u0027t practical.\n\nDo we know how many people this is actually breaking? It\u0027s a one-to-one mapping from index to strchr, so it shouldn\u0027t be much of a problem...",
+      "parentUuid": "df74307d_12959d27",
       "revId": "be2f630644b572f5f60e7e2d9e88e7dc7b20cb1a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
