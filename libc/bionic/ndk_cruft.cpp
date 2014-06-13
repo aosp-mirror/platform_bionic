@@ -250,4 +250,9 @@ extern "C" int issetugid() {
   return 0;
 }
 
+// This was removed from POSIX 2004.
+extern "C" pid_t wait3(int* status, int options, struct rusage* rusage) {
+  return wait4(-1, status, options, rusage);
+}
+
 #endif
