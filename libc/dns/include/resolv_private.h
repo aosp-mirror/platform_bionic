@@ -60,6 +60,9 @@
 #include "resolv_static.h"
 #include <net/if.h>
 
+/* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
+#pragma GCC visibility push(default)
+
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
@@ -279,8 +282,9 @@ union res_sockaddr_union {
 
 /* Things involving an internal (static) resolver context. */
 __BEGIN_DECLS
-extern struct __res_state *__res_get_state(void);
-extern void __res_put_state(struct __res_state *);
+
+__LIBC_HIDDEN__ extern struct __res_state *__res_get_state(void);
+__LIBC_HIDDEN__ extern void __res_put_state(struct __res_state *);
 
 #ifndef ANDROID_CHANGES
 /*
@@ -320,7 +324,7 @@ const char *	hostalias(const char *);
 void		p_query(const u_char *);
 void		res_close(void);
 int		res_init(void);
-int		res_opt(int, u_char *, int, int);
+__LIBC_HIDDEN__ int		res_opt(int, u_char *, int, int);
 int		res_isourserver(const struct sockaddr_in *);
 int		res_mkquery(int, const char *, int, int, const u_char *, int, const u_char *, u_char *, int);
 int		res_query(const char *, int, int, u_char *, int);
@@ -339,11 +343,11 @@ __END_DECLS
  * Make them go away if a client is including this
  *
  */
-extern const struct res_sym __p_key_syms[];
-extern const struct res_sym __p_cert_syms[];
+__LIBC_HIDDEN__ extern const struct res_sym __p_key_syms[];
+__LIBC_HIDDEN__ extern const struct res_sym __p_cert_syms[];
 extern const struct res_sym __p_class_syms[];
 extern const struct res_sym __p_type_syms[];
-extern const struct res_sym __p_rcode_syms[];
+__LIBC_HIDDEN__ extern const struct res_sym __p_rcode_syms[];
 #endif /* SHARED_LIBBIND */
 
 #ifndef ANDROID_CHANGES
@@ -434,7 +438,7 @@ const char *	p_class(int);
 const char *	p_time(uint32_t);
 const char *	p_type(int);
 const char *	p_rcode(int);
-const char *	p_sockun(union res_sockaddr_union, char *, size_t);
+__LIBC_HIDDEN__ const char *	p_sockun(union res_sockaddr_union, char *, size_t);
 const u_char *	p_cdnname(const u_char *, const u_char *, int, FILE *);
 const u_char *	p_cdname(const u_char *, const u_char *, FILE *);
 const u_char *	p_fqnname(const u_char *, const u_char *,
@@ -448,12 +452,12 @@ int		res_nameinquery(const char *, int, int, const u_char *,
 				     const u_char *);
 int		res_queriesmatch(const u_char *, const u_char *,
 				      const u_char *, const u_char *);
-const char *	p_section(int, int);
+__LIBC_HIDDEN__ const char *	p_section(int, int);
 /* Things involving a resolver context. */
 int		res_ninit(res_state);
 int		res_nisourserver(const res_state, const struct sockaddr_in *);
 void		fp_resstat(const res_state, FILE *);
-void		res_pquery(const res_state, const u_char *, int, FILE *);
+__LIBC_HIDDEN__ void		res_pquery(const res_state, const u_char *, int, FILE *);
 const char *	res_hostalias(const res_state, const char *, char *, size_t);
 int		res_nquery(res_state, const char *, int, int, u_char *, int);
 int		res_nsearch(res_state, const char *, int, int, u_char *, int);
@@ -471,29 +475,31 @@ int		res_findzonecut2(res_state, const char *, ns_class, int,
 				      char *, size_t,
 				      union res_sockaddr_union *, int);
 void		res_nclose(res_state);
-int		res_nopt(res_state, int, u_char *, int, int);
+__LIBC_HIDDEN__ int		res_nopt(res_state, int, u_char *, int, int);
 void		res_send_setqhook(res_send_qhook);
 void		res_send_setrhook(res_send_rhook);
-int		__res_vinit(res_state, int);
+__LIBC_HIDDEN__ int		__res_vinit(res_state, int);
 void		res_destroyservicelist(void);
 const char *	res_servicename(uint16_t, const char *);
 const char *	res_protocolname(int);
 void		res_destroyprotolist(void);
 void		res_buildprotolist(void);
-const char *	res_get_nibblesuffix(res_state);
-const char *	res_get_nibblesuffix2(res_state);
-void		res_ndestroy(res_state);
-uint16_t	res_nametoclass(const char *, int *);
-uint16_t	res_nametotype(const char *, int *);
-void		res_setservers(res_state,
+__LIBC_HIDDEN__ const char *	res_get_nibblesuffix(res_state);
+__LIBC_HIDDEN__ const char *	res_get_nibblesuffix2(res_state);
+__LIBC_HIDDEN__ void		res_ndestroy(res_state);
+__LIBC_HIDDEN__ uint16_t	res_nametoclass(const char *, int *);
+__LIBC_HIDDEN__ uint16_t	res_nametotype(const char *, int *);
+__LIBC_HIDDEN__ void		res_setservers(res_state,
 				    const union res_sockaddr_union *, int);
-int		res_getservers(res_state,
+__LIBC_HIDDEN__ int		res_getservers(res_state,
 				    union res_sockaddr_union *, int);
 
-void res_setnetid(res_state, unsigned);
-void res_setmark(res_state, unsigned);
+__LIBC_HIDDEN__ void res_setnetid(res_state, unsigned);
+__LIBC_HIDDEN__ void res_setmark(res_state, unsigned);
 u_int  res_randomid(void);
 
 __END_DECLS
+
+#pragma GCC visibility pop
 
 #endif /* !_RESOLV_PRIVATE_H_ */
