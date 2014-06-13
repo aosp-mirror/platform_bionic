@@ -22,6 +22,30 @@
       "revId": "5ee320dd35fafc11eaf90c62198e08c6670e35b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf713c8e_2ad22038",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T22:59:34Z",
+      "side": 1,
+      "message": "Should I wait for your fix, or is this okay to submit now?",
+      "parentUuid": "5f4e8057_d44a32e3",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 41
+      },
+      "revId": "5ee320dd35fafc11eaf90c62198e08c6670e35b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
