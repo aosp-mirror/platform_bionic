@@ -2,7 +2,6 @@
 
 libc_common_src_files_arm64 := \
     bionic/memchr.c \
-    bionic/__memcmp16.cpp \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strrchr.cpp \
