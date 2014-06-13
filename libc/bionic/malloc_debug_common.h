@@ -83,19 +83,27 @@ struct HashTable {
 };
 
 /* Entry in malloc dispatch table. */
-typedef void* (*MallocDebugMalloc)(size_t);
-typedef void (*MallocDebugFree)(void*);
 typedef void* (*MallocDebugCalloc)(size_t, size_t);
-typedef void* (*MallocDebugRealloc)(void*, size_t);
-typedef void* (*MallocDebugMemalign)(size_t, size_t);
+typedef void (*MallocDebugFree)(void*);
+typedef struct mallinfo (*MallocDebugMallinfo)();
+typedef void* (*MallocDebugMalloc)(size_t);
 typedef size_t (*MallocDebugMallocUsableSize)(const void*);
+typedef void* (*MallocDebugMemalign)(size_t, size_t);
+typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
+typedef void* (*MallocDebugPvalloc)(size_t);
+typedef void* (*MallocDebugRealloc)(void*, size_t);
+typedef void* (*MallocDebugValloc)(size_t);
 struct MallocDebug {
-  MallocDebugMalloc malloc;
-  MallocDebugFree free;
   MallocDebugCalloc calloc;
-  MallocDebugRealloc realloc;
-  MallocDebugMemalign memalign;
+  MallocDebugFree free;
+  MallocDebugMallinfo mallinfo;
+  MallocDebugMalloc malloc;
   MallocDebugMallocUsableSize malloc_usable_size;
+  MallocDebugMemalign memalign;
+  MallocDebugPosixMemalign posix_memalign;
+  MallocDebugPvalloc pvalloc;
+  MallocDebugRealloc realloc;
+  MallocDebugValloc valloc;
 };
 
 typedef bool (*MallocDebugInit)(HashTable*);
