@@ -164,8 +164,6 @@ extern int usleep(useconds_t);
 
 extern int gethostname(char *, size_t);
 
-extern int getdtablesize(void);
-
 extern void *__brk(void *);
 extern int brk(void *);
 extern void *sbrk(ptrdiff_t);
