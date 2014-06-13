@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f49844c_9bfb77e3",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T01:07:15Z",
+      "side": 1,
+      "message": "these weren\u0027t in a header file, so until proven otherwise, we should just get rid of them. they were never public API.",
+      "revId": "1a186ba0da216a0e578cbe88d45ce262f35ab664",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
