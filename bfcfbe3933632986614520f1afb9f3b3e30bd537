@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df74307d_770b238c",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-13T15:43:09Z",
+      "side": 1,
+      "message": "i still don\u0027t understand why we need these declarations.",
+      "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
