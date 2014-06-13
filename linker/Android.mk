@@ -16,6 +16,7 @@ LOCAL_SRC_FILES_arm64   := arch/arm64/begin.S
 LOCAL_SRC_FILES_x86     := arch/x86/begin.c
 LOCAL_SRC_FILES_x86_64  := arch/x86_64/begin.S
 LOCAL_SRC_FILES_mips    := arch/mips/begin.S
+LOCAL_SRC_FILES_mips64  := arch/mips64/begin.S
 
 LOCAL_LDFLAGS := \
     -shared \
