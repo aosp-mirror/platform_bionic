@@ -50,20 +50,24 @@ __BEGIN_DECLS
 
 struct addrinfo;
 
-struct hostent *android_gethostbyaddrfornet(const void *, socklen_t, int, unsigned, unsigned);
-struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int , unsigned);
-struct hostent *android_gethostbynamefornet(const char *, int, unsigned, unsigned);
+#define __used_in_netd __attribute__((visibility ("default")))
+
+struct hostent *android_gethostbyaddrfornet(const void *, socklen_t, int, unsigned, unsigned) __used_in_netd;
+struct hostent *android_gethostbynamefornet(const char *, int, unsigned, unsigned) __used_in_netd;
 int android_getaddrinfofornet(const char *, const char *, const struct addrinfo *, unsigned,
-		unsigned, struct addrinfo **);
-int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t,
-		 int, unsigned, unsigned);
+		unsigned, struct addrinfo **) __used_in_netd;
 
 /* set name servers for a network */
 extern void _resolv_set_nameservers_for_net(unsigned netid,
-    const char** servers, int numservers, const char *domains);
+    const char** servers, int numservers, const char *domains) __used_in_netd;
 
 /* flush the cache associated with a certain network */
-extern void _resolv_flush_cache_for_net(unsigned netid);
+extern void _resolv_flush_cache_for_net(unsigned netid) __used_in_netd;
+
+/* Internal use only. */
+struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int , unsigned);
+int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t,
+		 int, unsigned, unsigned);
 
 __END_DECLS
 
