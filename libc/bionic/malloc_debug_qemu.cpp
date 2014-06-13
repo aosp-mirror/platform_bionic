@@ -693,7 +693,7 @@ extern "C" void* qemu_instrumented_malloc(size_t bytes) {
     }
     desc.ptr = Malloc(malloc)(size);
     if (desc.ptr == NULL) {
-        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%zu): malloc(%u) failed.",
+        qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%zu): malloc(%zu) failed.",
                        malloc_pid, getpid(), bytes, size);
         return NULL;
     }
@@ -898,14 +898,14 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
     new_desc.suffix_size = DEFAULT_SUFFIX_SIZE;
     size_t new_size = mallocdesc_alloc_size(&new_desc);
     if (new_size < bytes) { // Overflow
-        qemu_error_log("<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%u) failed due to overflow",
+        qemu_error_log("<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%zu) failed due to overflow",
                        malloc_pid, getpid(), mem, bytes, new_size);
         errno = ENOMEM;
         return NULL;
     }
     new_desc.ptr = Malloc(malloc)(new_size);
     if (new_desc.ptr == NULL) {
-        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%u) failed on ",
+        log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%zu) failed on ",
                   malloc_pid, getpid(), mem, bytes, new_size);
         return NULL;
     }
@@ -978,14 +978,14 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     desc.suffix_size = DEFAULT_SUFFIX_SIZE;
     size_t size = mallocdesc_alloc_size(&desc);
     if (size < bytes) { // Overflow
-        qemu_error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%u) failed due to overflow.",
+        qemu_error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%zu) failed due to overflow.",
                        malloc_pid, getpid(), alignment, bytes, size);
 
         return NULL;
     }
     desc.ptr = Malloc(memalign)(desc.prefix_size, size);
     if (desc.ptr == NULL) {
-        error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%u) failed.",
+        error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%zu) failed.",
                   malloc_pid, getpid(), alignment, bytes, size);
         return NULL;
     }
