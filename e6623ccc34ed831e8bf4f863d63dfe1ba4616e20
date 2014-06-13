@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f49844c_d9a9846d",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-06-13T21:10:13Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "df74307d_cd79c40c",
+      "revId": "e6623ccc34ed831e8bf4f863d63dfe1ba4616e20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf713c8e_91228bc0",
         "filename": "libc/bionic/ndk_cruft.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-13T18:58:51Z",
       "side": 1,
       "message": "Why not __strchr_chk as before?",
+      "revId": "e6623ccc34ed831e8bf4f863d63dfe1ba4616e20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f4e8057_11e92c21",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-06-13T21:10:13Z",
+      "side": 1,
+      "message": "Since _FORTIFY_SOURCE was not undefined before including \u003cstring.h\u003e, the strchr() call here actually uses the inline definition in this header, which does the __strchr_chk.\n\nAnd undefining the macro could impact other stuff in this source file, so I didn\u0027t want to risk it.",
+      "parentUuid": "bf713c8e_91228bc0",
       "revId": "e6623ccc34ed831e8bf4f863d63dfe1ba4616e20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
