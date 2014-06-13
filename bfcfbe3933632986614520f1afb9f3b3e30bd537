@@ -16,6 +16,24 @@
       "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f49844c_21b978b7",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-13T16:42:24Z",
+      "side": 1,
+      "message": "The don\u0027t necessarily need to be here, but they need to be in bionic somewhere. The way the visibility is set in dlmalloc means they need to have a decl somewhere in bionic in order to be exported. Another option would be adding an upstream-dlmalloc/android/include/namespace.h to override the dlmalloc default visibility for these symbols as we have for the BSDs, but this is ndk cruft after all.",
+      "parentUuid": "df74307d_770b238c",
+      "revId": "bfcfbe3933632986614520f1afb9f3b3e30bd537",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
