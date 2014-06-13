@@ -70,6 +70,54 @@
       "revId": "3963b7b7f5ee3b24956715cefdd73e8bfb147c8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_59392feb",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-13T21:13:16Z",
+      "side": 1,
+      "message": "Only if it\u0027s between glibc/a particular arch. If we do it this way, the 64 bit bionic cts tests will all be the same across all arches. The same for the 32 bit bionic cts tests, so it should just work.\n\nIf we do have a problem that we have to have the same set of tests between 64/32 then I will volunteer to fix it.",
+      "parentUuid": "7f49844c_f96ba871",
+      "range": {
+        "startLine": 294,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 16
+      },
+      "revId": "3963b7b7f5ee3b24956715cefdd73e8bfb147c8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_94a43c2e",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-13T21:13:16Z",
+      "side": 1,
+      "message": "Actually, you could probably just include private/malloc_debug_common.h and then use it directly, no need to move this at all.\n\nI\u0027m not really a fan of making it public though.",
+      "parentUuid": "df74307d_83b4fc0d",
+      "range": {
+        "startLine": 294,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 16
+      },
+      "revId": "3963b7b7f5ee3b24956715cefdd73e8bfb147c8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
