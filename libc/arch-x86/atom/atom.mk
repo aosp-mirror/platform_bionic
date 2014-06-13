@@ -14,7 +14,6 @@ libc_bionic_src_files_x86 += \
     arch-x86/atom/string/sse2-wcscmp-atom.S \
     arch-x86/atom/string/ssse3-bcopy-atom.S \
     arch-x86/atom/string/ssse3-memcmp-atom.S \
-    arch-x86/atom/string/ssse3-memcmp16-atom.S \
     arch-x86/atom/string/ssse3-memcpy-atom.S \
     arch-x86/atom/string/ssse3-memmove-atom.S \
     arch-x86/atom/string/ssse3-strcat-atom.S \
