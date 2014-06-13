@@ -326,14 +326,19 @@ static inline void add_to_backlog(hdr_t* hdr) {
     }
 }
 
-extern "C" void* chk_malloc(size_t size) {
+extern "C" void* chk_malloc(size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
-    hdr_t* hdr = static_cast<hdr_t*>(Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t)));
+    size_t size = sizeof(hdr_t) + bytes + sizeof(ftr_t);
+    if (size < bytes) { // Overflow
+        errno = ENOMEM;
+        return NULL;
+    }
+    hdr_t* hdr = static_cast<hdr_t*>(Malloc(malloc)(size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
-        add(hdr, size);
+        add(hdr, bytes);
         return user(hdr);
     }
     return NULL;
@@ -411,15 +416,15 @@ extern "C" void chk_free(void* ptr) {
     }
 }
 
-extern "C" void* chk_realloc(void* ptr, size_t size) {
+extern "C" void* chk_realloc(void* ptr, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
 
     if (!ptr) {
-        return chk_malloc(size);
+        return chk_malloc(bytes);
     }
 
 #ifdef REALLOC_ZERO_BYTES_FREE
-    if (!size) {
+    if (!bytes) {
         chk_free(ptr);
         return NULL;
     }
@@ -432,7 +437,7 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
         int depth = get_backtrace(bt, MAX_BACKTRACE_DEPTH);
         if (hdr->tag == BACKLOG_TAG) {
             log_message("+++ REALLOCATION %p SIZE %d OF FREED MEMORY!\n",
-                       user(hdr), size, hdr->size);
+                       user(hdr), bytes, hdr->size);
             log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                        user(hdr), hdr->size);
             log_backtrace(hdr->bt, hdr->bt_depth);
@@ -451,47 +456,54 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
             del_from_backlog(hdr);
         } else {
             log_message("+++ REALLOCATION %p SIZE %d IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
-                       user(hdr), size);
+                       user(hdr), bytes);
             log_backtrace(bt, depth);
             // just get a whole new allocation and leak the old one
-            return Malloc(realloc)(0, size);
-            // return realloc(user(hdr), size); // assuming it was allocated externally
+            return Malloc(realloc)(0, bytes);
+            // return realloc(user(hdr), bytes); // assuming it was allocated externally
         }
     }
 
+    size_t size = sizeof(hdr_t) + bytes + sizeof(ftr_t);
+    if (size < bytes) { // Overflow
+        errno = ENOMEM;
+        return NULL;
+    }
     if (hdr->base != hdr) {
         // An allocation from memalign, so create another allocation and
         // copy the data out.
-        void* newMem = Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t));
-        if (newMem) {
-            memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
-            Malloc(free)(hdr->base);
-            hdr = static_cast<hdr_t*>(newMem);
-        } else {
-            Malloc(free)(hdr->base);
-            hdr = NULL;
+        void* newMem = Malloc(malloc)(size);
+        if (newMem == NULL) {
+            return NULL;
         }
+        memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
+        Malloc(free)(hdr->base);
+        hdr = static_cast<hdr_t*>(newMem);
     } else {
-        hdr = static_cast<hdr_t*>(Malloc(realloc)(hdr, sizeof(hdr_t) + size + sizeof(ftr_t)));
+        hdr = static_cast<hdr_t*>(Malloc(realloc)(hdr, size));
     }
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
-        add(hdr, size);
+        add(hdr, bytes);
         return user(hdr);
     }
-
     return NULL;
 }
 
-extern "C" void* chk_calloc(int nmemb, size_t size) {
+extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
-    size_t total_size = nmemb * size;
-    hdr_t* hdr = static_cast<hdr_t*>(Malloc(calloc)(1, sizeof(hdr_t) + total_size + sizeof(ftr_t)));
+    size_t total_bytes = nmemb * bytes;
+    size_t size = sizeof(hdr_t) + total_bytes + sizeof(ftr_t);
+    if (size < total_bytes || (nmemb && SIZE_MAX / nmemb < bytes)) { // Overflow
+        errno = ENOMEM;
+        return NULL;
+    }
+    hdr_t* hdr = static_cast<hdr_t*>(Malloc(calloc)(1, size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
-        add(hdr, total_size);
+        add(hdr, total_bytes);
         return user(hdr);
     }
     return NULL;
@@ -507,6 +519,33 @@ extern "C" size_t chk_malloc_usable_size(const void* ptr) {
     // The sentinel tail is written just after the request block bytes
     // so there is no extra room we can report here.
     return hdr->size;
+}
+
+extern "C" struct mallinfo chk_mallinfo() {
+  return Malloc(mallinfo)();
+}
+
+extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if ((alignment & (alignment - 1)) != 0) {
+    return EINVAL;
+  }
+  int saved_errno = errno;
+  *memptr = chk_memalign(alignment, size);
+  errno = saved_errno;
+  return (*memptr != NULL) ? 0 : ENOMEM;
+}
+
+extern "C" void* chk_pvalloc(size_t bytes) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  if (size < bytes) { // Overflow
+    return NULL;
+  }
+  return chk_memalign(pagesize, size);
+}
+
+extern "C" void* chk_valloc(size_t size) {
+  return chk_memalign(sysconf(_SC_PAGESIZE), size);
 }
 
 static void ReportMemoryLeaks() {

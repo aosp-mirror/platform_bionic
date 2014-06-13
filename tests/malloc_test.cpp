@@ -16,16 +16,24 @@
 
 #include <gtest/gtest.h>
 
+#include <limits.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <unistd.h>
 
 TEST(malloc, malloc_std) {
   // Simple malloc test.
   void *ptr = malloc(100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
-
   free(ptr);
+}
+
+TEST(malloc, malloc_overflow) {
+  errno = 0;
+  ASSERT_EQ(NULL, malloc(SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
 }
 
 TEST(malloc, calloc_std) {
@@ -37,22 +45,65 @@ TEST(malloc, calloc_std) {
   for (size_t i = 0; i < alloc_len; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
-
   free(ptr);
+}
+
+TEST(malloc, calloc_illegal) {
+  errno = 0;
+  ASSERT_EQ(NULL, calloc(-1, 100));
+  ASSERT_EQ(ENOMEM, errno);
+}
+
+TEST(malloc, calloc_overflow) {
+  errno = 0;
+  ASSERT_EQ(NULL, calloc(1, SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
+  errno = 0;
+  ASSERT_EQ(NULL, calloc(SIZE_MAX, SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
+  errno = 0;
+  ASSERT_EQ(NULL, calloc(2, SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
+  errno = 0;
+  ASSERT_EQ(NULL, calloc(SIZE_MAX, 2));
+  ASSERT_EQ(ENOMEM, errno);
 }
 
 TEST(malloc, memalign_multiple) {
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
-      char *ptr = (char*)memalign(alignment, 100);
-      ASSERT_TRUE(ptr != NULL) << alignment;
-      ASSERT_LE(100U, malloc_usable_size(ptr));
-      ASSERT_EQ(0, (intptr_t)ptr % (1 << i));
-
+      char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));
+      ASSERT_TRUE(ptr != NULL) << "Failed at alignment " << alignment;
+      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
+      ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))
+          << "Failed at alignment " << alignment;
       free(ptr);
     }
   }
+}
+
+TEST(malloc, memalign_overflow) {
+  ASSERT_EQ(NULL, memalign(4096, SIZE_MAX));
+}
+
+TEST(malloc, memalign_non_power2) {
+  void* ptr;
+  for (size_t align = 0; align <= 256; align++) {
+    ptr = memalign(align, 1024);
+    ASSERT_TRUE(ptr != NULL) << "Failed at align " << align;
+    free(ptr);
+  }
+}
+
+TEST(malloc, posix_memalign_non_power2) {
+  void* ptr;
+  ASSERT_EQ(EINVAL, posix_memalign(&ptr, 17, 1024));
+}
+
+TEST(malloc, posix_memalign_overflow) {
+  void* ptr;
+  ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
 }
 
 TEST(malloc, memalign_realloc) {
@@ -87,7 +138,6 @@ TEST(malloc, memalign_realloc) {
     for (size_t i = 0; i < 250; i++) {
       ASSERT_EQ(0x67, ptr[i]);
     }
-
     free(ptr);
   }
 }
@@ -105,7 +155,6 @@ TEST(malloc, malloc_realloc_larger) {
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(67, ptr[i]);
   }
-
   free(ptr);
 }
 
@@ -122,7 +171,6 @@ TEST(malloc, malloc_realloc_smaller) {
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(67, ptr[i]);
   }
-
   free(ptr);
 }
 
@@ -161,9 +209,9 @@ TEST(malloc, malloc_multiple_realloc) {
   for (size_t i = 0; i < 150; i++) {
     ASSERT_EQ(0x23, ptr[i]);
   }
-
   free(ptr);
 }
+
 TEST(malloc, calloc_realloc_larger) {
   // Realloc to a larger size, calloc is used for the original allocation.
   char *ptr = (char *)calloc(1, 100);
@@ -176,7 +224,6 @@ TEST(malloc, calloc_realloc_larger) {
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
-
   free(ptr);
 }
 
@@ -192,7 +239,6 @@ TEST(malloc, calloc_realloc_smaller) {
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
-
   free(ptr);
 }
 
@@ -230,21 +276,42 @@ TEST(malloc, calloc_multiple_realloc) {
   for (size_t i = 0; i < 150; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
-
   free(ptr);
 }
 
-TEST(malloc, posix_memalign_non_power2) {
-  void* ptr;
-
-  ASSERT_EQ(EINVAL, posix_memalign(&ptr, 17, 1024));
+TEST(malloc, realloc_overflow) {
+  errno = 0;
+  ASSERT_EQ(NULL, realloc(NULL, SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
+  void* ptr = malloc(100);
+  ASSERT_TRUE(ptr != NULL);
+  errno = 0;
+  ASSERT_EQ(NULL, realloc(ptr, SIZE_MAX));
+  ASSERT_EQ(ENOMEM, errno);
+  free(ptr);
 }
 
-TEST(malloc, memalign_non_power2) {
-  void* ptr;
-  for (size_t align = 0; align <= 256; align++) {
-    ptr = memalign(align, 1024);
-    ASSERT_TRUE(ptr != NULL) << "Failed at align " << align;
-    free(ptr);
-  }
+TEST(malloc, pvalloc_std) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  void* ptr = pvalloc(100);
+  ASSERT_TRUE(ptr != NULL);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  ASSERT_LE(pagesize, malloc_usable_size(ptr));
+  free(ptr);
+}
+
+TEST(malloc, pvalloc_overflow) {
+  ASSERT_EQ(NULL, pvalloc(SIZE_MAX));
+}
+
+TEST(malloc, valloc_std) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  void* ptr = pvalloc(100);
+  ASSERT_TRUE(ptr != NULL);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  free(ptr);
+}
+
+TEST(malloc, valloc_overflow) {
+  ASSERT_EQ(NULL, valloc(SIZE_MAX));
 }
