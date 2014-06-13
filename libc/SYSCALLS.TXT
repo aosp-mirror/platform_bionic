@@ -275,10 +275,6 @@ int unshare(int) all
 int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)  all
 int __getcpu:getcpu(unsigned*, unsigned*, void*) all
 
-# io priorities
-int ioprio_set(int which, int who, int ioprio) all
-int ioprio_get(int which, int who) all
-
 # other
 int     uname(struct utsname*)  all
 mode_t  umask(mode_t)  all
