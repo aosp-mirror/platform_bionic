@@ -22,6 +22,10 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#if defined(__BIONIC__)
+#include <libc/bionic/malloc_debug_common.h>
+#endif
+
 TEST(malloc, malloc_std) {
   // Simple malloc test.
   void *ptr = malloc(100);
@@ -291,6 +295,10 @@ TEST(malloc, realloc_overflow) {
   free(ptr);
 }
 
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+extern "C" void* pvalloc(size_t);
+extern "C" void* valloc(size_t);
+
 TEST(malloc, pvalloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
@@ -315,3 +323,4 @@ TEST(malloc, valloc_std) {
 TEST(malloc, valloc_overflow) {
   ASSERT_EQ(NULL, valloc(SIZE_MAX));
 }
+#endif
