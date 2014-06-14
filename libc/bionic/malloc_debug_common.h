@@ -61,6 +61,12 @@
 #define Malloc(function)  dl ## function
 #endif
 
+// valloc(3) and pvalloc(3) were removed from POSIX 2004. We do not include them
+// for LP64, but the symbols remain in LP32 for binary compatibility.
+#ifndef __LP64__
+#define HAVE_DEPRECATED_MALLOC_FUNCS 1
+#endif
+
 // =============================================================================
 // Structures
 // =============================================================================
@@ -90,9 +96,14 @@ typedef void* (*MallocDebugMalloc)(size_t);
 typedef size_t (*MallocDebugMallocUsableSize)(const void*);
 typedef void* (*MallocDebugMemalign)(size_t, size_t);
 typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocDebugPvalloc)(size_t);
+#endif
 typedef void* (*MallocDebugRealloc)(void*, size_t);
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocDebugValloc)(size_t);
+#endif
+
 struct MallocDebug {
   MallocDebugCalloc calloc;
   MallocDebugFree free;
@@ -101,9 +112,13 @@ struct MallocDebug {
   MallocDebugMallocUsableSize malloc_usable_size;
   MallocDebugMemalign memalign;
   MallocDebugPosixMemalign posix_memalign;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   MallocDebugPvalloc pvalloc;
+#endif
   MallocDebugRealloc realloc;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   MallocDebugValloc valloc;
+#endif
 };
 
 typedef bool (*MallocDebugInit)(HashTable*);
