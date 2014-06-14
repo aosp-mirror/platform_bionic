@@ -61,9 +61,13 @@ static const MallocDebug __libc_malloc_default_dispatch __attribute__((aligned(3
   Malloc(malloc_usable_size),
   Malloc(memalign),
   Malloc(posix_memalign),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   Malloc(pvalloc),
+#endif
   Malloc(realloc),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   Malloc(valloc),
+#endif
 };
 
 // Selector of dispatch table to use for dispatching malloc calls.
@@ -258,17 +262,21 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
   return __libc_malloc_dispatch->posix_memalign(memptr, alignment, size);
 }
 
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
   return __libc_malloc_dispatch->pvalloc(bytes);
 }
+#endif
 
 extern "C" void* realloc(void* oldMem, size_t bytes) {
   return __libc_malloc_dispatch->realloc(oldMem, bytes);
 }
 
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* valloc(size_t bytes) {
   return __libc_malloc_dispatch->valloc(bytes);
 }
+#endif
 
 // We implement malloc debugging only in libc.so, so the code below
 // must be excluded if we compile this file for static libc.a
@@ -299,9 +307,13 @@ static void InitMalloc(void* malloc_impl_handler, MallocDebug* table, const char
   InitMallocFunction<MallocDebugMallocUsableSize>(malloc_impl_handler, &table->malloc_usable_size, prefix, "malloc_usable_size");
   InitMallocFunction<MallocDebugMemalign>(malloc_impl_handler, &table->memalign, prefix, "memalign");
   InitMallocFunction<MallocDebugPosixMemalign>(malloc_impl_handler, &table->posix_memalign, prefix, "posix_memalign");
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   InitMallocFunction<MallocDebugPvalloc>(malloc_impl_handler, &table->pvalloc, prefix, "pvalloc");
+#endif
   InitMallocFunction<MallocDebugRealloc>(malloc_impl_handler, &table->realloc, prefix, "realloc");
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   InitMallocFunction<MallocDebugValloc>(malloc_impl_handler, &table->valloc, prefix, "valloc");
+#endif
 }
 
 // Initializes memory allocation framework once per process.
@@ -447,9 +459,14 @@ static void malloc_init_impl() {
       (malloc_dispatch_table.malloc_usable_size == NULL) ||
       (malloc_dispatch_table.memalign == NULL) ||
       (malloc_dispatch_table.posix_memalign == NULL) ||
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
       (malloc_dispatch_table.pvalloc == NULL) ||
-      (malloc_dispatch_table.realloc == NULL) ||
-      (malloc_dispatch_table.valloc == NULL)) {
+#endif
+      (malloc_dispatch_table.realloc == NULL)
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+      || (malloc_dispatch_table.valloc == NULL)
+#endif
+      ) {
     error_log("%s: some symbols for libc.debug.malloc level %d were not found (see above)",
               getprogname(), g_malloc_debug_level);
     dlclose(malloc_impl_handle);
