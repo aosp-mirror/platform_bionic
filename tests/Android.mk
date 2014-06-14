@@ -115,17 +115,8 @@ libBionicStandardTests_src_files := \
 libBionicStandardTests_cflags := \
     $(test_cflags) \
 
-ifeq ($(MALLOC_IMPL),jemalloc)
-  libBionicStandardTests_cflags += -DUSE_JEMALLOC
-else
-  libBionicStandardTests_cflags += -DUSE_DLMALLOC
-endif
-
 libBionicStandardTests_cppflags := \
     $(test_cppflags) \
-
-libBionicStandardTests_c_includes := \
-    bionic/libc \
 
 libBionicStandardTests_ldlibs_host := \
     -lrt \
