@@ -17,7 +17,6 @@ libc_bionic_src_files_x86 += \
     arch-x86/atom/string/sse2-memrchr-atom.S \
     arch-x86/atom/string/sse2-strchr-atom.S \
     arch-x86/atom/string/sse2-strrchr-atom.S \
-    arch-x86/atom/string/sse2-index-atom.S \
     arch-x86/atom/string/sse2-strnlen-atom.S \
     arch-x86/atom/string/sse2-wcschr-atom.S \
     arch-x86/atom/string/sse2-wcsrchr-atom.S \
