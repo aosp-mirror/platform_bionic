@@ -40,6 +40,9 @@ endif
 include $(arch_variant_mk)
 libc_common_additional_dependencies += $(arch_variant_mk)
 
+libc_netbsd_src_files_x86 := \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
 arch_variant_mk :=
 
 libc_crt_target_cflags_x86 := \
