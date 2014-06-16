@@ -255,4 +255,15 @@ extern "C" pid_t wait3(int* status, int options, struct rusage* rusage) {
   return wait4(-1, status, options, rusage);
 }
 
+// This was removed from POSIX 2004.
+extern "C" int getdtablesize() {
+  struct rlimit r;
+
+  if (getrlimit(RLIMIT_NOFILE, &r) < 0) {
+    return sysconf(_SC_OPEN_MAX);
+  }
+
+  return r.rlim_cur;
+}
+
 #endif
