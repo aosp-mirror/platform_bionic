@@ -12,7 +12,6 @@ libc_bionic_src_files_mips += \
      bionic/mmap.cpp
 
 libc_common_src_files_mips += \
-    bionic/index.cpp \
     bionic/memchr.c \
     bionic/memcmp.c \
     bionic/memmove.c \

@@ -1,6 +1,5 @@
 libc_bionic_src_files_x86 += \
     arch-x86/atom/string/sse2-bzero-atom.S \
-    arch-x86/atom/string/sse2-index-atom.S \
     arch-x86/atom/string/sse2-memchr-atom.S \
     arch-x86/atom/string/sse2-memrchr-atom.S \
     arch-x86/atom/string/sse2-memset-atom.S \
