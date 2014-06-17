@@ -501,7 +501,7 @@ endif
 
 ifeq ($(MALLOC_IMPL),jemalloc)
   libc_common_cflags += -DUSE_JEMALLOC
-  libc_malloc_src := bionic/jemalloc.cpp
+  libc_malloc_src := bionic/jemalloc_wrapper.cpp
 else
   libc_common_cflags += -DUSE_DLMALLOC
   libc_malloc_src := bionic/dlmalloc.c
