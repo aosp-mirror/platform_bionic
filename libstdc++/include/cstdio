@@ -63,9 +63,7 @@ using ::ftell;
 using ::fwrite;
 using ::getc;
 using ::getchar;
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L
 using ::gets;
-#endif
 using ::perror;
 using ::printf;
 using ::putc;
