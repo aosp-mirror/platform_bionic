@@ -36,10 +36,6 @@ LOCAL_CLANG := $($(module)_clang_$(build_type))
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
 
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(LOCAL_PATH)/Android.mk \
-    $(LOCAL_PATH)/Android.build.mk \
-
 LOCAL_CFLAGS := \
     $(common_cflags) \
     $($(module)_cflags) \
