@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2492a112_c8e823cb",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-17T23:49:35Z",
+      "side": 1,
+      "message": "should this be __builtin___memset_chk? don\u0027t we need to either do that or declare memset? libm currently has a compiler warning caused by a bzero reference.\n\n(same applies to bcopy/memmove.)",
+      "revId": "ce9ce28e5d760e32ab6c894dfaf7b8dad6de7ff6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
