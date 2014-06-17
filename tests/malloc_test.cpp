@@ -22,9 +22,7 @@
 #include <malloc.h>
 #include <unistd.h>
 
-#if defined(__BIONIC__)
-#include <libc/bionic/malloc_debug_common.h>
-#endif
+#include "private/bionic_config.h"
 
 TEST(malloc, malloc_std) {
   // Simple malloc test.
