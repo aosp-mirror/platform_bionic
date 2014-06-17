@@ -16,6 +16,24 @@
       "revId": "f18dbdc95aeacb5f6b09d39dda75f2c79a4ccf6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448dd5f1_694f9d7d",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-17T22:49:48Z",
+      "side": 1,
+      "message": "Didn\u0027t realize this was something that could be undefined, but gcc agrees with you.",
+      "parentUuid": "2492a112_855e861c",
+      "revId": "f18dbdc95aeacb5f6b09d39dda75f2c79a4ccf6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
