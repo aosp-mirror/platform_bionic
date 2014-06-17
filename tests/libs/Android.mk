@@ -103,3 +103,15 @@ include $(TEST_PATH)/Android.build.mk
 build_type := host
 include $(TEST_PATH)/Android.build.mk
 
+# -----------------------------------------------------------------------------
+# Library with weak function
+# -----------------------------------------------------------------------------
+libtest_dlsym_weak_func_src_files := \
+    dlsym_weak_function.cpp
+
+module := libtest_dlsym_weak_func
+build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
+include $(TEST_PATH)/Android.build.mk
