@@ -37,6 +37,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "private/bionic_config.h"
 #include "private/libc_logging.h"
 
 #define HASHTABLE_SIZE      1543
@@ -59,12 +60,6 @@
 #endif
 #include "dlmalloc.h"
 #define Malloc(function)  dl ## function
-#endif
-
-// valloc(3) and pvalloc(3) were removed from POSIX 2004. We do not include them
-// for LP64, but the symbols remain in LP32 for binary compatibility.
-#ifndef __LP64__
-#define HAVE_DEPRECATED_MALLOC_FUNCS 1
 #endif
 
 // =============================================================================
