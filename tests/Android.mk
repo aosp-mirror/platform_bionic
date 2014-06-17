@@ -233,88 +233,6 @@ build_type := host
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# Library used by dlfcn tests.
-# -----------------------------------------------------------------------------
-ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-no-elf-hash-table-library_src_files := \
-    empty.cpp \
-
-no-elf-hash-table-library_ldflags := \
-    -Wl,--hash-style=gnu \
-
-module := no-elf-hash-table-library
-module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(LOCAL_PATH)/Android.build.mk
-endif
-
-# -----------------------------------------------------------------------------
-# Library used by dlext tests - with/without GNU RELRO program header
-# -----------------------------------------------------------------------------
-libdlext_test_src_files := \
-    dlext_test_library.cpp \
-
-libdlext_test_ldflags := \
-    -Wl,-z,relro \
-
-module := libdlext_test
-module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(LOCAL_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
-# create symlink to libdlext_test.so for symlink test
-# -----------------------------------------------------------------------------
-# Use = instead of := to defer the evaluation of $@
-$(LOCAL_INSTALLED_MODULE): PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-ifneq ($(TARGET_2ND_ARCH),)
-# link 64 bit .so
-$(TARGET_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-endif
-
-libdlext_test_norelro_src_files := \
-    dlext_test_library.cpp \
-
-libdlext_test_norelro_ldflags := \
-    -Wl,-z,norelro \
-
-module := libdlext_test_norelro
-module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(LOCAL_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
-# Library used by dlfcn tests
-# -----------------------------------------------------------------------------
-libtest_simple_src_files := \
-    dlopen_testlib_simple.cpp
-
-module := libtest_simple
-build_type := target
-build_target := SHARED_LIBRARY
-include $(LOCAL_PATH)/Android.build.mk
-
-
-# -----------------------------------------------------------------------------
-# Library used by atexit tests
-# -----------------------------------------------------------------------------
-
-libtest_atexit_src_files := \
-    atexit_testlib.cpp
-
-module := libtest_atexit
-build_target := SHARED_LIBRARY
-build_type := target
-include $(LOCAL_PATH)/Android.build.mk
-build_type := host
-include $(LOCAL_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
 # Tests for the device using bionic's .so. Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 # -----------------------------------------------------------------------------
@@ -438,4 +356,5 @@ endif
 
 endif # linux-x86
 
+include $(call first-makefiles-under,$(LOCAL_PATH))
 endif # !BUILD_TINY_ANDROID
