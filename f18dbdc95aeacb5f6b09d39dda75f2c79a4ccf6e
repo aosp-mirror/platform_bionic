@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2492a112_855e861c",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-17T22:42:33Z",
+      "side": 1,
+      "message": "do we need defined(__STDC_VERSION) \u0026\u0026 ? most existing checks have that, but not all. we should probably be consistent.",
+      "revId": "f18dbdc95aeacb5f6b09d39dda75f2c79a4ccf6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
