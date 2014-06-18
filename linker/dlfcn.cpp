@@ -118,7 +118,7 @@ void* dlsym(void* handle, const char* symbol) {
   if (sym != NULL) {
     unsigned bind = ELF_ST_BIND(sym->st_info);
 
-    if (bind == STB_GLOBAL && sym->st_shndx != 0) {
+    if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
       return reinterpret_cast<void*>(sym->st_value + found->load_bias);
     }
 
