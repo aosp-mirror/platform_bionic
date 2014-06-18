@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6471f9c6_a28dc46f",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T19:46:25Z",
+      "side": 1,
+      "message": "maybe a comment saying that the LP32 NDK ctype.h inlined references to these tables?",
+      "revId": "83626cd7841fed7938b0cfe7a1d0530c11d42622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
