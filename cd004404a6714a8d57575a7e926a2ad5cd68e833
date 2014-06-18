@@ -16,6 +16,24 @@
       "revId": "cd004404a6714a8d57575a7e926a2ad5cd68e833",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d659dd_771c683d",
+        "filename": "libc/bionic/jemalloc_wrapper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-18T21:25:08Z",
+      "side": 1,
+      "message": "Changed to powerof2.",
+      "parentUuid": "2492a112_33534017",
+      "revId": "cd004404a6714a8d57575a7e926a2ad5cd68e833",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
