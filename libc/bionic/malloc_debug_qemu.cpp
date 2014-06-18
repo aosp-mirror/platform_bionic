@@ -47,11 +47,13 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
-#include "private/libc_logging.h"
 #include "malloc_debug_common.h"
+#include "private/bionic_macros.h"
+#include "private/libc_logging.h"
 
 /* This file should be included into the build only when
  * MALLOC_QEMU_INSTRUMENT macro is defined. */
@@ -970,8 +972,8 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     // size.
     if (alignment < DEFAULT_PREFIX_SIZE) {
         alignment = DEFAULT_PREFIX_SIZE;
-    } else if (alignment & (alignment - 1)) {
-        alignment = 1L << (31 - __builtin_clz(alignment));
+    } else if (!powerof2(alignment)) {
+        alignment = BIONIC_ROUND_UP_POWER_OF_2(alignment);
     }
     desc.prefix_size = alignment;
     desc.requested_bytes = bytes;
@@ -1047,7 +1049,7 @@ extern "C" int qemu_instrumented_posix_memalign(void** memptr, size_t alignment,
 
 extern "C" void* qemu_instrumented_pvalloc(size_t bytes) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     qemu_error_log("<libc_pid=%03u, pid=%03u> pvalloc(%zu): overflow (%zu).",
                    malloc_pid, getpid(), bytes, size);

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
+#include <sys/param.h>
 #include <unistd.h>
 
 #include "jemalloc.h"
+#include "private/bionic_macros.h"
 
 void* je_pvalloc(size_t bytes) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  return je_memalign(pagesize, (bytes + pagesize - 1) & ~(pagesize - 1));
+  size_t size = BIONIC_ALIGN(bytes, pagesize);
+  if (size < bytes) {
+    return NULL;
+  }
+  return je_memalign(pagesize, size);
 }
 
 #ifdef je_memalign
@@ -31,11 +37,9 @@ void* je_pvalloc(size_t bytes) {
 // but this is not true. Both glibc and dlmalloc round up to the next power
 // of 2, so we'll do the same.
 void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
-  unsigned int power_of_2 = static_cast<unsigned int>(boundary);
-  if (power_of_2 != 0) {
-    power_of_2 = 1UL << (sizeof(unsigned int)*8 - 1 - __builtin_clz(power_of_2));
-    if (power_of_2 != boundary) {
-      boundary = power_of_2 << 1;
+  if (boundary != 0) {
+    if (!powerof2(boundary)) {
+      boundary = BIONIC_ROUND_UP_POWER_OF_2(boundary);
     }
   } else {
     boundary = 1;
