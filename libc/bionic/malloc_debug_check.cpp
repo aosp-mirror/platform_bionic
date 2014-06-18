@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <sys/socket.h>
 #include <sys/system_properties.h>
 #include <sys/types.h>
@@ -47,8 +48,9 @@
 
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
-#include "private/libc_logging.h"
 #include "malloc_debug_common.h"
+#include "private/bionic_macros.h"
+#include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
 #define MAX_BACKTRACE_DEPTH 16
@@ -350,8 +352,8 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
     }
 
     // Make the alignment a power of two.
-    if (alignment & (alignment-1)) {
-        alignment = 1L << (31 - __builtin_clz(alignment));
+    if (!powerof2(alignment)) {
+        alignment = BIONIC_ROUND_UP_POWER_OF_2(alignment);
     }
 
     // here, alignment is at least MALLOC_ALIGNMENT<<1 bytes
@@ -526,7 +528,7 @@ extern "C" struct mallinfo chk_mallinfo() {
 }
 
 extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) {
-  if ((alignment & (alignment - 1)) != 0) {
+  if (!powerof2(alignment)) {
     return EINVAL;
   }
   int saved_errno = errno;
@@ -537,7 +539,7 @@ extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) 
 
 extern "C" void* chk_pvalloc(size_t bytes) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
   }

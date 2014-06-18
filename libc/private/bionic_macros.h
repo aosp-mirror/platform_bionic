@@ -33,4 +33,10 @@
   TypeName();                                    \
   DISALLOW_COPY_AND_ASSIGN(TypeName)
 
+#define BIONIC_ALIGN(value, alignment) \
+  (((value) + (alignment) - 1) & ~((alignment) - 1))
+
+#define BIONIC_ROUND_UP_POWER_OF_2(value) \
+  (1UL << (sizeof(value) * 8 - 1 - __builtin_clz(value)))
+
 #endif // _BIONIC_MACROS_H_

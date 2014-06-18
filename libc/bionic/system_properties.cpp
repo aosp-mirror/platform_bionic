@@ -55,9 +55,6 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_macros.h"
 
-#define ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
-
-
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
 
@@ -301,7 +298,7 @@ static int map_prop_area()
 static void *allocate_obj(const size_t size, uint32_t *const off)
 {
     prop_area *pa = __system_property_area__;
-    const size_t aligned = ALIGN(size, sizeof(uint32_t));
+    const size_t aligned = BIONIC_ALIGN(size, sizeof(uint32_t));
     if (pa->bytes_used + aligned > pa_data_size) {
         return NULL;
     }
