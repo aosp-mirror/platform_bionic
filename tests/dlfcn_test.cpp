@@ -254,6 +254,18 @@ TEST(dlfcn, rtld_next_known_symbol) {
   ASSERT_TRUE(addr != NULL);
 }
 
+TEST(dlfcn, dlsym_weak_func) {
+  dlerror();
+  void* handle = dlopen("libtest_dlsym_weak_func.so",RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+
+  int (*weak_func)();
+  weak_func = reinterpret_cast<int (*)()>(dlsym(handle, "weak_func"));
+  ASSERT_TRUE(weak_func != NULL) << "dlerror: " << dlerror();
+  EXPECT_EQ(42, weak_func());
+  dlclose(handle);
+}
+
 TEST(dlfcn, dlopen_symlink) {
   void* handle1 = dlopen("libdlext_test.so", RTLD_NOW);
   void* handle2 = dlopen("libdlext_test_v2.so", RTLD_NOW);
