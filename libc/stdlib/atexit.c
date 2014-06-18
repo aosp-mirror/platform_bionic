@@ -37,7 +37,6 @@
 #include "atexit.h"
 #include "private/thread_private.h"
 
-int __atexit_invalid = 1;
 struct atexit *__atexit;
 
 /*
@@ -131,8 +130,6 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 		    sizeof(p->fns[0]);
 		p->next = __atexit;
 		__atexit = p;
-		if (__atexit_invalid)
-			__atexit_invalid = 0;
 	}
 	fnp = &p->fns[p->ind++];
 	fnp->cxa_func = func;
@@ -159,8 +156,6 @@ __cxa_finalize(void *dso)
 	int n, pgsize = getpagesize(), original_ind;
 	static int call_depth;
 
-	if (__atexit_invalid)
-		return;
 	_ATEXIT_LOCK();
 	call_depth++;
 
