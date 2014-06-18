@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2492a112_33534017",
+        "filename": "libc/bionic/jemalloc_wrapper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T00:37:20Z",
+      "side": 1,
+      "message": "not just powerof2 from \u003csys/param.h\u003e?",
+      "revId": "cd004404a6714a8d57575a7e926a2ad5cd68e833",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
