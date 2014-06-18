@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "846c2df2_80543a0f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-06-18T17:56:47Z",
+      "side": 1,
+      "message": "and remove",
+      "range": {
+        "startLine": 7,
+        "startChar": 14,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "89ca1c6eeb58bd9d8439a344dac1b70469a21dc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
