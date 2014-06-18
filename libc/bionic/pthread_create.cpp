@@ -33,6 +33,7 @@
 
 #include "pthread_internal.h"
 
+#include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
@@ -183,8 +184,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   }
 
   // Make sure the stack size and guard size are multiples of PAGE_SIZE.
-  thread->attr.stack_size = (thread->attr.stack_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
-  thread->attr.guard_size = (thread->attr.guard_size + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
+  thread->attr.stack_size = BIONIC_ALIGN(thread->attr.stack_size, PAGE_SIZE);
+  thread->attr.guard_size = BIONIC_ALIGN(thread->attr.guard_size, PAGE_SIZE);
 
   if (thread->attr.stack_base == NULL) {
     // The caller didn't provide a stack, so allocate one.

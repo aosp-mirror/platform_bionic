@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/limits.h>
+#include "bionic_macros.h"
 #include "__get_tls.h"
 
 __BEGIN_DECLS
@@ -83,8 +84,6 @@ enum {
 #else
 #define BIONIC_TLS_RESERVED_SLOTS GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
 #endif
-
-#define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
 
 /*
  * Maximum number of elements in the TLS array.
