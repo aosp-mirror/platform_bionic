@@ -31,6 +31,7 @@
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
     mov     ip, sp
+    .save   {r4, r5, r6, r7}
     # save registers to parent stack
     stmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 16

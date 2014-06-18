@@ -30,6 +30,7 @@
 
 ENTRY(syscall)
     mov     ip, sp
+    .save   {r4, r5, r6, r7}
     stmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 16
     .cfi_rel_offset r4, 0

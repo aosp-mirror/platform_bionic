@@ -36,6 +36,7 @@
  * sequence when the crash happens.
  */
 ENTRY(abort)
+    .save   {r3, r14}
     stmfd   sp!, {r3, r14}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r3, 0
