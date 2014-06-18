@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04c59d23_8e521bec",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T17:23:08Z",
+      "side": 1,
+      "message": "i think we should just remove __atexit_invalid. it\u0027s gone from upstream.",
+      "revId": "83886b0e981a7f48b0f624effadc5200e535036b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

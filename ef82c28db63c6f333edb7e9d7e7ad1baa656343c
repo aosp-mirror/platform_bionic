@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44db1506_f082a0af",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T17:23:08Z",
+      "side": 0,
+      "message": "note that this is a non-public header. can\u0027t we just add the __LIBC_HIDDEN__ in here? (dimitry\u0027s trying to get our atexit.c fixes upstream so hopefully we\u0027ll be able to have no diffs there at some point.)",
+      "revId": "ef82c28db63c6f333edb7e9d7e7ad1baa656343c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
