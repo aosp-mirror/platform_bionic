@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04975d03_489c1014",
+        "filename": "tests/inttypes_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "yeah, these are removed from LP64. they\u0027ve also been removed from the headers in future NDK releases so we\u0027ll keep binary compatibility but not source compatibility.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04975d03_887bf801",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "our style here would be to have two more tests called system_short_explanation_of_purpose_of_ls_test and system_fail (and then you don\u0027t need the SCOPED_TRACEs).",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04975d03_a88034a4",
+        "filename": "tests/sys_ioctl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "so again, ioctl_input_device and ioctl_tty_device.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d659dd_c05d48cc",
+        "filename": "tests/sys_ioctl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "we test !\u003d -1, not \u003c 0.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d659dd_20ae9473",
+        "filename": "tests/sys_klog_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "comment explaining who needs these #defines. glibc? (in which case, better than a comment is #if defined(__GLIBC__).)",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2492a112_f46e1e40",
+        "filename": "tests/sys_prctl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "something like prctl_PDEATHSIG then. even if there\u0027s only one function in the header file, we like to have the function being tested\u0027s name in the test name.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d659dd_c0d788cb",
+        "filename": "tests/sys_vfs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "_2?\n\nyou can probably just replace the existing fstatfs.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04975d03_a8ecb45b",
+        "filename": "tests/sys_vfs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "why is this more useful than opening \"/proc\"?",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2492a112_f4fffe10",
+        "filename": "tests/sys_vfs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-18T16:31:06Z",
+      "side": 1,
+      "message": "try to write expectations the more readable way round. 0\u003cx makes us think harder.",
+      "revId": "f86eb95ae2d890016caa72fbe5619a35a158da90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
