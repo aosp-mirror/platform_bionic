@@ -159,9 +159,9 @@ static const char * getoffset(const char * strp, int_fast32_t * offsetp);
 static const char * getrule(const char * strp, struct rule * rulep);
 static void     gmtload(struct state * sp);
 static struct tm *  gmtsub(const time_t * timep, int_fast32_t offset,
-                struct tm * tmp, const struct state * sp); // android-changed: added sp.
+                struct tm * tmp, struct state * sp); // android-changed: added sp.
 static struct tm *  localsub(const time_t * timep, int_fast32_t offset,
-                struct tm * tmp, const struct state * sp); // android-changed: added sp.
+                struct tm * tmp, struct state * sp); // android-changed: added sp.
 static int      increment_overflow(int * number, int delta);
 static int      leaps_thru_end_of(int y) ATTRIBUTE_PURE;
 static int      increment_overflow32(int_fast32_t * number, int delta);
@@ -173,16 +173,16 @@ static int      normalize_overflow(int * tensptr, int * unitsptr,
 static void     settzname(void);
 static time_t       time1(struct tm * tmp,
                 struct tm * (*funcp)(const time_t *,
-                int_fast32_t, struct tm *, const struct state *), // android-changed: added state*.
-                int_fast32_t, const struct state * sp); // android-changed: added sp.
+                int_fast32_t, struct tm *, struct state *), // android-changed: added state*.
+                int_fast32_t, struct state * sp); // android-changed: added sp.
 static time_t       time2(struct tm * tmp,
                 struct tm * (*funcp)(const time_t *,
-                int_fast32_t, struct tm*, const struct state *), // android-changed: added state*.
-                int_fast32_t offset, int * okayp, const struct state * sp); // android-changed: added sp.
+                int_fast32_t, struct tm*, struct state *), // android-changed: added state*.
+                int_fast32_t offset, int * okayp, struct state * sp); // android-changed: added sp.
 static time_t       time2sub(struct tm *tmp,
                 struct tm * (*funcp) (const time_t *,
-                int_fast32_t, struct tm*, const struct state *), // android-changed: added state*.
-                int_fast32_t offset, int * okayp, int do_norm_secs, const struct state * sp); // android-change: added sp.
+                int_fast32_t, struct tm*, struct state *), // android-changed: added state*.
+                int_fast32_t offset, int * okayp, int do_norm_secs, struct state * sp); // android-change: added sp.
 static struct tm *  timesub(const time_t * timep, int_fast32_t offset,
                 const struct state * sp, struct tm * tmp);
 static int      tmcomp(const struct tm * atmp,
@@ -945,7 +945,6 @@ tzparse(const char * name, register struct state * const sp,
     register int         load_result;
     static struct ttinfo zttinfo;
 
-    INITIALIZE(dstname);
     stdname = name;
     if (lastditch) {
         stdlen = strlen(name);  /* length of standard zone name */
@@ -1284,7 +1283,7 @@ tzset(void)
 /*ARGSUSED*/
 static struct tm *
 localsub(const time_t * const timep, const int_fast32_t offset,
-         struct tm * const tmp, const struct state * sp) // android-changed: added sp.
+         struct tm * const tmp, struct state * sp) // android-changed: added sp.
 {
     register const struct ttinfo * ttisp;
     register int         i;
@@ -1390,16 +1389,18 @@ localtime_r(const time_t * const timep, struct tm * tmp)
 
 static struct tm *
 gmtsub(const time_t * const timep, const int_fast32_t offset,
-       struct tm *const tmp, const struct state * sp __unused) // android-changed: added sp.
+       struct tm *const tmp, struct state * sp __unused) // android-changed: added sp.
 {
     register struct tm * result;
 
     if (!gmt_is_set) {
-        gmt_is_set = TRUE;
 #ifdef ALL_STATE
         gmtptr = malloc(sizeof *gmtptr);
+        gmt_is_set = gmtptr != NULL;
+#else
+        gmt_is_set = TRUE;
 #endif /* defined ALL_STATE */
-        if (gmtptr != NULL)
+        if (gmt_is_set)
             gmtload(gmtptr);
     }
     result = timesub(timep, offset, gmtptr, tmp);
@@ -1710,10 +1711,10 @@ tmcomp(register const struct tm * const atmp,
 
 static time_t
 time2sub(struct tm * const tmp,
-         struct tm *(*const funcp)(const time_t*, int_fast32_t, struct tm*, const struct state*),
+         struct tm *(*const funcp)(const time_t*, int_fast32_t, struct tm*, struct state*),
          const int_fast32_t offset,
          int * const okayp,
-         const int do_norm_secs, const struct state * sp) // android-changed: added sp
+         const int do_norm_secs, struct state * sp) // android-changed: added sp
 {
     register int          dir;
     register int          i, j;
@@ -1848,7 +1849,7 @@ time2sub(struct tm * const tmp,
         */
         // BEGIN android-changed: support user-supplied sp
         if (sp == NULL) {
-            sp = (const struct state *)
+            sp = (struct state *)
                 ((funcp == localsub) ? lclptr : gmtptr);
         }
         // END android-changed
@@ -1889,9 +1890,9 @@ label:
 
 static time_t
 time2(struct tm * const tmp,
-      struct tm * (*const funcp)(const time_t *, int_fast32_t, struct tm *, const struct state *), // android-changed: added sp.
+      struct tm * (*const funcp)(const time_t *, int_fast32_t, struct tm *, struct state *), // android-changed: added sp.
       const int_fast32_t offset,
-      int *const okayp, const struct state* sp) // android-changed: added sp.
+      int *const okayp, struct state* sp) // android-changed: added sp.
 {
     time_t t;
 
@@ -1906,8 +1907,8 @@ time2(struct tm * const tmp,
 
 static time_t
 time1(struct tm * const tmp,
-      struct tm * (* const funcp) (const time_t *, int_fast32_t, struct tm *, const struct state *), // android-changed: added sp.
-      const int_fast32_t offset, const struct state * sp) // android-changed: added sp.
+      struct tm * (* const funcp) (const time_t *, int_fast32_t, struct tm *, struct state *), // android-changed: added sp.
+      const int_fast32_t offset, struct state * sp) // android-changed: added sp.
 {
     register time_t t;
     register int    samei, otheri;
@@ -1944,7 +1945,7 @@ time1(struct tm * const tmp,
     */
     // BEGIN android-changed: support user-supplied sp.
     if (sp == NULL) {
-        sp = (const struct state *) ((funcp == localsub) ?  lclptr : gmtptr);
+        sp = (struct state *) ((funcp == localsub) ?  lclptr : gmtptr);
     }
     // BEGIN android-changed
     if (sp == NULL)
