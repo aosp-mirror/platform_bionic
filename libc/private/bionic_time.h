@@ -52,10 +52,11 @@ struct strftime_locale {
 
 /*
  * Note: you should consider these extensions deprecated and use managed code or icu4c instead.
+ * We'd like to hide them but they're currently still used in frameworks code.
  */
-extern size_t strftime_tz(char* s, size_t max, const char* format, const struct tm* tm, const struct strftime_locale* lc);
-extern time_t mktime_tz(struct tm* const tmp, char const* tz);
-extern void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz);
+extern size_t strftime_tz(char*, size_t, const char*, const struct tm*, const struct strftime_locale*);
+extern time_t mktime_tz(struct tm* const, char const*);
+extern void localtime_tz(const time_t* const, struct tm*, const char*);
 
 #endif /* _BIONIC_STRFTIME_TZ_DECLARED */
 

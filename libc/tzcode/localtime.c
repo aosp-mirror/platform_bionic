@@ -2293,7 +2293,7 @@ static int __bionic_tzload_cached(const char* name, struct state* const sp, cons
 }
 
 // Non-standard API: mktime(3) but with an explicit timezone parameter.
-time_t mktime_tz(struct tm* const tmp, const char* tz) {
+time_t __attribute__((visibility("default"))) mktime_tz(struct tm* const tmp, const char* tz) {
   struct state* st = malloc(sizeof(*st));
   time_t return_value;
 
@@ -2310,7 +2310,7 @@ time_t mktime_tz(struct tm* const tmp, const char* tz) {
 }
 
 // Non-standard API: localtime(3) but with an explicit timezone parameter.
-void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz) {
+void __attribute__((visibility("default"))) localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz) {
   struct state* st = malloc(sizeof(*st));
 
   if (st == NULL)
