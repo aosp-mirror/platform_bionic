@@ -36,9 +36,9 @@ __BEGIN_DECLS
 
 #define CLOCKS_PER_SEC 1000000
 
-extern char* tzname[];
-extern int daylight;
-extern long int timezone;
+extern char* tzname[] __LIBC_ABI_PUBLIC__;
+extern int daylight __LIBC_ABI_PUBLIC__;
+extern long int timezone __LIBC_ABI_PUBLIC__;
 
 struct sigevent;
 
