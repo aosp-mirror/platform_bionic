@@ -17,8 +17,6 @@
 #ifndef _BIONIC_OPENBSD_COMPAT_H_included
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
-#include <sys/cdefs.h>
-
 #define __USE_BSD
 
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
@@ -35,9 +33,5 @@
 
 /* OpenBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
-
-/* LP32 NDK ctype.h contained references to these. */
-__LIBC64_HIDDEN__ extern const short *_tolower_tab_;
-__LIBC64_HIDDEN__ extern const short *_toupper_tab_;
 
 #endif
