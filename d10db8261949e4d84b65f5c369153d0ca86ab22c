@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e43fa9e6_c3b78ac2",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-19T21:58:39Z",
+      "side": 1,
+      "message": "Why is just this one marked public?",
+      "range": {
+        "startLine": 121,
+        "startChar": 89,
+        "endLine": 121,
+        "endChar": 108
+      },
+      "revId": "d10db8261949e4d84b65f5c369153d0ca86ab22c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6471f9c6_9671ddf4",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-19T21:58:39Z",
+      "side": 1,
+      "message": "Should you use __LIBC_ABI_PUBLIC__ instead? Also, I assume it doesn\u0027t work when you add this to the header file, is that correct?",
+      "range": {
+        "startLine": 2296,
+        "startChar": 7,
+        "endLine": 2296,
+        "endChar": 45
+      },
+      "revId": "d10db8261949e4d84b65f5c369153d0ca86ab22c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
