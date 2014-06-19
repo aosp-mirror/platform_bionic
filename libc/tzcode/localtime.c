@@ -74,7 +74,7 @@ static inline void _tzUnlock(void) { pthread_mutex_unlock(&_tzMutex); }
 #define WILDABBR    "   "
 #endif /* !defined WILDABBR */
 
-static char       wildabbr[] = WILDABBR;
+static const char       wildabbr[] = WILDABBR;
 
 static const char gmt[] = "GMT";
 
@@ -128,16 +128,16 @@ struct state {
 };
 
 struct rule {
-    int          r_type; /* type of rule--see below */
+    int          r_type; /* type of rule; see below */
     int          r_day;  /* day number of rule */
     int          r_week; /* week number of rule */
     int          r_mon;  /* month number of rule */
     int_fast32_t r_time; /* transition time of rule */
 };
 
-#define JULIAN_DAY            0 /* Jn - Julian day */
-#define DAY_OF_YEAR           1 /* n - day of year */
-#define MONTH_NTH_DAY_OF_WEEK 2 /* Mm.n.d - month, week, day of week */
+#define JULIAN_DAY             0       /* Jn = Julian day */
+#define DAY_OF_YEAR            1       /* n = day of year */
+#define MONTH_NTH_DAY_OF_WEEK  2       /* Mm.n.d = month, week, day of week */
 
 /*
 ** Prototypes for static functions.
@@ -158,7 +158,7 @@ static const char * getsecs(const char * strp, int_fast32_t * secsp);
 static const char * getoffset(const char * strp, int_fast32_t * offsetp);
 static const char * getrule(const char * strp, struct rule * rulep);
 static void     gmtload(struct state * sp);
-static struct tm *  gmtsub(const time_t * timep, const int_fast32_t offset,
+static struct tm *  gmtsub(const time_t * timep, int_fast32_t offset,
                 struct tm * tmp, const struct state * sp); // android-changed: added sp.
 static struct tm *  localsub(const time_t * timep, int_fast32_t offset,
                 struct tm * tmp, const struct state * sp); // android-changed: added sp.
@@ -174,9 +174,9 @@ static void     settzname(void);
 static time_t       time1(struct tm * tmp,
                 struct tm * (*funcp)(const time_t *,
                 int_fast32_t, struct tm *, const struct state *), // android-changed: added state*.
-                int_fast32_t offset, const struct state * sp); // android-changed: added sp.
-static time_t       time2(struct tm * const tmp,
-                struct tm * (*const funcp)(const time_t *,
+                int_fast32_t, const struct state * sp); // android-changed: added sp.
+static time_t       time2(struct tm * tmp,
+                struct tm * (*funcp)(const time_t *,
                 int_fast32_t, struct tm*, const struct state *), // android-changed: added state*.
                 int_fast32_t offset, int * okayp, const struct state * sp); // android-changed: added sp.
 static time_t       time2sub(struct tm *tmp,
@@ -217,8 +217,8 @@ static int  lcl_is_set;
 static int  gmt_is_set;
 
 char * tzname[2] = {
-    wildabbr,
-    wildabbr
+    (char *) wildabbr,
+    (char *) wildabbr
 };
 
 /*
@@ -270,8 +270,7 @@ settzname(void)
     register struct state * const sp = lclptr;
     register int                  i;
 
-    tzname[0] = wildabbr;
-    tzname[1] = wildabbr;
+    tzname[0] = tzname[1] = (char *) wildabbr;
 #ifdef USG_COMPAT
     daylight = 0;
     timezone = 0;
@@ -279,12 +278,10 @@ settzname(void)
 #ifdef ALTZONE
     altzone = 0;
 #endif /* defined ALTZONE */
-#ifdef ALL_STATE
     if (sp == NULL) {
         tzname[0] = tzname[1] = (char *) gmt;
         return;
     }
-#endif /* defined ALL_STATE */
     /*
     ** And to get the latest zone names into tzname. . .
     */
@@ -356,25 +353,50 @@ tzload(register const char* name, register struct state* const sp,
                       2 * sizeof *sp +
                       4 * TZ_MAX_TIMES];
     } u_t;
-#ifdef ALL_STATE
-    register u_t *        up;
+    union local_storage {
+        /*
+        ** Section 4.9.1 of the C standard says that
+        ** "FILENAME_MAX expands to an integral constant expression
+        ** that is the size needed for an array of char large enough
+        ** to hold the longest file name string that the implementation
+        ** guarantees can be opened."
+        */
+        char            fullname[FILENAME_MAX + 1];
 
-    up = (u_t *) calloc(1, sizeof *up);
-    if (up == NULL)
+        /* The main part of the storage for this function.  */
+        struct {
+            u_t u;
+            struct state st;
+        } u;
+    };
+    register char *fullname;
+    register u_t *up;
+    register union local_storage *lsp;
+#ifdef ALL_STATE
+    lsp = malloc(sizeof *lsp);
+    if (!lsp)
         return -1;
 #else /* !defined ALL_STATE */
-    u_t                   u;
-    register u_t * const  up = &u;
+    union local_storage ls;
+    lsp = &ls;
 #endif /* !defined ALL_STATE */
+    fullname = lsp->fullname;
+    up = &lsp->u.u;
 
     sp->goback = sp->goahead = FALSE;
-    if (name == NULL && (name = TZDEFAULT) == NULL)
-        goto oops;
+
+    if (! name) {
+        name = TZDEFAULT;
+        if (! name)
+            goto oops;
+    }
+
     int toread;
     fid = __bionic_open_tzdata(name, &toread);
     if (fid < 0)
         goto oops;
-    nread = read(fid, up->buf, toread);
+
+    nread = read(fid, up->buf, sizeof up->buf);
     if (close(fid) < 0 || nread <= 0)
         goto oops;
     for (stored = 4; stored <= 8; stored *= 2) {
@@ -506,11 +528,8 @@ tzload(register const char* name, register struct state* const sp,
     if (doextend && nread > 2 &&
         up->buf[0] == '\n' && up->buf[nread - 1] == '\n' &&
         sp->typecnt + 2 <= TZ_MAX_TYPES) {
-            struct state * ts = malloc(sizeof *ts);
+            struct state    *ts = &lsp->u.st;
             register int result;
-
-            if (ts == NULL)
-                goto oops;
 
             up->buf[nread - 1] = '\0';
             result = tzparse(&up->buf[1], ts, FALSE);
@@ -540,7 +559,6 @@ tzload(register const char* name, register struct state* const sp,
                     sp->ttis[sp->typecnt++] = ts->ttis[0];
                     sp->ttis[sp->typecnt++] = ts->ttis[1];
             }
-            free(ts);
     }
     if (sp->timecnt > 1) {
         for (i = 1; i < sp->timecnt; ++i)
@@ -712,10 +730,10 @@ getsecs(register const char *strp, int_fast32_t *const secsp)
     int num;
 
     /*
-    ** `HOURSPERDAY * DAYSPERWEEK - 1' allows quasi-Posix rules like
+    ** 'HOURSPERDAY * DAYSPERWEEK - 1' allows quasi-Posix rules like
     ** "M10.4.6/26", which does not conform to Posix,
     ** but which specifies the equivalent of
-    ** ``02:00 on the first Sunday on or after 23 Oct''.
+    ** "02:00 on the first Sunday on or after 23 Oct".
     */
     strp = getnum(strp, &num, 0, HOURSPERDAY * DAYSPERWEEK - 1);
     if (strp == NULL)
@@ -729,7 +747,7 @@ getsecs(register const char *strp, int_fast32_t *const secsp)
         *secsp += num * SECSPERMIN;
         if (*strp == ':') {
             ++strp;
-            /* `SECSPERMIN' allows for leap seconds. */
+            /* 'SECSPERMIN' allows for leap seconds. */
             strp = getnum(strp, &num, 0, SECSPERMIN);
             if (strp == NULL)
                 return NULL;
@@ -1005,6 +1023,7 @@ tzparse(const char * name, register struct state * const sp,
             sp->ttis[1].tt_gmtoff = -stdoffset;
             sp->ttis[1].tt_isdst = 0;
             sp->ttis[1].tt_abbrind = 0;
+            sp->defaulttype = 0;
             timecnt = 0;
             janfirst = 0;
             yearlim = EPOCH_YEAR + YEARSPERREPEAT;
@@ -1130,6 +1149,7 @@ tzparse(const char * name, register struct state * const sp,
             sp->ttis[1].tt_isdst = TRUE;
             sp->ttis[1].tt_abbrind = stdlen + 1;
             sp->typecnt = 2;
+            sp->defaulttype = 0;
         }
     } else {
         dstlen = 0;
@@ -1139,6 +1159,7 @@ tzparse(const char * name, register struct state * const sp,
         sp->ttis[0].tt_gmtoff = -stdoffset;
         sp->ttis[0].tt_isdst = 0;
         sp->ttis[0].tt_abbrind = 0;
+        sp->defaulttype = 0;
     }
     sp->charcnt = stdlen + 1;
     if (dstlen != 0)
@@ -1179,7 +1200,7 @@ tzsetwall(void)
 
 #ifdef ALL_STATE
     if (lclptr == NULL) {
-        lclptr = calloc(1, sizeof *lclptr);
+        lclptr = malloc(sizeof *lclptr);
         if (lclptr == NULL) {
             settzname();    /* all we can do */
             return;
@@ -1196,7 +1217,7 @@ tzsetwall(void)
 static void
 tzset_locked(void)
 {
-    register const char * name = NULL;
+    register const char * name;
 
     name = getenv("TZ");
 
@@ -1219,7 +1240,7 @@ tzset_locked(void)
 
 #ifdef ALL_STATE
     if (lclptr == NULL) {
-        lclptr = calloc(1, sizeof *lclptr);
+        lclptr = malloc(sizeof *lclptr);
         if (lclptr == NULL) {
             settzname();    /* all we can do */
             return;
@@ -1275,10 +1296,8 @@ localsub(const time_t * const timep, const int_fast32_t offset,
         sp = lclptr;
     }
     // END android-changed
-#ifdef ALL_STATE
     if (sp == NULL)
         return gmtsub(timep, offset, tmp, sp); // android-changed: added sp.
-#endif /* defined ALL_STATE */
     if ((sp->goback && t < sp->ats[0]) ||
         (sp->goahead && t > sp->ats[sp->timecnt - 1])) {
             time_t          newt = t;
@@ -1371,18 +1390,16 @@ localtime_r(const time_t * const timep, struct tm * tmp)
 
 static struct tm *
 gmtsub(const time_t * const timep, const int_fast32_t offset,
-       struct tm *const tmp, const struct state * sp) // android-changed: added sp.
+       struct tm *const tmp, const struct state * sp __unused) // android-changed: added sp.
 {
     register struct tm * result;
-
-    (void) sp; // android-added: unused.
 
     if (!gmt_is_set) {
         gmt_is_set = TRUE;
 #ifdef ALL_STATE
-        gmtptr = calloc(1, sizeof *gmtptr);
-        if (gmtptr != NULL)
+        gmtptr = malloc(sizeof *gmtptr);
 #endif /* defined ALL_STATE */
+        if (gmtptr != NULL)
             gmtload(gmtptr);
     }
     result = timesub(timep, offset, gmtptr, tmp);
@@ -1392,18 +1409,7 @@ gmtsub(const time_t * const timep, const int_fast32_t offset,
     ** "UT+xxxx" or "UT-xxxx" if offset is non-zero,
     ** but this is no time for a treasure hunt.
     */
-    if (offset != 0)
-        tmp->TM_ZONE = wildabbr;
-    else {
-#ifdef ALL_STATE
-        if (gmtptr == NULL)
-            tmp->TM_ZONE = gmt;
-        else    tmp->TM_ZONE = gmtptr->chars;
-#endif /* defined ALL_STATE */
-#ifndef ALL_STATE
-        tmp->TM_ZONE = gmtptr->chars;
-#endif /* State Farm */
-    }
+    tmp->TM_ZONE = offset ? wildabbr : gmtptr ? gmtptr->chars : gmt;
 #endif /* defined TM_ZONE */
     return result;
 }
@@ -1429,6 +1435,16 @@ gmtime_r(const time_t * const timep, struct tm * tmp)
 
     return result;
 }
+
+#ifdef STD_INSPIRED
+
+struct tm *
+offtime(const time_t *const timep, const long offset)
+{
+    return gmtsub(timep, offset, &tmGlobal, NULL); // android-changed: extra parameter.
+}
+
+#endif /* defined STD_INSPIRED */
 
 /*
 ** Return the number of leap years through the end of the given year
@@ -1459,12 +1475,7 @@ timesub(const time_t *const timep, const int_fast32_t offset,
 
     corr = 0;
     hit = 0;
-#ifdef ALL_STATE
     i = (sp == NULL) ? 0 : sp->leapcnt;
-#endif /* defined ALL_STATE */
-#ifndef ALL_STATE
-    i = sp->leapcnt;
-#endif /* State Farm */
     while (--i >= 0) {
         lp = &sp->lsis[i];
         if (*timep >= lp->ls_trans) {
@@ -1841,10 +1852,8 @@ time2sub(struct tm * const tmp,
                 ((funcp == localsub) ? lclptr : gmtptr);
         }
         // END android-changed
-#ifdef ALL_STATE
         if (sp == NULL)
             return WRONG;
-#endif /* defined ALL_STATE */
         for (i = sp->typecnt - 1; i >= 0; --i) {
             if (sp->ttis[i].tt_isdst != yourtm.tm_isdst)
                 continue;
@@ -1905,8 +1914,8 @@ time1(struct tm * const tmp,
     register int    sameind, otherind;
     register int    i;
     register int    nseen;
-    int             seen[TZ_MAX_TYPES];
-    int             types[TZ_MAX_TYPES];
+    char            seen[TZ_MAX_TYPES];
+    unsigned char   types[TZ_MAX_TYPES];
     int             okay;
 
     if (tmp == NULL) {
@@ -1916,17 +1925,15 @@ time1(struct tm * const tmp,
     if (tmp->tm_isdst > 1)
         tmp->tm_isdst = 1;
     t = time2(tmp, funcp, offset, &okay, sp); // android-changed: added sp.
-#ifdef PCTS
-    /*
-    ** PCTS code courtesy Grant Sullivan.
-    */
     if (okay)
         return t;
     if (tmp->tm_isdst < 0)
+#ifdef PCTS
+        /*
+        ** POSIX Conformance Test Suite code courtesy Grant Sullivan.
+        */
         tmp->tm_isdst = 0;  /* reset to std and try again */
-#endif /* defined PCTS */
-#ifndef PCTS
-    if (okay || tmp->tm_isdst < 0)
+#else
         return t;
 #endif /* !defined PCTS */
     /*
@@ -1940,10 +1947,8 @@ time1(struct tm * const tmp,
         sp = (const struct state *) ((funcp == localsub) ?  lclptr : gmtptr);
     }
     // BEGIN android-changed
-#ifdef ALL_STATE
     if (sp == NULL)
         return WRONG;
-#endif /* defined ALL_STATE */
     for (i = 0; i < sp->typecnt; ++i)
         seen[i] = FALSE;
     nseen = 0;
@@ -2006,6 +2011,14 @@ timegm(struct tm * const tmp)
     _tzUnlock();
 
     return result;
+}
+
+time_t
+timeoff(struct tm *const tmp, const long offset)
+{
+    if (tmp != NULL)
+        tmp->tm_isdst = 0;
+    return time1(tmp, gmtsub, offset, NULL); // android-changed: extra parameter.
 }
 
 #endif /* defined STD_INSPIRED */
