@@ -144,7 +144,7 @@ const struct tm * const t;
 }
 
 size_t
-strftime_tz(s, maxsize, format, t, locale)
+__attribute__((visibility("default"))) strftime_tz(s, maxsize, format, t, locale)
 char * const        s;
 const size_t        maxsize;
 const char * const  format;

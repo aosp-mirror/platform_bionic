@@ -585,7 +585,10 @@ LOCAL_SRC_FILES := $(call all-c-files-under,tzcode)
 # tzcode doesn't include wcsftime, so we use the OpenBSD one.
 LOCAL_SRC_FILES += upstream-openbsd/lib/libc/time/wcsftime.c
 
-LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -fvisibility=hidden \
+    -Werror \
+
 # Don't use ridiculous amounts of stack.
 LOCAL_CFLAGS += -DALL_STATE
 # Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
@@ -597,7 +600,7 @@ LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
 # Include timezone and daylight globals.
 LOCAL_CFLAGS += -DUSG_COMPAT=1
 LOCAL_CFLAGS += -DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
-LOCAL_CFLAGS += -Dlint -Werror
+LOCAL_CFLAGS += -Dlint
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
