@@ -361,7 +361,7 @@ tzload(register const char* name, register struct state* const sp,
         ** to hold the longest file name string that the implementation
         ** guarantees can be opened."
         */
-        char            fullname[FILENAME_MAX + 1];
+        //char            fullname[FILENAME_MAX + 1];
 
         /* The main part of the storage for this function.  */
         struct {
@@ -369,7 +369,7 @@ tzload(register const char* name, register struct state* const sp,
             struct state st;
         } u;
     };
-    register char *fullname;
+    //register char *fullname;
     register u_t *up;
     register union local_storage *lsp;
 #ifdef ALL_STATE
@@ -380,7 +380,7 @@ tzload(register const char* name, register struct state* const sp,
     union local_storage ls;
     lsp = &ls;
 #endif /* !defined ALL_STATE */
-    fullname = lsp->fullname;
+    //fullname = lsp->fullname;
     up = &lsp->u.u;
 
     sp->goback = sp->goahead = FALSE;
