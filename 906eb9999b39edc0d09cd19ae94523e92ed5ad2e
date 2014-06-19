@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4ce254b_c05d4ecc",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-19T02:51:50Z",
+      "side": 1,
+      "message": "this gives us one more unwanted symbol. i\u0027ll address the unwanted tzcode symbols in a later patch...",
+      "revId": "906eb9999b39edc0d09cd19ae94523e92ed5ad2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44b4f5af_517b6602",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2017,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-19T02:51:50Z",
+      "side": 1,
+      "message": "(and another one. seems easier to keep as close to upstream as possible. if we\u0027re going to have to hide one symbol, it\u0027s no more work to hide several.)",
+      "revId": "906eb9999b39edc0d09cd19ae94523e92ed5ad2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
