@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getpid)
+ENTRY(__getpid)
     mov     ip, r7
     ldr     r7, =__NR_getpid
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(getpid)
     bxls    lr
     neg     r0, r0
     b       __set_errno
-END(getpid)
+END(__getpid)
