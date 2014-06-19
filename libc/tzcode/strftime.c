@@ -1,12 +1,9 @@
-#ifndef lint
-#ifndef NOID
-static char elsieid[] = "@(#)strftime.c 8.1";
 /*
-** Based on the UCB version with the ID appearing below.
+** Based on the UCB version with the copyright notice and sccsid
+** appearing below.
+**
 ** This is ANSIish only when "multibyte character == plain character".
 */
-#endif /* !defined NOID */
-#endif /* !defined lint */
 
 #include "private.h"
 
@@ -22,35 +19,27 @@ static char elsieid[] = "@(#)strftime.c 8.1";
 ** by the University of California, Berkeley. The name of the
 ** University may not be used to endorse or promote products derived
 ** from this software without specific prior written permission.
-** THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+** THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
 ** IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 
-#ifndef LIBC_SCCS
-#ifndef lint
-static const char   sccsid[] = "@(#)strftime.c  5.4 (Berkeley) 3/14/89";
-#endif /* !defined lint */
-#endif /* !defined LIBC_SCCS */
-
 #include "tzfile.h"
 #include "fcntl.h"
 #include "locale.h"
-#include <ctype.h>
+
+#if __ANDROID__
+/* Android: struct lc_time_T is defined as strftime_locale in "bionic_time.h" */
+#include "private/bionic_time.h"  /* for strftime_tz */
+#define  lc_time_T    strftime_locale
 #if defined(__LP64__)
 #define time64_t time_t
 #define mktime64 mktime
 #else
 #include <time64.h>
 #endif
-#include "private/bionic_time.h"  /* for strftime_tz */
-
-/* struct lc_time_T is now defined as strftime_locale
- * in <time.h>
- */
-#if 1
-#define  lc_time_T    strftime_locale
-#else
+#include <ctype.h>
+#else // not __ANDROID__
 struct lc_time_T {
     const char *    mon[MONSPERYEAR];
     const char *    month[MONSPERYEAR];
@@ -65,7 +54,15 @@ struct lc_time_T {
 };
 #endif
 
+#if LOCALE_HOME
+#include "sys/stat.h"
+static struct lc_time_T                localebuf;
+static struct lc_time_T *      _loc(void);
+#define Locale _loc()
+#endif /* defined LOCALE_HOME */
+#ifndef LOCALE_HOME
 #define Locale  (&C_time_locale)
+#endif /* !defined LOCALE_HOME */
 
 static const struct lc_time_T   C_time_locale = {
     {

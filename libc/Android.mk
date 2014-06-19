@@ -597,6 +597,7 @@ LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
 # Include timezone and daylight globals.
 LOCAL_CFLAGS += -DUSG_COMPAT=1
 LOCAL_CFLAGS += -DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
+LOCAL_CFLAGS += -Dlint -Werror
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
