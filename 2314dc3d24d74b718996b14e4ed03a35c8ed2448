@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c465452b_37f67274",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-20T00:56:14Z",
+      "side": 1,
+      "message": "Maybe name it _cached_pid to make that more clear? Don\u0027t know if we follow that style in bionic.",
+      "revId": "2314dc3d24d74b718996b14e4ed03a35c8ed2448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
