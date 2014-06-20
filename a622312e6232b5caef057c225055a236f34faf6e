@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "442075de_6bde5d76",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-20T05:31:40Z",
+      "side": 1,
+      "message": "unless the atomics grown on me overnight, i think i\u0027ll remove them in the morning. a thread should only look at its own pid, so this just feels like we\u0027re implying there\u0027s something subtle going on when there\u0027s actually no reason for this.",
+      "revId": "a622312e6232b5caef057c225055a236f34faf6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
