@@ -127,6 +127,7 @@ libc_bionic_src_files := \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/getpgrp.cpp \
+    bionic/getpid.cpp \
     bionic/gettid.cpp \
     bionic/inotify_init.cpp \
     bionic/lchown.cpp \

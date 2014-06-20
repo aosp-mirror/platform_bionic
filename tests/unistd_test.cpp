@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -378,4 +379,48 @@ TEST(unistd, fdatasync) {
 
 TEST(unistd, fsync) {
   TestFsyncFunction(fsync);
+}
+
+TEST(unistd, getpid_caching_and_fork) {
+  pid_t parent_pid = getpid();
+  ASSERT_EQ(syscall(__NR_getpid), parent_pid);
+
+  pid_t fork_result = fork();
+  ASSERT_NE(fork_result, -1);
+  if (fork_result == 0) {
+    // We're the child.
+    ASSERT_EQ(syscall(__NR_getpid), getpid());
+    ASSERT_EQ(parent_pid, getppid());
+    _exit(123);
+  } else {
+    // We're the parent.
+    ASSERT_EQ(parent_pid, getpid());
+
+    int status;
+    ASSERT_EQ(fork_result, waitpid(fork_result, &status, 0));
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(123, WEXITSTATUS(status));
+  }
+}
+
+static void GetPidCachingHelperHelper() {
+  ASSERT_EQ(syscall(__NR_getpid), getpid());
+}
+
+static void* GetPidCachingHelper(void*) {
+  GetPidCachingHelperHelper(); // Can't assert in a non-void function.
+  return NULL;
+}
+
+TEST(unistd, getpid_caching_and_pthread_create) {
+  pid_t parent_pid = getpid();
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, GetPidCachingHelper, NULL));
+
+  ASSERT_EQ(parent_pid, getpid());
+
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
+  ASSERT_EQ(NULL, result);
 }

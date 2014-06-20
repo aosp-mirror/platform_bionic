@@ -2,14 +2,15 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getpid)
+ENTRY(__getpid)
     movl    $__NR_getpid, %eax
-    syscall
-    cmpq    $-MAX_ERRNO, %rax
+    int     $0x80
+    cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax
-    movl    %eax, %edi
+    pushl   %eax
     call    __set_errno
+    addl    $4, %esp
 1:
     ret
-END(getpid)
+END(__getpid)

@@ -36,6 +36,26 @@ struct pthread_internal_t {
 
   pid_t tid;
 
+ private:
+  pid_t cached_pid_;
+
+ public:
+  pid_t invalidate_cached_pid() {
+    pid_t old_value;
+    get_cached_pid(&old_value);
+    set_cached_pid(0);
+    return old_value;
+  }
+
+  void set_cached_pid(pid_t value) {
+    cached_pid_ = value;
+  }
+
+  bool get_cached_pid(pid_t* cached_pid) {
+    *cached_pid = cached_pid_;
+    return (*cached_pid != 0);
+  }
+
   void** tls;
 
   pthread_attr_t attr;

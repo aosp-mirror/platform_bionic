@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getpid)
+ENTRY(__getpid)
     .set push
     .set noreorder
     li v0, __NR_getpid
@@ -22,4 +22,5 @@ ENTRY(getpid)
     j t9
     move ra, t0
     .set pop
-END(getpid)
+END(__getpid)
+.hidden __getpid
