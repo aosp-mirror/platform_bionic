@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "84fd0d75_1524164b",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-20T02:23:40Z",
+      "side": 1,
+      "message": "i\u0027ve implemented cferris\u0027 atomic suggestion by making this private and making the API hard to abuse, so i think you should both be happy.",
+      "parentUuid": "c465452b_37f67274",
+      "revId": "2314dc3d24d74b718996b14e4ed03a35c8ed2448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44079552_53999661",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 5
@@ -53,6 +71,30 @@
       "writtenOn": "2014-06-20T01:15:01Z",
       "side": 1,
       "message": "Did you verify that if GetPidCachingHelperHelper fails, the test actually fails? I suspect it might not since if you assert in a pthread, that thread prints something out and dies, but I think the thread still winds up returning NULL.",
+      "range": {
+        "startLine": 419,
+        "startChar": 40,
+        "endLine": 419,
+        "endChar": 59
+      },
+      "revId": "2314dc3d24d74b718996b14e4ed03a35c8ed2448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "242541ef_072b56a4",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-20T02:23:40Z",
+      "side": 1,
+      "message": "yeah, i checked both the fork and pthread_create tests.",
+      "parentUuid": "44079552_53999661",
       "range": {
         "startLine": 419,
         "startChar": 40,
