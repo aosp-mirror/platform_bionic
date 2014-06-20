@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getpid)
+ENTRY(__getpid)
     mov     x8, __NR_getpid
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(getpid)
     b.hi    __set_errno
 
     ret
-END(getpid)
+END(__getpid)
+.hidden __getpid

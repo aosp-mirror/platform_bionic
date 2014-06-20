@@ -30,6 +30,7 @@
 
 #include <errno.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "pthread_internal.h"
 
@@ -219,6 +220,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   thread->start_routine = start_routine;
   thread->start_routine_arg = arg;
+
+  thread->set_cached_pid(getpid());
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
       CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;

@@ -86,21 +86,24 @@ static size_t get_main_thread_stack_size() {
 void __libc_init_tls(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
-  uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  size_t stack_size = get_main_thread_stack_size();
-  uintptr_t stack_bottom = stack_top - stack_size;
-
   static void* tls[BIONIC_TLS_SLOTS];
   static pthread_internal_t main_thread;
   main_thread.tls = tls;
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
+  // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
   main_thread.tid = __set_tid_address(&main_thread.tid);
+  main_thread.set_cached_pid(main_thread.tid);
 
-  // We already have a stack, and we don't want to free it up on exit (because things like
-  // environment variables with global scope live on it).
+  // Work out the extent of the main thread's stack.
+  uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
+  size_t stack_size = get_main_thread_stack_size();
+  void* stack_bottom = reinterpret_cast<void*>(stack_top - stack_size);
+
+  // We don't want to free the main thread's stack even when the main thread exits
+  // because things like environment variables with global scope live on it.
   pthread_attr_init(&main_thread.attr);
-  pthread_attr_setstack(&main_thread.attr, (void*) stack_bottom, stack_size);
+  pthread_attr_setstack(&main_thread.attr, stack_bottom, stack_size);
   main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK | PTHREAD_ATTR_FLAG_MAIN_THREAD;
 
   __init_thread(&main_thread, false);
