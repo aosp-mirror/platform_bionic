@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,31 +27,21 @@
  */
 
 #include <unistd.h>
-#include <sys/syscall.h>
 
 #include "pthread_internal.h"
 
-#define FORK_FLAGS (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD)
+extern "C" pid_t __getpid();
 
-int fork() {
-  __bionic_atfork_run_prepare();
-
+pid_t getpid() {
   pthread_internal_t* self = __get_thread();
 
-  // Remember the parent pid and invalidate the cached value while we fork.
-  pid_t parent_pid = self->invalidate_cached_pid();
-
-#if defined(__x86_64__) // sys_clone's last two arguments are flipped on x86-64.
-  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, &(self->tid), NULL);
-#else
-  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, NULL, &(self->tid));
-#endif
-  if (result == 0) {
-    self->set_cached_pid(gettid());
-    __bionic_atfork_run_child();
-  } else {
-    self->set_cached_pid(parent_pid);
-    __bionic_atfork_run_parent();
+  // Do we have a valid cached pid?
+  pid_t cached_pid;
+  if (__predict_true(self->get_cached_pid(&cached_pid))) {
+    return cached_pid;
   }
-  return result;
+
+  // We're still in the dynamic linker or we're in the middle of forking, so ask the kernel.
+  // We don't know whether it's safe to update the cached value, so don't try.
+  return __getpid();
 }

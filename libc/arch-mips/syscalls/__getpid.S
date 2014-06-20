@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(getpid)
+ENTRY(__getpid)
     .set noreorder
     .cpload t9
     li v0, __NR_getpid
@@ -16,4 +16,4 @@ ENTRY(getpid)
     j t9
     nop
     .set reorder
-END(getpid)
+END(__getpid)
