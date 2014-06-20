@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c413859f_4469ceff",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:04:02Z",
+      "side": 1,
+      "message": "This hiding of all remaining CONFIG_* tests helped obscure two bugs in the cleaned mips headers: accidentally using big-endian fillers, and accidentally choosing some 32-bit-only definitions in mips64.",
+      "revId": "a69eaec4d48e978751356b2e8fd989d5e23a34db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e416c98e_0802472c",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:04:02Z",
+      "side": 1,
+      "message": "Our tests show that\n   defined(_ABIO32) \u003d\u003d !defined(__LP64__)\nfor both gcc and clang.",
+      "revId": "a69eaec4d48e978751356b2e8fd989d5e23a34db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
