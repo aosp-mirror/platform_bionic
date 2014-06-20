@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e416c98e_282623de",
+        "filename": "libc/kernel/uapi/asm-mips/asm/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:20:03Z",
+      "side": 1,
+      "message": "is now skipped in __LP64__ mode, using generic flock instead.",
+      "revId": "2300332596f181c8b5c19b6d912c645161cf1486",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c413859f_44426e73",
+        "filename": "libc/kernel/uapi/asm-mips/asm/resource.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:20:03Z",
+      "side": 1,
+      "message": "This has corrected a mips64 failure on math test sys_resource.smoke test.",
+      "revId": "2300332596f181c8b5c19b6d912c645161cf1486",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

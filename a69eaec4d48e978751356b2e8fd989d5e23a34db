@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e416c98e_082b67a4",
+        "filename": "libc/kernel/uapi/asm-mips/asm/msgbuf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:20:03Z",
+      "side": 0,
+      "message": "This filler was misplaced for mips32, using big-endian rules instead of little-endian.",
+      "revId": "a69eaec4d48e978751356b2e8fd989d5e23a34db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e416c98e_68301b0d",
+        "filename": "libc/kernel/uapi/asm-mips/asm/types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2014-06-20T18:20:03Z",
+      "side": 0,
+      "message": "This caused compile-time failures in various linux-derived programs such as perf.",
+      "revId": "a69eaec4d48e978751356b2e8fd989d5e23a34db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
