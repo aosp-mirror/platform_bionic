@@ -44,7 +44,11 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
-    "mips": {"CONFIG_32BIT":"1", "__MIPSEB__": kCppUndefinedMacro, "__MIPSEL__": "1"},
+    "mips": {"__MIPSEB__": kCppUndefinedMacro,
+             "__MIPSEL__": "1",
+             "CONFIG_32BIT": "_ABIO32",
+             "CONFIG_CPU_LITTLE_ENDIAN": "1",
+             "__SANE_USERSPACE_TYPES__": "1",},
     "x86": {},
     }
 
