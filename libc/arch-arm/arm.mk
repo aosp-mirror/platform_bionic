@@ -65,6 +65,9 @@ libc_bionic_src_files_arm += \
 libc_arch_static_src_files_arm := arch-arm/bionic/exidx_static.c
 libc_arch_dynamic_src_files_arm := arch-arm/bionic/exidx_dynamic.c
 
+libc_netbsd_src_files_arm := \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
 ## CPU variant specific source files
 ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
   $(warning TARGET_$(my_2nd_arch_prefix)ARCH is arm, but TARGET_$(my_2nd_arch_prefix)CPU_VARIANT is not defined)
