@@ -33,6 +33,24 @@
       "revId": "848b7b1429bb76723a2b347562cf2089946b36d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04df5d24_33be9a53",
+        "filename": "libc/upstream-openbsd/lib/libc/crypt/chacha_private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-21T06:24:56Z",
+      "side": 1,
+      "message": "yeah, and there are no tests.",
+      "parentUuid": "e4db2937_92a12a54",
+      "revId": "848b7b1429bb76723a2b347562cf2089946b36d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
