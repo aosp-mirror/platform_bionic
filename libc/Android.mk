@@ -263,7 +263,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wmemset.c \
 
 libc_upstream_netbsd_src_files := \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
     upstream-netbsd/common/lib/libc/stdlib/random.c \
     upstream-netbsd/lib/libc/gen/ftw.c \
     upstream-netbsd/lib/libc/gen/nftw.c \
@@ -704,6 +703,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_netbsd_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
