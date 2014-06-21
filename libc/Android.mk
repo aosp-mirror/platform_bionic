@@ -217,7 +217,7 @@ libc_bionic_src_files := \
     bionic/system_properties.cpp \
     bionic/tdestroy.cpp \
     bionic/termios.cpp \
-    bionic/thread_atexit.cpp \
+    bionic/thread_private.cpp \
     bionic/tmpfile.cpp \
     bionic/umount.cpp \
     bionic/unlink.cpp \
