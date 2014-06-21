@@ -68,6 +68,8 @@ libc_bionic_src_files_mips += \
     arch-mips/string/memset.S \
     arch-mips/string/mips_strlen.c \
 
+libc_netbsd_src_files_mips := \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
 
 libc_crt_target_cflags_mips := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
