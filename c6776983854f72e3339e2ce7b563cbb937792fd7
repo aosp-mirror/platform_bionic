@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4e8e5cd_1ca45594",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-21T06:25:06Z",
+      "side": 1,
+      "message": "this is 40 bytes, and we\u0027ve already used 8 bytes of AT_RANDOM for the stack guard (and i\u0027m assuming at some point we\u0027ll use the other 8 bytes for the heap guard).",
+      "revId": "c6776983854f72e3339e2ce7b563cbb937792fd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
