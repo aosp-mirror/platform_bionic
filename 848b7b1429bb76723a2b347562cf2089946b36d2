@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4db2937_729c9e14",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-06-21T06:08:09Z",
+      "side": 1,
+      "message": "Killing the process feels a bit extreme for this, IMHO. This could occur if the system is running out of file descriptors, for example.\n\nCould we fallback to using getauxval(AT_RANDOM), which can\u0027t fail and doesn\u0027t use any syscalls at all? It\u0027s a pointer to 16 random bytes supplied by the kernel. \n\nIt\u0027s not as good as /dev/urandom, but it\u0027s better than crashing, and 16 bytes is quite a bit of randomness...",
+      "revId": "848b7b1429bb76723a2b347562cf2089946b36d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4db2937_92a12a54",
+        "filename": "libc/upstream-openbsd/lib/libc/crypt/chacha_private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-06-21T06:08:09Z",
+      "side": 1,
+      "message": "I\u0027m not even going to pretend I understand this...",
+      "revId": "848b7b1429bb76723a2b347562cf2089946b36d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
