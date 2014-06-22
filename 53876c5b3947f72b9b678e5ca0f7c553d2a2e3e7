@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64b9f9d7_b9e45f49",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-22T04:02:43Z",
+      "side": 1,
+      "message": "sys/cdefs.h already has __bos0",
+      "revId": "53876c5b3947f72b9b678e5ca0f7c553d2a2e3e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
