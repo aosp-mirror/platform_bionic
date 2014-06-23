@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4ede9ca_7653e615",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-23T18:28:50Z",
+      "side": 1,
+      "message": "pre-built code shouldn\u0027t need this declaration. just the weak alias should be enough, no?",
+      "revId": "0284216fc5f74f60660ce9b9bedf85ae6b188a69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
