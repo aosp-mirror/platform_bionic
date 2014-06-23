@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04df5d24_a87f9482",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-23T01:36:15Z",
+      "side": 1,
+      "message": "use the __BIONIC_FORTIFY* stuff in cdefs.h?",
+      "revId": "0a7af12bd7da4a4666a7e0b054e4525bf241f4fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
