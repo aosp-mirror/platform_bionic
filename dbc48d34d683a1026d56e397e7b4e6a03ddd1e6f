@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44a315b3_6624ef4c",
+        "filename": "tests/fcntl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-24T23:58:39Z",
+      "side": 1,
+      "message": "Do you want an ASSERT_TRUE(fp !\u003d NULL)? I know the line below will fail if fp is null, but it might seg fault.\n\nSame for the other places you use this pattern.",
+      "range": {
+        "startLine": 170,
+        "startChar": 2,
+        "endLine": 170,
+        "endChar": 10
+      },
+      "revId": "dbc48d34d683a1026d56e397e7b4e6a03ddd1e6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
