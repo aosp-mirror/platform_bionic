@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "04abdd9e_47310424",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44a315b3_da165262",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04abdd9e_e4d12edf",
         "filename": "libc/bionic/arc4random.c",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2014-06-24T19:42:14Z",
       "side": 1,
       "message": "Is the intention here to make this a fixed time algorithm? Otherwise, it would be faster (trivially) to write this as:\n\nfor (i \u003d 0 ; i \u003c len; i++) {\n    if (buf[i] !\u003d \u0027\\0\u0027) { return 0; }\n}\nreturn -1;",
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a315b3_8dfd768d",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "just copied from upstream.",
+      "parentUuid": "04abdd9e_e4d12edf",
       "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "04abdd9e_52f2e40a",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "because that\u0027s the upstream API. (for them it\u0027s a syscall that can\u0027t fail.)",
+      "parentUuid": "04abdd9e_24f15674",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 10
+      },
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04abdd9e_64de3eeb",
         "filename": "libc/bionic/arc4random.c",
         "patchSetId": 4
@@ -76,6 +142,24 @@
       "writtenOn": "2014-06-24T19:42:14Z",
       "side": 1,
       "message": "Might as well add O_NOFOLLOW while we\u0027re at it.",
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a7a9cf_e67494ab",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04abdd9e_64de3eeb",
       "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "04abdd9e_d2f6f4f8",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "only that i didn\u0027t touch a single line below the __ANDROID__ block up top. i\u0027m hoping that one day we can get completely in sync.",
+      "parentUuid": "44a315b3_dab492c0",
+      "range": {
+        "startLine": 138,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 9
+      },
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04abdd9e_84138aeb",
         "filename": "libc/bionic/arc4random.c",
         "patchSetId": 4
@@ -116,6 +224,30 @@
       "writtenOn": "2014-06-24T19:51:22Z",
       "side": 1,
       "message": "I assume this to make sure the random data is not stored in memory? Otherwise, this is not necessary. It would be nice if the bsd code had a comment.",
+      "range": {
+        "startLine": 160,
+        "startChar": 1,
+        "endLine": 160,
+        "endChar": 34
+      },
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a315b3_6d113224",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-24T20:55:29Z",
+      "side": 1,
+      "message": "yeah, i assume so.",
+      "parentUuid": "04abdd9e_84138aeb",
       "range": {
         "startLine": 160,
         "startChar": 1,
