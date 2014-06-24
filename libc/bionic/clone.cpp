@@ -31,6 +31,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include "pthread_internal.h"
+
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
 extern "C" __noreturn void __exit(int status);
 
@@ -64,5 +66,18 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   child_stack_addr &= ~0xf;
   child_stack = reinterpret_cast<void*>(child_stack_addr);
 
-  return __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
+  // Remember the parent pid and invalidate the cached value while we clone.
+  pthread_internal_t* self = __get_thread();
+  pid_t parent_pid = self->invalidate_cached_pid();
+
+  // Actually do the clone.
+  int clone_result = __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
+
+  // We're the parent, so put our known pid back in place.
+  // We leave the child without a cached pid, but:
+  // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
+  // 2. fork makes a clone system call directly.
+  // If any other cases become important, we could use a double trampoline like __pthread_start.
+  self->set_cached_pid(parent_pid);
+  return clone_result;
 }
