@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04abdd9e_e4d12edf",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-06-24T19:42:14Z",
+      "side": 1,
+      "message": "Is the intention here to make this a fixed time algorithm? Otherwise, it would be faster (trivially) to write this as:\n\nfor (i \u003d 0 ; i \u003c len; i++) {\n    if (buf[i] !\u003d \u0027\\0\u0027) { return 0; }\n}\nreturn -1;",
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04abdd9e_64de3eeb",
+        "filename": "libc/bionic/arc4random.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-06-24T19:42:14Z",
+      "side": 1,
+      "message": "Might as well add O_NOFOLLOW while we\u0027re at it.",
+      "revId": "cce29f0bc0fc3807f2a9996318e20e1541d31d28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
