@@ -381,6 +381,14 @@ TEST(unistd, fsync) {
   TestFsyncFunction(fsync);
 }
 
+static void AssertGetPidCorrect() {
+  // The loop is just to make manual testing/debugging with strace easier.
+  pid_t getpid_syscall_result = syscall(__NR_getpid);
+  for (size_t i = 0; i < 128; ++i) {
+    ASSERT_EQ(getpid_syscall_result, getpid());
+  }
+}
+
 TEST(unistd, getpid_caching_and_fork) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
@@ -389,7 +397,7 @@ TEST(unistd, getpid_caching_and_fork) {
   ASSERT_NE(fork_result, -1);
   if (fork_result == 0) {
     // We're the child.
-    ASSERT_EQ(syscall(__NR_getpid), getpid());
+    AssertGetPidCorrect();
     ASSERT_EQ(parent_pid, getppid());
     _exit(123);
   } else {
@@ -403,12 +411,29 @@ TEST(unistd, getpid_caching_and_fork) {
   }
 }
 
-static void GetPidCachingHelperHelper() {
-  ASSERT_EQ(syscall(__NR_getpid), getpid());
+static int GetPidCachingCloneStartRoutine(void*) {
+  AssertGetPidCorrect();
+  return 123;
 }
 
-static void* GetPidCachingHelper(void*) {
-  GetPidCachingHelperHelper(); // Can't assert in a non-void function.
+TEST(unistd, getpid_caching_and_clone) {
+  pid_t parent_pid = getpid();
+  ASSERT_EQ(syscall(__NR_getpid), parent_pid);
+
+  void* child_stack[1024];
+  int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
+  ASSERT_NE(clone_result, -1);
+
+  ASSERT_EQ(parent_pid, getpid());
+
+  int status;
+  ASSERT_EQ(clone_result, waitpid(clone_result, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(123, WEXITSTATUS(status));
+}
+
+static void* GetPidCachingPthreadStartRoutine(void*) {
+  AssertGetPidCorrect();
   return NULL;
 }
 
@@ -416,7 +441,7 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   pid_t parent_pid = getpid();
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, GetPidCachingHelper, NULL));
+  ASSERT_EQ(0, pthread_create(&t, NULL, GetPidCachingPthreadStartRoutine, NULL));
 
   ASSERT_EQ(parent_pid, getpid());
 
