@@ -69,6 +69,19 @@ TEST(pthread, pthread_key_create_lots) {
 #endif // __BIONIC__
 }
 
+TEST(pthread, pthread_key_delete) {
+  void* expected = reinterpret_cast<void*>(1234);
+  pthread_key_t key;
+  ASSERT_EQ(0, pthread_key_create(&key, NULL));
+  ASSERT_EQ(0, pthread_setspecific(key, expected));
+  ASSERT_EQ(expected, pthread_getspecific(key));
+  ASSERT_EQ(0, pthread_key_delete(key));
+  // After deletion, pthread_getspecific returns NULL.
+  ASSERT_EQ(NULL, pthread_getspecific(key));
+  // And you can't use pthread_setspecific with the deleted key.
+  ASSERT_EQ(EINVAL, pthread_setspecific(key, expected));
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }
