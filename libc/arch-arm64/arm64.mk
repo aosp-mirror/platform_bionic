@@ -3,7 +3,6 @@
 libc_common_src_files_arm64 := \
     bionic/memchr.c \
     bionic/memrchr.c \
-    bionic/strchr.cpp \
     bionic/strrchr.cpp \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
