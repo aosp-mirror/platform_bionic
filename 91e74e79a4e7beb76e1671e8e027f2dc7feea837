@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c450e5a6_dc162d1f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-06-27T09:33:19Z",
+      "side": 1,
+      "message": "Fix commit message style :\n\nShort 60-80 char summary followed by a blank line followed by a detailed description.",
+      "revId": "91e74e79a4e7beb76e1671e8e027f2dc7feea837",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c450e5a6_fc1be943",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-06-27T09:33:19Z",
+      "side": 1,
+      "message": "recorded",
+      "revId": "91e74e79a4e7beb76e1671e8e027f2dc7feea837",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c450e5a6_bc156111",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-06-27T09:33:19Z",
+      "side": 1,
+      "message": "The definition of this function must be above the macro that uses it (otherwise there will be weird compilation errors if someone starts using the macro before this point) , so you can either moved the macros down here, or move the function to the top or add a declaration.",
+      "revId": "91e74e79a4e7beb76e1671e8e027f2dc7feea837",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
