@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "443dd54b_43bd58ed",
+        "filename": "libc/arch-arm64/denver64/denver64.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-06-27T10:45:49Z",
+      "side": 1,
+      "message": "should be generic instead of generic-neon",
+      "revId": "276ff0f879e733a1115456247e1342b9c5a09015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "443dd54b_63b65c19",
+        "filename": "libc/arch-arm64/generic-neon/bionic/strchr.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-06-27T10:45:49Z",
+      "side": 1,
+      "message": "This should be moved to generic instead of generic-neon. generic-neon and denver64 can inherit from generic.",
+      "revId": "276ff0f879e733a1115456247e1342b9c5a09015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6438195d_c49f304e",
+        "filename": "libc/arch-arm64/generic-neon/generic-neon.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-06-27T10:45:49Z",
+      "side": 1,
+      "message": "same generic - similar to strlen \u0026 co",
+      "revId": "276ff0f879e733a1115456247e1342b9c5a09015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84334d7e_a56c688a",
+        "filename": "libc/arch-arm64/generic/generic.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-06-27T10:45:49Z",
+      "side": 1,
+      "message": "all versions of arm64 should use the .S version.",
+      "revId": "276ff0f879e733a1115456247e1342b9c5a09015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
