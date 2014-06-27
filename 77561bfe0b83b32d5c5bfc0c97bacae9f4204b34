@@ -16,6 +16,24 @@
       "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64865967_65850e80",
+        "filename": "libc/arch-arm64/generic/bionic/strcpy.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-27T22:09:32Z",
+      "side": 1,
+      "message": "That\u0027s what the .Lmisaligned code does. Usually it winds up reading 8 bytes or so. This code isn\u0027t super highly optimized, but I figured having something right now would be better and we could optimize parts later on.",
+      "parentUuid": "6438195d_87b36a26",
+      "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
