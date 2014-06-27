@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6438195d_87b36a26",
+        "filename": "libc/arch-arm64/generic/bionic/strcpy.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-27T21:10:02Z",
+      "side": 1,
+      "message": "strings won\u0027t normally be 128-bit aligned, will they? don\u0027t we want to read smaller units until we\u0027re aligned, then read as much as we can aligned?",
+      "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
