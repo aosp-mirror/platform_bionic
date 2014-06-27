@@ -34,6 +34,24 @@
       "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64865967_cb9f294e",
+        "filename": "libc/arch-arm64/generic/bionic/strcpy.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-27T22:14:30Z",
+      "side": 1,
+      "message": "it doesn\u0027t though, does it? it looks like if you branch there, you\u0027ll only ever do 64-bit copies, never coming back to 128-bit ones.",
+      "parentUuid": "64865967_65850e80",
+      "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
