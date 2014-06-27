@@ -70,6 +70,24 @@
       "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64865967_a6c1bc38",
+        "filename": "libc/arch-arm64/generic/bionic/strcpy.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-27T23:07:43Z",
+      "side": 1,
+      "message": "ah, yes, i didn\u0027t notice that L192 was a branch back into the top loop.",
+      "parentUuid": "64865967_6b7e3d38",
+      "revId": "77561bfe0b83b32d5c5bfc0c97bacae9f4204b34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
