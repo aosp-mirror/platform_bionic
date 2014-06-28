@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64865967_50a3e526",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-06-28T23:21:07Z",
+      "side": 1,
+      "message": "Seems a little extreme. Look at TEMP_FAILURE_RETRY(). A warning is probably sufficient for the non-EINTR case.",
+      "revId": "8184ef14c8c938efa8a1acb3e39553edeef30509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
