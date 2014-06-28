@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84334d7e_eb6fa1d6",
+        "filename": "libc/arch-arm64/generic/bionic/stpcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-28T00:25:34Z",
+      "side": 1,
+      "message": "can\u0027t we rewrite strcpy as\n\n  mov somewhere_safe, x0\n  bl stpcpy\n  mov x0, somwhere_safe\n  ret\n\n?\n\nif not, let\u0027s at least use macros or factor out the common code. this amount of duplication seems excessive.",
+      "revId": "c53bedb7d49b7944f1335baae71ce33917f81c4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
