@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2490e198_150b1444",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-28T17:01:32Z",
+      "side": 1,
+      "message": "comment that the return value of stpcpy points to the trailing NUL so we need to back up one? would it be clearer to have everyone branch to one exit, especially given that most of the \u0027ret\u0027s are already arrived at via a branch anyway? (here for example we\u0027d lose the STPCPY #if defined completely, i think.)",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448b1570_378e576b",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-28T17:01:32Z",
+      "side": 1,
+      "message": "why do we need the conditionality here? for stpcpy we need to advance dst, so i get that. but for strcpy we don\u0027t need to _not_ advance dst because there dst is just x2 anyway. so isn\u0027t it simpler just to have them both the same? (we could even unconditionally sub dst,dst,#1 on return, though i understand why you\u0027d want to skip a whole instruction, and having a single \"out\" removes the error-prone side of that anyway.)",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
