@@ -100,30 +100,23 @@ void* dlsym(void* handle, const char* symbol) {
 
   soinfo* found = NULL;
   ElfW(Sym)* sym = NULL;
-  if (handle == RTLD_DEFAULT) {
-    sym = dlsym_linear_lookup(symbol, &found, NULL);
-  } else if (handle == RTLD_NEXT) {
-    void* caller_addr = __builtin_return_address(0);
-    soinfo* si = find_containing_library(caller_addr);
+  void* caller_addr = __builtin_return_address(0);
+  soinfo* caller_si = find_containing_library(caller_addr);
 
+  if (handle == RTLD_DEFAULT) {
+    sym = dlsym_linear_lookup(symbol, &found, NULL, caller_si);
+  } else if (handle == RTLD_NEXT) {
     sym = NULL;
-    if (si && si->next) {
-      sym = dlsym_linear_lookup(symbol, &found, si->next);
+    if (caller_si && caller_si->next) {
+      sym = dlsym_linear_lookup(symbol, &found, caller_si->next, caller_si);
     }
   } else {
     found = reinterpret_cast<soinfo*>(handle);
-    sym = dlsym_handle_lookup(found, symbol);
+    sym = dlsym_handle_lookup(found, symbol, caller_si);
   }
 
-  if (sym != NULL) {
-    unsigned bind = ELF_ST_BIND(sym->st_info);
-
-    if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
-      return reinterpret_cast<void*>(sym->st_value + found->load_bias);
-    }
-
-    __bionic_format_dlerror("symbol found but not global", symbol);
-    return NULL;
+  if (sym != NULL && sym->st_shndx != 0) {
+    return reinterpret_cast<void*>(sym->st_value + found->load_bias);
   } else {
     __bionic_format_dlerror("undefined symbol", symbol);
     return NULL;
