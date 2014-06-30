@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "448b1570_4699eb96",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-30T19:52:13Z",
+      "side": 1,
+      "message": "I\u0027d prefer not to branch when I can just add an extra return right there. It can make things a bit more complicated, but I find it easier to follow when tracing through the code to see the actual return right away. This is not as highly optimized as it can be, this is just a first pass to get something better. I\u0027ll need to make at least one more pass on this at some point.",
+      "parentUuid": "2490e198_150b1444",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "448b1570_378e576b",
         "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-28T17:01:32Z",
       "side": 1,
       "message": "why do we need the conditionality here? for stpcpy we need to advance dst, so i get that. but for strcpy we don\u0027t need to _not_ advance dst because there dst is just x2 anyway. so isn\u0027t it simpler just to have them both the same? (we could even unconditionally sub dst,dst,#1 on return, though i understand why you\u0027d want to skip a whole instruction, and having a single \"out\" removes the error-prone side of that anyway.)",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c47e2525_f5444ad9",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-06-30T19:52:13Z",
+      "side": 1,
+      "message": "I assume that incrementing the dst register might cost some cycles, so if it\u0027s not necessary, I don\u0027t do it.",
+      "parentUuid": "448b1570_378e576b",
       "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
