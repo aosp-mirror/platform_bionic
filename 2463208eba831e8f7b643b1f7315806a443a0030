@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c47e2525_b54ec2f3",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-30T19:26:25Z",
+      "side": 1,
+      "message": "use \u0027a\u0027s and \u0027b\u0027s to avoid \u00270\u0027 \u0027\\0\u0027 confusion?",
+      "revId": "2463208eba831e8f7b643b1f7315806a443a0030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448b1570_ab82e276",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-30T19:26:25Z",
+      "side": 1,
+      "message": "\u0026str[0] to make it more explicit? (i missed what this was actually testing at first.)",
+      "revId": "2463208eba831e8f7b643b1f7315806a443a0030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
