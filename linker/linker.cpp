@@ -669,8 +669,7 @@ static int open_library(const char* name) {
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
 #if defined(__LP64__)
-    // TODO: uncomment this after bug b/7465467 is fixed.
-    // return -1;
+    return -1;
 #endif
   }
 
