@@ -611,7 +611,7 @@ net_mask(in)		/* XXX - should really use system's version of this */
 static int
 real_randomid(u_int *random_value) {
 	/* open the nonblocking random device, returning -1 on failure */
-	int random_device = open("/dev/urandom", O_RDONLY);
+	int random_device = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
 	if (random_device < 0) {
 		return -1;
 	}
