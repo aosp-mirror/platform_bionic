@@ -69,26 +69,14 @@
  */
 
 #include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/stat.h>
 
 #include <assert.h>
-#ifdef __ELF__
-#include <dlfcn.h>
-#endif /* __ELF__ */
-#include <fcntl.h>
-#define _NS_PRIVATE
 #include <nsswitch.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <strings.h>
-#include <unistd.h>
 
 static nss_method
-_nsmethod(const char *source, const char *database, const char *method,
+_nsmethod(const char *source, const char *database __unused, const char *method __unused,
     const ns_dtab disp_tab[], void **cb_data)
 {
 	int	curdisp;
