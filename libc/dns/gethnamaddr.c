@@ -539,7 +539,7 @@ static FILE* android_open_proxy()
 	const int one = 1;
 	struct sockaddr_un proxy_addr;
 
-	sock = socket(AF_UNIX, SOCK_STREAM, 0);
+	sock = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
 	if (sock < 0) {
 		return NULL;
 	}
