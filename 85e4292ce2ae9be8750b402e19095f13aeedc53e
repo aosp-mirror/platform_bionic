@@ -69,6 +69,24 @@
       "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "443dd54b_547c2cc2",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-06-30T20:54:29Z",
+      "side": 1,
+      "message": "serban?",
+      "parentUuid": "c47e2525_f5444ad9",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
