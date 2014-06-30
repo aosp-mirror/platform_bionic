@@ -271,10 +271,12 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/gen/psignal.c \
     upstream-netbsd/lib/libc/gen/utime.c \
     upstream-netbsd/lib/libc/gen/utmp.c \
+    upstream-netbsd/lib/libc/inet/nsap_addr.c \
     upstream-netbsd/lib/libc/regex/regcomp.c \
     upstream-netbsd/lib/libc/regex/regerror.c \
     upstream-netbsd/lib/libc/regex/regexec.c \
     upstream-netbsd/lib/libc/regex/regfree.c \
+    upstream-netbsd/lib/libc/resolv/mtctxres.c \
     upstream-netbsd/lib/libc/stdlib/bsearch.c \
     upstream-netbsd/lib/libc/stdlib/div.c \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
