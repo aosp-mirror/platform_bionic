@@ -359,6 +359,24 @@ TEST(string, strchr_with_0) {
   EXPECT_TRUE(strchr(buf, '\0') == (buf + strlen(s)));
 }
 
+TEST(string, strchr_multiple) {
+  char str[128];
+  memset(str, 'a', sizeof(str) - 1);
+  str[sizeof(str)-1] = '\0';
+
+  // Verify that strchr finds the first occurrence of 'a' in a string
+  // filled with 'a' characters. Iterate over the string putting
+  // non 'a' characters at the front of the string during each iteration
+  // and continue to verify that strchr can find the first occurrence
+  // properly. The idea is to cover all possible alignments of the location
+  // of the first occurrence of the 'a' character and which includes
+  // other 'a' characters close by.
+  for (size_t i = 0; i < sizeof(str) - 1; i++) {
+    EXPECT_EQ(&str[i], strchr(str, 'a'));
+    str[i] = 'b';
+  }
+}
+
 TEST(string, strchr) {
   int seek_char = random() & 255;
 
@@ -1234,4 +1252,30 @@ TEST(string, memcmp_align) {
 
 TEST(string, memcmp_overread) {
   RunCmpBufferOverreadTest(DoMemcmpTest, DoMemcmpFailTest);
+}
+
+static void DoStrchrTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    char value = 32 + (len % 96);
+    char search_value = 33 + (len % 96);
+    memset(buf, value, len - 1);
+    buf[len-1] = '\0';
+    ASSERT_EQ(NULL, strchr(reinterpret_cast<char*>(buf), search_value));
+    ASSERT_EQ(reinterpret_cast<char*>(&buf[len-1]), strchr(reinterpret_cast<char*>(buf), '\0'));
+    if (len >= 2) {
+      buf[0] = search_value;
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]), strchr(reinterpret_cast<char*>(buf), search_value));
+      buf[0] = value;
+      buf[len-2] = search_value;
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[len-2]), strchr(reinterpret_cast<char*>(buf), search_value));
+    }
+  }
+}
+
+TEST(string, strchr_align) {
+  RunSingleBufferAlignTest(MEDIUM, DoStrchrTest);
+}
+
+TEST(string, strchr_overread) {
+  RunSingleBufferOverreadTest(DoStrchrTest);
 }
