@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24ee2135_53e8e41b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T21:09:10Z",
+      "side": 1,
+      "message": "i wonder if we should fix the TODO in __libc_fatal and start using that in places like this?",
+      "revId": "d97e9f546ea195686a78e539315b273393609b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
