@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "646f3977_72106ede",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "find_local seems a bit misleading. you can have find_local\u003d\u003dtrue but still return global or weak. allow_local?",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646f3977_d21efaf5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "comment out of date now.",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "045e7dcf_ef2d511f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "default: abort() to make it clear these are the only three types?",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4464f599_11900ef4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "i don\u0027t like these trues and falses. enum? flags that default \u003d 0?",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "045e7dcf_6f3ac153",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "ooh, that sounds like something else you could look at :-)",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "045e7dcf_eff0f147",
+        "filename": "tests/libs/dlsym_local_symbol_public.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "and?",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646f3977_325bd6b1",
+        "filename": "tests/libs/dlsym_local_symbol_public.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-01T02:32:16Z",
+      "side": 1,
+      "message": "lets\u003d\u003dallows\nlet\u0027s\u003d\u003dlet us",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
