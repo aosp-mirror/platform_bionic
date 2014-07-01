@@ -168,10 +168,7 @@ static unsigned bitmask[4096];
 #define DISALLOW_ALLOCATION(return_type, name, ...) \
     return_type name __VA_ARGS__ \
     { \
-        const char* msg = "ERROR: " #name " called from the dynamic linker!\n"; \
-        __libc_format_log(ANDROID_LOG_FATAL, "linker", "%s", msg); \
-        write(2, msg, strlen(msg)); \
-        abort(); \
+        __libc_fatal("ERROR: " #name " called from the dynamic linker!\n"); \
     }
 DISALLOW_ALLOCATION(void*, malloc, (size_t u __unused));
 DISALLOW_ALLOCATION(void, free, (void* u __unused));
@@ -467,10 +464,8 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
                 static_cast<size_t>(s->st_size));
         return s;
       default:
-        const char* msg = "FATAL: Unexpected ST_BIND\n";
-        __libc_format_log(ANDROID_LOG_FATAL, "linker", "%s", msg);
-        write(2, msg, strlen(msg));
-        abort();
+        __libc_fatal("ERROR: Unexpected ST_BIND value: %d for '%s' in '%s'",
+            ELF_ST_BIND(s->st_info), name, si->name);
     }
   }
 
