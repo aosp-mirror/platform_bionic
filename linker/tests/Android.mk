@@ -19,7 +19,6 @@ ifneq ($(BUILD_TINY_ANDROID),true)
 LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MULTILIB := both
 LOCAL_MODULE := linker-unit-tests
 LOCAL_MODULE_STEM_32 := $(LOCAL_MODULE)32
 LOCAL_MODULE_STEM_64 := $(LOCAL_MODULE)64
