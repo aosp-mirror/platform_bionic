@@ -41,7 +41,6 @@
 char*
 if_indextoname(unsigned ifindex, char *ifname)
 {
-    int index;
     int ctl_sock;
     struct ifreq ifr;
     char*  ret = NULL;
