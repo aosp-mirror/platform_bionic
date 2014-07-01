@@ -260,7 +260,6 @@ bionic-unit-tests_shared_libraries_target := \
 
 module := bionic-unit-tests
 module_tag := optional
-bionic-unit-tests_multilib := both
 build_type := target
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
@@ -282,7 +281,6 @@ bionic-unit-tests-static_force_static_executable := true
 
 module := bionic-unit-tests-static
 module_tag := optional
-bionic-unit-tests-static_multilib := both
 build_type := target
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
@@ -308,7 +306,6 @@ bionic-unit-tests-glibc_cppflags := \
 
 module := bionic-unit-tests-glibc
 module_tag := optional
-bionic-unit-tests-glibc_multilib := both
 build_type := host
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
