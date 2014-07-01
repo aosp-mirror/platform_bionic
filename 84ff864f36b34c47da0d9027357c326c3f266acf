@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4464f599_1131ee24",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "646f3977_72106ede",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "646f3977_d21efaf5",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-01T02:32:16Z",
       "side": 1,
       "message": "comment out of date now.",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646f3977_3d088744",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "646f3977_d21efaf5",
       "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4464f599_9cddf579",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "045e7dcf_ef2d511f",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4464f599_11900ef4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-01T02:32:16Z",
       "side": 1,
       "message": "i don\u0027t like these trues and falses. enum? flags that default \u003d 0?",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04f3dd1b_9e8c3db8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "enum it is. Done",
+      "parentUuid": "4464f599_11900ef4",
       "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "e4efa930_40593011",
+        "filename": "tests/libs/dlsym_local_symbol_public.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "045e7dcf_eff0f147",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "646f3977_325bd6b1",
         "filename": "tests/libs/dlsym_local_symbol_public.cpp",
         "patchSetId": 1
@@ -115,6 +205,24 @@
       "writtenOn": "2014-07-01T02:32:16Z",
       "side": 1,
       "message": "lets\u003d\u003dallows\nlet\u0027s\u003d\u003dlet us",
+      "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24ee2135_c26f04d7",
+        "filename": "tests/libs/dlsym_local_symbol_public.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-01T17:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "646f3977_325bd6b1",
       "revId": "84ff864f36b34c47da0d9027357c326c3f266acf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
