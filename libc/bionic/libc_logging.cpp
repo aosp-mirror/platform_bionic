@@ -619,7 +619,8 @@ static void __libc_fatal(const char* format, va_list args) {
   BufferOutputStream os(msg, sizeof(msg));
   out_vformat(os, format, args);
 
-  // TODO: log to stderr for the benefit of "adb shell" users.
+  // log to stderr for the benefit of "adb shell" users.
+  write(2, msg, strlen(msg));
 
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
   __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
