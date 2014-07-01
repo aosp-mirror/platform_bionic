@@ -87,6 +87,24 @@
       "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "045e7dcf_3a7c09c2",
+        "filename": "libc/arch-arm64/generic/bionic/string_copy.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-01T09:04:00Z",
+      "side": 1,
+      "message": "The general consensus here is \"don\u0027t do more work than necessary\". The impact on performance would be minimal, however there is a potential energy saving by using this variant. I also agree that having a single \"out\" is less error-prone :-) (all the routines in cortex-strings have been heavily tested thus we should not worry to much about uncovered bugs).",
+      "parentUuid": "443dd54b_547c2cc2",
+      "revId": "85e4292ce2ae9be8750b402e19095f13aeedc53e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
