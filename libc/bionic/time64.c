@@ -252,6 +252,7 @@ Time64_T timegm64(const struct TM *date) {
 }
 
 
+#if !defined(NDEBUG)
 static int check_tm(struct TM *tm)
 {
     /* Don't forget leap seconds */
@@ -283,6 +284,7 @@ static int check_tm(struct TM *tm)
 
     return 1;
 }
+#endif
 
 
 /* The exceptional centuries without leap years cause the cycle to
