@@ -125,6 +125,11 @@ enum RelocationKind {
     kRelocMax
 };
 
+enum class SymbolLookupScope {
+  kAllowLocal,
+  kExcludeLocal,
+};
+
 #if STATS
 struct linker_stats_t {
     int count[kRelocMax];
@@ -431,7 +436,7 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
     return rv;
 }
 
-static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name) {
+static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name, const SymbolLookupScope& lookup_scope) {
   ElfW(Sym)* symtab = si->symtab;
   const char* strtab = si->strtab;
 
@@ -442,18 +447,30 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
     ElfW(Sym)* s = symtab + n;
     if (strcmp(strtab + s->st_name, name)) continue;
 
-    /* only concern ourselves with global and weak symbol definitions */
     switch (ELF_ST_BIND(s->st_info)) {
       case STB_GLOBAL:
       case STB_WEAK:
         if (s->st_shndx == SHN_UNDEF) {
-        continue;
-      }
+          continue;
+        }
 
-      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
                  name, si->name, reinterpret_cast<void*>(s->st_value),
                  static_cast<size_t>(s->st_size));
-      return s;
+        return s;
+      case STB_LOCAL:
+        if (lookup_scope != SymbolLookupScope::kAllowLocal) {
+          continue;
+        }
+        TRACE_TYPE(LOOKUP, "FOUND LOCAL %s in %s (%p) %zd",
+                name, si->name, reinterpret_cast<void*>(s->st_value),
+                static_cast<size_t>(s->st_size));
+        return s;
+      default:
+        const char* msg = "FATAL: Unexpected ST_BIND\n";
+        __libc_format_log(ANDROID_LOG_FATAL, "linker", "%s", msg);
+        write(2, msg, strlen(msg));
+        abort();
     }
   }
 
@@ -484,7 +501,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
          */
 
         if (si == somain) {
-            s = soinfo_elf_lookup(si, elf_hash, name);
+            s = soinfo_elf_lookup(si, elf_hash, name, SymbolLookupScope::kAllowLocal);
             if (s != NULL) {
                 *lsi = si;
                 goto done;
@@ -501,7 +518,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
             if (!si->has_DT_SYMBOLIC) {
                 DEBUG("%s: looking up %s in executable %s",
                       si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
+                s = soinfo_elf_lookup(somain, elf_hash, name, SymbolLookupScope::kExcludeLocal);
                 if (s != NULL) {
                     *lsi = somain;
                     goto done;
@@ -518,7 +535,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
              * and some the first non-weak definition.   This is system dependent.
              * Here we return the first definition found for simplicity.  */
 
-            s = soinfo_elf_lookup(si, elf_hash, name);
+            s = soinfo_elf_lookup(si, elf_hash, name, SymbolLookupScope::kAllowLocal);
             if (s != NULL) {
                 *lsi = si;
                 goto done;
@@ -532,7 +549,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
             if (si->has_DT_SYMBOLIC) {
                 DEBUG("%s: looking up %s in executable %s after local scope",
                       si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
+                s = soinfo_elf_lookup(somain, elf_hash, name, SymbolLookupScope::kExcludeLocal);
                 if (s != NULL) {
                     *lsi = somain;
                     goto done;
@@ -543,7 +560,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
 
     /* Next, look for it in the preloads list */
     for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
+        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name, SymbolLookupScope::kExcludeLocal);
         if (s != NULL) {
             *lsi = g_ld_preloads[i];
             goto done;
@@ -553,7 +570,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
     for (int i = 0; needed[i] != NULL; i++) {
         DEBUG("%s: looking up %s in %s",
               si->name, name, needed[i]->name);
-        s = soinfo_elf_lookup(needed[i], elf_hash, name);
+        s = soinfo_elf_lookup(needed[i], elf_hash, name, SymbolLookupScope::kExcludeLocal);
         if (s != NULL) {
             *lsi = needed[i];
             goto done;
@@ -582,8 +599,9 @@ done:
    Binary Interface) where in Chapter 5 it discuss resolving "Shared
    Object Dependencies" in breadth first search order.
  */
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name) {
-    return soinfo_elf_lookup(si, elfhash(name), name);
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name, soinfo* caller) {
+    return soinfo_elf_lookup(si, elfhash(name), name,
+        caller == si ? SymbolLookupScope::kAllowLocal : SymbolLookupScope::kExcludeLocal);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -591,7 +609,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name) {
    beginning of the global solist. Otherwise the search starts at the
    specified soinfo (for RTLD_NEXT).
  */
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start, soinfo* caller) {
   unsigned elf_hash = elfhash(name);
 
   if (start == NULL) {
@@ -600,7 +618,8 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
 
   ElfW(Sym)* s = NULL;
   for (soinfo* si = start; (s == NULL) && (si != NULL); si = si->next) {
-    s = soinfo_elf_lookup(si, elf_hash, name);
+    s = soinfo_elf_lookup(si, elf_hash, name,
+        caller == si ? SymbolLookupScope::kAllowLocal : SymbolLookupScope::kExcludeLocal);
     if (s != NULL) {
       *found = si;
       break;
