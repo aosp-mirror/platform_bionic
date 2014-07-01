@@ -25,5 +25,5 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#define STRCPY
+#define STPCPY
 #include "string_copy.S"
