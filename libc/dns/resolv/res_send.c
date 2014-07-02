@@ -759,7 +759,7 @@ send_vc(res_state statp,
 		struct sockaddr_storage peer;
 		socklen_t size = sizeof peer;
 		unsigned old_mark;
-		int mark_size = sizeof(old_mark);
+		socklen_t mark_size = sizeof(old_mark);
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)(void *)&peer, &size) < 0 ||
 		    !sock_eq((struct sockaddr *)(void *)&peer, nsap) ||

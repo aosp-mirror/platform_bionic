@@ -104,10 +104,6 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #include <sys/system_properties.h>
 #endif /* ANDROID_CHANGES */
 
-#ifndef MIN
-#define	MIN(x,y)	((x)<(y)?(x):(y))
-#endif
-
 /* ensure that sockaddr_in6 and IN6ADDR_ANY_INIT are declared / defined */
 #ifdef ANDROID_CHANGES
 #include "resolv_netid.h"
@@ -125,9 +121,11 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 
 static void res_setoptions __P((res_state, const char *, const char *));
 
+#ifdef RESOLVSORT
 static const char sort_mask[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask, ch) != NULL)
-static u_int32_t net_mask __P((struct in_addr));
+static uint32_t net_mask(struct in_addr);
+#endif
 
 #if !defined(isascii)	/* XXX - could be a function */
 # define isascii(c) (!(c & 0200))
@@ -168,15 +166,25 @@ res_ninit(res_state statp) {
 /* This function has to be reachable by res_data.c but not publicly. */
 int
 __res_vinit(res_state statp, int preinit) {
+#if !defined(__ANDROID__)
 	register FILE *fp;
+#endif
 	register char *cp, **pp;
+#if !defined(__ANDROID__)
 	register int n;
+#endif
 	char buf[BUFSIZ];
 	int nserv = 0;    /* number of nameserver records read from file */
+#if !defined(__ANDROID__)
 	int haveenv = 0;
+#endif
 	int havesearch = 0;
+#ifdef RESOLVSORT
 	int nsort = 0;
+#endif
+#if !defined(__ANDROID__)
 	char *net;
+#endif
 	int dots;
 	union res_sockaddr_union u[2];
 
@@ -235,7 +243,7 @@ __res_vinit(res_state statp, int preinit) {
 	statp->nsort = 0;
 	res_setservers(statp, u, nserv);
 
-#if 0 /* IGNORE THE ENVIRONMENT */
+#if !defined(__ANDROID__) /* IGNORE THE ENVIRONMENT */
 	/* Allow user to override the local domain definition */
 	if ((cp = getenv("LOCALDOMAIN")) != NULL) {
 		(void)strncpy(statp->defdname, cp, sizeof(statp->defdname) - 1);
@@ -593,12 +601,12 @@ res_setoptions(res_state statp, const char *options, const char *source)
 	}
 }
 
+#ifdef RESOLVSORT
 /* XXX - should really support CIDR which means explicit masks always. */
-static u_int32_t
-net_mask(in)		/* XXX - should really use system's version of this */
-	struct in_addr in;
+static uint32_t
+net_mask(struct in_addr in)	/*!< XXX - should really use system's version of this */
 {
-	register u_int32_t i = ntohl(in.s_addr);
+	register uint32_t i = ntohl(in.s_addr);
 
 	if (IN_CLASSA(i))
 		return (htonl(IN_CLASSA_NET));
@@ -606,6 +614,7 @@ net_mask(in)		/* XXX - should really use system's version of this */
 		return (htonl(IN_CLASSB_NET));
 	return (htonl(IN_CLASSC_NET));
 }
+#endif
 
 #ifdef ANDROID_CHANGES
 static int
@@ -617,8 +626,7 @@ real_randomid(u_int *random_value) {
 	}
 
 	/* read from the random device, returning -1 on failure (or too many retries)*/
-	u_int retry = 5;
-	for (retry; retry > 0; retry--) {
+	for (u_int retry = 5; retry > 0; retry--) {
 		int retval = read(random_device, random_value, sizeof(u_int));
 		if (retval == sizeof(u_int)) {
 			*random_value &= 0xffff;
@@ -649,7 +657,7 @@ res_randomid(void) {
 	return (0xffff & (now.tv_sec ^ now.tv_usec ^ getpid()));
 }
 
-/*
+/*%
  * This routine is for closing the socket if a virtual circuit is used and
  * the program wants to close it.  This provides support for endhostent()
  * which expects to close the socket.
@@ -657,7 +665,8 @@ res_randomid(void) {
  * This routine is not expected to be user visible.
  */
 void
-res_nclose(res_state statp) {
+res_nclose(res_state statp)
+{
 	int ns;
 
 	if (statp->_vcsock >= 0) {
@@ -674,7 +683,8 @@ res_nclose(res_state statp) {
 }
 
 void
-res_ndestroy(res_state statp) {
+res_ndestroy(res_state statp)
+{
 	res_nclose(statp);
 	if (statp->_u._ext.ext != NULL)
 		free(statp->_u._ext.ext);
@@ -683,21 +693,24 @@ res_ndestroy(res_state statp) {
 }
 
 const char *
-res_get_nibblesuffix(res_state statp) {
+res_get_nibblesuffix(res_state statp)
+{
 	if (statp->_u._ext.ext)
 		return (statp->_u._ext.ext->nsuffix);
 	return ("ip6.arpa");
 }
 
 const char *
-res_get_nibblesuffix2(res_state statp) {
+res_get_nibblesuffix2(res_state statp)
+{
 	if (statp->_u._ext.ext)
 		return (statp->_u._ext.ext->nsuffix2);
 	return ("ip6.int");
 }
 
 void
-res_setservers(res_state statp, const union res_sockaddr_union *set, int cnt) {
+res_setservers(res_state statp, const union res_sockaddr_union *set, int cnt)
+{
 	int i, nserv;
 	size_t size;
 
@@ -718,10 +731,8 @@ res_setservers(res_state statp, const union res_sockaddr_union *set, int cnt) {
 			if (size <= sizeof(statp->nsaddr_list[nserv]))
 				memcpy(&statp->nsaddr_list[nserv],
 					&set->sin, size);
-#ifdef notdef
 			else
 				statp->nsaddr_list[nserv].sin_family = 0;
-#endif
 			nserv++;
 			break;
 
@@ -750,10 +761,11 @@ res_setservers(res_state statp, const union res_sockaddr_union *set, int cnt) {
 }
 
 int
-res_getservers(res_state statp, union res_sockaddr_union *set, int cnt) {
+res_getservers(res_state statp, union res_sockaddr_union *set, int cnt)
+{
 	int i;
 	size_t size;
-	u_int16_t family;
+	uint16_t family;
 
 	for (i = 0; i < statp->nscount && i < cnt; i++) {
 		if (statp->_u._ext.ext)
