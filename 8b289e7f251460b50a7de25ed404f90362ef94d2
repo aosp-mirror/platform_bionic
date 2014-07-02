@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "84d6ed80_59bf6f97",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T17:23:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84d6ed80_7edb39f9",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4a77122_7f61778e",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-02T16:19:22Z",
       "side": 1,
       "message": "USE_LIBRARY_FD, since we already have two fds?",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a77122_1a2de182",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T17:23:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4a77122_7f61778e",
       "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -161,6 +197,24 @@
     },
     {
       "key": {
+        "uuid": "64dbb9ad_8c96c7f4",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T17:23:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44d07588_c8e26f3e",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64dbb9ad_4c216fbd",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -178,6 +232,24 @@
     },
     {
       "key": {
+        "uuid": "84d6ed80_f96c638b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T17:23:44Z",
+      "side": 1,
+      "message": "Done. With errno, we can clear it, but I would rather just leave it alone.",
+      "parentUuid": "64dbb9ad_4c216fbd",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4a77122_bf1e3ff4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -189,6 +261,24 @@
       "writtenOn": "2014-07-02T16:19:22Z",
       "side": 1,
       "message": "should we switch to __PRETTY_FUNCTION__ rather than correct these one by one?",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64dbb9ad_cc4efff4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T17:23:44Z",
+      "side": 1,
+      "message": "logging deserves separate change.. TRACE should also be changed to TRACE_TYPE, to enable filtering in LD_DEBUG...",
+      "parentUuid": "a4a77122_bf1e3ff4",
       "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
