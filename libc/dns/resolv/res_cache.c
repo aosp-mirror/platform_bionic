@@ -2043,7 +2043,7 @@ _resolv_populate_res_for_net(res_state statp)
         register char **pp = statp->dnsrch;
         register int *p = info->dnsrch_offset;
         while (pp < statp->dnsrch + MAXDNSRCH && *p != -1) {
-            *pp++ = &statp->defdname + *p++;
+            *pp++ = &statp->defdname[0] + *p++;
         }
     }
     pthread_mutex_unlock(&_res_cache_list_lock);

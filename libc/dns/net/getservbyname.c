@@ -34,7 +34,6 @@ struct servent *
 getservbyname(const char *name, const char *proto)
 {
     res_static       rs = __res_get_static();
-    struct servent*  s;
 
     if (rs == NULL || proto == NULL || name == NULL) {
         errno = EINVAL;

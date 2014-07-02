@@ -637,7 +637,6 @@ LOCAL_CFLAGS := \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -include netbsd-compat.h \
-    -Wno-error \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
