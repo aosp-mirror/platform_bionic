@@ -42,6 +42,7 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
+#include "private/ScopedFd.h"
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -696,11 +697,20 @@ static int open_library(const char* name) {
 }
 
 static soinfo* load_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
-    // Open the file.
-    int fd = open_library(name);
-    if (fd == -1) {
+    int fd = -1;
+    ScopedFd file_guard(-1);
+
+    if (extinfo != NULL && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
+      fd = extinfo->library_fd;
+    } else {
+      // Open the file.
+      fd = open_library(name);
+      if (fd == -1) {
         DL_ERR("library \"%s\" not found", name);
         return NULL;
+      }
+
+      file_guard.reset(fd);
     }
 
     ElfReader elf_reader(name, fd);
@@ -744,7 +754,7 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
 
     // At this point we know that whatever is loaded @ base is a valid ELF
     // shared library whose segments are properly mapped in.
-    TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
+    TRACE("[ load_library base=%p size=%zu name='%s' ]",
           reinterpret_cast<void*>(si->base), si->size, si->name);
 
     if (!soinfo_link_image(si, extinfo)) {
@@ -847,7 +857,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     return NULL;
   }
   if (extinfo != NULL && ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0)) {
-    DL_ERR("invalid extended flags to android_dlopen_ext: %x", extinfo->flags);
+    DL_ERR("invalid extended flags to android_dlopen_ext: %llx", extinfo->flags);
     return NULL;
   }
   protect_data(PROT_READ | PROT_WRITE);

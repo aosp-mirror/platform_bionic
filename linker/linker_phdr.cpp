@@ -127,9 +127,6 @@ ElfReader::ElfReader(const char* name, int fd)
 }
 
 ElfReader::~ElfReader() {
-  if (fd_ != -1) {
-    close(fd_);
-  }
   if (phdr_mmap_ != NULL) {
     munmap(phdr_mmap_, phdr_size_);
   }
