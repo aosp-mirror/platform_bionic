@@ -33,6 +33,24 @@
       "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24d54179_6adb77f9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T20:17:50Z",
+      "side": 1,
+      "message": "won\u0027t work.. we should not close fd in case it comes from extinfo. The responsibility for closing fd in this case on caller. The only case when we scope this is when linker opens the file.",
+      "parentUuid": "246381c5_b75dc822",
+      "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
