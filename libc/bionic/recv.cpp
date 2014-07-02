@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
 #include <sys/socket.h>
 
 ssize_t recv(int socket, void *buf, size_t len, int flags) {
