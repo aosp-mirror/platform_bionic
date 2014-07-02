@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "a4a77122_9ff0a347",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:36:43Z",
+      "side": 1,
+      "message": "or just use uint64_t flags. we\u0027ll have moved on to other things before the other 59 flags get used...\n\nactually, fuck it --- you can use your last flag as ANDROID_DLEXT_USE_FLAGS2 and add a flags2 field anyway.",
+      "parentUuid": "a4a77122_bf911f01",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64dbb9ad_4c216fbd",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
