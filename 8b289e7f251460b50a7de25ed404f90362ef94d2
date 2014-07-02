@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "041cbd1d_19b20feb",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2014-07-02T16:23:31Z",
+      "side": 1,
+      "message": "My intent was that everything would be guarded by a flag and we would only extend the structure downward. Since 0 is a valid fd, you can\u0027t just use a size and memset() the struct to zero, and I really don\u0027t like the idea that callers would have to initialise every field they know about to a specific \"safe\" value. But, ultimately the API is up to you :)\n\nGrouping the fields and commenting them to indicate which flag(s) use them seems like a good idea though, yes.",
+      "parentUuid": "a4a77122_9fa8a368",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64dbb9ad_4c216fbd",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
