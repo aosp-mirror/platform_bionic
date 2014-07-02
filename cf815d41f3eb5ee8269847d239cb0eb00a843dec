@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e474097d_f5fbb8dd",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T20:15:05Z",
+      "side": 1,
+      "message": "won\u0027t this break the Chrome prebuilts? (that was why i was leaning towards flags2 if and when we need it.)",
+      "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "246381c5_b75dc822",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T20:15:05Z",
+      "side": 1,
+      "message": "treat this like a smart pointer.\n\n  ScopedFd fd(-1);\n  ...\n  ElfReader elf_reader(name, fd.get());",
+      "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
