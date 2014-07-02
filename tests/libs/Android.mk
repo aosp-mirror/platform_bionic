@@ -78,6 +78,19 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by dlext tests - different name non-default location
+# -----------------------------------------------------------------------------
+libdlext_test_fd_src_files := \
+    dlext_test_library.cpp \
+
+libdlext_test_fd_install_to_out_data := true
+module := libdlext_test_fd
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Library used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_simple_src_files := \
