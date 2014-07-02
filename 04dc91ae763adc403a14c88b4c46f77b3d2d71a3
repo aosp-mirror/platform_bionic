@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d54179_8a47cb83",
+        "filename": "libc/private/ScopedFd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-02T20:38:51Z",
+      "side": 1,
+      "message": "2014",
+      "revId": "04dc91ae763adc403a14c88b4c46f77b3d2d71a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
