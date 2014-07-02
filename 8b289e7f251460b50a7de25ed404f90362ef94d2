@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "a4a77122_1f3af351",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:27:37Z",
+      "side": 1,
+      "message": "i\u0027m just trying to think ahead, since we won\u0027t get another chance to fix broken ABI like we did with LP64. since the communication via this struct is in one direction, i can\u0027t think of a case in which having the flags guard the fields won\u0027t be sufficient. i _think_ we\u0027d only need versioning if we were communicating back, but the \u0027const\u0027 ensures we\u0027re not.\n\nif no one can think of a counter-example, i think it\u0027s just paranoia and can be ignored.",
+      "parentUuid": "041cbd1d_19b20feb",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64dbb9ad_4c216fbd",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
