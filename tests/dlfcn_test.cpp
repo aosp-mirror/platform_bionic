@@ -50,6 +50,10 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_EQ(0, dlclose(self));
 }
 
+#if !defined(__LP64__)
+// Current compiler/static linker used for aarch64
+// platform optimizes LOCAL PROTECTED symbol
+// in libtest_local_symbol.so out of existence
 TEST(dlfcn, dlsym_local_symbol) {
   void* handle = dlopen("libtest_local_symbol.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
@@ -63,6 +67,7 @@ TEST(dlfcn, dlsym_local_symbol) {
   ASSERT_TRUE(f != NULL);
   ASSERT_EQ(1729U, f());
 }
+#endif
 
 TEST(dlfcn, dlopen_noload) {
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
