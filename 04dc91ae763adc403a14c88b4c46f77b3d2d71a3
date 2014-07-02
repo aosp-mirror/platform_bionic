@@ -16,6 +16,24 @@
       "revId": "04dc91ae763adc403a14c88b4c46f77b3d2d71a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04cafddd_cf79d508",
+        "filename": "libc/private/ScopedFd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-02T22:17:24Z",
+      "side": 1,
+      "message": "This class is copied from /libnativehelper with slight modifications.",
+      "parentUuid": "24d54179_8a47cb83",
+      "revId": "04dc91ae763adc403a14c88b4c46f77b3d2d71a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
