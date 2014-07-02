@@ -147,7 +147,7 @@ int sem_close(sem_t *sem)
 }
 
 
-int sem_unlink(const char * name)
+int sem_unlink(const char* name __unused)
 {
     errno = ENOSYS;
     return -1;
@@ -266,7 +266,6 @@ int sem_wait(sem_t *sem)
 
 int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 {
-    int  ret;
     unsigned int shared;
 
     if (sem == NULL) {
