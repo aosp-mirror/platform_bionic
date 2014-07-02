@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84d6ed80_7edb39f9",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 1,
+      "message": "\"The name\"? say where that comes from.",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a77122_7f61778e",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 1,
+      "message": "USE_LIBRARY_FD, since we already have two fds?",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a77122_9fa8a368",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 1,
+      "message": "can we get a version number in here, or a size_t in android_dlopen_ext (like the existing r_debug or dl_iterate_phdr respectively)? i worry about our ability to add stuff after we ship L otherwise.\n\n(obviously that\u0027s fine in a different change.)\n\nor are we confident that everything we\u0027ll ever want to add will be guarded by a new flag?\n\nshould we group the fields and add comments pointing to the flags they correspond to?",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64dbb9ad_4c216fbd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 1,
+      "message": "we should copy libnativehelper/include/libnativehelper/ScopedFd.h into bionic\u0027s private includes instead.\n\n(in general, when writing something like this, try to make it have the same API as a standard smart pointer.)\n\nan additional question (that applies to the existing one too) is what we want to do with errno if the close fails.",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a77122_bf1e3ff4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 1,
+      "message": "should we switch to __PRETTY_FUNCTION__ rather than correct these one by one?",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

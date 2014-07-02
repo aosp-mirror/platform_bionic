@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64dbb9ad_ac6f4bd7",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T16:19:22Z",
+      "side": 0,
+      "message": "good. it was kind of weird that ElfReader took ownership of the fd.",
+      "revId": "105ef36c67baeebd2fd9c24b6140953afba4f160",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
