@@ -45,6 +45,11 @@ typedef int (*fn)(void);
 #define LIBNAME_NORELRO "libdlext_test_norelro.so"
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
+#if defined(__LP64__)
+#define LIBPATH "%s/nativetest64/libdlext_test_fd/libdlext_test_fd.so"
+#else
+#define LIBPATH "%s/nativetest/libdlext_test_fd/libdlext_test_fd.so"
+#endif
 
 class DlExtTest : public ::testing::Test {
 protected:
@@ -77,6 +82,23 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
   android_dlextinfo extinfo;
   extinfo.flags = 0;
   handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(4, f());
+}
+
+TEST_F(DlExtTest, ExtInfoUseFd) {
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != NULL);
+  char lib_path[PATH_MAX];
+  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD;
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  ASSERT_TRUE(extinfo.library_fd != -1);
+  handle_ = android_dlopen_ext(lib_path, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
