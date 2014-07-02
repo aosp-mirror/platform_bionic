@@ -61,7 +61,7 @@ TEST(dlfcn, dlsym_local_symbol) {
   uint32_t (*f)(void);
   f = reinterpret_cast<uint32_t (*)(void)>(dlsym(handle, "dlsym_local_symbol_get_taxicab_number_using_dlsym"));
   ASSERT_TRUE(f != NULL);
-  ASSERT_EQ(1729, f());
+  ASSERT_EQ(1729U, f());
 }
 
 TEST(dlfcn, dlopen_noload) {
