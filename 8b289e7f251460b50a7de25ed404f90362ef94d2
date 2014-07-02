@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "44d07588_c8e26f3e",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2014-07-02T16:47:31Z",
+      "side": 1,
+      "message": "Yeah, we should probably go with uint64_t flags. If we need more than 64 we can extend it with a flag, but that\u0027s unlikely.",
+      "parentUuid": "84d6ed80_f948e373",
+      "revId": "8b289e7f251460b50a7de25ed404f90362ef94d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64dbb9ad_4c216fbd",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
