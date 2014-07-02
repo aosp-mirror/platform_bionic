@@ -69,6 +69,24 @@
       "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "246381c5_775090e4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-02T20:47:17Z",
+      "side": 1,
+      "message": "ah, right. you could ScopedFd::release in that case. that might seem more idiomatic than having two variables. unfortunately there\u0027s the fstat... yuck. i don\u0027t like any of the choices :-(",
+      "parentUuid": "24d54179_6adb77f9",
+      "revId": "cf815d41f3eb5ee8269847d239cb0eb00a843dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
