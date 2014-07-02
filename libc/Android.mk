@@ -234,7 +234,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/stdio/fclose.c \
     upstream-freebsd/lib/libc/stdio/flags.c \
     upstream-freebsd/lib/libc/stdio/fopen.c \
-    upstream-freebsd/lib/libc/stdio/mktemp.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
     upstream-freebsd/lib/libc/stdlib/imaxabs.c \
@@ -414,6 +413,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/getwc.c \
     upstream-openbsd/lib/libc/stdio/getwchar.c \
     upstream-openbsd/lib/libc/stdio/makebuf.c \
+    upstream-openbsd/lib/libc/stdio/mktemp.c \
     upstream-openbsd/lib/libc/stdio/perror.c \
     upstream-openbsd/lib/libc/stdio/printf.c \
     upstream-openbsd/lib/libc/stdio/putc.c \
@@ -496,6 +496,7 @@ libc_common_cflags += \
     -Werror=pointer-to-int-cast \
     -Werror=int-to-pointer-cast \
     -Werror=type-limits \
+    -Werror \
 
 ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
@@ -565,7 +566,7 @@ endef
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
-LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector -Werror
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -589,7 +590,6 @@ LOCAL_SRC_FILES += upstream-openbsd/lib/libc/time/wcsftime.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -fvisibility=hidden \
-    -Werror \
 
 # Don't use ridiculous amounts of stack.
 LOCAL_CFLAGS += -DALL_STATE
@@ -631,12 +631,13 @@ LOCAL_CFLAGS := \
     -DANDROID_CHANGES \
     -DINET6 \
     -fvisibility=hidden \
+    -Wno-unused-parameter \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -include netbsd-compat.h \
-#    -Werror \
+    -Wno-error \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -665,7 +666,6 @@ LOCAL_CFLAGS := \
     -I$(LOCAL_PATH)/upstream-freebsd/android/include \
     -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
     -include freebsd-compat.h \
-#    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -691,7 +691,6 @@ LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
-    -Werror \
     -DPOSIX_MISTAKE \
     -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
@@ -722,7 +721,6 @@ LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter \
-    -Werror \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
@@ -753,7 +751,6 @@ LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
-    -Werror \
     -fvisibility=hidden \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
@@ -778,7 +775,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_bionic_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
-    -Werror \
     -Wframe-larger-than=2048 \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
@@ -874,7 +870,6 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -DLIBC_STATIC \
-    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -896,7 +891,6 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_malloc_src)
 LOCAL_CFLAGS := $(libc_common_cflags) \
-    -Werror \
     -fvisibility=hidden \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
@@ -920,7 +914,6 @@ LOCAL_SRC_FILES := \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -DLIBC_STATIC \
-    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -940,7 +933,7 @@ include $(BUILD_STATIC_LIBRARY)
 # ========================================================
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := $(libc_common_cflags) -Werror
+LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -1010,7 +1003,6 @@ include $(CLEAR_VARS)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DMALLOC_LEAK_CHECK \
-    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
@@ -1046,7 +1038,6 @@ include $(CLEAR_VARS)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DMALLOC_QEMU_INSTRUMENT \
-    -Werror \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
