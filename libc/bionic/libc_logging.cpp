@@ -453,7 +453,7 @@ static int __libc_open_log_socket()
   // found that all logd crashes thus far have had no problem stuffing
   // the UNIX domain socket and moving on so not critical *today*.
 
-  int log_fd = TEMP_FAILURE_RETRY(socket(PF_UNIX, SOCK_DGRAM, 0));
+  int log_fd = TEMP_FAILURE_RETRY(socket(PF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC, 0));
   if (log_fd < 0) {
     return -1;
   }
