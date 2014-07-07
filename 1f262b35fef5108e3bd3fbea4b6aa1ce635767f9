@@ -16,6 +16,24 @@
       "revId": "1f262b35fef5108e3bd3fbea4b6aa1ce635767f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4c385c9_d896bdc3",
+        "filename": "libc/bionic/time64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-07T17:53:22Z",
+      "side": 0,
+      "message": "no one should have any reason to look at this code any more.\n\n(the obvious alternative would be to build it into its own library built with fewer -W options, but i\u0027m assuming YAGNI.)",
+      "parentUuid": "043d9d9e_54dba4f8",
+      "revId": "1f262b35fef5108e3bd3fbea4b6aa1ce635767f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
