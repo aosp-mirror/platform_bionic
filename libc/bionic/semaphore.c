@@ -126,11 +126,8 @@ int sem_destroy(sem_t *sem)
 }
 
 
-sem_t *sem_open(const char *name, int oflag, ...)
+sem_t *sem_open(const char *name __unused, int oflag __unused, ...)
 {
-    name=name;
-    oflag=oflag;
-
     errno = ENOSYS;
     return SEM_FAILED;
 }
