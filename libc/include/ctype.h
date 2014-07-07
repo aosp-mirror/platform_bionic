@@ -56,8 +56,6 @@
 __BEGIN_DECLS
 
 extern const char	*_ctype_;
-extern const short	*_tolower_tab_;
-extern const short	*_toupper_tab_;
 
 #if defined(__GNUC__) || defined(_ANSI_LIBRARY) || defined(lint)
 int	isalnum(int);
