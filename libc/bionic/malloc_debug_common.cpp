@@ -408,7 +408,7 @@ static void malloc_init_impl() {
     dlclose(malloc_impl_handle);
     return;
   }
-  if (malloc_debug_initialize(&g_hash_table) == -1) {
+  if (!malloc_debug_initialize(&g_hash_table)) {
     dlclose(malloc_impl_handle);
     return;
   }
