@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4c051c0_5708dc44",
+        "filename": "libc/bionic/cmsg_nxthdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-07T16:30:26Z",
+      "side": 1,
+      "message": "kill the trailing blank line too?",
+      "revId": "4b92aeb049934dfc7755a15969e3b00735c26741",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
