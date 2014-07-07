@@ -211,10 +211,9 @@ __res_get_state(void)
 }
 
 void
-__res_put_state(res_state res)
+__res_put_state(res_state res __unused)
 {
     /* nothing to do */
-    res=res;
 }
 
 res_static
