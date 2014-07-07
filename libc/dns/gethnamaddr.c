@@ -90,7 +90,7 @@
 // This should be synchronized to ResponseCode.h
 static const int DnsProxyQueryResult = 222;
 
-static const char const AskedForGot[] =
+static const char AskedForGot[] =
 			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
 #define	MAXPACKET	(64*1024)
