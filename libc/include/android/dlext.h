@@ -63,7 +63,7 @@ enum {
 };
 
 typedef struct {
-  int     flags;
+  uint64_t flags;
   void*   reserved_addr;
   size_t  reserved_size;
   int     relro_fd;
