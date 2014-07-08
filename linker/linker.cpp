@@ -856,7 +856,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     return NULL;
   }
   if (extinfo != NULL && ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0)) {
-    DL_ERR("invalid extended flags to android_dlopen_ext: %x", extinfo->flags);
+    DL_ERR("invalid extended flags to android_dlopen_ext: %" PRIx64, extinfo->flags);
     return NULL;
   }
   protect_data(PROT_READ | PROT_WRITE);
