@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2431c1d1_8d58a533",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-08T22:35:00Z",
+      "side": 1,
+      "message": "delete[].",
+      "revId": "870ccb19de050d8393aea2172b520fae900239b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
