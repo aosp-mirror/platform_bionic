@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c41f0544_186dd5d3",
+        "filename": "linker/arch/arm/begin.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T02:38:39Z",
+      "side": 1,
+      "message": "question: why does arm need us to set up __CTOR_LIST__ when aarch64, x86, and x86-64 don\u0027t? and do mips/mips64 really need theirs, or are they just another case of copy \u0026 paste from the arm code?",
+      "revId": "a896ddfb4266fb4bbcb62d80b51ca58d1294f647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
