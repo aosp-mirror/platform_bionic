@@ -16,6 +16,24 @@
       "revId": "dc42e20d54f17cbcabb2e8584398566eb66c47c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c41f0544_f3d01a32",
+        "filename": "tests/Android.build.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-07-09T06:45:24Z",
+      "side": 1,
+      "message": "It will work. This basically duplicate the logic in build/core/target_test_internal.mk.\nI think the ideal fix is to \"include $(BUILD_NATIVE_TEST)\" or \"include $(BUILD_SHARED_TEST_LIBRARY\", then you don\u0027t need to set up LOCAL_MODULE_PATH by yourself.",
+      "parentUuid": "e474097d_d4779554",
+      "revId": "dc42e20d54f17cbcabb2e8584398566eb66c47c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
