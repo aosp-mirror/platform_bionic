@@ -29,7 +29,6 @@
 #include <private/bionic_asm.h>
 
 ENTRY(_start)
-  /* Pass elfdata to __linker_init. */
   mov %rsp, %rdi
   call __linker_init
 
