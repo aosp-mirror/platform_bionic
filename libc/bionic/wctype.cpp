@@ -30,7 +30,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <wctype.h>
 
 // TODO: these only work for the ASCII range; rewrite to dlsym icu4c? http://b/14499654
 
@@ -46,19 +45,6 @@ int iswpunct(wint_t wc) { return ispunct(wc); }
 int iswspace(wint_t wc) { return isspace(wc); }
 int iswupper(wint_t wc) { return isupper(wc); }
 int iswxdigit(wint_t wc) { return isxdigit(wc); }
-
-int iswalnum_l(wint_t c, locale_t) { return iswalnum(c); }
-int iswalpha_l(wint_t c, locale_t) { return iswalpha(c); }
-int iswblank_l(wint_t c, locale_t) { return iswblank(c); }
-int iswcntrl_l(wint_t c, locale_t) { return iswcntrl(c); }
-int iswdigit_l(wint_t c, locale_t) { return iswdigit(c); }
-int iswgraph_l(wint_t c, locale_t) { return iswgraph(c); }
-int iswlower_l(wint_t c, locale_t) { return iswlower(c); }
-int iswprint_l(wint_t c, locale_t) { return iswprint(c); }
-int iswpunct_l(wint_t c, locale_t) { return iswpunct(c); }
-int iswspace_l(wint_t c, locale_t) { return iswspace(c); }
-int iswupper_l(wint_t c, locale_t) { return iswupper(c); }
-int iswxdigit_l(wint_t c, locale_t) { return iswxdigit(c); }
 
 int iswctype(wint_t wc, wctype_t char_class) {
   switch (char_class) {
@@ -78,15 +64,8 @@ int iswctype(wint_t wc, wctype_t char_class) {
   }
 }
 
-int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
-  return iswctype(wc, char_class);
-}
-
 wint_t towlower(wint_t wc) { return tolower(wc); }
 wint_t towupper(wint_t wc) { return toupper(wc); }
-
-int towupper_l(int c, locale_t) { return towupper(c); }
-int towlower_l(int c, locale_t) { return towlower(c); }
 
 wctype_t wctype(const char* property) {
   static const char* const  properties[WC_TYPE_MAX] = {
@@ -100,10 +79,6 @@ wctype_t wctype(const char* property) {
     }
   }
   return static_cast<wctype_t>(0);
-}
-
-wctype_t wctype_l(const char* property, locale_t) {
-  return wctype(property);
 }
 
 int wcwidth(wchar_t wc) {
