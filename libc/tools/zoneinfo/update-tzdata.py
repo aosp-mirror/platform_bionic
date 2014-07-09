@@ -31,8 +31,8 @@ CheckDirExists(bionic_libc_tools_zoneinfo_dir, 'bionic/libc/tools/zoneinfo')
 print 'Found bionic in %s ...' % bionic_dir
 
 # Find the icu4c directory.
-icu_dir = os.path.realpath('%s/../external/icu4c' % bionic_dir)
-CheckDirExists(icu_dir, 'external/icu4c')
+icu_dir = os.path.realpath('%s/../external/icu/icu4c/source' % bionic_dir)
+CheckDirExists(icu_dir, 'external/icu/icu4c/source')
 print 'Found icu in %s ...' % icu_dir
 
 
