@@ -16,6 +16,24 @@
       "revId": "a896ddfb4266fb4bbcb62d80b51ca58d1294f647",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e474097d_3467e9a6",
+        "filename": "linker/arch/arm/begin.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-09T02:56:03Z",
+      "side": 1,
+      "message": "interesting question, I tried to remove it from arm, linker compiles and runs (bionic-unit-tests at least)",
+      "parentUuid": "c41f0544_186dd5d3",
+      "revId": "a896ddfb4266fb4bbcb62d80b51ca58d1294f647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
