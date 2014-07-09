@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9015cf5_8121bebf",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T18:06:01Z",
+      "side": 1,
+      "message": "do we need to add \"ascii\" here?\n\nhmm... looks like iswascii is a non-POSIX BSD thing. glibc doesn\u0027t have it.",
+      "revId": "4bead5af8ab7a2ebf9b26bbf86905bf2a95dd494",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
