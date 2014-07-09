@@ -31,7 +31,6 @@
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
-#include <xlocale.h>
 
 __BEGIN_DECLS
 
@@ -76,7 +75,6 @@ extern struct tm* gmtime_r(const time_t*, struct tm*) __LIBC_ABI_PUBLIC__;
 
 extern char* strptime(const char*, const char*, struct tm*) __LIBC_ABI_PUBLIC__;
 extern size_t strftime(char*, size_t, const char*, const struct tm*) __LIBC_ABI_PUBLIC__;
-extern size_t strftime_l(char *, size_t, const char *, const struct tm *, locale_t) __LIBC_ABI_PUBLIC__;
 
 extern char* ctime(const time_t*) __LIBC_ABI_PUBLIC__;
 extern char* ctime_r(const time_t*, char*) __LIBC_ABI_PUBLIC__;
