@@ -120,9 +120,3 @@ __start:
     move	t9, v0
     j		t9
     .end    __start
-
-/* FIXME:Is this still needed? */
-    .section .ctors, "wa"
-    .globl __CTOR_LIST__
-__CTOR_LIST__:
-    .long -1
