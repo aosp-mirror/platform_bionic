@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e474097d_d4779554",
+        "filename": "tests/Android.build.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-09T02:43:18Z",
+      "side": 1,
+      "message": "what if there is no 2nd arch? aosp_hammmerhead for example; will it work?",
+      "revId": "dc42e20d54f17cbcabb2e8584398566eb66c47c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
