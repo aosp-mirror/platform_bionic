@@ -16,6 +16,24 @@
       "revId": "4bead5af8ab7a2ebf9b26bbf86905bf2a95dd494",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_c1922602",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-09T18:33:39Z",
+      "side": 1,
+      "message": "Yeah... I was just noticing that. Let me see if there\u0027s a way to tell libc++ that we don\u0027t support it.",
+      "parentUuid": "b9015cf5_8121bebf",
+      "revId": "4bead5af8ab7a2ebf9b26bbf86905bf2a95dd494",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
