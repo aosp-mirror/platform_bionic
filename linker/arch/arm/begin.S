@@ -26,20 +26,12 @@
  * SUCH DAMAGE.
  */
 
-	.text
-	.align 4
-	.type _start,#function
-	.globl _start
+#include <private/bionic_asm.h>
 
-_start:
-	mov	r0, sp
-	mov	r1, #0
-	bl	__linker_init
+ENTRY(_start)
+  mov r0, sp
+  bl __linker_init
 
-	/* linker init returns the _entry address in the main image */
-	mov	pc, r0
-
-	.section .ctors, "wa"
-	.globl __CTOR_LIST__
-__CTOR_LIST__:
-	.long -1
+  /* linker init returns the _entry address in the main image */
+  mov pc, r0
+END(_start)
