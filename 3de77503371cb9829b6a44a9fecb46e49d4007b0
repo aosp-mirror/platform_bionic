@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9f75445_0c56ffe8",
+        "filename": "libc/bionic/ctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "blank line between comment and content.",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9f75445_ec2bd368",
+        "filename": "libc/bionic/ctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "in C++ we just omit the parameter name.",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_0f8955d6",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "amusing that wctype.cpp didn\u0027t include wctype.h!",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9045004_6517dcb0",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "missing _l?",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_4f0cfda0",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "#if __POSIX_VISIBLE \u003e\u003d 200809?\n\n(we really ought to decide at some point whether we care about such things. and fix \u003cfeatures.h\u003e.)",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9045004_25c8b4ea",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "i thought we weren\u0027t adding this?",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_cf1fedc2",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "should these be in the #if below?",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9045004_c5b6b072",
+        "filename": "libc/include/wctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-09T21:19:12Z",
+      "side": 1,
+      "message": "char*",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
