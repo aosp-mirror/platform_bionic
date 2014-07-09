@@ -32,6 +32,18 @@ extern "C" void DlSymTestFunction() {
   g_called = true;
 }
 
+static int g_ctor_function_called = 0;
+
+extern "C" void ctor_function() __attribute__ ((constructor));
+
+extern "C" void ctor_function() {
+  g_ctor_function_called = 17;
+}
+
+TEST(dlfcn, ctor_function_call) {
+  ASSERT_EQ(17, g_ctor_function_called);
+}
+
 TEST(dlfcn, dlsym_in_self) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
