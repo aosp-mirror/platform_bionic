@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "f9f75445_37f908e6",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-09T21:47:49Z",
+      "side": 1,
+      "message": "wctype.h used to do nothing other than #include \u003cwchar.h\u003e. Still odd, but explains why it wasn\u0027t an issue.",
+      "parentUuid": "b9015cf5_0f8955d6",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9045004_6517dcb0",
         "filename": "libc/bionic/wctype.cpp",
         "patchSetId": 1
@@ -64,6 +82,24 @@
       "writtenOn": "2014-07-09T21:19:12Z",
       "side": 1,
       "message": "missing _l?",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_aa87effe",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-09T21:47:49Z",
+      "side": 1,
+      "message": "Oops.",
+      "parentUuid": "d9045004_6517dcb0",
       "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "f9f75445_f73840e9",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-09T21:47:49Z",
+      "side": 1,
+      "message": "I thought we had decided that the rule with bionic was that we were going to always be true to the latest version of POSIX. We had discussed this when I was removing all the things that had been scrubbed from POSIX (I deleted all the prototypes rather than hiding them behind __POSIX_VISIBLE).\n\nStill, I can add the guard if you\u0027d like.",
+      "parentUuid": "b9015cf5_4f0cfda0",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9045004_25c8b4ea",
         "filename": "libc/include/wchar.h",
         "patchSetId": 1
@@ -98,6 +152,24 @@
       "writtenOn": "2014-07-09T21:19:12Z",
       "side": 1,
       "message": "i thought we weren\u0027t adding this?",
+      "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9015cf5_aabdaf9f",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-09T21:47:49Z",
+      "side": 1,
+      "message": "Yeah, forgot to remove it from this patch.",
+      "parentUuid": "d9045004_25c8b4ea",
       "revId": "3de77503371cb9829b6a44a9fecb46e49d4007b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
