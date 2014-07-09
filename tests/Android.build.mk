@@ -28,8 +28,8 @@ ifneq ($(findstring LIBRARY, $(build_target)),LIBRARY)
     LOCAL_MODULE_STEM_64 := $(module)64
 else
 ifeq ($($(module)_install_to_out_data),true)
-    LOCAL_MODULE_PATH_32 := $(TARGET_OUT_DATA_NATIVE_TESTS)/$(module)
-    LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)64/$(module)
+    LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/$(module)
+    LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/$(module)
 endif
 endif
 
