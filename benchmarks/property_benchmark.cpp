@@ -156,3 +156,30 @@ static void BM_property_find(int iters, int nprops)
     StopBenchmarkTiming();
 }
 BENCHMARK(BM_property_find)->TEST_NUM_PROPS;
+
+static void BM_property_read(int iters, int nprops)
+{
+    StopBenchmarkTiming();
+
+    LocalPropertyTestState pa(nprops);
+
+    if (!pa.valid)
+        return;
+
+    srandom(iters * nprops);
+    const prop_info** pinfo = new const prop_info*[iters];
+    char propvalue[PROP_VALUE_MAX];
+
+    for (int i = 0; i < iters; i++) {
+        pinfo[i] = __system_property_find(pa.names[random() % nprops]);
+    }
+
+    StartBenchmarkTiming();
+    for (int i = 0; i < iters; i++) {
+        __system_property_read(pinfo[i], 0, propvalue);
+    }
+    StopBenchmarkTiming();
+
+    delete[] pinfo;
+}
+BENCHMARK(BM_property_read)->TEST_NUM_PROPS;
