@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-import sys, cpp, kernel, glob, os, re, getopt, clean_header
+import sys, cpp, kernel, glob, os, re, getopt, clean_header, subprocess
 from defaults import *
 from utils import *
 
@@ -40,11 +40,22 @@ else:
     if not os.path.isdir(original_dir):
         panic( "Missing directory, please specify one through command-line: %s\n" % original_dir )
 
+# Fixme: This should be removed after next release.
+# Do not update ion.h ion_test.h until after next release in aosp.
+source = subprocess.check_output('git remote show', shell=True).strip()
+skip_ion = False
+if source == "aosp":
+    skip_ion = True
+
 # find all source files in 'original'
 #
 sources = []
+warning_ion = []
 for root, dirs, files in os.walk( original_dir ):
     for file in files:
+        if skip_ion and (file == "ion.h" or file == "ion_test.h"):
+            warning_ion.append("  Skipped file %s/%s" % (root, file))
+            continue
         base, ext = os.path.splitext(file)
         if ext == ".h":
             sources.append( "%s/%s" % (root,file) )
@@ -90,4 +101,7 @@ print "%-*s" % (oldlen,"Done!")
 
 b.updateGitFiles()
 
+if warning_ion:
+    print "NOTE: Due to import into aosp, some files were not processed."
+    print "\n".join(warning_ion)
 sys.exit(0)
