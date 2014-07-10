@@ -16,6 +16,24 @@
       "revId": "006e0770ffaa57d88f407fad8d9b78ea0efa9c6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d979b0b6_d4d2fc0b",
+        "filename": "linker/arch/arm/begin.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-10T22:29:18Z",
+      "side": 0,
+      "message": "it did not work anyways...",
+      "parentUuid": "d9045004_b991888e",
+      "revId": "006e0770ffaa57d88f407fad8d9b78ea0efa9c6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
