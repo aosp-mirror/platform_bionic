@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9045004_b991888e",
+        "filename": "linker/arch/arm/begin.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T19:30:21Z",
+      "side": 0,
+      "message": "you know, this is the dynamic linker\u0027s _start, so this would only have applied to a .ctor section in the linker itself anyway.",
+      "revId": "006e0770ffaa57d88f407fad8d9b78ea0efa9c6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
