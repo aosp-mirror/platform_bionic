@@ -51,17 +51,6 @@
 #define MALLOC_ALIGNMENT ((size_t)(2 * sizeof(void *)))
 #endif
 
-#ifdef USE_JEMALLOC
-#include "jemalloc.h"
-#define Malloc(function)  je_ ## function
-#else
-#ifndef USE_DLMALLOC
-#error "Either one of USE_DLMALLOC or USE_JEMALLOC must be defined."
-#endif
-#include "dlmalloc.h"
-#define Malloc(function)  dl ## function
-#endif
-
 // =============================================================================
 // Structures
 // =============================================================================
@@ -116,7 +105,7 @@ struct MallocDebug {
 #endif
 };
 
-typedef bool (*MallocDebugInit)(HashTable*);
+typedef bool (*MallocDebugInit)(HashTable*, const MallocDebug*);
 typedef void (*MallocDebugFini)(int);
 
 // =============================================================================

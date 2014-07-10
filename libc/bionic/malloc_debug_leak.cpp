@@ -62,6 +62,7 @@
 
 extern int gMallocLeakZygoteChild;
 extern HashTable* g_hash_table;
+extern const MallocDebug* g_malloc_dispatch;
 
 // =============================================================================
 // stack trace functions
@@ -143,7 +144,7 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         entry->allocations++;
     } else {
         // create a new entry
-        entry = static_cast<HashEntry*>(Malloc(malloc)(sizeof(HashEntry) + numEntries*sizeof(uintptr_t)));
+        entry = static_cast<HashEntry*>(g_malloc_dispatch->malloc(sizeof(HashEntry) + numEntries*sizeof(uintptr_t)));
         if (!entry) {
             return NULL;
         }
@@ -208,11 +209,11 @@ static void remove_entry(HashEntry* entry) {
 #define CHK_SENTINEL_VALUE      0xeb
 
 extern "C" void* fill_calloc(size_t n_elements, size_t elem_size) {
-    return Malloc(calloc)(n_elements, elem_size);
+    return g_malloc_dispatch->calloc(n_elements, elem_size);
 }
 
 extern "C" void* fill_malloc(size_t bytes) {
-    void* buffer = Malloc(malloc)(bytes);
+    void* buffer = g_malloc_dispatch->malloc(bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
     }
@@ -220,17 +221,17 @@ extern "C" void* fill_malloc(size_t bytes) {
 }
 
 extern "C" void fill_free(void* mem) {
-    size_t bytes = Malloc(malloc_usable_size)(mem);
+    size_t bytes = g_malloc_dispatch->malloc_usable_size(mem);
     memset(mem, CHK_FILL_FREE, bytes);
-    Malloc(free)(mem);
+    g_malloc_dispatch->free(mem);
 }
 
 extern "C" void* fill_realloc(void* mem, size_t bytes) {
-    size_t oldSize = Malloc(malloc_usable_size)(mem);
-    void* newMem = Malloc(realloc)(mem, bytes);
+    size_t oldSize = g_malloc_dispatch->malloc_usable_size(mem);
+    void* newMem = g_malloc_dispatch->realloc(mem, bytes);
     if (newMem) {
         // If this is larger than before, fill the extra with our pattern.
-        size_t newSize = Malloc(malloc_usable_size)(newMem);
+        size_t newSize = g_malloc_dispatch->malloc_usable_size(newMem);
         if (newSize > oldSize) {
             memset(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(newMem)+oldSize), CHK_FILL_FREE, newSize-oldSize);
         }
@@ -239,7 +240,7 @@ extern "C" void* fill_realloc(void* mem, size_t bytes) {
 }
 
 extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
-    void* buffer = Malloc(memalign)(alignment, bytes);
+    void* buffer = g_malloc_dispatch->memalign(alignment, bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
     }
@@ -249,11 +250,11 @@ extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
 extern "C" size_t fill_malloc_usable_size(const void* mem) {
     // Since we didn't allocate extra bytes before or after, we can
     // report the normal usable size here.
-    return Malloc(malloc_usable_size)(mem);
+    return g_malloc_dispatch->malloc_usable_size(mem);
 }
 
 extern "C" struct mallinfo fill_mallinfo() {
-  return Malloc(mallinfo)();
+  return g_malloc_dispatch->mallinfo();
 }
 
 extern "C" int fill_posix_memalign(void** memptr, size_t alignment, size_t size) {
@@ -298,7 +299,7 @@ extern "C" void* leak_malloc(size_t bytes) {
         return NULL;
     }
 
-    void* base = Malloc(malloc)(size);
+    void* base = g_malloc_dispatch->malloc(size);
     if (base != NULL) {
         ScopedPthreadMutexLocker locker(&g_hash_table->lock);
 
@@ -342,11 +343,11 @@ extern "C" void leak_free(void* mem) {
     entry->allocations--;
     if (entry->allocations <= 0) {
       remove_entry(entry);
-      Malloc(free)(entry);
+      g_malloc_dispatch->free(entry);
     }
 
     // now free the memory!
-    Malloc(free)(header);
+    g_malloc_dispatch->free(header);
   } else {
     debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
               header->guard, header->entry);
@@ -452,7 +453,7 @@ extern "C" size_t leak_malloc_usable_size(const void* mem) {
             return 0;
         }
 
-        size_t ret = Malloc(malloc_usable_size)(header);
+        size_t ret = g_malloc_dispatch->malloc_usable_size(header);
         if (ret != 0) {
             // The usable area starts at 'mem' and stops at 'header+ret'.
             return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
@@ -462,7 +463,7 @@ extern "C" size_t leak_malloc_usable_size(const void* mem) {
 }
 
 extern "C" struct mallinfo leak_mallinfo() {
-  return Malloc(mallinfo)();
+  return g_malloc_dispatch->mallinfo();
 }
 
 extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size) {
