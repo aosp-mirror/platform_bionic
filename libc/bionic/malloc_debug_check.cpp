@@ -123,6 +123,7 @@ static pthread_mutex_t backlog_lock = PTHREAD_MUTEX_INITIALIZER;
 static unsigned g_malloc_debug_backlog = 100;
 
 __LIBC_HIDDEN__ HashTable* g_hash_table;
+__LIBC_HIDDEN__ const MallocDebug* g_malloc_dispatch;
 
 static inline void init_front_guard(hdr_t* hdr) {
     memset(hdr->front_guard, FRONT_GUARD, FRONT_GUARD_LEN);
@@ -324,7 +325,7 @@ static inline void add_to_backlog(hdr_t* hdr) {
     while (backlog_num > g_malloc_debug_backlog) {
         hdr_t* gone = backlog_tail;
         del_from_backlog_locked(gone);
-        Malloc(free)(gone->base);
+        g_malloc_dispatch->free(gone->base);
     }
 }
 
@@ -336,7 +337,7 @@ extern "C" void* chk_malloc(size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    hdr_t* hdr = static_cast<hdr_t*>(Malloc(malloc)(size));
+    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->malloc(size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -364,7 +365,7 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
         return NULL;
     }
 
-    void* base = Malloc(malloc)(sizeof(hdr_t) + size + sizeof(ftr_t));
+    void* base = g_malloc_dispatch->malloc(sizeof(hdr_t) + size + sizeof(ftr_t));
     if (base != NULL) {
         // Check that the actual pointer that will be returned is aligned
         // properly.
@@ -461,7 +462,7 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
                        user(hdr), bytes);
             log_backtrace(bt, depth);
             // just get a whole new allocation and leak the old one
-            return Malloc(realloc)(0, bytes);
+            return g_malloc_dispatch->realloc(0, bytes);
             // return realloc(user(hdr), bytes); // assuming it was allocated externally
         }
     }
@@ -474,15 +475,15 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
     if (hdr->base != hdr) {
         // An allocation from memalign, so create another allocation and
         // copy the data out.
-        void* newMem = Malloc(malloc)(size);
+        void* newMem = g_malloc_dispatch->malloc(size);
         if (newMem == NULL) {
             return NULL;
         }
         memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
-        Malloc(free)(hdr->base);
+        g_malloc_dispatch->free(hdr->base);
         hdr = static_cast<hdr_t*>(newMem);
     } else {
-        hdr = static_cast<hdr_t*>(Malloc(realloc)(hdr, size));
+        hdr = static_cast<hdr_t*>(g_malloc_dispatch->realloc(hdr, size));
     }
     if (hdr) {
         hdr->base = hdr;
@@ -501,7 +502,7 @@ extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    hdr_t* hdr = static_cast<hdr_t*>(Malloc(calloc)(1, size));
+    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->calloc(1, size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = get_backtrace(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -524,7 +525,7 @@ extern "C" size_t chk_malloc_usable_size(const void* ptr) {
 }
 
 extern "C" struct mallinfo chk_mallinfo() {
-  return Malloc(mallinfo)();
+  return g_malloc_dispatch->mallinfo();
 }
 
 extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) {
@@ -584,8 +585,9 @@ static void ReportMemoryLeaks() {
   }
 }
 
-extern "C" bool malloc_debug_initialize(HashTable* hash_table) {
+extern "C" bool malloc_debug_initialize(HashTable* hash_table, const MallocDebug* malloc_dispatch) {
   g_hash_table = hash_table;
+  g_malloc_dispatch = malloc_dispatch;
 
   char debug_backlog[PROP_VALUE_MAX];
   if (__system_property_get("libc.debug.malloc.backlog", debug_backlog)) {
