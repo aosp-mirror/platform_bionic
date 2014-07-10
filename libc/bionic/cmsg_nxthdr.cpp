@@ -37,6 +37,3 @@ cmsghdr* __cmsg_nxthdr(msghdr* msg, cmsghdr* cmsg) {
   }
   return ptr;
 }
-
-// TODO: remove after NDK refresh.
-__weak_alias(cmsg_nxthdr, __cmsg_nxthdr);
