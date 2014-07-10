@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9045004_a3e0395a",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-10T04:49:17Z",
+      "side": 1,
+      "message": "Yep, done.",
+      "parentUuid": "995e582a_ded9c540",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9f75445_df38b6c0",
         "filename": "libc/bionic/malloc_debug_common.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-10T04:04:58Z",
       "side": 1,
       "message": "not your usual defined() style?",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9045004_83e53d6b",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-10T04:49:17Z",
+      "side": 1,
+      "message": "Fixed it.",
+      "parentUuid": "f9f75445_df38b6c0",
       "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "995e582a_1ece3d69",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-10T04:49:17Z",
+      "side": 1,
+      "message": "Fixed this to use an elif.",
+      "parentUuid": "f9f75445_9f422e25",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "995e582a_7e109927",
         "filename": "libc/bionic/malloc_debug_leak.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-10T04:04:58Z",
       "side": 1,
       "message": "are you sure you don\u0027t want a different Malloc macro for this?",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9f75445_7f79a246",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-10T04:49:17Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem to add much to the readability of the code to make it another macro.",
+      "parentUuid": "995e582a_7e109927",
       "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
