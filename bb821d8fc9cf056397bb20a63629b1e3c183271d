@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "995e582a_ded9c540",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:04:58Z",
+      "side": 1,
+      "message": "can\u0027t we just add this to libc_common_cflags once?",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9f75445_df38b6c0",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:04:58Z",
+      "side": 1,
+      "message": "not your usual defined() style?",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9f75445_9f422e25",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:04:58Z",
+      "side": 1,
+      "message": "#elif would let you have the #error case last in a regular #else, rather than nestled in the middle.",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "995e582a_7e109927",
+        "filename": "libc/bionic/malloc_debug_leak.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:04:58Z",
+      "side": 1,
+      "message": "are you sure you don\u0027t want a different Malloc macro for this?",
+      "revId": "bb821d8fc9cf056397bb20a63629b1e3c183271d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
