@@ -491,6 +491,10 @@ libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
 
+ifneq ($(TARGET_USES_LOGD),false)
+libc_common_cflags += -DTARGET_USES_LOGD
+endif
+
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
 libc_common_cflags += \
     -Werror=pointer-to-int-cast \
@@ -783,10 +787,6 @@ LOCAL_MODULE := libc_bionic
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-ifneq ($(TARGET_USES_LOGD),false)
-LOCAL_CFLAGS += -DTARGET_USES_LOGD
-endif
-
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
 include $(BUILD_STATIC_LIBRARY)
@@ -1011,6 +1011,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
     bionic/debug_mapinfo.cpp \
     bionic/debug_stacktrace.cpp \
+    bionic/libc_logging.cpp \
     bionic/malloc_debug_leak.cpp \
     bionic/malloc_debug_check.cpp \
 
@@ -1018,7 +1019,6 @@ LOCAL_MODULE := libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
@@ -1044,13 +1044,13 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-    bionic/malloc_debug_qemu.cpp
+    bionic/libc_logging.cpp \
+    bionic/malloc_debug_qemu.cpp \
 
 LOCAL_MODULE := libc_malloc_debug_qemu
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't install on release build

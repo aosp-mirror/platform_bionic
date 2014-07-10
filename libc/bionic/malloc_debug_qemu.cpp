@@ -336,6 +336,9 @@ static void dump_malloc_descriptor(char* str,
 // Static data
 // =============================================================================
 
+// The underlying malloc implementation to use to get memory.
+static const MallocDebug* g_malloc_dispatch = NULL;
+
 /* Emulator's magic page address.
  * This page (mapped on /dev/qemu_trace device) is used to fire up events
  * in the emulator. */
@@ -595,7 +598,9 @@ extern "C" void* qemu_instrumented_valloc(size_t);
  * Return:
  *  0 on success, or -1 on failure.
 */
-extern "C" bool malloc_debug_initialize(HashTable*) {
+extern "C" bool malloc_debug_initialize(HashTable*, const MallocDebug* malloc_dispatch) {
+    g_malloc_dispatch = malloc_dispatch;
+
     /* We will be using emulator's magic page to report memory allocation
      * activities. In essence, what magic page does, it translates writes to
      * the memory mapped spaces into writes to an I/O port that emulator
@@ -693,7 +698,7 @@ extern "C" void* qemu_instrumented_malloc(size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    desc.ptr = Malloc(malloc)(size);
+    desc.ptr = g_malloc_dispatch->malloc(size);
     if (desc.ptr == NULL) {
         qemu_error_log("<libc_pid=%03u, pid=%03u> malloc(%zu): malloc(%zu) failed.",
                        malloc_pid, getpid(), bytes, size);
@@ -704,7 +709,7 @@ extern "C" void* qemu_instrumented_malloc(size_t bytes) {
     if (notify_qemu_malloc(&desc)) {
         log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: malloc: notify_malloc failed for ",
                   malloc_pid, getpid());
-        Malloc(free)(desc.ptr);
+        g_malloc_dispatch->free(desc.ptr);
         errno = ENOMEM;
         return NULL;
     } else {
@@ -726,7 +731,7 @@ extern "C" void qemu_instrumented_free(void* mem) {
 
     if (mem == NULL) {
         // Just let go NULL free
-        Malloc(free)(mem);
+        g_malloc_dispatch->free(mem);
         return;
     }
 
@@ -757,7 +762,7 @@ extern "C" void qemu_instrumented_free(void* mem) {
     } else {
         log_mdesc(info, &desc, "--- <libc_pid=%03u, pid=%03u> free(%p) -> ",
                   malloc_pid, getpid(), mem);
-        Malloc(free)(desc.ptr);
+        g_malloc_dispatch->free(desc.ptr);
     }
 }
 
@@ -816,7 +821,7 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
         total_elements++;
         desc.suffix_size += (elem_size - total_size);
     }
-    desc.ptr = Malloc(calloc)(total_elements, elem_size);
+    desc.ptr = g_malloc_dispatch->calloc(total_elements, elem_size);
     if (desc.ptr == NULL) {
         error_log("<libc_pid=%03u, pid=%03u> calloc: calloc(%zu(%zu), %zu) (prx=%u, sfx=%u) failed.",
                    malloc_pid, getpid(), n_elements, total_elements, elem_size,
@@ -827,7 +832,7 @@ extern "C" void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     if (notify_qemu_malloc(&desc)) {
         log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: calloc(%zu(%zu), %zu): notify_malloc failed for ",
                   malloc_pid, getpid(), n_elements, total_elements, elem_size);
-        Malloc(free)(desc.ptr);
+        g_malloc_dispatch->free(desc.ptr);
         errno = ENOMEM;
         return NULL;
     } else {
@@ -905,7 +910,7 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    new_desc.ptr = Malloc(malloc)(new_size);
+    new_desc.ptr = g_malloc_dispatch->malloc(new_size);
     if (new_desc.ptr == NULL) {
         log_mdesc(error, &cur_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu): malloc(%zu) failed on ",
                   malloc_pid, getpid(), mem, bytes, new_size);
@@ -924,7 +929,7 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
         log_mdesc(error, &new_desc, "<libc_pid=%03u, pid=%03u>: realloc(%p, %zu) notify_malloc failed -> ",
                   malloc_pid, getpid(), mem, bytes);
         log_mdesc(error, &cur_desc, "                                                                <- ");
-        Malloc(free)(new_desc.ptr);
+        g_malloc_dispatch->free(new_desc.ptr);
         errno = ENOMEM;
         return NULL;
     }
@@ -940,11 +945,11 @@ extern "C" void* qemu_instrumented_realloc(void* mem, size_t bytes) {
         /* Since we registered new decriptor with the emulator, we need
          * to unregister it before freeing newly allocated block. */
         notify_qemu_free(mallocdesc_user_ptr(&new_desc));
-        Malloc(free)(new_desc.ptr);
+        g_malloc_dispatch->free(new_desc.ptr);
         errno = ENOMEM;
         return NULL;
     }
-    Malloc(free)(cur_desc.ptr);
+    g_malloc_dispatch->free(cur_desc.ptr);
 
     log_mdesc(info, &new_desc, "=== <libc_pid=%03u, pid=%03u>: realloc(%p, %zu) -> ",
               malloc_pid, getpid(), mem, bytes);
@@ -985,7 +990,7 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
 
         return NULL;
     }
-    desc.ptr = Malloc(memalign)(desc.prefix_size, size);
+    desc.ptr = g_malloc_dispatch->memalign(desc.prefix_size, size);
     if (desc.ptr == NULL) {
         error_log("<libc_pid=%03u, pid=%03u> memalign(%zx, %zu): malloc(%zu) failed.",
                   malloc_pid, getpid(), alignment, bytes, size);
@@ -994,7 +999,7 @@ extern "C" void* qemu_instrumented_memalign(size_t alignment, size_t bytes) {
     if (notify_qemu_malloc(&desc)) {
         log_mdesc(error, &desc, "<libc_pid=%03u, pid=%03u>: memalign(%zx, %zu): notify_malloc failed for ",
                   malloc_pid, getpid(), alignment, bytes);
-        Malloc(free)(desc.ptr);
+        g_malloc_dispatch->free(desc.ptr);
         return NULL;
     }
 
@@ -1032,7 +1037,7 @@ extern "C" size_t qemu_instrumented_malloc_usable_size(const void* mem) {
 }
 
 extern "C" struct mallinfo qemu_instrumented_mallinfo() {
-  return Malloc(mallinfo)();
+  return g_malloc_dispatch->mallinfo();
 }
 
 extern "C" int qemu_instrumented_posix_memalign(void** memptr, size_t alignment, size_t size) {
