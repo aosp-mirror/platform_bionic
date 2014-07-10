@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9045004_86d8ab90",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:55:26Z",
+      "side": 1,
+      "message": "overlapping or the same?\n\n(despite the quibble, i get that part: that two copies of jemalloc with different keys leads to confusion makes sense, but...)",
+      "revId": "dda1c6c466c4f31de31d76c8be7e46c16b4b4209",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9f75445_bf5e0acd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-10T04:55:26Z",
+      "side": 1,
+      "message": "this is the bit i still don\u0027t get. how did we hand out the same key to jemalloc and to the locale code?",
+      "revId": "dda1c6c466c4f31de31d76c8be7e46c16b4b4209",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
