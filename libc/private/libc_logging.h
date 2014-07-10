@@ -88,7 +88,7 @@ __LIBC_HIDDEN__ void __libc_fatal_no_abort(const char* format, ...)
 
 //
 // Formatting routines for the C library's internal debugging.
-// Unlike the usual alternatives, these don't allocate.
+// Unlike the usual alternatives, these don't allocate, and they don't drag in all of stdio.
 //
 
 __LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...)

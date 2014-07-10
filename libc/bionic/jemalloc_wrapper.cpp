@@ -21,7 +21,7 @@
 #include "private/bionic_macros.h"
 
 void* je_pvalloc(size_t bytes) {
-  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) {
     return NULL;
