@@ -41,13 +41,6 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-// Used by gdb to track thread creation. See libthread_db.
-#ifdef __i386__
-extern "C" __attribute__((noinline)) __attribute__((fastcall)) void _thread_created_hook(pid_t) {}
-#else
-extern "C" __attribute__((noinline)) void _thread_created_hook(pid_t) {}
-#endif
-
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if __i386__
 #include <asm/ldt.h>
@@ -55,8 +48,6 @@ extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 #endif
 
 static pthread_mutex_t g_pthread_stack_creation_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static pthread_mutex_t g_debugger_notification_lock = PTHREAD_MUTEX_INITIALIZER;
 
 extern "C" int __isthreaded;
 
@@ -256,12 +247,6 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     thread->start_routine = __do_nothing;
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     return init_errno;
-  }
-
-  // Notify any debuggers about the new thread.
-  {
-    ScopedPthreadMutexLocker debugger_locker(&g_debugger_notification_lock);
-    _thread_created_hook(thread->tid);
   }
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.
