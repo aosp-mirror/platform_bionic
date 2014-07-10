@@ -107,7 +107,7 @@ libc_bionic_src_files := \
     bionic/clearenv.cpp \
     bionic/clock.cpp \
     bionic/clone.cpp \
-    bionic/cmsg_nxthdr.cpp \
+    bionic/__cmsg_nxthdr.cpp \
     bionic/connect.cpp \
     bionic/__cxa_guard.cpp \
     bionic/__cxa_pure_virtual.cpp \
