@@ -103,7 +103,7 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
 	struct atexit *p = __atexit;
 	struct atexit_fn *fnp;
-	size_t pgsize = sysconf(_SC_PAGESIZE);
+	size_t pgsize = getpagesize();
 	int ret = -1;
 
 	if (pgsize < sizeof(*p))
@@ -219,7 +219,7 @@ void
 __atexit_register_cleanup(void (*func)(void))
 {
         struct atexit *p;
-        size_t pgsize = sysconf(_SC_PAGESIZE);
+        size_t pgsize = getpagesize();
 
         if (pgsize < sizeof(*p))
                 return;
@@ -248,4 +248,3 @@ __atexit_register_cleanup(void (*func)(void))
 unlock:
         _ATEXIT_UNLOCK();
 }
-
