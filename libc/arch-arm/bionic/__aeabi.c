@@ -25,10 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#if defined(__clang__)
+// clang interprets -fno-builtin more loosely than you might expect,
+// and thinks it's okay to still substitute builtins as long as they're
+// named __aeabi_* rather than __builtin_*, which causes infinite
+// recursion if we have the fortified memcpy visible in this file.
+#undef _FORTIFY_SOURCE
+#endif
+
 #include <stddef.h>
 #include <string.h>
 
-extern int  __cxa_atexit(void (*)(void*), void*, void* );
+extern int __cxa_atexit(void (*)(void*), void*, void*);
 
 /* The "C++ ABI for ARM" document states that static C++ constructors,
  * which are called from the .init_array, should manually call
@@ -38,11 +47,9 @@ extern int  __cxa_atexit(void (*)(void*), void*, void* );
  * variable from the shared object that contains the constructor/destructor
  */
 
-/* Make this a weak symbol to avoid a multiple definition error when linking
- * with libstdc++-v3.  */
+// Make this a weak symbol to avoid a multiple definition error when linking with libstdc++-v3.
 int __attribute__((weak))
-__aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
-{
+__aeabi_atexit(void *object, void (*destructor) (void *), void *dso_handle) {
     return __cxa_atexit(destructor, object, dso_handle);
 }
 
@@ -73,10 +80,10 @@ void __aeabi_memmove(void *dest, const void *src, size_t n) {
 }
 
 /*
- * __aeabi_memset has the order of its second and third arguments reversed. 
+ * __aeabi_memset has the order of its second and third arguments reversed.
  *  This allows __aeabi_memclr to tail-call __aeabi_memset
  */
- 
+
 void __aeabi_memset8(void *dest, size_t n, int c) {
     memset(dest, c, n);
 }
