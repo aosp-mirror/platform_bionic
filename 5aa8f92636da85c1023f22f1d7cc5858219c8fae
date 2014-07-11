@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59b4e0af_cefed715",
+        "filename": "tests/create_bionic_tests.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1010108
+      },
+      "writtenOn": "2014-07-11T20:59:50Z",
+      "side": 1,
+      "message": "whitespace",
+      "revId": "5aa8f92636da85c1023f22f1d7cc5858219c8fae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
