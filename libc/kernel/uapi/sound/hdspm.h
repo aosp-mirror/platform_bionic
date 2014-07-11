@@ -94,7 +94,7 @@ struct hdspm_ltc {
  enum hdspm_ltc_frame frame;
  enum hdspm_ltc_input_format input_format;
 };
-#define SNDRV_HDSPM_IOCTL_GET_LTC _IOR('H', 0x46, struct hdspm_mixer_ioctl)
+#define SNDRV_HDSPM_IOCTL_GET_LTC _IOR('H', 0x46, struct hdspm_ltc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum hdspm_sync {
  hdspm_sync_no_lock = 0,
