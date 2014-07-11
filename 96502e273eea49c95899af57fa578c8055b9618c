@@ -16,6 +16,24 @@
       "revId": "96502e273eea49c95899af57fa578c8055b9618c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b4e0af_4eb98767",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T20:55:09Z",
+      "side": 0,
+      "message": "on the contrary - i made it static in atexit.c",
+      "parentUuid": "79bfe48c_9283227c",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
