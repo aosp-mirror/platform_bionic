@@ -1,7 +1,6 @@
 # arm64 specific configs
 
 libc_common_src_files_arm64 := \
-    bionic/memchr.c \
     bionic/memrchr.c \
     bionic/strrchr.cpp \
     upstream-freebsd/lib/libc/string/wcscat.c \
