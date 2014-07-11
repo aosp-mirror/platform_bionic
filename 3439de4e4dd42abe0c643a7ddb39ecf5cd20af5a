@@ -34,6 +34,24 @@
       "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b4e0af_71478a36",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T21:19:30Z",
+      "side": 1,
+      "message": "actually, only libc_init_*, crtbegins include local atexit.h",
+      "parentUuid": "79bfe48c_d2375a17",
+      "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
