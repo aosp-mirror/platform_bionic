@@ -16,6 +16,24 @@
       "revId": "4497dd622e5dc5c81bd7502deb9645f79083b75e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "396bacde_66426028",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-11T03:33:15Z",
+      "side": 1,
+      "message": "That does seem cleaner.\n\nDone.",
+      "parentUuid": "79d604dd_d48af25a",
+      "revId": "4497dd622e5dc5c81bd7502deb9645f79083b75e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
