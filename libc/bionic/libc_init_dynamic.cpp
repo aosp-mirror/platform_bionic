@@ -48,7 +48,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <elf.h>
-#include "atexit.h"
 #include "libc_init_common.h"
 
 #include "private/bionic_tls.h"
@@ -58,6 +57,7 @@ extern "C" {
   extern void malloc_debug_init(void);
   extern void malloc_debug_fini(void);
   extern void netdClientInit(void);
+  extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
 
 // We flag the __libc_preinit function as a constructor to ensure
