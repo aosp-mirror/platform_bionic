@@ -1,5 +1,5 @@
 ifneq ($(TARGET_USE_PRIVATE_LIBM),true)
-LOCAL_PATH := $(call my-dir)
+LOCAL_PATH:= $(call my-dir)
 
 # TODO: this comes from from upstream's libc, not libm, but it's an
 # implementation detail that should have hidden visibility, so it needs
@@ -232,21 +232,14 @@ libm_ld_src_files += \
 # TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
 libm_common_cflags := \
-    -Wall \
-    -Wextra \
-    -Wunused \
-    -Werror=pointer-to-int-cast \
-    -Werror=int-to-pointer-cast \
-    -Werror=type-limits \
-    -Werror \
     -DFLT_EVAL_METHOD=0 \
-    -std=gnu99 \
+    -std=c99 \
     -include $(LOCAL_PATH)/freebsd-compat.h \
     -Wno-missing-braces \
     -Wno-parentheses \
     -Wno-sign-compare \
     -Wno-uninitialized \
-    -Wno-unused-variable \
+    -Wno-unknown-pragmas \
     -fvisibility=hidden \
 
 # Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
@@ -262,8 +255,7 @@ libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 # libm.a for target.
 #
 include $(CLEAR_VARS)
-LOCAL_MODULE := libm
-LOCAL_CLANG := true
+LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS := $(libm_common_cflags)
@@ -295,8 +287,7 @@ include $(BUILD_STATIC_LIBRARY)
 # libm.so for target.
 #
 include $(CLEAR_VARS)
-LOCAL_MODULE := libm
-LOCAL_CLANG := true
+LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
