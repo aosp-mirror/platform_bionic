@@ -30,7 +30,6 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "atexit.h"
 
 #ifdef __arm__
 extern "C" __LIBC_HIDDEN__ void __libc_android_abort()
