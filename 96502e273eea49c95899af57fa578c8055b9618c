@@ -34,6 +34,24 @@
       "revId": "96502e273eea49c95899af57fa578c8055b9618c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1980a8c3_b61e5d7e",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-11T22:17:59Z",
+      "side": 0,
+      "message": "ah, don\u0027t do that. the upstream-* directories contain unmolested source. it should be the case that we can run a script to copy the current versions on top of what we have at any time.",
+      "parentUuid": "59b4e0af_4eb98767",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

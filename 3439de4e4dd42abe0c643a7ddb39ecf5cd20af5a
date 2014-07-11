@@ -52,6 +52,24 @@
       "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b4e0af_bc35d9c6",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-11T22:17:59Z",
+      "side": 1,
+      "message": "and it looks like they don\u0027t need it. the local atexit.h files seem to declare __cxa_atexit which seems to be the only thing actually used?",
+      "parentUuid": "59b4e0af_71478a36",
+      "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
