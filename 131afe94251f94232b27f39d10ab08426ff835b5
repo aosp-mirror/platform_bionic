@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "59db0006_3056e892",
+        "filename": "libc/private/ScopedMmap.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "copy-paste leftover... done",
+      "parentUuid": "f97cb4a5_3ed46d28",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1980a8c3_3c2d5918",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-10T23:38:13Z",
       "side": 1,
       "message": "do you want a FileInfo::INVALID constant instead of a zero-arg constructor that you never call?",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d604dd_f1fb8822",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1980a8c3_3c2d5918",
       "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "396bacde_e0d3b896",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1980a8c3_3ca4795a",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "396bacde_80267cd4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-10T23:38:13Z",
       "side": 1,
       "message": "ScopedFd and .release later?",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f97cb4a5_29cf5597",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "396bacde_80267cd4",
       "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "1980a8c3_7f8183a7",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "396bacde_60480877",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1980a8c3_bc05e978",
         "filename": "linker/linker_ziparchive.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2014-07-10T23:38:13Z",
       "side": 1,
       "message": "can\u0027t we reuse one of the existing zip file readers? security have been pushing us to reduce the number of implementations...",
+      "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d604dd_f16ce843",
+        "filename": "linker/linker_ziparchive.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-11T01:07:36Z",
+      "side": 1,
+      "message": "I looked at them they all use heap in one way or the other.\n\nIf someone knows malloc-free implementation we can use - I\u0027ll gladly switch to it.",
+      "parentUuid": "1980a8c3_bc05e978",
       "revId": "131afe94251f94232b27f39d10ab08426ff835b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
