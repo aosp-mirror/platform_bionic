@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79bfe48c_9283227c",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-11T20:50:48Z",
+      "side": 0,
+      "message": "does this mean we now expose this symbol? does this need to be added to the openbsd -include file?",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
