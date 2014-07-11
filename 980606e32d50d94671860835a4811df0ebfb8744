@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59b4e0af_d788a6d4",
+        "filename": "tests/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-11T23:24:28Z",
+      "side": 1,
+      "message": "This isn\u0027t the right way to generate the file. You should create a rule for generating the file math_csv_test.cpp that does this instead.\n\nI think it would be something like:\n\nbionic/tests/math_csv_test.cpp:\n  $(LOCAL_PATH)/create_bionic_tests.py libcore/luni/src/test/resources/math_tests.csv $(GENERATED_LOCATION)/bionic/tests/math_csv_test.c\n\nI don\u0027t think this is exactly the rule you need, but it\u0027s close.\n\nThen change the src_files to contain the same name. You shouldn\u0027t generate the file into the source tree since that will confuse git.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 128
+      },
+      "revId": "980606e32d50d94671860835a4811df0ebfb8744",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
