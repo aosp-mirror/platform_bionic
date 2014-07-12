@@ -47,8 +47,6 @@
 extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 #endif
 
-static pthread_mutex_t g_pthread_stack_creation_lock = PTHREAD_MUTEX_INITIALIZER;
-
 extern "C" int __isthreaded;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
@@ -104,8 +102,6 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
 }
 
 static void* __create_thread_stack(pthread_internal_t* thread) {
-  ScopedPthreadMutexLocker lock(&g_pthread_stack_creation_lock);
-
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
