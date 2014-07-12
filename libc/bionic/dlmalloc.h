@@ -32,6 +32,8 @@
 #define USE_SPIN_LOCKS 0
 #define DEFAULT_MMAP_THRESHOLD (64U * 1024U)
 
+#define malloc_getpagesize getpagesize()
+
 /* Export two symbols used by the VM. */
 __BEGIN_DECLS
 int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;

@@ -1053,7 +1053,7 @@ extern "C" int qemu_instrumented_posix_memalign(void** memptr, size_t alignment,
 }
 
 extern "C" void* qemu_instrumented_pvalloc(size_t bytes) {
-  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     qemu_error_log("<libc_pid=%03u, pid=%03u> pvalloc(%zu): overflow (%zu).",
@@ -1064,5 +1064,5 @@ extern "C" void* qemu_instrumented_pvalloc(size_t bytes) {
 }
 
 extern "C" void* qemu_instrumented_valloc(size_t size) {
-  return qemu_instrumented_memalign(sysconf(_SC_PAGESIZE), size);
+  return qemu_instrumented_memalign(getpagesize(), size);
 }

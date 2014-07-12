@@ -268,7 +268,7 @@ extern "C" int fill_posix_memalign(void** memptr, size_t alignment, size_t size)
 }
 
 extern "C" void* fill_pvalloc(size_t bytes) {
-  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
@@ -277,7 +277,7 @@ extern "C" void* fill_pvalloc(size_t bytes) {
 }
 
 extern "C" void* fill_valloc(size_t size) {
-  return fill_memalign(sysconf(_SC_PAGESIZE), size);
+  return fill_memalign(getpagesize(), size);
 }
 
 // =============================================================================
@@ -477,7 +477,7 @@ extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size)
 }
 
 extern "C" void* leak_pvalloc(size_t bytes) {
-  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
@@ -486,5 +486,5 @@ extern "C" void* leak_pvalloc(size_t bytes) {
 }
 
 extern "C" void* leak_valloc(size_t size) {
-  return leak_memalign(sysconf(_SC_PAGESIZE), size);
+  return leak_memalign(getpagesize(), size);
 }
