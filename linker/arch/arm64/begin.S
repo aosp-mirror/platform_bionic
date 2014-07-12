@@ -30,8 +30,7 @@
 
 ENTRY(_start)
   mov x0, sp
-  mov x1, xzr
-  bl  __linker_init
+  bl __linker_init
 
   /* linker init returns the _entry address in the main image */
   br x0
