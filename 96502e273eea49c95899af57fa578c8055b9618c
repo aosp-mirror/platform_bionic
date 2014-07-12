@@ -52,6 +52,24 @@
       "revId": "96502e273eea49c95899af57fa578c8055b9618c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79bfe48c_55a4af5a",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-12T15:14:26Z",
+      "side": 0,
+      "message": "well the choice is to modify this string and make it library-local, or modify definition and make it atexit.c local...",
+      "parentUuid": "1980a8c3_b61e5d7e",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

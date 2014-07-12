@@ -70,6 +70,24 @@
       "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9a7f088_aa87cbfe",
+        "filename": "libc/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-12T15:14:26Z",
+      "side": 1,
+      "message": "the local atexit.h is not visible to libc_inits (they are local to crt* files) I can just declare external for libc_inits... and get rid of the header",
+      "parentUuid": "59b4e0af_bc35d9c6",
+      "revId": "3439de4e4dd42abe0c643a7ddb39ecf5cd20af5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
