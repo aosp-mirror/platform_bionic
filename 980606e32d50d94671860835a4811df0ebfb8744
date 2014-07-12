@@ -22,6 +22,30 @@
       "revId": "980606e32d50d94671860835a4811df0ebfb8744",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79bfe48c_323ef1f8",
+        "filename": "tests/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-12T02:14:15Z",
+      "side": 1,
+      "message": "I did find a way to generate this automatically, but it\u0027s extremely convoluted and I don\u0027t think it\u0027s worth the pain.\n\nI would suggest that we use Ian\u0027s suggestion to check in the generate script to bionic/libc/tools and generate the file once and check it in. The generated file should have instructions about how to regenerate it.",
+      "parentUuid": "59b4e0af_d788a6d4",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 128
+      },
+      "revId": "980606e32d50d94671860835a4811df0ebfb8744",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
