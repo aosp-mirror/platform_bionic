@@ -70,6 +70,24 @@
       "revId": "96502e273eea49c95899af57fa578c8055b9618c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79bfe48c_156dd73d",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-12T16:30:56Z",
+      "side": 0,
+      "message": "there are two more choices:\n\n* build the library with -fvisibility\u003dhidden and mark everything that should be public in the .h files. (this, i think, is our long-term goal, but too much work for now.)\n\n* add this line to openbsd-compat.h.\n\ni\u0027m suggesting the latter because -- although it\u0027s not what we want long-term -- it\u0027s much easier and still preserves the \"upstream source should be unmodified\" property.",
+      "parentUuid": "79bfe48c_55a4af5a",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
