@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79bfe48c_5e1291c1",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1288,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-12T00:14:21Z",
+      "side": 1,
+      "message": "hmm. i\u0027m sure i\u0027ve seen this code somewhere before...\n\n(stands out because there\u0027s no reason to null-terminate for memchr. in fact, it\u0027s probably a better test if you don\u0027t?)",
+      "revId": "47a198f3791af8869841dabd286b43737d6e342b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9a7f088_6494aac3",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1290,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-12T00:14:21Z",
+      "side": 1,
+      "message": "you could tab-terminate or something if you wanted to keep this.",
+      "revId": "47a198f3791af8869841dabd286b43737d6e342b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
