@@ -22,7 +22,7 @@
 #include <sound/asound.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <sound/compress_params.h>
-#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 1, 1)
+#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 1, 2)
 struct snd_compressed_buffer {
  __u32 fragment_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -38,8 +38,8 @@ struct snd_compr_tstamp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 byte_offset;
  __u32 copied_total;
- snd_pcm_uframes_t pcm_frames;
- snd_pcm_uframes_t pcm_io_frames;
+ __u32 pcm_frames;
+ __u32 pcm_io_frames;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 sampling_rate;
 };
