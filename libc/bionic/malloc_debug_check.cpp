@@ -539,7 +539,7 @@ extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) 
 }
 
 extern "C" void* chk_pvalloc(size_t bytes) {
-  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
@@ -548,7 +548,7 @@ extern "C" void* chk_pvalloc(size_t bytes) {
 }
 
 extern "C" void* chk_valloc(size_t size) {
-  return chk_memalign(sysconf(_SC_PAGESIZE), size);
+  return chk_memalign(getpagesize(), size);
 }
 
 static void ReportMemoryLeaks() {
