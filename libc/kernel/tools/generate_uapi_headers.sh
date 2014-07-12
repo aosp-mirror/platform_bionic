@@ -148,22 +148,28 @@ elif [[ ! -d "${ANDROID_KERNEL_DIR}" ]]; then
   exit 1
 fi
 
+if [[ -d "${KERNEL_DIR}/linux-stable" ]]; then
+  src_dir="linux-stable"
+else
+  src_dir="common"
+fi
+
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
   cd "${TMPDIR}"
   echo "Fetching android kernel source ${KERNEL_VERSION}"
   git clone https://android.googlesource.com/kernel/common.git
-  cd common
+  cd "${COMMON}"
   git checkout "${KERNEL_VERSION}"
   KERNEL_DIR="${TMPDIR}"
 elif [[ "${KERNEL_DIR}" == "" ]]; then
   echo "Must specify one of --use-kernel-dir or --download-kernel."
   exit 1
-elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/common" ]]; then
-  echo "The kernel directory $KERNEL_DIR or $KERNEL_DIR/common does not exist."
+elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/${src_dir}" ]]; then
+  echo "The kernel directory $KERNEL_DIR or $KERNEL_DIR/${src_dir} does not exist."
   exit 1
 else
-  cd "${KERNEL_DIR}/common"
+  cd "${KERNEL_DIR}/${src_dir}"
 fi
 
 if [[ ${SKIP_GENERATION} -eq 0 ]]; then
@@ -175,27 +181,27 @@ if [[ ${SKIP_GENERATION} -eq 0 ]]; then
 fi
 
 # Copy all of the include/uapi files to the kernel headers uapi directory.
-copy_hdrs "${KERNEL_DIR}/common/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
+copy_hdrs "${KERNEL_DIR}/${src_dir}/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
 
 # Copy the staging files to uapi/linux.
-copy_hdrs "${KERNEL_DIR}/common/drivers/staging/android/uapi" \
+copy_hdrs "${KERNEL_DIR}/${src_dir}/drivers/staging/android/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi/linux" "no-copy-dirs"
 
 # Copy the generated headers.
-copy_hdrs "${KERNEL_DIR}/common/include/generated/uapi" \
+copy_hdrs "${KERNEL_DIR}/${src_dir}/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
 
 for arch in "${ARCH_LIST[@]}"; do
   # Copy arch headers.
-  copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/uapi" \
+  copy_hdrs "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
   # Copy the generated arch headers.
-  copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/generated/uapi" \
+  copy_hdrs "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/generated/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
 
   # Special copy of generated header files from arch/<ARCH>/generated/asm that
   # also exist in uapi/asm-generic.
-  copy_if_exists "${KERNEL_DIR}/common/include/uapi/asm-generic" \
-                 "${KERNEL_DIR}/common/arch/${arch}/include/generated/asm" \
+  copy_if_exists "${KERNEL_DIR}/${src_dir}/include/uapi/asm-generic" \
+                 "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/generated/asm" \
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
