@@ -22,18 +22,21 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
  */
+
 #define _GNU_SOURCE 1
 #include <math.h>
 
+#if !defined(__clang__)
 // Disable sincos optimization for all functions in this file,
 // otherwise gcc would generate infinite calls.
 // Refer to gcc PR46926.
 // -fno-builtin-sin or -fno-builtin-cos can disable sincos optimization,
 // but these two options do not work inside optimize pragma in-file.
 // Thus we just enforce -O0 when compiling this file.
+// clang doesn't implement this optimization anyway, so it doesn't need this.
 #pragma GCC optimize ("O0")
+#endif
 
 void sincos(double x, double* p_sin, double* p_cos) {
   *p_sin = sin(x);
