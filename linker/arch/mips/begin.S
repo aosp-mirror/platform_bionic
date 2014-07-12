@@ -100,8 +100,3 @@ __start:
     addu    $sp, 4*4        /* restore sp */
     j    $t9
     .end    __start
-
-    .section .ctors, "wa"
-    .globl __CTOR_LIST__
-__CTOR_LIST__:
-    .long -1
