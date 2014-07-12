@@ -16,6 +16,23 @@
       "revId": "263325d4b0c4c0e2933cb6428475ced16f0a86d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9aaf451_687b1bd1",
+        "filename": "libc/include/sys/prctl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-12T03:01:47Z",
+      "side": 1,
+      "message": "(btw cferris: we should see if we can hide __bionic_name_mem or whatever it\u0027s called for L; jemalloc uses it atm.)",
+      "revId": "263325d4b0c4c0e2933cb6428475ced16f0a86d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
