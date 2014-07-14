@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d965302b_54ab2ca4",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T17:29:41Z",
+      "side": 1,
+      "message": "we should have a blank line here because __atexit doesn\u0027t belong with the other two or the comment.",
+      "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1980a8c3_672d6d17",
         "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.c",
         "patchSetId": 5
@@ -13,6 +30,24 @@
       "writtenOn": "2014-07-12T21:23:52Z",
       "side": 1,
       "message": "this include is a little bit different from the original",
+      "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9683404_7581083f",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T17:29:41Z",
+      "side": 1,
+      "message": "does it need to be? couldn\u0027t we just add $(LOCAL_PATH)/private  to the include path for libc_openbsd?",
+      "parentUuid": "1980a8c3_672d6d17",
       "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
