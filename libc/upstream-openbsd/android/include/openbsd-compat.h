@@ -37,9 +37,17 @@
 #define issetugid() 0
 
 /* LP32 NDK ctype.h contained references to these. */
-__LIBC64_HIDDEN__ extern const short *_tolower_tab_;
-__LIBC64_HIDDEN__ extern const short *_toupper_tab_;
+__LIBC64_HIDDEN__ extern const short* _tolower_tab_;
+__LIBC64_HIDDEN__ extern const short* _toupper_tab_;
 
-__LIBC_HIDDEN__ extern struct atexit *__atexit;
+__LIBC_HIDDEN__ extern struct atexit* __atexit;
+__LIBC_HIDDEN__ extern const char _C_ctype_[];
+__LIBC_HIDDEN__ extern const short _C_toupper_[];
+__LIBC_HIDDEN__ extern const short _C_tolower_[];
+__LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
+__LIBC_HIDDEN__ extern char* _mktemp(char*);
+
+/* TODO: hide this when android_support.a is fixed (http://b/16298580).*/
+/*__LIBC_HIDDEN__*/ extern int __isthreaded;
 
 #endif
