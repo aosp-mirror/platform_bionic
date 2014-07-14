@@ -51,6 +51,24 @@
       "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d965302b_b467209e",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-14T18:13:28Z",
+      "side": 1,
+      "message": "we already have pthread_private.h in openbsd/android/include, which will will cause conflict.",
+      "parentUuid": "f9683404_7581083f",
+      "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
