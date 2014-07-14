@@ -49,14 +49,7 @@
  */
 __LIBC_HIDDEN__ int __srget(FILE*);
 __LIBC_HIDDEN__ int __swbuf(int, FILE*);
-
-/*
- * The NDK apparently includes an android_support.a library that
- * refers to __srefill in its copy of the vsnprintf implementation.
- */
-/* TODO(LP64): __LIBC_HIDDEN__ int __srefill(FILE*);*/
-/* http://b/15291317: the LP64 NDK needs to be fixed to remove that cruft. */
-__LIBC_ABI_PUBLIC__ int __srefill(FILE*);
+__LIBC_HIDDEN__ int __srefill(FILE*);
 #else
 __LIBC_ABI_PUBLIC__ int __srget(FILE*);
 __LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
