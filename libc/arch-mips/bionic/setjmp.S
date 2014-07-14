@@ -45,17 +45,6 @@ A0OFF= FRAMESZ-3*REGSZ
 GPOFF= FRAMESZ-2*REGSZ
 RAOFF= FRAMESZ-1*REGSZ
 
-#define FPREG64_S(FPR, OFF, BASE)       \
-        swc1    FPR, OFF(BASE)  ;       \
-        mfhc1   t0, FPR         ;       \
-        sw      t0, OFF+4(BASE) ;
-
-#define FPREG64_L(FPR, OFF, BASE)       \
-        lw      t0, OFF+4(BASE) ;       \
-        lw      t1, OFF(BASE)   ;       \
-        mtc1    t1, FPR         ;       \
-        mthc1   t0, FPR         ;       \
-
 NON_LEAF(setjmp, FRAMESZ, ra)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU sp, FRAMESZ			# allocate stack frame
@@ -98,32 +87,19 @@ NON_LEAF(setjmp, FRAMESZ, ra)
 	li	v0, 1				# be nice if we could tell
 	REG_S	v0, SC_FPUSED(a0)		# sc_fpused = 1
 	cfc1	v0, $31
+	s.d	$f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
+	s.d	$f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
+	s.d	$f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
+	s.d	$f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
+	s.d	$f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
+	s.d	$f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
 #if _MIPS_FPSET == 32
-        FPREG64_S($f20, SC_FPREGS+((F20-F0)*REGSZ_FP), a0)
-        FPREG64_S($f21, SC_FPREGS+((F21-F0)*REGSZ_FP), a0)
-        FPREG64_S($f22, SC_FPREGS+((F22-F0)*REGSZ_FP), a0)
-        FPREG64_S($f23, SC_FPREGS+((F23-F0)*REGSZ_FP), a0)
-        FPREG64_S($f24, SC_FPREGS+((F24-F0)*REGSZ_FP), a0)
-        FPREG64_S($f25, SC_FPREGS+((F25-F0)*REGSZ_FP), a0)
-        FPREG64_S($f26, SC_FPREGS+((F26-F0)*REGSZ_FP), a0)
-        FPREG64_S($f27, SC_FPREGS+((F27-F0)*REGSZ_FP), a0)
-        FPREG64_S($f28, SC_FPREGS+((F28-F0)*REGSZ_FP), a0)
-        FPREG64_S($f29, SC_FPREGS+((F29-F0)*REGSZ_FP), a0)
-        FPREG64_S($f30, SC_FPREGS+((F30-F0)*REGSZ_FP), a0)
-        FPREG64_S($f31, SC_FPREGS+((F31-F0)*REGSZ_FP), a0)
-#else
-        swc1    $f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
-        swc1    $f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
-        swc1    $f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
-        swc1    $f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
-        swc1    $f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
-        swc1    $f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
-        swc1    $f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
-        swc1    $f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
-        swc1    $f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
-        swc1    $f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
-        swc1    $f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
-        swc1    $f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
+	s.d	$f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
+	s.d	$f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
+	s.d	$f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
+	s.d	$f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
+	s.d	$f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
+	s.d	$f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
 #endif
 	REG_S	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)
 #endif /* !SOFTFLOAT */
@@ -173,32 +149,19 @@ LEAF(longjmp, FRAMESZ)
 #if !defined(SOFTFLOAT)
 	REG_L	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)
 	ctc1	v0, $31
+	l.d	$f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
+	l.d	$f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
+	l.d	$f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
+	l.d	$f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
+	l.d	$f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
+	l.d	$f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
 #if _MIPS_FPSET == 32
-        FPREG64_L($f20, SC_FPREGS+((F20-F0)*REGSZ_FP), a0)
-        FPREG64_L($f21, SC_FPREGS+((F21-F0)*REGSZ_FP), a0)
-        FPREG64_L($f22, SC_FPREGS+((F22-F0)*REGSZ_FP), a0)
-        FPREG64_L($f23, SC_FPREGS+((F23-F0)*REGSZ_FP), a0)
-        FPREG64_L($f24, SC_FPREGS+((F24-F0)*REGSZ_FP), a0)
-        FPREG64_L($f25, SC_FPREGS+((F25-F0)*REGSZ_FP), a0)
-        FPREG64_L($f26, SC_FPREGS+((F26-F0)*REGSZ_FP), a0)
-        FPREG64_L($f27, SC_FPREGS+((F27-F0)*REGSZ_FP), a0)
-        FPREG64_L($f28, SC_FPREGS+((F28-F0)*REGSZ_FP), a0)
-        FPREG64_L($f29, SC_FPREGS+((F29-F0)*REGSZ_FP), a0)
-        FPREG64_L($f30, SC_FPREGS+((F30-F0)*REGSZ_FP), a0)
-        FPREG64_L($f31, SC_FPREGS+((F31-F0)*REGSZ_FP), a0)
-#else
-        lwc1    $f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
-        lwc1    $f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
-        lwc1    $f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
-        lwc1    $f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
-        lwc1    $f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
-        lwc1    $f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
-        lwc1    $f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
-        lwc1    $f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
-        lwc1    $f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
-        lwc1    $f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
-        lwc1    $f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
-        lwc1    $f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
+	l.d	$f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
+	l.d	$f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
+	l.d	$f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
+	l.d	$f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
+	l.d	$f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
+	l.d	$f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
 #endif
 #endif /* !SOFTFLOAT */
 	bne	a1, zero, 1f
