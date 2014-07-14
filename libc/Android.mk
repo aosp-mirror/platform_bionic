@@ -177,6 +177,7 @@ libc_bionic_src_files := \
     bionic/pthread_sigmask.cpp \
     bionic/ptrace.cpp \
     bionic/raise.cpp \
+    bionic/rand.cpp \
     bionic/readlink.cpp \
     bionic/reboot.cpp \
     bionic/recv.cpp \
@@ -294,7 +295,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/mrand48.c \
     upstream-netbsd/lib/libc/stdlib/nrand48.c \
     upstream-netbsd/lib/libc/stdlib/_rand48.c \
-    upstream-netbsd/lib/libc/stdlib/rand.c \
     upstream-netbsd/lib/libc/stdlib/rand_r.c \
     upstream-netbsd/lib/libc/stdlib/seed48.c \
     upstream-netbsd/lib/libc/stdlib/srand48.c \
