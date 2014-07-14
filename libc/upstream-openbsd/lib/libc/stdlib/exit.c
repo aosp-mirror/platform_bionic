@@ -33,6 +33,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "atexit.h"
+#include "thread_private.h"
+
+/*
+ * This variable is zero until a process has created a thread.
+ * It is used to avoid calling locking functions in libc when they
+ * are not required. By default, libc is intended to be(come)
+ * thread-safe, but without a (significant) penalty to non-threaded
+ * processes.
+ */
+int     __isthreaded    = 0;
 
 /*
  * Exit, flushing stdio buffers if necessary.
