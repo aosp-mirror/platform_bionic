@@ -69,6 +69,24 @@
       "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9683404_7570e8e9",
+        "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T18:17:25Z",
+      "side": 1,
+      "message": "can\u0027t we put that stuff into the private/thread_private.h? (or openbsd-compat.h if that\u0027s more convenient/tasteful.)",
+      "parentUuid": "d965302b_b467209e",
+      "revId": "bc9ef0edbaba3d68cb34857c568ad22dcaf6f92e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
