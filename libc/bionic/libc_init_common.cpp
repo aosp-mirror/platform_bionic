@@ -39,7 +39,6 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
-#include "atexit.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
