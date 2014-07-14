@@ -305,7 +305,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/string/strcasestr.c \
     upstream-netbsd/lib/libc/string/strcoll.c \
     upstream-netbsd/lib/libc/string/strxfrm.c \
-    upstream-netbsd/lib/libc/thread-stub/__isthreaded.c \
     upstream-netbsd/lib/libc/unistd/killpg.c \
 
 libc_upstream_openbsd_gdtoa_src_files := \
