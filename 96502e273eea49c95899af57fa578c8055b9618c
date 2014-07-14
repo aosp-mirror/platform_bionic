@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "196c2814_d6faa485",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T17:49:08Z",
+      "side": 0,
+      "message": "yay!",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d965302b_d4961c6d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T17:49:08Z",
+      "side": 0,
+      "message": "one more to go :-)",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9683404_35c5d076",
+        "filename": "libc/private/thread_private.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-14T17:49:08Z",
+      "side": 0,
+      "message": "i did wonder about this, but i thought it was probably beneficial to keep these together because one day we\u0027re going to want to fix the fork/pthread_create deadlocks by taking these locks in order in the parent and unlocking/reinitializing them in the parent/child afterwards.",
+      "revId": "96502e273eea49c95899af57fa578c8055b9618c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79bfe48c_9283227c",
         "filename": "libc/upstream-openbsd/lib/libc/stdlib/atexit.h",
         "patchSetId": 4
