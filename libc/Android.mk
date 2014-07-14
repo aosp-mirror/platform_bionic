@@ -67,7 +67,6 @@ libc_common_src_files := \
     bionic/unlockpt.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    stdlib/atexit.c \
     unistd/syslog.c \
 
 # Fortify implementations of libc functions.
@@ -463,6 +462,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/wprintf.c \
     upstream-openbsd/lib/libc/stdio/wscanf.c \
     upstream-openbsd/lib/libc/stdio/wsetup.c \
+    upstream-openbsd/lib/libc/stdlib/atexit.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
@@ -549,7 +549,6 @@ libc_common_cppflags := \
 # Define some common includes
 # ========================================================
 libc_common_c_includes += \
-    $(LOCAL_PATH)/stdlib  \
     $(LOCAL_PATH)/stdio   \
 
 # ========================================================
@@ -735,6 +734,7 @@ LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized -Wno-unused-parameter \
+    -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
@@ -767,6 +767,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
     -fvisibility=hidden \
+    -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-openbsd/android/include \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -include openbsd-compat.h \
