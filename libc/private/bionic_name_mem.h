@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-int __bionic_name_mem(void* addr, size_t len, const char* name);
+__LIBC_HIDDEN__ int __bionic_name_mem(void* addr, size_t len, const char* name);
 
 __END_DECLS
 
