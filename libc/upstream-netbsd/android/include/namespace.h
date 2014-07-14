@@ -22,4 +22,7 @@
 #undef __weak_alias
 #endif
 
+__LIBC_HIDDEN__ int __res_enable_mt(void);
+__LIBC_HIDDEN__ int __res_disable_mt(void);
+
 #endif
