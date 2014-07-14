@@ -53,17 +53,10 @@ TEST(stdlib, random) {
 
 TEST(stdlib, rand) {
   srand(0x01020304);
-#if defined(__BIONIC__)
-  EXPECT_EQ(1675538669, rand());
-  EXPECT_EQ(1678228258, rand());
-  EXPECT_EQ(1352350131, rand());
-  EXPECT_EQ(824068976, rand());
-#else
   EXPECT_EQ(55436735, rand());
   EXPECT_EQ(1399865117, rand());
   EXPECT_EQ(2032643283, rand());
   EXPECT_EQ(571329216, rand());
-#endif
 }
 
 TEST(stdlib, mrand48) {
