@@ -17,6 +17,4 @@
 #ifndef _BIONIC_FREEBSD_NAMESPACE_H_included
 #define _BIONIC_FREEBSD_NAMESPACE_H_included
 
-__attribute__((visibility("hidden"))) char* _mktemp(char*);
-
 #endif
