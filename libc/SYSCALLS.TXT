@@ -194,11 +194,9 @@ int     swapon(const char*, int) all
 int     swapoff(const char*) all
 
 # time
-int           gettimeofday(struct timeval*, struct timezone*)       all
 int           settimeofday(const struct timeval*, const struct timezone*)   all
 clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
-int           clock_gettime(clockid_t clk_id, struct timespec* tp)    all
 int           clock_settime(clockid_t clk_id, const struct timespec* tp)  all
 int           clock_getres(clockid_t clk_id, struct timespec* res)   all
 int           clock_nanosleep(clockid_t clock_id, int flags, const struct timespec* req, struct timespec* rem)  all
@@ -320,3 +318,9 @@ int     __set_tls:set_thread_area(void*) mips,mips64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86
+
+# vdso stuff.
+int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64,x86
+int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86_64
+int gettimeofday(timeval*, timezone*)                   arm,mips,mips64,x86
+int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86_64

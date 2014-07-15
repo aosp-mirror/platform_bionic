@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(gettimeofday)
+ENTRY(__gettimeofday)
     mov     x8, __NR_gettimeofday
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(gettimeofday)
     b.hi    __set_errno
 
     ret
-END(gettimeofday)
+END(__gettimeofday)
+.hidden __gettimeofday
