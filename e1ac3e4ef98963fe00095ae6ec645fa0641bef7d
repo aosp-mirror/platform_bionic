@@ -52,6 +52,24 @@
       "revId": "e1ac3e4ef98963fe00095ae6ec645fa0641bef7d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c4b462_9867999e",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-15T22:03:54Z",
+      "side": 1,
+      "message": "I should mention that this does fix the problem when I was running and it seg faulted.",
+      "parentUuid": "19c8a874_59da67b0",
+      "revId": "e1ac3e4ef98963fe00095ae6ec645fa0641bef7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
