@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_gettime)
+ENTRY(__clock_gettime)
     movl    $__NR_clock_gettime, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(clock_gettime)
     call    __set_errno
 1:
     ret
-END(clock_gettime)
+END(__clock_gettime)
+.hidden __clock_gettime

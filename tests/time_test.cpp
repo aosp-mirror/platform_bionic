@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -418,4 +419,24 @@ TEST(time, timer_delete_from_timer_thread) {
   while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5);
   ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
 #endif
+}
+
+TEST(time, clock_gettime) {
+  // Try to ensure that our vdso clock_gettime is working.
+  timespec ts1;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts1));
+  timespec ts2;
+  ASSERT_EQ(0, syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts2));
+
+  // What's the difference between the two?
+  ts2.tv_sec -= ts1.tv_sec;
+  ts2.tv_nsec -= ts1.tv_nsec;
+  if (ts2.tv_nsec < 0) {
+    --ts2.tv_sec;
+    ts2.tv_nsec += 1000000000;
+  }
+
+  // Should be less than (a very generous, to try to avoid flakiness) 1000000ns.
+  ASSERT_EQ(0, ts2.tv_sec);
+  ASSERT_LT(ts2.tv_nsec, 1000000);
 }

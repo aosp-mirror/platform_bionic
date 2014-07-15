@@ -51,6 +51,8 @@ extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
 
+void __libc_init_vdso();
+
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
@@ -129,6 +131,8 @@ void __libc_init_common(KernelArgumentBlock& args) {
   _pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
+
+  __libc_init_vdso();
 }
 
 /* This function will be called during normal program termination
