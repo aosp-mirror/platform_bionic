@@ -16,6 +16,24 @@
       "revId": "e1ac3e4ef98963fe00095ae6ec645fa0641bef7d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19dfc824_64cf7e96",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-15T22:02:38Z",
+      "side": 1,
+      "message": "The failure happens deep in the guts of these functions within allocate_obj (system_properties.cpp).  \n\nif (pa-\u003ebytes_used + aligned \u003e pa_data_size) {\n    return NULL;\n}\n\n^This check is true, since it\u0027s simply checking if the object will fit. It won\u0027t, seeing as we are just adding and adding until we hit the limit (PROP_AREA, #defined in _system_properties.h).",
+      "parentUuid": "19c8a874_d9691732",
+      "revId": "e1ac3e4ef98963fe00095ae6ec645fa0641bef7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
