@@ -75,7 +75,6 @@ int	toupper(int);
 
 int isalnum_l(int, locale_t);
 int isalpha_l(int, locale_t);
-int isascii_l(int, locale_t);
 int isblank_l(int, locale_t);
 int iscntrl_l(int, locale_t);
 int isdigit_l(int, locale_t);
