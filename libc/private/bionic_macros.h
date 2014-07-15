@@ -37,6 +37,8 @@
   (((value) + (alignment) - 1) & ~((alignment) - 1))
 
 #define BIONIC_ROUND_UP_POWER_OF_2(value) \
-  (1UL << (sizeof(value) * 8 - 1 - __builtin_clz(value)))
+  (sizeof(value) == 8) \
+    ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
+    : (1UL << (32 - __builtin_clz(static_cast<unsigned int>(value))))
 
 #endif // _BIONIC_MACROS_H_
