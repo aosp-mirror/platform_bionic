@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59ef80ff_d0149c1c",
+        "filename": "libc/bionic/ptrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-16T22:58:28Z",
+      "side": 1,
+      "message": "Nit, do you want to put this in alphabet order as long as you are here?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "40be4dd3c90a0733d4eee90352c5142b0b47cdc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39f48cd0_2ffee97b",
+        "filename": "libc/bionic/ptrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-16T22:58:28Z",
+      "side": 1,
+      "message": "This isn\u0027t quite the same as the other side. Does __peek always return -1 for any error?",
+      "range": {
+        "startLine": 55,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 16
+      },
+      "revId": "40be4dd3c90a0733d4eee90352c5142b0b47cdc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
