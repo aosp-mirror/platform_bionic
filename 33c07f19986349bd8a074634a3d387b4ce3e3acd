@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19c8a874_f038a0c0",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T02:18:20Z",
+      "side": 1,
+      "message": "not just default (since this isn\u0027t the default one anyway) --- all property areas are the same size.",
+      "revId": "33c07f19986349bd8a074634a3d387b4ce3e3acd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
