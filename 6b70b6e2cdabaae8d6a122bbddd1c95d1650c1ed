@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9c1b053_887587db",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "i think i\u0027d leave out the \"recursive bits: \".",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c1b053_48628f1a",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "i think you need to say more about what that fd is then used for.",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c1b053_c8869f8d",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "fn seems more C and fun more C++. fcn seems weird and i can\u0027t see any precedent in our libraries. (unless you count the oddly-named dlfcn.h :-) )",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c1b053_28447381",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "why does it return int if you\u0027re just going to ignore it?",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c8a874_254738e0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "misspelled comment (that isn\u0027t obviously worth keeping)",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c1b053_8843c776",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T01:23:33Z",
+      "side": 1,
+      "message": "extra parens",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
