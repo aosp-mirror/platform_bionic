@@ -36,10 +36,6 @@ int isalpha_l(int c, locale_t) {
   return isalpha(c);
 }
 
-int isascii_l(int c, locale_t) {
-  return isascii(c);
-}
-
 int isblank_l(int c, locale_t) {
   return isblank(c);
 }
