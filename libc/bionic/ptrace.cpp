@@ -26,28 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
+#include <stdarg.h>
 #include <sys/ptrace.h>
 
-extern "C" long __ptrace(int request, pid_t pid, void* addr, void* data);
+extern "C" long __ptrace(int req, pid_t pid, void* addr, void* data);
 
-long ptrace(int request, pid_t pid, void* addr, void* data) {
-  switch (request) {
-    case PTRACE_PEEKUSR:
-    case PTRACE_PEEKTEXT:
-    case PTRACE_PEEKDATA:
-      {
-      long word;
-      long ret = __ptrace(request, pid, addr, &word);
-      if (ret == 0) {
-        return word;
-      } else {
-        // __ptrace already set errno for us.
-        return -1;
-      }
-    }
+long ptrace(int req, ...) {
+  bool is_peek = (req == PTRACE_PEEKUSR || req == PTRACE_PEEKTEXT || req == PTRACE_PEEKDATA);
+  long peek_result;
 
-    default:
-      return __ptrace(request, pid, addr, data);
+  va_list args;
+  va_start(args, req);
+  pid_t pid = va_arg(args, pid_t);
+  void* addr = va_arg(args, void*);
+  void* data;
+  if (is_peek) {
+    data = &peek_result;
+  } else {
+    data = va_arg(args, void*);
   }
+  va_end(args);
+
+  long result = __ptrace(req, pid, addr, data);
+  if (is_peek && result == 0) {
+    return peek_result;
+  }
+  return result;
 }
