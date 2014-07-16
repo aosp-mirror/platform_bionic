@@ -156,10 +156,7 @@ bool ElfReader::ReadElfHeader() {
 }
 
 bool ElfReader::VerifyElfHeader() {
-  if (header_.e_ident[EI_MAG0] != ELFMAG0 ||
-      header_.e_ident[EI_MAG1] != ELFMAG1 ||
-      header_.e_ident[EI_MAG2] != ELFMAG2 ||
-      header_.e_ident[EI_MAG3] != ELFMAG3) {
+  if (memcmp(header_.e_ident, ELFMAG, SELFMAG) != 0) {
     DL_ERR("\"%s\" has bad ELF magic", name_);
     return false;
   }

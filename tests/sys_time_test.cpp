@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <sys/syscall.h>
 #include <sys/time.h>
 
 #include "TemporaryFile.h"
@@ -45,4 +46,24 @@ TEST(sys_time, utimes) {
 TEST(sys_time, utimes_NULL) {
   TemporaryFile tf;
   ASSERT_EQ(0, utimes(tf.filename, NULL));
+}
+
+TEST(sys_time, gettimeofday) {
+  // Try to ensure that our vdso gettimeofday is working.
+  timeval tv1;
+  ASSERT_EQ(0, gettimeofday(&tv1, NULL));
+  timeval tv2;
+  ASSERT_EQ(0, syscall(__NR_gettimeofday, &tv2, NULL));
+
+  // What's the difference between the two?
+  tv2.tv_sec -= tv1.tv_sec;
+  tv2.tv_usec -= tv1.tv_usec;
+  if (tv2.tv_usec < 0) {
+    --tv2.tv_sec;
+    tv2.tv_usec += 1000000;
+  }
+
+  // Should be less than (a very generous, to try to avoid flakiness) 1000us.
+  ASSERT_EQ(0, tv2.tv_sec);
+  ASSERT_LT(tv2.tv_usec, 1000);
 }

@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(gettimeofday)
+ENTRY(__gettimeofday)
     movl    $__NR_gettimeofday, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(gettimeofday)
     call    __set_errno
 1:
     ret
-END(gettimeofday)
+END(__gettimeofday)
+.hidden __gettimeofday
