@@ -55,11 +55,15 @@ IMPORTANT IMPORTANT:
 
 Grab the latest headers from the android kernel by running this command:
 
-  bionic/kernel/tools/generate_uapi_headers.sh --download-kernel
+  bionic/libc/kernel/tools/generate_uapi_headers.sh --download-kernel
 
 Next, run this command to copy the parsed files to bionic/libc/kernel/uapi:
 
-  bionic/kernel/tools/update_all.py
+  bionic/libc/kernel/tools/update_all.py
+
+Finally, run this command to regenerate the syscalls list:
+
+  bionic/libc/tools/gensyscalls.py
 
 After this, you will need to build/test the tree to make sure that these
 changes do not introduce any errors.
