@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "19d9886f_ceb08315",
+        "filename": "libc/bionic/ptrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T23:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59ef80ff_d0149c1c",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "40be4dd3c90a0733d4eee90352c5142b0b47cdc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39f48cd0_2ffee97b",
         "filename": "libc/bionic/ptrace.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-07-16T22:58:28Z",
       "side": 1,
       "message": "This isn\u0027t quite the same as the other side. Does __peek always return -1 for any error?",
+      "range": {
+        "startLine": 55,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 16
+      },
+      "revId": "40be4dd3c90a0733d4eee90352c5142b0b47cdc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39f48cd0_0fb1e5e0",
+        "filename": "libc/bionic/ptrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T23:06:45Z",
+      "side": 1,
+      "message": "our generated assembler will, because it\u0027ll see that ptrace(2) returned -errno, set errno, and return -1.",
+      "parentUuid": "39f48cd0_2ffee97b",
       "range": {
         "startLine": 55,
         "startChar": 2,
