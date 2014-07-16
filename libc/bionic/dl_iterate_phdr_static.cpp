@@ -27,6 +27,7 @@
  */
 
 #include <elf.h>
+#include <string.h>
 #include <sys/auxv.h>
 #include <sys/types.h>
 #include <link.h>
@@ -37,11 +38,9 @@ extern "C" void* __executable_start;
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data), void* data) {
   ElfW(Ehdr)* ehdr = reinterpret_cast<ElfW(Ehdr)*>(&__executable_start);
 
-  // TODO: again, copied from linker.c. Find a better home for this later.
-  if (ehdr->e_ident[EI_MAG0] != ELFMAG0) return -1;
-  if (ehdr->e_ident[EI_MAG1] != ELFMAG1) return -1;
-  if (ehdr->e_ident[EI_MAG2] != ELFMAG2) return -1;
-  if (ehdr->e_ident[EI_MAG3] != ELFMAG3) return -1;
+  if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+    return -1;
+  }
 
   // Dynamic binaries get their dl_iterate_phdr from the dynamic linker, but
   // static binaries get this. We don't have a list of shared objects to
@@ -54,7 +53,7 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   exe_info.dlpi_phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(ehdr) + ehdr->e_phoff);
   exe_info.dlpi_phnum = ehdr->e_phnum;
 
-#ifdef AT_SYSINFO_EHDR
+#if defined(AT_SYSINFO_EHDR)
   // Try the executable first.
   int rc = cb(&exe_info, sizeof(exe_info), data);
   if (rc != 0) {

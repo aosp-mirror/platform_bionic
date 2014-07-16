@@ -16,6 +16,7 @@
 
 #include "benchmark.h"
 
+#include <sys/syscall.h>
 #include <time.h>
 
 #if defined(__BIONIC__)
@@ -41,7 +42,7 @@ BENCHMARK(BM_time_localtime_tz);
 static void BM_time_clock_gettime(int iters) {
   StartBenchmarkTiming();
 
-  struct timespec t;
+  timespec t;
   for (int i = 0; i < iters; ++i) {
     clock_gettime(CLOCK_MONOTONIC, &t);
   }
@@ -49,3 +50,50 @@ static void BM_time_clock_gettime(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_time_clock_gettime);
+
+static void BM_time_clock_gettime_syscall(int iters) {
+  StartBenchmarkTiming();
+
+  timespec t;
+  for (int i = 0; i < iters; ++i) {
+    syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_time_clock_gettime_syscall);
+
+static void BM_time_gettimeofday(int iters) {
+  StartBenchmarkTiming();
+
+  timeval tv;
+  for (int i = 0; i < iters; ++i) {
+    gettimeofday(&tv, NULL);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_time_gettimeofday);
+
+static void BM_time_gettimeofday_syscall(int iters) {
+  StartBenchmarkTiming();
+
+  timeval tv;
+  for (int i = 0; i < iters; ++i) {
+    syscall(__NR_gettimeofday, &tv, NULL);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_time_gettimeofday_syscall);
+
+static void BM_time_time(int iters) {
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; ++i) {
+    time(NULL);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_time_time);

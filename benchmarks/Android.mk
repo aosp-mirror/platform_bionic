@@ -54,7 +54,7 @@ LOCAL_SHARED_LIBRARIES += libstlport
 LOCAL_SRC_FILES := $(benchmark_src_files)
 include $(BUILD_EXECUTABLE)
 
-ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
+ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 ifeq ($(TARGET_ARCH),x86)
 LINKER = linker
 NATIVE_SUFFIX=32
