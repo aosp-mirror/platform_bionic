@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "39bf2ce0_970e2407",
+        "filename": "libc/arch-x86/syscalls/__clock_gettime.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T20:31:25Z",
+      "side": 1,
+      "message": "we don\u0027t actually have a per-syscall way of influencing this. for LP64, anything beginning __ is hidden, but we don\u0027t use hidden visibility for LP32 because we were scared of breaking things.\n\nhere\u0027s the list now:\n\n__accept4.S\n__brk.S\n__connect.S\n__epoll_pwait.S\n__exit.S\n__fcntl64.S\n__fstatfs64.S\n__getcpu.S\n__getcwd.S\n__getdents64.S\n__getpid.S\n__getpriority.S\n__ioctl.S\n__llseek.S\n__mmap2.S\n__openat.S\n__ppoll.S\n__pselect6.S\n__ptrace.S\n__reboot.S\n__rt_sigaction.S\n__rt_sigpending.S\n__rt_sigprocmask.S\n__rt_sigsuspend.S\n__rt_sigtimedwait.S\n__sched_getaffinity.S\n__set_tid_address.S\n__set_tls.S\n__sigaction.S\n__signalfd4.S\n__socket.S\n__statfs64.S\n__timer_create.S\n__timer_delete.S\n__timer_getoverrun.S\n__timer_gettime.S\n__timer_settime.S\n__waitid.S\n\nand here\u0027s the list from klp-dev:\n\n__brk.S\n__fcntl64.S\n__fcntl.S\n__fork.S\n__fstatfs64.S\n__getcpu.S\n__getcwd.S\n__getpriority.S\n__ioctl.S\n__llseek.S\n__mmap2.S\n__openat.S\n__open.S\n__ptrace.S\n__reboot.S\n__rt_sigaction.S\n__rt_sigprocmask.S\n__rt_sigtimedwait.S\n__sched_getaffinity.S\n__setresuid.S\n__setreuid.S\n__set_tls.S\n__setuid.S\n__sigsuspend.S\n__statfs64.S\n__sys_clone.S\n__syslog.S\n__timer_create.S\n__timer_delete.S\n__timer_getoverrun.S\n__timer_gettime.S\n__timer_settime.S\n__waitid.S\n\nso -- because we\u0027re not going out of our way to keep these implementation details alive as the implementation changes -- we\u0027ve actually lost quite a few anyway. so maybe we should just flip the switch and see what happens? (in a separate change though.)",
+      "parentUuid": "39a80c90_5e81793e",
+      "revId": "5aabcd054bdf704adc3d31ba541b707e38bc3677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19d4282d_16ee9c20",
         "filename": "libc/arch-x86/syscalls/__gettimeofday.S",
         "patchSetId": 2
