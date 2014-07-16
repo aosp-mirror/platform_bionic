@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39f48cd0_af9f7956",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T23:01:53Z",
+      "side": 1,
+      "message": "stray space before )",
+      "revId": "b58d4d8c0ab726287a1c6f2b937029f6a222954d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
