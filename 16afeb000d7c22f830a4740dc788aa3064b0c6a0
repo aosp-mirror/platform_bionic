@@ -39,6 +39,30 @@
       "revId": "16afeb000d7c22f830a4740dc788aa3064b0c6a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39a80c90_3e9af520",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T21:27:15Z",
+      "side": 1,
+      "message": "oops. over-enthusiastic removal of __i386__!",
+      "parentUuid": "79c52478_edaa2d72",
+      "range": {
+        "startLine": 22,
+        "startChar": 27,
+        "endLine": 22,
+        "endChar": 34
+      },
+      "revId": "16afeb000d7c22f830a4740dc788aa3064b0c6a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
