@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39bf2ce0_378bd80f",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-16T20:47:46Z",
+      "side": 1,
+      "message": "it turns out -- as running the benchmarks rather than just the tests showed me -- that x86 doesn\u0027t have anything useful to us in its vdso, so let\u0027s not waste time looking.",
+      "revId": "16afeb000d7c22f830a4740dc788aa3064b0c6a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
