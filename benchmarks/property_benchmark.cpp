@@ -28,12 +28,14 @@
 
 extern void *__system_property_area__;
 
+// Do not exceed 512, that is about the largest number of properties
+// that can be created with the current property area size.
 #define TEST_NUM_PROPS \
-    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)->Arg(1024)
+    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)
 
 struct LocalPropertyTestState {
     LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
-        static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_";
+        static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.";
 
         const char* android_data = getenv("ANDROID_DATA");
         if (android_data == NULL) {
@@ -66,18 +68,38 @@ struct LocalPropertyTestState {
         srandom(nprops);
 
         for (int i = 0; i < nprops; i++) {
-            name_lens[i] = random() % PROP_NAME_MAX;
+            // Make sure the name has at least 10 characters to make
+            // it very unlikely to generate the same random name.
+            name_lens[i] = (random() % (PROP_NAME_MAX - 10)) + 10;
             names[i] = new char[PROP_NAME_MAX + 1];
+            size_t prop_name_len = sizeof(prop_name_chars) - 1;
             for (int j = 0; j < name_lens[i]; j++) {
-                names[i][j] = prop_name_chars[random() % (sizeof(prop_name_chars) - 1)];
+                if (j == 0 || names[i][j-1] == '.' || j == name_lens[i] - 1) {
+                    // Certain values are not allowed:
+                    // - Don't start name with '.'
+                    // - Don't allow '.' to appear twice in a row
+                    // - Don't allow the name to end with '.'
+                    // This assumes that '.' is the last character in the
+                    // array so that decrementing the length by one removes
+                    // the value from the possible values.
+                    prop_name_len--;
+                }
+                names[i][j] = prop_name_chars[random() % prop_name_len];
             }
             names[i][name_lens[i]] = 0;
-            value_lens[i] = random() % PROP_VALUE_MAX;
+
+            // Make sure the value contains at least 1 character.
+            value_lens[i] = (random() % (PROP_VALUE_MAX - 1)) + 1;
             values[i] = new char[PROP_VALUE_MAX];
             for (int j = 0; j < value_lens[i]; j++) {
                 values[i][j] = prop_name_chars[random() % (sizeof(prop_name_chars) - 1)];
             }
-            __system_property_add(names[i], name_lens[i], values[i], value_lens[i]);
+
+            if (__system_property_add(names[i], name_lens[i], values[i], value_lens[i]) < 0) {
+                printf("Failed to add a property, terminating...\n");
+                printf("%s = %.*s\n", names[i], value_lens[i], values[i]);
+                exit(1);
+            }
         }
 
         valid = true;
