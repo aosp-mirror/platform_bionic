@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39a80c90_5e81793e",
+        "filename": "libc/arch-x86/syscalls/__clock_gettime.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-07-16T20:16:03Z",
+      "side": 1,
+      "message": ".hidden?",
+      "revId": "5aabcd054bdf704adc3d31ba541b707e38bc3677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19d4282d_16ee9c20",
+        "filename": "libc/arch-x86/syscalls/__gettimeofday.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2014-07-16T20:16:03Z",
+      "side": 1,
+      "message": ".hidden?",
+      "revId": "5aabcd054bdf704adc3d31ba541b707e38bc3677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
