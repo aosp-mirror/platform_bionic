@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9c1b053_63adac70",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9c1b053_887587db",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c1b053_48628f1a",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-16T01:23:33Z",
       "side": 1,
       "message": "i think you need to say more about what that fd is then used for.",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c4b462_e4946480",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9c1b053_48628f1a",
       "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "19c8a874_f04fc047",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "fn it is",
+      "parentUuid": "d9c1b053_c8869f8d",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c1b053_28447381",
         "filename": "linker/linker.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-16T01:23:33Z",
       "side": 1,
       "message": "why does it return int if you\u0027re just going to ignore it?",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c8a874_f0e6e0f7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9c1b053_28447381",
       "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "f9c4b462_44ca7887",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19c8a874_254738e0",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c1b053_8843c776",
         "filename": "linker/linker.cpp",
         "patchSetId": 6
@@ -98,6 +188,24 @@
       "writtenOn": "2014-07-16T01:23:33Z",
       "side": 1,
       "message": "extra parens",
+      "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c1b053_a3e424b3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-16T02:43:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9c1b053_8843c776",
       "revId": "6b70b6e2cdabaae8d6a122bbddd1c95d1650c1ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
