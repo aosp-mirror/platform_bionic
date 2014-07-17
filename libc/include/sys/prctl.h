@@ -38,18 +38,6 @@
 #error PR_SET_TIMERSLACK_PID defined twice
 #endif
 
-#if !defined(PR_SET_VMA)
-#define PR_SET_VMA 0x53564d41
-#else
-#error PR_SET_VMA defined twice
-#endif
-
-#if !defined(PR_SET_VMA_ANON_NAME)
-#define PR_SET_VMA_ANON_NAME 0
-#else
-#error PR_SET_VMA_ANON_NAME defined twice
-#endif
-
 __BEGIN_DECLS
 
 /* IMPORTANT NOTE: This function is declared as taking a variable number
@@ -63,4 +51,3 @@ extern int prctl(int option, ...);
 __END_DECLS
 
 #endif /* _SYS_PRCTL_H */
-
