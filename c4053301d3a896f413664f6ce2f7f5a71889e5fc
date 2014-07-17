@@ -67,6 +67,24 @@
       "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "390d6cbc_ad50a996",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-17T05:18:04Z",
+      "side": 1,
+      "message": "we need a way to preserve lookup_fn for JNI_OnLoad dlopens.\n\nI couldn\u0027t find another way. It goes like this. If art Runtime nativeLoad modified to use android_dlopen_ext it will break libraries that currently rely on LD_LIBRARY_PATH while calling dlopen from JNI_OnLoad... in other words we need to somehow extend scope of lookup_fn to match the scope of currently used android_update_LD_LIBRARY_PATH.",
+      "parentUuid": "390d6cbc_8d728560",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
