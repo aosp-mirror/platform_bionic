@@ -26,10 +26,15 @@ static void __bionic_heap_usage_error(const char* function, void* address);
 #define CORRUPTION_ERROR_ACTION(m) __bionic_heap_corruption_error(__FUNCTION__)
 #define USAGE_ERROR_ACTION(m,p) __bionic_heap_usage_error(__FUNCTION__, p)
 
-/* Bionic named anonymous memory declarations */
+// Bionic named anonymous memory declarations.
 static void* named_anonymous_mmap(size_t length);
 #define MMAP(s) named_anonymous_mmap(s)
 #define DIRECT_MMAP(s) named_anonymous_mmap(s)
+
+// Local definitions of custom prctl arguments to set a vma name in Android kernels.
+#include <sys/prctl.h>
+#define PR_SET_VMA           0x53564d41
+#define PR_SET_VMA_ANON_NAME 0
 
 // Ugly inclusion of C file so that bionic specific #defines configure dlmalloc.
 #include "../upstream-dlmalloc/malloc.c"
@@ -51,6 +56,6 @@ static void* named_anonymous_mmap(size_t length) {
   if (map == MAP_FAILED) {
     return map;
   }
-  __bionic_name_mem(map, length, "libc_malloc");
+  prctl(BIONIC_PR_SET_VMA, BIONIC_PR_SET_VMA_ANON_NAME, map, length, "libc_malloc");
   return map;
 }
