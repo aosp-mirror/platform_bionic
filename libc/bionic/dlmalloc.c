@@ -16,7 +16,6 @@
 
 #include "dlmalloc.h"
 
-#include "private/bionic_name_mem.h"
 #include "private/libc_logging.h"
 
 // Send dlmalloc errors to the log.
@@ -56,6 +55,6 @@ static void* named_anonymous_mmap(size_t length) {
   if (map == MAP_FAILED) {
     return map;
   }
-  prctl(BIONIC_PR_SET_VMA, BIONIC_PR_SET_VMA_ANON_NAME, map, length, "libc_malloc");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, length, "libc_malloc");
   return map;
 }
