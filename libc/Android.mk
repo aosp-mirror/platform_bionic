@@ -229,6 +229,7 @@ libc_bionic_src_files := \
     bionic/umount.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
+    bionic/vdso.cpp \
     bionic/vfork.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \

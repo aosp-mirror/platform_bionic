@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_gettime)
+ENTRY(__clock_gettime)
     mov     x8, __NR_clock_gettime
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(clock_gettime)
     b.hi    __set_errno
 
     ret
-END(clock_gettime)
+END(__clock_gettime)
+.hidden __clock_gettime
