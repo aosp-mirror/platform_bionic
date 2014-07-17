@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1902688d_8fdefda0",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-17T05:29:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "590860ab_f1ab1aa6",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "390d6cbc_ad6d4982",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "390d6cbc_ed2d811b",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-17T05:29:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "390d6cbc_ad6d4982",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "590860ab_91297e76",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 8
@@ -47,6 +83,24 @@
       "writtenOn": "2014-07-17T04:17:19Z",
       "side": 1,
       "message": "should? or must?\n\ndo i have to have an fd? i can\u0027t supply a void*? (i\u0027m thinking of the Kindle app.)",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1902688d_0fcb2dde",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-17T05:29:13Z",
+      "side": 1,
+      "message": "must",
+      "parentUuid": "590860ab_91297e76",
       "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
