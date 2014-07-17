@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590860ab_f1ab1aa6",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-17T04:17:19Z",
+      "side": 1,
+      "message": "if the ... the linker",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "390d6cbc_ad6d4982",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-17T04:17:19Z",
+      "side": 1,
+      "message": "Opens the library named by \u0027filename\u0027 and...",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590860ab_91297e76",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-17T04:17:19Z",
+      "side": 1,
+      "message": "should? or must?\n\ndo i have to have an fd? i can\u0027t supply a void*? (i\u0027m thinking of the Kindle app.)",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "390d6cbc_8d728560",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-17T04:17:19Z",
+      "side": 1,
+      "message": "what\u0027s the motivation for this?",
+      "revId": "c4053301d3a896f413664f6ce2f7f5a71889e5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
