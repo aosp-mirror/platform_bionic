@@ -16,6 +16,24 @@
       "revId": "6425327c3278137d153b8a7505f97d2f5f058d49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "790d24e9_e2a31c52",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-18T22:07:24Z",
+      "side": 1,
+      "message": "size does not seem to be fixed (sizeof + strlen)... linker allocator works with blocks with fixed size.",
+      "parentUuid": "79e44451_ea465b66",
+      "revId": "6425327c3278137d153b8a7505f97d2f5f058d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
