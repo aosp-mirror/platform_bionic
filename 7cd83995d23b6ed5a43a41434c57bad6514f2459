@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99df387f_4be78d46",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "we currently arrange our tests with one file per header. so tests in test_pthread_cleanup_push.c, for example, should go in pthread_test.cpp. et cetera.",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_a8b0df13",
+        "filename": "tests/libc/MODULE_LICENSE_BSD_AND_GPL",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "we should just not include anything that isn\u0027t BSD-licensed. there shouldn\u0027t be any GPL in this project.",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_67c0c65f",
+        "filename": "tests/libc/bionic/lib_relocs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "if you look in tests/libs/ you can see how we\u0027ve been generating shared objects for tests like this. (it might be easier to do that kind of test in a separate change.)",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_a7b00e14",
+        "filename": "tests/libc/bionic/test_cond.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "these aren\u0027t unit tests. we need to rewrite tests so that they\u0027re using the gtest unit test framework like the existing tests in here. anything that requires a human to look at the output and decide whether it makes sense is not useful.",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_a81f3f4f",
+        "filename": "tests/libc/bionic/test_mutex.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "is there anything in here that isn\u0027t already tested in pthread_test.cpp? anything that\u0027s already tested should just be removed from system/extras. we don\u0027t need to test the same thing twice.",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_08258b97",
+        "filename": "tests/libc/glibc/assert/test-assert.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "we can\u0027t have glibc tests in bionic.",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99df387f_6beed121",
+        "filename": "tests/libc/test_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T18:32:04Z",
+      "side": 1,
+      "message": "yeah, this doesn\u0027t really count as converting these tests to gtest :-)",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
