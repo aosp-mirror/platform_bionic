@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79e44451_ea465b66",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-18T22:03:07Z",
+      "side": 1,
+      "message": "maybe not right now, but i wonder if we can use the \"linker\" allocator here?",
+      "revId": "6425327c3278137d153b8a7505f97d2f5f058d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
