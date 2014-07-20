@@ -620,7 +620,11 @@ static void __libc_fatal(const char* format, va_list args) {
   out_vformat(os, format, args);
 
   // log to stderr for the benefit of "adb shell" users.
-  write(2, msg, strlen(msg));
+  struct iovec iov[2] = {
+    {msg, strlen(msg)},
+    {const_cast<void*>(static_cast<const void*>("\n")), 1},
+  };
+  writev(2, iov, 2);
 
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
   __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
