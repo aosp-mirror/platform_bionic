@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "590220bc_674d5c4f",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-21T23:03:28Z",
+      "side": 1,
+      "message": "To bad upstream can\u0027t split this into multiple files. That way, we can import the files we care about, without cluttering the code with unused functions.",
+      "parentUuid": "39ee4c35_9ed8ac04",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39ee4c35_bef5b064",
         "filename": "libc/bionic/getentropy_linux.c",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "writtenOn": "2014-07-21T22:54:59Z",
       "side": 1,
       "message": "this is the only part we actually use.",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_3686eec5",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-21T23:03:28Z",
+      "side": 1,
+      "message": "Oh...  :-(",
+      "parentUuid": "39ee4c35_bef5b064",
       "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
