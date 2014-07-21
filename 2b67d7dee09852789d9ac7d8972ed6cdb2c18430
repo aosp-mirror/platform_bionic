@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "590220bc_47a018be",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T22:54:59Z",
+      "side": 1,
+      "message": "what they really want is Linux to add a new system call. tso@ looks like he\u0027s looking into it. so hopefully at some point we\u0027ll be able to scrap all this and just call that instead.",
+      "parentUuid": "590220bc_8795107c",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "590220bc_07cf4096",
         "filename": "libc/bionic/getentropy_linux.c",
         "patchSetId": 1
@@ -36,6 +54,41 @@
     },
     {
       "key": {
+        "uuid": "39ee4c35_9ed8ac04",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T22:54:59Z",
+      "side": 1,
+      "message": "no. this is something i added; the upstream code assumes it\u0027s meant to be used in an app.\n\ni couldn\u0027t really decide between removing all this unused stuff (because it\u0027s just misleading clutter) and keeping it (so we\u0027re as close to upstream as possible).",
+      "parentUuid": "590220bc_07cf4096",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_bef5b064",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T22:54:59Z",
+      "side": 1,
+      "message": "this is the only part we actually use.",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "590220bc_876cf0d1",
         "filename": "libc/bionic/getentropy_linux.c",
         "patchSetId": 1
@@ -47,6 +100,24 @@
       "writtenOn": "2014-07-21T22:50:45Z",
       "side": 1,
       "message": "Should this function be surrounded by ifdef HAVE_OPENSSL? (see lines 86 through 89).",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_f62c861d",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T22:54:59Z",
+      "side": 1,
+      "message": "it is. see L317 --- everything from there to EOF is openssl stuff.",
+      "parentUuid": "590220bc_876cf0d1",
       "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
