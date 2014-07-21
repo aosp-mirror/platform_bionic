@@ -378,6 +378,9 @@ static void out_vformat(Out& o, const char* format, va_list args) {
         } else if (c == '%') {
             buffer[0] = '%';
             buffer[1] = '\0';
+        } else if (c == 'm') {
+            // syslog-like %m for strerror(errno).
+            str = strerror(errno);
         } else {
             __assert(__FILE__, __LINE__, "conversion specifier unsupported");
         }
