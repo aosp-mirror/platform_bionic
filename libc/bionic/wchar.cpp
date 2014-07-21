@@ -116,11 +116,10 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
     if (static_cast<uint8_t>((*src)[i]) < 0x80) {
       // Fast path for plain ASCII characters.
       dst[o] = (*src)[i];
-      if ((*src)[i] == '\0') {
-        *src = NULL;
-        return reset_and_return_illegal(EILSEQ, state);
-      }
       r = 1;
+      if ((*src)[i] == '\0') {
+        break;
+      }
     } else {
       r = mbrtowc(dst + o, *src + i, nmc - i, state);
       if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
