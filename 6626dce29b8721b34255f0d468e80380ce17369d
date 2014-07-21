@@ -16,6 +16,24 @@
       "revId": "6626dce29b8721b34255f0d468e80380ce17369d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_c8939eda",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-21T18:46:51Z",
+      "side": 1,
+      "message": "Didn\u0027t realize there was such a function. Thanks.",
+      "parentUuid": "f918342e_58aac1f5",
+      "revId": "6626dce29b8721b34255f0d468e80380ce17369d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
