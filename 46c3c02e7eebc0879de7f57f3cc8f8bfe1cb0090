@@ -50,6 +50,24 @@
       "revId": "46c3c02e7eebc0879de7f57f3cc8f8bfe1cb0090",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590220bc_21651495",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-21T18:30:50Z",
+      "side": 1,
+      "message": "Changing line 355 was actually a leftover from when I was trying to figure out what the actual bug was :)",
+      "parentUuid": "191c281e_bf0f7b06",
+      "revId": "46c3c02e7eebc0879de7f57f3cc8f8bfe1cb0090",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
