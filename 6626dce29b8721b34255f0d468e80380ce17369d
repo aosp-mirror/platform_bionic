@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f918342e_58aac1f5",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T18:42:58Z",
+      "side": 1,
+      "message": "wmemset?",
+      "revId": "6626dce29b8721b34255f0d468e80380ce17369d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
