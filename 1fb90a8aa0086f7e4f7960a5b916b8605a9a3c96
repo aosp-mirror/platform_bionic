@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79e44451_96c1ba16",
+        "filename": "libc/dns/resolv/res_init.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T22:34:08Z",
+      "side": 0,
+      "message": "nnk: this is the code you were in the other day that make me ask if we should take the upstream res_randomid instead.",
+      "revId": "1fb90a8aa0086f7e4f7960a5b916b8605a9a3c96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
