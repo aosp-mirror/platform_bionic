@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "191c281e_7f5043ea",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T17:05:19Z",
+      "side": 1,
+      "message": "y u hate {s?",
+      "revId": "46c3c02e7eebc0879de7f57f3cc8f8bfe1cb0090",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_fff293b9",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T17:05:19Z",
+      "side": 1,
+      "message": "i was confused for a moment here until i realized this is saying \"the _next_ character [assuming it\u0027s a single-byte character] will be \u0027e\u0027\".",
+      "revId": "46c3c02e7eebc0879de7f57f3cc8f8bfe1cb0090",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_bf0f7b06",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-21T17:05:19Z",
+      "side": 1,
+      "message": "should we memset out to \u0027x\u0027 before we start?\nthen at L343 we can also assert that out[4] still \u003d\u003d \u0027x\u0027.\n\nalso, did you mean to use out on L344 or \u0026out[4]? (given your change on L335.)",
+      "revId": "46c3c02e7eebc0879de7f57f3cc8f8bfe1cb0090",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
