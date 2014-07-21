@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590220bc_8795107c",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-21T22:50:45Z",
+      "side": 1,
+      "message": "Wow, I\u0027m impressed by the number of steps they go through to get a good source of random data.",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590220bc_07cf4096",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-21T22:50:45Z",
+      "side": 1,
+      "message": "Is HAVE_OPENSSL defined when building bionic?",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590220bc_876cf0d1",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-21T22:50:45Z",
+      "side": 1,
+      "message": "Should this function be surrounded by ifdef HAVE_OPENSSL? (see lines 86 through 89).",
+      "revId": "2b67d7dee09852789d9ac7d8972ed6cdb2c18430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
