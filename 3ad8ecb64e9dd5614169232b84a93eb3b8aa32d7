@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91530f5_aa329024",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "Paranoid nit ...\n\nNothing in the loop affects the incoming errno (?)\n\n(errno value captured at top before parsing loop in case someone inadvertently adds something that does?)",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 34
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9123c0c_e6e843cd",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "includes in alphabetic order",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_47881162",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "should be \u0027off\u0027 by default until openlog, which can set it at that point.\n\nI personally have no problem with leaving syslog open outside scope of openlog/closelog, just a pedantic note that it is shut off in real-life.",
+      "range": {
+        "startLine": 24,
+        "startChar": 34,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d91530f5_055d7525",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "reset syslog_log_tag and syslog_priority_mask?",
+      "range": {
+        "startLine": 26,
+        "startChar": 16,
+        "endLine": 27,
+        "endChar": 1
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9123c0c_06f8df98",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "set syslog_priority_mask to unilaterally re-open it up.",
+      "range": {
+        "startLine": 30,
+        "startChar": 26,
+        "endLine": 30,
+        "endChar": 27
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_e75ddd29",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "Do we want LOG_EMERG to be ANDROID_LOG_FATAL, or are we giving too much power to syslog (yes).\n\nRegistering a design thought.",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 26
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_a708054a",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "\u003c\u003d",
+      "range": {
+        "startLine": 64,
+        "startChar": 15,
+        "endLine": 64,
+        "endChar": 16
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9123c0c_460137d4",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "If only we could signal LOG_ID_SYSTEM (where SPAM resides, oops, is my prejudice showing?) to the bottom layers?\n\nWe should consider adding a feature that android_log_priority could use the upper bits to act as a log id selector? Consider this thought outside the scope of this feature.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 70
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c281e_871ce986",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2014-07-22T14:51:51Z",
+      "side": 1,
+      "message": "To manage expectations, do we want to tell them these flags are meaningless?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 23
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
