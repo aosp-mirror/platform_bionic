@@ -67,7 +67,6 @@ libc_common_src_files := \
     bionic/unlockpt.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    unistd/syslog.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
@@ -218,6 +217,7 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
+    bionic/syslog.cpp \
     bionic/sys_siglist.c \
     bionic/sys_signame.c \
     bionic/system_properties.cpp \

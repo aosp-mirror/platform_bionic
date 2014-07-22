@@ -74,20 +74,18 @@ __BEGIN_DECLS
 #define LOG_MASK(pri) (1 << (pri))
 #define LOG_UPTO(pri) ((1 << ((pri)+1)) - 1)
 
-#define LOG_PID    0x01    /* include pid with message */
-#define LOG_CONS   0x02    /* write to console on logger error */
-#define LOG_ODELAY 0x04    /* delay connection until syslog() */
-#define LOG_NDELAY 0x08    /* open connection immediately */
-#define LOG_NOWAIT 0x10    /* wait for child processes (unused on linux) */
-#define LOG_PERROR 0x20    /* additional logging to stderr */
+#define LOG_PID    0x01
+#define LOG_CONS   0x02
+#define LOG_ODELAY 0x04
+#define LOG_NDELAY 0x08
+#define LOG_NOWAIT 0x10
+#define LOG_PERROR 0x20
 
-#define _PATH_LOG  "/dev/syslog"
-
-extern void	closelog(void);
-extern void	openlog(const char *, int, int);
-extern int	setlogmask(int);
-extern void	syslog(int, const char *, ...) __printflike(2, 3);
-extern void	vsyslog(int, const char *, va_list) __printflike(2, 0);
+extern void closelog(void);
+extern void openlog(const char*, int, int);
+extern int setlogmask(int);
+extern void syslog(int, const char*, ...) __printflike(2, 3);
+extern void vsyslog(int, const char*, va_list) __printflike(2, 0);
 
 __END_DECLS
 
