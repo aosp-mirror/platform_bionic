@@ -37,7 +37,6 @@ endif
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
-    bionic/arc4random.c \
     bionic/bindresvport.c \
     bionic/daemon.c \
     bionic/err.c \
@@ -124,6 +123,7 @@ libc_bionic_src_files := \
     bionic/futimens.cpp \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
+    bionic/getentropy_linux.c \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
     bionic/gettid.cpp \
@@ -335,6 +335,8 @@ libc_upstream_openbsd_gdtoa_src_files_64 := \
     upstream-openbsd/lib/libc/gdtoa/strtorQ.c \
 
 libc_upstream_openbsd_src_files := \
+    upstream-openbsd/lib/libc/crypt/arc4random.c \
+    upstream-openbsd/lib/libc/crypt/arc4random_uniform.c \
     upstream-openbsd/lib/libc/gen/alarm.c \
     upstream-openbsd/lib/libc/gen/ctype_.c \
     upstream-openbsd/lib/libc/gen/exec.c \
