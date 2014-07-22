@@ -46,8 +46,9 @@ __LIBC_HIDDEN__ void  _thread_atexit_unlock(void);
 __LIBC_HIDDEN__ void    _thread_arc4_lock(void);
 __LIBC_HIDDEN__ void    _thread_arc4_unlock(void);
 
-#define  _ARC4_LOCK() _thread_arc4_lock()
-#define  _ARC4_UNLOCK() _thread_arc4_unlock()
+#define _ARC4_LOCK() _thread_arc4_lock()
+#define _ARC4_UNLOCK() _thread_arc4_unlock()
+#define _ARC4_ATFORK(f) pthread_atfork(NULL, NULL, (f))
 
 __END_DECLS
 

@@ -18,6 +18,7 @@
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
 #include <sys/cdefs.h>
+#include <stddef.h> // For size_t.
 
 #define __USE_BSD
 
@@ -35,6 +36,11 @@
 
 /* OpenBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
+
+#define explicit_bzero(p, s) memset(p, 0, s)
+
+/* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
+__LIBC_HIDDEN__ extern int getentropy(void*, size_t);
 
 /* LP32 NDK ctype.h contained references to these. */
 __LIBC64_HIDDEN__ extern const short* _tolower_tab_;
