@@ -81,13 +81,6 @@ libc/
   private/
     # These are private header files meant for use within bionic itself.
 
-  stdio/
-  stdlib/
-  unistd/
-    # These are legacy files of unknown provenance. In the past, bionic was a
-    # mess of random versions of random files from all three of FreeBSD, NetBSD,
-    # and OpenBSD! We've been working to clean that up, but these directories
-    # are basically where all the stuff we haven't got to yet lives.
   dns/
     # Contains the DNS resolver (originates from NetBSD code).
 
@@ -113,6 +106,10 @@ libc/
     # legacy mess that needs to be sorted out, either by replacing it with
     # current upstream source in one of the upstream directories or by
     # switching the file to C++ and cleaning it up.
+
+  stdio/
+    # These are legacy files of dubious provenance. We're working to clean
+    # this mess up, and this directory should disappear.
 
   tools/
     # Various tools used to maintain bionic.
