@@ -176,3 +176,14 @@ TEST(libc_logging, lld_LLONG_MIN) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
+
+TEST(libc_logging, m) {
+#if defined(__BIONIC__)
+  char buf[BUFSIZ];
+  errno = EBADF;
+  __libc_format_buffer(buf, sizeof(buf), "<%m>");
+  EXPECT_STREQ("<Bad file number>", buf);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
