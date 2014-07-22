@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39bc8c31_75b7e06e",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "why initialize to a fake value when the very next thing you do is assign the actual value?",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_95bd2456",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "?",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_35d4387f",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "yes, i think -1 makes sense as being the usual \"not an fd\" value.",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b2845d_ba7655ae",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "i think the previous discussion was \"is it useful to distinguish a recursive pthread_mutex_lock from an error-checking one from a default flags one?\" to which we said \"don\u0027t know; let\u0027s wait and see\".\n\nhere i think the question is \"is it useful to distinguish a pthread_mutex_lock from a pthread_mutex_timedlock?\". strictly speaking i think we still don\u0027t know, but that sounds plausible? or does that make the UI less useful? (does it sum all the pthread_mutex_t lock contention time?)\n\n[note that it\u0027s either \"a pthread mutex\" (the name) or \"pthread_mutex_t\" (the type) or \"pthread_mutex_lock\" (the function). pthread_mutex isn\u0027t a thing.]",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_1587748a",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "oops",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_75840084",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "lose the \", ...\". no one is going to use placement new on a ScopedTrace.",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b7804c_164e5ca6",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "confusingly, the access modifiers are half-indented. so that should be \"...{\\n\\x20public:\\n\\x20\\x20Scoped...\"",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_f56f5007",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "we have a DISALLOW_COPY_AND_ASSIGN you can use.",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b2845d_fa80dd3d",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-22T18:58:05Z",
+      "side": 1,
+      "message": "i still don\u0027t think any of these need to be in the header file.",
+      "revId": "63b51bbe1d21659b9d5a463686d0909cdf7482cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
