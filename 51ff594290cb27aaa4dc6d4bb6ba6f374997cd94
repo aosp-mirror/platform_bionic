@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59b7804c_abce02eb",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T16:34:05Z",
+      "side": 1,
+      "message": "can you remind me why we didn\u0027t call __libc_fatal in these places?",
+      "revId": "51ff594290cb27aaa4dc6d4bb6ba6f374997cd94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39bc8c31_42b777d7",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T16:34:05Z",
+      "side": 1,
+      "message": "stray ;",
+      "revId": "51ff594290cb27aaa4dc6d4bb6ba6f374997cd94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
