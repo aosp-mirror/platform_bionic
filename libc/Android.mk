@@ -287,20 +287,18 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/div.c \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
     upstream-netbsd/lib/libc/stdlib/erand48.c \
+    upstream-netbsd/lib/libc/stdlib/insque.c \
     upstream-netbsd/lib/libc/stdlib/jrand48.c \
     upstream-netbsd/lib/libc/stdlib/ldiv.c \
     upstream-netbsd/lib/libc/stdlib/lldiv.c \
     upstream-netbsd/lib/libc/stdlib/lrand48.c \
-    upstream-netbsd/lib/libc/stdlib/lsearch.c \
     upstream-netbsd/lib/libc/stdlib/mrand48.c \
     upstream-netbsd/lib/libc/stdlib/nrand48.c \
     upstream-netbsd/lib/libc/stdlib/_rand48.c \
     upstream-netbsd/lib/libc/stdlib/rand_r.c \
+    upstream-netbsd/lib/libc/stdlib/remque.c \
     upstream-netbsd/lib/libc/stdlib/seed48.c \
     upstream-netbsd/lib/libc/stdlib/srand48.c \
-    upstream-netbsd/lib/libc/stdlib/tdelete.c \
-    upstream-netbsd/lib/libc/stdlib/tfind.c \
-    upstream-netbsd/lib/libc/stdlib/tsearch.c \
     upstream-netbsd/lib/libc/string/memccpy.c \
     upstream-netbsd/lib/libc/string/strcasestr.c \
     upstream-netbsd/lib/libc/string/strcoll.c \
@@ -469,6 +467,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
     upstream-openbsd/lib/libc/stdlib/exit.c \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
+    upstream-openbsd/lib/libc/stdlib/lsearch.c \
     upstream-openbsd/lib/libc/stdlib/setenv.c \
     upstream-openbsd/lib/libc/stdlib/strtoimax.c \
     upstream-openbsd/lib/libc/stdlib/strtol.c \
@@ -477,6 +476,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/strtoull.c \
     upstream-openbsd/lib/libc/stdlib/strtoumax.c \
     upstream-openbsd/lib/libc/stdlib/system.c \
+    upstream-openbsd/lib/libc/stdlib/tfind.c \
+    upstream-openbsd/lib/libc/stdlib/tsearch.c \
     upstream-openbsd/lib/libc/string/strcasecmp.c \
     upstream-openbsd/lib/libc/string/strcspn.c \
     upstream-openbsd/lib/libc/string/strdup.c \
