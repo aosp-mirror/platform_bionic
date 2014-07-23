@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "79b2845d_ff40c21c",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d91530f5_aa329024",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 34
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9123c0c_e6e843cd",
         "filename": "libc/bionic/syslog.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-07-22T14:51:51Z",
       "side": 1,
       "message": "includes in alphabetic order",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b2845d_bfed9adb",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "i went with a strict interpretation of the google3 rule, where this is implementing \u003csyslog.h\u003e, so that comes first, with a blank line between.\n\nit looks like we typically haven\u0027t done that elsewhere in bionic, so i\u0027ll change this to match the others.",
+      "parentUuid": "b9123c0c_e6e843cd",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "39bc8c31_e1e4a86e",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "POSIX (and glibc) disagree. \"The default log mask allows all priorities to be logged.\"",
+      "parentUuid": "191c281e_47881162",
+      "range": {
+        "startLine": 24,
+        "startChar": 34,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d91530f5_055d7525",
         "filename": "libc/bionic/syslog.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2014-07-22T14:51:51Z",
       "side": 1,
       "message": "reset syslog_log_tag and syslog_priority_mask?",
+      "range": {
+        "startLine": 26,
+        "startChar": 16,
+        "endLine": 27,
+        "endChar": 1
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b7804c_81ecbd98",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "since openlog doesn\u0027t set (and \"is not required prior to calling setlogmask\"), i think the mask should persist. i can\u0027t find any claims about the tag, but that sounds reasonable to me (especially because the caller owns the pointer!), and glibc seems to agree.",
+      "parentUuid": "d91530f5_055d7525",
       "range": {
         "startLine": 26,
         "startChar": 16,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "79b2845d_5f810eed",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "yeah, i wondered if some of these should be fatal. i decided to wait and see.",
+      "parentUuid": "191c281e_e75ddd29",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 26
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "191c281e_a708054a",
         "filename": "libc/bionic/syslog.cpp",
         "patchSetId": 2
@@ -151,6 +271,30 @@
       "writtenOn": "2014-07-22T14:51:51Z",
       "side": 1,
       "message": "\u003c\u003d",
+      "range": {
+        "startLine": 64,
+        "startChar": 15,
+        "endLine": 64,
+        "endChar": 16
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b7804c_2151919a",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "d\u0027oh!",
+      "parentUuid": "191c281e_a708054a",
       "range": {
         "startLine": 64,
         "startChar": 15,
@@ -197,6 +341,30 @@
       "writtenOn": "2014-07-22T14:51:51Z",
       "side": 1,
       "message": "To manage expectations, do we want to tell them these flags are meaningless?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 23
+      },
+      "revId": "3ad8ecb64e9dd5614169232b84a93eb3b8aa32d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b2845d_3f652a95",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T18:33:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "191c281e_871ce986",
       "range": {
         "startLine": 77,
         "startChar": 0,
