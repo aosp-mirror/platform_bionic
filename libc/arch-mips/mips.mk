@@ -83,3 +83,6 @@ libc_crt_target_crtbegin_so_file_mips := \
 
 libc_crt_target_so_cflags_mips := \
     -fPIC
+
+libc_crt_target_ldflags_mips := \
+    -melf32ltsmip
