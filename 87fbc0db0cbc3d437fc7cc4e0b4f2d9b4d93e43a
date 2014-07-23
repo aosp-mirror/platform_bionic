@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d971b08d_57c38e6c",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T21:49:30Z",
+      "side": 1,
+      "message": "if PTRACE_ATTACH is disabled, debuggerd won\u0027t be able to do anything anyway.\n\nshould we log to say we\u0027re not containing debuggerd?",
+      "revId": "87fbc0db0cbc3d437fc7cc4e0b4f2d9b4d93e43a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
