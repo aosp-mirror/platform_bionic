@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-#include <syslog.h>
-
 #include <stdlib.h>
+#include <syslog.h>
 
 #include "private/libc_logging.h"
 
@@ -24,6 +23,7 @@ static const char* syslog_log_tag = NULL;
 static int syslog_priority_mask = 0xff;
 
 void closelog() {
+  syslog_log_tag = NULL;
 }
 
 void openlog(const char* log_tag, int /*options*/, int /*facility*/) {
@@ -61,7 +61,7 @@ void vsyslog(int priority, const char* fmt, va_list args) {
   // What's our Android log priority?
   priority &= LOG_PRIMASK;
   int android_log_priority;
-  if (priority < LOG_ERR) {
+  if (priority <= LOG_ERR) {
     android_log_priority = ANDROID_LOG_ERROR;
   } else if (priority == LOG_WARNING) {
     android_log_priority = ANDROID_LOG_WARN;
