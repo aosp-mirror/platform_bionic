@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193d089f_420122d4",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T22:39:50Z",
+      "side": 1,
+      "message": "weird google3 style is to half-indent here. http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml?showone\u003dClass_Format#Class_Format",
+      "revId": "1c22991e6f87f19b3cad21cacadf262e5748fec3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9461042_c0918e44",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T22:39:50Z",
+      "side": 1,
+      "message": "old_dumpable_",
+      "revId": "1c22991e6f87f19b3cad21cacadf262e5748fec3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
