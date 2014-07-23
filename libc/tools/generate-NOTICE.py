@@ -144,7 +144,7 @@ for arg in args:
 
             i = 0
             while i < len(lines):
-                if "Copyright" in lines[i] and not "__COPYRIGHT" in lines[i]:
+                if "Copyright" in lines[i] and not "@(#) Copyright" in lines[i]:
                     i = ExtractCopyrightAt(lines, i)
                 i += 1
 
