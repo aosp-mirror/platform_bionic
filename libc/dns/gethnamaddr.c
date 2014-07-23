@@ -565,7 +565,7 @@ android_read_hostent(FILE* proxy)
 	char buf[4];
 	if (fread(buf, 1, sizeof(buf), proxy) != sizeof(buf)) return NULL;
 
-	/* This is reading serialized data from system/netd/DnsProxyListener.cpp
+	/* This is reading serialized data from system/netd/server/DnsProxyListener.cpp
 	 * and changes here need to be matched there */
 	int result_code = strtol(buf, NULL, 10);
 	if (result_code != DnsProxyQueryResult) {
@@ -763,7 +763,7 @@ gethostbyname_internal(const char *name, int af, res_state res, unsigned netid, 
 
 	netid = __netdClientDispatch.netIdForResolv(netid);
 
-	/* This is writing to system/netd/DnsProxyListener.cpp and changes
+	/* This is writing to system/netd/server/DnsProxyListener.cpp and changes
 	 * here need to be matched there */
 	if (fprintf(proxy, "gethostbyname %u %s %d",
 			netid,

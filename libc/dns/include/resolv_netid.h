@@ -36,7 +36,7 @@
 #include <netinet/in.h>
 
 /*
- * Passing NETID_UNSET as the netId causes system/netd/DnsProxyListener.cpp to
+ * Passing NETID_UNSET as the netId causes system/netd/server/DnsProxyListener.cpp to
  * fill in the appropriate default netId for the query.
  */
 #define NETID_UNSET 0u
@@ -60,9 +60,6 @@ int android_getaddrinfofornet(const char *, const char *, const struct addrinfo 
 /* set name servers for a network */
 extern void _resolv_set_nameservers_for_net(unsigned netid,
     const char** servers, int numservers, const char *domains) __used_in_netd;
-
-/* flush the cache associated with a certain network */
-extern void _resolv_flush_cache_for_net(unsigned netid) __used_in_netd;
 
 /* delete the cache associated with a certain network */
 extern void _resolv_delete_cache_for_net(unsigned netid) __used_in_netd;
