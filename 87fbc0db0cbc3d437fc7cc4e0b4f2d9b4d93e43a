@@ -16,6 +16,24 @@
       "revId": "87fbc0db0cbc3d437fc7cc4e0b4f2d9b4d93e43a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "794e0458_1472fab0",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-07-23T21:55:58Z",
+      "side": 1,
+      "message": "\u003e if PTRACE_ATTACH is disabled, debuggerd won\u0027t be able to do anything anyway.\n\ndebuggerd runs as root, and doesn\u0027t honor PR_SET_DUMPABLE. Specifically, any process with CAP_SYS_PTRACE can trace any other process regardless of whether it wants to be traced or not. (SELinux imposes even further restrictions, which aren\u0027t relevant for this case.)\n\nLogging seems like a good idea. Will do.",
+      "parentUuid": "d971b08d_57c38e6c",
+      "revId": "87fbc0db0cbc3d437fc7cc4e0b4f2d9b4d93e43a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
