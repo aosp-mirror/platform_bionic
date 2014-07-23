@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193d089f_a28c862b",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T22:42:42Z",
+      "side": 1,
+      "message": "i don\u0027t think you need this. i think the missing piece is that you should actually _call_ foo and make sure you get the expected result. there are examples in this file.",
+      "revId": "561c825a9fc9f765cfced6dc794a9fa4dff61bf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
