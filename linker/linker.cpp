@@ -476,6 +476,29 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
   return NULL;
 }
 
+static void resolve_ifunc_symbols(soinfo* si) {
+
+  phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias);
+
+  TRACE_TYPE(IFUNC, "CHECKING FOR IFUNCS AND PERFORMING SYMBOL UPDATES");
+
+  for (size_t i = 0; i < si->nchain; ++i) {
+    ElfW(Sym)* s = &si->symtab[i];
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+      // The address of the ifunc in the symbol table is the address of the
+      // function that chooses the function to which the ifunc will refer.
+      // In order to return the proper value, we run the choosing function
+      // in the linker and then return its result (minus the base offset).
+      TRACE_TYPE(IFUNC, "FOUND IFUNC");
+      ElfW(Addr) (*ifunc_ptr)();
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
+      s->st_value = (ifunc_ptr() - si->base);
+      TRACE_TYPE(IFUNC, "NEW VALUE IS %p", (void*)s->st_value);
+    }
+  }
+  phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias);
+}
+
 static unsigned elfhash(const char* _name) {
     const unsigned char* name = reinterpret_cast<const unsigned char*>(_name);
     unsigned h = 0, g;
@@ -790,6 +813,10 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       return NULL;
     }
 
+    // if the library has any ifuncs, we will need to resolve them so that dlsym
+    // can handle them properly
+    resolve_ifunc_symbols(si);
+
     return si;
 }
 
@@ -902,6 +929,53 @@ void do_dlclose(soinfo* si) {
   soinfo_unload(si);
   protect_data(PROT_READ);
 }
+
+// ifuncs are only defined for x86
+#if defined(__i386__)
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
+  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+    ElfW(Sym)* s;
+    soinfo* lsi;
+    unsigned type = ELFW(R_TYPE)(rel->r_info);
+    unsigned sym = ELFW(R_SYM)(rel->r_info);
+    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
+    ElfW(Addr) sym_addr = 0;
+    const char* sym_name = NULL;
+    sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
+    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_386_JMP_SLOT) {
+      TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr));
+      ElfW(Addr) (*ifunc_ptr)();
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_ptr();
+    }
+  }
+}
+#endif
+
+#if defined(__x86_64__)
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+  for (size_t idx = 0; idx < count; ++idx, ++rela) {
+    ElfW(Sym)* s;
+    soinfo* lsi;
+    unsigned type = ELFW(R_TYPE)(rela->r_info);
+    unsigned sym = ELFW(R_SYM)(rela->r_info);
+    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
+    ElfW(Addr) sym_addr = 0;
+    const char* sym_name = NULL;
+    sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
+    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_X86_64_JUMP_SLOT) {
+      TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr + rela->r_addend));
+      ElfW(Addr) (*ifunc_ptr)();
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_ptr();
+    }
+  }
+}
+#endif
 
 #if defined(USE_RELA)
 static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
@@ -1114,7 +1188,11 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
       MARK(rela->r_offset);
       TRACE_TYPE(RELO, "RELO JMP_SLOT %08zx <- %08zx %s", static_cast<size_t>(reloc),
                  static_cast<size_t>(sym_addr + rela->r_addend), sym_name);
-      *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
+      if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+        si->set_has_ifuncs(true);
+      } else {
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
+      }
       break;
     case R_X86_64_GLOB_DAT:
       count_relocation(kRelocAbsolute);
@@ -1293,7 +1371,11 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
+            if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+              si->set_has_ifuncs(true);
+            } else {
+              *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
+            }
             break;
         case R_386_GLOB_DAT:
             count_relocation(kRelocAbsolute);
@@ -1553,6 +1635,14 @@ void soinfo::set_st_ino(ino_t ino) {
   st_ino = ino;
 }
 
+void soinfo::set_has_ifuncs(bool ifuncs) {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return;
+  }
+
+  has_ifuncs = ifuncs;
+}
+
 dev_t soinfo::get_st_dev() {
   if ((this->flags & FLAG_NEW_SOINFO) == 0) {
     return 0;
@@ -1567,6 +1657,14 @@ ino_t soinfo::get_st_ino() {
   }
 
   return st_ino;
+}
+
+bool soinfo::get_has_ifuncs() {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return false;
+  }
+
+  return has_ifuncs;
 }
 
 // This is a return on get_children() in case
@@ -1952,6 +2050,18 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         }
     }
 #endif
+
+    // if there are ifuncs, we need to do an additional relocation pass.
+    // they cannot be resolved until the rest of the relocations are done
+    // because we need to call the resolution function which may be waiting
+    // on relocations.
+    if(si->get_has_ifuncs()) {
+#if defined(__i386__)
+      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count, needed);
+#elif defined(__x86_64__)
+      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count, needed);
+#endif
+    }
 
 #if defined(__mips__)
     if (!mips_relocate_got(si, needed)) {
