@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "f9c674d8_6be7f5f4",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-23T16:40:25Z",
+      "side": 1,
+      "message": "I don\u0027t distinctly remember having a conversation about that.  I know there was some uncertainty, at least on my part, about exactly what the appropriate response to one of these critical failure points would be, and a discussion of how stdio isn\u0027t reliable for error reporting, so unless there\u0027s some distinct reason why this shouldn\u0027t be reported to the log, I would think __libc_fatal would be preferred.",
+      "parentUuid": "59b7804c_abce02eb",
+      "revId": "51ff594290cb27aaa4dc6d4bb6ba6f374997cd94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d998d0f7_3f0983be",
         "filename": "libc/bionic/bionic_systrace.cpp",
         "patchSetId": 17
@@ -115,6 +133,24 @@
       "writtenOn": "2014-07-23T16:34:05Z",
       "side": 1,
       "message": "stray ;",
+      "revId": "51ff594290cb27aaa4dc6d4bb6ba6f374997cd94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "997bb85f_a5f02875",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-23T16:40:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39bc8c31_42b777d7",
       "revId": "51ff594290cb27aaa4dc6d4bb6ba6f374997cd94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
