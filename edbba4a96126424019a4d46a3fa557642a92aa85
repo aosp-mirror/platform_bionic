@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9461042_8f733968",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T20:27:53Z",
+      "side": 1,
+      "message": "this is basically what ASSERT does :-)",
+      "revId": "edbba4a96126424019a4d46a3fa557642a92aa85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f93914b5_b0913645",
+        "filename": "tests/libs/dlopen_testlib_ifunc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-23T20:27:53Z",
+      "side": 1,
+      "message": "i might choose more recognizable values. you can return a const char* and have \"f1\" and \"f2\", for example.",
+      "revId": "edbba4a96126424019a4d46a3fa557642a92aa85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
