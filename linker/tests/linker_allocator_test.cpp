@@ -50,7 +50,6 @@ static size_t kPageSize = sysconf(_SC_PAGE_SIZE);
 
 TEST(linker_allocator, test_nominal) {
   LinkerAllocator<test_struct_nominal> allocator;
-  allocator.init();
 
   test_struct_nominal* ptr1 = allocator.alloc();
   ASSERT_TRUE(ptr1 != nullptr);
@@ -67,7 +66,6 @@ TEST(linker_allocator, test_nominal) {
 
 TEST(linker_allocator, test_small) {
   LinkerAllocator<test_struct_small> allocator;
-  allocator.init();
 
   char* ptr1 = reinterpret_cast<char*>(allocator.alloc());
   char* ptr2 = reinterpret_cast<char*>(allocator.alloc());
@@ -79,7 +77,6 @@ TEST(linker_allocator, test_small) {
 
 TEST(linker_allocator, test_larger) {
   LinkerAllocator<test_struct_larger> allocator;
-  allocator.init();
 
   test_struct_larger* ptr1 = allocator.alloc();
   test_struct_larger* ptr2 = allocator.alloc();
@@ -103,7 +100,6 @@ TEST(linker_allocator, test_larger) {
 
 static void protect_all() {
   LinkerAllocator<test_struct_larger> allocator;
-  allocator.init();
 
   // number of allocs to reach the end of first page
   size_t n = kPageSize/sizeof(test_struct_larger) - 1;
