@@ -1,3 +1,5 @@
+/*	$OpenBSD: lsearch.c,v 1.5 2014/07/18 04:16:09 matthew Exp $	*/
+
 /*
  * Copyright (c) 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,64 +32,39 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)lsearch.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: lsearch.c,v 1.7 2012/06/25 22:32:45 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
 #include <sys/types.h>
-
-#include <assert.h>
-#include <errno.h>
 #include <string.h>
 #include <search.h>
 
 typedef int (*cmp_fn_t)(const void *, const void *);
-static void *linear_base(const void *, void *, size_t *, size_t,
-			     cmp_fn_t, int);
+static void *linear_base(const void *, const void *, size_t *, size_t,
+    cmp_fn_t, int);
 
 void *
 lsearch(const void *key, void *base, size_t *nelp, size_t width,
-    cmp_fn_t compar)
+    	cmp_fn_t compar)
 {
-
-	_DIAGASSERT(key != NULL);
-	_DIAGASSERT(base != NULL);
-	_DIAGASSERT(compar != NULL);
 
 	return(linear_base(key, base, nelp, width, compar, 1));
 }
 
 void *
 lfind(const void *key, const void *base, size_t *nelp, size_t width,
-    cmp_fn_t compar)
+	cmp_fn_t compar)
 {
-
-	_DIAGASSERT(key != NULL);
-	_DIAGASSERT(base != NULL);
-	_DIAGASSERT(compar != NULL);
-
-	return(linear_base(key, __UNCONST(base), nelp, width, compar, 0));
+	return(linear_base(key, base, nelp, width, compar, 0));
 }
 
 static void *
-linear_base(const void *key, void *base, size_t *nelp, size_t width,
+linear_base(const void *key, const void *base, size_t *nelp, size_t width,
 	cmp_fn_t compar, int add_flag)
 {
-	char *element, *end;
+	const char *element, *end;
 
-	_DIAGASSERT(key != NULL);
-	_DIAGASSERT(base != NULL);
-	_DIAGASSERT(compar != NULL);
-
-	end = (char *)base + *nelp * width;
-	for (element = (char *)base; element < end; element += width)
-		if (!compar(element, key))		/* key found */
-			return element;
+	end = (const char *)base + *nelp * width;
+	for (element = base; element < end; element += width)
+		if (!compar(key, element))		/* key found */
+			return((void *)element);
 
 	if (!add_flag)					/* key not found */
 		return(NULL);
@@ -102,6 +79,6 @@ linear_base(const void *key, void *base, size_t *nelp, size_t width,
 	 * manual.
 	 */
 	++*nelp;
-	memcpy(end, key, width);
-	return end;
+	memcpy((void *)end, key, width);
+	return((void *)end);
 }
