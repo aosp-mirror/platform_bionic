@@ -46,7 +46,10 @@ void syslog(int priority, const char* fmt, ...) {
   va_end(args);
 }
 
-void vsyslog(int priority, const char* fmt, va_list args) {
+void vsyslog(int /*priority*/, const char* /*fmt*/, va_list /*args*/) {
+// HACK to avoid lock up on certain devices. This will be reverted when
+// that is fixed.
+#if 0
   // Check whether we're supposed to be logging messages of this priority.
   if ((syslog_priority_mask & LOG_MASK(LOG_PRI(priority))) == 0) {
     return;
@@ -72,4 +75,5 @@ void vsyslog(int priority, const char* fmt, va_list args) {
   }
 
   __libc_format_log_va_list(android_log_priority, log_tag, fmt, args);
+#endif
 }
