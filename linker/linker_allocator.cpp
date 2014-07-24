@@ -28,16 +28,11 @@ struct FreeBlockInfo {
   size_t num_free_blocks;
 };
 
-LinkerBlockAllocator::LinkerBlockAllocator()
-  : block_size_(0),
+LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
+  : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
     page_list_(nullptr),
     free_block_list_(nullptr)
 {}
-
-void LinkerBlockAllocator::init(size_t block_size) {
-  block_size_ = block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size;
-}
-
 
 void* LinkerBlockAllocator::alloc() {
   if (free_block_list_ == nullptr) {
