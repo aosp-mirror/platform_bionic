@@ -30,25 +30,6 @@
 
 #if __ANDROID__
 
-/*
- * This has an extra standalone_month array field compared to upstream.
- * We only need to keep that if we leave the strftime_tz symbol exposed.
- * Even then, this structure was never in an NDK header file.
- */
-struct lc_time_T {
-  const char *  mon[12];
-  const char *  month[12];
-  const char *  standalone_month[12];
-  const char *  wday[7];
-  const char *  weekday[7];
-  const char *  X_fmt;
-  const char *  x_fmt;
-  const char *  c_fmt;
-  const char *  am;
-  const char *  pm;
-  const char *  date_fmt;
-};
-
 /* LP32 had a 32-bit time_t, so we need to work around that here. */
 #if defined(__LP64__)
 #define time64_t time_t
@@ -59,9 +40,8 @@ struct lc_time_T {
 
 #include <ctype.h>
 
-size_t strftime_tz(char*, size_t, const char*, const struct tm*, const struct lc_time_T*);
+#endif
 
-#else // not __ANDROID__
 struct lc_time_T {
     const char *    mon[MONSPERYEAR];
     const char *    month[MONSPERYEAR];
@@ -74,9 +54,8 @@ struct lc_time_T {
     const char *    pm;
     const char *    date_fmt;
 };
-#endif
 
-#if LOCALE_HOME
+#ifdef LOCALE_HOME
 #include "sys/stat.h"
 static struct lc_time_T                localebuf;
 static struct lc_time_T *      _loc(void);
@@ -90,9 +69,6 @@ static const struct lc_time_T   C_time_locale = {
     {
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    }, {
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
     }, {
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -138,7 +114,7 @@ static const struct lc_time_T   C_time_locale = {
 static char *   _add(const char *, char *, const char *, int);
 static char *   _conv(int, const char *, char *, const char *);
 static char *   _fmt(const char *, const struct tm *, char *, const char *,
-            int *, const struct lc_time_T*);
+            int *);
 static char *   _yconv(int, int, int, int, char *, const char *, int);
 static char *   getformat(int, char *, char *, char *, char *);
 
@@ -156,28 +132,18 @@ extern char *   tzname[];
 #define FORCE_LOWER_CASE 0x100
 
 size_t
-strftime(s, maxsize, format, t)
-char * const        s;
-const size_t        maxsize;
-const char * const  format;
-const struct tm * const t;
-{
-    return strftime_tz(s, maxsize, format, t, Locale);
-}
-
-__LIBC64_HIDDEN__ size_t strftime_tz(s, maxsize, format, t, locale)
-char * const        s;
-const size_t        maxsize;
-const char * const  format;
-const struct tm * const t;
-const struct lc_time_T *locale;
+strftime(char * const s, const size_t maxsize, const char *const format,
+        const struct tm *const t)
 {
     char *  p;
     int warn;
 
     tzset();
+#ifdef LOCALE_HOME
+    localebuf.mon[0] = 0;
+#endif /* defined LOCALE_HOME */
     warn = IN_NONE;
-    p = _fmt(((format == NULL) ? "%c" : format), t, s, s + maxsize, &warn, locale);
+    p = _fmt(((format == NULL) ? "%c" : format), t, s, s + maxsize, &warn);
 #ifndef NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
     if (warn != IN_NONE && getenv(YEAR_2000_NAME) != NULL) {
         (void) fprintf(stderr, "\n");
@@ -217,13 +183,8 @@ static char *getformat(int modifier, char *normal, char *underscore,
 }
 
 static char *
-_fmt(format, t, pt, ptlim, warnp, locale)
-const char *        format;
-const struct tm * const t;
-char *          pt;
-const char * const  ptlim;
-int *           warnp;
-const struct lc_time_T* locale;
+_fmt(const char *format, const struct tm *const t, char * pt,
+        const char *const ptlim, int *warnp)
 {
     for ( ; *format; ++format) {
         if (*format == '%') {
@@ -236,33 +197,26 @@ label:
             case 'A':
                 pt = _add((t->tm_wday < 0 ||
                     t->tm_wday >= DAYSPERWEEK) ?
-                    "?" : locale->weekday[t->tm_wday],
+                    "?" : Locale->weekday[t->tm_wday],
                     pt, ptlim, modifier);
                 continue;
             case 'a':
                 pt = _add((t->tm_wday < 0 ||
                     t->tm_wday >= DAYSPERWEEK) ?
-                    "?" : locale->wday[t->tm_wday],
+                    "?" : Locale->wday[t->tm_wday],
                     pt, ptlim, modifier);
                 continue;
             case 'B':
-                if (modifier == '-') {
-                    pt = _add((t->tm_mon < 0 ||
+                pt = _add((t->tm_mon < 0 ||
                                 t->tm_mon >= MONSPERYEAR) ?
-                                "?" : locale->standalone_month[t->tm_mon],
+                                "?" : Locale->month[t->tm_mon],
                                 pt, ptlim, modifier);
-                } else {
-                    pt = _add((t->tm_mon < 0 ||
-                                t->tm_mon >= MONSPERYEAR) ?
-                                "?" : locale->month[t->tm_mon],
-                                pt, ptlim, modifier);
-                }
                 continue;
             case 'b':
             case 'h':
                 pt = _add((t->tm_mon < 0 ||
                     t->tm_mon >= MONSPERYEAR) ?
-                    "?" : locale->mon[t->tm_mon],
+                    "?" : Locale->mon[t->tm_mon],
                     pt, ptlim, modifier);
                 continue;
             case 'C':
@@ -280,7 +234,7 @@ label:
                 {
                 int warn2 = IN_SOME;
 
-                pt = _fmt(locale->c_fmt, t, pt, ptlim, warnp, locale);
+                pt = _fmt(Locale->c_fmt, t, pt, ptlim, &warn2);
                 if (warn2 == IN_ALL)
                     warn2 = IN_THIS;
                 if (warn2 > *warnp)
@@ -288,7 +242,7 @@ label:
                 }
                 continue;
             case 'D':
-                                pt = _fmt("%m/%d/%y", t, pt, ptlim, warnp, locale);
+                                pt = _fmt("%m/%d/%y", t, pt, ptlim, warnp);
                 continue;
             case 'd':
                                 pt = _conv(t->tm_mday,
@@ -322,7 +276,7 @@ label:
                                            pt, ptlim);
                 continue;
             case 'F':
-                pt = _fmt("%Y-%m-%d", t, pt, ptlim, warnp, locale);
+                pt = _fmt("%Y-%m-%d", t, pt, ptlim, warnp);
                 continue;
             case 'H':
                 pt = _conv(t->tm_hour,
@@ -363,7 +317,7 @@ label:
                 /*
                 ** After all this time, still unclaimed!
                 */
-                pt = _add("kitchen sink", pt, ptlim, modifier);
+                pt = _add("kitchen sink", pt, ptlim);
                 continue;
 #endif /* defined KITCHEN_SINK */
             case 'l':
@@ -399,21 +353,21 @@ label:
                 continue;
             case 'p':
                 pt = _add((t->tm_hour >= (HOURSPERDAY / 2)) ?
-                    locale->pm :
-                    locale->am,
+                    Locale->pm :
+                    Locale->am,
                     pt, ptlim, modifier);
                 continue;
             case 'P':
                 pt = _add((t->tm_hour >= (HOURSPERDAY / 2)) ?
-                    locale->pm :
-                    locale->am,
+                    Locale->pm :
+                    Locale->am,
                     pt, ptlim, FORCE_LOWER_CASE);
                 continue;
             case 'R':
-                pt = _fmt("%H:%M", t, pt, ptlim, warnp, locale);
+                pt = _fmt("%H:%M", t, pt, ptlim, warnp);
                 continue;
             case 'r':
-                pt = _fmt("%I:%M:%S %p", t, pt, ptlim, warnp, locale);
+                pt = _fmt("%I:%M:%S %p", t, pt, ptlim, warnp);
                 continue;
             case 'S':
                 pt = _conv(t->tm_sec,
@@ -439,7 +393,7 @@ label:
                 }
                 continue;
             case 'T':
-                pt = _fmt("%H:%M:%S", t, pt, ptlim, warnp, locale);
+                pt = _fmt("%H:%M:%S", t, pt, ptlim, warnp);
                 continue;
             case 't':
                 pt = _add("\t", pt, ptlim, modifier);
@@ -470,7 +424,7 @@ label:
 ** (01-53)."
 ** (ado, 1993-05-24)
 **
-** From "http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html" by Markus Kuhn:
+** From <http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html> by Markus Kuhn:
 ** "Week 01 of a year is per definition the first week which has the
 ** Thursday in this year, which is equivalent to the week which contains
 ** the fourth day of January. In other words, the first week of a new year
@@ -540,11 +494,7 @@ label:
 #endif /* defined XPG4_1994_04_09 */
                     if (*format == 'V')
                         pt = _conv(w,
-                                                           getformat(modifier,
-                                                                     "%02d",
-                                                                     "%2d",
-                                                                     "%d",
-                                                                     "%02d"),
+                                getformat(modifier, "%02d", "%2d", "%d", "%02d"),
                                pt, ptlim);
                     else if (*format == 'g') {
                         *warnp = IN_ALL;
@@ -560,7 +510,7 @@ label:
                 ** "date as dd-bbb-YYYY"
                 ** (ado, 1993-05-24)
                 */
-                pt = _fmt("%e-%b-%Y", t, pt, ptlim, warnp, locale);
+                pt = _fmt("%e-%b-%Y", t, pt, ptlim, warnp);
                 continue;
             case 'W':
                 pt = _conv((t->tm_yday + DAYSPERWEEK -
@@ -575,13 +525,13 @@ label:
                 pt = _conv(t->tm_wday, "%d", pt, ptlim);
                 continue;
             case 'X':
-                pt = _fmt(locale->X_fmt, t, pt, ptlim, warnp, locale);
+                pt = _fmt(Locale->X_fmt, t, pt, ptlim, warnp);
                 continue;
             case 'x':
                 {
                 int warn2 = IN_SOME;
 
-                pt = _fmt(locale->x_fmt, t, pt, ptlim, &warn2, locale);
+                pt = _fmt(Locale->x_fmt, t, pt, ptlim, &warn2);
                 if (warn2 == IN_ALL)
                     warn2 = IN_THIS;
                 if (warn2 > *warnp)
@@ -670,8 +620,8 @@ label:
                 }
                 continue;
             case '+':
-                pt = _fmt(locale->date_fmt, t, pt, ptlim,
-                    warnp, locale);
+                pt = _fmt(Locale->date_fmt, t, pt, ptlim,
+                    warnp);
                 continue;
             case '%':
             /*
@@ -691,11 +641,8 @@ label:
 }
 
 static char *
-_conv(n, format, pt, ptlim)
-const int       n;
-const char * const  format;
-char * const        pt;
-const char * const  ptlim;
+_conv(const int n, const char *const format, char *const pt,
+        const char *const ptlim)
 {
     char    buf[INT_STRLEN_MAXIMUM(int) + 1];
 
@@ -704,11 +651,7 @@ const char * const  ptlim;
 }
 
 static char *
-_add(str, pt, ptlim, modifier)
-const char *        str;
-char *          pt;
-const char * const  ptlim;
-int                     modifier;
+_add(const char *str, char *pt, const char *const ptlim, int modifier)
 {
         int c;
 
@@ -756,14 +699,8 @@ int                     modifier;
 */
 
 static char *
-_yconv(a, b, convert_top, convert_yy, pt, ptlim, modifier)
-const int       a;
-const int       b;
-const int       convert_top;
-const int       convert_yy;
-char *          pt;
-const char * const  ptlim;
-int                     modifier;
+_yconv(const int a, const int b, const int convert_top, const int convert_yy,
+        char *pt, const char *const ptlim, int modifier)
 {
     register int    lead;
     register int    trail;
@@ -782,13 +719,9 @@ int                     modifier;
     if (convert_top) {
         if (lead == 0 && trail < 0)
             pt = _add("-0", pt, ptlim, modifier);
-        else    pt = _conv(lead, getformat(modifier, "%02d",
-                                                   "%2d", "%d", "%02d"),
-                                   pt, ptlim);
+        else    pt = _conv(lead, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
     }
     if (convert_yy)
-        pt = _conv(((trail < 0) ? -trail : trail),
-                           getformat(modifier, "%02d", "%2d", "%d", "%02d"),
-                           pt, ptlim);
+        pt = _conv(((trail < 0) ? -trail : trail), getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
     return pt;
 }
