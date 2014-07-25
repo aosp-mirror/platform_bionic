@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "f974b47c_af8e45b1",
+        "filename": "libm/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-25T16:30:04Z",
+      "side": 1,
+      "message": "+1 to everything Bernhard.Rosenkranzer said, plus s/_common// in these names. the \"common\" part means \"shared by all the architectures, so \"common...arm\" doesn\u0027t make any sense.",
+      "revId": "b9efeca2d58ec12f04f75fedaf60f9095228588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9431c33_f1f740a7",
         "filename": "libm/arm/arm.mk",
         "patchSetId": 2
