@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9431c33_11568ce8",
+        "filename": "libm/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1010121
+      },
+      "writtenOn": "2014-07-25T12:09:57Z",
+      "side": 1,
+      "message": "Unless I\u0027m missing some transformation magic somewhere, this should be $(libm_default_src_files)",
+      "range": {
+        "startLine": 262,
+        "startChar": 39,
+        "endLine": 262,
+        "endChar": 61
+      },
+      "revId": "b9efeca2d58ec12f04f75fedaf60f9095228588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9932d8d1_d0507498",
+        "filename": "libm/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1010121
+      },
+      "writtenOn": "2014-07-25T12:09:57Z",
+      "side": 1,
+      "message": "Same here: $(libm_default_src_files)",
+      "range": {
+        "startLine": 271,
+        "startChar": 43,
+        "endLine": 271,
+        "endChar": 65
+      },
+      "revId": "b9efeca2d58ec12f04f75fedaf60f9095228588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9431c33_f1f740a7",
+        "filename": "libm/arm/arm.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1010121
+      },
+      "writtenOn": "2014-07-25T12:09:57Z",
+      "side": 1,
+      "message": "Should also be $(libm_default_src_files)",
+      "range": {
+        "startLine": 4,
+        "startChar": 29,
+        "endLine": 4,
+        "endChar": 51
+      },
+      "revId": "b9efeca2d58ec12f04f75fedaf60f9095228588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9932d8d1_90943cf5",
+        "filename": "libm/bionic_asm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010121
+      },
+      "writtenOn": "2014-07-25T12:09:57Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s a good idea to duplicate this from libc to libm (2 places to maintain the same thing if it ever changes), I think #include-ing libc\u0027s version would be preferable",
+      "revId": "b9efeca2d58ec12f04f75fedaf60f9095228588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
