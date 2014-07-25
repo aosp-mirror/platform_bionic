@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,20 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MAPINFO_H
-#define DEBUG_MAPINFO_H
+#ifndef MALLOC_DEBUG_DISABLE_H
+#define MALLOC_DEBUG_DISABLE_H
 
-#include <sys/cdefs.h>
+#include <pthread.h>
 
-struct mapinfo_t {
-  struct mapinfo_t* next;
-  uintptr_t start;
-  uintptr_t end;
-  char name[];
+#include "private/bionic_macros.h"
+
+// =============================================================================
+// Used to disable the debug allocation calls.
+// =============================================================================
+extern pthread_key_t g_debug_calls_disabled;
+
+static inline bool DebugCallsDisabled() {
+  return pthread_getspecific(g_debug_calls_disabled) != NULL;
+}
+
+class ScopedDisableDebugCalls {
+ public:
+  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
+    }
+  }
+  ~ScopedDisableDebugCalls() {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, NULL);
+    }
+  }
+
+ private:
+  bool disabled_;
+
+  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
 };
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid);
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc);
-
-#endif /* DEBUG_MAPINFO_H */
+#endif  // MALLOC_DEBUG_DISABLE_H
