@@ -979,8 +979,6 @@ LOCAL_SRC_FILES := \
     $(libc_arch_dynamic_src_files) \
     $(libc_static_common_src_files) \
     bionic/malloc_debug_common.cpp \
-    bionic/debug_mapinfo.cpp \
-    bionic/debug_stacktrace.cpp \
     bionic/libc_init_dynamic.cpp \
     bionic/NetdClient.cpp \
 
@@ -1046,7 +1044,10 @@ LOCAL_CFLAGS := \
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+# Make sure that unwind.h comes from libunwind.
+LOCAL_C_INCLUDES := \
+    external/libunwind/include \
+    $(libc_common_c_includes) \
 
 LOCAL_SRC_FILES := \
     bionic/debug_mapinfo.cpp \
@@ -1061,6 +1062,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_WHOLE_STATIC_LIBRARIES := libunwindbacktrace
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
 # Don't install on release build
