@@ -32,9 +32,8 @@ struct LinkerAllocatorPage;
  */
 class LinkerBlockAllocator {
  public:
-  LinkerBlockAllocator();
+  explicit LinkerBlockAllocator(size_t block_size);
 
-  void init(size_t block_size);
   void* alloc();
   void free(void* block);
   void protect_all(int prot);
@@ -60,8 +59,7 @@ class LinkerBlockAllocator {
 template<typename T>
 class LinkerAllocator {
  public:
-  LinkerAllocator() : block_allocator_() {}
-  void init() { block_allocator_.init(sizeof(T)); }
+  LinkerAllocator() : block_allocator_(sizeof(T)) {}
   T* alloc() { return reinterpret_cast<T*>(block_allocator_.alloc()); }
   void free(T* t) { block_allocator_.free(t); }
   void protect_all(int prot) { block_allocator_.protect_all(prot); }

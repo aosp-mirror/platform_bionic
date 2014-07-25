@@ -2077,12 +2077,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       ldpreload_env = linker_env_get("LD_PRELOAD");
     }
 
-    // Linker does not call constructors for its own
-    // global variables so we need to initialize
-    // the allocators explicitly.
-    g_soinfo_allocator.init();
-    g_soinfo_links_allocator.init();
-
     INFO("[ android linker & debugger ]");
 
     soinfo* si = soinfo_alloc(args.argv[0], NULL);
@@ -2270,6 +2264,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     write(2, "\n", 1);
     _exit(EXIT_FAILURE);
   }
+
+  // lets properly initialize global variables
+  linker_so.CallConstructors();
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
