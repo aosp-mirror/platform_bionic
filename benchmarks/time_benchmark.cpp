@@ -19,26 +19,6 @@
 #include <sys/syscall.h>
 #include <time.h>
 
-#if defined(__BIONIC__)
-
-// Used by the horrible android.text.format.Time class, which is used by Calendar. http://b/8270865.
-extern "C" void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz);
-
-static void BM_time_localtime_tz(int iters) {
-  StartBenchmarkTiming();
-
-  time_t now(time(NULL));
-  tm broken_down_time;
-  for (int i = 0; i < iters; ++i) {
-    localtime_tz(&now, &broken_down_time, "Europe/Berlin");
-  }
-
-  StopBenchmarkTiming();
-}
-BENCHMARK(BM_time_localtime_tz);
-
-#endif
-
 static void BM_time_clock_gettime(int iters) {
   StartBenchmarkTiming();
 

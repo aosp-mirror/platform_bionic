@@ -29,16 +29,38 @@
 #include "locale.h"
 
 #if __ANDROID__
-/* Android: struct lc_time_T is defined as strftime_locale in "bionic_time.h" */
-#include "private/bionic_time.h"  /* for strftime_tz */
-#define  lc_time_T    strftime_locale
+
+/*
+ * This has an extra standalone_month array field compared to upstream.
+ * We only need to keep that if we leave the strftime_tz symbol exposed.
+ * Even then, this structure was never in an NDK header file.
+ */
+struct lc_time_T {
+  const char *  mon[12];
+  const char *  month[12];
+  const char *  standalone_month[12];
+  const char *  wday[7];
+  const char *  weekday[7];
+  const char *  X_fmt;
+  const char *  x_fmt;
+  const char *  c_fmt;
+  const char *  am;
+  const char *  pm;
+  const char *  date_fmt;
+};
+
+/* LP32 had a 32-bit time_t, so we need to work around that here. */
 #if defined(__LP64__)
 #define time64_t time_t
 #define mktime64 mktime
 #else
 #include <time64.h>
 #endif
+
 #include <ctype.h>
+
+size_t strftime_tz(char*, size_t, const char*, const struct tm*, const struct lc_time_T*);
+
 #else // not __ANDROID__
 struct lc_time_T {
     const char *    mon[MONSPERYEAR];
@@ -116,7 +138,7 @@ static const struct lc_time_T   C_time_locale = {
 static char *   _add(const char *, char *, const char *, int);
 static char *   _conv(int, const char *, char *, const char *);
 static char *   _fmt(const char *, const struct tm *, char *, const char *,
-            int *, const struct strftime_locale*);
+            int *, const struct lc_time_T*);
 static char *   _yconv(int, int, int, int, char *, const char *, int);
 static char *   getformat(int, char *, char *, char *, char *);
 
@@ -143,13 +165,12 @@ const struct tm * const t;
     return strftime_tz(s, maxsize, format, t, Locale);
 }
 
-size_t
-__attribute__((visibility("default"))) strftime_tz(s, maxsize, format, t, locale)
+__LIBC64_HIDDEN__ size_t strftime_tz(s, maxsize, format, t, locale)
 char * const        s;
 const size_t        maxsize;
 const char * const  format;
 const struct tm * const t;
-const struct strftime_locale *locale;
+const struct lc_time_T *locale;
 {
     char *  p;
     int warn;
@@ -202,7 +223,7 @@ const struct tm * const t;
 char *          pt;
 const char * const  ptlim;
 int *           warnp;
-const struct strftime_locale* locale;
+const struct lc_time_T* locale;
 {
     for ( ; *format; ++format) {
         if (*format == '%') {
