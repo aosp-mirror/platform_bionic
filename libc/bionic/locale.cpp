@@ -79,7 +79,9 @@ static bool __bionic_current_locale_is_utf8 = false;
 
 static bool __is_supported_locale(const char* locale) {
   return (strcmp(locale, "") == 0 ||
-          strcmp(locale, "C") == 0 || strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "C") == 0 ||
+          strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "en_US.UTF-8") == 0 ||
           strcmp(locale, "POSIX") == 0);
 }
 
