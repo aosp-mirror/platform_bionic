@@ -26,39 +26,48 @@
  * SUCH DAMAGE.
  */
 
+#include <ctype.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/mman.h>
 
 #include "debug_mapinfo.h"
+#include "malloc_debug_disable.h"
 
-// 6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so
-// 012345678901234567890123456789012345678901234567890123456789
-// 0         1         2         3         4         5
-
+// Format of /proc/<PID>/maps:
+//   6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so
 static mapinfo_t* parse_maps_line(char* line) {
-  int len = strlen(line);
+  uintptr_t start;
+  uintptr_t end;
+  int name_pos;
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start,
+             &end, &name_pos) < 2) {
+    return NULL;
+  }
 
-  if (len < 1) return 0;
-  line[--len] = 0;
+  while (isspace(line[name_pos])) {
+    name_pos += 1;
+  }
+  const char* name = line + name_pos;
+  size_t name_len = strlen(name);
+  if (name_len && name[name_len - 1] == '\n') {
+    name_len -= 1;
+  }
 
-  if (len < 50) return 0;
-  if (line[20] != 'x') return 0;
-
-  mapinfo_t* mi = static_cast<mapinfo_t*>(
-      mmap(NULL, sizeof(mapinfo_t) + (len - 47), PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0));
-  if (mi == MAP_FAILED) return 0;
-
-  mi->start = strtoul(line, 0, 16);
-  mi->end = strtoul(line + 9, 0, 16);
-  mi->next = 0;
-  strcpy(mi->name, line + 49);
-
+  mapinfo_t* mi = reinterpret_cast<mapinfo_t*>(calloc(1, sizeof(mapinfo_t) + name_len + 1));
+  if (mi) {
+    mi->start = start;
+    mi->end = end;
+    memcpy(mi->name, name, name_len);
+    mi->name[name_len] = '\0';
+  }
   return mi;
 }
 
 __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
+  ScopedDisableDebugCalls disable;
+
   struct mapinfo_t* milist = NULL;
   char data[1024]; // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
@@ -77,10 +86,12 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
 }
 
 __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
+  ScopedDisableDebugCalls disable;
+
   while (mi != NULL) {
     mapinfo_t* del = mi;
     mi = mi->next;
-    munmap(del, sizeof(mapinfo_t) + strlen(del->name) + 2);
+    free(del);
   }
 }
 
