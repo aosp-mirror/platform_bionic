@@ -2293,7 +2293,8 @@ static int __bionic_tzload_cached(const char* name, struct state* const sp, cons
 }
 
 // Non-standard API: mktime(3) but with an explicit timezone parameter.
-time_t __attribute__((visibility("default"))) mktime_tz(struct tm* const tmp, const char* tz) {
+// This can't actually be hidden/removed until we fix MtpUtils.cpp
+__attribute__((visibility("default"))) time_t mktime_tz(struct tm* const tmp, const char* tz) {
   struct state* st = malloc(sizeof(*st));
   time_t return_value;
 
@@ -2310,7 +2311,8 @@ time_t __attribute__((visibility("default"))) mktime_tz(struct tm* const tmp, co
 }
 
 // Non-standard API: localtime(3) but with an explicit timezone parameter.
-void __attribute__((visibility("default"))) localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz) {
+#if !defined(__LP64__)
+__attribute__((visibility("default"))) void localtime_tz(const time_t* const timep, struct tm* tmp, const char* tz) {
   struct state* st = malloc(sizeof(*st));
 
   if (st == NULL)
@@ -2322,5 +2324,6 @@ void __attribute__((visibility("default"))) localtime_tz(const time_t* const tim
   localsub(timep, 0L, tmp, st);
   free(st);
 }
+#endif
 
 // END android-added
