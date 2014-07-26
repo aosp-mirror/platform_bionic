@@ -230,7 +230,6 @@ static void SendRepeat(Out& o, char ch, int count) {
 /* Perform formatted output to an output target 'o' */
 template <typename Out>
 static void out_vformat(Out& o, const char* format, va_list args) {
-    int caller_errno = errno;
     int nn = 0;
 
     for (;;) {
@@ -379,9 +378,6 @@ static void out_vformat(Out& o, const char* format, va_list args) {
         } else if (c == '%') {
             buffer[0] = '%';
             buffer[1] = '\0';
-        } else if (c == 'm') {
-            // syslog-like %m for strerror(errno).
-            str = strerror(caller_errno);
         } else {
             __assert(__FILE__, __LINE__, "conversion specifier unsupported");
         }
