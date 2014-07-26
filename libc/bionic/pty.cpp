@@ -25,20 +25,83 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <termios.h>
+#include <stdlib.h>
 #include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
 
-/* not thread-safe */
-char*  ptsname( int fd )
-{
-    unsigned int  pty_num;
-    static char   buff[64];
+int getpt(void) {
+  return posix_openpt(O_RDWR|O_NOCTTY);
+}
 
-    if ( ioctl( fd, TIOCGPTN, &pty_num ) != 0 )
-        return NULL;
+int grantpt(int) {
+  return 0;
+}
 
-    snprintf( buff, sizeof(buff), "/dev/pts/%u", pty_num );
-    return buff;
+int posix_openpt(int flags) {
+  return open("/dev/ptmx", flags);
+}
+
+char* ptsname(int fd) {
+  static char buf[64];
+  return ptsname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
+}
+
+int ptsname_r(int fd, char* buf, size_t len) {
+  if (buf == NULL) {
+    errno = EINVAL;
+    return errno;
+  }
+
+  unsigned int pty_num;
+  if (ioctl(fd, TIOCGPTN, &pty_num) != 0) {
+    errno = ENOTTY;
+    return errno;
+  }
+
+  if (snprintf(buf, len, "/dev/pts/%u", pty_num) >= static_cast<int>(len)) {
+    errno = ERANGE;
+    return errno;
+  }
+
+  return 0;
+}
+
+char* ttyname(int fd) {
+  static char buf[64];
+  return ttyname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
+}
+
+int ttyname_r(int fd, char* buf, size_t len) {
+  if (buf == NULL) {
+    errno = EINVAL;
+    return errno;
+  }
+
+  if (!isatty(fd)) {
+    return errno;
+  }
+
+  char path[64];
+  snprintf(path, sizeof(path), "/proc/self/fd/%d", fd);
+
+  ssize_t count = readlink(path, buf, len);
+  if (count == -1) {
+    return errno;
+  }
+  if (static_cast<size_t>(count) == len) {
+    errno = ERANGE;
+    return errno;
+  }
+  buf[count] = '\0';
+  return 0;
+}
+
+int unlockpt(int fd) {
+  int unlock = 0;
+  return ioctl(fd, TIOCSPTLCK, &unlock);
 }

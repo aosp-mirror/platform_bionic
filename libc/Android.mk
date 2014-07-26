@@ -45,7 +45,6 @@ libc_common_src_files := \
     bionic/fts.c \
     bionic/gethostname.c \
     bionic/getpriority.c \
-    bionic/getpt.c \
     bionic/if_indextoname.c \
     bionic/if_nametoindex.c \
     bionic/initgroups.c \
@@ -53,8 +52,6 @@ libc_common_src_files := \
     bionic/isatty.c \
     bionic/memmem.c \
     bionic/pathconf.c \
-    bionic/ptsname.c \
-    bionic/ptsname_r.c \
     bionic/pututline.c \
     bionic/sched_cpualloc.c \
     bionic/sched_cpucount.c \
@@ -63,7 +60,6 @@ libc_common_src_files := \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
     bionic/system_properties_compat.c \
-    bionic/unlockpt.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
 
@@ -174,6 +170,7 @@ libc_bionic_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/ptrace.cpp \
+    bionic/pty.cpp \
     bionic/raise.cpp \
     bionic/rand.cpp \
     bionic/readlink.cpp \
