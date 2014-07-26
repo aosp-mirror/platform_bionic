@@ -444,16 +444,6 @@ void endpwent() {
   UNIMPLEMENTED;
 }
 
-char* ttyname(int /*fd*/) { // NOLINT: implementing bad function.
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-int ttyname_r(int /*fd*/, char* /*buf*/, size_t /*buflen*/) {
-  UNIMPLEMENTED;
-  return -ERANGE;
-}
-
 char* getusershell() {
   UNIMPLEMENTED;
   return NULL;
