@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f65b4a_ed362cfb",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:04:03Z",
+      "side": 1,
+      "message": "i\u0027d probably not duplicate this and just let tracingReady set it up.",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_e8e05b9f",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:04:03Z",
+      "side": 1,
+      "message": "if (",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_681e8bfd",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:04:03Z",
+      "side": 1,
+      "message": "why is this chunk still duplicated?",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_28ff7343",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:04:03Z",
+      "side": 1,
+      "message": "since these are all globals, this could be a static function in this file.",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
