@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_d256653e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-28T22:58:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_e89dfb8b",
+      "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_68644bee",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-28T22:48:15Z",
       "side": 1,
       "message": "wouldn\u0027t this read more naturally the other way round?",
+      "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "560aef14_58b27d1d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2251,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-28T22:58:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_68644bee",
       "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_12360d1d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2252,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-28T22:58:45Z",
+      "side": 1,
+      "message": "there aren\u0027t any args... running liker as a binary isn\u0027t very useful atm.",
+      "parentUuid": "7615332e_a890238a",
+      "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_d8e20d36",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-28T22:48:15Z",
       "side": 1,
       "message": "Let\u0027s ... .\n\n(or just \"// Initialize the linker\u0027s own global variables.\")",
+      "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_f2328926",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-28T22:58:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "560aef14_d8e20d36",
       "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
