@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9431c33_d4279236",
+        "filename": "libc/arch-x86/x86.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1045543
+      },
+      "writtenOn": "2014-07-28T09:18:03Z",
+      "side": 1,
+      "message": "We have separeate mk file for silvermont (arch-x86/silvermont/silvermont.mk), so compat file should be directly added in silvermont.mk.",
+      "range": {
+        "startLine": 41,
+        "startChar": 31,
+        "endLine": 41,
+        "endChar": 41
+      },
+      "revId": "eaed1d9d7f57b2a70a2f11fa9e85bf0668e1d25b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
