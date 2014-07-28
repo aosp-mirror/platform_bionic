@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <syslog.h>
 
@@ -46,10 +47,9 @@ void syslog(int priority, const char* fmt, ...) {
   va_end(args);
 }
 
-void vsyslog(int /*priority*/, const char* /*fmt*/, va_list /*args*/) {
-// HACK to avoid lock up on certain devices. This will be reverted when
-// that is fixed.
-#if 0
+void vsyslog(int priority, const char* fmt, va_list args) {
+  int caller_errno = errno;
+
   // Check whether we're supposed to be logging messages of this priority.
   if ((syslog_priority_mask & LOG_MASK(LOG_PRI(priority))) == 0) {
     return;
@@ -74,6 +74,48 @@ void vsyslog(int /*priority*/, const char* /*fmt*/, va_list /*args*/) {
     android_log_priority = ANDROID_LOG_DEBUG;
   }
 
-  __libc_format_log_va_list(android_log_priority, log_tag, fmt, args);
-#endif
+  // glibc's printf family support %m directly, but our BSD-based one doesn't.
+  // If the format string seems to contain "%m", rewrite it.
+  const char* log_fmt = fmt;
+  if (strstr(fmt, "%m") != NULL) {
+    size_t dst_len = 1024;
+    char* dst = reinterpret_cast<char*>(malloc(dst_len));
+    log_fmt = dst;
+
+    const char* src = fmt;
+    for (; dst_len > 0 && *src != '\0'; ++src) {
+      if (*src == '%' && *(src + 1) == 'm') {
+        // Expand %m.
+        size_t n = strlcpy(dst, strerror(caller_errno), dst_len);
+        if (n >= dst_len) {
+          n = dst_len;
+        }
+        dst += n;
+        dst_len -= n;
+        ++src;
+      } else if (*src == '%' && *(src + 1) == '%') {
+        // We need to copy pairs of '%'s so the %m test works.
+        if (dst_len <= 2) {
+          break;
+        }
+        *dst++ = '%'; --dst_len;
+        *dst++ = '%'; --dst_len;
+        ++src;
+      } else {
+        *dst++ = *src; --dst_len;
+      }
+    }
+    *dst = '\0';
+  }
+
+  // We can't let __libc_format_log do the formatting because it doesn't support
+  // all the printf functionality.
+  char log_line[1024];
+  vsnprintf(log_line, sizeof(log_line), log_fmt, args);
+
+  if (log_fmt != fmt) {
+    free(const_cast<char*>(log_fmt));
+  }
+
+  __libc_format_log(android_log_priority, log_tag, "%s", log_line);
 }
