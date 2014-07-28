@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91ff043_bc03c79a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1013855
+      },
+      "writtenOn": "2014-07-28T17:35:54Z",
+      "side": 1,
+      "message": "Silvermont",
+      "range": {
+        "startLine": 7,
+        "startChar": 31,
+        "endLine": 7,
+        "endChar": 41
+      },
+      "revId": "3129324a61e977df1e24dca5297c5ad7ab8ae33a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16fb1735_ed9d118c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1013855
+      },
+      "writtenOn": "2014-07-28T17:35:54Z",
+      "side": 1,
+      "message": "Silvermont",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 17
+      },
+      "revId": "3129324a61e977df1e24dca5297c5ad7ab8ae33a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_8bc9d092",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1013855
+      },
+      "writtenOn": "2014-07-28T17:35:54Z",
+      "side": 1,
+      "message": "Silvermont",
+      "range": {
+        "startLine": 12,
+        "startChar": 61,
+        "endLine": 12,
+        "endChar": 71
+      },
+      "revId": "3129324a61e977df1e24dca5297c5ad7ab8ae33a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d91ff043_7c586fbc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1013855
+      },
+      "writtenOn": "2014-07-28T17:35:54Z",
+      "side": 1,
+      "message": "resolve",
+      "range": {
+        "startLine": 12,
+        "startChar": 45,
+        "endLine": 12,
+        "endChar": 52
+      },
+      "revId": "3129324a61e977df1e24dca5297c5ad7ab8ae33a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_ebc17c65",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1013855
+      },
+      "writtenOn": "2014-07-28T17:35:54Z",
+      "side": 1,
+      "message": "compatibility",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 10
+      },
+      "revId": "3129324a61e977df1e24dca5297c5ad7ab8ae33a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
