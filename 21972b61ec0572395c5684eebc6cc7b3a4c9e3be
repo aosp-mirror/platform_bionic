@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91ff043_6539b2eb",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-28T20:22:21Z",
+      "side": 1,
+      "message": "I think you could use mmap but only for 64 bit pointer systems. You can force the choice of a memory address that has the upper bits set. I don\u0027t know of way to guarantee it on 32 bit systems though.",
+      "range": {
+        "startLine": 220,
+        "startChar": 44,
+        "endLine": 220,
+        "endChar": 51
+      },
+      "revId": "21972b61ec0572395c5684eebc6cc7b3a4c9e3be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
