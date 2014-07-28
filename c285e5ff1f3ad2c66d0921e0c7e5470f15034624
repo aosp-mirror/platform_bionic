@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f65b4a_54980af5",
+        "filename": "libm/arm64/e_sqrt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-28T13:24:29Z",
+      "side": 1,
+      "message": "Why? Arm64 uses a Hard Float ABI - sqrt receives the arguments in d registers",
+      "revId": "c285e5ff1f3ad2c66d0921e0c7e5470f15034624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16fb1735_875c2c65",
+        "filename": "libm/arm64/e_sqrtf.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-28T13:24:29Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c285e5ff1f3ad2c66d0921e0c7e5470f15034624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_349d86e5",
+        "filename": "libm/arm64/s_ceil.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-28T13:24:29Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c285e5ff1f3ad2c66d0921e0c7e5470f15034624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
