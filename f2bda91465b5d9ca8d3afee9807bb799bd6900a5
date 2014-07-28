@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7615332e_f36f30c4",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-28T23:32:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36f65b4a_ed362cfb",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_e8e05b9f",
         "filename": "libc/bionic/bionic_systrace.cpp",
         "patchSetId": 21
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-28T23:04:03Z",
       "side": 1,
       "message": "if (",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_931a345f",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-28T23:32:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_e8e05b9f",
       "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_0db5d007",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-28T23:32:52Z",
+      "side": 1,
+      "message": "I was going to ask if you thought I should make this a function as well, but figured you\u0027d probably say something in the CR if you thought it was a good idea :)",
+      "parentUuid": "7615332e_681e8bfd",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_28ff7343",
         "filename": "libc/bionic/bionic_systrace.cpp",
         "patchSetId": 21
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-28T23:04:03Z",
       "side": 1,
       "message": "since these are all globals, this could be a static function in this file.",
+      "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "560aef14_58e6fd77",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-28T23:32:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_28ff7343",
       "revId": "f2bda91465b5d9ca8d3afee9807bb799bd6900a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
