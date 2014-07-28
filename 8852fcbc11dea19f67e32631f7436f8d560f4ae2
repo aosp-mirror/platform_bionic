@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "7615332e_480d079b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2252,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:10:51Z",
+      "side": 1,
+      "message": "oh, i hadn\u0027t noticed we don\u0027t support \"adb shell linker /system/bin/cat /proc/version\".\n\nif we\u0027re not going to implement that, how about something more like: \"This is %s, the ...\"",
+      "parentUuid": "36f65b4a_12360d1d",
+      "revId": "8852fcbc11dea19f67e32631f7436f8d560f4ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_d8e20d36",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
