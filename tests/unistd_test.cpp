@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/syscall.h>
@@ -210,6 +211,14 @@ TEST(unistd, read_EBADF) {
   char buf[1];
   ASSERT_EQ(-1, read(-1, buf, sizeof(buf)));
   ASSERT_EQ(EBADF, errno);
+}
+
+TEST(unistd, syscall_long) {
+  // Check that syscall(3) correctly returns long results.
+  // https://code.google.com/p/android/issues/detail?id=73952
+  // We assume that the break is > 4GiB, but this is potentially flaky.
+  uintptr_t p = reinterpret_cast<uintptr_t>(sbrk(0));
+  ASSERT_EQ(p, static_cast<uintptr_t>(syscall(__NR_brk, 0)));
 }
 
 TEST(unistd, alarm) {
