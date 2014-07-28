@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "560aef14_58995d29",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:24:24Z",
+      "side": 1,
+      "message": "s/INTER/PT_INTERP/?\n\ns/linker/the linker/g",
+      "revId": "284703a25d6788b8a9ace016f8228950e0aa816a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_732560c9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2251,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:24:24Z",
+      "side": 1,
+      "message": "as an executable",
+      "revId": "284703a25d6788b8a9ace016f8228950e0aa816a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
