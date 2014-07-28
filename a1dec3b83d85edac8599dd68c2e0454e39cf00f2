@@ -34,6 +34,23 @@
       "revId": "a1dec3b83d85edac8599dd68c2e0454e39cf00f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_28ac0a21",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T17:11:18Z",
+      "side": 1,
+      "message": "i get a SIGSEGV with fault address 0 here.",
+      "revId": "a1dec3b83d85edac8599dd68c2e0454e39cf00f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
