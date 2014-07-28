@@ -2221,6 +2221,8 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
+extern "C" void _start();
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -2238,11 +2240,22 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
+  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so;
   memset(&linker_so, 0, sizeof(soinfo));
+
+  // If the linker is not acting as PT_INTERP entry_point is equal to
+  // _start. Which means that the linker is running as an executable and
+  // already linked by PT_INTERP.
+  //
+  // This happens when user tries to run 'adb shell /system/bin/linker'
+  // see also https://code.google.com/p/android/issues/detail?id=63174
+  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
+    __libc_fatal("This is %s, the helper program for shared library executables.\n", args.argv[0]);
+  }
 
   strcpy(linker_so.name, "[dynamic linker]");
   linker_so.base = linker_addr;
@@ -2265,7 +2278,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     _exit(EXIT_FAILURE);
   }
 
-  // lets properly initialize global variables
+  // Initialize the linker's own global variables
   linker_so.CallConstructors();
 
   // We have successfully fixed our own relocations. It's safe to run
