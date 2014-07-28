@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f65b4a_2ddc142f",
+        "filename": "libc/bionic/malloc_shims.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-28T23:13:32Z",
+      "side": 1,
+      "message": "i don\u0027t understand.",
+      "revId": "7e64e23cff9a16e20a94e1b0c65bfe7f28454985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
