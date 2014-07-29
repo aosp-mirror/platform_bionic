@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_10fcbb7f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T21:25:05Z",
+      "side": 1,
+      "message": "to hide the class (SoinfoListAllocatorRW)...",
+      "parentUuid": "f6f76345_7d9417f5",
+      "revId": "2933d16b463eed4c36194ee70eda20371093f09d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6f76345_5d995b29",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-29T21:09:46Z",
       "side": 1,
       "message": "This ... library.",
+      "revId": "2933d16b463eed4c36194ee70eda20371093f09d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_70d2e70e",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T21:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6f76345_5d995b29",
       "revId": "2933d16b463eed4c36194ee70eda20371093f09d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
