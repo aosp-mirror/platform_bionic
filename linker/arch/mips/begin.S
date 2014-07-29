@@ -32,7 +32,9 @@
 
     .ent    __start
     .globl    __start
+    .globl    _start
 __start:
+_start:
     .set    noreorder
     bal    1f
     nop
