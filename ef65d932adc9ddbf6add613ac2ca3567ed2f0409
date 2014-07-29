@@ -16,6 +16,24 @@
       "revId": "ef65d932adc9ddbf6add613ac2ca3567ed2f0409",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_573da2d6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T02:06:07Z",
+      "side": 1,
+      "message": "where? I do not see _start in begin.S only __start",
+      "parentUuid": "560aef14_de3f953e",
+      "revId": "ef65d932adc9ddbf6add613ac2ca3567ed2f0409",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
