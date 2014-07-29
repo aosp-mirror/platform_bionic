@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "560aef14_2de1c533",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T18:50:51Z",
+      "side": 1,
+      "message": "this shouldn\u0027t work because dlopen will just say \"hey, this library\u0027s already loaded\" and give you the same handle as before.\n\nit should work if you put a dlclose in between these tests though.",
+      "revId": "3d9d906246fc27bc117292be4188aba22e21ffc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
