@@ -130,6 +130,55 @@ TEST(dlfcn, ifunc_ctor_call) {
 }
 #endif
 
+TEST(dlfcn, dlopen_check_order) {
+  // Here is how the test library and its dt_needed
+  // libraries are arranged
+  //
+  //  libtest_check_order.so
+  //  |
+  //  +-> libtest_check_order_1_left.so
+  //  |   |
+  //  |   +-> libtest_check_order_a.so
+  //  |   |
+  //  |   +-> libtest_check_order_b.so
+  //  |
+  //  +-> libtest_check_order_2_right.so
+  //  |   |
+  //  |   +-> libtest_check_order_d.so
+  //  |       |
+  //  |       +-> libtest_check_order_b.so
+  //  |
+  //  +-> libtest_check_order_3_c.so
+  //
+  //  load order should be (1, 2, 3, a, b, d)
+  //
+  // get_answer() is defined in (2, 3, a, b, c)
+  // get_answer2() is defined in (b, d)
+  void* sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
+  ASSERT_TRUE(sym == nullptr);
+  void* handle = dlopen("libtest_check_order.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr);
+  typedef int (*fn_t) (void);
+  fn_t fn, fn2;
+  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer"));
+  ASSERT_TRUE(fn != NULL);
+  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer2"));
+  ASSERT_TRUE(fn2 != NULL);
+
+  ASSERT_EQ(42, fn());
+  ASSERT_EQ(43, fn2());
+  dlclose(handle);
+}
+
+// libtest_with_dependency_loop.so -> libtest_with_dependency_loop_a.so ->
+// libtest_with_dependency_loop_b.so -> libtest_with_dependency_loop_c.so ->
+// libtest_with_dependency_loop_a.so
+TEST(dlfcn, dlopen_check_loop) {
+  void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
