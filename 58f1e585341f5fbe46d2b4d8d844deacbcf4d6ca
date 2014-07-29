@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9932d8d1_84815a75",
+        "filename": "libm/arm/arm.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T12:44:47Z",
+      "side": 1,
+      "message": "Sort this alphabetically",
+      "revId": "58f1e585341f5fbe46d2b4d8d844deacbcf4d6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7937e4c3_83c07260",
+        "filename": "libm/arm64/arm64.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T12:44:47Z",
+      "side": 1,
+      "message": "This needs to be removed. All Arm64 CPUs should benefit from this optimisation, including generic. Please note that for Arm64 VFP is mandatory.",
+      "revId": "58f1e585341f5fbe46d2b4d8d844deacbcf4d6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7937e4c3_a3abb6a6",
+        "filename": "libm/arm64/arm64.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T12:44:47Z",
+      "side": 1,
+      "message": "Sort this",
+      "revId": "58f1e585341f5fbe46d2b4d8d844deacbcf4d6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9932d8d1_c4619216",
+        "filename": "libm/arm64/arm64.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T12:44:47Z",
+      "side": 1,
+      "message": "Thus no else",
+      "revId": "58f1e585341f5fbe46d2b4d8d844deacbcf4d6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
