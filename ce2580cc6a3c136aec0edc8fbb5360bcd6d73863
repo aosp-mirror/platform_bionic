@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7615332e_2cdc1e2f",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T19:25:13Z",
+      "side": 1,
+      "message": "compiler started producing text relocations at some point.. Just checked this is not the case anymore.. removed.",
+      "parentUuid": "36f65b4a_a64a7e8b",
+      "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_cc6922c0",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-29T18:58:53Z",
       "side": 1,
       "message": "its\n\n(use // comments.)",
+      "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_daa79291",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T19:25:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_cc6922c0",
       "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_1ad61ad7",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T19:25:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7615332e_4cd3d242",
+      "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36f65b4a_fa11362d",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-07-29T18:58:53Z",
       "side": 1,
       "message": "maybe comment that this symbol is in the DT_NEEDED library, not in libtest_with_dependency.so itself. should we actually have a new DT_NEEDED library for this test, so we can be confident it\u0027s not in memory already? (which i assume is how you found the missing dlclose above...)",
+      "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_ba504e97",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T19:25:13Z",
+      "side": 1,
+      "message": "added comment. dlsym with handle !\u003d RTLD_DEFAULT/NEXT doesn\u0027t look in other libraries, it does not matter if this one was already loaded if dependency search is not working it won\u0027t matter.",
+      "parentUuid": "36f65b4a_fa11362d",
       "revId": "ce2580cc6a3c136aec0edc8fbb5360bcd6d73863",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
