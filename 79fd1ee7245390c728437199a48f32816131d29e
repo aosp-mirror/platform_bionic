@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1624f7a2_39fa2b53",
+        "filename": "libc/arch-x86/bionic/libgcc_compat.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T22:53:58Z",
+      "side": 1,
+      "message": "these haven\u0027t shipped in the NDK though, right? so we should just fix the NDK and regenerate whatever blobs and abandon this change?",
+      "revId": "79fd1ee7245390c728437199a48f32816131d29e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
