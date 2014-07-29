@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "560aef14_1ea3cd55",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T02:05:06Z",
+      "side": 1,
+      "message": "static",
+      "revId": "cf1517b605ec1b8ba8f3212d11e0951dc9bd697e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_d749b27a",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T02:05:06Z",
+      "side": 1,
+      "message": "missing blank line.",
+      "revId": "cf1517b605ec1b8ba8f3212d11e0951dc9bd697e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
