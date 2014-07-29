@@ -95,3 +95,23 @@ TEST(linked_list, simple) {
   ASSERT_TRUE(free_called);
   ASSERT_EQ("", test_list_to_string(list));
 }
+
+TEST(linked_list, push_pop) {
+  test_list_t list;
+  list.push_front("b");
+  list.push_front("a");
+  ASSERT_EQ("ab", test_list_to_string(list));
+  list.push_back("c");
+  ASSERT_EQ("abc", test_list_to_string(list));
+  ASSERT_EQ("a", list.pop_front());
+  ASSERT_EQ("bc", test_list_to_string(list));
+  ASSERT_EQ("b", list.pop_front());
+  ASSERT_EQ("c", test_list_to_string(list));
+  ASSERT_EQ("c", list.pop_front());
+  ASSERT_EQ("", test_list_to_string(list));
+  ASSERT_TRUE(list.pop_front() == nullptr);
+  list.push_back("r");
+  ASSERT_EQ("r", test_list_to_string(list));
+  ASSERT_EQ("r", list.pop_front());
+  ASSERT_TRUE(list.pop_front() == nullptr);
+}
