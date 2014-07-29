@@ -120,18 +120,12 @@ long random(void);
 char* setstate(char*);
 void srandom(unsigned int);
 
-/* Basic PTY functions.  These only work if devpts is mounted! */
-
-extern int    unlockpt(int);
-extern char*  ptsname(int);
-extern int    ptsname_r(int, char*, size_t);
-extern int    getpt(void);
-
-static __inline__ int grantpt(int __fd __attribute((unused)))
-{
-  (void)__fd;
-  return 0;     /* devpts does this all for us! */
-}
+int getpt(void);
+int grantpt(int);
+int posix_openpt(int);
+char* ptsname(int) __warnattr("ptsname is not thread-safe; use ptsname_r instead");
+int ptsname_r(int, char*, size_t);
+int unlockpt(int);
 
 typedef struct {
     int  quot;

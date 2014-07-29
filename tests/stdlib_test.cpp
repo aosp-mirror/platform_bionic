@@ -262,3 +262,102 @@ TEST(unistd, _Exit) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(99, WEXITSTATUS(status));
 }
+
+TEST(stdlib, pty_smoke) {
+  // getpt returns a pty with O_RDWR|O_NOCTTY.
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+
+  // grantpt is a no-op.
+  ASSERT_EQ(0, grantpt(fd));
+
+  // ptsname_r should start "/dev/pts/".
+  char name_r[128];
+  ASSERT_EQ(0, ptsname_r(fd, name_r, sizeof(name_r)));
+  name_r[9] = 0;
+  ASSERT_STREQ("/dev/pts/", name_r);
+
+  close(fd);
+}
+
+TEST(stdlib, posix_openpt) {
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
+  ASSERT_NE(-1, fd);
+  close(fd);
+}
+
+TEST(stdlib, ptsname_r_ENOTTY) {
+  errno = 0;
+  char buf[128];
+  ASSERT_EQ(ENOTTY, ptsname_r(STDOUT_FILENO, buf, sizeof(buf)));
+  ASSERT_EQ(ENOTTY, errno);
+}
+
+TEST(stdlib, ptsname_r_EINVAL) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+  errno = 0;
+  char* buf = NULL;
+  ASSERT_EQ(EINVAL, ptsname_r(fd, buf, 128));
+  ASSERT_EQ(EINVAL, errno);
+  close(fd);
+}
+
+TEST(stdlib, ptsname_r_ERANGE) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+  errno = 0;
+  char buf[1];
+  ASSERT_EQ(ERANGE, ptsname_r(fd, buf, sizeof(buf)));
+  ASSERT_EQ(ERANGE, errno);
+  close(fd);
+}
+
+TEST(stdlib, ttyname_r) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+
+  // ttyname_r returns "/dev/ptmx" for a pty.
+  char name_r[128];
+  ASSERT_EQ(0, ttyname_r(fd, name_r, sizeof(name_r)));
+  ASSERT_STREQ("/dev/ptmx", name_r);
+
+  close(fd);
+}
+
+TEST(stdlib, ttyname_r_ENOTTY) {
+  int fd = open("/dev/null", O_WRONLY);
+  errno = 0;
+  char buf[128];
+  ASSERT_EQ(ENOTTY, ttyname_r(fd, buf, sizeof(buf)));
+  ASSERT_EQ(ENOTTY, errno);
+  close(fd);
+}
+
+TEST(stdlib, ttyname_r_EINVAL) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+  errno = 0;
+  char* buf = NULL;
+  ASSERT_EQ(EINVAL, ttyname_r(fd, buf, 128));
+  ASSERT_EQ(EINVAL, errno);
+  close(fd);
+}
+
+TEST(stdlib, ttyname_r_ERANGE) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+  errno = 0;
+  char buf[1];
+  ASSERT_EQ(ERANGE, ttyname_r(fd, buf, sizeof(buf)));
+  ASSERT_EQ(ERANGE, errno);
+  close(fd);
+}
+
+TEST(stdlib, unlockpt_ENOTTY) {
+  int fd = open("/dev/null", O_WRONLY);
+  errno = 0;
+  ASSERT_EQ(-1, unlockpt(fd));
+  ASSERT_EQ(ENOTTY, errno);
+  close(fd);
+}
