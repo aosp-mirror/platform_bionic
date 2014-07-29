@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9431c33_7a9085f9",
+        "filename": "libm/arm/e_sqrtf.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T10:15:43Z",
+      "side": 1,
+      "message": "weak, equ ?",
+      "revId": "c6432ef0336d32a8cd8a2715245892a5273061a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
