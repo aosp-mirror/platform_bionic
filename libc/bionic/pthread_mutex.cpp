@@ -39,6 +39,8 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
+#include "private/bionic_systrace.h"
+
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
@@ -333,6 +335,10 @@ static inline void _normal_lock(pthread_mutex_t* mutex, int shared) {
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
+
+         ScopedTrace trace("Contending for pthread mutex");
+
+
         while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
             __futex_wait_ex(&mutex->value, shared, locked_contended, NULL);
         }
@@ -472,6 +478,8 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
         /* argh, the value changed, reload before entering the loop */
         mvalue = mutex->value;
     }
+
+    ScopedTrace trace("Contending for pthread mutex");
 
     for (;;) {
         int newval;
@@ -626,6 +634,8 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
       return 0;
     }
 
+    ScopedTrace trace("Contending for timed pthread mutex");
+
     // Loop while needed.
     while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
       if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
@@ -657,6 +667,8 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
     }
     mvalue = mutex->value;
   }
+
+  ScopedTrace trace("Contending for timed pthread mutex");
 
   while (true) {
     // If the value is 'unlocked', try to acquire it directly.
