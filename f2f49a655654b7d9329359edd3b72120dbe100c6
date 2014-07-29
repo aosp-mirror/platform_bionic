@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7615332e_d3b54c68",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T00:01:24Z",
+      "side": 1,
+      "message": "you don\u0027t actually use ATRACE_TAG_NOT_READY, so you could just initialize to 0 and lose the cutils #include.",
+      "revId": "f2f49a655654b7d9329359edd3b72120dbe100c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_d3ab0cf7",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T00:01:24Z",
+      "side": 1,
+      "message": "no need for \u0027this\u0027. (there\u0027s also no need for these to be member functions.)\n\nprefer returning early, so readers can check off cases as they go.\n\nis there any reason to split tracingReady and checkTags?\n\ni feel like what you really want is something more like:\n\n  if (!should_trace()) {\n    return;\n  }\n\n  ... actual code\n\nwhere \"should_trace\" (or whatever) takes care of:\n\n1. setting up the property.\n\n2. getting the property value.\n\n3. checking whether that means that ATRACE_TAG_BIONIC is set or not.\n\nyou can break that up into multiple functions if you feel that makes it more readable, but the _caller_ doesn\u0027t want to have to know about your internal organization. it has one question: \"should i be tracing?\" and doesn\u0027t want to be cluttered with the details of the fact that deciding that is currently a three-step process.",
+      "revId": "f2f49a655654b7d9329359edd3b72120dbe100c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
