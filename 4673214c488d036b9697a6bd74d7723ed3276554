@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9431c33_da6df981",
+        "filename": "libm/bionic_asm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2014-07-29T08:59:02Z",
+      "side": 1,
+      "message": "Remove this file - you use the bionic_asm.h from libc/private",
+      "revId": "4673214c488d036b9697a6bd74d7723ed3276554",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
