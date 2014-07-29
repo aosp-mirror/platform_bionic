@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f65b4a_4671721b",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T19:12:56Z",
+      "side": 1,
+      "message": "i don\u0027t think the latter two lines are useful now no one needs to count characters. might be useful to add the LP64 equivalent of the first comment line though. (and move the comments down next to the sscanf.)",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_b1464be2",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T19:12:56Z",
+      "side": 1,
+      "message": "i think you lined up with the wrong (",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_7129d30a",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T19:12:56Z",
+      "side": 1,
+      "message": "strlcpy?",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "560aef14_7282f8af",
+        "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T19:12:56Z",
+      "side": 1,
+      "message": "that\u0027s not really what this is doing, is it? you\u0027re bypassing the usual indirection so you know you\u0027re getting the actual malloc implementation, not the debug malloc library that you\u0027re meant to be part of.",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_0ccf1a63",
+        "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T19:12:56Z",
+      "side": 1,
+      "message": "i feel like the dividing line should be before strdup, not here.\n\ni\u0027m still uncomfortable about this. can\u0027t we use -D to have libbacktrace build with other symbols? or set some bit in TLS so that the debug malloc sees when it\u0027s being called recursively and short-circuits to the underlying allocator? i just feel like there are so many ways for this to go wrong, especially if we have fake \u0027fopen\u0027s and the like (in a world where we\u0027re trying to turn off -Bsymbolic).",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
