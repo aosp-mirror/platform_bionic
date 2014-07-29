@@ -16,6 +16,24 @@
       "revId": "3d9d906246fc27bc117292be4188aba22e21ffc1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615332e_2c73feb6",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-29T18:54:01Z",
+      "side": 1,
+      "message": "It always exits at the ASSERT_EQ on line 107, so I haven\u0027t seen this yet, but I\u0027ll add it.",
+      "parentUuid": "560aef14_2de1c533",
+      "revId": "3d9d906246fc27bc117292be4188aba22e21ffc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
