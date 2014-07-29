@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "560aef14_de3f953e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T02:03:03Z",
+      "side": 1,
+      "message": "why do we need this? looking at the assembler, they declare both __start and _start. (for the same location.)",
+      "revId": "ef65d932adc9ddbf6add613ac2ca3567ed2f0409",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
