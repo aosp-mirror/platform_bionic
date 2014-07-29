@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "560aef14_f5014fd6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T22:48:20Z",
+      "side": 1,
+      "message": "The ... However ... (et cetera)",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "560aef14_15bba3c5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T22:48:20Z",
+      "side": 1,
+      "message": "i think this is clearer if you just lose the \"However...\" sentence.",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_19108f24",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T22:48:20Z",
+      "side": 1,
+      "message": "what\u0027s the bug here?",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_eed29870",
+        "filename": "tests/libs/dlopen_testlib_ifunc.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-29T22:48:20Z",
+      "side": 1,
+      "message": "we might want to also have another function in here that calls foo(), so we can check that we\u0027re correctly handling references to ifuncs from within the same library.",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
