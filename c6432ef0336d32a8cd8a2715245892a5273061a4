@@ -16,6 +16,24 @@
       "revId": "c6432ef0336d32a8cd8a2715245892a5273061a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56f10f4f_341228bf",
+        "filename": "libm/arm/e_sqrtf.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043009
+      },
+      "writtenOn": "2014-07-29T12:26:48Z",
+      "side": 1,
+      "message": "sqrtl need a weak refernce to sqrt if there is no real long double implementation.\nfor sqrtf, there is no weak reference from/to it.",
+      "parentUuid": "b9431c33_7a9085f9",
+      "revId": "c6432ef0336d32a8cd8a2715245892a5273061a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
