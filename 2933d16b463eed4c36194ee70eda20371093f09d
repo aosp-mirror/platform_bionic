@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_5066c3a3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-29T21:29:16Z",
+      "side": 1,
+      "message": "this one more like static for class declarations. limits visibility scope to file.",
+      "parentUuid": "f6f76345_3d77af15",
+      "revId": "2933d16b463eed4c36194ee70eda20371093f09d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6f76345_5d995b29",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 3
