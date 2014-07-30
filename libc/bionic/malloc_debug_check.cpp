@@ -49,6 +49,7 @@
 #include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
 #include "malloc_debug_common.h"
+#include "malloc_debug_disable.h"
 #include "private/bionic_macros.h"
 #include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -331,6 +332,9 @@ static inline void add_to_backlog(hdr_t* hdr) {
 
 extern "C" void* chk_malloc(size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->malloc(bytes);
+    }
 
     size_t size = sizeof(hdr_t) + bytes + sizeof(ftr_t);
     if (size < bytes) { // Overflow
@@ -348,6 +352,10 @@ extern "C" void* chk_malloc(size_t bytes) {
 }
 
 extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->memalign(alignment, bytes);
+    }
+
     if (alignment <= MALLOC_ALIGNMENT) {
         return chk_malloc(bytes);
     }
@@ -386,6 +394,9 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
 
 extern "C" void chk_free(void* ptr) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->free(ptr);
+    }
 
     if (!ptr) /* ignore free(NULL) */
         return;
@@ -421,6 +432,9 @@ extern "C" void chk_free(void* ptr) {
 
 extern "C" void* chk_realloc(void* ptr, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->realloc(ptr, bytes);
+    }
 
     if (!ptr) {
         return chk_malloc(bytes);
@@ -496,6 +510,10 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
 
 extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->calloc(nmemb, bytes);
+    }
+
     size_t total_bytes = nmemb * bytes;
     size_t size = sizeof(hdr_t) + total_bytes + sizeof(ftr_t);
     if (size < total_bytes || (nmemb && SIZE_MAX / nmemb < bytes)) { // Overflow
@@ -513,6 +531,10 @@ extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
 }
 
 extern "C" size_t chk_malloc_usable_size(const void* ptr) {
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->malloc_usable_size(ptr);
+    }
+
     // malloc_usable_size returns 0 for NULL and unknown blocks.
     if (ptr == NULL)
         return 0;
@@ -529,6 +551,10 @@ extern "C" struct mallinfo chk_mallinfo() {
 }
 
 extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if (DebugCallsDisabled()) {
+    return g_malloc_dispatch->posix_memalign(memptr, alignment, size);
+  }
+
   if (!powerof2(alignment)) {
     return EINVAL;
   }
@@ -538,7 +564,12 @@ extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) 
   return (*memptr != NULL) ? 0 : ENOMEM;
 }
 
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* chk_pvalloc(size_t bytes) {
+  if (DebugCallsDisabled()) {
+    return g_malloc_dispatch->pvalloc(bytes);
+  }
+
   size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
@@ -548,10 +579,16 @@ extern "C" void* chk_pvalloc(size_t bytes) {
 }
 
 extern "C" void* chk_valloc(size_t size) {
+  if (DebugCallsDisabled()) {
+    return g_malloc_dispatch->valloc(size);
+  }
   return chk_memalign(getpagesize(), size);
 }
+#endif
 
 static void ReportMemoryLeaks() {
+  ScopedDisableDebugCalls disable;
+
   // Use /proc/self/exe link to obtain the program name for logging
   // purposes. If it's not available, we set it to "<unknown>".
   char exe[PATH_MAX];
@@ -585,9 +622,13 @@ static void ReportMemoryLeaks() {
   }
 }
 
+pthread_key_t g_debug_calls_disabled;
+
 extern "C" bool malloc_debug_initialize(HashTable* hash_table, const MallocDebug* malloc_dispatch) {
   g_hash_table = hash_table;
   g_malloc_dispatch = malloc_dispatch;
+
+  pthread_key_create(&g_debug_calls_disabled, NULL);
 
   char debug_backlog[PROP_VALUE_MAX];
   if (__system_property_get("libc.debug.malloc.backlog", debug_backlog)) {
@@ -605,4 +646,6 @@ extern "C" void malloc_debug_finalize(int malloc_debug_level) {
     ReportMemoryLeaks();
   }
   backtrace_shutdown();
+
+  pthread_setspecific(g_debug_calls_disabled, NULL);
 }
