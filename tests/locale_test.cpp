@@ -48,8 +48,8 @@ TEST(locale, localeconv) {
 }
 
 TEST(locale, setlocale) {
-  EXPECT_STREQ("C", setlocale(LC_ALL, NULL));
-  EXPECT_STREQ("C", setlocale(LC_CTYPE, NULL));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_ALL, NULL));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_CTYPE, NULL));
 
   errno = 0;
   EXPECT_EQ(NULL, setlocale(-1, NULL));
@@ -104,4 +104,21 @@ TEST(locale, uselocale) {
   EXPECT_TRUE(old == original);
 
   EXPECT_EQ(n, uselocale(NULL));
+}
+
+TEST(locale, mb_cur_max) {
+  // We can't reliably test the behavior with setlocale(3) or the behavior for
+  // initial program conditions because (unless we're the only test that was
+  // run), another test has almost certainly called uselocale(3) in this thread.
+  // See b/16685652.
+  locale_t cloc = newlocale(LC_ALL, "C", 0);
+  locale_t cloc_utf8 = newlocale(LC_ALL, "C.UTF-8", 0);
+
+  uselocale(cloc);
+  ASSERT_EQ(1U, MB_CUR_MAX);
+  uselocale(cloc_utf8);
+  ASSERT_EQ(4U, MB_CUR_MAX);
+
+  freelocale(cloc);
+  freelocale(cloc_utf8);
 }
