@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1624f7a2_67f22dbd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-30T21:16:02Z",
+      "side": 1,
+      "message": "this will resolve symbols only for main binary.. look into open_library, it is called on dlopen and for dt_needed libs",
+      "revId": "1b75f03062b1a18332dbe55a9c46ee6606e4be44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
