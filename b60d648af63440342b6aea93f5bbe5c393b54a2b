@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1624f7a2_a56968c0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-30T02:55:55Z",
+      "side": 1,
+      "message": "small correction, looks like this function should be called on load not on resolve, according to the attribute description.  \n\nDoing this on load means that the ifunction needs to be called after relocs and preferably after CallConstructors() (it might rely on some global vars with static constructors). \n\nand after function pointer is resolved linker(?) needs to store it somewhere (update plt record?)",
+      "parentUuid": "1624f7a2_85d2ec6f",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_f5014fd6",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
