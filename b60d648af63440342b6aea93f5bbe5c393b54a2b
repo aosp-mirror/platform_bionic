@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1624f7a2_85d2ec6f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-30T02:27:46Z",
+      "side": 1,
+      "message": "I can do that.  I expected that this wasn\u0027t going to be a passable solution, since I wasn\u0027t sure what other effects it would have, so it should be easy enough to migrate to another function.",
+      "parentUuid": "1624f7a2_df655797",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_f5014fd6",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "correct. i suspect this and your new test failure are related --- don\u0027t you want to modify the st_value for the _actual_ Elf_Sym rather than a copy?",
       "parentUuid": "36f65b4a_ee94d8f6",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_c5efc41b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-07-30T02:27:46Z",
+      "side": 1,
+      "message": "I thought so too, since my failure is a 0x0 null pointer.  The reason I\u0027m modifying a copy and not the actual st_value is because I can\u0027t--SEGV_ACCERR.  I suspect this is because the symbol table is part of the ELF file, and the dynamic linker shouldn\u0027t modify that.  However, I may be mistaken in that understanding.  If I could just modify st_value, it would be much easier.",
+      "parentUuid": "560aef14_38e0de56",
       "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
