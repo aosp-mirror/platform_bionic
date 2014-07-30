@@ -303,6 +303,9 @@ int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  al
 
 int __set_tid_address:set_tid_address(int*)  all
 
+int setfsgid(gid_t)  all
+int setfsuid(uid_t)  all
+
 pid_t wait4(pid_t, int*, int, struct rusage*)  all
 int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
 
