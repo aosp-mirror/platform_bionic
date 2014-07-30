@@ -16,6 +16,24 @@
       "revId": "79fd1ee7245390c728437199a48f32816131d29e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56f10f4f_5a1395f3",
+        "filename": "libc/arch-x86/bionic/libgcc_compat.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2014-07-30T07:20:18Z",
+      "side": 1,
+      "message": "Symbols merged from libgcc.a should be excluded from shared library in NDK, but in the past only functions from libgcc.a are excluded.  __popcount_tab is exposed in NDK r10\u0027s android-L/arch-{arm,mips,x86,x86_64} as a result.  https://android-review.googlesource.com/#/c/102497 fixes it. Sorry about that.",
+      "parentUuid": "1624f7a2_39fa2b53",
+      "revId": "79fd1ee7245390c728437199a48f32816131d29e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
