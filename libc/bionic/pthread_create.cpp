@@ -51,9 +51,9 @@ extern "C" int __isthreaded;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
 void __init_tls(pthread_internal_t* thread) {
-  // Zero-initialize all the slots after TLS_SLOT_SELF and TLS_SLOT_THREAD_ID.
-  for (size_t i = TLS_SLOT_ERRNO; i < BIONIC_TLS_SLOTS; ++i) {
-    thread->tls[i] = NULL;
+  if (thread->user_allocated_stack()) {
+    // We don't know where the user got their stack, so assume the worst and zero the TLS area.
+    memset(&thread->tls[0], 0, BIONIC_TLS_SLOTS * sizeof(void*));
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
@@ -66,7 +66,7 @@ void __init_tls(pthread_internal_t* thread) {
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   stack_t ss;
-  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (ss.ss_sp != MAP_FAILED) {
     ss.ss_size = SIGSTKSZ;
     ss.ss_flags = 0;
@@ -227,7 +227,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
+    if (!thread->user_allocated_stack()) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
     free(thread);

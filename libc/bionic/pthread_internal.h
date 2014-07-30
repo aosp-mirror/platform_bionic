@@ -30,6 +30,18 @@
 
 #include <pthread.h>
 
+/* Has the thread been detached by a pthread_join or pthread_detach call? */
+#define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
+
+/* Was the thread's stack allocated by the user rather than by us? */
+#define PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK 0x00000002
+
+/* Has the thread been joined by another thread? */
+#define PTHREAD_ATTR_FLAG_JOINED 0x00000004
+
+/* Is this the main thread? */
+#define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
+
 struct pthread_internal_t {
   struct pthread_internal_t* next;
   struct pthread_internal_t* prev;
@@ -54,6 +66,10 @@ struct pthread_internal_t {
   bool get_cached_pid(pid_t* cached_pid) {
     *cached_pid = cached_pid_;
     return (*cached_pid != 0);
+  }
+
+  bool user_allocated_stack() {
+    return (attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0;
   }
 
   void** tls;
@@ -87,20 +103,8 @@ __LIBC_HIDDEN__ pthread_internal_t* __get_thread(void);
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
-/* Has the thread been detached by a pthread_join or pthread_detach call? */
-#define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
-
-/* Was the thread's stack allocated by the user rather than by us? */
-#define PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK 0x00000002
-
-/* Has the thread been joined by another thread? */
-#define PTHREAD_ATTR_FLAG_JOINED 0x00000004
-
-/* Is this the main thread? */
-#define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
-
 /*
- * Traditionally we give threads a 1MiB stack. When we started
+ * Traditionally we gave threads a 1MiB stack. When we started
  * allocating per-thread alternate signal stacks to ease debugging of
  * stack overflows, we subtracted the same amount we were using there
  * from the default thread stack size. This should keep memory usage
