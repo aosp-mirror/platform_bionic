@@ -163,10 +163,6 @@ extern size_t	wcstombs(char *, const wchar_t *, size_t);
 
 #define MB_CUR_MAX 4U
 
-#if 0 /* MISSING FROM BIONIC */
-extern int on_exit(void (*)(int, void *), void *);
-#endif /* MISSING */
-
 __END_DECLS
 
 #endif /* _STDLIB_H_ */
