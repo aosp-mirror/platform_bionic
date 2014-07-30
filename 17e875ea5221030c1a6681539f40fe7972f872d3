@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1624f7a2_d156633e",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T20:23:19Z",
+      "side": 1,
+      "message": "Oh. I misunderstood LC_GLOBAL_LOCALE. Checked the docs and you\u0027re right. I\u0027ll fix that.",
+      "parentUuid": "f6f76345_e601b4d6",
+      "revId": "17e875ea5221030c1a6681539f40fe7972f872d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6f76345_6616c426",
         "filename": "libc/bionic/locale.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "963547d4_5b616f14",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T20:23:19Z",
+      "side": 1,
+      "message": "Is it not better to provide a real error message instead of a segfault when it\u0027s easy?",
+      "parentUuid": "f6f76345_6616c426",
+      "revId": "17e875ea5221030c1a6681539f40fe7972f872d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6016bf5_a4b2887c",
         "filename": "libc/bionic/locale.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2014-07-30T20:13:58Z",
       "side": 1,
       "message": "you didn\u0027t like the constructor idea?",
+      "revId": "17e875ea5221030c1a6681539f40fe7972f872d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "763a93c6_912fbcbb",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T20:23:19Z",
+      "side": 1,
+      "message": "Hadn\u0027t actually seen that comment until now. I\u0027ll play around with it.",
+      "parentUuid": "b6016bf5_a4b2887c",
       "revId": "17e875ea5221030c1a6681539f40fe7972f872d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
