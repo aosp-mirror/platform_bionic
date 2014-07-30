@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_e411992d",
+        "filename": "libc/bionic/malloc_debug_common.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T01:10:26Z",
+      "side": 1,
+      "message": "I actually moved this to a new file so that I don\u0027t need to over include and this stuff only gets included where it\u0027s needed. Which means it\u0027s not in libc.so.\n\nThis code is not built with -fvisibility\u003dhidden. I don\u0027t think it\u0027s necessary because the debug .so should not be present for usr builds.",
+      "parentUuid": "36f65b4a_c44e9581",
+      "revId": "488766444da2d686ecab1c16cd16648546b10788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_f35047ec",
         "filename": "libc/bionic/malloc_debug_common.h",
         "patchSetId": 6
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "1624f7a2_1f12afbe",
+        "filename": "libc/bionic/malloc_debug_common.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T01:10:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "560aef14_f35047ec",
+      "revId": "488766444da2d686ecab1c16cd16648546b10788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1624f7a2_5f1ee7fc",
         "filename": "libc/bionic/malloc_debug_common.h",
         "patchSetId": 6
@@ -64,6 +100,24 @@
       "writtenOn": "2014-07-30T00:35:37Z",
       "side": 1,
       "message": "DISALLOW_COPY_AND_ASSIGN",
+      "revId": "488766444da2d686ecab1c16cd16648546b10788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_ff26d31a",
+        "filename": "libc/bionic/malloc_debug_common.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T01:10:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1624f7a2_5f1ee7fc",
       "revId": "488766444da2d686ecab1c16cd16648546b10788",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
