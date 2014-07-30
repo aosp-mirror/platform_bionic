@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "560aef14_38e0de56",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T00:09:15Z",
+      "side": 1,
+      "message": "correct. i suspect this and your new test failure are related --- don\u0027t you want to modify the st_value for the _actual_ Elf_Sym rather than a copy?",
+      "parentUuid": "36f65b4a_ee94d8f6",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36f65b4a_eed29870",
         "filename": "tests/libs/dlopen_testlib_ifunc.c",
         "patchSetId": 7
