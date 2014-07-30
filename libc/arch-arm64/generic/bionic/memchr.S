@@ -75,6 +75,7 @@ ENTRY(memchr)
 	 * Magic constant 0x40100401 allows us to identify which lane matches
 	 * the requested byte.
 	 */
+	cbz	cntin, .Lzero_length
 	mov	wtmp2, #0x0401
 	movk	wtmp2, #0x4010, lsl #16
 	dup	vrepchr.16b, chrin
@@ -156,5 +157,9 @@ ENTRY(memchr)
 	add	result, src, synd, lsr #1
 	/* Select result or NULL */
 	csel	result, xzr, result, eq
+	ret
+
+.Lzero_length:
+	mov	result, xzr
 	ret
 END(memchr)
