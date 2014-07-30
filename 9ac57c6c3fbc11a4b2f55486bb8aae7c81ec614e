@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "560aef14_f31de782",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T00:31:11Z",
+      "side": 1,
+      "message": "Changed to be an example of the maps data line.",
+      "parentUuid": "36f65b4a_4671721b",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_b1464be2",
         "filename": "libc/bionic/debug_mapinfo.cpp",
         "patchSetId": 5
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "560aef14_f393a795",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T00:31:11Z",
+      "side": 1,
+      "message": "I think memcpy is more recognizable, so I\u0027d prefer to leave it.",
+      "parentUuid": "7615332e_7129d30a",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_7282f8af",
         "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
         "patchSetId": 5
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "36f65b4a_a966ca2b",
+        "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T00:31:11Z",
+      "side": 1,
+      "message": "This file is all gone, I went with a disable method. The pure recursive method doesn\u0027t quite work because the code does make a few recursive calls itself and making that special case is a pain.",
+      "parentUuid": "560aef14_7282f8af",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615332e_0ccf1a63",
         "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
         "patchSetId": 5
@@ -81,6 +135,24 @@
       "writtenOn": "2014-07-29T19:12:56Z",
       "side": 1,
       "message": "i feel like the dividing line should be before strdup, not here.\n\ni\u0027m still uncomfortable about this. can\u0027t we use -D to have libbacktrace build with other symbols? or set some bit in TLS so that the debug malloc sees when it\u0027s being called recursively and short-circuits to the underlying allocator? i just feel like there are so many ways for this to go wrong, especially if we have fake \u0027fopen\u0027s and the like (in a world where we\u0027re trying to turn off -Bsymbolic).",
+      "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_494dfea7",
+        "filename": "libc/bionic/malloc_debug_no_allocations.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-07-30T00:31:11Z",
+      "side": 1,
+      "message": "As above, I used a variation of this suggestion.",
+      "parentUuid": "7615332e_0ccf1a63",
       "revId": "9ac57c6c3fbc11a4b2f55486bb8aae7c81ec614e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
