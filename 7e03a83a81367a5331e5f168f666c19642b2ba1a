@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f974b47c_cfefee8b",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T23:12:17Z",
+      "side": 1,
+      "message": "DISALLOW_COPY_AND_ASSIGN?",
+      "revId": "7e03a83a81367a5331e5f168f666c19642b2ba1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
