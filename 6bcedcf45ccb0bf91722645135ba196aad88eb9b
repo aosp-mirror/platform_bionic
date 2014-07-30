@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b6016bf5_04b6dcc5",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T18:44:26Z",
+      "side": 1,
+      "message": "Whoops. At first I thought it was supposed to be an int (spec says \"integer type\"), but implementations seem to say it\u0027s unsigned (and spec also says it\u0027s a value between 1 and MB_MAX_LEN). Had forgotten to change this when I fixed __mb_cur_max().",
+      "parentUuid": "36f65b4a_049478c2",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36f65b4a_a4a26c1d",
         "filename": "libc/bionic/locale.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-30T18:07:50Z",
       "side": 1,
       "message": "you just dereferenced clone on L112. oops.",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6204393_fb0ca7cf",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T18:44:26Z",
+      "side": 1,
+      "message": "Oops indeed. I think I read this as s/clone/l/. Which, for that matter, looks like a bug in the previous code.",
+      "parentUuid": "36f65b4a_a4a26c1d",
       "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -98,6 +134,24 @@
       "writtenOn": "2014-07-30T18:07:50Z",
       "side": 1,
       "message": "init?",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6f76345_c3590a6f",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-07-30T18:44:26Z",
+      "side": 1,
+      "message": "Initial state.",
+      "parentUuid": "1624f7a2_93ad93bc",
       "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
