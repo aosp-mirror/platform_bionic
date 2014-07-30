@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f65b4a_049478c2",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "is this an int or a size_t?",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_a4a26c1d",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "you just dereferenced clone on L112. oops.",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f65b4a_047d98c2",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "s/loc/l/ like the other functions.",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "963547d4_554b7ee9",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "!\u003d NULL",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_736437ee",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "why do we need these casts? isn\u0027t locale_t \u003d\u003d __locale_t*?",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_93ad93bc",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "init?",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "963547d4_759442f5",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "say what you mean instead of \"screwing with us\".",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1624f7a2_13a183c2",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:07:50Z",
+      "side": 1,
+      "message": "_uselocale?",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
