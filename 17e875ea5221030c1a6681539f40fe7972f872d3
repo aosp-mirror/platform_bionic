@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "f6204393_3e2a0d99",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T20:26:52Z",
+      "side": 1,
+      "message": "it\u0027s not particularly convincing in a case like this. it\u0027s not likely this will ever happen, and it\u0027s going to be really obvious what went wrong when it dies. (we have a similar thing in libcore; whether to add an explicit null pointer check because we think it adds enough value, or just rely on the \"free\" one.)",
+      "parentUuid": "963547d4_5b616f14",
+      "revId": "17e875ea5221030c1a6681539f40fe7972f872d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6016bf5_a4b2887c",
         "filename": "libc/bionic/locale.cpp",
         "patchSetId": 2
