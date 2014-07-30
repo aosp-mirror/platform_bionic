@@ -763,6 +763,14 @@ TEST(string, memchr) {
   }
 }
 
+TEST(string, memchr_zero) {
+  uint8_t* buffer;
+  ASSERT_EQ(0, posix_memalign(reinterpret_cast<void**>(&buffer), 64, 64));
+  memset(buffer, 10, 64);
+  ASSERT_TRUE(NULL == memchr(buffer, 5, 0));
+  ASSERT_TRUE(NULL == memchr(buffer, 10, 0));
+}
+
 TEST(string, memrchr) {
   int seek_char = random() & 255;
   StringTestState<char> state(SMALL);
