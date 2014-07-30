@@ -82,6 +82,57 @@ TEST(pthread, pthread_key_delete) {
   ASSERT_EQ(EINVAL, pthread_setspecific(key, expected));
 }
 
+TEST(pthread, pthread_key_fork) {
+  void* expected = reinterpret_cast<void*>(1234);
+  pthread_key_t key;
+  ASSERT_EQ(0, pthread_key_create(&key, NULL));
+  ASSERT_EQ(0, pthread_setspecific(key, expected));
+  ASSERT_EQ(expected, pthread_getspecific(key));
+
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    // The surviving thread inherits all the forking thread's TLS values...
+    ASSERT_EQ(expected, pthread_getspecific(key));
+    _exit(99);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(99, WEXITSTATUS(status));
+
+  ASSERT_EQ(expected, pthread_getspecific(key));
+}
+
+static void* DirtyKeyFn(void* key) {
+  return pthread_getspecific(*reinterpret_cast<pthread_key_t*>(key));
+}
+
+TEST(pthread, pthread_key_dirty) {
+  pthread_key_t key;
+  ASSERT_EQ(0, pthread_key_create(&key, NULL));
+
+  size_t stack_size = 128 * 1024;
+  void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, stack);
+  memset(stack, 0xff, stack_size);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setstack(&attr, stack, stack_size));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, DirtyKeyFn, &key));
+
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
+  ASSERT_EQ(nullptr, result); // Not ~0!
+
+  ASSERT_EQ(0, munmap(stack, stack_size));
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }
