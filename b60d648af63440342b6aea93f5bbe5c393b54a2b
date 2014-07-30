@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1624f7a2_df655797",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-07-30T00:29:40Z",
+      "side": 1,
+      "message": "this function is used at relocation stage, which could lead to some interesting events... \n\nmaybe it is better to introduce new resove_elf_sym(.) function and use it from dlfcn.c dlsym?",
+      "revId": "b60d648af63440342b6aea93f5bbe5c393b54a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "560aef14_f5014fd6",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
