@@ -59,9 +59,20 @@ libc_bionic_src_files_mips += \
     arch-mips/bionic/setjmp.S \
     arch-mips/bionic/sigsetjmp.S \
     arch-mips/bionic/syscall.S \
+
+ifndef ARCH_MIPS_REV6
+libc_bionic_src_files_mips += \
     arch-mips/string/memcpy.S \
     arch-mips/string/memset.S \
     arch-mips/string/mips_strlen.c \
+
+else
+libc_bionic_src_files_mips += \
+    bionic/memcpy.cpp \
+    bionic/memset.c
+libc_common_src_files_mips += \
+    upstream-openbsd/lib/libc/string/strlen.c
+endif
 
 libc_netbsd_src_files_mips := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
