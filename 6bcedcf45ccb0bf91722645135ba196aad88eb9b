@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "1624f7a2_761f8550",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-07-30T18:48:35Z",
+      "side": 1,
+      "message": "i think the original code was saying \"the global locale isn\u0027t a valid pointer, but we don\u0027t need to copy it anyway because an empty new locale will be identical [since all locales are identical and contain no data]\".\n\ni wonder now whether we should change __new_locale to be more like a constructor so it\u0027s not possible to create a locale without supplying a value for mb_cur_max? (or, you know, use \u0027new\u0027 instead of malloc and have an actual constructor...)",
+      "parentUuid": "f6204393_fb0ca7cf",
+      "revId": "6bcedcf45ccb0bf91722645135ba196aad88eb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36f65b4a_047d98c2",
         "filename": "libc/bionic/locale.cpp",
         "patchSetId": 1
