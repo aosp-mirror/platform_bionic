@@ -351,7 +351,7 @@ void test_mbsrtowcs(mbstate_t* ps) {
   // Check that we didn't clobber the rest of out.
   ASSERT_EQ(L'x', out[3]);
   // Check that valid has advanced to the end of the string.
-  ASSERT_EQ(L'\0', *valid);
+  ASSERT_EQ(nullptr, valid);
 
   const char* invalid = "A" "\xc2\x20" "ef";
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &invalid, 4, ps));
