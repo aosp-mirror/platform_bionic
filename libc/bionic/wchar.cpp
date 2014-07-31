@@ -84,6 +84,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       if (static_cast<uint8_t>((*src)[i]) < 0x80) {
         // Fast path for plain ASCII characters.
         if ((*src)[i] == '\0') {
+          *src = nullptr;
           return reset_and_return(o, state);
         }
         r = 1;
@@ -96,6 +97,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
           return reset_and_return_illegal(EILSEQ, state);
         }
         if (r == 0) {
+          *src = nullptr;
           return reset_and_return(o, state);
         }
       }
@@ -118,7 +120,8 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       dst[o] = (*src)[i];
       r = 1;
       if ((*src)[i] == '\0') {
-        break;
+        *src = nullptr;
+        return reset_and_return(o, state);
       }
     } else {
       r = mbrtowc(dst + o, *src + i, nmc - i, state);
