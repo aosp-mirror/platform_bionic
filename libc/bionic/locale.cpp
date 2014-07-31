@@ -30,10 +30,27 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#include "private/bionic_macros.h"
+
 // We currently support a single locale, the "C" locale (also known as "POSIX").
 
+static bool __bionic_current_locale_is_utf8 = true;
+
 struct __locale_t {
-  // Because we only support one locale, these are just tokens with no data.
+  size_t mb_cur_max;
+
+  __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
+  }
+
+  __locale_t(const __locale_t* other) {
+    if (other == LC_GLOBAL_LOCALE) {
+      mb_cur_max = __bionic_current_locale_is_utf8 ? 4 : 1;
+    } else {
+      mb_cur_max = other->mb_cur_max;
+    }
+  }
+
+  DISALLOW_COPY_AND_ASSIGN(__locale_t);
 };
 
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
@@ -75,7 +92,14 @@ static void __locale_init() {
   g_locale.int_n_sign_posn = CHAR_MAX;
 }
 
-static bool __bionic_current_locale_is_utf8 = false;
+size_t __mb_cur_max() {
+  locale_t l = reinterpret_cast<locale_t>(pthread_getspecific(g_uselocale_key));
+  if (l == nullptr || l == LC_GLOBAL_LOCALE) {
+    return __bionic_current_locale_is_utf8 ? 4 : 1;
+  } else {
+    return l->mb_cur_max;
+  }
+}
 
 static bool __is_supported_locale(const char* locale) {
   return (strcmp(locale, "") == 0 ||
@@ -85,25 +109,17 @@ static bool __is_supported_locale(const char* locale) {
           strcmp(locale, "POSIX") == 0);
 }
 
-static locale_t __new_locale() {
-  return reinterpret_cast<locale_t>(malloc(sizeof(__locale_t)));
-}
-
 lconv* localeconv() {
   pthread_once(&g_locale_once, __locale_init);
   return &g_locale;
 }
 
 locale_t duplocale(locale_t l) {
-  locale_t clone = __new_locale();
-  if (clone != NULL && l != LC_GLOBAL_LOCALE) {
-    *clone = *l;
-  }
-  return clone;
+  return new __locale_t(l);
 }
 
 void freelocale(locale_t l) {
-  free(l);
+  delete l;
 }
 
 locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
@@ -118,7 +134,7 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
     return NULL;
   }
 
-  return __new_locale();
+  return new __locale_t(strstr(locale_name, "UTF-8") != NULL ? 4 : 1);
 }
 
 char* setlocale(int category, const char* locale_name) {
