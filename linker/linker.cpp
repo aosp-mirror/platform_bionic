@@ -469,10 +469,6 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
     }
   }
 
-  TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p %x %zd",
-             name, si->name, reinterpret_cast<void*>(si->base), hash, hash % si->nbucket);
-
-
   return NULL;
 }
 
@@ -589,43 +585,18 @@ done:
     return NULL;
 }
 
-// Another soinfo list allocator to use in dlsym. We don't reuse
-// SoinfoListAllocator because it is write-protected most of the time.
-static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_list_allocator_rw;
-class SoinfoListAllocatorRW {
- public:
-  static LinkedListEntry<soinfo>* alloc() {
-    return g_soinfo_list_allocator_rw.alloc();
-  }
+/* This is used by dlsym(3).  It performs symbol lookup only within the
+   specified soinfo object and not in any of its dependencies.
 
-  static void free(LinkedListEntry<soinfo>* ptr) {
-    g_soinfo_list_allocator_rw.free(ptr);
-  }
-};
-
-// This is used by dlsym(3).  It performs symbol lookup only within the
-// specified soinfo object and its dependencies in breadth first order.
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name, soinfo* caller) {
-  LinkedList<soinfo, SoinfoListAllocatorRW> visit_list;
-  visit_list.push_back(si);
-  soinfo* current_soinfo;
-  while ((current_soinfo = visit_list.pop_front()) != nullptr) {
-    ElfW(Sym)* result = soinfo_elf_lookup(current_soinfo, elfhash(name), name,
-        caller == current_soinfo ? SymbolLookupScope::kAllowLocal : SymbolLookupScope::kExcludeLocal);
-
-    if (result != nullptr) {
-      *found = current_soinfo;
-      visit_list.clear();
-      return result;
-    }
-
-    current_soinfo->get_children().for_each([&](soinfo* child) {
-      visit_list.push_back(child);
-    });
-  }
-
-  visit_list.clear();
-  return nullptr;
+   TODO: Only looking in the specified soinfo seems wrong. dlsym(3) says
+   that it should do a breadth first search through the dependency
+   tree. This agrees with the ELF spec (aka System V Application
+   Binary Interface) where in Chapter 5 it discuss resolving "Shared
+   Object Dependencies" in breadth first search order.
+ */
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, const char* name, soinfo* caller) {
+    return soinfo_elf_lookup(si, elfhash(name), name,
+        caller == si ? SymbolLookupScope::kAllowLocal : SymbolLookupScope::kExcludeLocal);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
