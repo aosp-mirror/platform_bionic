@@ -102,19 +102,6 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# Library with dependency used by dlfcn tests
-# -----------------------------------------------------------------------------
-libtest_with_dependency_src_files := \
-    dlopen_testlib_simple.cpp
-
-libtest_with_dependency_shared_libraries := libdlext_test
-
-module := libtest_with_dependency
-build_type := target
-build_target := SHARED_LIBRARY
-include $(TEST_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
 # Library used to test local symbol lookup
 # -----------------------------------------------------------------------------
 libtest_local_symbol_src_files := \

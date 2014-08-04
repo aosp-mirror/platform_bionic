@@ -62,9 +62,10 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-#if defined(__arm__)
-// This seems to be working only for arm.
-// Others platforms optimize LOCAL PROTECTED symbols.
+#if !defined(__LP64__)
+// Current compiler/static linker used for aarch64
+// platform optimizes LOCAL PROTECTED symbol
+// in libtest_local_symbol.so out of existence
 TEST(dlfcn, dlsym_local_symbol) {
   void* handle = dlopen("libtest_local_symbol.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
@@ -77,22 +78,8 @@ TEST(dlfcn, dlsym_local_symbol) {
   f = reinterpret_cast<uint32_t (*)(void)>(dlsym(handle, "dlsym_local_symbol_get_taxicab_number_using_dlsym"));
   ASSERT_TRUE(f != NULL);
   ASSERT_EQ(1729U, f());
-  dlclose(handle);
 }
 #endif
-
-TEST(dlfcn, dlsym_with_dependencies) {
-  void* handle = dlopen("libtest_with_dependency.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
-  dlerror();
-  // This symbol is in DT_NEEDED library.
-  void* sym = dlsym(handle, "getRandomNumber");
-  ASSERT_TRUE(sym != NULL);
-  int (*fn)(void);
-  fn = reinterpret_cast<int (*)(void)>(sym);
-  EXPECT_EQ(4, fn());
-  dlclose(handle);
-}
 
 TEST(dlfcn, dlopen_noload) {
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
