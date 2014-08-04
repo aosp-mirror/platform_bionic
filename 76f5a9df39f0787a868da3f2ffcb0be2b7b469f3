@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3692db12_21dc45f6",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-04T17:50:33Z",
+      "side": 1,
+      "message": "this passes for me with my slightly older version of glibc (2.15) so for now we should probably check for the known-broken version of glibc (and change the comment to point out that they regressed here).",
+      "revId": "76f5a9df39f0787a868da3f2ffcb0be2b7b469f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
