@@ -31,45 +31,13 @@ struct LinkedListEntry {
 template<typename T, typename Allocator>
 class LinkedList {
  public:
-  LinkedList() : head_(nullptr), tail_(nullptr) {}
+  LinkedList() : head_(nullptr) {}
 
   void push_front(T* const element) {
     LinkedListEntry<T>* new_entry = Allocator::alloc();
     new_entry->next = head_;
     new_entry->element = element;
     head_ = new_entry;
-    if (tail_ == nullptr) {
-      tail_ = new_entry;
-    }
-  }
-
-  void push_back(T* const element) {
-    LinkedListEntry<T>* new_entry = Allocator::alloc();
-    new_entry->next = nullptr;
-    new_entry->element = element;
-    if (tail_ == nullptr) {
-      tail_ = head_ = new_entry;
-    } else {
-      tail_->next = new_entry;
-      tail_ = new_entry;
-    }
-  }
-
-  T* pop_front() {
-    if (head_ == nullptr) {
-      return nullptr;
-    }
-
-    LinkedListEntry<T>* entry = head_;
-    T* element = entry->element;
-    head_ = entry->next;
-    Allocator::free(entry);
-
-    if (head_ == nullptr) {
-      tail_ = nullptr;
-    }
-
-    return element;
   }
 
   void clear() {
@@ -78,8 +46,6 @@ class LinkedList {
       head_ = head_->next;
       Allocator::free(p);
     }
-
-    tail_ = nullptr;
   }
 
   template<typename F>
@@ -102,7 +68,6 @@ class LinkedList {
 
  private:
   LinkedListEntry<T>* head_;
-  LinkedListEntry<T>* tail_;
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
 
