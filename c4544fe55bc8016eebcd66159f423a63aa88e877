@@ -106,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "76345307_4af0a774",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "renamed, and changed for_each() to use visit()",
+      "parentUuid": "b6496ba6_af650198",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16431782_92f5cced",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -123,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "76345307_2af56364",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16431782_92f5cced",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d64c1fb5_c5d4b083",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -134,6 +170,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "member function on soinfo?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f63f63e6_a37cfe3b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64c1fb5_c5d4b083",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -174,6 +228,24 @@
     },
     {
       "key": {
+        "uuid": "d64c1fb5_d1e58e40",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16431782_121edc7e",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d64c1fb5_a59ec4dd",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -191,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "76345307_b5d1d891",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done. not exactly the header file but repetitions are removed, also its now 1 allocator per sizeof(T) instead of typeid(T)",
+      "parentUuid": "d64c1fb5_a59ec4dd",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6684304_154ed481",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -202,6 +292,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "and then maybe default the allocator to the obvious implementation?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_11f096fd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6684304_154ed481",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -260,6 +368,24 @@
     },
     {
       "key": {
+        "uuid": "56390f00_1494047e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64c1fb5_a54c04ae",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6684304_f5c19865",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -271,6 +397,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "can\u0027t we move this definition down to L1087?\n\nlikewise s?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56390f00_3464a8ed",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "it should go before if: L1084. Done.",
+      "parentUuid": "f6684304_f5c19865",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -294,6 +438,24 @@
     },
     {
       "key": {
+        "uuid": "56390f00_745e3023",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64c1fb5_50205cba",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d64c1fb5_90430459",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -305,6 +467,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "every time i see us pushing a whole bunch of member data through i wonder (a) should we just pass \u0027si\u0027 and (b) should the callee be a member function? (in this case, i suspect both caller and callee should be soinfo member functions. not necessarily in this change though. no point making it bigger than it needs to be right now.)\n\n(speaking of which, if you\u0027re going to move to nullptr [which i admit is probably a good idea] we should just have one big s/NULL/nullptr/ change rather than keep mixing it in.)",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76345307_f52fe0b9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1813,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "I was thinking about this, there are two calls and one of them is relying on save to variable outside of si: L2185\n\ns/NULL/nullptr/g - done",
+      "parentUuid": "d64c1fb5_90430459",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -328,6 +508,24 @@
     },
     {
       "key": {
+        "uuid": "f6684304_7e9e0514",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2295,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64c1fb5_9080243e",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16431782_52e864c9",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -339,6 +537,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "isn\u0027t this bss?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f63f63e6_066d00cc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "16431782_52e864c9",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -362,6 +578,24 @@
     },
     {
       "key": {
+        "uuid": "16431782_337b1a99",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2307,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16431782_72f760ab",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6684304_d5e29ce3",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
@@ -379,6 +613,24 @@
     },
     {
       "key": {
+        "uuid": "d64c1fb5_d113ce77",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6684304_d5e29ce3",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6684304_750bc8f8",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
@@ -390,6 +642,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "s/break/return/ now?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_b110c26c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T21:40:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6684304_750bc8f8",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
