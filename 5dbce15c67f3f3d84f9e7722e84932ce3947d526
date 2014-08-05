@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76345307_64f9642c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2290,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2014-08-05T14:07:42Z",
+      "side": 1,
+      "message": "I think this would load any dependencies of LD_PRELOAD-ed libraries ahead of any dependendecies of the main executable.\nI.e.\n\nLD_PRELOAD(a) -\u003e c;\nmain -\u003e b -\u003e c\n\nwould load (a, c, b) instead of (a, b, c).\nWe probably want the latter.",
+      "revId": "5dbce15c67f3f3d84f9e7722e84932ce3947d526",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
