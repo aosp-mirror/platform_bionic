@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "968387c4_13bb93c5",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T00:24:23Z",
+      "side": 1,
+      "message": "(this STT constant should probably go with the other STT constants.)",
+      "revId": "20e6f2a339b16a6037a16907f91c453582c8b352",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56b4afaf_28e0cb56",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T00:24:23Z",
+      "side": 1,
+      "message": "yeah, at this point you\u0027ll already have resolved references to the ifunc within this library (via soinfo_link_image).",
+      "revId": "20e6f2a339b16a6037a16907f91c453582c8b352",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
