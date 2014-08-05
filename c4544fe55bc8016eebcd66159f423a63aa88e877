@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "56390f00_a64c12ae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T18:15:01Z",
+      "side": 1,
+      "message": "it is not... this is second part  of the fix, the first one fixed with dlsym(handle, .); this one fixes dlsym(RTLD_NEXT/RTLD_DEFAULT, .)",
+      "parentUuid": "b6496ba6_cf04cde9",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16431782_0785fc80",
         "filename": "libc/private/UniquePtr.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "a third copy? :-(\n\ni guess at least the other two will be removed at some point when their projects switch to libcxx, whereas we\u0027re likely to always want our copy.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76345307_8a0bcff7",
+        "filename": "libc/private/UniquePtr.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T18:15:01Z",
+      "side": 1,
+      "message": "I tried to use std::unique_ptr at first but it ended up requiring malloc and co... so here we are.",
+      "parentUuid": "16431782_0785fc80",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -183,6 +219,24 @@
       "writtenOn": "2014-08-05T18:02:19Z",
       "side": 1,
       "message": "you\u0027ve said this twice :-(",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76345307_6acdab6a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 971,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T18:15:01Z",
+      "side": 1,
+      "message": "the first one is for failures during load/prelink, this one for spinfo_link_image() failures.",
+      "parentUuid": "d64c1fb5_656b1cf4",
       "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
