@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6684304_1bef2363",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T20:34:31Z",
+      "side": 1,
+      "message": "even reading the checkin comment (and rewriting this to use \u0027in\u0027) i\u0027m not sure i follow. why would _NR_ be in name?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_fb3ce74b",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T20:34:31Z",
+      "side": 1,
+      "message": ";?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_38165925",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T20:34:31Z",
+      "side": 1,
+      "message": "intentional?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_16f08cfd",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T20:34:31Z",
+      "side": 1,
+      "message": "or atexit.register(shutil.rmtree, bionic_temp) ?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
