@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,10 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
+#include <private/bionic_asm.h>
 
-// vfork(2) was removed from POSIX 2008, but it's common enough that we can't
-// actually remove it entirely.
-extern "C" pid_t vfork(void) {
-  return fork();
-}
+// This custom code preserves the return address across the system call.
+
+ENTRY(vfork)
+  popq    %rdi  // Grab the return address.
+  movl    $__NR_vfork, %eax
+  syscall
+  pushq   %rdi  // Restore the return address.
+  cmpq    $-MAX_ERRNO, %rax
+  jb      1f
+  negl    %eax
+  movl    %eax, %edi
+  call    __set_errno
+1:
+  ret
+END(vfork)
