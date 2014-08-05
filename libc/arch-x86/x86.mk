@@ -31,6 +31,7 @@ libc_bionic_src_files_x86 += \
     arch-x86/bionic/__set_tls.c \
     arch-x86/bionic/sigsetjmp.S \
     arch-x86/bionic/syscall.S \
+    arch-x86/bionic/vfork.S \
 
 ## ARCH variant specific source files
 arch_variant_mk := $(LOCAL_PATH)/arch-x86/$(TARGET_ARCH_VARIANT)/$(TARGET_ARCH_VARIANT).mk
