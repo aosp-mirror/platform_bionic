@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6496ba6_64c7a0dd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "what about the others?",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_8559083c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "move these to where they\u0027re needed.",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_056df8cb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "if (\n\nmaybe reverse the conjuncts, since ifuncs should be rare?",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_e7e290e3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "} else {",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6496ba6_649de0e4",
+        "filename": "linker/linker.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "you can\u0027t put this up here without breaking [naughty] apps.\n\nsee the private section at the bottom.",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_a59d248d",
+        "filename": "tests/libs/dlopen_testlib_ifunc.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T17:06:50Z",
+      "side": 1,
+      "message": "fix formatting in this file.",
+      "revId": "4e067bdb544242f429fdd98a7d6852dc519f5429",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
