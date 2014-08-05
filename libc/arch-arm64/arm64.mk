@@ -36,6 +36,7 @@ libc_bionic_src_files_arm64 := \
     arch-arm64/bionic/__set_tls.c \
     arch-arm64/bionic/sigsetjmp.S \
     arch-arm64/bionic/syscall.S \
+    arch-arm64/bionic/vfork.S \
 
 
 libc_crt_target_cflags_arm64 := \

@@ -46,6 +46,7 @@ libc_bionic_src_files_mips64 := \
     arch-mips64/bionic/setjmp.S \
     arch-mips64/bionic/sigsetjmp.S \
     arch-mips64/bionic/syscall.S \
+    arch-mips64/bionic/vfork.S \
 
 # FIXME TODO
 ## libc_bionic_src_files_mips64 += arch-mips64/string/memcpy.S

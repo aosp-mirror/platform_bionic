@@ -37,6 +37,7 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/__set_tls.c \
     arch-x86_64/bionic/sigsetjmp.S \
     arch-x86_64/bionic/syscall.S \
+    arch-x86_64/bionic/vfork.S \
 
 libc_bionic_src_files_x86_64 += \
     arch-x86_64/string/sse2-memcpy-slm.S \
