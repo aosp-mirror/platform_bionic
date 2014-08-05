@@ -16,6 +16,24 @@
       "revId": "5dbce15c67f3f3d84f9e7722e84932ce3947d526",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56390f00_8650ee97",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2290,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-05T17:31:02Z",
+      "side": 1,
+      "message": "checked ld-linux.so, the load order is (a,b,c). done",
+      "parentUuid": "76345307_64f9642c",
+      "revId": "5dbce15c67f3f3d84f9e7722e84932ce3947d526",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
