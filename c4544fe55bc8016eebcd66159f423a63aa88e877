@@ -1,0 +1,344 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6496ba6_cf04cde9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "can you explain that this is a replacement for the original (now reverted?) patch, and preferably what was wrong with that and why this is better?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_0785fc80",
+        "filename": "libc/private/UniquePtr.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "a third copy? :-(\n\ni guess at least the other two will be removed at some point when their projects switch to libcxx, whereas we\u0027re likely to always want our copy.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_a74c08ae",
+        "filename": "libc/private/UniquePtr.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "(...in which case, should we turn these into gtests?)",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6496ba6_af650198",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "can we collapse these two for_eaches into a \u0027visit\u0027 or something? (having the regular callers just unconditionally return true doesn\u0027t seem too onerous and it\u0027s one less thing to follow.)",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_92f5cced",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "i think the style guide has a blank line between C and C++ headers.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_c5d4b083",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "member function on soinfo?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_2593d4dd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "one day we should get rid of these gotos...",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_121edc7e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "this comment is a bit out of date now.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_a59ec4dd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "these all seem repetitive. can we say this once in the header file?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_154ed481",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "and then maybe default the allocator to the obvious implementation?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_656b1cf4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 971,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "you\u0027ve said this twice :-(",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_a54c04ae",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "if (\n\ncan we pass a size_t rather than inferring the length from the first null entry? it weirds me out that the two arrays differ in size by 1.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_f5c19865",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "can\u0027t we move this definition down to L1087?\n\nlikewise s?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_50205cba",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "likewise these two.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_90430459",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1813,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "every time i see us pushing a whole bunch of member data through i wonder (a) should we just pass \u0027si\u0027 and (b) should the callee be a member function? (in this case, i suspect both caller and callee should be soinfo member functions. not necessarily in this change though. no point making it bigger than it needs to be right now.)\n\n(speaking of which, if you\u0027re going to move to nullptr [which i admit is probably a good idea] we should just have one big s/NULL/nullptr/ change rather than keep mixing it in.)",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64c1fb5_9080243e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "\"// Load ... dependencies.\", here and elsewhere.",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_52e864c9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "isn\u0027t this bss?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_72f760ab",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "sure you don\u0027t just want to cache the size to make it O(1)?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_d5e29ce3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "L710 said this already. move declaration down here?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_750bc8f8",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T18:02:19Z",
+      "side": 1,
+      "message": "s/break/return/ now?",
+      "revId": "c4544fe55bc8016eebcd66159f423a63aa88e877",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
