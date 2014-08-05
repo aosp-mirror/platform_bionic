@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d64c1fb5_76a630ae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-05T21:01:09Z",
+      "side": 1,
+      "message": "(when you\u0027re resolving the merge conflict, please swap this line with the \"revert revert\" line :-) )",
+      "revId": "7b6534ecc10864b86d536a36d98b922a938bc234",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
