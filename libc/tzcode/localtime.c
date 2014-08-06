@@ -2210,7 +2210,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
     char buf[NAME_LENGTH];
     int32_t start;
     int32_t length;
-    int32_t raw_gmt_offset;
+    int32_t unused; // Was raw GMT offset; always 0 since tzdata2014f (L).
   };
 
   size_t id_count = (ntohl(header.data_offset) - ntohl(header.index_offset)) / sizeof(struct index_entry_t);
