@@ -112,6 +112,12 @@ void pthread_exit(void* return_value) {
   }
   pthread_mutex_unlock(&g_thread_list_lock);
 
+  // Perform a second key cleanup. When using jemalloc, a call to free from
+  // _pthread_internal_remove_locked causes the memory associated with a key
+  // to be reallocated.
+  // TODO: When b/16847284 is fixed this call can be removed.
+  pthread_key_clean_all();
+
   if (user_allocated_stack) {
     // Cleaning up this thread's stack is the creator's responsibility, not ours.
     __exit(0);
