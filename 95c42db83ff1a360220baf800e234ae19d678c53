@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76345307_9bfa0351",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2266,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2014-08-06T12:13:03Z",
+      "side": 1,
+      "message": "This not just for dt_needed libraries now, might want to call it something else.",
+      "range": {
+        "startLine": 2266,
+        "startChar": 21,
+        "endLine": 2266,
+        "endChar": 40
+      },
+      "revId": "95c42db83ff1a360220baf800e234ae19d678c53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
