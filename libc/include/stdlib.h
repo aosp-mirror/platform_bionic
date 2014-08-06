@@ -111,12 +111,6 @@ void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
 
-/* Work around x86/x86-64 libvpx build breakage caused by postproc_x86.c. */
-#if (defined(__i386__) || defined(__x86_64__)) && defined(rand)
-#undef rand
-#define __rand lrand48
-#endif
-
 int rand(void);
 int rand_r(unsigned int*);
 void srand(unsigned int);
