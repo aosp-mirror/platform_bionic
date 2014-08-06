@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6624b22_532ea414",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-06T18:01:33Z",
+      "side": 1,
+      "message": "do we still need this? given that relocation should have already resolved and placed correct address in plt?",
+      "revId": "f82fca9ce8c6bbd17d67f61b5bb266a0348d4718",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
