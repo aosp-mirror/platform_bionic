@@ -16,6 +16,24 @@
       "revId": "f82fca9ce8c6bbd17d67f61b5bb266a0348d4718",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6624b22_dc1da1ca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1047249
+      },
+      "writtenOn": "2014-08-06T21:33:46Z",
+      "side": 1,
+      "message": "The dlsym reference doesn\u0027t work without it, but it may be that there\u0027s a better way to do this that will fix both of the situations instead of two different fixes.",
+      "parentUuid": "b6624b22_532ea414",
+      "revId": "f82fca9ce8c6bbd17d67f61b5bb266a0348d4718",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
