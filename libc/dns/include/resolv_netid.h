@@ -61,6 +61,9 @@ int android_getaddrinfofornet(const char *, const char *, const struct addrinfo 
 extern void _resolv_set_nameservers_for_net(unsigned netid,
     const char** servers, int numservers, const char *domains) __used_in_netd;
 
+/* flush the cache associated with a certain network */
+extern void _resolv_flush_cache_for_net(unsigned netid) __used_in_netd;
+
 /* delete the cache associated with a certain network */
 extern void _resolv_delete_cache_for_net(unsigned netid) __used_in_netd;
 
