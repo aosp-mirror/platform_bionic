@@ -225,6 +225,7 @@ extern "C" int tkill(pid_t tid, int sig) {
   return syscall(__NR_tkill, tid, sig);
 }
 
+// This was removed from POSIX 2008.
 extern "C" wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
   return wcsstr(haystack, needle);
 }
@@ -267,7 +268,7 @@ extern "C" int getdtablesize() {
   return r.rlim_cur;
 }
 
-// Only used by ftime, which was removed from POSIX.
+// Only used by ftime, which was removed from POSIX 2008.
 struct timeb {
   time_t          time;
   unsigned short  millitm;
