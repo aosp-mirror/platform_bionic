@@ -111,8 +111,7 @@ void* dlsym(void* handle, const char* symbol) {
       sym = dlsym_linear_lookup(symbol, &found, caller_si->next, caller_si);
     }
   } else {
-    found = reinterpret_cast<soinfo*>(handle);
-    sym = dlsym_handle_lookup(found, symbol, caller_si);
+    sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, symbol, caller_si);
   }
 
   if (sym != NULL && sym->st_shndx != 0) {
