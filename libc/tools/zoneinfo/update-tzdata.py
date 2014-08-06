@@ -115,7 +115,7 @@ def BuildIcuToolsAndData(data_filename):
   print 'Configuring ICU tools...'
   subprocess.check_call(['%s/runConfigureICU' % icu_dir, 'Linux'])
   print 'Making ICU tools...'
-  subprocess.check_call(['make', '-j6'])
+  subprocess.check_call(['make', '-j32'])
 
   # Run the ICU tools.
   os.chdir('tools/tzcode')
@@ -169,11 +169,8 @@ def BuildBionicToolsAndData(data_filename):
   WriteSetupFile()
 
   print 'Calling ZoneCompactor to update bionic to %s...' % new_version
-  libcore_src_dir = '%s/../libcore/luni/src/main/java/' % bionic_dir
   subprocess.check_call(['javac', '-d', '.',
-                         '%s/ZoneCompactor.java' % bionic_libc_tools_zoneinfo_dir,
-                         '%s/libcore/util/ZoneInfo.java' % libcore_src_dir,
-                         '%s/libcore/io/BufferIterator.java' % libcore_src_dir])
+                         '%s/ZoneCompactor.java' % bionic_libc_tools_zoneinfo_dir])
   subprocess.check_call(['java', 'ZoneCompactor',
                          'setup', 'data', 'extracted/zone.tab',
                          bionic_libc_zoneinfo_dir, new_version])
