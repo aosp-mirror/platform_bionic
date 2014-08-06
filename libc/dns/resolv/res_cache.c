@@ -1831,6 +1831,17 @@ _get_res_cache_for_net_locked(unsigned netid)
     return cache;
 }
 
+void
+_resolv_flush_cache_for_net(unsigned netid)
+{
+    pthread_once(&_res_cache_once, _res_cache_init);
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    _flush_cache_for_net_locked(netid);
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
 static void
 _flush_cache_for_net_locked(unsigned netid)
 {
