@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "360c9b77_5e7cf9f4",
+        "filename": "tests/os_cpu_set_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:23:45Z",
+      "side": 1,
+      "message": "do any of the tests in this file test anything that isn\u0027t already tested in sched_test.cpp?",
+      "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56390f00_dd2d9c7f",
         "filename": "tests/os_cpu_set_test.cpp",
         "patchSetId": 1
@@ -186,6 +203,40 @@
     },
     {
       "key": {
+        "uuid": "56202fde_ebe52dee",
+        "filename": "tests/os_getgrouplist_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:23:45Z",
+      "side": 1,
+      "message": "this file should be grp_test.cpp and the test should be TEST(grp, getgrouplist).",
+      "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f157a2_5d108725",
+        "filename": "tests/os_getgrouplist_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:23:45Z",
+      "side": 1,
+      "message": "prefer ASSERT_EQ to ASSERT_TRUE because the former will give better error messages if the test fails. (this will just say \"false\", whereas ASSERT_EQ would tell us what the actual value was.)",
+      "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56390f00_bd5378f7",
         "filename": "tests/os_gethostbyname_test.cpp",
         "patchSetId": 1
@@ -203,6 +254,23 @@
         "endLine": 2,
         "endChar": 21
       },
+      "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56202fde_6bc81d5c",
+        "filename": "tests/os_gethostbyname_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:23:45Z",
+      "side": 1,
+      "message": "likewise, this should be in netdb_test.cpp...",
       "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -318,6 +386,23 @@
         "endLine": 22,
         "endChar": 70
       },
+      "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56202fde_4bcd596a",
+        "filename": "tests/os_mutex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:23:45Z",
+      "side": 1,
+      "message": "does this test anything that isn\u0027t already tested in pthread_test.cpp?",
       "revId": "f9bf0da0241125cf765ef55d0bde5be30be012d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
