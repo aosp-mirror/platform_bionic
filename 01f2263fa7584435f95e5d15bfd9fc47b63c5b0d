@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d6133f9f_47a39054",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-07T23:40:26Z",
+      "side": 1,
+      "message": "I\u0027ll move it before stdio and delete the second include of unistd.h.\n\nOr should I re-sort such lists when I touch them?",
+      "parentUuid": "360c9b77_c90cb5d0",
+      "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "360c9b77_8950ed97",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-07T18:12:54Z",
       "side": 1,
       "message": "is this right? isn\u0027t this used via futex(2) so we really do mean exactly 32 bits?",
+      "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6133f9f_e7639c67",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-07T23:40:26Z",
+      "side": 1,
+      "message": "I\u0027m treating them as synonymous:\n\n\"The typedef name uint_leastN_t designates an unsigned integer type with a width\nof at least N , such that no unsigned integer type with lesser size has at least the specified\n width. Thus, uint_least16_t denotes an unsigned integer type with a width of at\nleast 16 bits.\"\n\nI think that if there is a uint32_t, then it must be the same as uint_least32_t.  I there isn\u0027t, we\u0027re toast anyway.\n\nThe standard has no uint32_t and thus no atomic_uint32_t.  If we\u0027re going to run C11 on a PDP10 ...",
+      "parentUuid": "360c9b77_8950ed97",
       "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
