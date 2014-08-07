@@ -46,11 +46,7 @@
 ENTRY(setjmp)
 	PIC_PROLOGUE
 	pushl	$0
-#ifdef PIC
 	call	PIC_PLT(sigblock)
-#else
-	call	sigblock
-#endif
 	addl	$4,%esp
 	PIC_EPILOGUE
 
@@ -71,11 +67,7 @@ ENTRY(longjmp)
 	movl	4(%esp),%edx
 	PIC_PROLOGUE
 	pushl	24(%edx)
-#ifdef PIC
 	call	PIC_PLT(sigsetmask)
-#else
-	call	sigsetmask
-#endif
 	addl	$4,%esp
 	PIC_EPILOGUE
 
