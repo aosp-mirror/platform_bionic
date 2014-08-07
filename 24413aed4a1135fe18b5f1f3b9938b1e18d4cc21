@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f157a2_7d96233d",
+        "filename": "libc/arch-x86/include/machine/asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T17:25:16Z",
+      "side": 1,
+      "message": "should this be __PIC__ instead?",
+      "revId": "24413aed4a1135fe18b5f1f3b9938b1e18d4cc21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
