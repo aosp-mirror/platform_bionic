@@ -170,7 +170,7 @@ x86_call = """\
     jb      1f
     negl    %%eax
     pushl   %%eax
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
     addl    $4, %%esp
 1:
 """
@@ -192,7 +192,7 @@ x86_64_call = """\
     jb      1f
     negl    %%eax
     movl    %%eax, %%edi
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
 1:
     ret
 END(%(func)s)

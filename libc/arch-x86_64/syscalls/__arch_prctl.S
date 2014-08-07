@@ -9,7 +9,7 @@ ENTRY(__arch_prctl)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
 1:
     ret
 END(__arch_prctl)

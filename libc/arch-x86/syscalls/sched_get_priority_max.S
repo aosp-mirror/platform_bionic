@@ -13,7 +13,7 @@ ENTRY(sched_get_priority_max)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
     addl    $4, %esp
 1:
     popl    %ebx
