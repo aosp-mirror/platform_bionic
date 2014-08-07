@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "360c9b77_c90cb5d0",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T18:12:54Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "360c9b77_8950ed97",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-07T18:12:54Z",
+      "side": 1,
+      "message": "is this right? isn\u0027t this used via futex(2) so we really do mean exactly 32 bits?",
+      "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
