@@ -1,9 +1,6 @@
 
 import java.io.*;
-import java.nio.ByteOrder;
 import java.util.*;
-import libcore.io.BufferIterator;
-import libcore.util.ZoneInfo;
 
 // usage: java ZoneCompiler <setup file> <data directory> <output directory> <tzdata version>
 //
@@ -27,66 +24,20 @@ import libcore.util.ZoneInfo;
 //
 
 public class ZoneCompactor {
-  public static class ByteArrayBufferIteratorBE extends BufferIterator {
-    private final byte[] bytes;
-    private int offset = 0;
-
-    public ByteArrayBufferIteratorBE(byte[] bytes) {
-      this.bytes = bytes;
-      this.offset = 0;
-    }
-
-    public void seek(int offset) {
-      this.offset = offset;
-    }
-
-    public void skip(int byteCount) {
-      this.offset += byteCount;
-    }
-
-    public void readByteArray(byte[] dst, int dstOffset, int byteCount) {
-      System.arraycopy(bytes, offset, dst, dstOffset, byteCount);
-      offset += byteCount;
-    }
-
-    public byte readByte() {
-      return bytes[offset++];
-    }
-
-    public int readInt() {
-      return ((readByte() & 0xff) << 24) | ((readByte() & 0xff) << 16) | ((readByte() & 0xff) << 8) | (readByte() & 0xff);
-    }
-
-    public void readIntArray(int[] dst, int dstOffset, int intCount) {
-      for (int i = 0; i < intCount; ++i) {
-        dst[dstOffset++] = readInt();
-      }
-    }
-
-    public short readShort() {
-      throw new UnsupportedOperationException();
-    }
-  }
-
-  // Maximum number of characters in a zone name, including '\0' terminator
+  // Maximum number of characters in a zone name, including '\0' terminator.
   private static final int MAXNAME = 40;
 
-  // Zone name synonyms
+  // Zone name synonyms.
   private Map<String,String> links = new HashMap<String,String>();
 
-  // File starting bytes by zone name
-  private Map<String,Integer> starts = new HashMap<String,Integer>();
+  // File offsets by zone name.
+  private Map<String,Integer> offsets = new HashMap<String,Integer>();
 
-  // File lengths by zone name
+  // File lengths by zone name.
   private Map<String,Integer> lengths = new HashMap<String,Integer>();
 
-  // Raw GMT offsets by zone name
-  private Map<String,Integer> offsets = new HashMap<String,Integer>();
-  private int start = 0;
-
-  // Concatenate the contents of 'inFile' onto 'out'
-  // and return the contents as a byte array.
-  private static byte[] copyFile(File inFile, OutputStream out) throws Exception {
+  // Concatenate the contents of 'inFile' onto 'out'.
+  private static void copyFile(File inFile, OutputStream out) throws Exception {
     byte[] ret = new byte[0];
 
     InputStream in = new FileInputStream(inFile);
@@ -104,14 +55,14 @@ public class ZoneCompactor {
       ret = nret;
     }
     out.flush();
-    return ret;
   }
 
   public ZoneCompactor(String setupFile, String dataDirectory, String zoneTabFile, String outputDirectory, String version) throws Exception {
-    // Read the setup file, and concatenate all the data.
+    // Read the setup file and concatenate all the data.
     ByteArrayOutputStream allData = new ByteArrayOutputStream();
     BufferedReader reader = new BufferedReader(new FileReader(setupFile));
     String s;
+    int offset = 0;
     while ((s = reader.readLine()) != null) {
       s = s.trim();
       if (s.startsWith("Link")) {
@@ -125,16 +76,11 @@ public class ZoneCompactor {
         if (link == null) {
           File sourceFile = new File(dataDirectory, s);
           long length = sourceFile.length();
-          starts.put(s, start);
+          offsets.put(s, offset);
           lengths.put(s, (int) length);
 
-          start += length;
-          byte[] data = copyFile(sourceFile, allData);
-
-          BufferIterator it = new ByteArrayBufferIteratorBE(data);
-          TimeZone tz = ZoneInfo.makeTimeZone(s, it);
-          int gmtOffset = tz.getRawOffset();
-          offsets.put(s, gmtOffset);
+          offset += length;
+          copyFile(sourceFile, allData);
         }
       }
     }
@@ -146,9 +92,8 @@ public class ZoneCompactor {
       String from = it.next();
       String to = links.get(from);
 
-      starts.put(from, starts.get(to));
-      lengths.put(from, lengths.get(to));
       offsets.put(from, offsets.get(to));
+      lengths.put(from, lengths.get(to));
     }
 
     // Create/truncate the destination file.
@@ -178,7 +123,7 @@ public class ZoneCompactor {
 
     // Write the index.
     ArrayList<String> sortedOlsonIds = new ArrayList<String>();
-    sortedOlsonIds.addAll(starts.keySet());
+    sortedOlsonIds.addAll(offsets.keySet());
     Collections.sort(sortedOlsonIds);
     it = sortedOlsonIds.iterator();
     while (it.hasNext()) {
@@ -188,9 +133,9 @@ public class ZoneCompactor {
       }
 
       f.write(toAscii(new byte[MAXNAME], zoneName));
-      f.writeInt(starts.get(zoneName));
-      f.writeInt(lengths.get(zoneName));
       f.writeInt(offsets.get(zoneName));
+      f.writeInt(lengths.get(zoneName));
+      f.writeInt(0); // Used to be raw GMT offset. No longer used.
     }
 
     int data_offset = (int) f.getFilePointer();
