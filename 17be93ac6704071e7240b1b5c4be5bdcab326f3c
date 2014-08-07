@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f63f63e6_d2dbd236",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-07T00:09:47Z",
+      "side": 1,
+      "message": "This is not used",
+      "range": {
+        "startLine": 83,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 23
+      },
+      "revId": "17be93ac6704071e7240b1b5c4be5bdcab326f3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76029343_d139045a",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-07T00:09:47Z",
+      "side": 1,
+      "message": "ASSERT_TRUE(handle !\u003d nullptr)\n.. foo_ptr, foo_library_ptr",
+      "revId": "17be93ac6704071e7240b1b5c4be5bdcab326f3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
