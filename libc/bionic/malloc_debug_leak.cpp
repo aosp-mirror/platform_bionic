@@ -47,6 +47,7 @@
 #include <unwind.h>
 
 #include "debug_stacktrace.h"
+#include "malloc_debug_backtrace.h"
 #include "malloc_debug_common.h"
 #include "malloc_debug_disable.h"
 
@@ -311,7 +312,7 @@ extern "C" void* leak_malloc(size_t bytes) {
         ScopedPthreadMutexLocker locker(&g_hash_table->lock);
 
         uintptr_t backtrace[BACKTRACE_SIZE];
-        size_t numEntries = get_backtrace(backtrace, BACKTRACE_SIZE);
+        size_t numEntries = GET_BACKTRACE(backtrace, BACKTRACE_SIZE);
 
         AllocationEntry* header = reinterpret_cast<AllocationEntry*>(base);
         header->entry = record_backtrace(backtrace, numEntries, bytes);
