@@ -57,11 +57,7 @@ ENTRY(sigsetjmp)
 
 	pushq	%rdi
 	xorq	%rdi,%rdi
-#ifdef __PIC__
 	call	PIC_PLT(sigblock)
-#else
-	call	sigblock
-#endif
 	popq	%rdi
 	movq	%rax,(_JB_SIGMASK * 8)(%rdi)
 
@@ -86,11 +82,7 @@ ENTRY(siglongjmp)
 	jz      2f
 
 	movq	(_JB_SIGMASK * 8)(%rdi),%rdi
-#ifdef __PIC__
 	call	PIC_PLT(sigsetmask)
-#else
-	call	sigsetmask
-#endif
 2:	popq	%rax
 	movq	(_JB_RBX * 8)(%r12),%rbx
 	movq	(_JB_RBP * 8)(%r12),%rbp
