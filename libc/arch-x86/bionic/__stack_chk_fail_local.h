@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
 
 /*
    __stack_chk_fail routine is runtime part of stack protector compiler
@@ -48,13 +49,9 @@
 */
 
 #ifdef __i386__
-#ifdef __PIC__
 extern void __stack_chk_fail();
 
-__attribute__ ((visibility ("hidden")))
-void __stack_chk_fail_local()
-{
+__LIBC_HIDDEN__ void __stack_chk_fail_local() {
   __stack_chk_fail();
 }
-#endif
 #endif
