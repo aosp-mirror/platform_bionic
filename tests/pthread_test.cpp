@@ -400,27 +400,36 @@ TEST(pthread, pthread_detach__no_such_thread) {
 }
 
 TEST(pthread, pthread_detach__leak) {
-  size_t initial_bytes = mallinfo().uordblks;
+  size_t initial_bytes = 0;
+  // Run this loop more than once since the first loop causes some memory
+  // to be allocated permenantly. Run an extra loop to help catch any subtle
+  // memory leaks.
+  for (size_t loop = 0; loop < 3; loop++) {
+    // Set the initial bytes on the second loop since the memory in use
+    // should have stabilized.
+    if (loop == 1) {
+      initial_bytes = mallinfo().uordblks;
+    }
 
-  pthread_attr_t attr;
-  ASSERT_EQ(0, pthread_attr_init(&attr));
-  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
+    pthread_attr_t attr;
+    ASSERT_EQ(0, pthread_attr_init(&attr));
+    ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
 
-  std::vector<pthread_t> threads;
-  for (size_t i = 0; i < 32; ++i) {
-    pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, NULL));
-    threads.push_back(t);
-  }
+    std::vector<pthread_t> threads;
+    for (size_t i = 0; i < 32; ++i) {
+      pthread_t t;
+      ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, NULL));
+      threads.push_back(t);
+    }
 
-  sleep(1);
+    sleep(1);
 
-  for (size_t i = 0; i < 32; ++i) {
-    ASSERT_EQ(0, pthread_detach(threads[i])) << i;
+    for (size_t i = 0; i < 32; ++i) {
+      ASSERT_EQ(0, pthread_detach(threads[i])) << i;
+    }
   }
 
   size_t final_bytes = mallinfo().uordblks;
-
   int leaked_bytes = (final_bytes - initial_bytes);
 
   // User code (like this test) doesn't know how large pthread_internal_t is.
