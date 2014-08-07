@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f63f63e6_e6b72f10",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-08-07T09:29:37Z",
+      "side": 0,
+      "message": "why the following lines need to be deleted?",
+      "revId": "7cd83995d23b6ed5a43a41434c57bad6514f2459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
