@@ -107,7 +107,7 @@ ENTRY(_longjmp)
 
 	/* validation failed, die die die. */
 botch:
-	bl	PIC_SYM(longjmperror, PLT)
-	bl	PIC_SYM(abort, PLT)
+	bl	longjmperror
+	bl	abort
 	b	. - 8		/* Cannot get here */
 END(_longjmp)

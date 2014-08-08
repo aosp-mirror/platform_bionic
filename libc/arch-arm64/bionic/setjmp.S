@@ -45,7 +45,7 @@ ENTRY(setjmp)
     stp     x0, x30, [sp, #-16]!
 
     mov     x0, xzr
-    bl      PIC_SYM(sigblock, PLT)
+    bl      sigblock
     mov     w1, w0
 
     ldp     x0, x30, [sp], #16
@@ -117,7 +117,7 @@ ENTRY(longjmp)
 
     /* validation failed, die die die */
 .L_fail:
-    bl      PIC_SYM(longjmperror, PLT)
-    bl      PIC_SYM(abort, PLT)
+    bl      longjmperror
+    bl      abort
     b       . - 8       /* Cannot get here */
 END(longjmp)
