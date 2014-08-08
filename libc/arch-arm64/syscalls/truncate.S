@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(truncate)
     mov     x8, __NR_truncate
     svc     #0

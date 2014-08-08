@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(capset)
     movl    $__NR_capset, %eax
     syscall

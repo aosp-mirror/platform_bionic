@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__accept4)
     mov     x8, __NR_accept4
     svc     #0

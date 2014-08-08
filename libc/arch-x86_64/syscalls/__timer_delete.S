@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__timer_delete)
     movl    $__NR_timer_delete, %eax
     syscall

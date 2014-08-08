@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(flistxattr)
     mov     x8, __NR_flistxattr
     svc     #0

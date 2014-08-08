@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setpriority)
     mov     x8, __NR_setpriority
     svc     #0

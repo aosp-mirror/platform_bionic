@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fchmodat)
     movq    %rcx, %r10
     movl    $__NR_fchmodat, %eax

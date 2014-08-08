@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_get_priority_max)
     mov     x8, __NR_sched_get_priority_max
     svc     #0

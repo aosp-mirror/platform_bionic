@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(epoll_ctl)
     .set noreorder
     .cpload t9

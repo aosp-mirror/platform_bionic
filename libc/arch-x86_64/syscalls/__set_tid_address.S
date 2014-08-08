@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__set_tid_address)
     movl    $__NR_set_tid_address, %eax
     syscall

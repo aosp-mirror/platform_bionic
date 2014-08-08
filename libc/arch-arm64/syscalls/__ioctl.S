@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__ioctl)
     mov     x8, __NR_ioctl
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getsid)
     mov     x8, __NR_getsid
     svc     #0

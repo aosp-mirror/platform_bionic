@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(inotify_add_watch)
     mov     x8, __NR_inotify_add_watch
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(munlock)
     mov     x8, __NR_munlock
     svc     #0

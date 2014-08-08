@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_getparam)
     movl    $__NR_sched_getparam, %eax
     syscall

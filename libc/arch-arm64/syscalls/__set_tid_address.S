@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__set_tid_address)
     mov     x8, __NR_set_tid_address
     svc     #0

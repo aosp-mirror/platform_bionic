@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(madvise)
     movl    $__NR_madvise, %eax
     syscall

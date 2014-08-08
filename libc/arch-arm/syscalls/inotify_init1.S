@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(inotify_init1)
     mov     ip, r7
     ldr     r7, =__NR_inotify_init1

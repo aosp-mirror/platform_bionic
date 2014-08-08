@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(tgkill)
     mov     x8, __NR_tgkill
     svc     #0

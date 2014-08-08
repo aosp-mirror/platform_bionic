@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setgid)
     movl    $__NR_setgid, %eax
     syscall

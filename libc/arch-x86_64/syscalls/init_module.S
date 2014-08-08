@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(init_module)
     movl    $__NR_init_module, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(dup3)
     mov     x8, __NR_dup3
     svc     #0

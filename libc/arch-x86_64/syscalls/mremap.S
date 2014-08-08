@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(mremap)
     movq    %rcx, %r10
     movl    $__NR_mremap, %eax

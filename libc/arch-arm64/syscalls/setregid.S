@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setregid)
     mov     x8, __NR_setregid
     svc     #0
