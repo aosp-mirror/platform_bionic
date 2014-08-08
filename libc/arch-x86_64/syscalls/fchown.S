@@ -9,7 +9,7 @@ ENTRY(fchown)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
 1:
     ret
 END(fchown)

@@ -38,7 +38,7 @@ ENTRY(vfork)
   jb      1f
   negl    %eax
   pushl   %eax
-  call    __set_errno
+  call    PIC_PLT(__set_errno)
 1:
   jmp     *%ecx  // Jump to the stored return address.
 END(vfork)
