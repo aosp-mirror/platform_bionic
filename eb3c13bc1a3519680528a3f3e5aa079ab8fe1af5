@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6684304_3ebe4dc1",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-08T02:35:47Z",
+      "side": 1,
+      "message": "Really this is only for one exemption to the naming. Since only one name is exempted, it\u0027s better to use the exact name. If we need to add more, then we can add create an exemption list.",
+      "parentUuid": "f6684304_1bef2363",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6684304_fb3ce74b",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-05T20:34:31Z",
       "side": 1,
       "message": ";?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6dbe336_c60cd3d0",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-08T02:35:47Z",
+      "side": 1,
+      "message": "I actually moved this back to the top and got rid of the \u0027/\u0027 because the code is really bad about how it handles directories. I bit the bullet and fixed the directory handling code.",
+      "parentUuid": "f6684304_fb3ce74b",
       "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "360c9b77_fd1a0a88",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-08T02:35:47Z",
+      "side": 1,
+      "message": "This is back to the original.",
+      "parentUuid": "16431782_38165925",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d64c1fb5_16f08cfd",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-08-05T20:34:31Z",
       "side": 1,
       "message": "or atexit.register(shutil.rmtree, bionic_temp) ?",
+      "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6684304_3ea76dad",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-08T02:35:47Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s better than this. Changed to this.",
+      "parentUuid": "d64c1fb5_16f08cfd",
       "revId": "eb3c13bc1a3519680528a3f3e5aa079ab8fe1af5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
