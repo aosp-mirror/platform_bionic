@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__getdents64)
     movl    $__NR_getdents64, %eax
     syscall

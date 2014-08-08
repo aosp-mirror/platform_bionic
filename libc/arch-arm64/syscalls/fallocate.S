@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fallocate)
     mov     x8, __NR_fallocate
     svc     #0

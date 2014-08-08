@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__signalfd4)
     movq    %rcx, %r10
     movl    $__NR_signalfd4, %eax

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(ftruncate)
     movl    $__NR_ftruncate, %eax
     syscall

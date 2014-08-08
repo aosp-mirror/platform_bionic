@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getsockname)
     movl    $__NR_getsockname, %eax
     syscall

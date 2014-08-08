@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(unlinkat)
     movl    $__NR_unlinkat, %eax
     syscall

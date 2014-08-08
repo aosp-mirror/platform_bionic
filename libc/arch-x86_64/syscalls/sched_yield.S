@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_yield)
     movl    $__NR_sched_yield, %eax
     syscall

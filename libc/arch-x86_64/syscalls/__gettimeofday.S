@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__gettimeofday)
     movl    $__NR_gettimeofday, %eax
     syscall

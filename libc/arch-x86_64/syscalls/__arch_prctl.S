@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__arch_prctl)
     movl    $__NR_arch_prctl, %eax
     syscall

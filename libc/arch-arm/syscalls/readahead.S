@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(readahead)
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}

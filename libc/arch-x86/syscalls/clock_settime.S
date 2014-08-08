@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(clock_settime)
     pushl   %ebx
     .cfi_def_cfa_offset 8

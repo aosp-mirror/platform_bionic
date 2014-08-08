@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__clock_gettime)
     movl    $__NR_clock_gettime, %eax
     syscall

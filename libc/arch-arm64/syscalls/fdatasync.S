@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fdatasync)
     mov     x8, __NR_fdatasync
     svc     #0

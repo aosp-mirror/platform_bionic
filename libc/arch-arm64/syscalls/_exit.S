@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(_exit)
     mov     x8, __NR_exit_group
     svc     #0

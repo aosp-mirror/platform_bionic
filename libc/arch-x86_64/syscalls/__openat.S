@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__openat)
     movq    %rcx, %r10
     movl    $__NR_openat, %eax

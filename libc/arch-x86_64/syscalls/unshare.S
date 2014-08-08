@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(unshare)
     movl    $__NR_unshare, %eax
     syscall

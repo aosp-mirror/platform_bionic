@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(flistxattr)
     movl    $__NR_flistxattr, %eax
     syscall

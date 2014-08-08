@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(pread64)
     movq    %rcx, %r10
     movl    $__NR_pread64, %eax
