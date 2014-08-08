@@ -17,7 +17,7 @@ ENTRY(inotify_rm_watch)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    PIC_PLT(__set_errno)
     addl    $4, %esp
 1:
     popl    %ecx
