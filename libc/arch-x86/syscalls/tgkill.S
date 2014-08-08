@@ -21,7 +21,7 @@ ENTRY(tgkill)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    PIC_PLT(__set_errno)
+    call    __set_errno
     addl    $4, %esp
 1:
     popl    %edx
