@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sendfile64)
     mov     ip, r7
     ldr     r7, =__NR_sendfile64

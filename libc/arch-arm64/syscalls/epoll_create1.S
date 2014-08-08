@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(epoll_create1)
     mov     x8, __NR_epoll_create1
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__sched_getaffinity)
     movl    $__NR_sched_getaffinity, %eax
     syscall

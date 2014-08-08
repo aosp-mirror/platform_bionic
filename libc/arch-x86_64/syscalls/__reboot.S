@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__reboot)
     movq    %rcx, %r10
     movl    $__NR_reboot, %eax

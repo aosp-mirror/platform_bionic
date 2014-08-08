@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getuid)
     movl    $__NR_getuid, %eax
     syscall

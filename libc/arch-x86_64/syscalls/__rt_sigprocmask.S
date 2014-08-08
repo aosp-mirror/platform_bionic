@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__rt_sigprocmask)
     movq    %rcx, %r10
     movl    $__NR_rt_sigprocmask, %eax

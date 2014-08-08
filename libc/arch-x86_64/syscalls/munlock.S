@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(munlock)
     movl    $__NR_munlock, %eax
     syscall

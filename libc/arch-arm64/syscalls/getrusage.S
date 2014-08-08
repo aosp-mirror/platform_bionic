@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getrusage)
     mov     x8, __NR_getrusage
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getppid)
     mov     x8, __NR_getppid
     svc     #0

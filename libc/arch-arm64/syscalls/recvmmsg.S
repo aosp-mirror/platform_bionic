@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(recvmmsg)
     mov     x8, __NR_recvmmsg
     svc     #0

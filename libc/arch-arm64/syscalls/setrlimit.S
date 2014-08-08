@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setrlimit)
     mov     x8, __NR_setrlimit
     svc     #0
