@@ -9,7 +9,7 @@ ENTRY(sched_setparam)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    PIC_PLT(__set_errno)
+    call    __set_errno
 1:
     ret
 END(sched_setparam)
