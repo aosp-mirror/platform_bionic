@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(listxattr)
     mov     x8, __NR_listxattr
     svc     #0

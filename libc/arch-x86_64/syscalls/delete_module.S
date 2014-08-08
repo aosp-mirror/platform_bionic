@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(delete_module)
     movl    $__NR_delete_module, %eax
     syscall

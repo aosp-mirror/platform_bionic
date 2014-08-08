@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(pipe2)
     mov     x8, __NR_pipe2
     svc     #0

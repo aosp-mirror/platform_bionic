@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__rt_sigsuspend)
     mov     x8, __NR_rt_sigsuspend
     svc     #0

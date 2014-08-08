@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__waitid)
     mov     x8, __NR_waitid
     svc     #0

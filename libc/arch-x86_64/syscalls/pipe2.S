@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(pipe2)
     movl    $__NR_pipe2, %eax
     syscall

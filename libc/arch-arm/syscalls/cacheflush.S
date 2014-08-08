@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(cacheflush)
     mov     ip, r7
     ldr     r7, =__ARM_NR_cacheflush

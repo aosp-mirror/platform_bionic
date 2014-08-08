@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getitimer)
     movl    $__NR_getitimer, %eax
     syscall

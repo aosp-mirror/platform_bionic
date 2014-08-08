@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getegid)
     movl    $__NR_getegid32, %eax
     int     $0x80

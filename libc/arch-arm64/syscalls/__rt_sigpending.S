@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__rt_sigpending)
     mov     x8, __NR_rt_sigpending
     svc     #0

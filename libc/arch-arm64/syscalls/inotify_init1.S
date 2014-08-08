@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(inotify_init1)
     mov     x8, __NR_inotify_init1
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getresuid)
     movl    $__NR_getresuid, %eax
     syscall

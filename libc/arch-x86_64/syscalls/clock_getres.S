@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(clock_getres)
     movl    $__NR_clock_getres, %eax
     syscall

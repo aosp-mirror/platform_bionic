@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getgroups)
     movl    $__NR_getgroups, %eax
     syscall

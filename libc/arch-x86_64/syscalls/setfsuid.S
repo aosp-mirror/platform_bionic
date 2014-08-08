@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setfsuid)
     movl    $__NR_setfsuid, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(_exit)
     movl    $__NR_exit_group, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(umount2)
     mov     x8, __NR_umount2
     svc     #0
