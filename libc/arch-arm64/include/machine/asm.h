@@ -45,10 +45,4 @@
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type %function
 
-#if defined(__ELF__) && defined(PIC)
-#define PIC_SYM(x,y) x ## ( ## y ## )
-#else
-#define PIC_SYM(x,y) x
-#endif
-
 #endif /* _AARCH64_ASM_H_ */
