@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "360c9b77_817d5cf6",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 18
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-08T15:31:29Z",
+      "side": 1,
+      "message": "ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))",
+      "revId": "e30ece41c184181d2741fa29c240119cc464108e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
