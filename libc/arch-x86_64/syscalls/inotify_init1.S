@@ -9,7 +9,7 @@ ENTRY(inotify_init1)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    PIC_PLT(__set_errno)
+    call    __set_errno
 1:
     ret
 END(inotify_init1)

@@ -10,7 +10,7 @@ ENTRY(fallocate)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    PIC_PLT(__set_errno)
+    call    __set_errno
 1:
     ret
 END(fallocate)
