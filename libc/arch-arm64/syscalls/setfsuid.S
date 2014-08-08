@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setfsuid)
     mov     x8, __NR_setfsuid
     svc     #0

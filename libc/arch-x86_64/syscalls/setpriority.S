@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(setpriority)
     movl    $__NR_setpriority, %eax
     syscall

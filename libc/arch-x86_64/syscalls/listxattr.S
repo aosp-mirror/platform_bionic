@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(listxattr)
     movl    $__NR_listxattr, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(munmap)
     movl    $__NR_munmap, %eax
     syscall

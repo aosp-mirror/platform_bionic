@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(symlinkat)
     mov     x8, __NR_symlinkat
     svc     #0

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__rt_sigsuspend)
     movl    $__NR_rt_sigsuspend, %eax
     syscall

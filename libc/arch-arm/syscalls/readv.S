@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(readv)
     mov     ip, r7
     ldr     r7, =__NR_readv

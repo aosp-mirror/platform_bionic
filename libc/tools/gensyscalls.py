@@ -48,6 +48,8 @@ syscall_stub_header = "/* " + warning + " */\n" + \
 """
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(%(func)s)
 """
 

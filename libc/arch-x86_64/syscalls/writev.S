@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(writev)
     movl    $__NR_writev, %eax
     syscall

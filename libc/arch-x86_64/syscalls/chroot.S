@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(chroot)
     movl    $__NR_chroot, %eax
     syscall

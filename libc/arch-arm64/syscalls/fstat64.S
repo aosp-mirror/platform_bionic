@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fstat64)
     mov     x8, __NR_fstat
     svc     #0

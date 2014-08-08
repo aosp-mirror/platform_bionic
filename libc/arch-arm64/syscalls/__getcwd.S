@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__getcwd)
     mov     x8, __NR_getcwd
     svc     #0

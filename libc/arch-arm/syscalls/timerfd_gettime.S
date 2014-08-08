@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(timerfd_gettime)
     mov     ip, r7
     ldr     r7, =__NR_timerfd_gettime

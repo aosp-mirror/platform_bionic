@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_setscheduler)
     movl    $__NR_sched_setscheduler, %eax
     syscall

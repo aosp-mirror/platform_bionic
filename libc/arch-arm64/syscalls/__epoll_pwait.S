@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__epoll_pwait)
     mov     x8, __NR_epoll_pwait
     svc     #0

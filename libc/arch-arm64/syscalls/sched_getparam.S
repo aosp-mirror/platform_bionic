@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_getparam)
     mov     x8, __NR_sched_getparam
     svc     #0
