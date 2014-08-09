@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "567caff0_a8095bbe",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-09T01:44:29Z",
+      "side": 1,
+      "message": "because they\u0027re not in regular kernels, only android ones, and our uapi headers are from regular kernels. (and we\u0027re trying not to put non-standard Android stuff in the bionic headers either.)\n\nwe could put these somewhere in private/ though. (or an inline __set_vma_anon_name() if we want to stop copying the prctl call around too...)",
+      "revId": "e032e354f2048438df49753b848d8196f71be688",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
