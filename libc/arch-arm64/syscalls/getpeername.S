@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(getpeername)
     mov     x8, __NR_getpeername
     svc     #0

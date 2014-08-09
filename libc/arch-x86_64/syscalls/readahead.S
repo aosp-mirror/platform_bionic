@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(readahead)
     movl    $__NR_readahead, %eax
     syscall

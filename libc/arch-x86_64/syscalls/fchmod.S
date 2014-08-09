@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fchmod)
     movl    $__NR_fchmod, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(splice)
     movq    %rcx, %r10
     movl    $__NR_splice, %eax

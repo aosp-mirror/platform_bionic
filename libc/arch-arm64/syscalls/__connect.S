@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__connect)
     mov     x8, __NR_connect
     svc     #0

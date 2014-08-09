@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(fgetxattr)
     mov     x8, __NR_fgetxattr
     svc     #0

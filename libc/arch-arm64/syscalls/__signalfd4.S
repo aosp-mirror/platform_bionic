@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__signalfd4)
     mov     x8, __NR_signalfd4
     svc     #0

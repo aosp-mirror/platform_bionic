@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(mkdirat)
     movl    $__NR_mkdirat, %eax
     syscall

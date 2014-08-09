@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(socketpair)
     mov     x8, __NR_socketpair
     svc     #0

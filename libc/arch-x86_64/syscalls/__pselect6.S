@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__pselect6)
     movq    %rcx, %r10
     movl    $__NR_pselect6, %eax

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_yield)
     mov     x8, __NR_sched_yield
     svc     #0

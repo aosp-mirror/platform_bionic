@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sendmsg)
     movl    $__NR_sendmsg, %eax
     syscall

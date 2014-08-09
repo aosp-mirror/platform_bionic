@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sched_get_priority_min)
     movl    $__NR_sched_get_priority_min, %eax
     syscall

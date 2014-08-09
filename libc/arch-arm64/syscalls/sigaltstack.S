@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(sigaltstack)
     mov     x8, __NR_sigaltstack
     svc     #0

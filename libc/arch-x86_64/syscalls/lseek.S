@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(lseek)
     movl    $__NR_lseek, %eax
     syscall

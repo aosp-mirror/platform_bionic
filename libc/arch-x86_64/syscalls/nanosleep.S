@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(nanosleep)
     movl    $__NR_nanosleep, %eax
     syscall

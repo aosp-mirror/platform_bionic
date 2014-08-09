@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(timerfd_settime)
     .set noreorder
     .cpload t9

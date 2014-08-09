@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(klogctl)
     movl    $__NR_syslog, %eax
     syscall

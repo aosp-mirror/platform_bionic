@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(tgkill)
     movl    $__NR_tgkill, %eax
     syscall

@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(epoll_ctl)
     mov     ip, r7
     ldr     r7, =__NR_epoll_ctl

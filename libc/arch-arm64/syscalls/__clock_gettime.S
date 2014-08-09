@@ -2,6 +2,8 @@
 
 #include <private/bionic_asm.h>
 
+    .hidden __set_errno
+
 ENTRY(__clock_gettime)
     mov     x8, __NR_clock_gettime
     svc     #0
