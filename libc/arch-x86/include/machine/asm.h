@@ -39,10 +39,10 @@
 
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
-	call	1f;	\
-1:			\
+	call	666f;	\
+666:			\
 	popl	%ebx;	\
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-666b], %ebx
 #define PIC_EPILOGUE	\
 	popl	%ebx
 #define PIC_PLT(x)	x@PLT
