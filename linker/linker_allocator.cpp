@@ -18,6 +18,8 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include "private/bionic_prctl.h"
+
 struct LinkerAllocatorPage {
   LinkerAllocatorPage* next;
   uint8_t bytes[PAGE_SIZE-sizeof(LinkerAllocatorPage*)];
@@ -96,6 +98,9 @@ void LinkerBlockAllocator::create_new_page() {
   if (page == MAP_FAILED) {
     abort(); // oom
   }
+
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, PAGE_SIZE, "linker_alloc");
+
   memset(page, 0, PAGE_SIZE);
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
