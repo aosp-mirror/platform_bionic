@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1676b712_09f0ad73",
+        "filename": "libc/private/bionic_prctl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-11T16:09:11Z",
+      "side": 1,
+      "message": "blank line after comment.",
+      "revId": "5b3a0539da7d700968eb7fd3e5de9cd4dbb1698e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1676b712_29f56964",
+        "filename": "libc/private/bionic_prctl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-11T16:09:11Z",
+      "side": 1,
+      "message": "// This is only supported by Android kernels, so it\u0027s not in the uapi headers.",
+      "revId": "5b3a0539da7d700968eb7fd3e5de9cd4dbb1698e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
