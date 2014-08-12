@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76c53378_0811cf2c",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-12T20:07:07Z",
+      "side": 1,
+      "message": "this list should be sorted.",
+      "revId": "2938ebc2ef2cc9cf56e8dbb619f9064eb978c036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16d4f72c_4509f44a",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-12T20:07:07Z",
+      "side": 1,
+      "message": "this seems wrong.\n\ndimitry: can you comment on the dl side of things?",
+      "revId": "2938ebc2ef2cc9cf56e8dbb619f9064eb978c036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56baefee_a1dfa49c",
+        "filename": "tests/euid_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-12T20:07:07Z",
+      "side": 1,
+      "message": "presumably this test doesn\u0027t pass unless run as root, which makes it useless?",
+      "revId": "2938ebc2ef2cc9cf56e8dbb619f9064eb978c036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
