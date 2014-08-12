@@ -69,6 +69,24 @@
       "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6ca4b8f_4d335d2c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-12T01:39:21Z",
+      "side": 1,
+      "message": "Correcting myself, uint32_t is mentioned as optional in C (though not explicitly, hence my search failed), but there is no atomic_uint32_t.  The conclusion is till correct, I think.",
+      "parentUuid": "d6133f9f_e7639c67",
+      "revId": "01f2263fa7584435f95e5d15bfd9fc47b63c5b0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
