@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "56166fdd_fb7a0b93",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-12T20:39:11Z",
+      "side": 1,
+      "message": "this does not seem to be useful, we already have libc.so in dt_needed, does libtest_relocs have any special relocs?",
+      "parentUuid": "16d4f72c_4509f44a",
+      "revId": "2938ebc2ef2cc9cf56e8dbb619f9064eb978c036",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56baefee_a1dfa49c",
         "filename": "tests/euid_test.cpp",
         "patchSetId": 1
