@@ -100,6 +100,15 @@ class LinkedList {
     }
   }
 
+  bool contains(const T* el) {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element != nullptr && e->element == el) {
+        return true;
+      }
+    }
+    return false;
+  }
+
  private:
   LinkedListEntry<T>* head_;
   LinkedListEntry<T>* tail_;
