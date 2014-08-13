@@ -129,8 +129,7 @@ TEST(string, strsignal_concurrent) {
   ASSERT_STREQ("Unknown signal 1001", strsignal1001);
 }
 
-// TODO: where did these numbers come from?
-#define POS_ITER    10
+// TODO: where did this number come from?
 #define ITER        500
 
 // For every length we want to test, vary and change alignment
@@ -139,8 +138,9 @@ TEST(string, strsignal_concurrent) {
 // These tests contributed by Intel Corporation.
 // TODO: make these tests more intention-revealing and less random.
 template<class Character>
-struct StringTestState {
-  StringTestState(size_t MAX_LEN) : MAX_LEN(MAX_LEN) {
+class StringTestState {
+ public:
+  StringTestState(size_t MAX_LEN) : MAX_LEN(MAX_LEN), align1_index_(0), align2_index_(0) {
     int max_alignment = 64;
 
     // TODO: fix the tests to not sometimes use twice their specified "MAX_LEN".
@@ -159,15 +159,30 @@ struct StringTestState {
     free(glob_ptr2);
   }
 
-  void NewIteration() {
-    int alignments[] = { 24, 32, 16, 48, 1, 2, 3, 0, 5, 11 };
-    int usable_alignments = 10;
-    int align1 = alignments[random() % (usable_alignments - 1)];
-    int align2 = alignments[random() % (usable_alignments - 1)];
+  void BeginIterations() {
+    align1_index_ = 0;
+    align2_index_ = 0;
 
-    ptr = glob_ptr + align1;
-    ptr1 = glob_ptr1 + align1;
-    ptr2 = glob_ptr2 + align2;
+    ResetPointers();
+  }
+
+  bool HasNextIteration() {
+    return (align1_index_ != (alignments_size - 1) || align2_index_ != (alignments_size - 1));
+  }
+
+  void NextIteration() {
+    if (align1_index_ == (alignments_size - 1) && align2_index_ == (alignments_size - 1)) {
+      return;
+    }
+
+    if (align1_index_ == (alignments_size - 1)) {
+      align1_index_ = 0;
+      align2_index_++;
+    } else {
+      align1_index_++;
+    }
+
+    ResetPointers();
   }
 
   const size_t MAX_LEN;
@@ -176,7 +191,10 @@ struct StringTestState {
   int len[ITER + 1];
 
  private:
+  static size_t alignments[];
+  static size_t alignments_size;
   Character *glob_ptr, *glob_ptr1, *glob_ptr2;
+  size_t align1_index_, align2_index_;
 
   // Calculate input lengths and fill state.len with them.
   // Test small lengths with more density than big ones. Manually push
@@ -193,19 +211,33 @@ struct StringTestState {
     }
     len[n++] = MAX_LEN;
   }
+
+  void ResetPointers() {
+    if (align1_index_ == alignments_size || align2_index_ == alignments_size) {
+      ptr = ptr1 = ptr2 = nullptr;
+    } else {
+      ptr = glob_ptr + alignments[align1_index_];
+      ptr1 = glob_ptr1 + alignments[align1_index_];
+      ptr2 = glob_ptr2 + alignments[align2_index_];
+    }
+  }
 };
+
+template<class Character>
+size_t StringTestState<Character>::alignments[] = { 24, 32, 16, 48, 0, 1, 2, 3, 4, 5, 6, 7, 11 };
+
+template<class Character>
+size_t StringTestState<Character>::alignments_size = sizeof(alignments)/sizeof(size_t);
 
 TEST(string, strcat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, 2 * state.MAX_LEN);
 
-      memset(state.ptr1, random() & 255, state.len[i]);
+      memset(state.ptr1, 'L', state.len[i]);
       state.ptr1[random() % state.len[i]] = '\0';
       state.ptr1[state.len[i] - 1] = '\0';
 
@@ -378,13 +410,11 @@ TEST(string, strchr_multiple) {
 }
 
 TEST(string, strchr) {
-  int seek_char = random() & 255;
+  int seek_char = 'R';
 
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       if (~seek_char > 0) {
         memset(state.ptr1, ~seek_char, state.len[i]);
       } else {
@@ -413,9 +443,7 @@ TEST(string, strchr) {
 TEST(string, strcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, 'v', state.MAX_LEN);
       memset(state.ptr2, 'n', state.MAX_LEN);
       state.ptr1[state.len[i] - 1] = '\0';
@@ -449,9 +477,7 @@ TEST(string, strcmp) {
 
 TEST(string, stpcpy) {
   StringTestState<char> state(SMALL);
-  for (size_t j = 0; j < POS_ITER; j++) {
-    state.NewIteration();
-
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
 
     memset(state.ptr1, '\2', pos);
@@ -475,9 +501,7 @@ TEST(string, stpcpy) {
 
 TEST(string, strcpy) {
   StringTestState<char> state(SMALL);
-  for (size_t j = 0; j < POS_ITER; j++) {
-    state.NewIteration();
-
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
 
     memset(state.ptr1, '\2', pos);
@@ -503,9 +527,7 @@ TEST(string, strlcat) {
 #if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN + state.len[i]);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]);
@@ -533,13 +555,8 @@ TEST(string, strlcat) {
 TEST(string, strlcpy) {
 #if defined(__BIONIC__)
   StringTestState<char> state(SMALL);
-  for (size_t j = 0; j < POS_ITER; j++) {
-    state.NewIteration();
-
-    int rand = random() & 255;
-    if (rand < 1) {
-      rand = 1;
-    }
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    int rand = 'O';
     memset(state.ptr1, rand, state.MAX_LEN);
 
     size_t pos = random() % state.MAX_LEN;
@@ -548,7 +565,7 @@ TEST(string, strlcpy) {
     }
     memcpy(state.ptr, state.ptr1, state.MAX_LEN);
 
-    memset(state.ptr2, random() & 255, state.MAX_LEN);
+    memset(state.ptr2, 'I', state.MAX_LEN);
     memcpy(state.ptr + state.MAX_LEN, state.ptr2, state.MAX_LEN);
 
     if (pos > state.MAX_LEN - 1) {
@@ -570,14 +587,12 @@ TEST(string, strlcpy) {
 TEST(string, strncat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, 2 * state.MAX_LEN);
 
-      memset(state.ptr1, random() & 255, state.len[i]);
+      memset(state.ptr1, 'I', state.len[i]);
       state.ptr1[random() % state.len[i]] = '\0';
       state.ptr1[state.len[i] - 1] = '\0';
 
@@ -596,9 +611,7 @@ TEST(string, strncat) {
 TEST(string, strncmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, 'v', state.MAX_LEN);
       memset(state.ptr2, 'n', state.MAX_LEN);
       state.ptr1[state.len[i] - 1] = '\0';
@@ -632,12 +645,8 @@ TEST(string, strncmp) {
 
 TEST(string, stpncpy) {
   StringTestState<char> state(SMALL);
-  for (size_t j = 0; j < ITER; j++) {
-    state.NewIteration();
-
-    // Choose a random value to fill the string, except \0 (string terminator),
-    // or \1 (guarantees it's different from anything in ptr2).
-    memset(state.ptr1, (random() % 254) + 2, state.MAX_LEN);
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    memset(state.ptr1, 'J', state.MAX_LEN);
     // Choose a random size for our src buffer.
     size_t ptr1_len = random() % state.MAX_LEN;
     state.ptr1[ptr1_len] = '\0';
@@ -671,12 +680,10 @@ TEST(string, stpncpy) {
 
 TEST(string, strncpy) {
   StringTestState<char> state(SMALL);
-  for (size_t j = 0; j < ITER; j++) {
-    state.NewIteration();
-
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     // Choose a random value to fill the string, except \0 (string terminator),
     // or \1 (guarantees it's different from anything in ptr2).
-    memset(state.ptr1, (random() % 254) + 2, state.MAX_LEN);
+    memset(state.ptr1, 'K', state.MAX_LEN);
     // Choose a random size for our src buffer.
     size_t ptr1_len = random() % state.MAX_LEN;
     state.ptr1[ptr1_len] = '\0';
@@ -709,12 +716,10 @@ TEST(string, strncpy) {
 }
 
 TEST(string, strrchr) {
-  int seek_char = random() & 255;
+  int seek_char = 'M';
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       if (~seek_char > 0) {
         memset(state.ptr1, ~seek_char, state.len[i]);
       } else {
@@ -741,12 +746,10 @@ TEST(string, strrchr) {
 }
 
 TEST(string, memchr) {
-  int seek_char = random() & 255;
+  int seek_char = 'N';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
       int pos = random() % state.MAX_LEN;
@@ -772,12 +775,10 @@ TEST(string, memchr_zero) {
 }
 
 TEST(string, memrchr) {
-  int seek_char = random() & 255;
+  int seek_char = 'P';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
       int pos = random() % state.MAX_LEN;
@@ -797,11 +798,9 @@ TEST(string, memrchr) {
 TEST(string, memcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
-      int c1 = random() & 0xff;
-      int c2 = random() & 0xff;
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+      int c1 = 'A';
+      int c2 = 'N';
       memset(state.ptr1, c1, state.MAX_LEN);
       memset(state.ptr2, c1, state.MAX_LEN);
 
@@ -820,9 +819,7 @@ TEST(string, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);
 
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       long long mask = ((long long) 1 << 8 * sizeof(wchar_t)) - 1;
       int c1 = rand() & mask;
       int c2 = rand() & mask;
@@ -842,11 +839,9 @@ TEST(string, wmemcmp) {
 
 TEST(string, memcpy) {
   StringTestState<char> state(LARGE);
-  int rand = random() & 255;
+  int rand = 4;
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       size_t pos = random() % (state.MAX_LEN - state.len[i]);
 
       memset(state.ptr1, rand, state.len[i]);
@@ -864,11 +859,9 @@ TEST(string, memcpy) {
 
 TEST(string, memset) {
   StringTestState<char> state(LARGE);
-  char ch = random () & 255;
+  char ch = 'P';
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, ~ch, state.MAX_LEN);
       memcpy(state.ptr2, state.ptr1, state.MAX_LEN);
 
@@ -887,14 +880,12 @@ TEST(string, memset) {
 TEST(string, memmove) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
-      memset(state.ptr1, random() & 255, 2 * state.MAX_LEN);
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+      memset(state.ptr1, 'Q', 2 * state.MAX_LEN);
 
       size_t pos = random() % (state.MAX_LEN - state.len[i]);
 
-      memset(state.ptr1, random() & 255, state.len[i]);
+      memset(state.ptr1, 'R', state.len[i]);
       memcpy(state.ptr2, state.ptr1, 2 * state.MAX_LEN);
       memcpy(state.ptr, state.ptr1, state.len[i]);
       memcpy(state.ptr1 + pos, state.ptr, state.len[i]);
@@ -920,8 +911,8 @@ TEST(string, memmove_cache_size) {
 
   for (int i = 0; i < 5; i++) {
     char* ptr2 = glob_ptr2 + alignments[i];
-    memset(ptr1, random() & 255, 2 * len);
-    memset(ptr1, random() & 255, len);
+    memset(ptr1, 'S', 2 * len);
+    memset(ptr1, 'T', len);
     memcpy(ptr2, ptr1, 2 * len);
     memcpy(ptr, ptr1, len);
     memcpy(ptr1 + pos, ptr, len);
@@ -987,11 +978,9 @@ TEST(string, memmove_check) {
 TEST(string, bcopy) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n; i++) {
-    for (size_t j = 0; j < POS_ITER; j++) {
-      state.NewIteration();
-
-      memset(state.ptr1, random() & 255, state.MAX_LEN);
-      memset(state.ptr1 + state.MAX_LEN, random() & 255, state.MAX_LEN);
+    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+      memset(state.ptr1, '4', state.MAX_LEN);
+      memset(state.ptr1 + state.MAX_LEN, 'a', state.MAX_LEN);
       memcpy(state.ptr2, state.ptr1, 2 * state.MAX_LEN);
 
       size_t start = random() % (2 * state.MAX_LEN - state.len[i]);
@@ -1005,10 +994,8 @@ TEST(string, bcopy) {
 
 TEST(string, bzero) {
   StringTestState<char> state(LARGE);
-  for (size_t j = 0; j < ITER; j++) {
-    state.NewIteration();
-
-    memset(state.ptr1, random() & 255, state.MAX_LEN);
+  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    memset(state.ptr1, 'R', state.MAX_LEN);
 
     size_t start = random() % state.MAX_LEN;
     size_t end = start + random() % (state.MAX_LEN - start);
