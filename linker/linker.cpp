@@ -607,17 +607,24 @@ class SoinfoListAllocatorRW {
 // specified soinfo object and its dependencies in breadth first order.
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name, soinfo* caller) {
   LinkedList<soinfo, SoinfoListAllocatorRW> visit_list;
+  LinkedList<soinfo, SoinfoListAllocatorRW> visited;
   visit_list.push_back(si);
   soinfo* current_soinfo;
   while ((current_soinfo = visit_list.pop_front()) != nullptr) {
+    if (visited.contains(current_soinfo)) {
+      continue;
+    }
+
     ElfW(Sym)* result = soinfo_elf_lookup(current_soinfo, elfhash(name), name,
         caller == current_soinfo ? SymbolLookupScope::kAllowLocal : SymbolLookupScope::kExcludeLocal);
 
     if (result != nullptr) {
       *found = current_soinfo;
       visit_list.clear();
+      visited.clear();
       return result;
     }
+    visited.push_back(current_soinfo);
 
     current_soinfo->get_children().for_each([&](soinfo* child) {
       visit_list.push_back(child);
@@ -625,6 +632,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name, soi
   }
 
   visit_list.clear();
+  visited.clear();
   return nullptr;
 }
 
