@@ -25,29 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/cdefs.h>
-#include <sys/types.h>
+
 #include <netdb.h>
+
 #include "servent.h"
 
-struct servent *
-getservbyname(const char *name, const char *proto)
-{
-    res_static       rs = __res_get_static();
-
-    if (rs == NULL || proto == NULL || name == NULL) {
-        errno = EINVAL;
-        return NULL;
+struct servent* getservbyname(const char* name, const char* proto) {
+  res_static rs = __res_get_static();
+  rs->servent_ptr = NULL;
+  struct servent* s;
+  while ((s = getservent_r(rs)) != NULL) {
+    if (strcmp(s->s_name, name) == 0 && (proto == NULL || strcmp(s->s_proto, proto) == 0)) {
+      return s;
     }
-
-    rs->servent_ptr = NULL;
-    while (1) {
-        struct servent*  s = getservent_r(rs);
-        if (s == NULL)
-            break;
-        if ( !strcmp( s->s_name, name ) && !strcmp( s->s_proto, proto ) )
-            return s;
-    }
-
-    return NULL;
+  }
+  return NULL;
 }
