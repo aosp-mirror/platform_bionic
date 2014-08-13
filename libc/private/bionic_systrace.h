@@ -23,7 +23,7 @@
 //   ScopedTrace("Trace message");
 // The trace will end when the contructor goes out of scope.
 
-class ScopedTrace {
+class __LIBC_HIDDEN__ ScopedTrace {
  public:
   explicit ScopedTrace(const char* message);
   ~ScopedTrace();
