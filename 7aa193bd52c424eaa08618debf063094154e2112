@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "b64deb11_84d5a77e",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-13T16:21:23Z",
+      "side": 1,
+      "message": "remove_if sets elements to nullptr to avoid concurrent modification.",
+      "parentUuid": "b626cb4d_796eff3a",
+      "revId": "7aa193bd52c424eaa08618debf063094154e2112",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76861367_3706603d",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2014-08-13T16:17:23Z",
       "side": 1,
       "message": "why doesn\u0027t LinkedList have a destructor?",
+      "revId": "7aa193bd52c424eaa08618debf063094154e2112",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b67b2b36_7fdcb7f6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-13T16:21:23Z",
+      "side": 1,
+      "message": "Linker can\u0027t define d-tors for classes used for global vars at this point requires __cxa_atexit __dso_handle and co. I will look into this later.",
+      "parentUuid": "76861367_3706603d",
       "revId": "7aa193bd52c424eaa08618debf063094154e2112",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
