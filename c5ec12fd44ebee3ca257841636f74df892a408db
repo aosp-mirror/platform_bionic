@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b67b2b36_ea7542a5",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-13T22:30:47Z",
+      "side": 1,
+      "message": "for (",
+      "revId": "c5ec12fd44ebee3ca257841636f74df892a408db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
