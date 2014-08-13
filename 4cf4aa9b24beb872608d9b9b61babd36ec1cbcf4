@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f62cc32f_d8cab12e",
+        "filename": "libc/bionic/mmap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2014-08-13T08:17:31Z",
+      "side": 1,
+      "message": "I don\u0027t see the reason for this change. We *want* sign extension here. If someone passes a negative off_t, it will be rejected with EINVAL in mmap64.",
+      "revId": "4cf4aa9b24beb872608d9b9b61babd36ec1cbcf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
