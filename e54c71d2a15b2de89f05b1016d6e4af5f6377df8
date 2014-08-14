@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76e45351_e1f686ad",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-14T20:19:07Z",
+      "side": 1,
+      "message": "wait, what do they call theirs? since we\u0027ve only just added this we can still fix it.",
+      "revId": "e54c71d2a15b2de89f05b1016d6e4af5f6377df8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6540bb2_2c1e17c6",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-14T20:19:07Z",
+      "side": 1,
+      "message": "weren\u0027t we going to hide these?",
+      "revId": "e54c71d2a15b2de89f05b1016d6e4af5f6377df8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b64deb11_a2ac4622",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-14T20:19:07Z",
+      "side": 1,
+      "message": "these last two should probably go in macro_stuff.",
+      "revId": "e54c71d2a15b2de89f05b1016d6e4af5f6377df8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
