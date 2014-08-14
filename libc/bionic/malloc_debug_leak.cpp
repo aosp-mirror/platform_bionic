@@ -481,11 +481,15 @@ extern "C" size_t leak_malloc_usable_size(const void* mem) {
             return 0;
         }
 
+        // TODO: Temporary workaround to avoid a crash b/16874447.
+        return header->entry->size & ~SIZE_FLAG_MASK;
+#if 0
         size_t ret = g_malloc_dispatch->malloc_usable_size(header);
         if (ret != 0) {
             // The usable area starts at 'mem' and stops at 'header+ret'.
             return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
         }
+#endif
     }
     return 0;
 }
