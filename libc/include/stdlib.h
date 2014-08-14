@@ -161,8 +161,8 @@ extern int      mbtowc(wchar_t *, const char *, size_t);
 extern int	wctomb(char *, wchar_t);
 extern size_t	wcstombs(char *, const wchar_t *, size_t);
 
-extern size_t __mb_cur_max(void);
-#define MB_CUR_MAX __mb_cur_max()
+extern size_t __ctype_get_mb_cur_max(void);
+#define MB_CUR_MAX __ctype_get_mb_cur_max()
 
 __END_DECLS
 
