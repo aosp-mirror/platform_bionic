@@ -3,12 +3,18 @@
 import glob
 import os
 import re
-import string
 import subprocess
 import sys
 
+only_unwanted = False
+if len(sys.argv) > 1:
+  if sys.argv[1] in ('-u', '--unwanted'):
+    only_unwanted = True
+
 toolchain = os.environ['ANDROID_TOOLCHAIN']
 arch = re.sub(r'.*/linux-x86/([^/]+)/.*', r'\1', toolchain)
+if arch == 'aarch64':
+  arch = 'arm64'
 
 def GetSymbolsFromSo(so_file):
   # Example readelf output:
@@ -50,6 +56,15 @@ def MangleGlibcNameToBionic(name):
     return glibc_to_bionic_names[name]
   return name
 
+def GetNdkIgnored():
+  global arch
+  symbols = set()
+  files = glob.glob('%s/ndk/build/tools/unwanted-symbols/%s/*' %
+                    (os.getenv('ANDROID_BUILD_TOP'), arch))
+  for f in files:
+    symbols |= set(open(f, 'r').read().splitlines())
+  return symbols
+
 glibc_to_bionic_names = {
   '__res_init': 'res_init',
   '__res_mkquery': 'res_mkquery',
@@ -59,6 +74,7 @@ glibc_to_bionic_names = {
 
 glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
 bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
+ndk_ignored = GetNdkIgnored()
 
 glibc = map(MangleGlibcNameToBionic, glibc)
 
@@ -100,6 +116,16 @@ macro_stuff = set([
   '__errno',
   '__fe_dfl_env',
   '__get_h_errno',
+  '__fpclassifyd',
+  '__isfinite',
+  '__isfinitef',
+  '__isfinitel',
+  '__isnormal',
+  '__isnormalf',
+  '__isnormall',
+  '__sF',
+  '__pthread_cleanup_pop',
+  '__pthread_cleanup_push',
 ])
 # bionic exposes various Linux features that glibc doesn't.
 linux_stuff = set([
@@ -133,21 +159,62 @@ weird_stuff = set([
   'mknodat',
   'stat',
   'stat64',
+  'optreset',
+  'sigsetjmp',
+])
+# These exist in glibc, but under slightly different names (generally one extra
+# or one fewer _). TODO: check against glibc names.
+libresolv_stuff = set([
+  '__res_send_setqhook',
+  '__res_send_setrhook',
+  '_resolv_flush_cache_for_net',
+  '_resolv_set_nameservers_for_net',
+  'dn_expand',
+  'nsdispatch',
+])
+# libstdc++ stuff we took over.
+libstdcxx_stuff = set([
+  # new, delete, nothrow
+  '_ZSt7nothrow',
+  '_ZdaPv',
+  '_ZdaPvRKSt9nothrow_t',
+  '_ZdlPv',
+  '_ZdlPvRKSt9nothrow_t',
+  '_Znam',
+  '_ZnamRKSt9nothrow_t',
+  '_Znwm',
+  '_ZnwmRKSt9nothrow_t',
+
+  '__cxa_guard_abort',
+  '__cxa_guard_acquire',
+  '__cxa_guard_release',
+  '__cxa_pure_virtual',
+])
+# Implementation details we know we export (and can't get away from).
+known = set([
+  '_ctype_',
+  '__libc_init',
 ])
 
-print 'glibc:'
-for symbol in sorted(glibc):
-  print symbol
+if not only_unwanted:
+  print 'glibc:'
+  for symbol in sorted(glibc):
+    print symbol
 
-print
-print 'bionic:'
-for symbol in sorted(bionic):
-  print symbol
+  print
+  print 'bionic:'
+  for symbol in sorted(bionic):
+    print symbol
 
-print
-print 'in bionic but not glibc:'
-allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff | std_stuff | weird_stuff)
+  print
+  print 'in bionic but not glibc:'
+
+allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff |
+                 std_stuff | weird_stuff | libresolv_stuff | libstdcxx_stuff |
+                 known)
 for symbol in sorted((bionic - allowed_stuff).difference(glibc)):
+  if symbol in ndk_ignored:
+    symbol += '*'
   print symbol
 
 sys.exit(0)
