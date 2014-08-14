@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "766ff376_468a430a",
+        "filename": "tests/libs/libdlclosetest1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-14T14:15:03Z",
+      "side": 1,
+      "message": "we have static dtor test in atexit_test.cpp",
+      "revId": "7aea0dcc5defe9ffd57ab263f883a646d2584882",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
