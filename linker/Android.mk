@@ -57,6 +57,10 @@ LOCAL_MODULE_STEM_32 := linker
 LOCAL_MODULE_STEM_64 := linker64
 LOCAL_MULTILIB := both
 
+# Leave the symbols in the shared library so that stack unwinders can produce
+# meaningful name resolution.
+LOCAL_STRIP_MODULE := keep_symbols
+
 include $(LOCAL_PATH)/linker_executable.mk
 ifdef TARGET_2ND_ARCH
 LOCAL_2ND_ARCH_VAR_PREFIX := $(TARGET_2ND_ARCH_VAR_PREFIX)
