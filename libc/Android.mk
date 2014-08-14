@@ -278,7 +278,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/regex/regerror.c \
     upstream-netbsd/lib/libc/regex/regexec.c \
     upstream-netbsd/lib/libc/regex/regfree.c \
-    upstream-netbsd/lib/libc/resolv/mtctxres.c \
     upstream-netbsd/lib/libc/stdlib/bsearch.c \
     upstream-netbsd/lib/libc/stdlib/div.c \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
@@ -634,6 +633,7 @@ LOCAL_SRC_FILES := \
     $(call all-c-files-under,dns) \
     upstream-netbsd/lib/libc/isc/ev_streams.c \
     upstream-netbsd/lib/libc/isc/ev_timers.c \
+    upstream-netbsd/lib/libc/resolv/mtctxres.c \
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
