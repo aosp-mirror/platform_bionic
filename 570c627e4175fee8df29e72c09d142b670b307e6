@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "766ff376_4b4ecc4c",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-14T03:10:52Z",
+      "side": 1,
+      "message": "There are actually less alignments here than in the random case. Is there a reason you chose just these?",
+      "range": {
+        "startLine": 213,
+        "startChar": 51,
+        "endLine": 213,
+        "endChar": 80
+      },
+      "revId": "570c627e4175fee8df29e72c09d142b670b307e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3669fb74_6adcf7f6",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-14T03:10:52Z",
+      "side": 1,
+      "message": "I\u0027m really not fond of the way this works. Is there any way to make this a proper iterator? It\u0027s seems kind of weird to have NextIteration also return done.",
+      "range": {
+        "startLine": 400,
+        "startChar": 9,
+        "endLine": 400,
+        "endChar": 55
+      },
+      "revId": "570c627e4175fee8df29e72c09d142b670b307e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
