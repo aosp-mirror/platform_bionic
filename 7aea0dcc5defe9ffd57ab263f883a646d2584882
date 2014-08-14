@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "96df077f_a2175eaf",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-14T21:00:23Z",
+      "side": 1,
+      "message": "I\u0027d suggest moving this to atexit_test.cpp, it mainly tests __cxa_atexit and __cxa_finalize.",
+      "revId": "7aea0dcc5defe9ffd57ab263f883a646d2584882",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "766ff376_468a430a",
         "filename": "tests/libs/libdlclosetest1.cpp",
         "patchSetId": 1
