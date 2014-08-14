@@ -42,6 +42,7 @@
 #define TRACE_DEBUG          1
 #define DO_TRACE_LOOKUP      1
 #define DO_TRACE_RELO        1
+#define DO_TRACE_IFUNC       1
 #define TIMING               0
 #define STATS                0
 #define COUNT_PAGES          0
