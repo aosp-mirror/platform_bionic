@@ -92,7 +92,7 @@ static void __locale_init() {
   g_locale.int_n_sign_posn = CHAR_MAX;
 }
 
-size_t __mb_cur_max() {
+size_t __ctype_get_mb_cur_max() {
   locale_t l = reinterpret_cast<locale_t>(pthread_getspecific(g_uselocale_key));
   if (l == nullptr || l == LC_GLOBAL_LOCALE) {
     return __bionic_current_locale_is_utf8 ? 4 : 1;
