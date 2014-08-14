@@ -115,6 +115,20 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by ifunc tests
+# -----------------------------------------------------------------------------
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+    libtest_ifunc_src_files := \
+        dlopen_testlib_ifunc.c
+
+    LOCAL_SDK_VERSION := current
+    module := libtest_ifunc
+    build_type := target
+    build_target := SHARED_LIBRARY
+    include $(TEST_PATH)/Android.build.mk
+endif
+
+# -----------------------------------------------------------------------------
 # Library used to test local symbol lookup
 # -----------------------------------------------------------------------------
 libtest_local_symbol_src_files := \

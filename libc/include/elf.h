@@ -69,14 +69,17 @@ typedef struct {
 
 #define PT_GNU_RELRO 0x6474e552
 
-#define STB_LOOS   10
-#define STB_HIOS   12
-#define STB_LOPROC 13
-#define STB_HIPROC 15
+#define STB_LOOS      10
+#define STB_HIOS      12
+#define STB_LOPROC    13
+#define STB_HIPROC    15
 
-#define STT_LOOS   10
-#define STT_HIOS   12
-#define STT_LOPROC 13
-#define STT_HIPROC 15
+#define STT_GNU_IFUNC 10
+#define STT_LOOS      10
+#define STT_HIOS      12
+#define STT_LOPROC    13
+#define STT_HIPROC    15
+
+#define R_386_IRELATIVE  42
 
 #endif /* _ELF_H */
