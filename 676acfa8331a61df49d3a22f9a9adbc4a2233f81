@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b64deb11_8cb61c72",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-14T23:13:51Z",
+      "side": 1,
+      "message": "If you do (defined(_USING_LIBCXX) || __has_include(\u003catomic\u003e)) it will be valid for FreeBSD (the upstream parent of this patch) as well. I don\u0027t know if we actually care for this.",
+      "revId": "676acfa8331a61df49d3a22f9a9adbc4a2233f81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
