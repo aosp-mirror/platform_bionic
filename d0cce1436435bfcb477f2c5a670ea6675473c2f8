@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6432b33_6b4e014d",
+        "filename": "libstdc++/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-15T21:49:43Z",
+      "side": 0,
+      "message": "git rm?",
+      "revId": "d0cce1436435bfcb477f2c5a670ea6675473c2f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

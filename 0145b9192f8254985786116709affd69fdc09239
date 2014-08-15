@@ -16,6 +16,24 @@
       "revId": "0145b9192f8254985786116709affd69fdc09239",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f68be3a0_e6f4f4f0",
+        "filename": "libstdc++/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-15T21:49:43Z",
+      "side": 1,
+      "message": "you checked no symbols leak?\n\n(we should probably move this into libc/Android.mk.)",
+      "parentUuid": "f68be3a0_037c72f3",
+      "revId": "0145b9192f8254985786116709affd69fdc09239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
