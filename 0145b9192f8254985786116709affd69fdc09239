@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f68be3a0_037c72f3",
+        "filename": "libstdc++/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-15T21:32:15Z",
+      "side": 1,
+      "message": "Or I can do a fputs() + syslog() + android_set_abort_message() for each current use of __libc_fatal(). Since we\u0027re already stealing the other sources from ../libc, this seems alright.",
+      "revId": "0145b9192f8254985786116709affd69fdc09239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
