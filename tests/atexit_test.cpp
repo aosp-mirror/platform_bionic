@@ -24,20 +24,33 @@
 
 #include <string>
 
-TEST(atexit, dlclose) {
+TEST(atexit, sofile) {
   std::string atexit_call_sequence;
   bool valid_this_in_static_dtor = false;
+  bool attr_dtor_called = false;
+
   void* handle = dlopen("libtest_atexit.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle != nullptr);
+
+  typedef int (*int_fn)(void);
+  int_fn get_cxx_ctor_called, get_attr_ctor_called;
+  get_cxx_ctor_called = reinterpret_cast<int_fn>(dlsym(handle, "get_cxx_ctor_called"));
+  get_attr_ctor_called = reinterpret_cast<int_fn>(dlsym(handle, "get_attr_ctor_called"));
+  ASSERT_TRUE(get_cxx_ctor_called != nullptr);
+  ASSERT_TRUE(get_attr_ctor_called != nullptr);
+
+  ASSERT_EQ(1, get_cxx_ctor_called());
+  ASSERT_EQ(1, get_attr_ctor_called());
 
   void* sym = dlsym(handle, "register_atexit");
-  ASSERT_TRUE(sym != NULL);
-  reinterpret_cast<void (*)(std::string*, bool*)>(sym)(&atexit_call_sequence, &valid_this_in_static_dtor);
+  ASSERT_TRUE(sym != nullptr);
+  reinterpret_cast<void (*)(std::string*, bool*, bool*)>(sym)(&atexit_call_sequence, &valid_this_in_static_dtor, &attr_dtor_called);
 
   ASSERT_EQ(0, dlclose(handle));
   // this test verifies atexit call from atexit handler. as well as the order of calls
   ASSERT_EQ("Humpty Dumpty sat on a wall", atexit_call_sequence);
   ASSERT_TRUE(valid_this_in_static_dtor);
+  ASSERT_TRUE(attr_dtor_called);
 }
 
 class TestMainStaticDtorClass {
@@ -57,7 +70,7 @@ class TestMainStaticDtorClass {
   static const TestMainStaticDtorClass* expected_this;
 };
 
-const TestMainStaticDtorClass* TestMainStaticDtorClass::expected_this = NULL;
+const TestMainStaticDtorClass* TestMainStaticDtorClass::expected_this = nullptr;
 
 static void atexit_func5() {
   fprintf(stderr, "5");
