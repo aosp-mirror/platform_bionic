@@ -19,12 +19,19 @@
 #include <string>
 
 // use external control number from main test
-static std::string* atexit_sequence = NULL;
-static bool* atexit_valid_this_in_static_dtor = NULL;
+static std::string* atexit_sequence = nullptr;
+static bool* atexit_valid_this_in_static_dtor = nullptr;
+static bool* atexit_attr_dtor_called = nullptr;
+
+static int cxx_ctor_called = 0;
+static int attr_ctor_called = 0;
 
 static class AtExitStaticClass {
  public:
-  AtExitStaticClass() { expected_this = this; }
+  AtExitStaticClass() {
+    expected_this = this;
+    cxx_ctor_called = 1;
+  }
   ~AtExitStaticClass() {
     if (atexit_valid_this_in_static_dtor) {
       *atexit_valid_this_in_static_dtor = (expected_this == this);
@@ -35,7 +42,7 @@ static class AtExitStaticClass {
 
 } static_obj;
 
-const AtExitStaticClass* AtExitStaticClass::expected_this = NULL;
+const AtExitStaticClass* AtExitStaticClass::expected_this = nullptr;
 
 // 4
 static void atexit_handler_from_atexit_from_atexit2() {
@@ -66,10 +73,30 @@ static void atexit_handler_regular() {
   *atexit_sequence += " a wall";
 }
 
-extern "C" void register_atexit(std::string* sequence, bool* valid_this_in_static_dtor) {
+// attribute c-tor and d-tor
+static void __attribute__((constructor)) atexit_attr_ctor() {
+  attr_ctor_called = 1;
+}
+
+static void __attribute__((destructor)) atexit_attr_dtor() {
+  if (atexit_attr_dtor_called) {
+    *atexit_attr_dtor_called = true;
+  }
+}
+
+extern "C" void register_atexit(std::string* sequence, bool* valid_this_in_static_dtor, bool* attr_dtor_called) {
   atexit_sequence = sequence;
   atexit_valid_this_in_static_dtor = valid_this_in_static_dtor;
+  atexit_attr_dtor_called = attr_dtor_called;
   atexit(atexit_handler_regular);
   atexit(atexit_handler_with_atexit);
+}
+
+extern "C" int get_cxx_ctor_called() {
+  return cxx_ctor_called;
+}
+
+extern "C" int get_attr_ctor_called() {
+  return attr_ctor_called;
 }
 
