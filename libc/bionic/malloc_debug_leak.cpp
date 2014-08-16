@@ -385,6 +385,36 @@ extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
     return ptr;
 }
 
+extern "C" size_t leak_malloc_usable_size(const void* mem) {
+    if (DebugCallsDisabled()) {
+        return g_malloc_dispatch->malloc_usable_size(mem);
+    }
+
+    if (mem == NULL) {
+        return 0;
+    }
+
+    // Check the guard to make sure it is valid.
+    const AllocationEntry* header = const_to_header(mem);
+
+    if (header->guard == MEMALIGN_GUARD) {
+        // If this is a memalign'd pointer, then grab the header from
+        // entry.
+        header = const_to_header(header->entry);
+    } else if (header->guard != GUARD) {
+        debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
+                  header->guard, header->entry);
+        return 0;
+    }
+
+    size_t ret = g_malloc_dispatch->malloc_usable_size(header);
+    if (ret != 0) {
+        // The usable area starts at 'mem' and stops at 'header+ret'.
+        return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
+    }
+    return 0;
+}
+
 extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
     if (DebugCallsDisabled()) {
         return g_malloc_dispatch->realloc(oldMem, bytes);
@@ -408,7 +438,7 @@ extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
 
     newMem = leak_malloc(bytes);
     if (newMem != NULL) {
-        size_t oldSize = header->entry->size & ~SIZE_FLAG_MASK;
+        size_t oldSize = leak_malloc_usable_size(oldMem);
         size_t copySize = (oldSize <= bytes) ? oldSize : bytes;
         memcpy(newMem, oldMem, copySize);
         leak_free(oldMem);
@@ -460,38 +490,6 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
         return reinterpret_cast<void*>(ptr);
     }
     return base;
-}
-
-extern "C" size_t leak_malloc_usable_size(const void* mem) {
-    if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->malloc_usable_size(mem);
-    }
-
-    if (mem != NULL) {
-        // Check the guard to make sure it is valid.
-        const AllocationEntry* header = const_to_header((void*)mem);
-
-        if (header->guard == MEMALIGN_GUARD) {
-            // If this is a memalign'd pointer, then grab the header from
-            // entry.
-            header = const_to_header(header->entry);
-        } else if (header->guard != GUARD) {
-            debug_log("WARNING bad header guard: '0x%x'! and invalid entry: %p\n",
-                      header->guard, header->entry);
-            return 0;
-        }
-
-        // TODO: Temporary workaround to avoid a crash b/16874447.
-        return header->entry->size & ~SIZE_FLAG_MASK;
-#if 0
-        size_t ret = g_malloc_dispatch->malloc_usable_size(header);
-        if (ret != 0) {
-            // The usable area starts at 'mem' and stops at 'header+ret'.
-            return reinterpret_cast<uintptr_t>(header) + ret - reinterpret_cast<uintptr_t>(mem);
-        }
-#endif
-    }
-    return 0;
 }
 
 extern "C" struct mallinfo leak_mallinfo() {
