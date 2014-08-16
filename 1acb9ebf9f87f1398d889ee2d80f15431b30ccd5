@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6432b33_54c00211",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2454,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-16T01:21:54Z",
+      "side": 1,
+      "message": "this call do constructors is no longer necessary ld_preloads are in somain dependencies now (see also L2440).",
+      "revId": "1acb9ebf9f87f1398d889ee2d80f15431b30ccd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
