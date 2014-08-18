@@ -102,8 +102,6 @@ libc_bionic_src_files := \
     bionic/__cmsg_nxthdr.cpp \
     bionic/connect.cpp \
     bionic/ctype.cpp \
-    bionic/__cxa_guard.cpp \
-    bionic/__cxa_pure_virtual.cpp \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
@@ -142,7 +140,6 @@ libc_bionic_src_files := \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
     bionic/NetdClientDispatch.cpp \
-    bionic/new.cpp \
     bionic/open.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
@@ -229,6 +226,11 @@ libc_bionic_src_files := \
     bionic/wait.cpp \
     bionic/wchar.cpp \
     bionic/wctype.cpp \
+
+libc_cxa_src_files := \
+    bionic/__cxa_guard.cpp \
+    bionic/__cxa_pure_virtual.cpp \
+    bionic/new.cpp \
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/ldexp.c \
@@ -806,6 +808,27 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_cxa.a - Things traditionally in libstdc++
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_cxa_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -fvisibility=hidden \
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_cxa
+LOCAL_CLANG := true # GCC refuses to hide new/delete
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_syscalls.a
 # ========================================================
 
@@ -857,6 +880,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_bionic \
+    libc_cxa \
     libc_dns \
     libc_freebsd \
     libc_gdtoa \
@@ -1103,6 +1127,36 @@ $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_SHARED_LIBRARY)
 
 endif  #!user
+
+# ========================================================
+# libstdc++.so
+# ========================================================
+libstdcxx_common_src_files := \
+    bionic/__cxa_guard.cpp \
+    bionic/__cxa_pure_virtual.cpp \
+    bionic/new.cpp \
+    bionic/libc_logging.cpp \
+
+include $(CLEAR_VARS)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
+LOCAL_MODULE:= libstdc++
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+include $(BUILD_SHARED_LIBRARY)
+
+# ========================================================
+# libstdc++.a
+# ========================================================
+include $(CLEAR_VARS)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_CFLAGS := $(libc_common_cflags)
+LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
+LOCAL_MODULE:= libstdc++
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
