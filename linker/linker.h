@@ -240,11 +240,11 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo);
 void do_dlclose(soinfo* si);
 
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start, soinfo* caller_si);
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
 ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr);
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name, soinfo* caller_si);
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;
