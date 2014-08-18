@@ -294,8 +294,7 @@ __socketcall ssize_t recvfrom(int, void*, size_t, int, const struct sockaddr*, s
 #if defined(__BIONIC_FORTIFY)
 __errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
 extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*);
-extern ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*)
-    __asm__(__USER_LABEL_PREFIX__ "recvfrom");
+extern ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*) __RENAME(recvfrom);
 
 __BIONIC_FORTIFY_INLINE
 ssize_t recvfrom(int fd, void* buf, size_t len, int flags, const struct sockaddr* src_addr, socklen_t* addr_len) {

@@ -408,7 +408,7 @@ int sprintf(char *dest, const char *format, ...)
 #endif
 
 extern char* __fgets_chk(char*, int, FILE*, size_t);
-extern char* __fgets_real(char*, int, FILE*) __asm__(__USER_LABEL_PREFIX__ "fgets");
+extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
