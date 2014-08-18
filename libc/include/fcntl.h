@@ -82,9 +82,9 @@ extern ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int);
 #if defined(__BIONIC_FORTIFY)
 
 extern int __open_2(const char*, int);
-extern int __open_real(const char*, int, ...) __asm__(__USER_LABEL_PREFIX__ "open");
+extern int __open_real(const char*, int, ...) __RENAME(open);
 extern int __openat_2(int, const char*, int);
-extern int __openat_real(int, const char*, int, ...) __asm__(__USER_LABEL_PREFIX__ "openat");
+extern int __openat_real(int, const char*, int, ...) __RENAME(openat);
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");
 
