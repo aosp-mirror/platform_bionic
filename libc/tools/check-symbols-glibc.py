@@ -172,24 +172,6 @@ libresolv_stuff = set([
   'dn_expand',
   'nsdispatch',
 ])
-# libstdc++ stuff we took over.
-libstdcxx_stuff = set([
-  # new, delete, nothrow
-  '_ZSt7nothrow',
-  '_ZdaPv',
-  '_ZdaPvRKSt9nothrow_t',
-  '_ZdlPv',
-  '_ZdlPvRKSt9nothrow_t',
-  '_Znam',
-  '_ZnamRKSt9nothrow_t',
-  '_Znwm',
-  '_ZnwmRKSt9nothrow_t',
-
-  '__cxa_guard_abort',
-  '__cxa_guard_acquire',
-  '__cxa_guard_release',
-  '__cxa_pure_virtual',
-])
 # Implementation details we know we export (and can't get away from).
 known = set([
   '_ctype_',
@@ -210,8 +192,7 @@ if not only_unwanted:
   print 'in bionic but not glibc:'
 
 allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff |
-                 std_stuff | weird_stuff | libresolv_stuff | libstdcxx_stuff |
-                 known)
+                 std_stuff | weird_stuff | libresolv_stuff | known)
 for symbol in sorted((bionic - allowed_stuff).difference(glibc)):
   if symbol in ndk_ignored:
     symbol += '*'
