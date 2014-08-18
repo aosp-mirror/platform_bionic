@@ -28,6 +28,7 @@
 #ifndef _SCHED_H_
 #define _SCHED_H_
 
+#include <features.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
 
@@ -52,7 +53,7 @@ extern int sched_setparam(pid_t, const struct sched_param*);
 extern int sched_getparam(pid_t, struct sched_param*);
 extern int sched_rr_get_interval(pid_t, struct timespec*);
 
-#ifdef _GNU_SOURCE
+#if defined(__USE_GNU)
 
 extern int clone(int (*)(void*), void*, int, void*, ...);
 extern int unshare(int);
@@ -146,7 +147,7 @@ extern void       __sched_cpufree(cpu_set_t* set);
 
 extern int __sched_cpucount(size_t setsize, cpu_set_t* set);
 
-#endif /* _GNU_SOURCE */
+#endif /* __USE_GNU */
 
 __END_DECLS
 

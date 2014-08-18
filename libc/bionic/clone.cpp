@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#define __GNU_SOURCE 1
+#define _GNU_SOURCE 1
 #include <sched.h>
 #include <stdlib.h>
 #include <stdarg.h>
