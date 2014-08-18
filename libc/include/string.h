@@ -180,8 +180,7 @@ void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 
-extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
-    __asm__(__USER_LABEL_PREFIX__ "strlcpy");
+extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
 extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
@@ -204,8 +203,7 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     return __strlcpy_chk(dest, src, size, bos);
 }
 
-extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
-    __asm__(__USER_LABEL_PREFIX__ "strlcat");
+extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcat);
 extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 
