@@ -29,7 +29,6 @@
 #ifndef _SYS_STAT_H_
 #define _SYS_STAT_H_
 
-#include <features.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/time.h>
