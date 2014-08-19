@@ -25,9 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_STAT_H_
 #define _SYS_STAT_H_
 
+#include <features.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/time.h>

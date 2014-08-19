@@ -17,7 +17,7 @@
 #ifndef _BIONIC_FREEBSD_COMPAT_H_included
 #define _BIONIC_FREEBSD_COMPAT_H_included
 
-#define __USE_BSD
+#define _BSD_SOURCE
 #define REPLACE_GETOPT
 
 /*

@@ -17,10 +17,10 @@
 #ifndef _BIONIC_OPENBSD_COMPAT_H_included
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
+#define _BSD_SOURCE
+
 #include <sys/cdefs.h>
 #include <stddef.h> // For size_t.
-
-#define __USE_BSD
 
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
  * Additionally, we changed the numeric/digit type from N to D for libcxx.
