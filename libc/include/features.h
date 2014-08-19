@@ -37,21 +37,4 @@
 # define __USE_GNU 1
 #endif
 
-/* C95 support */
-#undef __USE_ISOC95
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199409L
-# define __USE_ISOC95   1
-#endif
-
-/* C99 support */
-#undef __USE_ISOC99
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-# define __USE_ISOC99   1
-#endif
-
-/* Posix support */
-#define  __USE_POSIX   1
-#define  __USE_POSIX2  1
-#define  __USE_XPG     1
-
 #endif /* _FEATURES_H_ */
