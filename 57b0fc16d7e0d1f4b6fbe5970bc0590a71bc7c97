@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6220389_11104f25",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-19T23:05:32Z",
+      "side": 1,
+      "message": "This one?: http://man7.org/linux/man-pages/man3/malloc_info.3.html\n\nI talked with cferris about it, and it sounds like XML is just overkill for the intended use case.\n\nI did mention that we might want to add malloc_info(3), but keep these around (not in a header, and not in the NDK) so that anyone that wants to do simple malloc debugging without having to deal with xml still can.",
+      "parentUuid": "3344ad56_7bb30a1e",
+      "revId": "57b0fc16d7e0d1f4b6fbe5970bc0590a71bc7c97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6220389_31570be7",
         "filename": "tests/je_stats.cpp",
         "patchSetId": 1
