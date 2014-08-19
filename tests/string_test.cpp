@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
+#include <string.h>
 
 #include <errno.h>
+#include <gtest/gtest.h>
 #include <malloc.h>
 #include <math.h>
-#include <string.h>
 
 #include "buffer_tests.h"
 
@@ -1286,4 +1286,23 @@ TEST(string, strchr_align) {
 
 TEST(string, strchr_overread) {
   RunSingleBufferOverreadTest(DoStrchrTest);
+}
+
+static void TestBasename(const char* in, const char* expected_out) {
+  errno = 0;
+  const char* out = basename(in);
+  ASSERT_STREQ(expected_out, out) << in;
+  ASSERT_EQ(0, errno) << in;
+}
+
+TEST(string, __gnu_basename) {
+  TestBasename("", "");
+  TestBasename("/usr/lib", "lib");
+  TestBasename("/usr/", "");
+  TestBasename("usr", "usr");
+  TestBasename("/", "");
+  TestBasename(".", ".");
+  TestBasename("..", "..");
+  TestBasename("///", "");
+  TestBasename("//usr//lib//", "");
 }

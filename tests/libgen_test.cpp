@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
 #include <libgen.h>
 
 #include <errno.h>
+#include <gtest/gtest.h>
 
 static void TestBasename(const char* in, const char* expected_out) {
   char* writable_in = (in != NULL) ? strdup(in) : NULL;
@@ -40,7 +39,7 @@ static void TestDirname(const char* in, const char* expected_out) {
 
 // Do not use basename as the test name, it's defined to another value in glibc
 // so leads to a differently named test on host versus target architectures.
-TEST(libgen, basename_smoke) {
+TEST(libgen, posix_basename) {
   TestBasename(NULL, ".");
   TestBasename("", ".");
   TestBasename("/usr/lib", "lib");
