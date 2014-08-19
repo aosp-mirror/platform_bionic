@@ -123,6 +123,12 @@ using std::atomic_uintmax_t;
  * bits as a T.
  */
 
+#include <stddef.h>  /* For ptrdiff_t.                          */
+#include <stdint.h>  /* TODO: Should pollute namespace less.    */
+#if __STDC_VERSION__ >= 201112L
+# include <uchar.h>  /* For char16_t and char32_t.              */
+#endif
+
 #if __has_extension(c_atomic) || __has_extension(cxx_atomic)
 #define	__CLANG_ATOMICS
 #elif __GNUC_PREREQ__(4, 7)
@@ -228,7 +234,7 @@ typedef enum {
  */
 
 static __inline void
-atomic_thread_fence(memory_order __order __unused)
+atomic_thread_fence(memory_order __order __attribute__((unused)))
 {
 
 #ifdef __CLANG_ATOMICS
@@ -241,7 +247,7 @@ atomic_thread_fence(memory_order __order __unused)
 }
 
 static __inline void
-atomic_signal_fence(memory_order __order __unused)
+atomic_signal_fence(memory_order __order __attribute__((unused)))
 {
 
 #ifdef __CLANG_ATOMICS
@@ -263,7 +269,7 @@ atomic_signal_fence(memory_order __order __unused)
 	((void)(obj), (_Bool)1)
 #elif defined(__CLANG_ATOMICS)
 #define	atomic_is_lock_free(obj) \
-	__atomic_is_lock_free(sizeof(*(obj)), obj)
+	__c11_atomic_is_lock_free(sizeof(*(obj)))
 #elif defined(__GNUC_ATOMICS)
 #define	atomic_is_lock_free(obj) \
 	__atomic_is_lock_free(sizeof((obj)->__val), &(obj)->__val)
@@ -477,7 +483,7 @@ typedef struct {
 	atomic_bool	__flag;
 } atomic_flag;
 
-#define	ATOMIC_FLAG_INIT		{ ATOMIC_VAR_INIT(0) }
+#define	ATOMIC_FLAG_INIT		{ ATOMIC_VAR_INIT(false) }
 
 static __inline bool
 atomic_flag_test_and_set_explicit(volatile atomic_flag *__object,
