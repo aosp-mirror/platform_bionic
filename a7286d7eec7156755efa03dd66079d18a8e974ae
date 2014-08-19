@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13fb2935_07549cdc",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-19T21:40:02Z",
+      "side": 1,
+      "message": "type*, not type *.",
+      "revId": "a7286d7eec7156755efa03dd66079d18a8e974ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13fb2935_e75090ea",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-19T21:40:02Z",
+      "side": 1,
+      "message": "s/mutable/non_const/",
+      "revId": "a7286d7eec7156755efa03dd66079d18a8e974ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
