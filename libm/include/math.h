@@ -17,6 +17,7 @@
 #ifndef _MATH_H_
 #define	_MATH_H_
 
+#include <features.h>
 #include <sys/cdefs.h>
 #include <limits.h>
 
@@ -462,11 +463,11 @@ long double	truncl(long double);
 
 #endif /* __ISO_C_VISIBLE >= 1999 */
 
-#if defined(_GNU_SOURCE)
+#if defined(__USE_GNU)
 void sincos(double, double*, double*);
 void sincosf(float, float*, float*);
 void sincosl(long double, long double*, long double*);
-#endif /* _GNU_SOURCE */
+#endif /* __USE_GNU */
 
 #pragma GCC visibility pop
 __END_DECLS

@@ -25,18 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _FEATURES_H_
 #define _FEATURES_H_
 
-/* certain Linux-specific programs expect a <features.h> header file
- * that defines various features macros
- */
+#if defined(_BSD_SOURCE)
+# define __USE_BSD 1
+#endif
 
-/* we do include a number of BSD extensions */
-#define  _BSD_SOURCE  1
-
-/* we do include a number of GNU extensions */
-#define  _GNU_SOURCE  1
+#if defined(_GNU_SOURCE)
+# define __USE_GNU 1
+#endif
 
 /* C95 support */
 #undef __USE_ISOC95
