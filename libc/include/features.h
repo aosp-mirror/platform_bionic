@@ -29,12 +29,7 @@
 #ifndef _FEATURES_H_
 #define _FEATURES_H_
 
-#if defined(_BSD_SOURCE)
-# define __USE_BSD 1
-#endif
-
-#if defined(_GNU_SOURCE)
-# define __USE_GNU 1
-#endif
+/* Our <features.h> macro fun is all in <sys/cdefs.h>. */
+#include <sys/cdefs.h>
 
 #endif /* _FEATURES_H_ */

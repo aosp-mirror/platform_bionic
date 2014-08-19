@@ -19,7 +19,6 @@
 #if defined(__BIONIC__)
 #define HAVE_UCHAR 1
 #elif defined(__GLIBC__)
-#include <features.h>
 #define HAVE_UCHAR __GLIBC_PREREQ(2, 16)
 #endif
 

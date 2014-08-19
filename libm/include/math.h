@@ -17,7 +17,6 @@
 #ifndef _MATH_H_
 #define	_MATH_H_
 
-#include <features.h>
 #include <sys/cdefs.h>
 #include <limits.h>
 
