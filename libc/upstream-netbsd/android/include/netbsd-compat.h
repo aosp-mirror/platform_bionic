@@ -17,15 +17,15 @@
 #ifndef _BIONIC_NETBSD_COMPAT_H_included
 #define _BIONIC_NETBSD_COMPAT_H_included
 
+#define _BSD_SOURCE
+#define _GNU_SOURCE
+
 // NetBSD uses _DIAGASSERT to null-check arguments and the like.
 #include <assert.h>
 #define _DIAGASSERT(e) ((e) ? (void) 0 : __assert2(__FILE__, __LINE__, __func__, #e))
 
 // TODO: update our <sys/cdefs.h> to support this properly.
 #define __type_fit(t, a) (0 == 0)
-
-#define _GNU_SOURCE
-#define __USE_BSD
 
 // TODO: we don't yet have thread-safe environment variables.
 #define __readlockenv() 0
