@@ -29,6 +29,8 @@
 #ifndef _SET_ABORT_MESSAGE_H
 #define _SET_ABORT_MESSAGE_H
 
+#include <sys/cdefs.h>
+
 __BEGIN_DECLS
 
 void android_set_abort_message(const char* msg);
