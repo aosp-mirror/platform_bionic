@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f325b5a9_f3fcc81c",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-19T23:54:36Z",
+      "side": 1,
+      "message": "even if we can\u0027t enforce it, i wonder if we should have a different _name_ for __LIBC_ABI_PUBLIC__ when it\u0027s used to mean \"internal platform use only\"?",
+      "revId": "304b7061e01bac783657c44d14446d59ed856217",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
