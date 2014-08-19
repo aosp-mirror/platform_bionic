@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define _GNU_SOURCE 1
+
 #include <math.h>
 
 #include <gtest/gtest.h>

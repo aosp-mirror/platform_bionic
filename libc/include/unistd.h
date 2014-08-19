@@ -28,6 +28,7 @@
 #ifndef _UNISTD_H_
 #define _UNISTD_H_
 
+#include <features.h>
 #include <stddef.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -112,7 +113,7 @@ extern int chdir(const char *);
 extern int fchdir(int);
 extern int rmdir(const char *);
 extern int pipe(int *);
-#ifdef _GNU_SOURCE
+#if defined(__USE_GNU)
 extern int pipe2(int *, int);
 #endif
 extern int chroot(const char *);
@@ -143,7 +144,7 @@ extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 
 extern int dup(int);
 extern int dup2(int, int);
-#ifdef _GNU_SOURCE
+#if defined(__USE_GNU)
 extern int dup3(int, int, int);
 #endif
 extern int fcntl(int, int, ...);
