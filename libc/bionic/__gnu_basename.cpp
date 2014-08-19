@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,42 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LIBGEN_H
-#define _LIBGEN_H
+#define _GNU_SOURCE 1
+#include <string.h>
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
-
-__BEGIN_DECLS
-
-#if !defined(__bionic_using_gnu_basename)
-/*
- * <string.h> gets you the GNU basename.
- * <libgen.h> the POSIX one.
- * Note that our "POSIX" one has the wrong argument cv-qualifiers.
- */
-extern char* basename(const char*);
-#define __bionic_using_posix_basename
-#endif
-
-/* our version of dirname/basename don't modify the input path */
-extern char*  dirname (const char*  path);
-
-/* special thread-safe Bionic versions
- *
- * if 'buffer' is NULL, 'bufflen' is ignored and the length of the result is returned
- * otherwise, place result in 'buffer'
- *
- * at most bufflen-1 characters written, plus a terminating zero
- *
- * return length of result, or -1 in case of error, with errno set to:
- *
- *    ERANGE:        buffer is too short
- *    ENAMETOOLONG:  the result is too long for a valid path
- */
-extern int    dirname_r(const char*  path, char*  buffer, size_t  bufflen);
-extern int    basename_r(const char*  path, char*  buffer, size_t  bufflen);
-
-__END_DECLS
-
-#endif /* _LIBGEN_H */
+extern "C" const char* __gnu_basename(const char* path) {
+  const char* last_slash = strrchr(path, '/');
+  return (last_slash != NULL) ? last_slash + 1 : path;
+}

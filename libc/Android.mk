@@ -121,6 +121,7 @@ libc_bionic_src_files := \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
     bionic/gettid.cpp \
+    bionic/__gnu_basename.cpp \
     bionic/inotify_init.cpp \
     bionic/lchown.cpp \
     bionic/lfs64_support.cpp \
