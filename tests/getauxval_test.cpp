@@ -15,7 +15,6 @@
  */
 
 #include <sys/cdefs.h>
-#include <features.h>
 #include <gtest/gtest.h>
 
 // getauxval() was only added as of glibc version 2.16.

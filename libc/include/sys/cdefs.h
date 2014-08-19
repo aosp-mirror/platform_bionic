@@ -355,9 +355,23 @@
 #define __RCSID(_s) /* nothing */
 #define __SCCSID(_s) /* nothing */
 
+/*
+ * _BSD_SOURCE and _GNU_SOURCE are expected to be defined by callers before
+ * any standard header file is included. In those header files we test
+ * against __USE_BSD and __USE_GNU. glibc does this in <features.h> but we
+ * do it in <sys/cdefs.h> instead because that's where our existing
+ * _POSIX_C_SOURCE tests were, and we're already confident that <sys/cdefs.h>
+ * is included everywhere it should be.
+ */
+#if defined(_BSD_SOURCE)
+# define __USE_BSD 1
+#endif
+
+#if defined(_GNU_SOURCE)
+# define __USE_GNU 1
+#endif
+
 /*-
- * The following definitions are an extension of the behavior originally
- * implemented in <sys/_posix.h>, but with a different level of granularity.
  * POSIX.1 requires that the macros we test be defined before any standard
  * header file is included.
  *
