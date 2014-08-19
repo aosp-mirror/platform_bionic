@@ -130,21 +130,6 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 endif
 
 # -----------------------------------------------------------------------------
-# Library used to test local symbol lookup
-# -----------------------------------------------------------------------------
-libtest_local_symbol_src_files := \
-    dlsym_local_symbol_private.cpp \
-    dlsym_local_symbol_public.cpp
-
-module := libtest_local_symbol
-build_target := SHARED_LIBRARY
-libtest_local_symbol_ldflags := -Wl,--version-script=$(LOCAL_PATH)/dlsym_local_symbol.map
-libtest_local_symbol_cppflags := -std=gnu++11
-libtest_local_symbol_shared_libraries_target := libdl
-build_type := target
-include $(TEST_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
 # Library used by atexit tests
 # -----------------------------------------------------------------------------
 
