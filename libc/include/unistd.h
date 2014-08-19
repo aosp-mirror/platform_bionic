@@ -25,10 +25,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _UNISTD_H_
 #define _UNISTD_H_
 
-#include <features.h>
 #include <stddef.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>

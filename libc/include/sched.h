@@ -28,7 +28,6 @@
 #ifndef _SCHED_H_
 #define _SCHED_H_
 
-#include <features.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
 

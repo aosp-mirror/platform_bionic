@@ -17,7 +17,6 @@
 #include <time.h>
 
 #include <errno.h>
-#include <features.h>
 #include <gtest/gtest.h>
 #include <pthread.h>
 #include <signal.h>
