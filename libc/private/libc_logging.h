@@ -69,8 +69,6 @@ struct abort_msg_t {
   char msg[0];
 };
 
-void __android_set_abort_message(const char* msg);
-
 //
 // Formats a message to the log (priority 'fatal'), then aborts.
 //

@@ -29,6 +29,7 @@
 #include "../private/libc_logging.h" // Relative path so we can #include this .cpp file for testing.
 #include "../private/ScopedPthreadMutexLocker.h"
 
+#include <android/set_abort_message.h>
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -629,7 +630,7 @@ static void __libc_fatal(const char* format, va_list args) {
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
   __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
 
-  __android_set_abort_message(msg);
+  android_set_abort_message(msg);
 }
 
 void __libc_fatal_no_abort(const char* format, ...) {
@@ -647,7 +648,7 @@ void __libc_fatal(const char* format, ...) {
   abort();
 }
 
-void __android_set_abort_message(const char* msg) {
+void android_set_abort_message(const char* msg) {
   ScopedPthreadMutexLocker locker(&g_abort_msg_lock);
 
   if (__abort_message_ptr == NULL) {
