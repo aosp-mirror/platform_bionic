@@ -1,11 +1,16 @@
 /* $OpenBSD: strerror_r.c,v 1.6 2005/08/08 08:05:37 espie Exp $ */
 /* Public Domain <marc@snafu.org> */
 
+// G++ automatically defines _GNU_SOURCE, which then means that <string.h>
+// gives us the GNU variant.
+#undef _GNU_SOURCE
+
+#include <string.h>
+
 #include <errno.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
@@ -60,6 +65,12 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
   }
 
   return 0;
+}
+
+extern "C" char* __gnu_strerror_r(int error_number, char* buf, size_t buf_len) {
+  ErrnoRestorer errno_restorer; // The glibc strerror_r doesn't set errno if it truncates...
+  strerror_r(error_number, buf, buf_len);
+  return buf; // ...and just returns whatever fit.
 }
 
 extern "C" __LIBC_HIDDEN__ const char* __strsignal(int signal_number, char* buf, size_t buf_len) {
