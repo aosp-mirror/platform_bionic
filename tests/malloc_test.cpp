@@ -22,6 +22,8 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#include <tinyxml2.h>
+
 #include "private/bionic_config.h"
 
 TEST(malloc, malloc_std) {
@@ -322,3 +324,51 @@ TEST(malloc, valloc_overflow) {
   ASSERT_EQ(NULL, valloc(SIZE_MAX));
 }
 #endif
+
+TEST(malloc, malloc_info) {
+#ifdef __BIONIC__
+  char* buf;
+  size_t bufsize;
+  FILE* memstream = open_memstream(&buf, &bufsize);
+  ASSERT_NE(nullptr, memstream);
+  ASSERT_EQ(0, malloc_info(0, memstream));
+  ASSERT_EQ(0, fclose(memstream));
+
+  tinyxml2::XMLDocument doc;
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+
+  auto root = doc.FirstChildElement();
+  ASSERT_NE(nullptr, root);
+  ASSERT_STREQ("malloc", root->Name());
+  ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
+
+  auto arena = root->FirstChildElement();
+  for (; arena != nullptr; arena = arena->NextSiblingElement()) {
+    int val;
+
+    ASSERT_STREQ("heap", arena->Name());
+    ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
+    ASSERT_EQ(tinyxml2::XML_SUCCESS,
+              arena->FirstChildElement("allocated-large")->QueryIntText(&val));
+    ASSERT_EQ(tinyxml2::XML_SUCCESS,
+              arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
+    ASSERT_EQ(tinyxml2::XML_SUCCESS,
+              arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
+    ASSERT_EQ(tinyxml2::XML_SUCCESS,
+              arena->FirstChildElement("bins-total")->QueryIntText(&val));
+
+    auto bin = arena->FirstChildElement("bin");
+    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+      if (strcmp(bin->Name(), "bin") == 0) {
+        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                  bin->FirstChildElement("allocated")->QueryIntText(&val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                  bin->FirstChildElement("nmalloc")->QueryIntText(&val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                  bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+      }
+    }
+  }
+#endif
+}
