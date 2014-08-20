@@ -8,14 +8,18 @@ import atexit
 import commands
 import filecmp
 import glob
+import logging
 import os.path
 import re
 import shutil
 import stat
+import string
 import sys
 import tempfile
 
-from bionic_utils import *
+
+all_arches = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
+
 
 # temp directory where we store all intermediate files
 bionic_temp = tempfile.mkdtemp(prefix="bionic_gensyscalls");
@@ -387,6 +391,120 @@ def x86_64_genstub(syscall):
     return result
 
 
+class SysCallsTxtParser:
+    def __init__(self):
+        self.syscalls = []
+        self.lineno   = 0
+
+    def E(self, msg):
+        print "%d: %s" % (self.lineno, msg)
+
+    def parse_line(self, line):
+        """ parse a syscall spec line.
+
+        line processing, format is
+           return type    func_name[|alias_list][:syscall_name[:socketcall_id]] ( [paramlist] ) architecture_list
+        """
+        pos_lparen = line.find('(')
+        E          = self.E
+        if pos_lparen < 0:
+            E("missing left parenthesis in '%s'" % line)
+            return
+
+        pos_rparen = line.rfind(')')
+        if pos_rparen < 0 or pos_rparen <= pos_lparen:
+            E("missing or misplaced right parenthesis in '%s'" % line)
+            return
+
+        return_type = line[:pos_lparen].strip().split()
+        if len(return_type) < 2:
+            E("missing return type in '%s'" % line)
+            return
+
+        syscall_func = return_type[-1]
+        return_type  = string.join(return_type[:-1],' ')
+        socketcall_id = -1
+
+        pos_colon = syscall_func.find(':')
+        if pos_colon < 0:
+            syscall_name = syscall_func
+        else:
+            if pos_colon == 0 or pos_colon+1 >= len(syscall_func):
+                E("misplaced colon in '%s'" % line)
+                return
+
+            # now find if there is a socketcall_id for a dispatch-type syscall
+            # after the optional 2nd colon
+            pos_colon2 = syscall_func.find(':', pos_colon + 1)
+            if pos_colon2 < 0:
+                syscall_name = syscall_func[pos_colon+1:]
+                syscall_func = syscall_func[:pos_colon]
+            else:
+                if pos_colon2+1 >= len(syscall_func):
+                    E("misplaced colon2 in '%s'" % line)
+                    return
+                syscall_name = syscall_func[(pos_colon+1):pos_colon2]
+                socketcall_id = int(syscall_func[pos_colon2+1:])
+                syscall_func = syscall_func[:pos_colon]
+
+        alias_delim = syscall_func.find('|')
+        if alias_delim > 0:
+            alias_list = syscall_func[alias_delim+1:].strip()
+            syscall_func = syscall_func[:alias_delim]
+            alias_delim = syscall_name.find('|')
+            if alias_delim > 0:
+                syscall_name = syscall_name[:alias_delim]
+            syscall_aliases = string.split(alias_list, ',')
+        else:
+            syscall_aliases = []
+
+        if pos_rparen > pos_lparen+1:
+            syscall_params = line[pos_lparen+1:pos_rparen].split(',')
+            params         = string.join(syscall_params,',')
+        else:
+            syscall_params = []
+            params         = "void"
+
+        t = {
+              "name"    : syscall_name,
+              "func"    : syscall_func,
+              "aliases" : syscall_aliases,
+              "params"  : syscall_params,
+              "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
+              "socketcall_id" : socketcall_id
+        }
+
+        # Parse the architecture list.
+        arch_list = line[pos_rparen+1:].strip()
+        if arch_list == "all":
+            for arch in all_arches:
+                t[arch] = True
+        else:
+            for arch in string.split(arch_list, ','):
+                if arch in all_arches:
+                    t[arch] = True
+                else:
+                    E("invalid syscall architecture '%s' in '%s'" % (arch, line))
+                    return
+
+        self.syscalls.append(t)
+
+        logging.debug(t)
+
+
+    def parse_file(self, file_path):
+        logging.debug("parse_file: %s" % file_path)
+        fp = open(file_path)
+        for line in fp.xreadlines():
+            self.lineno += 1
+            line = line.strip()
+            if not line: continue
+            if line[0] == '#': continue
+            self.parse_line(line)
+
+        fp.close()
+
+
 class State:
     def __init__(self):
         self.old_stubs = []
@@ -444,7 +562,7 @@ class State:
     def gen_glibc_syscalls_h(self):
         # TODO: generate a separate file for each architecture, like glibc's bits/syscall.h.
         glibc_syscalls_h_path = "include/sys/glibc-syscalls.h"
-        D("generating " + glibc_syscalls_h_path)
+        logging.info("generating " + glibc_syscalls_h_path)
         glibc_fp = create_file(glibc_syscalls_h_path)
         glibc_fp.write("/* %s */\n" % warning)
         glibc_fp.write("#ifndef _BIONIC_GLIBC_SYSCALLS_H_\n")
@@ -473,7 +591,7 @@ class State:
             for arch in all_arches:
                 if syscall.has_key("asm-%s" % arch):
                     filename = "arch-%s/syscalls/%s.S" % (arch, syscall["func"])
-                    D2(">>> generating " + filename)
+                    logging.info(">>> generating " + filename)
                     fp = create_file(filename)
                     fp.write(syscall["asm-%s" % arch])
                     fp.close()
@@ -481,28 +599,28 @@ class State:
 
 
     def regenerate(self):
-        D("scanning for existing architecture-specific stub files...")
+        logging.info("scanning for existing architecture-specific stub files...")
 
         for arch in all_arches:
             arch_dir = "arch-" + arch
-            D("scanning " + os.path.join(bionic_libc_root, arch_dir))
+            logging.info("scanning " + os.path.join(bionic_libc_root, arch_dir))
             rel_path = os.path.join(arch_dir, "syscalls")
             for file in os.listdir(os.path.join(bionic_libc_root, rel_path)):
                 if file.endswith(".S"):
                   self.old_stubs.append(os.path.join(rel_path, file))
 
-        D("found %d stub files" % len(self.old_stubs))
+        logging.info("found %d stub files" % len(self.old_stubs))
 
         if not os.path.exists(bionic_temp):
-            D("creating %s..." % bionic_temp)
+            logging.info("creating %s..." % bionic_temp)
             make_dir(bionic_temp)
 
-        D("re-generating stubs and support files...")
+        logging.info("re-generating stubs and support files...")
 
         self.gen_glibc_syscalls_h()
         self.gen_syscall_stubs()
 
-        D("comparing files...")
+        logging.info("comparing files...")
         adds    = []
         edits   = []
 
@@ -511,18 +629,18 @@ class State:
             libc_file = os.path.join(bionic_libc_root, stub)
             if not os.path.exists(libc_file):
                 # new file, git add it
-                D("new file:     " + stub)
+                logging.info("new file:     " + stub)
                 adds.append(libc_file)
                 shutil.copyfile(tmp_file, libc_file)
 
             elif not filecmp.cmp(tmp_file, libc_file):
-                D("changed file: " + stub)
+                logging.info("changed file: " + stub)
                 edits.append(stub)
 
         deletes = []
         for stub in self.old_stubs:
             if not stub in self.new_stubs:
-                D("deleted file: " + stub)
+                logging.info("deleted file: " + stub)
                 deletes.append(os.path.join(bionic_libc_root, stub))
 
         if not DRY_RUN:
@@ -539,11 +657,11 @@ class State:
             commands.getoutput("git add %s" % (os.path.join(bionic_libc_root, "SYSCALLS.TXT")))
 
         if (not adds) and (not deletes) and (not edits):
-            D("no changes detected!")
+            logging.info("no changes detected!")
         else:
-            D("ready to go!!")
+            logging.info("ready to go!!")
 
-D_setlevel(1)
+logging.basicConfig(level=logging.INFO)
 
 state = State()
 state.process_file(os.path.join(bionic_libc_root, "SYSCALLS.TXT"))

@@ -1711,7 +1711,7 @@ def  optimize_if01( blocks ):
         while j < n and not blocks[j].isIf():
             j += 1
         if j > i:
-            D2("appending lines %d to %d" % (blocks[i].lineno, blocks[j-1].lineno))
+            logging.debug("appending lines %d to %d" % (blocks[i].lineno, blocks[j-1].lineno))
             result += blocks[i:j]
         if j >= n:
             break
@@ -1730,17 +1730,17 @@ def  optimize_if01( blocks ):
                 break
             dir = blocks[j].directive
             if dir == "endif":
-                D2("remove 'if 0' .. 'endif' (lines %d to %d)" % (blocks[i].lineno, blocks[j].lineno))
+                logging.debug("remove 'if 0' .. 'endif' (lines %d to %d)" % (blocks[i].lineno, blocks[j].lineno))
                 i = j + 1
             elif dir == "else":
                 # convert 'else' into 'if 1'
-                D2("convert 'if 0' .. 'else' into 'if 1' (lines %d to %d)" % (blocks[i].lineno, blocks[j-1].lineno))
+                logging.debug("convert 'if 0' .. 'else' into 'if 1' (lines %d to %d)" % (blocks[i].lineno, blocks[j-1].lineno))
                 blocks[j].directive = "if"
                 blocks[j].expr      = CppExpr( CppLineTokenizer("1").toTokenList() )
                 i = j
             elif dir == "elif":
                 # convert 'elif' into 'if'
-                D2("convert 'if 0' .. 'elif' into 'if'")
+                logging.debug("convert 'if 0' .. 'elif' into 'if'")
                 blocks[j].directive = "if"
                 i = j
             continue
@@ -1749,25 +1749,25 @@ def  optimize_if01( blocks ):
         k = find_matching_endif( blocks, j+1 )
         if k >= n:
             # unterminated #if 1, finish here
-            D2("unterminated 'if 1'")
+            logging.debug("unterminated 'if 1'")
             result += blocks[j+1:k]
             break
 
         dir = blocks[k].directive
         if dir == "endif":
-            D2("convert 'if 1' .. 'endif' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
+            logging.debug("convert 'if 1' .. 'endif' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
             result += optimize_if01(blocks[j+1:k])
             i       = k+1
         elif dir == "else":
             # convert 'else' into 'if 0'
-            D2("convert 'if 1' .. 'else' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
+            logging.debug("convert 'if 1' .. 'else' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
             result += optimize_if01(blocks[j+1:k])
             blocks[k].directive = "if"
             blocks[k].expr      = CppExpr( CppLineTokenizer("0").toTokenList() )
             i = k
         elif dir == "elif":
             # convert 'elif' into 'if 0'
-            D2("convert 'if 1' .. 'elif' (lines %d to %d)" % (blocks[j].lineno, blocks[k].lineno))
+            logging.debug("convert 'if 1' .. 'elif' (lines %d to %d)" % (blocks[j].lineno, blocks[k].lineno))
             result += optimize_if01(blocks[j+1:k])
             blocks[k].expr      = CppExpr( CppLineTokenizer("0").toTokenList() )
             i = k
@@ -1835,7 +1835,6 @@ def  test_optimizeAll():
     out = StringOutput()
     lines = string.split(text, '\n')
     list = BlockParser().parse( CppLinesTokenizer(lines) )
-    #D_setlevel(2)
     list.replaceTokens( kernel_token_replacements )
     list.optimizeAll( {"__KERNEL__":kCppUndefinedMacro} )
     list.write(out)
