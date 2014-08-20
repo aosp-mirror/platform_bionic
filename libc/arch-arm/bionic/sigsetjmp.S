@@ -33,8 +33,6 @@
  * SUCH DAMAGE.
  */
 
-#define _ALIGN_TEXT .align 0
-
 #include <private/bionic_asm.h>
 #include <machine/setjmp.h>
 
