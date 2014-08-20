@@ -52,7 +52,7 @@ LEAF(syscall,FRAMESZ)
 #else
 	move	a3, a4
 	move	a4, a5
-	REG_L	a5, FRAMESZ(sp)
+	move	a5, a6
 #endif
 	syscall
 	move	a0, v0
