@@ -1,51 +1,21 @@
 # common python utility routines for the Bionic tool scripts
 
-import sys, os, commands, string, commands
+import commands
+import logging
+import os
+import string
+import sys
 
-# basic debugging trace support
-# call D_setlevel to set the verbosity level
-# and D(), D2(), D3(), D4() to add traces
-#
-verbose = 0
 
 def panic(msg):
-    sys.stderr.write( find_program_name() + ": error: " )
-    sys.stderr.write( msg )
+    sys.stderr.write(os.path.basename(sys.argv[0]) + ": error: ")
+    sys.stderr.write(msg)
     sys.exit(1)
 
-def D(msg):
-    global verbose
-    if verbose > 0:
-        print msg
-
-def D2(msg):
-    global verbose
-    if verbose >= 2:
-        print msg
-
-def D3(msg):
-    global verbose
-    if verbose >= 3:
-        print msg
-
-def D4(msg):
-    global verbose
-    if verbose >= 4:
-        print msg
-
-def D_setlevel(level):
-    global verbose
-    verbose = level
-
-
-#  other stuff
-#
-#
-def find_program_name():
-    return os.path.basename(sys.argv[0])
 
 def find_program_dir():
     return os.path.dirname(sys.argv[0])
+
 
 class StringOutput:
     def __init__(self):
@@ -53,7 +23,7 @@ class StringOutput:
 
     def write(self,msg):
         self.line += msg
-        D2("write '%s'" % msg)
+        logging.debug("write '%s'" % msg)
 
     def get(self):
         return self.line
@@ -75,47 +45,6 @@ def create_file_path(path):
         if os.path.isdir(dir):
             continue
         os.mkdir(dir)
-
-def walk_source_files(paths,callback,args,excludes=[]):
-    """recursively walk a list of paths and files, only keeping the source files in directories"""
-    for path in paths:
-        if len(path) > 0 and path[0] == '@':
-            # this is the name of another file, include it and parse it
-            path = path[1:]
-            if os.path.exists(path):
-                for line in open(path):
-                    if len(line) > 0 and line[-1] == '\n':
-                        line = line[:-1]
-                    walk_source_files([line],callback,args,excludes)
-            continue
-        if not os.path.isdir(path):
-            callback(path,args)
-        else:
-            for root, dirs, files in os.walk(path):
-                #print "w-- %s (ex: %s)" % (repr((root,dirs)), repr(excludes))
-                if len(excludes):
-                    for d in dirs[:]:
-                        if os.path.join(root,d) in excludes:
-                            dirs.remove(d)
-                for f in files:
-                    r, ext = os.path.splitext(f)
-                    if ext in [ ".h", ".c", ".cpp", ".S" ]:
-                        callback( "%s/%s" % (root,f), args )
-
-def cleanup_dir(path):
-    """create a directory if needed, and ensure that it is totally empty
-       by removing any existing content in it"""
-    if not os.path.exists(path):
-        os.mkdir(path)
-    else:
-        for root, dirs, files in os.walk(path, topdown=False):
-            if root.endswith("kernel_headers/"):
-                # skip 'kernel_headers'
-                continue
-            for name in files:
-                os.remove(os.path.join(root, name))
-            for name in dirs:
-                os.rmdir(os.path.join(root, name))
 
 
 class BatchFileUpdater:
