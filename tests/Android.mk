@@ -92,6 +92,7 @@ libBionicStandardTests_src_files := \
     stdatomic_test.cpp \
     stdint_test.cpp \
     stdio_test.cpp \
+    stdio_ext_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \
     strings_test.cpp \

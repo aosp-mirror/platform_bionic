@@ -343,6 +343,11 @@ int	 setlinebuf(FILE *);
 int	 vasprintf(char ** __restrict, const char * __restrict,
     __va_list)
 		__printflike(2, 0);
+
+void clearerr_unlocked(FILE*);
+int feof_unlocked(FILE*);
+int ferror_unlocked(FILE*);
+
 __END_DECLS
 
 /*
