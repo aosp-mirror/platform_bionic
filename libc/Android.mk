@@ -62,6 +62,7 @@ libc_common_src_files := \
     bionic/system_properties_compat.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
+    stdio/stdio_ext.cpp \
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
