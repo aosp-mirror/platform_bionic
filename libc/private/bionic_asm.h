@@ -41,7 +41,7 @@
 #define ENTRY(f) \
     .text; \
     .globl f; \
-    _ALIGN_TEXT; \
+    .align __bionic_asm_align; \
     .type f, __bionic_asm_function_type; \
     f: \
     __bionic_asm_custom_entry(f); \
