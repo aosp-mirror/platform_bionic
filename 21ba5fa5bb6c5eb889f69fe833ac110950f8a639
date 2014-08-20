@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3344ad56_a2c82339",
+        "filename": "tests/stdio_ext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-20T17:01:43Z",
+      "side": 1,
+      "message": "Should flush the buffer and check that __fpending(fp) returns 0.",
+      "revId": "21ba5fa5bb6c5eb889f69fe833ac110950f8a639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3344ad56_824abfe6",
+        "filename": "tests/stdio_ext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-20T17:01:43Z",
+      "side": 1,
+      "message": "Whitespace.",
+      "revId": "21ba5fa5bb6c5eb889f69fe833ac110950f8a639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
