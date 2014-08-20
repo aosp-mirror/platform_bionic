@@ -199,8 +199,7 @@ if __name__ == "__main__":
         if opt == '-u':
             noUpdate = 0
         elif opt == '-v':
-            verbose = 1
-            D_setlevel(1)
+            logging.basicConfig(level=logging.DEBUG)
         elif opt == '-k':
             kernel_original_path = arg
         elif opt == '-d':
