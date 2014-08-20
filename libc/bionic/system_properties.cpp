@@ -611,6 +611,14 @@ const prop_info *__system_property_find(const char *name)
     return find_property(root_node(), name, strlen(name), NULL, 0, false);
 }
 
+// The C11 standard doesn't allow atomic loads from const fields,
+// though C++11 does.  Fudge it until standards get straightened out.
+static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
+                                               memory_order mo) {
+    atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
+    return atomic_load_explicit(non_const_s, mo);
+}
+
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
     if (__predict_false(compat_mode)) {
@@ -631,7 +639,7 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         // would be any different, so this should be OK.
         atomic_thread_fence(memory_order_acquire);
         if (serial ==
-                atomic_load_explicit(&(pi->serial), memory_order_relaxed)) {
+                load_const_atomic(&(pi->serial), memory_order_relaxed)) {
             if (name != 0) {
                 strcpy(name, pi->name);
             }
@@ -733,12 +741,12 @@ int __system_property_add(const char *name, unsigned int namelen,
 // Wait for non-locked serial, and retrieve it with acquire semantics.
 unsigned int __system_property_serial(const prop_info *pi)
 {
-    uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_acquire);
+    uint32_t serial = load_const_atomic(&pi->serial, memory_order_acquire);
     while (SERIAL_DIRTY(serial)) {
         __futex_wait(const_cast<volatile void *>(
                         reinterpret_cast<const void *>(&pi->serial)),
                      serial, NULL);
-        serial = atomic_load_explicit(&pi->serial, memory_order_acquire);
+        serial = load_const_atomic(&pi->serial, memory_order_acquire);
     }
     return serial;
 }
