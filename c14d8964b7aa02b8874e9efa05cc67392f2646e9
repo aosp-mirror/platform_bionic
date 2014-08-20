@@ -2,6 +2,74 @@
   "comments": [
     {
       "key": {
+        "uuid": "736385f2_efae151d",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "assert?",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736385f2_afb81d5d",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "this is pretty useless. see _DIAGASSERT if you really want to assert, but we usually don\u0027t bother with null pointers.",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736385f2_4fe76174",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "throw?",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13524923_e6dbdefd",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "DISALLOW_",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3344ad56_e7d758f6",
         "filename": "libc/bionic/malloc_info.cpp",
         "patchSetId": 3
@@ -31,6 +99,57 @@
       "side": 1,
       "message": "I think this is good.",
       "parentUuid": "3344ad56_e7d758f6",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33f66d4a_9c7a3491",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "size_t",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736385f2_8f1af9ce",
+        "filename": "libc/bionic/malloc_info.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "s/unsigned/size_t/?",
+      "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33f66d4a_5c494c78",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-20T21:27:44Z",
+      "side": 1,
+      "message": "FILE*",
       "revId": "c14d8964b7aa02b8874e9efa05cc67392f2646e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
