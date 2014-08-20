@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3344ad56_1050503f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-20T23:45:40Z",
+      "side": 1,
+      "message": "Check EINVAL cases?",
+      "revId": "6f27cedcc909dd58f1f3bb377593262810f28c69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d34b5172_aaf00b6c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-20T23:45:40Z",
+      "side": 1,
+      "message": "Test for EINVAL case?",
+      "revId": "6f27cedcc909dd58f1f3bb377593262810f28c69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
