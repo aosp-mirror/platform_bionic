@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33b90dab_6da9f17e",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "is it that we _can\u0027t_ do better for dlmalloc, or that we don\u0027t care enough to try?\n\n(might be worth a code comment explaining.)",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b90dab_4da42da8",
+        "filename": "libc/bionic/dlmalloc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "spurious blank line.",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13aec965_0c0abb87",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "i think i\u0027d prefer we didn\u0027t use R\"\". it\u0027s not obviously adding any benefit, and it is making things harder to read.",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13aec965_6cc00fc7",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "?",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b90dab_6d7b313f",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "heh. maybe you should encourage upstream to support C++11 better.",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b90dab_8d630592",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:31:23Z",
+      "side": 1,
+      "message": "ASSERT_TRUE(is_int(nr))?",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
