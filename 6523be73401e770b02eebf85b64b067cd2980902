@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "d34c31b5_059cd88b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T22:03:29Z",
+      "side": 1,
+      "message": "end - b ?\n\nWhy does c \u003e end not just mean we have an incomplete line?",
+      "range": {
+        "startLine": 97,
+        "startChar": 56,
+        "endLine": 97,
+        "endChar": 60
+      },
+      "revId": "6523be73401e770b02eebf85b64b067cd2980902",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d34c31b5_e5ae0c82",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T22:03:29Z",
+      "side": 1,
+      "message": "PAGE_SIZE?",
+      "range": {
+        "startLine": 115,
+        "startChar": 24,
+        "endLine": 115,
+        "endChar": 28
+      },
+      "revId": "6523be73401e770b02eebf85b64b067cd2980902",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53b4c1af_eb55cd81",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
