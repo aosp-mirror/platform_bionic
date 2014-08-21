@@ -466,14 +466,17 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
   return NULL;
 }
 
-static void resolve_ifunc_symbols(soinfo* si) {
+void soinfo::resolve_ifunc_symbols() {
+  if (!get_has_ifuncs()) {
+    return;
+  }
 
-  phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias);
+  phdr_table_unprotect_segments(phdr, phnum, load_bias);
 
   TRACE_TYPE(IFUNC, "CHECKING FOR IFUNCS AND PERFORMING SYMBOL UPDATES");
 
-  for (size_t i = 0; i < si->nchain; ++i) {
-    ElfW(Sym)* s = &si->symtab[i];
+  for (size_t i = 0; i < nchain; ++i) {
+    ElfW(Sym)* s = &symtab[i];
     if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
       // The address of the ifunc in the symbol table is the address of the
       // function that chooses the function to which the ifunc will refer.
@@ -481,12 +484,12 @@ static void resolve_ifunc_symbols(soinfo* si) {
       // in the linker and then return its result (minus the base offset).
       TRACE_TYPE(IFUNC, "FOUND IFUNC");
       ElfW(Addr) (*ifunc_ptr)();
-      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
-      s->st_value = (ifunc_ptr() - si->base);
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + base);
+      s->st_value = (ifunc_ptr() - base);
       TRACE_TYPE(IFUNC, "NEW VALUE IS %p", (void*)s->st_value);
     }
   }
-  phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias);
+  phdr_table_protect_segments(phdr, phnum, load_bias);
 }
 
 static unsigned elfhash(const char* _name) {
@@ -808,10 +811,6 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       soinfo_free(si);
       return NULL;
     }
-
-    // if the library has any ifuncs, we will need to resolve them so that dlsym
-    // can handle them properly
-    resolve_ifunc_symbols(si);
 
     return si;
 }
@@ -1567,6 +1566,8 @@ void soinfo::CallConstructors() {
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
   CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
+
+  resolve_ifunc_symbols();
 }
 
 void soinfo::CallDestructors() {

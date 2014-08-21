@@ -355,6 +355,22 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 endif
 
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
+# add target to run lp32 tests
+bionic-unit-tests-run-on-host32: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+	if [ ! -d /system -o ! -d /system/bin ]; then \
+	  echo "Attempting to create /system/bin"; \
+	  sudo mkdir -p -m 0777 /system/bin; \
+	fi
+	mkdir -p $(TARGET_OUT_DATA)/local/tmp
+	cp $(TARGET_OUT_EXECUTABLES)/linker /system/bin
+	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
+	ANDROID_DATA=$(TARGET_OUT_DATA) \
+	ANDROID_ROOT=$(TARGET_OUT) \
+	LD_LIBRARY_PATH=$(2ND_TARGET_OUT_SHARED_LIBRARIES) \
+		$(2ND_TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests32 $(BIONIC_TEST_FLAGS)
+endif
+
 endif # linux-x86
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
