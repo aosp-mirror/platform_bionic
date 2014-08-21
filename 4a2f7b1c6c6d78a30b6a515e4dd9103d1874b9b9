@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "13432982_c75834bd",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T21:16:19Z",
+      "side": 1,
+      "message": "Does it get correctly ignored by clang?  I worry about unconditionally adding nonstandard stuff, but maybe it\u0027s OK here.",
+      "parentUuid": "336bcdde_b76668f0",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938399c4_85e76473",
         "filename": "tests/Android.mk",
         "patchSetId": 1
