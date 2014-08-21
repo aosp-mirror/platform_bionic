@@ -126,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "d34c31b5_8240de6e",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T21:22:13Z",
+      "side": 1,
+      "message": "clang supports __attribute__((unused)).",
+      "parentUuid": "13432982_c75834bd",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938399c4_85e76473",
         "filename": "tests/Android.mk",
         "patchSetId": 1
