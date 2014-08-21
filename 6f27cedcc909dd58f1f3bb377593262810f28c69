@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d34b5172_ed161d66",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T00:04:00Z",
+      "side": 1,
+      "message": "as the man page warns, glibc fails those. i\u0027ll add them for bionic anyway.",
+      "parentUuid": "3344ad56_1050503f",
+      "revId": "6f27cedcc909dd58f1f3bb377593262810f28c69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d34b5172_aaf00b6c",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 1
