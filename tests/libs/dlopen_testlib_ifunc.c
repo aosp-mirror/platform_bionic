@@ -17,7 +17,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static int g_flag = 0;
+
+static void __attribute__((constructor)) init_flag() {
+  g_flag = 1;
+}
+
 const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
+const char* is_ctor_called() __attribute__ ((ifunc("is_ctor_called_ifun")));
+
+const char* return_true() {
+  return "true";
+}
+
+const char* return_false() {
+  return "false";
+}
 
 const char* f1() {
   return "unset";
@@ -25,6 +40,10 @@ const char* f1() {
 
 const char* f2() {
   return "set";
+}
+
+void* is_ctor_called_ifun() {
+  return g_flag == 0 ? return_false : return_true;
 }
 
 void* foo_ifunc() {

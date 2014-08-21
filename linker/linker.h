@@ -216,6 +216,7 @@ struct soinfo {
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
+  void resolve_ifunc_symbols();
 
  private:
   // This part of the structure is only available
