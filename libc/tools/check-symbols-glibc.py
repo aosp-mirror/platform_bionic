@@ -70,6 +70,7 @@ glibc_to_bionic_names = {
   '__res_mkquery': 'res_mkquery',
   '__res_query': 'res_query',
   '__res_search': 'res_search',
+  '__xpg_basename': '__gnu_basename',
 }
 
 glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
