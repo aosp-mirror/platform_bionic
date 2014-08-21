@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "13aec965_cc8a63cd",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:25:12Z",
+      "side": 1,
+      "message": "yeah, just use that as the comment here.",
+      "parentUuid": "f393f515_9dc4a377",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "538da1f1_2369b4fe",
         "filename": "libc/include/stdatomic.h",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "This could probably use a comment.  The unused attribute is needed only for the __sync version, which we only need for gcc.  I don\u0027t want to rely on the existing __unused, since it\u0027s not defined in all contexts.",
       "parentUuid": "538da1f1_2369b4fe",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a7d188_aaccabf6",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:25:12Z",
+      "side": 1,
+      "message": "might be simpler all round to just use __attribute__((unused)) directly.",
+      "parentUuid": "336bcdde_b76668f0",
       "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -194,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "d3a7d188_2a73dbf4",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:25:12Z",
+      "side": 1,
+      "message": "if it\u0027s too flaky we\u0027re more likely to remove it.",
+      "parentUuid": "f393f515_3dad4fba",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938399c4_859204d4",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 1
@@ -275,6 +329,23 @@
       "side": 1,
       "message": "I adjusted it to be on the order of half a second, similar to some of the other longer running tests.",
       "parentUuid": "538da1f1_c359e86c",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a7d188_0a693ffe",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T18:25:12Z",
+      "side": 1,
+      "message": "btw, 2-space indent in bionic.\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Spaces_vs._Tabs",
       "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
