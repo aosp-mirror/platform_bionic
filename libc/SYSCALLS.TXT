@@ -315,7 +315,7 @@ int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # MIPS-specific
-int     _flush_cache:cacheflush(char* addr, const int nbytes, const int op) mips,mips64
+int     _flush_cache:cacheflush(char* addr, const int nbytes, const int op) mips
 int     __set_tls:set_thread_area(void*) mips,mips64
 
 # x86-specific
