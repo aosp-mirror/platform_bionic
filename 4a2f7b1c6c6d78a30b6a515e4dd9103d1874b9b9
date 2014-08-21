@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "938399c4_25c538d6",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "are these only needed for __GLIBC__?\n\n(what was \u003cstddef.h\u003e for again?)",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "538da1f1_2369b4fe",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "i\u0027m not sure i understand this.\n\nis this another case that should be __GLIBC__?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "938399c4_85e76473",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "or ...nativetest64/...64",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7388e5e2_64c82439",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "likewise",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "938399c4_a5cf08eb",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "size_t.\n\nstatic on all this stuff.",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7388e5e2_84cd284a",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "938399c4_859204d4",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "why can\u0027t these go in the struct?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "538da1f1_834be093",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "pass the struct rather than having a global.",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "538da1f1_c359e86c",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-21T02:28:13Z",
+      "side": 1,
+      "message": "size_t\n\nhow long does this take to run?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
