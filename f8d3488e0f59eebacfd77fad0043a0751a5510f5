@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "33b90dab_b668962e",
+        "filename": "libc/bionic/malloc_info.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-21T22:10:42Z",
+      "side": 1,
+      "message": "It\u0027s to avoid escaping the quotes around the attribute. Much easier to read imo.",
+      "parentUuid": "13aec965_0c0abb87",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13aec965_6cc00fc7",
         "filename": "tests/Android.mk",
         "patchSetId": 4
@@ -64,6 +82,24 @@
       "writtenOn": "2014-08-21T18:31:23Z",
       "side": 1,
       "message": "?",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b90dab_56103ab5",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-21T22:10:42Z",
+      "side": 1,
+      "message": "tinyxml.h has a bunch of if (this), which is undefined.",
+      "parentUuid": "13aec965_6cc00fc7",
       "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -98,6 +134,24 @@
       "writtenOn": "2014-08-21T18:31:23Z",
       "side": 1,
       "message": "ASSERT_TRUE(is_int(nr))?",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a7d188_5ea1357e",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-21T22:10:42Z",
+      "side": 1,
+      "message": "That\u0027s essentially what this is, just using the tinyxml API that\u0027s available (the int conversion APIs exist only for attributes, not for the element text).",
+      "parentUuid": "33b90dab_8d630592",
       "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
