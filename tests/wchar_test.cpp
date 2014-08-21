@@ -489,3 +489,34 @@ TEST(wchar, mbrtowc_15439554) {
   EXPECT_EQ(4U, n);
   EXPECT_EQ(L'𤭢', wc);
 }
+
+TEST(wchar, open_wmemstream) {
+  wchar_t* p = nullptr;
+  size_t size = 0;
+  FILE* fp = open_wmemstream(&p, &size);
+  ASSERT_NE(EOF, fputws(L"hello, world!", fp));
+  fclose(fp);
+
+  ASSERT_STREQ(L"hello, world!", p);
+  ASSERT_EQ(wcslen(L"hello, world!"), size);
+  free(p);
+}
+
+TEST(stdio, open_wmemstream_EINVAL) {
+#if defined(__BIONIC__)
+  wchar_t* p;
+  size_t size;
+
+  // Invalid buffer.
+  errno = 0;
+  ASSERT_EQ(nullptr, open_wmemstream(nullptr, &size));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Invalid size.
+  errno = 0;
+  ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
+  ASSERT_EQ(EINVAL, errno);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}

@@ -390,6 +390,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
     upstream-openbsd/lib/libc/stdio/findfp.c \
+    upstream-openbsd/lib/libc/stdio/fmemopen.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
@@ -418,6 +419,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/getwchar.c \
     upstream-openbsd/lib/libc/stdio/makebuf.c \
     upstream-openbsd/lib/libc/stdio/mktemp.c \
+    upstream-openbsd/lib/libc/stdio/open_memstream.c \
+    upstream-openbsd/lib/libc/stdio/open_wmemstream.c \
     upstream-openbsd/lib/libc/stdio/perror.c \
     upstream-openbsd/lib/libc/stdio/printf.c \
     upstream-openbsd/lib/libc/stdio/putc.c \

@@ -166,6 +166,7 @@ extern wint_t towctrans(wint_t, wctrans_t);
 extern wctrans_t wctrans(const char*);
 
 #if __POSIX_VISIBLE >= 200809
+FILE* open_wmemstream(wchar_t**, size_t*);
 wchar_t* wcsdup(const wchar_t*);
 size_t wcsnlen(const wchar_t*, size_t);
 #endif
