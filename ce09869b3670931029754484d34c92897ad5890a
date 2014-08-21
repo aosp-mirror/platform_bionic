@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d3a7d188_5345aed6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-21T21:25:41Z",
+      "side": 1,
+      "message": "Done - removed",
+      "parentUuid": "d34c31b5_a2207aff",
+      "revId": "ce09869b3670931029754484d34c92897ad5890a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d34c31b5_021e8ec5",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-21T21:15:25Z",
       "side": 1,
       "message": "member function?",
+      "revId": "ce09869b3670931029754484d34c92897ad5890a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3a7d188_734a2aea",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-21T21:25:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d34c31b5_021e8ec5",
       "revId": "ce09869b3670931029754484d34c92897ad5890a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
