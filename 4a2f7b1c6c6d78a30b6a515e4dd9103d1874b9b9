@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f393f515_9dc4a377",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "stddef.h is for ptrdiff_t.  It\u0027s often defined due to transitive inclusion, but I really want to have only a single version of this file and not depend on that.",
+      "parentUuid": "938399c4_25c538d6",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "538da1f1_2369b4fe",
         "filename": "libc/include/stdatomic.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "336bcdde_b76668f0",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "This could probably use a comment.  The unused attribute is needed only for the __sync version, which we only need for gcc.  I don\u0027t want to rely on the existing __unused, since it\u0027s not defined in all contexts.",
+      "parentUuid": "538da1f1_2369b4fe",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938399c4_85e76473",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-08-21T02:28:13Z",
       "side": 1,
       "message": "or ...nativetest64/...64",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7371c5c6_f985b74b",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "Will add.",
+      "parentUuid": "938399c4_85e76473",
       "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "336bcdde_77cc50a4",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "Good point, though unsigned long seems better still.  It\u0027s not used as a size.",
+      "parentUuid": "938399c4_a5cf08eb",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7388e5e2_84cd284a",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 1
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "f393f515_3dad4fba",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "It checks for weird behavior that invalidates the test, and is likely to indicate an issue that should be addressed.  I made it an option so that it could be easily turned off in case I\u0027m wrong and we do start seeing spurious failures.  I don\u0027t expect that to happen.\n\nIf we want this test in L at all, I\u0027d be tempted to set it to false there, to minimize risk.",
+      "parentUuid": "7388e5e2_84cd284a",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "938399c4_859204d4",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 1
@@ -115,6 +205,24 @@
       "writtenOn": "2014-08-21T02:28:13Z",
       "side": 1,
       "message": "why can\u0027t these go in the struct?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7371c5c6_99c4bb77",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "Sure.  A very small possible down side is that the relative position will be fixed, thus probably testing slightly fewer scenarios across machines.  Since this is a test, I didn\u0027t really care.  But I\u0027ll go ahead and change it.",
+      "parentUuid": "938399c4_859204d4",
       "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -149,6 +257,24 @@
       "writtenOn": "2014-08-21T02:28:13Z",
       "side": 1,
       "message": "size_t\n\nhow long does this take to run?",
+      "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7371c5c6_5940631f",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-21T18:17:04Z",
+      "side": 1,
+      "message": "I adjusted it to be on the order of half a second, similar to some of the other longer running tests.",
+      "parentUuid": "538da1f1_c359e86c",
       "revId": "4a2f7b1c6c6d78a30b6a515e4dd9103d1874b9b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
