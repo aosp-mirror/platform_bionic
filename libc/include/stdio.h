@@ -325,6 +325,11 @@ int	 putc_unlocked(int, FILE *);
 int	 putchar_unlocked(int);
 #endif /* __POSIX_VISIBLE >= 199506 */
 
+#if __POSIX_VISIBLE >= 200809
+FILE* fmemopen(void*, size_t, const char*);
+FILE* open_memstream(char**, size_t*);
+#endif /* __POSIX_VISIBLE >= 200809 */
+
 __END_DECLS
 
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */

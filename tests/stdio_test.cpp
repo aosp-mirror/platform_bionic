@@ -676,3 +676,82 @@ TEST(stdio, fpos_t_and_seek) {
 
   fclose(fp);
 }
+
+TEST(stdio, fmemopen) {
+  char buf[16];
+  memset(buf, 0, sizeof(buf));
+  FILE* fp = fmemopen(buf, sizeof(buf), "r+");
+  ASSERT_EQ('<', fputc('<', fp));
+  ASSERT_NE(EOF, fputs("abc>\n", fp));
+  fflush(fp);
+
+  ASSERT_STREQ("<abc>\n", buf);
+
+  rewind(fp);
+
+  char line[16];
+  char* s = fgets(line, sizeof(line), fp);
+  ASSERT_TRUE(s != NULL);
+  ASSERT_STREQ("<abc>\n", s);
+
+  fclose(fp);
+}
+
+TEST(stdio, fmemopen_NULL) {
+  FILE* fp = fmemopen(nullptr, 128, "r+");
+  ASSERT_NE(EOF, fputs("xyz\n", fp));
+
+  rewind(fp);
+
+  char line[16];
+  char* s = fgets(line, sizeof(line), fp);
+  ASSERT_TRUE(s != NULL);
+  ASSERT_STREQ("xyz\n", s);
+
+  fclose(fp);
+}
+
+TEST(stdio, fmemopen_EINVAL) {
+  char buf[16];
+
+  // Invalid size.
+  errno = 0;
+  ASSERT_EQ(nullptr, fmemopen(buf, 0, "r+"));
+  ASSERT_EQ(EINVAL, errno);
+
+  // No '+' with NULL buffer.
+  errno = 0;
+  ASSERT_EQ(nullptr, fmemopen(nullptr, 0, "r"));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(stdio, open_memstream) {
+  char* p = nullptr;
+  size_t size = 0;
+  FILE* fp = open_memstream(&p, &size);
+  ASSERT_NE(EOF, fputs("hello, world!", fp));
+  fclose(fp);
+
+  ASSERT_STREQ("hello, world!", p);
+  ASSERT_EQ(strlen("hello, world!"), size);
+  free(p);
+}
+
+TEST(stdio, open_memstream_EINVAL) {
+#if defined(__BIONIC__)
+  char* p;
+  size_t size;
+
+  // Invalid buffer.
+  errno = 0;
+  ASSERT_EQ(nullptr, open_memstream(nullptr, &size));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Invalid size.
+  errno = 0;
+  ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
+  ASSERT_EQ(EINVAL, errno);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}
