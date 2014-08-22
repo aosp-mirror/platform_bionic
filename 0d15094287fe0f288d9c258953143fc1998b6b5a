@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13c88974_3694d830",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T20:37:03Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be 1?",
+      "revId": "0d15094287fe0f288d9c258953143fc1998b6b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_0ba6c197",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T20:37:03Z",
+      "side": 1,
+      "message": "oh, weird, so we started with version 0? i took 0 to mean \"old struct\".",
+      "revId": "0d15094287fe0f288d9c258953143fc1998b6b5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
