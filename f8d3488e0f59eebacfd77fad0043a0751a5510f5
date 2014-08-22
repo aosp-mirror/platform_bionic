@@ -124,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "53076152_500fcc96",
+        "filename": "tests/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-22T00:26:35Z",
+      "side": 1,
+      "message": "Updated to tinyxml 2.6.2 and it fixes the issue.",
+      "parentUuid": "13432982_32f83859",
+      "revId": "f8d3488e0f59eebacfd77fad0043a0751a5510f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33b90dab_6d7b313f",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 4
