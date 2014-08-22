@@ -35,8 +35,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <sys/stat.h>
 #include <unistd.h>
+
+#include <new>
 
 // Private C library headers.
 #include "private/bionic_tls.h"
@@ -290,17 +291,7 @@ static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
     return NULL;
   }
 
-  soinfo* si = g_soinfo_allocator.alloc();
-
-  // Initialize the new element.
-  memset(si, 0, sizeof(soinfo));
-  strlcpy(si->name, name, sizeof(si->name));
-  si->flags = FLAG_NEW_SOINFO;
-
-  if (file_stat != NULL) {
-    si->set_st_dev(file_stat->st_dev);
-    si->set_st_ino(file_stat->st_ino);
-  }
+  soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat);
 
   sonext->next = si;
   sonext = si;
@@ -464,6 +455,19 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
 
 
   return NULL;
+}
+
+soinfo::soinfo(const char* name, const struct stat* file_stat) {
+  memset(this, 0, sizeof(*this));
+
+  strlcpy(this->name, name, sizeof(this->name));
+  flags = FLAG_NEW_SOINFO;
+  version = SOINFO_VERSION;
+
+  if (file_stat != NULL) {
+    set_st_dev(file_stat->st_dev);
+    set_st_ino(file_stat->st_ino);
+  }
 }
 
 void soinfo::resolve_ifunc_symbols() {
@@ -860,7 +864,7 @@ static void soinfo_unload(soinfo* si) {
     TRACE("unloading '%s'", si->name);
     si->CallDestructors();
 
-    if ((si->flags | FLAG_NEW_SOINFO) != 0) {
+    if (si->has_min_version(0)) {
       si->get_children().for_each([&] (soinfo* child) {
         TRACE("%s needs to unload %s", si->name, child->name);
         soinfo_unload(child);
@@ -1585,16 +1589,14 @@ void soinfo::CallDestructors() {
 }
 
 void soinfo::add_child(soinfo* child) {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return;
+  if (has_min_version(0)) {
+    this->children.push_front(child);
+    child->parents.push_front(this);
   }
-
-  this->children.push_front(child);
-  child->parents.push_front(this);
 }
 
 void soinfo::remove_all_links() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+  if (!has_min_version(0)) {
     return;
   }
 
@@ -1617,51 +1619,45 @@ void soinfo::remove_all_links() {
 }
 
 void soinfo::set_st_dev(dev_t dev) {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return;
+  if (has_min_version(0)) {
+    st_dev = dev;
   }
-
-  st_dev = dev;
 }
 
 void soinfo::set_st_ino(ino_t ino) {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return;
+  if (has_min_version(0)) {
+    st_ino = ino;
   }
-
-  st_ino = ino;
 }
 
 void soinfo::set_has_ifuncs(bool ifuncs) {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return;
+  if (has_min_version(1)) {
+    has_ifuncs = ifuncs;
   }
-
-  has_ifuncs = ifuncs;
 }
 
 dev_t soinfo::get_st_dev() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return 0;
+  if (has_min_version(0)) {
+    return st_dev;
   }
 
-  return st_dev;
+  return 0;
 };
 
 ino_t soinfo::get_st_ino() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return 0;
+  if (has_min_version(0)) {
+    return st_ino;
   }
 
-  return st_ino;
+  return 0;
 }
 
 bool soinfo::get_has_ifuncs() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return false;
+  if (has_min_version(1)) {
+    return has_ifuncs;
   }
 
-  return has_ifuncs;
+  return false;
 }
 
 // This is a return on get_children() in case
@@ -1669,11 +1665,11 @@ bool soinfo::get_has_ifuncs() {
 static soinfo::soinfo_list_t g_empty_list;
 
 soinfo::soinfo_list_t& soinfo::get_children() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return g_empty_list;
+  if (has_min_version(0)) {
+    return this->children;
   }
 
-  return this->children;
+  return g_empty_list;
 }
 
 /* Force any of the closed stdin, stdout and stderr to be associated with
@@ -2135,7 +2131,12 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 /*
  * This is linker soinfo for GDB. See details below.
  */
-static soinfo linker_soinfo_for_gdb;
+#if defined(__LP64__)
+#define LINKER_PATH "/system/bin/linker64"
+#else
+#define LINKER_PATH "/system/bin/linker"
+#endif
+static soinfo linker_soinfo_for_gdb(LINKER_PATH, nullptr);
 
 /* gdb expects the linker to be in the debug shared object list.
  * Without this, gdb has trouble locating the linker's ".text"
@@ -2145,12 +2146,6 @@ static soinfo linker_soinfo_for_gdb;
  * be on the soinfo list.
  */
 static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
-#if defined(__LP64__)
-  strlcpy(linker_soinfo_for_gdb.name, "/system/bin/linker64", sizeof(linker_soinfo_for_gdb.name));
-#else
-  strlcpy(linker_soinfo_for_gdb.name, "/system/bin/linker", sizeof(linker_soinfo_for_gdb.name));
-#endif
-  linker_soinfo_for_gdb.flags = FLAG_NEW_SOINFO;
   linker_soinfo_for_gdb.base = linker_base;
 
   /*
@@ -2369,10 +2364,6 @@ extern "C" void _start();
  * function, or other GOT reference will generate a segfault.
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
-  // Initialize static variables.
-  solist = get_libdl_info();
-  sonext = get_libdl_info();
-
   KernelArgumentBlock args(raw_args);
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
@@ -2380,8 +2371,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  soinfo linker_so;
-  memset(&linker_so, 0, sizeof(soinfo));
+  soinfo linker_so("[dynamic linker]", nullptr);
 
   // If the linker is not acting as PT_INTERP entry_point is equal to
   // _start. Which means that the linker is running as an executable and
@@ -2393,7 +2383,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     __libc_fatal("This is %s, the helper program for shared library executables.\n", args.argv[0]);
   }
 
-  strcpy(linker_so.name, "[dynamic linker]");
   linker_so.base = linker_addr;
   linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
   linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
@@ -2416,6 +2405,13 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // Initialize the linker's own global variables
   linker_so.CallConstructors();
+
+  // Initialize static variables. Note that in order to
+  // get correct libdl_info we need to call constructors
+  // before get_libdl_info().
+  solist = get_libdl_info();
+  sonext = get_libdl_info();
+
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.

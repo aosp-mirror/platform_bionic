@@ -232,17 +232,12 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
-// Defined as global because we do not yet have access
-// to synchronization functions __cxa_guard_* needed
-// to define statics inside functions.
-static soinfo __libdl_info;
+static soinfo __libdl_info("libdl.so", nullptr);
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
-  if (__libdl_info.name[0] == '\0') {
-    // initialize
-    strncpy(__libdl_info.name, "libdl.so", sizeof(__libdl_info.name));
-    __libdl_info.flags = FLAG_LINKED | FLAG_NEW_SOINFO;
+  if ((__libdl_info.flags & FLAG_LINKED) == 0) {
+    __libdl_info.flags |= FLAG_LINKED;
     __libdl_info.strtab = ANDROID_LIBDL_STRTAB;
     __libdl_info.symtab = g_libdl_symtab;
     __libdl_info.nbucket = sizeof(g_libdl_buckets)/sizeof(unsigned);
