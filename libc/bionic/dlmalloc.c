@@ -66,13 +66,13 @@ size_t __mallinfo_nbins() {
   return 0;
 }
 
-struct mallinfo __mallinfo_arena_info(size_t) {
+struct mallinfo __mallinfo_arena_info(size_t aidx __unused) {
   struct mallinfo mi;
   memset(&mi, 0, sizeof(mi));
   return mi;
 }
 
-struct mallinfo __mallinfo_bin_info(size_t, size_t) {
+struct mallinfo __mallinfo_bin_info(size_t aidx __unused, size_t bidx __unused) {
   struct mallinfo mi;
   memset(&mi, 0, sizeof(mi));
   return mi;
