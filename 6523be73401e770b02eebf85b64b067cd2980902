@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "53076152_96cdac6e",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-22T03:53:01Z",
+      "side": 1,
+      "message": "end -b is must. Otherwise, it could access the out of range memory.",
+      "parentUuid": "d34c31b5_059cd88b",
+      "revId": "6523be73401e770b02eebf85b64b067cd2980902",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d34c31b5_e5ae0c82",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
