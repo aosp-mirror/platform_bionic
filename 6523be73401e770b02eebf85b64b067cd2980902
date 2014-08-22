@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "330cad77_f536b0cf",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-22T03:46:53Z",
+      "side": 1,
+      "message": "Yes. end -b is better. Will have it in patchset2.",
+      "parentUuid": "d34c31b5_059cd88b",
+      "revId": "6523be73401e770b02eebf85b64b067cd2980902",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d34c31b5_e5ae0c82",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
