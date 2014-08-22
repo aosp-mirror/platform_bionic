@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "131a49b4_4fa60567",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T21:45:29Z",
+      "side": 1,
+      "message": "s/unsigned long/uint_least32_t/ then. google style is to always use explicit sizes unless there\u0027s an actual reason not to, so using \u0027unsigned long\u0027 makes it look like you\u0027re deliberately trying to use a different size on LP32 and LP64. (even if you were, a typedef would probably be good to make that clear.)",
+      "revId": "6d2a96c74667dceaa7ecc72fb2d7b5155d85a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "131a49b4_6fa1414d",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T21:45:29Z",
+      "side": 1,
+      "message": "this should be size_t. (counters and indexes are always size_t.)",
+      "revId": "6d2a96c74667dceaa7ecc72fb2d7b5155d85a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
