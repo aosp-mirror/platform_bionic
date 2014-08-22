@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93cb9965_25c73882",
+        "filename": "tests/Android.mk",
+        "patchSetId": 8
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-22T17:24:31Z",
+      "side": 1,
+      "message": "tinyxml2 uses __android_log_assert()",
+      "revId": "4caa1f09770ea3e5ca22afbe8aa0900810a0dbfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
