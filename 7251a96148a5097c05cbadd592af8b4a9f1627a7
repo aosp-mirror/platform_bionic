@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "131a49b4_2ff3c97f",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-22T21:24:26Z",
+      "side": 1,
+      "message": "I fixed the comment.\n\nThe test is reasonably likely to fail if the alignment is wrong. I\u0027ll see a half-updated value.  That\u0027s probably good enough.",
+      "parentUuid": "131a49b4_0f4fed81",
+      "revId": "7251a96148a5097c05cbadd592af8b4a9f1627a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13c88974_36a93880",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-22T20:40:36Z",
       "side": 1,
       "message": "i\u0027m confused by the choice of \u0027unsigned long\u0027. if you deliberately want LP32 and LP64 to use their natural sizes, that\u0027s worth a comment up in the struct. if you wanted a specific size, you\u0027ll have to use one.",
+      "revId": "7251a96148a5097c05cbadd592af8b4a9f1627a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_ebb8855e",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-22T21:24:26Z",
+      "side": 1,
+      "message": "It doesn\u0027t really matter, I think.  I want something that\u0027s big enough to hold BIG (i.e. at least 32 bits), and small enough to keep the implementation from having to use locks.  Plain unsigned int would work on our architectures, but I think would be theoretically less portable.  uint_least32_t would also work.",
+      "parentUuid": "13c88974_36a93880",
       "revId": "7251a96148a5097c05cbadd592af8b4a9f1627a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
