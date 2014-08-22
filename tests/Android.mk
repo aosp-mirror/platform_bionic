@@ -130,6 +130,7 @@ libBionicStandardTests_cppflags := \
 
 libBionicStandardTests_c_includes := \
     bionic/libc \
+    external/tinyxml2 \
 
 libBionicStandardTests_ldlibs_host := \
     -lrt \
@@ -243,6 +244,10 @@ include $(LOCAL_PATH)/Android.build.mk
 bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
+bionic-unit-tests_static_libraries := \
+    libtinyxml2 \
+    liblog \
+
 bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
@@ -280,6 +285,8 @@ bionic-unit-tests-static_static_libraries := \
     libm \
     libc \
     libstdc++ \
+    libtinyxml2 \
+    liblog \
 
 bionic-unit-tests-static_force_static_executable := true
 
