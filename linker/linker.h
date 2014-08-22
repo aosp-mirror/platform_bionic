@@ -30,6 +30,7 @@
 #define _LINKER_H_
 
 #include <elf.h>
+#include <inttypes.h>
 #include <link.h>
 #include <unistd.h>
 #include <android/dlext.h>
@@ -87,6 +88,8 @@
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
+
+#define SOINFO_VERSION 1
 
 #define SOINFO_NAME_LEN 128
 
@@ -195,6 +198,9 @@ struct soinfo {
   bool has_text_relocations;
 #endif
   bool has_DT_SYMBOLIC;
+
+  soinfo(const char* name, const struct stat* file_stat);
+
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
@@ -209,10 +215,11 @@ struct soinfo {
   dev_t get_st_dev();
   bool get_has_ifuncs();
 
-
-
   soinfo_list_t& get_children();
 
+  bool inline has_min_version(uint32_t min_version) {
+    return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
+  }
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
@@ -221,10 +228,9 @@ struct soinfo {
  private:
   // This part of the structure is only available
   // when FLAG_NEW_SOINFO is set in this->flags.
-  unsigned int version;
+  uint32_t version;
 
-  bool has_ifuncs;
-
+  // version >= 0
   dev_t st_dev;
   ino_t st_ino;
 
@@ -232,6 +238,8 @@ struct soinfo {
   soinfo_list_t children;
   soinfo_list_t parents;
 
+  // version >= 1
+  bool has_ifuncs;
 };
 
 extern soinfo* get_libdl_info();
