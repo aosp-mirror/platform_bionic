@@ -134,6 +134,7 @@ libc_bionic_src_files := \
     bionic/link.cpp \
     bionic/locale.cpp \
     bionic/lstat.cpp \
+    bionic/malloc_info.cpp \
     bionic/mbrtoc16.cpp \
     bionic/mbrtoc32.cpp \
     bionic/mbstate.cpp \
