@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f316958e_eb2085b7",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T19:47:54Z",
+      "side": 1,
+      "message": "couldn\u0027t we just link that in?\n\nor, if we don\u0027t actually care, just remove this comment.",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "131a49b4_4ca61367",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T19:47:54Z",
+      "side": 1,
+      "message": "we can probably lose this without losing any information :-)",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_0b4fe181",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T19:47:54Z",
+      "side": 1,
+      "message": "or has_min_version(1) would be fewer lines for these?",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_6b449562",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2419,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T19:47:54Z",
+      "side": 1,
+      "message": ".",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_2b757da2",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-22T19:47:54Z",
+      "side": 1,
+      "message": "the only reason to move this down is to set a precedent for putting things in chronological order? (since these went into the same release.)\n\nmaybe put explicit markers in showing where version 0 and version 1 and (in future) version 2 actually start/end?",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
