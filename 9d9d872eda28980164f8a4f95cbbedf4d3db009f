@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "131a49b4_4c6e1308",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-22T20:30:47Z",
+      "side": 1,
+      "message": "we don\u0027t actually care...",
+      "parentUuid": "f316958e_eb2085b7",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "131a49b4_4ca61367",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-22T19:47:54Z",
       "side": 1,
       "message": "we can probably lose this without losing any information :-)",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_4b11d925",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-22T20:30:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "131a49b4_4ca61367",
       "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "13c88974_16bd1cc3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-22T20:30:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f316958e_0b4fe181",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f316958e_6b449562",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "f316958e_4b9ef951",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2419,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-22T20:30:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f316958e_6b449562",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f316958e_2b757da2",
         "filename": "linker/linker.h",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2014-08-22T19:47:54Z",
       "side": 1,
       "message": "the only reason to move this down is to set a precedent for putting things in chronological order? (since these went into the same release.)\n\nmaybe put explicit markers in showing where version 0 and version 1 and (in future) version 2 actually start/end?",
+      "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f316958e_0b17e11e",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-22T20:30:47Z",
+      "side": 1,
+      "message": "has_ifunc is not part of L release.\n\nmarkers - done.",
+      "parentUuid": "f316958e_2b757da2",
       "revId": "9d9d872eda28980164f8a4f95cbbedf4d3db009f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
