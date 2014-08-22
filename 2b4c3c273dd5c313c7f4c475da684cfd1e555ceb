@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "f316958e_6b0c9513",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-22T20:30:08Z",
+      "side": 1,
+      "message": "I mostly want to make sure that we do align the atomics, so that we\u0027re standards-conforming where we try to be.  Granted, this is unlikely to be an issue on architectures we care about.  I\u0027m not sure what happens if I say \"packed\" in a structure with atomics.  I\u0027m not 100% sure I want to know. :-)",
+      "parentUuid": "131a49b4_8c6e4b3b",
+      "revId": "2b4c3c273dd5c313c7f4c475da684cfd1e555ceb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13c88974_963dacd9",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 4
@@ -81,6 +99,24 @@
       "writtenOn": "2014-08-22T19:54:27Z",
       "side": 1,
       "message": "huh. i didn\u0027t know you could do that. there\u0027s probably a bunch of other places where we should have used that.",
+      "revId": "2b4c3c273dd5c313c7f4c475da684cfd1e555ceb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "131a49b4_ec5c1f5f",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-22T20:30:08Z",
+      "side": 1,
+      "message": "Seems to work.  I was surprised by the values printed with memory_order_relaxed, but they were consistent enough that it didn\u0027t look like a printing error.",
+      "parentUuid": "13c88974_b63aa8dc",
       "revId": "2b4c3c273dd5c313c7f4c475da684cfd1e555ceb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
