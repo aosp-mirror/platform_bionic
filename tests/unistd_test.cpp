@@ -431,6 +431,10 @@ TEST(unistd, getpid_caching_and_clone) {
 
   void* child_stack[1024];
   int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
+  if (clone_result == -1 && errno == EPERM && getuid() != 0) {
+    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
+    return;
+  }
   ASSERT_NE(clone_result, -1);
 
   ASSERT_EQ(parent_pid, getpid());
