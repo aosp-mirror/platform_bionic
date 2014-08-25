@@ -38,11 +38,11 @@ void* operator new[](std::size_t size) {
     return p;
 }
 
-void  operator delete(void* ptr) {
+void  operator delete(void* ptr) throw() {
     free(ptr);
 }
 
-void  operator delete[](void* ptr) {
+void  operator delete[](void* ptr) throw() {
     free(ptr);
 }
 
@@ -54,10 +54,10 @@ void* operator new[](std::size_t size, const std::nothrow_t&) {
     return malloc(size);
 }
 
-void  operator delete(void* ptr, const std::nothrow_t&) {
+void  operator delete(void* ptr, const std::nothrow_t&) throw() {
     free(ptr);
 }
 
-void  operator delete[](void* ptr, const std::nothrow_t&) {
+void  operator delete[](void* ptr, const std::nothrow_t&) throw() {
     free(ptr);
 }
