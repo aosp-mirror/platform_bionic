@@ -201,14 +201,6 @@ static int map_prop_area_rw()
         return -1;
     }
 
-    // TODO: Is this really required ? Does android run on any kernels that
-    // don't support O_CLOEXEC ?
-    const int ret = fcntl(fd, F_SETFD, FD_CLOEXEC);
-    if (ret < 0) {
-        close(fd);
-        return -1;
-    }
-
     if (ftruncate(fd, PA_SIZE) < 0) {
         close(fd);
         return -1;
@@ -271,18 +263,9 @@ static int map_fd_ro(const int fd) {
 
 static int map_prop_area()
 {
-    int fd(open(property_filename, O_RDONLY | O_NOFOLLOW | O_CLOEXEC));
-    if (fd >= 0) {
-        /* For old kernels that don't support O_CLOEXEC */
-        const int ret = fcntl(fd, F_SETFD, FD_CLOEXEC);
-        if (ret < 0) {
-            close(fd);
-            return -1;
-        }
-    }
-
+    int fd = open(property_filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
     bool close_fd = true;
-    if ((fd < 0) && (errno == ENOENT)) {
+    if (fd == -1 && errno == ENOENT) {
         /*
          * For backwards compatibility, if the file doesn't
          * exist, we use the environment to get the file descriptor.

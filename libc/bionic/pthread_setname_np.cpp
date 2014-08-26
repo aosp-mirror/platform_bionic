@@ -67,7 +67,7 @@ int pthread_setname_np(pthread_t t, const char* thread_name) {
   }
   char comm_name[sizeof(TASK_COMM_FMT) + 8];
   snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, tid);
-  int fd = open(comm_name, O_WRONLY);
+  int fd = open(comm_name, O_CLOEXEC | O_WRONLY);
   if (fd == -1) {
     return errno;
   }

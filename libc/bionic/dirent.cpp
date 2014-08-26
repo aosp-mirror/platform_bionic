@@ -78,7 +78,7 @@ DIR* fdopendir(int fd) {
 }
 
 DIR* opendir(const char* path) {
-  int fd = open(path, O_RDONLY | O_DIRECTORY);
+  int fd = open(path, O_CLOEXEC | O_DIRECTORY | O_RDONLY);
   return (fd != -1) ? __allocate_DIR(fd) : NULL;
 }
 
