@@ -616,47 +616,6 @@ net_mask(struct in_addr in)	/*!< XXX - should really use system's version of thi
 }
 #endif
 
-#ifdef ANDROID_CHANGES
-static int
-real_randomid(u_int *random_value) {
-	/* open the nonblocking random device, returning -1 on failure */
-	int random_device = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-	if (random_device < 0) {
-		return -1;
-	}
-
-	/* read from the random device, returning -1 on failure (or too many retries)*/
-	for (u_int retry = 5; retry > 0; retry--) {
-		int retval = read(random_device, random_value, sizeof(u_int));
-		if (retval == sizeof(u_int)) {
-			*random_value &= 0xffff;
-			close(random_device);
-			return 0;
-		} else if ((retval < 0) && (errno != EINTR)) {
-			break;
-		}
-	}
-
-	close(random_device);
-	return -1;
-}
-#endif /* ANDROID_CHANGES */
-
-u_int
-res_randomid(void) {
-#ifdef ANDROID_CHANGES
-	int status = 0;
-	u_int output = 0;
-	status = real_randomid(&output);
-	if (status != -1) {
-		return output;
-	}
-#endif /* ANDROID_CHANGES */
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	return (0xffff & (now.tv_sec ^ now.tv_usec ^ getpid()));
-}
-
 /*%
  * This routine is for closing the socket if a virtual circuit is used and
  * the program wants to close it.  This provides support for endhostent()

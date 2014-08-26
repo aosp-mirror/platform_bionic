@@ -643,7 +643,13 @@ LOCAL_SRC_FILES := \
     upstream-netbsd/lib/libc/isc/ev_timers.c \
     upstream-netbsd/lib/libc/resolv/mtctxres.c \
 
-LOCAL_CFLAGS := \
+# We use the OpenBSD res_random.
+LOCAL_CFLAGS += \
+    -Dres_randomid=__res_randomid
+LOCAL_SRC_FILES += \
+    upstream-openbsd/lib/libc/net/res_random.c \
+
+LOCAL_CFLAGS += \
     $(libc_common_cflags) \
     -DANDROID_CHANGES \
     -DINET6 \
