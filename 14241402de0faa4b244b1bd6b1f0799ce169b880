@@ -16,6 +16,24 @@
       "revId": "14241402de0faa4b244b1bd6b1f0799ce169b880",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3d0553d_5e642499",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T22:53:05Z",
+      "side": 1,
+      "message": "explicit clears are part of load order change - which is not yet merged, I will amend it after this change is merged.",
+      "parentUuid": "f3d0553d_1e76ac56",
+      "revId": "14241402de0faa4b244b1bd6b1f0799ce169b880",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
