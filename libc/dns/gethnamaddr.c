@@ -899,7 +899,7 @@ _sethtent(int f)
     res_static  rs = __res_get_static();
     if (rs == NULL) return;
 	if (!rs->hostf)
-		rs->hostf = fopen(_PATH_HOSTS, "r" );
+		rs->hostf = fopen(_PATH_HOSTS, "re" );
 	else
 		rewind(rs->hostf);
 	rs->stayopen = f;
@@ -925,7 +925,7 @@ _gethtent(void)
 	int af, len;
 	res_static  rs = __res_get_static();
 
-	if (!rs->hostf && !(rs->hostf = fopen(_PATH_HOSTS, "r" ))) {
+	if (!rs->hostf && !(rs->hostf = fopen(_PATH_HOSTS, "re" ))) {
 		h_errno = NETDB_INTERNAL;
 		return NULL;
 	}
