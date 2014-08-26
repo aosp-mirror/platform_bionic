@@ -16,6 +16,23 @@
       "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9382b917_ad66c9a1",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-26T02:20:11Z",
+      "side": 1,
+      "message": "Can we cache the stack_base and stack_size so the maps is just parsed once for stack info?",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
