@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1376c912_5adc25a9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T16:50:19Z",
+      "side": 1,
+      "message": "reinterpret_cast?",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73c54578_1cd359e5",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T16:50:19Z",
+      "side": 1,
+      "message": "reinterpret_cast\u003c\u003e()",
+      "range": {
+        "startLine": 865,
+        "startChar": 36,
+        "endLine": 865,
+        "endChar": 43
+      },
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73c54578_fc19c513",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T16:50:19Z",
+      "side": 1,
+      "message": "reinterpret_cast?",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13d4092d_b6c488da",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T16:50:19Z",
+      "side": 1,
+      "message": "ASSERT_EQ(+1, g_ok);\n\nunless it is supposed to be non-fatal?",
+      "range": {
+        "startLine": 888,
+        "startChar": 1,
+        "endLine": 896,
+        "endChar": 5
+      },
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13d4092d_f6456080",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T16:50:19Z",
+      "side": 1,
+      "message": "If I understand correctly if something goes wrong here - test may hang, instead of failing?",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
