@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33810d18_4af29301",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-26T02:01:41Z",
+      "side": 1,
+      "message": "Looks wrong to me. The main thread is not initialized as RLIMIT_STACK. It\u0027s expended dynamically.  I expect we don\u0027t see 8M for stack mapping on main thread. Should just assign stack_size RLIMIT_STACK.",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
