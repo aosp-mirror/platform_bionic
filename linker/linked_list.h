@@ -32,6 +32,9 @@ template<typename T, typename Allocator>
 class LinkedList {
  public:
   LinkedList() : head_(nullptr), tail_(nullptr) {}
+  ~LinkedList() {
+    clear();
+  }
 
   void push_front(T* const element) {
     LinkedListEntry<T>* new_entry = Allocator::alloc();
