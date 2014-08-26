@@ -8,6 +8,7 @@ LOCAL_SRC_FILES:= \
     linker.cpp \
     linker_allocator.cpp \
     linker_environ.cpp \
+    linker_libc_support.c \
     linker_phdr.cpp \
     rt.cpp \
 
