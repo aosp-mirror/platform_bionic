@@ -29,7 +29,6 @@ libc_common_src_files_arm64 += \
 libc_bionic_src_files_arm64 := \
     arch-arm64/bionic/__bionic_clone.S \
     arch-arm64/bionic/_exit_with_stack_teardown.S \
-    arch-arm64/bionic/__get_sp.S \
     arch-arm64/bionic/__rt_sigreturn.S \
     arch-arm64/bionic/_setjmp.S \
     arch-arm64/bionic/setjmp.S \
