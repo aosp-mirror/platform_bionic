@@ -36,7 +36,6 @@
 #include <stdlib.h>
 #include <sys/auxv.h>
 #include <sys/time.h>
-#include <sys/resource.h>
 #include <unistd.h>
 
 #include "private/bionic_auxv.h"
@@ -46,7 +45,6 @@
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
-extern "C" uintptr_t __get_sp(void);
 extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
@@ -61,17 +59,6 @@ char** environ;
 
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
-
-static size_t get_main_thread_stack_size() {
-  rlimit stack_limit;
-  int rlimit_result = getrlimit(RLIMIT_STACK, &stack_limit);
-  if ((rlimit_result == 0) &&
-      (stack_limit.rlim_cur != RLIM_INFINITY) &&
-      (stack_limit.rlim_cur > PTHREAD_STACK_MIN)) {
-    return (stack_limit.rlim_cur & ~(PAGE_SIZE - 1));
-  }
-  return PTHREAD_STACK_SIZE_DEFAULT;
-}
 
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
@@ -96,16 +83,15 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   main_thread.tid = __set_tid_address(&main_thread.tid);
   main_thread.set_cached_pid(main_thread.tid);
 
-  // Work out the extent of the main thread's stack.
-  uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  size_t stack_size = get_main_thread_stack_size();
-  void* stack_bottom = reinterpret_cast<void*>(stack_top - stack_size);
-
   // We don't want to free the main thread's stack even when the main thread exits
   // because things like environment variables with global scope live on it.
+  // We also can't free the pthread_internal_t itself, since that lives on the main
+  // thread's stack rather than on the heap.
   pthread_attr_init(&main_thread.attr);
-  pthread_attr_setstack(&main_thread.attr, stack_bottom, stack_size);
   main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK | PTHREAD_ATTR_FLAG_MAIN_THREAD;
+  main_thread.attr.guard_size = 0; // The main thread has no guard page.
+  main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
+  // TODO: the main thread's sched_policy and sched_priority need to be queried.
 
   __init_thread(&main_thread, false);
   __init_tls(&main_thread);
