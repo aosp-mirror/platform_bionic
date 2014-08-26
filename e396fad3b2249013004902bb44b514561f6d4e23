@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "13d4092d_abf9b99d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2400,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T22:47:48Z",
+      "side": 1,
+      "message": "all actual work is done by __libc_init_tls()... I removed the comment from here - it is confusing.",
+      "parentUuid": "73c54578_4ed6afd5",
+      "revId": "e396fad3b2249013004902bb44b514561f6d4e23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73c54578_ee4903f5",
         "filename": "linker/linker_libc_support.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-26T22:18:29Z",
       "side": 1,
       "message": "#include \u003csys/cdefs.h\u003e and use __LIBC_HIDDEN__?\n\nor #include one of the __dso_handle.h files? (do we not care what section this goes in?)",
+      "revId": "e396fad3b2249013004902bb44b514561f6d4e23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13d4092d_6b9f2183",
+        "filename": "linker/linker_libc_support.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T22:47:48Z",
+      "side": 1,
+      "message": "included existing one... we do not care about the segment.",
+      "parentUuid": "73c54578_ee4903f5",
       "revId": "e396fad3b2249013004902bb44b514561f6d4e23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
