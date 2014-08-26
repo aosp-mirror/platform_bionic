@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73c54578_4ed6afd5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2400,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T22:18:29Z",
+      "side": 1,
+      "message": "is this true? i\u0027m not sure what this comment is trying to say, and unless we can come up with a better comment we should probably just remove this.\n\nhow about:\n\n  // Ensure that __libc_preinit has access to the KernelArgumentBlock.\n\n?",
+      "revId": "e396fad3b2249013004902bb44b514561f6d4e23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73c54578_ee4903f5",
+        "filename": "linker/linker_libc_support.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T22:18:29Z",
+      "side": 1,
+      "message": "#include \u003csys/cdefs.h\u003e and use __LIBC_HIDDEN__?\n\nor #include one of the __dso_handle.h files? (do we not care what section this goes in?)",
+      "revId": "e396fad3b2249013004902bb44b514561f6d4e23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
