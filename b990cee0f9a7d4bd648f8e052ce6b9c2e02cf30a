@@ -2,6 +2,91 @@
   "comments": [
     {
       "key": {
+        "uuid": "d3cd11a8_573beee2",
+        "filename": "tests/euid_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T20:14:58Z",
+      "side": 1,
+      "message": "this should be in unistd.",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3b431fe_65851c82",
+        "filename": "tests/euid_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T20:14:58Z",
+      "side": 1,
+      "message": "this test is only going to work when run as root (which isn\u0027t the case for CTS), so it\u0027s not useful.",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3b431fe_e5636c1e",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T20:14:58Z",
+      "side": 1,
+      "message": "two space indent. one space between keywords/identifiers.",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_6bacd123",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T20:14:58Z",
+      "side": 1,
+      "message": "gethostname is in \u003cunistd.h\u003e.\n\ncan we assert something about the result? memset hostname first and check that the string isn\u0027t zero-length afterwards?",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_0be2e564",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T20:14:58Z",
+      "side": 1,
+      "message": "please fix the formatting on all this imported code to match the code already here.\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Formatting",
+      "revId": "b990cee0f9a7d4bd648f8e052ce6b9c2e02cf30a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1376c912_5adc25a9",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 3
