@@ -38,7 +38,6 @@ endif
 # =========================================================
 libc_common_src_files := \
     bionic/bindresvport.c \
-    bionic/daemon.c \
     bionic/err.c \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
@@ -338,6 +337,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/crypt/arc4random_uniform.c \
     upstream-openbsd/lib/libc/gen/alarm.c \
     upstream-openbsd/lib/libc/gen/ctype_.c \
+    upstream-openbsd/lib/libc/gen/daemon.c \
     upstream-openbsd/lib/libc/gen/exec.c \
     upstream-openbsd/lib/libc/gen/fnmatch.c \
     upstream-openbsd/lib/libc/gen/ftok.c \
