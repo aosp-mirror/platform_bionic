@@ -1453,7 +1453,7 @@ _dump_answer(const void* answer, int answerlen)
     char* buf;
     int fileLen;
 
-    fp = fopen("/data/reslog.txt", "w+");
+    fp = fopen("/data/reslog.txt", "w+e");
     if (fp != NULL) {
         statep = __res_get_state();
 
