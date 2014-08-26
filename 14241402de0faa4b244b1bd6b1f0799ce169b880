@@ -34,6 +34,24 @@
       "revId": "14241402de0faa4b244b1bd6b1f0799ce169b880",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73c54578_02f88b58",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-26T22:55:41Z",
+      "side": 1,
+      "message": "nope - it is part of dlsym change... I got confused.",
+      "parentUuid": "f3d0553d_5e642499",
+      "revId": "14241402de0faa4b244b1bd6b1f0799ce169b880",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
