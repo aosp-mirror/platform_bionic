@@ -639,8 +639,6 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
 
     if (result != nullptr) {
       *found = current_soinfo;
-      visit_list.clear();
-      visited.clear();
       return result;
     }
     visited.push_back(current_soinfo);
@@ -650,8 +648,6 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
     });
   }
 
-  visit_list.clear();
-  visited.clear();
   return nullptr;
 }
 
