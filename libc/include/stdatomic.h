@@ -39,6 +39,13 @@
 
 #include <atomic>
 
+#undef _Atomic
+        /* Also defined by <atomic> for gcc.  But not used in macros. */
+        /* Also a clang intrinsic.                                    */
+        /* Should not be used by client code before this file is      */
+        /* included.  The definitions in <atomic> themselves see      */
+        /* the old definition, as they should.                        */
+        /* Client code sees the following definition.                 */
 #define _Atomic(t) std::atomic<t>
 
 using std::atomic_is_lock_free;
