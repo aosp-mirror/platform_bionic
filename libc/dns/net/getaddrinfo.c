@@ -2017,7 +2017,7 @@ _sethtent(FILE **hostf)
 {
 
 	if (!*hostf)
-		*hostf = fopen(_PATH_HOSTS, "r" );
+		*hostf = fopen(_PATH_HOSTS, "re");
 	else
 		rewind(*hostf);
 }
@@ -2046,7 +2046,7 @@ _gethtent(FILE **hostf, const char *name, const struct addrinfo *pai)
 	assert(name != NULL);
 	assert(pai != NULL);
 
-	if (!*hostf && !(*hostf = fopen(_PATH_HOSTS, "r" )))
+	if (!*hostf && !(*hostf = fopen(_PATH_HOSTS, "re")))
 		return (NULL);
  again:
 	if (!(p = fgets(hostbuf, sizeof hostbuf, *hostf)))
