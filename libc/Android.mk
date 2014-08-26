@@ -1070,7 +1070,6 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 # Make sure that unwind.h comes from libunwind.
 LOCAL_C_INCLUDES := \
-    external/libunwind/include \
     $(libc_common_c_includes) \
 
 LOCAL_SRC_FILES := \
@@ -1086,7 +1085,9 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_WHOLE_STATIC_LIBRARIES := libunwindbacktrace
+# Only need this for arm since libc++ uses its own unwind code that
+# doesn't mix with the other default unwind code.
+LOCAL_STATIC_LIBRARIES_arm := libc++
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
 # Don't install on release build
