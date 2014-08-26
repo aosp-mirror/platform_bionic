@@ -95,7 +95,7 @@ static int __sysconf_nprocessors_conf() {
 }
 
 static int __sysconf_nprocessors_onln() {
-  FILE* fp = fopen("/proc/stat", "r");
+  FILE* fp = fopen("/proc/stat", "re");
   if (fp == NULL) {
     return 1;
   }
@@ -118,7 +118,7 @@ static int __sysconf_nprocessors_onln() {
 }
 
 static int __get_meminfo(const char* pattern) {
-  FILE* fp = fopen("/proc/meminfo", "r");
+  FILE* fp = fopen("/proc/meminfo", "re");
   if (fp == NULL) {
     return -1;
   }

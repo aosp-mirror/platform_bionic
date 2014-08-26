@@ -71,7 +71,7 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
   struct mapinfo_t* milist = NULL;
   char data[1024]; // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
-  FILE* fp = fopen(data, "r");
+  FILE* fp = fopen(data, "re");
   if (fp != NULL) {
     while (fgets(data, sizeof(data), fp) != NULL) {
       mapinfo_t* mi = parse_maps_line(data);

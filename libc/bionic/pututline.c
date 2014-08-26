@@ -36,7 +36,7 @@ void pututline(struct utmp* utmp)
     struct utmp u;
     long i;
 
-    if (!(f = fopen(_PATH_UTMP, "w+")))
+    if (!(f = fopen(_PATH_UTMP, "w+e")))
         return;
 
     while (fread(&u, sizeof(struct utmp), 1, f) == 1)
@@ -55,7 +55,7 @@ void pututline(struct utmp* utmp)
 
     fclose(f);
 
-    if (!(f = fopen(_PATH_UTMP, "w+")))
+    if (!(f = fopen(_PATH_UTMP, "w+e")))
         return;
     fwrite(utmp, sizeof(struct utmp), 1, f);
 
