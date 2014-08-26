@@ -231,10 +231,8 @@ TEST(dlfcn, dladdr) {
   // Look in /proc/pid/maps to find out what address we were loaded at.
   // TODO: factor /proc/pid/maps parsing out into a class and reuse all over bionic.
   void* base_address = NULL;
-  char path[PATH_MAX];
-  snprintf(path, sizeof(path), "/proc/%d/maps", getpid());
   char line[BUFSIZ];
-  FILE* fp = fopen(path, "r");
+  FILE* fp = fopen("/proc/self/maps", "r");
   ASSERT_TRUE(fp != NULL);
   while (fgets(line, sizeof(line), fp) != NULL) {
     uintptr_t start = strtoul(line, 0, 16);

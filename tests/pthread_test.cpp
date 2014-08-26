@@ -23,6 +23,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -815,4 +816,89 @@ TEST(pthread, pthread_mutex_timedlock) {
 
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
+}
+
+TEST(pthread, pthread_attr_getstack__main_thread) {
+  // This test is only meaningful for the main thread, so make sure we're running on it!
+  ASSERT_EQ(getpid(), syscall(__NR_gettid));
+
+  // Get the main thread's attributes.
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attributes));
+
+  // Check that we correctly report that the main thread has no guard page.
+  size_t guard_size;
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(0U, guard_size); // The main thread has no guard page.
+
+  // Get the stack base and the stack size (both ways).
+  void* stack_base;
+  size_t stack_size;
+  ASSERT_EQ(0, pthread_attr_getstack(&attributes, &stack_base, &stack_size));
+  size_t stack_size2;
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size2));
+
+  // The two methods of asking for the stack size should agree.
+  EXPECT_EQ(stack_size, stack_size2);
+
+  // What does /proc/self/maps' [stack] line say?
+  void* maps_stack_base = NULL;
+  size_t maps_stack_size = 0;
+  FILE* fp = fopen("/proc/self/maps", "r");
+  ASSERT_TRUE(fp != NULL);
+  char line[BUFSIZ];
+  while (fgets(line, sizeof(line), fp) != NULL) {
+    uintptr_t lo, hi;
+    char name[10];
+    sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %10s", &lo, &hi, name);
+    if (strcmp(name, "[stack]") == 0) {
+      maps_stack_base = reinterpret_cast<void*>(lo);
+      maps_stack_size = hi - lo;
+      break;
+    }
+  }
+  fclose(fp);
+
+#if defined(__BIONIC__)
+  // bionic thinks that the stack base and size should correspond to the mapped region.
+  EXPECT_EQ(maps_stack_base, stack_base);
+  EXPECT_EQ(maps_stack_size, stack_size);
+#else
+  // glibc doesn't give the true extent for some reason.
+#endif
+
+  // Both bionic and glibc agree that the high address you can compute from the returned
+  // values should match what /proc/self/maps says.
+  void* stack_end = reinterpret_cast<uint8_t*>(stack_base) + stack_size;
+  void* maps_stack_end = reinterpret_cast<uint8_t*>(maps_stack_base) + maps_stack_size;
+  EXPECT_EQ(maps_stack_end, stack_end);
+
+  //
+  // What if the rlimit is smaller than the stack's current extent?
+  //
+  rlimit rl;
+  rl.rlim_cur = rl.rlim_max = 1024; // 1KiB. We know the stack must be at least a page already.
+  rl.rlim_max = RLIM_INFINITY;
+  ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attributes));
+  ASSERT_EQ(0, pthread_attr_getstack(&attributes, &stack_base, &stack_size));
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size2));
+
+  EXPECT_EQ(stack_size, stack_size2);
+  ASSERT_EQ(1024U, stack_size);
+
+  //
+  // What if the rlimit isn't a whole number of pages?
+  //
+  rl.rlim_cur = rl.rlim_max = 6666; // Not a whole number of pages.
+  rl.rlim_max = RLIM_INFINITY;
+  ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attributes));
+  ASSERT_EQ(0, pthread_attr_getstack(&attributes, &stack_base, &stack_size));
+  ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size2));
+
+  EXPECT_EQ(stack_size, stack_size2);
+  ASSERT_EQ(6666U, stack_size);
 }
