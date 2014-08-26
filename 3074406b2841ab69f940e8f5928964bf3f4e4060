@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "9382b917_4d238d96",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-26T02:57:44Z",
+      "side": 1,
+      "message": "At the very least, we should log an error.",
+      "range": {
+        "startLine": 139,
+        "startChar": 2,
+        "endLine": 139,
+        "endChar": 75
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9382b917_ad66c9a1",
         "filename": "libc/bionic/pthread_attr.cpp",
         "patchSetId": 4
@@ -30,6 +53,75 @@
       "writtenOn": "2014-08-26T02:20:11Z",
       "side": 1,
       "message": "Can we cache the stack_base and stack_size so the maps is just parsed once for stack info?",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9382b917_8d0585e6",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-26T02:57:44Z",
+      "side": 1,
+      "message": "I\u0027m assuming that you aren\u0027t caching these values since there is the possiblity they can change, correct?",
+      "range": {
+        "startLine": 145,
+        "startChar": 11,
+        "endLine": 145,
+        "endChar": 71
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9382b917_4dc70d4f",
+        "filename": "libc/private/bionic_string_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-26T02:57:44Z",
+      "side": 1,
+      "message": "Since you have already computed the lengths, you can use memcmp instead of strncmp.",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 16
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b36c1d49_63d6a231",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-08-26T02:57:44Z",
+      "side": 1,
+      "message": "This kind of seems like testing the same code (since both proc maps parsers use ends_with). Maybe you could use a sscanf and iterate over the whole line.",
+      "range": {
+        "startLine": 852,
+        "startChar": 4,
+        "endLine": 852,
+        "endChar": 40
+      },
       "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
