@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3d0553d_1e76ac56",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T22:51:38Z",
+      "side": 1,
+      "message": "did you mean to include this in this change? (since you didn\u0027t remove the explicit clears from before we had the destructor.)",
+      "revId": "14241402de0faa4b244b1bd6b1f0799ce169b880",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
