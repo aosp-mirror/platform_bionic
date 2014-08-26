@@ -74,7 +74,7 @@ ScopedTrace::ScopedTrace(const char* message) {
   }
 
   if (g_trace_marker_fd == -1) {
-    g_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_WRONLY | O_CLOEXEC);
+    g_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     if (g_trace_marker_fd == -1) {
       __libc_fatal("Could not open kernel trace file: %s\n", strerror(errno));
     }
