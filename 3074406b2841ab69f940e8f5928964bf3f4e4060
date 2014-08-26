@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "13d4092d_19afef7f",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T17:34:58Z",
+      "side": 1,
+      "message": "wrong? i don\u0027t see how. useless? i don\u0027t think so: this handles the case where the rlimit is greater than the mapped region.\n\nthis is the true result _unless_ the rlimit is more restrictive, so i think starting with this and then adjusting based on the rlimit makes sense.",
+      "parentUuid": "33810d18_4af29301",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9382b917_4d238d96",
         "filename": "libc/bionic/pthread_attr.cpp",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2014-08-26T02:57:44Z",
       "side": 1,
       "message": "At the very least, we should log an error.",
+      "range": {
+        "startLine": 139,
+        "startChar": 2,
+        "endLine": 139,
+        "endChar": 75
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3d0553d_d5913cd2",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T17:34:58Z",
+      "side": 1,
+      "message": "i\u0027ll add a check for fopen failing and return its errno, and i\u0027ll __libc_fatal if we can\u0027t find the \"[stack]\" line. i\u0027ll also add the missing ErrnoRestorer in here.",
+      "parentUuid": "9382b917_4d238d96",
       "range": {
         "startLine": 139,
         "startChar": 2,
@@ -100,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "13d4092d_194b6f40",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T17:34:58Z",
+      "side": 1,
+      "message": "these values _do_ change under the main thread\u0027s feet. there\u0027s nothing we can do about that except decide whether to (a) report the first values we saw or (b) report the current values. the latter seems to make a lot more sense because it\u0027s more consistent with reality, and if the caller only wants the first value, it can cache the pthread_attr_t itself and not ask us again. this is also consistent with glibc\u0027s behavior, so less likely to cause portability problems.\n\nfor other threads you _can\u0027t_ change their stacks after they\u0027ve started. (strictly, you could mremap, but the pthread implementation wouldn\u0027t know you\u0027ve done that, and isn\u0027t supposed to support that.)",
+      "parentUuid": "9382b917_8dd5857c",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9382b917_4dc70d4f",
         "filename": "libc/private/bionic_string_utils.h",
         "patchSetId": 4
@@ -123,6 +183,30 @@
     },
     {
       "key": {
+        "uuid": "73c54578_ffa3f79e",
+        "filename": "libc/private/bionic_string_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T17:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9382b917_4dc70d4f",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 16
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b36c1d49_63d6a231",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
@@ -134,6 +218,30 @@
       "writtenOn": "2014-08-26T02:57:44Z",
       "side": 1,
       "message": "This kind of seems like testing the same code (since both proc maps parsers use ends_with). Maybe you could use a sscanf and iterate over the whole line.",
+      "range": {
+        "startLine": 852,
+        "startChar": 4,
+        "endLine": 852,
+        "endChar": 40
+      },
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3d0553d_d844d134",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-26T17:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b36c1d49_63d6a231",
       "range": {
         "startLine": 852,
         "startChar": 4,
