@@ -82,6 +82,24 @@
     },
     {
       "key": {
+        "uuid": "9382b917_8dd5857c",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-26T03:13:00Z",
+      "side": 1,
+      "message": "Yes. They could be changed. If the values are changed, the cached value could be updated accordingly.\n\nIMHO, changing these values of the main thread does not make sense.\nEven for other thread, it does not make sense to change these values after the thread is created and running. It makes sense to change it before create the thread.",
+      "parentUuid": "9382b917_8d0585e6",
+      "revId": "3074406b2841ab69f940e8f5928964bf3f4e4060",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9382b917_4dc70d4f",
         "filename": "libc/private/bionic_string_utils.h",
         "patchSetId": 4
