@@ -366,7 +366,7 @@ endif
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 # add target to run lp32 tests
-bionic-unit-tests-run-on-host32: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+bionic-unit-tests-run-on-host32: bionic-unit-tests_32 $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
 	if [ ! -d /system -o ! -d /system/bin ]; then \
 	  echo "Attempting to create /system/bin"; \
 	  sudo mkdir -p -m 0777 /system/bin; \

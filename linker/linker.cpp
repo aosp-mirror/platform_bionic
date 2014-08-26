@@ -2167,16 +2167,6 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
  * and other non-local data at this point.
  */
 static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(Addr) linker_base) {
-    /* NOTE: we store the args pointer on a special location
-     *       of the temporary TLS area in order to pass it to
-     *       the C Library's runtime initializer.
-     *
-     *       The initializer must clear the slot and reset the TLS
-     *       to point to a different location to ensure that no other
-     *       shared library constructor can access it.
-     */
-  __libc_init_tls(args);
-
 #if TIMING
     struct timeval t0, t1;
     gettimeofday(&t0, 0);
@@ -2403,6 +2393,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     _exit(EXIT_FAILURE);
   }
 
+  __libc_init_tls(args);
+
   // Initialize the linker's own global variables
   linker_so.CallConstructors();
 
@@ -2411,7 +2403,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // before get_libdl_info().
   solist = get_libdl_info();
   sonext = get_libdl_info();
-
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
