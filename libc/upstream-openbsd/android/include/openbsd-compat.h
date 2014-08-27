@@ -22,6 +22,16 @@
 #include <sys/cdefs.h>
 #include <stddef.h> // For size_t.
 
+/* Redirect internal C library calls to the public function. */
+#define _err err
+#define _errx errx
+#define _verr verr
+#define _verrx verrx
+#define _vwarn vwarn
+#define _vwarnx vwarnx
+#define _warn warn
+#define _warnx warnx
+
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
  * Additionally, we changed the numeric/digit type from N to D for libcxx.
  */
