@@ -25,7 +25,6 @@ libc_bionic_src_files_x86 := \
 libc_bionic_src_files_x86 += \
     arch-x86/bionic/__bionic_clone.S \
     arch-x86/bionic/_exit_with_stack_teardown.S \
-    arch-x86/bionic/__get_sp.S \
     arch-x86/bionic/_setjmp.S \
     arch-x86/bionic/setjmp.S \
     arch-x86/bionic/__set_tls.c \
