@@ -842,8 +842,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   EXPECT_EQ(stack_size, stack_size2);
 
   // What does /proc/self/maps' [stack] line say?
-  void* maps_stack_base = NULL;
-  size_t maps_stack_size = 0;
+  void* maps_stack_hi = NULL;
   FILE* fp = fopen("/proc/self/maps", "r");
   ASSERT_TRUE(fp != NULL);
   char line[BUFSIZ];
@@ -852,31 +851,25 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
     char name[10];
     sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %10s", &lo, &hi, name);
     if (strcmp(name, "[stack]") == 0) {
-      maps_stack_base = reinterpret_cast<void*>(lo);
-      maps_stack_size = hi - lo;
+      maps_stack_hi = reinterpret_cast<void*>(hi);
       break;
     }
   }
   fclose(fp);
 
-#if defined(__BIONIC__)
-  // bionic thinks that the stack base and size should correspond to the mapped region.
-  EXPECT_EQ(maps_stack_base, stack_base);
-  EXPECT_EQ(maps_stack_size, stack_size);
-#else
-  // glibc doesn't give the true extent for some reason.
-#endif
-
-  // Both bionic and glibc agree that the high address you can compute from the returned
-  // values should match what /proc/self/maps says.
-  void* stack_end = reinterpret_cast<uint8_t*>(stack_base) + stack_size;
-  void* maps_stack_end = reinterpret_cast<uint8_t*>(maps_stack_base) + maps_stack_size;
-  EXPECT_EQ(maps_stack_end, stack_end);
-
-  //
-  // What if the rlimit is smaller than the stack's current extent?
-  //
+  // The stack size should correspond to RLIMIT_STACK.
   rlimit rl;
+  ASSERT_EQ(0, getrlimit(RLIMIT_STACK, &rl));
+  EXPECT_EQ(rl.rlim_cur, stack_size);
+
+  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
+  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
+  // region isn't very interesting.
+  EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
+
+  //
+  // What if RLIMIT_STACK is smaller than the stack's current extent?
+  //
   rl.rlim_cur = rl.rlim_max = 1024; // 1KiB. We know the stack must be at least a page already.
   rl.rlim_max = RLIM_INFINITY;
   ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
@@ -889,7 +882,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   ASSERT_EQ(1024U, stack_size);
 
   //
-  // What if the rlimit isn't a whole number of pages?
+  // What if RLIMIT_STACK isn't a whole number of pages?
   //
   rl.rlim_cur = rl.rlim_max = 6666; // Not a whole number of pages.
   rl.rlim_max = RLIM_INFINITY;
