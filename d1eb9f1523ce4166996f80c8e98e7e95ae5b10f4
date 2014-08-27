@@ -16,6 +16,24 @@
       "revId": "d1eb9f1523ce4166996f80c8e98e7e95ae5b10f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9333997e_b62ca0b7",
+        "filename": "libc/arch-mips/string/mips_strlen.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2014-08-27T23:04:28Z",
+      "side": 1,
+      "message": "Good catch. I replace it with string.h in patch set 2. PTAL.\nNow the mip and mips64 version are only different in the long vs default int size.",
+      "parentUuid": "7321c530_3fecef28",
+      "revId": "d1eb9f1523ce4166996f80c8e98e7e95ae5b10f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
