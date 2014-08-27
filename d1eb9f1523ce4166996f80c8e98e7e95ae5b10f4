@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7321c530_3fecef28",
+        "filename": "libc/arch-mips/string/mips_strlen.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-27T22:26:44Z",
+      "side": 1,
+      "message": "#include \u003cstring.h\u003e?\n\n(interestingly, the mips64 copy has the #include \u003cstring.h\u003e and the correct prototype. you might want to diff the two to see if there are other changes in the mips64 one.)",
+      "revId": "d1eb9f1523ce4166996f80c8e98e7e95ae5b10f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
