@@ -1,6 +1,7 @@
+/*	$OpenBSD: vwarn.c,v 1.9 2012/12/05 23:20:00 deraadt Exp $ */
 /*-
  * Copyright (c) 1993
- *      The Regents of the University of California.  All rights reserved.
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,83 +28,16 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
 #include <err.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
 
-extern const char* __progname;
-
-__noreturn void
-err(int eval, const char *fmt, ...)
-{
-        va_list ap;
-
-        va_start(ap, fmt);
-        verr(eval, fmt, ap);
-        va_end(ap);
-}
-
-__noreturn void
-errx(int eval, const char *fmt, ...)
-{
-        va_list ap;
-
-        va_start(ap, fmt);
-        verrx(eval, fmt, ap);
-        va_end(ap);
-}
-
-__noreturn void
-verr(int eval, const char *fmt, va_list ap)
-{
-        int sverrno;
-
-        sverrno = errno;
-        (void)fprintf(stderr, "%s: ", __progname);
-        if (fmt != NULL) {
-                (void)vfprintf(stderr, fmt, ap);
-                (void)fprintf(stderr, ": ");
-        }
-        (void)fprintf(stderr, "%s\n", strerror(sverrno));
-        exit(eval);
-}
-
-
-__noreturn void
-verrx(int eval, const char *fmt, va_list ap)
-{
-        (void)fprintf(stderr, "%s: ", __progname);
-        if (fmt != NULL)
-                (void)vfprintf(stderr, fmt, ap);
-        (void)fprintf(stderr, "\n");
-        exit(eval);
-}
+extern char *__progname;		/* Program name, from crt0. */
 
 void
-warn(const char *fmt, ...)
-{
-	va_list ap;
-
-	va_start(ap, fmt);
-	vwarn(fmt, ap);
-	va_end(ap);
-}
-
-void
-warnx(const char *fmt, ...)
-{
-	va_list ap;
-
-	va_start(ap, fmt);
-	vwarnx(fmt, ap);
-	va_end(ap);
-}
-
-void
-vwarn(const char *fmt, va_list ap)
+_vwarn(const char *fmt, va_list ap)
 {
 	int sverrno;
 
@@ -116,11 +50,5 @@ vwarn(const char *fmt, va_list ap)
 	(void)fprintf(stderr, "%s\n", strerror(sverrno));
 }
 
-void
-vwarnx(const char *fmt, va_list ap)
-{
-	(void)fprintf(stderr, "%s: ", __progname);
-	if (fmt != NULL)
-		(void)vfprintf(stderr, fmt, ap);
-	(void)fprintf(stderr, "\n");
-}
+__weak_alias(vwarn, _vwarn);
+
