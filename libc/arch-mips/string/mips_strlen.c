@@ -30,6 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <string.h>
 #include "mips-string-ops.h"
 
 #define do_strlen_word(__av) {\
@@ -47,8 +48,8 @@
 #define strlen my_strlen
 #endif
 
-int
-strlen (const void *_a)
+size_t
+strlen (const char *_a)
 {
   int cnt = 0;
   unsigned x;
