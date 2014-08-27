@@ -116,6 +116,16 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
 static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
   ErrnoRestorer errno_restorer;
 
+  rlimit stack_limit;
+  if (getrlimit(RLIMIT_STACK, &stack_limit) == -1) {
+    return errno;
+  }
+
+  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack for sanity's sake.
+  if (stack_limit.rlim_cur == RLIM_INFINITY) {
+    stack_limit.rlim_cur = 8 * 1024 * 1024;
+  }
+
   // It doesn't matter which thread we are; we're just looking for "[stack]".
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == NULL) {
@@ -126,17 +136,8 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     if (ends_with(line, " [stack]\n")) {
       uintptr_t lo, hi;
       if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
-        *stack_base = reinterpret_cast<void*>(lo);
-        *stack_size = hi - lo;
-
-        // Does our current RLIMIT_STACK mean we won't actually get everything /proc/maps promises?
-        rlimit stack_limit;
-        if (getrlimit(RLIMIT_STACK, &stack_limit) != -1) {
-          if (*stack_size > stack_limit.rlim_cur) {
-            *stack_size = stack_limit.rlim_cur;
-          }
-        }
-
+        *stack_size = stack_limit.rlim_cur;
+        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
         fclose(fp);
         return 0;
       }
