@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3d0553d_b253694e",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1011068
+      },
+      "writtenOn": "2014-08-27T02:10:27Z",
+      "side": 1,
+      "message": "I may not have myself statement. This is more detail explanation about why this is incorrect:\n\nThe main thread is very special. Its stack was created by kernel and the original size is 128k.\nIt\u0027s automatically expanded if kernel detect it\u0027s trying to access the valid stack range.\n\n---kernel behavior start here.\nFor generic memory map range, if kernel detect the access is not in this range, the segv will happen.\nBut for stack memory mapping (map flag with GROWDOWN/GROWUP), if the access is not in the range,\nkernel will check whether the mapping could be extended to have the address in the range (mapping\nend address - RLIMIT_STACK if GROWDOWN. Or mapping start + RLIMIT_STACK if GROWUP).\n\nThe segv just happen s if the address is not in the expended stack range.\n---kernel behavior end here.\n\nSo with this implementation, the stack size is not real  main thread stack size. It\u0027s just the\ncurrent map range of the \"[stack] line in /proc/self/maps.\n\nI suppose the correct value for stack_size is direct RLIMIT_STACK.",
+      "revId": "57b7a6110e7e8b446fc23cce4765ff625ee0a105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
