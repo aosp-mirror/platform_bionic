@@ -117,7 +117,7 @@ TEST_F(DlExtTest, Reserved) {
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
-  EXPECT_GE(f, start);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
   EXPECT_LT(reinterpret_cast<void*>(f),
             reinterpret_cast<char*>(start) + LIBSIZE);
   EXPECT_EQ(4, f());
@@ -147,7 +147,7 @@ TEST_F(DlExtTest, ReservedHint) {
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
-  EXPECT_GE(f, start);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
   EXPECT_LT(reinterpret_cast<void*>(f),
             reinterpret_cast<char*>(start) + LIBSIZE);
   EXPECT_EQ(4, f());
@@ -165,8 +165,9 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
-  EXPECT_TRUE(f < start || (reinterpret_cast<void*>(f) >=
-                            reinterpret_cast<char*>(start) + PAGE_SIZE));
+  EXPECT_TRUE(reinterpret_cast<void*>(f) < start ||
+              (reinterpret_cast<void*>(f) >=
+               reinterpret_cast<char*>(start) + PAGE_SIZE));
   EXPECT_EQ(4, f());
 }
 
