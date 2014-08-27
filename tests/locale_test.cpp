@@ -114,11 +114,12 @@ TEST(locale, mb_cur_max) {
   locale_t cloc = newlocale(LC_ALL, "C", 0);
   locale_t cloc_utf8 = newlocale(LC_ALL, "C.UTF-8", 0);
 
-  uselocale(cloc);
+  locale_t old_locale = uselocale(cloc);
   ASSERT_EQ(1U, MB_CUR_MAX);
   uselocale(cloc_utf8);
   ASSERT_EQ(4U, MB_CUR_MAX);
 
+  uselocale(old_locale);
   freelocale(cloc);
   freelocale(cloc_utf8);
 }

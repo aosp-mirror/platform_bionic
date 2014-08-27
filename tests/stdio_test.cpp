@@ -428,7 +428,7 @@ TEST(stdio, snprintf_negative_zero_5084292) {
 
 TEST(stdio, snprintf_utf8_15439554) {
   locale_t cloc = newlocale(LC_ALL, "C.UTF-8", 0);
-  uselocale(cloc);
+  locale_t old_locale = uselocale(cloc);
 
   // http://b/15439554
   char buf[BUFSIZ];
@@ -446,6 +446,7 @@ TEST(stdio, snprintf_utf8_15439554) {
   snprintf(buf, sizeof(buf), "%d\xf0\xa4\xad\xa2%d", 1, 2);
   EXPECT_STREQ("1𤭢2", buf);
 
+  uselocale(old_locale);
   freelocale(cloc);
 }
 
