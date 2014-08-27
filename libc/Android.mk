@@ -38,7 +38,6 @@ endif
 # =========================================================
 libc_common_src_files := \
     bionic/bindresvport.c \
-    bionic/err.c \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
     bionic/fts.c \
@@ -338,6 +337,8 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/alarm.c \
     upstream-openbsd/lib/libc/gen/ctype_.c \
     upstream-openbsd/lib/libc/gen/daemon.c \
+    upstream-openbsd/lib/libc/gen/err.c \
+    upstream-openbsd/lib/libc/gen/errx.c \
     upstream-openbsd/lib/libc/gen/exec.c \
     upstream-openbsd/lib/libc/gen/fnmatch.c \
     upstream-openbsd/lib/libc/gen/ftok.c \
@@ -347,6 +348,12 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/time.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
+    upstream-openbsd/lib/libc/gen/verr.c \
+    upstream-openbsd/lib/libc/gen/verrx.c \
+    upstream-openbsd/lib/libc/gen/vwarn.c \
+    upstream-openbsd/lib/libc/gen/vwarnx.c \
+    upstream-openbsd/lib/libc/gen/warn.c \
+    upstream-openbsd/lib/libc/gen/warnx.c \
     upstream-openbsd/lib/libc/locale/btowc.c \
     upstream-openbsd/lib/libc/locale/mbrlen.c \
     upstream-openbsd/lib/libc/locale/mbstowcs.c \
