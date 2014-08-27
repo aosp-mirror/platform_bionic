@@ -170,9 +170,9 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
   if (info != NULL) {
     // For a rethrown signal, this si_code will be right and the one debuggerd shows will
     // always be SI_TKILL.
-    snprintf(code_desc, sizeof(code_desc), ", code %d", info->si_code);
+    __libc_format_buffer(code_desc, sizeof(code_desc), ", code %d", info->si_code);
     if (has_address) {
-      snprintf(addr_desc, sizeof(addr_desc), ", fault addr %p", info->si_addr);
+      __libc_format_buffer(addr_desc, sizeof(addr_desc), ", fault addr %p", info->si_addr);
     }
   }
   __libc_format_log(ANDROID_LOG_FATAL, "libc",
