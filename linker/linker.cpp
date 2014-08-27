@@ -866,7 +866,21 @@ static void soinfo_unload(soinfo* si) {
 }
 
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
-  snprintf(buffer, buffer_size, "%s:%s", kDefaultLdPaths[0], kDefaultLdPaths[1]);
+  // Use basic string manipulation calls to avoid snprintf.
+  // snprintf indirectly calls pthread_getspecific to get the size of a buffer.
+  // When debug malloc is enabled, this call returns 0. This in turn causes
+  // snprintf to do nothing, which causes libraries to fail to load.
+  // See b/17302493 for further details.
+  // Once the above bug is fixed, this code can be modified to use
+  // snprintf again.
+  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
+  if (buffer_size < required_len) {
+    __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: buffer len %zu, required len %zu",
+                 buffer_size, required_len);
+  }
+  char* end = stpcpy(buffer, kDefaultLdPaths[0]);
+  *end = ':';
+  strcpy(end + 1, kDefaultLdPaths[1]);
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
