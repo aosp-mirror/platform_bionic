@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "f35a15dc_1dcc9ea2",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T23:41:08Z",
+      "side": 1,
+      "message": "wouldn\u0027t everyone be better off if we fixed remove_if instead? (or had an explicit erase, though that tends to be confusing.)",
+      "parentUuid": "d37ef124_db193f14",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736f0577_f8143daa",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -153,6 +171,24 @@
       "side": 1,
       "message": "it will simplify things...",
       "parentUuid": "736f0577_38d89527",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736f0577_83acb224",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T23:41:08Z",
+      "side": 1,
+      "message": "which simplifies which? (all i\u0027m saying is \"there\u0027s no point making your life super hard just to keep some of your linker changes out of the tree for now\".)",
+      "parentUuid": "f35a15dc_22ccd7a2",
       "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
