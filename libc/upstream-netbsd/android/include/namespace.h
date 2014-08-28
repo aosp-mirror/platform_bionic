@@ -17,11 +17,6 @@
 #ifndef _BIONIC_NETBSD_NAMESPACE_H_included
 #define _BIONIC_NETBSD_NAMESPACE_H_included
 
-// NetBSD uses __weak_alias on a lot of functions. We don't want that.
-#if defined(__weak_alias)
-#undef __weak_alias
-#endif
-
 __LIBC_HIDDEN__ int __res_enable_mt(void);
 __LIBC_HIDDEN__ int __res_disable_mt(void);
 
