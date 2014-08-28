@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d37ef124_7b036be0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "executable",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_bbcb135a",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "while (\n\nnot sure i understand this though. where are these nulls coming from and why are we skipping them in pop_front?",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_bbaf9369",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "where does this incorrect load order come from?",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736f0577_38d89527",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "bug?\n\nhmm. is this the lord telling us we should submit your other change now anyway?",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736f0577_f893dd47",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "The following",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_87d91d08",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "that the",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_27d629d5",
+        "filename": "tests/libs/dl_preempt_library_1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "in the",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_47d325e4",
+        "filename": "tests/libs/dl_preempt_library_1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "by the",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_c70155a2",
+        "filename": "tests/libs/dl_preempt_library_1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "s/ -//",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_87e4bdb3",
+        "filename": "tests/libs/dl_preempt_library_1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "from a\n\n.so",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_9bfc174e",
+        "filename": "tests/libs/dl_preempt_library_2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-28T22:39:39Z",
+      "side": 1,
+      "message": "s/ -//",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
