@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "d37ef124_b3225791",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-28T23:55:28Z",
+      "side": 1,
+      "message": "merging load-order fix - it also allows me to properly implement RTLD_NODELETE logic.",
+      "parentUuid": "736f0577_83acb224",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736f0577_f893dd47",
         "filename": "tests/dl_test.cpp",
         "patchSetId": 1
