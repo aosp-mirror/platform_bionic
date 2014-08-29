@@ -32,6 +32,9 @@
 #define _warn warn
 #define _warnx warnx
 
+/* Ignore all __weak_alias in OpenBSD. */
+#define __weak_alias(alias,sym)
+
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
  * Additionally, we changed the numeric/digit type from N to D for libcxx.
  */
