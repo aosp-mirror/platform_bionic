@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "d37ef124_7da1181b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-29T18:29:19Z",
+      "side": 1,
+      "message": "yes, always use the SHA. short or long are both fine, but long is more common.\n\n(the others are _not_ permanent ids.)",
+      "parentUuid": "73e46551_5070daa5",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d37ef124_211e14c6",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -102,6 +126,24 @@
       "side": 1,
       "message": "Mostly because we need this in L, and I want to minimize divergence.  Secondarily because we now have a bunch of code in both places that\u0027s not really useful because it doesn\u0027t quite work, and the existing code does things that look dubious (notably invoking clang extensions on gcc), although they seem to work with later versions of gcc.\n\nI would be fine with committing this and then later ripping out all the __sync stuff from AOSP, including most of this patch.  But I think it would be best to do the latter a month or two from now, once we\u0027re more confident the L stuff is stable.  In my mind, there is something to be said for having a working version of this stuff somewhere in the revision history.",
       "parentUuid": "d37ef124_211e14c6",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3f97d00_2a14bf5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-29T18:29:19Z",
+      "side": 1,
+      "message": "what in L uses the __sync implementations?",
+      "parentUuid": "d37ef124_33abc7fd",
       "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -195,6 +237,24 @@
       "side": 1,
       "message": "This is the test that was previously used around the whole file.\n\nI could check for defined(__clang__) || __GNUC__ \u003e 4 || __GNUC_MINOR \u003e 6, which would be more accurate.  This isn\u0027t really dependent on the glibc version.",
       "parentUuid": "736f0577_a39696c6",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3f97d00_ca49db7e",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-29T18:29:19Z",
+      "side": 1,
+      "message": "there\u0027s a __GNU_PREREQ in that case then. (it\u0027s glibc only, but aiui that\u0027s fine because this is only expected to fire in the host case anyway?)",
+      "parentUuid": "d37ef124_b6d00535",
       "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
