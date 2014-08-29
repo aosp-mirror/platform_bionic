@@ -176,3 +176,15 @@ TEST(libc_logging, lld_LLONG_MIN) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
+
+TEST(libc_logging, buffer_overrun) {
+#if defined(__BIONIC__)
+  char buf[BUFSIZ];
+  ASSERT_EQ(11, __libc_format_buffer(buf, sizeof(buf), "hello %s", "world"));
+  EXPECT_STREQ("hello world", buf);
+  ASSERT_EQ(11, __libc_format_buffer(buf, 8, "hello %s", "world"));
+  EXPECT_STREQ("hello w", buf);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
