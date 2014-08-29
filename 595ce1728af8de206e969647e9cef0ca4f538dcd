@@ -150,6 +150,24 @@
     },
     {
       "key": {
+        "uuid": "d31511f5_b7a0427d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T19:43:05Z",
+      "side": 1,
+      "message": "We seem to use gcc4.6 in L for host builds.  For example, the bionic tests on glibc run with 4.6 in L.  There is a 4.6 host prebuilt tree in L, which seems to get used heavily.  In all of those cases, we fall back to the __sync implementations.  Those are stupid ans slow, so hopefully this is not true for anything where performance matters.  This was not my choice. Someone explained the reason to me, but I don\u0027t recall it at the moment.",
+      "parentUuid": "b3f97d00_2a14bf5b",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f35a15dc_dda28699",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -254,6 +272,24 @@
       "writtenOn": "2014-08-29T18:29:19Z",
       "side": 1,
       "message": "there\u0027s a __GNU_PREREQ in that case then. (it\u0027s glibc only, but aiui that\u0027s fine because this is only expected to fire in the host case anyway?)",
+      "parentUuid": "d37ef124_b6d00535",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3f97d00_2ad31f97",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T19:43:05Z",
+      "side": 1,
+      "message": "It\u0027s spelled __GNUC_PREREQ__ in our header and __GNUC_PREREQ in the system header.  As far as I can tell, we sometimes use one and sometimes the other.  It seems easier to just rely on the gcc spec directly.",
       "parentUuid": "d37ef124_b6d00535",
       "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
