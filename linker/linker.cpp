@@ -609,6 +609,8 @@ done:
     return NULL;
 }
 
+
+
 // Another soinfo list allocator to use in dlsym. We don't reuse
 // SoinfoListAllocator because it is write-protected most of the time.
 static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_list_allocator_rw;
@@ -861,10 +863,17 @@ static void soinfo_unload(soinfo* si) {
     si->CallDestructors();
 
     if (si->has_min_version(0)) {
-      si->get_children().for_each([&] (soinfo* child) {
-        TRACE("%s needs to unload %s", si->name, child->name);
-        soinfo_unload(child);
-      });
+      // It is not safe to do si->get_children().for_each, because
+      // during soinfo_free the child will concurrently modify the si->children
+      // list, therefore we create a copy and use it to unload children.
+      size_t children_count = si->get_children().size();
+      soinfo* children[children_count];
+      si->get_children().copy_to_array(children, children_count);
+
+      for (size_t i = 0; i < children_count; ++i) {
+        TRACE("%s needs to unload %s", si->name, children[i]->name);
+        soinfo_unload(children[i]);
+      }
     } else {
       for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
         if (d->d_tag == DT_NEEDED) {
@@ -1618,7 +1627,7 @@ void soinfo::remove_all_links() {
   });
 
   parents.for_each([&] (soinfo* parent) {
-    parent->children.for_each([&] (const soinfo* child) {
+    parent->children.remove_if([&] (const soinfo* child) {
       return child == this;
     });
   });
