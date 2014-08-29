@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d37ef124_783e06d5",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-29T18:43:40Z",
+      "side": 1,
+      "message": "these fopens should have been O_CLOEXEC too.",
+      "revId": "f5327da7b85863dbf82a452d7c1691cd7db84678",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3f97d00_caea7bc5",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-08-29T18:43:40Z",
+      "side": 1,
+      "message": "i think you could probably have just used __libc_auxv. you know that\u0027s within a couple of pages of the start of the main thread\u0027s stack.\n\ni went with looking for \"[stack]\" to save myself having to parse every line. luckily the VM only needs to call this right when it first starts up, but i didn\u0027t want to make it any more expensive than necessary if someone chooses to call it later.",
+      "revId": "f5327da7b85863dbf82a452d7c1691cd7db84678",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
