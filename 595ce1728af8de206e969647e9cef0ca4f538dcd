@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "73e46551_5070daa5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-08-29T17:14:33Z",
+      "side": 1,
+      "message": "I think the (shortened, as from git log --oneline) commit hash, the Change-Id, or the URL to the review would all be fine, but I don\u0027t know if there\u0027s an official stance on this.",
+      "parentUuid": "f35a15dc_f35bf331",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d37ef124_211e14c6",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
