@@ -35,7 +35,7 @@ class KernelArgumentBlock;
 extern void linker_env_init(KernelArgumentBlock& args);
 
 // Returns the value of environment variable 'name' if defined and not
-// empty, or NULL otherwise.
+// empty, or null otherwise.
 extern const char* linker_env_get(const char* name);
 
 // Returns the value of this program's AT_SECURE variable.
