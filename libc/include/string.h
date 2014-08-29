@@ -67,8 +67,12 @@ extern char*  strcasestr(const char *haystack, const char *needle) __purefunc;
 extern char*  strtok(char* __restrict, const char* __restrict);
 extern char*  strtok_r(char* __restrict, const char* __restrict, char** __restrict);
 
-extern char*  strerror(int);
-extern int    strerror_r(int errnum, char *buf, size_t n);
+extern char* strerror(int);
+#if defined(__USE_GNU)
+extern char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r);
+#else /* POSIX */
+extern int strerror_r(int, char*, size_t);
+#endif
 
 extern size_t strnlen(const char *, size_t) __purefunc;
 extern char*  strncat(char* __restrict, const char* __restrict, size_t);

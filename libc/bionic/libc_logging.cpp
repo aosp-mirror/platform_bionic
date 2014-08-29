@@ -75,10 +75,12 @@ struct BufferOutputStream {
       len = strlen(data);
     }
 
+    total += len;
+
     while (len > 0) {
       int avail = end_ - pos_;
       if (avail == 0) {
-        break;
+        return;
       }
       if (avail > len) {
         avail = len;
@@ -87,11 +89,10 @@ struct BufferOutputStream {
       pos_ += avail;
       pos_[0] = '\0';
       len -= avail;
-      total += avail;
     }
   }
 
-  int total;
+  size_t total;
 
  private:
   char* buffer_;
@@ -109,18 +110,19 @@ struct FdOutputStream {
       len = strlen(data);
     }
 
+    total += len;
+
     while (len > 0) {
       int rc = TEMP_FAILURE_RETRY(write(fd_, data, len));
       if (rc == -1) {
-        break;
+        return;
       }
       data += rc;
       len -= rc;
-      total += rc;
     }
   }
 
-  int total;
+  size_t total;
 
  private:
   int fd_;
