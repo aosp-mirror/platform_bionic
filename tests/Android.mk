@@ -95,6 +95,7 @@ libBionicStandardTests_src_files := \
     stdio_ext_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \
+    string_posix_strerror_r_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
     sstream_test.cpp \
