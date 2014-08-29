@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f35a15dc_f35bf331",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T00:40:38Z",
+      "side": 1,
+      "message": "What\u0027s the proper way to cite a previously commited CL?  The commit id?  That\u0027s 00aaea364501b3b0abe58dae461136159df1e356 . It was the commit that added the stdatomic test and enabled it with glibc.",
+      "parentUuid": "f35a15dc_fd8e6224",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d37ef124_211e14c6",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2014-08-28T23:45:32Z",
       "side": 1,
       "message": "so why are we doing this? who\u0027s using the __sync implementations?",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_33abc7fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T00:40:38Z",
+      "side": 1,
+      "message": "Mostly because we need this in L, and I want to minimize divergence.  Secondarily because we now have a bunch of code in both places that\u0027s not really useful because it doesn\u0027t quite work, and the existing code does things that look dubious (notably invoking clang extensions on gcc), although they seem to work with later versions of gcc.\n\nI would be fine with committing this and then later ripping out all the __sync stuff from AOSP, including most of this patch.  But I think it would be best to do the latter a month or two from now, once we\u0027re more confident the L stuff is stable.  In my mind, there is something to be said for having a working version of this stuff somewhere in the revision history.",
+      "parentUuid": "d37ef124_211e14c6",
       "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +101,47 @@
     },
     {
       "key": {
+        "uuid": "d37ef124_939e3bdd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T00:40:38Z",
+      "side": 1,
+      "message": "Thanks.  I wasn\u0027t sure that was allowed.",
+      "parentUuid": "f35a15dc_dda28699",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_56c2016b",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T00:40:38Z",
+      "side": 1,
+      "message": "That fails for gcc \u003e\u003d 5.0.  Will fix.",
+      "range": {
+        "startLine": 42,
+        "startChar": 7,
+        "endLine": 42,
+        "endChar": 42
+      },
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736f0577_a39696c6",
         "filename": "tests/stdatomic_test.cpp",
         "patchSetId": 1
@@ -70,6 +153,24 @@
       "writtenOn": "2014-08-28T23:45:32Z",
       "side": 1,
       "message": "there\u0027s a GLIBC_PREREQ you should use.",
+      "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d37ef124_b6d00535",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T00:40:38Z",
+      "side": 1,
+      "message": "This is the test that was previously used around the whole file.\n\nI could check for defined(__clang__) || __GNUC__ \u003e 4 || __GNUC_MINOR \u003e 6, which would be more accurate.  This isn\u0027t really dependent on the glibc version.",
+      "parentUuid": "736f0577_a39696c6",
       "revId": "595ce1728af8de206e969647e9cef0ca4f538dcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
