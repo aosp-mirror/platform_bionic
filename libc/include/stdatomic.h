@@ -138,7 +138,7 @@ using std::atomic_uintmax_t;
 
 #if __has_extension(c_atomic) || __has_extension(cxx_atomic)
 #define	__CLANG_ATOMICS
-#elif __GNUC_PREREQ__(4, 7)
+#elif __GNUC_PREREQ(4, 7)
 #define	__GNUC_ATOMICS
 #elif defined(__GNUC__)
 #define	__SYNC_ATOMICS
