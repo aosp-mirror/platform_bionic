@@ -213,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "b37b3d36_0b953de7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2014-08-29T12:06:21Z",
+      "side": 1,
+      "message": "Does it mean that change would make the L release then?\nIt would be just amazing and would save us the trouble of jumping though hoops to somehow make our runtime coexist with libsigchain.so with the depth-first lookup.\n\nIf not, we would still like this one to make L, as it\u0027s a complete show stopper. Either that or resurrect the malloc dispatch pointer.",
+      "parentUuid": "d37ef124_b3225791",
+      "revId": "0314707477ecc5c72adbe614ff1d63be71f45e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "736f0577_f893dd47",
         "filename": "tests/dl_test.cpp",
         "patchSetId": 1
