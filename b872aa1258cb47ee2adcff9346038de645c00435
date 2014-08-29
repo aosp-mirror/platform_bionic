@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d31511f5_b7f7a2f1",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-29T19:05:05Z",
+      "side": 1,
+      "message": "this...",
+      "revId": "b872aa1258cb47ee2adcff9346038de645c00435",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d31511f5_d7f69ef2",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-29T19:05:05Z",
+      "side": 1,
+      "message": "and this... is to fix invalid cast from nullptr_t -\u003e void*",
+      "revId": "b872aa1258cb47ee2adcff9346038de645c00435",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
