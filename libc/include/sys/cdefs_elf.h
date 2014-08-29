@@ -34,10 +34,6 @@
     __asm__(".global " #alias "\n" \
             #alias " = " #sym);
 
-#define __weak_alias(alias,sym) \
-    __asm__(".weak " #alias "\n" \
-            #alias " = " #sym);
-
 /* We use __warnattr instead of __warn_references.
  * TODO: remove this and put an empty definition in one of the upstream-* compatibility headers.
  */
