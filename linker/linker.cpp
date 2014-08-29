@@ -97,7 +97,7 @@ static const char* const kDefaultLdPaths[] = {
   "/vendor/lib",
   "/system/lib",
 #endif
-  NULL
+  nullptr
 };
 
 #define LDPATH_BUFSIZE (LDPATH_MAX*64)
@@ -116,7 +116,7 @@ static soinfo* g_ld_preloads[LDPRELOAD_MAX + 1];
 
 __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
-__LIBC_HIDDEN__ abort_msg_t* g_abort_message = NULL; // For debuggerd.
+__LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr; // For debuggerd.
 
 enum RelocationKind {
     kRelocAbsolute = 0,
@@ -189,7 +189,7 @@ size_t linker_get_error_buffer_size() {
 extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
 
 static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
-static r_debug _r_debug = {1, NULL, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
+static r_debug _r_debug = {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
 static link_map* r_debug_tail = 0;
 
 static void insert_soinfo_into_debug_map(soinfo* info) {
@@ -288,7 +288,7 @@ static void protect_data(int protection) {
 static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
-    return NULL;
+    return nullptr;
   }
 
   soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat);
@@ -301,7 +301,7 @@ static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
 }
 
 static void soinfo_free(soinfo* si) {
-    if (si == NULL) {
+    if (si == nullptr) {
         return;
     }
 
@@ -309,16 +309,16 @@ static void soinfo_free(soinfo* si) {
       munmap(reinterpret_cast<void*>(si->base), si->size);
     }
 
-    soinfo *prev = NULL, *trav;
+    soinfo *prev = nullptr, *trav;
 
     TRACE("name %s: freeing soinfo @ %p", si->name, si);
 
-    for (trav = solist; trav != NULL; trav = trav->next) {
+    for (trav = solist; trav != nullptr; trav = trav->next) {
         if (trav == si)
             break;
         prev = trav;
     }
-    if (trav == NULL) {
+    if (trav == nullptr) {
         /* si was not in solist */
         DL_ERR("name \"%s\" is not in solist!", si->name);
         return;
@@ -327,7 +327,7 @@ static void soinfo_free(soinfo* si) {
     // clear links to/from si
     si->remove_all_links();
 
-    /* prev will never be NULL, because the first entry in solist is
+    /* prev will never be null, because the first entry in solist is
        always the static libdl_info.
     */
     prev->next = si->next;
@@ -341,7 +341,7 @@ static void soinfo_free(soinfo* si) {
 
 static void parse_path(const char* path, const char* delimiters,
                        const char** array, char* buf, size_t buf_size, size_t max_count) {
-  if (path == NULL) {
+  if (path == nullptr) {
     return;
   }
 
@@ -358,9 +358,9 @@ static void parse_path(const char* path, const char* delimiters,
   // Forget the last path if we had to truncate; this occurs if the 2nd to
   // last char isn't '\0' (i.e. wasn't originally a delimiter).
   if (i > 0 && len >= buf_size && buf[buf_size - 2] != '\0') {
-    array[i - 1] = NULL;
+    array[i - 1] = nullptr;
   } else {
-    array[i] = NULL;
+    array[i] = nullptr;
   }
 }
 
@@ -396,7 +396,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
         }
     }
     *pcount = 0;
-    return NULL;
+    return nullptr;
 }
 
 #endif
@@ -405,7 +405,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
  * loaded libraries. gcc_eh does the rest. */
 int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
     int rv = 0;
-    for (soinfo* si = solist; si != NULL; si = si->next) {
+    for (soinfo* si = solist; si != nullptr; si = si->next) {
         dl_phdr_info dl_info;
         dl_info.dlpi_addr = si->link_map_head.l_addr;
         dl_info.dlpi_name = si->link_map_head.l_name;
@@ -454,7 +454,7 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
              name, si->name, reinterpret_cast<void*>(si->base), hash, hash % si->nbucket);
 
 
-  return NULL;
+  return nullptr;
 }
 
 soinfo::soinfo(const char* name, const struct stat* file_stat) {
@@ -464,7 +464,7 @@ soinfo::soinfo(const char* name, const struct stat* file_stat) {
   flags = FLAG_NEW_SOINFO;
   version = SOINFO_VERSION;
 
-  if (file_stat != NULL) {
+  if (file_stat != nullptr) {
     set_st_dev(file_stat->st_dev);
     set_st_ino(file_stat->st_ino);
   }
@@ -511,9 +511,9 @@ static unsigned elfhash(const char* _name) {
 
 static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, soinfo* needed[]) {
     unsigned elf_hash = elfhash(name);
-    ElfW(Sym)* s = NULL;
+    ElfW(Sym)* s = nullptr;
 
-    if (si != NULL && somain != NULL) {
+    if (si != nullptr && somain != nullptr) {
         /*
          * Local scope is executable scope. Just start looking into it right away
          * for the shortcut.
@@ -521,7 +521,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
 
         if (si == somain) {
             s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != NULL) {
+            if (s != nullptr) {
                 *lsi = si;
                 goto done;
             }
@@ -538,7 +538,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
                 DEBUG("%s: looking up %s in executable %s",
                       si->name, name, somain->name);
                 s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != NULL) {
+                if (s != nullptr) {
                     *lsi = somain;
                     goto done;
                 }
@@ -555,7 +555,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
              * Here we return the first definition found for simplicity.  */
 
             s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != NULL) {
+            if (s != nullptr) {
                 *lsi = si;
                 goto done;
             }
@@ -569,7 +569,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
                 DEBUG("%s: looking up %s in executable %s after local scope",
                       si->name, name, somain->name);
                 s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != NULL) {
+                if (s != nullptr) {
                     *lsi = somain;
                     goto done;
                 }
@@ -578,26 +578,26 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
     }
 
     /* Next, look for it in the preloads list */
-    for (int i = 0; g_ld_preloads[i] != NULL; i++) {
+    for (int i = 0; g_ld_preloads[i] != nullptr; i++) {
         s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-        if (s != NULL) {
+        if (s != nullptr) {
             *lsi = g_ld_preloads[i];
             goto done;
         }
     }
 
-    for (int i = 0; needed[i] != NULL; i++) {
+    for (int i = 0; needed[i] != nullptr; i++) {
         DEBUG("%s: looking up %s in %s",
               si->name, name, needed[i]->name);
         s = soinfo_elf_lookup(needed[i], elf_hash, name);
-        if (s != NULL) {
+        if (s != nullptr) {
             *lsi = needed[i];
             goto done;
         }
     }
 
 done:
-    if (s != NULL) {
+    if (s != nullptr) {
         TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
                    "found in %s, base = %p, load bias = %p",
                    si->name, name, reinterpret_cast<void*>(s->st_value),
@@ -606,7 +606,7 @@ done:
         return s;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Another soinfo list allocator to use in dlsym. We don't reuse
@@ -659,20 +659,20 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
 ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
   unsigned elf_hash = elfhash(name);
 
-  if (start == NULL) {
+  if (start == nullptr) {
     start = solist;
   }
 
-  ElfW(Sym)* s = NULL;
-  for (soinfo* si = start; (s == NULL) && (si != NULL); si = si->next) {
+  ElfW(Sym)* s = nullptr;
+  for (soinfo* si = start; (s == nullptr) && (si != nullptr); si = si->next) {
     s = soinfo_elf_lookup(si, elf_hash, name);
-    if (s != NULL) {
+    if (s != nullptr) {
       *found = si;
       break;
     }
   }
 
-  if (s != NULL) {
+  if (s != nullptr) {
     TRACE_TYPE(LOOKUP, "%s s->st_value = %p, found->base = %p",
                name, reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
   }
@@ -682,12 +682,12 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
 
 soinfo* find_containing_library(const void* p) {
   ElfW(Addr) address = reinterpret_cast<ElfW(Addr)>(p);
-  for (soinfo* si = solist; si != NULL; si = si->next) {
+  for (soinfo* si = solist; si != nullptr; si = si->next) {
     if (address >= si->base && address - si->base < si->size) {
       return si;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
@@ -704,12 +704,12 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 static int open_library_on_path(const char* name, const char* const paths[]) {
   char buf[512];
-  for (size_t i = 0; paths[i] != NULL; ++i) {
+  for (size_t i = 0; paths[i] != nullptr; ++i) {
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
@@ -727,7 +727,7 @@ static int open_library(const char* name) {
   TRACE("[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
-  if (strchr(name, '/') != NULL) {
+  if (strchr(name, '/') != nullptr) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       return fd;
@@ -750,14 +750,14 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
     int fd = -1;
     ScopedFd file_guard(-1);
 
-    if (extinfo != NULL && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
+    if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
       fd = extinfo->library_fd;
     } else {
       // Open the file.
       fd = open_library(name);
       if (fd == -1) {
         DL_ERR("library \"%s\" not found", name);
-        return NULL;
+        return nullptr;
       }
 
       file_guard.reset(fd);
@@ -768,12 +768,12 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
     struct stat file_stat;
     if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
       DL_ERR("unable to stat file for the library %s: %s", name, strerror(errno));
-      return NULL;
+      return nullptr;
     }
 
     // Check for symlink and other situations where
     // file can have different names.
-    for (soinfo* si = solist; si != NULL; si = si->next) {
+    for (soinfo* si = solist; si != nullptr; si = si->next) {
       if (si->get_st_dev() != 0 &&
           si->get_st_ino() != 0 &&
           si->get_st_dev() == file_stat.st_dev &&
@@ -784,17 +784,17 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
     }
 
     if ((dlflags & RTLD_NOLOAD) != 0) {
-      return NULL;
+      return nullptr;
     }
 
     // Read the ELF header and load the segments.
     if (!elf_reader.Load(extinfo)) {
-        return NULL;
+        return nullptr;
     }
 
     soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat);
-    if (si == NULL) {
-        return NULL;
+    if (si == nullptr) {
+        return nullptr;
     }
     si->base = elf_reader.load_start();
     si->size = elf_reader.load_size();
@@ -809,7 +809,7 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
 
     if (!soinfo_link_image(si, extinfo)) {
       soinfo_free(si);
-      return NULL;
+      return nullptr;
     }
 
     return si;
@@ -817,16 +817,16 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
 
 static soinfo *find_loaded_library_by_name(const char* name) {
   const char* search_name = SEARCH_NAME(name);
-  for (soinfo* si = solist; si != NULL; si = si->next) {
+  for (soinfo* si = solist; si != nullptr; si = si->next) {
     if (!strcmp(search_name, si->name)) {
       return si;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 static soinfo* find_library_internal(const char* name, int dlflags, const android_dlextinfo* extinfo) {
-  if (name == NULL) {
+  if (name == nullptr) {
     return somain;
   }
 
@@ -834,14 +834,14 @@ static soinfo* find_library_internal(const char* name, int dlflags, const androi
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library
-  if (si == NULL) {
+  if (si == nullptr) {
     TRACE("[ '%s' has not been found by name.  Trying harder...]", name);
     si = load_library(name, dlflags, extinfo);
   }
 
-  if (si != NULL && (si->flags & FLAG_LINKED) == 0) {
+  if (si != nullptr && (si->flags & FLAG_LINKED) == 0) {
     DL_ERR("recursive link to \"%s\"", si->name);
-    return NULL;
+    return nullptr;
   }
 
   return si;
@@ -849,7 +849,7 @@ static soinfo* find_library_internal(const char* name, int dlflags, const androi
 
 static soinfo* find_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
   soinfo* si = find_library_internal(name, dlflags, extinfo);
-  if (si != NULL) {
+  if (si != nullptr) {
     si->ref_count++;
   }
   return si;
@@ -870,8 +870,8 @@ static void soinfo_unload(soinfo* si) {
         if (d->d_tag == DT_NEEDED) {
           const char* library_name = si->strtab + d->d_un.d_val;
           TRACE("%s needs to unload %s", si->name, library_name);
-          soinfo* needed = find_library(library_name, RTLD_NOLOAD, NULL);
-          if (needed != NULL) {
+          soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
+          if (needed != nullptr) {
             soinfo_unload(needed);
           } else {
             // Not found: for example if symlink was deleted between dlopen and dlclose
@@ -918,15 +918,15 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
-    return NULL;
+    return nullptr;
   }
-  if (extinfo != NULL && ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0)) {
+  if (extinfo != nullptr && ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0)) {
     DL_ERR("invalid extended flags to android_dlopen_ext: %" PRIx64, extinfo->flags);
-    return NULL;
+    return nullptr;
   }
   protect_data(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name, flags, extinfo);
-  if (si != NULL) {
+  if (si != nullptr) {
     si->CallConstructors();
   }
   protect_data(PROT_READ);
@@ -949,7 +949,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, so
     unsigned sym = ELFW(R_SYM)(rel->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
     ElfW(Addr) sym_addr = 0;
-    const char* sym_name = NULL;
+    const char* sym_name = nullptr;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
     s = soinfo_do_lookup(si, sym_name, &lsi, needed);
 
@@ -972,7 +972,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, 
     unsigned sym = ELFW(R_SYM)(rela->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
     ElfW(Addr) sym_addr = 0;
-    const char* sym_name = NULL;
+    const char* sym_name = nullptr;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
     s = soinfo_do_lookup(si, sym_name, &lsi, needed);
 
@@ -996,7 +996,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
     unsigned sym = ELFW(R_SYM)(rela->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
     ElfW(Addr) sym_addr = 0;
-    const char* sym_name = NULL;
+    const char* sym_name = nullptr;
 
     DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
     if (type == 0) { // R_*_NONE
@@ -1005,7 +1005,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
     if (sym != 0) {
       sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
       s = soinfo_do_lookup(si, sym_name, &lsi, needed);
-      if (s == NULL) {
+      if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &si->symtab[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
@@ -1061,7 +1061,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
       }
       count_relocation(kRelocSymbol);
     } else {
-      s = NULL;
+      s = nullptr;
     }
 
     switch (type) {
@@ -1265,7 +1265,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
         unsigned sym = ELFW(R_SYM)(rel->r_info);
         ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
         ElfW(Addr) sym_addr = 0;
-        const char* sym_name = NULL;
+        const char* sym_name = nullptr;
 
         DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
         if (type == 0) { // R_*_NONE
@@ -1274,7 +1274,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
         if (sym != 0) {
             sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
             s = soinfo_do_lookup(si, sym_name, &lsi, needed);
-            if (s == NULL) {
+            if (s == nullptr) {
                 // We only allow an undefined symbol if this is a weak reference...
                 s = &si->symtab[sym];
                 if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
@@ -1333,7 +1333,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             }
             count_relocation(kRelocSymbol);
         } else {
-            s = NULL;
+            s = nullptr;
         }
 
         switch (type) {
@@ -1458,7 +1458,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
 #if defined(__mips__)
 static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
     ElfW(Addr)** got = si->plt_got;
-    if (got == NULL) {
+    if (got == nullptr) {
         return true;
     }
     unsigned local_gotno = si->mips_local_gotno;
@@ -1490,7 +1490,7 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
         const char* sym_name = si->strtab + sym->st_name;
         soinfo* lsi;
         ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, needed);
-        if (s == NULL) {
+        if (s == nullptr) {
             // We only allow an undefined symbol if this is a weak reference.
             s = &symtab[g];
             if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
@@ -1510,7 +1510,7 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
 #endif
 
 void soinfo::CallArray(const char* array_name __unused, linker_function_t* functions, size_t count, bool reverse) {
-  if (functions == NULL) {
+  if (functions == nullptr) {
     return;
   }
 
@@ -1529,7 +1529,7 @@ void soinfo::CallArray(const char* array_name __unused, linker_function_t* funct
 }
 
 void soinfo::CallFunction(const char* function_name __unused, linker_function_t function) {
-  if (function == NULL || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
+  if (function == nullptr || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
     return;
   }
 
@@ -1565,7 +1565,7 @@ void soinfo::CallConstructors() {
   //    out above, the libc constructor will be called again (recursively!).
   constructors_called = true;
 
-  if ((flags & FLAG_EXE) == 0 && preinit_array != NULL) {
+  if ((flags & FLAG_EXE) == 0 && preinit_array != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
     PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!",
           name, preinit_array_count);
@@ -1761,7 +1761,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     ElfW(Word) dynamic_flags;
     phdr_table_get_dynamic_section(phdr, phnum, base, &si->dynamic,
                                    &dynamic_count, &dynamic_flags);
-    if (si->dynamic == NULL) {
+    if (si->dynamic == nullptr) {
         if (!relocating_linker) {
             DL_ERR("missing PT_DYNAMIC in \"%s\"", si->name);
         }
@@ -1979,9 +1979,9 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     if (si->flags & FLAG_EXE) {
         memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
         size_t preload_count = 0;
-        for (size_t i = 0; g_ld_preload_names[i] != NULL; i++) {
-            soinfo* lsi = find_library(g_ld_preload_names[i], 0, NULL);
-            if (lsi != NULL) {
+        for (size_t i = 0; g_ld_preload_names[i] != nullptr; i++) {
+            soinfo* lsi = find_library(g_ld_preload_names[i], 0, nullptr);
+            if (lsi != nullptr) {
                 g_ld_preloads[preload_count++] = lsi;
             } else {
                 // As with glibc, failure to load an LD_PRELOAD library is just a warning.
@@ -1998,8 +1998,8 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         if (d->d_tag == DT_NEEDED) {
             const char* library_name = si->strtab + d->d_un.d_val;
             DEBUG("%s needs %s", si->name, library_name);
-            soinfo* lsi = find_library(library_name, 0, NULL);
-            if (lsi == NULL) {
+            soinfo* lsi = find_library(library_name, 0, nullptr);
+            if (lsi == nullptr) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        library_name, si->name, tmp_err_buf);
@@ -2010,7 +2010,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
             *pneeded++ = lsi;
         }
     }
-    *pneeded = NULL;
+    *pneeded = nullptr;
 
 #if !defined(__LP64__)
     if (si->has_text_relocations) {
@@ -2027,26 +2027,26 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
 #endif
 
 #if defined(USE_RELA)
-    if (si->plt_rela != NULL) {
+    if (si->plt_rela != nullptr) {
         DEBUG("[ relocating %s plt ]\n", si->name);
         if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count, needed)) {
             return false;
         }
     }
-    if (si->rela != NULL) {
+    if (si->rela != nullptr) {
         DEBUG("[ relocating %s ]\n", si->name);
         if (soinfo_relocate(si, si->rela, si->rela_count, needed)) {
             return false;
         }
     }
 #else
-    if (si->plt_rel != NULL) {
+    if (si->plt_rel != nullptr) {
         DEBUG("[ relocating %s plt ]", si->name);
         if (soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed)) {
             return false;
         }
     }
-    if (si->rel != NULL) {
+    if (si->rel != nullptr) {
         DEBUG("[ relocating %s ]", si->name);
         if (soinfo_relocate(si, si->rel, si->rel_count, needed)) {
             return false;
@@ -2122,11 +2122,11 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
 static void add_vdso(KernelArgumentBlock& args __unused) {
 #if defined(AT_SYSINFO_EHDR)
   ElfW(Ehdr)* ehdr_vdso = reinterpret_cast<ElfW(Ehdr)*>(args.getauxval(AT_SYSINFO_EHDR));
-  if (ehdr_vdso == NULL) {
+  if (ehdr_vdso == nullptr) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]", NULL);
+  soinfo* si = soinfo_alloc("[vdso]", nullptr);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
@@ -2134,7 +2134,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  soinfo_link_image(si, NULL);
+  soinfo_link_image(si, nullptr);
 #endif
 }
 
@@ -2167,7 +2167,7 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_soinfo_for_gdb.dynamic, NULL, NULL);
+                                 &linker_soinfo_for_gdb.dynamic, nullptr, nullptr);
   insert_soinfo_into_debug_map(&linker_soinfo_for_gdb);
 }
 
@@ -2195,14 +2195,14 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     // Get a few environment variables.
     const char* LD_DEBUG = linker_env_get("LD_DEBUG");
-    if (LD_DEBUG != NULL) {
+    if (LD_DEBUG != nullptr) {
       g_ld_debug_verbosity = atoi(LD_DEBUG);
     }
 
     // Normally, these are cleaned by linker_env_init, but the test
     // doesn't cost us anything.
-    const char* ldpath_env = NULL;
-    const char* ldpreload_env = NULL;
+    const char* ldpath_env = nullptr;
+    const char* ldpreload_env = nullptr;
     if (!get_AT_SECURE()) {
       ldpath_env = linker_env_get("LD_LIBRARY_PATH");
       ldpreload_env = linker_env_get("LD_PRELOAD");
@@ -2210,8 +2210,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     INFO("[ android linker & debugger ]");
 
-    soinfo* si = soinfo_alloc(args.argv[0], NULL);
-    if (si == NULL) {
+    soinfo* si = soinfo_alloc(args.argv[0], nullptr);
+    if (si == nullptr) {
         exit(EXIT_FAILURE);
     }
 
@@ -2221,8 +2221,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     map->l_addr = 0;
     map->l_name = args.argv[0];
-    map->l_prev = NULL;
-    map->l_next = NULL;
+    map->l_prev = nullptr;
+    map->l_next = nullptr;
 
     _r_debug.r_map = map;
     r_debug_tail = map;
@@ -2248,7 +2248,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
         break;
       }
     }
-    si->dynamic = NULL;
+    si->dynamic = nullptr;
     si->ref_count = 1;
 
     ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
@@ -2263,7 +2263,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     somain = si;
 
-    if (!soinfo_link_image(si, NULL)) {
+    if (!soinfo_link_image(si, nullptr)) {
         __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
         exit(EXIT_FAILURE);
     }
@@ -2272,7 +2272,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     si->CallPreInitConstructors();
 
-    for (size_t i = 0; g_ld_preloads[i] != NULL; ++i) {
+    for (size_t i = 0; g_ld_preloads[i] != nullptr; ++i) {
         g_ld_preloads[i]->CallConstructors();
     }
 
@@ -2285,7 +2285,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     si->CallConstructors();
 
 #if TIMING
-    gettimeofday(&t1, NULL);
+    gettimeofday(&t1, nullptr);
     PRINT("LINKER TIME: %s: %d microseconds", args.argv[0], (int) (
                (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
                (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
@@ -2386,12 +2386,12 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.base = linker_addr;
   linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
   linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
-  linker_so.dynamic = NULL;
+  linker_so.dynamic = nullptr;
   linker_so.phdr = phdr;
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!soinfo_link_image(&linker_so, NULL)) {
+  if (!soinfo_link_image(&linker_so, nullptr)) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
