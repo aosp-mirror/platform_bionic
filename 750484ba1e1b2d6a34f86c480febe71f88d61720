@@ -16,6 +16,24 @@
       "revId": "750484ba1e1b2d6a34f86c480febe71f88d61720",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d357d1b2_13db3627",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-08-29T22:25:12Z",
+      "side": 1,
+      "message": "Good catch.  Thanks!",
+      "parentUuid": "53e9212a_af93c548",
+      "revId": "750484ba1e1b2d6a34f86c480febe71f88d61720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
