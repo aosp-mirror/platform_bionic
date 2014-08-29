@@ -81,7 +81,7 @@ class ElfReader {
 };
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                ElfW(Addr)* min_vaddr = NULL, ElfW(Addr)* max_vaddr = NULL);
+                                ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
 
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias);
 
