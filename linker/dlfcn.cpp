@@ -42,7 +42,7 @@ static const char* __bionic_set_dlerror(char* new_value) {
 static void __bionic_format_dlerror(const char* msg, const char* detail) {
   char* buffer = __get_thread()->dlerror_buffer;
   strlcpy(buffer, msg, __BIONIC_DLERROR_BUFFER_SIZE);
-  if (detail != NULL) {
+  if (detail != nullptr) {
     strlcat(buffer, ": ", __BIONIC_DLERROR_BUFFER_SIZE);
     strlcat(buffer, detail, __BIONIC_DLERROR_BUFFER_SIZE);
   }
@@ -51,7 +51,7 @@ static void __bionic_format_dlerror(const char* msg, const char* detail) {
 }
 
 const char* dlerror() {
-  const char* old_value = __bionic_set_dlerror(NULL);
+  const char* old_value = __bionic_set_dlerror(nullptr);
   return old_value;
 }
 
@@ -68,9 +68,9 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   soinfo* result = do_dlopen(filename, flags, extinfo);
-  if (result == NULL) {
+  if (result == nullptr) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
-    return NULL;
+    return nullptr;
   }
   return result;
 }
@@ -80,33 +80,33 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
 }
 
 void* dlopen(const char* filename, int flags) {
-  return dlopen_ext(filename, flags, NULL);
+  return dlopen_ext(filename, flags, nullptr);
 }
 
 void* dlsym(void* handle, const char* symbol) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
 #if !defined(__LP64__)
-  if (handle == NULL) {
-    __bionic_format_dlerror("dlsym library handle is null", NULL);
-    return NULL;
+  if (handle == nullptr) {
+    __bionic_format_dlerror("dlsym library handle is null", nullptr);
+    return nullptr;
   }
 #endif
 
-  if (symbol == NULL) {
-    __bionic_format_dlerror("dlsym symbol name is null", NULL);
-    return NULL;
+  if (symbol == nullptr) {
+    __bionic_format_dlerror("dlsym symbol name is null", nullptr);
+    return nullptr;
   }
 
-  soinfo* found = NULL;
-  ElfW(Sym)* sym = NULL;
+  soinfo* found = nullptr;
+  ElfW(Sym)* sym = nullptr;
   if (handle == RTLD_DEFAULT) {
-    sym = dlsym_linear_lookup(symbol, &found, NULL);
+    sym = dlsym_linear_lookup(symbol, &found, nullptr);
   } else if (handle == RTLD_NEXT) {
     void* caller_addr = __builtin_return_address(0);
     soinfo* si = find_containing_library(caller_addr);
 
-    sym = NULL;
+    sym = nullptr;
     if (si && si->next) {
       sym = dlsym_linear_lookup(symbol, &found, si->next);
     }
@@ -114,7 +114,7 @@ void* dlsym(void* handle, const char* symbol) {
     sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, symbol);
   }
 
-  if (sym != NULL) {
+  if (sym != nullptr) {
     unsigned bind = ELF_ST_BIND(sym->st_info);
 
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
@@ -122,10 +122,10 @@ void* dlsym(void* handle, const char* symbol) {
     }
 
     __bionic_format_dlerror("symbol found but not global", symbol);
-    return NULL;
+    return nullptr;
   } else {
     __bionic_format_dlerror("undefined symbol", symbol);
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -134,7 +134,7 @@ int dladdr(const void* addr, Dl_info* info) {
 
   // Determine if this address can be found in any library currently mapped.
   soinfo* si = find_containing_library(addr);
-  if (si == NULL) {
+  if (si == nullptr) {
     return 0;
   }
 
@@ -146,7 +146,7 @@ int dladdr(const void* addr, Dl_info* info) {
 
   // Determine if any symbol in the library contains the specified address.
   ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
-  if (sym != NULL) {
+  if (sym != nullptr) {
     info->dli_sname = si->strtab + sym->st_name;
     info->dli_saddr = reinterpret_cast<void*>(si->load_bias + sym->st_value);
   }
@@ -164,7 +164,7 @@ int dlclose(void* handle) {
 // name_offset: starting index of the name in libdl_info.strtab
 #define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
-      reinterpret_cast<Elf32_Addr>(reinterpret_cast<void*>(value)), \
+      reinterpret_cast<Elf32_Addr>(value), \
       /* st_size */ 0, \
       (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
@@ -176,7 +176,7 @@ int dlclose(void* handle) {
       (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
       shndx, \
-      reinterpret_cast<Elf64_Addr>(reinterpret_cast<void*>(value)), \
+      reinterpret_cast<Elf64_Addr>(value), \
       /* st_size */ 0, \
     }
 
@@ -199,7 +199,7 @@ static ElfW(Sym) g_libdl_symtab[] = {
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
   // in the strtab with a \0 to make iterating through the symtab easier.
-  ELFW(SYM_INITIALIZER)(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
+  ELFW(SYM_INITIALIZER)(sizeof(ANDROID_LIBDL_STRTAB) - 1, nullptr, 0),
   ELFW(SYM_INITIALIZER)(  0, &dlopen, 1),
   ELFW(SYM_INITIALIZER)(  7, &dlclose, 1),
   ELFW(SYM_INITIALIZER)( 15, &dlsym, 1),

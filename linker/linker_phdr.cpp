@@ -121,13 +121,13 @@
 
 ElfReader::ElfReader(const char* name, int fd)
     : name_(name), fd_(fd),
-      phdr_num_(0), phdr_mmap_(NULL), phdr_table_(NULL), phdr_size_(0),
-      load_start_(NULL), load_size_(0), load_bias_(0),
-      loaded_phdr_(NULL) {
+      phdr_num_(0), phdr_mmap_(nullptr), phdr_table_(nullptr), phdr_size_(0),
+      load_start_(nullptr), load_size_(0), load_bias_(0),
+      loaded_phdr_(nullptr) {
 }
 
 ElfReader::~ElfReader() {
-  if (phdr_mmap_ != NULL) {
+  if (phdr_mmap_ != nullptr) {
     munmap(phdr_mmap_, phdr_size_);
   }
 }
@@ -225,7 +225,7 @@ bool ElfReader::ReadProgramHeader() {
 
   phdr_size_ = page_max - page_min;
 
-  void* mmap_result = mmap(NULL, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, page_min);
+  void* mmap_result = mmap(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, page_min);
   if (mmap_result == MAP_FAILED) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_, strerror(errno));
     return false;
@@ -242,7 +242,7 @@ bool ElfReader::ReadProgramHeader() {
  * process' address space. If there are no loadable segments, 0 is
  * returned.
  *
- * If out_min_vaddr or out_max_vaddr are non-NULL, they will be
+ * If out_min_vaddr or out_max_vaddr are not null, they will be
  * set to the minimum and maximum addresses of pages to be reserved,
  * or 0 if there is nothing to load.
  */
@@ -276,10 +276,10 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   min_vaddr = PAGE_START(min_vaddr);
   max_vaddr = PAGE_END(max_vaddr);
 
-  if (out_min_vaddr != NULL) {
+  if (out_min_vaddr != nullptr) {
     *out_min_vaddr = min_vaddr;
   }
-  if (out_max_vaddr != NULL) {
+  if (out_max_vaddr != nullptr) {
     *out_max_vaddr = max_vaddr;
   }
   return max_vaddr - min_vaddr;
@@ -301,7 +301,7 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   size_t reserved_size = 0;
   bool reserved_hint = true;
 
-  if (extinfo != NULL) {
+  if (extinfo != nullptr) {
     if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
       reserved_size = extinfo->reserved_size;
       reserved_hint = false;
@@ -585,9 +585,9 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
     return -1;
   }
   off_t file_size = file_stat.st_size;
-  void* temp_mapping = NULL;
+  void* temp_mapping = nullptr;
   if (file_size > 0) {
-    temp_mapping = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    temp_mapping = mmap(nullptr, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
     if (temp_mapping == MAP_FAILED) {
       return -1;
     }
@@ -667,7 +667,7 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Output:
- *   arm_exidx       -> address of table in memory (NULL on failure).
+ *   arm_exidx       -> address of table in memory (null on failure).
  *   arm_exidx_count -> number of items in table (0 on failure).
  * Return:
  *   0 on error, -1 on failure (_no_ error code in errno)
@@ -687,21 +687,21 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
     *arm_exidx_count = (unsigned)(phdr->p_memsz / 8);
     return 0;
   }
-  *arm_exidx = NULL;
+  *arm_exidx = nullptr;
   *arm_exidx_count = 0;
   return -1;
 }
 #endif
 
 /* Return the address and size of the ELF file's .dynamic section in memory,
- * or NULL if missing.
+ * or null if missing.
  *
  * Input:
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Output:
- *   dynamic       -> address of table in memory (NULL on failure).
+ *   dynamic       -> address of table in memory (null on failure).
  *   dynamic_count -> number of items in table (0 on failure).
  *   dynamic_flags -> protection flags for section (unset on failure)
  * Return:
@@ -727,7 +727,7 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
     }
     return;
   }
-  *dynamic = NULL;
+  *dynamic = nullptr;
   if (dynamic_count) {
     *dynamic_count = 0;
   }

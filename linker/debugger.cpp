@@ -162,12 +162,12 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
     thread_name[MAX_TASK_NAME_LEN] = 0;
   }
 
-  // "info" will be NULL if the siginfo_t information was not available.
+  // "info" will be null if the siginfo_t information was not available.
   // Many signals don't have an address or a code.
   char code_desc[32]; // ", code -6"
   char addr_desc[32]; // ", fault addr 0x1234"
   addr_desc[0] = code_desc[0] = 0;
-  if (info != NULL) {
+  if (info != nullptr) {
     // For a rethrown signal, this si_code will be right and the one debuggerd shows will
     // always be SI_TKILL.
     __libc_format_buffer(code_desc, sizeof(code_desc), ", code %d", info->si_code);
@@ -198,7 +198,7 @@ static bool have_siginfo(int signum) {
   }
   bool result = (old_action.sa_flags & SA_SIGINFO) != 0;
 
-  if (sigaction(signum, &old_action, NULL) == -1) {
+  if (sigaction(signum, &old_action, nullptr) == -1) {
     __libc_format_log(ANDROID_LOG_WARN, "libc", "Restore failed in test for SA_SIGINFO: %s",
                       strerror(errno));
   }
@@ -230,7 +230,7 @@ static void send_debuggerd_packet(siginfo_t* info) {
   msg.action = DEBUGGER_ACTION_CRASH;
   msg.tid = gettid();
   msg.abort_msg_address = reinterpret_cast<uintptr_t>(g_abort_message);
-  msg.original_si_code = (info != NULL) ? info->si_code : 0;
+  msg.original_si_code = (info != nullptr) ? info->si_code : 0;
   int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
   if (ret == sizeof(msg)) {
     char debuggerd_ack;
@@ -255,7 +255,7 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
   // It's possible somebody cleared the SA_SIGINFO flag, which would mean
   // our "info" arg holds an undefined value.
   if (!have_siginfo(signal_number)) {
-    info = NULL;
+    info = nullptr;
   }
 
   log_signal_summary(signal_number, info);
@@ -296,14 +296,14 @@ __LIBC_HIDDEN__ void debuggerd_init() {
   // Use the alternate signal stack if available so we can catch stack overflows.
   action.sa_flags |= SA_ONSTACK;
 
-  sigaction(SIGABRT, &action, NULL);
-  sigaction(SIGBUS, &action, NULL);
-  sigaction(SIGFPE, &action, NULL);
-  sigaction(SIGILL, &action, NULL);
-  sigaction(SIGPIPE, &action, NULL);
-  sigaction(SIGSEGV, &action, NULL);
+  sigaction(SIGABRT, &action, nullptr);
+  sigaction(SIGBUS, &action, nullptr);
+  sigaction(SIGFPE, &action, nullptr);
+  sigaction(SIGILL, &action, nullptr);
+  sigaction(SIGPIPE, &action, nullptr);
+  sigaction(SIGSEGV, &action, nullptr);
 #if defined(SIGSTKFLT)
-  sigaction(SIGSTKFLT, &action, NULL);
+  sigaction(SIGSTKFLT, &action, nullptr);
 #endif
-  sigaction(SIGTRAP, &action, NULL);
+  sigaction(SIGTRAP, &action, nullptr);
 }
