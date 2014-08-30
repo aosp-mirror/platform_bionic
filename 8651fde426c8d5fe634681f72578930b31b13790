@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "b3a7bd22_71d09088",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-30T00:16:45Z",
+      "side": 1,
+      "message": "and the right side here is std::string - changed back to ASSERT_EQ.",
+      "revId": "8651fde426c8d5fe634681f72578930b31b13790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33d58d79_a7baca59",
         "filename": "linker/tests/linked_list_test.cpp",
         "patchSetId": 4
@@ -13,6 +30,24 @@
       "writtenOn": "2014-08-30T00:03:56Z",
       "side": 1,
       "message": "not these ones?",
+      "revId": "8651fde426c8d5fe634681f72578930b31b13790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53b7614c_1685bc82",
+        "filename": "linker/tests/linked_list_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-08-30T00:16:45Z",
+      "side": 1,
+      "message": "it\u0027s char, not char* - output is going to be fine.",
+      "parentUuid": "33d58d79_a7baca59",
       "revId": "8651fde426c8d5fe634681f72578930b31b13790",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
