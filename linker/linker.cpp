@@ -627,10 +627,42 @@ done:
     return nullptr;
 }
 
+// Each size has it's own allocator.
+template<size_t size>
+class SizeBasedAllocator {
+ public:
+  static void* alloc() {
+    return allocator_.alloc();
+  }
 
+  static void free(void* ptr) {
+    allocator_.free(ptr);
+  }
 
-// Another soinfo list allocator to use in dlsym. We don't reuse
-// SoinfoListAllocator because it is write-protected most of the time.
+ private:
+  static LinkerBlockAllocator allocator_;
+};
+
+template<size_t size>
+LinkerBlockAllocator SizeBasedAllocator<size>::allocator_(size);
+
+template<typename T>
+class TypeBasedAllocator {
+ public:
+  static T* alloc() {
+    return reinterpret_cast<T*>(SizeBasedAllocator<sizeof(T)>::alloc());
+  }
+
+  static void free(T* ptr) {
+    SizeBasedAllocator<sizeof(T)>::free(ptr);
+  }
+};
+
+template <typename T>
+using linked_list_t = LinkedList<T, TypeBasedAllocator<LinkedListEntry<T>>>;
+
+typedef linked_list_t<soinfo> SoinfoLinkedList;
+
 static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_list_allocator_rw;
 class SoinfoListAllocatorRW {
  public:
@@ -646,8 +678,9 @@ class SoinfoListAllocatorRW {
 // This is used by dlsym(3).  It performs symbol lookup only within the
 // specified soinfo object and its dependencies in breadth first order.
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
-  LinkedList<soinfo, SoinfoListAllocatorRW> visit_list;
-  LinkedList<soinfo, SoinfoListAllocatorRW> visited;
+  SoinfoLinkedList visit_list;
+  SoinfoLinkedList visited;
+
   visit_list.push_back(si);
   soinfo* current_soinfo;
   while ((current_soinfo = visit_list.pop_front()) != nullptr) {
