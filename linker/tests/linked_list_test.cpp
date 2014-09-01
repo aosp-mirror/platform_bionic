@@ -80,7 +80,7 @@ TEST(linked_list, simple) {
   });
 
   ASSERT_TRUE(!alloc_called);
-  ASSERT_TRUE(!free_called);
+  ASSERT_TRUE(free_called);
 
   ASSERT_EQ("dba", test_list_to_string(list));
   alloc_called = free_called = false;
@@ -103,15 +103,82 @@ TEST(linked_list, push_pop) {
   ASSERT_EQ("ab", test_list_to_string(list));
   list.push_back("c");
   ASSERT_EQ("abc", test_list_to_string(list));
-  ASSERT_EQ("a", list.pop_front());
+  ASSERT_STREQ("a", list.pop_front());
   ASSERT_EQ("bc", test_list_to_string(list));
-  ASSERT_EQ("b", list.pop_front());
+  ASSERT_STREQ("b", list.pop_front());
   ASSERT_EQ("c", test_list_to_string(list));
-  ASSERT_EQ("c", list.pop_front());
+  ASSERT_STREQ("c", list.pop_front());
   ASSERT_EQ("", test_list_to_string(list));
   ASSERT_TRUE(list.pop_front() == nullptr);
   list.push_back("r");
   ASSERT_EQ("r", test_list_to_string(list));
-  ASSERT_EQ("r", list.pop_front());
+  ASSERT_STREQ("r", list.pop_front());
   ASSERT_TRUE(list.pop_front() == nullptr);
 }
+
+TEST(linked_list, remove_if_then_pop) {
+  test_list_t list;
+  list.push_back("a");
+  list.push_back("b");
+  list.push_back("c");
+  list.push_back("d");
+  list.remove_if([](const char* c) {
+    return *c == 'b' || *c == 'c';
+  });
+
+  ASSERT_EQ("ad", test_list_to_string(list));
+  ASSERT_STREQ("a", list.pop_front());
+  ASSERT_EQ("d", test_list_to_string(list));
+  ASSERT_STREQ("d", list.pop_front());
+  ASSERT_TRUE(list.pop_front() == nullptr);
+}
+
+TEST(linked_list, copy_to_array) {
+  test_list_t list;
+  const size_t max_size = 128;
+  const char* buf[max_size];
+  memset(buf, 0, sizeof(buf));
+
+  ASSERT_EQ(0U, list.size());
+  ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
+  ASSERT_EQ(nullptr, buf[0]);
+
+  list.push_back("a");
+  list.push_back("b");
+  list.push_back("c");
+  list.push_back("d");
+
+  memset(buf, 0, sizeof(buf));
+  ASSERT_EQ(4U, list.size());
+  ASSERT_EQ(2U, list.copy_to_array(buf, 2));
+  ASSERT_EQ('a', *buf[0]);
+  ASSERT_EQ('b', *buf[1]);
+  ASSERT_EQ(nullptr, buf[2]);
+
+  ASSERT_EQ(4U, list.copy_to_array(buf, max_size));
+  ASSERT_EQ('a', *buf[0]);
+  ASSERT_EQ('b', *buf[1]);
+  ASSERT_EQ('c', *buf[2]);
+  ASSERT_EQ('d', *buf[3]);
+  ASSERT_EQ(nullptr, buf[4]);
+
+  memset(buf, 0, sizeof(buf));
+  list.remove_if([](const char* c) {
+    return *c != 'c';
+  });
+  ASSERT_EQ(1U, list.size());
+  ASSERT_EQ(1U, list.copy_to_array(buf, max_size));
+  ASSERT_EQ('c', *buf[0]);
+  ASSERT_EQ(nullptr, buf[1]);
+
+  memset(buf, 0, sizeof(buf));
+
+  list.remove_if([](const char* c) {
+    return *c == 'c';
+  });
+
+  ASSERT_EQ(0U, list.size());
+  ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
+  ASSERT_EQ(nullptr, buf[0]);
+}
+
