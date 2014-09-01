@@ -58,7 +58,7 @@ static void __init_AT_SECURE(KernelArgumentBlock& args) {
 
 // Check if the environment variable definition at 'envstr'
 // starts with '<name>=', and if so return the address of the
-// first character after the equal sign. Otherwise return NULL.
+// first character after the equal sign. Otherwise return null.
 static const char* env_match(const char* envstr, const char* name) {
   size_t i = 0;
 
@@ -70,7 +70,7 @@ static const char* env_match(const char* envstr, const char* name) {
     return envstr + i + 1;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 static bool __is_valid_environment_variable(const char* name) {
@@ -78,7 +78,7 @@ static bool __is_valid_environment_variable(const char* name) {
   // as the maximum size for an env. variable definition.
   const int MAX_ENV_LEN = 32*4096;
 
-  if (name == NULL) {
+  if (name == nullptr) {
     return false;
   }
 
@@ -136,10 +136,10 @@ static bool __is_unsafe_environment_variable(const char* name) {
       "RES_OPTIONS",
       "TMPDIR",
       "TZDIR",
-      NULL
+      nullptr
   };
-  for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != NULL; ++i) {
-    if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != NULL) {
+  for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != nullptr; ++i) {
+    if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != nullptr) {
       return true;
     }
   }
@@ -149,7 +149,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
 static void __sanitize_environment_variables() {
   char** src  = _envp;
   char** dst = _envp;
-  for (; src[0] != NULL; ++src) {
+  for (; src[0] != nullptr; ++src) {
     if (!__is_valid_environment_variable(src[0])) {
       continue;
     }
@@ -160,11 +160,11 @@ static void __sanitize_environment_variables() {
     dst[0] = src[0];
     ++dst;
   }
-  dst[0] = NULL;
+  dst[0] = nullptr;
 }
 
 void linker_env_init(KernelArgumentBlock& args) {
-  // Store environment pointer - can't be NULL.
+  // Store environment pointer - can't be null.
   _envp = args.envp;
 
   __init_AT_SECURE(args);
@@ -172,18 +172,18 @@ void linker_env_init(KernelArgumentBlock& args) {
 }
 
 const char* linker_env_get(const char* name) {
-  if (name == NULL || name[0] == '\0') {
-    return NULL;
+  if (name == nullptr || name[0] == '\0') {
+    return nullptr;
   }
 
-  for (char** p = _envp; p[0] != NULL; ++p) {
+  for (char** p = _envp; p[0] != nullptr; ++p) {
     const char* val = env_match(p[0], name);
-    if (val != NULL) {
+    if (val != nullptr) {
       if (val[0] == '\0') {
-        return NULL; // Return NULL for empty strings.
+        return nullptr; // Return null for empty strings.
       }
       return val;
     }
   }
-  return NULL;
+  return nullptr;
 }
