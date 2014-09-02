@@ -151,15 +151,15 @@ TEST(linked_list, copy_to_array) {
   memset(buf, 0, sizeof(buf));
   ASSERT_EQ(4U, list.size());
   ASSERT_EQ(2U, list.copy_to_array(buf, 2));
-  ASSERT_EQ('a', *buf[0]);
-  ASSERT_EQ('b', *buf[1]);
+  ASSERT_STREQ("a", buf[0]);
+  ASSERT_STREQ("b", buf[1]);
   ASSERT_EQ(nullptr, buf[2]);
 
   ASSERT_EQ(4U, list.copy_to_array(buf, max_size));
-  ASSERT_EQ('a', *buf[0]);
-  ASSERT_EQ('b', *buf[1]);
-  ASSERT_EQ('c', *buf[2]);
-  ASSERT_EQ('d', *buf[3]);
+  ASSERT_STREQ("a", buf[0]);
+  ASSERT_STREQ("b", buf[1]);
+  ASSERT_STREQ("c", buf[2]);
+  ASSERT_STREQ("d", buf[3]);
   ASSERT_EQ(nullptr, buf[4]);
 
   memset(buf, 0, sizeof(buf));
@@ -168,7 +168,7 @@ TEST(linked_list, copy_to_array) {
   });
   ASSERT_EQ(1U, list.size());
   ASSERT_EQ(1U, list.copy_to_array(buf, max_size));
-  ASSERT_EQ('c', *buf[0]);
+  ASSERT_STREQ("c", buf[0]);
   ASSERT_EQ(nullptr, buf[1]);
 
   memset(buf, 0, sizeof(buf));
@@ -180,5 +180,41 @@ TEST(linked_list, copy_to_array) {
   ASSERT_EQ(0U, list.size());
   ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
   ASSERT_EQ(nullptr, buf[0]);
+}
+
+TEST(linked_list, test_visit) {
+  test_list_t list;
+  list.push_back("a");
+  list.push_back("b");
+  list.push_back("c");
+  list.push_back("d");
+
+  int visits = 0;
+  std::stringstream ss;
+  bool result = list.visit([&](const char* c) {
+    ++visits;
+    ss << c;
+    return true;
+  });
+
+  ASSERT_TRUE(result);
+  ASSERT_EQ(4, visits);
+  ASSERT_EQ("abcd", ss.str());
+
+  visits = 0;
+  ss.str(std::string());
+
+  result = list.visit([&](const char* c) {
+    if (++visits == 3) {
+      return false;
+    }
+
+    ss << c;
+    return true;
+  });
+
+  ASSERT_TRUE(!result);
+  ASSERT_EQ(3, visits);
+  ASSERT_EQ("ab", ss.str());
 }
 
