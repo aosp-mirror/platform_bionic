@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -4386,6 +4388,7 @@ static sinf_intel_data_t g_sinf_intel_data[] = {
 
 TEST(math_sinf, sinf_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_sinf_intel_data)/sizeof(sinf_intel_data_t); i++) {
     EXPECT_FLOAT_EQ(g_sinf_intel_data[i].expected, sinf(g_sinf_intel_data[i].call_data)) << "Failed on element " << i;
   }

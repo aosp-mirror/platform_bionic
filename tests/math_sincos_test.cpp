@@ -18,6 +18,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -4778,6 +4780,7 @@ static sincos_intel_data_t g_sincos_intel_data[] = {
 
 TEST(math_sincos, sincos_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_sincos_intel_data)/sizeof(sincos_intel_data_t); i++) {
    double dsin, dcos;
    sincos(g_sincos_intel_data[i].call_data, &dsin, &dcos);
