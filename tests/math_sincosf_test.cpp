@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -4646,6 +4648,7 @@ static sincosf_intel_data_t g_sincosf_intel_data[] = {
 
 TEST(math_sincosf, sincosf_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_sincosf_intel_data)/sizeof(sincosf_intel_data_t); i++) {
    float fsin, fcos;
    sincosf(g_sincosf_intel_data[i].call_data, &fsin, &fcos);

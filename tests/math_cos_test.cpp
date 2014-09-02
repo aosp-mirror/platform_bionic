@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -5634,6 +5636,7 @@ static cos_intel_data_t g_cos_intel_data[] = {
 
 TEST(math_cos, cos_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_cos_intel_data)/sizeof(cos_intel_data_t); i++) {
     EXPECT_DOUBLE_EQ(g_cos_intel_data[i].expected, cos(g_cos_intel_data[i].call_data)) << "Failed on element " << i;
   }
