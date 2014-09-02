@@ -32,8 +32,20 @@
 
 #include <sys/cdefs.h>
 
-#if defined(__cplusplus) && defined(_USING_LIBCXX) && \
-    (__has_feature(cxx_atomic) || _GNUC_VER >= 407)
+
+#if defined(__cplusplus) && defined(_USING_LIBCXX)
+# ifdef __clang__
+#  if __has_feature(cxx_atomic)
+#   define _STDATOMIC_HAVE_ATOMIC
+#  endif
+# else /* gcc */
+#  if __GNUC_PREREQ(4, 7)
+#   define _STDATOMIC_HAVE_ATOMIC
+#  endif
+# endif
+#endif
+
+#ifdef _STDATOMIC_HAVE_ATOMIC
 
 /* We have a usable C++ <atomic>; use it instead.  */
 
@@ -46,6 +58,7 @@
         /* included.  The definitions in <atomic> themselves see      */
         /* the old definition, as they should.                        */
         /* Client code sees the following definition.                 */
+
 #define _Atomic(t) std::atomic<t>
 
 using std::atomic_is_lock_free;
@@ -136,14 +149,24 @@ using std::atomic_uintmax_t;
 # include <uchar.h>  /* For char16_t and char32_t.              */
 #endif
 
-#if __has_extension(c_atomic) || __has_extension(cxx_atomic)
-#define	__CLANG_ATOMICS
-#elif __GNUC_PREREQ(4, 7)
-#define	__GNUC_ATOMICS
-#elif defined(__GNUC__)
-#define	__SYNC_ATOMICS
+#ifdef __clang__
+# if __has_extension(c_atomic) || __has_extension(cxx_atomic)
+#  define       __CLANG_ATOMICS
+# else
+#  error "stdatomic.h does not support your compiler"
+# endif
+# if __has_builtin(__sync_swap)
+#  define __HAS_BUILTIN_SYNC_SWAP
+# endif
 #else
-#error "stdatomic.h does not support your compiler"
+# if __GNUC_PREREQ(4, 7)
+#  define	__GNUC_ATOMICS
+# else
+#  define	__SYNC_ATOMICS
+#  ifdef __cplusplus
+#   define       __ATOMICS_AVOID_DOT_INIT
+#  endif
+# endif
 #endif
 
 /*
@@ -152,33 +175,53 @@ using std::atomic_uintmax_t;
 
 #ifdef __GCC_ATOMIC_BOOL_LOCK_FREE
 #define	ATOMIC_BOOL_LOCK_FREE		__GCC_ATOMIC_BOOL_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_BOOL_LOCK_FREE           2 /* For all modern platforms */
 #endif
 #ifdef __GCC_ATOMIC_CHAR_LOCK_FREE
 #define	ATOMIC_CHAR_LOCK_FREE		__GCC_ATOMIC_CHAR_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_CHAR_LOCK_FREE           2
 #endif
 #ifdef __GCC_ATOMIC_CHAR16_T_LOCK_FREE
 #define	ATOMIC_CHAR16_T_LOCK_FREE	__GCC_ATOMIC_CHAR16_T_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_CHAR16_T_LOCK_FREE       2
 #endif
 #ifdef __GCC_ATOMIC_CHAR32_T_LOCK_FREE
 #define	ATOMIC_CHAR32_T_LOCK_FREE	__GCC_ATOMIC_CHAR32_T_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_CHAR32_T_LOCK_FREE       2
 #endif
 #ifdef __GCC_ATOMIC_WCHAR_T_LOCK_FREE
 #define	ATOMIC_WCHAR_T_LOCK_FREE	__GCC_ATOMIC_WCHAR_T_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_WCHAR_T_LOCK_FREE        2
 #endif
 #ifdef __GCC_ATOMIC_SHORT_LOCK_FREE
 #define	ATOMIC_SHORT_LOCK_FREE		__GCC_ATOMIC_SHORT_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_SHORT_LOCK_FREE          2
 #endif
 #ifdef __GCC_ATOMIC_INT_LOCK_FREE
 #define	ATOMIC_INT_LOCK_FREE		__GCC_ATOMIC_INT_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_INT_LOCK_FREE            2
 #endif
 #ifdef __GCC_ATOMIC_LONG_LOCK_FREE
 #define	ATOMIC_LONG_LOCK_FREE		__GCC_ATOMIC_LONG_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_LONG_LOCK_FREE           2
 #endif
 #ifdef __GCC_ATOMIC_LLONG_LOCK_FREE
 #define	ATOMIC_LLONG_LOCK_FREE		__GCC_ATOMIC_LLONG_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_LLONG_LOCK_FREE          1 /* maybe */
 #endif
 #ifdef __GCC_ATOMIC_POINTER_LOCK_FREE
 #define	ATOMIC_POINTER_LOCK_FREE	__GCC_ATOMIC_POINTER_LOCK_FREE
+#elif defined(__SYNC_ATOMICS)
+#define	ATOMIC_POINTER_LOCK_FREE        2
 #endif
 
 /*
@@ -189,7 +232,11 @@ using std::atomic_uintmax_t;
 #define	ATOMIC_VAR_INIT(value)		(value)
 #define	atomic_init(obj, value)		__c11_atomic_init(obj, value)
 #else
+#ifdef __ATOMICS_AVOID_DOT_INIT
+#define	ATOMIC_VAR_INIT(value)		{ value }
+#else
 #define	ATOMIC_VAR_INIT(value)		{ .__val = (value) }
+#endif
 #define	atomic_init(obj, value)		((void)((obj)->__val = (value)))
 #endif
 
@@ -289,7 +336,7 @@ atomic_signal_fence(memory_order __order __attribute__((unused)))
  * 7.17.6 Atomic integer types.
  */
 
-#if !__has_extension(c_atomic) && !__has_extension(cxx_atomic)
+#ifndef __CLANG_ATOMICS
 /*
  * No native support for _Atomic(). Place object in structure to prevent
  * most forms of direct non-atomic access.
@@ -410,7 +457,7 @@ typedef _Atomic(uintmax_t)		atomic_uintmax_t;
     desired, success, failure)						\
 	atomic_compare_exchange_strong_explicit(object, expected,	\
 		desired, success, failure)
-#if __has_builtin(__sync_swap)
+#ifdef __HAS_BUILTIN_SYNC_SWAP
 /* Clang provides a full-barrier atomic exchange - use it if available. */
 #define	atomic_exchange_explicit(object, desired, order)		\
 	((void)(order), __sync_swap(&(object)->__val, desired))
