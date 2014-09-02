@@ -16,6 +16,24 @@
       "revId": "0cd83ebb0e9784827d9ec0a8028a710e73a28b2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f38bf5a0_8cd8af29",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-02T17:05:25Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/103229 uses 3 structures which have same size (2*sizeof(void*)).",
+      "parentUuid": "d371918d_daa0a54c",
+      "revId": "0cd83ebb0e9784827d9ec0a8028a710e73a28b2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
