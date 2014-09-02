@@ -525,6 +525,15 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
                 *lsi = si;
                 goto done;
             }
+
+            /* Next, look for it in the preloads list */
+            for (int i = 0; g_ld_preloads[i] != NULL; i++) {
+                s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
+                if (s != NULL) {
+                    *lsi = g_ld_preloads[i];
+                    goto done;
+                }
+            }
         } else {
             /* Order of symbol lookup is controlled by DT_SYMBOLIC flag */
 
@@ -541,6 +550,15 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
                 if (s != nullptr) {
                     *lsi = somain;
                     goto done;
+                }
+
+                /* Next, look for it in the preloads list */
+                for (int i = 0; g_ld_preloads[i] != NULL; i++) {
+                    s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
+                    if (s != NULL) {
+                        *lsi = g_ld_preloads[i];
+                        goto done;
+                    }
                 }
             }
 
@@ -573,16 +591,16 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
                     *lsi = somain;
                     goto done;
                 }
-            }
-        }
-    }
 
-    /* Next, look for it in the preloads list */
-    for (int i = 0; g_ld_preloads[i] != nullptr; i++) {
-        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-        if (s != nullptr) {
-            *lsi = g_ld_preloads[i];
-            goto done;
+                /* Next, look for it in the preloads list */
+                for (int i = 0; g_ld_preloads[i] != NULL; i++) {
+                    s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
+                    if (s != NULL) {
+                        *lsi = g_ld_preloads[i];
+                        goto done;
+                    }
+                }
+            }
         }
     }
 
