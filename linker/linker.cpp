@@ -79,7 +79,6 @@ static const char* get_base_name(const char* name) {
 #define SEARCH_NAME(x) get_base_name(x)
 #endif
 
-static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo);
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 static LinkerAllocator<soinfo> g_soinfo_allocator;
@@ -509,7 +508,7 @@ static unsigned elfhash(const char* _name) {
     return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, soinfo* needed[]) {
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
     unsigned elf_hash = elfhash(name);
     ElfW(Sym)* s = nullptr;
 
@@ -604,15 +603,15 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, s
         }
     }
 
-    for (int i = 0; needed[i] != nullptr; i++) {
-        DEBUG("%s: looking up %s in %s",
-              si->name, name, needed[i]->name);
-        s = soinfo_elf_lookup(needed[i], elf_hash, name);
+    si->get_children().visit([&](soinfo* child) {
+        DEBUG("%s: looking up %s in %s", si->name, name, child->name);
+        s = soinfo_elf_lookup(child, elf_hash, name);
         if (s != nullptr) {
-            *lsi = needed[i];
-            goto done;
+            *lsi = child;
+            return false;
         }
-    }
+        return true;
+    });
 
 done:
     if (s != nullptr) {
@@ -860,7 +859,7 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
     TRACE("[ load_library base=%p size=%zu name='%s' ]",
           reinterpret_cast<void*>(si->base), si->size, si->name);
 
-    if (!soinfo_link_image(si, extinfo)) {
+    if (!si->LinkImage(extinfo)) {
       soinfo_free(si);
       return nullptr;
     }
@@ -1001,7 +1000,7 @@ void do_dlclose(soinfo* si) {
 
 // ifuncs are only defined for x86
 #if defined(__i386__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     ElfW(Sym)* s;
     soinfo* lsi;
@@ -1011,7 +1010,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, so
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+    s = soinfo_do_lookup(si, sym_name, &lsi);
 
     if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_386_JMP_SLOT) {
       TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr));
@@ -1024,7 +1023,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, so
 #endif
 
 #if defined(__x86_64__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     ElfW(Sym)* s;
     soinfo* lsi;
@@ -1034,7 +1033,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, 
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+    s = soinfo_do_lookup(si, sym_name, &lsi);
 
     if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_X86_64_JUMP_SLOT) {
       TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr + rela->r_addend));
@@ -1047,29 +1046,29 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, 
 #endif
 
 #if defined(USE_RELA)
-static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
   ElfW(Sym)* s;
   soinfo* lsi;
 
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
+    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + load_bias);
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
 
-    DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
+    DEBUG("Processing '%s' relocation at index %zd", name, idx);
     if (type == 0) { // R_*_NONE
       continue;
     }
     if (sym != 0) {
-      sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-      s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+      sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+      s = soinfo_do_lookup(this, sym_name, &lsi);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
-        s = &si->symtab[sym];
+        s = &symtab[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
-          DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, si->name);
+          DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
           return -1;
         }
 
@@ -1227,8 +1226,8 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
             return -1;
         }
         TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n",
-                   reloc, (si->base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (si->base + rela->r_addend);
+                   reloc, (base + rela->r_addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
         break;
 
     case R_AARCH64_COPY:
@@ -1241,7 +1240,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
          * R_AARCH64_COPY may only appear in executable objects where e_type is
          * set to ET_EXEC.
          */
-        DL_ERR("%s R_AARCH64_COPY relocations are not supported", si->name);
+        DL_ERR("%s R_AARCH64_COPY relocations are not supported", name);
         return -1;
     case R_AARCH64_TLS_TPREL64:
         TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
@@ -1258,7 +1257,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
       TRACE_TYPE(RELO, "RELO JMP_SLOT %08zx <- %08zx %s", static_cast<size_t>(reloc),
                  static_cast<size_t>(sym_addr + rela->r_addend), sym_name);
       if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-        si->set_has_ifuncs(true);
+        set_has_ifuncs(true);
       } else {
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
       }
@@ -1278,8 +1277,8 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
         return -1;
       }
       TRACE_TYPE(RELO, "RELO RELATIVE %08zx <- +%08zx", static_cast<size_t>(reloc),
-                 static_cast<size_t>(si->base));
-      *reinterpret_cast<ElfW(Addr)*>(reloc) = si->base + rela->r_addend;
+                 static_cast<size_t>(base));
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = base + rela->r_addend;
       break;
     case R_X86_64_32:
       count_relocation(kRelocRelative);
@@ -1314,8 +1313,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
 }
 
 #else // REL, not RELA.
-
-static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
+int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
     ElfW(Sym)* s;
     soinfo* lsi;
 
@@ -1323,22 +1321,22 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
         unsigned type = ELFW(R_TYPE)(rel->r_info);
         // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
         unsigned sym = ELFW(R_SYM)(rel->r_info);
-        ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
+        ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
         ElfW(Addr) sym_addr = 0;
         const char* sym_name = nullptr;
 
-        DEBUG("Processing '%s' relocation at index %zd", si->name, idx);
+        DEBUG("Processing '%s' relocation at index %zd", name, idx);
         if (type == 0) { // R_*_NONE
             continue;
         }
         if (sym != 0) {
-            sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-            s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+            sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+            s = soinfo_do_lookup(this, sym_name, &lsi);
             if (s == nullptr) {
                 // We only allow an undefined symbol if this is a weak reference...
-                s = &si->symtab[sym];
+                s = &symtab[sym];
                 if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
-                    DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, si->name);
+                    DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
                     return -1;
                 }
 
@@ -1433,7 +1431,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
              * R_ARM_COPY may only appear in executable objects where e_type is
              * set to ET_EXEC.
              */
-            DL_ERR("%s R_ARM_COPY relocations are not supported", si->name);
+            DL_ERR("%s R_ARM_COPY relocations are not supported", name);
             return -1;
 #elif defined(__i386__)
         case R_386_JMP_SLOT:
@@ -1441,7 +1439,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
             if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-              si->set_has_ifuncs(true);
+              set_has_ifuncs(true);
             } else {
               *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
             }
@@ -1485,7 +1483,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             if (s) {
                 *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
             } else {
-                *reinterpret_cast<ElfW(Addr)*>(reloc) += si->base;
+                *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
             }
             break;
 #endif
@@ -1502,8 +1500,8 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
                 return -1;
             }
             TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p",
-                       reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(si->base));
-            *reinterpret_cast<ElfW(Addr)*>(reloc) += si->base;
+                       reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
+            *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
             break;
 
         default:
@@ -1516,7 +1514,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
 #endif
 
 #if defined(__mips__)
-static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
+static bool mips_relocate_got(soinfo* si) {
     ElfW(Addr)** got = si->plt_got;
     if (got == nullptr) {
         return true;
@@ -1549,7 +1547,7 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
         // This is an undefined reference... try to locate it.
         const char* sym_name = si->strtab + sym->st_name;
         soinfo* lsi;
-        ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+        ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi);
         if (s == nullptr) {
             // We only allow an undefined symbol if this is a weak reference.
             s = &symtab[g];
@@ -1803,84 +1801,80 @@ static int nullify_closed_stdio() {
     return return_value;
 }
 
-static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
-    /* "base" might wrap around UINT32_MAX. */
-    ElfW(Addr) base = si->load_bias;
-    const ElfW(Phdr)* phdr = si->phdr;
-    int phnum = si->phnum;
-    bool relocating_linker = (si->flags & FLAG_LINKER) != 0;
+bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
+    bool relocating_linker = (flags & FLAG_LINKER) != 0;
 
     /* We can't debug anything until the linker is relocated */
     if (!relocating_linker) {
-        INFO("[ linking %s ]", si->name);
-        DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(si->base), si->flags);
+        INFO("[ linking %s ]", name);
+        DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags);
     }
 
     /* Extract dynamic section */
     size_t dynamic_count;
     ElfW(Word) dynamic_flags;
-    phdr_table_get_dynamic_section(phdr, phnum, base, &si->dynamic,
+    phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic,
                                    &dynamic_count, &dynamic_flags);
-    if (si->dynamic == nullptr) {
+    if (dynamic == nullptr) {
         if (!relocating_linker) {
-            DL_ERR("missing PT_DYNAMIC in \"%s\"", si->name);
+            DL_ERR("missing PT_DYNAMIC in \"%s\"", name);
         }
         return false;
     } else {
         if (!relocating_linker) {
-            DEBUG("dynamic = %p", si->dynamic);
+            DEBUG("dynamic = %p", dynamic);
         }
     }
 
 #if defined(__arm__)
-    (void) phdr_table_get_arm_exidx(phdr, phnum, base,
-                                    &si->ARM_exidx, &si->ARM_exidx_count);
+    (void) phdr_table_get_arm_exidx(phdr, phnum, load_bias,
+                                    &ARM_exidx, &ARM_exidx_count);
 #endif
 
     // Extract useful information from dynamic section.
     uint32_t needed_count = 0;
-    for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
+    for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
         DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p",
               d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         switch (d->d_tag) {
         case DT_HASH:
-            si->nbucket = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr)[0];
-            si->nchain = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr)[1];
-            si->bucket = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr + 8);
-            si->chain = reinterpret_cast<uint32_t*>(base + d->d_un.d_ptr + 8 + si->nbucket * 4);
+            nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
+            nchain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
+            bucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
+            chain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8 + nbucket * 4);
             break;
         case DT_STRTAB:
-            si->strtab = reinterpret_cast<const char*>(base + d->d_un.d_ptr);
+            strtab = reinterpret_cast<const char*>(load_bias + d->d_un.d_ptr);
             break;
         case DT_SYMTAB:
-            si->symtab = reinterpret_cast<ElfW(Sym)*>(base + d->d_un.d_ptr);
+            symtab = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
             break;
 #if !defined(__LP64__)
         case DT_PLTREL:
             if (d->d_un.d_val != DT_REL) {
-                DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
+                DL_ERR("unsupported DT_RELA in \"%s\"", name);
                 return false;
             }
             break;
 #endif
         case DT_JMPREL:
 #if defined(USE_RELA)
-            si->plt_rela = reinterpret_cast<ElfW(Rela)*>(base + d->d_un.d_ptr);
+            plt_rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
 #else
-            si->plt_rel = reinterpret_cast<ElfW(Rel)*>(base + d->d_un.d_ptr);
+            plt_rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
 #endif
             break;
         case DT_PLTRELSZ:
 #if defined(USE_RELA)
-            si->plt_rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
+            plt_rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
 #else
-            si->plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
+            plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
 #endif
             break;
 #if defined(__mips__)
         case DT_PLTGOT:
             // Used by mips and mips64.
-            si->plt_got = reinterpret_cast<ElfW(Addr)**>(base + d->d_un.d_ptr);
+            plt_got = reinterpret_cast<ElfW(Addr)**>(load_bias + d->d_un.d_ptr);
             break;
 #endif
         case DT_DEBUG:
@@ -1898,67 +1892,67 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
 #endif
 #if defined(USE_RELA)
          case DT_RELA:
-            si->rela = reinterpret_cast<ElfW(Rela)*>(base + d->d_un.d_ptr);
+            rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
             break;
          case DT_RELASZ:
-            si->rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
+            rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
             break;
         case DT_REL:
-            DL_ERR("unsupported DT_REL in \"%s\"", si->name);
+            DL_ERR("unsupported DT_REL in \"%s\"", name);
             return false;
         case DT_RELSZ:
-            DL_ERR("unsupported DT_RELSZ in \"%s\"", si->name);
+            DL_ERR("unsupported DT_RELSZ in \"%s\"", name);
             return false;
 #else
         case DT_REL:
-            si->rel = reinterpret_cast<ElfW(Rel)*>(base + d->d_un.d_ptr);
+            rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
             break;
         case DT_RELSZ:
-            si->rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
+            rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
             break;
          case DT_RELA:
-            DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
+            DL_ERR("unsupported DT_RELA in \"%s\"", name);
             return false;
 #endif
         case DT_INIT:
-            si->init_func = reinterpret_cast<linker_function_t>(base + d->d_un.d_ptr);
-            DEBUG("%s constructors (DT_INIT) found at %p", si->name, si->init_func);
+            init_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+            DEBUG("%s constructors (DT_INIT) found at %p", name, init_func);
             break;
         case DT_FINI:
-            si->fini_func = reinterpret_cast<linker_function_t>(base + d->d_un.d_ptr);
-            DEBUG("%s destructors (DT_FINI) found at %p", si->name, si->fini_func);
+            fini_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+            DEBUG("%s destructors (DT_FINI) found at %p", name, fini_func);
             break;
         case DT_INIT_ARRAY:
-            si->init_array = reinterpret_cast<linker_function_t*>(base + d->d_un.d_ptr);
-            DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", si->name, si->init_array);
+            init_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+            DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", name, init_array);
             break;
         case DT_INIT_ARRAYSZ:
-            si->init_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+            init_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
             break;
         case DT_FINI_ARRAY:
-            si->fini_array = reinterpret_cast<linker_function_t*>(base + d->d_un.d_ptr);
-            DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", si->name, si->fini_array);
+            fini_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+            DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", name, fini_array);
             break;
         case DT_FINI_ARRAYSZ:
-            si->fini_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+            fini_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
             break;
         case DT_PREINIT_ARRAY:
-            si->preinit_array = reinterpret_cast<linker_function_t*>(base + d->d_un.d_ptr);
-            DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", si->name, si->preinit_array);
+            preinit_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+            DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", name, preinit_array);
             break;
         case DT_PREINIT_ARRAYSZ:
-            si->preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+            preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
             break;
         case DT_TEXTREL:
 #if defined(__LP64__)
-            DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", si->name);
+            DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", name);
             return false;
 #else
-            si->has_text_relocations = true;
+            has_text_relocations = true;
             break;
 #endif
         case DT_SYMBOLIC:
-            si->has_DT_SYMBOLIC = true;
+            has_DT_SYMBOLIC = true;
             break;
         case DT_NEEDED:
             ++needed_count;
@@ -1966,14 +1960,14 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         case DT_FLAGS:
             if (d->d_un.d_val & DF_TEXTREL) {
 #if defined(__LP64__)
-                DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", si->name);
+                DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", name);
                 return false;
 #else
-                si->has_text_relocations = true;
+                has_text_relocations = true;
 #endif
             }
             if (d->d_un.d_val & DF_SYMBOLIC) {
-                si->has_DT_SYMBOLIC = true;
+                has_DT_SYMBOLIC = true;
             }
             break;
 #if defined(__mips__)
@@ -1984,7 +1978,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         case DT_MIPS_RLD_MAP:
             // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
             {
-              r_debug** dp = reinterpret_cast<r_debug**>(base + d->d_un.d_ptr);
+              r_debug** dp = reinterpret_cast<r_debug**>(load_bias + d->d_un.d_ptr);
               *dp = &_r_debug;
             }
             break;
@@ -1995,15 +1989,15 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
             break;
 
         case DT_MIPS_SYMTABNO:
-            si->mips_symtabno = d->d_un.d_val;
+            mips_symtabno = d->d_un.d_val;
             break;
 
         case DT_MIPS_LOCAL_GOTNO:
-            si->mips_local_gotno = d->d_un.d_val;
+            mips_local_gotno = d->d_un.d_val;
             break;
 
         case DT_MIPS_GOTSYM:
-            si->mips_gotsym = d->d_un.d_val;
+            mips_gotsym = d->d_un.d_val;
             break;
 #endif
 
@@ -2015,28 +2009,28 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     }
 
     DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
-          reinterpret_cast<void*>(si->base), si->strtab, si->symtab);
+          reinterpret_cast<void*>(base), strtab, symtab);
 
     // Sanity checks.
     if (relocating_linker && needed_count != 0) {
         DL_ERR("linker cannot have DT_NEEDED dependencies on other libraries");
         return false;
     }
-    if (si->nbucket == 0) {
-        DL_ERR("empty/missing DT_HASH in \"%s\" (built with --hash-style=gnu?)", si->name);
+    if (nbucket == 0) {
+        DL_ERR("empty/missing DT_HASH in \"%s\" (built with --hash-style=gnu?)", name);
         return false;
     }
-    if (si->strtab == 0) {
-        DL_ERR("empty/missing DT_STRTAB in \"%s\"", si->name);
+    if (strtab == 0) {
+        DL_ERR("empty/missing DT_STRTAB in \"%s\"", name);
         return false;
     }
-    if (si->symtab == 0) {
-        DL_ERR("empty/missing DT_SYMTAB in \"%s\"", si->name);
+    if (symtab == 0) {
+        DL_ERR("empty/missing DT_SYMTAB in \"%s\"", name);
         return false;
     }
 
     // If this is the main executable, then load all of the libraries from LD_PRELOAD now.
-    if (si->flags & FLAG_EXE) {
+    if (flags & FLAG_EXE) {
         memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
         size_t preload_count = 0;
         for (size_t i = 0; g_ld_preload_names[i] != nullptr; i++) {
@@ -2046,69 +2040,64 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
             } else {
                 // As with glibc, failure to load an LD_PRELOAD library is just a warning.
                 DL_WARN("could not load library \"%s\" from LD_PRELOAD for \"%s\"; caused by %s",
-                        g_ld_preload_names[i], si->name, linker_get_error_buffer());
+                        g_ld_preload_names[i], name, linker_get_error_buffer());
             }
         }
     }
 
-    soinfo** needed = reinterpret_cast<soinfo**>(alloca((1 + needed_count) * sizeof(soinfo*)));
-    soinfo** pneeded = needed;
-
-    for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
+    for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
         if (d->d_tag == DT_NEEDED) {
-            const char* library_name = si->strtab + d->d_un.d_val;
-            DEBUG("%s needs %s", si->name, library_name);
+            const char* library_name = strtab + d->d_un.d_val;
+            DEBUG("%s needs %s", name, library_name);
             soinfo* lsi = find_library(library_name, 0, nullptr);
             if (lsi == nullptr) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
-                       library_name, si->name, tmp_err_buf);
+                       library_name, name, tmp_err_buf);
                 return false;
             }
 
-            si->add_child(lsi);
-            *pneeded++ = lsi;
+            add_child(lsi);
         }
     }
-    *pneeded = nullptr;
 
 #if !defined(__LP64__)
-    if (si->has_text_relocations) {
+    if (has_text_relocations) {
         // Make segments writable to allow text relocations to work properly. We will later call
         // phdr_table_protect_segments() after all of them are applied and all constructors are run.
         DL_WARN("%s has text relocations. This is wasting memory and prevents "
-                "security hardening. Please fix.", si->name);
-        if (phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
+                "security hardening. Please fix.", name);
+        if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
             DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-                   si->name, strerror(errno));
+                   name, strerror(errno));
             return false;
         }
     }
 #endif
 
 #if defined(USE_RELA)
-    if (si->plt_rela != nullptr) {
-        DEBUG("[ relocating %s plt ]\n", si->name);
-        if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count, needed)) {
+    if (plt_rela != nullptr) {
+        DEBUG("[ relocating %s plt ]\n", name);
+        if (Relocate(plt_rela, plt_rela_count)) {
             return false;
         }
     }
-    if (si->rela != nullptr) {
-        DEBUG("[ relocating %s ]\n", si->name);
-        if (soinfo_relocate(si, si->rela, si->rela_count, needed)) {
+    if (rela != nullptr) {
+        DEBUG("[ relocating %s ]\n", name);
+        if (Relocate(rela, rela_count)) {
             return false;
         }
     }
 #else
-    if (si->plt_rel != nullptr) {
-        DEBUG("[ relocating %s plt ]", si->name);
-        if (soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed)) {
+    if (plt_rel != nullptr) {
+        DEBUG("[ relocating %s plt ]", name);
+        if (Relocate(plt_rel, plt_rel_count)) {
             return false;
         }
     }
-    if (si->rel != nullptr) {
-        DEBUG("[ relocating %s ]", si->name);
-        if (soinfo_relocate(si, si->rel, si->rel_count, needed)) {
+    if (rel != nullptr) {
+        DEBUG("[ relocating %s ]", name);
+        if (Relocate(rel, rel_count)) {
             return false;
         }
     }
@@ -2118,59 +2107,59 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     // they cannot be resolved until the rest of the relocations are done
     // because we need to call the resolution function which may be waiting
     // on relocations.
-    if(si->get_has_ifuncs()) {
+    if(get_has_ifuncs()) {
 #if defined(__i386__)
-      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count, needed);
+      soinfo_ifunc_relocate(this, plt_rel, plt_rel_count);
 #elif defined(__x86_64__)
-      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count, needed);
+      soinfo_ifunc_relocate(this, plt_rela, plt_rela_count);
 #endif
     }
 
 #if defined(__mips__)
-    if (!mips_relocate_got(si, needed)) {
+    if (!mips_relocate_got(this)) {
         return false;
     }
 #endif
 
-    si->flags |= FLAG_LINKED;
-    DEBUG("[ finished linking %s ]", si->name);
+    flags |= FLAG_LINKED;
+    DEBUG("[ finished linking %s ]", name);
 
 #if !defined(__LP64__)
-    if (si->has_text_relocations) {
+    if (has_text_relocations) {
         // All relocations are done, we can protect our segments back to read-only.
-        if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
+        if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
             DL_ERR("can't protect segments for \"%s\": %s",
-                   si->name, strerror(errno));
+                   name, strerror(errno));
             return false;
         }
     }
 #endif
 
     /* We can also turn on GNU RELRO protection */
-    if (phdr_table_protect_gnu_relro(si->phdr, si->phnum, si->load_bias) < 0) {
+    if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
         DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
-               si->name, strerror(errno));
+               name, strerror(errno));
         return false;
     }
 
     /* Handle serializing/sharing the RELRO segment */
     if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
-      if (phdr_table_serialize_gnu_relro(si->phdr, si->phnum, si->load_bias,
+      if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
                                          extinfo->relro_fd) < 0) {
         DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
-               si->name, strerror(errno));
+               name, strerror(errno));
         return false;
       }
     } else if (extinfo && (extinfo->flags & ANDROID_DLEXT_USE_RELRO)) {
-      if (phdr_table_map_gnu_relro(si->phdr, si->phnum, si->load_bias,
+      if (phdr_table_map_gnu_relro(phdr, phnum, load_bias,
                                    extinfo->relro_fd) < 0) {
         DL_ERR("failed mapping GNU RELRO section for \"%s\": %s",
-               si->name, strerror(errno));
+               name, strerror(errno));
         return false;
       }
     }
 
-    notify_gdb_of_load(si);
+    notify_gdb_of_load(this);
     return true;
 }
 
@@ -2194,7 +2183,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  soinfo_link_image(si, nullptr);
+  si->LinkImage(nullptr);
 #endif
 }
 
@@ -2323,7 +2312,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     somain = si;
 
-    if (!soinfo_link_image(si, nullptr)) {
+    if (!si->LinkImage(nullptr)) {
         __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
         exit(EXIT_FAILURE);
     }
@@ -2336,7 +2325,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
         g_ld_preloads[i]->CallConstructors();
     }
 
-    /* After the link_image, the si->load_bias is initialized.
+    /* After the LinkImage, the si->load_bias is initialized.
      * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
      * We need to update this value for so exe here. So Unwind_Backtrace
      * for some arch like x86 could work correctly within so exe.
@@ -2451,7 +2440,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!soinfo_link_image(&linker_so, nullptr)) {
+  if (!linker_so.LinkImage(nullptr)) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as

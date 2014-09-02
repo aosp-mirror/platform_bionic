@@ -204,6 +204,7 @@ struct soinfo {
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
+  bool LinkImage(const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -224,6 +225,11 @@ struct soinfo {
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
   void resolve_ifunc_symbols();
+#if defined(USE_RELA)
+  int Relocate(ElfW(Rela)* rela, unsigned count);
+#else
+  int Relocate(ElfW(Rel)* rel, unsigned count);
+#endif
 
  private:
   // This part of the structure is only available
