@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10979f03_617570da",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-03T22:21:18Z",
+      "side": 1,
+      "message": "stray blank line.",
+      "revId": "7dd6206bd6d7b874472e2aa0dd5b3eb790f2c0e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10979f03_216f680c",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-03T22:21:18Z",
+      "side": 1,
+      "message": "\", \"",
+      "revId": "7dd6206bd6d7b874472e2aa0dd5b3eb790f2c0e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
