@@ -36,15 +36,10 @@ void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
 __attribute__ ((section (".init_array")))
 void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
-
-
 __LIBC_HIDDEN__  void do_mips_start(void *raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
 
   __libc_init(raw_args, NULL, &main, &array);
 }

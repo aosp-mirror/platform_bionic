@@ -33,7 +33,6 @@
 typedef struct {
   void (**preinit_array)(void);
   void (**init_array)(void);
-  void (**fini_array)(void);
 } structors_array_t;
 
 __BEGIN_DECLS
