@@ -303,4 +303,9 @@ extern "C" char* index(const char* str, int ch) {
   return strchr(str, ch);
 }
 
+// This was removed from BSD.
+extern "C" void arc4random_stir(void) {
+  // The current implementation stirs itself as needed.
+}
+
 #endif
