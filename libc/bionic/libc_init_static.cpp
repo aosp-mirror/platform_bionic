@@ -61,6 +61,9 @@
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
 static void call_array(void(**list)()) {
   // First element is -1, list is null-terminated
   while (*++list) {
@@ -99,14 +102,13 @@ __noreturn void __libc_init(void* raw_args,
   // do never use it.  Therefore, we ignore it.
 
   call_array(structors->preinit_array);
-  call_array(structors->init_array);
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
   // normally.
-  if (structors->fini_array != NULL) {
-    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
-  }
+  __cxa_atexit(__libc_fini,&__FINI_ARRAY__, NULL);
+
+  call_array(structors->init_array);
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
