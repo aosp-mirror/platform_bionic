@@ -260,6 +260,11 @@ TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
 }
 
 TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
+  if (geteuid() != 0) {
+    GTEST_LOG_(INFO) << "This test must be run as root.\n";
+    return;
+  }
+
   ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME));
   int relro_fd = open(relro_file_, O_RDONLY);
   ASSERT_NOERROR(relro_fd);
