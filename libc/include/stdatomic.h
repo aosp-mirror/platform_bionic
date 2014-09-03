@@ -58,7 +58,6 @@
         /* included.  The definitions in <atomic> themselves see      */
         /* the old definition, as they should.                        */
         /* Client code sees the following definition.                 */
-
 #define _Atomic(t) std::atomic<t>
 
 using std::atomic_is_lock_free;
