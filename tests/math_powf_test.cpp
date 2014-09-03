@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -2779,6 +2781,7 @@ static powf_intel_data_t g_powf_intel_data[] = {
 
 TEST(math_powf, powf_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_powf_intel_data)/sizeof(powf_intel_data_t); i++) {
     EXPECT_FLOAT_EQ(g_powf_intel_data[i].expected, powf(g_powf_intel_data[i].x_call_data, g_powf_intel_data[i].y_call_data)) << "Failed on element " << i;
   }

@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -4450,6 +4452,7 @@ static tanf_intel_data_t g_tanf_intel_data[] = {
 
 TEST(math_tanf, tanf_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_tanf_intel_data)/sizeof(tanf_intel_data_t); i++) {
     EXPECT_FLOAT_EQ(g_tanf_intel_data[i].expected, tanf(g_tanf_intel_data[i].call_data)) << "Failed on element " << i;
   }

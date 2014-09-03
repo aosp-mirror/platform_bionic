@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <fenv.h>
+
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
@@ -5786,6 +5788,7 @@ static sin_intel_data_t g_sin_intel_data[] = {
 
 TEST(math_sin, sin_intel) {
 #if defined(__BIONIC__)
+  fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_sin_intel_data)/sizeof(sin_intel_data_t); i++) {
     EXPECT_DOUBLE_EQ(g_sin_intel_data[i].expected, sin(g_sin_intel_data[i].call_data)) << "Failed on element " << i;
   }
