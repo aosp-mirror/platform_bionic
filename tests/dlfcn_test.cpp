@@ -338,4 +338,6 @@ TEST(dlfcn, dlopen_symlink) {
   ASSERT_TRUE(handle1 != NULL);
   ASSERT_TRUE(handle2 != NULL);
   ASSERT_EQ(handle1, handle2);
+  dlclose(handle1);
+  dlclose(handle2);
 }
