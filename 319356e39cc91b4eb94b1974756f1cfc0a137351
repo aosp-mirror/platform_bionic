@@ -16,6 +16,24 @@
       "revId": "319356e39cc91b4eb94b1974756f1cfc0a137351",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b395fdbe_29322410",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-03T00:59:20Z",
+      "side": 1,
+      "message": "not so much... also there are some .so files with different names compiled from same source file.",
+      "parentUuid": "532cc17a_6508e1bb",
+      "revId": "319356e39cc91b4eb94b1974756f1cfc0a137351",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
