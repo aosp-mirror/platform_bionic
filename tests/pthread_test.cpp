@@ -105,6 +105,7 @@ TEST(pthread, pthread_key_fork) {
   ASSERT_EQ(99, WEXITSTATUS(status));
 
   ASSERT_EQ(expected, pthread_getspecific(key));
+  ASSERT_EQ(0, pthread_key_delete(key));
 }
 
 static void* DirtyKeyFn(void* key) {
@@ -132,6 +133,7 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(nullptr, result); // Not ~0!
 
   ASSERT_EQ(0, munmap(stack, stack_size));
+  ASSERT_EQ(0, pthread_key_delete(key));
 }
 
 static void* IdFn(void* arg) {
