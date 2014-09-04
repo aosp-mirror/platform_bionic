@@ -362,13 +362,22 @@
  * do it in <sys/cdefs.h> instead because that's where our existing
  * _POSIX_C_SOURCE tests were, and we're already confident that <sys/cdefs.h>
  * is included everywhere it should be.
+ *
+ * The _GNU_SOURCE test needs to come before any _BSD_SOURCE or _POSIX* tests
+ * because _GNU_SOURCE implies everything else.
  */
-#if defined(_BSD_SOURCE)
-# define __USE_BSD 1
-#endif
-
 #if defined(_GNU_SOURCE)
 # define __USE_GNU 1
+# undef _POSIX_SOURCE
+# define _POSIX_SOURCE 1
+# undef _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 200809L
+# undef _BSD_SOURCE
+# define _BSD_SOURCE 1
+#endif
+
+#if defined(_BSD_SOURCE)
+# define __USE_BSD 1
 #endif
 
 /*-
