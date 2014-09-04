@@ -60,9 +60,6 @@ extern "C" {
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
 
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
-
 // We flag the __libc_preinit function as a constructor to ensure
 // that its address is listed in libc.so's .init_array section.
 // This ensures that the function is called by the dynamic linker
@@ -82,11 +79,6 @@ __attribute__((constructor)) static void __libc_preinit() {
   // Hooks for various libraries to let them know that we're starting up.
   malloc_debug_init();
   netdClientInit();
-
-  // The executable may have its own destructors listed in its .fini_array
-  // so we need to ensure that these are called when the program exits
-  // normally.
-  __cxa_atexit(__libc_fini, &__FINI_ARRAY__, NULL);
 }
 
 __LIBC_HIDDEN__ void __libc_postfini() {
@@ -104,11 +96,19 @@ __LIBC_HIDDEN__ void __libc_postfini() {
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors __unused) {
+                            structors_array_t const * const structors) {
+
   KernelArgumentBlock args(raw_args);
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
+
+  // The executable may have its own destructors listed in its .fini_array
+  // so we need to ensure that these are called when the program exits
+  // normally.
+  if (structors->fini_array) {
+    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+  }
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }

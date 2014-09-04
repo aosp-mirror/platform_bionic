@@ -36,6 +36,9 @@ void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
 __attribute__ ((section (".init_array")))
 void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
 __LIBC_HIDDEN__
 #ifdef __i386__
 __attribute__((force_align_arg_pointer))
@@ -44,6 +47,7 @@ void _start() {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
+  array.fini_array = &__FINI_ARRAY__;
 
   void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
 #ifdef __x86_64__
