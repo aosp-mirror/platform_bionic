@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b076d3c3_fc54bd87",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-04T22:47:08Z",
+      "side": 1,
+      "message": "This file was added yesterday.",
+      "parentUuid": "50dbd705_5fd05766",
+      "range": {
+        "startLine": 56,
+        "startChar": 10,
+        "endLine": 56,
+        "endChar": 30
+      },
+      "revId": "9d9410b57497aa2d12222aae18f19366e04268c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30e023af_69afa9b5",
         "filename": "tests/math_test.cpp",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2014-09-04T22:01:28Z",
       "side": 1,
       "message": "I don\u0027t think you meant to add this blank line.",
+      "range": {
+        "startLine": 786,
+        "startChar": 0,
+        "endLine": 786,
+        "endChar": 0
+      },
+      "revId": "9d9410b57497aa2d12222aae18f19366e04268c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f07ccba5_09d4d97c",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-04T22:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30e023af_a991118e",
       "range": {
         "startLine": 786,
         "startChar": 0,
