@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
+#include <signal.h>
 
 #include <errno.h>
-#include <signal.h>
+#include <gtest/gtest.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -198,13 +198,19 @@ static void EmptySignalHandler(int) {}
 static void EmptySignalAction(int, siginfo_t*, void*) {}
 
 TEST(signal, sigaction) {
+  // Both bionic and glibc set SA_RESTORER when talking to the kernel on arm,
+  // arm64, x86, and x86-64. The version of glibc we're using also doesn't
+  // define SA_RESTORER, but luckily it's the same value everywhere, and mips
+  // doesn't use the bit for anything.
+  static const int sa_restorer = 0x4000000;
+
   // See what's currently set for SIGALRM.
   struct sigaction original_sa;
   memset(&original_sa, 0, sizeof(original_sa));
   ASSERT_EQ(0, sigaction(SIGALRM, NULL, &original_sa));
   ASSERT_TRUE(original_sa.sa_handler == NULL);
   ASSERT_TRUE(original_sa.sa_sigaction == NULL);
-  ASSERT_TRUE(original_sa.sa_flags == 0);
+  ASSERT_EQ(0, original_sa.sa_flags & ~sa_restorer);
 
   // Set a traditional sa_handler signal handler.
   struct sigaction sa;
@@ -219,7 +225,7 @@ TEST(signal, sigaction) {
   ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
   ASSERT_TRUE(sa.sa_handler == EmptySignalHandler);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
-  ASSERT_TRUE(sa.sa_flags == SA_ONSTACK);
+  ASSERT_EQ(SA_ONSTACK, sa.sa_flags & ~sa_restorer);
 
   // Set a new-style sa_sigaction signal handler.
   memset(&sa, 0, sizeof(sa));
@@ -233,7 +239,7 @@ TEST(signal, sigaction) {
   ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
   ASSERT_TRUE(sa.sa_sigaction == EmptySignalAction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
-  ASSERT_TRUE(sa.sa_flags == (SA_ONSTACK | SA_SIGINFO));
+  ASSERT_EQ((SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
 
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction(SIGALRM, &original_sa, NULL));
