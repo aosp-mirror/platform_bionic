@@ -27,6 +27,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "private/ScopeGuard.h"
 #include "ScopedSignalHandler.h"
 
 TEST(pthread, pthread_key_create) {
@@ -862,7 +863,18 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   // The stack size should correspond to RLIMIT_STACK.
   rlimit rl;
   ASSERT_EQ(0, getrlimit(RLIMIT_STACK, &rl));
+  uint64_t original_rlim_cur = rl.rlim_cur;
+#if defined(__BIONIC__)
+  if (rl.rlim_cur == RLIM_INFINITY) {
+    rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
+  }
+#endif
   EXPECT_EQ(rl.rlim_cur, stack_size);
+
+  auto guard = create_scope_guard([&rl, original_rlim_cur]() {
+    rl.rlim_cur = original_rlim_cur;
+    ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+  });
 
   // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
   // Remember that the stack grows down (and is mapped in on demand), so the low address of the
