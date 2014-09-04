@@ -22,11 +22,11 @@
 #include <linux/errno.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <unistd.h>
-#define SHMMAX 0x2000000
 #define SHMMIN 1
 #define SHMMNI 4096
+#define SHMMAX (ULONG_MAX - (1UL << 24))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SHMALL (SHMMAX/getpagesize()*(SHMMNI/16))
+#define SHMALL (ULONG_MAX - (1UL << 24))
 #define SHMSEG SHMMNI
 struct shmid_ds {
  struct ipc_perm shm_perm;
