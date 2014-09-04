@@ -255,6 +255,10 @@ libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 # libm.a for target.
 #
 include $(CLEAR_VARS)
+ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
+# Clang has wrong long double sizes for x86.
+LOCAL_CLANG := false
+endif
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ARM_MODE := arm
@@ -287,6 +291,10 @@ include $(BUILD_STATIC_LIBRARY)
 # libm.so for target.
 #
 include $(CLEAR_VARS)
+ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
+# Clang has wrong long double sizes for x86.
+LOCAL_CLANG := false
+endif
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
