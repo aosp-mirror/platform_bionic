@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "50dbd705_16687cf8",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-04T20:08:16Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "3a7f696bdfbd99e3a9449fb16635e3d26a0c3a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10807fc3_d361ab8a",
         "filename": "tests/string_test.cpp",
         "patchSetId": 1
@@ -13,6 +30,30 @@
       "writtenOn": "2014-09-04T19:58:38Z",
       "side": 1,
       "message": "We should try and find the misbehaving tests and fix them too.\n\nIt\u0027s probably a good fallback to do this, but there are bound to be other tests that might misbehave this way.",
+      "range": {
+        "startLine": 213,
+        "startChar": 4,
+        "endLine": 213,
+        "endChar": 29
+      },
+      "revId": "3a7f696bdfbd99e3a9449fb16635e3d26a0c3a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10807fc3_53a59b58",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-04T20:08:16Z",
+      "side": 1,
+      "message": "yeah, we can\u0027t realistically expect people to set the rounding mode any time they use float arithmetic in a test.",
+      "parentUuid": "10807fc3_d361ab8a",
       "range": {
         "startLine": 213,
         "startChar": 4,
