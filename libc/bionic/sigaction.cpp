@@ -64,10 +64,6 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
     bionic_old_action->sa_mask = kernel_old_action.sa_mask;
 #ifdef SA_RESTORER
     bionic_old_action->sa_restorer = kernel_old_action.sa_restorer;
-
-    if (bionic_old_action->sa_restorer == &__rt_sigreturn) {
-      bionic_old_action->sa_flags &= ~SA_RESTORER;
-    }
 #endif
   }
 
