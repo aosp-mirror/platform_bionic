@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "private/ScopeGuard.h"
+
 #include <string>
 
 #define ASSERT_SUBSTR(needle, haystack) \
@@ -129,6 +131,32 @@ TEST(dlfcn, ifunc_ctor_call) {
   dlclose(handle);
 }
 #endif
+
+TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
+  // This is the structure of the test library and
+  // its dt_needed libraries
+  // libtest_relo_check_dt_needed_order.so
+  // |
+  // +-> libtest_relo_check_dt_needed_order_1.so
+  // |
+  // +-> libtest_relo_check_dt_needed_order_2.so
+  //
+  // The root library references relo_test_get_answer_lib - which is defined
+  // in both dt_needed libraries, the correct relocation should
+  // use the function defined in libtest_relo_check_dt_needed_order_1.so
+  void* handle = nullptr;
+  auto guard = create_scope_guard([&]() {
+    dlclose(handle);
+  });
+
+  handle = dlopen("libtest_relo_check_dt_needed_order.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "relo_test_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(1, fn());
+}
 
 TEST(dlfcn, dlopen_check_order) {
   // Here is how the test library and its dt_needed
