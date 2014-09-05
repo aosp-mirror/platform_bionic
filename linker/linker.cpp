@@ -1778,8 +1778,8 @@ void soinfo::CallDestructors() {
 
 void soinfo::add_child(soinfo* child) {
   if (has_min_version(0)) {
-    this->children.push_front(child);
-    child->parents.push_front(this);
+    child->parents.push_back(this);
+    this->children.push_back(child);
   }
 }
 
