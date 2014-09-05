@@ -204,7 +204,6 @@ struct soinfo {
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
-  bool PrelinkImage();
   bool LinkImage(const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
@@ -218,7 +217,6 @@ struct soinfo {
   bool get_has_ifuncs();
 
   soinfo_list_t& get_children();
-  soinfo_list_t& get_parents();
 
   bool inline has_min_version(uint32_t min_version) {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
