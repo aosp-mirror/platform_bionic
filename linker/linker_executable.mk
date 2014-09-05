@@ -9,6 +9,8 @@
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_SUFFIX := $(TARGET_EXECUTABLE_SUFFIX)
 
+# Clang calls /usr/bin/ld: unrecognized option '--icf=safe', http://b/17403674.
+LOCAL_CLANG := false
 include $(BUILD_SYSTEM)/dynamic_binary.mk
 
 # See build/core/executable_internal.mk
