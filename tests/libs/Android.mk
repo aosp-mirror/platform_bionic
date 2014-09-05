@@ -257,6 +257,29 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# libtest_relo_check_dt_needed_order.so
+# |
+# +-> libtest_relo_check_dt_needed_order_1.so
+# |
+# +-> libtest_relo_check_dt_needed_order_2.so
+# -----------------------------------------------------------------------------
+libtest_relo_check_dt_needed_order_shared_libraries := \
+    libtest_relo_check_dt_needed_order_1 libtest_relo_check_dt_needed_order_2
+
+libtest_relo_check_dt_needed_order_src_files := dlopen_testlib_relo_check_dt_needed_order.cpp
+libtest_relo_check_dt_needed_order_1_src_files := dlopen_testlib_relo_check_dt_needed_order_1.cpp
+libtest_relo_check_dt_needed_order_2_src_files := dlopen_testlib_relo_check_dt_needed_order_2.cpp
+build_type := target
+build_target := SHARED_LIBRARY
+
+module := libtest_relo_check_dt_needed_order
+include $(TEST_PATH)/Android.build.mk
+module := libtest_relo_check_dt_needed_order_1
+include $(TEST_PATH)/Android.build.mk
+module := libtest_relo_check_dt_needed_order_2
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Library with dependency used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_with_dependency_src_files := \
