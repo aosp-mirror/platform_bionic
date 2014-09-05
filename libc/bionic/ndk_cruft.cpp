@@ -308,4 +308,11 @@ extern "C" void arc4random_stir(void) {
   // The current implementation stirs itself as needed.
 }
 
+// Old versions of the NDK did not export malloc_usable_size, but did
+// export dlmalloc_usable_size. We are moving away from dlmalloc in L
+// so make this call malloc_usable_size.
+extern "C" size_t dlmalloc_usable_size(void* ptr) {
+  return malloc_usable_size(ptr);
+}
+
 #endif
