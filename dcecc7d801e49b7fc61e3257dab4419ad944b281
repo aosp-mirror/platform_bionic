@@ -16,6 +16,24 @@
       "revId": "dcecc7d801e49b7fc61e3257dab4419ad944b281",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10807fc3_d300c0d4",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2014-09-05T18:31:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30b903ab_ed3ba1df",
+      "revId": "dcecc7d801e49b7fc61e3257dab4419ad944b281",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
