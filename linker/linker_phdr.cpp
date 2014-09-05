@@ -702,17 +702,34 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  *   load_bias   -> load bias
  * Output:
  *   dynamic       -> address of table in memory (null on failure).
+ *   dynamic_count -> number of items in table (0 on failure).
+ *   dynamic_flags -> protection flags for section (unset on failure)
  * Return:
  *   void
  */
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                    ElfW(Addr) load_bias, ElfW(Dyn)** dynamic) {
-  *dynamic = nullptr;
-  for (const ElfW(Phdr)* phdr = phdr_table, *phdr_limit = phdr + phdr_count; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type == PT_DYNAMIC) {
-      *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
-      return;
+                                    ElfW(Addr) load_bias,
+                                    ElfW(Dyn)** dynamic, size_t* dynamic_count, ElfW(Word)* dynamic_flags) {
+  const ElfW(Phdr)* phdr = phdr_table;
+  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
+    if (phdr->p_type != PT_DYNAMIC) {
+      continue;
     }
+
+    *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
+    if (dynamic_count) {
+      *dynamic_count = (unsigned)(phdr->p_memsz / 8);
+    }
+    if (dynamic_flags) {
+      *dynamic_flags = phdr->p_flags;
+    }
+    return;
+  }
+  *dynamic = nullptr;
+  if (dynamic_count) {
+    *dynamic_count = 0;
   }
 }
 
