@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90baaf9a_1e7e5d85",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-05T16:39:48Z",
+      "side": 0,
+      "message": "I\u0027d prefer it if we kept this. Instead, do something like\n\n    use_clang :\u003d $(USE_CLANG_PLATFORM_BUILD)\n    ifeq ($(use_clang),)\n        use_clang :\u003d false\n    endif",
+      "revId": "05f0bfd6c56746aa4f737804ebb62b555dc0d921",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
