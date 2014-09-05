@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10979f03_fb7048a8",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-05T22:48:51Z",
+      "side": 1,
+      "message": "the structure\n\n(sorry, don\u0027t know how i missed this before.)",
+      "revId": "d3de00560314ca6c486e3f524c9d953d9c614dcb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70345b07_24f75c6c",
+        "filename": "tests/libs/dlopen_testlib_relo_check_dt_needed_order_2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-05T22:48:51Z",
+      "side": 1,
+      "message": "missed this one.",
+      "revId": "d3de00560314ca6c486e3f524c9d953d9c614dcb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
