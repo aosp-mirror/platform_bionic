@@ -34,6 +34,13 @@
 
 #define malloc_getpagesize getpagesize()
 
+/* dlmalloc_usable_size was exposed in the NDK, so change the name
+ * of the function on 32 bit architectures.
+ */
+#if !defined(__LP64__)
+#define dlmalloc_usable_size dlmalloc_usable_size_real
+#endif
+
 /* Export two symbols used by the VM. */
 __BEGIN_DECLS
 int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;
