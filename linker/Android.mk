@@ -45,13 +45,11 @@ LOCAL_NO_CRT := true
 # TODO: split out the asflags.
 LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/linker_executable.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc
 
-LOCAL_FORCE_STATIC_EXECUTABLE := true # not necessary when not including BUILD_EXECUTABLE
-
-LOCAL_2ND_ARCH_VAR_PREFIX := $(linker_2nd_arch_var_prefix)
+LOCAL_FORCE_STATIC_EXECUTABLE := true
 
 LOCAL_MODULE := linker
 LOCAL_MODULE_STEM_32 := linker
@@ -62,17 +60,12 @@ LOCAL_MULTILIB := both
 # meaningful name resolution.
 LOCAL_STRIP_MODULE := keep_symbols
 
-include $(LOCAL_PATH)/linker_executable.mk
-ifdef TARGET_2ND_ARCH
-LOCAL_2ND_ARCH_VAR_PREFIX := $(TARGET_2ND_ARCH_VAR_PREFIX)
-OVERRIDE_BUILT_MODULE_PATH :=
-LOCAL_BUILT_MODULE :=
-LOCAL_INSTALLED_MODULE :=
-LOCAL_MODULE_STEM :=
-LOCAL_BUILT_MODULE_STEM :=
-LOCAL_INSTALLED_MODULE_STEM :=
-LOCAL_INTERMEDIATE_TARGETS :=
-include $(LOCAL_PATH)/linker_executable.mk
-endif
+# Insert an extra objcopy step to add prefix to symbols.
+# Note we are using "=" instead of ":=" to defer the evaluation,
+# because LOCAL_2ND_ARCH_VAR_PREFIX or linked_module isn't set properly yet at this point.
+LOCAL_POST_LINK_CMD = $(hide) $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_OBJCOPY) \
+  --prefix-symbols=__dl_ $(linked_module)
+
+include $(BUILD_EXECUTABLE)
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
