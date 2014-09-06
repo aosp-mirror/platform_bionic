@@ -101,6 +101,7 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
 #endif
 
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                    ElfW(Addr) load_bias, ElfW(Dyn)** dynamic);
+                                    ElfW(Addr) load_bias,
+                                    ElfW(Dyn)** dynamic, size_t* dynamic_count, ElfW(Word)* dynamic_flags);
 
 #endif /* LINKER_PHDR_H */

@@ -114,7 +114,6 @@ libBionicStandardTests_src_files := \
     system_properties_test.cpp \
     time_test.cpp \
     uchar_test.cpp \
-    uniqueptr_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
 
