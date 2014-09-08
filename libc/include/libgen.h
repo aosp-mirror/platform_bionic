@@ -38,29 +38,21 @@ __BEGIN_DECLS
 /*
  * <string.h> gets you the GNU basename.
  * <libgen.h> the POSIX one.
- * Note that our "POSIX" one has the wrong argument cv-qualifiers.
+ * Note that our "POSIX" one has the wrong argument cv-qualifiers, but doesn't
+ * modify its input and uses thread-local storage for the result if necessary.
  */
 extern char* basename(const char*);
 #define __bionic_using_posix_basename
 #endif
 
-/* our version of dirname/basename don't modify the input path */
-extern char*  dirname (const char*  path);
+/* This has the wrong argument cv-qualifiers, but doesn't modify its input and uses thread-local storage for the result if necessary. */
+extern char* dirname(const char*);
 
-/* special thread-safe Bionic versions
- *
- * if 'buffer' is NULL, 'bufflen' is ignored and the length of the result is returned
- * otherwise, place result in 'buffer'
- *
- * at most bufflen-1 characters written, plus a terminating zero
- *
- * return length of result, or -1 in case of error, with errno set to:
- *
- *    ERANGE:        buffer is too short
- *    ENAMETOOLONG:  the result is too long for a valid path
- */
-extern int    dirname_r(const char*  path, char*  buffer, size_t  bufflen);
-extern int    basename_r(const char*  path, char*  buffer, size_t  bufflen);
+#if !defined(__LP64__)
+/* These non-standard functions are not needed on Android; basename and dirname use thread-local storage. */
+extern int dirname_r(const char*, char*, size_t);
+extern int basename_r(const char*, char*, size_t);
+#endif
 
 __END_DECLS
 
