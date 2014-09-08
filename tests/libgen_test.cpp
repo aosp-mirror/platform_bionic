@@ -63,7 +63,7 @@ TEST(libgen, dirname) {
   TestDirname("/", "/");
 }
 
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__LP64__)
 static void TestBasename(const char* in, const char* expected_out, int expected_rc,
                          char* buf, size_t buf_size, int expected_errno) {
   errno = 0;
@@ -88,7 +88,7 @@ static void TestDirname(const char* in, const char* expected_out, int expected_r
 #endif // __BIONIC__
 
 TEST(libgen, basename_r) {
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
   TestBasename("", ".",  1, NULL, 0, 0);
   TestBasename("", ".", -1, buf, 0, ERANGE);
@@ -107,7 +107,7 @@ TEST(libgen, basename_r) {
 }
 
 TEST(libgen, dirname_r) {
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
   TestDirname("", ".",  1, NULL, 0, 0);
   TestDirname("", ".", -1, buf, 0, ERANGE);
