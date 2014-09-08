@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__waitid)
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}
@@ -20,5 +18,5 @@ ENTRY(__waitid)
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
-    b       __set_errno
+    b       __set_errno_internal
 END(__waitid)

@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(tgkill)
     movl    $__NR_tgkill, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(tgkill)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(tgkill)
