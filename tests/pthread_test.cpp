@@ -871,7 +871,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 #endif
   EXPECT_EQ(rl.rlim_cur, stack_size);
 
-  auto guard = create_scope_guard([&rl, original_rlim_cur]() {
+  auto guard = make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
