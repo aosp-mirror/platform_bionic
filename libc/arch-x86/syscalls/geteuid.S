@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(geteuid)
     movl    $__NR_geteuid32, %eax
     int     $0x80
@@ -11,7 +9,7 @@ ENTRY(geteuid)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    __set_errno_internal
     addl    $4, %esp
 1:
     ret

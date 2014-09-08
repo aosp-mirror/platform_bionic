@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(fsetxattr)
     movq    %rcx, %r10
     movl    $__NR_fsetxattr, %eax
@@ -12,7 +10,7 @@ ENTRY(fsetxattr)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(fsetxattr)

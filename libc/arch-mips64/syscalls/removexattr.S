@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(removexattr)
     .set push
     .set noreorder
@@ -19,7 +17,7 @@ ENTRY(removexattr)
     nop
 2:
     .cpsetup ra, t1, 2b
-    LA t9,__set_errno
+    LA t9,__set_errno_internal
     .cpreturn
     j t9
     move ra, t0

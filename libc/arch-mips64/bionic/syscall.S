@@ -61,7 +61,7 @@ LEAF(syscall,FRAMESZ)
 	PTR_ADDU sp, FRAMESZ
 	j	ra
 1:
-	LA	t9,__set_errno
+	LA	t9,__set_errno_internal
 	RESTORE_GP64
 	PTR_ADDU sp, FRAMESZ
 	j	t9

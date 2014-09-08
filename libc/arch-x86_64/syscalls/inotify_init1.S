@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(inotify_init1)
     movl    $__NR_inotify_init1, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(inotify_init1)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(inotify_init1)

@@ -66,7 +66,7 @@ ENTRY(__bionic_clone)
 
 .L__error_bc:
 	move	a0,v0
-	la	t9,__set_errno
+	la	t9,__set_errno_internal
 	j	t9
 END(__bionic_clone)
 .hidden __bionic_clone

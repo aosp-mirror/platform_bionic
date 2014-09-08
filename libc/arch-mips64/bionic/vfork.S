@@ -65,7 +65,7 @@ LEAF(vfork,FRAMESZ)
 	RESTORE_GP64
 	j	ra
 1:
-	LA	t9,__set_errno
+	LA	t9,__set_errno_internal
 	RESTORE_GP64
 	j	t9
 	END(vfork)
