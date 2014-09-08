@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(munmap)
     movl    $__NR_munmap, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(munmap)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(munmap)

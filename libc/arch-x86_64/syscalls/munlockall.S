@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(munlockall)
     movl    $__NR_munlockall, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(munlockall)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(munlockall)

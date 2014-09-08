@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(inotify_add_watch)
     movl    $__NR_inotify_add_watch, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(inotify_add_watch)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(inotify_add_watch)

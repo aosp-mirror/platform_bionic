@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(getgid)
     movl    $__NR_getgid32, %eax
     int     $0x80
@@ -11,7 +9,7 @@ ENTRY(getgid)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    __set_errno_internal
     addl    $4, %esp
 1:
     ret

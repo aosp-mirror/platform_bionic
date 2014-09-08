@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(setitimer)
     movl    $__NR_setitimer, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(setitimer)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(setitimer)

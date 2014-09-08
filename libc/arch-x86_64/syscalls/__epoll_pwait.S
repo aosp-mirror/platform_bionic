@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__epoll_pwait)
     movq    %rcx, %r10
     movl    $__NR_epoll_pwait, %eax
@@ -12,7 +10,7 @@ ENTRY(__epoll_pwait)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(__epoll_pwait)
