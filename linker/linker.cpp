@@ -955,7 +955,7 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
   SoinfoLinkedList found_libs;
   size_t soinfos_size = 0;
 
-  auto failure_guard = create_scope_guard([&]() {
+  auto failure_guard = make_scope_guard([&]() {
     // Housekeeping
     load_tasks.for_each([] (LoadTask* t) {
       LoadTask::deleter(t);

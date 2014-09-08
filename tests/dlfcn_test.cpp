@@ -145,7 +145,7 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // in both dt_needed libraries, the correct relocation should
   // use the function defined in libtest_relo_check_dt_needed_order_1.so
   void* handle = nullptr;
-  auto guard = create_scope_guard([&]() {
+  auto guard = make_scope_guard([&]() {
     dlclose(handle);
   });
 
