@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__fstatfs64)
     mov     ip, r7
     ldr     r7, =__NR_fstatfs64
@@ -12,5 +10,5 @@ ENTRY(__fstatfs64)
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
-    b       __set_errno
+    b       __set_errno_internal
 END(__fstatfs64)

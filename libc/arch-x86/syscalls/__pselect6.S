@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__pselect6)
     pushl   %ebx
     .cfi_def_cfa_offset 8
@@ -35,7 +33,7 @@ ENTRY(__pselect6)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    __set_errno_internal
     addl    $4, %esp
 1:
     popl    %ebp

@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__getdents64)
     movl    $__NR_getdents64, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(__getdents64)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(__getdents64)

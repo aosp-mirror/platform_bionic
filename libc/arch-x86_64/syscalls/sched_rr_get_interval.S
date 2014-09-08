@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(sched_rr_get_interval)
     movl    $__NR_sched_rr_get_interval, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(sched_rr_get_interval)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(sched_rr_get_interval)

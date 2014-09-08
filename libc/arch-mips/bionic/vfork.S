@@ -52,7 +52,7 @@ ENTRY(vfork)
 	j	ra
 	 nop
 1:
-	la	t9, __set_errno
+	la	t9, __set_errno_internal
 	j	t9
 	 nop
 END(vfork)

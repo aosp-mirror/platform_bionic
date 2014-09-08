@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(__rt_sigaction)
     movq    %rcx, %r10
     movl    $__NR_rt_sigaction, %eax
@@ -12,7 +10,7 @@ ENTRY(__rt_sigaction)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(__rt_sigaction)

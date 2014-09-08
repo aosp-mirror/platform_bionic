@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(_flush_cache)
     .set noreorder
     .cpload t9
@@ -14,7 +12,7 @@ ENTRY(_flush_cache)
     j ra
     nop
 1:
-    la t9,__set_errno
+    la t9,__set_errno_internal
     j t9
     nop
     .set reorder

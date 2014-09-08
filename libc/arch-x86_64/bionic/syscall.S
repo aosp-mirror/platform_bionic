@@ -57,7 +57,7 @@ ENTRY(syscall)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(syscall)

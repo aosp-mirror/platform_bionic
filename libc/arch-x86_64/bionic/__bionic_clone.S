@@ -54,7 +54,7 @@ ENTRY(__bionic_clone)
         # An error occurred, set errno and return -1.
         negl    %eax
         movl    %eax, %edi
-        call    __set_errno
+        call    __set_errno_internal
         ret
 
 .L_bc_child:
