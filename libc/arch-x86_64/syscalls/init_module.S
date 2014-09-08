@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(init_module)
     movl    $__NR_init_module, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(init_module)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(init_module)

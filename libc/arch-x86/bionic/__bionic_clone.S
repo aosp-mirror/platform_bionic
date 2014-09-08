@@ -32,7 +32,7 @@ ENTRY(__bionic_clone)
         # An error occurred, so set errno and return -1.
         negl    %eax
         pushl   %eax
-        call    __set_errno
+        call    __set_errno_internal
         addl    $4, %esp
         jmp     .L_bc_return
 

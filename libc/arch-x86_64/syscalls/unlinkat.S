@@ -2,8 +2,6 @@
 
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(unlinkat)
     movl    $__NR_unlinkat, %eax
     syscall
@@ -11,7 +9,7 @@ ENTRY(unlinkat)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(unlinkat)

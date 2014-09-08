@@ -43,8 +43,6 @@ syscall_stub_header = "/* " + warning + " */\n" + \
 """
 #include <private/bionic_asm.h>
 
-    .hidden __set_errno
-
 ENTRY(%(func)s)
 """
 
@@ -67,7 +65,7 @@ arm_eabi_call_default = syscall_stub_header + """\
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
-    b       __set_errno
+    b       __set_errno_internal
 END(%(func)s)
 """
 
@@ -87,7 +85,7 @@ arm_eabi_call_long = syscall_stub_header + """\
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
-    b       __set_errno
+    b       __set_errno_internal
 END(%(func)s)
 """
 
@@ -102,7 +100,7 @@ arm64_call = syscall_stub_header + """\
 
     cmn     x0, #(MAX_ERRNO + 1)
     cneg    x0, x0, hi
-    b.hi    __set_errno
+    b.hi    __set_errno_internal
 
     ret
 END(%(func)s)
@@ -123,7 +121,7 @@ mips_call = syscall_stub_header + """\
     j ra
     nop
 1:
-    la t9,__set_errno
+    la t9,__set_errno_internal
     j t9
     nop
     .set reorder
@@ -150,7 +148,7 @@ mips64_call = syscall_stub_header + """\
     nop
 2:
     .cpsetup ra, t1, 2b
-    LA t9,__set_errno
+    LA t9,__set_errno_internal
     .cpreturn
     j t9
     move ra, t0
@@ -172,7 +170,7 @@ x86_call = """\
     jb      1f
     negl    %%eax
     pushl   %%eax
-    call    __set_errno
+    call    __set_errno_internal
     addl    $4, %%esp
 1:
 """
@@ -194,7 +192,7 @@ x86_64_call = """\
     jb      1f
     negl    %%eax
     movl    %%eax, %%edi
-    call    __set_errno
+    call    __set_errno_internal
 1:
     ret
 END(%(func)s)

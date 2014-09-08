@@ -57,7 +57,7 @@ ENTRY(__bionic_clone)
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
-    b       __set_errno
+    b       __set_errno_internal
 
 1:  # The child.
     # Setting lr to 0 will make the unwinder stop at __start_thread

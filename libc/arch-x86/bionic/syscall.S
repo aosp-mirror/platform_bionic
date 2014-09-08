@@ -38,7 +38,7 @@ ENTRY(syscall)
     # Yes, so set errno.
     negl    %eax
     pushl   %eax
-    call    __set_errno
+    call    __set_errno_internal
     addl    $4, %esp
 1:
     # Restore the callee save registers.
