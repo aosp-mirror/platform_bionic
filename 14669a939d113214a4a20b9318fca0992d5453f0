@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70345b07_3b2777d6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-08T20:26:49Z",
+      "side": 1,
+      "message": "This was the part leading to the bug",
+      "revId": "14669a939d113214a4a20b9318fca0992d5453f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
