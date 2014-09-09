@@ -122,15 +122,6 @@ class LinkedList {
     }
   }
 
-  size_t size() const {
-    size_t sz = 0;
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      ++sz;
-    }
-
-    return sz;
-  }
-
   size_t copy_to_array(T* array[], size_t array_length) const {
     size_t sz = 0;
     for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next) {
