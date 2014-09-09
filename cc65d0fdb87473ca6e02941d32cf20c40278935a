@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f15fa2_947e4c30",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T17:58:24Z",
+      "side": 1,
+      "message": "librar_ies_, plural? do you want to dlsym to check that one of the dependent ones isn\u0027t still there then?",
+      "revId": "cc65d0fdb87473ca6e02941d32cf20c40278935a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
