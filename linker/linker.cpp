@@ -843,6 +843,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int dlfl
   }
 
   if ((dlflags & RTLD_NOLOAD) != 0) {
+    DL_ERR("library \"%s\" wasn't loaded and RTLD_NOLOAD prevented it", name);
     return nullptr;
   }
 
@@ -950,7 +951,6 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
     soinfo* needed_by = task->get_needed_by();
 
     if (is_recursive(si, needed_by)) {
-      soinfo_free(si);
       return false;
     }
 

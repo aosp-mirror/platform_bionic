@@ -195,7 +195,7 @@ include $(TEST_PATH)/Android.build.mk
 #
 # libtest_with_dependency_loop -> a -> b -> c -> a
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_src_files := empty.cpp
+libtest_with_dependency_loop_src_files := dlopen_testlib_invalid.cpp
 
 libtest_with_dependency_loop_shared_libraries := \
     libtest_with_dependency_loop_a
@@ -208,7 +208,7 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_a.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_a_src_files := empty.cpp
+libtest_with_dependency_loop_a_src_files := dlopen_testlib_invalid.cpp
 
 libtest_with_dependency_loop_a_shared_libraries := \
     libtest_with_dependency_loop_b_tmp
@@ -223,7 +223,7 @@ include $(TEST_PATH)/Android.build.mk
 #
 # this is temporary placeholder - will be removed
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_b_tmp_src_files := empty.cpp
+libtest_with_dependency_loop_b_tmp_src_files := dlopen_testlib_invalid.cpp
 libtest_with_dependency_loop_b_tmp_ldflags := -Wl,-soname=libtest_with_dependency_loop_b.so
 
 module := libtest_with_dependency_loop_b_tmp
@@ -234,7 +234,7 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_b.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_b_src_files := empty.cpp
+libtest_with_dependency_loop_b_src_files := dlopen_testlib_invalid.cpp
 libtest_with_dependency_loop_b_shared_libraries := libtest_with_dependency_loop_c
 
 module := libtest_with_dependency_loop_b
@@ -245,7 +245,7 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_c.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_c_src_files := empty.cpp
+libtest_with_dependency_loop_c_src_files := dlopen_testlib_invalid.cpp
 
 libtest_with_dependency_loop_c_shared_libraries := \
     libtest_with_dependency_loop_a
