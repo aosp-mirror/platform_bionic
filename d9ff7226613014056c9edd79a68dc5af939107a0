@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0edabca_33e8505b",
+        "filename": "libc/private/bionic_macros.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-09T00:59:54Z",
+      "side": 1,
+      "message": "This seems to have a higher chance of failure since this changes bionic proper code and uses a C++11 feature. Did you do a mingw build and verify this still compiles?",
+      "range": {
+        "startLine": 23,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 42
+      },
+      "revId": "d9ff7226613014056c9edd79a68dc5af939107a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
