@@ -139,7 +139,6 @@ TEST(linked_list, copy_to_array) {
   const char* buf[max_size];
   memset(buf, 0, sizeof(buf));
 
-  ASSERT_EQ(0U, list.size());
   ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
   ASSERT_EQ(nullptr, buf[0]);
 
@@ -149,7 +148,6 @@ TEST(linked_list, copy_to_array) {
   list.push_back("d");
 
   memset(buf, 0, sizeof(buf));
-  ASSERT_EQ(4U, list.size());
   ASSERT_EQ(2U, list.copy_to_array(buf, 2));
   ASSERT_STREQ("a", buf[0]);
   ASSERT_STREQ("b", buf[1]);
@@ -166,7 +164,6 @@ TEST(linked_list, copy_to_array) {
   list.remove_if([](const char* c) {
     return *c != 'c';
   });
-  ASSERT_EQ(1U, list.size());
   ASSERT_EQ(1U, list.copy_to_array(buf, max_size));
   ASSERT_STREQ("c", buf[0]);
   ASSERT_EQ(nullptr, buf[1]);
@@ -177,7 +174,6 @@ TEST(linked_list, copy_to_array) {
     return *c == 'c';
   });
 
-  ASSERT_EQ(0U, list.size());
   ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
   ASSERT_EQ(nullptr, buf[0]);
 }
