@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "300ca377_987e7930",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T18:01:06Z",
+      "side": 1,
+      "message": "want to describe what this does and the kinds of bugs it can catch?",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30574343_eccd4ff2",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T18:01:06Z",
+      "side": 1,
+      "message": "Use...\n\nexplain why?",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f15fa2_d488d412",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T18:01:06Z",
+      "side": 1,
+      "message": "PROT_READ? why not PROT_NONE?",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30574343_eca6ef31",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T18:01:06Z",
+      "side": 1,
+      "message": "would this be clearer as a \"continue\" in the loop above?",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f15fa2_94676ca0",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T18:01:06Z",
+      "side": 1,
+      "message": "PROT_NONE?",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
