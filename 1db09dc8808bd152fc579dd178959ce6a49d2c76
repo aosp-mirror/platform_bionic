@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "702b7bc3_6c9673cb",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T23:11:06Z",
+      "side": 1,
+      "message": "i\u0027m not 100% comfortable with invalid (since there\u0027s nothing wrong with the function itself), but i don\u0027t have a better name off the top of my head.",
+      "revId": "1db09dc8808bd152fc579dd178959ce6a49d2c76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502037de_eb088dbb",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T23:11:06Z",
+      "side": 1,
+      "message": "s/has been loaded/wasn\u0027t loaded even though dlopen returned NULL/? i (think i) know what you mean, but \"unloaded\" sounds odd for something that was never really loaded.",
+      "revId": "1db09dc8808bd152fc579dd178959ce6a49d2c76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502037de_6b4e5dfc",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-09T23:11:06Z",
+      "side": 1,
+      "message": "i was assuming you\u0027d have a different function name in each library and you\u0027d dlsym each function above to check that none of the other libraries had been loaded. (or to check that they had; i\u0027m honestly not sure which to expect!)",
+      "revId": "1db09dc8808bd152fc579dd178959ce6a49d2c76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
