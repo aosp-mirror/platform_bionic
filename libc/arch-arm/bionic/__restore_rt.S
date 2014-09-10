@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,8 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY_PRIVATE(__rt_sigreturn)
-  movl $__NR_rt_sigreturn, %eax
-  syscall
-END(__rt_sigreturn)
+// This function must have exactly this instruction sequence for gdb and libunwind.
+ENTRY_PRIVATE(__restore_rt)
+  mov r7, #__NR_rt_sigreturn
+  swi #0
+END(__restore_rt)

@@ -62,6 +62,11 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
 
   // Try the VDSO if that didn't work.
   ElfW(Ehdr)* ehdr_vdso = reinterpret_cast<ElfW(Ehdr)*>(getauxval(AT_SYSINFO_EHDR));
+  if (ehdr_vdso == nullptr) {
+    // There is no VDSO, so there's nowhere left to look.
+    return rc;
+  }
+
   struct dl_phdr_info vdso_info;
   vdso_info.dlpi_addr = 0;
   vdso_info.dlpi_name = NULL;
