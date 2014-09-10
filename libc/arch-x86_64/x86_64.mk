@@ -30,7 +30,7 @@ libc_common_src_files_x86_64 += \
 libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/__bionic_clone.S \
     arch-x86_64/bionic/_exit_with_stack_teardown.S \
-    arch-x86_64/bionic/__rt_sigreturn.S \
+    arch-x86_64/bionic/__restore_rt.S \
     arch-x86_64/bionic/_setjmp.S \
     arch-x86_64/bionic/setjmp.S \
     arch-x86_64/bionic/__set_tls.c \
