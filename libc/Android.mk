@@ -145,6 +145,7 @@ libc_bionic_src_files := \
     bionic/pause.cpp \
     bionic/pipe.cpp \
     bionic/poll.cpp \
+    bionic/posix_fadvise.cpp \
     bionic/posix_fallocate.cpp \
     bionic/posix_timers.cpp \
     bionic/pthread_atfork.cpp \

@@ -167,6 +167,12 @@ void* mmap|mmap64(void*, size_t, int, int, int, off_t)  arm64,mips64,x86_64
 int fallocate64:fallocate(int, int, off64_t, off64_t) arm,mips,x86
 int fallocate|fallocate64(int, int, off_t, off_t) arm64,mips64,x86_64
 
+# posix_fadvise64 is awkward: arm has shuffled arguments,
+# the POSIX functions don't set errno, and no architecture has posix_fadvise.
+int __arm_fadvise64_64:arm_fadvise64_64(int, int, off64_t, off64_t) arm
+int __fadvise64:fadvise64_64(int, off64_t, off64_t, int) mips,x86
+int __fadvise64:fadvise64(int, off64_t, off64_t, int) arm64,mips64,x86_64
+
 int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
 int fstatfs64|fstatfs:fstatfs(int, struct statfs*)  arm64,mips64,x86_64
 int __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
