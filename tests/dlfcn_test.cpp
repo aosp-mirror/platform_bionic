@@ -89,8 +89,8 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
-// ifuncs are only supported on intel for now
-#if defined(__i386__) || defined(__x86_64__)
+// ifuncs are only supported on intel and arm64 for now
+#if defined (__aarch64__) || defined(__i386__) || defined(__x86_64__)
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
@@ -124,9 +124,13 @@ TEST(dlfcn, ifunc_ctor_call) {
   typedef const char* (*fn_ptr)();
 
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL) << dlerror();
-  fn_ptr is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called"));
-  ASSERT_TRUE(is_ctor_called != NULL) << dlerror();
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  fn_ptr is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_irelative"));
+  ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
+  ASSERT_STREQ("false", is_ctor_called());
+
+  is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_jump_slot"));
+  ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
