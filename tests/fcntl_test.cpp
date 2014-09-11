@@ -70,10 +70,32 @@ TEST(fcntl, creat_creat64) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+TEST(fcntl, posix_fadvise) {
+  TemporaryFile tf;
+  errno = 0;
+
+  EXPECT_EQ(EBADF, posix_fadvise(-1, 0, 0, POSIX_FADV_NORMAL));
+  EXPECT_EQ(0, errno);
+
+  EXPECT_EQ(EBADF, posix_fadvise64(-1, 0, 0, POSIX_FADV_NORMAL));
+  EXPECT_EQ(0, errno);
+
+  EXPECT_EQ(EINVAL, posix_fadvise(tf.fd, 0, 0, -1));
+  EXPECT_EQ(0, errno);
+
+  EXPECT_EQ(EINVAL, posix_fadvise64(tf.fd, 0, 0, -1));
+  EXPECT_EQ(0, errno);
+
+  EXPECT_EQ(0, posix_fadvise(tf.fd, 0, 0, POSIX_FADV_NORMAL));
+  EXPECT_EQ(0, posix_fadvise64(tf.fd, 0, 0, POSIX_FADV_NORMAL));
+}
+
 TEST(fcntl, fallocate_EINVAL) {
   TemporaryFile tf;
 
-#if defined(__BIONIC__)
+  // fallocate/fallocate64 set errno.
+  // posix_fallocate/posix_fallocate64 return an errno value.
+
   errno = 0;
   ASSERT_EQ(-1, fallocate(tf.fd, 0, 0, -1));
   ASSERT_EQ(EINVAL, errno);
@@ -81,7 +103,6 @@ TEST(fcntl, fallocate_EINVAL) {
   errno = 0;
   ASSERT_EQ(-1, fallocate64(tf.fd, 0, 0, -1));
   ASSERT_EQ(EINVAL, errno);
-#endif
 
   errno = 0;
   ASSERT_EQ(EINVAL, posix_fallocate(tf.fd, 0, -1));
