@@ -28,7 +28,6 @@
 
 #include "pthread_internal.h"
 #include "private/bionic_futex.h"
-#include "private/bionic_pthread.h"
 #include "private/kernel_sigset_t.h"
 
 #include <errno.h>
@@ -159,7 +158,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   sigevent se = *evp;
   se.sigev_signo = TIMER_SIGNAL;
   se.sigev_notify = SIGEV_THREAD_ID;
-  se.sigev_notify_thread_id = __pthread_gettid(timer->callback_thread);
+  se.sigev_notify_thread_id = pthread_gettid_np(timer->callback_thread);
   if (__timer_create(clock_id, &se, &timer->kernel_timer_id) == -1) {
     __timer_thread_stop(timer);
     return -1;
