@@ -29,7 +29,6 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_futex.h"
-#include "private/bionic_pthread.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
@@ -67,10 +66,6 @@ void _pthread_internal_add(pthread_internal_t* thread) {
 
 pthread_internal_t* __get_thread(void) {
   return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
-}
-
-pid_t __pthread_gettid(pthread_t t) {
-  return reinterpret_cast<pthread_internal_t*>(t)->tid;
 }
 
 // Initialize 'ts' with the difference between 'abstime' and the current time
