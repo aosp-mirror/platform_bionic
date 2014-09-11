@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "702b7bc3_8b574405",
+        "filename": "libc/arch-x86/include/machine/elf_machdep.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "weird. upstream still doesn\u0027t have this.",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50d597fe_5aedf569",
+        "filename": "libc/arch-x86_64/include/machine/elf_machdep.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "where did this comment come from?",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50d597fe_7af2b94a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "called\n\nresulting (or just result)",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50d597fe_fa05e97b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "we need \\n? we should probably fix the macros so we don\u0027t.",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30b3c3fb_dd9c9b8e",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "sort",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30b3c3fb_1d18d364",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "sort",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30b3c3fb_fd995f9b",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "a workaround",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "702b7bc3_6bd5b023",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "removes its\n\nAndroid\n\n.",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50d597fe_9a105db5",
+        "filename": "tests/libs/dlopen_testlib_ifunc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "explain the name?",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "702b7bc3_abb68810",
+        "filename": "tests/libs/dlopen_testlib_ifunc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-11T23:06:37Z",
+      "side": 1,
+      "message": "Call ... .\n\nifunc",
+      "revId": "b409640fee5fd8e9ab34699f51927532caf62598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
