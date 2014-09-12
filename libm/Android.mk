@@ -194,6 +194,7 @@ libm_ld_src_files = \
     upstream-freebsd/lib/msun/src/s_cbrtl.c \
     upstream-freebsd/lib/msun/src/s_ceill.c \
     upstream-freebsd/lib/msun/src/s_copysignl.c \
+    upstream-freebsd/lib/msun/src/e_coshl.c \
     upstream-freebsd/lib/msun/src/s_cosl.c \
     upstream-freebsd/lib/msun/src/s_fabsl.c \
     upstream-freebsd/lib/msun/src/s_floorl.c \
@@ -215,7 +216,9 @@ libm_ld_src_files = \
     upstream-freebsd/lib/msun/src/s_rintl.c \
     upstream-freebsd/lib/msun/src/s_roundl.c \
     upstream-freebsd/lib/msun/src/s_scalbnl.c \
+    upstream-freebsd/lib/msun/src/e_sinhl.c \
     upstream-freebsd/lib/msun/src/s_sinl.c \
+    upstream-freebsd/lib/msun/src/s_tanhl.c \
     upstream-freebsd/lib/msun/src/s_tanl.c \
     upstream-freebsd/lib/msun/src/s_truncl.c \
 
