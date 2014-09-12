@@ -41,20 +41,17 @@
 #include "wcio.h"
 #include "fileext.h"
 
-#if defined(__LP64__)
 /*
  * Android <= KitKat had getc/putc macros in <stdio.h> that referred
  * to __srget/__swbuf, so those symbols need to be public for LP32
  * but can be hidden for LP64.
  */
-__LIBC_HIDDEN__ int __srget(FILE*);
-__LIBC_HIDDEN__ int __swbuf(int, FILE*);
-__LIBC_HIDDEN__ int __srefill(FILE*);
-#else
-__LIBC_ABI_PUBLIC__ int __srget(FILE*);
-__LIBC_ABI_PUBLIC__ int __swbuf(int, FILE*);
-__LIBC_ABI_PUBLIC__ int __srefill(FILE*);
-#endif
+__LIBC64_HIDDEN__ int __srget(FILE*);
+__LIBC64_HIDDEN__ int __swbuf(int, FILE*);
+__LIBC64_HIDDEN__ int __srefill(FILE*);
+
+/* This was referenced by the apportable middleware for LP32. */
+__LIBC64_HIDDEN__ int __swsetup(FILE*);
 
 #pragma GCC visibility push(hidden)
 
@@ -70,7 +67,6 @@ void	_cleanup(void);
 void	__smakebuf(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
 int	_fwalk(int (*)(FILE *));
-int	__swsetup(FILE *);
 int	__sflags(const char *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
