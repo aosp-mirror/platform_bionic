@@ -16,6 +16,24 @@
       "revId": "8fb639ca9118a6522723d0bc09db59b432a803a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0c4cb62_b2c9c0f2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-12T22:18:14Z",
+      "side": 1,
+      "message": "i\u0027m joining so i know t_gettid_result is valid. POSIX doesn\u0027t let you pass NULL if you don\u0027t actually care about the result :-(",
+      "parentUuid": "30b3c3fb_eb343913",
+      "revId": "8fb639ca9118a6522723d0bc09db59b432a803a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
