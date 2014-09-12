@@ -224,6 +224,7 @@ libm_ld_src_files += \
     upstream-freebsd/lib/msun/ld128/k_cosl.c \
     upstream-freebsd/lib/msun/ld128/k_sinl.c \
     upstream-freebsd/lib/msun/ld128/k_tanl.c \
+    upstream-freebsd/lib/msun/ld128/s_erfl.c \
     upstream-freebsd/lib/msun/ld128/s_exp2l.c \
     upstream-freebsd/lib/msun/ld128/s_expl.c \
     upstream-freebsd/lib/msun/ld128/s_logl.c \
