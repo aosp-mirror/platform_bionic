@@ -5,7 +5,7 @@
 ENTRY(__fadvise64)
     .set noreorder
     .cpload t9
-    li v0, __NR_fadvise64_64
+    li v0, __NR_fadvise64
     syscall
     bnez a3, 1f
     move a0, v0
