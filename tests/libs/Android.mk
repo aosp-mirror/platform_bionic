@@ -295,7 +295,7 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # Library used by ifunc tests
 # -----------------------------------------------------------------------------
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm64 x86 x86_64))
     libtest_ifunc_src_files := \
         dlopen_testlib_ifunc.c
 
@@ -303,6 +303,14 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
     module := libtest_ifunc
     build_type := target
     build_target := SHARED_LIBRARY
+
+    ifeq ($(TARGET_ARCH),arm64)
+      libtest_ifunc_multilib := 64
+      # TODO: This is a workaround - remove it once gcc
+      # removes its Android ifunc checks
+      libtest_ifunc_cflags := -mglibc
+    endif
+
     include $(TEST_PATH)/Android.build.mk
 endif
 
