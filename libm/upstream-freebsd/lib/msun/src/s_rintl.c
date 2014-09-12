@@ -29,7 +29,6 @@ __FBSDID("$FreeBSD$");
 
 #include <float.h>
 #include <math.h>
-#include <stdint.h>
 
 #include "fpmath.h"
 
