@@ -16,6 +16,24 @@
       "revId": "535e1ce1a59c9f847c1112e05d4416e29388982c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0bed3c4_fc907df9",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-12T05:42:14Z",
+      "side": 1,
+      "message": "Done - apparently we did not have error message for RTLD_NOLOAD case... fixed.",
+      "parentUuid": "f0c4cb62_d5055c7c",
+      "revId": "535e1ce1a59c9f847c1112e05d4416e29388982c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
