@@ -369,7 +369,7 @@ exp2l(long double x)
 			    || u.xbits.manl != 0
 			    || (hx & 0x8000) == 0)
 				return (x + x);	/* x is NaN or +Inf */
-			else
+			else 
 				return (0.0);	/* x is -Inf */
 		}
 		if (x >= 16384)
