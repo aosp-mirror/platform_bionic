@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef SCOPE_GUARD_H
-#define SCOPE_GUARD_H
+#ifndef _SCOPE_GUARD_H
+#define _SCOPE_GUARD_H
+
+#include "private/bionic_macros.h"
 
 // TODO: include explicit std::move when it becomes available
 template<typename F>
@@ -40,14 +42,12 @@ class ScopeGuard {
   F f_;
   bool active_;
 
-  ScopeGuard() = delete;
-  ScopeGuard(const ScopeGuard&) = delete;
-  ScopeGuard& operator=(const ScopeGuard&) = delete;
+  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopeGuard);
 };
 
 template<typename T>
-ScopeGuard<T> create_scope_guard(T f) {
+ScopeGuard<T> make_scope_guard(T f) {
   return ScopeGuard<T>(f);
 }
 
-#endif  // SCOPE_GUARD_H
+#endif  // _SCOPE_GUARD_H

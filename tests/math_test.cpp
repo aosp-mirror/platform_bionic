@@ -762,7 +762,7 @@ TEST(math, erfcl) {
 }
 
 TEST(math, lrint) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
 
@@ -786,7 +786,7 @@ TEST(math, lrint) {
 }
 
 TEST(math, rint) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
 
@@ -816,7 +816,7 @@ TEST(math, rint) {
 }
 
 TEST(math, nearbyint) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
@@ -845,7 +845,7 @@ TEST(math, nearbyint) {
 }
 
 TEST(math, lround) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // lround ignores the rounding mode.
@@ -855,7 +855,7 @@ TEST(math, lround) {
 }
 
 TEST(math, llround) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // llround ignores the rounding mode.
@@ -952,7 +952,7 @@ TEST(math, fdiml) {
 }
 
 TEST(math, round) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_TOWARDZERO); // round ignores the rounding mode and always rounds away from zero.
@@ -965,7 +965,7 @@ TEST(math, round) {
 }
 
 TEST(math, roundf) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_TOWARDZERO); // roundf ignores the rounding mode and always rounds away from zero.
@@ -978,7 +978,7 @@ TEST(math, roundf) {
 }
 
 TEST(math, roundl) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_TOWARDZERO); // roundl ignores the rounding mode and always rounds away from zero.
@@ -991,7 +991,7 @@ TEST(math, roundl) {
 }
 
 TEST(math, trunc) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // trunc ignores the rounding mode and always rounds toward zero.
@@ -1004,7 +1004,7 @@ TEST(math, trunc) {
 }
 
 TEST(math, truncf) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // truncf ignores the rounding mode and always rounds toward zero.
@@ -1017,7 +1017,7 @@ TEST(math, truncf) {
 }
 
 TEST(math, truncl) {
-  auto guard = create_scope_guard([]() {
+  auto guard = make_scope_guard([]() {
     fesetenv(FE_DFL_ENV);
   });
   fesetround(FE_UPWARD); // truncl ignores the rounding mode and always rounds toward zero.
