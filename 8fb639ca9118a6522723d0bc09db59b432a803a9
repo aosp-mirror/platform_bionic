@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30b3c3fb_eb343913",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-12T22:10:10Z",
+      "side": 1,
+      "message": "Check join_result or just remove it?",
+      "revId": "8fb639ca9118a6522723d0bc09db59b432a803a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
