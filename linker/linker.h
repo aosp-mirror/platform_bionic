@@ -197,6 +197,8 @@ struct soinfo {
 #if !defined(__LP64__)
   bool has_text_relocations;
 #endif
+  // TODO: remove this flag, dynamic linker
+  // should not use it in any way.
   bool has_DT_SYMBOLIC;
 
   soinfo(const char* name, const struct stat* file_stat);
@@ -212,13 +214,13 @@ struct soinfo {
 
   void set_st_dev(dev_t st_dev);
   void set_st_ino(ino_t st_ino);
-  void set_has_ifuncs(bool ifunc);
   ino_t get_st_ino();
   dev_t get_st_dev();
-  bool get_has_ifuncs();
 
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
+
+  ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
   bool inline has_min_version(uint32_t min_version) {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
@@ -226,7 +228,6 @@ struct soinfo {
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
-  void resolve_ifunc_symbols();
 #if defined(USE_RELA)
   int Relocate(ElfW(Rela)* rela, unsigned count);
 #else
@@ -247,7 +248,6 @@ struct soinfo {
   soinfo_list_t parents;
 
   // version >= 1
-  bool has_ifuncs;
 };
 
 extern soinfo* get_libdl_info();

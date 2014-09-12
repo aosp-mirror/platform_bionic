@@ -470,32 +470,6 @@ soinfo::soinfo(const char* name, const struct stat* file_stat) {
   }
 }
 
-void soinfo::resolve_ifunc_symbols() {
-  if (!get_has_ifuncs()) {
-    return;
-  }
-
-  phdr_table_unprotect_segments(phdr, phnum, load_bias);
-
-  TRACE_TYPE(IFUNC, "CHECKING FOR IFUNCS AND PERFORMING SYMBOL UPDATES");
-
-  for (size_t i = 0; i < nchain; ++i) {
-    ElfW(Sym)* s = &symtab[i];
-    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-      // The address of the ifunc in the symbol table is the address of the
-      // function that chooses the function to which the ifunc will refer.
-      // In order to return the proper value, we run the choosing function
-      // in the linker and then return its result (minus the base offset).
-      TRACE_TYPE(IFUNC, "FOUND IFUNC");
-      ElfW(Addr) (*ifunc_ptr)();
-      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + base);
-      s->st_value = (ifunc_ptr() - base);
-      TRACE_TYPE(IFUNC, "NEW VALUE IS %p", (void*)s->st_value);
-    }
-  }
-  phdr_table_protect_segments(phdr, phnum, load_bias);
-}
-
 static unsigned elfhash(const char* _name) {
     const unsigned char* name = reinterpret_cast<const unsigned char*>(_name);
     unsigned h = 0, g;
@@ -1111,52 +1085,14 @@ void do_dlclose(soinfo* si) {
   protect_data(PROT_READ);
 }
 
-// ifuncs are only defined for x86
-#if defined(__i386__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count) {
-  for (size_t idx = 0; idx < count; ++idx, ++rel) {
-    ElfW(Sym)* s;
-    soinfo* lsi;
-    unsigned type = ELFW(R_TYPE)(rel->r_info);
-    unsigned sym = ELFW(R_SYM)(rel->r_info);
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + si->load_bias);
-    ElfW(Addr) sym_addr = 0;
-    const char* sym_name = nullptr;
-    sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi);
+static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
+  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
+  ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
+  ElfW(Addr) ifunc_addr = ifunc_resolver();
+  TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p", ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
 
-    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_386_JMP_SLOT) {
-      TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr));
-      ElfW(Addr) (*ifunc_ptr)();
-      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
-      *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_ptr();
-    }
-  }
+  return ifunc_addr;
 }
-#endif
-
-#if defined(__x86_64__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count) {
-  for (size_t idx = 0; idx < count; ++idx, ++rela) {
-    ElfW(Sym)* s;
-    soinfo* lsi;
-    unsigned type = ELFW(R_TYPE)(rela->r_info);
-    unsigned sym = ELFW(R_SYM)(rela->r_info);
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
-    ElfW(Addr) sym_addr = 0;
-    const char* sym_name = nullptr;
-    sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi);
-
-    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_X86_64_JUMP_SLOT) {
-      TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr + rela->r_addend));
-      ElfW(Addr) (*ifunc_ptr)();
-      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
-      *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_ptr();
-    }
-  }
-}
-#endif
 
 #if defined(USE_RELA)
 int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
@@ -1206,6 +1142,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
         case R_AARCH64_ABS32:
         case R_AARCH64_ABS16:
         case R_AARCH64_RELATIVE:
+        case R_AARCH64_IRELATIVE:
           /*
            * The sym_addr was initialized to be zero above, or the relocation
            * code below does not care about value of sym_addr.
@@ -1218,6 +1155,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
         case R_X86_64_32:
         case R_X86_64_64:
         case R_X86_64_RELATIVE:
+        case R_X86_64_IRELATIVE:
           // No need to do anything.
           break;
         case R_X86_64_PC32:
@@ -1230,7 +1168,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
         }
       } else {
         // We got a definition.
-        sym_addr = static_cast<ElfW(Addr)>(s->st_value + lsi->load_bias);
+        sym_addr = lsi->resolve_symbol_address(s);
       }
       count_relocation(kRelocSymbol);
     }
@@ -1342,6 +1280,13 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
         break;
 
+    case R_AARCH64_IRELATIVE:
+      count_relocation(kRelocRelative);
+      MARK(rela->r_offset);
+      TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
+      break;
+
     case R_AARCH64_COPY:
         /*
          * ET_EXEC is not supported so this should not happen.
@@ -1368,11 +1313,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
       MARK(rela->r_offset);
       TRACE_TYPE(RELO, "RELO JMP_SLOT %08zx <- %08zx %s", static_cast<size_t>(reloc),
                  static_cast<size_t>(sym_addr + rela->r_addend), sym_name);
-      if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-        set_has_ifuncs(true);
-      } else {
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
-      }
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
       break;
     case R_X86_64_GLOB_DAT:
       count_relocation(kRelocAbsolute);
@@ -1391,6 +1332,12 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
       TRACE_TYPE(RELO, "RELO RELATIVE %08zx <- +%08zx", static_cast<size_t>(reloc),
                  static_cast<size_t>(base));
       *reinterpret_cast<ElfW(Addr)*>(reloc) = base + rela->r_addend;
+      break;
+    case R_X86_64_IRELATIVE:
+      count_relocation(kRelocRelative);
+      MARK(rela->r_offset);
+      TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
+      *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
       break;
     case R_X86_64_32:
       count_relocation(kRelocRelative);
@@ -1481,6 +1428,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
                 case R_386_GLOB_DAT:
                 case R_386_32:
                 case R_386_RELATIVE:    /* Don't care. */
+                case R_386_IRELATIVE:
                     // sym_addr was initialized to be zero above or relocation
                     // code below does not care about value of sym_addr.
                     // No need to do anything.
@@ -1500,7 +1448,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
                 }
             } else {
                 // We got a definition.
-                sym_addr = static_cast<ElfW(Addr)>(s->st_value + lsi->load_bias);
+                sym_addr = lsi->resolve_symbol_address(s);
             }
             count_relocation(kRelocSymbol);
         }
@@ -1549,11 +1497,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
-            if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-              set_has_ifuncs(true);
-            } else {
-              *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
-            }
+            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
             break;
         case R_386_GLOB_DAT:
             count_relocation(kRelocAbsolute);
@@ -1614,6 +1558,14 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
                        reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
             *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
             break;
+#if defined(__i386__)
+        case R_386_IRELATIVE:
+          count_relocation(kRelocRelative);
+          MARK(rel->r_offset);
+          TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
+          break;
+#endif
 
         default:
             DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
@@ -1671,7 +1623,7 @@ static bool mips_relocate_got(soinfo* si) {
             // FIXME: is this sufficient?
             // For reference see NetBSD link loader
             // http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
-            *got = reinterpret_cast<ElfW(Addr)*>(lsi->load_bias + s->st_value);
+            *got = reinterpret_cast<ElfW(Addr)*>(lsi->resolve_symbol_address(s));
         }
     }
     return true;
@@ -1749,8 +1701,6 @@ void soinfo::CallConstructors() {
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
   CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
-
-  resolve_ifunc_symbols();
 }
 
 void soinfo::CallDestructors() {
@@ -1812,12 +1762,6 @@ void soinfo::set_st_ino(ino_t ino) {
   }
 }
 
-void soinfo::set_has_ifuncs(bool ifuncs) {
-  if (has_min_version(1)) {
-    has_ifuncs = ifuncs;
-  }
-}
-
 dev_t soinfo::get_st_dev() {
   if (has_min_version(0)) {
     return st_dev;
@@ -1832,14 +1776,6 @@ ino_t soinfo::get_st_ino() {
   }
 
   return 0;
-}
-
-bool soinfo::get_has_ifuncs() {
-  if (has_min_version(1)) {
-    return has_ifuncs;
-  }
-
-  return false;
 }
 
 // This is a return on get_children()/get_parents() if
@@ -1860,6 +1796,14 @@ soinfo::soinfo_list_t& soinfo::get_parents() {
   }
 
   return this->parents;
+}
+
+ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
+  if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+    return call_ifunc_resolver(s->st_value + load_bias);
+  }
+
+  return static_cast<ElfW(Addr)>(s->st_value + load_bias);
 }
 
 /* Force any of the closed stdin, stdout and stderr to be associated with
@@ -2168,44 +2112,32 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
 #endif
 
 #if defined(USE_RELA)
-    if (plt_rela != nullptr) {
-        DEBUG("[ relocating %s plt ]\n", name);
-        if (Relocate(plt_rela, plt_rela_count)) {
-            return false;
-        }
-    }
     if (rela != nullptr) {
-        DEBUG("[ relocating %s ]\n", name);
+        DEBUG("[ relocating %s ]", name);
         if (Relocate(rela, rela_count)) {
             return false;
         }
     }
-#else
-    if (plt_rel != nullptr) {
+    if (plt_rela != nullptr) {
         DEBUG("[ relocating %s plt ]", name);
-        if (Relocate(plt_rel, plt_rel_count)) {
+        if (Relocate(plt_rela, plt_rela_count)) {
             return false;
         }
     }
+#else
     if (rel != nullptr) {
         DEBUG("[ relocating %s ]", name);
         if (Relocate(rel, rel_count)) {
             return false;
         }
     }
-#endif
-
-    // if there are ifuncs, we need to do an additional relocation pass.
-    // they cannot be resolved until the rest of the relocations are done
-    // because we need to call the resolution function which may be waiting
-    // on relocations.
-    if(get_has_ifuncs()) {
-#if defined(__i386__)
-      soinfo_ifunc_relocate(this, plt_rel, plt_rel_count);
-#elif defined(__x86_64__)
-      soinfo_ifunc_relocate(this, plt_rela, plt_rela_count);
-#endif
+    if (plt_rel != nullptr) {
+        DEBUG("[ relocating %s plt ]", name);
+        if (Relocate(plt_rel, plt_rel_count)) {
+            return false;
+        }
     }
+#endif
 
 #if defined(__mips__)
     if (!mips_relocate_got(this)) {

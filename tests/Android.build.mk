@@ -37,6 +37,10 @@ LOCAL_CLANG := $($(module)_clang_$(build_type))
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
 
+ifneq ($($(module)_multilib),)
+    LOCAL_MULTILIB := $($(module)_multilib)
+endif
+
 LOCAL_CFLAGS := \
     $(common_cflags) \
     $($(module)_cflags) \

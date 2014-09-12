@@ -118,7 +118,7 @@ void* dlsym(void* handle, const char* symbol) {
     unsigned bind = ELF_ST_BIND(sym->st_info);
 
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
-      return reinterpret_cast<void*>(sym->st_value + found->load_bias);
+      return reinterpret_cast<void*>(found->resolve_symbol_address(sym));
     }
 
     __bionic_format_dlerror("symbol found but not global", symbol);
@@ -148,7 +148,7 @@ int dladdr(const void* addr, Dl_info* info) {
   ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
   if (sym != nullptr) {
     info->dli_sname = si->strtab + sym->st_name;
-    info->dli_saddr = reinterpret_cast<void*>(si->load_bias + sym->st_value);
+    info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));
   }
 
   return 1;
