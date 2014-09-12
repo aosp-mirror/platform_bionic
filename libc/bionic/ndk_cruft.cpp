@@ -320,4 +320,9 @@ extern "C" size_t dlmalloc_usable_size(void* ptr) {
   return malloc_usable_size(ptr);
 }
 
+// In L we added a public pthread_gettid_np, but some apps were using the private API.
+extern "C" pid_t __pthread_gettid(pthread_t t) {
+  return pthread_gettid_np(t);
+}
+
 #endif

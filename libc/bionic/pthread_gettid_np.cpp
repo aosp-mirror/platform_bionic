@@ -27,13 +27,7 @@
  */
 
 #include "pthread_internal.h"
-#include "private/bionic_pthread.h"
 
 pid_t pthread_gettid_np(pthread_t t) {
   return reinterpret_cast<pthread_internal_t*>(t)->tid;
-}
-
-// TODO: move callers over to pthread_gettid_np and remove this.
-pid_t __pthread_gettid(pthread_t t) {
-  return pthread_gettid_np(t);
 }
