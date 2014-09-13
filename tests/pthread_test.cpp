@@ -909,3 +909,29 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   EXPECT_EQ(stack_size, stack_size2);
   ASSERT_EQ(6666U, stack_size);
 }
+
+#if defined(__BIONIC__)
+static void* pthread_gettid_np_helper(void* arg) {
+  *reinterpret_cast<pid_t*>(arg) = gettid();
+  return NULL;
+}
+#endif
+
+TEST(pthread, pthread_gettid_np) {
+#if defined(__BIONIC__)
+  ASSERT_EQ(gettid(), pthread_gettid_np(pthread_self()));
+
+  pid_t t_gettid_result;
+  pthread_t t;
+  pthread_create(&t, NULL, pthread_gettid_np_helper, &t_gettid_result);
+
+  pid_t t_pthread_gettid_np_result = pthread_gettid_np(t);
+
+  void* join_result;
+  pthread_join(t, &join_result);
+
+  ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}
