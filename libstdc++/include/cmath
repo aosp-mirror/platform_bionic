@@ -31,7 +31,7 @@
 #define BIONIC_LIBSTDCPP_INCLUDE_CMATH__
 
 /*
- * Standard C++ Library wrapper around the C time.h header file.
+ * Standard C++ Library wrapper around the C math.h header file.
  */
 
 #include <cstddef>
