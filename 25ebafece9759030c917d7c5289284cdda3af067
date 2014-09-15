@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "709e1b6e_e82b456a",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-15T21:29:44Z",
+      "side": 1,
+      "message": "I was considering doing the same, our current dlsym implementation should work fine - the only problem is with soinfo_unload.",
+      "parentUuid": "90b46fdf_c1b831c8",
+      "revId": "25ebafece9759030c917d7c5289284cdda3af067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9099cf85_194c6c54",
         "filename": "tests/libs/Android.mk",
         "patchSetId": 1
@@ -36,6 +54,41 @@
     },
     {
       "key": {
+        "uuid": "d06fc739_edcd1df2",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-15T21:29:44Z",
+      "side": 1,
+      "message": "yep, maybe something like include \u0027Android.build.testlib.mk\u0027 ?",
+      "parentUuid": "9099cf85_194c6c54",
+      "revId": "25ebafece9759030c917d7c5289284cdda3af067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06fc739_8d9f49da",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-15T21:29:44Z",
+      "side": 1,
+      "message": "... except in some cases - like this",
+      "revId": "25ebafece9759030c917d7c5289284cdda3af067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "507cb7f0_8ee57fb3",
         "filename": "tests/libs/dlopen_testlib_simple.cpp",
         "patchSetId": 1
@@ -47,6 +100,24 @@
       "writtenOn": "2014-09-15T21:24:05Z",
       "side": 1,
       "message": "|sort",
+      "revId": "25ebafece9759030c917d7c5289284cdda3af067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06fc739_eda6fd31",
+        "filename": "tests/libs/dlopen_testlib_simple.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-15T21:29:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "507cb7f0_8ee57fb3",
       "revId": "25ebafece9759030c917d7c5289284cdda3af067",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
