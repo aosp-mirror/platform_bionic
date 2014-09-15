@@ -188,14 +188,14 @@ TEST(dlfcn, dlopen_check_order) {
   // get_answer2() is defined in (b, d)
   void* sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
   ASSERT_TRUE(sym == nullptr);
-  void* handle = dlopen("libtest_check_order.so", RTLD_NOW);
+  void* handle = dlopen("libtest_check_order.so", RTLD_NOW | RTLD_GLOBAL);
   ASSERT_TRUE(handle != nullptr);
   typedef int (*fn_t) (void);
   fn_t fn, fn2;
   fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer"));
-  ASSERT_TRUE(fn != NULL);
+  ASSERT_TRUE(fn != NULL) << dlerror();
   fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer2"));
-  ASSERT_TRUE(fn2 != NULL);
+  ASSERT_TRUE(fn2 != NULL) << dlerror();
 
   ASSERT_EQ(42, fn());
   ASSERT_EQ(43, fn2());
@@ -207,6 +207,7 @@ TEST(dlfcn, dlopen_check_order) {
 // libtest_with_dependency_loop_a.so
 TEST(dlfcn, dlopen_check_loop) {
   void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
+#if defined(__BIONIC__)
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
   // This symbol should never be exposed
@@ -220,6 +221,10 @@ TEST(dlfcn, dlopen_check_loop) {
   handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#else // glibc allows recursive links
+  ASSERT_TRUE(handle != nullptr);
+  dlclose(handle);
+#endif
 }
 
 TEST(dlfcn, dlopen_failure) {
