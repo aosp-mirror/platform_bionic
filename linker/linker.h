@@ -197,9 +197,7 @@ struct soinfo {
 #if !defined(__LP64__)
   bool has_text_relocations;
 #endif
-  // TODO: remove this flag, dynamic linker
-  // should not use it in any way.
-  bool has_DT_SYMBOLIC;
+  bool unused4; // DO NOT USE, maintained for compatibility
 
   soinfo(const char* name, const struct stat* file_stat, int rtld_flags);
 
