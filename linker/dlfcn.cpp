@@ -244,7 +244,6 @@ soinfo* get_libdl_info() {
     __libdl_info.nchain = sizeof(g_libdl_chains)/sizeof(unsigned);
     __libdl_info.bucket = g_libdl_buckets;
     __libdl_info.chain = g_libdl_chains;
-    __libdl_info.has_DT_SYMBOLIC = true;
     __libdl_info.ref_count = 1;
   }
 

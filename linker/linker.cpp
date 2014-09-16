@@ -486,117 +486,65 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
   ElfW(Sym)* s = nullptr;
 
   if (somain != nullptr) {
-    /*
-     * Local scope is executable scope. Just start looking into it right away
-     * for the shortcut.
-     */
+    DEBUG("%s: looking up %s in executable %s",
+          si->name, name, somain->name);
 
-    if (si == somain) {
-      s = soinfo_elf_lookup(si, elf_hash, name);
-      if (s != nullptr) {
-        *lsi = si;
-        goto done;
-      }
+    // 1. Look for it in the main executable
+    s = soinfo_elf_lookup(somain, elf_hash, name);
+    if (s != nullptr) {
+      *lsi = somain;
+    }
 
-      /* Next, look for it in the preloads list */
+    // 2. Look for it in the ld_preloads
+    if (s == nullptr) {
       for (int i = 0; g_ld_preloads[i] != NULL; i++) {
         s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-        if (s != NULL) {
-          *lsi = g_ld_preloads[i];
-          goto done;
-        }
-      }
-    } else {
-      /* Order of symbol lookup is controlled by DT_SYMBOLIC flag */
-
-      /*
-       * If this object was built with symbolic relocations disabled, the
-       * first place to look to resolve external references is the main
-       * executable.
-       */
-
-      if (!si->has_DT_SYMBOLIC) {
-        DEBUG("%s: looking up %s in executable %s",
-              si->name, name, somain->name);
-        s = soinfo_elf_lookup(somain, elf_hash, name);
         if (s != nullptr) {
-          *lsi = somain;
-          goto done;
-        }
-
-        /* Next, look for it in the preloads list */
-        for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-          s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-          if (s != NULL) {
-            *lsi = g_ld_preloads[i];
-            goto done;
-          }
+          *lsi = g_ld_preloads[i];
+          break;
         }
       }
+    }
 
-      /* Look for symbols in the local scope (the object who is
-       * searching). This happens with C++ templates on x86 for some
-       * reason.
-       *
-       * Notes on weak symbols:
-       * The ELF specs are ambiguous about treatment of weak definitions in
-       * dynamic linking.  Some systems return the first definition found
-       * and some the first non-weak definition.   This is system dependent.
-       * Here we return the first definition found for simplicity.  */
+    /* Look for symbols in the local scope (the object who is
+     * searching). This happens with C++ templates on x86 for some
+     * reason.
+     *
+     * Notes on weak symbols:
+     * The ELF specs are ambiguous about treatment of weak definitions in
+     * dynamic linking.  Some systems return the first definition found
+     * and some the first non-weak definition.   This is system dependent.
+     * Here we return the first definition found for simplicity.  */
 
+    if (s == nullptr) {
       s = soinfo_elf_lookup(si, elf_hash, name);
       if (s != nullptr) {
         *lsi = si;
-        goto done;
-      }
-
-      /*
-       * If this object was built with -Bsymbolic and symbol is not found
-       * in the local scope, try to find the symbol in the main executable.
-       */
-
-      if (si->has_DT_SYMBOLIC) {
-        DEBUG("%s: looking up %s in executable %s after local scope",
-              si->name, name, somain->name);
-        s = soinfo_elf_lookup(somain, elf_hash, name);
-        if (s != nullptr) {
-          *lsi = somain;
-          goto done;
-        }
-
-        /* Next, look for it in the preloads list */
-        for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-          s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-          if (s != NULL) {
-            *lsi = g_ld_preloads[i];
-            goto done;
-          }
-        }
       }
     }
   }
 
-  si->get_children().visit([&](soinfo* child) {
-    DEBUG("%s: looking up %s in %s", si->name, name, child->name);
-    s = soinfo_elf_lookup(child, elf_hash, name);
-    if (s != nullptr) {
-      *lsi = child;
-      return false;
-    }
-    return true;
-  });
+  if (s == nullptr) {
+    si->get_children().visit([&](soinfo* child) {
+      DEBUG("%s: looking up %s in %s", si->name, name, child->name);
+      s = soinfo_elf_lookup(child, elf_hash, name);
+      if (s != nullptr) {
+        *lsi = child;
+        return false;
+      }
+      return true;
+    });
+  }
 
-done:
   if (s != nullptr) {
     TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
                "found in %s, base = %p, load bias = %p",
                si->name, name, reinterpret_cast<void*>(s->st_value),
                (*lsi)->name, reinterpret_cast<void*>((*lsi)->base),
                reinterpret_cast<void*>((*lsi)->load_bias));
-    return s;
   }
 
-  return nullptr;
+  return s;
 }
 
 // Each size has it's own allocator.
@@ -2026,7 +1974,7 @@ bool soinfo::PrelinkImage() {
         break;
 #endif
       case DT_SYMBOLIC:
-        has_DT_SYMBOLIC = true;
+        // ignored
         break;
       case DT_NEEDED:
         ++needed_count;
@@ -2039,9 +1987,6 @@ bool soinfo::PrelinkImage() {
 #else
           has_text_relocations = true;
 #endif
-        }
-        if (d->d_un.d_val & DF_SYMBOLIC) {
-          has_DT_SYMBOLIC = true;
         }
         break;
 #if defined(__mips__)
@@ -2076,8 +2021,10 @@ bool soinfo::PrelinkImage() {
 #endif
 
       default:
-        DEBUG("Unused DT entry: type %p arg %p",
-        reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+        if (!relocating_linker) {
+          DL_WARN("%s: unused DT entry: type %p arg %p", name,
+              reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+        }
         break;
     }
   }
