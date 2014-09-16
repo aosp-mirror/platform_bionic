@@ -16,6 +16,24 @@
       "revId": "828db1a902307efb5778ceabb72d9d91c752479b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0b1730f_449d8486",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-16T17:51:36Z",
+      "side": 1,
+      "message": "You\u0027re right, can probably prune this back. This just preserves the old build system behavior. Will upload another revision.",
+      "parentUuid": "b0b1730f_e4ca5087",
+      "revId": "828db1a902307efb5778ceabb72d9d91c752479b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
