@@ -202,6 +202,42 @@ TEST(dlfcn, dlopen_check_order) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlopen_check_rtld_local) {
+  void* sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym == nullptr);
+
+  // implicit RTLD_LOCAL
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_testlib_simple_func", dlerror());
+  sym = dlsym(handle, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym != nullptr);
+  ASSERT_TRUE(reinterpret_cast<bool (*)(void)>(sym)());
+  dlclose(handle);
+
+  // explicit RTLD_LOCAL
+  handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_LOCAL);
+  sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_testlib_simple_func", dlerror());
+  sym = dlsym(handle, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym != nullptr);
+  ASSERT_TRUE(reinterpret_cast<bool (*)(void)>(sym)());
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_check_rtld_global) {
+  void* sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym == nullptr);
+
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_GLOBAL);
+  sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym != nullptr) << dlerror();
+  ASSERT_TRUE(reinterpret_cast<bool (*)(void)>(sym)());
+  dlclose(handle);
+}
+
 // libtest_with_dependency_loop.so -> libtest_with_dependency_loop_a.so ->
 // libtest_with_dependency_loop_b.so -> libtest_with_dependency_loop_c.so ->
 // libtest_with_dependency_loop_a.so

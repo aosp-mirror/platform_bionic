@@ -201,7 +201,7 @@ struct soinfo {
   // should not use it in any way.
   bool has_DT_SYMBOLIC;
 
-  soinfo(const char* name, const struct stat* file_stat);
+  soinfo(const char* name, const struct stat* file_stat, int rtld_flags);
 
   void CallConstructors();
   void CallDestructors();
@@ -216,6 +216,8 @@ struct soinfo {
   void set_st_ino(ino_t st_ino);
   ino_t get_st_ino();
   dev_t get_st_dev();
+
+  int get_rtld_flags();
 
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
@@ -248,6 +250,7 @@ struct soinfo {
   soinfo_list_t parents;
 
   // version >= 1
+  int rtld_flags;
 };
 
 extern soinfo* get_libdl_info();
