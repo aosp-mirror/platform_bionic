@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90c0ef69_89d72583",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "Unnecessary since this is C++.",
+      "range": {
+        "startLine": 345,
+        "startChar": 17,
+        "endLine": 345,
+        "endChar": 21
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_29b5b963",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "This should be named something like reloc_func1.",
+      "range": {
+        "startLine": 345,
+        "startChar": 11,
+        "endLine": 345,
+        "endChar": 16
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0b1730f_8f0f25c4",
+        "filename": "tests/grp_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "This test seems brittle since it relies on special numbers which might be set on any random system. I don\u0027t know if this test adds much value, and it might be worth nuking.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 41
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_e990e1cf",
+        "filename": "tests/libs/lib_relocs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "Not needed, C++ code, same as below.",
+      "range": {
+        "startLine": 12,
+        "startChar": 11,
+        "endLine": 12,
+        "endChar": 15
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0b427fe_8b883965",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "How is this testing the hints mechanism? If the hints were not set, would you get a different value?",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0b427fe_4b923193",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "Split this into 4 checks:\n\nASSERT_EQ(..., 127);\nASSERT_EQ(..., 0);\n\nOtherwise, you can\u0027t see what the values of each actually returned.",
+      "range": {
+        "startLine": 81,
+        "startChar": 2,
+        "endLine": 82,
+        "endChar": 49
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0b1730f_ef8349b3",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "Does this test work properly when run on a user debug build? It also seems to assume something about the number of cpus. It\u0027s possible that you will be running on a system with only one core active.",
+      "range": {
+        "startLine": 384,
+        "startChar": 12,
+        "endLine": 384,
+        "endChar": 21
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0b427fe_0b22e9c5",
+        "filename": "tests/sys_conf_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "This whole macro would probably be better written as a function something like:\n\nvoid verifySysconf(int name, long* ret) {\n  errno \u003d 0;\n  *ret \u003d sysconf(name);\n  ASSERT_NE(*ret, -1);\n  ASSERT_EQ(errno, 0);\n}\n\nThe called something like:\n\nlong ret;\nverifySysconf(_SC_ARG_MAX);\nASSERT_GT(ret, 0);",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 10
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_f42678d7",
+        "filename": "tests/sys_conf_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "Why keep these if they are commented out. They should either be deleted or a comment describing why they aren\u0027t used.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 34
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_74294872",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-16T20:00:08Z",
+      "side": 1,
+      "message": "This test doesn\u0027t seem very useful, it simply verifies that the hostname call doesn\u0027t crash. It would probably be better to call uname and then gethostname and verify that the names are the same.\n\nIt would also be nice to add the error case where you pass in a too small name size and verify that errno is set properly. Looking at the bionic code, I think that we might be setting the wrong errno.",
+      "range": {
+        "startLine": 468,
+        "startChar": 13,
+        "endLine": 468,
+        "endChar": 24
+      },
+      "revId": "c5271440fdf3a1139f18985fcb907a6281b25c21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
