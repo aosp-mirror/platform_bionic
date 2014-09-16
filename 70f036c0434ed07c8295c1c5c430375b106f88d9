@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90c0ef69_21414d25",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2021,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-16T21:41:24Z",
+      "side": 1,
+      "message": "...especially because it feels like this should probably be a warning. don\u0027t we want to know if we\u0027re loading ELF files with DT entries we don\u0027t understand?",
+      "revId": "70f036c0434ed07c8295c1c5c430375b106f88d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_614f454b",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-16T21:41:24Z",
+      "side": 1,
+      "message": "crap. our first LP64 turd in struct soinfo :-(",
+      "revId": "70f036c0434ed07c8295c1c5c430375b106f88d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

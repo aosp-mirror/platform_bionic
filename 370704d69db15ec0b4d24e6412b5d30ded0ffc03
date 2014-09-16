@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0b427fe_96897ca2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2028,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-16T21:41:24Z",
+      "side": 0,
+      "message": "leave the case in so we ignore DT_SYMBOLIC rather than fall through to the default case?",
+      "revId": "370704d69db15ec0b4d24e6412b5d30ded0ffc03",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
