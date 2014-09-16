@@ -232,7 +232,7 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
-static soinfo __libdl_info("libdl.so", nullptr);
+static soinfo __libdl_info("libdl.so", nullptr, RTLD_GLOBAL);
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
