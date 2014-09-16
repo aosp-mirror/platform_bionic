@@ -197,7 +197,7 @@ struct soinfo {
 #if !defined(__LP64__)
   bool has_text_relocations;
 #endif
-  bool has_DT_SYMBOLIC;
+  bool unused4; // DO NOT USE, maintained for compatibility
 
   soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags);
 
