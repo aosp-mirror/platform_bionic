@@ -310,6 +310,7 @@ ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x
 
 bionic-unit-tests-glibc_src_files := \
     atexit_test.cpp \
+    dlfcn_test.cpp \
 
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
@@ -317,8 +318,12 @@ bionic-unit-tests-glibc_whole_static_libraries := \
 bionic-unit-tests-glibc_ldlibs := \
     -lrt -ldl \
 
+bionic-unit-tests-glibc_c_includes := \
+    bionic/libc \
+
 bionic-unit-tests-glibc_cflags := $(test_cflags)
 bionic-unit-tests-glibc_cppflags := $(test_cppflags)
+bionic-unit-tests-glibc_ldflags := -Wl,--export-dynamic
 
 module := bionic-unit-tests-glibc
 module_tag := optional
