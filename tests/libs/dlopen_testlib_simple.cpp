@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
 #include <stdlib.h>
 
 uint32_t dlopen_testlib_taxicab_number = 1729;
