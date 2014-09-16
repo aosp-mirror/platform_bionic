@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0b1730f_e4ca5087",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-16T17:50:24Z",
+      "side": 1,
+      "message": "which libraries need this? do we really want this in the common includes that all the libraries get?",
+      "revId": "828db1a902307efb5778ceabb72d9d91c752479b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
