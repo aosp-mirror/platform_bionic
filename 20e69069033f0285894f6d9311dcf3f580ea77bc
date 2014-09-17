@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b0ca538f_b60a4685",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-17T01:20:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90c0ef69_b052454a",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90c0ef69_f0679d29",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b0ca538f_f610beb8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1939,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-17T01:20:39Z",
+      "side": 1,
+      "message": "This is number of relative relocations... added comment.",
+      "parentUuid": "90c0ef69_f0679d29",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "300d83bc_8d3f259f",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-09-17T01:06:45Z",
       "side": 1,
       "message": "backwards?",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0ca538f_960f4a95",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-17T01:20:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "300d83bc_8d3f259f",
       "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
