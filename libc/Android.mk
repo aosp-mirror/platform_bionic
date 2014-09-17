@@ -712,6 +712,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_freebsd_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -780,6 +781,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_openbsd_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
