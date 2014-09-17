@@ -865,8 +865,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_cxa
-# GCC refuses to hide new/delete
-LOCAL_CLANG := true
+LOCAL_CLANG := true # GCC refuses to hide new/delete
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
