@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "300d83bc_ed9581ef",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1965,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T01:48:43Z",
+      "side": 1,
+      "message": "so you always get the SZ, but if you also get the COUNT then you know they\u0027re sequential? (though i don\u0027t understand you can really benefit much from that knowledge since you need to go through all the relocations anyway, no?) (plus doesn\u0027t that seem like weird naming? the fact that SZ tells you how many bytes to my mind implies that they\u0027re sequential. otherwise it\u0027s really weird to me that they\u0027d say \"there are 1234 bytes of relative relocations but they\u0027re scattered about\".)",
+      "revId": "4a6e9a835a84aca965f0170f604381dae7f130be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
