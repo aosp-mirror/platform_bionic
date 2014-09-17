@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90c0ef69_b052454a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T01:06:45Z",
+      "side": 1,
+      "message": "why backwards?",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_f0679d29",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1939,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T01:06:45Z",
+      "side": 1,
+      "message": "what\u0027s the relationship between the COUNT and SZ values?",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "300d83bc_8d3f259f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T01:06:45Z",
+      "side": 1,
+      "message": "backwards?",
+      "revId": "20e69069033f0285894f6d9311dcf3f580ea77bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
