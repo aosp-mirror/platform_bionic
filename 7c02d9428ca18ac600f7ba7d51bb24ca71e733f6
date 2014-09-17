@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90c0ef69_2b75a6da",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T16:36:45Z",
+      "side": 1,
+      "message": "danalbert did the right thing when he added some netbsd source to one of the architecture-specific makefiles, but we didn\u0027t come back and clean up the rest.",
+      "revId": "7c02d9428ca18ac600f7ba7d51bb24ca71e733f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
