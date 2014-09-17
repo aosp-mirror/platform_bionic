@@ -2053,7 +2053,7 @@ bool soinfo::PrelinkImage() {
 
       default:
         if (!relocating_linker) {
-          DL_WARN("%s: unused DT entry: type %p arg %p", name,
+          DEBUG("%s: unused DT entry: type %p arg %p", name,
               reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
