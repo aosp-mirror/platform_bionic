@@ -1,8 +1,18 @@
-# arm64 specific configs
+# 64-bit arm.
 
-libc_common_src_files_arm64 := \
+#
+# Default implementations of functions that are commonly optimized.
+#
+
+libc_bionic_src_files_arm64 += \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/__strcat_chk.cpp \
     bionic/memrchr.c \
     bionic/strrchr.cpp \
+
+libc_freebsd_src_files_arm64 += \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -10,6 +20,8 @@ libc_common_src_files_arm64 := \
     upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
+
+libc_openbsd_src_files_arm64 += \
     upstream-openbsd/lib/libc/string/stpncpy.c \
     upstream-openbsd/lib/libc/string/strcat.c \
     upstream-openbsd/lib/libc/string/strlcat.c \
@@ -17,16 +29,11 @@ libc_common_src_files_arm64 := \
     upstream-openbsd/lib/libc/string/strncat.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
 
-# Fortify implementations of libc functions.
-libc_common_src_files_arm64 += \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
+#
+# Inherently architecture-specific code.
+#
 
-##########################################
-### CPU specific source files
-libc_bionic_src_files_arm64 := \
+libc_bionic_src_files_arm64 += \
     arch-arm64/bionic/__bionic_clone.S \
     arch-arm64/bionic/_exit_with_stack_teardown.S \
     arch-arm64/bionic/__restore_rt.S \
