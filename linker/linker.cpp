@@ -1893,7 +1893,7 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_SYMENT:
         if (d->d_un.d_val != sizeof(ElfW(Sym))) {
-          DL_ERR("invalid DT_SYMENT: %d", d->d_un.d_val);
+          DL_ERR("invalid DT_SYMENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
@@ -1948,7 +1948,7 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_RELAENT:
         if (d->d_un.d_val != sizeof(ElfW(Rela))) {
-          DL_ERR("invalid DT_RELAENT: %d", d->d_un.d_val);
+          DL_ERR("invalid DT_RELAENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
@@ -1970,7 +1970,7 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_RELENT:
         if (d->d_un.d_val != sizeof(ElfW(Rel))) {
-          DL_ERR("invalid DT_RELENT: %d", d->d_un.d_val);
+          DL_ERR("invalid DT_RELENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
