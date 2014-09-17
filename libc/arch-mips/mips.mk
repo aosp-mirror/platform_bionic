@@ -1,17 +1,32 @@
-# mips specific configs
+# 32-bit mips.
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-libc_common_src_files_mips := \
+#
+# Various kinds of LP32 cruft.
+#
+
+libc_bionic_src_files_mips += \
+    bionic/mmap.cpp \
+
+libc_common_src_files_mips += \
     bionic/legacy_32_bit_support.cpp \
     bionic/ndk_cruft.cpp \
     bionic/time64.c \
+
+libc_netbsd_src_files_mips += \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
+libc_openbsd_src_files_mips += \
     upstream-openbsd/lib/libc/stdio/putw.c \
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-libc_bionic_src_files_mips += \
-     bionic/mmap.cpp
+#
+# Default implementations of functions that are commonly optimized.
+#
 
-libc_common_src_files_mips += \
+libc_bionic_src_files_mips += \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/__strcat_chk.cpp \
     bionic/memchr.c \
     bionic/memcmp.c \
     bionic/memmove.c \
@@ -19,6 +34,8 @@ libc_common_src_files_mips += \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
+
+libc_freebsd_src_files_mips += \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -27,6 +44,8 @@ libc_common_src_files_mips += \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
+
+libc_openbsd_src_files_mips += \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
@@ -39,16 +58,10 @@ libc_common_src_files_mips += \
     upstream-openbsd/lib/libc/string/strncmp.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
 
-# Fortify implementations of libc functions.
-libc_common_src_files_mips += \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
+#
+# Inherently architecture-specific code.
+#
 
-
-##########################################
-### CPU specific source files
 libc_bionic_src_files_mips += \
     arch-mips/bionic/__bionic_clone.S \
     arch-mips/bionic/bzero.S \
@@ -69,13 +82,12 @@ libc_bionic_src_files_mips += \
 else
 libc_bionic_src_files_mips += \
     bionic/memcpy.cpp \
-    bionic/memset.c
-libc_common_src_files_mips += \
-    upstream-openbsd/lib/libc/string/strlen.c
-endif
+    bionic/memset.c \
 
-libc_netbsd_src_files_mips := \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+libc_openbsd_src_files_mips += \
+    upstream-openbsd/lib/libc/string/strlen.c \
+
+endif
 
 libc_crt_target_cflags_mips := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
