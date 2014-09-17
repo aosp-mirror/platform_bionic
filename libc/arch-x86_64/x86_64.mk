@@ -1,11 +1,21 @@
-# x86_64 specific configs
+# 64-bit x86.
 
-libc_common_src_files_x86_64 := \
+#
+# Default implementations of functions that are commonly optimized.
+#
+
+libc_bionic_src_files_x86_64 += \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/__strcat_chk.cpp \
     bionic/memchr.c \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
+
+libc_freebsd_src_files_x86_64 += \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -14,20 +24,16 @@ libc_common_src_files_x86_64 := \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
+
+libc_openbsd_src_files_x86_64 += \
     upstream-openbsd/lib/libc/string/strlcat.c \
     upstream-openbsd/lib/libc/string/strlcpy.c \
 
-# Fortify implementations of libc functions.
-libc_common_src_files_x86_64 += \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
+#
+# Inherently architecture-specific code.
+#
 
-
-##########################################
-### CPU specific source files
-libc_bionic_src_files_x86_64 := \
+libc_bionic_src_files_x86_64 += \
     arch-x86_64/bionic/__bionic_clone.S \
     arch-x86_64/bionic/_exit_with_stack_teardown.S \
     arch-x86_64/bionic/__restore_rt.S \
@@ -37,6 +43,10 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/sigsetjmp.S \
     arch-x86_64/bionic/syscall.S \
     arch-x86_64/bionic/vfork.S \
+
+#
+# Optimized memory/string functions.
+#
 
 libc_bionic_src_files_x86_64 += \
     arch-x86_64/string/sse2-memcpy-slm.S \
@@ -55,15 +65,15 @@ libc_bionic_src_files_x86_64 += \
 
 libc_crt_target_cflags_x86_64 += \
     -m64 \
-    -I$(LOCAL_PATH)/arch-x86_64/include
+    -I$(LOCAL_PATH)/arch-x86_64/include \
 
-libc_crt_target_ldflags_x86_64 := -melf_x86_64
+libc_crt_target_ldflags_x86_64 := -melf_x86_64 \
 
 libc_crt_target_crtbegin_file_x86_64 := \
-    $(LOCAL_PATH)/arch-common/bionic/crtbegin.c
+    $(LOCAL_PATH)/arch-common/bionic/crtbegin.c \
 
 libc_crt_target_crtbegin_so_file_x86_64 := \
-    $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
+    $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c \
 
 libc_crt_target_so_cflags_x86_64 := \
-    -fPIC
+    -fPIC \

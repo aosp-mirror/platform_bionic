@@ -1,27 +1,40 @@
-# x86 specific configs
+# 32-bit x86.
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-libc_common_src_files_x86 := \
+#
+# Various kinds of LP32 cruft.
+#
+
+libc_bionic_src_files_x86 += \
+    bionic/mmap.cpp \
+
+libc_common_src_files_x86 += \
     bionic/legacy_32_bit_support.cpp \
     bionic/ndk_cruft.cpp \
     bionic/time64.c \
+
+libc_netbsd_src_files_x86 += \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
+libc_openbsd_src_files_x86 += \
     upstream-openbsd/lib/libc/stdio/putw.c \
 
-# Fortify implementations of libc functions.
+#
+# Default implementations of functions that are commonly optimized.
+#
+
 libc_common_src_files_x86 += \
     bionic/__memcpy_chk.cpp \
     bionic/__memset_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/__strcat_chk.cpp \
+
+libc_freebsd_src_files_x86 += \
     upstream-freebsd/lib/libc/string/wmemmove.c \
 
+#
+# Inherently architecture-specific functions.
+#
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-libc_bionic_src_files_x86 := \
-    bionic/mmap.cpp
-
-##########################################
-### CPU specific source files
 libc_bionic_src_files_x86 += \
     arch-x86/bionic/__bionic_clone.S \
     arch-x86/bionic/_exit_with_stack_teardown.S \
@@ -41,9 +54,6 @@ ifeq ($(wildcard $(arch_variant_mk)),)
 endif
 include $(arch_variant_mk)
 libc_common_additional_dependencies += $(arch_variant_mk)
-
-libc_netbsd_src_files_x86 := \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
 
 arch_variant_mk :=
 
