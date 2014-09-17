@@ -1,22 +1,35 @@
-# arm specific configs
+# 32-bit arm.
 
-# These are used by the 32-bit targets, but not the 64-bit ones.
-libc_common_src_files_arm := \
+#
+# Various kinds of LP32 cruft.
+#
+
+libc_bionic_src_files_arm += \
+    bionic/mmap.cpp \
+
+libc_common_src_files_arm += \
     bionic/legacy_32_bit_support.cpp \
     bionic/ndk_cruft.cpp \
     bionic/time64.c \
+
+libc_netbsd_src_files_arm += \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
+libc_openbsd_src_files_arm += \
     upstream-openbsd/lib/libc/stdio/putw.c \
 
-# These are shared by all the 32-bit targets, but not the 64-bit ones.
-libc_bionic_src_files_arm := \
-    bionic/mmap.cpp
+#
+# Default implementations of functions that are commonly optimized.
+#
 
-libc_common_src_files_arm += \
+libc_bionic_src_files_arm += \
     bionic/memchr.c \
     bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
+
+libc_freebsd_src_files_arm += \
     upstream-freebsd/lib/libc/string/wcscat.c \
     upstream-freebsd/lib/libc/string/wcschr.c \
     upstream-freebsd/lib/libc/string/wcscmp.c \
@@ -25,6 +38,8 @@ libc_common_src_files_arm += \
     upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
+
+libc_openbsd_src_files_arm += \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
@@ -34,18 +49,10 @@ libc_common_src_files_arm += \
     upstream-openbsd/lib/libc/string/strncmp.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
 
-# The C++ fortify function implementations for which there is an
-# arm assembler version.
 #
-# Fortify implementations of libc functions.
-# libc_common_src_files_arm +=
-#    bionic/__memcpy_chk.cpp \
-#    bionic/__memset_chk.cpp \
-#    bionic/__strcpy_chk.cpp \
-#    bionic/__strcat_chk.cpp \
+# Inherently architecture-specific code.
+#
 
-##########################################
-### CPU specific source files
 libc_bionic_src_files_arm += \
     arch-arm/bionic/abort_arm.S \
     arch-arm/bionic/atomics_arm.c \
@@ -61,9 +68,6 @@ libc_bionic_src_files_arm += \
 
 libc_arch_static_src_files_arm := arch-arm/bionic/exidx_static.c
 libc_arch_dynamic_src_files_arm := arch-arm/bionic/exidx_dynamic.c
-
-libc_netbsd_src_files_arm := \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
 
 ## CPU variant specific source files
 ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
