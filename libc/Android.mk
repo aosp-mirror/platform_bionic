@@ -89,6 +89,7 @@ libc_bionic_src_files := \
     bionic/access.cpp \
     bionic/assert.cpp \
     bionic/atof.cpp \
+    bionic/bionic_systrace.cpp \
     bionic/bionic_time_conversions.cpp \
     bionic/brk.cpp \
     bionic/c16rtomb.cpp \
