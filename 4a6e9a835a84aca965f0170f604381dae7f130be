@@ -16,6 +16,24 @@
       "revId": "4a6e9a835a84aca965f0170f604381dae7f130be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90c0ef69_66b8735c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1965,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-17T04:24:51Z",
+      "side": 1,
+      "message": "naming is confusing... the difference between sz/ent and count is that the count is for *_RELATIVE relocation subset, it does not count the other kind (JUMP_SLOT for example). In theory we can do special cycle without checking the relocation type for next COUNT-1 once we encountered first _RELATIVE (?)...",
+      "parentUuid": "300d83bc_ed9581ef",
+      "revId": "4a6e9a835a84aca965f0170f604381dae7f130be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
