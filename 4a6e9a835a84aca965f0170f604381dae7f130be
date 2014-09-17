@@ -34,6 +34,24 @@
       "revId": "4a6e9a835a84aca965f0170f604381dae7f130be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "300d83bc_f09556ef",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1965,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-17T04:55:55Z",
+      "side": 1,
+      "message": "weird. it\u0027s hard to believe this was useful even back on 1992\u0027s hardware.",
+      "parentUuid": "90c0ef69_66b8735c",
+      "revId": "4a6e9a835a84aca965f0170f604381dae7f130be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
