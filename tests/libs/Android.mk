@@ -308,3 +308,5 @@ libtest_dlsym_weak_func_src_files := \
 
 module := libtest_dlsym_weak_func
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.testlib.mk $(TEST_PATH)/Android.build.mk
