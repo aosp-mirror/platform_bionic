@@ -390,5 +390,7 @@ endif
 
 endif # linux-x86
 
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.mk
+
 include $(call first-makefiles-under,$(LOCAL_PATH))
 endif # !BUILD_TINY_ANDROID
