@@ -1859,6 +1859,10 @@ bool soinfo::PrelinkImage() {
     DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p",
           d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
     switch (d->d_tag) {
+      case DT_SONAME:
+        // TODO: glibc dynamic linker uses this name for
+        // initial library lookup; consider doing the same here.
+        break;
       case DT_HASH:
         nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         nchain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
@@ -1870,6 +1874,12 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_SYMTAB:
         symtab = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
+        break;
+      case DT_SYMENT:
+        if (d->d_un.d_val != sizeof(ElfW(Sym))) {
+          DL_ERR("invalid DT_SYMENT: %d", d->d_un.d_val);
+          return false;
+        }
         break;
 #if !defined(__LP64__)
       case DT_PLTREL:
@@ -1893,12 +1903,13 @@ bool soinfo::PrelinkImage() {
         plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
 #endif
         break;
-#if defined(__mips__)
       case DT_PLTGOT:
+#if defined(__mips__)
         // Used by mips and mips64.
         plt_got = reinterpret_cast<ElfW(Addr)**>(load_bias + d->d_un.d_ptr);
-        break;
 #endif
+        // Ignore for other platforms... (because RTLD_LAZY is not supported)
+        break;
       case DT_DEBUG:
         // Set the DT_DEBUG entry to the address of _r_debug for GDB
         // if the dynamic table is writable
@@ -1919,6 +1930,15 @@ bool soinfo::PrelinkImage() {
       case DT_RELASZ:
         rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
         break;
+      case DT_RELAENT:
+        if (d->d_un.d_val != sizeof(ElfW(Rela))) {
+          DL_ERR("invalid DT_RELAENT: %d", d->d_un.d_val);
+          return false;
+        }
+        break;
+      case DT_RELACOUNT:
+        // ignored (see DT_RELCOUNT comments for details)
+        break;
       case DT_REL:
         DL_ERR("unsupported DT_REL in \"%s\"", name);
         return false;
@@ -1931,6 +1951,19 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_RELSZ:
         rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
+        break;
+      case DT_RELENT:
+        if (d->d_un.d_val != sizeof(ElfW(Rel))) {
+          DL_ERR("invalid DT_RELENT: %d", d->d_un.d_val);
+          return false;
+        }
+        break;
+      case DT_RELCOUNT:
+        // "Indicates that all RELATIVE relocations have been concatenated together,
+        // and specifies the RELATIVE relocation count."
+        //
+        // TODO: Spec also mentions that this can be used to optimize relocation process;
+        // Not currently used by bionic linker - ignored.
         break;
       case DT_RELA:
         DL_ERR("unsupported DT_RELA in \"%s\"", name);
@@ -1991,8 +2024,6 @@ bool soinfo::PrelinkImage() {
         break;
 #if defined(__mips__)
       case DT_STRSZ:
-      case DT_SYMENT:
-      case DT_RELENT:
         break;
       case DT_MIPS_RLD_MAP:
         // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
