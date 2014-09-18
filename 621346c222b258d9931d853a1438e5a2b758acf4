@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3042e3dc_45e55eec",
+        "filename": "tests/stack_unwinding_test_impl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-18T00:24:21Z",
+      "side": 1,
+      "message": "this test is really testing \"does _Unwind_ForcedUnwind call cleanup functions as it unwinds through them?\", and the answer is \"no\" for all but x86. even x86-64 doesn\u0027t work. this feels like it should be a libgcc test rather than a bionic one, so i\u0027ll remove this test in a later patch. (now that we have simpler tests for \"can we unwind through a signal frame?\".)",
+      "revId": "621346c222b258d9931d853a1438e5a2b758acf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
