@@ -27,13 +27,13 @@ struct snd_compressed_buffer {
  __u32 fragment_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 fragments;
-};
+} __attribute__((packed, aligned(4)));
 struct snd_compr_params {
  struct snd_compressed_buffer buffer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct snd_codec codec;
  __u8 no_wake_mode;
-};
+} __attribute__((packed, aligned(4)));
 struct snd_compr_tstamp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 byte_offset;
@@ -42,12 +42,12 @@ struct snd_compr_tstamp {
  __u32 pcm_io_frames;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 sampling_rate;
-};
+} __attribute__((packed, aligned(4)));
 struct snd_compr_avail {
  __u64 avail;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct snd_compr_tstamp tstamp;
-};
+} __attribute__((packed, aligned(4)));
 enum snd_compr_direction {
  SND_COMPRESS_PLAYBACK = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -64,14 +64,14 @@ struct snd_compr_caps {
  __u32 max_fragments;
  __u32 codecs[MAX_NUM_CODECS];
  __u32 reserved[11];
-};
+} __attribute__((packed, aligned(4)));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_compr_codec_caps {
  __u32 codec;
  __u32 num_descriptors;
  struct snd_codec_desc descriptor[MAX_NUM_CODEC_DESCRIPTORS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
+} __attribute__((packed, aligned(4)));
 enum {
  SNDRV_COMPRESS_ENCODER_PADDING = 1,
  SNDRV_COMPRESS_ENCODER_DELAY = 2,
@@ -81,7 +81,7 @@ struct snd_compr_metadata {
  __u32 key;
  __u32 value[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
+} __attribute__((packed, aligned(4)));
 #define SNDRV_COMPRESS_IOCTL_VERSION _IOR('C', 0x00, int)
 #define SNDRV_COMPRESS_GET_CAPS _IOWR('C', 0x10, struct snd_compr_caps)
 #define SNDRV_COMPRESS_GET_CODEC_CAPS _IOWR('C', 0x11,  struct snd_compr_codec_caps)

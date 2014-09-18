@@ -68,6 +68,11 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_VMW_PARAM_MAX_MOB_MEMORY 9
 #define DRM_VMW_PARAM_MAX_MOB_SIZE 10
+enum drm_vmw_handle_type {
+ DRM_VMW_HANDLE_LEGACY = 0,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ DRM_VMW_HANDLE_PRIME = 1
+};
 struct drm_vmw_getparam_arg {
  uint64_t value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -92,7 +97,7 @@ struct drm_vmw_surface_create_req {
 struct drm_vmw_surface_arg {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  int32_t sid;
- uint32_t pad64;
+ enum drm_vmw_handle_type handle_type;
 };
 struct drm_vmw_size {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

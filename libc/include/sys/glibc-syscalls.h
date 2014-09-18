@@ -203,6 +203,7 @@
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
 #define SYS_renameat __NR_renameat
+#define SYS_renameat2 __NR_renameat2
 #define SYS_request_key __NR_request_key
 #define SYS_restart_syscall __NR_restart_syscall
 #define SYS_rmdir __NR_rmdir
@@ -533,6 +534,7 @@
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
 #define SYS_renameat __NR_renameat
+#define SYS_renameat2 __NR_renameat2
 #define SYS_request_key __NR_request_key
 #define SYS_restart_syscall __NR_restart_syscall
 #define SYS_rmdir __NR_rmdir
@@ -888,6 +890,7 @@
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
 #define SYS_renameat __NR_renameat
+#define SYS_renameat2 __NR_renameat2
 #define SYS_request_key __NR_request_key
 #define SYS_reserved177 __NR_reserved177
 #define SYS_reserved193 __NR_reserved193
@@ -1250,6 +1253,7 @@
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
 #define SYS_renameat __NR_renameat
+#define SYS_renameat2 __NR_renameat2
 #define SYS_request_key __NR_request_key
 #define SYS_restart_syscall __NR_restart_syscall
 #define SYS_rmdir __NR_rmdir
@@ -1580,6 +1584,7 @@
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
 #define SYS_renameat __NR_renameat
+#define SYS_renameat2 __NR_renameat2
 #define SYS_request_key __NR_request_key
 #define SYS_restart_syscall __NR_restart_syscall
 #define SYS_rmdir __NR_rmdir

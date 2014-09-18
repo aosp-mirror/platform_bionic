@@ -39,14 +39,7 @@
 __BEGIN_DECLS
 
 #ifdef __LP64__
-/* LP64 kernels don't have flock64 because their flock is 64-bit. */
-struct flock64 {
-  short l_type;
-  short l_whence;
-  off64_t l_start;
-  off64_t l_len;
-  pid_t l_pid;
-};
+/* LP64 kernels don't have F_*64 defines because their flock is 64-bit. */
 #define F_GETLK64  F_GETLK
 #define F_SETLK64  F_SETLK
 #define F_SETLKW64 F_SETLKW

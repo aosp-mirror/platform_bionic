@@ -454,5 +454,6 @@
 #define __NR_finit_module 350
 #define __NR_sched_setattr 351
 #define __NR_sched_getattr 352
-#endif
+#define __NR_renameat2 353
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

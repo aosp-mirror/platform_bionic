@@ -182,9 +182,12 @@ enum binder_driver_command_protocol {
  BC_ENTER_LOOPER = _IO('c', 12),
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  BC_EXIT_LOOPER = _IO('c', 13),
- BC_REQUEST_DEATH_NOTIFICATION = _IOW('c', 14, struct binder_handle_cookie),
- BC_CLEAR_DEATH_NOTIFICATION = _IOW('c', 15, struct binder_handle_cookie),
- BC_DEAD_BINDER_DONE = _IOW('c', 16, binder_uintptr_t),
+ BC_REQUEST_DEATH_NOTIFICATION = _IOW('c', 14,
+ struct binder_handle_cookie),
+ BC_CLEAR_DEATH_NOTIFICATION = _IOW('c', 15,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct binder_handle_cookie),
+ BC_DEAD_BINDER_DONE = _IOW('c', 16, binder_uintptr_t),
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
