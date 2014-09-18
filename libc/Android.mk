@@ -53,7 +53,6 @@ libc_common_src_files := \
     bionic/pututline.c \
     bionic/sched_cpualloc.c \
     bionic/sched_cpucount.c \
-    bionic/semaphore.c \
     bionic/sigblock.c \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
@@ -182,6 +181,7 @@ libc_bionic_src_files := \
     bionic/scandir.cpp \
     bionic/sched_getaffinity.cpp \
     bionic/sched_getcpu.cpp \
+    bionic/semaphore.cpp \
     bionic/send.cpp \
     bionic/setegid.cpp \
     bionic/__set_errno.cpp \

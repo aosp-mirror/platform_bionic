@@ -49,6 +49,7 @@
 #define	_POSIX_PATH_MAX		256
 #define _POSIX_PIPE_BUF		512
 #define	_POSIX_RE_DUP_MAX	255
+#define	_POSIX_SEM_VALUE_MAX	32767
 #define _POSIX_SSIZE_MAX	32767
 #define _POSIX_STREAM_MAX	8
 #define _POSIX_SYMLINK_MAX	255
@@ -124,5 +125,8 @@
 
 /* glibc's PAGE_MASK is the bitwise negation of BSD's! TODO: remove? */
 #define PAGE_MASK (~(PAGE_SIZE - 1))
+
+#define _POSIX_SEMAPHORES 200809L
+#define SEM_VALUE_MAX 0x3fffffff
 
 #endif /* !_LIMITS_H_ */

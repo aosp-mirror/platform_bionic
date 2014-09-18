@@ -163,12 +163,12 @@ int __pthread_cond_timedwait_relative(pthread_cond_t* cond, pthread_mutex_t* mut
 }
 
 __LIBC_HIDDEN__
-int __pthread_cond_timedwait(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime, clockid_t clock) {
+int __pthread_cond_timedwait(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abs_ts, clockid_t clock) {
   timespec ts;
   timespec* tsp;
 
-  if (abstime != NULL) {
-    if (__timespec_from_absolute(&ts, abstime, clock) < 0) {
+  if (abs_ts != NULL) {
+    if (!timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
       return ETIMEDOUT;
     }
     tsp = &ts;

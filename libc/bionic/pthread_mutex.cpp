@@ -36,7 +36,9 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_atomic_inline.h"
+#include "private/bionic_constants.h"
 #include "private/bionic_futex.h"
+#include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
 
 #include "private/bionic_systrace.h"
@@ -615,7 +617,7 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex) {
     return EBUSY;
 }
 
-static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_timeout, clockid_t clock) {
+static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs_ts, clockid_t clock) {
   timespec ts;
 
   int mvalue = mutex->value;
@@ -638,7 +640,7 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
 
     // Loop while needed.
     while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
-      if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+      if (!timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
         return ETIMEDOUT;
       }
       __futex_wait_ex(&mutex->value, shared, locked_contended, &ts);
@@ -681,7 +683,7 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
       }
       // The value changed before we could lock it. We need to check
       // the time to avoid livelocks, reload the value, then loop again.
-      if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+      if (!timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
         return ETIMEDOUT;
       }
 
@@ -703,7 +705,7 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
     }
 
     // Check time and update 'ts'.
-    if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
+    if (timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
       return ETIMEDOUT;
     }
 
@@ -726,9 +728,9 @@ extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned ms
   clock_gettime(CLOCK_MONOTONIC, &abs_timeout);
   abs_timeout.tv_sec  += ms / 1000;
   abs_timeout.tv_nsec += (ms % 1000) * 1000000;
-  if (abs_timeout.tv_nsec >= 1000000000) {
+  if (abs_timeout.tv_nsec >= NS_PER_S) {
     abs_timeout.tv_sec++;
-    abs_timeout.tv_nsec -= 1000000000;
+    abs_timeout.tv_nsec -= NS_PER_S;
   }
 
   int error = __pthread_mutex_timedlock(mutex, &abs_timeout, CLOCK_MONOTONIC);
