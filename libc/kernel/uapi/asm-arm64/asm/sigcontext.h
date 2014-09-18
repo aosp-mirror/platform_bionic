@@ -43,4 +43,11 @@ struct fpsimd_context {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __uint128_t vregs[32];
 };
+#define ESR_MAGIC 0x45535201
+struct esr_context {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct _aarch64_ctx head;
+ __u64 esr;
+};
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

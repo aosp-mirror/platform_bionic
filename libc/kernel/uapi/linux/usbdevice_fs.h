@@ -91,37 +91,47 @@ struct usbdevfs_urb {
  int actual_length;
  int start_frame;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ union {
  int number_of_packets;
+ unsigned int stream_id;
+ };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  int error_count;
  unsigned int signr;
  void __user *usercontext;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct usbdevfs_iso_packet_desc iso_frame_desc[0];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct usbdevfs_ioctl {
  int ifno;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  int ioctl_code;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  void __user *data;
 };
 struct usbdevfs_hub_portinfo {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char nports;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char port [127];
 };
 #define USBDEVFS_CAP_ZERO_PACKET 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USBDEVFS_CAP_BULK_CONTINUATION 0x02
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USBDEVFS_CAP_NO_PACKET_SIZE_LIM 0x04
 #define USBDEVFS_CAP_BULK_SCATTER_GATHER 0x08
 #define USBDEVFS_DISCONNECT_CLAIM_IF_DRIVER 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USBDEVFS_DISCONNECT_CLAIM_EXCEPT_DRIVER 0x02
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usbdevfs_disconnect_claim {
  unsigned int interface;
  unsigned int flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  char driver[USBDEVFS_MAXDRIVERNAME + 1];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct usbdevfs_streams {
+ unsigned int num_streams;
+ unsigned int num_eps;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned char eps[0];
 };
 #define USBDEVFS_CONTROL _IOWR('U', 0, struct usbdevfs_ctrltransfer)
 #define USBDEVFS_CONTROL32 _IOWR('U', 0, struct usbdevfs_ctrltransfer32)
@@ -162,4 +172,7 @@ struct usbdevfs_disconnect_claim {
 #define USBDEVFS_GET_CAPABILITIES _IOR('U', 26, __u32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USBDEVFS_DISCONNECT_CLAIM _IOR('U', 27, struct usbdevfs_disconnect_claim)
+#define USBDEVFS_ALLOC_STREAMS _IOR('U', 28, struct usbdevfs_streams)
+#define USBDEVFS_FREE_STREAMS _IOR('U', 29, struct usbdevfs_streams)
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

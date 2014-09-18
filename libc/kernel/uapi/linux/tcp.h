@@ -193,16 +193,18 @@ struct tcp_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 tcpi_rcv_space;
  __u32 tcpi_total_retrans;
+ __u64 tcpi_pacing_rate;
+ __u64 tcpi_max_pacing_rate;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tcp_md5sig {
  struct __kernel_sockaddr_storage tcpm_addr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u16 __tcpm_pad1;
  __u16 tcpm_keylen;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u32 __tcpm_pad2;
  __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
