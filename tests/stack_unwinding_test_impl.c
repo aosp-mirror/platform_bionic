@@ -18,52 +18,47 @@
  * Contributed by: Intel Corporation
  */
 
-#include <stdio.h>
+#include <dlfcn.h>
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <unwind.h>
 
 #define noinline __attribute__((__noinline__))
-#define unused __attribute__((__unused__))
 
-static noinline _Unwind_Reason_Code stop_fn(int a unused,
+#ifndef __unused
+#define __unused __attribute__((__unused__))
+#endif
+
+static noinline _Unwind_Reason_Code cleanup_unwind_fn(int a __unused,
     _Unwind_Action action,
-    _Unwind_Exception_Class b unused, struct _Unwind_Exception* c unused,
-    struct _Unwind_Context* d unused, void* e unused) {
+    _Unwind_Exception_Class b __unused,
+    struct _Unwind_Exception* c __unused,
+    struct _Unwind_Context* ctx __unused,
+    void* e __unused) {
   if ((action & _UA_END_OF_STACK) != 0) {
-    // We reached the end of the stack without executing foo_cleanup. Test failed.
-    abort();
+    abort(); // We reached the end of the stack without executing foo_cleanup (which would have exited). Test failed.
   }
   return _URC_NO_REASON;
 }
 
-static void noinline foo_cleanup(char* param unused) {
+static void noinline foo_cleanup(char* param __unused) {
   exit(42);
 }
 
-static void noinline do_crash() {
-  char* ptr = NULL;
-  *ptr = 0; // Deliberately cause a SIGSEGV.
+static void noinline function_with_cleanup_function() {
+  char c __attribute__((cleanup(foo_cleanup))) __unused;
+  *((int*) 1) = 0;
 }
 
-static void noinline foo() {
-  char c1 __attribute__((cleanup(foo_cleanup))) unused;
-  do_crash();
+static void noinline cleanup_sigsegv_handler(int param __unused) {
+  struct _Unwind_Exception* exception = (struct _Unwind_Exception*) calloc(1, sizeof(*exception));
+  _Unwind_ForcedUnwind(exception, cleanup_unwind_fn, 0);
 }
 
-// It's SEGSEGV handler. We start forced stack unwinding here.
-// If libgcc don't find dso for signal frame stack unwinding will be finished.
-// libgcc pass to stop_fn _UA_END_OF_STACK flag.
-// Test pass condition: stack unwinding through signal frame and foo1_handler execution.
-static void noinline sigsegv_handler(int param unused) {
-  struct _Unwind_Exception* exception = (struct _Unwind_Exception*) malloc(sizeof(*exception));
-  memset(&exception->exception_class, 0, sizeof(exception->exception_class));
-  exception->exception_cleanup = 0;
-  _Unwind_ForcedUnwind(exception, stop_fn, 0);
-}
-
-void do_test() {
-  signal(SIGSEGV, &sigsegv_handler);
-  foo();
+void unwind_through_frame_with_cleanup_function() {
+  signal(SIGSEGV, &cleanup_sigsegv_handler);
+  function_with_cleanup_function();
 }
