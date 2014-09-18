@@ -88,7 +88,6 @@ libBionicStandardTests_src_files := \
     search_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
-    stack_unwinding_test.cpp \
     stdatomic_test.cpp \
     stdint_test.cpp \
     stdio_test.cpp \
@@ -137,29 +136,7 @@ libBionicStandardTests_c_includes := \
 libBionicStandardTests_ldlibs_host := \
     -lrt \
 
-libBionicStandardTests_whole_static_libraries := \
-    libBionicUnwindTest \
-
 module := libBionicStandardTests
-module_tag := optional
-build_type := target
-build_target := STATIC_TEST_LIBRARY
-include $(LOCAL_PATH)/Android.build.mk
-build_type := host
-include $(LOCAL_PATH)/Android.build.mk
-
-# -----------------------------------------------------------------------------
-# Special stack unwinding test library compiled with special flags.
-# -----------------------------------------------------------------------------
-libBionicUnwindTest_cflags := \
-    $(test_cflags) \
-    -fexceptions \
-    -fnon-call-exceptions \
-
-libBionicUnwindTest_src_files := \
-    stack_unwinding_test_impl.c \
-
-module := libBionicUnwindTest
 module_tag := optional
 build_type := target
 build_target := STATIC_TEST_LIBRARY
@@ -255,8 +232,15 @@ bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
+    stack_unwinding_test.cpp \
+    stack_unwinding_test_impl.c \
 
 bionic-unit-tests_cflags := $(test_cflags)
+
+bionic-unit-tests_conlyflags := \
+    -fexceptions \
+    -fnon-call-exceptions \
+
 bionic-unit-tests_cppflags := $(test_cppflags)
 
 bionic-unit-tests_ldflags := \

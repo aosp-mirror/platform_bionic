@@ -20,18 +20,83 @@
 
 #include <gtest/gtest.h>
 
-extern "C" {
-  void do_test();
+#include <dlfcn.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <unwind.h>
+
+#include "ScopedSignalHandler.h"
+
+#define noinline __attribute__((noinline))
+
+static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
+  int* count_ptr = reinterpret_cast<int*>(arg);
+
+#if SHOW_FRAME_LOCATIONS
+  void* ip = reinterpret_cast<void*>(_Unwind_GetIP(ctx));
+
+  const char* symbol = "<unknown>";
+  int offset = 0;
+
+  Dl_info info;
+  memset(&info, 0, sizeof(info));
+  if (dladdr(ip, &info) != 0) {
+    symbol = info.dli_sname;
+    if (info.dli_saddr != nullptr) {
+      offset = static_cast<int>(reinterpret_cast<char*>(ip) - reinterpret_cast<char*>(info.dli_saddr));
+    }
+  }
+
+  fprintf(stderr, " #%02d %p %s%+d (%s)\n", *count_ptr, ip, symbol, offset, info.dli_fname ? info.dli_fname : "??");
+  fflush(stderr);
+#endif
+
+  ++*count_ptr;
+  return _URC_NO_REASON;
 }
+
+static int noinline unwind_one_frame_deeper() {
+  int count = 0;
+  _Unwind_Backtrace(FrameCounter, &count);
+  return count;
+}
+
+TEST(stack_unwinding, easy) {
+  int count = 0;
+  _Unwind_Backtrace(FrameCounter, &count);
+  int deeper_count = unwind_one_frame_deeper();
+  ASSERT_EQ(count + 1, deeper_count);
+}
+
+static int killer_count = 0;
+static int handler_count = 0;
+static int handler_one_deeper_count = 0;
+
+static void noinline UnwindSignalHandler(int) {
+  _Unwind_Backtrace(FrameCounter, &handler_count);
+  ASSERT_GT(handler_count, killer_count);
+
+  handler_one_deeper_count = unwind_one_frame_deeper();
+  ASSERT_EQ(handler_count + 1, handler_one_deeper_count);
+}
+
+TEST(stack_unwinding, unwind_through_signal_frame) {
+  ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
+
+  _Unwind_Backtrace(FrameCounter, &killer_count);
+
+  ASSERT_EQ(0, kill(getpid(), SIGUSR1));
+}
+
+extern "C" void unwind_through_frame_with_cleanup_function();
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process.
-TEST(stack_unwinding_DeathTest, unwinding_through_signal_frame) {
-// Only our x86 unwinding is good enough. Switch to libunwind?
-#if defined(__BIONIC__) && defined(__i386__)
+TEST(stack_unwinding_DeathTest, unwind_through_frame_with_cleanup_function) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(do_test(), ::testing::ExitedWithCode(42), "");
-#else // __i386__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __i386__
+  ASSERT_EXIT(unwind_through_frame_with_cleanup_function(), ::testing::ExitedWithCode(42), "");
 }
