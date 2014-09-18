@@ -1032,13 +1032,13 @@ TEST(math, truncl) {
 TEST(math, nextafter) {
   ASSERT_DOUBLE_EQ(0.0, nextafter(0.0, 0.0));
   ASSERT_DOUBLE_EQ(4.9406564584124654e-324, nextafter(0.0, 1.0));
-  ASSERT_DOUBLE_EQ(0.0, nextafter(0.0, -1.0));
+  ASSERT_DOUBLE_EQ(-4.9406564584124654e-324, nextafter(0.0, -1.0));
 }
 
 TEST(math, nextafterf) {
   ASSERT_FLOAT_EQ(0.0f, nextafterf(0.0f, 0.0f));
   ASSERT_FLOAT_EQ(1.4012985e-45f, nextafterf(0.0f, 1.0f));
-  ASSERT_FLOAT_EQ(0.0f, nextafterf(0.0f, -1.0f));
+  ASSERT_FLOAT_EQ(-1.4012985e-45f, nextafterf(0.0f, -1.0f));
 }
 
 TEST(math, nextafterl) {
@@ -1047,19 +1047,19 @@ TEST(math, nextafterl) {
   // sizeof(double) == sizeof(long double)
   long double smallest_positive = ldexpl(1.0L, LDBL_MIN_EXP - LDBL_MANT_DIG);
   ASSERT_DOUBLE_EQ(smallest_positive, nextafterl(0.0L, 1.0L));
-  ASSERT_DOUBLE_EQ(0.0L, nextafterl(0.0L, -1.0L));
+  ASSERT_DOUBLE_EQ(-smallest_positive, nextafterl(0.0L, -1.0L));
 }
 
 TEST(math, nexttoward) {
   ASSERT_DOUBLE_EQ(0.0, nexttoward(0.0, 0.0L));
   ASSERT_DOUBLE_EQ(4.9406564584124654e-324, nexttoward(0.0, 1.0L));
-  ASSERT_DOUBLE_EQ(0.0, nexttoward(0.0, -1.0L));
+  ASSERT_DOUBLE_EQ(-4.9406564584124654e-324, nexttoward(0.0, -1.0L));
 }
 
 TEST(math, nexttowardf) {
   ASSERT_FLOAT_EQ(0.0f, nexttowardf(0.0f, 0.0L));
   ASSERT_FLOAT_EQ(1.4012985e-45f, nexttowardf(0.0f, 1.0L));
-  ASSERT_FLOAT_EQ(0.0f, nexttowardf(0.0f, -1.0L));
+  ASSERT_FLOAT_EQ(-1.4012985e-45f, nexttowardf(0.0f, -1.0L));
 }
 
 TEST(math, nexttowardl) {
@@ -1068,7 +1068,7 @@ TEST(math, nexttowardl) {
   // sizeof(double) == sizeof(long double)
   long double smallest_positive = ldexpl(1.0L, LDBL_MIN_EXP - LDBL_MANT_DIG);
   ASSERT_DOUBLE_EQ(smallest_positive, nexttowardl(0.0L, 1.0L));
-  ASSERT_DOUBLE_EQ(0.0L, nexttowardl(0.0L, -1.0L));
+  ASSERT_DOUBLE_EQ(-smallest_positive, nexttowardl(0.0L, -1.0L));
 }
 
 TEST(math, copysign) {
@@ -1095,19 +1095,19 @@ TEST(math, copysignl) {
 TEST(math, significand) {
   ASSERT_DOUBLE_EQ(0.0, significand(0.0));
   ASSERT_DOUBLE_EQ(1.2, significand(1.2));
-  ASSERT_DOUBLE_EQ(1.5375, significand(12.3));
+  ASSERT_DOUBLE_EQ(1.53125, significand(12.25));
 }
 
 TEST(math, significandf) {
   ASSERT_FLOAT_EQ(0.0f, significandf(0.0f));
   ASSERT_FLOAT_EQ(1.2f, significandf(1.2f));
-  ASSERT_FLOAT_EQ(1.5375f, significandf(12.3f));
+  ASSERT_FLOAT_EQ(1.53125f, significandf(12.25f));
 }
 
 TEST(math, significandl) {
   ASSERT_DOUBLE_EQ(0.0L, significandl(0.0L));
   ASSERT_DOUBLE_EQ(1.2L, significandl(1.2L));
-  ASSERT_DOUBLE_EQ(1.5375L, significandl(12.3L));
+  ASSERT_DOUBLE_EQ(1.53125L, significandl(12.25L));
 }
 
 TEST(math, scalb) {
