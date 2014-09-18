@@ -16,30 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_NETDEVICE_H
-#define _UAPI_LINUX_NETDEVICE_H
-#include <linux/if.h>
-#include <linux/if_ether.h>
+#ifndef _ASM_X86_KVM_PERF_H
+#define _ASM_X86_KVM_PERF_H
+#include <asm/svm.h>
+#include <asm/vmx.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <linux/if_packet.h>
-#include <linux/if_link.h>
-#define MAX_ADDR_LEN 32
-#define INIT_NETDEV_GROUP 0
+#include <asm/kvm.h>
+#define DECODE_STR_LEN 20
+#define VCPU_ID "vcpu_id"
+#define KVM_ENTRY_TRACE "kvm:kvm_entry"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-enum {
- IF_PORT_UNKNOWN = 0,
- IF_PORT_10BASE2,
- IF_PORT_10BASET,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IF_PORT_AUI,
- IF_PORT_100BASET,
- IF_PORT_100BASETX,
- IF_PORT_100BASEFX
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-#define NET_ADDR_PERM 0
-#define NET_ADDR_RANDOM 1
-#define NET_ADDR_STOLEN 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NET_ADDR_SET 3
+#define KVM_EXIT_TRACE "kvm:kvm_exit"
+#define KVM_EXIT_REASON "exit_reason"
 #endif

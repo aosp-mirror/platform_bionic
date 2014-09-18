@@ -68,7 +68,7 @@ struct knfsd_fh {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define fh_auth_type fh_base.fh_new.fb_auth_type
 #define fh_fileid_type fh_base.fh_new.fb_fileid_type
-#define fh_auth fh_base.fh_new.fb_auth
 #define fh_fsid fh_base.fh_new.fb_auth
+#define fh_auth fh_base.fh_new.fb_auth
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
