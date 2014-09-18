@@ -32,51 +32,71 @@ struct nvme_id_power_state {
  __u8 write_tput;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 write_lat;
- __u8 rsvd16[16];
-};
-enum {
+ __le16 idle_power;
+ __u8 idle_scale;
+ __u8 rsvd19;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le16 active_power;
+ __u8 active_work_scale;
+ __u8 rsvd23[9];
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum {
  NVME_PS_FLAGS_MAX_POWER_SCALE = 1 << 0,
  NVME_PS_FLAGS_NON_OP_STATE = 1 << 1,
 };
-struct nvme_id_ctrl {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nvme_id_ctrl {
  __le16 vid;
  __le16 ssvid;
  char sn[20];
- char mn[40];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ char mn[40];
  char fr[8];
  __u8 rab;
  __u8 ieee[3];
- __u8 mic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 mic;
  __u8 mdts;
- __u8 rsvd78[178];
+ __u16 cntlid;
+ __u32 ver;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 rsvd84[172];
  __le16 oacs;
  __u8 acl;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 aerl;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 frmw;
  __u8 lpa;
  __u8 elpe;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 npss;
- __u8 rsvd264[248];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 avscc;
+ __u8 apsta;
+ __le16 wctemp;
+ __le16 cctemp;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 rsvd270[242];
  __u8 sqes;
  __u8 cqes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 rsvd514[2];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __le32 nn;
  __le16 oncs;
  __le16 fuses;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 fna;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 vwc;
  __le16 awun;
  __le16 awupf;
+ __u8 nvscc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 rsvd530[1518];
+ __u8 rsvd531;
+ __le16 acwu;
+ __u8 rsvd534[2];
+ __le32 sgls;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 rsvd540[1508];
  struct nvme_id_power_state psd[32];
  __u8 vs[1024];
 };
@@ -86,63 +106,78 @@ enum {
  NVME_CTRL_ONCS_WRITE_UNCORRECTABLE = 1 << 1,
  NVME_CTRL_ONCS_DSM = 1 << 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ NVME_CTRL_VWC_PRESENT = 1 << 0,
 };
 struct nvme_lbaf {
  __le16 ms;
- __u8 ds;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 ds;
  __u8 rp;
 };
 struct nvme_id_ns {
- __le64 nsze;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le64 nsze;
  __le64 ncap;
  __le64 nuse;
  __u8 nsfeat;
- __u8 nlbaf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 nlbaf;
  __u8 flbas;
  __u8 mc;
  __u8 dpc;
- __u8 dps;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 rsvd30[98];
+ __u8 dps;
+ __u8 nmic;
+ __u8 rescap;
+ __u8 fpi;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 rsvd33;
+ __le16 nawun;
+ __le16 nawupf;
+ __le16 nacwu;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 rsvd40[80];
+ __u8 eui64[8];
  struct nvme_lbaf lbaf[16];
  __u8 rsvd192[192];
- __u8 vs[3712];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 vs[3712];
 };
 enum {
  NVME_NS_FEAT_THIN = 1 << 0,
- NVME_LBAF_RP_BEST = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ NVME_LBAF_RP_BEST = 0,
  NVME_LBAF_RP_BETTER = 1,
  NVME_LBAF_RP_GOOD = 2,
  NVME_LBAF_RP_DEGRADED = 3,
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct nvme_smart_log {
  __u8 critical_warning;
  __u8 temperature[2];
- __u8 avail_spare;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 avail_spare;
  __u8 spare_thresh;
  __u8 percent_used;
  __u8 rsvd6[26];
- __u8 data_units_read[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 data_units_read[16];
  __u8 data_units_written[16];
  __u8 host_reads[16];
  __u8 host_writes[16];
- __u8 ctrl_busy_time[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 ctrl_busy_time[16];
  __u8 power_cycles[16];
  __u8 power_on_hours[16];
  __u8 unsafe_shutdowns[16];
- __u8 media_errors[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 media_errors[16];
  __u8 num_err_log_entries[16];
- __u8 rsvd192[320];
+ __le32 warning_temp_time;
+ __le32 critical_comp_time;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le16 temp_sensor[8];
+ __u8 rsvd216[296];
 };
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -315,6 +350,11 @@ enum {
  NVME_FEAT_WRITE_ATOMIC = 0x0a,
  NVME_FEAT_ASYNC_EVENT = 0x0b,
  NVME_FEAT_SW_PROGRESS = 0x0c,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ NVME_LOG_ERROR = 0x01,
+ NVME_LOG_SMART = 0x02,
+ NVME_LOG_FW_SLOT = 0x03,
+ NVME_LOG_RESERVATION = 0x80,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  NVME_FWACT_REPL = (0 << 3),
  NVME_FWACT_REPL_ACTV = (1 << 3),
@@ -493,62 +533,63 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  NVME_SC_COMPARE_FAILED = 0x285,
  NVME_SC_ACCESS_DENIED = 0x286,
+ NVME_SC_DNR = 0x4000,
 };
-struct nvme_completion {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nvme_completion {
  __le32 result;
  __u32 rsvd;
  __le16 sq_head;
- __le16 sq_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le16 sq_id;
  __u16 command_id;
  __le16 status;
 };
-struct nvme_user_io {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nvme_user_io {
  __u8 opcode;
  __u8 flags;
  __u16 control;
- __u16 nblocks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u16 nblocks;
  __u16 rsvd;
  __u64 metadata;
  __u64 addr;
- __u64 slba;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u64 slba;
  __u32 dsmgmt;
  __u32 reftag;
  __u16 apptag;
- __u16 appmask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u16 appmask;
 };
 struct nvme_admin_cmd {
  __u8 opcode;
- __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 flags;
  __u16 rsvd1;
  __u32 nsid;
  __u32 cdw2;
- __u32 cdw3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 cdw3;
  __u64 metadata;
  __u64 addr;
  __u32 metadata_len;
- __u32 data_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 data_len;
  __u32 cdw10;
  __u32 cdw11;
  __u32 cdw12;
- __u32 cdw13;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 cdw13;
  __u32 cdw14;
  __u32 cdw15;
  __u32 timeout_ms;
- __u32 result;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 result;
 };
 #define NVME_IOCTL_ID _IO('N', 0x40)
 #define NVME_IOCTL_ADMIN_CMD _IOWR('N', 0x41, struct nvme_admin_cmd)
-#define NVME_IOCTL_SUBMIT_IO _IOW('N', 0x42, struct nvme_user_io)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NVME_IOCTL_SUBMIT_IO _IOW('N', 0x42, struct nvme_user_io)
 #endif

@@ -38,38 +38,58 @@ struct ptp_clock_caps {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  int n_per_out;
  int pps;
- int rsv[15];
-};
+ int n_pins;
+ int rsv[14];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct ptp_extts_request {
  unsigned int index;
  unsigned int flags;
- unsigned int rsv[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned int rsv[2];
 };
 struct ptp_perout_request {
  struct ptp_clock_time start;
- struct ptp_clock_time period;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct ptp_clock_time period;
  unsigned int index;
  unsigned int flags;
  unsigned int rsv[4];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define PTP_MAX_SAMPLES 25
 struct ptp_sys_offset {
  unsigned int n_samples;
- unsigned int rsv[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned int rsv[3];
  struct ptp_clock_time ts[2 * PTP_MAX_SAMPLES + 1];
 };
+enum ptp_pin_function {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ PTP_PF_NONE,
+ PTP_PF_EXTTS,
+ PTP_PF_PEROUT,
+ PTP_PF_PHYSYNC,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct ptp_pin_desc {
+ char name[64];
+ unsigned int index;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ unsigned int func;
+ unsigned int chan;
+ unsigned int rsv[5];
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PTP_CLK_MAGIC '='
 #define PTP_CLOCK_GETCAPS _IOR(PTP_CLK_MAGIC, 1, struct ptp_clock_caps)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PTP_EXTTS_REQUEST _IOW(PTP_CLK_MAGIC, 2, struct ptp_extts_request)
 #define PTP_PEROUT_REQUEST _IOW(PTP_CLK_MAGIC, 3, struct ptp_perout_request)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PTP_ENABLE_PPS _IOW(PTP_CLK_MAGIC, 4, int)
 #define PTP_SYS_OFFSET _IOW(PTP_CLK_MAGIC, 5, struct ptp_sys_offset)
+#define PTP_PIN_GETFUNC _IOWR(PTP_CLK_MAGIC, 6, struct ptp_pin_desc)
+#define PTP_PIN_SETFUNC _IOW(PTP_CLK_MAGIC, 7, struct ptp_pin_desc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ptp_extts_event {
  struct ptp_clock_time t;

@@ -16,30 +16,9 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_NETDEVICE_H
-#define _UAPI_LINUX_NETDEVICE_H
-#include <linux/if.h>
-#include <linux/if_ether.h>
+#ifndef _UAPI_LINUX_MEMFD_H
+#define _UAPI_LINUX_MEMFD_H
+#define MFD_CLOEXEC 0x0001U
+#define MFD_ALLOW_SEALING 0x0002U
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#include <linux/if_packet.h>
-#include <linux/if_link.h>
-#define MAX_ADDR_LEN 32
-#define INIT_NETDEV_GROUP 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-enum {
- IF_PORT_UNKNOWN = 0,
- IF_PORT_10BASE2,
- IF_PORT_10BASET,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IF_PORT_AUI,
- IF_PORT_100BASET,
- IF_PORT_100BASETX,
- IF_PORT_100BASEFX
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-#define NET_ADDR_PERM 0
-#define NET_ADDR_RANDOM 1
-#define NET_ADDR_STOLEN 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NET_ADDR_SET 3
 #endif

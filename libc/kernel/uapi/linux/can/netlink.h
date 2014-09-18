@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef CAN_NETLINK_H
-#define CAN_NETLINK_H
+#ifndef _UAPI_CAN_NETLINK_H
+#define _UAPI_CAN_NETLINK_H
 #include <linux/types.h>
 struct can_bittiming {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -77,30 +77,34 @@ struct can_ctrlmode {
 #define CAN_CTRLMODE_ONE_SHOT 0x08
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAN_CTRLMODE_BERR_REPORTING 0x10
+#define CAN_CTRLMODE_FD 0x20
 struct can_device_stats {
  __u32 bus_error;
- __u32 error_warning;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 error_warning;
  __u32 error_passive;
  __u32 bus_off;
  __u32 arbitration_lost;
- __u32 restarts;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 restarts;
 };
 enum {
  IFLA_CAN_UNSPEC,
- IFLA_CAN_BITTIMING,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ IFLA_CAN_BITTIMING,
  IFLA_CAN_BITTIMING_CONST,
  IFLA_CAN_CLOCK,
  IFLA_CAN_STATE,
- IFLA_CAN_CTRLMODE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ IFLA_CAN_CTRLMODE,
  IFLA_CAN_RESTART_MS,
  IFLA_CAN_RESTART,
  IFLA_CAN_BERR_COUNTER,
- __IFLA_CAN_MAX
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ IFLA_CAN_DATA_BITTIMING,
+ IFLA_CAN_DATA_BITTIMING_CONST,
+ __IFLA_CAN_MAX
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IFLA_CAN_MAX (__IFLA_CAN_MAX - 1)
 #endif

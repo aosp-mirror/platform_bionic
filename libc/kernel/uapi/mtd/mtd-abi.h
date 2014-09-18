@@ -81,105 +81,106 @@ struct mtd_write_req {
 #define MTD_CAP_NORFLASH (MTD_WRITEABLE | MTD_BIT_WRITEABLE)
 #define MTD_CAP_NANDFLASH (MTD_WRITEABLE)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MTD_CAP_NVRAM (MTD_WRITEABLE | MTD_BIT_WRITEABLE | MTD_NO_ERASE)
 #define MTD_NANDECC_OFF 0
 #define MTD_NANDECC_PLACE 1
 #define MTD_NANDECC_AUTOPLACE 2
-#define MTD_NANDECC_PLACEONLY 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MTD_NANDECC_PLACEONLY 3
 #define MTD_NANDECC_AUTOPL_USR 4
 #define MTD_OTP_OFF 0
 #define MTD_OTP_FACTORY 1
-#define MTD_OTP_USER 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MTD_OTP_USER 2
 struct mtd_info_user {
  __u8 type;
  __u32 flags;
- __u32 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 size;
  __u32 erasesize;
  __u32 writesize;
  __u32 oobsize;
- __u64 padding;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u64 padding;
 };
 struct region_info_user {
  __u32 offset;
- __u32 erasesize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 erasesize;
  __u32 numblocks;
  __u32 regionindex;
 };
-struct otp_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct otp_info {
  __u32 start;
  __u32 length;
  __u32 locked;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define MEMGETINFO _IOR('M', 1, struct mtd_info_user)
 #define MEMERASE _IOW('M', 2, struct erase_info_user)
 #define MEMWRITEOOB _IOWR('M', 3, struct mtd_oob_buf)
-#define MEMREADOOB _IOWR('M', 4, struct mtd_oob_buf)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MEMREADOOB _IOWR('M', 4, struct mtd_oob_buf)
 #define MEMLOCK _IOW('M', 5, struct erase_info_user)
 #define MEMUNLOCK _IOW('M', 6, struct erase_info_user)
 #define MEMGETREGIONCOUNT _IOR('M', 7, int)
-#define MEMGETREGIONINFO _IOWR('M', 8, struct region_info_user)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MEMGETREGIONINFO _IOWR('M', 8, struct region_info_user)
 #define MEMGETOOBSEL _IOR('M', 10, struct nand_oobinfo)
 #define MEMGETBADBLOCK _IOW('M', 11, __kernel_loff_t)
 #define MEMSETBADBLOCK _IOW('M', 12, __kernel_loff_t)
-#define OTPSELECT _IOR('M', 13, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define OTPSELECT _IOR('M', 13, int)
 #define OTPGETREGIONCOUNT _IOW('M', 14, int)
 #define OTPGETREGIONINFO _IOW('M', 15, struct otp_info)
 #define OTPLOCK _IOR('M', 16, struct otp_info)
-#define ECCGETLAYOUT _IOR('M', 17, struct nand_ecclayout_user)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ECCGETLAYOUT _IOR('M', 17, struct nand_ecclayout_user)
 #define ECCGETSTATS _IOR('M', 18, struct mtd_ecc_stats)
 #define MTDFILEMODE _IO('M', 19)
 #define MEMERASE64 _IOW('M', 20, struct erase_info_user64)
-#define MEMWRITEOOB64 _IOWR('M', 21, struct mtd_oob_buf64)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MEMWRITEOOB64 _IOWR('M', 21, struct mtd_oob_buf64)
 #define MEMREADOOB64 _IOWR('M', 22, struct mtd_oob_buf64)
 #define MEMISLOCKED _IOR('M', 23, struct erase_info_user)
 #define MEMWRITE _IOWR('M', 24, struct mtd_write_req)
-struct nand_oobinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nand_oobinfo {
  __u32 useecc;
  __u32 eccbytes;
  __u32 oobfree[8][2];
- __u32 eccpos[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 eccpos[32];
 };
 struct nand_oobfree {
  __u32 offset;
- __u32 length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 length;
 };
 #define MTD_MAX_OOBFREE_ENTRIES 8
 #define MTD_MAX_ECCPOS_ENTRIES 64
-struct nand_ecclayout_user {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nand_ecclayout_user {
  __u32 eccbytes;
  __u32 eccpos[MTD_MAX_ECCPOS_ENTRIES];
  __u32 oobavail;
- struct nand_oobfree oobfree[MTD_MAX_OOBFREE_ENTRIES];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ struct nand_oobfree oobfree[MTD_MAX_OOBFREE_ENTRIES];
 };
 struct mtd_ecc_stats {
  __u32 corrected;
- __u32 failed;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 failed;
  __u32 badblocks;
  __u32 bbtblocks;
 };
-enum mtd_file_modes {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum mtd_file_modes {
  MTD_FILE_MODE_NORMAL = MTD_OTP_OFF,
  MTD_FILE_MODE_OTP_FACTORY = MTD_OTP_FACTORY,
  MTD_FILE_MODE_OTP_USER = MTD_OTP_USER,
- MTD_FILE_MODE_RAW,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ MTD_FILE_MODE_RAW,
 };
 #endif
