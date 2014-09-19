@@ -187,6 +187,7 @@ libm_ld_src_files = \
     upstream-freebsd/lib/msun/src/e_atanhl.c \
     upstream-freebsd/lib/msun/src/e_fmodl.c \
     upstream-freebsd/lib/msun/src/e_hypotl.c \
+    upstream-freebsd/lib/msun/src/e_lgammal.c \
     upstream-freebsd/lib/msun/src/e_remainderl.c \
     upstream-freebsd/lib/msun/src/e_sqrtl.c \
     upstream-freebsd/lib/msun/src/s_asinhl.c \
@@ -224,6 +225,7 @@ libm_ld_src_files = \
 
 libm_ld_src_files += \
     upstream-freebsd/lib/msun/ld128/invtrig.c \
+    upstream-freebsd/lib/msun/ld128/e_lgammal_r.c \
     upstream-freebsd/lib/msun/ld128/k_cosl.c \
     upstream-freebsd/lib/msun/ld128/k_sinl.c \
     upstream-freebsd/lib/msun/ld128/k_tanl.c \

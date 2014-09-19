@@ -1188,10 +1188,49 @@ TEST(math, lgamma_r) {
   ASSERT_EQ(1, sign);
 }
 
+TEST(math, lgamma_r_17471883) {
+  int sign;
+
+  sign = 0;
+  ASSERT_DOUBLE_EQ(HUGE_VAL, lgamma_r(0.0, &sign));
+  ASSERT_EQ(1, sign);
+  sign = 0;
+  ASSERT_DOUBLE_EQ(HUGE_VAL, lgamma_r(-0.0, &sign));
+  ASSERT_EQ(-1, sign);
+}
+
 TEST(math, lgammaf_r) {
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), lgammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
+}
+
+TEST(math, lgammaf_r_17471883) {
+  int sign;
+
+  sign = 0;
+  ASSERT_FLOAT_EQ(HUGE_VALF, lgammaf_r(0.0f, &sign));
+  ASSERT_EQ(1, sign);
+  sign = 0;
+  ASSERT_FLOAT_EQ(HUGE_VALF, lgammaf_r(-0.0f, &sign));
+  ASSERT_EQ(-1, sign);
+}
+
+TEST(math, lgammal_r) {
+  int sign;
+  ASSERT_DOUBLE_EQ(log(24.0L), lgamma_r(5.0L, &sign));
+  ASSERT_EQ(1, sign);
+}
+
+TEST(math, lgammal_r_17471883) {
+  int sign;
+
+  sign = 0;
+  ASSERT_DOUBLE_EQ(HUGE_VAL, lgammal_r(0.0L, &sign));
+  ASSERT_EQ(1, sign);
+  sign = 0;
+  ASSERT_DOUBLE_EQ(HUGE_VAL, lgammal_r(-0.0L, &sign));
+  ASSERT_EQ(-1, sign);
 }
 
 TEST(math, tgamma) {
