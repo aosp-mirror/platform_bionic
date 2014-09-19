@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "901c6ffc_e17335f3",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-19T22:57:04Z",
+      "side": 1,
+      "message": "in the\n\nor just \"in libc.so,\"",
+      "revId": "bb4a37f9b78bfc8bfef431237b126633c5057339",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7021bb30_a80c4312",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-19T22:57:04Z",
+      "side": 1,
+      "message": "s/macro is defined//",
+      "revId": "bb4a37f9b78bfc8bfef431237b126633c5057339",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
