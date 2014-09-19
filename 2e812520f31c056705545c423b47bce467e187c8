@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "50e9172a_3acd316b",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-19T22:13:52Z",
+      "side": 1,
+      "message": "Leaving the C style casts for this and the below casts?",
+      "range": {
+        "startLine": 145,
+        "startChar": 28,
+        "endLine": 145,
+        "endChar": 33
+      },
+      "revId": "2e812520f31c056705545c423b47bce467e187c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f05a0bdc_4e36e2f9",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-19T22:13:52Z",
+      "side": 1,
+      "message": "This constant lives a few different places. I think I would be nice to have this defined with a name so it\u0027s clear that it\u0027s nanoseconds per second.",
+      "range": {
+        "startLine": 249,
+        "startChar": 20,
+        "endLine": 249,
+        "endChar": 30
+      },
+      "revId": "2e812520f31c056705545c423b47bce467e187c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b04df311_90b162cc",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-19T22:13:52Z",
+      "side": 1,
+      "message": "You should add a timeout just in case there is a bug and sem_wait never returns.",
+      "range": {
+        "startLine": 87,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 42
+      },
+      "revId": "2e812520f31c056705545c423b47bce467e187c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901c6ffc_e119f50f",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-19T22:13:52Z",
+      "side": 1,
+      "message": "There is a potential for this to wait forever if there is a bad implementation out there.",
+      "range": {
+        "startLine": 138,
+        "startChar": 2,
+        "endLine": 138,
+        "endChar": 28
+      },
+      "revId": "2e812520f31c056705545c423b47bce467e187c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "301bc308_acc21716",
         "filename": "tests/semaphore_test.cpp",
         "patchSetId": 2
