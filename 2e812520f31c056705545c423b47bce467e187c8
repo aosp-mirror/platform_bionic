@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "301bc308_acc21716",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-19T22:01:09Z",
+      "side": 1,
+      "message": "Should just remove these.",
+      "revId": "2e812520f31c056705545c423b47bce467e187c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
