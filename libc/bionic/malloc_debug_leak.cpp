@@ -55,13 +55,6 @@
 #include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-// This file should be included into the build only when
-// MALLOC_LEAK_CHECK, or MALLOC_QEMU_INSTRUMENT, or both
-// macros are defined.
-#ifndef MALLOC_LEAK_CHECK
-#error MALLOC_LEAK_CHECK is not defined.
-#endif  // !MALLOC_LEAK_CHECK
-
 extern int gMallocLeakZygoteChild;
 extern HashTable* g_hash_table;
 extern const MallocDebug* g_malloc_dispatch;
