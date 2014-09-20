@@ -1120,10 +1120,7 @@ ifneq ($(TARGET_BUILD_VARIANT),user)
 # ========================================================
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := \
-    $(libc_common_cflags) \
-    -DMALLOC_LEAK_CHECK \
-
+LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 

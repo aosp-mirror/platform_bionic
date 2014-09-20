@@ -29,14 +29,13 @@
 // Contains definition of structures, global variables, and implementation of
 // routines that are used by malloc leak detection code and other components in
 // the system. The trick is that some components expect these data and
-// routines to be defined / implemented in libc.so library, regardless
-// whether or not MALLOC_LEAK_CHECK macro is defined. To make things even
-// more tricky, malloc leak detection code, implemented in
-// libc_malloc_debug.so also requires access to these variables and routines
-// (to fill allocation entry hash table, for example). So, all relevant
-// variables and routines are defined / implemented here and exported
-// to all, leak detection code and other components via dynamic (libc.so),
-// or static (libc.a) linking.
+// routines to be defined / implemented in libc.so, regardless whether or not
+// malloc leak detection code is going to run. To make things even more tricky,
+// malloc leak detection code, implemented in libc_malloc_debug.so also
+// requires access to these variables and routines (to fill allocation entry
+// hash table, for example). So, all relevant variables and routines are
+// defined / implemented here and exported to all, leak detection code and
+// other components via dynamic (libc.so), or static (libc.a) linking.
 
 #include "malloc_debug_common.h"
 
