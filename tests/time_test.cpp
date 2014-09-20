@@ -26,6 +26,8 @@
 
 #include "ScopedSignalHandler.h"
 
+#include "private/bionic_constants.h"
+
 TEST(time, gmtime) {
   time_t t = 0;
   tm* broken_down = gmtime(&t);
@@ -395,7 +397,7 @@ TEST(time, clock_gettime) {
   ts2.tv_nsec -= ts1.tv_nsec;
   if (ts2.tv_nsec < 0) {
     --ts2.tv_sec;
-    ts2.tv_nsec += 1000000000;
+    ts2.tv_nsec += NS_PER_S;
   }
 
   // Should be less than (a very generous, to try to avoid flakiness) 1000000ns.

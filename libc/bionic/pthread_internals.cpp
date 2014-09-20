@@ -67,19 +67,3 @@ void _pthread_internal_add(pthread_internal_t* thread) {
 pthread_internal_t* __get_thread(void) {
   return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }
-
-// Initialize 'ts' with the difference between 'abstime' and the current time
-// according to 'clock'. Returns -1 if abstime already expired, or 0 otherwise.
-int __timespec_from_absolute(timespec* ts, const timespec* abstime, clockid_t clock) {
-  clock_gettime(clock, ts);
-  ts->tv_sec  = abstime->tv_sec - ts->tv_sec;
-  ts->tv_nsec = abstime->tv_nsec - ts->tv_nsec;
-  if (ts->tv_nsec < 0) {
-    ts->tv_sec--;
-    ts->tv_nsec += 1000000000;
-  }
-  if ((ts->tv_nsec < 0) || (ts->tv_sec < 0)) {
-    return -1;
-  }
-  return 0;
-}
