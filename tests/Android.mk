@@ -86,6 +86,7 @@ libBionicStandardTests_src_files := \
     regex_test.cpp \
     sched_test.cpp \
     search_test.cpp \
+    semaphore_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
     stdatomic_test.cpp \

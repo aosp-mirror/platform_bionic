@@ -30,6 +30,7 @@
 
 #include "pthread_internal.h"
 #include "private/bionic_futex.h"
+#include "private/bionic_time_conversions.h"
 
 /* Technical note:
  *
@@ -71,7 +72,7 @@ static inline bool rwlock_is_shared(const pthread_rwlock_t* rwlock) {
 
 static bool timespec_from_absolute(timespec* rel_timeout, const timespec* abs_timeout) {
   if (abs_timeout != NULL) {
-    if (__timespec_from_absolute(rel_timeout, abs_timeout, CLOCK_REALTIME) < 0) {
+    if (!timespec_from_absolute_timespec(*rel_timeout, *abs_timeout, CLOCK_REALTIME)) {
       return false;
     }
   }

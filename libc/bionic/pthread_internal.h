@@ -117,8 +117,6 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
 __LIBC_HIDDEN__ extern pthread_internal_t* g_thread_list;
 __LIBC_HIDDEN__ extern pthread_mutex_t g_thread_list_lock;
 
-__LIBC_HIDDEN__ int __timespec_from_absolute(timespec*, const timespec*, clockid_t);
-
 /* Needed by fork. */
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
