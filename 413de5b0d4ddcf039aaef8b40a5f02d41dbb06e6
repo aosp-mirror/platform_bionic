@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30ee6335_f9c75724",
+        "filename": "libc/include/sys/vfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-21T00:45:12Z",
+      "side": 0,
+      "message": "This isn\u0027t in magic.h, did you mean to remove it?",
+      "range": {
+        "startLine": 131,
+        "startChar": 9,
+        "endLine": 131,
+        "endChar": 24
+      },
+      "revId": "413de5b0d4ddcf039aaef8b40a5f02d41dbb06e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
