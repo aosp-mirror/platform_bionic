@@ -168,8 +168,7 @@ static void AssertDetached(pthread_t t, bool is_detached) {
 
 static void MakeDeadThread(pthread_t& t) {
   ASSERT_EQ(0, pthread_create(&t, NULL, IdFn, NULL));
-  void* result;
-  ASSERT_EQ(0, pthread_join(t, &result));
+  ASSERT_EQ(0, pthread_join(t, NULL));
 }
 
 TEST(pthread, pthread_create) {
@@ -201,8 +200,7 @@ TEST(pthread, pthread_no_join_after_detach) {
   AssertDetached(t1, true);
 
   // ...pthread_join should fail.
-  void* result;
-  ASSERT_EQ(EINVAL, pthread_join(t1, &result));
+  ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
@@ -230,8 +228,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
 }
 
 TEST(pthread, pthread_join_self) {
-  void* result;
-  ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), &result));
+  ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), NULL));
 }
 
 struct TestBug37410 {
@@ -481,8 +478,7 @@ TEST(pthread, pthread_join__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  void* result;
-  ASSERT_EQ(ESRCH, pthread_join(dead_thread, &result));
+  ASSERT_EQ(ESRCH, pthread_join(dead_thread, NULL));
 }
 
 TEST(pthread, pthread_kill__no_such_thread) {
@@ -543,8 +539,7 @@ static size_t GetActualGuardSize(const pthread_attr_t& attributes) {
   size_t result;
   pthread_t t;
   pthread_create(&t, &attributes, GetActualGuardSizeFn, &result);
-  void* join_result;
-  pthread_join(t, &join_result);
+  pthread_join(t, NULL);
   return result;
 }
 
@@ -559,8 +554,7 @@ static size_t GetActualStackSize(const pthread_attr_t& attributes) {
   size_t result;
   pthread_t t;
   pthread_create(&t, &attributes, GetActualStackSizeFn, &result);
-  void* join_result;
-  pthread_join(t, &join_result);
+  pthread_join(t, NULL);
   return result;
 }
 
@@ -927,11 +921,47 @@ TEST(pthread, pthread_gettid_np) {
 
   pid_t t_pthread_gettid_np_result = pthread_gettid_np(t);
 
-  void* join_result;
-  pthread_join(t, &join_result);
+  pthread_join(t, NULL);
 
   ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
+
+static size_t cleanup_counter = 0;
+
+void AbortCleanupRoutine(void*) {
+  abort();
+}
+
+void CountCleanupRoutine(void*) {
+  ++cleanup_counter;
+}
+
+void PthreadCleanupTester() {
+  pthread_cleanup_push(CountCleanupRoutine, NULL);
+  pthread_cleanup_push(CountCleanupRoutine, NULL);
+  pthread_cleanup_push(AbortCleanupRoutine, NULL);
+
+  pthread_cleanup_pop(0); // Pop the abort without executing it.
+  pthread_cleanup_pop(1); // Pop one count while executing it.
+  ASSERT_EQ(1U, cleanup_counter);
+  // Exit while the other count is still on the cleanup stack.
+  pthread_exit(NULL);
+
+  // Calls to pthread_cleanup_pop/pthread_cleanup_push must always be balanced.
+  pthread_cleanup_pop(0);
+}
+
+void* PthreadCleanupStartRoutine(void*) {
+  PthreadCleanupTester();
+  return NULL;
+}
+
+TEST(pthread, pthread_cleanup_push__pthread_cleanup_pop) {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, PthreadCleanupStartRoutine, NULL));
+  pthread_join(t, NULL);
+  ASSERT_EQ(2U, cleanup_counter);
 }
