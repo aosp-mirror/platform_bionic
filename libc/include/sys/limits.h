@@ -135,37 +135,11 @@
 #define  _XOPEN_REALTIME          -1 /* we don't support all these functions */
 #define  _XOPEN_REALTIME_THREADS  -1  /* same here */
 
-#define  _POSIX_REALTIME_SIGNALS    -1  /* for now, this is not supported */
-#define  _POSIX_PRIORITY_SCHEDULING  1  /* priority scheduling is a Linux feature */
-#define  _POSIX_TIMERS               1  /* Posix timers are supported */
-#undef   _POSIX_ASYNCHRONOUS_IO         /* aio_ functions are not supported */
-#define  _POSIX_SYNCHRONIZED_IO      1  /* synchronized i/o supported */
-#define  _POSIX_FSYNC                1  /* fdatasync() supported */
-#define  _POSIX_MAPPED_FILES         1  /* mmap-ed files supported */
-
-/* XXX: TODO: complete and check list here */
-
-
-#define  _POSIX_THREADS             1    /* we support threads */
-#define  _POSIX_THREAD_STACKADDR    1    /* we support thread stack address */
-#define  _POSIX_THREAD_STACKSIZE    1    /* we support thread stack size */
-#define  _POSIX_THREAD_PRIO_INHERIT 200112L   /* linux feature */
-#define  _POSIX_THREAD_PRIO_PROTECT 200112L   /* linux feature */
-
-#undef   _POSIX_PROCESS_SHARED           /* we don't support process-shared synchronization */
-#undef   _POSIX_THREAD_SAFE_FUNCTIONS    /* most functions are, but not everything yet */
-#define  _POSIX_CHOWN_RESTRICTED    1    /* yes, chown requires appropriate privileges */
-#define  _POSIX_MONOTONIC_CLOCK     0    /* the monotonic clock may be available; ask sysconf */
-#define  _POSIX_NO_TRUNC            1    /* very long pathnames generate an error */
-#define  _POSIX_SAVED_IDS           1    /* saved user ids is a Linux feature */
-#define  _POSIX_JOB_CONTROL         1    /* job control is a Linux feature */
-
 #define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4 /* the minimum mandated by POSIX */
 #define PTHREAD_DESTRUCTOR_ITERATIONS _POSIX_THREAD_DESTRUCTOR_ITERATIONS
 #define _POSIX_THREAD_KEYS_MAX 128            /* the minimum mandated by POSIX */
 #define PTHREAD_KEYS_MAX _POSIX_THREAD_KEYS_MAX
 #define _POSIX_THREAD_THREADS_MAX 64          /* the minimum mandated by POSIX */
 #define PTHREAD_THREADS_MAX                   /* bionic has no specific limit */
-
 
 #endif

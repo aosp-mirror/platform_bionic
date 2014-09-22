@@ -152,18 +152,12 @@ static int __sysconf_monotonic_clock() {
 int sysconf(int name) {
   switch (name) {
     case _SC_ARG_MAX:           return _POSIX_ARG_MAX;
-    case _SC_BC_BASE_MAX:       return _POSIX2_BC_BASE_MAX;
-    case _SC_BC_DIM_MAX:        return _POSIX2_BC_DIM_MAX;
-    case _SC_BC_SCALE_MAX:      return _POSIX2_BC_SCALE_MAX;
-    case _SC_BC_STRING_MAX:     return _POSIX2_BC_STRING_MAX;
     case _SC_CHILD_MAX:         return CHILD_MAX;
     case _SC_CLK_TCK:           return SYSTEM_CLK_TCK;
-    case _SC_COLL_WEIGHTS_MAX:  return _POSIX2_COLL_WEIGHTS_MAX;
-    case _SC_EXPR_NEST_MAX:     return _POSIX2_EXPR_NEST_MAX;
     case _SC_LINE_MAX:          return _POSIX2_LINE_MAX;
     case _SC_NGROUPS_MAX:       return NGROUPS_MAX;
     case _SC_OPEN_MAX:          return OPEN_MAX;
-    //case _SC_PASS_MAX:          return PASS_MAX;
+    case _SC_PASS_MAX:          return PASS_MAX;
     case _SC_2_C_BIND:          return SYSTEM_2_C_BIND;
     case _SC_2_C_DEV:           return SYSTEM_2_C_DEV;
     case _SC_2_C_VERSION:       return SYSTEM_2_C_VER;
