@@ -462,3 +462,8 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_EQ(NULL, result);
 }
+
+TEST(unistd_DeathTest, abort) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
+}
