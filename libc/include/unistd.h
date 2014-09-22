@@ -34,7 +34,6 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/sysconf.h>
-#include <pathconf.h>
 
 __BEGIN_DECLS
 
@@ -47,6 +46,29 @@ __BEGIN_DECLS
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
+
+#define _PC_FILESIZEBITS 0
+#define _PC_LINK_MAX 1
+#define _PC_MAX_CANON 2
+#define _PC_MAX_INPUT 3
+#define _PC_NAME_MAX 4
+#define _PC_PATH_MAX 5
+#define _PC_PIPE_BUF 6
+#define _PC_2_SYMLINKS 7
+#define _PC_ALLOC_SIZE_MIN 8
+#define _PC_REC_INCR_XFER_SIZE 9
+#define _PC_REC_MAX_XFER_SIZE 10
+#define _PC_REC_MIN_XFER_SIZE 11
+#define _PC_REC_XFER_ALIGN 12
+#define _PC_SYMLINK_MAX 13
+#define _PC_CHOWN_RESTRICTED 14
+#define _PC_NO_TRUNC 15
+#define _PC_VDISABLE 16
+#define _PC_ASYNC_IO 17
+#define _PC_PRIO_IO 18
+#define _PC_SYNC_IO 19
+
+#include <machine/posix_limits.h>
 
 extern char** environ;
 
@@ -95,6 +117,9 @@ extern char* getusershell(void);
 extern void setusershell(void);
 extern void endusershell(void);
 
+
+extern long fpathconf(int, int);
+extern long pathconf(const char*, int);
 
 
 /* Macros for access() */
