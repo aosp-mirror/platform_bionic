@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "300743cd_fddc5fa9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-22T23:25:08Z",
+      "side": 1,
+      "message": "s/nested/balanced/",
+      "revId": "77a77bf7d69919c936ff8eaa51f353e9bfd4e2f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
