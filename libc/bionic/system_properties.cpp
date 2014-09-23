@@ -471,8 +471,8 @@ static const prop_info *find_property(prop_bt *const trie, const char *name,
 
 static int send_prop_msg(const prop_msg *msg)
 {
-    const int fd = socket(AF_LOCAL, SOCK_STREAM, 0);
-    if (fd < 0) {
+    const int fd = socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
+    if (fd == -1) {
         return -1;
     }
 
