@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30bca331_43fca619",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-23T18:26:34Z",
+      "side": 1,
+      "message": "I\u0027m a bit confused by this. bionic_coverage is always set to true, and so LOCAL_NATIVE_COVERAGE is always set to true.\n\nDoes this cause two different versions of the executable/libraries to be created or something else?\n\nIt looks like there should be someing in BionicOptions.mk that sets bionic_coverage conditionally based on some external thing.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 31
+      },
+      "revId": "260395d465c80d9a44588f3b50cb2f8a0e9603f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
