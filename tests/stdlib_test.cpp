@@ -361,3 +361,51 @@ TEST(stdlib, unlockpt_ENOTTY) {
   ASSERT_EQ(ENOTTY, errno);
   close(fd);
 }
+
+TEST(stdlib, strtol_EINVAL) {
+  errno = 0;
+  strtol("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtol("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtol("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(stdlib, strtoll_EINVAL) {
+  errno = 0;
+  strtoll("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoll("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoll("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(stdlib, strtoul_EINVAL) {
+  errno = 0;
+  strtoul("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoul("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoul("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(stdlib, strtoull_EINVAL) {
+  errno = 0;
+  strtoull("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoull("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoull("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
