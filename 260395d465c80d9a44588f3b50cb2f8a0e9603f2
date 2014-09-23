@@ -22,6 +22,30 @@
       "revId": "260395d465c80d9a44588f3b50cb2f8a0e9603f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30bca331_c38b76a3",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-23T18:31:50Z",
+      "side": 1,
+      "message": "Oops. Had intended to make bionic_coverage :\u003d false for check-in. The idea is that this behaves exactly like this file\u0027s use_clang, but affects all of bionic, not just libc.\n\nThis was actually done to work around a separate issue that I think I\u0027ve now solved... so I can probably do away with that and just leave it in the files we care about. Will test after lunch.",
+      "parentUuid": "30bca331_43fca619",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 31
+      },
+      "revId": "260395d465c80d9a44588f3b50cb2f8a0e9603f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
