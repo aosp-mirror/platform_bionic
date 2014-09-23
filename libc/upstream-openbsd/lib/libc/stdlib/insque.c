@@ -1,7 +1,9 @@
+/*	$OpenBSD: insque.c,v 1.3 2014/08/15 04:14:36 guenther Exp $	*/
+
 /*
  *  Copyright (c) 1993 John Brezak
  *  All rights reserved.
- *
+ * 
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
  *  are met:
@@ -12,7 +14,7 @@
  *     documentation and/or other materials provided with the distribution.
  *  3. The name of the author may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR `AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,12 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: insque.c,v 1.3 2012/06/25 22:32:45 abs Exp $");
-#endif /* LIBC_SCCS and not lint */
-
-#include <assert.h>
+#include <stdlib.h>
 #include <search.h>
 
 struct qelem {
@@ -42,17 +39,16 @@ struct qelem {
 void
 insque(void *entry, void *pred)
 {
-	struct qelem *e = (struct qelem *) entry;
-	struct qelem *p = (struct qelem *) pred;
+	struct qelem *e = entry;
+	struct qelem *p = pred;
 
-	_DIAGASSERT(e != 0);
-
-	e->q_back = p;
-	if (p) {
+	if (p == NULL)
+		e->q_forw = e->q_back = NULL;
+	else {
 		e->q_forw = p->q_forw;
-		if (p->q_forw)
+		e->q_back = p;
+		if (p->q_forw != NULL)
 			p->q_forw->q_back = e;
 		p->q_forw = e;
-	} else
-		e->q_forw = 0;
+	}
 }
