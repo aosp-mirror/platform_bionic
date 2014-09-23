@@ -49,7 +49,6 @@ libc_common_src_files := \
     bionic/ioctl.c \
     bionic/isatty.c \
     bionic/memmem.c \
-    bionic/pathconf.c \
     bionic/pututline.c \
     bionic/sched_cpualloc.c \
     bionic/sched_cpucount.c \
@@ -142,6 +141,7 @@ libc_bionic_src_files := \
     bionic/mntent.cpp \
     bionic/NetdClientDispatch.cpp \
     bionic/open.cpp \
+    bionic/pathconf.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
     bionic/poll.cpp \
