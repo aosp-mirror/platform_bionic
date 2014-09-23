@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
-#include <stdio.h>
 #include <inttypes.h>
+
+#include <errno.h>
+#include <gtest/gtest.h>
+#include <stdio.h>
 
 TEST(inttypes, misc) {
   char buf[512];
@@ -45,4 +46,52 @@ TEST(inttypes, wcstoimax) {
 
 TEST(inttypes, wcstoumax) {
   ASSERT_EQ(123U, wcstoumax(L"123", NULL, 10));
+}
+
+TEST(inttypes, strtoimax_EINVAL) {
+  errno = 0;
+  strtoimax("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoimax("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoimax("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(inttypes, strtoumax_EINVAL) {
+  errno = 0;
+  strtoumax("123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoumax("123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  strtoumax("123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(inttypes, wcstoimax_EINVAL) {
+  errno = 0;
+  wcstoimax(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoimax(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoimax(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(inttypes, wcstoumax_EINVAL) {
+  errno = 0;
+  wcstoumax(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoumax(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoumax(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
 }

@@ -520,3 +520,75 @@ TEST(stdio, open_wmemstream_EINVAL) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
 }
+
+TEST(wchar, wcstol_EINVAL) {
+  errno = 0;
+  wcstol(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstol(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstol(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wcstoll_EINVAL) {
+  errno = 0;
+  wcstoll(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoll(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoll(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wcstoul_EINVAL) {
+  errno = 0;
+  wcstoul(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoul(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoul(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wcstoull_EINVAL) {
+  errno = 0;
+  wcstoull(L"123", NULL, -1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoull(L"123", NULL, 1);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoull(L"123", NULL, 37);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wcstoll_l_EINVAL) {
+  errno = 0;
+  wcstoll_l(L"123", NULL, -1, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoll_l(L"123", NULL, 1, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoll_l(L"123", NULL, 37, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wcstoull_l_EINVAL) {
+  errno = 0;
+  wcstoull_l(L"123", NULL, -1, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoull_l(L"123", NULL, 1, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  wcstoull_l(L"123", NULL, 37, LC_GLOBAL_LOCALE);
+  ASSERT_EQ(EINVAL, errno);
+}
