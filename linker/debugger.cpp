@@ -215,7 +215,7 @@ static void send_debuggerd_packet(siginfo_t* info) {
     return;
   }
 
-  int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
+  int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM | SOCK_CLOEXEC);
   if (s == -1) {
     __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
                       strerror(errno));
