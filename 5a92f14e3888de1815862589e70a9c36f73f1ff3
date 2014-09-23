@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "901c6ffc_aba0b319",
+        "filename": "linker/linker_libc_support.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-23T17:52:30Z",
+      "side": 1,
+      "message": "probably worth a comment explaining why you added this (especially since it isn\u0027t normally needed).\n\n#include \u003csys/cdefs.h\u003e and you can use __unused.",
+      "revId": "5a92f14e3888de1815862589e70a9c36f73f1ff3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
