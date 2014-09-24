@@ -38,17 +38,6 @@
 #define __usleep usleep
 
 /* Redirect internal C library calls to the public function. */
-#define _close close
-#define _fcntl fcntl
-#define _fstat fstat
 #define _nanosleep nanosleep
-#define _open open
-
-/* This one is only needed as long as we have a mix of OpenBSD and FreeBSD stdio. */
-#define _sseek __sseek
-
-/* This is in BSD's <stdlib.h>. */
-#include <stdint.h>
-extern uint32_t arc4random_uniform(uint32_t upper_bound);
 
 #endif
