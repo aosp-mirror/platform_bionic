@@ -28,7 +28,7 @@
 
 #include <stdlib.h>
 
-unsigned long long strtoull_l(const char *nptr, char **endptr, size_t base,
+unsigned long long strtoull_l(const char *nptr, char **endptr, int base,
                               locale_t) {
   return strtoull(nptr, endptr, base);
 }
