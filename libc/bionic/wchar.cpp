@@ -230,13 +230,13 @@ size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t) {
   return wcsxfrm(dest, src, n);
 }
 
-long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, size_t base,
+long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base,
                     locale_t) {
   return wcstoll(nptr, endptr, base);
 }
 
 unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr,
-                              size_t base, locale_t) {
+                              int base, locale_t) {
   return wcstoull(nptr, endptr, base);
 }
 
