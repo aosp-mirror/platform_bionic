@@ -1,3 +1,4 @@
+/*	$OpenBSD: flags.c,v 1.8 2014/08/31 02:21:18 guenther Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,22 +31,15 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)flags.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <sys/types.h>
 #include <sys/file.h>
 #include <stdio.h>
 #include <errno.h>
-
 #include "local.h"
 
 /*
  * Return the (stdio) flags for a given mode.  Store the flags
- * to be passed to an _open() syscall through *optr.
+ * to be passed to an open() syscall through *optr.
  * Return 0 on error.
  */
 int
@@ -78,34 +72,33 @@ __sflags(const char *mode, int *optr)
 		return (0);
 	}
 
-	/* 'b' (binary) is ignored */
-	if (*mode == 'b')
-		mode++;
-
-	/* [rwa][b]\+ means read and write */
-	if (*mode == '+') {
-		mode++;
-		ret = __SRW;
-		m = O_RDWR;
-	}
-
-	/* 'b' (binary) can appear here, too -- and is ignored again */
-	if (*mode == 'b')
-		mode++;
-
-	/* 'x' means exclusive (fail if the file exists) */
-	if (*mode == 'x') {
-		mode++;
-		if (m == O_RDONLY) {
+	while (*mode != '\0') 
+		switch (*mode++) {
+		case 'b':
+			break;
+		case '+':
+			ret = __SRW;
+			m = O_RDWR;
+			break;
+		case 'e':
+			o |= O_CLOEXEC;
+			break;
+		case 'x':
+			if (o & O_CREAT)
+				o |= O_EXCL;
+			break;
+		default:
+			/*
+			 * Lots of software passes other extension mode
+			 * letters, like Window's 't'
+			 */
+#if 0
 			errno = EINVAL;
 			return (0);
+#else
+			break;
+#endif
 		}
-		o |= O_EXCL;
-	}
-
-	/* set close-on-exec */
-	if (*mode == 'e')
-		o |= O_CLOEXEC;
 
 	*optr = m | o;
 	return (ret);
