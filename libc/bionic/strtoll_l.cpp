@@ -28,6 +28,6 @@
 
 #include <stdlib.h>
 
-long long strtoll_l(const char *nptr, char **endptr, size_t base, locale_t) {
+long long strtoll_l(const char *nptr, char **endptr, int base, locale_t) {
   return strtoll(nptr, endptr, base);
 }
