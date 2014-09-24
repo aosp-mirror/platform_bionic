@@ -162,17 +162,31 @@ TEST(stdlib_DeathTest, getenv_after_main_thread_exits) {
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
+TEST(stdlib, mkostemp64) {
+  TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
+  int flags = fcntl(tf.fd, F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+}
+
+TEST(stdlib, mkostemp) {
+  TemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
+  int flags = fcntl(tf.fd, F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+}
+
+TEST(stdlib, mkstemp64) {
+  TemporaryFile tf(mkstemp64);
+  struct stat64 sb;
+  ASSERT_EQ(0, fstat64(tf.fd, &sb));
+  ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
+}
+
 TEST(stdlib, mkstemp) {
   TemporaryFile tf;
   struct stat sb;
   ASSERT_EQ(0, fstat(tf.fd, &sb));
-}
-
-TEST(stdlib, mkstemp64) {
-  GenericTemporaryFile<mkstemp64> tf;
-  struct stat64 sb;
-  ASSERT_EQ(0, fstat64(tf.fd, &sb));
-  ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
 
 TEST(stdlib, system) {

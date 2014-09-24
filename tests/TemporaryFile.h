@@ -17,22 +17,24 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-template<int (*mk_fn)(char*)>
+#include "private/bionic_macros.h"
+
+template <typename T = int (*)(char*)>
 class GenericTemporaryFile {
  public:
-  GenericTemporaryFile(const char* dirpath = NULL) {
-    if (dirpath != NULL) {
-      init(dirpath);
-    } else {
-      // Since we might be running on the host or the target, and if we're
-      // running on the host we might be running under bionic or glibc,
-      // let's just try both possible temporary directories and take the
-      // first one that works.
-      init("/data/local/tmp");
-      if (fd == -1) {
-        init("/tmp");
-      }
+  GenericTemporaryFile(T mk_fn = mkstemp) : mk_fn(mk_fn) {
+    // Since we might be running on the host or the target, and if we're
+    // running on the host we might be running under bionic or glibc,
+    // let's just try both possible temporary directories and take the
+    // first one that works.
+    init("/data/local/tmp");
+    if (fd == -1) {
+      init("/tmp");
     }
+  }
+
+  GenericTemporaryFile(const char* dirpath, T mk_fn = mkstemp) : mk_fn(mk_fn) {
+    init(dirpath);
   }
 
   ~GenericTemporaryFile() {
@@ -49,13 +51,17 @@ class GenericTemporaryFile {
   char filename[1024];
 
  private:
+  T mk_fn;
+
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
     fd = mk_fn(filename);
   }
+
+  DISALLOW_COPY_AND_ASSIGN(GenericTemporaryFile);
 };
 
-typedef GenericTemporaryFile<mkstemp> TemporaryFile;
+typedef GenericTemporaryFile<> TemporaryFile;
 
 class TemporaryDir {
  public:
@@ -77,4 +83,5 @@ class TemporaryDir {
     return (mkdtemp(dirname) != NULL);
   }
 
+  DISALLOW_COPY_AND_ASSIGN(TemporaryDir);
 };
