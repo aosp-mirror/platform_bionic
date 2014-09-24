@@ -1,3 +1,4 @@
+/*	$OpenBSD: fclose.c,v 1.9 2009/11/09 00:18:27 kurt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -30,68 +31,33 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)fopen.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
-#include "namespace.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <errno.h>
-#include <limits.h>
-#include "un-namespace.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "local.h"
 
-FILE *
-fopen(const char * __restrict file, const char * __restrict mode)
+int
+fclose(FILE *fp)
 {
-	FILE *fp;
-	int f;
-	int flags, oflags;
+	int r;
 
-	if ((flags = __sflags(mode, &oflags)) == 0)
-		return (NULL);
-	if ((fp = __sfp()) == NULL)
-		return (NULL);
-	if ((f = _open(file, oflags, DEFFILEMODE)) < 0) {
-		fp->_flags = 0;			/* release */
-		return (NULL);
+	if (fp->_flags == 0) {	/* not open! */
+		errno = EBADF;
+		return (EOF);
 	}
-	/*
-	 * File descriptors are a full int, but _file is only a short.
-	 * If we get a valid file descriptor that is greater than
-	 * SHRT_MAX, then the fd will get sign-extended into an
-	 * invalid file descriptor.  Handle this case by failing the
-	 * open.
-	 */
-	if (f > SHRT_MAX) {
-		fp->_flags = 0;			/* release */
-		_close(f);
-		errno = EMFILE;
-		return (NULL);
-	}
-	fp->_file = f;
-	fp->_flags = flags;
-	fp->_cookie = fp;
-	fp->_read = __sread;
-	fp->_write = __swrite;
-	fp->_seek = __sseek;
-	fp->_close = __sclose;
-	/*
-	 * When opening in append mode, even though we use O_APPEND,
-	 * we need to seek to the end so that ftell() gets the right
-	 * answer.  If the user then alters the seek pointer, or
-	 * the file extends, this will fail, but there is not much
-	 * we can do about this.  (We could set __SAPP and check in
-	 * fseek and ftell.)
-	 */
-	if (oflags & O_APPEND)
-		(void)_sseek(fp, (fpos_t)0, SEEK_END);
-	return (fp);
+	FLOCKFILE(fp);
+	WCIO_FREE(fp);
+	r = fp->_flags & __SWR ? __sflush(fp) : 0;
+	if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0)
+		r = EOF;
+	if (fp->_flags & __SMBF)
+		free((char *)fp->_bf._base);
+	if (HASUB(fp))
+		FREEUB(fp);
+	if (HASLB(fp))
+		FREELB(fp);
+	fp->_r = fp->_w = 0;	/* Mess up if reaccessed. */
+	fp->_flags = 0;		/* Release this FILE for reuse. */
+	FUNLOCKFILE(fp);
+	return (r);
 }
