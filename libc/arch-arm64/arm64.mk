@@ -59,7 +59,7 @@ ifeq ($(strip $(TARGET_CPU_VARIANT)),)
 endif
 cpu_variant_mk := $(LOCAL_PATH)/arch-arm64/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
 ifeq ($(wildcard $(cpu_variant_mk)),)
-$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are generic, generic-neon, denver64. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are generic, denver64. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
 endif
 include $(cpu_variant_mk)
 libc_common_additional_dependencies += $(cpu_variank_mk)
