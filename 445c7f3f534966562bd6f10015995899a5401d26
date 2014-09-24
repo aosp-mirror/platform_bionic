@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30bca331_6c3b9203",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-24T00:53:35Z",
+      "side": 1,
+      "message": "Probably best to add an ASSERT_TRUE(fp !\u003d NULL); and below.",
+      "range": {
+        "startLine": 770,
+        "startChar": 0,
+        "endLine": 770,
+        "endChar": 0
+      },
+      "revId": "445c7f3f534966562bd6f10015995899a5401d26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
