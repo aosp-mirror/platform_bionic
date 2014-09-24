@@ -68,7 +68,7 @@ TEST(ftw, ftw) {
 
 TEST(ftw, ftw64) {
   TemporaryDir td;
-  GenericTemporaryFile<mkstemp64> tf(td.dirname);
+  TemporaryFile tf(td.dirname, mkstemp64);
   ftw64(td.dirname, check_ftw64, 1);
 }
 
@@ -80,6 +80,6 @@ TEST(ftw, nftw) {
 
 TEST(ftw, nftw64) {
   TemporaryDir td;
-  GenericTemporaryFile<mkstemp64> tf(td.dirname);
+  TemporaryFile tf(td.dirname, mkstemp64);
   nftw64(td.dirname, check_nftw64, 1, 0);
 }
