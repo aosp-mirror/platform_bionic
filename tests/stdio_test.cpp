@@ -756,3 +756,43 @@ TEST(stdio, open_memstream_EINVAL) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
 }
+
+TEST(stdio, fdopen_CLOEXEC) {
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+
+  // This fd doesn't have O_CLOEXEC...
+  int flags = fcntl(fd, F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(0, flags & FD_CLOEXEC);
+
+  FILE* fp = fdopen(fd, "re");
+  ASSERT_TRUE(fp != NULL);
+
+  // ...but the new one does.
+  flags = fcntl(fileno(fp), F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+
+  fclose(fp);
+  close(fd);
+}
+
+TEST(stdio, freopen_CLOEXEC) {
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_TRUE(fp != NULL);
+
+  // This FILE* doesn't have O_CLOEXEC...
+  int flags = fcntl(fileno(fp), F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(0, flags & FD_CLOEXEC);
+
+  fp = freopen("/proc/version", "re", fp);
+
+  // ...but the new one does.
+  flags = fcntl(fileno(fp), F_GETFD);
+  ASSERT_TRUE(flags != -1);
+  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+
+  fclose(fp);
+}
