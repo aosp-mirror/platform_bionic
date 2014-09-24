@@ -46,6 +46,7 @@ __BEGIN_DECLS
 #endif
 
 #define O_ASYNC FASYNC
+#define O_RSYNC O_SYNC
 
 #define SPLICE_F_MOVE 1
 #define SPLICE_F_NONBLOCK 2
