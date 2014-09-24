@@ -241,7 +241,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/sleep.c \
     upstream-freebsd/lib/libc/gen/usleep.c \
     upstream-freebsd/lib/libc/stdio/fclose.c \
-    upstream-freebsd/lib/libc/stdio/flags.c \
     upstream-freebsd/lib/libc/stdio/fopen.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
@@ -399,6 +398,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
     upstream-openbsd/lib/libc/stdio/findfp.c \
+    upstream-openbsd/lib/libc/stdio/flags.c \
     upstream-openbsd/lib/libc/stdio/fmemopen.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
