@@ -15,3 +15,7 @@
  */
 
 #include "../libc/arch-common/bionic/__dso_handle.h"
+
+int atexit(void (*function)(void) __attribute__((__unused__))) {
+  return -1;
+}
