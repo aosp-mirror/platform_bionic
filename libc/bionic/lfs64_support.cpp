@@ -17,11 +17,20 @@
 #include <ftw.h>
 #include <stdlib.h>
 
-int mkstemp64(char* filename) {
-  // Delegation will work in this case because all the transitive dependencies
-  // are already 64-bit ready. In particular, we don't have non-O_LARGEFILE
-  // open (our open is actually open64) and stat and stat64 are the same.
-  return mkstemp(filename);
+// Delegation will work in these cases because all the transitive dependencies
+// are already 64-bit ready. In particular, we don't have non-O_LARGEFILE
+// open (our open is actually open64) and stat and stat64 are the same.
+int mkstemp64(char* path) {
+  return mkstemp(path);
+}
+int mkostemp64(char* path, int flags) {
+  return mkostemp(path, flags);
+}
+int mkstemps64(char* path, int suffix_length) {
+  return mkstemps(path, suffix_length);
+}
+int mkostemps64(char* path, int suffix_length, int flags) {
+  return mkostemps(path, suffix_length, flags);
 }
 
 typedef int (*ftw_fn)(const char*, const struct stat*, int);
