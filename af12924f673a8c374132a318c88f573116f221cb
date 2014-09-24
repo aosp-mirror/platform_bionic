@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3063c3c5_8b809d73",
+        "filename": "libc/upstream-freebsd/lib/libc/stdlib/getopt_long.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-24T19:43:05Z",
+      "side": 1,
+      "message": "the weird thing here is that OpenBSD doesn\u0027t have any of the GNU compatible stuff...",
+      "revId": "af12924f673a8c374132a318c88f573116f221cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
