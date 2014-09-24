@@ -242,8 +242,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/ldexp.c \
     upstream-freebsd/lib/libc/gen/sleep.c \
     upstream-freebsd/lib/libc/gen/usleep.c \
-    upstream-freebsd/lib/libc/stdio/fclose.c \
-    upstream-freebsd/lib/libc/stdio/fopen.c \
     upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
     upstream-freebsd/lib/libc/stdlib/imaxabs.c \
@@ -388,6 +386,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/dprintf.c \
+    upstream-openbsd/lib/libc/stdio/fclose.c \
     upstream-openbsd/lib/libc/stdio/fdopen.c \
     upstream-openbsd/lib/libc/stdio/feof.c \
     upstream-openbsd/lib/libc/stdio/ferror.c \
@@ -402,6 +401,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/findfp.c \
     upstream-openbsd/lib/libc/stdio/flags.c \
     upstream-openbsd/lib/libc/stdio/fmemopen.c \
+    upstream-openbsd/lib/libc/stdio/fopen.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
