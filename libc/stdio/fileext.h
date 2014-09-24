@@ -43,6 +43,8 @@ struct __sfileext {
 	pthread_mutex_t _lock; /* file lock */
 };
 
+__LIBC_HIDDEN__ extern struct __sfileext __sFext[3];
+
 #define _FILEEXT_INITIALIZER  {{NULL,0},{0},PTHREAD_RECURSIVE_MUTEX_INITIALIZER}
 
 #define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
