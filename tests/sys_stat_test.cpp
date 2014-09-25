@@ -56,18 +56,22 @@ TEST(sys_stat, futimens_EBADF) {
 }
 
 TEST(sys_stat, mkfifo) {
-  // Racy but probably sufficient way to get a suitable filename.
-  std::string path;
-  {
-    TemporaryFile tf;
-    path = tf.filename;
-  }
+  if (getuid() == 0) {
+    // Racy but probably sufficient way to get a suitable filename.
+    std::string path;
+    {
+      TemporaryFile tf;
+      path = tf.filename;
+    }
 
-  ASSERT_EQ(0, mkfifo(path.c_str(), 0666));
-  struct stat sb;
-  ASSERT_EQ(0, stat(path.c_str(), &sb));
-  ASSERT_TRUE(S_ISFIFO(sb.st_mode));
-  unlink(path.c_str());
+    ASSERT_EQ(0, mkfifo(path.c_str(), 0666));
+    struct stat sb;
+    ASSERT_EQ(0, stat(path.c_str(), &sb));
+    ASSERT_TRUE(S_ISFIFO(sb.st_mode));
+    unlink(path.c_str());
+  } else {
+    GTEST_LOG_(INFO) << "This test only performs a test when run as root.";
+  }
 }
 
 TEST(sys_stat, stat64_lstat64_fstat64) {
