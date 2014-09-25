@@ -42,8 +42,5 @@ struct glue {
 	FILE	*iobs;
 };
 
-#pragma GCC visibility push(hidden)
-
-extern struct glue __sglue;
-
-#pragma GCC visibility pop
+/* This was referenced by a couple of different pieces of middleware and the Crystax NDK. */
+__LIBC64_HIDDEN__ extern struct glue __sglue;
