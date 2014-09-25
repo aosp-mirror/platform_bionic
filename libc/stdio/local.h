@@ -53,21 +53,24 @@ __LIBC64_HIDDEN__ int __srefill(FILE*);
 /* This was referenced by the apportable middleware for LP32. */
 __LIBC64_HIDDEN__ int __swsetup(FILE*);
 
+/* These were referenced by a couple of different pieces of middleware and the Crystax NDK. */
+__LIBC64_HIDDEN__ extern int __sdidinit;
+__LIBC64_HIDDEN__ int __sflags(const char*, int*);
+__LIBC64_HIDDEN__ FILE* __sfp(void);
+__LIBC64_HIDDEN__ void __sinit(void);
+__LIBC64_HIDDEN__ void __smakebuf(FILE*);
+
 #pragma GCC visibility push(hidden)
 
 int	__sflush(FILE *);
 int	__sflush_locked(FILE *);
-FILE	*__sfp(void);
 int	__sread(void *, char *, int);
 int	__swrite(void *, const char *, int);
 fpos_t	__sseek(void *, fpos_t, int);
 int	__sclose(void *);
-void	__sinit(void);
 void	_cleanup(void);
-void	__smakebuf(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
 int	_fwalk(int (*)(FILE *));
-int	__sflags(const char *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
 int	__vfprintf(FILE *, const char *, __va_list);
@@ -76,7 +79,6 @@ int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 
 extern void __atexit_register_cleanup(void (*)(void));
-extern int __sdidinit;
 
 /*
  * Return true if the given FILE cannot be written now.
@@ -114,8 +116,6 @@ extern int __sdidinit;
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
-int __srget(FILE*);
-int __swbuf(int, FILE*);
 #define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
 #define __sferror(p)   (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
