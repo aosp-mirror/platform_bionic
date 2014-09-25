@@ -5,7 +5,6 @@
 #
 
 libc_bionic_src_files_arm64 += \
-    bionic/__memcpy_chk.cpp \
     bionic/__memset_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/__strcat_chk.cpp \
