@@ -30,10 +30,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
-  ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
-}
-
 static void* get_brk() {
   return sbrk(0);
 }
@@ -519,4 +515,139 @@ TEST(unistd, pathconf_fpathconf) {
   ASSERT_TRUE(rc > 0 && powerof2(rc));
   rc = fpathconf(tf.fd, _PC_REC_XFER_ALIGN);
   ASSERT_TRUE(rc > 0 && powerof2(rc));
+}
+
+#define verifySysconf(name, ret) \
+{\
+  errno = 0;\
+  ret = sysconf(name);\
+  ASSERT_TRUE((0 == errno) && (-1 != ret)) << "name=" << #name << ", ret=" << ret << ", Error Message: " << strerror(errno);\
+}\
+
+TEST(unistd, sysconf) {
+  long ret;
+
+  verifySysconf(_SC_MONOTONIC_CLOCK, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_ARG_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_CHILD_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_CLK_TCK, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_LINE_MAX, ret);
+  ASSERT_GT(ret, 1);
+  verifySysconf(_SC_NGROUPS_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_OPEN_MAX, ret);
+  ASSERT_GT(ret, 1);
+  verifySysconf(_SC_2_C_BIND, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_2_C_VERSION, ret);
+  verifySysconf(_SC_JOB_CONTROL, ret);
+  ASSERT_EQ(1, ret);
+  verifySysconf(_SC_SAVED_IDS, ret);
+  ASSERT_EQ(1, ret);
+  verifySysconf(_SC_VERSION, ret);
+  verifySysconf(_SC_RE_DUP_MAX, ret);
+  verifySysconf(_SC_STREAM_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_TZNAME_MAX, ret);
+  verifySysconf(_SC_XOPEN_VERSION, ret);
+  verifySysconf(_SC_ATEXIT_MAX, ret);
+  ASSERT_GT(ret, 1);
+  verifySysconf(_SC_IOV_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_PAGESIZE, ret);
+  ASSERT_GE(ret, 1);
+  verifySysconf(_SC_PAGE_SIZE, ret);
+  ASSERT_GE(ret, 1);
+  verifySysconf(_SC_XOPEN_UNIX, ret);
+  verifySysconf(_SC_DELAYTIMER_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_MQ_OPEN_MAX, ret);
+  verifySysconf(_SC_MQ_PRIO_MAX, ret);
+  ASSERT_GT(ret ,0);
+  verifySysconf(_SC_RTSIG_MAX, ret);
+  verifySysconf(_SC_SEM_NSEMS_MAX, ret);
+  verifySysconf(_SC_SEM_VALUE_MAX, ret);
+  verifySysconf(_SC_SIGQUEUE_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_TIMER_MAX, ret);
+  verifySysconf(_SC_FSYNC, ret);
+  verifySysconf(_SC_MAPPED_FILES, ret);
+  verifySysconf(_SC_PRIORITY_SCHEDULING, ret);
+  verifySysconf(_SC_SEMAPHORES, ret);
+  verifySysconf(_SC_SYNCHRONIZED_IO, ret);
+  verifySysconf(_SC_TIMERS, ret);
+  verifySysconf(_SC_GETGR_R_SIZE_MAX, ret);
+  verifySysconf(_SC_GETPW_R_SIZE_MAX, ret);
+  verifySysconf(_SC_LOGIN_NAME_MAX, ret);
+  verifySysconf(_SC_THREAD_DESTRUCTOR_ITERATIONS, ret);
+  verifySysconf(_SC_THREAD_KEYS_MAX, ret);
+  verifySysconf(_SC_THREAD_STACK_MIN, ret);
+  verifySysconf(_SC_THREAD_THREADS_MAX, ret);
+  verifySysconf(_SC_TTY_NAME_MAX, ret);
+  ASSERT_GT(ret, 0);
+  verifySysconf(_SC_THREADS, ret);
+  verifySysconf(_SC_THREAD_PRIO_INHERIT, ret);
+  verifySysconf(_SC_THREAD_PRIO_PROTECT, ret);
+  verifySysconf(_SC_NPROCESSORS_CONF, ret);
+  verifySysconf(_SC_NPROCESSORS_ONLN, ret);
+  verifySysconf(_SC_PHYS_PAGES, ret);
+  verifySysconf(_SC_AVPHYS_PAGES, ret);
+
+  //  TODO: keep following names check here
+  //  so that we can enable them when the error fixed
+
+  /* when call sysconf with following name,
+     the system call will report error "Function not implemented"
+
+  verifySysconf(_SC_BC_BASE_MAX, ret);
+  verifySysconf(_SC_BC_DIM_MAX, ret);
+  verifySysconf(_SC_BC_SCALE_MAX, ret);
+  verifySysconf(_SC_BC_STRING_MAX, ret);
+  verifySysconf(_SC_COLL_WEIGHTS_MAX, ret);
+  verifySysconf(_SC_EXPR_NEST_MAX, ret);
+  verifySysconf(_SC_XOPEN_SHM, ret);
+  verifySysconf(_SC_XBS5_ILP32_OFF32, ret);
+  verifySysconf(_SC_XBS5_ILP32_OFFBIG, ret);
+  verifySysconf(_SC_XBS5_LP64_OFF64, ret);
+  verifySysconf(_SC_XBS5_LPBIG_OFFBIG, ret);
+  verifySysconf(_SC_AIO_LISTIO_MAX, ret);
+  verifySysconf(_SC_AIO_MAX, ret);
+  verifySysconf(_SC_AIO_PRIO_DELTA_MAX, ret);
+  verifySysconf(_SC_ASYNCHRONOUS_IO, ret);
+  verifySysconf(_SC_MEMLOCK, ret);
+  verifySysconf(_SC_MEMLOCK_RANGE, ret);
+  verifySysconf(_SC_MEMORY_PROTECTION, ret);
+  verifySysconf(_SC_MESSAGE_PASSING, ret);
+  verifySysconf(_SC_PRIORITIZED_IO, ret);
+  verifySysconf(_SC_SHARED_MEMORY_OBJECTS, ret);
+  verifySysconf(_SC_THREAD_SAFE_FUNCTIONS, ret);
+
+  */
+
+  /* when following names are checked,
+     the return value of sysconf is -1,
+     which means following name are invalid.
+
+  verifySysconf(_SC_2_C_DEV, ret);
+  verifySysconf(_SC_2_FORT_DEV, ret);
+  verifySysconf(_SC_2_FORT_RUN, ret);
+  verifySysconf(_SC_2_LOCALEDEF, ret);
+  verifySysconf(_SC_2_SW_DEV, ret);
+  verifySysconf(_SC_2_UPE, ret);
+  verifySysconf(_SC_2_VERSION, ret);
+  verifySysconf(_SC_XOPEN_CRYPT, ret);
+  verifySysconf(_SC_XOPEN_ENH_I18N, ret);
+  verifySysconf(_SC_XOPEN_XCU_VERSION, ret);
+  verifySysconf(_SC_XOPEN_REALTIME, ret);
+  verifySysconf(_SC_XOPEN_REALTIME_THREADS, ret);
+  verifySysconf(_SC_XOPEN_LEGACY, ret);
+  verifySysconf(_SC_THREAD_ATTR_STACKADDR, ret);
+  verifySysconf(_SC_THREAD_ATTR_STACKSIZE, ret);
+  verifySysconf(_SC_REALTIME_SIGNALS, ret);
+
+  */
 }
