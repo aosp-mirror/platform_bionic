@@ -20,8 +20,8 @@
 #include <math.h>
 
 // Avoid optimization.
-double d;
-double v;
+volatile double d;
+volatile double v;
 
 static void BM_math_sqrt(int iters) {
   StartBenchmarkTiming();
