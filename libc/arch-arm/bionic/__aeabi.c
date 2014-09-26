@@ -39,6 +39,9 @@
 
 extern int __cxa_atexit(void (*)(void*), void*, void*);
 
+// All of these are weak symbols to avoid multiple definition errors when
+// linking with libstdc++-v3 or compiler-rt.
+
 /* The "C++ ABI for ARM" document states that static C++ constructors,
  * which are called from the .init_array, should manually call
  * __aeabi_atexit() to register static destructors explicitly.
@@ -47,35 +50,35 @@ extern int __cxa_atexit(void (*)(void*), void*, void*);
  * variable from the shared object that contains the constructor/destructor
  */
 
-// Make this a weak symbol to avoid a multiple definition error when linking with libstdc++-v3.
 int __attribute__((weak))
 __aeabi_atexit(void *object, void (*destructor) (void *), void *dso_handle) {
     return __cxa_atexit(destructor, object, dso_handle);
 }
 
 
-void __aeabi_memcpy8(void *dest, const void *src, size_t n) {
+void __attribute__((weak))
+__aeabi_memcpy8(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
 
-void __aeabi_memcpy4(void *dest, const void *src, size_t n) {
+void __attribute__((weak)) __aeabi_memcpy4(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
 
-void __aeabi_memcpy(void *dest, const void *src, size_t n) {
+void __attribute__((weak)) __aeabi_memcpy(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
 
 
-void __aeabi_memmove8(void *dest, const void *src, size_t n) {
+void __attribute__((weak)) __aeabi_memmove8(void *dest, const void *src, size_t n) {
     memmove(dest, src, n);
 }
 
-void __aeabi_memmove4(void *dest, const void *src, size_t n) {
+void __attribute__((weak)) __aeabi_memmove4(void *dest, const void *src, size_t n) {
     memmove(dest, src, n);
 }
 
-void __aeabi_memmove(void *dest, const void *src, size_t n) {
+void __attribute__((weak)) __aeabi_memmove(void *dest, const void *src, size_t n) {
     memmove(dest, src, n);
 }
 
@@ -84,27 +87,27 @@ void __aeabi_memmove(void *dest, const void *src, size_t n) {
  *  This allows __aeabi_memclr to tail-call __aeabi_memset
  */
 
-void __aeabi_memset8(void *dest, size_t n, int c) {
+void __attribute__((weak)) __aeabi_memset8(void *dest, size_t n, int c) {
     memset(dest, c, n);
 }
 
-void __aeabi_memset4(void *dest, size_t n, int c) {
+void __attribute__((weak)) __aeabi_memset4(void *dest, size_t n, int c) {
     memset(dest, c, n);
 }
 
-void __aeabi_memset(void *dest, size_t n, int c) {
+void __attribute__((weak)) __aeabi_memset(void *dest, size_t n, int c) {
     memset(dest, c, n);
 }
 
 
-void __aeabi_memclr8(void *dest, size_t n) {
+void __attribute__((weak)) __aeabi_memclr8(void *dest, size_t n) {
     __aeabi_memset8(dest, n, 0);
 }
 
-void __aeabi_memclr4(void *dest, size_t n) {
+void __attribute__((weak)) __aeabi_memclr4(void *dest, size_t n) {
     __aeabi_memset4(dest, n, 0);
 }
 
-void __aeabi_memclr(void *dest, size_t n) {
+void __attribute__((weak)) __aeabi_memclr(void *dest, size_t n) {
     __aeabi_memset(dest, n, 0);
 }
