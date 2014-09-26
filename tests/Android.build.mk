@@ -15,6 +15,7 @@
 #
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_MODULE := $(module)
 LOCAL_MODULE_TAGS := $(module_tag)
@@ -85,9 +86,13 @@ LOCAL_LDLIBS := \
     $($(module)_ldlibs) \
     $($(module)_ldlibs_$(build_type)) \
 
-ifeq ($(build_type),target)
-  include external/stlport/libstlport.mk
+ifeq ($(LOCAL_FORCE_STATIC_EXECUTABLE),true)
+LOCAL_CXX_STL := libc++_static
+else
+LOCAL_CXX_STL := libc++
+endif
 
+ifeq ($(build_type),target)
   include $(BUILD_$(build_target))
 endif
 
