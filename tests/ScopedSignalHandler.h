@@ -21,9 +21,10 @@
 
 class ScopedSignalHandler {
  public:
-  ScopedSignalHandler(int signal_number, void (*handler)(int)) : signal_number_(signal_number) {
+  ScopedSignalHandler(int signal_number, void (*handler)(int), int sa_flags = 0)
+      : signal_number_(signal_number) {
     sigemptyset(&action_.sa_mask);
-    action_.sa_flags = 0;
+    action_.sa_flags = sa_flags;
     action_.sa_handler = handler;
     sigaction(signal_number_, &action_, &old_action_);
   }

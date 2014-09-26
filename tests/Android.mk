@@ -88,6 +88,7 @@ libBionicStandardTests_src_files := \
     search_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
+    stack_unwinding_test.cpp \
     stdatomic_test.cpp \
     stdint_test.cpp \
     stdio_test.cpp \
@@ -224,8 +225,6 @@ bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
-    stack_unwinding_test.cpp \
-    stack_unwinding_test_impl.c \
 
 bionic-unit-tests_cflags := $(test_cflags)
 
