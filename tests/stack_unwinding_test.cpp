@@ -31,7 +31,8 @@
 
 #include "ScopedSignalHandler.h"
 
-#define noinline __attribute__((noinline))
+#define noinline __attribute__((__noinline__))
+#define __unused __attribute__((__unused__))
 
 static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
   int* count_ptr = reinterpret_cast<int*>(arg);
@@ -85,6 +86,7 @@ static void noinline UnwindSignalHandler(int) {
 }
 
 TEST(stack_unwinding, unwind_through_signal_frame) {
+  killer_count = handler_count = handler_one_deeper_count = 0;
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
   _Unwind_Backtrace(FrameCounter, &killer_count);
@@ -92,11 +94,12 @@ TEST(stack_unwinding, unwind_through_signal_frame) {
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
 }
 
-extern "C" void unwind_through_frame_with_cleanup_function();
+// On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
+TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
+  killer_count = handler_count = handler_one_deeper_count = 0;
+  ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
-// We have to say "DeathTest" here so gtest knows to run this test (which exits)
-// in its own process.
-TEST(stack_unwinding_DeathTest, unwind_through_frame_with_cleanup_function) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(unwind_through_frame_with_cleanup_function(), ::testing::ExitedWithCode(42), "");
+  _Unwind_Backtrace(FrameCounter, &killer_count);
+
+  ASSERT_EQ(0, kill(getpid(), SIGUSR1));
 }
