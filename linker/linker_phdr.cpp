@@ -702,15 +702,20 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  *   load_bias   -> load bias
  * Output:
  *   dynamic       -> address of table in memory (null on failure).
+ *   dynamic_flags -> protection flags for section (unset on failure)
  * Return:
  *   void
  */
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                    ElfW(Addr) load_bias, ElfW(Dyn)** dynamic) {
+                                    ElfW(Addr) load_bias, ElfW(Dyn)** dynamic,
+                                    ElfW(Word)* dynamic_flags) {
   *dynamic = nullptr;
   for (const ElfW(Phdr)* phdr = phdr_table, *phdr_limit = phdr + phdr_count; phdr < phdr_limit; phdr++) {
     if (phdr->p_type == PT_DYNAMIC) {
       *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
+      if (dynamic_flags) {
+        *dynamic_flags = phdr->p_flags;
+      }
       return;
     }
   }
