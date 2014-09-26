@@ -612,6 +612,8 @@ class LoadTask {
   DISALLOW_IMPLICIT_CONSTRUCTORS(LoadTask);
 };
 
+LoadTask::deleter_t LoadTask::deleter;
+
 template <typename T>
 using linked_list_t = LinkedList<T, TypeBasedAllocator<LinkedListEntry<T>>>;
 
@@ -1826,7 +1828,9 @@ static int nullify_closed_stdio() {
 }
 
 bool soinfo::PrelinkImage() {
-  phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic);
+  /* Extract dynamic section */
+  ElfW(Word) dynamic_flags = 0;
+  phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
 
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags & FLAG_LINKER) != 0;
@@ -1835,8 +1839,6 @@ bool soinfo::PrelinkImage() {
     DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags);
   }
 
-  /* Extract dynamic section */
-  ElfW(Word) dynamic_flags = phdr->p_flags;
   if (dynamic == nullptr) {
     if (!relocating_linker) {
       DL_ERR("missing PT_DYNAMIC in \"%s\"", name);
@@ -2228,7 +2230,7 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_soinfo_for_gdb.dynamic);
+                                 &linker_soinfo_for_gdb.dynamic, nullptr);
   insert_soinfo_into_debug_map(&linker_soinfo_for_gdb);
 }
 
