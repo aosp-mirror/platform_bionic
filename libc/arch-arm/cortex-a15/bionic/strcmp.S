@@ -168,7 +168,6 @@ ENTRY(strcmp)
         bne     .L_do_align
 
         /* Fast path.  */
-        .save   {r4-r7}
         init
 
 .L_doubleword_aligned:
