@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b00a5412_f8acb1b0",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-29T23:55:42Z",
+      "side": 1,
+      "message": "if you want to do this, you\u0027ll have to clean out the collection below, otherwise you\u0027re deleting every key twice. (which is probably okay in our current implementation, but not guaranteed to be safe.)\n\nmore importantly --- why are you seeing this test fail?",
+      "revId": "4502b6f8a5d8528881d8d4c451b1f1955d3ec887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
