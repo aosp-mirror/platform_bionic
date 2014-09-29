@@ -486,14 +486,34 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
   unsigned elf_hash = elfhash(name);
   ElfW(Sym)* s = nullptr;
 
-  if (somain != nullptr) {
-    DEBUG("%s: looking up %s in executable %s",
-          si->name, name, somain->name);
-
-    // 1. Look for it in the main executable
-    s = soinfo_elf_lookup(somain, elf_hash, name);
+  /* "This element's presence in a shared object library alters the dynamic linker's
+   * symbol resolution algorithm for references within the library. Instead of starting
+   * a symbol search with the executable file, the dynamic linker starts from the shared
+   * object itself. If the shared object fails to supply the referenced symbol, the
+   * dynamic linker then searches the executable file and other shared objects as usual."
+   *
+   * http://www.sco.com/developers/gabi/2012-12-31/ch5.dynamic.html
+   *
+   * Note that this is unlikely since static linker avoids generating
+   * relocations for -Bsymbolic linked dynamic executables.
+   */
+  if (si->has_DT_SYMBOLIC) {
+    DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si->name, name);
+    s = soinfo_elf_lookup(si, elf_hash, name);
     if (s != nullptr) {
-      *lsi = somain;
+      *lsi = si;
+    }
+  }
+
+  if (s == nullptr && somain != nullptr) {
+    // 1. Look for it in the main executable unless we already did.
+    if (si != somain || !si->has_DT_SYMBOLIC) {
+      DEBUG("%s: looking up %s in executable %s",
+            si->name, name, somain->name);
+      s = soinfo_elf_lookup(somain, elf_hash, name);
+      if (s != nullptr) {
+        *lsi = somain;
+      }
     }
 
     // 2. Look for it in the ld_preloads
@@ -506,22 +526,23 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
         }
       }
     }
+  }
 
-    /* Look for symbols in the local scope (the object who is
-     * searching). This happens with C++ templates on x86 for some
-     * reason.
-     *
-     * Notes on weak symbols:
-     * The ELF specs are ambiguous about treatment of weak definitions in
-     * dynamic linking.  Some systems return the first definition found
-     * and some the first non-weak definition.   This is system dependent.
-     * Here we return the first definition found for simplicity.  */
+  /* Look for symbols in the local scope (the object who is
+   * searching). This happens with C++ templates on x86 for some
+   * reason.
+   *
+   * Notes on weak symbols:
+   * The ELF specs are ambiguous about treatment of weak definitions in
+   * dynamic linking.  Some systems return the first definition found
+   * and some the first non-weak definition.   This is system dependent.
+   * Here we return the first definition found for simplicity.  */
 
-    if (s == nullptr) {
-      s = soinfo_elf_lookup(si, elf_hash, name);
-      if (s != nullptr) {
-        *lsi = si;
-      }
+  if (s == nullptr && !si->has_DT_SYMBOLIC) {
+    DEBUG("%s: looking up %s in local scope", si->name, name);
+    s = soinfo_elf_lookup(si, elf_hash, name);
+    if (s != nullptr) {
+      *lsi = si;
     }
   }
 
@@ -2023,7 +2044,7 @@ bool soinfo::PrelinkImage() {
         break;
 #endif
       case DT_SYMBOLIC:
-        // ignored
+        has_DT_SYMBOLIC = true;
         break;
       case DT_NEEDED:
         ++needed_count;
@@ -2036,6 +2057,9 @@ bool soinfo::PrelinkImage() {
 #else
           has_text_relocations = true;
 #endif
+        }
+        if (d->d_un.d_val & DF_SYMBOLIC) {
+          has_DT_SYMBOLIC = true;
         }
         break;
 #if defined(__mips__)
