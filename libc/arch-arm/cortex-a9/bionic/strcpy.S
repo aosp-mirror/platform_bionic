@@ -62,6 +62,11 @@
 
     .macro m_push
     push    {r0, r4, r5, lr}
+    .cfi_def_cfa_offset 16
+    .cfi_rel_offset r0, 0
+    .cfi_rel_offset r4, 4
+    .cfi_rel_offset r5, 8
+    .cfi_rel_offset lr, 12
     .endm // m_push
 
     .macro m_ret inst
@@ -77,31 +82,31 @@
 ENTRY(strcpy)
     // Unroll the first 8 bytes that will be copied.
     m_push
-    m_copy_byte reg=r2, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r3, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r4, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r5, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r2, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r3, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r4, cmd=cbz, label=strcpy_finish
-    m_copy_byte reg=r5, cmd=cbnz, label=strcpy_continue
+    m_copy_byte reg=r2, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r3, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r4, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r5, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r2, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r3, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r4, cmd=cbz, label=.Lstrcpy_finish
+    m_copy_byte reg=r5, cmd=cbnz, label=.Lstrcpy_continue
 
-strcpy_finish:
+.Lstrcpy_finish:
     m_ret   inst=pop
 
-strcpy_continue:
+.Lstrcpy_continue:
     pld     [r1, #0]
     ands    r3, r0, #7
-    bne     strcpy_align_dst
+    bne     .Lstrcpy_align_dst
 
-strcpy_check_src_align:
+.Lstrcpy_check_src_align:
     // At this point dst is aligned to a double word, check if src
     // is also aligned to a double word.
     ands    r3, r1, #7
-    bne     strcpy_unaligned_copy
+    bne     .Lstrcpy_unaligned_copy
 
     .p2align 2
-strcpy_mainloop:
+.Lstrcpy_mainloop:
     ldmia   r1!, {r2, r3}
 
     pld     [r1, #64]
@@ -109,17 +114,17 @@ strcpy_mainloop:
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_mainloop
+    b       .Lstrcpy_mainloop
 
-strcpy_zero_in_first_register:
+.Lstrcpy_zero_in_first_register:
     lsls    lr, ip, #17
     itt     ne
     strbne  r2, [r0]
@@ -136,7 +141,7 @@ strcpy_zero_in_first_register:
     strb    r3, [r0]
     m_ret   inst=pop
 
-strcpy_zero_in_second_register:
+.Lstrcpy_zero_in_second_register:
     lsls    lr, ip, #17
     ittt    ne
     stmiane r0!, {r2}
@@ -156,18 +161,18 @@ strcpy_zero_in_second_register:
     strb    r4, [r0]
     m_ret   inst=pop
 
-strcpy_align_dst:
+.Lstrcpy_align_dst:
     // Align to a double word (64 bits).
     rsb     r3, r3, #8
     lsls    ip, r3, #31
-    beq     strcpy_align_to_32
+    beq     .Lstrcpy_align_to_32
 
     ldrb    r2, [r1], #1
     strb    r2, [r0], #1
-    cbz     r2, strcpy_complete
+    cbz     r2, .Lstrcpy_complete
 
-strcpy_align_to_32:
-    bcc     strcpy_align_to_64
+.Lstrcpy_align_to_32:
+    bcc     .Lstrcpy_align_to_64
 
     ldrb    r4, [r1], #1
     strb    r4, [r0], #1
@@ -180,76 +185,76 @@ strcpy_align_to_32:
     it      eq
     m_ret   inst=popeq
 
-strcpy_align_to_64:
+.Lstrcpy_align_to_64:
     tst     r3, #4
-    beq     strcpy_check_src_align
+    beq     .Lstrcpy_check_src_align
     ldr     r2, [r1], #4
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
     stmia   r0!, {r2}
-    b       strcpy_check_src_align
+    b       .Lstrcpy_check_src_align
 
-strcpy_complete:
+.Lstrcpy_complete:
     m_ret   inst=pop
 
-strcpy_unaligned_copy:
+.Lstrcpy_unaligned_copy:
     // Dst is aligned to a double word, while src is at an unknown alignment.
     // There are 7 different versions of the unaligned copy code
     // to prevent overreading the src. The mainloop of every single version
     // will store 64 bits per loop. The difference is how much of src can
     // be read without potentially crossing a page boundary.
     tbb     [pc, r3]
-strcpy_unaligned_branchtable:
+.Lstrcpy_unaligned_branchtable:
     .byte 0
-    .byte ((strcpy_unalign7 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign6 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign5 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign4 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign3 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign2 - strcpy_unaligned_branchtable)/2)
-    .byte ((strcpy_unalign1 - strcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign7 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign6 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign5 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign4 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign3 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign2 - .Lstrcpy_unaligned_branchtable)/2)
+    .byte ((.Lstrcpy_unalign1 - .Lstrcpy_unaligned_branchtable)/2)
 
     .p2align 2
     // Can read 7 bytes before possibly crossing a page.
-strcpy_unalign7:
+.Lstrcpy_unalign7:
     ldr     r2, [r1], #4
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     ldrb    r3, [r1]
-    cbz     r3, strcpy_unalign7_copy5bytes
+    cbz     r3, .Lstrcpy_unalign7_copy5bytes
     ldrb    r4, [r1, #1]
-    cbz     r4, strcpy_unalign7_copy6bytes
+    cbz     r4, .Lstrcpy_unalign7_copy6bytes
     ldrb    r5, [r1, #2]
-    cbz     r5, strcpy_unalign7_copy7bytes
+    cbz     r5, .Lstrcpy_unalign7_copy7bytes
 
     ldr     r3, [r1], #4
     pld     [r1, #64]
 
     lsrs    ip, r3, #24
     stmia   r0!, {r2, r3}
-    beq     strcpy_unalign_return
-    b       strcpy_unalign7
+    beq     .Lstrcpy_unalign_return
+    b       .Lstrcpy_unalign7
 
-strcpy_unalign7_copy5bytes:
+.Lstrcpy_unalign7_copy5bytes:
     stmia   r0!, {r2}
     strb    r3, [r0]
-strcpy_unalign_return:
+.Lstrcpy_unalign_return:
     m_ret   inst=pop
 
-strcpy_unalign7_copy6bytes:
+.Lstrcpy_unalign7_copy6bytes:
     stmia   r0!, {r2}
     strb    r3, [r0], #1
     strb    r4, [r0], #1
     m_ret   inst=pop
 
-strcpy_unalign7_copy7bytes:
+.Lstrcpy_unalign7_copy7bytes:
     stmia   r0!, {r2}
     strb    r3, [r0], #1
     strb    r4, [r0], #1
@@ -258,30 +263,30 @@ strcpy_unalign7_copy7bytes:
 
     .p2align 2
     // Can read 6 bytes before possibly crossing a page.
-strcpy_unalign6:
+.Lstrcpy_unalign6:
     ldr     r2, [r1], #4
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     ldrb    r4, [r1]
-    cbz     r4, strcpy_unalign_copy5bytes
+    cbz     r4, .Lstrcpy_unalign_copy5bytes
     ldrb    r5, [r1, #1]
-    cbz     r5, strcpy_unalign_copy6bytes
+    cbz     r5, .Lstrcpy_unalign_copy6bytes
 
     ldr     r3, [r1], #4
     pld     [r1, #64]
 
     tst     r3, #0xff0000
-    beq     strcpy_unalign6_copy7bytes
+    beq     .Lstrcpy_unalign6_copy7bytes
     lsrs    ip, r3, #24
     stmia   r0!, {r2, r3}
-    beq     strcpy_unalign_return
-    b       strcpy_unalign6
+    beq     .Lstrcpy_unalign_return
+    b       .Lstrcpy_unalign6
 
-strcpy_unalign6_copy7bytes:
+.Lstrcpy_unalign6_copy7bytes:
     stmia   r0!, {r2}
     strh    r3, [r0], #2
     lsr     r3, #16
@@ -290,16 +295,16 @@ strcpy_unalign6_copy7bytes:
 
     .p2align 2
     // Can read 5 bytes before possibly crossing a page.
-strcpy_unalign5:
+.Lstrcpy_unalign5:
     ldr     r2, [r1], #4
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     ldrb    r4, [r1]
-    cbz     r4, strcpy_unalign_copy5bytes
+    cbz     r4, .Lstrcpy_unalign_copy5bytes
 
     ldr     r3, [r1], #4
 
@@ -308,17 +313,17 @@ strcpy_unalign5:
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_unalign5
+    b       .Lstrcpy_unalign5
 
-strcpy_unalign_copy5bytes:
+.Lstrcpy_unalign_copy5bytes:
     stmia   r0!, {r2}
     strb    r4, [r0]
     m_ret   inst=pop
 
-strcpy_unalign_copy6bytes:
+.Lstrcpy_unalign_copy6bytes:
     stmia   r0!, {r2}
     strb    r4, [r0], #1
     strb    r5, [r0]
@@ -326,13 +331,13 @@ strcpy_unalign_copy6bytes:
 
     .p2align 2
     // Can read 4 bytes before possibly crossing a page.
-strcpy_unalign4:
+.Lstrcpy_unalign4:
     ldmia   r1!, {r2}
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     ldmia   r1!, {r3}
     pld     [r1, #64]
@@ -340,20 +345,20 @@ strcpy_unalign4:
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_unalign4
+    b       .Lstrcpy_unalign4
 
     .p2align 2
     // Can read 3 bytes before possibly crossing a page.
-strcpy_unalign3:
+.Lstrcpy_unalign3:
     ldrb    r2, [r1]
-    cbz     r2, strcpy_unalign3_copy1byte
+    cbz     r2, .Lstrcpy_unalign3_copy1byte
     ldrb    r3, [r1, #1]
-    cbz     r3, strcpy_unalign3_copy2bytes
+    cbz     r3, .Lstrcpy_unalign3_copy2bytes
     ldrb    r4, [r1, #2]
-    cbz     r4, strcpy_unalign3_copy3bytes
+    cbz     r4, .Lstrcpy_unalign3_copy3bytes
 
     ldr     r2, [r1], #4
     ldr     r3, [r1], #4
@@ -361,26 +366,26 @@ strcpy_unalign3:
     pld     [r1, #64]
 
     lsrs    lr, r2, #24
-    beq     strcpy_unalign_copy4bytes
+    beq     .Lstrcpy_unalign_copy4bytes
 
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_unalign3
+    b       .Lstrcpy_unalign3
 
-strcpy_unalign3_copy1byte:
+.Lstrcpy_unalign3_copy1byte:
     strb    r2, [r0]
     m_ret   inst=pop
 
-strcpy_unalign3_copy2bytes:
+.Lstrcpy_unalign3_copy2bytes:
     strb    r2, [r0], #1
     strb    r3, [r0]
     m_ret   inst=pop
 
-strcpy_unalign3_copy3bytes:
+.Lstrcpy_unalign3_copy3bytes:
     strb    r2, [r0], #1
     strb    r3, [r0], #1
     strb    r4, [r0]
@@ -388,34 +393,34 @@ strcpy_unalign3_copy3bytes:
 
     .p2align 2
     // Can read 2 bytes before possibly crossing a page.
-strcpy_unalign2:
+.Lstrcpy_unalign2:
     ldrb    r2, [r1]
-    cbz     r2, strcpy_unalign_copy1byte
+    cbz     r2, .Lstrcpy_unalign_copy1byte
     ldrb    r3, [r1, #1]
-    cbz     r3, strcpy_unalign_copy2bytes
+    cbz     r3, .Lstrcpy_unalign_copy2bytes
 
     ldr     r2, [r1], #4
     ldr     r3, [r1], #4
     pld     [r1, #64]
 
     tst     r2, #0xff0000
-    beq     strcpy_unalign_copy3bytes
+    beq     .Lstrcpy_unalign_copy3bytes
     lsrs    ip, r2, #24
-    beq     strcpy_unalign_copy4bytes
+    beq     .Lstrcpy_unalign_copy4bytes
 
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_unalign2
+    b       .Lstrcpy_unalign2
 
     .p2align 2
     // Can read 1 byte before possibly crossing a page.
-strcpy_unalign1:
+.Lstrcpy_unalign1:
     ldrb    r2, [r1]
-    cbz     r2, strcpy_unalign_copy1byte
+    cbz     r2, .Lstrcpy_unalign_copy1byte
 
     ldr     r2, [r1], #4
     ldr     r3, [r1], #4
@@ -425,32 +430,32 @@ strcpy_unalign1:
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_first_register
+    bne     .Lstrcpy_zero_in_first_register
 
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
     ands    ip, ip, #0x80808080
-    bne     strcpy_zero_in_second_register
+    bne     .Lstrcpy_zero_in_second_register
 
     stmia   r0!, {r2, r3}
-    b       strcpy_unalign1
+    b       .Lstrcpy_unalign1
 
-strcpy_unalign_copy1byte:
+.Lstrcpy_unalign_copy1byte:
     strb    r2, [r0]
     m_ret   inst=pop
 
-strcpy_unalign_copy2bytes:
+.Lstrcpy_unalign_copy2bytes:
     strb    r2, [r0], #1
     strb    r3, [r0]
     m_ret   inst=pop
 
-strcpy_unalign_copy3bytes:
+.Lstrcpy_unalign_copy3bytes:
     strh    r2, [r0], #2
     lsr     r2, #16
     strb    r2, [r0]
     m_ret   inst=pop
 
-strcpy_unalign_copy4bytes:
+.Lstrcpy_unalign_copy4bytes:
     stmia   r0, {r2}
     m_ret   inst=pop
 END(strcpy)

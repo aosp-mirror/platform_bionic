@@ -53,7 +53,6 @@ END(__memcpy_chk)
 ENTRY(memcpy)
         pld     [r1, #64]
         stmfd   sp!, {r0, lr}
-        .save   {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
@@ -66,7 +65,6 @@ END(memcpy)
 ENTRY_PRIVATE(__memcpy_chk_fail)
         // Preserve lr for backtrace.
         push    {lr}
-        .save   {lr}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset lr, 0
 

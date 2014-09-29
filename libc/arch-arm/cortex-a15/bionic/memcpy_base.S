@@ -54,7 +54,6 @@
  */
 
 ENTRY_PRIVATE(MEMCPY_BASE)
-        .save   {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
@@ -172,7 +171,6 @@ ENTRY_PRIVATE(MEMCPY_BASE)
 END(MEMCPY_BASE)
 
 ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
-        .save   {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
@@ -181,17 +179,14 @@ ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
         // i.e., not keeping the stack looking like users expect
         // (highest numbered register at highest address).
         strd    r4, r5, [sp, #-8]!
-        .save   {r4, r5}
         .cfi_adjust_cfa_offset 8
         .cfi_rel_offset r4, 0
         .cfi_rel_offset r5, 4
         strd    r6, r7, [sp, #-8]!
-        .save   {r6, r7}
         .cfi_adjust_cfa_offset 8
         .cfi_rel_offset r6, 0
         .cfi_rel_offset r7, 0
         strd    r8, r9, [sp, #-8]!
-        .save   {r8, r9}
         .cfi_adjust_cfa_offset 8
         .cfi_rel_offset r8, 0
         .cfi_rel_offset r9, 4
