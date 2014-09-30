@@ -147,7 +147,7 @@ int dladdr(const void* addr, Dl_info* info) {
   // Determine if any symbol in the library contains the specified address.
   ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
   if (sym != nullptr) {
-    info->dli_sname = si->strtab + sym->st_name;
+    info->dli_sname = si->get_string(sym->st_name);
     info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));
   }
 
@@ -245,6 +245,7 @@ soinfo* get_libdl_info() {
     __libdl_info.bucket = g_libdl_buckets;
     __libdl_info.chain = g_libdl_chains;
     __libdl_info.ref_count = 1;
+    __libdl_info.strtab_size = sizeof(ANDROID_LIBDL_STRTAB);
   }
 
   return &__libdl_info;

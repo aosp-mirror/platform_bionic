@@ -417,14 +417,13 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
 
 static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name) {
   ElfW(Sym)* symtab = si->symtab;
-  const char* strtab = si->strtab;
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p %x %zd",
              name, si->name, reinterpret_cast<void*>(si->base), hash, hash % si->nbucket);
 
   for (unsigned n = si->bucket[hash % si->nbucket]; n != 0; n = si->chain[n]) {
     ElfW(Sym)* s = symtab + n;
-    if (strcmp(strtab + s->st_name, name)) continue;
+    if (strcmp(si->get_string(s->st_name), name)) continue;
 
     // only concern ourselves with global and weak symbol definitions
     switch (ELF_ST_BIND(s->st_info)) {
@@ -776,7 +775,7 @@ template<typename F>
 static void for_each_dt_needed(const soinfo* si, F action) {
   for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
-      action(si->strtab + d->d_un.d_val);
+      action(si->get_string(d->d_un.d_val));
     }
   }
 }
@@ -1103,7 +1102,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
     soinfo* lsi = nullptr;
 
     if (sym != 0) {
-      sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+      sym_name = get_string(symtab[sym].st_name);
       s = soinfo_do_lookup(this, sym_name, &lsi);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
@@ -1381,7 +1380,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
     soinfo* lsi = nullptr;
 
     if (sym != 0) {
-      sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
+      sym_name = get_string(symtab[sym].st_name);
       s = soinfo_do_lookup(this, sym_name, &lsi);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
@@ -1599,7 +1598,7 @@ static bool mips_relocate_got(soinfo* si) {
   got = si->plt_got + local_gotno;
   for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
     // This is an undefined reference... try to locate it.
-    const char* sym_name = si->strtab + sym->st_name;
+    const char* sym_name = si->get_string(sym->st_name);
     soinfo* lsi = nullptr;
     ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi);
     if (s == nullptr) {
@@ -1801,6 +1800,14 @@ ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
   return static_cast<ElfW(Addr)>(s->st_value + load_bias);
 }
 
+const char* soinfo::get_string(ElfW(Word) index) const {
+  if (has_min_version(1) && (index >= strtab_size)) {
+    __libc_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d", name, strtab_size, index);
+  }
+
+  return strtab + index;
+}
+
 /* Force any of the closed stdin, stdout and stderr to be associated with
    /dev/null. */
 static int nullify_closed_stdio() {
@@ -1908,6 +1915,9 @@ bool soinfo::PrelinkImage() {
         break;
       case DT_STRTAB:
         strtab = reinterpret_cast<const char*>(load_bias + d->d_un.d_ptr);
+        break;
+      case DT_STRSZ:
+        strtab_size = d->d_un.d_val;
         break;
       case DT_SYMTAB:
         symtab = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
@@ -2062,6 +2072,16 @@ bool soinfo::PrelinkImage() {
           has_DT_SYMBOLIC = true;
         }
         break;
+      case DT_FLAGS_1:
+        if ((d->d_un.d_val & DF_1_GLOBAL) != 0) {
+          rtld_flags |= RTLD_GLOBAL;
+        }
+        // TODO: Implement other flags
+
+        if ((d->d_un.d_val & ~(DF_1_NOW | DF_1_GLOBAL)) != 0) {
+          DL_WARN("Unsupported flags DT_FLAGS_1=%p", reinterpret_cast<void*>(d->d_un.d_val));
+        }
+        break;
 #if defined(__mips__)
       case DT_STRSZ:
         break;
@@ -2093,7 +2113,7 @@ bool soinfo::PrelinkImage() {
 
       default:
         if (!relocating_linker) {
-          DEBUG("%s: unused DT entry: type %p arg %p", name,
+          DL_WARN("%s: unused DT entry: type %p arg %p", name,
               reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
