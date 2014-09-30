@@ -280,6 +280,12 @@ bionic-unit-tests-static_static_libraries := \
 
 bionic-unit-tests-static_force_static_executable := true
 
+# libc and libc++ both define std::nothrow. libc's is a private symbol, but this
+# still causes issues when linking libc.a and libc++.a, since private isn't
+# effective until it has been linked. To fix this, just allow multiple symbol
+# definitions for the static tests.
+bionic-unit-tests-static_ldflags := -Wl,--allow-multiple-definition
+
 module := bionic-unit-tests-static
 module_tag := optional
 build_type := target
