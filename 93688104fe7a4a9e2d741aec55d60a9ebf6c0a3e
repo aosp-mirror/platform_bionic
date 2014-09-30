@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "103080e8_8e21db94",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T21:41:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "502678b6_41e62272",
+      "revId": "93688104fe7a4a9e2d741aec55d60a9ebf6c0a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0150830_e5f3e17c",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2014-09-30T21:30:52Z",
       "side": 1,
       "message": "Did you check this? I think that its off by one since I think that an extra \\0 gets added to the string. Which might mean that this is okay as is though.",
+      "range": {
+        "startLine": 248,
+        "startChar": 58,
+        "endLine": 248,
+        "endChar": 60
+      },
+      "revId": "93688104fe7a4a9e2d741aec55d60a9ebf6c0a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "103080e8_0e160b3e",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T21:41:47Z",
+      "side": 1,
+      "message": "I checked this... it will work either way but the last \\0 is still part of the last string, I think it is better to count it in.",
+      "parentUuid": "d0150830_e5f3e17c",
       "range": {
         "startLine": 248,
         "startChar": 58,
