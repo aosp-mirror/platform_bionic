@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "101b206c_62a588bc",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-30T19:16:30Z",
+      "side": 1,
+      "message": "Would it be possible to change this to sizeof(ANDROID_LIBDL_STRTAB) - 1? Then you can set it directly in the structure down below and get rid of the define.\n\nI\u0027ve been burned by this size issue when I made changes to this in the past.",
+      "range": {
+        "startLine": 188,
+        "startChar": 30,
+        "endLine": 188,
+        "endChar": 33
+      },
+      "revId": "6de46c07fe83250a23da7edf44d4de80a8c5fa44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0150830_2ec89b7e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1790,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-30T19:16:30Z",
+      "side": 1,
+      "message": "Is it possible that you will ever see a min version of 0? If so, won\u0027t this fail with an incorrect error message?\n\nIf the string sizes have not changed since version 0, it might be better to check for 0 and use a hard coded value to check for size in that case.",
+      "range": {
+        "startLine": 1790,
+        "startChar": 6,
+        "endLine": 1790,
+        "endChar": 23
+      },
+      "revId": "6de46c07fe83250a23da7edf44d4de80a8c5fa44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "101b206c_4275ecbc",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-30T19:16:30Z",
+      "side": 1,
+      "message": "Do you need to increase the version number since you are adding a new field?",
+      "range": {
+        "startLine": 254,
+        "startChar": 5,
+        "endLine": 254,
+        "endChar": 17
+      },
+      "revId": "6de46c07fe83250a23da7edf44d4de80a8c5fa44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
