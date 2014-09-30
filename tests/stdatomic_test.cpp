@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-#include <stdatomic.h>
 #include <gtest/gtest.h>
+// Fool stdatomic.h into not using <atomic>.
+#undef _USING_LIBCXX
+#include <stdatomic.h>
 #include <pthread.h>
 #include <stdint.h>
 
