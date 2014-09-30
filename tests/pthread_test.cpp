@@ -38,37 +38,71 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
-TEST(pthread, pthread_key_create_lots) {
-#if defined(__BIONIC__) // glibc uses keys internally that its sysconf value doesn't account for.
+TEST(pthread, pthread_keys_max) {
   // POSIX says PTHREAD_KEYS_MAX should be at least 128.
   ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+}
 
+TEST(pthread, _SC_THREAD_KEYS_MAX_big_enough_for_POSIX) {
+  // sysconf shouldn't return a smaller value.
+  int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
+  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
+}
+
+TEST(pthread, pthread_key_many_distinct) {
+  // We should be able to allocate at least this many keys.
+  int nkeys = sysconf(_SC_THREAD_KEYS_MAX) / 2;
+  std::vector<pthread_key_t> keys;
+
+  auto scope_guard = make_scope_guard([&keys]{
+    for (auto key : keys) {
+      EXPECT_EQ(0, pthread_key_delete(key));
+    }
+  });
+
+  for (int i = 0; i < nkeys; ++i) {
+    pthread_key_t key;
+    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is
+    // wrong.
+    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << nkeys;
+    keys.push_back(key);
+    ASSERT_EQ(0, pthread_setspecific(key, reinterpret_cast<void*>(i)));
+  }
+
+  for (int i = keys.size() - 1; i >= 0; --i) {
+    ASSERT_EQ(reinterpret_cast<void*>(i), pthread_getspecific(keys.back()));
+    pthread_key_t key = keys.back();
+    keys.pop_back();
+    ASSERT_EQ(0, pthread_key_delete(key));
+  }
+}
+
+TEST(pthread, pthread_key_EAGAIN) {
   int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
 
-  // sysconf shouldn't return a smaller value.
-  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
-
-  // We can allocate _SC_THREAD_KEYS_MAX keys.
-  sysconf_max -= 2; // (Except that gtest takes two for itself.)
   std::vector<pthread_key_t> keys;
-  for (int i = 0; i < sysconf_max; ++i) {
+  int rv = 0;
+  // Two keys are used by gtest, so sysconf_max should be more than we are
+  // allowed to allocate now.
+  for (int i = 0; i < sysconf_max; i++) {
     pthread_key_t key;
-    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
-    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf_max;
+    rv = pthread_key_create(&key, NULL);
+    if (rv == EAGAIN) {
+      break;
+    }
+    EXPECT_EQ(0, rv);
     keys.push_back(key);
   }
 
-  // ...and that really is the maximum.
-  pthread_key_t key;
-  ASSERT_EQ(EAGAIN, pthread_key_create(&key, NULL));
-
-  // (Don't leak all those keys!)
-  for (size_t i = 0; i < keys.size(); ++i) {
-    ASSERT_EQ(0, pthread_key_delete(keys[i]));
+  // Don't leak keys.
+  for (auto key : keys) {
+    EXPECT_EQ(0, pthread_key_delete(key));
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+  keys.clear();
+
+  // We should have eventually reached the maximum number of keys and received
+  // EAGAIN.
+  ASSERT_EQ(EAGAIN, rv);
 }
 
 TEST(pthread, pthread_key_delete) {
