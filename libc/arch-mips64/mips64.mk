@@ -49,7 +49,6 @@ libc_openbsd_src_files_mips64 += \
 libc_bionic_src_files_mips64 += \
     arch-mips64/bionic/__bionic_clone.S \
     arch-mips64/bionic/_exit_with_stack_teardown.S \
-    arch-mips64/bionic/__get_sp.S \
     arch-mips64/bionic/_setjmp.S \
     arch-mips64/bionic/setjmp.S \
     arch-mips64/bionic/sigsetjmp.S \
