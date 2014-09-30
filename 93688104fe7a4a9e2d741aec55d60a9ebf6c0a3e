@@ -16,6 +16,29 @@
       "revId": "93688104fe7a4a9e2d741aec55d60a9ebf6c0a3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0150830_e5f3e17c",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-09-30T21:30:52Z",
+      "side": 1,
+      "message": "Did you check this? I think that its off by one since I think that an extra \\0 gets added to the string. Which might mean that this is okay as is though.",
+      "range": {
+        "startLine": 248,
+        "startChar": 58,
+        "endLine": 248,
+        "endChar": 60
+      },
+      "revId": "93688104fe7a4a9e2d741aec55d60a9ebf6c0a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
