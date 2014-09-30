@@ -39,7 +39,6 @@
 ENTRY(__strcpy_chk)
     pld     [r0, #0]
     push    {r0, lr}
-    .save   {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
@@ -161,7 +160,6 @@ END(__strcpy_chk)
 #include "memcpy_base.S"
 
 ENTRY_PRIVATE(__strcpy_chk_failed)
-    .save   {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4

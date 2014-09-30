@@ -33,7 +33,6 @@
  */
 
 ENTRY_PRIVATE(MEMCPY_BASE)
-        .save       {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
@@ -139,14 +138,12 @@ ENTRY_PRIVATE(MEMCPY_BASE)
 END(MEMCPY_BASE)
 
 ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
-        .save       {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
 
         /* Simple arm-only copy loop to handle aligned copy operations */
         stmfd       sp!, {r4-r8}
-        .save       {r4-r8}
         .cfi_adjust_cfa_offset 20
         .cfi_rel_offset r4, 0
         .cfi_rel_offset r5, 4
