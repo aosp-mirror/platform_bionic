@@ -136,7 +136,9 @@ struct soinfo {
   soinfo* next;
   unsigned flags;
 
+ private:
   const char* strtab;
+ public:
   ElfW(Sym)* symtab;
 
   size_t nbucket;
@@ -222,7 +224,9 @@ struct soinfo {
 
   ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
-  bool inline has_min_version(uint32_t min_version) {
+  const char* get_string(ElfW(Word) index) const;
+
+  bool inline has_min_version(uint32_t min_version) const {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
   }
  private:
@@ -249,6 +253,9 @@ struct soinfo {
 
   // version >= 1
   int rtld_flags;
+  size_t strtab_size;
+
+  friend soinfo* get_libdl_info();
 };
 
 extern soinfo* get_libdl_info();
