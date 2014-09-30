@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d01fc743_781c09cb",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T20:53:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "101b206c_62a588bc",
+      "range": {
+        "startLine": 188,
+        "startChar": 30,
+        "endLine": 188,
+        "endChar": 33
+      },
+      "revId": "6de46c07fe83250a23da7edf44d4de80a8c5fa44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0150830_2ec89b7e",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-30T19:16:30Z",
       "side": 1,
       "message": "Is it possible that you will ever see a min version of 0? If so, won\u0027t this fail with an incorrect error message?\n\nIf the string sizes have not changed since version 0, it might be better to check for 0 and use a hard coded value to check for size in that case.",
+      "range": {
+        "startLine": 1790,
+        "startChar": 6,
+        "endLine": 1790,
+        "endChar": 23
+      },
+      "revId": "6de46c07fe83250a23da7edf44d4de80a8c5fa44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_c04fc27d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1790,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T20:53:44Z",
+      "side": 1,
+      "message": "for L soinfo::version is 0, for the pre-L there is no version.",
+      "parentUuid": "d0150830_2ec89b7e",
       "range": {
         "startLine": 1790,
         "startChar": 6,
