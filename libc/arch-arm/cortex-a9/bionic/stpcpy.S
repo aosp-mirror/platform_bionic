@@ -26,5 +26,5 @@
  * SUCH DAMAGE.
  */
 
-#define STRCPY
+#define STPCPY
 #include "string_copy.S"
