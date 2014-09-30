@@ -2083,8 +2083,6 @@ bool soinfo::PrelinkImage() {
         }
         break;
 #if defined(__mips__)
-      case DT_STRSZ:
-        break;
       case DT_MIPS_RLD_MAP:
         // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
         {
