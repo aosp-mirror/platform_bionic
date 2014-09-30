@@ -16,6 +16,24 @@
       "revId": "4502b6f8a5d8528881d8d4c451b1f1955d3ec887",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "101b206c_19de4b6f",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-09-30T16:27:50Z",
+      "side": 1,
+      "message": "Yes, I\u0027m relying on the fact that they can be safely deleted twice. I can clean it up easy enough.\n\nI\u0027m only seeing the failures on the host tests (host bionic, not glibc). libc++abi uses a pthread_key for __cxa_get_globals(), which is initialized when the first exception is thrown. If I\u0027m reading the gtest source/manual correctly, it looks like they use exceptions to handle failures. So if a test fails prior to this test running, the sysconf_max adjustment will be incorrect, and the test will fail.",
+      "parentUuid": "b00a5412_f8acb1b0",
+      "revId": "4502b6f8a5d8528881d8d4c451b1f1955d3ec887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
