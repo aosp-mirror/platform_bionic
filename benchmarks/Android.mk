@@ -49,9 +49,8 @@ LOCAL_MODULE_STEM_64 := bionic-benchmarks64
 LOCAL_MULTILIB := both
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
-LOCAL_SHARED_LIBRARIES += libstlport
 LOCAL_SRC_FILES := $(benchmark_src_files)
+LOCAL_CXX_STL := libc++
 include $(BUILD_EXECUTABLE)
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
