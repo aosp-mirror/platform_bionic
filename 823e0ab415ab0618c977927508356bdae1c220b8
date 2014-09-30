@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "101b206c_9c848968",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-30T18:20:08Z",
+      "side": 1,
+      "message": "add the others too?",
+      "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0150830_936b54e3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-30T18:20:08Z",
+      "side": 1,
+      "message": "(or just %p and void* like we\u0027ve lazily done elsewhere in this code.)",
+      "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0150830_f37bb0ae",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-09-30T18:20:08Z",
+      "side": 1,
+      "message": "sweet! only about a hundred left :-)",
+      "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
