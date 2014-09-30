@@ -271,10 +271,10 @@ bionic-unit-tests-static_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests-static_static_libraries := \
-    libstlport_static \
     libm \
     libc \
-    libstdc++ \
+    libc++_static \
+    libdl \
     libtinyxml2 \
     liblog \
 
