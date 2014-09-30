@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1026bf9c_75b092dc",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T18:51:04Z",
+      "side": 1,
+      "message": "done - some of them seem to be redundant...",
+      "parentUuid": "101b206c_9c848968",
+      "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0150830_936b54e3",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-09-30T18:20:08Z",
       "side": 1,
       "message": "(or just %p and void* like we\u0027ve lazily done elsewhere in this code.)",
+      "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "100240f8_41429689",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-09-30T18:51:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0150830_936b54e3",
       "revId": "823e0ab415ab0618c977927508356bdae1c220b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
