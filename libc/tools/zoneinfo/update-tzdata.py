@@ -123,18 +123,21 @@ def BuildIcuToolsAndData(data_filename):
   print 'Making ICU data...'
   subprocess.check_call(['make'])
 
-  # Copy the output files to their ultimate destination.
+  # Copy the source file to its ultimate destination.
   icu_txt_data_dir = '%s/data/misc' % icu_dir
   print 'Copying zoneinfo64.txt to %s ...' % icu_txt_data_dir
   shutil.copy('zoneinfo64.txt', icu_txt_data_dir)
 
+  # Regenerate the .dat file.
   os.chdir(icu_working_dir)
+  subprocess.check_call(['make', '-j32'])
+
+  # Copy the .dat file to its ultimate destination.
   icu_dat_data_dir = '%s/stubdata' % icu_dir
   datfiles = glob.glob('data/out/tmp/icudt??l.dat')
   if len(datfiles) != 1:
     print 'ERROR: Unexpectedly found %d .dat files (%s). Halting.' % (len(datfiles), datfiles)
     sys.exit(1)
-
   datfile = datfiles[0]
   print 'Copying %s to %s ...' % (datfile, icu_dat_data_dir)
   shutil.copy(datfile, icu_dat_data_dir)
