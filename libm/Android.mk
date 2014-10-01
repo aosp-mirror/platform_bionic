@@ -1,6 +1,8 @@
 ifneq ($(TARGET_USE_PRIVATE_LIBM),true)
 LOCAL_PATH:= $(call my-dir)
 
+bionic_coverage := false
+
 # TODO: this comes from from upstream's libc, not libm, but it's an
 # implementation detail that should have hidden visibility, so it needs
 # to be in whatever library the math code is in.
@@ -273,6 +275,8 @@ LOCAL_C_INCLUDES += $(libm_common_includes)
 LOCAL_SRC_FILES := $(libm_common_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
 # arch-specific settings
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
 LOCAL_SRC_FILES_arm := arm/fenv.c
@@ -305,6 +309,8 @@ LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
