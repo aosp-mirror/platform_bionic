@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70529c24_46ae322c",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-10-01T12:52:23Z",
+      "side": 1,
+      "message": "We call make here....",
+      "range": {
+        "startLine": 118,
+        "startChar": 2,
+        "endLine": 118,
+        "endChar": 12
+      },
+      "revId": "f8896c6c93fd698b129742780878123a3a19ae07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "504f587e_e5a6361e",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-10-01T12:52:23Z",
+      "side": 1,
+      "message": "And then again?\n\nWhat did I miss when I made the last changes?\n\nClearly I thought that the process was:\n1) Build the tools\n2) Run the tools\n3) Copy the .txt and .dat files\n\nNow the process is:\n1) Build the tools\n2) Run the tools\n3) copy the .txt file\n4) Build the tools again...?\n5) Copy the .dat file",
+      "range": {
+        "startLine": 133,
+        "startChar": 13,
+        "endLine": 133,
+        "endChar": 23
+      },
+      "revId": "f8896c6c93fd698b129742780878123a3a19ae07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
