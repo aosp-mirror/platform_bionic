@@ -16,6 +16,24 @@
       "revId": "12e3f22c7c17d9d23e1720c9d23b9ee09c7528c6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b066d410_db1a2761",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-01T03:09:24Z",
+      "side": 1,
+      "message": "No, this is a different behavior than the extra file was. The extra file was for enabling coverage for _all_ of bionic because it looked like it was required for a successful build. This is just a flag to enable it for libm (and similarly for libc). The flag can be set here for local builds, and is overridden in my cron job with mm bionic_coverage\u003dtrue. Could have been libm_coverage/libc_coverage, but it doesn\u0027t make much difference.",
+      "parentUuid": "b08df4f4_09185166",
+      "revId": "12e3f22c7c17d9d23e1720c9d23b9ee09c7528c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
