@@ -68,6 +68,30 @@
       "revId": "4ae0bcb9c66456793fd613d2a3ac8efc014fc3a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06348f0_cc38ff15",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-01T03:15:24Z",
+      "side": 1,
+      "message": "good point, I will add test cases",
+      "parentUuid": "b066d410_dbe22732",
+      "range": {
+        "startLine": 1039,
+        "startChar": 8,
+        "endLine": 1039,
+        "endChar": 17
+      },
+      "revId": "4ae0bcb9c66456793fd613d2a3ac8efc014fc3a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
