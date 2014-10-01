@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "30a1045f_e57e6ca1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-01T18:10:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d07188c8_7c76757d",
+      "range": {
+        "startLine": 979,
+        "startChar": 10,
+        "endLine": 979,
+        "endChar": 19
+      },
+      "revId": "4ae0bcb9c66456793fd613d2a3ac8efc014fc3a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b08df4f4_2952f5da",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-01T02:40:36Z",
       "side": 1,
       "message": "I think it might be better to never decrement the ref count when it\u0027s unloadable. It would be confusing to see the ref count be zero, and I\u0027m not sure if we care about the number of times someone has tried to close these things.",
+      "range": {
+        "startLine": 1007,
+        "startChar": 6,
+        "endLine": 1008,
+        "endChar": 22
+      },
+      "revId": "4ae0bcb9c66456793fd613d2a3ac8efc014fc3a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a1045f_457ac0af",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-01T18:10:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b08df4f4_2952f5da",
       "range": {
         "startLine": 1007,
         "startChar": 6,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "good point, I will add test cases",
       "parentUuid": "b066d410_dbe22732",
+      "range": {
+        "startLine": 1039,
+        "startChar": 8,
+        "endLine": 1039,
+        "endChar": 17
+      },
+      "revId": "4ae0bcb9c66456793fd613d2a3ac8efc014fc3a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "109ec022_e1a6621e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-01T18:10:16Z",
+      "side": 1,
+      "message": "\u003e What\u0027s the expected behavior if someone dlopens a library without the NODELETE flag, and then someone comes along and does a dlopen with the flag set?\n\ndone, added the test for it.\n\n\u003eSame question, but if a library is dlopened with the flag set and then someone comes along and dlopens without the flag set.\n\nThis one is already covered by nodelete test\n\n\u003e I assume that in both cases it would be that the library is now unloadable, or the second dlopen fails because there is a mismatch in the way the library is being opened.\n\nThe logic here is simple, rtld flags are ignored in the case when binary is already loaded. So that dlopen that triggers load is the one that counts. At least this is how linux ld.so works.",
+      "parentUuid": "d06348f0_cc38ff15",
       "range": {
         "startLine": 1039,
         "startChar": 8,
