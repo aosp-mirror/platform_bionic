@@ -44,6 +44,8 @@
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
 #include "private/ScopedFd.h"
+#include "private/ScopeGuard.h"
+#include "private/UniquePtr.h"
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -170,7 +172,6 @@ DISALLOW_ALLOCATION(void, free, (void* u __unused));
 DISALLOW_ALLOCATION(void*, realloc, (void* u1 __unused, size_t u2 __unused));
 DISALLOW_ALLOCATION(void*, calloc, (size_t u1 __unused, size_t u2 __unused));
 
-static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
 
 char* linker_get_error_buffer() {
@@ -791,39 +792,54 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
       DL_ERR("library \"%s\" not found", name);
       return nullptr;
     }
+  }
+}
+
+static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+  int fd = -1;
+  ScopedFd file_guard(-1);
+
+  if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
+    fd = extinfo->library_fd;
+  } else {
+    // Open the file.
+    fd = open_library(name);
+    if (fd == -1) {
+      DL_ERR("library \"%s\" not found", name);
+      return nullptr;
+    }
 
     file_guard.reset(fd);
   }
 
-    ElfReader elf_reader(name, fd);
+  struct stat file_stat;
+  if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
+    DL_ERR("unable to stat file for the library %s: %s", name, strerror(errno));
+    return nullptr;
+  }
 
-    struct stat file_stat;
-    if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
-      DL_ERR("unable to stat file for the library %s: %s", name, strerror(errno));
-      return nullptr;
+  // Check for symlink and other situations where
+  // file can have different names.
+  for (soinfo* si = solist; si != nullptr; si = si->next) {
+    if (si->get_st_dev() != 0 &&
+        si->get_st_ino() != 0 &&
+        si->get_st_dev() == file_stat.st_dev &&
+        si->get_st_ino() == file_stat.st_ino) {
+      TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
+      return si;
     }
-
-    // Check for symlink and other situations where
-    // file can have different names.
-    for (soinfo* si = solist; si != nullptr; si = si->next) {
-      if (si->get_st_dev() != 0 &&
-          si->get_st_ino() != 0 &&
-          si->get_st_dev() == file_stat.st_dev &&
-          si->get_st_ino() == file_stat.st_ino) {
-        TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
-        return si;
-      }
-    }
+  }
 
   if ((rtld_flags & RTLD_NOLOAD) != 0) {
     DL_ERR("library \"%s\" wasn't loaded and RTLD_NOLOAD prevented it", name);
     return nullptr;
   }
 
-    // Read the ELF header and load the segments.
-    if (!elf_reader.Load(extinfo)) {
-        return nullptr;
-    }
+  // Read the ELF header and load the segments.
+  ElfReader elf_reader(name, fd);
+  if (!elf_reader.Load(extinfo)) {
+    return nullptr;
+  }
 
   soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, rtld_flags);
   if (si == nullptr) {
@@ -835,17 +851,16 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
   si->phnum = elf_reader.phdr_count();
   si->phdr = elf_reader.loaded_phdr();
 
-    // At this point we know that whatever is loaded @ base is a valid ELF
-    // shared library whose segments are properly mapped in.
-    TRACE("[ load_library base=%p size=%zu name='%s' ]",
-          reinterpret_cast<void*>(si->base), si->size, si->name);
+  if (!si->PrelinkImage()) {
+    soinfo_free(si);
+    return nullptr;
+  }
 
-    if (!si->LinkImage(extinfo)) {
-      soinfo_free(si);
-      return nullptr;
-    }
+  for_each_dt_needed(si, [&] (const char* name) {
+    load_tasks.push_back(LoadTask::create(name, si));
+  });
 
-    return si;
+  return si;
 }
 
 static soinfo *find_loaded_library_by_name(const char* name) {
@@ -863,13 +878,23 @@ static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
   soinfo* si = find_loaded_library_by_name(name);
 
   // Library might still be loaded, the accurate detection
-  // of this fact is done by load_library
+  // of this fact is done by load_library.
   if (si == nullptr) {
     TRACE("[ '%s' has not been found by name.  Trying harder...]", name);
     si = load_library(load_tasks, name, rtld_flags, extinfo);
   }
 
-  if (si != nullptr && (si->flags & FLAG_LINKED) == 0) {
+  return si;
+}
+
+static void soinfo_unload(soinfo* si);
+
+static bool is_recursive(soinfo* si, soinfo* parent) {
+  if (parent == nullptr) {
+    return false;
+  }
+
+  if (si == parent) {
     DL_ERR("recursive link to \"%s\"", si->name);
     return true;
   }
@@ -945,7 +970,10 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
     }
   }
 
-  return si;
+  // All is well - found_libs and load_tasks are empty at this point
+  // and all libs are successfully linked.
+  failure_guard.disable();
+  return true;
 }
 
 static soinfo* find_library(const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
@@ -959,6 +987,7 @@ static soinfo* find_library(const char* name, int rtld_flags, const android_dlex
   if (!find_libraries(&name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
     return nullptr;
   }
+
   return si;
 }
 
@@ -974,20 +1003,17 @@ static void soinfo_unload(soinfo* si) {
         soinfo_unload(child);
       }
     } else {
-      for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
-        if (d->d_tag == DT_NEEDED) {
-          const char* library_name = si->strtab + d->d_un.d_val;
-          TRACE("%s needs to unload %s", si->name, library_name);
-          soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
-          if (needed != nullptr) {
-            soinfo_unload(needed);
-          } else {
-            // Not found: for example if symlink was deleted between dlopen and dlclose
-            // Since we cannot really handle errors at this point - print and continue.
-            PRINT("warning: couldn't find %s needed by %s on unload.", library_name, si->name);
-          }
+      for_each_dt_needed(si, [&] (const char* library_name) {
+        TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
+        soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
+        if (needed != nullptr) {
+          soinfo_unload(needed);
+        } else {
+          // Not found: for example if symlink was deleted between dlopen and dlclose
+          // Since we cannot really handle errors at this point - print and continue.
+          PRINT("warning: couldn't find %s needed by %s on unload.", library_name, si->name);
         }
-      }
+      });
     }
 
     notify_gdb_of_unload(si);
@@ -1058,9 +1084,6 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 
 #if defined(USE_RELA)
 int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
-  ElfW(Sym)* s;
-  soinfo* lsi;
-
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
@@ -1072,6 +1095,10 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
     if (type == 0) { // R_*_NONE
       continue;
     }
+
+    ElfW(Sym)* s = nullptr;
+    soinfo* lsi = nullptr;
+
     if (sym != 0) {
       sym_name = get_string(symtab[sym].st_name);
       s = soinfo_do_lookup(this, sym_name, &lsi);
@@ -1132,8 +1159,6 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
         sym_addr = lsi->resolve_symbol_address(s);
       }
       count_relocation(kRelocSymbol);
-    } else {
-      s = nullptr;
     }
 
     switch (type) {
@@ -1669,6 +1694,9 @@ void soinfo::CallConstructors() {
 }
 
 void soinfo::CallDestructors() {
+  if (!constructors_called) {
+    return;
+  }
   TRACE("\"%s\": calling destructors", name);
 
   // DT_FINI_ARRAY must be parsed in reverse order.
@@ -1754,7 +1782,7 @@ int soinfo::get_rtld_flags() {
   return 0;
 }
 
-// This is a return on get_children() in case
+// This is a return on get_children()/get_parents() if
 // 'this->flags' does not have FLAG_NEW_SOINFO set.
 static soinfo::soinfo_list_t g_empty_list;
 
@@ -1944,7 +1972,7 @@ bool soinfo::PrelinkImage() {
         // if the dynamic table is writable
 // FIXME: not working currently for N64
 // The flags for the LOAD and DYNAMIC program headers do not agree.
-// The LOAD section containng the dynamic table has been mapped as
+// The LOAD section containing the dynamic table has been mapped as
 // read-only, but the DYNAMIC header claims it is writable.
 #if !(defined(__mips__) && defined(__LP64__))
         if ((dynamic_flags & PF_W) != 0) {
@@ -2123,37 +2151,7 @@ bool soinfo::PrelinkImage() {
   return true;
 }
 
-    // If this is the main executable, then load all of the libraries from LD_PRELOAD now.
-    if (flags & FLAG_EXE) {
-        memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
-        size_t preload_count = 0;
-        for (size_t i = 0; g_ld_preload_names[i] != nullptr; i++) {
-            soinfo* lsi = find_library(g_ld_preload_names[i], 0, nullptr);
-            if (lsi != nullptr) {
-                g_ld_preloads[preload_count++] = lsi;
-            } else {
-                // As with glibc, failure to load an LD_PRELOAD library is just a warning.
-                DL_WARN("could not load library \"%s\" from LD_PRELOAD for \"%s\"; caused by %s",
-                        g_ld_preload_names[i], name, linker_get_error_buffer());
-            }
-        }
-    }
-
-    for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-        if (d->d_tag == DT_NEEDED) {
-            const char* library_name = strtab + d->d_un.d_val;
-            DEBUG("%s needs %s", name, library_name);
-            soinfo* lsi = find_library(library_name, 0, nullptr);
-            if (lsi == nullptr) {
-                strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
-                DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
-                       library_name, name, tmp_err_buf);
-                return false;
-            }
-
-            add_child(lsi);
-        }
-    }
+bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
@@ -2276,6 +2274,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
+  si->PrelinkImage();
   si->LinkImage(nullptr);
 #endif
 }
@@ -2560,7 +2559,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!linker_so.LinkImage(nullptr)) {
+  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(nullptr))) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
