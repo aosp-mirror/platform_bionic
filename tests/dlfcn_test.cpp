@@ -90,7 +90,7 @@ TEST(dlfcn, dlopen_noload) {
 }
 
 // ifuncs are only supported on intel and arm64 for now
-#if defined (__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__)
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
