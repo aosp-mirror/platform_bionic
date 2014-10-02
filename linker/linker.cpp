@@ -2183,11 +2183,11 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
     // they cannot be resolved until the rest of the relocations are done
     // because we need to call the resolution function which may be waiting
     // on relocations.
-    if(si->get_has_ifuncs()) {
+    if(get_has_ifuncs()) {
 #if defined(__i386__)
-      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count, needed);
+      soinfo_ifunc_relocate(this, plt_rel, plt_rel_count);
 #elif defined(__x86_64__)
-      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count, needed);
+      soinfo_ifunc_relocate(this, plt_rela, plt_rela_count);
 #endif
     }
 
