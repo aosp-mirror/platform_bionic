@@ -1689,8 +1689,6 @@ void soinfo::CallConstructors() {
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
   CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
-
-  resolve_ifunc_symbols();
 }
 
 void soinfo::CallDestructors() {
@@ -1749,12 +1747,6 @@ void soinfo::set_st_dev(dev_t dev) {
 void soinfo::set_st_ino(ino_t ino) {
   if (has_min_version(0)) {
     st_ino = ino;
-  }
-}
-
-void soinfo::set_has_ifuncs(bool ifuncs) {
-  if (has_min_version(1)) {
-    has_ifuncs = ifuncs;
   }
 }
 
@@ -2194,18 +2186,6 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
     }
   }
 #endif
-
-    // if there are ifuncs, we need to do an additional relocation pass.
-    // they cannot be resolved until the rest of the relocations are done
-    // because we need to call the resolution function which may be waiting
-    // on relocations.
-    if(get_has_ifuncs()) {
-#if defined(__i386__)
-      soinfo_ifunc_relocate(this, plt_rel, plt_rel_count);
-#elif defined(__x86_64__)
-      soinfo_ifunc_relocate(this, plt_rela, plt_rela_count);
-#endif
-    }
 
 #if defined(__mips__)
   if (!mips_relocate_got(this)) {
