@@ -1737,11 +1737,9 @@ void soinfo::set_st_ino(ino_t ino) {
 }
 
 void soinfo::set_has_ifuncs(bool ifuncs) {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return;
+  if (has_min_version(1)) {
+    has_ifuncs = ifuncs;
   }
-
-  has_ifuncs = ifuncs;
 }
 
 dev_t soinfo::get_st_dev() {
