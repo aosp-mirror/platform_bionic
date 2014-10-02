@@ -206,7 +206,6 @@ struct soinfo {
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
-  bool PrelinkImage();
   bool LinkImage(const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
@@ -224,7 +223,6 @@ struct soinfo {
   int get_rtld_flags();
 
   soinfo_list_t& get_children();
-  soinfo_list_t& get_parents();
 
   ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
