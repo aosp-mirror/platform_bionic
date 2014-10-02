@@ -214,10 +214,8 @@ struct soinfo {
 
   void set_st_dev(dev_t st_dev);
   void set_st_ino(ino_t st_ino);
-  void set_has_ifuncs(bool ifunc);
   ino_t get_st_ino();
   dev_t get_st_dev();
-  bool get_has_ifuncs();
 
 
 
