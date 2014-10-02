@@ -1673,6 +1673,8 @@ void soinfo::CallConstructors() {
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
   CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
+
+  resolve_ifunc_symbols();
 }
 
 void soinfo::CallDestructors() {
