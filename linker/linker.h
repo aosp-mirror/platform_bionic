@@ -89,7 +89,7 @@
 #define FLAG_LINKER     0x00000010 // The linker itself
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 0
+#define SOINFO_VERSION 1
 
 #define SOINFO_NAME_LEN 128
 
