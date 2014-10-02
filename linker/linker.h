@@ -217,8 +217,6 @@ struct soinfo {
   ino_t get_st_ino();
   dev_t get_st_dev();
 
-
-
   int get_rtld_flags();
 
   soinfo_list_t& get_children();

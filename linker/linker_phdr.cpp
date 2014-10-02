@@ -718,22 +718,6 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
       }
       return;
     }
-
-    *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
-    if (dynamic_count) {
-      *dynamic_count = (unsigned)(phdr->p_memsz / 8);
-    }
-    if (dynamic_flags) {
-      *dynamic_flags = phdr->p_flags;
-    }
-    return;
-  }
-  *dynamic = nullptr;
-  for (const ElfW(Phdr)* phdr = phdr_table, *phdr_limit = phdr + phdr_count; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type == PT_DYNAMIC) {
-      *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
-      return;
-    }
   }
 }
 

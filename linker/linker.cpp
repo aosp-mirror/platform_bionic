@@ -792,22 +792,6 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
       DL_ERR("library \"%s\" not found", name);
       return nullptr;
     }
-  }
-}
-
-static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
-  int fd = -1;
-  ScopedFd file_guard(-1);
-
-  if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
-    fd = extinfo->library_fd;
-  } else {
-    // Open the file.
-    fd = open_library(name);
-    if (fd == -1) {
-      DL_ERR("library \"%s\" not found", name);
-      return nullptr;
-    }
 
     file_guard.reset(fd);
   }
