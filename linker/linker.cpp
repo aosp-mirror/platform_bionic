@@ -1734,6 +1734,14 @@ void soinfo::set_st_ino(ino_t ino) {
   }
 }
 
+void soinfo::set_has_ifuncs(bool ifuncs) {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return;
+  }
+
+  has_ifuncs = ifuncs;
+}
+
 dev_t soinfo::get_st_dev() {
   if (has_min_version(0)) {
     return st_dev;
@@ -2170,6 +2178,18 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
     }
   }
 #endif
+
+    // if there are ifuncs, we need to do an additional relocation pass.
+    // they cannot be resolved until the rest of the relocations are done
+    // because we need to call the resolution function which may be waiting
+    // on relocations.
+    if(si->get_has_ifuncs()) {
+#if defined(__i386__)
+      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count, needed);
+#elif defined(__x86_64__)
+      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count, needed);
+#endif
+    }
 
 #if defined(__mips__)
   if (!mips_relocate_got(this)) {
