@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f0268cf7_8d064540",
+        "filename": "tests/compile_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-03T21:39:07Z",
+      "side": 1,
+      "message": "it\u0027s a bit misleading that you\u0027ve deliberately inserted an irrelevant error in a test that\u0027s supposed to test FORTIFY but which we don\u0027t currently pass...",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30fbc487_8fdf5968",
         "filename": "tests/file-check-clang++",
         "patchSetId": 1
@@ -31,6 +48,40 @@
       "side": 1,
       "message": "It\u0027s a tool that comes from LLVM: http://llvm.org/docs/CommandGuide/FileCheck.html\n\nEssentially, it allows us to match the output (stdout+stderr, in this case) of compiling the file to the checks that are in the file.",
       "parentUuid": "30fbc487_8fdf5968",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0268cf7_0d2255cd",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-03T21:39:07Z",
+      "side": 1,
+      "message": "isn\u0027t there a way to avoid hard-coding the version like this? can\u0027t we pass something from the makefile?",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50ee78c7_e1170e64",
+        "filename": "tests/file-check-g++",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-03T21:39:07Z",
+      "side": 1,
+      "message": "what about the second arch?",
       "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
