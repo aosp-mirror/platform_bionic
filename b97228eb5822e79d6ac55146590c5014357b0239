@@ -54,6 +54,23 @@
     },
     {
       "key": {
+        "uuid": "50ee78c7_01897a48",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-10-03T21:45:37Z",
+      "side": 1,
+      "message": "ANDROID_HOST_OUT imay be not set. It\u0027s set only if you run lunch. Our build server doesn\u0027t run lunch.\nYou should pass it in from makefile.",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0268cf7_0d2255cd",
         "filename": "tests/file-check-clang++",
         "patchSetId": 1
