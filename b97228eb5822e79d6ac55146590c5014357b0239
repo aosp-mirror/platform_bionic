@@ -88,6 +88,42 @@
     },
     {
       "key": {
+        "uuid": "30a8245b_01527d5f",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-03T23:04:21Z",
+      "side": 1,
+      "message": "Yes, I hadn\u0027t been passing things from the command line because I hadn\u0027t thought of a clean way to do it, but I think I have now.",
+      "parentUuid": "50ee78c7_01897a48",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a8245b_c15b0579",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-03T23:04:21Z",
+      "side": 1,
+      "message": "Would this eliminate the issue with ANDROID_HOST_OUT? Would it be placed somewhere that FileCheck is then on the path? (I think it actually is on the path the way I have things set up now, but don\u0027t know if that\u0027s because of lunch).",
+      "parentUuid": "50ee78c7_0125fa9f",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0268cf7_0d2255cd",
         "filename": "tests/file-check-clang++",
         "patchSetId": 1
