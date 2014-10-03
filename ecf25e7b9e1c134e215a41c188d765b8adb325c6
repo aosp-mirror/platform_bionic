@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "902550f1_67117245",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-10-03T23:59:46Z",
+      "side": 1,
+      "message": "Can we just move this to LOCAL_ADDITIONAL_DEPENDENCIES so we don\u0027t need to add a new LOCAL variable?\n(If we use prebult FileCheck then we don\u0027t need this dependency).",
+      "revId": "ecf25e7b9e1c134e215a41c188d765b8adb325c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
