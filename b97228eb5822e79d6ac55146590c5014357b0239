@@ -16,6 +16,24 @@
       "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30fbc487_4ff571e4",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-03T21:21:47Z",
+      "side": 1,
+      "message": "It\u0027s a tool that comes from LLVM: http://llvm.org/docs/CommandGuide/FileCheck.html\n\nEssentially, it allows us to match the output (stdout+stderr, in this case) of compiling the file to the checks that are in the file.",
+      "parentUuid": "30fbc487_8fdf5968",
+      "revId": "b97228eb5822e79d6ac55146590c5014357b0239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
