@@ -404,3 +404,11 @@ TEST(time, clock_gettime) {
   ASSERT_EQ(0, ts2.tv_sec);
   ASSERT_LT(ts2.tv_nsec, 1000000);
 }
+
+TEST(time, clock) {
+   // clock(3) is hard to test, but a 1s sleep should cost less than 1ms.
+   clock_t t0 = clock();
+   sleep(1);
+   clock_t t1 = clock();
+   ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
+}
