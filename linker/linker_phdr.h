@@ -39,7 +39,7 @@
 
 class ElfReader {
  public:
-  ElfReader(const char* name, int fd);
+  ElfReader(const char* name, int fd, off64_t file_offset);
   ~ElfReader();
 
   bool Load(const android_dlextinfo* extinfo);
@@ -61,6 +61,7 @@ class ElfReader {
 
   const char* name_;
   int fd_;
+  off64_t file_offset_;
 
   ElfW(Ehdr) header_;
   size_t phdr_num_;

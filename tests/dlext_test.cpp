@@ -31,7 +31,7 @@
 
 
 #define ASSERT_DL_NOTNULL(ptr) \
-    ASSERT_TRUE(ptr != NULL) << "dlerror: " << dlerror()
+    ASSERT_TRUE(ptr != nullptr) << "dlerror: " << dlerror()
 
 #define ASSERT_DL_ZERO(i) \
     ASSERT_EQ(0, i) << "dlerror: " << dlerror()
@@ -46,23 +46,31 @@ typedef int (*fn)(void);
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define LIBPATH "%s/nativetest64/libdlext_test_fd/libdlext_test_fd.so"
+#define LIBPATH_PREFIX "%s/nativetest64/libdlext_test_fd/"
 #else
-#define LIBPATH "%s/nativetest/libdlext_test_fd/libdlext_test_fd.so"
+#define LIBPATH_PREFIX "%s/nativetest/libdlext_test_fd/"
 #endif
+
+#define LIBPATH LIBPATH_PREFIX "libdlext_test_fd.so"
+#define LIBZIPPATH LIBPATH_PREFIX "dlext_test.zip"
+
+#define LIBZIP_OFFSET 2*PAGE_SIZE
 
 class DlExtTest : public ::testing::Test {
 protected:
   virtual void SetUp() {
-    handle_ = NULL;
+    handle_ = nullptr;
     // verify that we don't have the library loaded already
-    ASSERT_EQ(NULL, dlsym(RTLD_DEFAULT, "getRandomNumber"));
+    void* h = dlopen(LIBNAME, RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(h == nullptr);
+    h = dlopen(LIBNAME_NORELRO, RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(h == nullptr);
     // call dlerror() to swallow the error, and check it was the one we wanted
-    ASSERT_STREQ("undefined symbol: getRandomNumber", dlerror());
+    ASSERT_STREQ("dlopen failed: library \"" LIBNAME_NORELRO "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
   }
 
   virtual void TearDown() {
-    if (handle_ != NULL) {
+    if (handle_ != nullptr) {
       ASSERT_DL_ZERO(dlclose(handle_));
     }
   }
@@ -71,7 +79,7 @@ protected:
 };
 
 TEST_F(DlExtTest, ExtInfoNull) {
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, NULL);
+  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, nullptr);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
@@ -90,7 +98,7 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
 
 TEST_F(DlExtTest, ExtInfoUseFd) {
   const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != NULL);
+  ASSERT_TRUE(android_data != nullptr);
   char lib_path[PATH_MAX];
   snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
 
@@ -105,8 +113,55 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
   EXPECT_EQ(4, f());
 }
 
+TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != nullptr);
+
+  char lib_path[PATH_MAX];
+  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_OFFSET;
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  extinfo.library_offset = LIBZIP_OFFSET;
+
+  handle_ = android_dlopen_ext(lib_path, RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(4, f());
+}
+
+TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != nullptr);
+
+  char lib_path[PATH_MAX];
+  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_OFFSET;
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  extinfo.library_offset = 17;
+
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
+  ASSERT_STREQ("dlopen failed: file offset for the library libname_placeholder is not page-aligned: 17", dlerror());
+}
+
+TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_OFFSET;
+  extinfo.library_offset = LIBZIP_OFFSET;
+
+  handle_ = android_dlopen_ext("/some/lib/that/does_not_exist", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
+  ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
+}
+
 TEST_F(DlExtTest, Reserved) {
-  void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
                      -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
@@ -124,7 +179,7 @@ TEST_F(DlExtTest, Reserved) {
 }
 
 TEST_F(DlExtTest, ReservedTooSmall) {
-  void* start = mmap(NULL, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
                      -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
@@ -132,11 +187,11 @@ TEST_F(DlExtTest, ReservedTooSmall) {
   extinfo.reserved_addr = start;
   extinfo.reserved_size = PAGE_SIZE;
   handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
-  EXPECT_EQ(NULL, handle_);
+  EXPECT_EQ(nullptr, handle_);
 }
 
 TEST_F(DlExtTest, ReservedHint) {
-  void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
                      -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
@@ -154,7 +209,7 @@ TEST_F(DlExtTest, ReservedHint) {
 }
 
 TEST_F(DlExtTest, ReservedHintTooSmall) {
-  void* start = mmap(NULL, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
                      -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
@@ -174,7 +229,7 @@ class DlExtRelroSharingTest : public DlExtTest {
 protected:
   virtual void SetUp() {
     DlExtTest::SetUp();
-    void* start = mmap(NULL, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+    void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
                        -1, 0);
     ASSERT_TRUE(start != MAP_FAILED);
     extinfo_.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
@@ -183,7 +238,7 @@ protected:
     extinfo_.relro_fd = -1;
 
     const char* android_data = getenv("ANDROID_DATA");
-    ASSERT_TRUE(android_data != NULL);
+    ASSERT_TRUE(android_data != nullptr);
     snprintf(relro_file_, sizeof(relro_file_), "%s/local/tmp/libdlext_test.relro", android_data);
   }
 
@@ -204,7 +259,7 @@ protected:
       extinfo_.flags |= ANDROID_DLEXT_WRITE_RELRO;
       extinfo_.relro_fd = relro_fd;
       void* handle = android_dlopen_ext(lib, RTLD_NOW, &extinfo_);
-      if (handle == NULL) {
+      if (handle == nullptr) {
         fprintf(stderr, "in child: %s\n", dlerror());
         exit(1);
       }
@@ -327,7 +382,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
       } else {
         handle = dlopen(lib, RTLD_NOW);
       }
-      if (handle == NULL) {
+      if (handle == nullptr) {
         fprintf(stderr, "in child: %s\n", dlerror());
         exit(1);
       }

@@ -197,11 +197,9 @@ struct soinfo {
 #if !defined(__LP64__)
   bool has_text_relocations;
 #endif
-  // TODO: remove this flag, dynamic linker
-  // should not use it in any way.
   bool has_DT_SYMBOLIC;
 
-  soinfo(const char* name, const struct stat* file_stat);
+  soinfo(const char* name, const struct stat* file_stat, off64_t file_offset);
 
   void CallConstructors();
   void CallDestructors();
@@ -212,10 +210,9 @@ struct soinfo {
   void add_child(soinfo* child);
   void remove_all_links();
 
-  void set_st_dev(dev_t st_dev);
-  void set_st_ino(ino_t st_ino);
   ino_t get_st_ino();
   dev_t get_st_dev();
+  off64_t get_file_offset();
 
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
@@ -248,6 +245,7 @@ struct soinfo {
   soinfo_list_t parents;
 
   // version >= 1
+  off64_t file_offset;
 };
 
 extern soinfo* get_libdl_info();

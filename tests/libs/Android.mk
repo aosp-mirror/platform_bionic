@@ -91,6 +91,17 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by dlext tests - zipped and aligned
+# -----------------------------------------------------------------------------
+include $(CLEAR_VARS)
+bionic_2nd_arch_prefix :=
+include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
+ifneq ($(TARGET_2ND_ARCH),)
+  bionic_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+  include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
+endif
+
+# -----------------------------------------------------------------------------
 # Library used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_simple_src_files := \
@@ -332,3 +343,9 @@ build_type := target
 include $(TEST_PATH)/Android.build.mk
 build_type := host
 include $(TEST_PATH)/Android.build.mk
+
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
+    $(LOCAL_PATH)/Android.build.testlib.mk \
+    $(TEST_PATH)/Android.build.mk
