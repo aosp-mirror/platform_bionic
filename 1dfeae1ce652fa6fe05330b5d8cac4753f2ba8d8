@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "902550f1_27f77a3a",
+        "filename": "tests/file-check-clang++",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-04T00:28:56Z",
+      "side": 1,
+      "message": "do we actually need two files now? couldn\u0027t you just pass GCC or CLANG as $3?",
+      "revId": "1dfeae1ce652fa6fe05330b5d8cac4753f2ba8d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
