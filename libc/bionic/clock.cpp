@@ -30,12 +30,13 @@
 #include <sys/sysconf.h>
 #include <sys/times.h>
 
+#define NS_PER_S 1000000000 // No "private/bionic_constants.h" in lmp-dev.
+
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html
 clock_t clock() {
-  tms t;
-  times(&t);
-  // Although times(2) and clock(3) both use the type clock_t, the units are
-  // different. For times(2) it's pure clock ticks, but for clock(3) the unit
-  // is CLOCKS_PER_SEC, so we need to scale appropriately.
-  return (t.tms_utime + t.tms_stime) * (CLOCKS_PER_SEC / sysconf(_SC_CLK_TCK));
+  timespec ts;
+  if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == -1) {
+    return -1;
+  }
+  return (ts.tv_sec * CLOCKS_PER_SEC) + (ts.tv_nsec / (NS_PER_S / CLOCKS_PER_SEC));
 }
