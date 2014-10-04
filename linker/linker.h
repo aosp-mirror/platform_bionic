@@ -201,7 +201,7 @@ struct soinfo {
 #endif
   bool has_DT_SYMBOLIC;
 
-  soinfo(const char* name, const struct stat* file_stat, int rtld_flags);
+  soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags);
 
   void CallConstructors();
   void CallDestructors();
@@ -212,10 +212,9 @@ struct soinfo {
   void add_child(soinfo* child);
   void remove_all_links();
 
-  void set_st_dev(dev_t st_dev);
-  void set_st_ino(ino_t st_ino);
   ino_t get_st_ino();
   dev_t get_st_dev();
+  off64_t get_file_offset();
 
   int get_rtld_flags();
 
@@ -254,6 +253,7 @@ struct soinfo {
   soinfo_list_t parents;
 
   // version >= 1
+  off64_t file_offset;
   int rtld_flags;
   size_t strtab_size;
 
