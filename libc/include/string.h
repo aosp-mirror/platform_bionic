@@ -96,11 +96,7 @@ extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale
 
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
-    char *d = (char *) dest;
-    const char *s = (const char *) src;
-    size_t d_len = __bos0(d);
-
-    return __builtin___memcpy_chk(dest, src, copy_amount, d_len);
+    return __builtin___memcpy_chk(dest, src, copy_amount, __bos0(dest));
 }
 
 __BIONIC_FORTIFY_INLINE
