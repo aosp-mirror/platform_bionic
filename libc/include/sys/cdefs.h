@@ -53,6 +53,9 @@
 #ifndef __has_builtin
 #define __has_builtin(x)        0
 #endif
+#ifndef __has_attribute
+#define __has_attribute(x)      0
+#endif
 
 
 /*
@@ -511,7 +514,11 @@
 #endif
 #define __bos0(s) __builtin_object_size((s), 0)
 
+#if __GNUC_PREREQ(4,3) || __has_attribute(__artificial__)
+#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+#else
 #define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
+#endif
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
