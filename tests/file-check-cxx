@@ -1,0 +1,13 @@
+#!/bin/bash
+FILECHECK=$1
+CXX=$2
+PREFIX=$3
+ARGS=${*:4}
+SOURCE=$(echo $ARGS | grep -oP '\S+\.cpp\b')
+OBJ=$(echo $ARGS | grep -oP '\S+\.o\b')
+$CXX $ARGS 2>&1 | $FILECHECK -check-prefix=$PREFIX $SOURCE
+if [ "$?" -eq 0 ]; then
+  touch $OBJ
+else
+  exit 1
+fi
