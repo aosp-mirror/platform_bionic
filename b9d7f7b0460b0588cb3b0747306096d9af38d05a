@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5017588b_2bd57dfc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2344,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-06T17:02:23Z",
+      "side": 1,
+      "message": "I\u0027d rather keep one constructor..",
+      "parentUuid": "902550f1_db5c733c",
+      "revId": "b9d7f7b0460b0588cb3b0747306096d9af38d05a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0268cf7_9f6147af",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2014-10-05T16:50:20Z",
       "side": 1,
       "message": "http://xkcd.com/221/",
+      "range": {
+        "startLine": 133,
+        "startChar": 12,
+        "endLine": 133,
+        "endChar": 13
+      },
+      "revId": "b9d7f7b0460b0588cb3b0747306096d9af38d05a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0268cf7_477a61ea",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-06T17:02:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0268cf7_9f6147af",
       "range": {
         "startLine": 133,
         "startChar": 12,
