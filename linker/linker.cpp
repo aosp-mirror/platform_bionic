@@ -1936,14 +1936,19 @@ bool soinfo::PrelinkImage() {
           return false;
         }
         break;
-#if !defined(__LP64__)
       case DT_PLTREL:
-        if (d->d_un.d_val != DT_REL) {
-          DL_ERR("unsupported DT_RELA in \"%s\"", name);
+#if defined(USE_RELA)
+        if (d->d_un.d_val != DT_RELA) {
+          DL_ERR("unsupported DT_PLTREL in \"%s\"; expected DT_RELA", name);
           return false;
         }
-        break;
+#else
+        if (d->d_un.d_val != DT_REL) {
+          DL_ERR("unsupported DT_PLTREL in \"%s\"; expected DT_REL", name);
+          return false;
+        }
 #endif
+        break;
       case DT_JMPREL:
 #if defined(USE_RELA)
         plt_rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
@@ -2120,6 +2125,11 @@ bool soinfo::PrelinkImage() {
         mips_gotsym = d->d_un.d_val;
         break;
 #endif
+      case DT_VERSYM:
+      case DT_VERDEF:
+      case DT_VERDEFNUM:
+        // Ignore: bionic does not support symbol versioning...
+        break;
 
       default:
         if (!relocating_linker) {
