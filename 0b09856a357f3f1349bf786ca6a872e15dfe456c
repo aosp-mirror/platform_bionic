@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0268cf7_2afbb4dd",
+        "filename": "tests/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-10-06T17:14:40Z",
+      "side": 1,
+      "message": "you should use $($(LOCAL_2ND_ARCH_VAR_PREFIX)CXX_BARE)",
+      "revId": "0b09856a357f3f1349bf786ca6a872e15dfe456c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
