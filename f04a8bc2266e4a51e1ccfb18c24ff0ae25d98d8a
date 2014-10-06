@@ -16,6 +16,24 @@
       "revId": "f04a8bc2266e4a51e1ccfb18c24ff0ae25d98d8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70dffc23_becfd935",
+        "filename": "tests/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-10-06T19:31:47Z",
+      "side": 1,
+      "message": "It will work properly for both 1st and 2nd arch.\nI believe Dan has tested it.",
+      "parentUuid": "10116099_cc004325",
+      "revId": "f04a8bc2266e4a51e1ccfb18c24ff0ae25d98d8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
