@@ -120,17 +120,6 @@ TEST_F(DEATHTEST, sprintf_fortified2) {
 #endif
 
 #ifndef __clang__
-// This test is disabled in clang because clang doesn't properly detect
-// this buffer overflow. TODO: Fix clang.
-TEST_F(DEATHTEST, sprintf2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  foo myfoo;
-  ASSERT_EXIT(sprintf(myfoo.a, "0123456789"),
-              testing::KilledBySignal(SIGABRT), "");
-}
-#endif
-
-#ifndef __clang__
 // These tests are disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 static int vsprintf_helper2(const char *fmt, ...) {
@@ -527,12 +516,6 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
 }
 #endif
 
-TEST_F(DEATHTEST, sprintf2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  char buf[5];
-  ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
-}
-
 static int vsprintf_helper(const char *fmt, ...) {
   char buf[10];
   va_list va;
@@ -697,16 +680,6 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   char buf[1];
   fd_set* set = (fd_set*) buf;
   ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
-}
-
-// gtest's ASSERT_EXIT needs a valid expression, but glibc has a do-while macro.
-static void FD_ZERO_function(fd_set* s) { FD_ZERO(s); }
-
-TEST_F(DEATHTEST, FD_ZERO_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  char buf[1];
-  fd_set* set = (fd_set*) buf;
-  ASSERT_EXIT(FD_ZERO_function(set), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, read_fortified) {
