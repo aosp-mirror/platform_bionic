@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b007b451_aac5e346",
+        "filename": "tests/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2014-10-06T22:17:34Z",
+      "side": 1,
+      "message": "Tests run at compile time rather than tests of compilation time :-)",
+      "range": {
+        "startLine": 326,
+        "startChar": 2,
+        "endLine": 326,
+        "endChar": 21
+      },
+      "revId": "f04a8bc2266e4a51e1ccfb18c24ff0ae25d98d8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10116099_cc004325",
         "filename": "tests/Android.mk",
         "patchSetId": 7
