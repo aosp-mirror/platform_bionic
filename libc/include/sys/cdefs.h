@@ -534,7 +534,7 @@
 #endif
 #define __bos0(s) __builtin_object_size((s), 0)
 
-#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
