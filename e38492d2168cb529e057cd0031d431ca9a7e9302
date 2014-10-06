@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0cbec63_a8df9f90",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-06T22:08:13Z",
+      "side": 1,
+      "message": "these clang hacks live at the top.",
+      "revId": "e38492d2168cb529e057cd0031d431ca9a7e9302",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_379040db",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-06T22:08:13Z",
+      "side": 1,
+      "message": "(this is the other thing i don\u0027t like about __has_* --- unlike __GNUC_PREREQ they don\u0027t carry their own use-by date :-) )",
+      "revId": "e38492d2168cb529e057cd0031d431ca9a7e9302",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
