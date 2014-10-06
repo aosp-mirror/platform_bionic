@@ -282,13 +282,13 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, int rtld_flags) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, int rtld_flags) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return nullptr;
   }
 
-  soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat, rtld_flags);
+  soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat, file_offset, rtld_flags);
 
   sonext->next = si;
   sonext = si;
@@ -452,7 +452,7 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
   return nullptr;
 }
 
-soinfo::soinfo(const char* name, const struct stat* file_stat, int rtld_flags) {
+soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags) {
   memset(this, 0, sizeof(*this));
 
   strlcpy(this->name, name, sizeof(this->name));
@@ -460,8 +460,9 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, int rtld_flags) {
   version = SOINFO_VERSION;
 
   if (file_stat != nullptr) {
-    set_st_dev(file_stat->st_dev);
-    set_st_ino(file_stat->st_ino);
+    this->st_dev = file_stat->st_dev;
+    this->st_ino = file_stat->st_ino;
+    this->file_offset = file_offset;
   }
 
   this->rtld_flags = rtld_flags;
@@ -781,10 +782,14 @@ static void for_each_dt_needed(const soinfo* si, F action) {
 
 static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
   int fd = -1;
+  off64_t file_offset = 0;
   ScopedFd file_guard(-1);
 
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
     fd = extinfo->library_fd;
+    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_OFFSET) != 0) {
+      file_offset = extinfo->library_offset;
+    }
   } else {
     // Open the file.
     fd = open_library(name);
@@ -794,6 +799,11 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     }
 
     file_guard.reset(fd);
+  }
+
+  if ((file_offset % PAGE_SIZE) != 0) {
+    DL_ERR("file offset for the library %s is not page-aligned: %" PRId64, name, file_offset);
+    return nullptr;
   }
 
   struct stat file_stat;
@@ -808,7 +818,8 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     if (si->get_st_dev() != 0 &&
         si->get_st_ino() != 0 &&
         si->get_st_dev() == file_stat.st_dev &&
-        si->get_st_ino() == file_stat.st_ino) {
+        si->get_st_ino() == file_stat.st_ino &&
+        si->get_file_offset() == file_offset) {
       TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
       return si;
     }
@@ -820,12 +831,12 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
   }
 
   // Read the ELF header and load the segments.
-  ElfReader elf_reader(name, fd);
+  ElfReader elf_reader(name, fd, file_offset);
   if (!elf_reader.Load(extinfo)) {
     return nullptr;
   }
 
-  soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, rtld_flags);
+  soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, file_offset, rtld_flags);
   if (si == nullptr) {
     return nullptr;
   }
@@ -1043,9 +1054,16 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
   }
-  if (extinfo != nullptr && ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0)) {
-    DL_ERR("invalid extended flags to android_dlopen_ext: %" PRIx64, extinfo->flags);
-    return nullptr;
+  if (extinfo != nullptr) {
+    if ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0) {
+      DL_ERR("invalid extended flags to android_dlopen_ext: 0x%" PRIx64, extinfo->flags);
+      return nullptr;
+    }
+    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) == 0 &&
+        (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_OFFSET) != 0) {
+      DL_ERR("invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64, extinfo->flags);
+      return nullptr;
+    }
   }
   protect_data(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name, flags, extinfo);
@@ -1727,18 +1745,6 @@ void soinfo::remove_all_links() {
   children.clear();
 }
 
-void soinfo::set_st_dev(dev_t dev) {
-  if (has_min_version(0)) {
-    st_dev = dev;
-  }
-}
-
-void soinfo::set_st_ino(ino_t ino) {
-  if (has_min_version(0)) {
-    st_ino = ino;
-  }
-}
-
 dev_t soinfo::get_st_dev() {
   if (has_min_version(0)) {
     return st_dev;
@@ -1750,6 +1756,14 @@ dev_t soinfo::get_st_dev() {
 ino_t soinfo::get_st_ino() {
   if (has_min_version(0)) {
     return st_ino;
+  }
+
+  return 0;
+}
+
+off64_t soinfo::get_file_offset() {
+  if (has_min_version(1)) {
+    return file_offset;
   }
 
   return 0;
@@ -2242,7 +2256,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]", nullptr, 0);
+  soinfo* si = soinfo_alloc("[vdso]", nullptr, 0, 0);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
@@ -2263,7 +2277,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 #else
 #define LINKER_PATH "/system/bin/linker"
 #endif
-static soinfo linker_soinfo_for_gdb(LINKER_PATH, nullptr, 0);
+static soinfo linker_soinfo_for_gdb(LINKER_PATH, nullptr, 0, 0);
 
 /* gdb expects the linker to be in the debug shared object list.
  * Without this, gdb has trouble locating the linker's ".text"
@@ -2327,7 +2341,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   INFO("[ android linker & debugger ]");
 
-  soinfo* si = soinfo_alloc(args.argv[0], nullptr, RTLD_GLOBAL);
+  soinfo* si = soinfo_alloc(args.argv[0], nullptr, 0, RTLD_GLOBAL);
   if (si == nullptr) {
     exit(EXIT_FAILURE);
   }
@@ -2515,7 +2529,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  soinfo linker_so("[dynamic linker]", nullptr, 0);
+  soinfo linker_so("[dynamic linker]", nullptr, 0, 0);
 
   // If the linker is not acting as PT_INTERP entry_point is equal to
   // _start. Which means that the linker is running as an executable and

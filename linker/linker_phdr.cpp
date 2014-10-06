@@ -119,8 +119,8 @@
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-ElfReader::ElfReader(const char* name, int fd)
-    : name_(name), fd_(fd),
+ElfReader::ElfReader(const char* name, int fd, off64_t file_offset)
+    : name_(name), fd_(fd), file_offset_(file_offset),
       phdr_num_(0), phdr_mmap_(nullptr), phdr_table_(nullptr), phdr_size_(0),
       load_start_(nullptr), load_size_(0), load_bias_(0),
       loaded_phdr_(nullptr) {
@@ -142,6 +142,13 @@ bool ElfReader::Load(const android_dlextinfo* extinfo) {
 }
 
 bool ElfReader::ReadElfHeader() {
+  off64_t actual_offset = lseek64(fd_, file_offset_, SEEK_SET);
+
+  if (actual_offset != file_offset_) {
+    DL_ERR("seek to %" PRId64 " failed: %s", file_offset_, strerror(errno));
+    return false;
+  }
+
   ssize_t rc = TEMP_FAILURE_RETRY(read(fd_, &header_, sizeof(header_)));
   if (rc < 0) {
     DL_ERR("can't read file \"%s\": %s", name_, strerror(errno));
@@ -225,7 +232,7 @@ bool ElfReader::ReadProgramHeader() {
 
   phdr_size_ = page_max - page_min;
 
-  void* mmap_result = mmap(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, page_min);
+  void* mmap_result = mmap64(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, file_offset_ + page_min);
   if (mmap_result == MAP_FAILED) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_, strerror(errno));
     return false;
@@ -356,12 +363,12 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_length != 0) {
-      void* seg_addr = mmap(reinterpret_cast<void*>(seg_page_start),
+      void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
                             file_length,
                             PFLAGS_TO_PROT(phdr->p_flags),
                             MAP_FIXED|MAP_PRIVATE,
                             fd_,
-                            file_page_start);
+                            file_offset_ + file_page_start);
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_, i, strerror(errno));
         return false;
