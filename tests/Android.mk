@@ -152,11 +152,10 @@ $(foreach compiler,gcc clang, \
   $(foreach test,1 2, \
     $(eval fortify$(test)-tests-$(compiler)_cflags := \
       $(test_cflags) \
+      -Wno-error \
       -U_FORTIFY_SOURCE \
       -D_FORTIFY_SOURCE=$(test) \
       -DTEST_NAME=Fortify$(test)_$(compiler)); \
-    $(eval fortify$(test)-tests-$(compiler)_cflags_host := \
-      -Wno-error); \
     $(eval fortify$(test)-tests-$(compiler)_src_files := \
       fortify_test.cpp); \
     $(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
