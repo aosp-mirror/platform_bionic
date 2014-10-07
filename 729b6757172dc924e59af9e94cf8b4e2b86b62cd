@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_ba6b6e5d",
+        "filename": "libc/bionic/open.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-07T18:26:27Z",
+      "side": 1,
+      "message": "usually we\u0027d put the extern \"C\" on the definition. the __openat one is at the top because it\u0027s a generated system call stub.\n\nthis is a bit worrying, though. if something\u0027s breaking the __open_2 declaration in \u003cfcntl.h\u003e, which is #included here, that seems like it has the potential to break other stuff.",
+      "revId": "729b6757172dc924e59af9e94cf8b4e2b86b62cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
