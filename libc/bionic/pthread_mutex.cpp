@@ -448,6 +448,12 @@ static inline __always_inline int _recursive_increment(pthread_mutex_t* mutex, i
 }
 
 int pthread_mutex_lock(pthread_mutex_t* mutex) {
+#if !defined(__LP64__)
+    if (mutex == NULL) {
+        return EINVAL;
+    }
+#endif
+
     int mvalue, mtype, tid, shared;
 
     mvalue = mutex->value;
@@ -526,6 +532,12 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
 }
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex) {
+#if !defined(__LP64__)
+    if (mutex == NULL) {
+        return EINVAL;
+    }
+#endif
+
     int mvalue, mtype, tid, shared;
 
     mvalue = mutex->value;
