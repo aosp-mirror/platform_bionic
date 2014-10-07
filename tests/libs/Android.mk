@@ -98,10 +98,10 @@ include $(TEST_PATH)/Android.build.mk
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
 include $(CLEAR_VARS)
-bionic_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+bionic_2nd_arch_prefix :=
 include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
 ifneq ($(TARGET_2ND_ARCH),)
-  bionic_2nd_arch_prefix :=
+  bionic_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
   include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
 endif
 
