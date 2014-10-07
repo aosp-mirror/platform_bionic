@@ -92,6 +92,13 @@ extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
 extern int    strcoll_l(const char *, const char *, locale_t) __purefunc;
 extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale_t);
 
+extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
+extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
+extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
+extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
+extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcat);
+extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
+
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
@@ -114,8 +121,6 @@ char* strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
 
-extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
-
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
     size_t bos_dest = __bos(dest);
@@ -136,8 +141,6 @@ char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
 
     return __stpncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
-
-extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
 
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
@@ -175,9 +178,6 @@ void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 
-extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
-extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
-
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
     size_t bos = __bos(dest);
@@ -197,9 +197,6 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
 
     return __strlcpy_chk(dest, src, size, bos);
 }
-
-extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcat);
-extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 
 __BIONIC_FORTIFY_INLINE

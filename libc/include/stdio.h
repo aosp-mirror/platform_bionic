@@ -47,6 +47,8 @@
 #define __need_NULL
 #include <stddef.h>
 
+__BEGIN_DECLS
+
 #define	_FSTDIO			/* Define for new stdio with functions. */
 
 typedef off_t fpos_t;		/* stdio file position type */
@@ -136,9 +138,7 @@ typedef	struct __sFILE {
 	fpos_t	_offset;	/* current lseek offset */
 } FILE;
 
-__BEGIN_DECLS
 extern FILE __sF[];
-__END_DECLS
 
 #define	__SLBF	0x0001		/* line buffered */
 #define	__SNBF	0x0002		/* unbuffered */
@@ -208,7 +208,6 @@ __END_DECLS
 /*
  * Functions defined in ANSI C standard.
  */
-__BEGIN_DECLS
 void	 clearerr(FILE *);
 int	 fclose(FILE *);
 int	 feof(FILE *);
@@ -296,16 +295,12 @@ int	 vsscanf(const char * __restrict, const char * __restrict, __va_list)
 		__scanflike(2, 0);
 #endif /* __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE */
 
-__END_DECLS
-
-
 /*
  * Functions defined in POSIX 1003.1.
  */
 #if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
 #define	L_ctermid	1024	/* size for ctermid(); PATH_MAX */
 
-__BEGIN_DECLS
 FILE	*fdopen(int, const char *);
 int	 fileno(FILE *);
 
@@ -329,15 +324,12 @@ int	 putc_unlocked(int, FILE *);
 int	 putchar_unlocked(int);
 #endif /* __POSIX_VISIBLE >= 199506 */
 
-__END_DECLS
-
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
 
 /*
  * Routines that are purely local.
  */
 #if __BSD_VISIBLE
-__BEGIN_DECLS
 int	 asprintf(char ** __restrict, const char * __restrict, ...)
 		__printflike(2, 3);
 char	*fgetln(FILE * __restrict, size_t * __restrict);
@@ -347,25 +339,26 @@ int	 setlinebuf(FILE *);
 int	 vasprintf(char ** __restrict, const char * __restrict,
     __va_list)
 		__printflike(2, 0);
-__END_DECLS
 
 /*
  * Stdio function-access interface.
  */
-__BEGIN_DECLS
 FILE	*funopen(const void *,
 		int (*)(void *, char *, int),
 		int (*)(void *, const char *, int),
 		fpos_t (*)(void *, fpos_t, int),
 		int (*)(void *));
-__END_DECLS
+
 #define	fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define	fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __BSD_VISIBLE */
 
-#if defined(__BIONIC_FORTIFY)
+extern char* __fgets_chk(char*, int, FILE*, size_t);
+extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
+__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
+__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
-__BEGIN_DECLS
+#if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 0)
@@ -411,11 +404,6 @@ int sprintf(char *dest, const char *format, ...)
 }
 #endif
 
-extern char* __fgets_chk(char*, int, FILE*, size_t);
-extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
-__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
-__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
-
 #if !defined(__clang__)
 
 __BIONIC_FORTIFY_INLINE
@@ -450,8 +438,8 @@ char *fgets(char* dest, int size, FILE* stream) {
 
 #endif /* !defined(__clang__) */
 
-__END_DECLS
-
 #endif /* defined(__BIONIC_FORTIFY) */
+
+__END_DECLS
 
 #endif /* _STDIO_H_ */
