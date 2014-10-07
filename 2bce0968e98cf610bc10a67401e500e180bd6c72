@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0b988d9_c2ef53c2",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-07T21:41:55Z",
+      "side": 1,
+      "message": "need to be inside a _BEGIN_DECLS.",
+      "revId": "2bce0968e98cf610bc10a67401e500e180bd6c72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
