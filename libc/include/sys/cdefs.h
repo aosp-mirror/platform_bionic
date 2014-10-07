@@ -267,20 +267,6 @@
 #endif /* NO_KERNEL_RCSIDS */
 #endif /* _KERNEL */
 
-#if !defined(_STANDALONE) && !defined(_KERNEL)
-#ifdef __GNUC__
-#define	__RENAME(x)	___RENAME(x)
-#else
-#ifdef __lint__
-#define	__RENAME(x)	__symbolrename(x)
-#else
-#error "No function renaming possible"
-#endif /* __lint__ */
-#endif /* __GNUC__ */
-#else /* _STANDALONE || _KERNEL */
-#define	__RENAME(x)	no renaming in kernel or standalone environment
-#endif
-
 /*
  * A barrier to stop the optimizer from moving code or assume live
  * register values. This is gcc specific, the version is more or less
@@ -359,60 +345,15 @@
 #endif
 
 /*
- * Macros for manipulating "link sets".  Link sets are arrays of pointers
- * to objects, which are gathered up by the linker.
- *
- * Object format-specific code has provided us with the following macros:
- *
- *	__link_set_add_text(set, sym)
- *		Add a reference to the .text symbol `sym' to `set'.
- *
- *	__link_set_add_rodata(set, sym)
- *		Add a reference to the .rodata symbol `sym' to `set'.
- *
- *	__link_set_add_data(set, sym)
- *		Add a reference to the .data symbol `sym' to `set'.
- *
- *	__link_set_add_bss(set, sym)
- *		Add a reference to the .bss symbol `sym' to `set'.
- *
- *	__link_set_decl(set, ptype)
- *		Provide an extern declaration of the set `set', which
- *		contains an array of the pointer type `ptype'.  This
- *		macro must be used by any code which wishes to reference
- *		the elements of a link set.
- *
- *	__link_set_start(set)
- *		This points to the first slot in the link set.
- *
- *	__link_set_end(set)
- *		This points to the (non-existent) slot after the last
- *		entry in the link set.
- *
- *	__link_set_count(set)
- *		Count the number of entries in link set `set'.
- *
- * In addition, we provide the following macros for accessing link sets:
- *
- *	__link_set_foreach(pvar, set)
- *		Iterate over the link set `set'.  Because a link set is
- *		an array of pointers, pvar must be declared as "type **pvar",
- *		and the actual entry accessed as "*pvar".
- *
- *	__link_set_entry(set, idx)
- *		Access the link set entry at index `idx' from set `set'.
+ * Some BSD source needs these macros.
+ * Originally they embedded the rcs versions of each source file
+ * in the generated binary. We strip strings during build anyway,.
  */
-#define	__link_set_foreach(pvar, set)					\
-	for (pvar = __link_set_start(set); pvar < __link_set_end(set); pvar++)
-
-#define	__link_set_entry(set, idx)	(__link_set_begin(set)[idx])
-
-/*
- * Some of the FreeBSD sources used in Bionic need this.
- * Originally, this is used to embed the rcs versions of each source file
- * in the generated binary. We certainly don't want this in Bionic.
- */
-#define __FBSDID(s) /* nothing */
+#define __IDSTRING(_prefix,_s) /* nothing */
+#define __COPYRIGHT(_s) /* nothing */
+#define __FBSDID(_s) /* nothing */
+#define __RCSID(_s) /* nothing */
+#define __SCCSID(_s) /* nothing */
 
 /*-
  * The following definitions are an extension of the behavior originally
@@ -570,11 +511,24 @@
 #endif
 #define __bos0(s) __builtin_object_size((s), 0)
 
-#define __BIONIC_FORTIFY_INLINE \
-    extern __inline__ \
-    __attribute__ ((always_inline)) \
-    __attribute__ ((gnu_inline))
+#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
+
+/* Used to tag non-static symbols that are private and never exposed by the shared library. */
+#define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
+
+/* Like __LIBC_HIDDEN__, but preserves binary compatibility for LP32. */
+#ifdef __LP64__
+#define __LIBC64_HIDDEN__ __LIBC_HIDDEN__
+#else
+#define __LIBC64_HIDDEN__ __LIBC_ABI_PUBLIC__
+#endif
+
+/* Used to tag non-static symbols that are public and exposed by the shared library. */
+#define __LIBC_ABI_PUBLIC__ __attribute__((visibility ("default")))
+
+/* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
+#define __RENAME(x) __asm__(#x)
 
 #endif /* !_SYS_CDEFS_H_ */
