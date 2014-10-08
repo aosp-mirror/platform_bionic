@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0992c84_15cfd6bc",
+        "filename": "tests/libs/Android.build.dlext_testzip.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-08T19:45:16Z",
+      "side": 1,
+      "message": "wangying@: is this the correct way to add custom build target?",
+      "revId": "07e5bc152d8a3ad4c50808bb86f3c0f2c5e2f514",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
