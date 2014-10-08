@@ -43,8 +43,8 @@
  * This fgets check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __fgets_chk(char* dest, int supplied_size,
-                             FILE* stream, size_t dest_len_from_compiler) {
+char* __fgets_chk(char* dest, int supplied_size, FILE* stream,
+                  size_t dest_len_from_compiler) {
   if (supplied_size < 0) {
     __fortify_chk_fail("fgets: buffer size < 0", 0);
   }
