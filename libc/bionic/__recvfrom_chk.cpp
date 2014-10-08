@@ -32,9 +32,9 @@
 #include <sys/socket.h>
 #include "private/libc_logging.h"
 
-extern "C"
-ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buflen, unsigned int flags,
-                       const struct sockaddr* src_addr, socklen_t* addrlen) {
+ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buflen,
+                       int flags, const struct sockaddr* src_addr,
+                       socklen_t* addrlen) {
   if (__predict_false(len > buflen)) {
     __fortify_chk_fail("recvfrom: prevented write past end of buffer", 0);
   }
