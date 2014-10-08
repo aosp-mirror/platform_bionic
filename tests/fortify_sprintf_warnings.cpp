@@ -22,12 +22,12 @@ void test_sprintf() {
   char buf[4];
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___sprintf_chk(char*, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___sprintf_chk(char*, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   sprintf(buf, "foobar"); // NOLINT(runtime/printf)
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___sprintf_chk(char*, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___sprintf_chk(char*, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   sprintf(buf, "%s", "foobar"); // NOLINT(runtime/printf)
 }
@@ -36,22 +36,22 @@ void test_snprintf() {
   char buf[4];
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___snprintf_chk(char*, unsigned int, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___snprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   snprintf(buf, 5, "foobar"); // NOLINT(runtime/printf)
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___snprintf_chk(char*, unsigned int, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___snprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   snprintf(buf, 5, "%s", "foobar"); // NOLINT(runtime/printf)
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___snprintf_chk(char*, unsigned int, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___snprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   snprintf(buf, 5, " %s ", "foobar"); // NOLINT(runtime/printf)
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___snprintf_chk(char*, unsigned int, int, unsigned int, const char*, ...) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___snprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, ...) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   snprintf(buf, 5, "%d", 100000); // NOLINT(runtime/printf)
 }
