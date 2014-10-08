@@ -426,7 +426,7 @@ int		b64_ntop(u_char const *, size_t, char *, size_t);
 int		b64_pton(char const *, u_char *, size_t);
 #endif
 int		loc_aton(const char *, u_char *);
-const char *	loc_ntoa(const u_char *, char *);
+const char *	loc_ntoa(const u_char *, char *, size_t);
 int		dn_skipname(const u_char *, const u_char *);
 void		putlong(uint32_t, u_char *);
 void		putshort(uint16_t, u_char *);
