@@ -34,6 +34,24 @@
       "revId": "07e5bc152d8a3ad4c50808bb86f3c0f2c5e2f514",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0992c84_d83bc5bd",
+        "filename": "tests/libs/Android.build.dlext_testzip.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2014-10-08T22:28:32Z",
+      "side": 1,
+      "message": "No, this is totally wrong.\nI am going to upload a fix.",
+      "parentUuid": "f0992c84_35577a1d",
+      "revId": "07e5bc152d8a3ad4c50808bb86f3c0f2c5e2f514",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
