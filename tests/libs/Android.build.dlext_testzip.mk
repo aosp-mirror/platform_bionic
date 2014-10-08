@@ -24,6 +24,7 @@ $(bionic_2nd_arch_prefix)bionic_dlext_test_zip := \
 $(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned := \
     $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_fd/dlext_test.zip
 ALL_MODULES += $($(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned)
+ALL_MODULES.$($(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned).PATH := $(call my-dir)
 
 $(bionic_2nd_arch_prefix)bionic_dlext_built_shared_libraries := \
     $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_fd.so
