@@ -75,14 +75,14 @@ extern ssize_t tee(int, int, size_t, unsigned int);
 extern int unlinkat(int, const char*, int);
 extern ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int);
 
-#if defined(__BIONIC_FORTIFY)
-
 extern int __open_2(const char*, int);
 extern int __open_real(const char*, int, ...) __RENAME(open);
 extern int __openat_2(int, const char*, int);
 extern int __openat_real(int, const char*, int, ...) __RENAME(openat);
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");
+
+#if defined(__BIONIC_FORTIFY)
 
 #if !defined(__clang__)
 

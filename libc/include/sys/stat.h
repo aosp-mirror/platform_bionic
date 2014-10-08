@@ -160,11 +160,11 @@ extern int stat64(const char*, struct stat64*);
 extern int mknod(const char*, mode_t, dev_t);
 extern mode_t umask(mode_t);
 
-#if defined(__BIONIC_FORTIFY)
-
 extern mode_t __umask_chk(mode_t);
 extern mode_t __umask_real(mode_t) __RENAME(umask);
 __errordecl(__umask_invalid_mode, "umask called with invalid mode");
+
+#if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
 mode_t umask(mode_t mode) {
