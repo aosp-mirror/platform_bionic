@@ -16,6 +16,24 @@
       "revId": "07e5bc152d8a3ad4c50808bb86f3c0f2c5e2f514",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0992c84_35577a1d",
+        "filename": "tests/libs/Android.build.dlext_testzip.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-08T20:14:02Z",
+      "side": 1,
+      "message": "wangying: b/17887283, for context on why we\u0027re asking",
+      "parentUuid": "f0992c84_15cfd6bc",
+      "revId": "07e5bc152d8a3ad4c50808bb86f3c0f2c5e2f514",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
