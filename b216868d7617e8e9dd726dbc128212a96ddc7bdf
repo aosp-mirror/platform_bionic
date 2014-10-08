@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0b4ccdf_14018c26",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-08T18:28:22Z",
+      "side": 1,
+      "message": "copyright header?",
+      "revId": "b216868d7617e8e9dd726dbc128212a96ddc7bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10bfa0c3_b907f784",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-08T18:28:22Z",
+      "side": 1,
+      "message": "(void)?",
+      "revId": "b216868d7617e8e9dd726dbc128212a96ddc7bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
