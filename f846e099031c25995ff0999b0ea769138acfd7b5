@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90a8f091_a30a528d",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-10-08T22:09:11Z",
+      "side": 1,
+      "message": "By \"globally\", I meant in the build system.",
+      "revId": "f846e099031c25995ff0999b0ea769138acfd7b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
