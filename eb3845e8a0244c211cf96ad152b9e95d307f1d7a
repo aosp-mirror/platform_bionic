@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "508af82f_4df0f9f5",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2014-10-08T19:50:27Z",
+      "side": 1,
+      "message": "You may want to do:\n\n#undef _FORTIFY_SOURCE\n#define _FORTIFY_SOURCE 2\n\nJust in case _FORTIFY_SOURCE is already defined and isn\u0027t 2.",
+      "revId": "eb3845e8a0244c211cf96ad152b9e95d307f1d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
