@@ -86,11 +86,6 @@ static inline uint32_t SEM_GET_SHARED(sem_t* sem) {
 
 
 int sem_init(sem_t* sem, int pshared, unsigned int value) {
-  if (sem == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
   // Ensure that 'value' can be stored in the semaphore.
   if (value > SEM_VALUE_MAX) {
     errno = EINVAL;
@@ -104,11 +99,7 @@ int sem_init(sem_t* sem, int pshared, unsigned int value) {
   return 0;
 }
 
-int sem_destroy(sem_t* sem) {
-  if (sem == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
+int sem_destroy(sem_t*) {
   return 0;
 }
 
@@ -205,11 +196,6 @@ static int __sem_inc(volatile uint32_t* sem) {
 }
 
 int sem_wait(sem_t* sem) {
-  if (sem == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
   uint32_t shared = SEM_GET_SHARED(sem);
 
   while (true) {
@@ -223,11 +209,6 @@ int sem_wait(sem_t* sem) {
 }
 
 int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
-  if (sem == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
   // POSIX says we need to try to decrement the semaphore
   // before checking the timeout value. Note that if the
   // value is currently 0, __sem_trydec() does nothing.
@@ -271,10 +252,6 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
 }
 
 int sem_post(sem_t* sem) {
-  if (sem == NULL) {
-    return EINVAL;
-  }
-
   uint32_t shared = SEM_GET_SHARED(sem);
 
   ANDROID_MEMBAR_FULL();
@@ -292,11 +269,6 @@ int sem_post(sem_t* sem) {
 }
 
 int sem_trywait(sem_t* sem) {
-  if (sem == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
   if (__sem_trydec(&sem->count) > 0) {
     ANDROID_MEMBAR_FULL();
     return 0;
@@ -307,11 +279,6 @@ int sem_trywait(sem_t* sem) {
 }
 
 int sem_getvalue(sem_t* sem, int* sval) {
-  if (sem == NULL || sval == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
   int val = SEMCOUNT_TO_VALUE(sem->count);
   if (val < 0) {
     val = 0;
