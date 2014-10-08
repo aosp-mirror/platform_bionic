@@ -52,7 +52,7 @@ typedef int (*fn)(void);
 #endif
 
 #define LIBPATH LIBPATH_PREFIX "libdlext_test_fd.so"
-#define LIBZIPPATH LIBPATH_PREFIX "dlext_test.zip"
+#define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_fd_zipaligned.zip"
 
 #define LIBZIP_OFFSET 2*PAGE_SIZE
 

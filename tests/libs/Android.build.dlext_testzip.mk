@@ -18,31 +18,24 @@
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
 
-# TODO: It there simple way to do this?
-$(bionic_2nd_arch_prefix)bionic_dlext_test_zip := \
-    $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATES)/libdlext_test_fd/dlext_test_origin.zip
-$(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned := \
-    $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_fd/dlext_test.zip
-ALL_MODULES += $($(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned)
+include $(CLEAR_VARS)
 
-$(bionic_2nd_arch_prefix)bionic_dlext_built_shared_libraries := \
-    $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_fd.so
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE := libdlext_test_fd_zipaligned
+LOCAL_MODULE_SUFFIX := .zip
+LOCAL_MODULE_TAGS := tests
+LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_fd
+LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
-bionic_dlext_test_zip_alignment := 4096 # PAGE_SIZE
+include $(BUILD_SYSTEM)/base_rules.mk
 
-$(bionic_2nd_arch_prefix)bionic_dlext_test_zip_tmpdir := $(dir $($(bionic_2nd_arch_prefix)bionic_dlext_test_zip))
+my_shared_libs := \
+  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_fd.so
 
-$($(bionic_2nd_arch_prefix)bionic_dlext_test_zip)_prepare: $($(bionic_2nd_arch_prefix)bionic_dlext_built_shared_libraries)
-	$(hide) mkdir -p $(dir $@)
-	$(hide) cp -p $< $(dir $@)
-
-$($(bionic_2nd_arch_prefix)bionic_dlext_test_zip): $($(bionic_2nd_arch_prefix)bionic_dlext_test_zip)_prepare
-	@echo "Zip: $@"
-	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -rD0 $(notdir $@) empty_file.txt libdlext_test_fd.so)
-
-$($(bionic_2nd_arch_prefix)bionic_dlext_test_zip_aligned): $($(bionic_2nd_arch_prefix)bionic_dlext_test_zip) | $(ZIPALIGN)
-	$(hide) rm -rf $@
-	$(hide) mkdir -p $(dir $@)
-	@echo "Zipalign $(bionic_dlext_test_zip_alignment): $@"
-	$(hide) zipalign $(bionic_dlext_test_zip_alignment) $< $@
-
+$(LOCAL_BUILT_MODULE): PRIVATE_ALIGNMENT := 4096 # PAGE_SIZE
+$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
+	@echo "Zipalign $(PRIVATE_ALIGNMENT): $@"
+	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)
+	$(hide) cp $^ $(dir $@)
+	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -rD0 $(notdir $@).unaligned empty_file.txt *.so)
+	$(hide) $(ZIPALIGN) $(PRIVATE_ALIGNMENT) $@.unaligned $@
