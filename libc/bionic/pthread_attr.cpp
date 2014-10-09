@@ -31,6 +31,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <sys/resource.h>
+#include <unistd.h>
 
 #include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
@@ -126,8 +127,12 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
 
-  // It doesn't matter which thread we are; we're just looking for "[stack]".
-  FILE* fp = fopen("/proc/self/maps", "re");
+  // It shouldn't matter which thread we are because we're just looking for "[stack]", but
+  // valgrind seems to mess with the stack enough that the kernel will report "[stack:pid]"
+  // instead if you look in /proc/self/maps, so we need to look in /proc/pid/task/pid/maps.
+  char path[64];
+  snprintf(path, sizeof(path), "/proc/self/task/%d/maps", getpid());
+  FILE* fp = fopen(path, "re");
   if (fp == NULL) {
     return errno;
   }
@@ -143,7 +148,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
       }
     }
   }
-  __libc_fatal("No [stack] line found in /proc/self/maps!");
+  __libc_fatal("No [stack] line found in \"%s\"!", path);
 }
 
 int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
