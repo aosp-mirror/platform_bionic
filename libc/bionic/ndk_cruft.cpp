@@ -325,4 +325,10 @@ extern "C" pid_t __pthread_gettid(pthread_t t) {
   return pthread_gettid_np(t);
 }
 
+// Older versions of appportable used dlmalloc directly instead of malloc,
+// so export this compatibility shim that simply calls malloc.
+extern "C" void* dlmalloc(size_t size) {
+  return malloc(size);
+}
+
 #endif
