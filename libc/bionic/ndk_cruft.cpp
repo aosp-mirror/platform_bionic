@@ -320,4 +320,10 @@ extern "C" size_t dlmalloc_usable_size(void* ptr) {
   return malloc_usable_size(ptr);
 }
 
+// Older versions of appportable used dlmalloc directly instead of malloc,
+// so export this compatibility shim that simply calls malloc.
+extern "C" void* dlmalloc(size_t size) {
+  return malloc(size);
+}
+
 #endif
