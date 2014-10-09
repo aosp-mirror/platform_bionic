@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0820c18_90003c9f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-09T01:50:16Z",
+      "side": 1,
+      "message": "I don\u0027t see how this can legitimately make a difference, unless there are interesting hardware coherence issues.  There is already a fence to ensure that the contents of the critical section can\u0027t move out of the CS.  The only interesting shared memory accesses getting ordered by the added fence seem to be to mutex-\u003evalue, and those are all to exactly the same location, and hence should not require fencing.\n\nHaving said that, I\u0027m very mildly worried about the algorithm used here.  The comments are a reasonable argument, but I didn\u0027t find them 100% convincing.  A more precise proof seems surprisingly difficult to come by.  I suspect it would be simpler if we had lock and unlock each basically perform load; CAS combination rather than going through multiple atomic steps.\n\nNonetheless, here\u0027s my attempt to show that this doesn\u0027t lose a wakeups:\n\nObservations:\n\nWhenever the state first enters 2, we know that either the futex_wait won\u0027t wait or some thread will eventually be woken.\nEither the thread currently holding the lock will do so, or if\nthe lock was not held, we will.\n\nWhenever the state decreases from 2, wake() is eventually called.\n\nAssume a thread blocks forever in the futex_wait without\nbeing woken.  Consider the last atomic decrement that resulted in a wake call, say by thread 1.  At the wake call we were in one of the following cases:\n\nThere were no waiters.  Means the state never became contended after that \u003d\u003d\u003e impossible; there can\u0027t be any waiters.\n\nstate was unlocked when woken thread called swap\u003d\u003d\u003e woken thread would have made progress, set the state to contended and wake() would have been called again.\n\nstate was locked \u003d\u003d\u003e thread setting state to locked would have made progress, since woken thread would reset state to contended.\n\nstate contended \u003d\u003d\u003e Thread 1 set the state to unlocked.  Since then, some thread 2 set state to locked, some thread 3 is the first to set it to contended after observing the locked state.  If thread 2 completes the unlock decrement before the state is set to contended, thread 3 will make another later decrement wake call, since it sees an unlocked mutex value but nontheless sets the state to contended.  Otherwise thread 2 will do so after seeing the contended state.\n\nIn all cases we get a contradiction.\n\nThus, in spite of my negative comments, I actually kind of believe the algorithm as is.",
+      "range": {
+        "startLine": 343,
+        "startChar": 9,
+        "endLine": 343,
+        "endChar": 31
+      },
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
