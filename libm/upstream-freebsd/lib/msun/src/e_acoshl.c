@@ -7,7 +7,7 @@
  *
  * Developed at SunSoft, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
+ * software is freely granted, provided that this notice 
  * is preserved.
  * ====================================================
  *
@@ -75,7 +75,7 @@ acoshl(long double x)
 	} else if (hx >= BIAS + EXP_LARGE) { /* x >= LARGE */
 	    if (hx >= 0x7fff) {		/* x is inf, NaN or misnormal */
 	        RETURNI(x+x);
-	    } else
+	    } else 
 		RETURNI(logl(x)+ln2);	/* acosh(huge)=log(2x), or misnormal */
 	} else if (hx == 0x3fff && x == 1) {
 	    RETURNI(0.0);		/* acosh(1) = 0 */
