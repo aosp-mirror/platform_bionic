@@ -414,7 +414,7 @@ res_nquerydomain(res_state statp,
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
 			return (-1);
 		}
-		sprintf(nbuf, "%s.%s", name, domain);
+		snprintf(nbuf, sizeof(nbuf), "%s.%s", name, domain);
 	}
 	return (res_nquery(statp, longname, class, type, answer, anslen));
 }

@@ -1949,7 +1949,7 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numser
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_DGRAM; /*dummy*/
         hints.ai_flags = AI_NUMERICHOST;
-        sprintf(sbuf, "%u", NAMESERVER_PORT);
+        snprintf(sbuf, sizeof(sbuf), "%u", NAMESERVER_PORT);
 
         index = 0;
         for (i = 0; i < numservers && i < MAXNS; i++) {
