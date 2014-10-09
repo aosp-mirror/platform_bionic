@@ -57,6 +57,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "508af82f_53dfbc1b",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-09T18:40:35Z",
+      "side": 1,
+      "message": "The failure is a deadlock on ARMv8?\n\nThis at least weakly suggests that the __futex_wake_ex call may not ensure ordering we expect, and the assignment to value is not yet visible when the other thread wakes up.  That would also break other code in Android.\n\nBased on a quick examination of the kernel code, it is conceivable to me that there may be a problem here that was introduced with ARMv8.  Futex_wake acquires a spin lock and then calls wake_futex.  The spin lock presumably used to include a dmb which would have somewhat accidentally prevented this.  That\u0027s presumably now an exclusive acquire load, which would not.  I would be mildly surprised if there is not another dmb on kernel entry to prevent this.  If this is indeed the problem, it should also break on Itanium, though possibly not on real hardware.\n\nIf this is the problem, I think the correct place to fix it is in the kernel.  The fence here may be an actual workaround, but we would need several more like it.",
+      "parentUuid": "d087c827_afa95d9f",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
