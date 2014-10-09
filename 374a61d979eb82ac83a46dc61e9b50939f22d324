@@ -22,6 +22,41 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_c51475b4",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-09T17:05:49Z",
+      "side": 1,
+      "message": "Thanks Hans. I agree with you. I find it weird that a barrier could do any difference at that position, when the compare-exchange is guaranteed to have failed. After all, if the cmpxchg fails, then this means that the current thread hasn\u0027t written anything to memory. Why would it need a barrier, then?\n\nOrjan Eide, who has carried out most of the investigations on the issue so far, has just confirmed that the barrier above does only reduce the rate at which the bug occurs. In other words, the fix in this CL is know not to work. He has moved the barrier below (see comment) and this - so far - seems to have removed the issue (or has lowered the occurrence rate enough to require longer observation times). I hope I will have more time to look into this tomorrow (so far I have been hugely distracted by other issues and couldn\u0027t even attempt to reproduce the bug myself).",
+      "parentUuid": "f0820c18_90003c9f",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d087c827_afa95d9f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-09T17:05:49Z",
+      "side": 1,
+      "message": "A barrier here seems to work better.",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
