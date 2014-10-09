@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5073d823_4ef0e7f5",
+        "filename": "libm/upstream-freebsd/lib/msun/src/fenv-softfloat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-09T23:28:51Z",
+      "side": 0,
+      "message": "upstream hasn\u0027t removed this, but we don\u0027t use it and i\u0027m sick of looking at their diffs for an irrelevant file.",
+      "revId": "e9c216fca56e84b0d0a96f7d5e3c99d3276ef071",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
