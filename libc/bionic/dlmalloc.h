@@ -34,11 +34,14 @@
 
 #define malloc_getpagesize getpagesize()
 
-/* dlmalloc_usable_size was exposed in the NDK, so change the name
- * of the function on 32 bit architectures.
- */
 #if !defined(__LP64__)
+/* dlmalloc_usable_size and dlmalloc were exposed in the NDK and some
+ * apps actually used them. Rename these functions out of the way
+ * for 32 bit architectures so that ndk_cruft.cpp can expose
+ * compatibility shims with these names.
+ */
 #define dlmalloc_usable_size dlmalloc_usable_size_real
+#define dlmalloc dlmalloc_real
 #endif
 
 /* Export two symbols used by the VM. */
