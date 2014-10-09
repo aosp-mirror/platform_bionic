@@ -43,12 +43,6 @@ __RCSID("$NetBSD: ns_name.c,v 1.9 2012/03/13 21:13:39 christos Exp $");
 #include <stdlib.h>
 #include <limits.h>
 
-#ifdef SPRINTF_CHAR
-# define SPRINTF(x) ((int)strlen(sprintf/**/x))
-#else
-# define SPRINTF(x) (sprintf x)
-#endif
-
 #define NS_TYPE_ELT			0x40 /* EDNS0 extended label type */
 #define DNS_LABELTYPE_BITSTRING		0x41
 
@@ -1012,31 +1006,31 @@ decode_bitstring(const unsigned char **cpp, char *dn, const char *eom)
 		return(-1);
 
 	cp++;
-	i = SPRINTF((dn, "\\[x"));
+	i = snprintf(dn, eom - dn, "\\[x");
 	if (i < 0)
 		return (-1);
 	dn += i;
 	for (b = blen; b > 7; b -= 8, cp++) {
-		i = SPRINTF((dn, "%02x", *cp & 0xff));
+		i = snprintf(dn, eom - dn, "%02x", *cp & 0xff);
 		if (i < 0)
 			return (-1);
 		dn += i;
 	}
 	if (b > 4) {
 		tc = *cp++;
-		i = SPRINTF((dn, "%02x", tc & (0xff << (8 - b))));
+		i = snprintf(dn, eom - dn, "%02x", tc & (0xff << (8 - b)));
 		if (i < 0)
 			return (-1);
 		dn += i;
 	} else if (b > 0) {
 		tc = *cp++;
-		i = SPRINTF((dn, "%1x",
-			       (((u_int32_t)tc >> 4) & 0x0f) & (0x0f << (4 - b))));
+		i = snprintf(dn, eom - dn, "%1x",
+			       (((u_int32_t)tc >> 4) & 0x0f) & (0x0f << (4 - b)));
 		if (i < 0)
 			return (-1);
 		dn += i;
 	}
-	i = SPRINTF((dn, "/%d]", blen));
+	i = snprintf(dn, eom - dn, "/%d]", blen);
 	if (i < 0)
 		return (-1);
 	dn += i;

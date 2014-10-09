@@ -36,12 +36,6 @@ __RCSID("$NetBSD: ns_ttl.c,v 1.8 2012/03/13 21:13:39 christos Exp $");
 #include <stdio.h>
 #include <string.h>
 
-#ifdef SPRINTF_CHAR
-# define SPRINTF(x) strlen(sprintf/**/x)
-#else
-# define SPRINTF(x) ((size_t)sprintf x)
-#endif
-
 /* Forward. */
 
 static int	fmt1(int t, char s, char **buf, size_t *buflen);
@@ -157,8 +151,8 @@ fmt1(int t, char s, char **buf, size_t *buflen) {
 	char tmp[50];
 	size_t len;
 
-	len = SPRINTF((tmp, "%d%c", t, s));
-	if (len + 1 > *buflen)
+	len = (size_t)snprintf(tmp, sizeof(tmp), "%d%c", t, s);
+	if ((int)len < 0 || len + 1 > *buflen)
 		return (-1);
 	strcpy(*buf, tmp);
 	*buf += len;
