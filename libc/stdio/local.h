@@ -60,17 +60,19 @@ __LIBC64_HIDDEN__ FILE* __sfp(void);
 __LIBC64_HIDDEN__ void __sinit(void);
 __LIBC64_HIDDEN__ void __smakebuf(FILE*);
 
+/* These are referenced by the Greed for Glory franchise. */
+__LIBC64_HIDDEN__ int __sflush(FILE *);
+__LIBC64_HIDDEN__ int __sread(void *, char *, int);
+__LIBC64_HIDDEN__ int __swrite(void *, const char *, int);
+__LIBC64_HIDDEN__ fpos_t __sseek(void *, fpos_t, int);
+__LIBC64_HIDDEN__ int __sclose(void *);
+__LIBC64_HIDDEN__ int _fwalk(int (*)(FILE *));
+
 #pragma GCC visibility push(hidden)
 
-int	__sflush(FILE *);
 int	__sflush_locked(FILE *);
-int	__sread(void *, char *, int);
-int	__swrite(void *, const char *, int);
-fpos_t	__sseek(void *, fpos_t, int);
-int	__sclose(void *);
 void	_cleanup(void);
 int	__swhatbuf(FILE *, size_t *, int *);
-int	_fwalk(int (*)(FILE *));
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
 int	__vfprintf(FILE *, const char *, __va_list);
