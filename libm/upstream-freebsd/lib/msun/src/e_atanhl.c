@@ -7,7 +7,7 @@
  *
  * Developed at SunSoft, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
+ * software is freely granted, provided that this notice 
  * is preserved.
  * ====================================================
  *
@@ -68,7 +68,7 @@ atanhl(long double x)
 	if (ix < 0x3ffe) {		/* |x| < 0.5, or misnormal */
 	    t = x+x;
 	    t = 0.5*log1pl(t+t*x/(one-x));
-	} else
+	} else 
 	    t = 0.5*log1pl((x+x)/(one-x));
 	RETURNI((hx & 0x8000) == 0 ? t : -t);
 }
