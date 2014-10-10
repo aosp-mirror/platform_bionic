@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f960d6_e31c7292",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-10T15:05:26Z",
+      "side": 1,
+      "message": "explain how to do host coverage?",
+      "revId": "5f970cd02c39d64a90136ff025a70470e7b4a6f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
