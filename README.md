@@ -160,3 +160,74 @@ This is fully automated:
 
   1. Run update-tzdata.py.
 
+
+Running the tests
+-----------------
+
+The tests are all built from the tests/ directory.
+
+### Device tests
+
+    $ mma
+    $ adb sync
+    $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+    $ adb shell \
+        /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
+    # Only for 64-bit targets
+    $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
+    $ adb shell \
+        /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static64
+
+### Host tests
+
+The host tests require that you have `lunch`ed either an x86 or x86_64 target.
+
+    $ mma
+    # 64-bit tests for 64-bit targets, 32-bit otherwise.
+    $ mm bionic-unit-tests-run-on-host
+    # Only exists for 64-bit targets.
+    $ mm bionic-unit-tests-run-on-host32
+
+### Against glibc
+
+As a way to check that our tests do in fact test the correct behavior (and not
+just the behavior we think is correct), it is possible to run the tests against
+the host's glibc.
+
+    $ mma
+    $ bionic-unit-tests-glibc32 # already in your path
+    $ bionic-unit-tests-glibc64
+
+
+Gathering test coverage
+-----------------------
+
+For either host or target coverage, you must first:
+
+ * `$ export NATIVE_COVERAGE=true`
+     * Note that the build system is ignorant to this flag being toggled, i.e. if
+       you change this flag, you will have to manually rebuild bionic.
+ * Set `bionic_coverage=true` in `libc/Android.mk` and `libm/Android.mk`.
+
+### Coverage from device tests
+
+    $ mma
+    $ adb sync
+    $ adb shell \
+        GCOV_PREFIX=/data/local/tmp/gcov \
+        GCOV_PREFIX_STRIP=`echo $ANDROID_BUILD_TOP | grep -o / | wc -l` \
+        /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+    $ acov
+
+`acov` will pull all coverage information from the device, push it to the right
+directories, run `lcov`, and open the coverage report in your browser.
+
+### Coverage from host tests
+
+First, build and run the host tests as usual (see above).
+
+    $ croot
+    $ lcov -c -d $ANDROID_PRODUCT_OUT -o coverage.info
+    $ genhtml -o covreport coverage.info # or lcov --list coverage.info
+
+The coverage report is now available at `covreport/index.html`.
