@@ -93,6 +93,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f960d6_e61c8092",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-10T18:07:33Z",
+      "side": 1,
+      "message": "That still seems consistent with my conjecture that it\u0027s the lack of a fence in the kernel.  The deciding factor would be whether the kernel spin-lock implementation uses an acquire load or a dmb, which would presumably depend only on whether the kernel is 64-bit.  This would be highly dependent on weird timing, so it wouldn\u0027t surprise me if it occurred only in certain CPU configurations.  But the more I think about, the more I remain highly suspicious of my conjecture that there is no other kernel synchronization that would force sufficient memory ordering.\n\nDo you have a kernel expert involved or should I see if I can find one here?",
+      "parentUuid": "b0ba54ec_58b67d60",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
