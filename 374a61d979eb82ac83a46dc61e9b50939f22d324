@@ -75,6 +75,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0ba54ec_58b67d60",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-10T17:31:52Z",
+      "side": 1,
+      "message": "If I read the bug report correctly the issue has been observed when running both 32-bit and 64-bit versions of the same application on 64-bit Android (this should be confirmed shortly) on an ARMv8 system. It seems to only occurs when running threads across different CPU clusters. One thread hangs forever in __futex_wake_ex(). Orjan\u0027s gdb investigations suggest that the thread should have been waked up, but it hasn\u0027t. Note that the issue hasn\u0027t yet been observed when forcing the threads to run on the same cluster ([all on A53 cores] or [all on A57 cores]). While I didn\u0027t have a lot of time today to work on this, I had enough to prepare a filesystem and reproduce the issue. Hopefully, next week I\u0027ll gather more info.",
+      "parentUuid": "508af82f_53dfbc1b",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
