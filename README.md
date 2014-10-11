@@ -4,40 +4,52 @@ Working on bionic
 What are the big pieces of bionic?
 ----------------------------------
 
-libc/ --- libc.so, libc.a
-  The C library. Stuff like fopen(3) and kill(2).
-libm/ --- libm.so, libm.a
-  The math library. Traditionally Unix systems kept stuff like sin(3) and
-  cos(3) in a separate library to save space in the days before shared
-  libraries.
-libdl/ --- libdl.so
-  The dynamic linker interface library. This is actually just a bunch of
-  stubs that the dynamic linker replaces with pointers to its own
-  implementation at runtime. This is where stuff like dlopen(3) lives.
-libstdc++/ --- libstdc++.so
-  The C++ ABI support functions. The C++ compiler doesn't know how to
-  implement thread-safe static initialization and the like, so it just calls
-  functions that are supplied by the system. Stuff like __cxa_guard_acquire
-  and __cxa_pure_virtual live here.
+#### libc/ --- libc.so, libc.a
 
-linker/ --- /system/bin/linker and /system/bin/linker64
-  The dynamic linker. When you run a dynamically-linked executable, its ELF
-  file has a DT_INTERP entry that says "use the following program to start me".
-  On Android, that's either linker or linker64 (depending on whether it's a
-  32-bit or 64-bit executable). It's responsible for loading the ELF executable
-  into memory and resolving references to symbols (so that when your code tries
-  to jump to fopen(3), say, it lands in the right place).
+The C library. Stuff like `fopen(3)` and `kill(2)`.
 
-tests/ --- unit tests
-  The tests/ directory contains unit tests. Roughly arranged as one file per
-  publicly-exported header file.
-benchmarks/ --- benchmarks
-  The benchmarks/ directory contains benchmarks.
+#### libm/ --- libm.so, libm.a
+
+The math library. Traditionally Unix systems kept stuff like `sin(3)` and
+`cos(3)` in a separate library to save space in the days before shared
+libraries.
+
+#### libdl/ --- libdl.so
+
+The dynamic linker interface library. This is actually just a bunch of stubs
+that the dynamic linker replaces with pointers to its own implementation at
+runtime. This is where stuff like `dlopen(3)` lives.
+
+#### libstdc++/ --- libstdc++.so
+
+The C++ ABI support functions. The C++ compiler doesn't know how to implement
+thread-safe static initialization and the like, so it just calls functions that
+are supplied by the system. Stuff like `__cxa_guard_acquire` and
+`__cxa_pure_virtual` live here.
+
+#### linker/ --- /system/bin/linker and /system/bin/linker64
+
+The dynamic linker. When you run a dynamically-linked executable, its ELF file
+has a `DT_INTERP` entry that says "use the following program to start me".  On
+Android, that's either `linker` or `linker64` (depending on whether it's a
+32-bit or 64-bit executable). It's responsible for loading the ELF executable
+into memory and resolving references to symbols (so that when your code tries to
+jump to `fopen(3)`, say, it lands in the right place).
+
+#### tests/ --- unit tests
+
+The `tests/` directory contains unit tests. Roughly arranged as one file per
+publicly-exported header file.
+
+#### benchmarks/ --- benchmarks
+
+The `benchmarks/` directory contains benchmarks.
 
 
 What's in libc/?
 ----------------
 
+<pre>
 libc/
   arch-arm/
   arch-arm64/
@@ -121,6 +133,7 @@ libc/
   zoneinfo/
     # Android-format time zone data.
     # See 'Updating tzdata' later.
+</pre>
 
 
 Adding system calls
