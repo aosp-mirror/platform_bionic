@@ -111,6 +111,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9042b0da_22229041",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-12T09:46:06Z",
+      "side": 1,
+      "message": "An issue in the kernel would be a valid candidate for explaining the observations collected so far ...but I share the suspect. It sounds strange to me that the thread could go through a system call without any sort of memory synchronisation.\n\nTomorrow, I\u0027ll ask some of our kernel guys and see what they say. I\u0027ll let you know of any developments...\n\nMany thanks for helping with this :-)",
+      "parentUuid": "10f960d6_e61c8092",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
