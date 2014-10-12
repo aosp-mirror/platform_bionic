@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_nanosleep)
+ENTRY(__clock_nanosleep)
     movq    %rcx, %r10
     movl    $__NR_clock_nanosleep, %eax
     syscall
@@ -13,4 +13,5 @@ ENTRY(clock_nanosleep)
     call    __set_errno_internal
 1:
     ret
-END(clock_nanosleep)
+END(__clock_nanosleep)
+.hidden __clock_nanosleep

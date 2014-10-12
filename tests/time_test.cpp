@@ -406,9 +406,22 @@ TEST(time, clock_gettime) {
 }
 
 TEST(time, clock) {
-   // clock(3) is hard to test, but a 1s sleep should cost less than 1ms.
-   clock_t t0 = clock();
-   sleep(1);
-   clock_t t1 = clock();
-   ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
+  // clock(3) is hard to test, but a 1s sleep should cost less than 1ms.
+  clock_t t0 = clock();
+  sleep(1);
+  clock_t t1 = clock();
+  ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
+}
+
+TEST(time, clock_settime) {
+  errno = 0;
+  timespec ts;
+  ASSERT_EQ(-1, clock_settime(-1, &ts));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(time, clock_nanosleep) {
+  timespec in;
+  timespec out;
+  ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
 }
