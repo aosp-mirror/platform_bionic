@@ -43,6 +43,23 @@
     },
     {
       "key": {
+        "uuid": "502d9828_35ae50f5",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-13T20:46:31Z",
+      "side": 1,
+      "message": "LABEL1:",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d087c827_afa95d9f",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -126,6 +143,23 @@
       "side": 1,
       "message": "An issue in the kernel would be a valid candidate for explaining the observations collected so far ...but I share the suspect. It sounds strange to me that the thread could go through a system call without any sort of memory synchronisation.\n\nTomorrow, I\u0027ll ask some of our kernel guys and see what they say. I\u0027ll let you know of any developments...\n\nMany thanks for helping with this :-)",
       "parentUuid": "10f960d6_e61c8092",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9042b0da_c5464e9b",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-13T20:46:31Z",
+      "side": 1,
+      "message": "I think we found a potential weakness that could arise if the __futex_wake_ex() below is allowed to return zero (which - I believe - is the case).\n\nAssume a thread was interrupted - for any reasons - at \"LABEL1\". The __futex_wake_ex() below would have nothing to wake and would return 0. Once the previously-interrupted thread gets a chance to continue from \"LABEL1\" it goes into a __futex_wait_ex() and sleeps forever.\n\nTomorrow I will replace the line below with:\n\n  int num_woken_threads \u003d __futex_wake_ex(\u0026mutex-\u003evalue, shared, 1);\n  DCHECK_EQ(num_woken_threads, 1);\n\nTo check whether this is what we are observing. If I understand correctly, a failure in the assertion above can - in principle - cause one thread to sleep forever. If this is what is happening, we still would have to explain why running on different CPU clusters matters... I\u0027ll let you know how it goes.",
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
