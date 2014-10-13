@@ -163,6 +163,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_dd482b8c",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-13T23:04:56Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s that simple, unfortunately.  If unlock was executed entirely while another thread was stopped at Label1 then mutex-\u003e value would no longer be locked_contended, and the __futex_wait_ex would have returned immediately, since the comparison would fail.  If another thread set it back to locked_contended in the meantime, then that thread, or its successor, would wake up the waiter.  Such is the theory, anyway.\n\nI think the proposed DCHECK would trigger in normal operation and not tell you much.  The last wake in a contention period will fail to wake up another thread, even during normal operation. \n\nThis is a surprisingly complicated and subtle algorithm for what it does.  In the long run, I think a simplification attempt (single CAS loop in unlock rather than 2 stage release, replace the slower path in lock() with something that treats unlocked the same as we would have in the fast path) may make sense.  But I\u0027m not convinced it\u0027s really broken.  And if the real problem is in __futex_wake_ex, then this is not the only broken functionality.",
+      "parentUuid": "9042b0da_c5464e9b",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
