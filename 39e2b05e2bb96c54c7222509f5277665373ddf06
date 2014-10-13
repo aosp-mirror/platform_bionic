@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "901b9006_fafbe522",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-13T22:04:41Z",
+      "side": 1,
+      "message": "removed.",
+      "parentUuid": "10f960d6_982c0189",
+      "range": {
+        "startLine": 113,
+        "startChar": 8,
+        "endLine": 113,
+        "endChar": 16
+      },
+      "revId": "39e2b05e2bb96c54c7222509f5277665373ddf06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901b9006_da5aa1cd",
         "filename": "libc/include/elf.h",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2014-10-13T21:22:59Z",
       "side": 1,
       "message": "can\u0027t use C++ comments here. also, try to say something more like \"The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET.\".\n\n(i\u0027m assuming it\u0027s \"also\"? if not, \"uses Y instead.\".)\n\nany time we add cruft we want to say _why_ we\u0027re adding it. anyone can see that this is a synonym for another NT_ constant :-) what\u0027s not obvious is why we want it. superficial reason: to port valgrind. but that\u0027s a reason why valgrind wants it, not a reason for it to be in bionic. deeper reason: glibc has this name. _that\u0027s_ the reason why this makes sense in bionic.",
+      "revId": "39e2b05e2bb96c54c7222509f5277665373ddf06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f960d6_985641cc",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-13T22:04:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "901b9006_da5aa1cd",
       "revId": "39e2b05e2bb96c54c7222509f5277665373ddf06",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
