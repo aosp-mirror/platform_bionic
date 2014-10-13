@@ -54,29 +54,29 @@ typedef struct {
 #define DF_BIND_NOW   0x00000008
 #define DF_STATIC_TLS 0x00000010
 
-#define DF_1_NOW        0x00000001 // Perform complete relocation processing.
-#define DF_1_GLOBAL     0x00000002 // implies RTLD_GLOBAL
+#define DF_1_NOW        0x00000001 /* Perform complete relocation processing. */
+#define DF_1_GLOBAL     0x00000002 /* implies RTLD_GLOBAL */
 #define DF_1_GROUP      0x00000004
-#define DF_1_NODELETE   0x00000008 // implies RTLD_NODELETE
+#define DF_1_NODELETE   0x00000008 /* implies RTLD_NODELETE */
 #define DF_1_LOADFLTR   0x00000010
 #define DF_1_INITFIRST  0x00000020
-#define DF_1_NOOPEN     0x00000040 // Object can not be used with dlopen(3)
+#define DF_1_NOOPEN     0x00000040 /* Object can not be used with dlopen(3) */
 #define DF_1_ORIGIN     0x00000080
 #define DF_1_DIRECT     0x00000100
 #define DF_1_TRANS      0x00000200
 #define DF_1_INTERPOSE  0x00000400
 #define DF_1_NODEFLIB   0x00000800
-#define DF_1_NODUMP     0x00001000 // Object cannot be dumped with dldump(3)
+#define DF_1_NODUMP     0x00001000 /* Object cannot be dumped with dldump(3) */
 #define DF_1_CONFALT    0x00002000
 #define DF_1_ENDFILTEE  0x00004000
 #define DF_1_DISPRELDNE 0x00008000
 #define DF_1_DISPRELPND 0x00010000
 #define DF_1_NODIRECT   0x00020000
-#define DF_1_IGNMULDEF  0x00040000 // Internal use
-#define DF_1_NOKSYMS    0x00080000 // Internal use
-#define DF_1_NOHDR      0x00100000 // Internal use
+#define DF_1_IGNMULDEF  0x00040000 /* Internal use */
+#define DF_1_NOKSYMS    0x00080000 /* Internal use */
+#define DF_1_NOHDR      0x00100000 /* Internal use */
 #define DF_1_EDITED     0x00200000
-#define DF_1_NORELOC    0x00400000 // Internal use
+#define DF_1_NORELOC    0x00400000 /* Internal use */
 #define DF_1_SYMINTPOSE 0x00800000
 #define DF_1_GLOBAUDIT  0x01000000
 #define DF_1_SINGLETON  0x02000000
@@ -108,5 +108,8 @@ typedef struct {
 #define STT_HIOS      12
 #define STT_LOPROC    13
 #define STT_HIPROC    15
+
+/* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
+#define NT_FPREGSET NT_PRFPREG
 
 #endif /* _ELF_H */
