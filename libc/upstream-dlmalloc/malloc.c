@@ -3526,7 +3526,9 @@ static struct mallinfo internal_mallinfo(mstate m) {
       nm.arena    = sum;
       nm.ordblks  = nfree;
       nm.hblkhd   = m->footprint - sum;
-      nm.usmblks  = m->max_footprint;
+      /* BEGIN android-changed: usmblks set to footprint from max_footprint */
+      nm.usmblks  = m->footprint;
+      /* END android-changed */
       nm.uordblks = m->footprint - mfree;
       nm.fordblks = mfree;
       nm.keepcost = m->topsize;
