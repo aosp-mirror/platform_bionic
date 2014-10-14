@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_nanosleep)
+ENTRY(__clock_nanosleep)
     mov     x8, __NR_clock_nanosleep
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(clock_nanosleep)
     b.hi    __set_errno_internal
 
     ret
-END(clock_nanosleep)
+END(__clock_nanosleep)
+.hidden __clock_nanosleep
