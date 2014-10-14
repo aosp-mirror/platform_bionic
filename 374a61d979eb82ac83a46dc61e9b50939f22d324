@@ -181,6 +181,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d086e864_51421438",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-14T21:33:26Z",
+      "side": 1,
+      "message": "I agree, it is not that simple. __futex_wake_ex() should be able to return zero.\n\nWe are currently looking for missing barriers in kernel/futex.c:__futex_wake_ex(). There are a number of cases for which this system call returns without going through a barrier. Also, this function call has been subject to some barrier-related fixes recently:\n\nb0c29f79ecea0b6fbcefc999e70f2843ae8306db (futexes: Avoid taking the hb-\u003elock if there\u0027s nothing to wake up)",
+      "parentUuid": "d01348da_dd482b8c",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
