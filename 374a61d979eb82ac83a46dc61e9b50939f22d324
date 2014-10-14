@@ -199,6 +199,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9090f09a_e3e57ab6",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-14T23:25:43Z",
+      "side": 1,
+      "message": "Some of the comments in that patch suggest we may indeed have an issue in this area.\n\nI talked to someone here who initially also thought that kernel entry should generally involve a barrier, but then convinced himself it doesn\u0027t.\n\nI also can\u0027t convince myself that the general kernel memory barrier conventions for waiting and waking make sense.  They seem to require only a store barrier on the waking side.  That would seem to imply that if I have:\n\nThread 1:\nload x;\nwake();\n\nThread 2:\nwait();  // wakes thread 1\nx \u003d 17;\n\nAt least in theory, the load can see the 17 assigned by the woken thread. I suspect that doesn\u0027t really matter here, but it\u0027s likely to give all of us even more of a headache in thinking about this stuff.  I\u0027ll ask Paul McKenney about the intent here.",
+      "parentUuid": "d086e864_51421438",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
