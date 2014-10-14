@@ -217,6 +217,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9090f09a_23b14256",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-10-14T23:30:24Z",
+      "side": 1,
+      "message": "Sorry.  The \"wakes thread 1\" comment should have been associated with the wake and said \"thread 2\", i.e.\n\nThread 1:\nload x;  // sees 17 from thread 2\nwake();  // wakes thread 2\n\nThread 2:\nwait();\nx \u003d 17;",
+      "parentUuid": "9090f09a_e3e57ab6",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
