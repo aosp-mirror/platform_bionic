@@ -22,6 +22,30 @@
       "revId": "97df16ba5c2911e06d1211781a5724706abd227b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d038a85e_c4ddda98",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-14T23:00:51Z",
+      "side": 0,
+      "message": "It does report leaks, but nevertheless closing stds does not seem right...",
+      "parentUuid": "d038a85e_24c5a6c9",
+      "range": {
+        "startLine": 488,
+        "startChar": 0,
+        "endLine": 494,
+        "endChar": 17
+      },
+      "revId": "97df16ba5c2911e06d1211781a5724706abd227b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
