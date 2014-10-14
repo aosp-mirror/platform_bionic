@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_nanosleep)
+ENTRY(__clock_nanosleep)
     .set noreorder
     .cpload t9
     li v0, __NR_clock_nanosleep
@@ -16,4 +16,4 @@ ENTRY(clock_nanosleep)
     j t9
     nop
     .set reorder
-END(clock_nanosleep)
+END(__clock_nanosleep)
