@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_nanosleep)
+ENTRY(__clock_nanosleep)
     .set push
     .set noreorder
     li v0, __NR_clock_nanosleep
@@ -22,4 +22,5 @@ ENTRY(clock_nanosleep)
     j t9
     move ra, t0
     .set pop
-END(clock_nanosleep)
+END(__clock_nanosleep)
+.hidden __clock_nanosleep
