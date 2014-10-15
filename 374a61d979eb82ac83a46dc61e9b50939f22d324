@@ -235,6 +235,24 @@
       "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9069d076_ed0001db",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1037505
+      },
+      "writtenOn": "2014-10-15T22:10:18Z",
+      "side": 1,
+      "message": "It is reasonable that kernel entries - in general - do not necessarily need to go through a memory barrier. I suspect there would be a non-negligible performance implication in imposing the opposite. For the futex syscall, however, a barrier would probably make sense (maybe a full one, considered your example). In practice, in the Linux implementation (at least in 3.14-3.15) a number of barriers were added recently.\n\nIf the bug we see is really a matter of barriers, then we should be able to find one missing in the futex syscall implementation. This is the route I am currently trying to follow. Tomorrow, I will also try to introduce small forced delays to make the issue appear more easily. I hope this will work (I sometimes have to wait 20 or more minutes before seeing a hit). Many thanks for your help with this issue :-)",
+      "parentUuid": "9090f09a_23b14256",
+      "revId": "374a61d979eb82ac83a46dc61e9b50939f22d324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
