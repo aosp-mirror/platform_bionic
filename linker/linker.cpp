@@ -1915,27 +1915,33 @@ bool soinfo::PrelinkImage() {
         // TODO: glibc dynamic linker uses this name for
         // initial library lookup; consider doing the same here.
         break;
+
       case DT_HASH:
         nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         nchain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
         bucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
         chain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8 + nbucket * 4);
         break;
+
       case DT_STRTAB:
         strtab = reinterpret_cast<const char*>(load_bias + d->d_un.d_ptr);
         break;
+
       case DT_STRSZ:
         strtab_size = d->d_un.d_val;
         break;
+
       case DT_SYMTAB:
         symtab = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
         break;
+
       case DT_SYMENT:
         if (d->d_un.d_val != sizeof(ElfW(Sym))) {
           DL_ERR("invalid DT_SYMENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
+
       case DT_PLTREL:
 #if defined(USE_RELA)
         if (d->d_un.d_val != DT_RELA) {
@@ -1949,6 +1955,7 @@ bool soinfo::PrelinkImage() {
         }
 #endif
         break;
+
       case DT_JMPREL:
 #if defined(USE_RELA)
         plt_rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
@@ -1956,6 +1963,7 @@ bool soinfo::PrelinkImage() {
         plt_rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
 #endif
         break;
+
       case DT_PLTRELSZ:
 #if defined(USE_RELA)
         plt_rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
@@ -1963,6 +1971,7 @@ bool soinfo::PrelinkImage() {
         plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
 #endif
         break;
+
       case DT_PLTGOT:
 #if defined(__mips__)
         // Used by mips and mips64.
@@ -1970,6 +1979,7 @@ bool soinfo::PrelinkImage() {
 #endif
         // Ignore for other platforms... (because RTLD_LAZY is not supported)
         break;
+
       case DT_DEBUG:
         // Set the DT_DEBUG entry to the address of _r_debug for GDB
         // if the dynamic table is writable
@@ -1987,21 +1997,26 @@ bool soinfo::PrelinkImage() {
       case DT_RELA:
         rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
         break;
+
       case DT_RELASZ:
         rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
         break;
+
       case DT_RELAENT:
         if (d->d_un.d_val != sizeof(ElfW(Rela))) {
           DL_ERR("invalid DT_RELAENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
+
+      // ignored (see DT_RELCOUNT comments for details)
       case DT_RELACOUNT:
-        // ignored (see DT_RELCOUNT comments for details)
         break;
+
       case DT_REL:
         DL_ERR("unsupported DT_REL in \"%s\"", name);
         return false;
+
       case DT_RELSZ:
         DL_ERR("unsupported DT_RELSZ in \"%s\"", name);
         return false;
@@ -2009,21 +2024,24 @@ bool soinfo::PrelinkImage() {
       case DT_REL:
         rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
         break;
+
       case DT_RELSZ:
         rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
         break;
+
       case DT_RELENT:
         if (d->d_un.d_val != sizeof(ElfW(Rel))) {
           DL_ERR("invalid DT_RELENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
         }
         break;
+
+      // "Indicates that all RELATIVE relocations have been concatenated together,
+      // and specifies the RELATIVE relocation count."
+      //
+      // TODO: Spec also mentions that this can be used to optimize relocation process;
+      // Not currently used by bionic linker - ignored.
       case DT_RELCOUNT:
-        // "Indicates that all RELATIVE relocations have been concatenated together,
-        // and specifies the RELATIVE relocation count."
-        //
-        // TODO: Spec also mentions that this can be used to optimize relocation process;
-        // Not currently used by bionic linker - ignored.
         break;
       case DT_RELA:
         DL_ERR("unsupported DT_RELA in \"%s\"", name);
@@ -2033,31 +2051,39 @@ bool soinfo::PrelinkImage() {
         init_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT) found at %p", name, init_func);
         break;
+
       case DT_FINI:
         fini_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s destructors (DT_FINI) found at %p", name, fini_func);
         break;
+
       case DT_INIT_ARRAY:
         init_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", name, init_array);
         break;
+
       case DT_INIT_ARRAYSZ:
         init_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
+
       case DT_FINI_ARRAY:
         fini_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", name, fini_array);
         break;
+
       case DT_FINI_ARRAYSZ:
         fini_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
+
       case DT_PREINIT_ARRAY:
         preinit_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", name, preinit_array);
         break;
+
       case DT_PREINIT_ARRAYSZ:
         preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
+
       case DT_TEXTREL:
 #if defined(__LP64__)
         DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", name);
@@ -2066,12 +2092,15 @@ bool soinfo::PrelinkImage() {
         has_text_relocations = true;
         break;
 #endif
+
       case DT_SYMBOLIC:
         has_DT_SYMBOLIC = true;
         break;
+
       case DT_NEEDED:
         ++needed_count;
         break;
+
       case DT_FLAGS:
         if (d->d_un.d_val & DF_TEXTREL) {
 #if defined(__LP64__)
@@ -2085,6 +2114,7 @@ bool soinfo::PrelinkImage() {
           has_DT_SYMBOLIC = true;
         }
         break;
+
       case DT_FLAGS_1:
         if ((d->d_un.d_val & DF_1_GLOBAL) != 0) {
           rtld_flags |= RTLD_GLOBAL;
@@ -2107,6 +2137,7 @@ bool soinfo::PrelinkImage() {
           *dp = &_r_debug;
         }
         break;
+
       case DT_MIPS_RLD_VERSION:
       case DT_MIPS_FLAGS:
       case DT_MIPS_BASE_ADDRESS:
@@ -2125,10 +2156,14 @@ bool soinfo::PrelinkImage() {
         mips_gotsym = d->d_un.d_val;
         break;
 #endif
+      // Ignored: "Its use has been superseded by the DF_BIND_NOW flag"
+      case DT_BIND_NOW:
+        break;
+
+      // Ignore: bionic does not support symbol versioning...
       case DT_VERSYM:
       case DT_VERDEF:
       case DT_VERDEFNUM:
-        // Ignore: bionic does not support symbol versioning...
         break;
 
       default:
