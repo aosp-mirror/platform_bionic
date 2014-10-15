@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0218832_96c95465",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2129,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-15T22:07:43Z",
+      "side": 1,
+      "message": "The location of this comment and the comment below is a little confusing. Does the last one apply to all three DT_VERXX values?\n\nThis is a total nit, but it would probably be better to have the comment above this case, and the other one above the three DT_VER cases.",
+      "range": {
+        "startLine": 2129,
+        "startChar": 8,
+        "endLine": 2129,
+        "endChar": 72
+      },
+      "revId": "290e127936358991f1996427af0b39a500a2c120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
