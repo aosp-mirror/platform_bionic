@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06fc874_92ef2215",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-16T16:18:00Z",
+      "side": 1,
+      "message": "you missed a blank line here.",
+      "revId": "ea6eae182ad64312f80b9adddac511d8938e23e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06fc874_b2f4a6e9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-16T16:18:00Z",
+      "side": 1,
+      "message": "yet :-)",
+      "revId": "ea6eae182ad64312f80b9adddac511d8938e23e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
