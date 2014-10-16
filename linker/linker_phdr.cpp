@@ -728,9 +728,9 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
   }
 }
 
-// Returns the address of the program header table as it appears in the loaded
-// segments in memory. This is in contrast with 'phdr_table_' which
-// is temporary and will be released before the library is relocated.
+// Sets loaded_phdr_ to the address of the program header table as it appears
+// in the loaded segments in memory. This is in contrast with phdr_table_,
+// which is temporary and will be released before the library is relocated.
 bool ElfReader::FindPhdr() {
   const ElfW(Phdr)* phdr_limit = phdr_table_ + phdr_num_;
 
