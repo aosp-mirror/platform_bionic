@@ -295,6 +295,7 @@ LOCAL_SRC_FILES_mips := mips/fenv.c
 LOCAL_C_INCLUDES_mips64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_mips64 := mips/fenv.c $(libm_ld_src_files)
 
+LOCAL_CXX_STL := none
 include $(BUILD_STATIC_LIBRARY)
 
 #
@@ -311,6 +312,8 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+LOCAL_CXX_STL := none
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
