@@ -15,7 +15,7 @@
 #
 
 include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(common_additional_dependencies)
 
 LOCAL_MODULE := $(module)
 LOCAL_MODULE_TAGS := $(module_tag)

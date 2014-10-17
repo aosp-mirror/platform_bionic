@@ -18,6 +18,12 @@ LOCAL_PATH := $(call my-dir)
 TEST_PATH := $(LOCAL_PATH)/..
 
 common_cppflags += -std=gnu++11
+common_additional_dependencies := \
+    $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
+    $(LOCAL_PATH)/Android.build.testlib.mk \
+    $(TEST_PATH)/Android.build.mk
+
 # -----------------------------------------------------------------------------
 # Library used by dlfcn tests.
 # -----------------------------------------------------------------------------
@@ -348,9 +354,3 @@ libtest_dlsym_weak_func_src_files := \
 
 module := libtest_dlsym_weak_func
 include $(LOCAL_PATH)/Android.build.testlib.mk
-
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(LOCAL_PATH)/Android.mk \
-    $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
-    $(LOCAL_PATH)/Android.build.testlib.mk \
-    $(TEST_PATH)/Android.build.mk

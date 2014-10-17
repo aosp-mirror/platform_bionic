@@ -28,6 +28,8 @@ else
 build_host := false
 endif
 
+common_additional_dependencies := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.mk
+
 # -----------------------------------------------------------------------------
 # All standard tests.
 # -----------------------------------------------------------------------------
@@ -426,8 +428,6 @@ bionic-unit-tests-run-on-host32: bionic-unit-tests_32 $(TARGET_OUT_EXECUTABLES)/
 endif
 
 endif # linux-x86
-
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.mk
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
 endif # !BUILD_TINY_ANDROID
