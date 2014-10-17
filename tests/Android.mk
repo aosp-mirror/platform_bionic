@@ -28,6 +28,8 @@ else
 build_host := false
 endif
 
+common_additional_dependencies := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.mk
+
 # -----------------------------------------------------------------------------
 # All standard tests.
 # -----------------------------------------------------------------------------
