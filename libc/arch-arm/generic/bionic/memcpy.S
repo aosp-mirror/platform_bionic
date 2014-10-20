@@ -39,7 +39,7 @@
 
 ENTRY(__memcpy_chk)
         cmp         r2, r3
-        bgt         fortify_check_failed
+        bhi         __memcpy_chk_fail
 
         // Fall through to memcpy...
 END(__memcpy_chk)
@@ -49,11 +49,14 @@ ENTRY(memcpy)
          * ARM ABI. Since we have to save R0, we might as well save R4
          * which we can use for better pipelining of the reads below
          */
-        .save       {r0, r4, lr}
         stmfd       sp!, {r0, r4, lr}
+        .cfi_def_cfa_offset 12
+        .cfi_rel_offset r0, 0
+        .cfi_rel_offset r4, 4
+        .cfi_rel_offset lr, 8
         /* Making room for r5-r11 which will be spilled later */
-        .pad        #28
         sub         sp, sp, #28
+        .cfi_adjust_cfa_offset 28
 
         // preload the destination because we'll align it to a cache line
         // with small writes. Also start the source "pump".
@@ -63,14 +66,14 @@ ENTRY(memcpy)
 
         /* it simplifies things to take care of len<4 early */
         cmp         r2, #4
-        blo         copy_last_3_and_return
+        blo         .Lcopy_last_3_and_return
 
         /* compute the offset to align the source
          * offset = (4-(src&3))&3 = -src & 3
          */
         rsb         r3, r1, #0
         ands        r3, r3, #3
-        beq         src_aligned
+        beq         .Lsrc_aligned
 
         /* align source to 32 bits. We need to insert 2 instructions between
          * a ldr[b|h] and str[b|h] because byte and half-word instructions
@@ -85,12 +88,12 @@ ENTRY(memcpy)
         strcsb      r4, [r0], #1
         strcsb      r12,[r0], #1
 
-src_aligned:
+.Lsrc_aligned:
 
         /* see if src and dst are aligned together (congruent) */
         eor         r12, r0, r1
         tst         r12, #3
-        bne         non_congruent
+        bne         .Lnon_congruent
 
         /* Use post-incriment mode for stm to spill r5-r11 to reserved stack
          * frame. Don't update sp.
@@ -100,7 +103,7 @@ src_aligned:
         /* align the destination to a cache-line */
         rsb         r3, r0, #0
         ands        r3, r3, #0x1C
-        beq         congruent_aligned32
+        beq         .Lcongruent_aligned32
         cmp         r3, r2
         andhi       r3, r2, #0x1C
 
@@ -115,14 +118,14 @@ src_aligned:
         strne       r10,[r0], #4
         sub         r2, r2, r3
 
-congruent_aligned32:
+.Lcongruent_aligned32:
         /*
          * here source is aligned to 32 bytes.
          */
 
-cached_aligned32:
+.Lcached_aligned32:
         subs        r2, r2, #32
-        blo         less_than_32_left
+        blo         .Lless_than_32_left
 
         /*
          * We preload a cache-line up to 64 bytes ahead. On the 926, this will
@@ -160,10 +163,7 @@ cached_aligned32:
 
         add         r2, r2, #32
 
-
-
-
-less_than_32_left:
+.Lless_than_32_left:
         /*
          * less than 32 bytes left at this point (length in r2)
          */
@@ -197,7 +197,7 @@ less_than_32_left:
 
         /********************************************************************/
 
-non_congruent:
+.Lnon_congruent:
         /*
          * here source is aligned to 4 bytes
          * but destination is not.
@@ -207,9 +207,9 @@ non_congruent:
          * partial words in the shift queue)
          */
         cmp         r2, #4
-        blo         copy_last_3_and_return
+        blo         .Lcopy_last_3_and_return
 
-        /* Use post-incriment mode for stm to spill r5-r11 to reserved stack
+        /* Use post-increment mode for stm to spill r5-r11 to reserved stack
          * frame. Don't update sp.
          */
         stmea       sp, {r5-r11}
@@ -236,7 +236,7 @@ non_congruent:
         movcs       r3, r3, lsr #8
 
         cmp         r2, #4
-        blo         partial_word_tail
+        blo         .Lpartial_word_tail
 
         /* Align destination to 32 bytes (cache line boundary) */
 1:      tst         r0, #0x1c
@@ -248,11 +248,11 @@ non_congruent:
         str         r4, [r0], #4
         cmp         r2, #4
         bhs         1b
-        blo         partial_word_tail
+        blo         .Lpartial_word_tail
 
         /* copy 32 bytes at a time */
 2:      subs        r2, r2, #32
-        blo         less_than_thirtytwo
+        blo         .Lless_than_thirtytwo
 
         /* Use immediate mode for the shifts, because there is an extra cycle
          * for register shifts, which could account for up to 50% of
@@ -260,11 +260,11 @@ non_congruent:
          */
 
         cmp         r12, #24
-        beq         loop24
+        beq         .Lloop24
         cmp         r12, #8
-        beq         loop8
+        beq         .Lloop8
 
-loop16:
+.Lloop16:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
         ldmia       r1!, {   r5,r6,r7,  r8,r9,r10,r11}
@@ -289,9 +289,9 @@ loop16:
         stmia       r0!, {r3,r4,r5,r6, r7,r8,r9,r10}
         mov         r3, r11,        lsr #16
         bhs         1b
-        b           less_than_thirtytwo
+        b           .Lless_than_thirtytwo
 
-loop8:
+.Lloop8:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
         ldmia       r1!, {   r5,r6,r7,  r8,r9,r10,r11}
@@ -316,9 +316,9 @@ loop8:
         stmia       r0!, {r3,r4,r5,r6, r7,r8,r9,r10}
         mov         r3, r11,        lsr #8
         bhs         1b
-        b           less_than_thirtytwo
+        b           .Lless_than_thirtytwo
 
-loop24:
+.Lloop24:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
         ldmia       r1!, {   r5,r6,r7,  r8,r9,r10,r11}
@@ -345,12 +345,12 @@ loop24:
         bhs         1b
 
 
-less_than_thirtytwo:
+.Lless_than_thirtytwo:
         /* copy the last 0 to 31 bytes of the source */
         rsb         r12, lr, #32        /* we corrupted r12, recompute it  */
         add         r2, r2, #32
         cmp         r2, #4
-        blo         partial_word_tail
+        blo         .Lpartial_word_tail
 
 1:      ldr         r5, [r1], #4
         sub         r2, r2, #4
@@ -360,7 +360,7 @@ less_than_thirtytwo:
         cmp         r2, #4
         bhs         1b
 
-partial_word_tail:
+.Lpartial_word_tail:
         /* we have a partial word in the input buffer */
         movs        r5, lr, lsl #(31-3)
         strmib      r3, [r0], #1
@@ -372,7 +372,7 @@ partial_word_tail:
         /* Refill spilled registers from the stack. Don't update sp. */
         ldmfd       sp, {r5-r11}
 
-copy_last_3_and_return:
+.Lcopy_last_3_and_return:
         movs        r2, r2, lsl #31 /* copy remaining 0, 1, 2 or 3 bytes */
         ldrmib      r2, [r1], #1
         ldrcsb      r3, [r1], #1
@@ -385,9 +385,15 @@ copy_last_3_and_return:
         add         sp,  sp, #28
         ldmfd       sp!, {r0, r4, lr}
         bx          lr
+END(memcpy)
 
         // Only reached when the __memcpy_chk check fails.
-fortify_check_failed:
+ENTRY_PRIVATE(__memcpy_chk_fail)
+        // Preserve lr for backtrace.
+        push    {lr}
+        .cfi_def_cfa_offset 4
+        .cfi_rel_offset lr, 0
+
         ldr     r0, error_message
         ldr     r1, error_code
 1:
@@ -397,7 +403,7 @@ error_code:
         .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 error_message:
         .word   error_string-(1b+8)
-END(memcpy)
+END(__memcpy_chk_fail)
 
         .data
 error_string:
