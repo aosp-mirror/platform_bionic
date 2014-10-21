@@ -121,9 +121,9 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
 
   android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_OFFSET;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
   extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
-  extinfo.library_offset = LIBZIP_OFFSET;
+  extinfo.library_fd_offset = LIBZIP_OFFSET;
 
   handle_ = android_dlopen_ext(lib_path, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
@@ -141,23 +141,32 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
 
   android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_OFFSET;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
   extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
-  extinfo.library_offset = 17;
+  extinfo.library_fd_offset = 17;
 
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_STREQ("dlopen failed: file offset for the library libname_placeholder is not page-aligned: 17", dlerror());
+  ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
+
+  extinfo.library_fd_offset = (5LL<<58) + PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+
+  ASSERT_TRUE(handle_ == nullptr);
+  // TODO: Better error message when reading with offset > file_size
+  ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic", dlerror());
+
+  close(extinfo.library_fd);
 }
 
 TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
   android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_OFFSET;
-  extinfo.library_offset = LIBZIP_OFFSET;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
+  extinfo.library_fd_offset = LIBZIP_OFFSET;
 
   handle_ = android_dlopen_ext("/some/lib/that/does_not_exist", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
+  ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
 }
 
 TEST_F(DlExtTest, Reserved) {

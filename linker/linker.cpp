@@ -817,8 +817,8 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int dlfl
 
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
     fd = extinfo->library_fd;
-    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_OFFSET) != 0) {
-      file_offset = extinfo->library_offset;
+    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
+      file_offset = extinfo->library_fd_offset;
     }
   } else {
     // Open the file.
@@ -832,13 +832,13 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int dlfl
   }
 
   if ((file_offset % PAGE_SIZE) != 0) {
-    DL_ERR("file offset for the library %s is not page-aligned: %" PRId64, name, file_offset);
+    DL_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return nullptr;
   }
 
   struct stat file_stat;
   if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
-    DL_ERR("unable to stat file for the library %s: %s", name, strerror(errno));
+    DL_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
     return nullptr;
   }
 
@@ -1085,8 +1085,8 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
       return nullptr;
     }
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) == 0 &&
-        (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_OFFSET) != 0) {
-      DL_ERR("invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64, extinfo->flags);
+        (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
+      DL_ERR("invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64, extinfo->flags);
       return nullptr;
     }
   }
