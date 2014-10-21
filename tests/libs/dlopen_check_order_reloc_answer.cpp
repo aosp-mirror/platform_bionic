@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-extern "C" int dlopen_test_get_answer() {
-  return __ANSWER;
+extern "C" int __attribute__((weak)) check_order_reloc_get_answer_impl() {
+  return 0;
 }
 
-#ifdef __ANSWER2
-extern "C" int dlopen_test_get_answer2() {
-  return __ANSWER2;
+extern "C" int check_order_reloc_get_answer() {
+  return check_order_reloc_get_answer_impl();
 }
-#endif
