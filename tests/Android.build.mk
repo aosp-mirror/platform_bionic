@@ -35,6 +35,7 @@ endif
 endif
 
 LOCAL_CLANG := $($(module)_clang_$(build_type))
+LOCAL_ADDRESS_SANITIZER := false
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
 
