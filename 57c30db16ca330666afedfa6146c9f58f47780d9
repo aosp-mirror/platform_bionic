@@ -51,6 +51,24 @@
       "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f064ccc9_0351d424",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-21T01:51:47Z",
+      "side": 1,
+      "message": "does glibc leak something like this?",
+      "parentUuid": "30202482_536f2e99",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
