@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "150232f8_7e352d80",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-21T20:26:18Z",
+      "side": 1,
+      "message": "s/When/If/?\ns/library/a library/\ns/with/at/\nand add the missing \u0027.\u0027",
+      "revId": "ce35107df6c45fca6976266cdc4a23f242e16457",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
