@@ -69,6 +69,24 @@
       "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30202482_33f7126d",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-21T02:02:43Z",
+      "side": 1,
+      "message": "no, it doesn\u0027t",
+      "parentUuid": "f064ccc9_0351d424",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
