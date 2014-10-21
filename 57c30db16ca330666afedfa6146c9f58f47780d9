@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1096c0c9_81295ef6",
+        "filename": "libc/arch-common/bionic/crtbegin_sections.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-21T01:47:09Z",
+      "side": 1,
+      "message": "you could just move this up to L31 and lose the forward declaration.",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309904fa_a2601a2f",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-21T01:47:09Z",
+      "side": 1,
+      "message": "why is this no longer hidden?",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
