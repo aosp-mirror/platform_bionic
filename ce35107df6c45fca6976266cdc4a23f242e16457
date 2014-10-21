@@ -16,6 +16,24 @@
       "revId": "ce35107df6c45fca6976266cdc4a23f242e16457",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "150232f8_a116fa68",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-21T20:51:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "150232f8_7e352d80",
+      "revId": "ce35107df6c45fca6976266cdc4a23f242e16457",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
