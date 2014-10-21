@@ -162,44 +162,201 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   ASSERT_EQ(1, fn());
 }
 
-TEST(dlfcn, dlopen_check_order) {
+TEST(dlfcn, dlopen_check_order_dlsym) {
   // Here is how the test library and its dt_needed
   // libraries are arranged
   //
-  //  libtest_check_order.so
+  //  libtest_check_order_children.so
   //  |
-  //  +-> libtest_check_order_1_left.so
+  //  +-> ..._1_left.so
   //  |   |
-  //  |   +-> libtest_check_order_a.so
+  //  |   +-> ..._a.so
   //  |   |
-  //  |   +-> libtest_check_order_b.so
+  //  |   +-> ...r_b.so
   //  |
-  //  +-> libtest_check_order_2_right.so
+  //  +-> ..._2_right.so
   //  |   |
-  //  |   +-> libtest_check_order_d.so
+  //  |   +-> ..._d.so
   //  |       |
-  //  |       +-> libtest_check_order_b.so
+  //  |       +-> ..._b.so
   //  |
-  //  +-> libtest_check_order_3_c.so
+  //  +-> ..._3_c.so
   //
   //  load order should be (1, 2, 3, a, b, d)
   //
   // get_answer() is defined in (2, 3, a, b, c)
   // get_answer2() is defined in (b, d)
-  void* sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
+  void* sym = dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer");
   ASSERT_TRUE(sym == nullptr);
-  void* handle = dlopen("libtest_check_order.so", RTLD_NOW | RTLD_GLOBAL);
-  ASSERT_TRUE(handle != nullptr);
+  void* handle = dlopen("libtest_check_order_dlsym.so", RTLD_NOW | RTLD_GLOBAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
   typedef int (*fn_t) (void);
   fn_t fn, fn2;
-  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer"));
+  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer"));
   ASSERT_TRUE(fn != NULL) << dlerror();
-  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer2"));
+  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer2"));
   ASSERT_TRUE(fn2 != NULL) << dlerror();
 
   ASSERT_EQ(42, fn());
   ASSERT_EQ(43, fn2());
   dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_check_order_reloc_siblings) {
+  // This is how this one works:
+  // we lookup and call get_answer which is defined in '_2.so'
+  // and in turn calls external get_answer_impl() defined in _1.so and in '_[a-f].so'
+  // the correct _impl() is implemented by '_a.so';
+  //
+  // Note that this is test for RTLD_LOCAL (TODO: test for GLOBAL?)
+  //
+  // Here is the picture:
+  //
+  // libtest_check_order_reloc_siblings.so
+  // |
+  // +-> ..._1.so <- empty
+  // |   |
+  // |   +-> ..._a.so <- exports correct answer_impl()
+  // |   |
+  // |   +-> ..._b.so <- every other letter exporting incorrect one.
+  // |
+  // +-> ..._2.so <- empty
+  // |   |
+  // |   +-> ..._c.so
+  // |   |
+  // |   +-> ..._d.so
+  // |
+  // +-> ..._3.so <- empty
+  //     |
+  //     +-> ..._e.so
+  //     |
+  //     +-> ..._f.so <- exports get_answer() that calls get_anser_impl();
+  //                     implements incorrect get_answer_impl()
+
+  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#endif
+
+  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_check_order_reloc_siblings_with_preload) {
+  // This test uses the same library as dlopen_check_order_reloc_siblings.
+  // Unlike dlopen_check_order_reloc_siblings it preloads
+  // libtest_check_order_reloc_siblings_1.so (first dependency) prior to
+  // dlopen(libtest_check_order_reloc_siblings.so)
+
+  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+  handle = dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+
+  void* handle_for_1 = dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle_for_1 != nullptr) << dlerror();
+
+  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  ASSERT_EQ(0, dlclose(handle_for_1));
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_check_order_reloc_nephew) {
+  // This is how this one works:
+  // we lookup and call nephew_get_answer which is defined in '_2.so'
+  // and in turn calls external get_answer_impl() defined in '_[a-f].so'
+  // the correct _impl() is implemented by '_a.so';
+  //
+  // Here is the picture:
+  //
+  // libtest_check_order_reloc_siblings.so
+  // |
+  // +-> ..._1.so <- empty
+  // |   |
+  // |   +-> ..._a.so <- exports correct answer_impl()
+  // |   |
+  // |   +-> ..._b.so <- every other letter exporting incorrect one.
+  // |
+  // +-> ..._2.so <- empty
+  // |   |
+  // |   +-> ..._c.so
+  // |   |
+  // |   +-> ..._d.so
+  // |
+  // +-> ..._3.so <- nephew_get_answer() that calls get_answer_impl();
+  //     |
+  //     +-> ..._e.so
+  //     |
+  //     +-> ..._f.so
+
+  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#endif
+
+  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_nephew_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+extern "C" int check_order_reloc_root_get_answer_impl() {
+  return 42;
+}
+
+TEST(dlfcn, dlopen_check_order_reloc_main_executable) {
+  // This is how this one works:
+  // we lookup and call get_answer3 which is defined in 'root.so'
+  // and in turn calls external root_get_answer_impl() defined in _2.so and
+  // above the correct _impl() is one in the executable.
+  //
+  // libtest_check_order_reloc_root.so
+  // |
+  // +-> ..._1.so <- empty
+  // |
+  // +-> ..._2.so <- gives incorrect answer for answer_main_impl()
+  //
+
+  void* handle = dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_root.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#endif
+
+  handle = dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_root_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
 }
 
 TEST(dlfcn, dlopen_check_rtld_local) {
@@ -341,7 +498,6 @@ TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
   dlclose(handle);
   ASSERT_TRUE(!is_unloaded);
 }
-
 
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);

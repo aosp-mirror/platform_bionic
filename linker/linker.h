@@ -207,7 +207,7 @@ struct soinfo {
   void CallDestructors();
   void CallPreInitConstructors();
   bool PrelinkImage();
-  bool LinkImage(const android_dlextinfo* extinfo);
+  bool LinkImage(const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -234,9 +234,9 @@ struct soinfo {
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
 #if defined(USE_RELA)
-  int Relocate(ElfW(Rela)* rela, unsigned count);
+  int Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& local_group);
 #else
-  int Relocate(ElfW(Rel)* rel, unsigned count);
+  int Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_group);
 #endif
 
  private:
