@@ -206,22 +206,44 @@ struct Counter {
   volatile int value;
   timer_t timer_id;
   sigevent_t se;
+  bool timer_valid;
 
-  Counter(void (*fn)(sigval_t)) : value(0) {
+  Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
     memset(&se, 0, sizeof(se));
     se.sigev_notify = SIGEV_THREAD;
     se.sigev_notify_function = fn;
     se.sigev_value.sival_ptr = this;
+    Create();
   }
 
   void Create() {
+    ASSERT_FALSE(timer_valid);
     ASSERT_EQ(0, timer_create(CLOCK_REALTIME, &se, &timer_id));
+    timer_valid = true;
+  }
+
+  void DeleteTimer() {
+    ASSERT_TRUE(timer_valid);
+    ASSERT_EQ(0, timer_delete(timer_id));
+    timer_valid = false;
   }
 
   ~Counter() {
-    if (timer_delete(timer_id) != 0) {
-      abort();
+    if (timer_valid) {
+      DeleteTimer();
     }
+  }
+
+  void SetTime(time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
+    ::SetTime(timer_id, value_s, value_ns, interval_s, interval_ns);
+  }
+
+  bool ValueUpdated() {
+    volatile int current_value = value;
+    time_t start = time(NULL);
+    while (current_value == value && (time(NULL) - start) < 5) {
+    }
+    return current_value != value;
   }
 
   static void CountNotifyFunction(sigval_t value) {
@@ -234,17 +256,17 @@ struct Counter {
     ++cd->value;
 
     // Setting the initial expiration time to 0 disarms the timer.
-    SetTime(cd->timer_id, 0, 0, 1, 0);
+    cd->SetTime(0, 0, 1, 0);
   }
 };
 
 TEST(time, timer_settime_0) {
   Counter counter(Counter::CountAndDisarmNotifyFunction);
-  counter.Create();
+  ASSERT_TRUE(counter.timer_valid);
 
   ASSERT_EQ(0, counter.value);
 
-  SetTime(counter.timer_id, 0, 1, 1, 0);
+  counter.SetTime(0, 1, 1, 0);
   usleep(500000);
 
   // The count should just be 1 because we disarmed the timer the first time it fired.
@@ -253,15 +275,14 @@ TEST(time, timer_settime_0) {
 
 TEST(time, timer_settime_repeats) {
   Counter counter(Counter::CountNotifyFunction);
-  counter.Create();
+  ASSERT_TRUE(counter.timer_valid);
 
   ASSERT_EQ(0, counter.value);
 
-  SetTime(counter.timer_id, 0, 1, 0, 10);
-  usleep(500000);
-
-  // The count should just be > 1 because we let the timer repeat.
-  ASSERT_GT(counter.value, 1);
+  counter.SetTime(0, 1, 0, 10);
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
 }
 
 static int timer_create_NULL_signal_handler_invocation_count = 0;
@@ -321,17 +342,17 @@ TEST(time, timer_delete_multiple) {
 
 TEST(time, timer_create_multiple) {
   Counter counter1(Counter::CountNotifyFunction);
-  counter1.Create();
+  ASSERT_TRUE(counter1.timer_valid);
   Counter counter2(Counter::CountNotifyFunction);
-  counter2.Create();
+  ASSERT_TRUE(counter2.timer_valid);
   Counter counter3(Counter::CountNotifyFunction);
-  counter3.Create();
+  ASSERT_TRUE(counter3.timer_valid);
 
   ASSERT_EQ(0, counter1.value);
   ASSERT_EQ(0, counter2.value);
   ASSERT_EQ(0, counter3.value);
 
-  SetTime(counter2.timer_id, 0, 1, 0, 0);
+  counter2.SetTime(0, 1, 0, 0);
   usleep(500000);
 
   EXPECT_EQ(0, counter1.value);
@@ -424,4 +445,46 @@ TEST(time, clock_nanosleep) {
   timespec in;
   timespec out;
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
+}
+
+// Test to verify that disarming a repeatable timer disables the
+// callbacks.
+TEST(time, timer_disarm_terminates) {
+  Counter counter(Counter::CountNotifyFunction);
+  ASSERT_TRUE(counter.timer_valid);
+
+  ASSERT_EQ(0, counter.value);
+
+  counter.SetTime(0, 1, 0, 1);
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+
+  counter.SetTime(0, 0, 1, 0);
+  volatile int value = counter.value;
+  usleep(500000);
+
+  // Verify the counter has not been incremented.
+  ASSERT_EQ(value, counter.value);
+}
+
+// Test to verify that deleting a repeatable timer disables the
+// callbacks.
+TEST(time, timer_delete_terminates) {
+  Counter counter(Counter::CountNotifyFunction);
+  ASSERT_TRUE(counter.timer_valid);
+
+  ASSERT_EQ(0, counter.value);
+
+  counter.SetTime(0, 1, 0, 1);
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+
+  counter.DeleteTimer();
+  volatile int value = counter.value;
+  usleep(500000);
+
+  // Verify the counter has not been incremented.
+  ASSERT_EQ(value, counter.value);
 }
