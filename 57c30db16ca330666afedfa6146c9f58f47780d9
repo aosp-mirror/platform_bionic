@@ -33,6 +33,24 @@
       "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30202482_536f2e99",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-21T01:49:16Z",
+      "side": 1,
+      "message": "function registred with executable\u0027s .preinit_array needs to see it... before this change the only function that used this function was __libc_init() which is part of libc.",
+      "parentUuid": "309904fa_a2601a2f",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
