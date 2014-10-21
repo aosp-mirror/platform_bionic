@@ -87,6 +87,24 @@
       "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f064ccc9_4363ccfd",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-21T02:35:22Z",
+      "side": 1,
+      "message": "so how do we fix our implementation to avoid leaking this?",
+      "parentUuid": "30202482_33f7126d",
+      "revId": "57c30db16ca330666afedfa6146c9f58f47780d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
