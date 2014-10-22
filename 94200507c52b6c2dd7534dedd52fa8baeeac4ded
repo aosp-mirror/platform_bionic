@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f583dec2_2800af6f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T23:11:49Z",
+      "side": 1,
+      "message": "If soinfos array is null allocate one",
+      "revId": "94200507c52b6c2dd7534dedd52fa8baeeac4ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5889ae4_e47d14a5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T23:11:49Z",
+      "side": 1,
+      "message": "on the stack\n\n\n\"for failure_guard\" seems misleading. failure_guard only needs soinfos to be non-null if soinfos_size \u003e 0 (can we rename that soinfos_count and keep \u0027size\u0027 for things measured in bytes?). and it\u0027s only going to be \u003e 0 because you undid your change on L994. can you explain in a more intention-revealing way why we need this?",
+      "revId": "94200507c52b6c2dd7534dedd52fa8baeeac4ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
