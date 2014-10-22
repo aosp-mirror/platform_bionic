@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "151b126c_7c708d80",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T00:03:19Z",
+      "side": 1,
+      "message": "we use 4 space ident in makefiles unless it is make target.",
+      "revId": "89d1d06d29a8288bb67b105aa7274658c00ca4f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "150232f8_0a64a3bd",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T00:03:19Z",
+      "side": 1,
+      "message": "this needs to be extracted to separate file in order to build it twice (primary and 2nd arch). see L102-106",
+      "range": {
+        "startLine": 361,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 41
+      },
+      "revId": "89d1d06d29a8288bb67b105aa7274658c00ca4f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
