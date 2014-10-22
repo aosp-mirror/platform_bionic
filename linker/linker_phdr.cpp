@@ -142,18 +142,12 @@ bool ElfReader::Load(const android_dlextinfo* extinfo) {
 }
 
 bool ElfReader::ReadElfHeader() {
-  off64_t actual_offset = lseek64(fd_, file_offset_, SEEK_SET);
-
-  if (actual_offset != file_offset_) {
-    DL_ERR("seek to %" PRId64 " failed: %s", file_offset_, strerror(errno));
-    return false;
-  }
-
-  ssize_t rc = TEMP_FAILURE_RETRY(read(fd_, &header_, sizeof(header_)));
+  ssize_t rc = TEMP_FAILURE_RETRY(pread64(fd_, &header_, sizeof(header_), file_offset_));
   if (rc < 0) {
     DL_ERR("can't read file \"%s\": %s", name_, strerror(errno));
     return false;
   }
+
   if (rc != sizeof(header_)) {
     DL_ERR("\"%s\" is too small to be an ELF executable: only found %zd bytes", name_,
            static_cast<size_t>(rc));
