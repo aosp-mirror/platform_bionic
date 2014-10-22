@@ -367,7 +367,6 @@ res_nsend(res_state statp,
 	int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
 	char abuf[NI_MAXHOST];
 #if USE_RESOLV_CACHE
-        struct resolv_cache*  cache;
         ResolvCacheStatus     cache_status = RESOLV_CACHE_UNSUPPORTED;
 #endif
 
@@ -389,21 +388,17 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-	// get the cache associated with the network
-	cache = __get_res_cache(statp->netid);
-	if (cache != NULL) {
-		int  anslen = 0;
-		cache_status = _resolv_cache_lookup(
-				cache, buf, buflen,
-				ans, anssiz, &anslen);
+	int  anslen = 0;
+	cache_status = _resolv_cache_lookup(
+			statp->netid, buf, buflen,
+			ans, anssiz, &anslen);
 
-		if (cache_status == RESOLV_CACHE_FOUND) {
-			return anslen;
-		} else {
-			// had a cache miss for a known network, so populate the thread private
-			// data so the normal resolve path can do its thing
-			_resolv_populate_res_for_net(statp);
-		}
+	if (cache_status == RESOLV_CACHE_FOUND) {
+		return anslen;
+	} else if (cache_status != RESOLV_CACHE_UNSUPPORTED) {
+		// had a cache miss for a known network, so populate the thread private
+		// data so the normal resolve path can do its thing
+		_resolv_populate_res_for_net(statp);
 	}
 
 	if (statp->nscount == 0) {
@@ -602,7 +597,7 @@ res_nsend(res_state statp,
 
 #if USE_RESOLV_CACHE
                 if (cache_status == RESOLV_CACHE_NOTFOUND) {
-                    _resolv_cache_add(cache, buf, buflen,
+                    _resolv_cache_add(statp->netid, buf, buflen,
                                       ans, resplen);
                 }
 #endif
@@ -658,13 +653,13 @@ res_nsend(res_state statp,
 		errno = terrno;
 
 #if USE_RESOLV_CACHE
-        _resolv_cache_query_failed(cache, buf, buflen);
+        _resolv_cache_query_failed(statp->netid, buf, buflen);
 #endif
 
 	return (-1);
  fail:
 #if USE_RESOLV_CACHE
-	_resolv_cache_query_failed(cache, buf, buflen);
+	_resolv_cache_query_failed(statp->netid, buf, buflen);
 #endif
 	res_nclose(statp);
 	return (-1);
@@ -951,7 +946,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 	origflags = fcntl(sock, F_GETFL, 0);
 	fcntl(sock, F_SETFL, origflags | O_NONBLOCK);
 
-	res = connect(sock, nsap, salen);
+	res = __connect(sock, nsap, salen);
 	if (res < 0 && errno != EINPROGRESS) {
                 res = -1;
                 goto done;
@@ -1108,7 +1103,7 @@ send_dg(res_state statp,
 			res_nclose(statp);
 			return (0);
 		}
-		if (connect(EXT(statp).nssocks[ns], nsap, (socklen_t)nsaplen) < 0) {
+		if (__connect(EXT(statp).nssocks[ns], nsap, (socklen_t)nsaplen) < 0) {
 			Aerror(statp, stderr, "connect(dg)", errno, nsap,
 			    nsaplen);
 			res_nclose(statp);

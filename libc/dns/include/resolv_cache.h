@@ -32,11 +32,6 @@
 #include <sys/cdefs.h>
 
 struct __res_state;
-struct resolv_cache;  /* forward */
-
-/* Gets the cache for a network. Returned cache might be NULL. */
-__LIBC_HIDDEN__
-extern struct resolv_cache* __get_res_cache(unsigned netid);
 
 /* sets the name server addresses to the provided res_state structure. The
  * name servers are retrieved from the cache which is associated
@@ -53,7 +48,7 @@ typedef enum {
 
 __LIBC_HIDDEN__
 extern ResolvCacheStatus
-_resolv_cache_lookup( struct resolv_cache*  cache,
+_resolv_cache_lookup( unsigned              netid,
                       const void*           query,
                       int                   querylen,
                       void*                 answer,
@@ -65,7 +60,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
  */
 __LIBC_HIDDEN__
 extern void
-_resolv_cache_add( struct resolv_cache*  cache,
+_resolv_cache_add( unsigned              netid,
                    const void*           query,
                    int                   querylen,
                    const void*           answer,
@@ -74,7 +69,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
 /* Notify the cache a request failed */
 __LIBC_HIDDEN__
 extern void
-_resolv_cache_query_failed( struct resolv_cache* cache,
+_resolv_cache_query_failed( unsigned     netid,
                    const void* query,
                    int         querylen);
 
