@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "150232f8_7a6f70ee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T18:32:14Z",
+      "side": 1,
+      "message": "no, it is not.. and it is much smaller that that :)",
+      "parentUuid": "1549527c_c66a2459",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "354c968a_5e5ef5e8",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-10-22T18:07:39Z",
       "side": 1,
       "message": "is \"local scope\" terminology from the ELF spec, or should we use something like \"this library\" to distinguish more clearly between this and the local group?",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354c968a_59d3af68",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T18:32:14Z",
+      "side": 1,
+      "message": "not as far as I can see... done.",
+      "parentUuid": "354c968a_5e5ef5e8",
       "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "354c968a_f9381bf5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T18:32:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "354c968a_3ec8d92e",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "150232f8_87c9c9e6",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "1549527c_297429c2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T18:32:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "150232f8_87c9c9e6",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1549527c_06903cd8",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 2
@@ -81,6 +153,24 @@
       "writtenOn": "2014-10-22T18:07:39Z",
       "side": 1,
       "message": "but returns NULL from dlopen? weird.",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354c968a_1e6f5d1d",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T18:32:14Z",
+      "side": 1,
+      "message": "yes... it looks like a bug",
+      "parentUuid": "1549527c_06903cd8",
       "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
