@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1549527c_c66a2459",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T18:07:39Z",
+      "side": 1,
+      "message": "in the\n\nis \"local group\" terminology from the ELF spec? (sounds like astronomy to me!)",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354c968a_5e5ef5e8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T18:07:39Z",
+      "side": 1,
+      "message": "is \"local scope\" terminology from the ELF spec, or should we use something like \"this library\" to distinguish more clearly between this and the local group?",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354c968a_3ec8d92e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T18:07:39Z",
+      "side": 1,
+      "message": "null, the first",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "150232f8_87c9c9e6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T18:07:39Z",
+      "side": 1,
+      "message": "spaces around \u003c",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1549527c_06903cd8",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-22T18:07:39Z",
+      "side": 1,
+      "message": "but returns NULL from dlopen? weird.",
+      "revId": "2335c3ba4bcdaa2123250ec140d189deff56b994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
