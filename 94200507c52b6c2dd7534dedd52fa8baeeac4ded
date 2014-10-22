@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d5889ae4_87d9aa38",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T23:53:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f583dec2_2800af6f",
+      "revId": "94200507c52b6c2dd7534dedd52fa8baeeac4ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5889ae4_e47d14a5",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-10-22T23:11:49Z",
       "side": 1,
       "message": "on the stack\n\n\n\"for failure_guard\" seems misleading. failure_guard only needs soinfos to be non-null if soinfos_size \u003e 0 (can we rename that soinfos_count and keep \u0027size\u0027 for things measured in bytes?). and it\u0027s only going to be \u003e 0 because you undid your change on L994. can you explain in a more intention-revealing way why we need this?",
+      "revId": "94200507c52b6c2dd7534dedd52fa8baeeac4ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5889ae4_27de9e1f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-22T23:53:18Z",
+      "side": 1,
+      "message": "Done:\n1. changed naming of counts and sizes\n2. updated comment for this part to explain when it is needed\n\nnote that soinfos_size can be 0, if there was a failure for the first library from the library_names arrray (L974)",
+      "parentUuid": "d5889ae4_e47d14a5",
       "revId": "94200507c52b6c2dd7534dedd52fa8baeeac4ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
