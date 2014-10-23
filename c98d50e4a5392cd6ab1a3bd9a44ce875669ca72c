@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75244ea4_50001470",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T23:46:50Z",
+      "side": 1,
+      "message": "TODO: remove this duplication too.",
+      "revId": "c98d50e4a5392cd6ab1a3bd9a44ce875669ca72c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_30059880",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T23:46:50Z",
+      "side": 1,
+      "message": "TODO: remove this duplication too.",
+      "revId": "c98d50e4a5392cd6ab1a3bd9a44ce875669ca72c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_100a9c8e",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T23:46:50Z",
+      "side": 1,
+      "message": "TODO: remove this duplication too.",
+      "revId": "c98d50e4a5392cd6ab1a3bd9a44ce875669ca72c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_8dec4ca2",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T23:46:50Z",
+      "side": 1,
+      "message": "TODO: this isn\u0027t working; the new test still fails.\n\n(gdb\u0027s still as happy as ever though.)",
+      "revId": "c98d50e4a5392cd6ab1a3bd9a44ce875669ca72c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_edf4e068",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T23:46:50Z",
+      "side": 1,
+      "message": "TODO: still need to clean up the x86-64 implementation too.",
+      "revId": "c98d50e4a5392cd6ab1a3bd9a44ce875669ca72c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
