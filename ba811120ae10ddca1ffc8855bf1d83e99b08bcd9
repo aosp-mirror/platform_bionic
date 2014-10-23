@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9592a210_a26dc0a1",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T05:26:58Z",
+      "side": 1,
+      "message": "this is what we mean by \"if you don\u0027t find a bug, you\u0027re not trying very hard\"... why do the existing tests use a numeric service? because named services don\u0027t work (until this patch).",
+      "revId": "ba811120ae10ddca1ffc8855bf1d83e99b08bcd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
