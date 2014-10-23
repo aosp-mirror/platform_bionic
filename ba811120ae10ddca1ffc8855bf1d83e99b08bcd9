@@ -16,6 +16,24 @@
       "revId": "ba811120ae10ddca1ffc8855bf1d83e99b08bcd9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5359ed2_580295e3",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-10-23T07:01:41Z",
+      "side": 1,
+      "message": "I like the process of up-streaming more and more.  Except thinking of new things on how to make changes accepted, will learn much more useful things during the process:). Thanks for this new patchset, Elliott!",
+      "parentUuid": "9592a210_a26dc0a1",
+      "revId": "ba811120ae10ddca1ffc8855bf1d83e99b08bcd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
