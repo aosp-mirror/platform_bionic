@@ -98,13 +98,13 @@ L(WcscpyAtom):
 	mov	STR2(%esp), %ecx
 	lea	(%edi, %eax), %edx
 
-	cmp	$0, (%ecx)
+	cmpl	$0, (%ecx)
 	jz	L(Exit4)
-	cmp	$0, 4(%ecx)
+	cmpl	$0, 4(%ecx)
 	jz	L(Exit8)
-	cmp	$0, 8(%ecx)
+	cmpl	$0, 8(%ecx)
 	jz	L(Exit12)
-	cmp	$0, 12(%ecx)
+	cmpl	$0, 12(%ecx)
 	jz	L(Exit16)
 
 #undef RETURN
