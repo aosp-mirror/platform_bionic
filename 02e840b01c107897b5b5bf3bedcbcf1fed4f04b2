@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75244ea4_c5222441",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "its\n\n(\"it\u0027s\" \u003d\u003d \"it is\")",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_4052b02b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "(i\u0027m assuming one day we\u0027ll clang-format all the missing whitespace back in.)",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_855aecca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "is there a better name for this? especially to contrast it with (the equally poor) dlsym_linear_lookup?",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_20c20462",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "(i wonder whether we should break this into dlsym_lookup_DEFAULT, dlsym_lookup_NEXT, dlsym_lookup_whatever. with DEFAULT being just a call to NEXT with \u0027solist\u0027 as \u0027start\u0027.)",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_85430cdf",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "how",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_d704173b",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "TODO?",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_a574c83e",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "how",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_c577c442",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "how",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_00926860",
+        "filename": "tests/libs/dlopen_check_order_reloc_answer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "why did you remove the blank line?",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_971c5f91",
+        "filename": "tests/libs/dlopen_check_order_reloc_nephew_answer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "here too.",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_7721c3c8",
+        "filename": "tests/libs/dlopen_check_order_reloc_root_answer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T19:02:32Z",
+      "side": 1,
+      "message": "and here.",
+      "revId": "02e840b01c107897b5b5bf3bedcbcf1fed4f04b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
