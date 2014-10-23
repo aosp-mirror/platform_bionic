@@ -2281,7 +2281,7 @@ bool soinfo::LinkImage(const soinfo_list_t& local_group, const android_dlextinfo
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(this)) {
+  if (!mips_relocate_got(this, local_group)) {
     return false;
   }
 #endif
