@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9592a210_c88b4326",
+        "filename": "libc/dns/net/getservbyname.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T17:29:00Z",
+      "side": 1,
+      "message": "we do everywhere else in the resolver.",
+      "parentUuid": "9592a210_45a15e06",
+      "range": {
+        "startLine": 34,
+        "startChar": 18,
+        "endLine": 34,
+        "endChar": 37
+      },
+      "revId": "ba811120ae10ddca1ffc8855bf1d83e99b08bcd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9592a210_a26dc0a1",
         "filename": "tests/netdb_test.cpp",
         "patchSetId": 2
