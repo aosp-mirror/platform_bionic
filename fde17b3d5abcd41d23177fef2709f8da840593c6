@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b58de6f4_23c8d42e",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-23T04:27:42Z",
+      "side": 1,
+      "message": "why do we care? we can\u0027t really make that strong a guarantee anyway.",
+      "revId": "fde17b3d5abcd41d23177fef2709f8da840593c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
