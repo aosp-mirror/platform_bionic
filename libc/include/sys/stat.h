@@ -181,6 +181,7 @@ mode_t umask(mode_t mode) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 extern int mkfifo(const char*, mode_t);
+extern int mkfifoat(int, const char*, mode_t);
 
 extern int fchmodat(int, const char*, mode_t, int);
 extern int mkdirat(int, const char*, mode_t);

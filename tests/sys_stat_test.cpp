@@ -55,6 +55,18 @@ TEST(sys_stat, futimens_EBADF) {
   ASSERT_EQ(EBADF, errno);
 }
 
+TEST(sys_stat, mkfifo_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, mkfifo("/", 0666));
+  ASSERT_EQ(EEXIST, errno);
+}
+
+TEST(sys_stat, mkfifoat_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, mkfifoat(-2, "x", 0666));
+  ASSERT_EQ(EBADF, errno);
+}
+
 TEST(sys_stat, mkfifo) {
   if (getuid() == 0) {
     // Racy but probably sufficient way to get a suitable filename.
@@ -70,6 +82,7 @@ TEST(sys_stat, mkfifo) {
     ASSERT_TRUE(S_ISFIFO(sb.st_mode));
     unlink(path.c_str());
   } else {
+    // SELinux policy forbids us from creating FIFOs. http://b/17646702.
     GTEST_LOG_(INFO) << "This test only performs a test when run as root.";
   }
 }
