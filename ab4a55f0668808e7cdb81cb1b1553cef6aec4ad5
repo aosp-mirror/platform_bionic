@@ -53,6 +53,41 @@
     },
     {
       "key": {
+        "uuid": "35a1f65e_435395df",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T15:25:07Z",
+      "side": 1,
+      "message": "O wait, it is file mmap, wasn\u0027t it already mapped by ElfLoader? does the packing tool move it outside of LOAD segments?",
+      "parentUuid": "35a1f65e_83067d0e",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5717ac8_9cafc9f0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2423,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T15:25:07Z",
+      "side": 1,
+      "message": "this should go before rel_plt, for sure, IFUNCs may rely on it (IRELATIVE relocations are part of .rela?.plt)",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5717ac8_3c055d80",
         "filename": "linker/linker.h",
         "patchSetId": 1
