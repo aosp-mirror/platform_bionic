@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5717ac8_1c1979e5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T14:52:40Z",
+      "side": 1,
+      "message": "Bug: \u003curl\u003e",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35a1f65e_e320a191",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1590,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T14:52:40Z",
+      "side": 1,
+      "message": "move these to elf.h?",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35a1f65e_83067d0e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T14:52:40Z",
+      "side": 1,
+      "message": "I would prefer not having this allocation.. can we iterate over relocs in packed format?",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5717ac8_3c055d80",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T14:52:40Z",
+      "side": 1,
+      "message": "only arm?",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
