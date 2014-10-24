@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5594aafe_e663d4b5",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-24T02:50:06Z",
+      "side": 1,
+      "message": "Do you get the same errno when not running as root?",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 17
+      },
+      "revId": "ca8e84c6ff55640aef94d25a86a25778a542bfc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
