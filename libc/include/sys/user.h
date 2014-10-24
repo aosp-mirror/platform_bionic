@@ -108,7 +108,7 @@ struct user_fpregs_struct {
   __u64 rip;
   __u64 rdp;
   __u32 mxcsr;
-  __u32 mxcsr_mask;
+  __u32 mxcr_mask;
   __u32 st_space[32];
   __u32 xmm_space[64];
   __u32 padding[24];
