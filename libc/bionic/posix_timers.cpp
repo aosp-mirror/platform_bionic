@@ -62,6 +62,7 @@ struct PosixTimer {
   pthread_t callback_thread;
   void (*callback)(sigval_t);
   sigval_t callback_argument;
+  volatile bool armed;
 };
 
 static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
@@ -83,7 +84,7 @@ static void* __timer_thread_start(void* arg) {
       continue;
     }
 
-    if (si.si_code == SI_TIMER) {
+    if (si.si_code == SI_TIMER && timer->armed) {
       // This signal was sent because a timer fired, so call the callback.
       timer->callback(timer->callback_argument);
     } else if (si.si_code == SI_TKILL) {
@@ -95,6 +96,9 @@ static void* __timer_thread_start(void* arg) {
 }
 
 static void __timer_thread_stop(PosixTimer* timer) {
+  // Immediately mark the timer as disarmed so even if some events
+  // continue to happen, the callback won't be called.
+  timer->armed = false;
   pthread_kill(timer->callback_thread, TIMER_SIGNAL);
 }
 
@@ -121,6 +125,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   // Otherwise, this must be SIGEV_THREAD timer...
   timer->callback = evp->sigev_notify_function;
   timer->callback_argument = evp->sigev_value;
+  timer->armed = false;
 
   // Check arguments that the kernel doesn't care about but we do.
   if (timer->callback == NULL) {
@@ -200,7 +205,18 @@ int timer_gettime(timer_t id, itimerspec* ts) {
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
 int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) {
-  return __timer_settime(to_kernel_timer_id(id), flags, ts, ots);
+  PosixTimer* timer= reinterpret_cast<PosixTimer*>(id);
+  int rc = __timer_settime(timer->kernel_timer_id, flags, ts, ots);
+  if (rc == 0) {
+    // Mark the timer as either being armed or disarmed. This avoids the
+    // callback being called after the disarm for SIGEV_THREAD timers only.
+    if (ts->it_value.tv_sec != 0 || ts->it_value.tv_nsec != 0) {
+      timer->armed = true;
+    } else {
+      timer->armed = false;
+    }
+  }
+  return rc;
 }
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
