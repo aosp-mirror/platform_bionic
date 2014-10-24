@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "956b82dc_7aec35a1",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-24T18:15:26Z",
+      "side": 1,
+      "message": "what about arm64? should this be at the L270",
+      "revId": "b08629862968772c35418698c7d6d99a5110f3f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
