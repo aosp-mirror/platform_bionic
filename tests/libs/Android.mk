@@ -276,6 +276,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm64 x86 x86_64))
     endif
 
     build_type := target
+    libtest_ifunc_clang_target := false
     include $(TEST_PATH)/Android.build.mk
 endif
 
