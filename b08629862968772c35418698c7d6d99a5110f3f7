@@ -33,6 +33,42 @@
       "revId": "b08629862968772c35418698c7d6d99a5110f3f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7580cec4_1c265de2",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2014-10-24T18:21:48Z",
+      "side": 1,
+      "message": "It\u0027s already disable for host at L263.",
+      "parentUuid": "557d8a9e_355810f8",
+      "revId": "b08629862968772c35418698c7d6d99a5110f3f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "557d8a9e_550cacdd",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2014-10-24T18:21:48Z",
+      "side": 1,
+      "message": "This disables clang for target arm64, x86, and x86_64, which have compilation problems. I don\u0027t see problem for other targets, yet.",
+      "parentUuid": "956b82dc_7aec35a1",
+      "revId": "b08629862968772c35418698c7d6d99a5110f3f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
