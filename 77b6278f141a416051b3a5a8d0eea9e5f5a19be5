@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35a1f65e_e6a2ef37",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-24T17:21:41Z",
+      "side": 1,
+      "message": "Might want to add a reference to the new dir here.",
+      "range": {
+        "startLine": 420,
+        "startChar": 3,
+        "endLine": 420,
+        "endChar": 43
+      },
+      "revId": "77b6278f141a416051b3a5a8d0eea9e5f5a19be5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
