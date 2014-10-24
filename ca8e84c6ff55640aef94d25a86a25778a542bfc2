@@ -22,6 +22,47 @@
       "revId": "ca8e84c6ff55640aef94d25a86a25778a542bfc2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35a1f65e_363d6856",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-24T02:57:09Z",
+      "side": 1,
+      "message": "for once i actually wasn\u0027t running as root...",
+      "parentUuid": "5594aafe_e663d4b5",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 17
+      },
+      "revId": "ca8e84c6ff55640aef94d25a86a25778a542bfc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9592a210_fe327864",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-24T02:57:09Z",
+      "side": 1,
+      "message": "...which is why i saw this and wanted an explanation :-)",
+      "revId": "ca8e84c6ff55640aef94d25a86a25778a542bfc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
