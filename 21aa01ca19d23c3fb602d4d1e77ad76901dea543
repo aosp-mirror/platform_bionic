@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7580cec4_dd5a1c75",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-25T19:44:19Z",
+      "side": 1,
+      "message": "why don\u0027t we symlink this as well?",
+      "revId": "21aa01ca19d23c3fb602d4d1e77ad76901dea543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
