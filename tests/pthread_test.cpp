@@ -965,15 +965,15 @@ TEST(pthread, pthread_gettid_np) {
 
 static size_t cleanup_counter = 0;
 
-void AbortCleanupRoutine(void*) {
+static void AbortCleanupRoutine(void*) {
   abort();
 }
 
-void CountCleanupRoutine(void*) {
+static void CountCleanupRoutine(void*) {
   ++cleanup_counter;
 }
 
-void PthreadCleanupTester() {
+static void PthreadCleanupTester() {
   pthread_cleanup_push(CountCleanupRoutine, NULL);
   pthread_cleanup_push(CountCleanupRoutine, NULL);
   pthread_cleanup_push(AbortCleanupRoutine, NULL);
@@ -988,7 +988,7 @@ void PthreadCleanupTester() {
   pthread_cleanup_pop(0);
 }
 
-void* PthreadCleanupStartRoutine(void*) {
+static void* PthreadCleanupStartRoutine(void*) {
   PthreadCleanupTester();
   return NULL;
 }
@@ -998,4 +998,76 @@ TEST(pthread, pthread_cleanup_push__pthread_cleanup_pop) {
   ASSERT_EQ(0, pthread_create(&t, NULL, PthreadCleanupStartRoutine, NULL));
   pthread_join(t, NULL);
   ASSERT_EQ(2U, cleanup_counter);
+}
+
+TEST(pthread, PTHREAD_MUTEX_DEFAULT_is_PTHREAD_MUTEX_NORMAL) {
+  ASSERT_EQ(PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_DEFAULT);
+}
+
+TEST(pthread, pthread_mutexattr_gettype) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+
+  int attr_type;
+
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL));
+  ASSERT_EQ(0, pthread_mutexattr_gettype(&attr, &attr_type));
+  ASSERT_EQ(PTHREAD_MUTEX_NORMAL, attr_type);
+
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
+  ASSERT_EQ(0, pthread_mutexattr_gettype(&attr, &attr_type));
+  ASSERT_EQ(PTHREAD_MUTEX_ERRORCHECK, attr_type);
+
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+  ASSERT_EQ(0, pthread_mutexattr_gettype(&attr, &attr_type));
+  ASSERT_EQ(PTHREAD_MUTEX_RECURSIVE, attr_type);
+}
+
+TEST(pthread, pthread_mutex_lock_NORMAL) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL));
+
+  pthread_mutex_t lock;
+  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+
+  ASSERT_EQ(0, pthread_mutex_lock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+}
+
+TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
+
+  pthread_mutex_t lock;
+  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+
+  ASSERT_EQ(0, pthread_mutex_lock(&lock));
+  ASSERT_EQ(EDEADLK, pthread_mutex_lock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
+  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+}
+
+TEST(pthread, pthread_mutex_lock_RECURSIVE) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+
+  pthread_mutex_t lock;
+  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+
+  ASSERT_EQ(0, pthread_mutex_lock(&lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
+  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
 }
