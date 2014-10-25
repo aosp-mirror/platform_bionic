@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5d6dada_2529c677",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T06:30:40Z",
+      "side": 1,
+      "message": "160 determined experimentally with x/40x in gdb...",
+      "revId": "a65029e5d7b6b983225cbc3e6af73e878a28176e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
