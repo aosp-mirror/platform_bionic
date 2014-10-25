@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7580cec4_9d0264e1",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T01:56:54Z",
+      "side": 1,
+      "message": "running on glibc and reading of POSIX showed that bionic gets this one wrong. so where the original test (incorrectly) had EDEADLK here, i\u0027ve changed it to EBUSY. i\u0027ll leave it broken for now and fix it in a separate patch.",
+      "revId": "4199695657e9500db14ab40392e3715db1826002",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
