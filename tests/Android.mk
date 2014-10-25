@@ -397,15 +397,16 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
-bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
-	if [ ! -d /system -o ! -d /system/bin ]; then \
-	  echo "Attempting to create /system/bin"; \
-	  sudo mkdir -p -m 0777 /system/bin; \
+bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+	if [ ! -d /system ]; then \
+	  echo "Attempting to create /system"; \
+	  sudo mkdir -p -m 0777 /system; \
 	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/$(LINKER)` /system/bin
-	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/sh` /system/bin
+	ln -fs `realpath $(TARGET_OUT)/bin` /system/
 	ln -fs `realpath $(TARGET_OUT)/etc` /system/
+
+bionic-unit-tests-run-on-host: bionic-unit-tests bionic-unit-tests-run-on-host-prepare
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
@@ -415,15 +416,7 @@ endif
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 # add target to run lp32 tests
-bionic-unit-tests-run-on-host32: bionic-unit-tests_32 $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
-	if [ ! -d /system -o ! -d /system/bin ]; then \
-	  echo "Attempting to create /system/bin"; \
-	  sudo mkdir -p -m 0777 /system/bin; \
-	fi
-	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/linker` /system/bin
-	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/sh` /system/bin
-	ln -fs `realpath $(TARGET_OUT)/etc` /system/
+bionic-unit-tests-run-on-host32: bionic-unit-tests_32 bionic-unit-tests-run-on-host-prepare
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
