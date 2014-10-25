@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95e0e2b0_5245b271",
+        "filename": "tests/grp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:13:05Z",
+      "side": 1,
+      "message": "does this pass on glibc?",
+      "revId": "cc7a89a3b0b768d6cac4f2df6a62bcbe182e4b86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95e0e2b0_7258f64a",
+        "filename": "tests/grp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:13:05Z",
+      "side": 1,
+      "message": "given how stupid our implementation is, i think your test can be simpler. you know that there will be exactly 1 group, and you know what it is.\n\nwriting a test that passes for glibc is the more interesting part here. but maybe it\u0027s not worth it. you could just #if defined if there\u0027s no simple answer.",
+      "revId": "cc7a89a3b0b768d6cac4f2df6a62bcbe182e4b86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
