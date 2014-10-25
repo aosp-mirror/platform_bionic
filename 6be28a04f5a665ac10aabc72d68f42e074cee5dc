@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5d6dada_975d4c70",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "\u003climits.h\u003e should contain HOST_NAME_MAX.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5d6dada_b785f065",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "don\u0027t declare things before you use them.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5d6dada_9788ec7c",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "no need to memset these.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7580cec4_6b06a111",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "i don\u0027t think you mean sizeof(SYS_NMLN).",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7580cec4_ab8ef936",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "if you cast, use a C++ cast. but here you shouldn\u0027t cast. use 0U.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95e0e2b0_6f4ed1b7",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "you need to set \"errno \u003d 0\" before any test using errno.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7580cec4_eb42b136",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-25T00:07:14Z",
+      "side": 1,
+      "message": "does this test pass on glibc? i agree this is how bionic behaves, but i think it\u0027s contrary to what POSIX specifies.",
+      "revId": "6be28a04f5a665ac10aabc72d68f42e074cee5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
