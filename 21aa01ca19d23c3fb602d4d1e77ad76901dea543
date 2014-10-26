@@ -16,6 +16,24 @@
       "revId": "21aa01ca19d23c3fb602d4d1e77ad76901dea543",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95e0e2b0_e37dfaa4",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-26T03:48:07Z",
+      "side": 1,
+      "message": "yeah, that would probably make more sense. just create /system and symlink /system/bin and /system/etc.",
+      "parentUuid": "7580cec4_dd5a1c75",
+      "revId": "21aa01ca19d23c3fb602d4d1e77ad76901dea543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
