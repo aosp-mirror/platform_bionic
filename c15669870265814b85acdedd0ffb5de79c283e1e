@@ -16,6 +16,24 @@
       "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95b9c2ac_4aa2d390",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-27T18:48:07Z",
+      "side": 1,
+      "message": "L40?",
+      "parentUuid": "d5bfba8a_4ca18fb1",
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
