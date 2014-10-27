@@ -33,6 +33,24 @@
       "revId": "57cbc653c29028b917bee8570870dff8c5cec741",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35cf3649_c039cec5",
+        "filename": "tests/libs/badmagic.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1056613
+      },
+      "writtenOn": "2014-10-27T18:16:34Z",
+      "side": 1,
+      "message": "data is a string, and hence immutable.",
+      "parentUuid": "95b9c2ac_6a4a3783",
+      "revId": "57cbc653c29028b917bee8570870dff8c5cec741",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
