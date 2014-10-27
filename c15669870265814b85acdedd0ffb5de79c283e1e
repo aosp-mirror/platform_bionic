@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "5594aafe_9c21fccb",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-27T21:30:59Z",
+      "side": 1,
+      "message": "You could share this macro with the x86 code and put these two lines under an ifdef __LP64__ check.\n\nI\u0027m not sure where to place this a shared include file. Maybe private.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 49
+      },
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5bfba8a_0f2f092e",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-27T21:30:59Z",
+      "side": 1,
+      "message": "Same as above, could be shared since the only difference is breg7 versus breg4.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 22
+      },
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5bfba8a_4ca18fb1",
         "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
         "patchSetId": 7
@@ -31,6 +77,52 @@
       "side": 1,
       "message": "L40?",
       "parentUuid": "d5bfba8a_4ca18fb1",
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "956b82dc_b63c21b7",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-27T21:30:59Z",
+      "side": 1,
+      "message": "You order these differently in x86 (descending there and ascending here). Just a nit.",
+      "range": {
+        "startLine": 107,
+        "startChar": 13,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_1c0dec54",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-27T21:30:59Z",
+      "side": 1,
+      "message": "These numbers seem like magic, it might be better to define them like CFI_REGNUM_RCX or something like that. I think it better describes what they are.",
+      "range": {
+        "startLine": 108,
+        "startChar": 13,
+        "endLine": 108,
+        "endChar": 15
+      },
       "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
