@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5594aafe_3cf788a1",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-27T23:11:31Z",
+      "side": 1,
+      "message": "you can\u0027t do exactly that, and the things you can do seem to just make a small mess into a bigger mess.",
+      "parentUuid": "5594aafe_9c21fccb",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 49
+      },
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5bfba8a_0f2f092e",
         "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
         "patchSetId": 7
@@ -94,6 +118,30 @@
       "writtenOn": "2014-10-27T21:30:59Z",
       "side": 1,
       "message": "You order these differently in x86 (descending there and ascending here). Just a nit.",
+      "range": {
+        "startLine": 107,
+        "startChar": 13,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "c15669870265814b85acdedd0ffb5de79c283e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35a8165b_ea81438a",
+        "filename": "libc/arch-x86_64/bionic/__restore_rt.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-27T23:11:31Z",
+      "side": 1,
+      "message": "will fix.",
+      "parentUuid": "956b82dc_b63c21b7",
       "range": {
         "startLine": 107,
         "startChar": 13,
