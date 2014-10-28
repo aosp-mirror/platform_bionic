@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "55abca56_a8acb3fb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1590,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2014-10-28T15:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35a1f65e_e320a191",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35a1f65e_83067d0e",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -71,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "75ae0e67_ac6a8785",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2014-10-28T15:01:21Z",
+      "side": 1,
+      "message": "Not already mapped (yes, outside LOAD segments).",
+      "parentUuid": "35a1f65e_435395df",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5717ac8_9cafc9f0",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -88,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "75ae0e67_6c5ecfe9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2423,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2014-10-28T15:01:21Z",
+      "side": 1,
+      "message": "Done.  Thanks.",
+      "parentUuid": "d5717ac8_9cafc9f0",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5717ac8_3c055d80",
         "filename": "linker/linker.h",
         "patchSetId": 1
@@ -99,6 +153,24 @@
       "writtenOn": "2014-10-24T14:52:40Z",
       "side": 1,
       "message": "only arm?",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75ae0e67_cc4ca33c",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2014-10-28T15:01:21Z",
+      "side": 1,
+      "message": "Yes (for now, anyway).",
+      "parentUuid": "d5717ac8_3c055d80",
       "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
