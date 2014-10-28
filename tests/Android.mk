@@ -235,7 +235,6 @@ bionic-unit-tests_src_files := \
     dlext_test.cpp \
     dlfcn_test.cpp \
     stack_unwinding_test.cpp \
-    stack_unwinding_test_impl.c \
 
 bionic-unit-tests_cflags := $(test_cflags)
 
