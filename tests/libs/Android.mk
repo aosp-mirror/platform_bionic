@@ -21,6 +21,9 @@ common_cppflags += -std=gnu++11
 common_additional_dependencies := \
     $(LOCAL_PATH)/Android.mk \
     $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
+    $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
+    $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
+    $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
     $(TEST_PATH)/Android.build.mk
 
@@ -150,79 +153,19 @@ module := libtest_nodelete_dt_flags_1
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
-# Libraries used by dlfcn tests to verify correct load order:
-# libtest_check_order_2_right.so
+# Build libtest_check_order_dlsym.so with its dependencies.
 # -----------------------------------------------------------------------------
-libtest_check_order_2_right_src_files := \
-    dlopen_testlib_answer.cpp
-
-libtest_check_order_2_right_cflags := -D__ANSWER=42
-module := libtest_check_order_2_right
-include $(LOCAL_PATH)/Android.build.testlib.mk
+include $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk
 
 # -----------------------------------------------------------------------------
-# libtest_check_order_a.so
+# Build libtest_check_order_siblings.so with its dependencies.
 # -----------------------------------------------------------------------------
-libtest_check_order_a_src_files := \
-    dlopen_testlib_answer.cpp
-
-libtest_check_order_a_cflags := -D__ANSWER=1
-module := libtest_check_order_a
-include $(LOCAL_PATH)/Android.build.testlib.mk
+include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
 
 # -----------------------------------------------------------------------------
-# libtest_check_order_b.so
+# Build libtest_check_order_root.so with its dependencies.
 # -----------------------------------------------------------------------------
-libtest_check_order_b_src_files := \
-    dlopen_testlib_answer.cpp
-
-libtest_check_order_b_cflags := -D__ANSWER=2 -D__ANSWER2=43
-module := libtest_check_order_b
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# libtest_check_order_c.so
-# -----------------------------------------------------------------------------
-libtest_check_order_3_c_src_files := \
-    dlopen_testlib_answer.cpp
-
-libtest_check_order_3_c_cflags := -D__ANSWER=3
-module := libtest_check_order_3_c
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# libtest_check_order_d.so
-# -----------------------------------------------------------------------------
-libtest_check_order_d_src_files := \
-   dlopen_testlib_answer.cpp
-
-libtest_check_order_d_shared_libraries := libtest_check_order_b
-libtest_check_order_d_cflags := -D__ANSWER=4 -D__ANSWER2=4
-module := libtest_check_order_d
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# libtest_check_order_left.so
-# -----------------------------------------------------------------------------
-libtest_check_order_1_left_src_files := \
-    empty.cpp
-
-libtest_check_order_1_left_shared_libraries := libtest_check_order_a libtest_check_order_b
-
-module := libtest_check_order_1_left
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# libtest_check_order.so
-# -----------------------------------------------------------------------------
-libtest_check_order_src_files := \
-    empty.cpp
-
-libtest_check_order_shared_libraries := libtest_check_order_1_left \
-  libtest_check_order_2_right libtest_check_order_3_c
-
-module := libtest_check_order
-include $(LOCAL_PATH)/Android.build.testlib.mk
+include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
 
 # -----------------------------------------------------------------------------
 # Library with dependency loop used by dlfcn tests
