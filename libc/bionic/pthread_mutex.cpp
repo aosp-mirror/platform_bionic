@@ -578,15 +578,12 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex) {
 }
 
 int pthread_mutex_trylock(pthread_mutex_t* mutex) {
-    int mvalue, mtype, tid, shared;
+    int mvalue = mutex->value;
+    int mtype  = (mvalue & MUTEX_TYPE_MASK);
+    int shared = (mvalue & MUTEX_SHARED_MASK);
 
-    mvalue = mutex->value;
-    mtype  = (mvalue & MUTEX_TYPE_MASK);
-    shared = (mvalue & MUTEX_SHARED_MASK);
-
-    /* Handle common case first */
-    if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) )
-    {
+    // Handle common case first.
+    if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
         if (__bionic_cmpxchg(shared|MUTEX_STATE_BITS_UNLOCKED,
                              shared|MUTEX_STATE_BITS_LOCKED_UNCONTENDED,
                              &mutex->value) == 0) {
@@ -597,10 +594,14 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex) {
         return EBUSY;
     }
 
-    /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->tid;
-    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
+    // Do we already own this recursive or error-check mutex?
+    pid_t tid = __get_thread()->tid;
+    if (tid == MUTEX_OWNER_FROM_BITS(mvalue)) {
+        if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
+            return EBUSY;
+        }
         return _recursive_increment(mutex, mvalue, mtype);
+    }
 
     /* Same as pthread_mutex_lock, except that we don't want to wait, and
      * the only operation that can succeed is a single cmpxchg to acquire the
