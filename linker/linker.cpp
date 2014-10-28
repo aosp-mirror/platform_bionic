@@ -530,6 +530,11 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, c
   // 3. Look for it in the local group
   if (s == nullptr) {
     local_group.visit([&](soinfo* local_si) {
+      if (local_si == si && si->has_DT_SYMBOLIC) {
+        // we already did this - skip
+        return true;
+      }
+
       DEBUG("%s: looking up %s in %s (from local group)", si->name, name, local_si->name);
       s = soinfo_elf_lookup(local_si, elf_hash, name);
       if (s != nullptr) {
@@ -537,28 +542,6 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, c
         return false;
       }
 
-      return true;
-    });
-  }
-
-  // 4. Look for it in this library (unless we already did it because of DT_SYMBOLIC)
-  if (s == nullptr && !si->has_DT_SYMBOLIC) {
-    DEBUG("%s: looking up %s in local scope", si->name, name);
-    s = soinfo_elf_lookup(si, elf_hash, name);
-    if (s != nullptr) {
-      *lsi = si;
-    }
-  }
-
-  // 5. Dependencies
-  if (s == nullptr) {
-    si->get_children().visit([&](soinfo* child) {
-      DEBUG("%s: looking up %s in %s", si->name, name, child->name);
-      s = soinfo_elf_lookup(child, elf_hash, name);
-      if (s != nullptr) {
-        *lsi = child;
-        return false;
-      }
       return true;
     });
   }
