@@ -2252,14 +2252,11 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
 }
 
 static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
-  int fd = __bionic_open_tzdata_path("ANDROID_DATA", "/misc/zoneinfo/tzdata", olson_id, data_size);
-  if (fd < 0) {
-    fd = __bionic_open_tzdata_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata", olson_id, data_size);
-    if (fd == -2) {
-      // The first thing that 'recovery' does is try to format the current time. It doesn't have
-      // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
-      fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
-    }
+  int fd = __bionic_open_tzdata_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata", olson_id, data_size);
+  if (fd == -2) {
+    // The first thing that 'recovery' does is try to format the current time. It doesn't have
+    // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
+    fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
   }
   return fd;
 }
