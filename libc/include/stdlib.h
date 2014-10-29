@@ -112,8 +112,8 @@ extern double erand48(unsigned short xsubi[3]);
 extern double drand48(void);
 extern void srand48(long);
 
-unsigned int arc4random(void);
-unsigned int arc4random_uniform(unsigned int);
+uint32_t arc4random(void);
+uint32_t arc4random_uniform(uint32_t);
 void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
