@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "756c4e15_1cc39d17",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T18:19:23Z",
+      "side": 1,
+      "message": "(whitespace slightly messed up here and elsewhere.)",
+      "revId": "8eefc4a8d04332fe632d30ef8cd355cbeb4382df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5fd9e73_92ddbc99",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T18:19:23Z",
+      "side": 1,
+      "message": "these can\u0027t both be right. looks like you\u0027ve found another bug.",
+      "revId": "8eefc4a8d04332fe632d30ef8cd355cbeb4382df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5fd9e73_329210be",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T18:19:23Z",
+      "side": 1,
+      "message": "i think it might be clearer to just have these in the same test, and have a comment in each side of the if saying what you can/can\u0027t test in that situation.",
+      "revId": "8eefc4a8d04332fe632d30ef8cd355cbeb4382df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5fd9e73_32edf04e",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T18:19:23Z",
+      "side": 1,
+      "message": "use U on unsigned constants.",
+      "revId": "8eefc4a8d04332fe632d30ef8cd355cbeb4382df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
