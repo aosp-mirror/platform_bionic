@@ -229,6 +229,23 @@ TEST(stdlib, strtold) {
   ASSERT_DOUBLE_EQ(1.23, strtold("1.23", NULL));
 }
 
+TEST(stdlib, strtof_2206701) {
+  ASSERT_EQ(0.0f, strtof("7.0064923216240853546186479164495e-46", NULL));
+  ASSERT_EQ(1.4e-45f, strtof("7.0064923216240853546186479164496e-46", NULL));
+}
+
+TEST(stdlib, strtod_largest_subnormal) {
+  // This value has been known to cause javac and java to infinite loop.
+  // http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/
+  ASSERT_EQ(2.2250738585072014e-308, strtod("2.2250738585072012e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308, strtod("0.00022250738585072012e-304", NULL));
+  ASSERT_EQ(2.2250738585072014e-308, strtod("00000002.2250738585072012e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308, strtod("2.225073858507201200000e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308, strtod("2.2250738585072012e-00308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308, strtod("2.22507385850720129978001e-308", NULL));
+  ASSERT_EQ(-2.2250738585072014e-308, strtod("-2.2250738585072012e-308", NULL));
+}
+
 TEST(stdlib, quick_exit) {
   pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
