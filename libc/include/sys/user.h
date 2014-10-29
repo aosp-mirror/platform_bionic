@@ -91,7 +91,7 @@ struct user {
   unsigned long start_stack;
   long int signal;
   int reserved;
-  unsigned long u_ar0;
+  struct user_regs_struct* u_ar0;
   struct user_fpregs_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
@@ -155,7 +155,7 @@ struct user {
   long int signal;
   int reserved;
   int pad1;
-  unsigned long u_ar0;
+  struct user_regs_struct* u_ar0;
   struct user_fpregs_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
@@ -175,7 +175,7 @@ struct user {
   unsigned long start_data;
   unsigned long start_stack;
   long int signal;
-  unsigned long u_ar0;
+  void* u_ar0;
   unsigned long magic;
   char u_comm[32];
 };
