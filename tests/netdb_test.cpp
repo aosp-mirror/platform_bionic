@@ -24,6 +24,47 @@
 TEST(netdb, getaddrinfo_NULL_hints) {
   addrinfo* ai = NULL;
   ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &ai));
+
+  bool saw_tcp = false;
+  bool saw_udp = false;
+  for (addrinfo* p = ai; p != NULL; p = p->ai_next) {
+    ASSERT_TRUE(p->ai_family == AF_INET || p->ai_family == AF_INET6);
+    if (p->ai_socktype == SOCK_STREAM) {
+      ASSERT_EQ(IPPROTO_TCP, p->ai_protocol);
+      saw_tcp = true;
+    } else if (p->ai_socktype == SOCK_DGRAM) {
+      ASSERT_EQ(IPPROTO_UDP, p->ai_protocol);
+      saw_udp = true;
+    }
+  }
+  ASSERT_TRUE(saw_tcp);
+  ASSERT_TRUE(saw_udp);
+
+  freeaddrinfo(ai);
+}
+
+TEST(netdb, getaddrinfo_service_lookup) {
+  addrinfo* ai = NULL;
+  ASSERT_EQ(0, getaddrinfo("localhost", "smtp", NULL, &ai));
+  ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
+  ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);
+  ASSERT_EQ(25, ntohs(reinterpret_cast<sockaddr_in*>(ai->ai_addr)->sin_port));
+  freeaddrinfo(ai);
+}
+
+TEST(netdb, getaddrinfo_hints) {
+  addrinfo hints;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+
+  addrinfo* ai = NULL;
+  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
+  ASSERT_EQ(AF_INET, ai->ai_family);
+  ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
+  ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);
+  ASSERT_TRUE(ai->ai_next == NULL);
   freeaddrinfo(ai);
 }
 
@@ -64,4 +105,28 @@ TEST(netdb, gethostbyname) {
   ASSERT_EQ(hent->h_addr[1], 0);
   ASSERT_EQ(hent->h_addr[2], 0);
   ASSERT_EQ(hent->h_addr[3], 1);
+}
+
+TEST(netdb, getservbyname) {
+  // smtp is TCP-only, so we know we'll get 25/tcp back.
+  servent* s = getservbyname("smtp", NULL);
+  ASSERT_TRUE(s != NULL);
+  ASSERT_EQ(25, ntohs(s->s_port));
+  ASSERT_STREQ("tcp", s->s_proto);
+
+  // We get the same result by explicitly asking for tcp.
+  s = getservbyname("smtp", "tcp");
+  ASSERT_TRUE(s != NULL);
+  ASSERT_EQ(25, ntohs(s->s_port));
+  ASSERT_STREQ("tcp", s->s_proto);
+
+  // And we get a failure if we explicitly ask for udp.
+  s = getservbyname("smtp", "udp");
+  ASSERT_TRUE(s == NULL);
+
+  // But there are actually udp services.
+  s = getservbyname("echo", "udp");
+  ASSERT_TRUE(s != NULL);
+  ASSERT_EQ(7, ntohs(s->s_port));
+  ASSERT_STREQ("udp", s->s_proto);
 }
