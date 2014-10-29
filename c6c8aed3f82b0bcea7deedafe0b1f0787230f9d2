@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35665637_f4afd8ee",
+        "filename": "libc/include/limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T16:45:26Z",
+      "side": 1,
+      "message": "why #ifndef? what other file is allowed to #define this?",
+      "revId": "c6c8aed3f82b0bcea7deedafe0b1f0787230f9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "756c4e15_19bd6fdf",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-29T16:45:26Z",
+      "side": 1,
+      "message": "we try not to be a source of documentation since we\u0027re not canonical. anyone who wants to know what something means or how to use it should read POSIX. we only tend to note ways in which we differ from the standard, or explain why we include something at all.\n\nit might be useful to say that the Linux kernel actually restricts us to 64, but since POSIX says the minimum acceptable value is 255, i don\u0027t think we need to.",
+      "revId": "c6c8aed3f82b0bcea7deedafe0b1f0787230f9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
