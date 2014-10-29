@@ -194,7 +194,7 @@ static void insert_soinfo_into_debug_map(soinfo* info) {
   // Copy the necessary fields into the debug structure.
   link_map* map = &(info->link_map_head);
   map->l_addr = info->load_bias;
-  map->l_name = reinterpret_cast<char*>(info->name);
+  map->l_name = info->name;
   map->l_ld = info->dynamic;
 
   // Stick the new library at the end of the list.
