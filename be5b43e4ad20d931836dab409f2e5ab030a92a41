@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55174a8b_889bd74a",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-10-30T08:17:20Z",
+      "side": 1,
+      "message": "For here, seems it\u0027s problem of android toolchain?\nASSERT_EQ(4294967295U, (uid_t) -5); will pass on android side.",
+      "range": {
+        "startLine": 510,
+        "startChar": 29,
+        "endLine": 510,
+        "endChar": 31
+      },
+      "revId": "be5b43e4ad20d931836dab409f2e5ab030a92a41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
