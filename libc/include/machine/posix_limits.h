@@ -37,6 +37,7 @@
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
 #define _POSIX_FSYNC                1  /* fdatasync() supported */
 #define _POSIX_JOB_CONTROL          1  /* job control is a Linux feature */
+#define _POSIX_HOST_NAME_MAX        255
 #define _POSIX_LINK_MAX             8
 #define _POSIX_LOGIN_NAME_MAX       9  /* includes trailing NUL */
 #define _POSIX_MAPPED_FILES         1  /* mmap-ed files supported */
