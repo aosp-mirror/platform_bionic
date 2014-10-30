@@ -16,6 +16,24 @@
       "revId": "90437f7b271b2b1d70cb801ff3821e6294f4dc56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55174a8b_25592e00",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-10-30T03:30:59Z",
+      "side": 1,
+      "message": "negative is accepted by glibc, hostname can be got successfully there.",
+      "parentUuid": "35665637_bdfa6352",
+      "revId": "90437f7b271b2b1d70cb801ff3821e6294f4dc56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
