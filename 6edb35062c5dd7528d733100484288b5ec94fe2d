@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f582fe17_f47ec505",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-31T21:20:35Z",
+      "side": 1,
+      "message": "There is a PATH_MAX that comes from the system. However, it\u0027s rather large (4096), so it\u0027s not always safe to stick it on the stack.",
+      "range": {
+        "startLine": 755,
+        "startChar": 11,
+        "endLine": 755,
+        "endChar": 23
+      },
+      "revId": "6edb35062c5dd7528d733100484288b5ec94fe2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55a82aa2_80ac98ae",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-10-31T21:20:35Z",
+      "side": 1,
+      "message": "\u003e\u003d since you are strlcpy name_len + 1.",
+      "range": {
+        "startLine": 1110,
+        "startChar": 15,
+        "endLine": 1110,
+        "endChar": 16
+      },
+      "revId": "6edb35062c5dd7528d733100484288b5ec94fe2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
