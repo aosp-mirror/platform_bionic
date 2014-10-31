@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95a622d2_3f1a878f",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2014-10-31T16:25:13Z",
+      "side": 1,
+      "message": "Can we assume 16-byte stack alignment? It would be nice to avoid operations like this.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "ce4131f2c43c757c442ad267ee9bc2147202b63d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d587ba27_9e66890e",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2014-10-31T16:25:13Z",
+      "side": 1,
+      "message": "if esp is aligned down, and here the displacement is negative, won\u0027t this store and load be below esp? I don\u0027t believe there is a red zone, so couldn\u0027t a signal between these two instructions cause corruption?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 18
+      },
+      "revId": "ce4131f2c43c757c442ad267ee9bc2147202b63d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
