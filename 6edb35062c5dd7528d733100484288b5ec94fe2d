@@ -45,6 +45,30 @@
       "revId": "6edb35062c5dd7528d733100484288b5ec94fe2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35701618_ede7dde6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-31T21:24:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55a82aa2_80ac98ae",
+      "range": {
+        "startLine": 1110,
+        "startChar": 15,
+        "endLine": 1110,
+        "endChar": 16
+      },
+      "revId": "6edb35062c5dd7528d733100484288b5ec94fe2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
