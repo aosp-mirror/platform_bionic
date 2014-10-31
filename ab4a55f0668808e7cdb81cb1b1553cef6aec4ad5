@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "f5975e5c_2275ce39",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2014-10-31T14:02:33Z",
+      "side": 1,
+      "message": "Perhaps possible, definitely fiddly and brittle.  Is a file mmap going to be a significant issue?",
+      "parentUuid": "35973656_4c00ff70",
+      "revId": "ab4a55f0668808e7cdb81cb1b1553cef6aec4ad5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5717ac8_9cafc9f0",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
