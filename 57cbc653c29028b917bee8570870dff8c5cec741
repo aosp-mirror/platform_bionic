@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "156dd243_8932dd63",
+        "filename": "tests/libs/badmagic.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-31T21:10:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3533b6f6_e26d07a1",
+      "revId": "57cbc653c29028b917bee8570870dff8c5cec741",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95b9c2ac_6a4a3783",
         "filename": "tests/libs/badmagic.py",
         "patchSetId": 2
