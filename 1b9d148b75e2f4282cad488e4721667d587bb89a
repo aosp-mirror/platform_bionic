@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95a622d2_22bdd0a8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "s/little bit/slightly/",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f582fe17_39977bae",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the global group",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_c284e4ee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "backwards",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d587ba27_f26df9a0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the main executable",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d587ba27_d2fc7549",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "with the\n\n\n(i\u0027ve kind of given up on trying to get you to end sentences with \u0027.\u0027, but since you mostly did in this CL, you\u0027re missing one here.)",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_e239287c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "given that this constructs a new one every time, i\u0027d call it \"make\" rather than \"get\".",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f582fe17_24ce6ebf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the global group",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_a233209a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_22203037",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the local",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f582fe17_c4de726b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "in the",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d587ba27_12752d3a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "does this have any unintended side-effects? can anyone observe that we\u0027ve fucked with the flags in any way?",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_62075887",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "reasons :-)",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_021f6ccd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2663,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "the linker is built with",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a622d2_02c40ccd",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T17:41:39Z",
+      "side": 1,
+      "message": "thanks!",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
