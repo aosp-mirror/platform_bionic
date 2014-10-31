@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35b576f8_c20f461f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-10-31T22:54:47Z",
+      "side": 1,
+      "message": "maybe add a link to the bug here to motivate this change? otherwise i worry we\u0027ll be back in a year removing this \"obviously stupid\" code :-)\n\n(and did you want to + 1 here rather than everywhere you use it?)",
+      "revId": "da8e591c3996879e41dc5f70b77d1b0fe6f9c225",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
