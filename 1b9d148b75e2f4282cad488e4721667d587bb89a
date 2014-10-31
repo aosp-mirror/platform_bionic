@@ -189,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "d587ba27_752f332d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-10-31T18:26:36Z",
+      "side": 1,
+      "message": "this field is not visible from the outside (of the linker)...",
+      "parentUuid": "d587ba27_12752d3a",
+      "revId": "1b9d148b75e2f4282cad488e4721667d587bb89a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95a622d2_62075887",
         "filename": "linker/linker.cpp",
         "patchSetId": 9
