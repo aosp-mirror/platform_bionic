@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5a166bc_46ec6623",
+        "filename": "tests/Android.build.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-01T03:53:42Z",
+      "side": 1,
+      "message": "This option helps to make it pass on host side",
+      "revId": "c9dbb7becec381ffd4c3a4bf38498ffdd1c2f982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d59c1a86_a46e8c1d",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-01T03:53:42Z",
+      "side": 1,
+      "message": "if I declare it as \"register int ri\", it will report error like this when compile:\n error: address requested for \u0027ri\u0027, which is declared \u0027register\u0027 [-Werror\u003dextra]",
+      "revId": "c9dbb7becec381ffd4c3a4bf38498ffdd1c2f982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
