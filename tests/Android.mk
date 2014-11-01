@@ -256,8 +256,11 @@ bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
     libdl_preempt_test_1 \
-    libdl_preempt_test_2 \
-    libdl_test_df_1_global
+    libdl_preempt_test_2
+
+ifneq ($(filter $(TARGET_ARCH),arm arm64),$(TARGET_ARCH))
+bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
+endif
 
 module := bionic-unit-tests
 module_tag := optional
@@ -309,8 +312,11 @@ bionic-unit-tests-glibc_src_files := \
 
 bionic-unit-tests-glibc_shared_libraries := \
     libdl_preempt_test_1 \
-    libdl_preempt_test_2 \
-    libdl_test_df_1_global
+    libdl_preempt_test_2
+
+ifneq ($(filter $(TARGET_ARCH),arm arm64),$(TARGET_ARCH))
+bionic-unit-tests-glibc_shared_libraries += libdl_test_df_1_global
+endif
 
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
