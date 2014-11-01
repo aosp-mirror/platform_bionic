@@ -107,8 +107,6 @@ static const char* const kDefaultLdPaths[] = {
 #define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
 #define LDPRELOAD_MAX 8
 
-#define MAX_PATH_LEN 512
-
 static char g_ld_library_paths_buffer[LDPATH_BUFSIZE];
 static const char* g_ld_library_paths[LDPATH_MAX + 1];
 
@@ -744,7 +742,7 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
 }
 
 static int open_library_on_path(const char* name, const char* const paths[]) {
-  char buf[MAX_PATH_LEN];
+  char buf[512];
   for (size_t i = 0; paths[i] != nullptr; ++i) {
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
@@ -1123,18 +1121,8 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
       return nullptr;
     }
   }
-
-  size_t name_len = strlen(name);
-  if (name_len >= MAX_PATH_LEN) {
-    DL_ERR("library name \"%s\" is too long", name);
-    return nullptr;
-  }
-
-  char local_name[name_len+1];
-  strlcpy(local_name, name, name_len+1);
-
   protect_data(PROT_READ | PROT_WRITE);
-  soinfo* si = find_library(local_name, flags, extinfo);
+  soinfo* si = find_library(name, flags, extinfo);
   if (si != nullptr) {
     si->CallConstructors();
   }
