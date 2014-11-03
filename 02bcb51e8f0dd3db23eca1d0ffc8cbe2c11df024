@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15b23212_8a9cb3fc",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "don\u0027t invent new useless constants. BUFSIZ is fine.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15b23212_aab64f80",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "avoid globals. if you\u0027re going to pass a bunch of stuff, use a struct.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_edfb4dda",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "why do you assign return_value inside the loop...",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_0d456172",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "no, this is all useless. you need to ASSERT.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15b23212_8a571399",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "...when you\u0027re always going to overwrite it?",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_ad43156c",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "don\u0027t invent constants for things that are only said once.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_2d302509",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "avoid useless casts. never use C-style casts.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_cd73e9da",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "there are many ways to synchronize between two threads, all of them better than sleep. sometimes -- especially when testing the C library -- you really have no choice but to sleep, but if you don\u0027t have to sleep, you shouldn\u0027t. it makes for an inherently flaky test.",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c5fa79_4d88f943",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T17:44:38Z",
+      "side": 1,
+      "message": "memset _and_ bzero? pick one. (memset, since that\u0027s the one POSIX hasn\u0027t marked obsolete.)",
+      "revId": "02bcb51e8f0dd3db23eca1d0ffc8cbe2c11df024",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
