@@ -49,10 +49,8 @@ int	__sdidinit;
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define	std(flags, file) \
-	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
-	 {(unsigned char *)(__sFext+file), 0},NULL,0,{0,0,0},{0},{0,0},0,0}
-/*	 p r w flags file _bf z  cookie      close    read    seek    write
-	 ext */
+	{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
+	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0},0,0}
 
 				/* the usual - (stdin + stdout + stderr) */
 static FILE usual[FOPEN_MAX - 3];
@@ -165,17 +163,26 @@ void
 __sinit(void)
 {
 	_THREAD_PRIVATE_MUTEX(__sinit_mutex);
-	int i;
 
 	_THREAD_PRIVATE_MUTEX_LOCK(__sinit_mutex);
-	if (__sdidinit)
-		goto out;	/* bail out if caller lost the race */
-	for (i = 0; i < FOPEN_MAX - 3; i++) {
+	if (__sdidinit) {
+		/* bail out if caller lost the race */
+		_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
+		return;
+	}
+
+	/* Initialize stdin/stdout/stderr (for the recursive mutex). http://b/18208568. */
+	for (size_t i = 0; i < 3; ++i) {
+		_FILEEXT_SETUP(__sF+i, __sFext+i);
+	}
+	/* Initialize the pre-allocated (but initially unused) streams. */
+	for (size_t i = 0; i < FOPEN_MAX - 3; ++i) {
 		_FILEEXT_SETUP(usual+i, usualext+i);
 	}
+
 	/* make sure we clean up on exit */
 	__atexit_register_cleanup(_cleanup); /* conservative */
 	__sdidinit = 1;
-out:
+
 	_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
 }

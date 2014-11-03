@@ -60,6 +60,7 @@ libc_common_src_files := \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
     bionic/system_properties_compat.c \
+    stdio/findfp.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
 
@@ -389,7 +390,6 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fgetwc.c \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/fileno.c \
-    upstream-openbsd/lib/libc/stdio/findfp.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
