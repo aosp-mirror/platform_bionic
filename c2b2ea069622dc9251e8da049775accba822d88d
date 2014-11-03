@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5c5fa79_02488bf7",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021499
+      },
+      "writtenOn": "2014-11-03T21:13:03Z",
+      "side": 1,
+      "message": "The packed double versions of these functions will perform better with 8 byte alignment. If movlpd is unaligned, it incurs an additional cycle penalty in each case. Since alignment just relates to local variables accessed via a frame pointer in eax, this should have no other impact on signal handling, etc.\n\nAlignment for single precision isn\u0027t necessary and has been removed for these x86 functions.",
+      "revId": "c2b2ea069622dc9251e8da049775accba822d88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
