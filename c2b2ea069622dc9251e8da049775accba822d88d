@@ -16,6 +16,24 @@
       "revId": "c2b2ea069622dc9251e8da049775accba822d88d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55d10a3e_9ee2c1e3",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021499
+      },
+      "writtenOn": "2014-11-03T21:38:53Z",
+      "side": 1,
+      "message": "Sorry - meant to say double version - they aren\u0027t packed double of course.",
+      "parentUuid": "d5c5fa79_02488bf7",
+      "revId": "c2b2ea069622dc9251e8da049775accba822d88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
