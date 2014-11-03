@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15b23212_f0eb2688",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-03T19:31:59Z",
+      "side": 1,
+      "message": "i don\u0027t think that\u0027s going to happen.\n\ni don\u0027t think you want to change the test. isn\u0027t the real work here to change the dynamic linker?",
+      "revId": "5b650068d4a5c6fbe6d1cf80d4761c8adffdf1a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
