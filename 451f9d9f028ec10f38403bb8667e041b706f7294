@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35e3b620_4c081f4d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-04T18:23:27Z",
+      "side": 1,
+      "message": "Looks like you accidentally removed all the hashes that made these lines comments when making your commit...",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 37
+      },
+      "revId": "451f9d9f028ec10f38403bb8667e041b706f7294",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35e3b620_ac3e63e0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-04T18:23:27Z",
+      "side": 1,
+      "message": "Second line of a git commit should always be blank. Format is roughly:\n\nShort (~50 char) summary.\n\u003cblank line\u003e\nDetailed summary (if necessary). Wrap lines at 70 characters (repo upload will sometimes yell at you for longer lines).\n\u003cblank line\u003e\nBug: ####\nChange-Id: ####",
+      "revId": "451f9d9f028ec10f38403bb8667e041b706f7294",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35e3b620_ec1b4b97",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-04T18:23:27Z",
+      "side": 1,
+      "message": "Here too.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 33
+      },
+      "revId": "451f9d9f028ec10f38403bb8667e041b706f7294",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
