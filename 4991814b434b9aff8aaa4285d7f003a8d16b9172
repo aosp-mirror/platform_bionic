@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35ce56a4_b4ab6068",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "this one probably makes more sense up with the page alignment test.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35ce56a4_94b064d7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "\"is not less than\" is pretty awkward. even \"\u003e\u003d\" seems less bad.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35973656_75a01aac",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15b23212_f3632b88",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "we should add a comment explaining the choice of this particular value.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15cb1296_536b045e",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "use ASSERT_SUBSTR instead, rather than constructing an exact message. that couples the test to the implementation more tightly than is necessary or useful.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5e59e1c_5b0d6f53",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "set your editor to remove trailing whitespace.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5ea5aee_11210c94",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "don\u0027t add conditionals where you really mean to ASSERT something.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "156dd243_bdf7cf6b",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "if you\u0027re aiming for complete coverage, it looks like you\u0027re missing the not-page-aligned case?",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5ea5aee_5140b42d",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "don\u0027t do this. if you find yourself wanting to do this, think about whether you need to break your test up into several smaller tests.",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "156dd243_3d111ff8",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:29:21Z",
+      "side": 1,
+      "message": "can\u0027t you just assign without a loop?",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
