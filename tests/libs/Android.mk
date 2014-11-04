@@ -312,7 +312,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # Library with DF_1_GLOBAL
 # -----------------------------------------------------------------------------
 # TODO: re-enable arm once b/18137520 or b/18130452 are fixed
-ifeq ($(filter $(TARGET_ARCH),arm),)
+ifeq ($(filter $(TARGET_ARCH),arm arm64),)
 libdl_test_df_1_global_src_files := dl_df_1_global.cpp
 libdl_test_df_1_global_ldflags := -fuse-ld=bfd -Wl,-z,global
 module := libdl_test_df_1_global
