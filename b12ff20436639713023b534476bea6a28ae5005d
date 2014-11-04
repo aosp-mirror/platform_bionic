@@ -16,6 +16,23 @@
       "revId": "b12ff20436639713023b534476bea6a28ae5005d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15e07212_2b1a598f",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T20:07:58Z",
+      "side": 1,
+      "message": "comments are sentences, so start with a Capital letter and end with a \u0027.\u0027.",
+      "revId": "b12ff20436639713023b534476bea6a28ae5005d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
