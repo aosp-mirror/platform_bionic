@@ -282,7 +282,7 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, int rtld_flags) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, uint32_t rtld_flags) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return nullptr;
@@ -481,7 +481,8 @@ static unsigned elfhash(const char* _name) {
   return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, const soinfo::soinfo_list_t& local_group) {
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
+    const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
   unsigned elf_hash = elfhash(name);
   ElfW(Sym)* s = nullptr;
 
@@ -496,49 +497,40 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, c
    * Note that this is unlikely since static linker avoids generating
    * relocations for -Bsymbolic linked dynamic executables.
    */
-  if (si->has_DT_SYMBOLIC) {
-    DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si->name, name);
-    s = soinfo_elf_lookup(si, elf_hash, name);
+  if (si_from->has_DT_SYMBOLIC) {
+    DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->name, name);
+    s = soinfo_elf_lookup(si_from, elf_hash, name);
     if (s != nullptr) {
-      *lsi = si;
+      *si_found_in = si_from;
     }
   }
 
-  if (s == nullptr && somain != nullptr) {
-    // 1. Look for it in the main executable unless we already did.
-    if (si != somain || !si->has_DT_SYMBOLIC) {
-      DEBUG("%s: looking up %s in executable %s",
-            si->name, name, somain->name);
-      s = soinfo_elf_lookup(somain, elf_hash, name);
+  // 1. Look for it in global_group
+  if (s == nullptr) {
+    global_group.visit([&](soinfo* global_si) {
+      DEBUG("%s: looking up %s in %s (from global group)", si_from->name, name, global_si->name);
+      s = soinfo_elf_lookup(global_si, elf_hash, name);
       if (s != nullptr) {
-        *lsi = somain;
+        *si_found_in = global_si;
+        return false;
       }
-    }
 
-    // 2. Look for it in the ld_preloads
-    if (s == nullptr) {
-      for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-        if (s != nullptr) {
-          *lsi = g_ld_preloads[i];
-          break;
-        }
-      }
-    }
+      return true;
+    });
   }
 
-  // 3. Look for it in the local group
+  // 2. Look for it in the local group
   if (s == nullptr) {
     local_group.visit([&](soinfo* local_si) {
-      if (local_si == si && si->has_DT_SYMBOLIC) {
+      if (local_si == si_from && si_from->has_DT_SYMBOLIC) {
         // we already did this - skip
         return true;
       }
 
-      DEBUG("%s: looking up %s in %s (from local group)", si->name, name, local_si->name);
+      DEBUG("%s: looking up %s in %s (from local group)", si_from->name, name, local_si->name);
       s = soinfo_elf_lookup(local_si, elf_hash, name);
       if (s != nullptr) {
-        *lsi = local_si;
+        *si_found_in = local_si;
         return false;
       }
 
@@ -549,9 +541,9 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, c
   if (s != nullptr) {
     TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
                "found in %s, base = %p, load bias = %p",
-               si->name, name, reinterpret_cast<void*>(s->st_value),
-               (*lsi)->name, reinterpret_cast<void*>((*lsi)->base),
-               reinterpret_cast<void*>((*lsi)->load_bias));
+               si_from->name, name, reinterpret_cast<void*>(s->st_value),
+               (*si_found_in)->name, reinterpret_cast<void*>((*si_found_in)->base),
+               reinterpret_cast<void*>((*si_found_in)->load_bias));
   }
 
   return s;
@@ -916,6 +908,24 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
   });
 }
 
+// TODO: this is slightly unusual way to construct
+// the global group for relocation. Not every RTLD_GLOBAL
+// library is included in this group for backwards-compatibility
+// reasons.
+//
+// This group consists of the main executable, LD_PRELOADs
+// and libraries with the DF_1_GLOBAL flag set.
+static soinfo::soinfo_list_t make_global_group() {
+  soinfo::soinfo_list_t global_group;
+  for (soinfo* si = somain; si != nullptr; si = si->next) {
+    if ((si->get_dt_flags_1() & DF_1_GLOBAL) != 0) {
+      global_group.push_back(si);
+    }
+  }
+
+  return global_group;
+}
+
 static bool find_libraries(soinfo* start_with, const char* const library_names[], size_t library_names_count, soinfo* soinfos[],
     soinfo* ld_preloads[], size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
   // Step 0: prepare.
@@ -924,6 +934,9 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
     const char* name = library_names[i];
     load_tasks.push_back(LoadTask::create(name, start_with));
   }
+
+  // Construct global_group.
+  soinfo::soinfo_list_t global_group = make_global_group();
 
   // If soinfos array is null allocate one on stack.
   // The array is needed in case of failure; for example
@@ -973,6 +986,11 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
     // When ld_preloads is not null, the first
     // ld_preloads_count libs are in fact ld_preloads.
     if (ld_preloads != nullptr && soinfos_count < ld_preloads_count) {
+      // Add LD_PRELOADed libraries to the global group for future runs.
+      // There is no need to explicitly add them to the global group
+      // for this run because they are going to appear in the local
+      // group in the correct order.
+      si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
       ld_preloads[soinfos_count] = si;
     }
 
@@ -993,7 +1011,7 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
 
   bool linked = local_group.visit([&](soinfo* si) {
     if ((si->flags & FLAG_LINKED) == 0) {
-      if (!si->LinkImage(local_group, extinfo)) {
+      if (!si->LinkImage(global_group, local_group, extinfo)) {
         return false;
       }
       si->flags |= FLAG_LINKED;
@@ -1128,7 +1146,7 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 }
 
 #if defined(USE_RELA)
-int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& local_group) {
+int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
@@ -1146,7 +1164,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& loca
 
     if (sym != 0) {
       sym_name = get_string(symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, local_group);
+      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1405,7 +1423,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& loca
 }
 
 #else // REL, not RELA.
-int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_group) {
+int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     unsigned type = ELFW(R_TYPE)(rel->r_info);
     // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
@@ -1424,7 +1442,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_
 
     if (sym != 0) {
       sym_name = get_string(symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, local_group);
+      s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1610,7 +1628,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_
 #endif
 
 #if defined(__mips__)
-static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& local_group) {
+static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
   ElfW(Addr)** got = si->plt_got;
   if (got == nullptr) {
     return true;
@@ -1643,7 +1661,7 @@ static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& local_gro
     // This is an undefined reference... try to locate it.
     const char* sym_name = si->get_string(sym->st_name);
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, local_group);
+    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, global_group, local_group);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab[g];
@@ -1783,7 +1801,7 @@ void soinfo::remove_all_links() {
   children.clear();
 }
 
-dev_t soinfo::get_st_dev() {
+dev_t soinfo::get_st_dev() const {
   if (has_min_version(0)) {
     return st_dev;
   }
@@ -1791,7 +1809,7 @@ dev_t soinfo::get_st_dev() {
   return 0;
 };
 
-ino_t soinfo::get_st_ino() {
+ino_t soinfo::get_st_ino() const {
   if (has_min_version(0)) {
     return st_ino;
   }
@@ -1799,7 +1817,7 @@ ino_t soinfo::get_st_ino() {
   return 0;
 }
 
-off64_t soinfo::get_file_offset() {
+off64_t soinfo::get_file_offset() const {
   if (has_min_version(1)) {
     return file_offset;
   }
@@ -1807,12 +1825,33 @@ off64_t soinfo::get_file_offset() {
   return 0;
 }
 
-int soinfo::get_rtld_flags() {
+uint32_t soinfo::get_rtld_flags() const {
   if (has_min_version(1)) {
     return rtld_flags;
   }
 
   return 0;
+}
+
+uint32_t soinfo::get_dt_flags_1() const {
+  if (has_min_version(1)) {
+    return dt_flags_1;
+  }
+
+  return 0;
+}
+void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
+  if (has_min_version(1)) {
+    if ((dt_flags_1 & DF_1_GLOBAL) != 0) {
+      rtld_flags |= RTLD_GLOBAL;
+    }
+
+    if ((dt_flags_1 & DF_1_NODELETE) != 0) {
+      rtld_flags |= RTLD_NODELETE;
+    }
+
+    this->dt_flags_1 = dt_flags_1;
+  }
 }
 
 // This is a return on get_children()/get_parents() if
@@ -1852,8 +1891,9 @@ const char* soinfo::get_string(ElfW(Word) index) const {
 }
 
 bool soinfo::can_unload() const {
-  return (rtld_flags & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
+  return (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
 }
+
 /* Force any of the closed stdin, stdout and stderr to be associated with
    /dev/null. */
 static int nullify_closed_stdio() {
@@ -2154,16 +2194,9 @@ bool soinfo::PrelinkImage() {
         break;
 
       case DT_FLAGS_1:
-        if ((d->d_un.d_val & DF_1_GLOBAL) != 0) {
-          rtld_flags |= RTLD_GLOBAL;
-        }
+        set_dt_flags_1(d->d_un.d_val);
 
-        if ((d->d_un.d_val & DF_1_NODELETE) != 0) {
-          rtld_flags |= RTLD_NODELETE;
-        }
-        // TODO: Implement other flags
-
-        if ((d->d_un.d_val & ~(DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)) != 0) {
+        if ((d->d_un.d_val & ~SUPPORTED_DT_FLAGS_1) != 0) {
           DL_WARN("Unsupported flags DT_FLAGS_1=%p", reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
@@ -2236,7 +2269,7 @@ bool soinfo::PrelinkImage() {
   return true;
 }
 
-bool soinfo::LinkImage(const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
+bool soinfo::LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
@@ -2255,33 +2288,33 @@ bool soinfo::LinkImage(const soinfo_list_t& local_group, const android_dlextinfo
 #if defined(USE_RELA)
   if (rela != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rela, rela_count, local_group)) {
+    if (Relocate(rela, rela_count, global_group, local_group)) {
       return false;
     }
   }
   if (plt_rela != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rela, plt_rela_count, local_group)) {
+    if (Relocate(plt_rela, plt_rela_count, global_group, local_group)) {
       return false;
     }
   }
 #else
   if (rel != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rel, rel_count, local_group)) {
+    if (Relocate(rel, rel_count, global_group, local_group)) {
       return false;
     }
   }
   if (plt_rel != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rel, plt_rel_count, local_group)) {
+    if (Relocate(plt_rel, plt_rel_count, global_group, local_group)) {
       return false;
     }
   }
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(this, local_group)) {
+  if (!mips_relocate_got(this, global_group, local_group)) {
     return false;
   }
 #endif
@@ -2348,7 +2381,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   si->PrelinkImage();
-  si->LinkImage(g_empty_list, nullptr);
+  si->LinkImage(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr);
 #endif
 }
 
@@ -2478,6 +2511,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   somain = si;
 
   si->PrelinkImage();
+
+  // add somain to global group
+  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
 
   // Load ld_preloads and dependencies.
   StringLinkedList needed_library_name_list;
@@ -2622,7 +2658,13 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(g_empty_list, nullptr))) {
+  // This might not be obvious... The reasons why we pass g_empty_list
+  // in place of local_group here are (1) we do not really need it, because
+  // linker is built with DT_SYMBOLIC and therefore relocates its symbols against
+  // itself without having to look into local_group and (2) allocators
+  // are not yet initialized, and therefore we cannot use linked_list.push_*
+  // functions at this point.
+  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(g_empty_list, g_empty_list, nullptr))) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
