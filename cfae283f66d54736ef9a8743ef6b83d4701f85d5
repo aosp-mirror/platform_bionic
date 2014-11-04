@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95bf02de_1ae91913",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-04T04:33:06Z",
+      "side": 1,
+      "message": "since we can not use the ASSERT in a return function like this thread function, so I output the debug information and return negative here for the check outside this function.",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 26
+      },
+      "revId": "cfae283f66d54736ef9a8743ef6b83d4701f85d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
