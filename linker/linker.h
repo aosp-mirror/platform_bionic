@@ -89,7 +89,9 @@
 #define FLAG_LINKER     0x00000010 // The linker itself
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 0
+#define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
+
+#define SOINFO_VERSION 1
 
 #define SOINFO_NAME_LEN 128
 
@@ -207,16 +209,18 @@ struct soinfo {
   void CallDestructors();
   void CallPreInitConstructors();
   bool PrelinkImage();
-  bool LinkImage(const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
+  bool LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
 
-  ino_t get_st_ino();
-  dev_t get_st_dev();
-  off64_t get_file_offset();
+  ino_t get_st_ino() const;
+  dev_t get_st_dev() const;
+  off64_t get_file_offset() const;
 
-  int get_rtld_flags();
+  uint32_t get_rtld_flags() const;
+  uint32_t get_dt_flags_1() const;
+  void set_dt_flags_1(uint32_t dt_flags_1);
 
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
@@ -234,9 +238,9 @@ struct soinfo {
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
 #if defined(USE_RELA)
-  int Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& local_group);
+  int Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 #else
-  int Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_group);
+  int Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 #endif
 
  private:
@@ -254,7 +258,8 @@ struct soinfo {
 
   // version >= 1
   off64_t file_offset;
-  int rtld_flags;
+  uint32_t rtld_flags;
+  uint32_t dt_flags_1;
   size_t strtab_size;
 
   friend soinfo* get_libdl_info();
