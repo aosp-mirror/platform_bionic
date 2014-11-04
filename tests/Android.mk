@@ -411,7 +411,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
-bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
+bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT)/etc/hosts $(TARGET_OUT_EXECUTABLES)/sh
 	if [ ! -d /system ]; then \
 	  echo "Attempting to create /system"; \
 	  sudo mkdir -p -m 0777 /system; \
