@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15e07212_0bbd5da8",
+        "filename": "libc/stdio/findfp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T20:24:15Z",
+      "side": 1,
+      "message": "why do we need this? i thought {0} was a special case?",
+      "revId": "dc6599e20f6a2a82c35533fba36d16fd43c53273",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
