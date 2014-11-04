@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35973656_350bf216",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1393,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-04T01:41:28Z",
+      "side": 1,
+      "message": "the default for gtest is 4ulp. the main reason for this change is to move to tighter bounds.\n\nthis explicitly -- assuming i haven\u0027t fucked up the code in \"math_data_test.h\" -- asserts \u003c\u003d 1ulp. interestingly glibc can manage 0ulp on several of these tests, but we can\u0027t.",
+      "revId": "e34104a1f5512628b2b4f55526402a050ed2916d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
