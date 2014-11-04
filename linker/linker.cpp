@@ -415,7 +415,7 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return rv;
 }
 
-static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name) {
+static ElfW(Sym)* soinfo_elf_lookup(const soinfo* si, unsigned hash, const char* name) {
   ElfW(Sym)* symtab = si->symtab;
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p %x %zd",
@@ -481,7 +481,7 @@ static unsigned elfhash(const char* _name) {
   return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, const soinfo::soinfo_list_t& local_group) {
   unsigned elf_hash = elfhash(name);
   ElfW(Sym)* s = nullptr;
 
@@ -527,16 +527,21 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
     }
   }
 
-  /* Look for symbols in the local scope (the object who is
-   * searching). This happens with C++ templates on x86 for some
-   * reason.
-   *
-   * Notes on weak symbols:
-   * The ELF specs are ambiguous about treatment of weak definitions in
-   * dynamic linking.  Some systems return the first definition found
-   * and some the first non-weak definition.   This is system dependent.
-   * Here we return the first definition found for simplicity.  */
+  // 3. Look for it in the local group
+  if (s == nullptr) {
+    local_group.visit([&](soinfo* local_si) {
+      DEBUG("%s: looking up %s in %s (from local group)", si->name, name, local_si->name);
+      s = soinfo_elf_lookup(local_si, elf_hash, name);
+      if (s != nullptr) {
+        *lsi = local_si;
+        return false;
+      }
 
+      return true;
+    });
+  }
+
+  // 4. Look for it in this library (unless we already did it because of DT_SYMBOLIC)
   if (s == nullptr && !si->has_DT_SYMBOLIC) {
     DEBUG("%s: looking up %s in local scope", si->name, name);
     s = soinfo_elf_lookup(si, elf_hash, name);
@@ -545,6 +550,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
     }
   }
 
+  // 5. Dependencies
   if (s == nullptr) {
     si->get_children().visit([&](soinfo* child) {
       DEBUG("%s: looking up %s in %s", si->name, name, child->name);
@@ -643,33 +649,61 @@ typedef linked_list_t<const char> StringLinkedList;
 typedef linked_list_t<LoadTask> LoadTaskList;
 
 
-// This is used by dlsym(3).  It performs symbol lookup only within the
-// specified soinfo object and its dependencies in breadth first order.
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+// This function walks down the tree of soinfo dependencies
+// in breadth-first order and
+//   * calls action(soinfo* si) for each node, and
+//   * terminates walk if action returns false.
+//
+// walk_dependencies_tree returns false if walk was terminated
+// by the action and true otherwise.
+template<typename F>
+static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_size, F action) {
   SoinfoLinkedList visit_list;
   SoinfoLinkedList visited;
 
-  visit_list.push_back(si);
-  soinfo* current_soinfo;
-  while ((current_soinfo = visit_list.pop_front()) != nullptr) {
-    if (visited.contains(current_soinfo)) {
+  for (size_t i = 0; i < root_soinfos_size; ++i) {
+    visit_list.push_back(root_soinfos[i]);
+  }
+
+  soinfo* si;
+  while ((si = visit_list.pop_front()) != nullptr) {
+    if (visited.contains(si)) {
       continue;
     }
 
-    ElfW(Sym)* result = soinfo_elf_lookup(current_soinfo, elfhash(name), name);
-
-    if (result != nullptr) {
-      *found = current_soinfo;
-      return result;
+    if (!action(si)) {
+      return false;
     }
-    visited.push_back(current_soinfo);
 
-    current_soinfo->get_children().for_each([&](soinfo* child) {
+    visited.push_back(si);
+
+    si->get_children().for_each([&](soinfo* child) {
       visit_list.push_back(child);
     });
   }
 
-  return nullptr;
+  return true;
+}
+
+
+// This is used by dlsym(3).  It performs symbol lookup only within the
+// specified soinfo object and its dependencies in breadth first order.
+ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+  ElfW(Sym)* result = nullptr;
+  uint32_t elf_hash = elfhash(name);
+
+
+  walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
+    result = soinfo_elf_lookup(current_soinfo, elf_hash, name);
+    if (result != nullptr) {
+      *found = current_soinfo;
+      return false;
+    }
+
+    return true;
+  });
+
+  return result;
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -899,19 +933,30 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
   });
 }
 
-static bool find_libraries(const char* const library_names[], size_t library_names_size, soinfo* soinfos[],
-    soinfo* ld_preloads[], size_t ld_preloads_size, int rtld_flags, const android_dlextinfo* extinfo) {
+static bool find_libraries(soinfo* start_with, const char* const library_names[], size_t library_names_count, soinfo* soinfos[],
+    soinfo* ld_preloads[], size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
-  for (size_t i = 0; i < library_names_size; ++i) {
+  for (size_t i = 0; i < library_names_count; ++i) {
     const char* name = library_names[i];
-    load_tasks.push_back(LoadTask::create(name, nullptr));
+    load_tasks.push_back(LoadTask::create(name, start_with));
   }
 
-  // Libraries added to this list in reverse order so that we can
-  // start linking from bottom-up - see step 2.
-  SoinfoLinkedList found_libs;
-  size_t soinfos_size = 0;
+  // If soinfos array is null allocate one on stack.
+  // The array is needed in case of failure; for example
+  // when library_names[] = {libone.so, libtwo.so} and libone.so
+  // is loaded correctly but libtwo.so failed for some reason.
+  // In this case libone.so should be unloaded on return.
+  // See also implementation of failure_guard below.
+
+  if (soinfos == nullptr) {
+    size_t soinfos_size = sizeof(soinfo*)*library_names_count;
+    soinfos = reinterpret_cast<soinfo**>(alloca(soinfos_size));
+    memset(soinfos, 0, soinfos_size);
+  }
+
+  // list of libraries to link - see step 2.
+  size_t soinfos_count = 0;
 
   auto failure_guard = make_scope_guard([&]() {
     // Housekeeping
@@ -919,7 +964,7 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
       LoadTask::deleter(t);
     });
 
-    for (size_t i = 0; i<soinfos_size; ++i) {
+    for (size_t i = 0; i<soinfos_count; ++i) {
       soinfo_unload(soinfos[i]);
     }
   });
@@ -941,34 +986,44 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
     if (needed_by != nullptr) {
       needed_by->add_child(si);
     }
-    found_libs.push_front(si);
 
-    // When ld_preloads is not null first
-    // ld_preloads_size libs are in fact ld_preloads.
-    if (ld_preloads != nullptr && soinfos_size < ld_preloads_size) {
-      ld_preloads[soinfos_size] = si;
+    // When ld_preloads is not null, the first
+    // ld_preloads_count libs are in fact ld_preloads.
+    if (ld_preloads != nullptr && soinfos_count < ld_preloads_count) {
+      ld_preloads[soinfos_count] = si;
     }
 
-    if (soinfos_size<library_names_size) {
-      soinfos[soinfos_size++] = si;
+    if (soinfos_count < library_names_count) {
+      soinfos[soinfos_count++] = si;
     }
   }
 
   // Step 2: link libraries.
-  soinfo* si;
-  while ((si = found_libs.pop_front()) != nullptr) {
+  soinfo::soinfo_list_t local_group;
+  walk_dependencies_tree(
+      start_with == nullptr ? soinfos : &start_with,
+      start_with == nullptr ? soinfos_count : 1,
+      [&] (soinfo* si) {
+    local_group.push_back(si);
+    return true;
+  });
+
+  bool linked = local_group.visit([&](soinfo* si) {
     if ((si->flags & FLAG_LINKED) == 0) {
-      if (!si->LinkImage(extinfo)) {
+      if (!si->LinkImage(local_group, extinfo)) {
         return false;
       }
       si->flags |= FLAG_LINKED;
     }
+
+    return true;
+  });
+
+  if (linked) {
+    failure_guard.disable();
   }
 
-  // All is well - found_libs and load_tasks are empty at this point
-  // and all libs are successfully linked.
-  failure_guard.disable();
-  return true;
+  return linked;
 }
 
 static soinfo* find_library(const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
@@ -979,7 +1034,7 @@ static soinfo* find_library(const char* name, int rtld_flags, const android_dlex
 
   soinfo* si;
 
-  if (!find_libraries(&name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
+  if (!find_libraries(nullptr, &name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
     return nullptr;
   }
 
@@ -1090,7 +1145,7 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 }
 
 #if defined(USE_RELA)
-int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
+int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
@@ -1108,7 +1163,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
 
     if (sym != 0) {
       sym_name = get_string(symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi);
+      s = soinfo_do_lookup(this, sym_name, &lsi, local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1367,7 +1422,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
 }
 
 #else // REL, not RELA.
-int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
+int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     unsigned type = ELFW(R_TYPE)(rel->r_info);
     // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
@@ -1386,7 +1441,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
 
     if (sym != 0) {
       sym_name = get_string(symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi);
+      s = soinfo_do_lookup(this, sym_name, &lsi, local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1572,7 +1627,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
 #endif
 
 #if defined(__mips__)
-static bool mips_relocate_got(soinfo* si) {
+static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& local_group) {
   ElfW(Addr)** got = si->plt_got;
   if (got == nullptr) {
     return true;
@@ -1605,7 +1660,7 @@ static bool mips_relocate_got(soinfo* si) {
     // This is an undefined reference... try to locate it.
     const char* sym_name = si->get_string(sym->st_name);
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi);
+    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, local_group);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab[g];
@@ -2198,7 +2253,7 @@ bool soinfo::PrelinkImage() {
   return true;
 }
 
-bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
+bool soinfo::LinkImage(const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
@@ -2217,26 +2272,26 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
 #if defined(USE_RELA)
   if (rela != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rela, rela_count)) {
+    if (Relocate(rela, rela_count, local_group)) {
       return false;
     }
   }
   if (plt_rela != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rela, plt_rela_count)) {
+    if (Relocate(plt_rela, plt_rela_count, local_group)) {
       return false;
     }
   }
 #else
   if (rel != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rel, rel_count)) {
+    if (Relocate(rel, rel_count, local_group)) {
       return false;
     }
   }
   if (plt_rel != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rel, plt_rel_count)) {
+    if (Relocate(plt_rel, plt_rel_count, local_group)) {
       return false;
     }
   }
@@ -2310,7 +2365,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   si->PrelinkImage();
-  si->LinkImage(nullptr);
+  si->LinkImage(g_empty_list, nullptr);
 #endif
 }
 
@@ -2456,21 +2511,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   });
 
   const char* needed_library_names[needed_libraries_count];
-  soinfo* needed_library_si[needed_libraries_count];
 
   memset(needed_library_names, 0, sizeof(needed_library_names));
   needed_library_name_list.copy_to_array(needed_library_names, needed_libraries_count);
 
-  if (needed_libraries_count > 0 && !find_libraries(needed_library_names, needed_libraries_count, needed_library_si, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
-    __libc_format_fd(2, "CANNOT LINK EXECUTABLE DEPENDENCIES: %s\n", linker_get_error_buffer());
-    exit(EXIT_FAILURE);
-  }
-
-  for (size_t i = 0; i<needed_libraries_count; ++i) {
-    si->add_child(needed_library_si[i]);
-  }
-
-  if (!si->LinkImage(nullptr)) {
+  if (needed_libraries_count > 0 && !find_libraries(si, needed_library_names, needed_libraries_count, nullptr, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
   }
@@ -2594,7 +2639,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(nullptr))) {
+  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(g_empty_list, nullptr))) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
