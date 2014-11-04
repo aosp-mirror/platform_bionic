@@ -16,6 +16,24 @@
       "revId": "dc6599e20f6a2a82c35533fba36d16fd43c53273",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75d9ae6e_5db56752",
+        "filename": "libc/stdio/findfp.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2014-11-04T21:36:15Z",
+      "side": 1,
+      "message": "I don\u0027t know any special case for {0}, but an incomplete init list should mean 0 for the un-initialized elements. There is no rule against a compiler\u0027s warning. So we can either fill up the missing 0 like this or suppress the warning in Android.mk.",
+      "parentUuid": "15e07212_0bbd5da8",
+      "revId": "dc6599e20f6a2a82c35533fba36d16fd43c53273",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
