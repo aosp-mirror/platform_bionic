@@ -282,13 +282,13 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, int rtld_flags) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return nullptr;
   }
 
-  soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat, file_offset, rtld_flags);
+  soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(name, file_stat, file_offset);
 
   sonext->next = si;
   sonext = si;
@@ -452,7 +452,7 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
   return nullptr;
 }
 
-soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags) {
+soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offset) {
   memset(this, 0, sizeof(*this));
 
   strlcpy(this->name, name, sizeof(this->name));
@@ -464,8 +464,6 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offs
     this->st_ino = file_stat->st_ino;
     this->file_offset = file_offset;
   }
-
-  this->rtld_flags = rtld_flags;
 }
 
 static unsigned elfhash(const char* _name) {
@@ -686,10 +684,6 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
 
   ElfW(Sym)* s = nullptr;
   for (soinfo* si = start; (s == nullptr) && (si != nullptr); si = si->next) {
-    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0) {
-      continue;
-    }
-
     s = soinfo_elf_lookup(si, elf_hash, name);
     if (s != nullptr) {
       *found = si;
@@ -780,7 +774,7 @@ static void for_each_dt_needed(const soinfo* si, F action) {
   }
 }
 
-static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int dlflags, const android_dlextinfo* extinfo) {
   int fd = -1;
   off64_t file_offset = 0;
   ScopedFd file_guard(-1);
@@ -825,7 +819,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     }
   }
 
-  if ((rtld_flags & RTLD_NOLOAD) != 0) {
+  if ((dlflags & RTLD_NOLOAD) != 0) {
     DL_ERR("library \"%s\" wasn't loaded and RTLD_NOLOAD prevented it", name);
     return nullptr;
   }
@@ -836,7 +830,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     return nullptr;
   }
 
-  soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, file_offset, rtld_flags);
+  soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, file_offset);
   if (si == nullptr) {
     return nullptr;
   }
@@ -868,7 +862,7 @@ static soinfo *find_loaded_library_by_name(const char* name) {
   return nullptr;
 }
 
-static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name, int dlflags, const android_dlextinfo* extinfo) {
 
   soinfo* si = find_loaded_library_by_name(name);
 
@@ -876,7 +870,7 @@ static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
   // of this fact is done by load_library.
   if (si == nullptr) {
     TRACE("[ '%s' has not been found by name.  Trying harder...]", name);
-    si = load_library(load_tasks, name, rtld_flags, extinfo);
+    si = load_library(load_tasks, name, dlflags, extinfo);
   }
 
   return si;
@@ -900,7 +894,7 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
 }
 
 static bool find_libraries(const char* const library_names[], size_t library_names_size, soinfo* soinfos[],
-    soinfo* ld_preloads[], size_t ld_preloads_size, int rtld_flags, const android_dlextinfo* extinfo) {
+    soinfo* ld_preloads[], size_t ld_preloads_size, int dlflags, const android_dlextinfo* extinfo) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
   for (size_t i = 0; i < library_names_size; ++i) {
@@ -926,7 +920,7 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
 
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
   for (LoadTask::unique_ptr task(load_tasks.pop_front()); task.get() != nullptr; task.reset(load_tasks.pop_front())) {
-    soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, extinfo);
+    soinfo* si = find_library_internal(load_tasks, task->get_name(), dlflags, extinfo);
     if (si == nullptr) {
       return false;
     }
@@ -971,7 +965,7 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
   return true;
 }
 
-static soinfo* find_library(const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+static soinfo* find_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
   if (name == nullptr) {
     somain->ref_count++;
     return somain;
@@ -979,7 +973,7 @@ static soinfo* find_library(const char* name, int rtld_flags, const android_dlex
 
   soinfo* si;
 
-  if (!find_libraries(&name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
+  if (!find_libraries(&name, 1, &si, nullptr, 0, dlflags, extinfo)) {
     return nullptr;
   }
 
@@ -1764,14 +1758,6 @@ off64_t soinfo::get_file_offset() {
   return 0;
 }
 
-int soinfo::get_rtld_flags() {
-  if (has_min_version(1)) {
-    return rtld_flags;
-  }
-
-  return 0;
-}
-
 // This is a return on get_children()/get_parents() if
 // 'this->flags' does not have FLAG_NEW_SOINFO set.
 static soinfo::soinfo_list_t g_empty_list;
@@ -2289,7 +2275,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]", nullptr, 0, 0);
+  soinfo* si = soinfo_alloc("[vdso]", nullptr, 0);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
@@ -2310,7 +2296,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 #else
 #define LINKER_PATH "/system/bin/linker"
 #endif
-static soinfo linker_soinfo_for_gdb(LINKER_PATH, nullptr, 0, 0);
+static soinfo linker_soinfo_for_gdb(LINKER_PATH, nullptr, 0);
 
 /* gdb expects the linker to be in the debug shared object list.
  * Without this, gdb has trouble locating the linker's ".text"
@@ -2374,7 +2360,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   INFO("[ android linker & debugger ]");
 
-  soinfo* si = soinfo_alloc(args.argv[0], nullptr, 0, RTLD_GLOBAL);
+  soinfo* si = soinfo_alloc(args.argv[0], nullptr, 0);
   if (si == nullptr) {
     exit(EXIT_FAILURE);
   }
@@ -2449,7 +2435,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   memset(needed_library_names, 0, sizeof(needed_library_names));
   needed_library_name_list.copy_to_array(needed_library_names, needed_libraries_count);
 
-  if (needed_libraries_count > 0 && !find_libraries(needed_library_names, needed_libraries_count, needed_library_si, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
+  if (needed_libraries_count > 0 && !find_libraries(needed_library_names, needed_libraries_count, needed_library_si, g_ld_preloads, ld_preloads_count, 0, nullptr)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE DEPENDENCIES: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
   }
@@ -2562,7 +2548,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  soinfo linker_so("[dynamic linker]", nullptr, 0, 0);
+  soinfo linker_so("[dynamic linker]", nullptr, 0);
 
   // If the linker is not acting as PT_INTERP entry_point is equal to
   // _start. Which means that the linker is running as an executable and
