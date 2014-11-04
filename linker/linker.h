@@ -134,7 +134,7 @@ struct soinfo {
 #endif
 
   soinfo* next;
-  uint32_t flags;
+  unsigned flags;
 
  private:
   const char* strtab;
@@ -143,8 +143,8 @@ struct soinfo {
 
   size_t nbucket;
   size_t nchain;
-  uint32_t* bucket;
-  uint32_t* chain;
+  unsigned* bucket;
+  unsigned* chain;
 
 #if defined(__mips__) || !defined(__LP64__)
   // This is only used by mips and mips64, but needs to be here for
@@ -179,12 +179,12 @@ struct soinfo {
 
 #if defined(__arm__)
   // ARM EABI section used for stack unwinding.
-  uint32_t* ARM_exidx;
+  unsigned* ARM_exidx;
   size_t ARM_exidx_count;
 #elif defined(__mips__)
-  uint32_t mips_symtabno;
-  uint32_t mips_local_gotno;
-  uint32_t mips_gotsym;
+  unsigned mips_symtabno;
+  unsigned mips_local_gotno;
+  unsigned mips_gotsym;
 #endif
 
   size_t ref_count;
@@ -224,12 +224,10 @@ struct soinfo {
   ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
   const char* get_string(ElfW(Word) index) const;
-  bool can_unload() const;
 
   bool inline has_min_version(uint32_t min_version) const {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
   }
-
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
@@ -260,7 +258,7 @@ struct soinfo {
   friend soinfo* get_libdl_info();
 };
 
-soinfo* get_libdl_info();
+extern soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
