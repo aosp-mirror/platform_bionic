@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "15b23212_9330675d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-04T01:34:18Z",
+      "side": 1,
+      "message": "looks like title is missing (this line is too long for the git commit title)",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35ce56a4_b4ab6068",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -132,6 +149,24 @@
       "writtenOn": "2014-11-04T01:29:21Z",
       "side": 1,
       "message": "if you\u0027re aiming for complete coverage, it looks like you\u0027re missing the not-page-aligned case?",
+      "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15b23212_d3eb8f36",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-04T01:34:18Z",
+      "side": 1,
+      "message": "actually it is already covered by L152",
+      "parentUuid": "156dd243_bdf7cf6b",
       "revId": "4991814b434b9aff8aaa4285d7f003a8d16b9172",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
