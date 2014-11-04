@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75d9ae6e_02fd3a7f",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-04T19:58:58Z",
+      "side": 1,
+      "message": "buildbot says this test is failing: http://go/bionicbb/job/bionic-presubmit/175/testReport/junit/(root)/DlExtTest/ExtInfoUseFdWithInvalidOffset/",
+      "revId": "b12ff20436639713023b534476bea6a28ae5005d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
