@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#define _GNU_SOURCE 1
+#include <math.h>
+
 // This include (and the associated definition of __test_capture_signbit)
 // must be placed before any files that include <cmath> (gtest.h in this case).
 //
@@ -29,7 +32,6 @@
 // sure that we're testing the bionic version of signbit. The C++ libraries
 // are free to reimplement signbit or delegate to compiler builtins if they
 // please.
-#include <math.h>
 
 namespace {
 template<typename T> inline int test_capture_signbit(const T in) {
@@ -45,6 +47,8 @@ template<typename T> inline int test_capture_isinf(const T in) {
   return isinf(in);
 }
 }
+
+#include "math_data_test.h"
 
 #include <gtest/gtest.h>
 
@@ -167,39 +171,30 @@ TEST(math, signbit) {
 }
 
 TEST(math, __fpclassifyd) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+#define __fpclassifyd __fpclassify
+#endif
   ASSERT_EQ(FP_INFINITE, __fpclassifyd(HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassifyd(nan("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyd(1.0));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyd(double_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyd(0.0));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, __fpclassifyf) {
-#if defined(__BIONIC__)
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(HUGE_VALF));
   ASSERT_EQ(FP_NAN, __fpclassifyf(nanf("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyf(1.0f));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyf(float_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyf(0.0f));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, __fpclassifyl) {
-#if defined(__BIONIC__)
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(HUGE_VALL));
   EXPECT_EQ(FP_NAN, __fpclassifyl(nanl("")));
   EXPECT_EQ(FP_NORMAL, __fpclassifyl(1.0L));
   EXPECT_EQ(FP_SUBNORMAL, __fpclassifyl(ldouble_subnormal()));
   EXPECT_EQ(FP_ZERO, __fpclassifyl(0.0L));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, finitef) {
@@ -208,30 +203,27 @@ TEST(math, finitef) {
 }
 
 TEST(math, __isfinite) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+#define __isfinite __finite
+#endif
   ASSERT_TRUE(__isfinite(123.0));
   ASSERT_FALSE(__isfinite(HUGE_VAL));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, __isfinitef) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+#define __isfinitef __finitef
+#endif
   ASSERT_TRUE(__isfinitef(123.0f));
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, __isfinitel) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+#define __isfinitel __finitel
+#endif
   ASSERT_TRUE(__isfinitel(123.0L));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
 }
 
 TEST(math, finite) {
@@ -281,7 +273,7 @@ TEST(math, __isnormal) {
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __isnormal.\n";
 #endif // __BIONIC__
 }
 
@@ -290,7 +282,7 @@ TEST(math, __isnormalf) {
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __isnormalf.\n";
 #endif // __BIONIC__
 }
 
@@ -299,7 +291,7 @@ TEST(math, __isnormall) {
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
 #endif // __BIONIC__
 }
 
@@ -1156,7 +1148,7 @@ TEST(math, gamma_r) {
   ASSERT_DOUBLE_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have gamma_r.\n";
 #endif // __BIONIC__
 }
 
@@ -1166,7 +1158,7 @@ TEST(math, gammaf_r) {
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have gammaf_r.\n";
 #endif // __BIONIC__
 }
 
@@ -1385,4 +1377,74 @@ TEST(math, nextafterl_OpenBSD_bug) {
   ASSERT_TRUE(nextafter(1.0, 0.0) - 1.0 < 0.0);
   ASSERT_TRUE(nextafterf(1.0f, 0.0f) - 1.0f < 0.0f);
   ASSERT_TRUE(nextafterl(1.0L, 0.0L) - 1.0L < 0.0L);
+}
+
+#include "math_cos_intel_data.h"
+TEST(math, cos_intel) {
+  DoMathDataTest<1>(g_cos_intel_data, cos);
+}
+
+#include "math_cosf_intel_data.h"
+TEST(math, cosf_intel) {
+  DoMathDataTest<1>(g_cosf_intel_data, cosf);
+}
+
+#include "math_exp_intel_data.h"
+TEST(math, exp_intel) {
+  DoMathDataTest<1>(g_exp_intel_data, exp);
+}
+
+#include "math_expf_intel_data.h"
+TEST(math, expf_intel) {
+  DoMathDataTest<1>(g_expf_intel_data, expf);
+}
+
+#include "math_log_intel_data.h"
+TEST(math, log_intel) {
+  DoMathDataTest<1>(g_log_intel_data, log);
+}
+
+#include "math_logf_intel_data.h"
+TEST(math, logf_intel) {
+  DoMathDataTest<1>(g_logf_intel_data, logf);
+}
+
+#include "math_pow_intel_data.h"
+TEST(math, pow_intel) {
+  DoMathDataTest<1>(g_pow_intel_data, pow);
+}
+
+#include "math_powf_intel_data.h"
+TEST(math, powf_intel) {
+  DoMathDataTest<1>(g_powf_intel_data, powf);
+}
+
+#include "math_sin_intel_data.h"
+TEST(math, sin_intel) {
+  DoMathDataTest<1>(g_sin_intel_data, sin);
+}
+
+#include "math_sincos_intel_data.h"
+TEST(math, sincos_intel) {
+  DoMathDataTest<1>(g_sincos_intel_data, sincos);
+}
+
+#include "math_sincosf_intel_data.h"
+TEST(math, sincosf_intel) {
+  DoMathDataTest<1>(g_sincosf_intel_data, sincosf);
+}
+
+#include "math_sinf_intel_data.h"
+TEST(math, sinf_intel) {
+  DoMathDataTest<1>(g_sinf_intel_data, sinf);
+}
+
+#include "math_tan_intel_data.h"
+TEST(math, tan_intel) {
+  DoMathDataTest<1>(g_tan_intel_data, tan);
+}
+
+#include "math_tanf_intel_data.h"
+TEST(math, tanf_intel) {
+  DoMathDataTest<1>(g_tanf_intel_data, tanf);
 }

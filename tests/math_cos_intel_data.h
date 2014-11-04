@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  double expected;
-  double call_data;
-} cos_intel_data_t;
-
-static cos_intel_data_t g_cos_intel_data[] = {
+static data_1_1_t<double, double> g_cos_intel_data[] = {
   { // Entry 0
     0x1.c1a27ae836f128000000000000504e9bp-1,
     0x1.feb1f7920e248p-2
@@ -5632,15 +5620,3 @@ static cos_intel_data_t g_cos_intel_data[] = {
     -0.0
   },
 };
-#endif // __BIONIC__
-
-TEST(math_cos, cos_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_cos_intel_data)/sizeof(cos_intel_data_t); i++) {
-    EXPECT_DOUBLE_EQ(g_cos_intel_data[i].expected, cos(g_cos_intel_data[i].call_data)) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}
