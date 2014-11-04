@@ -36,12 +36,6 @@ class LinkedList {
     clear();
   }
 
-  LinkedList(LinkedList&& that) {
-    this->head_ = that.head_;
-    this->tail_ = that.tail_;
-    that.head_ = that.tail_ = nullptr;
-  }
-
   void push_front(T* const element) {
     LinkedListEntry<T>* new_entry = Allocator::alloc();
     new_entry->next = head_;
@@ -144,12 +138,6 @@ class LinkedList {
       }
     }
     return false;
-  }
-
-  static LinkedList make_list(T* const element) {
-    LinkedList<T, Allocator> one_element_list;
-    one_element_list.push_back(element);
-    return one_element_list;
   }
 
  private:
