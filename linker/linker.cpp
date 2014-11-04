@@ -987,6 +987,11 @@ static soinfo* find_library(const char* name, int rtld_flags, const android_dlex
 }
 
 static void soinfo_unload(soinfo* si) {
+  if (!si->can_unload()) {
+    TRACE("not unloading '%s' - the binary is flagged with NODELETE", si->name);
+    return;
+  }
+
   if (si->ref_count == 1) {
     TRACE("unloading '%s'", si->name);
     si->CallDestructors();
@@ -1045,7 +1050,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 }
 
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
-  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NOLOAD)) != 0) {
+  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
   }
@@ -1808,6 +1813,9 @@ const char* soinfo::get_string(ElfW(Word) index) const {
   return strtab + index;
 }
 
+bool soinfo::can_unload() const {
+  return (rtld_flags & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
+}
 /* Force any of the closed stdin, stdout and stderr to be associated with
    /dev/null. */
 static int nullify_closed_stdio() {
@@ -2111,9 +2119,13 @@ bool soinfo::PrelinkImage() {
         if ((d->d_un.d_val & DF_1_GLOBAL) != 0) {
           rtld_flags |= RTLD_GLOBAL;
         }
+
+        if ((d->d_un.d_val & DF_1_NODELETE) != 0) {
+          rtld_flags |= RTLD_NODELETE;
+        }
         // TODO: Implement other flags
 
-        if ((d->d_un.d_val & ~(DF_1_NOW | DF_1_GLOBAL)) != 0) {
+        if ((d->d_un.d_val & ~(DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)) != 0) {
           DL_WARN("Unsupported flags DT_FLAGS_1=%p", reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
