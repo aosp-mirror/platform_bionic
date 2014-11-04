@@ -29,6 +29,23 @@
 
 #include "TemporaryFile.h"
 
+TEST(stdio, flockfile_18208568_stderr) {
+  // Check that we have a _recursive_ mutex for flockfile.
+  flockfile(stderr);
+  feof(stderr); // We don't care about the result, but this needs to take the lock.
+  funlockfile(stderr);
+}
+
+TEST(stdio, flockfile_18208568_regular) {
+  // We never had a bug for streams other than stdin/stdout/stderr, but test anyway.
+  FILE* fp = fopen("/dev/null", "w");
+  ASSERT_TRUE(fp != NULL);
+  flockfile(fp);
+  feof(fp);
+  funlockfile(fp);
+  fclose(fp);
+}
+
 TEST(stdio, tmpfile_fileno_fprintf_rewind_fgets) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);
