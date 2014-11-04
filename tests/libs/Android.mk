@@ -121,35 +121,6 @@ module := libtest_simple
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
-# Library used by dlfcn nodelete tests
-# -----------------------------------------------------------------------------
-libtest_nodelete_1_src_files := \
-    dlopen_nodelete_1.cpp
-
-module := libtest_nodelete_1
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# Library used by dlfcn nodelete tests
-# -----------------------------------------------------------------------------
-libtest_nodelete_2_src_files := \
-    dlopen_nodelete_2.cpp
-
-module := libtest_nodelete_2
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
-# Library used by dlfcn nodelete tests
-# -----------------------------------------------------------------------------
-libtest_nodelete_dt_flags_1_src_files := \
-    dlopen_nodelete_dt_flags_1.cpp
-
-libtest_nodelete_dt_flags_1_ldflags := -Wl,-z,nodelete
-
-module := libtest_nodelete_dt_flags_1
-include $(LOCAL_PATH)/Android.build.testlib.mk
-
-# -----------------------------------------------------------------------------
 # Libraries used by dlfcn tests to verify correct load order:
 # libtest_check_order_2_right.so
 # -----------------------------------------------------------------------------

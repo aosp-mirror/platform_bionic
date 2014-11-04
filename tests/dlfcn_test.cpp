@@ -232,15 +232,10 @@ TEST(dlfcn, dlopen_check_rtld_global) {
   ASSERT_TRUE(sym == nullptr);
 
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_GLOBAL);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
   sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   ASSERT_TRUE(reinterpret_cast<bool (*)(void)>(sym)());
   dlclose(handle);
-
-  // RTLD_GLOBAL implies RTLD_NODELETE, let's check that
-  void* sym_after_dlclose = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
-  ASSERT_EQ(sym, sym_after_dlclose);
 }
 
 // libtest_with_dependency_loop.so -> libtest_with_dependency_loop_a.so ->
@@ -267,81 +262,6 @@ TEST(dlfcn, dlopen_check_loop) {
   dlclose(handle);
 #endif
 }
-
-TEST(dlfcn, dlopen_nodelete) {
-  static bool is_unloaded = false;
-
-  void* handle = dlopen("libtest_nodelete_1.so", RTLD_NOW | RTLD_NODELETE);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-  void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_1_set_unload_flag_ptr"));
-  ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
-  set_unload_flag_ptr(&is_unloaded);
-
-  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
-  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
-  ASSERT_EQ(1729U, *taxicab_number);
-  *taxicab_number = 2;
-
-  dlclose(handle);
-  ASSERT_TRUE(!is_unloaded);
-
-  uint32_t* taxicab_number_after_dlclose = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
-  ASSERT_EQ(taxicab_number_after_dlclose, taxicab_number);
-  ASSERT_EQ(2U, *taxicab_number_after_dlclose);
-
-
-  handle = dlopen("libtest_nodelete_1.so", RTLD_NOW);
-  uint32_t* taxicab_number2 = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
-  ASSERT_EQ(taxicab_number2, taxicab_number);
-
-  ASSERT_EQ(2U, *taxicab_number2);
-
-  dlclose(handle);
-  ASSERT_TRUE(!is_unloaded);
-}
-
-TEST(dlfcn, dlopen_nodelete_on_second_dlopen) {
-  static bool is_unloaded = false;
-
-  void* handle = dlopen("libtest_nodelete_2.so", RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-  void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_2_set_unload_flag_ptr"));
-  ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
-  set_unload_flag_ptr(&is_unloaded);
-
-  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_2_taxicab_number"));
-  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
-
-  ASSERT_EQ(1729U, *taxicab_number);
-  *taxicab_number = 2;
-
-  // This RTLD_NODELETE should be ignored
-  void* handle1 = dlopen("libtest_nodelete_2.so", RTLD_NOW | RTLD_NODELETE);
-  ASSERT_TRUE(handle1 != nullptr) << dlerror();
-  ASSERT_EQ(handle, handle1);
-
-  dlclose(handle1);
-  dlclose(handle);
-
-  ASSERT_TRUE(is_unloaded);
-}
-
-TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
-  static bool is_unloaded = false;
-
-  void* handle = dlopen("libtest_nodelete_dt_flags_1.so", RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-  void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_dt_flags_1_set_unload_flag_ptr"));
-  ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
-  set_unload_flag_ptr(&is_unloaded);
-
-  dlclose(handle);
-  ASSERT_TRUE(!is_unloaded);
-}
-
 
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
