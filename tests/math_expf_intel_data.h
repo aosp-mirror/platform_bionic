@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  float expected;
-  float call_data;
-} expf_intel_data_t;
-
-static expf_intel_data_t g_expf_intel_data[] = {
+static data_1_1_t<float, float> g_expf_intel_data[] = {
   { // Entry 0
     0x1.e0fabf081222780d74c00fda30aa3943p-1,
     -0x1.000006p-4
@@ -1428,15 +1416,3 @@ static expf_intel_data_t g_expf_intel_data[] = {
     -0x1.5d58a0p6
   },
 };
-#endif // __BIONIC__
-
-TEST(math_expf, expf_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_expf_intel_data)/sizeof(expf_intel_data_t); i++) {
-    EXPECT_FLOAT_EQ(g_expf_intel_data[i].expected, expf(g_expf_intel_data[i].call_data)) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}
