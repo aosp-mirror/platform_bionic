@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  float expected;
-  float call_data;
-} tanf_intel_data_t;
-
-static tanf_intel_data_t g_tanf_intel_data[] = {
+static data_1_1_t<float, float> g_tanf_intel_data[] = {
   { // Entry 0
     -0x1.00000000001555555555577777777777p-21,
     -0x1.p-21
@@ -4448,15 +4436,3 @@ static tanf_intel_data_t g_tanf_intel_data[] = {
     -0.0f
   },
 };
-#endif // __BIONIC__
-
-TEST(math_tanf, tanf_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_tanf_intel_data)/sizeof(tanf_intel_data_t); i++) {
-    EXPECT_FLOAT_EQ(g_tanf_intel_data[i].expected, tanf(g_tanf_intel_data[i].call_data)) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}
