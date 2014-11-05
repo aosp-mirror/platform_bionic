@@ -814,10 +814,18 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     DL_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return nullptr;
   }
+  if (file_offset < 0) {
+    DL_ERR("file offset for the library \"%s\" is negative: %" PRId64, name, file_offset);
+    return nullptr;
+  }
 
   struct stat file_stat;
   if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
     DL_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
+    return nullptr;
+  }
+  if (file_offset >= file_stat.st_size) {
+    DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name, file_offset, file_stat.st_size);
     return nullptr;
   }
 
