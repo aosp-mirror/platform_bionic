@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  float expected;
-  float call_data;
-} cosf_intel_data_t;
-
-static cosf_intel_data_t g_cosf_intel_data[] = {
+static data_1_1_t<float, float> g_cosf_intel_data[] = {
   { // Entry 0
     0x1.bc7b66ffb7689d646dd1af83e9661d2dp-1,
     -0x1.09ebacp-1
@@ -4344,15 +4332,3 @@ static cosf_intel_data_t g_cosf_intel_data[] = {
     -0.0f
   },
 };
-#endif // __BIONIC__
-
-TEST(math_cosf, cosf_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_cosf_intel_data)/sizeof(cosf_intel_data_t); i++) {
-    EXPECT_FLOAT_EQ(g_cosf_intel_data[i].expected, cosf(g_cosf_intel_data[i].call_data)) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}

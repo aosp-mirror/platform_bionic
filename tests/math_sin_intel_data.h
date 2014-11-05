@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  double expected;
-  double call_data;
-} sin_intel_data_t;
-
-static sin_intel_data_t g_sin_intel_data[] = {
+static data_1_1_t<double, double> g_sin_intel_data[] = {
   { // Entry 0
     0x1.9259e3708bd39ffffffffffffff1bdbep-5,
     0x1.9283586503fe0p-5
@@ -5784,15 +5772,3 @@ static sin_intel_data_t g_sin_intel_data[] = {
     -0.0
   },
 };
-#endif // __BIONIC__
-
-TEST(math_sin, sin_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_sin_intel_data)/sizeof(sin_intel_data_t); i++) {
-    EXPECT_DOUBLE_EQ(g_sin_intel_data[i].expected, sin(g_sin_intel_data[i].call_data)) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}

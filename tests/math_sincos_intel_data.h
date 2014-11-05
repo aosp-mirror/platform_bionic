@@ -14,22 +14,7 @@
  * limitations under the License.
  */
 
-#define _GNU_SOURCE 1
-
-#include <math.h>
-
-#include <fenv.h>
-
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-typedef struct {
-  double sin_expected;
-  double cos_expected;
-  double call_data;
-} sincos_intel_data_t;
-
-static sincos_intel_data_t g_sincos_intel_data[] = {
+static data_2_1_t<double, double, double> g_sincos_intel_data[] = {
   { // Entry 0
     -0x1.ce9a94ea9c2ad95597b1193b2300d19ap-1,
     -0x1.b6d3057776dc38335b16745f2d756ab6p-2,
@@ -4776,18 +4761,3 @@ static sincos_intel_data_t g_sincos_intel_data[] = {
     -0.0,
   },
 };
-#endif // __BIONIC__
-
-TEST(math_sincos, sincos_intel) {
-#if defined(__BIONIC__)
-  fesetenv(FE_DFL_ENV);
-  for (size_t i = 0; i < sizeof(g_sincos_intel_data)/sizeof(sincos_intel_data_t); i++) {
-   double dsin, dcos;
-   sincos(g_sincos_intel_data[i].call_data, &dsin, &dcos);
-   EXPECT_DOUBLE_EQ(g_sincos_intel_data[i].sin_expected, dsin) << "Failed on element " << i;
-   EXPECT_DOUBLE_EQ(g_sincos_intel_data[i].cos_expected, dcos) << "Failed on element " << i;
-  }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
-}
