@@ -49,8 +49,8 @@ int	__sdidinit;
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define	std(flags, file) \
-	{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
-	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0},0,0}
+	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
+	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0,0}
 
 				/* the usual - (stdin + stdout + stderr) */
 static FILE usual[FOPEN_MAX - 3];
