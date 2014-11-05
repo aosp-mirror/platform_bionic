@@ -784,7 +784,6 @@ endif
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -Wno-missing-field-initializers \
     -Wno-sign-compare \
     -Wno-uninitialized \
     -Wno-unused-parameter \
