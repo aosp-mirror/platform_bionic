@@ -123,8 +123,8 @@ void freelocale(locale_t l) {
 }
 
 locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
-  // Is 'category_mask' valid?
-  if ((category_mask & ~LC_ALL_MASK) != 0) {
+  // Are 'category_mask' and 'locale_name' valid?
+  if ((category_mask & ~LC_ALL_MASK) != 0 || locale_name == NULL) {
     errno = EINVAL;
     return NULL;
   }
