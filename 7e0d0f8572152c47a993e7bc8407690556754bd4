@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f533de7c_b6f6e0a1",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-05T02:16:20Z",
+      "side": 1,
+      "message": "(cferris persuaded me that i\u0027ve been testing too much in each test. i\u0027m going to try to improve them -- probably just by breaking them up and naming the pieces -- as i touch them.)",
+      "revId": "7e0d0f8572152c47a993e7bc8407690556754bd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f533de7c_36ebb0b6",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-05T02:16:20Z",
+      "side": 1,
+      "message": "this is the new test.",
+      "revId": "7e0d0f8572152c47a993e7bc8407690556754bd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f533de7c_76f138a8",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-05T02:16:20Z",
+      "side": 1,
+      "message": "this isn\u0027t actually a new test. i just moved all the failure tests before the success test.",
+      "revId": "7e0d0f8572152c47a993e7bc8407690556754bd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
