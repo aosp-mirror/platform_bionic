@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15c152c3_29298926",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T19:21:56Z",
+      "side": 1,
+      "message": "these c*l functions are all defined in terms of others, so they\u0027re actually portable between ld64 and ld128.",
+      "revId": "b8ee16f1dc1253e3f1c99b4a6b9df249515cd919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
