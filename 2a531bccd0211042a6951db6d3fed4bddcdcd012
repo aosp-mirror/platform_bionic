@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d54eda55_b70a1010",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T23:40:22Z",
+      "side": 1,
+      "message": "I assume no extern is intentional, correct?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 3
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_573d64b0",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T23:40:22Z",
+      "side": 1,
+      "message": "Do you need to include xlocale.h for locale_t or locale.h?",
+      "range": {
+        "startLine": 115,
+        "startChar": 72,
+        "endLine": 115,
+        "endChar": 80
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5491e4e_2610ae70",
+        "filename": "tests/strings_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T23:40:22Z",
+      "side": 1,
+      "message": "Should you include local.h for newlocale?",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 24
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_7d5177a2",
+        "filename": "tests/strings_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T23:40:22Z",
+      "side": 1,
+      "message": "Do you want to change this to EXPECT or have add something that restores the locale on failure?",
+      "range": {
+        "startLine": 42,
+        "startChar": 2,
+        "endLine": 42,
+        "endChar": 8
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
