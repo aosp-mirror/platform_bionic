@@ -16,6 +16,14 @@ arch = re.sub(r'.*/linux-x86/([^/]+)/.*', r'\1', toolchain)
 if arch == 'aarch64':
   arch = 'arm64'
 
+def GetSymbolsFromTxt(txt_file):
+  symbols = set()
+  f = open(txt_file, 'r')
+  for line in f.read().splitlines():
+    symbols.add(line)
+  f.close()
+  return symbols
+
 def GetSymbolsFromSo(so_file):
   # Example readelf output:
   #   264: 0001623c     4 FUNC    GLOBAL DEFAULT    8 cabsf
@@ -75,6 +83,7 @@ glibc_to_bionic_names = {
 
 glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
 bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
+posix = GetSymbolsFromTxt(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'posix-2013.txt'))
 ndk_ignored = GetNdkIgnored()
 
 glibc = map(MangleGlibcNameToBionic, glibc)
@@ -187,6 +196,11 @@ if not only_unwanted:
   print
   print 'bionic:'
   for symbol in sorted(bionic):
+    print symbol
+
+  print
+  print 'in posix but not bionic:'
+  for symbol in sorted(posix.difference(bionic)):
     print symbol
 
   print
