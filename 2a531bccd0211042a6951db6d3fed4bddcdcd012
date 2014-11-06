@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f5491e4e_26c8ae5d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T23:48:37Z",
+      "side": 1,
+      "message": "yeah, annoyingly we currently have a mix. since these really belong in \u003cstrings.h\u003e i just copied them across. one day we should just remove all the \"extern\"s.",
+      "parentUuid": "d54eda55_b70a1010",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 3
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d54eda55_573d64b0",
         "filename": "libc/include/wchar.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-11-06T23:40:22Z",
       "side": 1,
       "message": "Do you need to include xlocale.h for locale_t or locale.h?",
+      "range": {
+        "startLine": 115,
+        "startChar": 72,
+        "endLine": 115,
+        "endChar": 80
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5491e4e_e6f6a6a2",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T23:48:37Z",
+      "side": 1,
+      "message": "oops. since there were already _l functions in here i just assumed the #includes were correct. they\u0027re probably getting them transitively, but, yes, we should be explicit.",
+      "parentUuid": "d54eda55_573d64b0",
       "range": {
         "startLine": 115,
         "startChar": 72,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "15c152c3_3d337f6b",
+        "filename": "tests/strings_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T23:48:37Z",
+      "side": 1,
+      "message": "yes. god knows how this was pulling in \u003clocale.h\u003e!",
+      "parentUuid": "f5491e4e_2610ae70",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 24
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15c152c3_7d5177a2",
         "filename": "tests/strings_test.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2014-11-06T23:40:22Z",
       "side": 1,
       "message": "Do you want to change this to EXPECT or have add something that restores the locale on failure?",
+      "range": {
+        "startLine": 42,
+        "startChar": 2,
+        "endLine": 42,
+        "endChar": 8
+      },
+      "revId": "2a531bccd0211042a6951db6d3fed4bddcdcd012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_d7e074a7",
+        "filename": "tests/strings_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T23:48:37Z",
+      "side": 1,
+      "message": "newlocale doesn\u0027t set the locale; uselocale does that.",
+      "parentUuid": "15c152c3_7d5177a2",
       "range": {
         "startLine": 42,
         "startChar": 2,
