@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "3572d691_ba1049f5",
+        "filename": "tests/complex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T19:32:57Z",
+      "side": 1,
+      "message": "see L19.",
+      "parentUuid": "3572d691_1a4dbd35",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 40
+      },
+      "revId": "b8ee16f1dc1253e3f1c99b4a6b9df249515cd919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "156f92ad_d62ec22f",
         "filename": "tests/complex_test.cpp",
         "patchSetId": 1
@@ -53,6 +77,30 @@
       "writtenOn": "2014-11-06T19:25:59Z",
       "side": 1,
       "message": "Are these always guaranteed to be exact, or will we have some failures due to inexact values returned?",
+      "range": {
+        "startLine": 29,
+        "startChar": 2,
+        "endLine": 29,
+        "endChar": 11
+      },
+      "revId": "b8ee16f1dc1253e3f1c99b4a6b9df249515cd919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_691421b3",
+        "filename": "tests/complex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T19:32:57Z",
+      "side": 1,
+      "message": "it\u0027s my belief that these should all be exact.",
+      "parentUuid": "156f92ad_d62ec22f",
       "range": {
         "startLine": 29,
         "startChar": 2,
