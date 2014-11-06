@@ -15,38 +15,24 @@
  */
 
 #include <gtest/gtest.h>
-#include <signal.h>
-#include <string.h>
-#include <stdarg.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <malloc.h>
-#include <fcntl.h>
-#include <sys/prctl.h>
+#include "BionicDeathTest.h"
 
-// We have to say "DeathTest" here so gtest knows to run this test (which exits)
-// in its own process. Unfortunately, the C preprocessor doesn't give us an
-// easy way to concatenate strings, so we need to use the complicated method
-// below. *sigh*
+#include <fcntl.h>
+#include <malloc.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+// Fortify test code needs to run multiple times, so TEST_NAME macro is used to
+// distinguish different tests. TEST_NAME is defined in compilation command.
 #define DEATHTEST_PASTER(name) name##_DeathTest
 #define DEATHTEST_EVALUATOR(name) DEATHTEST_PASTER(name)
 #define DEATHTEST DEATHTEST_EVALUATOR(TEST_NAME)
 
-class DEATHTEST : public testing::Test {
- protected:
-  virtual void SetUp() {
-    old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
-    // Suppress debuggerd stack traces. Too slow.
-    prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-  }
-
-  virtual void TearDown() {
-    prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0);
-  }
- private:
-  int old_dumpable_;
-};
+class DEATHTEST : public BionicDeathTest {};
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE == 2
 struct foo {
@@ -60,7 +46,6 @@ struct foo {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, stpncpy_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   int copy_amt = atoi("11");
   ASSERT_EXIT(stpncpy(myfoo.a, "01234567890", copy_amt),
@@ -72,7 +57,6 @@ TEST_F(DEATHTEST, stpncpy_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, stpncpy2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memset(&myfoo, 0, sizeof(myfoo));
   myfoo.one[0] = 'A'; // not null terminated string
@@ -85,7 +69,6 @@ TEST_F(DEATHTEST, stpncpy2_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncpy_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   int copy_amt = atoi("11");
   ASSERT_EXIT(strncpy(myfoo.a, "01234567890", copy_amt),
@@ -97,7 +80,6 @@ TEST_F(DEATHTEST, strncpy_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncpy2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memset(&myfoo, 0, sizeof(myfoo));
   myfoo.one[0] = 'A'; // not null terminated string
@@ -110,7 +92,6 @@ TEST_F(DEATHTEST, strncpy2_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
@@ -123,7 +104,6 @@ TEST_F(DEATHTEST, sprintf_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   ASSERT_EXIT(sprintf(myfoo.a, "0123456789"),
               testing::KilledBySignal(SIGABRT), "");
@@ -145,12 +125,10 @@ static int vsprintf_helper2(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsprintf_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsprintf_helper2("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, vsprintf2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsprintf_helper2("0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 #endif
@@ -171,12 +149,10 @@ static int vsnprintf_helper2(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsnprintf_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsnprintf_helper2("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, vsnprintf2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsnprintf_helper2("0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 #endif
@@ -187,7 +163,6 @@ TEST_F(DEATHTEST, vsnprintf2_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, stpcpy_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   char* src = strdup("");
   ASSERT_EXIT(stpcpy(myfoo.empty, src),
@@ -205,7 +180,6 @@ TEST_F(DEATHTEST, stpcpy_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strcpy_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   char* src = strdup("");
   ASSERT_EXIT(strcpy(myfoo.empty, src),
@@ -223,7 +197,6 @@ TEST_F(DEATHTEST, strcpy_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strcpy2_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   char* src = strdup("1");
   ASSERT_EXIT(strcpy(myfoo.empty, src),
@@ -241,7 +214,6 @@ TEST_F(DEATHTEST, strcpy2_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strcpy3_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   char* src = strdup("12");
   ASSERT_EXIT(strcpy(myfoo.one, src),
@@ -258,7 +230,6 @@ TEST_F(DEATHTEST, strcpy3_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strchr_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
   myfoo.b[0] = '\0';
@@ -275,7 +246,6 @@ TEST_F(DEATHTEST, strchr_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strrchr_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.a, "0123456789", 10);
   memcpy(myfoo.b, "01234", 6);
@@ -292,7 +262,6 @@ TEST_F(DEATHTEST, strrchr_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcpy_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   strcpy(myfoo.a, "01");
   size_t n = strlen(myfoo.a);
@@ -309,7 +278,6 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcat_fortified2) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   strcpy(myfoo.a, "01");
   myfoo.one[0] = '\0';
@@ -326,7 +294,6 @@ TEST_F(DEATHTEST, strlcat_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncat_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   size_t n = atoi("10"); // avoid compiler optimizations
   strncpy(myfoo.a, "012345678", n);
@@ -338,7 +305,6 @@ TEST_F(DEATHTEST, strncat_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncat2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   myfoo.a[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
@@ -347,7 +313,6 @@ TEST_F(DEATHTEST, strncat2_fortified2) {
 #endif
 
 TEST_F(DEATHTEST, strncat3_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
   myfoo.b[0] = '\0';
@@ -359,7 +324,6 @@ TEST_F(DEATHTEST, strncat3_fortified2) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strcat_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char src[11];
   strcpy(src, "0123456789");
   foo myfoo;
@@ -369,7 +333,6 @@ TEST_F(DEATHTEST, strcat_fortified2) {
 #endif
 
 TEST_F(DEATHTEST, strcat2_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
   myfoo.b[0] = '\0';
@@ -377,7 +340,6 @@ TEST_F(DEATHTEST, strcat2_fortified2) {
 }
 
 TEST_F(DEATHTEST, snprintf_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   strcpy(myfoo.a, "012345678");
   size_t n = strlen(myfoo.a) + 2;
@@ -385,7 +347,6 @@ TEST_F(DEATHTEST, snprintf_fortified2) {
 }
 
 TEST_F(DEATHTEST, bzero_fortified2) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   foo myfoo;
   memcpy(myfoo.b, "0123456789", sizeof(myfoo.b));
   size_t n = atoi("11");
@@ -397,7 +358,6 @@ TEST_F(DEATHTEST, bzero_fortified2) {
 // multibyte target where we over fill (should fail)
 TEST_F(DEATHTEST, strcpy_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char *orig = strdup("0123456789");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
@@ -410,7 +370,6 @@ TEST_F(DEATHTEST, strcpy_fortified) {
 // zero sized target with "\0" source (should fail)
 TEST_F(DEATHTEST, strcpy2_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
@@ -423,7 +382,6 @@ TEST_F(DEATHTEST, strcpy2_fortified) {
 // zero sized target with longer source (should fail)
 TEST_F(DEATHTEST, strcpy3_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[0];
   char *orig = strdup("1");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
@@ -436,7 +394,6 @@ TEST_F(DEATHTEST, strcpy3_fortified) {
 // one byte target with longer source (should fail)
 TEST_F(DEATHTEST, strcpy4_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   char *orig = strdup("12");
   ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
@@ -448,7 +405,6 @@ TEST_F(DEATHTEST, strcpy4_fortified) {
 
 TEST_F(DEATHTEST, strlen_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%zd", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
@@ -459,7 +415,6 @@ TEST_F(DEATHTEST, strlen_fortified) {
 
 TEST_F(DEATHTEST, strchr_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
@@ -470,7 +425,6 @@ TEST_F(DEATHTEST, strchr_fortified) {
 
 TEST_F(DEATHTEST, strrchr_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
@@ -481,7 +435,6 @@ TEST_F(DEATHTEST, strrchr_fortified) {
 
 TEST_F(DEATHTEST, strlcpy_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
   strcpy(bufa, "01234567890123");
@@ -494,7 +447,6 @@ TEST_F(DEATHTEST, strlcpy_fortified) {
 
 TEST_F(DEATHTEST, strlcat_fortified) {
 #if defined(__BIONIC__)
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
   bufb[0] = '\0';
@@ -507,7 +459,6 @@ TEST_F(DEATHTEST, strlcat_fortified) {
 }
 
 TEST_F(DEATHTEST, sprintf_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
@@ -518,7 +469,6 @@ TEST_F(DEATHTEST, sprintf_fortified) {
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char* buf = (char *) malloc(10);
   char source_buf[11];
   memcpy(source_buf, "1234567890", 11);
@@ -528,7 +478,6 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
 #endif
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[5];
   ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
 }
@@ -545,12 +494,10 @@ static int vsprintf_helper(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsprintf_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, vsprintf2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
@@ -567,17 +514,14 @@ static int vsnprintf_helper(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsnprintf_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsnprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, vsnprintf2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(vsnprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, strncat_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   size_t n = atoi("10"); // avoid compiler optimizations
   strncpy(buf, "012345678", n);
@@ -585,7 +529,6 @@ TEST_F(DEATHTEST, strncat_fortified) {
 }
 
 TEST_F(DEATHTEST, strncat2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   buf[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
@@ -593,7 +536,6 @@ TEST_F(DEATHTEST, strncat2_fortified) {
 }
 
 TEST_F(DEATHTEST, strcat_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char src[11];
   strcpy(src, "0123456789");
   char buf[10];
@@ -602,7 +544,6 @@ TEST_F(DEATHTEST, strcat_fortified) {
 }
 
 TEST_F(DEATHTEST, memmove_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[20];
   strcpy(buf, "0123456789");
   size_t n = atoi("10");
@@ -610,7 +551,6 @@ TEST_F(DEATHTEST, memmove_fortified) {
 }
 
 TEST_F(DEATHTEST, memcpy_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[10];
   char bufb[10];
   strcpy(bufa, "012345678");
@@ -619,7 +559,6 @@ TEST_F(DEATHTEST, memcpy_fortified) {
 }
 
 TEST_F(DEATHTEST, stpncpy_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
   strcpy(bufa, "01234567890123");
@@ -628,7 +567,6 @@ TEST_F(DEATHTEST, stpncpy_fortified) {
 }
 
 TEST_F(DEATHTEST, stpncpy2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char dest[11];
   char src[10];
   memcpy(src, "0123456789", sizeof(src)); // src is not null terminated
@@ -636,7 +574,6 @@ TEST_F(DEATHTEST, stpncpy2_fortified) {
 }
 
 TEST_F(DEATHTEST, strncpy_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
   strcpy(bufa, "01234567890123");
@@ -646,7 +583,6 @@ TEST_F(DEATHTEST, strncpy_fortified) {
 
 
 TEST_F(DEATHTEST, strncpy2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char dest[11];
   char src[10];
   memcpy(src, "0123456789", sizeof(src)); // src is not null terminated
@@ -654,7 +590,6 @@ TEST_F(DEATHTEST, strncpy2_fortified) {
 }
 
 TEST_F(DEATHTEST, snprintf_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char bufa[15];
   char bufb[10];
   strcpy(bufa, "0123456789");
@@ -663,7 +598,6 @@ TEST_F(DEATHTEST, snprintf_fortified) {
 }
 
 TEST_F(DEATHTEST, bzero_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   size_t n = atoi("11");
@@ -671,13 +605,11 @@ TEST_F(DEATHTEST, bzero_fortified) {
 }
 
 TEST_F(DEATHTEST, umask_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   mode_t mask = atoi("1023");  // 01777 in octal
   ASSERT_EXIT(umask(mask), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, recv_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   size_t data_len = atoi("11"); // suppress compiler optimizations
   char buf[10];
   ASSERT_EXIT(recv(0, buf, data_len, 0), testing::KilledBySignal(SIGABRT), "");
@@ -685,7 +617,6 @@ TEST_F(DEATHTEST, recv_fortified) {
 
 TEST_F(DEATHTEST, FD_ISSET_fortified) {
 #if defined(__BIONIC__) // glibc catches this at compile-time.
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   fd_set set;
   memset(&set, 0, sizeof(set));
   ASSERT_EXIT(FD_ISSET(-1, &set), testing::KilledBySignal(SIGABRT), "");
@@ -693,7 +624,6 @@ TEST_F(DEATHTEST, FD_ISSET_fortified) {
 }
 
 TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   fd_set* set = (fd_set*) buf;
   ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
@@ -703,14 +633,12 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
 static void FD_ZERO_function(fd_set* s) { FD_ZERO(s); }
 
 TEST_F(DEATHTEST, FD_ZERO_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   fd_set* set = (fd_set*) buf;
   ASSERT_EXIT(FD_ZERO_function(set), testing::KilledBySignal(SIGABRT), "");
 }
 
 TEST_F(DEATHTEST, read_fortified) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
   int fd = open("/dev/null", O_RDONLY);

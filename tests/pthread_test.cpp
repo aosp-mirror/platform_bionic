@@ -16,6 +16,10 @@
 
 #include <gtest/gtest.h>
 
+#include "private/ScopeGuard.h"
+#include "BionicDeathTest.h"
+#include "ScopedSignalHandler.h"
+
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -27,8 +31,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "private/ScopeGuard.h"
-#include "ScopedSignalHandler.h"
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -302,9 +304,11 @@ struct TestBug37410 {
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
-TEST(pthread_DeathTest, pthread_bug_37410) {
+
+class pthread_DeathTest : public BionicDeathTest {};
+
+TEST_F(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(TestBug37410::main(), ::testing::ExitedWithCode(0), "");
 }
 
