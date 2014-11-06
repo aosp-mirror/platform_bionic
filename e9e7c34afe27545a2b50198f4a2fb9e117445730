@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3572d691_1757569a",
+        "filename": "tests/BionicDeathTest.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-06T19:05:32Z",
+      "side": 1,
+      "message": "blank line above private:.",
+      "revId": "e9e7c34afe27545a2b50198f4a2fb9e117445730",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
