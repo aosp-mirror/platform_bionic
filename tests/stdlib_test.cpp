@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "BionicDeathTest.h"
 #include "TemporaryFile.h"
 
 #include <errno.h>
@@ -168,9 +169,11 @@ static void TestBug57421_main() {
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
-TEST(stdlib_DeathTest, getenv_after_main_thread_exits) {
+
+class stdlib_DeathTest : public BionicDeathTest {};
+
+TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   // https://code.google.com/p/android/issues/detail?id=57421
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 

@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
 #include "TemporaryFile.h"
 
@@ -22,10 +23,11 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdint.h>
-#include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
+
 
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
@@ -463,7 +465,8 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   ASSERT_EQ(NULL, result);
 }
 
-TEST(unistd_DeathTest, abort) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+class unistd_DeathTest : public BionicDeathTest {};
+
+TEST_F(unistd_DeathTest, abort) {
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
 }
