@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "357f3623_a70d3156",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T02:14:18Z",
+      "side": 1,
+      "message": "It seems bad to have this code copy-pasted across 4 different files.\n\nWould it be better to have a class BionicDeathTest that does this? If you don\u0027t want all of the death tests to look like they have the same parent, you could add a line like so:\n\nclass stack_protecter_DeathTest : public BionicDeathTest { };\n\nThen if we need to add any special setup for all death tests, we get it in one place.",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 2
+      },
+      "revId": "71ddcb75bba7dbbd283d9e15df2e72b7006873ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
