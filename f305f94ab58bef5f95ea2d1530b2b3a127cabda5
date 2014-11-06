@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15c152c3_4cadf3f5",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T21:09:53Z",
+      "side": 1,
+      "message": "Just a nit, but naming the variable doesn\u0027t match the rest of the declarations.",
+      "range": {
+        "startLine": 117,
+        "startChar": 30,
+        "endLine": 117,
+        "endChar": 35
+      },
+      "revId": "f305f94ab58bef5f95ea2d1530b2b3a127cabda5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_2c54f74b",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-06T21:09:53Z",
+      "side": 1,
+      "message": "It might be worth a comment somewhere describing the repetition. I assume that you are verifying that you always get the same values given the same seed.",
+      "range": {
+        "startLine": 37,
+        "startChar": 2,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "f305f94ab58bef5f95ea2d1530b2b3a127cabda5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
