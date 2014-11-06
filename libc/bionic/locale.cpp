@@ -29,6 +29,10 @@
 #include <locale.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
+#include <wchar.h>
 
 #include "private/bionic_macros.h"
 
@@ -170,4 +174,48 @@ locale_t uselocale(locale_t new_locale) {
   }
 
   return old_locale;
+}
+
+int strcasecmp_l(const char* s1, const char* s2, locale_t) {
+  return strcasecmp(s1, s2);
+}
+
+int strcoll_l(const char* s1, const char* s2, locale_t) {
+  return strcoll(s1, s2);
+}
+
+char* strerror_l(int error, locale_t) {
+  return strerror(error);
+}
+
+size_t strftime_l(char* s, size_t max, const char* format, const struct tm* tm, locale_t) {
+  return strftime(s, max, format, tm);
+}
+
+int strncasecmp_l(const char* s1, const char* s2, size_t n, locale_t) {
+  return strncasecmp(s1, s2, n);
+}
+
+long double strtold_l(const char* s, char** end_ptr, locale_t) {
+  return strtold(s, end_ptr);
+}
+
+long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtoll(s, end_ptr, base);
+}
+
+unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtoull(s, end_ptr, base);
+}
+
+size_t strxfrm_l(char* dst, const char* src, size_t n, locale_t) {
+  return strxfrm(dst, src, n);
+}
+
+int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
+  return wcscasecmp(ws1, ws2);
+}
+
+int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
+  return wcsncasecmp(ws1, ws2, n);
 }
