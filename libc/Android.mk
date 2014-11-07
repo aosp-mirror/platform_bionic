@@ -206,16 +206,10 @@ libc_bionic_src_files := \
     bionic/socket.cpp \
     bionic/stat.cpp \
     bionic/statvfs.cpp \
-    bionic/strcoll_l.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
-    bionic/strftime_l.cpp \
     bionic/strsignal.cpp \
     bionic/strtold.cpp \
-    bionic/strtold_l.cpp \
-    bionic/strtoll_l.cpp \
-    bionic/strtoull_l.cpp \
-    bionic/strxfrm_l.cpp \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \

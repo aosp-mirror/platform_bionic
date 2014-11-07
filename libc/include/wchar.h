@@ -34,6 +34,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <time.h>
+#include <xlocale.h>
 
 #include <machine/wchar_limits.h>
 
@@ -112,6 +113,7 @@ extern int vwprintf(const wchar_t*, va_list);
 extern int vwscanf(const wchar_t*, va_list);
 extern size_t            wcrtomb(char *, wchar_t, mbstate_t *);
 extern int               wcscasecmp(const wchar_t *, const wchar_t *);
+extern int               wcscasecmp_l(const wchar_t *, const wchar_t *, locale_t);
 extern wchar_t          *wcscat(wchar_t *, const wchar_t *);
 extern wchar_t          *wcschr(const wchar_t *, wchar_t);
 extern int               wcscmp(const wchar_t *, const wchar_t *);
@@ -121,6 +123,7 @@ extern size_t            wcscspn(const wchar_t *, const wchar_t *);
 extern size_t            wcsftime(wchar_t *, size_t, const wchar_t *, const struct tm *) __LIBC_ABI_PUBLIC__;
 extern size_t            wcslen(const wchar_t *);
 extern int               wcsncasecmp(const wchar_t *, const wchar_t *, size_t);
+extern int               wcsncasecmp_l(const wchar_t *, const wchar_t *, size_t, locale_t);
 extern wchar_t          *wcsncat(wchar_t *, const wchar_t *, size_t);
 extern int               wcsncmp(const wchar_t *, const wchar_t *, size_t);
 extern wchar_t          *wcsncpy(wchar_t *, const wchar_t *, size_t);
