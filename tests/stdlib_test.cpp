@@ -28,12 +28,54 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+// The random number generator tests all set the seed, get four values, reset the seed and check
+// that they get the first two values repeated, and then reset the seed and check two more values
+// to rule out the possibility that we're just going round a cycle of four values.
+// TODO: factor this out.
+
 TEST(stdlib, drand48) {
   srand48(0x01020304);
   EXPECT_DOUBLE_EQ(0.65619299195623526, drand48());
   EXPECT_DOUBLE_EQ(0.18522597229772941, drand48());
   EXPECT_DOUBLE_EQ(0.42015087072844537, drand48());
   EXPECT_DOUBLE_EQ(0.061637783047395089, drand48());
+  srand48(0x01020304);
+  EXPECT_DOUBLE_EQ(0.65619299195623526, drand48());
+  EXPECT_DOUBLE_EQ(0.18522597229772941, drand48());
+  srand48(0x01020304);
+  EXPECT_DOUBLE_EQ(0.65619299195623526, drand48());
+  EXPECT_DOUBLE_EQ(0.18522597229772941, drand48());
+}
+
+TEST(stdlib, erand48) {
+  const unsigned short seed[3] = { 0x330e, 0xabcd, 0x1234 };
+  unsigned short xsubi[3];
+  memcpy(xsubi, seed, sizeof(seed));
+  EXPECT_DOUBLE_EQ(0.39646477376027534, erand48(xsubi));
+  EXPECT_DOUBLE_EQ(0.84048536941142515, erand48(xsubi));
+  EXPECT_DOUBLE_EQ(0.35333609724524351, erand48(xsubi));
+  EXPECT_DOUBLE_EQ(0.44658343479654405, erand48(xsubi));
+  memcpy(xsubi, seed, sizeof(seed));
+  EXPECT_DOUBLE_EQ(0.39646477376027534, erand48(xsubi));
+  EXPECT_DOUBLE_EQ(0.84048536941142515, erand48(xsubi));
+  memcpy(xsubi, seed, sizeof(seed));
+  EXPECT_DOUBLE_EQ(0.39646477376027534, erand48(xsubi));
+  EXPECT_DOUBLE_EQ(0.84048536941142515, erand48(xsubi));
+}
+
+TEST(stdlib, lcong48) {
+  unsigned short p[7] = { 0x0102, 0x0304, 0x0506, 0x0708, 0x090a, 0x0b0c, 0x0d0e };
+  lcong48(p);
+  EXPECT_EQ(1531389981, lrand48());
+  EXPECT_EQ(1598801533, lrand48());
+  EXPECT_EQ(2080534853, lrand48());
+  EXPECT_EQ(1102488897, lrand48());
+  lcong48(p);
+  EXPECT_EQ(1531389981, lrand48());
+  EXPECT_EQ(1598801533, lrand48());
+  lcong48(p);
+  EXPECT_EQ(1531389981, lrand48());
+  EXPECT_EQ(1598801533, lrand48());
 }
 
 TEST(stdlib, lrand48) {
@@ -42,6 +84,12 @@ TEST(stdlib, lrand48) {
   EXPECT_EQ(397769746, lrand48());
   EXPECT_EQ(902267124, lrand48());
   EXPECT_EQ(132366131, lrand48());
+  srand48(0x01020304);
+  EXPECT_EQ(1409163720, lrand48());
+  EXPECT_EQ(397769746, lrand48());
+  srand48(0x01020304);
+  EXPECT_EQ(1409163720, lrand48());
+  EXPECT_EQ(397769746, lrand48());
 }
 
 TEST(stdlib, random) {
@@ -50,6 +98,12 @@ TEST(stdlib, random) {
   EXPECT_EQ(1399865117, random());
   EXPECT_EQ(2032643283, random());
   EXPECT_EQ(571329216, random());
+  srandom(0x01020304);
+  EXPECT_EQ(55436735, random());
+  EXPECT_EQ(1399865117, random());
+  srandom(0x01020304);
+  EXPECT_EQ(55436735, random());
+  EXPECT_EQ(1399865117, random());
 }
 
 TEST(stdlib, rand) {
@@ -58,6 +112,12 @@ TEST(stdlib, rand) {
   EXPECT_EQ(1399865117, rand());
   EXPECT_EQ(2032643283, rand());
   EXPECT_EQ(571329216, rand());
+  srand(0x01020304);
+  EXPECT_EQ(55436735, rand());
+  EXPECT_EQ(1399865117, rand());
+  srand(0x01020304);
+  EXPECT_EQ(55436735, rand());
+  EXPECT_EQ(1399865117, rand());
 }
 
 TEST(stdlib, mrand48) {
@@ -66,6 +126,12 @@ TEST(stdlib, mrand48) {
   EXPECT_EQ(795539493, mrand48());
   EXPECT_EQ(1804534249, mrand48());
   EXPECT_EQ(264732262, mrand48());
+  srand48(0x01020304);
+  EXPECT_EQ(-1476639856, mrand48());
+  EXPECT_EQ(795539493, mrand48());
+  srand48(0x01020304);
+  EXPECT_EQ(-1476639856, mrand48());
+  EXPECT_EQ(795539493, mrand48());
 }
 
 TEST(stdlib, posix_memalign) {
