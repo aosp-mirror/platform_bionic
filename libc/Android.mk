@@ -290,6 +290,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/drand48.c \
     upstream-netbsd/lib/libc/stdlib/erand48.c \
     upstream-netbsd/lib/libc/stdlib/jrand48.c \
+    upstream-netbsd/lib/libc/stdlib/lcong48.c \
     upstream-netbsd/lib/libc/stdlib/ldiv.c \
     upstream-netbsd/lib/libc/stdlib/lldiv.c \
     upstream-netbsd/lib/libc/stdlib/lrand48.c \

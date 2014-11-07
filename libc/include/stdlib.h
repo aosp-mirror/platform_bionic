@@ -103,15 +103,6 @@ extern void * bsearch(const void *key, const void *base0,
 
 extern void qsort(void *, size_t, size_t, int (*)(const void *, const void *));
 
-extern long jrand48(unsigned short *);
-extern long mrand48(void);
-extern long nrand48(unsigned short *);
-extern long lrand48(void);
-extern unsigned short *seed48(unsigned short*);
-extern double erand48(unsigned short xsubi[3]);
-extern double drand48(void);
-extern void srand48(long);
-
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t);
 void arc4random_buf(void*, size_t);
@@ -121,6 +112,16 @@ void arc4random_buf(void*, size_t);
 int rand(void);
 int rand_r(unsigned int*);
 void srand(unsigned int);
+
+double drand48(void);
+double erand48(unsigned short[3]);
+long jrand48(unsigned short[3]);
+void lcong48(unsigned short[7]);
+long lrand48(void);
+long mrand48(void);
+long nrand48(unsigned short[3]);
+unsigned short* seed48(unsigned short[3]);
+void srand48(long);
 
 char* initstate(unsigned int, char*, size_t);
 long random(void);
