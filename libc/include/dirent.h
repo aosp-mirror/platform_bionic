@@ -70,6 +70,8 @@ extern int readdir_r(DIR*, struct dirent*, struct dirent**);
 extern int readdir64_r(DIR*, struct dirent64*, struct dirent64**);
 extern int closedir(DIR*);
 extern void rewinddir(DIR*);
+extern void seekdir(DIR*, long);
+extern long telldir(DIR*);
 extern int dirfd(DIR*);
 extern int alphasort(const struct dirent**, const struct dirent**);
 extern int alphasort64(const struct dirent64**, const struct dirent64**);
