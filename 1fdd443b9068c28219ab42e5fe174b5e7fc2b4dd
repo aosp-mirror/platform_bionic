@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "958aa29b_8ebd03ab",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-11-07T18:00:25Z",
+      "side": 1,
+      "message": "Why do you need the size here? The data you need to pass back is a fixed size (exactly one integer). Also: typo, \"length\".",
+      "revId": "1fdd443b9068c28219ab42e5fe174b5e7fc2b4dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b585e68b_4382f88f",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-11-07T18:00:25Z",
+      "side": 1,
+      "message": "Since rv is an integer, why isn\u0027t this \"int\" or \"int32_t\"? If it\u0027s because DnsProxyListener::GetAddrInfoHandler::run() passes back a uint32_t, that seems incorrect, because all it does is call android_getaddrinfofornet, which returns \"int\".",
+      "revId": "1fdd443b9068c28219ab42e5fe174b5e7fc2b4dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5809a7b_a442ecd9",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2014-11-07T18:00:25Z",
+      "side": 1,
+      "message": "The spec says that getaddrinfo can return EAI_SYSTEM, in which case the value of errno is significant. Can you modify DnsProxyListener::GetAddrInfoHandler::run() to pass back errno as well, and then set it before this function exits?",
+      "revId": "1fdd443b9068c28219ab42e5fe174b5e7fc2b4dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
