@@ -498,6 +498,16 @@ __LIBC_HIDDEN__ void res_setnetid(res_state, unsigned);
 __LIBC_HIDDEN__ void res_setmark(res_state, unsigned);
 u_int  res_randomid(void);
 
+#ifdef __i386__
+# define __socketcall extern __attribute__((__cdecl__))
+#else
+# define __socketcall extern
+#endif
+
+__socketcall int __connect(int, const struct sockaddr*, socklen_t);
+
+#undef __socketcall
+
 __END_DECLS
 
 #pragma GCC visibility pop
