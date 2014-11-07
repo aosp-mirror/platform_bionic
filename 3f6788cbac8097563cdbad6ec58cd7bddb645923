@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15c152c3_a27f4bd6",
+        "filename": "libc/bionic/dirent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "-1LL?",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_1a44dc72",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "you can\u0027t just make up the types :-)\n\nusually you\u0027ll want to check (a) POSIX:\n\nhttp://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html#\n\n(search google for \"opengroup 2013 function_name\" or \"opengroup 2013 header_name.h\".)\n\n(b) man pages (\"man function_name\")\n\nand (c) glibc headers. if they\u0027re all in agreement, your job is easy. if they\u0027re not, life gets interesting :-) (man pages are the most likely to be wrong, so trust what glibc is actually shipping and what POSIX says we should all be shipping more.)\n\nit\u0027s fine to keep int64_t in the internal representation though. (and realistically, no one will be able to create directory where the offset overflows.)",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_428f7786",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "never declare until you can initialize.",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_82896f82",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "offset_list.back() means i don\u0027t need to read backward to work out what should be in offset at this point.\n\nand if you push_back directly, you don\u0027t even need \u0027offset\u0027 in this function.\n\n\nnote that you\u0027re already at the end, because that\u0027s how you exit the loop. this test might be more convincing if you move it to the very end, after you\u0027ve gone through all the entries in reverse. (because your loops don\u0027t test the offset that returned NULL.) if you do this, you _will_ need somewhere to store the final offset, but you can just have \"long end_offset \u003d telldir(d);\" right here.",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_1a793cb9",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "remember that the C library only sets errno if something goes wrong. it doesn\u0027t set it to 0 if things go well. so any time you want to compare against 0, you\u0027ll need to _set_ it to zero beforehand.",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_fa4c788d",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "only one blank line between blocks.",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_4254974c",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "this is a pretty good test. is there anything that the telldir test tests that isn\u0027t tested by this test? if not, we should (a) think \"is there something we should be testing but aren\u0027t?\" and -- if not -- (b) remove the weaker test.\n\nif you want, you can call this test seekdir_telldir --- we do that a lot when one test covers multiple functions. (and it\u0027s quite common when you have \"function pairs\" like these that you find it hard to test them independently.)",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d54eda55_7a6168f4",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T06:30:07Z",
+      "side": 1,
+      "message": "ugh. well spotted! i hate implicit conversions :-)",
+      "revId": "3f6788cbac8097563cdbad6ec58cd7bddb645923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
