@@ -58,8 +58,11 @@ extern char*  stpcpy(char* __restrict, const char* __restrict);
 extern char*  strcpy(char* __restrict, const char* __restrict);
 extern char*  strcat(char* __restrict, const char* __restrict);
 
-extern int    strcasecmp(const char *, const char *) __purefunc;
-extern int    strncasecmp(const char *, const char *, size_t) __purefunc;
+int strcasecmp(const char*, const char*) __purefunc;
+int strcasecmp_l(const char*, const char*, locale_t) __purefunc;
+int strncasecmp(const char*, const char*, size_t) __purefunc;
+int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc;
+
 extern char*  strdup(const char *);
 
 extern char*  strstr(const char *, const char *) __purefunc;
@@ -68,6 +71,7 @@ extern char*  strtok(char* __restrict, const char* __restrict);
 extern char*  strtok_r(char* __restrict, const char* __restrict, char** __restrict);
 
 extern char* strerror(int);
+extern char* strerror_l(int, locale_t);
 #if defined(__USE_GNU)
 extern char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r);
 #else /* POSIX */
