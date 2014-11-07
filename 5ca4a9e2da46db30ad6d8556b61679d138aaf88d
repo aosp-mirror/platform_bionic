@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0f2f24_179174da",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T23:56:59Z",
+      "side": 1,
+      "message": "this is the current entry rather than the next entry, no?",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a025ff8_bed4d5f8",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-07T23:56:59Z",
+      "side": 1,
+      "message": "is this true? that seems mildly surprising. did you run the tests against glibc too?",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
