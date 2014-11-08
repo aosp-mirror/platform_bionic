@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1b3f6c_7c69adeb",
+        "filename": "libc/bionic/pathconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-08T23:46:10Z",
+      "side": 1,
+      "message": "Why is it okay to return s.f_bsize if s.f_frsize is not defined?",
+      "range": {
+        "startLine": 105,
+        "startChar": 13,
+        "endLine": 105,
+        "endChar": 23
+      },
+      "revId": "e9b7d2fd5e2f1bbc3af88b05c6f9910482274839",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1b3f6c_fc393df7",
+        "filename": "libc/bionic/pathconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-08T23:46:10Z",
+      "side": 1,
+      "message": "No need for a separate case if two cases do the exact same thing.",
+      "range": {
+        "startLine": 110,
+        "startChar": 9,
+        "endLine": 110,
+        "endChar": 27
+      },
+      "revId": "e9b7d2fd5e2f1bbc3af88b05c6f9910482274839",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3f93b4_b023d845",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-08T23:46:10Z",
+      "side": 1,
+      "message": "You should add a comment here. I assume that you are verifying that the value returned is a power of 2. Is that lways going to hold true for all of these values.",
+      "range": {
+        "startLine": 486,
+        "startChar": 24,
+        "endLine": 486,
+        "endChar": 39
+      },
+      "revId": "e9b7d2fd5e2f1bbc3af88b05c6f9910482274839",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
