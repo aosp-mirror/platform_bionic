@@ -183,7 +183,8 @@ extern unsigned int alarm(unsigned int);
 extern unsigned int sleep(unsigned int);
 extern int usleep(useconds_t);
 
-extern int gethostname(char *, size_t);
+int gethostname(char*, size_t);
+int sethostname(const char*, size_t);
 
 extern void *__brk(void *);
 extern int brk(void *);
