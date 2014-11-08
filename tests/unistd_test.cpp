@@ -470,3 +470,11 @@ class unistd_DeathTest : public BionicDeathTest {};
 TEST_F(unistd_DeathTest, abort) {
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
 }
+
+TEST(unistd, sethostname) {
+  // The permissions check happens before the argument check, so this will
+  // fail for a different reason if you're running as root than if you're
+  // not, but it'll fail either way. Checking that we have the symbol is about
+  // all we can do for sethostname(2).
+  ASSERT_EQ(-1, sethostname("", -1));
+}
