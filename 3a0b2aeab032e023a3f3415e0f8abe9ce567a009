@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a497f7c_7da2d7b9",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-10T23:02:55Z",
+      "side": 1,
+      "message": "Should add a comment explaining that this #undef is to document the fact that we _don\u0027t_ have this, rather than actually undefining something.",
+      "revId": "3a0b2aeab032e023a3f3415e0f8abe9ce567a009",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
