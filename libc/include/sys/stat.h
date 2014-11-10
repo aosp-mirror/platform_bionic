@@ -129,10 +129,6 @@ struct stat64 { __STAT64_BODY };
 #define st_atimensec st_atim.tv_nsec
 #define st_mtimensec st_mtim.tv_nsec
 #define st_ctimensec st_ctim.tv_nsec
-/* Compatibility with the kernel and older versions of bionic. */
-#define st_atime_nsec st_atim.tv_nsec
-#define st_mtime_nsec st_mtim.tv_nsec
-#define st_ctime_nsec st_ctim.tv_nsec
 
 #ifdef __USE_BSD
 /* Permission macros provided by glibc for compatibility with BSDs. */
