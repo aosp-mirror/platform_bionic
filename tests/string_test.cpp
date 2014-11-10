@@ -25,6 +25,11 @@
 
 #include "buffer_tests.h"
 
+#if defined(__BIONIC__)
+#define STRLCPY_SUPPORTED
+#define STRLCAT_SUPPORTED
+#endif
+
 #define KB 1024
 #define SMALL 1*KB
 #define MEDIUM 4*KB
@@ -70,7 +75,7 @@ TEST(string, strerror_concurrent) {
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "Skipping test, requires a thread safe strerror.";
 #endif // __BIONIC__
 }
 
@@ -532,7 +537,7 @@ TEST(string, strcpy) {
 }
 
 TEST(string, strlcat) {
-#if defined(__BIONIC__)
+#if defined(STRLCAT_SUPPORTED)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -555,13 +560,13 @@ TEST(string, strlcat) {
       ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) == 0);
     }
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+#endif
 }
 
 TEST(string, strlcpy) {
-#if defined(__BIONIC__)
+#if defined(STRLCPY_SUPPORTED)
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     int rand = 'O';
@@ -587,9 +592,9 @@ TEST(string, strlcpy) {
     ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+#endif
 }
 
 TEST(string, strncat) {
@@ -1100,6 +1105,36 @@ TEST(string, strcpy_overread) {
   RunSrcDstBufferOverreadTest(DoStrcpyTest);
 }
 
+#if defined(STRLCPY_SUPPORTED)
+static void DoStrlcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    memset(src, (32 + (len % 96)), len - 1);
+    src[len-1] = '\0';
+    memset(dst, 0, len);
+    ASSERT_EQ(len-1, strlcpy(reinterpret_cast<char*>(dst),
+                             reinterpret_cast<char*>(src), len));
+    ASSERT_TRUE(memcmp(src, dst, len) == 0);
+  }
+}
+#endif
+
+TEST(string, strlcpy_align) {
+#if defined(STRLCPY_SUPPORTED)
+  RunSrcDstBufferAlignTest(LARGE, DoStrlcpyTest);
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+#endif
+}
+
+TEST(string, strlcpy_overread) {
+#if defined(STRLCPY_SUPPORTED)
+  RunSrcDstBufferOverreadTest(DoStrlcpyTest);
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+#endif
+}
+
+
 static void DoStpcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     memset(src, (32 + (len % 96)), len - 1);
@@ -1170,6 +1205,55 @@ TEST(string, strcat_align) {
 
 TEST(string, strcat_overread) {
   RunSrcDstBufferOverreadTest(DoStrcatTest);
+}
+
+#if defined(STRLCAT_SUPPORTED)
+static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
+  if (len >= 1) {
+    int value = 32 + (len % 96);
+    memset(src, value, len - 1);
+    src[len-1] = '\0';
+
+    if (len >= STRCAT_DST_LEN) {
+      // Create a small buffer for doing quick compares in each loop.
+      uint8_t cmp_buf[STRCAT_DST_LEN];
+      // Make sure dst string contains a different value then the src string.
+      int value2 = 32 + (value + 2) % 96;
+      memset(cmp_buf, value2, sizeof(cmp_buf));
+
+      for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
+        memset(dst, value2, i-1);
+        memset(dst+i-1, 0, len-i);
+        src[len-i] = '\0';
+        ASSERT_EQ(len-1, strlcat(reinterpret_cast<char*>(dst),
+                                 reinterpret_cast<char*>(src), len));
+        ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
+        ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+      }
+    } else {
+      dst[0] = '\0';
+      ASSERT_EQ(len-1, strlcat(reinterpret_cast<char*>(dst),
+                               reinterpret_cast<char*>(src), len));
+      ASSERT_TRUE(memcmp(src, dst, len) == 0);
+    }
+  }
+}
+#endif
+
+TEST(string, strlcat_align) {
+#if defined(STRLCAT_SUPPORTED)
+  RunSrcDstBufferAlignTest(MEDIUM, DoStrlcatTest, LargeSetIncrement);
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+#endif
+}
+
+TEST(string, strlcat_overread) {
+#if defined(STRLCAT_SUPPORTED)
+  RunSrcDstBufferOverreadTest(DoStrlcatTest);
+#else
+  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+#endif
 }
 
 static void DoStrcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
