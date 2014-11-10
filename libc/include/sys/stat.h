@@ -52,12 +52,9 @@ __BEGIN_DECLS
   int st_blksize; \
   int __pad2; \
   long st_blocks; \
-  long st_atime; \
-  unsigned long st_atime_nsec; \
-  long st_mtime; \
-  unsigned long st_mtime_nsec; \
-  long st_ctime; \
-  unsigned long st_ctime_nsec; \
+  struct timespec st_atim; \
+  struct timespec st_mtim; \
+  struct timespec st_ctim; \
   unsigned int __unused4; \
   unsigned int __unused5; \
 
@@ -73,12 +70,9 @@ __BEGIN_DECLS
   unsigned int st_rdev; \
   unsigned int __pad1[3]; \
   long long st_size; \
-  unsigned int st_atime; \
-  unsigned int st_atime_nsec; \
-  unsigned int st_mtime; \
-  unsigned int st_mtime_nsec; \
-  unsigned int st_ctime; \
-  unsigned int st_ctime_nsec; \
+  struct timespec st_atim; \
+  struct timespec st_mtim; \
+  struct timespec st_ctim; \
   unsigned int st_blksize; \
   unsigned int __pad2; \
   unsigned long long st_blocks; \
@@ -96,12 +90,9 @@ __BEGIN_DECLS
   long st_size; \
   long st_blksize; \
   long st_blocks; \
-  unsigned long st_atime; \
-  unsigned long st_atime_nsec; \
-  unsigned long st_mtime; \
-  unsigned long st_mtime_nsec; \
-  unsigned long st_ctime; \
-  unsigned long st_ctime_nsec; \
+  struct timespec st_atim; \
+  struct timespec st_mtim; \
+  struct timespec st_ctim; \
   long __pad3[3]; \
 
 #else
@@ -118,12 +109,9 @@ __BEGIN_DECLS
   long long st_size; \
   unsigned long st_blksize; \
   unsigned long long st_blocks; \
-  unsigned long st_atime; \
-  unsigned long st_atime_nsec; \
-  unsigned long st_mtime; \
-  unsigned long st_mtime_nsec; \
-  unsigned long st_ctime; \
-  unsigned long st_ctime_nsec; \
+  struct timespec st_atim; \
+  struct timespec st_mtim; \
+  struct timespec st_ctim; \
   unsigned long long st_ino; \
 
 #endif
@@ -133,9 +121,18 @@ struct stat64 { __STAT64_BODY };
 
 #undef __STAT64_BODY
 
-#define st_atimensec st_atime_nsec
-#define st_mtimensec st_mtime_nsec
-#define st_ctimensec st_ctime_nsec
+/* Compatibility with older versions of POSIX. */
+#define st_atime st_atim.tv_sec
+#define st_mtime st_mtim.tv_sec
+#define st_ctime st_ctim.tv_sec
+/* Compatibility with glibc. */
+#define st_atimensec st_atim.tv_nsec
+#define st_mtimensec st_mtim.tv_nsec
+#define st_ctimensec st_ctim.tv_nsec
+/* Compatibility with the kernel and older versions of bionic. */
+#define st_atime_nsec st_atim.tv_nsec
+#define st_mtime_nsec st_mtim.tv_nsec
+#define st_ctime_nsec st_ctim.tv_nsec
 
 #ifdef __USE_BSD
 /* Permission macros provided by glibc for compatibility with BSDs. */
