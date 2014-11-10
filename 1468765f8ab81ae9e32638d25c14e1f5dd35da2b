@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "5a4f777e_1f82bbd9",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-10T23:38:15Z",
+      "side": 1,
+      "message": "Yeah, since I started to repeat a lot of this code, I should be able to refactor this. I filed b/18322310 for this.",
+      "parentUuid": "5a7db79e_358250da",
+      "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a6bafdc_377818b3",
         "filename": "tests/string_test.cpp",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2014-11-10T23:14:29Z",
       "side": 1,
       "message": "s/value/len/? i know this works, but i think reusing len works more obviously?",
+      "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a497f7c_d8367905",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-10T23:38:15Z",
+      "side": 1,
+      "message": "I\u0027ll fix this in the refactor.",
+      "parentUuid": "9a6bafdc_377818b3",
       "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
