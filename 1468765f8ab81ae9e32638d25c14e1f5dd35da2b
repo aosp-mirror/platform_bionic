@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a80bbc4_f6362005",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-10T23:14:29Z",
+      "side": 1,
+      "message": "const char* src?\n\n(switch to traditional C dst,src order? oh, i see all the others are like this too.)",
+      "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a7db79e_358250da",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-10T23:14:29Z",
+      "side": 1,
+      "message": "is \u0027 \u0027 + (len % (\u0027~\u0027 - \u0027 \u0027)) slightly less unclear?\n\n(oh, all the others are the same again. maybe factor out one day.)",
+      "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a6bafdc_377818b3",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-10T23:14:29Z",
+      "side": 1,
+      "message": "s/value/len/? i know this works, but i think reusing len works more obviously?",
+      "revId": "1468765f8ab81ae9e32638d25c14e1f5dd35da2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
