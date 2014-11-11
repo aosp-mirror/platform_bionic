@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bab4f3b0_51460682",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1099,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-11T21:00:50Z",
+      "side": 1,
+      "message": "if this function misbehaves - we can end up waiting here for example for infinity.. Expected: test failure.\n\nCould be useful forking process/thread - waiting for some finite timeout and then verifying current state of process and it\u0027s variables (?).",
+      "revId": "96105fb8e8ffe561f55d3e97471575d5478b22c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a4f777e_d35d3736",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-11T21:00:50Z",
+      "side": 1,
+      "message": "...or pthread_join with timeout",
+      "revId": "96105fb8e8ffe561f55d3e97471575d5478b22c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
