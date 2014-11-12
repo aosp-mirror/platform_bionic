@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fae74b92_45829ce3",
+        "filename": "libm/x86/e_pow.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2014-11-12T21:36:24Z",
+      "side": 1,
+      "message": "This list of special cases is copied over from section F.9.4.4 in the C99 standard. Neither C99 nor IEEE754 standard specifies that pow(x, 0.5) \u003d\u003d sqrt(x). By the way, sqrt is correctly rounded in the IEEE standard, pow is not.",
+      "parentUuid": "d587ba27_7e8ab5f8",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 2
+      },
+      "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "151dd24d_a6d2e862",
         "filename": "libm/x86/e_pow.S",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-11-09T19:34:44Z",
       "side": 1,
       "message": "I see compare with 0 in all these files. It used to be the case (pre-Nahelem and at least according to the Intel optimization manual) that cmp wasn\u0027t fusable and test was. iirc test is also a slightly smaller instruction. Interestingly on line 284 there is a test being used with a cmov, perhaps different rules are applying.",
+      "range": {
+        "startLine": 296,
+        "startChar": 8,
+        "endLine": 296,
+        "endChar": 26
+      },
+      "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da344709_8173bad7",
+        "filename": "libm/x86/e_pow.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2014-11-12T21:36:24Z",
+      "side": 1,
+      "message": "We believe the performance difference here is minimal and it is also outside the main path. We will investigate the performance and size impacts and check with Intel architects for more information.",
+      "parentUuid": "151dd24d_a6d2e862",
       "range": {
         "startLine": 296,
         "startChar": 8,
