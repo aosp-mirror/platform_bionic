@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a6c3b15_56a174af",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T19:42:17Z",
+      "side": 1,
+      "message": "should we fix the API then so we can return failure? __libc_fatal if i dlopen a bad .so seems a bit harsh.",
+      "revId": "2ec7ba3fc1baf10dd42a6f124a5ff0ba936c2df7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
