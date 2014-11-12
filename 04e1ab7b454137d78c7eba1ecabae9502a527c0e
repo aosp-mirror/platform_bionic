@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a664337_17553611",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T22:49:02Z",
+      "side": 1,
+      "message": "The code here repeat the code in soinfo::elf_lookup() below, will it be better if we use a common inline function?",
+      "range": {
+        "startLine": 449,
+        "startChar": 4,
+        "endLine": 464,
+        "endChar": 5
+      },
+      "revId": "04e1ab7b454137d78c7eba1ecabae9502a527c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
