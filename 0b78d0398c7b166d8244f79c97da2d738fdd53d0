@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a6c3b15_d67c640e",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T20:07:13Z",
+      "side": 1,
+      "message": "remember this is a size_t, so -2 is just a very large number. if gethostname was fortified, this would be a compile-time error.",
+      "revId": "0b78d0398c7b166d8244f79c97da2d738fdd53d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
