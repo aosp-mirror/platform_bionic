@@ -16,6 +16,24 @@
       "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a693705_95ee64c7",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-11-12T19:52:57Z",
+      "side": 1,
+      "message": "The mingw prebuilt toolchain.  A second patch adds a symbolic link from there.  Currently there is no stdatomic.h there, making it impossible to rely on stdatomic.h from any file used by the sdk.",
+      "parentUuid": "3aa8035b_1372d60c",
+      "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
