@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a4d63af_252474da",
+        "filename": "libc/bionic/pathconf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T19:14:26Z",
+      "side": 1,
+      "message": "I have tested that linux kernel support s.f_frsize in statfs() syscall in aosp/master.",
+      "revId": "30ae23c919d233bdf9aa56dd9e4e87fcafd71937",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
