@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a80bbc4_594aa7a6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1aa5ff82_634b4289",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5aabf756_79968faf",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-12T02:03:00Z",
       "side": 1,
       "message": "while (",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa2f4bb3_828c5ac8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5aabf756_79968faf",
       "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "7a80bbc4_19442f95",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3aa8035b_24723204",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5aabf756_b982c75b",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2014-11-12T02:03:00Z",
       "side": 1,
       "message": "factor this out?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa2f4bb3_e20f269d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "not sure if I can.. am I missing something?",
+      "parentUuid": "5aabf756_b982c75b",
       "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "9a6bafdc_1a72d90c",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3aa8035b_e43ada09",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5aabf756_74d21663",
         "filename": "linker/linker.h",
         "patchSetId": 3
@@ -98,6 +188,24 @@
       "writtenOn": "2014-11-12T02:03:00Z",
       "side": 1,
       "message": "can a symbol have both? oh, if you\u0027re looking in multiple libraries?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a80bbc4_b97c1b0d",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "yes, if there is a mixture of elf and gnu hashed libraries.",
+      "parentUuid": "5aabf756_74d21663",
       "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -132,6 +240,24 @@
       "writtenOn": "2014-11-12T02:03:00Z",
       "side": 1,
       "message": "want to prefix all these with gnu_hash_? or put them into an inner struct?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a80bbc4_d93d5704",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T07:55:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5aabf756_94ea320a",
       "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
