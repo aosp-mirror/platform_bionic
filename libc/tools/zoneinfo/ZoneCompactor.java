@@ -132,9 +132,15 @@ public class ZoneCompactor {
         throw new RuntimeException("zone filename too long: " + zoneName.length());
       }
 
+      // Follow the chain of links to work out where the real data for this zone lives.
+      String actualZoneName = zoneName;
+      while (links.get(actualZoneName) != null) {
+        actualZoneName = links.get(actualZoneName);
+      }
+
       f.write(toAscii(new byte[MAXNAME], zoneName));
-      f.writeInt(offsets.get(zoneName));
-      f.writeInt(lengths.get(zoneName));
+      f.writeInt(offsets.get(actualZoneName));
+      f.writeInt(lengths.get(actualZoneName));
       f.writeInt(0); // Used to be raw GMT offset. No longer used.
     }
 

@@ -13,8 +13,11 @@ import sys
 import tarfile
 import tempfile
 
-regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward',
-           'etcetera', 'europe', 'northamerica', 'southamerica']
+regions = ['africa', 'antarctica', 'asia', 'australasia',
+           'etcetera', 'europe', 'northamerica', 'southamerica',
+           # These two deliberately come last so they override what came
+           # before (and each other).
+           'backward', 'backzone' ]
 
 def CheckDirExists(dir, dirname):
   if not os.path.isdir(dir):
@@ -49,16 +52,16 @@ def WriteSetupFile():
       fields = line.split()
       if fields:
         if fields[0] == 'Link':
-          links.append('%s %s %s\n' % (fields[0], fields[1], fields[2]))
+          links.append('%s %s %s' % (fields[0], fields[1], fields[2]))
           zones.append(fields[2])
         elif fields[0] == 'Zone':
           zones.append(fields[1])
   zones.sort()
 
   setup = open('setup', 'w')
-  for link in links:
-    setup.write(link)
-  for zone in zones:
+  for link in sorted(set(links)):
+    setup.write('%s\n' % link)
+  for zone in sorted(set(zones)):
     setup.write('%s\n' % zone)
   setup.close()
 
@@ -165,9 +168,10 @@ def BuildBionicToolsAndData(data_filename):
 
   print 'Calling zic(1)...'
   os.mkdir('data')
-  for region in regions:
-    if region != 'backward':
-      subprocess.check_call(['zic', '-d', 'data', 'extracted/%s' % region])
+  zic_inputs = [ 'extracted/%s' % x for x in regions ]
+  zic_cmd = ['zic', '-d', 'data' ]
+  zic_cmd.extend(zic_inputs)
+  subprocess.check_call(zic_cmd)
 
   WriteSetupFile()
 
