@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "fa582b71_7aff390e",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T21:09:53Z",
+      "side": 1,
+      "message": "except there is no next entry when you just read the last one. that\u0027s one reason why i think of these things as pointing in between the entries.",
+      "parentUuid": "7a6c3b15_19a72fc9",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a025ff8_bed4d5f8",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 2
