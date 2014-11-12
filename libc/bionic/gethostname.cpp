@@ -25,27 +25,24 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <errno.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/utsname.h>
+#include <unistd.h>
 
-int gethostname(char*  buff, size_t  buflen)
-{
-    struct utsname  name;
-    int             result = 0;
+int gethostname(char* buf, size_t n) {
+  struct utsname name;
+  if (uname(&name) == -1) {
+    return -1;
+  }
 
-    result = uname(&name);
-    if (result != -1)
-    {
-        int  namelen = strlen(name.nodename);
+  size_t name_length = static_cast<size_t>(strlen(name.nodename) + 1);
+  if (name_length > n) {
+    errno = ENAMETOOLONG;
+    return -1;
+  }
 
-        if ((int)buflen < namelen+1) {
-            errno = EINVAL;
-            result = -1;
-        } else {
-            memcpy( buff, name.nodename, namelen+1 );
-        }
-    }
-    return result;
+  memcpy(buf, name.nodename, name_length);
+  return 0;
 }
