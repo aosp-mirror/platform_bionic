@@ -482,21 +482,23 @@ TEST(unistd, sethostname) {
 
 TEST(unistd, gethostname) {
   char hostname[HOST_NAME_MAX + 1];
-
   memset(hostname, 0, sizeof(hostname));
 
+  // Can we get the hostname with a big buffer?
   ASSERT_EQ(0, gethostname(hostname, HOST_NAME_MAX));
+
+  // Can we get the hostname with a right-sized buffer?
+  errno = 0;
+  ASSERT_EQ(0, gethostname(hostname, strlen(hostname) + 1));
+
+  // Does uname(2) agree?
   utsname buf;
   ASSERT_EQ(0, uname(&buf));
   ASSERT_EQ(0, strncmp(hostname, buf.nodename, SYS_NMLN));
   ASSERT_GT(strlen(hostname), 0U);
 
+  // Do we correctly detect truncation?
   errno = 0;
   ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
   ASSERT_EQ(ENAMETOOLONG, errno);
-
-  errno = 0;
-  ASSERT_EQ(0, gethostname(hostname, -2));
-  ASSERT_EQ(0, errno);
-  GTEST_LOG_(INFO) << "hostname=" << hostname << "\n";
 }

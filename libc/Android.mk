@@ -43,7 +43,6 @@ libc_common_src_files := \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
     bionic/fts.c \
-    bionic/gethostname.c \
     bionic/getpriority.c \
     bionic/if_indextoname.c \
     bionic/if_nametoindex.c \
@@ -120,6 +119,7 @@ libc_bionic_src_files := \
     bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/getentropy_linux.c \
+    bionic/gethostname.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
     bionic/gettid.cpp \
