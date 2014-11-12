@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da152730_3c733dda",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T19:11:36Z",
+      "side": 1,
+      "message": "e-\u003ed_off points to next dirent offset, telldir(d) points to the next dirent offset as this dirent has already been read. So they have the same value. I do the same test on my x86_64 workstation, and it has the same result.",
+      "parentUuid": "9a0f2f24_179174da",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a025ff8_bed4d5f8",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-07T23:56:59Z",
       "side": 1,
       "message": "is this true? that seems mildly surprising. did you run the tests against glibc too?",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a025ff8_1ed62984",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T19:11:36Z",
+      "side": 1,
+      "message": "I run test bionic-unit-tests-glibc32 and bionic-unit-tests-glibc64. they all pass the dirent.* test.",
+      "parentUuid": "1a025ff8_bed4d5f8",
       "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
