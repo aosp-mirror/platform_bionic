@@ -231,3 +231,50 @@ TEST(dirent, rewinddir) {
     ASSERT_EQ(pass1[i], pass2[i]);
   }
 }
+
+TEST(dirent, seekdir_telldir) {
+  DIR* d = opendir("/proc/self");
+  ASSERT_TRUE(d != NULL);
+  std::vector<long> offset_list;
+  std::vector<std::string> name_list;
+  dirent* e = NULL;
+
+  offset_list.push_back(telldir(d));
+  ASSERT_EQ(0L, offset_list.back());
+
+  while ((e = readdir(d)) != NULL) {
+    name_list.push_back(e->d_name);
+    offset_list.push_back(telldir(d));
+    // Make sure telldir() point to the next entry.
+    ASSERT_EQ(e->d_off, offset_list.back());
+  }
+
+  long end_offset = telldir(d);
+  // telldir() should not pass the end of the file.
+  ASSERT_EQ(offset_list.back(), end_offset);
+  offset_list.pop_back();
+
+  for (size_t i = 0; i < offset_list.size(); ++i) {
+    seekdir(d, offset_list[i]);
+    ASSERT_EQ(offset_list[i], telldir(d));
+    e = readdir(d);
+    ASSERT_TRUE(e != NULL);
+    ASSERT_STREQ(name_list[i].c_str(), e->d_name);
+  }
+  for (int i = static_cast<int>(offset_list.size()) - 1; i >= 0; --i) {
+    seekdir(d, offset_list[i]);
+    ASSERT_EQ(offset_list[i], telldir(d));
+    e = readdir(d);
+    ASSERT_TRUE(e != NULL);
+    ASSERT_STREQ(name_list[i].c_str(), e->d_name);
+  }
+
+  // Seek to the end, read NULL.
+  seekdir(d, end_offset);
+  ASSERT_EQ(end_offset, telldir(d));
+  errno = 0;
+  ASSERT_EQ(NULL, readdir(d));
+  ASSERT_EQ(0, errno);
+
+  ASSERT_EQ(0, closedir(d));
+}

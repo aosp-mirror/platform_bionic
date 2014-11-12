@@ -43,6 +43,7 @@ struct DIR {
   int fd_;
   size_t available_bytes_;
   dirent* next_;
+  long current_pos_;
   pthread_mutex_t mutex_;
   dirent buff_[15];
 };
@@ -55,6 +56,7 @@ static DIR* __allocate_DIR(int fd) {
   d->fd_ = fd;
   d->available_bytes_ = 0;
   d->next_ = NULL;
+  d->current_pos_ = 0L;
   pthread_mutex_init(&d->mutex_, NULL);
   return d;
 }
@@ -100,6 +102,9 @@ static dirent* __readdir_locked(DIR* d) {
   dirent* entry = d->next_;
   d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) + entry->d_reclen);
   d->available_bytes_ -= entry->d_reclen;
+  // The directory entry offset uses 0, 1, 2 instead of real file offset,
+  // so the value range of long type is enough.
+  d->current_pos_ = static_cast<long>(entry->d_off);
   return entry;
 }
 
@@ -146,6 +151,20 @@ void rewinddir(DIR* d) {
   ScopedPthreadMutexLocker locker(&d->mutex_);
   lseek(d->fd_, 0, SEEK_SET);
   d->available_bytes_ = 0;
+  d->current_pos_ = 0L;
+}
+
+void seekdir(DIR* d, long offset) {
+  ScopedPthreadMutexLocker locker(&d->mutex_);
+  off_t ret = lseek(d->fd_, offset, SEEK_SET);
+  if (ret != -1L) {
+    d->available_bytes_ = 0;
+    d->current_pos_ = ret;
+  }
+}
+
+long telldir(DIR* d) {
+  return d->current_pos_;
 }
 
 int alphasort(const dirent** a, const dirent** b) {
