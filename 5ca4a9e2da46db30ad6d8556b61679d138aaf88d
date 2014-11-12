@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "5a693705_e9a53d42",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T22:29:23Z",
+      "side": 1,
+      "message": "yes, It\u0027s interesting, it depends on whether you think there is no next entry or the next entry is NULL. when there is no entry, you can still readdir(), only get NULL.",
+      "parentUuid": "fa582b71_7aff390e",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a025ff8_bed4d5f8",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 2
