@@ -34,6 +34,24 @@
       "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a6c3b15_f647e014",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T19:56:27Z",
+      "side": 1,
+      "message": "hmm. if we do do this, i\u0027d rather be explict and say mingw. but can\u0027t we just fix the mingw cdefs.h? where does that come from?",
+      "parentUuid": "5a693705_95ee64c7",
+      "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
