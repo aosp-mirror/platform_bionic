@@ -22,6 +22,30 @@
       "revId": "d8c5676b0aea6275f36bb2671e059a06b35fbb3a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_cbf7a969",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T00:26:58Z",
+      "side": 1,
+      "message": "the documentation is in the files themselves, but i\u0027ll add \"so they override what came before (and each other)\".",
+      "parentUuid": "5aabf756_cb66c9c8",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "d8c5676b0aea6275f36bb2671e059a06b35fbb3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
