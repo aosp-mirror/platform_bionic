@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa5ff82_634b4289",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "__libc_fatal rather than DL_ERR?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_79968faf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "while (",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa8035b_24723204",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "\u003d symtab",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_b982c75b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "factor this out?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa8035b_e43ada09",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "blank line above private.",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_74d21663",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "can a symbol have both? oh, if you\u0027re looking in multiple libraries?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa5ff82_e33c12b8",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "yay! more privates!",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_94ea320a",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T02:03:00Z",
+      "side": 1,
+      "message": "want to prefix all these with gnu_hash_? or put them into an inner struct?",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
