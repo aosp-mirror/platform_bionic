@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "7a6c3b15_19a72fc9",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T20:36:09Z",
+      "side": 1,
+      "message": "personally I think \"point to next entry\" is more clear, because \"past the current entry\" may be some not meaningful data.",
+      "parentUuid": "5a693705_5514cc32",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a025ff8_bed4d5f8",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 2
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "yeah, it makes more sense when interpreted in the above light --- because it points _past_ the entry you just read.\n\nbut in that case, is this useful? didn\u0027t you already test exactly this on L249? oh, no, because you\u0027ve done one extra readdir since then. maybe \"The failed readdir should not have changed the offset.\" to make that clearer?\n\n(i think this is a good test, and i think it\u0027s all useful. but for some reason i\u0027m having trouble following it, and i don\u0027t think we can usefully break it into smaller tests, which would be my usual suggestion.)",
       "parentUuid": "1a025ff8_1ed62984",
+      "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a6c3b15_1931efe0",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-12T20:36:09Z",
+      "side": 1,
+      "message": "Yes, I think it is because we should keep an eye on both telldir and seekdir, and the test process is a little long.",
+      "parentUuid": "7a6c3b15_b66608c7",
       "revId": "5ca4a9e2da46db30ad6d8556b61679d138aaf88d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
