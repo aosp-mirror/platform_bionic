@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
+#include <sys/utsname.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -477,4 +478,25 @@ TEST(unistd, sethostname) {
   // not, but it'll fail either way. Checking that we have the symbol is about
   // all we can do for sethostname(2).
   ASSERT_EQ(-1, sethostname("", -1));
+}
+
+TEST(unistd, gethostname) {
+  char hostname[HOST_NAME_MAX + 1];
+
+  memset(hostname, 0, sizeof(hostname));
+
+  ASSERT_EQ(0, gethostname(hostname, HOST_NAME_MAX));
+  utsname buf;
+  ASSERT_EQ(0, uname(&buf));
+  ASSERT_EQ(0, strncmp(hostname, buf.nodename, SYS_NMLN));
+  ASSERT_GT(strlen(hostname), 0U);
+
+  errno = 0;
+  ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
+  ASSERT_EQ(ENAMETOOLONG, errno);
+
+  errno = 0;
+  ASSERT_EQ(0, gethostname(hostname, -2));
+  ASSERT_EQ(0, errno);
+  GTEST_LOG_(INFO) << "hostname=" << hostname << "\n";
 }
