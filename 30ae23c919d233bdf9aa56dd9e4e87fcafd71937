@@ -16,6 +16,23 @@
       "revId": "30ae23c919d233bdf9aa56dd9e4e87fcafd71937",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa8035b_be92a929",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-12T20:00:44Z",
+      "side": 1,
+      "message": "should use powerof2 from \u003csys/param.h\u003e.",
+      "revId": "30ae23c919d233bdf9aa56dd9e4e87fcafd71937",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
