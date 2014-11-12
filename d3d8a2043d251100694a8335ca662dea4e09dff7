@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3aa8035b_18ff550f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T18:38:34Z",
+      "side": 1,
+      "message": "actually, returning nullptr here does not constitute failure, so DL_ERR is not useful, and in most cases is going to be ignored or overridden. keeping __libc_fatal",
+      "parentUuid": "7a80bbc4_594aa7a6",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5aabf756_79968faf",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "not sure if I can.. am I missing something?",
       "parentUuid": "5aabf756_b982c75b",
+      "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a4d63af_62a152b0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-12T18:38:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa2f4bb3_e20f269d",
       "revId": "d3d8a2043d251100694a8335ca662dea4e09dff7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
