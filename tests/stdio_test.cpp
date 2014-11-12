@@ -77,7 +77,7 @@ TEST(stdio, dprintf) {
   int rc = dprintf(tf.fd, "hello\n");
   ASSERT_EQ(rc, 6);
 
-  lseek(tf.fd, SEEK_SET, 0);
+  lseek(tf.fd, 0, SEEK_SET);
   FILE* tfile = fdopen(tf.fd, "r");
   ASSERT_TRUE(tfile != NULL);
 
