@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aabf756_cb66c9c8",
+        "filename": "libc/tools/zoneinfo/update-tzdata.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2014-11-12T00:26:07Z",
+      "side": 1,
+      "message": "Perhaps comment on what these actually are, or link to somewhere that explains what they are. *Why* they come last would be worth explaining too.",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 18
+      },
+      "revId": "d8c5676b0aea6275f36bb2671e059a06b35fbb3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
