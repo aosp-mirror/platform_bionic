@@ -52,6 +52,24 @@
       "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a664337_3705d204",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2014-11-12T22:42:54Z",
+      "side": 1,
+      "message": "I was afraid you were going to ask that :-)\n\nNote that the barely-semi-documented way to get __GNUC_PREREQ seems to be to include \u003cfeatures.h\u003e.  I just tried that instead, and it also doesn\u0027t seem to work with the current build command line.  Investigating a bit more:\n\nsys/cdefs.h seems to come from\n\nprebuilts/gcc/linux-x86/host/x86_64-w64-mingw32-4.8/x86_64-w64-mingw32/include/sys/cdefs.h\n\nThat and the files it includes seem to come from upstream mingw?  And I seem to have trouble finding any real documentation that I can point to to argue this is broken.\n\nThere doesn\u0027t seem to be an appropriate features.h in that vicinity.  (There is parallel/features.h, but I believe that\u0027s unrelated.)\n\nI\u0027m happy to mention mingw in the comment.  But anything else still seems nontrivial.\n\nDisclaimer: I\u0027m still seeing another win_sdk build problem, which appears unrelated.  I\u0027ll investigate more before checking this in.",
+      "parentUuid": "7a6c3b15_f647e014",
+      "revId": "66218515fbde46463d063fe94271a3d357e4fc93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
