@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <unistd.h>
 
 #include <new>
@@ -316,6 +317,7 @@ static void soinfo_free(soinfo* si) {
     }
     prev = trav;
   }
+
   if (trav == nullptr) {
     // si was not in solist
     DL_ERR("name \"%s\" is not in solist!", si->name);
@@ -334,7 +336,6 @@ static void soinfo_free(soinfo* si) {
 
   g_soinfo_allocator.free(si);
 }
-
 
 static void parse_path(const char* path, const char* delimiters,
                        const char** array, char* buf, size_t buf_size, size_t max_count) {
@@ -415,39 +416,72 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return rv;
 }
 
-static ElfW(Sym)* soinfo_elf_lookup(const soinfo* si, unsigned hash, const char* name) {
-  ElfW(Sym)* symtab = si->symtab;
+ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name) {
+  return is_gnu_hash() ? gnu_lookup(symbol_name) : elf_lookup(symbol_name);
+}
 
-  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p %x %zd",
-             name, si->name, reinterpret_cast<void*>(si->base), hash, hash % si->nbucket);
+static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
+  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
+      ELF_ST_BIND(s->st_info) == STB_WEAK) {
+    return s->st_shndx != SHN_UNDEF;
+  } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
+    DL_WARN("unexpected ST_BIND value: %d for '%s' in '%s'",
+        ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->name);
+  }
 
-  for (unsigned n = si->bucket[hash % si->nbucket]; n != 0; n = si->chain[n]) {
+  return false;
+}
+
+ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
+  uint32_t hash = symbol_name.gnu_hash();
+  uint32_t h2 = hash >> gnu_shift2;
+
+  uint32_t bloom_mask_bits = sizeof(ElfW(Addr))*8;
+  uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords;
+  ElfW(Addr) bloom_word = gnu_bloom_filter[word_num];
+
+  // test against bloom filter
+  if ((1 & (bloom_word >> (hash % bloom_mask_bits)) & (bloom_word >> (h2 % bloom_mask_bits))) == 0) {
+    return nullptr;
+  }
+
+  // bloom test says "probably yes"...
+  uint32_t n = bucket[hash % nbucket];
+
+  if (n == 0) {
+    return nullptr;
+  }
+
+  do {
     ElfW(Sym)* s = symtab + n;
-    if (strcmp(si->get_string(s->st_name), name)) continue;
+    if (((chain[n] ^ hash) >> 1) == 0 &&
+        strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
+        is_symbol_global_and_defined(this, s)) {
+      return s;
+    }
+  } while ((chain[n++] & 1) == 0);
 
-    // only concern ourselves with global and weak symbol definitions
-    switch (ELF_ST_BIND(s->st_info)) {
-      case STB_GLOBAL:
-      case STB_WEAK:
-        if (s->st_shndx == SHN_UNDEF) {
-          continue;
-        }
+  return nullptr;
+}
 
-        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
-                 name, si->name, reinterpret_cast<void*>(s->st_value),
-                 static_cast<size_t>(s->st_size));
-        return s;
-      case STB_LOCAL:
-        continue;
-      default:
-        __libc_fatal("ERROR: Unexpected ST_BIND value: %d for '%s' in '%s'",
-            ELF_ST_BIND(s->st_info), name, si->name);
+ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
+  uint32_t hash = symbol_name.elf_hash();
+
+  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
+             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket);
+
+  for (uint32_t n = bucket[hash % nbucket]; n != 0; n = chain[n]) {
+    ElfW(Sym)* s = symtab + n;
+    if (strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 && is_symbol_global_and_defined(this, s)) {
+      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+               symbol_name.get_name(), name, reinterpret_cast<void*>(s->st_value),
+               static_cast<size_t>(s->st_size));
+      return s;
     }
   }
 
   TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p %x %zd",
-             name, si->name, reinterpret_cast<void*>(si->base), hash, hash % si->nbucket);
-
+             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket);
 
   return nullptr;
 }
@@ -468,22 +502,44 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offs
   this->rtld_flags = rtld_flags;
 }
 
-static unsigned elfhash(const char* _name) {
-  const unsigned char* name = reinterpret_cast<const unsigned char*>(_name);
-  unsigned h = 0, g;
 
-  while (*name) {
-    h = (h << 4) + *name++;
-    g = h & 0xf0000000;
-    h ^= g;
-    h ^= g >> 24;
+uint32_t SymbolName::elf_hash() {
+  if (!has_elf_hash_) {
+    const unsigned char* name = reinterpret_cast<const unsigned char*>(name_);
+    uint32_t h = 0, g;
+
+    while (*name) {
+      h = (h << 4) + *name++;
+      g = h & 0xf0000000;
+      h ^= g;
+      h ^= g >> 24;
+    }
+
+    elf_hash_ = h;
+    has_elf_hash_ = true;
   }
-  return h;
+
+  return elf_hash_;
+}
+
+uint32_t SymbolName::gnu_hash() {
+  if (!has_gnu_hash_) {
+    uint32_t h = 5381;
+    const unsigned char* name = reinterpret_cast<const unsigned char*>(name_);
+    while (*name != 0) {
+      h += (h << 5) + *name++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
+    }
+
+    gnu_hash_ =  h;
+    has_gnu_hash_ = true;
+  }
+
+  return gnu_hash_;
 }
 
 static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
     const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
-  unsigned elf_hash = elfhash(name);
+  SymbolName symbol_name(name);
   ElfW(Sym)* s = nullptr;
 
   /* "This element's presence in a shared object library alters the dynamic linker's
@@ -499,7 +555,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
    */
   if (si_from->has_DT_SYMBOLIC) {
     DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->name, name);
-    s = soinfo_elf_lookup(si_from, elf_hash, name);
+    s = si_from->find_symbol_by_name(symbol_name);
     if (s != nullptr) {
       *si_found_in = si_from;
     }
@@ -509,7 +565,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
   if (s == nullptr) {
     global_group.visit([&](soinfo* global_si) {
       DEBUG("%s: looking up %s in %s (from global group)", si_from->name, name, global_si->name);
-      s = soinfo_elf_lookup(global_si, elf_hash, name);
+      s = global_si->find_symbol_by_name(symbol_name);
       if (s != nullptr) {
         *si_found_in = global_si;
         return false;
@@ -528,7 +584,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
       }
 
       DEBUG("%s: looking up %s in %s (from local group)", si_from->name, name, local_si->name);
-      s = soinfo_elf_lookup(local_si, elf_hash, name);
+      s = local_si->find_symbol_by_name(symbol_name);
       if (s != nullptr) {
         *si_found_in = local_si;
         return false;
@@ -665,11 +721,11 @@ static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_s
 // specified soinfo object and its dependencies in breadth first order.
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
   ElfW(Sym)* result = nullptr;
-  uint32_t elf_hash = elfhash(name);
+  SymbolName symbol_name(name);
 
 
   walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
-    result = soinfo_elf_lookup(current_soinfo, elf_hash, name);
+    result = current_soinfo->find_symbol_by_name(symbol_name);
     if (result != nullptr) {
       *found = current_soinfo;
       return false;
@@ -687,7 +743,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
    specified soinfo (for RTLD_NEXT).
  */
 ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
-  unsigned elf_hash = elfhash(name);
+  SymbolName symbol_name(name);
 
   if (start == nullptr) {
     start = solist;
@@ -699,7 +755,7 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
       continue;
     }
 
-    s = soinfo_elf_lookup(si, elf_hash, name);
+    s = si->find_symbol_by_name(symbol_name);
     if (s != nullptr) {
       *found = si;
       break;
@@ -724,16 +780,45 @@ soinfo* find_containing_library(const void* p) {
   return nullptr;
 }
 
-ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
-  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - si->base;
+ElfW(Sym)* soinfo::find_symbol_by_address(const void* addr) {
+  return is_gnu_hash() ? gnu_addr_lookup(addr) : elf_addr_lookup(addr);
+}
+
+static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
+  return sym->st_shndx != SHN_UNDEF &&
+      soaddr >= sym->st_value &&
+      soaddr < sym->st_value + sym->st_size;
+}
+
+ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
+  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
+
+  for (size_t i = 0; i < nbucket; ++i) {
+    uint32_t n = bucket[i];
+
+    if (n == 0) {
+      continue;
+    }
+
+    do {
+      ElfW(Sym)* sym = symtab + n;
+      if (symbol_matches_soaddr(sym, soaddr)) {
+        return sym;
+      }
+    } while ((chain[n++] & 1) == 0);
+  }
+
+  return nullptr;
+}
+
+ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
+  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
   // Search the library's symbol table for any defined symbol which
   // contains this address.
-  for (size_t i = 0; i < si->nchain; ++i) {
-    ElfW(Sym)* sym = &si->symtab[i];
-    if (sym->st_shndx != SHN_UNDEF &&
-        soaddr >= sym->st_value &&
-        soaddr < sym->st_value + sym->st_size) {
+  for (size_t i = 0; i < nchain; ++i) {
+    ElfW(Sym)* sym = symtab + i;
+    if (symbol_matches_soaddr(sym, soaddr)) {
       return sym;
     }
   }
@@ -1898,6 +1983,10 @@ const char* soinfo::get_string(ElfW(Word) index) const {
   return strtab + index;
 }
 
+bool soinfo::is_gnu_hash() const {
+  return (flags & FLAG_GNU_HASH) != 0;
+}
+
 bool soinfo::can_unload() const {
   return (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
 }
@@ -2003,10 +2092,40 @@ bool soinfo::PrelinkImage() {
         break;
 
       case DT_HASH:
+        if (nbucket != 0) {
+          // in case of --hash-style=both, we prefer gnu
+          break;
+        }
+
         nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         nchain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
         bucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
         chain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8 + nbucket * 4);
+        break;
+
+      case DT_GNU_HASH:
+        if (nbucket != 0) {
+          // in case of --hash-style=both, we prefer gnu
+          nchain = 0;
+        }
+
+        nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
+        // skip symndx
+        gnu_maskwords = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
+        gnu_shift2 = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
+
+        gnu_bloom_filter = reinterpret_cast<ElfW(Addr)*>(load_bias + d->d_un.d_ptr + 16);
+        bucket = reinterpret_cast<uint32_t*>(gnu_bloom_filter + gnu_maskwords);
+        // amend chain for symndx = header[1]
+        chain = bucket + nbucket - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
+
+        if (!powerof2(gnu_maskwords)) {
+          DL_ERR("invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting power to two", gnu_maskwords, name);
+          return false;
+        }
+        --gnu_maskwords;
+
+        flags |= FLAG_GNU_HASH;
         break;
 
       case DT_STRTAB:
@@ -2023,7 +2142,7 @@ bool soinfo::PrelinkImage() {
 
       case DT_SYMENT:
         if (d->d_un.d_val != sizeof(ElfW(Sym))) {
-          DL_ERR("invalid DT_SYMENT: %zd", static_cast<size_t>(d->d_un.d_val));
+          DL_ERR("invalid DT_SYMENT: %zd in \"%s\"", static_cast<size_t>(d->d_un.d_val), name);
           return false;
         }
         break;
@@ -2263,7 +2382,7 @@ bool soinfo::PrelinkImage() {
     return false;
   }
   if (nbucket == 0) {
-    DL_ERR("empty/missing DT_HASH in \"%s\" (built with --hash-style=gnu?)", name);
+    DL_ERR("empty/missing DT_HASH/DT_GNU_HASH in \"%s\" (new hash type from the future?)", name);
     return false;
   }
   if (strtab == 0) {

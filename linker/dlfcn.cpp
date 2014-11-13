@@ -145,7 +145,7 @@ int dladdr(const void* addr, Dl_info* info) {
   info->dli_fbase = reinterpret_cast<void*>(si->base);
 
   // Determine if any symbol in the library contains the specified address.
-  ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
+  ElfW(Sym)* sym = si->find_symbol_by_address(addr);
   if (sym != nullptr) {
     info->dli_sname = si->get_string(sym->st_name);
     info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));

@@ -87,6 +87,7 @@
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
+#define FLAG_GNU_HASH   0x00000040 // uses gnu hash
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
@@ -105,12 +106,36 @@ typedef void (*linker_function_t)();
 struct soinfo;
 
 class SoinfoListAllocator {
-public:
+ public:
   static LinkedListEntry<soinfo>* alloc();
   static void free(LinkedListEntry<soinfo>* entry);
-private:
+
+ private:
   // unconstructable
   DISALLOW_IMPLICIT_CONSTRUCTORS(SoinfoListAllocator);
+};
+
+class SymbolName {
+ public:
+  explicit SymbolName(const char* name)
+      : name_(name), has_elf_hash_(false), has_gnu_hash_(false),
+        elf_hash_(0), gnu_hash_(0) { }
+
+  const char* get_name() {
+    return name_;
+  }
+
+  uint32_t elf_hash();
+  uint32_t gnu_hash();
+
+ private:
+  const char* name_;
+  bool has_elf_hash_;
+  bool has_gnu_hash_;
+  uint32_t elf_hash_;
+  uint32_t gnu_hash_;
+
+  DISALLOW_IMPLICIT_CONSTRUCTORS(SymbolName);
 };
 
 struct soinfo {
@@ -140,7 +165,6 @@ struct soinfo {
 
  private:
   const char* strtab;
- public:
   ElfW(Sym)* symtab;
 
   size_t nbucket;
@@ -148,6 +172,7 @@ struct soinfo {
   uint32_t* bucket;
   uint32_t* chain;
 
+ public:
 #if defined(__mips__) || !defined(__LP64__)
   // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
@@ -225,16 +250,24 @@ struct soinfo {
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
 
+  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name);
+  ElfW(Sym)* find_symbol_by_address(const void* addr);
   ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
+  bool is_gnu_hash() const;
 
   bool inline has_min_version(uint32_t min_version) const {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
   }
 
  private:
+  ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
+  ElfW(Sym)* elf_addr_lookup(const void* addr);
+  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
+  ElfW(Sym)* gnu_addr_lookup(const void* addr);
+
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
 #if defined(USE_RELA)
@@ -262,6 +295,12 @@ struct soinfo {
   uint32_t dt_flags_1;
   size_t strtab_size;
 
+  // version >= 2
+  uint32_t gnu_maskwords;
+  uint32_t gnu_shift2;
+
+  ElfW(Addr)* gnu_bloom_filter;
+
   friend soinfo* get_libdl_info();
 };
 
@@ -275,7 +314,6 @@ void do_dlclose(soinfo* si);
 ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
-ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr);
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
 
 void debuggerd_init();
