@@ -408,6 +408,15 @@ _have_ipv4(unsigned mark) {
 	return _test_connect(PF_INET, &addr.generic, sizeof(addr.in), mark);
 }
 
+bool readBE32(FILE* fp, int32_t* result) {
+  int32_t tmp;
+  if (fread(&tmp, sizeof(tmp), 1, fp) != 1) {
+    return false;
+  }
+  *result = ntohl(tmp);
+  return true;
+}
+
 // Returns 0 on success, else returns on error.
 static int
 android_getaddrinfo_proxy(
@@ -486,61 +495,62 @@ android_getaddrinfo_proxy(
 	struct addrinfo* ai = NULL;
 	struct addrinfo** nextres = res;
 	while (1) {
-		uint32_t addrinfo_len;
-		if (fread(&addrinfo_len, sizeof(addrinfo_len),
-			  1, proxy) != 1) {
+		int32_t have_more;
+		if (!readBE32(proxy, &have_more)) {
 			break;
 		}
-		addrinfo_len = ntohl(addrinfo_len);
-		if (addrinfo_len == 0) {
+		if (have_more == 0) {
 			success = 1;
 			break;
 		}
 
-		if (addrinfo_len < sizeof(struct addrinfo)) {
-			break;
-		}
-		struct addrinfo* ai = calloc(1, addrinfo_len +
-					     sizeof(struct sockaddr_storage));
+		struct addrinfo* ai = calloc(1, sizeof(struct addrinfo) + sizeof(struct sockaddr_storage));
 		if (ai == NULL) {
 			break;
 		}
+		ai->ai_addr = (struct sockaddr*)(ai + 1);
 
-		if (fread(ai, addrinfo_len, 1, proxy) != 1) {
-			// Error; fall through.
+		// struct addrinfo {
+		//	int	ai_flags;	/* AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST */
+		//	int	ai_family;	/* PF_xxx */
+		//	int	ai_socktype;	/* SOCK_xxx */
+		//	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
+		//	socklen_t ai_addrlen;	/* length of ai_addr */
+		//	char	*ai_canonname;	/* canonical name for hostname */
+		//	struct	sockaddr *ai_addr;	/* binary address */
+		//	struct	addrinfo *ai_next;	/* next structure in linked list */
+		// };
+
+		// Read the struct piece by piece because we might be a 32-bit process
+		// talking to a 64-bit netd.
+		int32_t addr_len;
+		bool success =
+				readBE32(proxy, &ai->ai_flags) &&
+				readBE32(proxy, &ai->ai_family) &&
+				readBE32(proxy, &ai->ai_socktype) &&
+				readBE32(proxy, &ai->ai_protocol) &&
+				readBE32(proxy, &addr_len);
+		if (!success) {
 			break;
 		}
 
-		// Zero out the pointer fields we copied which aren't
-		// valid in this address space.
-		ai->ai_addr = NULL;
-		ai->ai_canonname = NULL;
-		ai->ai_next = NULL;
-
-		// struct sockaddr
-		uint32_t addr_len;
-		if (fread(&addr_len, sizeof(addr_len), 1, proxy) != 1) {
-			break;
-		}
-		addr_len = ntohl(addr_len);
+		// Set ai_addrlen and read the ai_addr data.
+		ai->ai_addrlen = addr_len;
 		if (addr_len != 0) {
-			if (addr_len > sizeof(struct sockaddr_storage)) {
+			if ((size_t) addr_len > sizeof(struct sockaddr_storage)) {
 				// Bogus; too big.
 				break;
 			}
-			struct sockaddr* addr = (struct sockaddr*)(ai + 1);
-			if (fread(addr, addr_len, 1, proxy) != 1) {
+			if (fread(ai->ai_addr, addr_len, 1, proxy) != 1) {
 				break;
 			}
-			ai->ai_addr = addr;
 		}
 
-		// cannonname
-		uint32_t name_len;
-		if (fread(&name_len, sizeof(name_len), 1, proxy) != 1) {
+		// The string for ai_cannonname.
+		int32_t name_len;
+		if (!readBE32(proxy, &name_len)) {
 			break;
 		}
-		name_len = ntohl(name_len);
 		if (name_len != 0) {
 			ai->ai_canonname = (char*) malloc(name_len);
 			if (fread(ai->ai_canonname, name_len, 1, proxy) != 1) {
