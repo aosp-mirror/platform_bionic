@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1af89f89_74547ec4",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T01:27:38Z",
+      "side": 1,
+      "message": "It would be nice to explain why this is necessary. Otherwise, someone coming back might go back to the old method.",
+      "range": {
+        "startLine": 513,
+        "startChar": 5,
+        "endLine": 513,
+        "endChar": 20
+      },
+      "revId": "619e2f9384e0c68c1e8823a542f66ea98817d380",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7af19ba1_42cd42c4",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T01:27:38Z",
+      "side": 1,
+      "message": "It would be nice to add something like get ai_addrlen and ai_addr. I was confused about what this was doing exactly on first read.",
+      "range": {
+        "startLine": 535,
+        "startChar": 2,
+        "endLine": 535,
+        "endChar": 28
+      },
+      "revId": "619e2f9384e0c68c1e8823a542f66ea98817d380",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
