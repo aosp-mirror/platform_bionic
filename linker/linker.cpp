@@ -1721,21 +1721,20 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
 #endif
 
 #if defined(__mips__)
-static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
-  ElfW(Addr)** got = si->plt_got;
+bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  ElfW(Addr)** got = plt_got;
   if (got == nullptr) {
     return true;
   }
-  unsigned local_gotno = si->mips_local_gotno;
-  unsigned gotsym = si->mips_gotsym;
-  unsigned symtabno = si->mips_symtabno;
-  ElfW(Sym)* symtab = si->symtab;
+  unsigned local_gotno = mips_local_gotno;
+  unsigned gotsym = mips_gotsym;
+  unsigned symtabno = mips_symtabno;
 
   // got[0] is the address of the lazy resolver function.
   // got[1] may be used for a GNU extension.
   // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
   // FIXME: maybe this should be in a separate routine?
-  if ((si->flags & FLAG_LINKER) == 0) {
+  if ((flags & FLAG_LINKER) == 0) {
     size_t g = 0;
     got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadbeef);
     if (reinterpret_cast<intptr_t>(got[g]) < 0) {
@@ -1743,18 +1742,18 @@ static bool mips_relocate_got(soinfo* si, const soinfo::soinfo_list_t& global_gr
     }
     // Relocate the local GOT entries.
     for (; g < local_gotno; g++) {
-      got[g] = reinterpret_cast<ElfW(Addr)*>(reinterpret_cast<uintptr_t>(got[g]) + si->load_bias);
+      got[g] = reinterpret_cast<ElfW(Addr)*>(reinterpret_cast<uintptr_t>(got[g]) + load_bias);
     }
   }
 
   // Now for the global GOT entries...
   ElfW(Sym)* sym = symtab + gotsym;
-  got = si->plt_got + local_gotno;
+  got = plt_got + local_gotno;
   for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
     // This is an undefined reference... try to locate it.
-    const char* sym_name = si->get_string(sym->st_name);
+    const char* sym_name = get_string(sym->st_name);
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, global_group, local_group);
+    ElfW(Sym)* s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab[g];
@@ -2441,7 +2440,7 @@ bool soinfo::LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& l
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(this, global_group, local_group)) {
+  if (!mips_relocate_got(global_group, local_group)) {
     return false;
   }
 #endif
