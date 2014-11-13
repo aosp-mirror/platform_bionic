@@ -15,13 +15,23 @@
  */
 
 #undef _GNU_SOURCE
+#include <features.h> // Get __BIONIC__ or __GLIBC__ so we can tell what we're using.
 
-// Old versions of glibc (like our current host prebuilt sysroot one) have
-// headers that don't work if you #undef _GNU_SOURCE, which makes it
-// impossible to build this test.
-#include <features.h>
+#if defined(__GLIBC__)
 
-#if !defined(__GLIBC__)
+// At the time of writing, libcxx -- which is dragged in by gtest -- assumes
+// declarations from glibc of things that aren't available without __USE_GNU.
+// This means we can't even build this test (which is a problem because that
+// means it doesn't get included in CTS).
+// For glibc 2.15, the symbols in question are:
+//   at_quick_exit, quick_exit, vasprintf, strtoll_l, strtoull_l, and strtold_l.
+
+# if __GLIBC_PREREQ(2, 19)
+#  error check whether we can build this now...
+# endif
+
+#else
+
 #include <string.h>
 
 #include <errno.h>
@@ -50,8 +60,5 @@ TEST(string, posix_strerror_r) {
   // The POSIX strerror_r sets errno to ERANGE (the GNU one doesn't).
   ASSERT_EQ(ERANGE, errno);
 }
-#else
-# if __GLIBC_PREREQ(2, 15)
-#  error this test should work now
-# endif
+
 #endif
