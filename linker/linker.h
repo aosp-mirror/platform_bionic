@@ -209,9 +209,13 @@ struct soinfo {
   uint32_t* ARM_exidx;
   size_t ARM_exidx_count;
 #elif defined(__mips__)
+ private:
   uint32_t mips_symtabno;
   uint32_t mips_local_gotno;
   uint32_t mips_gotsym;
+  bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+
+ public:
 #endif
 
   size_t ref_count;
