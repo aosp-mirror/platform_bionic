@@ -61,7 +61,7 @@ int pthread_setname_np(pthread_t t, const char* thread_name) {
   {
     pthread_accessor thread(t);
     if (thread.get() == NULL) {
-      return ESRCH;
+      return ENOENT;
     }
     tid = thread->tid;
   }
