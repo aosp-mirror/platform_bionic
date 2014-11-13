@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "baaeb391_bbf45366",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1724,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-13T17:39:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7adfdb23_fe1fa14a",
+      "range": {
+        "startLine": 1724,
+        "startChar": 13,
+        "endLine": 1724,
+        "endChar": 30
+      },
+      "revId": "889409168322920ab6cddeb93f506c983d8b5878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7adfdb23_7e147133",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "writtenOn": "2014-11-13T02:39:47Z",
       "side": 1,
       "message": "It doesn\u0027t seem like these are really necessary any more. Each of these variables are only really used once or twice.",
+      "range": {
+        "startLine": 1729,
+        "startChar": 2,
+        "endLine": 1731,
+        "endChar": 36
+      },
+      "revId": "889409168322920ab6cddeb93f506c983d8b5878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab9a7d9_7f59c7fa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1731,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-13T17:39:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7adfdb23_7e147133",
       "range": {
         "startLine": 1729,
         "startChar": 2,
