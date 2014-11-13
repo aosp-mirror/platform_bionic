@@ -29,7 +29,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
 }
@@ -250,8 +249,6 @@ TEST(unistd, getenv_unsetenv) {
 }
 
 TEST(unistd, unsetenv_EINVAL) {
-  EXPECT_EQ(-1, unsetenv(NULL));
-  EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, unsetenv(""));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, unsetenv("a=b"));
