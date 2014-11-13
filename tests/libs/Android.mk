@@ -31,13 +31,13 @@ common_additional_dependencies := \
 # Library used by dlfcn tests.
 # -----------------------------------------------------------------------------
 ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-no-elf-hash-table-library_src_files := \
-    empty.cpp \
+libgnu-hash-table-library_src_files := \
+    dlext_test_library.cpp \
 
-no-elf-hash-table-library_ldflags := \
+libgnu-hash-table-library_ldflags := \
     -Wl,--hash-style=gnu \
 
-module := no-elf-hash-table-library
+module := libgnu-hash-table-library
 module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
 endif

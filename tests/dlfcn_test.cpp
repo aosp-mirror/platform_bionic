@@ -648,19 +648,32 @@ TEST(dlfcn, dladdr_invalid) {
   ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
 }
 
-// Our dynamic linker doesn't support GNU hash tables.
-#if defined(__BIONIC__)
 // GNU-style ELF hash tables are incompatible with the MIPS ABI.
 // MIPS requires .dynsym to be sorted to match the GOT but GNU-style requires sorting by hash code.
-#if !defined(__mips__)
 TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
+#if !defined(__mips__)
   dlerror(); // Clear any pending errors.
-  void* handle = dlopen("no-elf-hash-table-library.so", RTLD_NOW);
-  ASSERT_TRUE(handle == NULL);
-  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
+  void* handle = dlopen("libgnu-hash-table-library.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  auto guard = make_scope_guard([&]() {
+    dlclose(handle);
+  });
+  void* sym = dlsym(handle, "getRandomNumber");
+  ASSERT_TRUE(sym != nullptr) << dlerror();
+  int (*fn)(void);
+  fn = reinterpret_cast<int (*)(void)>(sym);
+  EXPECT_EQ(4, fn());
+
+  Dl_info dlinfo;
+  ASSERT_TRUE(0 != dladdr(reinterpret_cast<void*>(fn), &dlinfo));
+
+  ASSERT_TRUE(fn == dlinfo.dli_saddr);
+  ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
+  ASSERT_STREQ("libgnu-hash-table-library.so", dlinfo.dli_fname);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
+#endif
 }
-#endif
-#endif
 
 TEST(dlfcn, dlopen_bad_flags) {
   dlerror(); // Clear any pending errors.
