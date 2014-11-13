@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa313b2_d08f1c36",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T22:47:53Z",
+      "side": 1,
+      "message": "Is it always guaranteed to be formatted like this? I thought that it was possible to have multiple spaces and/or tabs as delimiters.",
+      "range": {
+        "startLine": 51,
+        "startChar": 24,
+        "endLine": 51,
+        "endChar": 75
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adfdb23_d304963d",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T22:47:53Z",
+      "side": 1,
+      "message": "Do you need to check for NULL in case this is malformed?",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 54,
+        "endChar": 3
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adfdb23_734ae274",
+        "filename": "tests/mntent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T22:47:53Z",
+      "side": 1,
+      "message": "Would it be better to create a temporary file with a known format?",
+      "range": {
+        "startLine": 22,
+        "startChar": 24,
+        "endLine": 22,
+        "endChar": 36
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
