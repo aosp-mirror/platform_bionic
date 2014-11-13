@@ -22,18 +22,6 @@
 #include <sys/un.h>
 #include <fcntl.h>
 
-#if defined(__BIONIC__)
-  #define RECVMMSG_SUPPORTED 1
-  #define SENDMMSG_SUPPORTED 1
-#elif defined(__GLIBC_PREREQ)
-  #if __GLIBC_PREREQ(2, 12)
-    #define RECVMMSG_SUPPORTED 1
-  #endif
-  #if __GLIBC_PREREQ(2, 14)
-    #define SENDMMSG_SUPPORTED 1
-  #endif
-#endif
-
 #define SOCK_PATH "test"
 
 static void* ConnectFn(void* data) {
@@ -120,7 +108,6 @@ TEST(sys_socket, accept4_smoke) {
   RunTest(TestAccept4, NULL);
 }
 
-#if defined(RECVMMSG_SUPPORTED)
 const char* g_RecvMsgs[] = {
   "RECVMMSG_ONE",
   "RECVMMSG_TWO",
@@ -171,26 +158,16 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
 
   close(fd_acc);
 }
-#endif
 
 TEST(sys_socket, recvmmsg_smoke) {
-#if defined(RECVMMSG_SUPPORTED)
   RunTest(TestRecvMMsg, SendMultiple);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
 TEST(sys_socket, recvmmsg_error) {
-#if defined(RECVMMSG_SUPPORTED)
   ASSERT_EQ(-1, recvmmsg(-1, NULL, 0, 0, NULL));
   ASSERT_EQ(EBADF, errno);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
-#if defined(SENDMMSG_SUPPORTED)
 const char* g_SendMsgs[] = {
   "MSG_ONE",
   "MSG_TWO",
@@ -239,21 +216,12 @@ static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
 
   close(fd_acc);
 }
-#endif
 
 TEST(sys_socket, sendmmsg_smoke) {
-#if defined(SENDMMSG_SUPPORTED)
   RunTest(TestSendMMsg, SendMMsg);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
 TEST(sys_socket, sendmmsg_error) {
-#if defined(SENDMMSG_SUPPORTED)
   ASSERT_EQ(-1, sendmmsg(-1, NULL, 0, 0));
   ASSERT_EQ(EBADF, errno);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
