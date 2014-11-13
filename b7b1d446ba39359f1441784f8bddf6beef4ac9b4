@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7adfdb23_9314ce34",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T22:54:15Z",
+      "side": 1,
+      "message": "if we\u0027re only trying to parse /proc/mounts (which is all i needed) this is fine. do we care about arbitrary input? (that\u0027s a genuine question... will we ever see other input?)",
+      "parentUuid": "baa313b2_d08f1c36",
+      "range": {
+        "startLine": 51,
+        "startChar": 24,
+        "endLine": 51,
+        "endChar": 75
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7adfdb23_d304963d",
         "filename": "libc/bionic/mntent.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-11-13T22:47:53Z",
       "side": 1,
       "message": "Do you need to check for NULL in case this is malformed?",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 54,
+        "endChar": 3
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adfdb23_f3227299",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T22:54:15Z",
+      "side": 1,
+      "message": "see above.",
+      "parentUuid": "7adfdb23_d304963d",
       "range": {
         "startLine": 54,
         "startChar": 2,
