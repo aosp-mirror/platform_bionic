@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7a1a7bb5_2936298b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1724,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-13T03:25:25Z",
+      "side": 1,
+      "message": "I was going to revisit names - style guide says use underscore for lightweight functions and Capital once for the rest... if I am not mistaken.",
+      "parentUuid": "7adfdb23_fe1fa14a",
+      "range": {
+        "startLine": 1724,
+        "startChar": 13,
+        "endLine": 1724,
+        "endChar": 30
+      },
+      "revId": "889409168322920ab6cddeb93f506c983d8b5878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7adfdb23_7e147133",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2014-11-13T02:39:47Z",
       "side": 1,
       "message": "It seems like it would be better to move this into the private section above, rather than do it this way.",
+      "range": {
+        "startLine": 211,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 94
+      },
+      "revId": "889409168322920ab6cddeb93f506c983d8b5878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a1a7bb5_e90c11dd",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-13T03:25:25Z",
+      "side": 1,
+      "message": "Unfortunately, we can\u0027t move fields of this structure around (mostly because of kindle but there might be others).",
+      "parentUuid": "7adfdb23_1ed7ed03",
       "range": {
         "startLine": 211,
         "startChar": 0,
