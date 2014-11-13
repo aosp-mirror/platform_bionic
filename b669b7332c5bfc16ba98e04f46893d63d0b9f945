@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adacf31_424b5488",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T03:36:10Z",
+      "side": 1,
+      "message": "doesn\u0027t this disable the test for glibc *and* bionic?",
+      "revId": "b669b7332c5bfc16ba98e04f46893d63d0b9f945",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
