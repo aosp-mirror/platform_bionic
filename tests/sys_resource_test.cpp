@@ -18,17 +18,6 @@
 
 #include <sys/resource.h>
 
-#if defined(__GLIBC__)
-/* The host glibc we're currently building with doesn't have prlimit64 yet. */
-static int prlimit64(pid_t, int resource, const struct rlimit64* new_limit, struct rlimit64* old_limit) {
-  if (new_limit != NULL) {
-    return setrlimit64(resource, new_limit);
-  } else {
-    return getrlimit64(resource, old_limit);
-  }
-}
-#endif
-
 TEST(sys_resource, smoke) {
 #if defined(__LP64__) || defined(__GLIBC__)
   ASSERT_EQ(sizeof(rlimit), sizeof(rlimit64));
