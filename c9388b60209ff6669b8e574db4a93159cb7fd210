@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5adcd72f_dd23cb44",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T03:30:32Z",
+      "side": 1,
+      "message": "i\u0027d hoped this would get me at_quick_exit and quick_exit, but it didn\u0027t so i\u0027ll remove it.",
+      "revId": "c9388b60209ff6669b8e574db4a93159cb7fd210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adfdb23_5eded5e6",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T03:30:32Z",
+      "side": 1,
+      "message": "most of these are non-POSIX, so it\u0027s not unreasonable for glibc to consider them GNU extensions (even if they\u0027re not unique to glibc), so I\u0027m not sure this will ever get fixed.",
+      "revId": "c9388b60209ff6669b8e574db4a93159cb7fd210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adacf31_82f39cfe",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T03:30:32Z",
+      "side": 1,
+      "message": "but it might be worth checking again next time...",
+      "revId": "c9388b60209ff6669b8e574db4a93159cb7fd210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adacf31_221f3085",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-13T03:30:32Z",
+      "side": 1,
+      "message": "i think the alternative is to #define strerror_r __xpg_strerror_r and call glibc\u0027s POSIX strerror_r directly.",
+      "revId": "c9388b60209ff6669b8e574db4a93159cb7fd210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
