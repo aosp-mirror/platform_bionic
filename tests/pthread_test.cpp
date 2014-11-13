@@ -359,50 +359,26 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
-#if defined(__BIONIC__)
-#define HAVE_PTHREAD_SETNAME_NP
-#elif defined(__GLIBC__)
-#if __GLIBC_PREREQ(2, 12)
-#define HAVE_PTHREAD_SETNAME_NP
-#endif
-#endif
-
 TEST(pthread, pthread_setname_np__too_long) {
-#if defined(HAVE_PTHREAD_SETNAME_NP)
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
 TEST(pthread, pthread_setname_np__self) {
-#if defined(HAVE_PTHREAD_SETNAME_NP)
   ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
 TEST(pthread, pthread_setname_np__other) {
-#if defined(HAVE_PTHREAD_SETNAME_NP)
   pthread_t t1;
   ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
 }
 
 TEST(pthread, pthread_setname_np__no_such_thread) {
-#if defined(HAVE_PTHREAD_SETNAME_NP)
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
-  ASSERT_EQ(ESRCH, pthread_setname_np(dead_thread, "short 3"));
-#else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif
+  ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
 }
 
 TEST(pthread, pthread_kill__0) {
