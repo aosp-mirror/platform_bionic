@@ -174,6 +174,18 @@ This is fully automated:
   1. Run update-tzdata.py.
 
 
+Verifying changes
+-----------------
+
+If you make a change that is likely to have a wide effect on the tree (such as a
+libc header change), you should run `make checkbuild`. A regular `make` will
+_not_ build the entire tree; just the minimum number of projects that are
+required for the device. Tests, additional developer tools, and various other
+modules will not be built. Note that `make checkbuild` will not be complete
+either, as `make tests` covers a few additional modules, but generally speaking
+`make checkbuild` is enough.
+
+
 Running the tests
 -----------------
 
