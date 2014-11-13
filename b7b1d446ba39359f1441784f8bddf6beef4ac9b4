@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7adfdb23_5396c6ae",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-13T23:25:02Z",
+      "side": 1,
+      "message": "It just makes me nervous to expose a function that only works for that very specific case. However, I can\u0027t think of a reason anyone would use this function for anything else on an android device.",
+      "parentUuid": "7adfdb23_9314ce34",
+      "range": {
+        "startLine": 51,
+        "startChar": 24,
+        "endLine": 51,
+        "endChar": 75
+      },
+      "revId": "b7b1d446ba39359f1441784f8bddf6beef4ac9b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7adfdb23_d304963d",
         "filename": "libc/bionic/mntent.cpp",
         "patchSetId": 1
