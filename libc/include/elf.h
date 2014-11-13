@@ -94,6 +94,9 @@ typedef struct {
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
 
+/* gnu hash entry */
+#define DT_GNU_HASH 0x6ffffef5
+
 #define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
 
 #define PT_GNU_RELRO 0x6474e552
