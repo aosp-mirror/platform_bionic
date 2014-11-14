@@ -19,16 +19,22 @@
 #include <mntent.h>
 
 TEST(mntent, mntent_smoke) {
-  FILE* fp = setmntent("/no/mnt/tab/on/android", "r");
-  ASSERT_TRUE(fp == NULL);
+  FILE* fp = setmntent("/proc/mounts", "r");
+  ASSERT_TRUE(fp != NULL);
 
-#if __BIONIC__ // glibc doesn't let you call getmntent/getmntent_r with a NULL FILE*.
-  ASSERT_TRUE(getmntent(fp) == NULL);
+  ASSERT_TRUE(getmntent(fp) != NULL);
 
-  struct mntent mbuf;
-  char cbuf[32];
-  ASSERT_TRUE(getmntent_r(fp, &mbuf, cbuf, sizeof(cbuf)) == NULL);
-#endif
+  bool saw_proc = false;
+
+  struct mntent entry;
+  char buf[BUFSIZ];
+  while (getmntent_r(fp, &entry, buf, sizeof(buf)) != NULL) {
+    if (strcmp(entry.mnt_fsname, "proc") == 0 && strcmp(entry.mnt_dir, "/proc") == 0) {
+      saw_proc = true;
+    }
+  }
+
+  ASSERT_TRUE(saw_proc);
 
   ASSERT_EQ(1, endmntent(fp));
 }
