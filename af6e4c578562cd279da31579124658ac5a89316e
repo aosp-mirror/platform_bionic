@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9e076c_9af131a8",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-14T00:00:38Z",
+      "side": 1,
+      "message": "oops. leak. can\u0027t we just have a stack array?",
+      "revId": "af6e4c578562cd279da31579124658ac5a89316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa313b2_d68f1436",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-14T00:00:38Z",
+      "side": 1,
+      "message": "sizeof(dst) would seem more natural here.",
+      "revId": "af6e4c578562cd279da31579124658ac5a89316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
