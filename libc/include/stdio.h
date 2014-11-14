@@ -146,7 +146,16 @@ typedef	struct __sFILE {
 	fpos_t	_offset;	/* current lseek offset */
 } FILE;
 
+/* Legacy BSD implementation of stdin/stdout/stderr. */
 extern FILE __sF[];
+/* More obvious implementation. */
+extern FILE* stdin;
+extern FILE* stdout;
+extern FILE* stderr;
+/* C99 and earlier plus current C++ standards say these must be macros. */
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 
 #define	__SLBF	0x0001		/* line buffered */
 #define	__SNBF	0x0002		/* unbuffered */
@@ -208,10 +217,6 @@ extern FILE __sF[];
 #ifndef SEEK_END
 #define	SEEK_END	2	/* set file offset to EOF plus offset */
 #endif
-
-#define	stdin	(&__sF[0])
-#define	stdout	(&__sF[1])
-#define	stderr	(&__sF[2])
 
 /*
  * Functions defined in ANSI C standard.
