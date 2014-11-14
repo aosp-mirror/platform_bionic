@@ -23,6 +23,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdint.h>
+#include <sys/param.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -498,4 +499,24 @@ TEST(unistd, gethostname) {
   errno = 0;
   ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
   ASSERT_EQ(ENAMETOOLONG, errno);
+}
+
+TEST(unistd, pathconf_fpathconf) {
+  TemporaryFile tf;
+  long rc = 0L;
+  // As a file system's block size is always power of 2, the configure values
+  // for ALLOC and XFER should be power of 2 as well.
+  rc = pathconf(tf.filename, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  rc = pathconf(tf.filename, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  rc = pathconf(tf.filename, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
+
+  rc = fpathconf(tf.fd, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  rc = fpathconf(tf.fd, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  rc = fpathconf(tf.fd, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(rc > 0 && powerof2(rc));
 }
