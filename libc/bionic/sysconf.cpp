@@ -149,7 +149,7 @@ static int __sysconf_monotonic_clock() {
   return (rc == -1) ? -1 : _POSIX_VERSION;
 }
 
-int sysconf(int name) {
+long sysconf(int name) {
   switch (name) {
     case _SC_ARG_MAX:           return _POSIX_ARG_MAX;
     case _SC_CHILD_MAX:         return CHILD_MAX;
