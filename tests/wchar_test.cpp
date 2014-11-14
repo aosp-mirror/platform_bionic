@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
+#define NUM_WCHARS(num_bytes) (num_bytes/sizeof(wchar_t))
+
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));
   EXPECT_EQ(4U, sizeof(wint_t));
@@ -343,7 +345,7 @@ void test_mbsrtowcs(mbstate_t* ps) {
   // Check that valid has advanced to the next unread character.
   ASSERT_EQ('e', *valid);
 
-  wmemset(out, L'x', sizeof(out) / sizeof(wchar_t));
+  wmemset(out, L'x', NUM_WCHARS(sizeof(out)));
   ASSERT_EQ(2U, mbsrtowcs(out, &valid, 4, ps));
   ASSERT_EQ(L'e', out[0]);
   ASSERT_EQ(L'f', out[1]);
@@ -450,15 +452,83 @@ TEST(wchar, wcsftime) {
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
 
-TEST(wchar, wmemmove) {
+TEST(wchar, wmemmove_smoke) {
   const wchar_t const_wstr[] = L"This is a test of something or other.....";
-  wchar_t* wstr = new wchar_t[sizeof(const_wstr)];
+  wchar_t wstr[NUM_WCHARS(sizeof(const_wstr))];
 
-  wmemmove(wstr, const_wstr, sizeof(const_wstr)/sizeof(wchar_t));
+  EXPECT_EQ(wstr, wmemmove(wstr, const_wstr, NUM_WCHARS(sizeof(const_wstr))));
   EXPECT_STREQ(const_wstr, wstr);
 
-  wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
+  EXPECT_EQ(wstr+5, wmemmove(wstr+5, wstr, NUM_WCHARS(sizeof(const_wstr)) - 6));
   EXPECT_STREQ(L"This This is a test of something or other", wstr);
+}
+
+TEST(wchar, wmemcpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t dst[NUM_WCHARS(sizeof(src))];
+
+  EXPECT_EQ(dst, wmemcpy(dst, src, NUM_WCHARS(sizeof(src))));
+  EXPECT_STREQ(dst, src);
+}
+
+TEST(wchar, wcpcpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t dst[NUM_WCHARS(sizeof(src))];
+
+  EXPECT_EQ(dst + NUM_WCHARS(sizeof(src)) - 1, wcpcpy(dst, src));
+  EXPECT_STREQ(dst, src);
+}
+
+TEST(wchar, wcpncpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t dst[NUM_WCHARS(sizeof(src)) + 5];
+
+  size_t src_len = NUM_WCHARS(sizeof(src)) - 1;
+  EXPECT_EQ(dst + src_len, wcpncpy(dst, src, src_len + 1));
+  EXPECT_STREQ(dst, src);
+
+  EXPECT_EQ(dst + 6, wcpncpy(dst, src, 6));
+  dst[6] = L'\0';
+  EXPECT_STREQ(dst, L"Source");
+
+  wmemset(dst, L'x', NUM_WCHARS(sizeof(dst)));
+  EXPECT_EQ(dst + src_len, wcpncpy(dst, src, src_len + 4));
+  EXPECT_STREQ(dst, src);
+  EXPECT_EQ(dst[src_len], L'\0');
+  EXPECT_EQ(dst[src_len+1], L'\0');
+  EXPECT_EQ(dst[src_len+2], L'\0');
+  EXPECT_EQ(dst[src_len+3], L'\0');
+  EXPECT_EQ(dst[src_len+4], L'x');
+}
+
+TEST(wchar, wcscpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t dst[NUM_WCHARS(sizeof(src))];
+
+  EXPECT_EQ(dst, wcscpy(dst, src));
+  EXPECT_STREQ(src, dst);
+}
+
+TEST(wchar, wcsncpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t dst[NUM_WCHARS(sizeof(src)) + 5];
+
+  size_t src_len = NUM_WCHARS(sizeof(src)) - 1;
+  EXPECT_EQ(dst, wcsncpy(dst, src, src_len + 1));
+  EXPECT_STREQ(dst, src);
+
+  EXPECT_EQ(dst, wcsncpy(dst, src, 6));
+  dst[6] = L'\0';
+  EXPECT_STREQ(dst, L"Source");
+
+  wmemset(dst, L'x', NUM_WCHARS(sizeof(dst)));
+  EXPECT_EQ(dst, wcsncpy(dst, src, src_len + 4));
+  EXPECT_STREQ(dst, src);
+  EXPECT_EQ(dst[src_len], L'\0');
+  EXPECT_EQ(dst[src_len+1], L'\0');
+  EXPECT_EQ(dst[src_len+2], L'\0');
+  EXPECT_EQ(dst[src_len+3], L'\0');
+  EXPECT_EQ(dst[src_len+4], L'x');
 }
 
 TEST(wchar, mbrtowc_15439554) {
