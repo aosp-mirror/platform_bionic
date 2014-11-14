@@ -28,7 +28,7 @@ common_additional_dependencies := \
     $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# Library used by dlfcn tests.
+# Library to test gnu-styled hash
 # -----------------------------------------------------------------------------
 ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 libgnu-hash-table-library_src_files := \
@@ -41,6 +41,19 @@ module := libgnu-hash-table-library
 module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
 endif
+
+# -----------------------------------------------------------------------------
+# Library to test sysv-styled hash
+# -----------------------------------------------------------------------------
+libsysv-hash-table-library_src_files := \
+    dlext_test_library.cpp \
+
+libsysv-hash-table-library_ldflags := \
+    -Wl,--hash-style=sysv \
+
+module := libsysv-hash-table-library
+module_tag := optional
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - with GNU RELRO program header
