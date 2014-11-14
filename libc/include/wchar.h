@@ -111,6 +111,8 @@ extern int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
 extern int vswscanf(const wchar_t*, const wchar_t*, va_list);
 extern int vwprintf(const wchar_t*, va_list);
 extern int vwscanf(const wchar_t*, va_list);
+extern wchar_t* wcpcpy (wchar_t*, const wchar_t *);
+extern wchar_t* wcpncpy (wchar_t*, const wchar_t *, size_t);
 extern size_t            wcrtomb(char *, wchar_t, mbstate_t *);
 extern int               wcscasecmp(const wchar_t *, const wchar_t *);
 extern int               wcscasecmp_l(const wchar_t *, const wchar_t *, locale_t);
