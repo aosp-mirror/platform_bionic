@@ -434,11 +434,11 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
 
 ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.gnu_hash();
-  uint32_t h2 = hash >> gnu_shift2;
+  uint32_t h2 = hash >> gnu_shift2_;
 
   uint32_t bloom_mask_bits = sizeof(ElfW(Addr))*8;
-  uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords;
-  ElfW(Addr) bloom_word = gnu_bloom_filter[word_num];
+  uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
+  ElfW(Addr) bloom_word = gnu_bloom_filter_[word_num];
 
   // test against bloom filter
   if ((1 & (bloom_word >> (hash % bloom_mask_bits)) & (bloom_word >> (h2 % bloom_mask_bits))) == 0) {
@@ -446,20 +446,20 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
   }
 
   // bloom test says "probably yes"...
-  uint32_t n = bucket[hash % nbucket];
+  uint32_t n = bucket_[hash % nbucket_];
 
   if (n == 0) {
     return nullptr;
   }
 
   do {
-    ElfW(Sym)* s = symtab + n;
-    if (((chain[n] ^ hash) >> 1) == 0 &&
+    ElfW(Sym)* s = symtab_ + n;
+    if (((chain_[n] ^ hash) >> 1) == 0 &&
         strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
         is_symbol_global_and_defined(this, s)) {
       return s;
     }
-  } while ((chain[n++] & 1) == 0);
+  } while ((chain_[n++] & 1) == 0);
 
   return nullptr;
 }
@@ -468,10 +468,10 @@ ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.elf_hash();
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
-             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket);
+             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  for (uint32_t n = bucket[hash % nbucket]; n != 0; n = chain[n]) {
-    ElfW(Sym)* s = symtab + n;
+  for (uint32_t n = bucket_[hash % nbucket_]; n != 0; n = chain_[n]) {
+    ElfW(Sym)* s = symtab_ + n;
     if (strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 && is_symbol_global_and_defined(this, s)) {
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
                symbol_name.get_name(), name, reinterpret_cast<void*>(s->st_value),
@@ -481,7 +481,7 @@ ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
   }
 
   TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p %x %zd",
-             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket);
+             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
   return nullptr;
 }
@@ -491,15 +491,15 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offs
 
   strlcpy(this->name, name, sizeof(this->name));
   flags = FLAG_NEW_SOINFO;
-  version = SOINFO_VERSION;
+  version_ = SOINFO_VERSION;
 
   if (file_stat != nullptr) {
-    this->st_dev = file_stat->st_dev;
-    this->st_ino = file_stat->st_ino;
-    this->file_offset = file_offset;
+    this->st_dev_ = file_stat->st_dev;
+    this->st_ino_ = file_stat->st_ino;
+    this->file_offset_ = file_offset;
   }
 
-  this->rtld_flags = rtld_flags;
+  this->rtld_flags_ = rtld_flags;
 }
 
 
@@ -793,19 +793,19 @@ static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
 ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
-  for (size_t i = 0; i < nbucket; ++i) {
-    uint32_t n = bucket[i];
+  for (size_t i = 0; i < nbucket_; ++i) {
+    uint32_t n = bucket_[i];
 
     if (n == 0) {
       continue;
     }
 
     do {
-      ElfW(Sym)* sym = symtab + n;
+      ElfW(Sym)* sym = symtab_ + n;
       if (symbol_matches_soaddr(sym, soaddr)) {
         return sym;
       }
-    } while ((chain[n++] & 1) == 0);
+    } while ((chain_[n++] & 1) == 0);
   }
 
   return nullptr;
@@ -816,8 +816,8 @@ ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
 
   // Search the library's symbol table for any defined symbol which
   // contains this address.
-  for (size_t i = 0; i < nchain; ++i) {
-    ElfW(Sym)* sym = symtab + i;
+  for (size_t i = 0; i < nchain_; ++i) {
+    ElfW(Sym)* sym = symtab_ + i;
     if (symbol_matches_soaddr(sym, soaddr)) {
       return sym;
     }
@@ -948,7 +948,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
   si->phnum = elf_reader.phdr_count();
   si->phdr = elf_reader.loaded_phdr();
 
-  if (!si->PrelinkImage()) {
+  if (!si->prelink_image()) {
     soinfo_free(si);
     return nullptr;
   }
@@ -1104,7 +1104,7 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
 
   bool linked = local_group.visit([&](soinfo* si) {
     if ((si->flags & FLAG_LINKED) == 0) {
-      if (!si->LinkImage(global_group, local_group, extinfo)) {
+      if (!si->link_image(global_group, local_group, extinfo)) {
         return false;
       }
       si->flags |= FLAG_LINKED;
@@ -1143,7 +1143,7 @@ static void soinfo_unload(soinfo* si) {
 
   if (si->ref_count == 1) {
     TRACE("unloading '%s'", si->name);
-    si->CallDestructors();
+    si->call_destructors();
 
     if (si->has_min_version(0)) {
       soinfo* child = nullptr;
@@ -1217,7 +1217,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
   protect_data(PROT_READ | PROT_WRITE);
   soinfo* si = find_library(name, flags, extinfo);
   if (si != nullptr) {
-    si->CallConstructors();
+    si->call_constructors();
   }
   protect_data(PROT_READ);
   return si;
@@ -1239,7 +1239,7 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 }
 
 #if defined(USE_RELA)
-int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
@@ -1256,11 +1256,11 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
     soinfo* lsi = nullptr;
 
     if (sym != 0) {
-      sym_name = get_string(symtab[sym].st_name);
+      sym_name = get_string(symtab_[sym].st_name);
       s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
-        s = &symtab[sym];
+        s = &symtab_[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
           DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
           return -1;
@@ -1516,7 +1516,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
 }
 
 #else // REL, not RELA.
-int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     unsigned type = ELFW(R_TYPE)(rel->r_info);
     // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
@@ -1534,11 +1534,11 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
     soinfo* lsi = nullptr;
 
     if (sym != 0) {
-      sym_name = get_string(symtab[sym].st_name);
+      sym_name = get_string(symtab_[sym].st_name);
       s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
-        s = &symtab[sym];
+        s = &symtab_[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
           DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
           return -1;
@@ -1722,13 +1722,10 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
 
 #if defined(__mips__)
 bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  ElfW(Addr)** got = plt_got;
+  ElfW(Addr)** got = plt_got_;
   if (got == nullptr) {
     return true;
   }
-  unsigned local_gotno = mips_local_gotno;
-  unsigned gotsym = mips_gotsym;
-  unsigned symtabno = mips_symtabno;
 
   // got[0] is the address of the lazy resolver function.
   // got[1] may be used for a GNU extension.
@@ -1741,22 +1738,22 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
       got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadfeed);
     }
     // Relocate the local GOT entries.
-    for (; g < local_gotno; g++) {
+    for (; g < mips_local_gotno_; g++) {
       got[g] = reinterpret_cast<ElfW(Addr)*>(reinterpret_cast<uintptr_t>(got[g]) + load_bias);
     }
   }
 
   // Now for the global GOT entries...
-  ElfW(Sym)* sym = symtab + gotsym;
-  got = plt_got + local_gotno;
-  for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
+  ElfW(Sym)* sym = symtab_ + mips_gotsym_;
+  got = plt_got_ + mips_local_gotno_;
+  for (size_t g = mips_gotsym_; g < mips_symtabno_; g++, sym++, got++) {
     // This is an undefined reference... try to locate it.
     const char* sym_name = get_string(sym->st_name);
     soinfo* lsi = nullptr;
     ElfW(Sym)* s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
-      s = &symtab[g];
+      s = &symtab_[g];
       if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
         DL_ERR("cannot locate \"%s\"...", sym_name);
         return false;
@@ -1773,7 +1770,7 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
 }
 #endif
 
-void soinfo::CallArray(const char* array_name __unused, linker_function_t* functions, size_t count, bool reverse) {
+void soinfo::call_array(const char* array_name __unused, linker_function_t* functions, size_t count, bool reverse) {
   if (functions == nullptr) {
     return;
   }
@@ -1786,13 +1783,13 @@ void soinfo::CallArray(const char* array_name __unused, linker_function_t* funct
 
   for (int i = begin; i != end; i += step) {
     TRACE("[ %s[%d] == %p ]", array_name, i, functions[i]);
-    CallFunction("function", functions[i]);
+    call_function("function", functions[i]);
   }
 
   TRACE("[ Done calling %s for '%s' ]", array_name, name);
 }
 
-void soinfo::CallFunction(const char* function_name __unused, linker_function_t function) {
+void soinfo::call_function(const char* function_name __unused, linker_function_t function) {
   if (function == nullptr || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
     return;
   }
@@ -1806,13 +1803,13 @@ void soinfo::CallFunction(const char* function_name __unused, linker_function_t 
   protect_data(PROT_READ | PROT_WRITE);
 }
 
-void soinfo::CallPreInitConstructors() {
+void soinfo::call_pre_init_constructors() {
   // DT_PREINIT_ARRAY functions are called before any other constructors for executables,
   // but ignored in a shared library.
-  CallArray("DT_PREINIT_ARRAY", preinit_array, preinit_array_count, false);
+  call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false);
 }
 
-void soinfo::CallConstructors() {
+void soinfo::call_constructors() {
   if (constructors_called) {
     return;
   }
@@ -1829,34 +1826,34 @@ void soinfo::CallConstructors() {
   //    out above, the libc constructor will be called again (recursively!).
   constructors_called = true;
 
-  if ((flags & FLAG_EXE) == 0 && preinit_array != nullptr) {
+  if ((flags & FLAG_EXE) == 0 && preinit_array_ != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
     PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!",
-          name, preinit_array_count);
+          name, preinit_array_count_);
   }
 
   get_children().for_each([] (soinfo* si) {
-    si->CallConstructors();
+    si->call_constructors();
   });
 
   TRACE("\"%s\": calling constructors", name);
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
-  CallFunction("DT_INIT", init_func);
-  CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
+  call_function("DT_INIT", init_func_);
+  call_array("DT_INIT_ARRAY", init_array_, init_array_count_, false);
 }
 
-void soinfo::CallDestructors() {
+void soinfo::call_destructors() {
   if (!constructors_called) {
     return;
   }
   TRACE("\"%s\": calling destructors", name);
 
   // DT_FINI_ARRAY must be parsed in reverse order.
-  CallArray("DT_FINI_ARRAY", fini_array, fini_array_count, true);
+  call_array("DT_FINI_ARRAY", fini_array_, fini_array_count_, true);
 
   // DT_FINI should be called after DT_FINI_ARRAY if both are present.
-  CallFunction("DT_FINI", fini_func);
+  call_function("DT_FINI", fini_func_);
 
   // This is needed on second call to dlopen
   // after library has been unloaded with RTLD_NODELETE
@@ -1865,8 +1862,8 @@ void soinfo::CallDestructors() {
 
 void soinfo::add_child(soinfo* child) {
   if (has_min_version(0)) {
-    child->parents.push_back(this);
-    this->children.push_back(child);
+    child->parents_.push_back(this);
+    this->children_.push_back(child);
   }
 }
 
@@ -1876,26 +1873,26 @@ void soinfo::remove_all_links() {
   }
 
   // 1. Untie connected soinfos from 'this'.
-  children.for_each([&] (soinfo* child) {
-    child->parents.remove_if([&] (const soinfo* parent) {
+  children_.for_each([&] (soinfo* child) {
+    child->parents_.remove_if([&] (const soinfo* parent) {
       return parent == this;
     });
   });
 
-  parents.for_each([&] (soinfo* parent) {
-    parent->children.remove_if([&] (const soinfo* child) {
+  parents_.for_each([&] (soinfo* parent) {
+    parent->children_.remove_if([&] (const soinfo* child) {
       return child == this;
     });
   });
 
   // 2. Once everything untied - clear local lists.
-  parents.clear();
-  children.clear();
+  parents_.clear();
+  children_.clear();
 }
 
 dev_t soinfo::get_st_dev() const {
   if (has_min_version(0)) {
-    return st_dev;
+    return st_dev_;
   }
 
   return 0;
@@ -1903,7 +1900,7 @@ dev_t soinfo::get_st_dev() const {
 
 ino_t soinfo::get_st_ino() const {
   if (has_min_version(0)) {
-    return st_ino;
+    return st_ino_;
   }
 
   return 0;
@@ -1911,7 +1908,7 @@ ino_t soinfo::get_st_ino() const {
 
 off64_t soinfo::get_file_offset() const {
   if (has_min_version(1)) {
-    return file_offset;
+    return file_offset_;
   }
 
   return 0;
@@ -1919,7 +1916,7 @@ off64_t soinfo::get_file_offset() const {
 
 uint32_t soinfo::get_rtld_flags() const {
   if (has_min_version(1)) {
-    return rtld_flags;
+    return rtld_flags_;
   }
 
   return 0;
@@ -1927,7 +1924,7 @@ uint32_t soinfo::get_rtld_flags() const {
 
 uint32_t soinfo::get_dt_flags_1() const {
   if (has_min_version(1)) {
-    return dt_flags_1;
+    return dt_flags_1_;
   }
 
   return 0;
@@ -1935,14 +1932,14 @@ uint32_t soinfo::get_dt_flags_1() const {
 void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
   if (has_min_version(1)) {
     if ((dt_flags_1 & DF_1_GLOBAL) != 0) {
-      rtld_flags |= RTLD_GLOBAL;
+      rtld_flags_ |= RTLD_GLOBAL;
     }
 
     if ((dt_flags_1 & DF_1_NODELETE) != 0) {
-      rtld_flags |= RTLD_NODELETE;
+      rtld_flags_ |= RTLD_NODELETE;
     }
 
-    this->dt_flags_1 = dt_flags_1;
+    dt_flags_1_ = dt_flags_1;
   }
 }
 
@@ -1952,18 +1949,18 @@ static soinfo::soinfo_list_t g_empty_list;
 
 soinfo::soinfo_list_t& soinfo::get_children() {
   if (has_min_version(0)) {
-    return this->children;
+    return children_;
   }
 
   return g_empty_list;
 }
 
 soinfo::soinfo_list_t& soinfo::get_parents() {
-  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
-    return g_empty_list;
+  if (has_min_version(0)) {
+    return parents_;
   }
 
-  return this->parents;
+  return g_empty_list;
 }
 
 ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
@@ -1975,11 +1972,11 @@ ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
 }
 
 const char* soinfo::get_string(ElfW(Word) index) const {
-  if (has_min_version(1) && (index >= strtab_size)) {
-    __libc_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d", name, strtab_size, index);
+  if (has_min_version(1) && (index >= strtab_size_)) {
+    __libc_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d", name, strtab_size_, index);
   }
 
-  return strtab + index;
+  return strtab_ + index;
 }
 
 bool soinfo::is_gnu_hash() const {
@@ -2051,7 +2048,7 @@ static int nullify_closed_stdio() {
   return return_value;
 }
 
-bool soinfo::PrelinkImage() {
+bool soinfo::prelink_image() {
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
   phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
@@ -2091,52 +2088,52 @@ bool soinfo::PrelinkImage() {
         break;
 
       case DT_HASH:
-        if (nbucket != 0) {
+        if (nbucket_ != 0) {
           // in case of --hash-style=both, we prefer gnu
           break;
         }
 
-        nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
-        nchain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
-        bucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
-        chain = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8 + nbucket * 4);
+        nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
+        nchain_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
+        bucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
+        chain_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8 + nbucket_ * 4);
         break;
 
       case DT_GNU_HASH:
-        if (nbucket != 0) {
+        if (nbucket_ != 0) {
           // in case of --hash-style=both, we prefer gnu
-          nchain = 0;
+          nchain_ = 0;
         }
 
-        nbucket = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
+        nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         // skip symndx
-        gnu_maskwords = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
-        gnu_shift2 = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
+        gnu_maskwords_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
+        gnu_shift2_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
 
-        gnu_bloom_filter = reinterpret_cast<ElfW(Addr)*>(load_bias + d->d_un.d_ptr + 16);
-        bucket = reinterpret_cast<uint32_t*>(gnu_bloom_filter + gnu_maskwords);
+        gnu_bloom_filter_ = reinterpret_cast<ElfW(Addr)*>(load_bias + d->d_un.d_ptr + 16);
+        bucket_ = reinterpret_cast<uint32_t*>(gnu_bloom_filter_ + gnu_maskwords_);
         // amend chain for symndx = header[1]
-        chain = bucket + nbucket - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
+        chain_ = bucket_ + nbucket_ - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
 
-        if (!powerof2(gnu_maskwords)) {
-          DL_ERR("invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting power to two", gnu_maskwords, name);
+        if (!powerof2(gnu_maskwords_)) {
+          DL_ERR("invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting power to two", gnu_maskwords_, name);
           return false;
         }
-        --gnu_maskwords;
+        --gnu_maskwords_;
 
         flags |= FLAG_GNU_HASH;
         break;
 
       case DT_STRTAB:
-        strtab = reinterpret_cast<const char*>(load_bias + d->d_un.d_ptr);
+        strtab_ = reinterpret_cast<const char*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_STRSZ:
-        strtab_size = d->d_un.d_val;
+        strtab_size_ = d->d_un.d_val;
         break;
 
       case DT_SYMTAB:
-        symtab = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
+        symtab_ = reinterpret_cast<ElfW(Sym)*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_SYMENT:
@@ -2162,24 +2159,24 @@ bool soinfo::PrelinkImage() {
 
       case DT_JMPREL:
 #if defined(USE_RELA)
-        plt_rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
+        plt_rela_ = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
 #else
-        plt_rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
+        plt_rel_ = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
 #endif
         break;
 
       case DT_PLTRELSZ:
 #if defined(USE_RELA)
-        plt_rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
+        plt_rela_count_ = d->d_un.d_val / sizeof(ElfW(Rela));
 #else
-        plt_rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
+        plt_rel_count_ = d->d_un.d_val / sizeof(ElfW(Rel));
 #endif
         break;
 
       case DT_PLTGOT:
 #if defined(__mips__)
         // Used by mips and mips64.
-        plt_got = reinterpret_cast<ElfW(Addr)**>(load_bias + d->d_un.d_ptr);
+        plt_got_ = reinterpret_cast<ElfW(Addr)**>(load_bias + d->d_un.d_ptr);
 #endif
         // Ignore for other platforms... (because RTLD_LAZY is not supported)
         break;
@@ -2199,11 +2196,11 @@ bool soinfo::PrelinkImage() {
 #endif
 #if defined(USE_RELA)
       case DT_RELA:
-        rela = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
+        rela_ = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_RELASZ:
-        rela_count = d->d_un.d_val / sizeof(ElfW(Rela));
+        rela_count_ = d->d_un.d_val / sizeof(ElfW(Rela));
         break;
 
       case DT_RELAENT:
@@ -2226,11 +2223,11 @@ bool soinfo::PrelinkImage() {
         return false;
 #else
       case DT_REL:
-        rel = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
+        rel_ = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_RELSZ:
-        rel_count = d->d_un.d_val / sizeof(ElfW(Rel));
+        rel_count_ = d->d_un.d_val / sizeof(ElfW(Rel));
         break;
 
       case DT_RELENT:
@@ -2252,40 +2249,40 @@ bool soinfo::PrelinkImage() {
         return false;
 #endif
       case DT_INIT:
-        init_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_INIT) found at %p", name, init_func);
+        init_func_ = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+        DEBUG("%s constructors (DT_INIT) found at %p", name, init_func_);
         break;
 
       case DT_FINI:
-        fini_func = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s destructors (DT_FINI) found at %p", name, fini_func);
+        fini_func_ = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+        DEBUG("%s destructors (DT_FINI) found at %p", name, fini_func_);
         break;
 
       case DT_INIT_ARRAY:
-        init_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", name, init_array);
+        init_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", name, init_array_);
         break;
 
       case DT_INIT_ARRAYSZ:
-        init_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        init_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_FINI_ARRAY:
-        fini_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", name, fini_array);
+        fini_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", name, fini_array_);
         break;
 
       case DT_FINI_ARRAYSZ:
-        fini_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        fini_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_PREINIT_ARRAY:
-        preinit_array = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", name, preinit_array);
+        preinit_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", name, preinit_array_);
         break;
 
       case DT_PREINIT_ARRAYSZ:
-        preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        preinit_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_TEXTREL:
@@ -2342,15 +2339,15 @@ bool soinfo::PrelinkImage() {
         break;
 
       case DT_MIPS_SYMTABNO:
-        mips_symtabno = d->d_un.d_val;
+        mips_symtabno_ = d->d_un.d_val;
         break;
 
       case DT_MIPS_LOCAL_GOTNO:
-        mips_local_gotno = d->d_un.d_val;
+        mips_local_gotno_ = d->d_un.d_val;
         break;
 
       case DT_MIPS_GOTSYM:
-        mips_gotsym = d->d_un.d_val;
+        mips_gotsym_ = d->d_un.d_val;
         break;
 #endif
       // Ignored: "Its use has been superseded by the DF_BIND_NOW flag"
@@ -2373,29 +2370,29 @@ bool soinfo::PrelinkImage() {
   }
 
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
-        reinterpret_cast<void*>(base), strtab, symtab);
+        reinterpret_cast<void*>(base), strtab_, symtab_);
 
   // Sanity checks.
   if (relocating_linker && needed_count != 0) {
     DL_ERR("linker cannot have DT_NEEDED dependencies on other libraries");
     return false;
   }
-  if (nbucket == 0) {
+  if (nbucket_ == 0) {
     DL_ERR("empty/missing DT_HASH/DT_GNU_HASH in \"%s\" (new hash type from the future?)", name);
     return false;
   }
-  if (strtab == 0) {
+  if (strtab_ == 0) {
     DL_ERR("empty/missing DT_STRTAB in \"%s\"", name);
     return false;
   }
-  if (symtab == 0) {
+  if (symtab_ == 0) {
     DL_ERR("empty/missing DT_SYMTAB in \"%s\"", name);
     return false;
   }
   return true;
 }
 
-bool soinfo::LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
+bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
@@ -2412,28 +2409,28 @@ bool soinfo::LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& l
 #endif
 
 #if defined(USE_RELA)
-  if (rela != nullptr) {
+  if (rela_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rela, rela_count, global_group, local_group)) {
+    if (relocate(rela_, rela_count_, global_group, local_group)) {
       return false;
     }
   }
-  if (plt_rela != nullptr) {
+  if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rela, plt_rela_count, global_group, local_group)) {
+    if (relocate(plt_rela_, plt_rela_count_, global_group, local_group)) {
       return false;
     }
   }
 #else
-  if (rel != nullptr) {
+  if (rel_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (Relocate(rel, rel_count, global_group, local_group)) {
+    if (relocate(rel_, rel_count_, global_group, local_group)) {
       return false;
     }
   }
-  if (plt_rel != nullptr) {
+  if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (Relocate(plt_rel, plt_rel_count, global_group, local_group)) {
+    if (relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
       return false;
     }
   }
@@ -2506,8 +2503,8 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  si->PrelinkImage();
-  si->LinkImage(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr);
+  si->prelink_image();
+  si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr);
 #endif
 }
 
@@ -2636,7 +2633,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   somain = si;
 
-  si->PrelinkImage();
+  si->prelink_image();
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
@@ -2667,15 +2664,15 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   add_vdso(args);
 
-  si->CallPreInitConstructors();
+  si->call_pre_init_constructors();
 
-  /* After the PrelinkImage, the si->load_bias is initialized.
+  /* After the prelink_image, the si->load_bias is initialized.
    * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
    * We need to update this value for so exe here. So Unwind_Backtrace
    * for some arch like x86 could work correctly within so exe.
    */
   map->l_addr = si->load_bias;
-  si->CallConstructors();
+  si->call_constructors();
 
 #if TIMING
   gettimeofday(&t1, nullptr);
@@ -2790,7 +2787,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!(linker_so.PrelinkImage() && linker_so.LinkImage(g_empty_list, g_empty_list, nullptr))) {
+  if (!(linker_so.prelink_image() && linker_so.link_image(g_empty_list, g_empty_list, nullptr))) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
@@ -2805,7 +2802,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   __libc_init_tls(args);
 
   // Initialize the linker's own global variables
-  linker_so.CallConstructors();
+  linker_so.call_constructors();
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors

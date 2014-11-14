@@ -164,60 +164,60 @@ struct soinfo {
   uint32_t flags;
 
  private:
-  const char* strtab;
-  ElfW(Sym)* symtab;
+  const char* strtab_;
+  ElfW(Sym)* symtab_;
 
-  size_t nbucket;
-  size_t nchain;
-  uint32_t* bucket;
-  uint32_t* chain;
+  size_t nbucket_;
+  size_t nchain_;
+  uint32_t* bucket_;
+  uint32_t* chain_;
 
- public:
 #if defined(__mips__) || !defined(__LP64__)
   // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
-  ElfW(Addr)** plt_got;
+  ElfW(Addr)** plt_got_;
 #endif
 
 #if defined(USE_RELA)
-  ElfW(Rela)* plt_rela;
-  size_t plt_rela_count;
+  ElfW(Rela)* plt_rela_;
+  size_t plt_rela_count_;
 
-  ElfW(Rela)* rela;
-  size_t rela_count;
+  ElfW(Rela)* rela_;
+  size_t rela_count_;
 #else
-  ElfW(Rel)* plt_rel;
-  size_t plt_rel_count;
+  ElfW(Rel)* plt_rel_;
+  size_t plt_rel_count_;
 
-  ElfW(Rel)* rel;
-  size_t rel_count;
+  ElfW(Rel)* rel_;
+  size_t rel_count_;
 #endif
 
-  linker_function_t* preinit_array;
-  size_t preinit_array_count;
+  linker_function_t* preinit_array_;
+  size_t preinit_array_count_;
 
-  linker_function_t* init_array;
-  size_t init_array_count;
-  linker_function_t* fini_array;
-  size_t fini_array_count;
+  linker_function_t* init_array_;
+  size_t init_array_count_;
+  linker_function_t* fini_array_;
+  size_t fini_array_count_;
 
-  linker_function_t init_func;
-  linker_function_t fini_func;
+  linker_function_t init_func_;
+  linker_function_t fini_func_;
 
+ public:
 #if defined(__arm__)
   // ARM EABI section used for stack unwinding.
   uint32_t* ARM_exidx;
   size_t ARM_exidx_count;
 #elif defined(__mips__)
  private:
-  uint32_t mips_symtabno;
-  uint32_t mips_local_gotno;
-  uint32_t mips_gotsym;
+  uint32_t mips_symtabno_;
+  uint32_t mips_local_gotno_;
+  uint32_t mips_gotsym_;
   bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 
- public:
 #endif
 
+ public:
   size_t ref_count;
   link_map link_map_head;
 
@@ -232,13 +232,14 @@ struct soinfo {
 #endif
   bool has_DT_SYMBOLIC;
 
+ public:
   soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags);
 
-  void CallConstructors();
-  void CallDestructors();
-  void CallPreInitConstructors();
-  bool PrelinkImage();
-  bool LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
+  void call_constructors();
+  void call_destructors();
+  void call_pre_init_constructors();
+  bool prelink_image();
+  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -263,7 +264,7 @@ struct soinfo {
   bool is_gnu_hash() const;
 
   bool inline has_min_version(uint32_t min_version) const {
-    return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
+    return (flags & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
   }
 
  private:
@@ -272,38 +273,38 @@ struct soinfo {
   ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
 
-  void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
-  void CallFunction(const char* function_name, linker_function_t function);
+  void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
+  void call_function(const char* function_name, linker_function_t function);
 #if defined(USE_RELA)
-  int Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  int relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 #else
-  int Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  int relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 #endif
 
  private:
   // This part of the structure is only available
   // when FLAG_NEW_SOINFO is set in this->flags.
-  uint32_t version;
+  uint32_t version_;
 
   // version >= 0
-  dev_t st_dev;
-  ino_t st_ino;
+  dev_t st_dev_;
+  ino_t st_ino_;
 
   // dependency graph
-  soinfo_list_t children;
-  soinfo_list_t parents;
+  soinfo_list_t children_;
+  soinfo_list_t parents_;
 
   // version >= 1
-  off64_t file_offset;
-  uint32_t rtld_flags;
-  uint32_t dt_flags_1;
-  size_t strtab_size;
+  off64_t file_offset_;
+  uint32_t rtld_flags_;
+  uint32_t dt_flags_1_;
+  size_t strtab_size_;
 
   // version >= 2
-  uint32_t gnu_maskwords;
-  uint32_t gnu_shift2;
+  uint32_t gnu_maskwords_;
+  uint32_t gnu_shift2_;
 
-  ElfW(Addr)* gnu_bloom_filter;
+  ElfW(Addr)* gnu_bloom_filter_;
 
   friend soinfo* get_libdl_info();
 };
