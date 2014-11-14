@@ -669,10 +669,30 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
 
   ASSERT_TRUE(fn == dlinfo.dli_saddr);
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
-  ASSERT_STREQ("libgnu-hash-table-library.so", dlinfo.dli_fname);
+  ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
 #else
   GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
 #endif
+}
+
+TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
+  void* handle = dlopen("libsysv-hash-table-library.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  auto guard = make_scope_guard([&]() {
+    dlclose(handle);
+  });
+  void* sym = dlsym(handle, "getRandomNumber");
+  ASSERT_TRUE(sym != nullptr) << dlerror();
+  int (*fn)(void);
+  fn = reinterpret_cast<int (*)(void)>(sym);
+  EXPECT_EQ(4, fn());
+
+  Dl_info dlinfo;
+  ASSERT_TRUE(0 != dladdr(reinterpret_cast<void*>(fn), &dlinfo));
+
+  ASSERT_TRUE(fn == dlinfo.dli_saddr);
+  ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
+  ASSERT_SUBSTR("libsysv-hash-table-library.so", dlinfo.dli_fname);
 }
 
 TEST(dlfcn, dlopen_bad_flags) {
