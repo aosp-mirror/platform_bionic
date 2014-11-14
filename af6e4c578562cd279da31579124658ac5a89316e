@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da9e076c_8b7721fb",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-14T02:51:40Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "da9e076c_9af131a8",
+      "revId": "af6e4c578562cd279da31579124658ac5a89316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baa313b2_d68f1436",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-14T00:00:38Z",
       "side": 1,
       "message": "sizeof(dst) would seem more natural here.",
+      "revId": "af6e4c578562cd279da31579124658ac5a89316e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adfdb23_feb876ea",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-14T02:51:40Z",
+      "side": 1,
+      "message": "Modified slightly but inline with this comment.",
+      "parentUuid": "baa313b2_d68f1436",
       "revId": "af6e4c578562cd279da31579124658ac5a89316e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
