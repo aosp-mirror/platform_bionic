@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a1a7bb5_405a52f4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1731,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-14T03:17:55Z",
+      "side": 1,
+      "message": "you didn\u0027t actually rename the local; it\u0027s still just \u0027got\u0027.",
+      "revId": "077885966059b820dd85db8444b72aba8c2ba611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
