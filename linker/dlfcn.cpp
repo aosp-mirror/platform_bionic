@@ -238,14 +238,14 @@ static soinfo __libdl_info("libdl.so", nullptr, 0, RTLD_GLOBAL);
 soinfo* get_libdl_info() {
   if ((__libdl_info.flags & FLAG_LINKED) == 0) {
     __libdl_info.flags |= FLAG_LINKED;
-    __libdl_info.strtab = ANDROID_LIBDL_STRTAB;
-    __libdl_info.symtab = g_libdl_symtab;
-    __libdl_info.nbucket = sizeof(g_libdl_buckets)/sizeof(unsigned);
-    __libdl_info.nchain = sizeof(g_libdl_chains)/sizeof(unsigned);
-    __libdl_info.bucket = g_libdl_buckets;
-    __libdl_info.chain = g_libdl_chains;
+    __libdl_info.strtab_ = ANDROID_LIBDL_STRTAB;
+    __libdl_info.symtab_ = g_libdl_symtab;
+    __libdl_info.nbucket_ = sizeof(g_libdl_buckets)/sizeof(unsigned);
+    __libdl_info.nchain_ = sizeof(g_libdl_chains)/sizeof(unsigned);
+    __libdl_info.bucket_ = g_libdl_buckets;
+    __libdl_info.chain_ = g_libdl_chains;
     __libdl_info.ref_count = 1;
-    __libdl_info.strtab_size = sizeof(ANDROID_LIBDL_STRTAB);
+    __libdl_info.strtab_size_ = sizeof(ANDROID_LIBDL_STRTAB);
   }
 
   return &__libdl_info;
