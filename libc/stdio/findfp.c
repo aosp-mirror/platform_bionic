@@ -59,12 +59,15 @@ static struct glue uglue = { 0, FOPEN_MAX - 3, usual };
 static struct glue *lastglue = &uglue;
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
-struct __sfileext __sFext[3];
+static struct __sfileext __sFext[3];
 FILE __sF[3] = {
 	std(__SRD, STDIN_FILENO),		/* stdin */
 	std(__SWR, STDOUT_FILENO),		/* stdout */
 	std(__SWR|__SNBF, STDERR_FILENO)	/* stderr */
 };
+FILE* stdin = &__sF[0];
+FILE* stdout = &__sF[1];
+FILE* stderr = &__sF[2];
 struct glue __sglue = { &uglue, 3, __sF };
 
 static struct glue *
