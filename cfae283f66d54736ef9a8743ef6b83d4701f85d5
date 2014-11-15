@@ -45,6 +45,30 @@
       "revId": "cfae283f66d54736ef9a8743ef6b83d4701f85d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a941f50_74873ef2",
+        "filename": "tests/sys_socket_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-15T02:31:19Z",
+      "side": 1,
+      "message": "At the beginning I was going to resue those functions, but considered that the ConnectFn and RunTest can be more reusable for others socket test cases if not changed, like the parameters for socket, and call for listen and select, etc. So I created this new simple TestRecvFrom function for use. Felt this udp test is a little different that other socket tests(including the tests not implemented here yet).",
+      "parentUuid": "7a8d1b44_95682367",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 1
+      },
+      "revId": "cfae283f66d54736ef9a8743ef6b83d4701f85d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
