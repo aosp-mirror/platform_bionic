@@ -26,20 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
-#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdio.h>  // For FOPEN_MAX.
-#include <string.h>
 #include <sys/sysconf.h>
+#include <sys/sysinfo.h>
 #include <time.h>
 #include <unistd.h>
 
 #include "private/bionic_tls.h"
-#include "private/ScopedReaddir.h"
 
 /* seems to be the default on Linux, per the GLibc sources and my own digging */
 
@@ -67,81 +64,6 @@
 #define  SYSTEM_2_LOCALEDEF  -1       /* localedef() unimplemented */
 #define  SYSTEM_2_UPE        -1       /* No UPE for you ! (User Portability Utilities) */
 #define  SYSTEM_2_VERSION    -1       /* No posix command-line tools */
-
-static bool __matches_cpuN(const char* s) {
-  // The %c trick is to ensure that we have the anchored match "^cpu[0-9]+$".
-  unsigned cpu;
-  char dummy;
-  return (sscanf(s, "cpu%u%c", &cpu, &dummy) == 1);
-}
-
-static int __sysconf_nprocessors_conf() {
-  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
-  // from there. This method works on both.
-  ScopedReaddir reader("/sys/devices/system/cpu");
-  if (reader.IsBad()) {
-    return 1;
-  }
-
-  int result = 0;
-  dirent* entry;
-  while ((entry = reader.ReadEntry()) != NULL) {
-    if (entry->d_type == DT_DIR && __matches_cpuN(entry->d_name)) {
-      ++result;
-    }
-  }
-  return result;
-}
-
-static int __sysconf_nprocessors_onln() {
-  FILE* fp = fopen("/proc/stat", "re");
-  if (fp == NULL) {
-    return 1;
-  }
-
-  int result = 0;
-  char buf[256];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    // Extract just the first word from the line.
-    // 'cpu0 7976751 1364388 3116842 469770388 8629405 0 49047 0 0 0'
-    char* p = strchr(buf, ' ');
-    if (p != NULL) {
-      *p = 0;
-    }
-    if (__matches_cpuN(buf)) {
-      ++result;
-    }
-  }
-  fclose(fp);
-  return result;
-}
-
-static int __get_meminfo(const char* pattern) {
-  FILE* fp = fopen("/proc/meminfo", "re");
-  if (fp == NULL) {
-    return -1;
-  }
-
-  int result = -1;
-  char buf[256];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    long total;
-    if (sscanf(buf, pattern, &total) == 1) {
-      result = (int) (total / (PAGE_SIZE/1024));
-      break;
-    }
-  }
-  fclose(fp);
-  return result;
-}
-
-static int __sysconf_phys_pages() {
-  return __get_meminfo("MemTotal: %ld kB");
-}
-
-static int __sysconf_avphys_pages() {
-  return __get_meminfo("MemFree: %ld kB");
-}
 
 static int __sysconf_monotonic_clock() {
   timespec t;
@@ -244,10 +166,10 @@ long sysconf(int name) {
     //case _SC_THREAD_SAFE_FUNCTIONS:  return _POSIX_THREAD_SAFE_FUNCTIONS
 
     case _SC_MONOTONIC_CLOCK:   return __sysconf_monotonic_clock();
-    case _SC_NPROCESSORS_CONF:  return __sysconf_nprocessors_conf();
-    case _SC_NPROCESSORS_ONLN:  return __sysconf_nprocessors_onln();
-    case _SC_PHYS_PAGES:        return __sysconf_phys_pages();
-    case _SC_AVPHYS_PAGES:      return __sysconf_avphys_pages();
+    case _SC_NPROCESSORS_CONF:  return get_nprocs_conf();
+    case _SC_NPROCESSORS_ONLN:  return get_nprocs();
+    case _SC_PHYS_PAGES:        return get_phys_pages();
+    case _SC_AVPHYS_PAGES:      return get_avphys_pages();
 
     default:
       // Posix says EINVAL is the only error that shall be returned,
