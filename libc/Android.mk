@@ -213,6 +213,7 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
+    bionic/sysinfo.cpp \
     bionic/syslog.cpp \
     bionic/sys_siglist.c \
     bionic/sys_signame.c \
