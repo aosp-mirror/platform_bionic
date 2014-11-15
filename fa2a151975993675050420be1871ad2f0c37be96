@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a73f723_8e665fc7",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-15T00:45:08Z",
+      "side": 1,
+      "message": "Done. I was confused because it didn\u0027t include the implementation of sysinfo().",
+      "parentUuid": "1ab25f12_7e3a4ded",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a8d1b44_f8123ec3",
         "filename": "libc/bionic/getsysstat.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-15T00:11:21Z",
       "side": 1,
       "message": "we\u0027re not very consistent, but we\u0027ve been bitten a few times now by not including the header we\u0027re implementing first. prefer to include that header above the others, with a blank line between them.\n\n(otherwise this is good, with them sorted and the private header in a separate group.)",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a73f723_ce70577a",
+        "filename": "libc/bionic/getsysstat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-15T00:45:08Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "7a8d1b44_f8123ec3",
       "revId": "fa2a151975993675050420be1871ad2f0c37be96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1ab25f12_befe950f",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-15T00:45:08Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "1ab25f12_5e055135",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a73f723_2b68fd16",
         "filename": "libc/include/sys/sysinfo.h",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "5a73f723_ce477715",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-15T00:45:08Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5a73f723_2b68fd16",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a73f723_0b4a61a5",
         "filename": "tests/sys_sysinfo_test.cpp",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2014-11-15T00:11:21Z",
       "side": 1,
       "message": "if you\u0027re writing a test that\u0027s just a bunch of random stuff, call it \"smoke\" (as in \"smoke test\").\n\nbut here you may as well just break this out into one test per function. they\u0027re all unrelated.",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a73f723_6eccc346",
+        "filename": "tests/sys_sysinfo_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-15T00:45:08Z",
+      "side": 1,
+      "message": "As I want to check the relation between results from different APIs, I change it into a smoke test.",
+      "parentUuid": "5a73f723_0b4a61a5",
       "revId": "fa2a151975993675050420be1871ad2f0c37be96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
