@@ -316,6 +316,8 @@ bionic-unit-tests-glibc_cflags := $(test_cflags)
 bionic-unit-tests-glibc_cppflags := $(test_cppflags)
 bionic-unit-tests-glibc_ldflags := -Wl,--export-dynamic
 
+bionic-unit-tests-glibc_allow_asan := true
+
 module := bionic-unit-tests-glibc
 module_tag := optional
 build_type := host
