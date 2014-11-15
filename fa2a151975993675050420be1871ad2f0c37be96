@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ab25f12_7e3a4ded",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-15T00:11:21Z",
+      "side": 1,
+      "message": "ideally each file should be named either after the function it implements (like dup2.cpp) or the header file (like libgen.cpp). so this should be \"sysinfo.cpp\".",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8d1b44_f8123ec3",
+        "filename": "libc/bionic/getsysstat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-15T00:11:21Z",
+      "side": 1,
+      "message": "we\u0027re not very consistent, but we\u0027ve been bitten a few times now by not including the header we\u0027re implementing first. prefer to include that header above the others, with a blank line between them.\n\n(otherwise this is good, with them sorted and the private header in a separate group.)",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ab25f12_5e055135",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-15T00:11:21Z",
+      "side": 1,
+      "message": "we don\u0027t include documentation in our headers, unless it\u0027s documenting an implementation detail or an ABI bug. developers are expected to refer to the canonical documentation for whatever it is we\u0027re implementing (ISO C, POSIX, et cetera).",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a73f723_2b68fd16",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-15T00:11:21Z",
+      "side": 1,
+      "message": "we prefer to not include the \"extern\".\n\nwe don\u0027t have spaces before parentheses in function prototypes.\n\nwe always write \"type* identifier\" like C++ programmers rather than \"type *identifier\".",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a73f723_0b4a61a5",
+        "filename": "tests/sys_sysinfo_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-15T00:11:21Z",
+      "side": 1,
+      "message": "if you\u0027re writing a test that\u0027s just a bunch of random stuff, call it \"smoke\" (as in \"smoke test\").\n\nbut here you may as well just break this out into one test per function. they\u0027re all unrelated.",
+      "revId": "fa2a151975993675050420be1871ad2f0c37be96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
