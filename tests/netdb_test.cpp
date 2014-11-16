@@ -21,6 +21,23 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
+TEST(netdb, getaddrinfo_NULL_host) {
+  // It's okay for the host argument to be NULL, as long as service isn't.
+  addrinfo* ai = NULL;
+  ASSERT_EQ(0, getaddrinfo(NULL, "smtp", NULL, &ai));
+  // (sockaddr_in::sin_port and sockaddr_in6::sin6_port overlap.)
+  ASSERT_EQ(25U, ntohs(reinterpret_cast<sockaddr_in*>(ai->ai_addr)->sin_port));
+  freeaddrinfo(ai);
+}
+
+TEST(netdb, getaddrinfo_NULL_service) {
+  // It's okay for the service argument to be NULL, as long as host isn't.
+  addrinfo* ai = NULL;
+  ASSERT_EQ(0, getaddrinfo("localhost", NULL, NULL, &ai));
+  ASSERT_TRUE(ai != NULL);
+  freeaddrinfo(ai);
+}
+
 TEST(netdb, getaddrinfo_NULL_hints) {
   addrinfo* ai = NULL;
   ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &ai));
