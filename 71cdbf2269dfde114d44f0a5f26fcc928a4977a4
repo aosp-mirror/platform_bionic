@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1acb3f96_569c12f9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-17T17:16:42Z",
+      "side": 1,
+      "message": "Hi, Elliott\n\nwhen I test this change, it will be deadlocked here, do you know why? I am wrong somewhere?",
+      "range": {
+        "startLine": 1140,
+        "startChar": 3,
+        "endLine": 1140,
+        "endChar": 51
+      },
+      "revId": "71cdbf2269dfde114d44f0a5f26fcc928a4977a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ace43a4_9aaf6d76",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1041813
+      },
+      "writtenOn": "2014-11-17T17:16:42Z",
+      "side": 1,
+      "message": "here will be deadlocked too:(",
+      "range": {
+        "startLine": 1172,
+        "startChar": 4,
+        "endLine": 1172,
+        "endChar": 57
+      },
+      "revId": "71cdbf2269dfde114d44f0a5f26fcc928a4977a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
