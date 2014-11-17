@@ -30,10 +30,6 @@
  *   on SMP systems emits an appropriate instruction.
  */
 
-#if !defined(ANDROID_SMP)
-# error "Must define ANDROID_SMP before including atomic-inline.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
