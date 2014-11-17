@@ -71,6 +71,30 @@ TEST(time, gmtime_no_stack_overflow_14313703) {
   ASSERT_EQ(0, pthread_join(t, &result));
 }
 
+TEST(time, mktime_empty_TZ) {
+  // tzcode used to have a bug where it didn't reinitialize some internal state.
+
+  // Choose a time where DST is set.
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 1980 - 1900;
+  t.tm_mon = 6;
+  t.tm_mday = 2;
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+  ASSERT_EQ(static_cast<time_t>(331372800U), mktime(&t));
+
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 1980 - 1900;
+  t.tm_mon = 6;
+  t.tm_mday = 2;
+
+  setenv("TZ", "", 1); // Implies UTC.
+  tzset();
+  ASSERT_EQ(static_cast<time_t>(331344000U), mktime(&t));
+}
+
 TEST(time, mktime_10310929) {
   struct tm t;
   memset(&t, 0, sizeof(tm));

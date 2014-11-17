@@ -1257,6 +1257,7 @@ tzset_locked(void)
         lclptr->ttis[0].tt_gmtoff = 0;
         lclptr->ttis[0].tt_abbrind = 0;
         (void) strcpy(lclptr->chars, gmt);
+        lclptr->defaulttype = 0;
     } else if (tzload(name, lclptr, TRUE) != 0)
         if (name[0] == ':' || tzparse(name, lclptr, FALSE) != 0)
             (void) gmtload(lclptr);
