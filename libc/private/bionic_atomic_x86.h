@@ -20,12 +20,7 @@
  * platform for a multi-core device.
  */
 __ATOMIC_INLINE__ void __bionic_memory_barrier() {
-#if defined(ANDROID_SMP) && ANDROID_SMP == 1
   __asm__ __volatile__ ( "mfence" : : : "memory" );
-#else
-  /* A simple compiler barrier. */
-  __asm__ __volatile__ ( "" : : : "memory" );
-#endif
 }
 
 /* Compare-and-swap, without any explicit barriers. Note that this function
