@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dae44753_c71b92de",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-11-18T21:07:59Z",
+      "side": 1,
+      "message": "Don\u0027t you need to include sys/types.h for this? It might work by accident right now.",
+      "range": {
+        "startLine": 79,
+        "startChar": 2,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "de7e9220757f4ded696b4ff5bbbd765a0aa660b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
