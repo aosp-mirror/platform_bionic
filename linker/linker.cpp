@@ -1135,28 +1135,27 @@ static soinfo* find_library(const char* name, int rtld_flags, const android_dlex
   return si;
 }
 
-static void soinfo_unload(soinfo* si) {
+static void soinfo_unload_schedule(soinfo::soinfo_list_t& unload_list, soinfo* si) {
   if (!si->can_unload()) {
     TRACE("not unloading '%s' - the binary is flagged with NODELETE", si->name);
     return;
   }
 
   if (si->ref_count == 1) {
-    TRACE("unloading '%s'", si->name);
-    si->call_destructors();
+    unload_list.push_back(si);
 
     if (si->has_min_version(0)) {
       soinfo* child = nullptr;
       while ((child = si->get_children().pop_front()) != nullptr) {
         TRACE("%s needs to unload %s", si->name, child->name);
-        soinfo_unload(child);
+        soinfo_unload_schedule(unload_list, child);
       }
     } else {
       for_each_dt_needed(si, [&] (const char* library_name) {
         TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
         soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
         if (needed != nullptr) {
-          soinfo_unload(needed);
+          soinfo_unload_schedule(unload_list, needed);
         } else {
           // Not found: for example if symlink was deleted between dlopen and dlclose
           // Since we cannot really handle errors at this point - print and continue.
@@ -1165,12 +1164,25 @@ static void soinfo_unload(soinfo* si) {
       });
     }
 
-    notify_gdb_of_unload(si);
     si->ref_count = 0;
-    soinfo_free(si);
   } else {
     si->ref_count--;
     TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
+  }
+}
+
+static void soinfo_unload(soinfo* root) {
+  soinfo::soinfo_list_t unload_list;
+  soinfo_unload_schedule(unload_list, root);
+  unload_list.for_each([](soinfo* si) {
+    si->call_destructors();
+  });
+
+  soinfo* si = nullptr;
+  while ((si = unload_list.pop_front()) != nullptr) {
+    TRACE("unloading '%s'", si->name);
+    notify_gdb_of_unload(si);
+    soinfo_free(si);
   }
 }
 

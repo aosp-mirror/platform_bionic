@@ -19,3 +19,19 @@ extern "C" int check_order_reloc_get_answer_impl();
 extern "C" int check_order_reloc_nephew_get_answer() {
   return check_order_reloc_get_answer_impl();
 }
+
+namespace {
+// The d-tor for this class is called on dlclose() -> __on_dlclose() -> __cxa_finalize()
+// We use it to detect calls to prematurely unmapped libraries during dlclose.
+// See also b/18338888
+class CallNephewInDtor {
+ public:
+  ~CallNephewInDtor() {
+    check_order_reloc_get_answer_impl();
+  }
+} instance;
+};
+
+extern "C" void* get_instance() {
+  return &instance;
+}
