@@ -18,7 +18,9 @@
 #define __ANDROID_DLEXT_H__
 
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>  /* for off64_t */
 
 __BEGIN_DECLS
 

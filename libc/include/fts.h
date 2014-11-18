@@ -35,6 +35,8 @@
 #ifndef	_FTS_H_
 #define	_FTS_H_
 
+#include <sys/types.h>
+
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
 	struct _ftsent *fts_child;	/* linked list of children */
@@ -110,8 +112,6 @@ typedef struct _ftsent {
 	struct stat *fts_statp;		/* stat(2) information */
 	char fts_name[1];		/* file name */
 } FTSENT;
-
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 FTSENT	*fts_children(FTS *, int);
