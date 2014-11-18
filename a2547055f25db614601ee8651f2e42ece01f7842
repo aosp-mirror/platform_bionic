@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a55ffac_8c9b8b7d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-11-18T21:27:55Z",
+      "side": 1,
+      "message": "We may need to handle the case of (si-\u003eref_count \u003d\u003d 0). Although it would be scheduled to be destroyed later anyway.",
+      "range": {
+        "startLine": 1168,
+        "startChar": 2,
+        "endLine": 1168,
+        "endChar": 10
+      },
+      "revId": "a2547055f25db614601ee8651f2e42ece01f7842",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
