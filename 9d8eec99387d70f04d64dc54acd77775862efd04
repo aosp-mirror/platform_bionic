@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fadf4b7d_a5c12811",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-18T20:56:27Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "9d8eec99387d70f04d64dc54acd77775862efd04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dae44753_c791d2df",
+        "filename": "tests/libs/dlopen_check_order_reloc_nephew_answer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-18T20:56:27Z",
+      "side": 1,
+      "message": "link to bug?",
+      "revId": "9d8eec99387d70f04d64dc54acd77775862efd04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
