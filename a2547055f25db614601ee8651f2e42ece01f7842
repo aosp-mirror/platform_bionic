@@ -22,6 +22,30 @@
       "revId": "a2547055f25db614601ee8651f2e42ece01f7842",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_65356016",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-18T21:34:12Z",
+      "side": 1,
+      "message": "... and we do not support recursive links in dependency graph at the moment.",
+      "parentUuid": "1a55ffac_8c9b8b7d",
+      "range": {
+        "startLine": 1168,
+        "startChar": 2,
+        "endLine": 1168,
+        "endChar": 10
+      },
+      "revId": "a2547055f25db614601ee8651f2e42ece01f7842",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
