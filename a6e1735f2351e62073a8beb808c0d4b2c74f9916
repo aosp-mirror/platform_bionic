@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a7c1f2d_0b80dd84",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-19T07:06:01Z",
+      "side": 1,
+      "message": "Not needed anymore.",
+      "revId": "a6e1735f2351e62073a8beb808c0d4b2c74f9916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_e9f30601",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-19T07:06:01Z",
+      "side": 1,
+      "message": "You did some cleanup of the feature test macros, right? ftw(3) says this should have a `#define _XOPEN_SOURCE 500`",
+      "revId": "a6e1735f2351e62073a8beb808c0d4b2c74f9916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a7c1f2d_2b7d9907",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-11-19T07:06:01Z",
+      "side": 1,
+      "message": "Checking the beahavior of FTW_CHDIR would be fairly simple.\n\nDo we also support the FTW_ACTIONRETVAL flag? That should be fairly easy to test.\n\nTesting the post-order traversal would be messier, and the remaining flags can\u0027t be tested reliably (unless you want to build a fs tree just for testing).",
+      "revId": "a6e1735f2351e62073a8beb808c0d4b2c74f9916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
