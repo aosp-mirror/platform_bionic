@@ -37,12 +37,13 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # ..._2.so - empty
 # -----------------------------------------------------------------------------
 libtest_check_order_reloc_siblings_2_src_files := \
-    empty.cpp
+    dlopen_check_order_reloc_grandchild_answer.cpp
 
 libtest_check_order_reloc_siblings_2_shared_libraries := \
     libtest_check_order_reloc_siblings_c \
     libtest_check_order_reloc_siblings_d
 
+libtest_check_order_reloc_siblings_2_allow_undefined_symbols := true
 module := libtest_check_order_reloc_siblings_2
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
@@ -86,6 +87,10 @@ libtest_check_order_reloc_siblings_c_src_files := \
     dlopen_check_order_reloc_answer_impl.cpp
 
 libtest_check_order_reloc_siblings_c_cflags := -D__ANSWER=2
+libtest_check_order_reloc_siblings_c_shared_libraries := \
+    libtest_check_order_reloc_siblings_c_1 \
+    libtest_check_order_reloc_siblings_c_2
+
 module := libtest_check_order_reloc_siblings_c
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
@@ -116,6 +121,26 @@ libtest_check_order_reloc_siblings_f_src_files := \
     dlopen_check_order_reloc_answer.cpp
 
 module := libtest_check_order_reloc_siblings_f
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# ..._c_1.so
+# -----------------------------------------------------------------------------
+libtest_check_order_reloc_siblings_c_1_src_files := \
+    dlopen_check_order_reloc_grandchild_answer_impl.cpp
+
+libtest_check_order_reloc_siblings_c_1_cflags := -D__ANSWER=42
+module := libtest_check_order_reloc_siblings_c_1
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# ..._c_2.so
+# -----------------------------------------------------------------------------
+libtest_check_order_reloc_siblings_c_2_src_files := \
+    dlopen_check_order_reloc_grandchild_answer_impl.cpp
+
+libtest_check_order_reloc_siblings_c_2_cflags := -D__ANSWER=0
+module := libtest_check_order_reloc_siblings_c_2
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------

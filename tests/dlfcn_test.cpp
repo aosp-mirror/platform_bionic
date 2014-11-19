@@ -278,6 +278,44 @@ TEST(dlfcn, dlopen_check_order_reloc_siblings_with_preload) {
   ASSERT_EQ(0, dlclose(handle));
 }
 
+TEST(dlfcn, dlopen_check_order_reloc_grandchild) {
+  // This is how this one works:
+  // we lookup and call grandchild_get_answer which is defined in '_2.so'
+  // and in turn calls external get_answer_impl() defined in '_c_1.so and _c_2.so'
+  // the correct _impl() is implemented by '_c_1.so';
+  //
+  // Here is the picture of subtree:
+  //
+  // libtest_check_order_reloc_siblings.so
+  // |
+  // +-> ..._2.so <- grandchild_get_answer()
+  //     |
+  //     +-> ..._c.so <- empty
+  //     |   |
+  //     |   +-> _c_1.so <- exports correct answer_impl()
+  //     |   |
+  //     |   +-> _c_2.so <- exports incorrect answer_impl()
+  //     |
+  //     +-> ..._d.so <- empty
+
+  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#endif
+
+  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_grandchild_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
+}
+
 TEST(dlfcn, dlopen_check_order_reloc_nephew) {
   // This is how this one works:
   // we lookup and call nephew_get_answer which is defined in '_2.so'
