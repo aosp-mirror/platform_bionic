@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fadf4b7d_1c402d61",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Done. change xxx \u003d NULL to memset in __stubs_state.",
+      "parentUuid": "ba0233b9_3e3ed1ff",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba0233b9_0129f0b2",
         "filename": "libc/bionic/stubs.cpp",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ba0233b9_8c24174f",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ba0233b9_417da8a1",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fadf4b7d_5119fe69",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2014-11-19T00:33:43Z",
       "side": 1,
       "message": "prefer \u0027result\u0027. \u0027ret\u0027 isn\u0027t a word or abbreviation.",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_ec679393",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Done. change ret to result, change pwd_st to pwd_storage.",
+      "parentUuid": "fadf4b7d_5119fe69",
       "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "ba0233b9_4c6ddf73",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "fadf4b7d_d104ee09",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba0233b9_4119286a",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 1
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "fadf4b7d_fc4e2985",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Done. Delete all SCOPED_TRACE like this.",
+      "parentUuid": "ba0233b9_4119286a",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba0233b9_813a20b8",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 1
@@ -115,6 +205,24 @@
       "writtenOn": "2014-11-19T00:33:43Z",
       "side": 1,
       "message": "this is an example where the test should be broken in two.",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_9c3a7db8",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-19T01:31:28Z",
+      "side": 1,
+      "message": "Yes. But if we don\u0027t use SCOPED_TRACE here, we need to duplicate the testcase(like \"root\", \"system\") or code in check_group/check_passwd. I don\u0027t know which of the three is better.",
+      "parentUuid": "ba0233b9_813a20b8",
       "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
