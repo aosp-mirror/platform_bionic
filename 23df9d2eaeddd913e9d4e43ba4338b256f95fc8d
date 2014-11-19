@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba0233b9_3e3ed1ff",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "|sort\n\ni see we\u0027re also missing pw_gecos on LP64.\n\nmemset?",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_0129f0b2",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "this one\u0027s a bit more awkward. should we just change __stubs_state to memset?",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_417da8a1",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "use __unused in C, or just don\u0027t name the parameters in C++. (you can comment them out if you think there\u0027s some value to having the names visible.)",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_5119fe69",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "prefer \u0027result\u0027. \u0027ret\u0027 isn\u0027t a word or abbreviation.",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_d104ee09",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "prefer to explain why. we have too many \"This test does nothing\"s, and we\u0027re trying to replace them with specific explanations.",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_4119286a",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "why are these helpful? these tests are carefully broken into individual tests that just test one thing (which is always to be preferred to using SCOPED_TRACE).",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_813a20b8",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T00:33:43Z",
+      "side": 1,
+      "message": "this is an example where the test should be broken in two.",
+      "revId": "23df9d2eaeddd913e9d4e43ba4338b256f95fc8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
