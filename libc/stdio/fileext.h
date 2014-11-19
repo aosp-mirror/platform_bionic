@@ -34,6 +34,8 @@
 
 #include <pthread.h>
 
+__BEGIN_DECLS
+
 /*
  * file extension
  */
@@ -60,5 +62,7 @@ do { \
 	(f)->_ext._base = (unsigned char *)(fext); \
 	_FILEEXT_INIT(f); \
 } while (0)
+
+__END_DECLS
 
 #endif /* _FILEEXT_H_ */
