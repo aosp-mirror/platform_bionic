@@ -32,6 +32,10 @@
 #ifndef _WCIO_H_
 #define _WCIO_H_
 
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
+
 /* minimal requirement of SUSv2 */
 #define WCIO_UNGETWC_BUFSIZE 1
 
@@ -77,5 +81,7 @@ do {\
 
 #define WCIO_INIT(fp) \
 	memset(&(_EXT(fp)->_wcio), 0, sizeof(struct wchar_io_data))
+
+__END_DECLS
 
 #endif /*_WCIO_H_*/

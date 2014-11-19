@@ -41,6 +41,8 @@
 #include "wcio.h"
 #include "fileext.h"
 
+__BEGIN_DECLS
+
 /*
  * Android <= KitKat had getc/putc macros in <stdio.h> that referred
  * to __srget/__swbuf, so those symbols need to be public for LP32
@@ -137,3 +139,5 @@ extern int __sfvwrite(FILE *, struct __suio *);
 wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
 
 #pragma GCC visibility pop
+
+__END_DECLS
