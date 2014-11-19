@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faad8bfd_523754cf",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-11-19T16:21:36Z",
+      "side": 1,
+      "message": "Description here is inconsistent with the pic/code below.",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 285,
+        "endChar": 51
+      },
+      "revId": "72d8c620dd21bfc09f6e4b50fcad9d022c730b2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
