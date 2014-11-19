@@ -22,6 +22,30 @@
       "revId": "72d8c620dd21bfc09f6e4b50fcad9d022c730b2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ad56f7b_ea2f672d",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-19T18:39:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faad8bfd_523754cf",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 285,
+        "endChar": 51
+      },
+      "revId": "72d8c620dd21bfc09f6e4b50fcad9d022c730b2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
