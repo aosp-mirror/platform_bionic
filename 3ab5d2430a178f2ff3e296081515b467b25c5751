@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba0233b9_4713f87a",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "you could just return directly. or inline this function at its one call site.",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a55ffac_efed4c51",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "i don\u0027t think we need this either. can\u0027t we just pass free(3) directly to pthread_key_create?\n\nactually, no, we should just replace all this with the ThreadLocalBuffer.h stuff. doesn\u0027t have to be in this change though.",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_fc1d8908",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "this is \u003c 100, so just put it all on one line.\n\n(if it wasn\u0027t, wrapped lines should line up with the ( from the line above.)",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_c704280a",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "typedef enum? what are we? barbarians? :-)",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a55ffac_62089351",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "i think part of the problem here is that this function is testing four different functions, only the second of which is actually called getpwnam.",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_3c6a515d",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-19T01:49:12Z",
+      "side": 1,
+      "message": "similarly here.\n\ncheck_grp_functions?\n\nis it worth breaking this file up into pwd_test.cpp and grp_test.cpp? does that make things better or worse? (there\u0027s no good reason the code is in \u0027stubs.cpp\u0027. that\u0027s just a historical mistake. but since you\u0027re making real changes there it would be a mistake to pull them out into different files in the same change. it would be impossible to review. but we might want to fix that later.)",
+      "revId": "3ab5d2430a178f2ff3e296081515b467b25c5751",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
