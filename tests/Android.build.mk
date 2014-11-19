@@ -42,6 +42,8 @@ endif
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
 
+LOCAL_ALLOW_UNDEFINED_SYMBOLS := $($(module)_allow_undefined_symbols)
+
 ifneq ($($(module)_multilib),)
     LOCAL_MULTILIB := $($(module)_multilib)
 endif
