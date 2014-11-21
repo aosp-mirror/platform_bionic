@@ -723,7 +723,7 @@ static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) 
 static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
 
 TEST(pthread, pthread_atfork_smoke) {
-  test_forked([]() {
+  test_isolated([] {
     ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
     ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
 
