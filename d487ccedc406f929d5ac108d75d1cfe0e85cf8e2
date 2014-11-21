@@ -1,0 +1,259 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df151930_195acbef",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "comments should end with \u0027.\u0027",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_996c9ba6",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "is it useful to have this extra layer of constants? would it be clearer to just inline these below?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_59772377",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "is it useful to have *this* extra layer of constants? would it be clearer to just inline these below?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_b96f5f9a",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "is this really how one reports no limit? LONG_MAX?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_99937b30",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "i think there\u0027s a getauxval for this now?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_7972e788",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "i think there\u0027s a getauxval for this now?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0a2512_3b8d83c2",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "LONG_MAX?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_795b07f7",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "may as well just remove these.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff101d40_5a8ef510",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "fall-through?\n\nghackmann mentioned the other day there\u0027s a getauxval for page size too. though we\u0027re in big trouble if it\u0027s not 4096 :-)",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff101d40_7a89b906",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "looks like they were called \"legacy\" even in 2001: http://www.open-std.org/jtc1/sc22/open/n3232/d6text.txt",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0a2512_9b27ef22",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "if you know which POSIX version they were marked obsolescent in, add it to the comment.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff101d40_da99e551",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "if you know which POSIX version they were marked obsolescent in, add it to the comment.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df151930_b9487f26",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "i wonder if we should change this. our pthread implementation (amongst other things) wouldn\u0027t work if we didn\u0027t have the monotonic clock.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff101d40_3a5581c1",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "does this actually exist? if it does, the value seems suspiciously low. (and implausible; are we to believe that ssize_t is a signed 17-bit type?)",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0a2512_1b4abfa1",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T05:13:07Z",
+      "side": 1,
+      "message": "2008 is the year, so \"2008 (2013 edition)\" doesn\u0027t make sense.\n\nhow many of these actually pass on glibc? it would be nice to have those run on both, with the aim being that we get closer over time.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
