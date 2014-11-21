@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f97cd02_274bf877",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "df151930_195acbef",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_996c9ba6",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-21T05:13:07Z",
       "side": 1,
       "message": "is it useful to have this extra layer of constants? would it be clearer to just inline these below?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f97cd02_47e5e4ec",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Macros like AIO_MAX are used in POSIX standard to refer to the variables returned by sysconf, like sysconf(_SC_AIO_MAX). \n_POSIX_AIO_MAX is the minumum value of AIO_MAX.\nThese variables may be declared in header files, like THREAD_THREADS_MAX. I add this layer to make up the missing macros like AIO_MAX.\nWhen people look at the code and POSIX standard, they will not surprise when they find AIO_MAX is returned for sysconf(_SC_AIO_MAX), but they may wonder if _POSIX_AIO_MAX is returned instead.",
+      "parentUuid": "df151930_996c9ba6",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_1c81a5d5",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "In POSIX standard, sysconf should return -1 without errno change to represent an unlimited value. glibc do something like that. But I hesitate to make the change, because it may confuse people/some code to set macros like ATEXIT_MAX/THREAD_THREADS_MAX to -1.",
+      "parentUuid": "df151930_b96f5f9a",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_99937b30",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -104,6 +158,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_bc6f399a",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "df151930_99937b30",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf0a2512_3b8d83c2",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -115,6 +187,24 @@
       "writtenOn": "2014-11-21T05:13:07Z",
       "side": 1,
       "message": "LONG_MAX?",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff5e5d2a_df041f86",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "As the return type of timer_getoverrun is int, it may be not larger than INT_MAX.",
+      "parentUuid": "bf0a2512_3b8d83c2",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -138,6 +228,24 @@
     },
     {
       "key": {
+        "uuid": "7f97cd02_2718d816",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "If we remove the commented items here, there will be only macro definitions in sysconf.h, and people may wonder whether these macros are to be supported or just out of date.",
+      "parentUuid": "df151930_795b07f7",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff101d40_5a8ef510",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -155,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_5c139dfe",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Done. I missed the words in POSIX standard that they should always be the same.",
+      "parentUuid": "ff101d40_5a8ef510",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff101d40_7a89b906",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -166,6 +292,24 @@
       "writtenOn": "2014-11-21T05:13:07Z",
       "side": 1,
       "message": "looks like they were called \"legacy\" even in 2001: http://www.open-std.org/jtc1/sc22/open/n3232/d6text.txt",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff5e5d2a_9f834762",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "ff101d40_7a89b906",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -206,6 +350,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_7c58a1d1",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Items like _SC_V6_ILP32_OFF32 are introduced and obsolescent in POSIX.1-2008, just in different Issues. I hope I don\u0027t need to find exact Issue for them.",
+      "parentUuid": "ff101d40_da99e551",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_b9487f26",
         "filename": "libc/include/machine/posix_limits.h",
         "patchSetId": 4
@@ -217,6 +379,24 @@
       "writtenOn": "2014-11-21T05:13:07Z",
       "side": 1,
       "message": "i wonder if we should change this. our pthread implementation (amongst other things) wouldn\u0027t work if we didn\u0027t have the monotonic clock.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f97cd02_4703a47e",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "I don\u0027t know. I checked glibc, they use the same way as we currently use.",
+      "parentUuid": "df151930_b9487f26",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -240,6 +420,24 @@
     },
     {
       "key": {
+        "uuid": "ff5e5d2a_71fa07d7",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Yes, It is SHORT_MAX, defined in POSIX standard. I increased it to INT_MAX as ssize_t is int type on 32bit platforms.",
+      "parentUuid": "ff101d40_3a5581c1",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf0a2512_1b4abfa1",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 4
@@ -251,6 +449,24 @@
       "writtenOn": "2014-11-21T05:13:07Z",
       "side": 1,
       "message": "2008 is the year, so \"2008 (2013 edition)\" doesn\u0027t make sense.\n\nhow many of these actually pass on glibc? it would be nice to have those run on both, with the aim being that we get closer over time.",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f97cd02_47d5e476",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-21T21:50:25Z",
+      "side": 1,
+      "message": "Done. I split the test to which can run on both bionic and glibc(at least on my workstation), and which can run only on bionic. The difference is smaller than I expected.",
+      "parentUuid": "bf0a2512_1b4abfa1",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
