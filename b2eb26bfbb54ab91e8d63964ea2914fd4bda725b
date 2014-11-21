@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff101d40_3ad0e187",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T16:51:02Z",
+      "side": 1,
+      "message": "this feels a bit heavyweight. break the pthread types out into machine/pthread_types.h, and #include that from both here and pthread.h?\n\nposix only says that \u003csignal.h\u003e defines pthread_t ad pthread_attr_t, but i don\u0027t think polluting the namespace with types is much of a crime; polluting with functions, though, seems questionable.",
+      "revId": "b2eb26bfbb54ab91e8d63964ea2914fd4bda725b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
