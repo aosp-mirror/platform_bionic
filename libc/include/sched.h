@@ -39,9 +39,8 @@ __BEGIN_DECLS
 #define SCHED_OTHER SCHED_NORMAL
 
 struct sched_param {
-  int __sched_priority;
+  int sched_priority;
 };
-#define sched_priority __sched_priority
 
 extern int sched_setscheduler(pid_t, int, const struct sched_param*);
 extern int sched_getscheduler(pid_t);
