@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_bc861972",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "the ones in the header files are necessary, but these just seem like an extra layer (or two layers!) of indirection to jump through to understand what\u0027s going on.\n\nfor a case like AIO_MAX, the reader is _still_ left wondering \"is this right?\". an extra layer of macros doesn\u0027t mean anything. the comments you\u0027ve added are useful, but they\u0027d be more useful in the sysconf implementation directly because that would be one less jump through the source to find the answer.",
+      "parentUuid": "7f97cd02_47e5e4ec",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_59772377",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -118,6 +136,24 @@
       "side": 1,
       "message": "In POSIX standard, sysconf should return -1 without errno change to represent an unlimited value. glibc do something like that. But I hesitate to make the change, because it may confuse people/some code to set macros like ATEXIT_MAX/THREAD_THREADS_MAX to -1.",
       "parentUuid": "df151930_b96f5f9a",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f97cd02_b2b748f9",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "okay, but we should do that in a separate change. (because it might confuse _correct_ code that we _don\u0027t_ do what POSIX says. we should prefer to make correct code run than incorrect code.)",
+      "parentUuid": "bf586542_1c81a5d5",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -211,6 +247,24 @@
     },
     {
       "key": {
+        "uuid": "bf586542_172dfebc",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "well, INT_MAX then. my point is that we shouldn\u0027t be repeating the literal value :-)",
+      "parentUuid": "ff5e5d2a_df041f86",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_795b07f7",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -240,6 +294,24 @@
       "side": 1,
       "message": "If we remove the commented items here, there will be only macro definitions in sysconf.h, and people may wonder whether these macros are to be supported or just out of date.",
       "parentUuid": "df151930_795b07f7",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff5e5d2a_910e9bd7",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "oh, i assumed you\u0027d removed those too. if we\u0027re keeping those, we need to report something here. if you\u0027re deliberately relying on these falling into the default case, it\u0027s clearer to not comment them out and have a case for all of these obsolete ones explaining what you\u0027re doing and why.",
+      "parentUuid": "7f97cd02_2718d816",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -368,6 +440,24 @@
     },
     {
       "key": {
+        "uuid": "ff5e5d2a_311daf07",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "no, \"2008\" is sufficient.",
+      "parentUuid": "bf586542_7c58a1d1",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_b9487f26",
         "filename": "libc/include/machine/posix_limits.h",
         "patchSetId": 4
@@ -432,6 +522,24 @@
       "side": 1,
       "message": "Yes, It is SHORT_MAX, defined in POSIX standard. I increased it to INT_MAX as ssize_t is int type on 32bit platforms.",
       "parentUuid": "ff101d40_3a5581c1",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf586542_975b2e3f",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-21T22:06:56Z",
+      "side": 1,
+      "message": "but ssize_t isn\u0027t an int on LP64. i\u0027m sure you can find a more appropriate constant...",
+      "parentUuid": "ff5e5d2a_71fa07d7",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
