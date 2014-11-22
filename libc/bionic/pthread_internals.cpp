@@ -28,6 +28,8 @@
 
 #include "pthread_internal.h"
 
+#include <stdlib.h>
+
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"

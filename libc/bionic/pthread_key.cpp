@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <pthread.h>
 
 #include "private/bionic_tls.h"

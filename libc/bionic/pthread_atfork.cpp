@@ -28,6 +28,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <stdlib.h>
 
 struct atfork_t {
   atfork_t* next;
