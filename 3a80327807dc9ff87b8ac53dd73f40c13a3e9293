@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3fa1d55e_8b677948",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T03:17:21Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "3fa1d55e_4bd5f176",
+      "revId": "3a80327807dc9ff87b8ac53dd73f40c13a3e9293",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f9ed122_84c1ac11",
         "filename": "libc/include/sys/sysconf.h",
         "patchSetId": 11
@@ -88,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "3fa1d55e_6b622d3b",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T03:17:21Z",
+      "side": 1,
+      "message": "Do you mean the remove of _SC_XB5*, _SC_2_C_VERSION,..? When I remove it, bionic build wrong, it seems some other place uses these macros.\n\nFor the _POSIX_CPUTIME, maybe most support is done, but a function clock_getcpuclockid() is missing. I didn\u0027t study it in much detail.",
+      "parentUuid": "1f9ed122_e4f8b05b",
+      "revId": "3a80327807dc9ff87b8ac53dd73f40c13a3e9293",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff6c9df2_233bf861",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 11
@@ -99,6 +135,24 @@
       "writtenOn": "2014-11-22T03:00:05Z",
       "side": 1,
       "message": "what are we missing for this?",
+      "revId": "3a80327807dc9ff87b8ac53dd73f40c13a3e9293",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6c9df2_23d0d887",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T03:17:21Z",
+      "side": 1,
+      "message": "_POSIX_MESSAGE_PASSING, APIs like msg_open/msg_send are completely missing.\n_POSIX_PRIORITIZED_IO needs AIO support first, which we are missing as well.\n_POSIX_REALTIME_SIGNALS misses APIs like sigqueue.",
+      "parentUuid": "ff6c9df2_233bf861",
       "revId": "3a80327807dc9ff87b8ac53dd73f40c13a3e9293",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
