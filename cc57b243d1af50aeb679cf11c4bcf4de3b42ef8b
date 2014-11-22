@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "3fa1d55e_8b221917",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T02:39:23Z",
+      "side": 1,
+      "message": "Done. Changed back. values in this file are all defined by POSIX.1-2008.",
+      "parentUuid": "1f9ed122_81675e48",
+      "revId": "cc57b243d1af50aeb679cf11c4bcf4de3b42ef8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f9ed122_fe527d5d",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 8
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "i misunderstood what you were asking. (there are too damn many different kinds of macros, all with very similar names!)\n\ni thought you were asking about macros like _POSIX_ADVISORY_INFO which must always be defined, but whose value tells you whether their feature is supported. obviously these ones need to be defined.\n\nbut now i guess you were actually talking about ones like _POSIX_SS_REPL_MAX which should _not_ be defined if you don\u0027t have the optional feature it belongs to. obviously these ones need to _not_ be defined.\n\nas for _POSIX2_FORT_DEV, note the \"if\" in what POSIX actually says: \"If this symbol is defined in \u003cunistd.h\u003e, it shall be defined to be -1, 0, or 200809L.\". the little \"[FD]\" next to the name means that this is part of the optional extra FD (Fortran Development). we don\u0027t have that, so we don\u0027t need to have any of the defines, and it\u0027s probably less confusing to just remove them. (though, as you say, in this case at least they let us set it to -1.)\n\nif glibc doesn\u0027t have a macro, that probably means we don\u0027t need to either (and also probably means we _shouldn\u0027t_ have it --- i can\u0027t think of any part of POSIX we support that they don\u0027t).",
       "parentUuid": "ff6c9df2_808e7a0e",
+      "revId": "cc57b243d1af50aeb679cf11c4bcf4de3b42ef8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9ed122_848e8c0e",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T02:39:23Z",
+      "side": 1,
+      "message": "Catch your idea. Remove the _POSX* not defined in glibc.",
+      "parentUuid": "3fa1d55e_8b6d39f9",
       "revId": "cc57b243d1af50aeb679cf11c4bcf4de3b42ef8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
