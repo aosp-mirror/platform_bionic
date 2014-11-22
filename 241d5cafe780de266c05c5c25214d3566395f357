@@ -16,6 +16,24 @@
       "revId": "241d5cafe780de266c05c5c25214d3566395f357",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9ed122_9ef25978",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T00:24:38Z",
+      "side": 1,
+      "message": "The comment is misleading. I have changed it.",
+      "parentUuid": "7f97cd02_72e540b8",
+      "revId": "241d5cafe780de266c05c5c25214d3566395f357",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
