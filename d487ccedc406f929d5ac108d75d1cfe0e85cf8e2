@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "3fa1d55e_a5bdc4a9",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T00:24:31Z",
+      "side": 1,
+      "message": "I got your idea. We should decrease the unnecessary complexity for readers instead of matching sysconf standard strictly in appearance.",
+      "parentUuid": "bf586542_bc861972",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df151930_59772377",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -318,6 +336,24 @@
     },
     {
       "key": {
+        "uuid": "3fa1d55e_85c1a811",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T00:24:31Z",
+      "side": 1,
+      "message": "I prefer to remove these items if I can also remove them in sysconf.h. That is simpler.",
+      "parentUuid": "ff5e5d2a_910e9bd7",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff101d40_5a8ef510",
         "filename": "libc/bionic/sysconf.cpp",
         "patchSetId": 4
@@ -540,6 +576,24 @@
       "side": 1,
       "message": "but ssize_t isn\u0027t an int on LP64. i\u0027m sure you can find a more appropriate constant...",
       "parentUuid": "ff5e5d2a_71fa07d7",
+      "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9ed122_3ee465b9",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-22T00:24:31Z",
+      "side": 1,
+      "message": "Done. It is SSIZE_MAX.",
+      "parentUuid": "bf586542_975b2e3f",
       "revId": "d487ccedc406f929d5ac108d75d1cfe0e85cf8e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
