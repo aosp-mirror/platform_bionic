@@ -27,6 +27,7 @@
  */
 
 #include <mntent.h>
+#include <string.h>
 
 #include "private/ThreadLocalBuffer.h"
 
