@@ -17,6 +17,8 @@
 #ifndef LIBC_PRIVATE_KERNEL_SIGSET_T_H_
 #define LIBC_PRIVATE_KERNEL_SIGSET_T_H_
 
+#include <signal.h>
+
 // Our sigset_t is wrong for ARM and x86. It's 32-bit but the kernel expects 64 bits.
 // This means we can't support real-time signals correctly until we can change the ABI.
 // In the meantime, we can use this union to pass an appropriately-sized block of memory

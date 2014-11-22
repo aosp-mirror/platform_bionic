@@ -29,11 +29,12 @@
 #ifndef _PTHREAD_H_
 #define _PTHREAD_H_
 
-#include <time.h>
-#include <signal.h>
-#include <sched.h>
 #include <limits.h>
+#include <machine/pthread_types.h>
+#include <sched.h>
+#include <sys/cdefs.h>
 #include <sys/types.h>
+#include <time.h>
 
 #if defined(__LP64__)
   #define __RESERVED_INITIALIZER , {0}
@@ -76,18 +77,6 @@ typedef struct {
 
 #define PTHREAD_COND_INITIALIZER  {0 __RESERVED_INITIALIZER}
 
-typedef struct {
-  uint32_t flags;
-  void* stack_base;
-  size_t stack_size;
-  size_t guard_size;
-  int32_t sched_policy;
-  int32_t sched_priority;
-#ifdef __LP64__
-  char __reserved[16];
-#endif
-} pthread_attr_t;
-
 typedef long pthread_mutexattr_t;
 typedef long pthread_condattr_t;
 
@@ -118,7 +107,6 @@ typedef struct {
 #endif
 
 typedef int pthread_key_t;
-typedef long pthread_t;
 
 typedef volatile int pthread_once_t;
 
@@ -195,8 +183,6 @@ int pthread_join(pthread_t, void**);
 int pthread_key_create(pthread_key_t*, void (*)(void*)) __nonnull((1));
 int pthread_key_delete(pthread_key_t);
 
-int pthread_kill(pthread_t, int);
-
 int pthread_mutexattr_destroy(pthread_mutexattr_t*) __nonnull((1));
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
 int pthread_mutexattr_gettype(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
@@ -235,8 +221,6 @@ int pthread_setname_np(pthread_t, const char*) __nonnull((2));
 int pthread_setschedparam(pthread_t, int, const struct sched_param*) __nonnull((3));
 
 int pthread_setspecific(pthread_key_t, const void*);
-
-int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
 typedef void (*__pthread_cleanup_func_t)(void*);
 

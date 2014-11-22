@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <locale.h>
 #include <pthread.h>
 #include <stdlib.h>
