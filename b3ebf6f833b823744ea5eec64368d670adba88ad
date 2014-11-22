@@ -16,6 +16,75 @@
       "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6c9df2_7dfaf3d6",
+        "filename": "libc/arch-common/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-22T00:53:25Z",
+      "side": 1,
+      "message": "want to mail the OpenBSD guy a link to this patch? see which way he wants to go? (since it\u0027s his __cxa_finalize we\u0027re using right now.)",
+      "parentUuid": "3fa1d55e_85ea0886",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6c9df2_1d72d7d5",
+        "filename": "libc/arch-common/bionic/pthread_atfork.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-22T00:53:25Z",
+      "side": 1,
+      "message": "i don\u0027t think this is ever defined on Android. it\u0027s a BSD thing.",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9ed122_c15b263e",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-22T00:53:25Z",
+      "side": 1,
+      "message": "can we reuse the linker\u0027s linked_list.h? (\"promoting\" it to libc/private/include.)",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa1d55e_f07b88ac",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-22T00:53:25Z",
+      "side": 1,
+      "message": "thank you :-)",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
