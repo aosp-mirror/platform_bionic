@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1f9ed122_61ffb277",
+        "filename": "libc/arch-common/bionic/pthread_atfork.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-22T01:20:43Z",
+      "side": 1,
+      "message": "we do, its defined as part of libc_common_cflags Android.mk:511",
+      "parentUuid": "ff6c9df2_1d72d7d5",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f9ed122_c15b263e",
         "filename": "libc/bionic/pthread_atfork.cpp",
         "patchSetId": 1
@@ -65,6 +83,41 @@
       "writtenOn": "2014-11-22T00:53:25Z",
       "side": 1,
       "message": "can we reuse the linker\u0027s linked_list.h? (\"promoting\" it to libc/private/include.)",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6c9df2_c031d20c",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-22T01:20:43Z",
+      "side": 1,
+      "message": "linker\u0027s linked_list is not very good at walking backwards.. but yes, I think we can use a lightweight list header at this point.",
+      "parentUuid": "1f9ed122_c15b263e",
+      "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6c9df2_80567a1d",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-22T01:20:43Z",
+      "side": 1,
+      "message": "This should be guarded by g_atfork_list_mutex.",
       "revId": "b3ebf6f833b823744ea5eec64368d670adba88ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
