@@ -29,9 +29,6 @@
 #ifndef _AARCH64_ENDIAN_H_
 #define _AARCH64_ENDIAN_H_
 
-#include <sys/types.h>
-#include <sys/endian.h>
-
 #ifdef __GNUC__
 
 #define __swap16md(x) ({                                        \
@@ -49,10 +46,8 @@
 
 #endif  /* __GNUC__ */
 
-#if defined(__AARCH64EB__)
-#define _BYTE_ORDER _BIG_ENDIAN
-#else
 #define _BYTE_ORDER _LITTLE_ENDIAN
-#endif
+#include <sys/types.h>
+#include <sys/endian.h>
 
 #endif /* _AARCH64_ENDIAN_H_ */
