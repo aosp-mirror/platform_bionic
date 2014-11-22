@@ -26,14 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <pthread.h>
-#include <signal.h>
+#ifndef _MACHINE_PTHREAD_TYPES_H_
+#define _MACHINE_PTHREAD_TYPES_H_
 
-int raise(int sig) {
-  int rc = pthread_kill(pthread_self(), sig);
-  if (rc != 0) {
-    errno = rc;
-    return -1;
-  }
-  return 0;
-}
+#include <sys/types.h>
+
+typedef long pthread_t;
+
+typedef struct {
+  uint32_t flags;
+  void* stack_base;
+  size_t stack_size;
+  size_t guard_size;
+  int32_t sched_policy;
+  int32_t sched_priority;
+#ifdef __LP64__
+  char __reserved[16];
+#endif
+} pthread_attr_t;
+
+#endif /* _MACHINE_PTHREAD_TYPES_H_ */
