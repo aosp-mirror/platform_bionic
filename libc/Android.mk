@@ -479,6 +479,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
     upstream-openbsd/lib/libc/stdlib/insque.c \
     upstream-openbsd/lib/libc/stdlib/lsearch.c \
+    upstream-openbsd/lib/libc/stdlib/reallocarray.c \
     upstream-openbsd/lib/libc/stdlib/remque.c \
     upstream-openbsd/lib/libc/stdlib/setenv.c \
     upstream-openbsd/lib/libc/stdlib/strtoimax.c \
