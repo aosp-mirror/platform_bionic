@@ -59,6 +59,9 @@
 /* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
 __LIBC_HIDDEN__ extern int getentropy(void*, size_t);
 
+/* OpenBSD has this as API, but we just use it internally. */
+__LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
+
 /* LP32 NDK ctype.h contained references to these. */
 __LIBC64_HIDDEN__ extern const short* _tolower_tab_;
 __LIBC64_HIDDEN__ extern const short* _toupper_tab_;
