@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fc50d23_4e90b3b2",
+        "filename": "libc/bionic/__cxa_pure_virtual.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "can we put a higher negative cost on this?",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_32feee78",
+        "filename": "libc/bionic/__fgets_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "really?",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_d2f202ab",
+        "filename": "libc/bionic/__libc_current_sigrtmax.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "ew!",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_6ecb2fe0",
+        "filename": "libc/bionic/bindresvport.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "really?",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_ceb9034f",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "ugh. can we put a higher negative cost on line breaks?",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_4eef5349",
+        "filename": "libc/bionic/brk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "this is exactly the kind of thing that worries me about having clang-format touch line lengths at all. this is clearly (to a human) less readable than the original.",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdb0505_f3ef0ac2",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_7260f6a7",
+        "filename": "libc/bionic/clock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "(whereas this is fine!)",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_2eee874a",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T17:44:45Z",
+      "side": 1,
+      "message": "that\u0027s just crazy!",
+      "revId": "a37f6f7a4d9d18e65d2c5ed00f15fe8741605724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
