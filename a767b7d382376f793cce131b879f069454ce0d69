@@ -16,6 +16,23 @@
       "revId": "a767b7d382376f793cce131b879f069454ce0d69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_34cb382f",
+        "filename": "libc/bionic/__cxa_pure_virtual.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T18:54:22Z",
+      "side": 1,
+      "message": "penalty doesn\u0027t seem to have worked.",
+      "revId": "a767b7d382376f793cce131b879f069454ce0d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
