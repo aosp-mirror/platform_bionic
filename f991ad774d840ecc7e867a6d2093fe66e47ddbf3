@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdb0505_53fff676",
+        "filename": "libc/bionic/ctype.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T17:57:37Z",
+      "side": 1,
+      "message": "why did it collapse these but expanded one-liners in other places?",
+      "revId": "f991ad774d840ecc7e867a6d2093fe66e47ddbf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdb0505_33afd277",
+        "filename": "libc/bionic/fpclassify.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T17:57:37Z",
+      "side": 1,
+      "message": "maybe we should increase max line width...",
+      "revId": "f991ad774d840ecc7e867a6d2093fe66e47ddbf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_72f9d627",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T17:57:37Z",
+      "side": 1,
+      "message": "... or not count comments?",
+      "revId": "f991ad774d840ecc7e867a6d2093fe66e47ddbf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
