@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fcf1549_0f8389e8",
+        "filename": "libc/bionic/c16rtomb.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "this is unfortunate. break it into one \u003d and two |\u003ds?",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_b3d980a8",
+        "filename": "libc/bionic/debug_mapinfo.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "ugh.",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcf1549_4f72f188",
+        "filename": "libc/bionic/legacy_32_bit_support.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "?",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_f3a06805",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "oops.",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_337830ea",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "really?",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcf1549_afd6f5ce",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "can we stop it doing this? all of these seem to be cases where the human deliberately wanted one entry per line.",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_33711000",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T20:17:40Z",
+      "side": 1,
+      "message": "?",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
