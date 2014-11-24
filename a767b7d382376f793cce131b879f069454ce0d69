@@ -33,6 +33,40 @@
       "revId": "a767b7d382376f793cce131b879f069454ce0d69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_381d6d07",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T19:00:03Z",
+      "side": 1,
+      "message": "this does not look right...",
+      "revId": "a767b7d382376f793cce131b879f069454ce0d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe001b1_b87ddd08",
+        "filename": "linker/linker.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T19:00:03Z",
+      "side": 1,
+      "message": "looks like it does not like marco\u0027ed types...",
+      "revId": "a767b7d382376f793cce131b879f069454ce0d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
