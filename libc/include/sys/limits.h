@@ -115,31 +115,13 @@
 
 /* Bionic-specific definitions */
 
-#define  _POSIX_VERSION             200112L   /* Posix C language bindings version */
+#define  _POSIX_VERSION             200809L   /* Posix C language bindings version */
 #define  _POSIX2_VERSION            -1        /* we don't support Posix command-line tools */
-#define  _POSIX2_C_VERSION          _POSIX_VERSION
-#define  _XOPEN_VERSION             500       /* by Posix definition */
-#define  _XOPEN_XCU_VERSION         -1        /* we don't support command-line utilities */
+#define  _XOPEN_VERSION             700       /* by Posix definition */
 
-/* tell what we implement legacy stuff when appropriate */
-#if _POSIX_VERSION > 0
-#define  _XOPEN_XPG2                1
-#define  _XOPEN_XPG3                1
-#define  _XOPEN_XPG4                1
-#define  _XOPEN_UNIX                1
-#endif
 
-#define  _XOPEN_ENH_I18N          -1  /* we don't support internationalization in the C library */
-#define  _XOPEN_CRYPT             -1  /* don't support X/Open Encryption */
-#define  _XOPEN_LEGACY            -1  /* don't claim we support these, we have some of them but not all */
-#define  _XOPEN_REALTIME          -1 /* we don't support all these functions */
-#define  _XOPEN_REALTIME_THREADS  -1  /* same here */
-
-#define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4 /* the minimum mandated by POSIX */
-#define PTHREAD_DESTRUCTOR_ITERATIONS _POSIX_THREAD_DESTRUCTOR_ITERATIONS
-#define _POSIX_THREAD_KEYS_MAX 128            /* the minimum mandated by POSIX */
-#define PTHREAD_KEYS_MAX _POSIX_THREAD_KEYS_MAX
-#define _POSIX_THREAD_THREADS_MAX 64          /* the minimum mandated by POSIX */
-#define PTHREAD_THREADS_MAX                   /* bionic has no specific limit */
+#define PTHREAD_DESTRUCTOR_ITERATIONS 4     // >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS
+#define PTHREAD_KEYS_MAX              128   // >= _POSIX_THREAD_KEYS_MAX
+#define PTHREAD_THREADS_MAX           2048  // bionic has no specific limit
 
 #endif
