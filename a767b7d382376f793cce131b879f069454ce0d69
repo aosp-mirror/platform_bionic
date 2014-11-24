@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc2091f_308106d6",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T18:53:17Z",
+      "side": 1,
+      "message": "you got this backwards :-)",
+      "revId": "a767b7d382376f793cce131b879f069454ce0d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
