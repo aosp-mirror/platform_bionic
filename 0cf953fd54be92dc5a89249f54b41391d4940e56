@@ -118,6 +118,23 @@
       "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcf1549_cff8215c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-24T20:20:35Z",
+      "side": 1,
+      "message": "it lost the space between * and \u0027linker\u0027",
+      "revId": "0cf953fd54be92dc5a89249f54b41391d4940e56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
