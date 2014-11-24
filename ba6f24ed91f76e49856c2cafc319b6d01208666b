@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fcf1549_152876ac",
+        "filename": "libc/bionic/mbstate.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-24T21:33:44Z",
+      "side": 1,
+      "message": "it really ought to have a penalty for nested ternaries!",
+      "revId": "ba6f24ed91f76e49856c2cafc319b6d01208666b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
