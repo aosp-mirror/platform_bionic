@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff581d71_ba6b915f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "free? destroy? i don\u0027t think we use \u0027release\u0027 elsewhere do we?",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4d55af_df311f0d",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "void*\n\nand no need for \u0027p\u0027.",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff581d71_7a18d917",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "no need for \u0027thread\u0027",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4d55af_df82bf25",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4a5199_3e47657f",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "i don\u0027t think you need to do this. it\u0027ll be rounded up for you.\n\ndid you actually mean to static_assert that sizeof(pthread_internal_t) \u003c\u003d PAGE_SIZE?",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff581d71_ba2a711a",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "s/pmem/result/",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4d55af_5fa22fb7",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "alignment",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4a5199_7e728dd6",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "strerror",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4a5199_9e7839b2",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T22:58:48Z",
+      "side": 1,
+      "message": "__release_thread_struct\n\nor use __FUNCTION__.",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
