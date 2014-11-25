@@ -37,6 +37,7 @@
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
 extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
+extern "C" void __set_tls(void*);
 
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation
@@ -75,6 +76,9 @@ void pthread_exit(void* return_value) {
   // space (see pthread_key_delete).
   pthread_key_clean_all();
 
+  // Clear tls to prevent further use of __get_tls(), see b/16847284.
+  __set_tls(NULL);
+
   if (thread->alternate_signal_stack != NULL) {
     // Tell the kernel to stop using the alternate signal stack.
     stack_t ss;
@@ -111,12 +115,6 @@ void pthread_exit(void* return_value) {
     // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
   }
   pthread_mutex_unlock(&g_thread_list_lock);
-
-  // Perform a second key cleanup. When using jemalloc, a call to free from
-  // _pthread_internal_remove_locked causes the memory associated with a key
-  // to be reallocated.
-  // TODO: When b/16847284 is fixed this call can be removed.
-  pthread_key_clean_all();
 
   if (user_allocated_stack) {
     // Cleaning up this thread's stack is the creator's responsibility, not ours.
