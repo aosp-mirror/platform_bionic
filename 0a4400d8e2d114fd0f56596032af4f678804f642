@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "ff581d71_1da8b795",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-25T23:33:07Z",
+      "side": 1,
+      "message": "yeah, i was wondering that too. dimitry thinks this will go away with the new TLS implementation anyway, but it\u0027s worth raising a bug.",
+      "parentUuid": "3f4d55af_bf553349",
+      "revId": "0a4400d8e2d114fd0f56596032af4f678804f642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff581d71_ba2a711a",
         "filename": "libc/bionic/pthread_internals.cpp",
         "patchSetId": 2
