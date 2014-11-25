@@ -463,6 +463,15 @@ android_getaddrinfo_proxy(
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
+	if (proxy == NULL) {
+		// Failed to map sock to FILE*. Check errno for the cause.
+		// @sonymobile.com saw failures in automated testing, but
+		// couldn't reproduce it for debugging.
+		// Fail with EAI_SYSTEM and let callers handle the failure.
+		close(sock);
+		return EAI_SYSTEM;
+	}
+
 	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %u",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
