@@ -523,6 +523,7 @@ TEST(unistd, _POSIX_macros_smoke) {
   // Verify according to POSIX.1-2008.
   EXPECT_EQ(200809L, _POSIX_VERSION);
 
+  EXPECT_EQ(_POSIX_VERSION, _POSIX_ADVISORY_INFO);
   EXPECT_GT(_POSIX_AIO_LISTIO_MAX, 0);
   EXPECT_GT(_POSIX_AIO_MAX, 0);
   EXPECT_GT(_POSIX_ARG_MAX, 0);
@@ -611,8 +612,7 @@ TEST(unistd, _POSIX_macros_smoke) {
 
 #if defined(__BIONIC__)
   // These tests only pass on bionic, as bionic and glibc has different support on these macros.
-  // Macros like _POSIX_ADVISORY_INFO are not supported on bionic yet.
-  EXPECT_EQ(-1, _POSIX_ADVISORY_INFO);
+  // Macros like _POSIX_ASYNCHRONOUS_IO are not supported on bionic yet.
   EXPECT_EQ(-1, _POSIX_ASYNCHRONOUS_IO);
   EXPECT_EQ(-1, _POSIX_BARRIERS);
   EXPECT_EQ(-1, _POSIX_MESSAGE_PASSING);
@@ -658,6 +658,7 @@ static void VerifySysconf(int option, const char *option_name, bool (*verify)(lo
 }
 
 TEST(unistd, sysconf) {
+  VERIFY_SYSCONF_POSIX_VERSION(_SC_ADVISORY_INFO);
   VERIFY_SYSCONF_POSITIVE(_SC_ARG_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_BC_BASE_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_BC_DIM_MAX);
@@ -773,7 +774,6 @@ TEST(unistd, sysconf) {
 #if defined(__BIONIC__)
   // Tests can only run on bionic, as bionic and glibc have different support for these options.
   // Below options are not supported on bionic yet.
-  VERIFY_SYSCONF_NOT_SUPPORT(_SC_ADVISORY_INFO);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_ASYNCHRONOUS_IO);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_BARRIERS);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_MESSAGE_PASSING);
