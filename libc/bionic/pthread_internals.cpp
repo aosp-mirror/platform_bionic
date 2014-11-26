@@ -28,37 +28,14 @@
 
 #include "pthread_internal.h"
 
-#include <errno.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
 
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
-#include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
 pthread_internal_t* g_thread_list = NULL;
 pthread_mutex_t g_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
-
-pthread_internal_t* __create_thread_struct() {
-  void* result = mmap(NULL, sizeof(pthread_internal_t), PROT_READ | PROT_WRITE,
-                      MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-  if (result == MAP_FAILED) {
-    __libc_format_log(ANDROID_LOG_WARN, "libc",
-                      "__create_thread_struct() failed: %s", strerror(errno));
-    return NULL;
-  }
-  return reinterpret_cast<pthread_internal_t*>(result);
-}
-
-void __free_thread_struct(pthread_internal_t* thread) {
-  int result = munmap(thread, sizeof(pthread_internal_t));
-  if (result != 0) {
-    __libc_format_log(ANDROID_LOG_WARN, "libc",
-                      "__free_thread_struct() failed: %s", strerror(errno));
-  }
-}
 
 void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->next != NULL) {
@@ -73,7 +50,7 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
   // and __libc_init_common for the point where it's added to the thread list.
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
-    __free_thread_struct(thread);
+    free(thread);
   }
 }
 
