@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3ffb9587_d58d6e3e",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:14:51Z",
+      "side": 1,
+      "message": "Done. Removed.",
+      "parentUuid": "1ff89189_cb831561",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fee89c7_d3274c21",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 3
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "5fee89c7_769ac6d1",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:14:51Z",
+      "side": 1,
+      "message": "Done. Check removed.",
+      "parentUuid": "5fee89c7_36683ee7",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ffb9587_6fe94d41",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 3
@@ -82,6 +118,24 @@
       "writtenOn": "2014-11-26T22:06:55Z",
       "side": 1,
       "message": "we usually just write this more concisely:\n\n  return (madvise(addr, len, advice) \u003d\u003d 0) ? 0 : errno;",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_d5372ecf",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:14:51Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "1ff89189_6b730112",
       "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -150,6 +204,24 @@
       "writtenOn": "2014-11-26T22:34:01Z",
       "side": 1,
       "message": "Let\u0027s add another check for \"invalid\" advice: MADV_DOFORK? to see if we are different from glibc in this regard.",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_55fe9e78",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:14:51Z",
+      "side": 1,
+      "message": "Allow that as glibc now.",
+      "parentUuid": "1ff89189_8eb0fbd2",
       "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
