@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3ffb9587_f5ad0afb",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:41:42Z",
+      "side": 1,
+      "message": "so if you remove these lines, your current test aborts on bionic like it should? (i want to make sure that our tests protect against someone \"cleaning this up\".)",
+      "parentUuid": "5fee89c7_e1370ecf",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fee89c7_21d1165e",
         "filename": "tests/sys_mman_test.cpp",
         "patchSetId": 4
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "I know how to distinguish bionic with __bionic__, but how can I distinguish bionic with Android only?",
       "parentUuid": "5fee89c7_21d1165e",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_611dde06",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:41:42Z",
+      "side": 1,
+      "message": "i don\u0027t think you can.\n\ni\u0027m not sure that this duplication is the best use of your testing effort. there\u0027s no real need to test everything with both kinds of mapped region. and this test isn\u0027t really about testing \"map_anonymous\"... it\u0027s about testing whether POSIX_MADV_DONTNEED works. the fact that you need an anonymous region to test it is just a coincidence. worth mentioning in a comment, sure, but not worth naming the test after.\n\nimagine you come back to this test after a year. can you tell what\u0027s really being tested here? does every single line add value? would you wish that these tests had been broken up into more, smaller, tests?",
+      "parentUuid": "5fee89c7_21775678",
       "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
