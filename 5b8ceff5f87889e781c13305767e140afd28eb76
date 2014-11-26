@@ -16,6 +16,24 @@
       "revId": "5b8ceff5f87889e781c13305767e140afd28eb76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f448158_38eea84a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2014-11-26T18:05:42Z",
+      "side": 1,
+      "message": "Good point. I guess this needs to be added manually? Because I don\u0027t remember removing any lines.",
+      "parentUuid": "bf52254f_0c4fe7ff",
+      "revId": "5b8ceff5f87889e781c13305767e140afd28eb76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
