@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f692905_8fe92944",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "2014",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f692905_afdfc58c",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "blank line before #includes.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f692905_0fdd1994",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "always use {}.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_eda7054a",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "is this actually a difference between posix_madvise and madvise?",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff581d71_4f90adb2",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "add a comment explaining why this is necessary. break after \u0026\u0026 rather than before.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff581d71_6f9f71c0",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "the call to madvise will already have corrupted errno. see posix_fallocate.cpp for how to do this.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_8c05a73a",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "i think you need a better test for POSIX_MADV_DONTNEED...\n\nin particular: \"The posix_madvise() function shall have no effect on the semantics of access to memory in the specified range, although it may affect the performance of access.\"",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f692905_0faeb9f6",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T20:13:32Z",
+      "side": 1,
+      "message": "this is now out of date.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
