@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "5fee89c7_36683ee7",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:23:01Z",
+      "side": 1,
+      "message": "interesting question :-)\n\ni don\u0027t think we _have_ to because POSIX doesn\u0027t say anything about any other values. i think the only problem would come if there\u0027s a new POSIX_MADV_FUTURETHING that requires extra code to implement. if we just pass values through, a future binary will actually do something (possibly wrong) rather than let you probe for the functionality.\n\ni\u0027m not saying that\u0027s a 100% convincing argument, but allowing all the madvise values does make me a little nervous. but if glibc doesn\u0027t care...\n\ni guess what\u0027s weird is that normally the kernel would spot anything like this. we don\u0027t need checks in bionic because we know the kernel is paying attention. but here the public API is known to be a subset of the kernel API.",
+      "parentUuid": "5fee89c7_d3274c21",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ffb9587_6fe94d41",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 3
