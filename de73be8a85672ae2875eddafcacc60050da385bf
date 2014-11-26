@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3ffb9587_2fbc6591",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5f692905_8fe92944",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f692905_afdfc58c",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-26T20:13:32Z",
       "side": 1,
       "message": "blank line before #includes.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_13a8b495",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5f692905_afdfc58c",
       "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5fee89c7_53a23cb7",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5f692905_0fdd1994",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fee89c7_eda7054a",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-11-26T20:13:32Z",
       "side": 1,
       "message": "is this actually a difference between posix_madvise and madvise?",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_4f1d7106",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "On POSIX standard: return EINVAL The value of len is zero. madvise() will check if len \u003c 0 (It is never possible on size_t). So I add this check. \nThe invalid or misalign of addr will be checked by madvise().",
+      "parentUuid": "5fee89c7_eda7054a",
       "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "3ffb9587_8f68f963",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "glibc doesn\u0027t make the test of advice. But the options of madvise is a superset of posix_madvise, so I think it may be proper to limit posix_madvise\u0027s behavior.",
+      "parentUuid": "ff581d71_4f90adb2",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff581d71_6f9f71c0",
         "filename": "libc/bionic/posix_madvise.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2014-11-26T20:13:32Z",
       "side": 1,
       "message": "the call to madvise will already have corrupted errno. see posix_fallocate.cpp for how to do this.",
+      "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ff89189_0b223d18",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T21:47:58Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ff581d71_6f9f71c0",
       "revId": "de73be8a85672ae2875eddafcacc60050da385bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
