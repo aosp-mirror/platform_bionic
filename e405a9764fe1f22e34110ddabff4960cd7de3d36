@@ -51,6 +51,24 @@
       "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_21775678",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:35:57Z",
+      "side": 1,
+      "message": "I know how to distinguish bionic with __bionic__, but how can I distinguish bionic with Android only?",
+      "parentUuid": "5fee89c7_21d1165e",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
