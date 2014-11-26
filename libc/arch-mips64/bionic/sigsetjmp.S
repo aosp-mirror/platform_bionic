@@ -32,7 +32,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/regnum.h>
 #include <machine/setjmp.h>
 
 /*
@@ -46,7 +45,7 @@ LEAF(sigsetjmp, FRAMESZ)
 	PTR_SUBU sp, FRAMESZ
 	SETUP_GP64(GPOFF, sigsetjmp)
 	.set	reorder
-	REG_S	a1, (_JBLEN*REGSZ)(a0)		# save "savemask"
+	sw	a1, _JBLEN*REGSZ(a0)		# save "savemask"
 	bne	a1, 0x0, 1f			# do saving of signal mask?
 	LA	t9, _setjmp
 	RESTORE_GP64
@@ -63,7 +62,7 @@ LEAF(siglongjmp, FRAMESZ)
 	PTR_SUBU sp, FRAMESZ
 	SETUP_GP64(GPOFF, siglongjmp)
 	.set	reorder
-	REG_L	t0, (_JBLEN*REGSZ)(a0)		# get "savemask"
+	lw	t0, _JBLEN*REGSZ(a0)		# get "savemask"
 	bne	t0, 0x0, 1f			# restore signal mask?
 	LA	t9, _longjmp
 	RESTORE_GP64
