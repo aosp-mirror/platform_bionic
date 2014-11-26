@@ -16,6 +16,91 @@
       "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_16f9c228",
+        "filename": "libc/bionic/clock_getcpuclockid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:04:41Z",
+      "side": 1,
+      "message": "or just put the two comment lines next to each other and delete L42?",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_5577bec4",
+        "filename": "libc/bionic/clock_getcpuclockid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:04:41Z",
+      "side": 1,
+      "message": "not \"return errno\"?",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_56034a7e",
+        "filename": "libc/include/time.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:04:41Z",
+      "side": 1,
+      "message": "__LIBC_ABI_PUBLIC__",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ff89189_2eaaa718",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:04:41Z",
+      "side": 1,
+      "message": "this local doesn\u0027t add any value. just inline the call.",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_55c97e83",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:04:41Z",
+      "side": 1,
+      "message": "test with pid -1 to see that we don\u0027t clobber errno and do return ESRCH?",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
