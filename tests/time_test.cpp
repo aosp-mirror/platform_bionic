@@ -23,6 +23,7 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -456,6 +457,34 @@ TEST(time, clock) {
   sleep(1);
   clock_t t1 = clock();
   ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
+}
+
+pid_t GetInvalidPid() {
+  FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
+  long pid_max;
+  fscanf(fp, "%ld", &pid_max);
+  pid_t invalid_pid = static_cast<pid_t>(pid_max + 1);
+  fclose(fp);
+  return invalid_pid;
+}
+
+TEST(time, clock_getcpuclockid) {
+  // For current process.
+  clockid_t clockid;
+  ASSERT_EQ(0, clock_getcpuclockid(getpid(), &clockid));
+
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(clockid, &ts));
+
+  // For parent process.
+  ASSERT_EQ(0, clock_getcpuclockid(getppid(), &clockid));
+  ASSERT_EQ(0, clock_gettime(clockid, &ts));
+
+  // For invalid process.
+  // We can't use -1 for invalid pid here, because clock_getcpuclockid() can't detect it.
+  errno = 0;
+  ASSERT_EQ(ESRCH, clock_getcpuclockid(GetInvalidPid(), &clockid));
+  ASSERT_EQ(0, errno);
 }
 
 TEST(time, clock_settime) {
