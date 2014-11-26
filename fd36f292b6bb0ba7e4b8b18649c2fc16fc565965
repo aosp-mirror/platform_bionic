@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff89189_cb831561",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "posix says \"may fail\". i don\u0027t think it\u0027s useful for us to add this restriction, unless you have a counterexample?",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_6fe94d41",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "break after \u0026\u0026 not before.",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ff89189_6b730112",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "we usually just write this more concisely:\n\n  return (madvise(addr, len, advice) \u003d\u003d 0) ? 0 : errno;",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_6f9aedd1",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "a better test would be one that explicitly checks the nearest types for madvise that posix_madvise doesn\u0027t support.",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_93f5c464",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "just ASSERT_EQ(0, posix_m...);",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_12fa6cd5",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "i think you need an anonymous mapping to really test this, don\u0027t you?",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_b208b850",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T22:06:55Z",
+      "side": 1,
+      "message": "this would be a better comment above, since we won\u0027t have to change it every time we fix something.",
+      "revId": "fd36f292b6bb0ba7e4b8b18649c2fc16fc565965",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
