@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5fee89c7_e1370ecf",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-11-26T23:27:24Z",
+      "side": 1,
+      "message": "I wrote a test on host, use posix_madvise(POSIX_MADV_DONTNEED) can still access the memory, use madvise(MADV_DONTNEED) will make process aborted with next access.",
+      "parentUuid": "1ff89189_ee2a5fe9",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fee89c7_21d1165e",
         "filename": "tests/sys_mman_test.cpp",
         "patchSetId": 4
