@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ffb9587_d5ff2ebe",
+        "filename": "libc/bionic/clock_getcpuclockid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-11-26T22:54:38Z",
+      "side": 1,
+      "message": "isn\u0027t bit 2 always 0 at this point?",
+      "revId": "1c458af4b6d76dde5bf39fb446c968ae6d70e33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
