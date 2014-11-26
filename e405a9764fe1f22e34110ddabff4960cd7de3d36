@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff89189_ee2a5fe9",
+        "filename": "libc/bionic/posix_madvise.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:13:24Z",
+      "side": 1,
+      "message": "madvise\n\n(it\u0027s one of those annoying english bugs: \u0027advise\u0027 is the verb, \u0027advice\u0027 is the noun.)\n\ndid you actually manage to write a test that proves this is true, since your original test didn\u0027t catch this?",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_21d1165e",
+        "filename": "tests/sys_mman_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T23:13:24Z",
+      "side": 1,
+      "message": "i think that\u0027s because we don\u0027t have swap on Android. so this test probably fails on glibc, or on bionic on the host?",
+      "revId": "e405a9764fe1f22e34110ddabff4960cd7de3d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
