@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf52254f_0c4fe7ff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-26T17:55:11Z",
+      "side": 1,
+      "message": "btw, when you revert, please don\u0027t lose the \"bug:\" line. it makes it harder to track that the bug needs to be reopened.",
+      "revId": "5b8ceff5f87889e781c13305767e140afd28eb76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
