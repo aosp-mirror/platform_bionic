@@ -30,12 +30,12 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/regnum.h>
 #include <machine/signal.h>
 
 /*
- * setjmp, longjmp implementation for libc. this code depends
- * on the layout of the struct sigcontext in machine/signal.h.
+ * _setjmp, _longjmp (restoring signal state)
+ *
+ *  GPOFF and FRAMESIZE must be the same for both _setjmp and _longjmp!
  *
  */
 
@@ -51,61 +51,134 @@ NON_LEAF(setjmp, FRAMESZ, ra)
 	SETUP_GP64(GPOFF, setjmp)
 	SAVE_GP(GPOFF)
 	.set	reorder
+
+#ifndef __LP64__
+	addiu   a0, 7				# roundup jmpbuf addr to 8-byte boundary
+	li      t0, ~7
+	and     a0, t0
+#endif
+
 	REG_S	ra, RAOFF(sp)			# save state
 	REG_S	a0, A0OFF(sp)
-
 	move	a0, zero			# get current signal mask
 	jal	sigblock
-
-	REG_L	v1, A0OFF(sp)			# v1 = jmpbuf
-	REG_S	v0, SC_MASK(v1)			# save sc_mask = sigblock(0)
-
-	REG_L	a0, A0OFF(sp)			# restore jmpbuf
+	REG_L	a0, A0OFF(sp)
 	REG_L	ra, RAOFF(sp)
-	REG_S	ra, SC_PC(a0)			# sc_pc = return address
-#if defined(__mips64)
-	dli	v0, 0xACEDBADE			# sigcontext magic number
-#else
-	li	v0, 0xACEDBADE			# sigcontext magic number
-#endif
-	REG_S	v0, SC_REGS+ZERO*REGSZ(a0)
-	REG_S	s0, SC_REGS+S0*REGSZ(a0)
-	REG_S	s1, SC_REGS+S1*REGSZ(a0)
-	REG_S	s2, SC_REGS+S2*REGSZ(a0)
-	REG_S	s3, SC_REGS+S3*REGSZ(a0)
-	REG_S	s4, SC_REGS+S4*REGSZ(a0)
-	REG_S	s5, SC_REGS+S5*REGSZ(a0)
-	REG_S	s6, SC_REGS+S6*REGSZ(a0)
-	REG_S	s7, SC_REGS+S7*REGSZ(a0)
-	REG_S	s8, SC_REGS+S8*REGSZ(a0)
-	REG_L	v0, GPOFF(sp)
-	REG_S	v0, SC_REGS+GP*REGSZ(a0)
-	PTR_ADDU v0, sp, FRAMESZ
-	REG_S	v0, SC_REGS+SP*REGSZ(a0)
 
-#if !defined(SOFTFLOAT)
-	li	v0, 1				# be nice if we could tell
-	REG_S	v0, SC_FPUSED(a0)		# sc_fpused = 1
+	REG_S	v0, SC_MASK(a0)			# save sc_mask = sigblock(0)
+
+	li	v0, 0xACEDBADE			# sigcontext magic number
+	sw	v0, SC_MAGIC(a0)
+	# callee-saved long-sized regs:
+	REG_S	ra, SC_REGS+0*REGSZ(a0)
+	REG_S	s0, SC_REGS+1*REGSZ(a0)
+	REG_S	s1, SC_REGS+2*REGSZ(a0)
+	REG_S	s2, SC_REGS+3*REGSZ(a0)
+	REG_S	s3, SC_REGS+4*REGSZ(a0)
+	REG_S	s4, SC_REGS+5*REGSZ(a0)
+	REG_S	s5, SC_REGS+6*REGSZ(a0)
+	REG_S	s6, SC_REGS+7*REGSZ(a0)
+	REG_S	s7, SC_REGS+8*REGSZ(a0)
+	REG_S	s8, SC_REGS+9*REGSZ(a0)
+	REG_L	v0, GPOFF(sp)
+	REG_S	v0, SC_REGS+10*REGSZ(a0)
+	PTR_ADDU v0, sp, FRAMESZ
+	REG_S	v0, SC_REGS+11*REGSZ(a0)
+
 	cfc1	v0, $31
-	s.d	$f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
-	s.d	$f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
-	s.d	$f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
-	s.d	$f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
-	s.d	$f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
-	s.d	$f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
-#if _MIPS_FPSET == 32
-	s.d	$f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
-	s.d	$f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
-	s.d	$f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
-	s.d	$f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
-	s.d	$f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
-	s.d	$f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
+
+#ifdef __LP64__
+	# callee-saved fp regs on mips n64 ABI are $f24..$f31
+	s.d	$f24, SC_FPREGS+0*REGSZ_FP(a0)
+	s.d	$f25, SC_FPREGS+1*REGSZ_FP(a0)
+	s.d	$f26, SC_FPREGS+2*REGSZ_FP(a0)
+	s.d	$f27, SC_FPREGS+3*REGSZ_FP(a0)
+	s.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
+	s.d	$f29, SC_FPREGS+5*REGSZ_FP(a0)
+	s.d	$f30, SC_FPREGS+6*REGSZ_FP(a0)
+	s.d	$f31, SC_FPREGS+7*REGSZ_FP(a0)
+#else
+	# callee-saved fp regs on mips o32 ABI are
+	#   the even-numbered fp regs $f20,$f22,...$f30
+	s.d	$f20, SC_FPREGS+0*REGSZ_FP(a0)
+	s.d	$f22, SC_FPREGS+1*REGSZ_FP(a0)
+	s.d	$f24, SC_FPREGS+2*REGSZ_FP(a0)
+	s.d	$f26, SC_FPREGS+3*REGSZ_FP(a0)
+	s.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
+	s.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
 #endif
-	REG_S	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)
-#endif /* !SOFTFLOAT */
+	sw	v0, SC_FPSR(a0)
 	move	v0, zero
 	RESTORE_GP64
 	PTR_ADDU sp, FRAMESZ
+	j	ra
+END(setjmp)
+
+
+NON_LEAF(longjmp, FRAMESZ, ra)
+	.mask	0x80000000, RAOFF
+	PTR_SUBU sp, FRAMESZ
+	SETUP_GP64(GPOFF, longjmp)
+	SAVE_GP(GPOFF)
+	.set	reorder
+
+#ifndef __LP64__
+	addiu	a0, 7				# roundup jmpbuf addr to 8-byte boundary
+	li      t0, ~7
+	and	a0, t0
+#endif
+
+	REG_S	a1, A1OFF(sp)
+	REG_S	a0, A0OFF(sp)
+	lw	a0, SC_MASK(a0)
+	jal	sigsetmask
+	REG_L	a0, A0OFF(sp)
+	REG_L	a1, A1OFF(sp)
+
+	lw	v0, SC_MAGIC(a0)
+	li	t0, 0xACEDBADE
+	bne	v0, t0, botch			# jump if error
+
+	# callee-saved long-sized regs:
+	REG_L	ra, SC_REGS+0*REGSZ(a0)
+	REG_L	s0, SC_REGS+1*REGSZ(a0)
+	REG_L	s1, SC_REGS+2*REGSZ(a0)
+	REG_L	s2, SC_REGS+3*REGSZ(a0)
+	REG_L	s3, SC_REGS+4*REGSZ(a0)
+	REG_L	s4, SC_REGS+5*REGSZ(a0)
+	REG_L	s5, SC_REGS+6*REGSZ(a0)
+	REG_L	s6, SC_REGS+7*REGSZ(a0)
+	REG_L	s7, SC_REGS+8*REGSZ(a0)
+	REG_L	s8, SC_REGS+9*REGSZ(a0)
+	REG_L	gp, SC_REGS+10*REGSZ(a0)
+	REG_L	sp, SC_REGS+11*REGSZ(a0)
+
+	lw	v0, SC_FPSR(a0)
+	ctc1	v0, $31
+#ifdef __LP64__
+	# callee-saved fp regs on mips n64 ABI are $f24..$f31
+	l.d	$f24, SC_FPREGS+0*REGSZ_FP(a0)
+	l.d	$f25, SC_FPREGS+1*REGSZ_FP(a0)
+	l.d	$f26, SC_FPREGS+2*REGSZ_FP(a0)
+	l.d	$f27, SC_FPREGS+3*REGSZ_FP(a0)
+	l.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
+	l.d	$f29, SC_FPREGS+5*REGSZ_FP(a0)
+	l.d	$f30, SC_FPREGS+6*REGSZ_FP(a0)
+	l.d	$f31, SC_FPREGS+7*REGSZ_FP(a0)
+#else
+	# callee-saved fp regs on mips o32 ABI are
+	#   the even-numbered fp regs $f20,$f22,...$f30
+	l.d	$f20, SC_FPREGS+0*REGSZ_FP(a0)
+	l.d	$f22, SC_FPREGS+1*REGSZ_FP(a0)
+	l.d	$f24, SC_FPREGS+2*REGSZ_FP(a0)
+	l.d	$f26, SC_FPREGS+3*REGSZ_FP(a0)
+	l.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
+	l.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
+#endif
+	bne	a1, zero, 1f
+	li	a1, 1			# never return 0!
+1:
+	move	v0, a1
 	j	ra
 
 botch:
@@ -113,62 +186,4 @@ botch:
 	jal	abort
 	RESTORE_GP64
 	PTR_ADDU sp, FRAMESZ
-END(setjmp)
-
-
-LEAF(longjmp, FRAMESZ)
-	PTR_SUBU sp, FRAMESZ
-	SETUP_GP64(GPOFF, longjmp)
-	SAVE_GP(GPOFF)
-	.set	reorder
-	sw	a1, A1OFF(sp)
-	sw	a0, A0OFF(sp)
-
-	lw	a0, SC_MASK(a0)
-	jal	sigsetmask
-
-	lw	a0, A0OFF(sp)
-	lw	a1, A1OFF(sp)
-
-	.set	noreorder
-	REG_L	v0, SC_REGS+ZERO*REGSZ(a0)
-	bne	v0, 0xACEDBADE, botch		# jump if error
-	REG_L	ra, SC_PC(a0)
-	REG_L	s0, SC_REGS+S0*REGSZ(a0)
-	REG_L	s1, SC_REGS+S1*REGSZ(a0)
-	REG_L	s2, SC_REGS+S2*REGSZ(a0)
-	REG_L	s3, SC_REGS+S3*REGSZ(a0)
-	REG_L	s4, SC_REGS+S4*REGSZ(a0)
-	REG_L	s5, SC_REGS+S5*REGSZ(a0)
-	REG_L	s6, SC_REGS+S6*REGSZ(a0)
-	REG_L	s7, SC_REGS+S7*REGSZ(a0)
-	REG_L	s8, SC_REGS+S8*REGSZ(a0)
-	REG_L	gp, SC_REGS+GP*REGSZ(a0)
-	REG_L	sp, SC_REGS+SP*REGSZ(a0)
-
-#if !defined(SOFTFLOAT)
-	REG_L	v0, SC_FPREGS+((FSR-F0)*REGSZ)(a0)
-	ctc1	v0, $31
-	l.d	$f20, SC_FPREGS+((F20-F0)*REGSZ_FP)(a0)
-	l.d	$f22, SC_FPREGS+((F22-F0)*REGSZ_FP)(a0)
-	l.d	$f24, SC_FPREGS+((F24-F0)*REGSZ_FP)(a0)
-	l.d	$f26, SC_FPREGS+((F26-F0)*REGSZ_FP)(a0)
-	l.d	$f28, SC_FPREGS+((F28-F0)*REGSZ_FP)(a0)
-	l.d	$f30, SC_FPREGS+((F30-F0)*REGSZ_FP)(a0)
-#if _MIPS_FPSET == 32
-	l.d	$f21, SC_FPREGS+((F21-F0)*REGSZ_FP)(a0)
-	l.d	$f23, SC_FPREGS+((F23-F0)*REGSZ_FP)(a0)
-	l.d	$f25, SC_FPREGS+((F25-F0)*REGSZ_FP)(a0)
-	l.d	$f27, SC_FPREGS+((F27-F0)*REGSZ_FP)(a0)
-	l.d	$f29, SC_FPREGS+((F29-F0)*REGSZ_FP)(a0)
-	l.d	$f31, SC_FPREGS+((F31-F0)*REGSZ_FP)(a0)
-#endif
-#endif /* !SOFTFLOAT */
-	bne	a1, zero, 1f
-	 nop
-	li	a1, 1			# never return 0!
-1:
-	j	ra
-	 move	v0, a1
-
 END(longjmp)
