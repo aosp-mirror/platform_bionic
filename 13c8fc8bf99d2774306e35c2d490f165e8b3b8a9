@@ -16,6 +16,24 @@
       "revId": "13c8fc8bf99d2774306e35c2d490f165e8b3b8a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f448158_3b8102d6",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1010077
+      },
+      "writtenOn": "2014-11-27T11:16:30Z",
+      "side": 1,
+      "message": "We received crash reports in the field and automated stability tests confirmed. What we observed in the crash reports lead to this (admittedly) workaround as root cause analysis was inconclusive since we were not able to reproduce the issue in controlled environment.",
+      "parentUuid": "bf394503_00be86a4",
+      "revId": "13c8fc8bf99d2774306e35c2d490f165e8b3b8a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
