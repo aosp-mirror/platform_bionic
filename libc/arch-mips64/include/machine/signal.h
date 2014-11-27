@@ -37,15 +37,42 @@
 #ifndef _MIPS_SIGNAL_H_
 #define _MIPS_SIGNAL_H_
 
-#define	SC_REGMASK	(0*REGSZ)
-#define	SC_STATUS	(1*REGSZ)
-#define	SC_PC		(2*REGSZ)
-#define	SC_REGS		(SC_PC+8)
-#define	SC_FPREGS	(SC_REGS+32*8)
-#define	SC_ACX		(SC_FPREGS+32*REGSZ_FP)
-#define	SC_USED_MATH	(SC_ACX+3*REGSZ)
-/* OpenBSD compatibility */
-#define	SC_MASK		SC_REGMASK
-#define	SC_FPUSED	SC_USED_MATH
+/* On Mips32, jmpbuf begins with optional 4-byte filler so that
+ *  all saved FP regs are aligned on 8-byte boundary, despite this whole
+ *  struct being mis-declared to users as an array of (4-byte) longs.
+ *  All the following offsets are then from the rounded-up base addr
+ */
+
+/* Fields of same size on all MIPS abis: */
+#define	SC_MAGIC        (0*4)		/* 4 bytes, identify jmpbuf */
+#define	SC_MASK		(1*4)		/* 4 bytes, saved signal mask */
+#define	SC_FPSR		(2*4)		/* 4 bytes, floating point control/status reg */
+/*     	filler2		(3*4)		   4 bytes, pad to 8-byte boundary */
+
+/* Registers that are 4-byte on mips32 o32, and 8-byte on mips64 n64 abi */
+#define	SC_REGS_SAVED	12		/* ra,gp,sp,s0-s8 */
+#define	SC_REGS		(4*4)		/* SC_REGS_SAVED*REGSZ bytes */
+
+/* Floating pt registers are 8-bytes on all abis,
+ * but the number of saved fp regs varies for o32/n32 versus n64 abis:
+ */
+
+#ifdef __LP64__
+#define	SC_FPREGS_SAVED	8  /* all  fp regs f24,f25,f26,f27,f28,f29,f30,f31 */
+#else
+#define	SC_FPREGS_SAVED	6  /* even fp regs f20,f22,f24,f26,f28,f30 */
+#endif
+
+#define	SC_FPREGS	(SC_REGS + SC_REGS_SAVED*REGSZ)  /* SC_FPREGS_SAVED*REGSZ_FP bytes */
+
+#define	SC_BYTES	(SC_FPREGS + SC_FPREGS_SAVED*REGSZ_FP)
+#define	SC_LONGS	(SC_BYTES/REGSZ)
+
+#ifdef __LP64__
+/* SC_LONGS is 22, so _JBLEN should be 22 or larger */
+#else
+/* SC_LONGS is 28, but must also allocate dynamic-roundup filler.
+   so _JBLEN should be 29 or larger */
+#endif
 
 #endif	/* !_MIPS_SIGNAL_H_ */
