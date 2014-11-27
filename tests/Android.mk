@@ -76,6 +76,7 @@ libBionicStandardTests_src_files := \
     sched_test.cpp \
     search_test.cpp \
     semaphore_test.cpp \
+    setjmp_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
