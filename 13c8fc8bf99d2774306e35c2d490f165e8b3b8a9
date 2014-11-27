@@ -34,6 +34,24 @@
       "revId": "13c8fc8bf99d2774306e35c2d490f165e8b3b8a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_a24b4422",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-27T18:57:15Z",
+      "side": 1,
+      "message": "crap. i suspect we\u0027re really just papering over the real bug here.",
+      "parentUuid": "9f448158_3b8102d6",
+      "revId": "13c8fc8bf99d2774306e35c2d490f165e8b3b8a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
