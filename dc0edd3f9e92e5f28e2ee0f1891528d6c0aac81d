@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff89189_9152dc5c",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-11-27T00:35:42Z",
+      "side": 1,
+      "message": "make sure you actually talk to upstream about this though. it won\u0027t fix itself. personally, since (i believe) that project is already slightly modified relative to upstream, we shouldn\u0027t pollute bionic when we can just fix that and push all our fixes upstream. (because sadly i\u0027d assume that our current fixes haven\u0027t been pushed...)",
+      "revId": "dc0edd3f9e92e5f28e2ee0f1891528d6c0aac81d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
