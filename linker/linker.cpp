@@ -230,7 +230,7 @@ static void remove_soinfo_from_debug_map(soinfo* info) {
 }
 
 static void notify_gdb_of_load(soinfo* info) {
-  if (info->flags & FLAG_EXE) {
+  if (info->is_main_executable()) {
     // GDB already knows about the main executable
     return;
   }
@@ -247,7 +247,7 @@ static void notify_gdb_of_load(soinfo* info) {
 }
 
 static void notify_gdb_of_unload(soinfo* info) {
-  if (info->flags & FLAG_EXE) {
+  if (info->is_main_executable()) {
     // GDB already knows about the main executable
     return;
   }
@@ -490,7 +490,7 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offs
   memset(this, 0, sizeof(*this));
 
   strlcpy(this->name, name, sizeof(this->name));
-  flags = FLAG_NEW_SOINFO;
+  flags_ = FLAG_NEW_SOINFO;
   version_ = SOINFO_VERSION;
 
   if (file_stat != nullptr) {
@@ -986,21 +986,6 @@ static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
 
 static void soinfo_unload(soinfo* si);
 
-static bool is_recursive(soinfo* si, soinfo* parent) {
-  if (parent == nullptr) {
-    return false;
-  }
-
-  if (si == parent) {
-    DL_ERR("recursive link to \"%s\"", si->name);
-    return true;
-  }
-
-  return !parent->get_parents().visit([&](soinfo* grandparent) {
-    return !is_recursive(si, grandparent);
-  });
-}
-
 // TODO: this is slightly unusual way to construct
 // the global group for relocation. Not every RTLD_GLOBAL
 // library is included in this group for backwards-compatibility
@@ -1067,13 +1052,12 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
 
     soinfo* needed_by = task->get_needed_by();
 
-    if (is_recursive(si, needed_by)) {
-      return false;
-    }
-
-    si->ref_count++;
     if (needed_by != nullptr) {
       needed_by->add_child(si);
+    }
+
+    if (si->is_linked()) {
+      si->increment_ref_count();
     }
 
     // When ld_preloads is not null, the first
@@ -1102,12 +1086,16 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
     return true;
   });
 
+  // We need to increment ref_count in case
+  // the root of the local group was not linked.
+  bool was_local_group_root_linked = local_group.front()->is_linked();
+
   bool linked = local_group.visit([&](soinfo* si) {
-    if ((si->flags & FLAG_LINKED) == 0) {
+    if (!si->is_linked()) {
       if (!si->link_image(global_group, local_group, extinfo)) {
         return false;
       }
-      si->flags |= FLAG_LINKED;
+      si->set_linked();
     }
 
     return true;
@@ -1117,72 +1105,101 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
     failure_guard.disable();
   }
 
+  if (!was_local_group_root_linked) {
+    local_group.front()->increment_ref_count();
+  }
+
   return linked;
 }
 
 static soinfo* find_library(const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
-  if (name == nullptr) {
-    somain->ref_count++;
-    return somain;
-  }
-
   soinfo* si;
 
-  if (!find_libraries(nullptr, &name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
+  if (name == nullptr) {
+    si = somain;
+  } else if (!find_libraries(nullptr, &name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
     return nullptr;
   }
 
   return si;
 }
 
-static void soinfo_unload_schedule(soinfo::soinfo_list_t& unload_list, soinfo* si) {
-  if (!si->can_unload()) {
-    TRACE("not unloading '%s' - the binary is flagged with NODELETE", si->name);
+static void soinfo_unload(soinfo* root) {
+  // Note that the library can be loaded but not linked;
+  // in which case there is no root but we still need
+  // to walk the tree and unload soinfos involved.
+  //
+  // This happens on unsuccessful dlopen, when one of
+  // the DT_NEEDED libraries could not be linked/found.
+  if (root->is_linked()) {
+    root = root->get_local_group_root();
+  }
+
+  if (!root->can_unload()) {
+    TRACE("not unloading '%s' - the binary is flagged with NODELETE", root->name);
     return;
   }
 
-  if (si->ref_count == 1) {
-    unload_list.push_back(si);
+  size_t ref_count = root->is_linked() ? root->decrement_ref_count() : 0;
 
-    if (si->has_min_version(0)) {
-      soinfo* child = nullptr;
-      while ((child = si->get_children().pop_front()) != nullptr) {
-        TRACE("%s needs to unload %s", si->name, child->name);
-        soinfo_unload_schedule(unload_list, child);
-      }
-    } else {
-      for_each_dt_needed(si, [&] (const char* library_name) {
-        TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
-        soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
-        if (needed != nullptr) {
-          soinfo_unload_schedule(unload_list, needed);
-        } else {
-          // Not found: for example if symlink was deleted between dlopen and dlclose
-          // Since we cannot really handle errors at this point - print and continue.
-          PRINT("warning: couldn't find %s needed by %s on unload.", library_name, si->name);
+  if (ref_count == 0) {
+    soinfo::soinfo_list_t local_unload_list;
+    soinfo::soinfo_list_t external_unload_list;
+    soinfo::soinfo_list_t depth_first_list;
+    depth_first_list.push_back(root);
+    soinfo* si = nullptr;
+
+    while ((si = depth_first_list.pop_front()) != nullptr) {
+      local_unload_list.push_back(si);
+      if (si->has_min_version(0)) {
+        soinfo* child = nullptr;
+        while ((child = si->get_children().pop_front()) != nullptr) {
+          TRACE("%s needs to unload %s", si->name, child->name);
+          if (local_unload_list.contains(child)) {
+            continue;
+          } else if (child->get_local_group_root() != root) {
+            external_unload_list.push_back(child);
+          } else {
+            depth_first_list.push_front(child);
+          }
         }
-      });
+      } else {
+        for_each_dt_needed(si, [&] (const char* library_name) {
+          TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
+          soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
+          if (needed != nullptr) {
+            // Not found: for example if symlink was deleted between dlopen and dlclose
+            // Since we cannot really handle errors at this point - print and continue.
+            PRINT("warning: couldn't find %s needed by %s on unload.", library_name, si->name);
+            return;
+          } else if (local_unload_list.contains(needed)) {
+            // already visited
+            return;
+          } else if (needed->get_local_group_root() != root) {
+            // external group
+            external_unload_list.push_back(needed);
+          } else {
+            // local group
+            depth_first_list.push_front(needed);
+          }
+        });
+      }
     }
 
-    si->ref_count = 0;
+    local_unload_list.for_each([](soinfo* si) {
+      si->call_destructors();
+    });
+
+    while ((si = local_unload_list.pop_front()) != nullptr) {
+      notify_gdb_of_unload(si);
+      soinfo_free(si);
+    }
+
+    while ((si = external_unload_list.pop_front()) != nullptr) {
+      soinfo_unload(si);
+    }
   } else {
-    si->ref_count--;
-    TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
-  }
-}
-
-static void soinfo_unload(soinfo* root) {
-  soinfo::soinfo_list_t unload_list;
-  soinfo_unload_schedule(unload_list, root);
-  unload_list.for_each([](soinfo* si) {
-    si->call_destructors();
-  });
-
-  soinfo* si = nullptr;
-  while ((si = unload_list.pop_front()) != nullptr) {
-    TRACE("unloading '%s'", si->name);
-    notify_gdb_of_unload(si);
-    soinfo_free(si);
+    TRACE("not unloading '%s' group, decrementing ref_count to %zd", root->name, ref_count);
   }
 }
 
@@ -1838,7 +1855,7 @@ void soinfo::call_constructors() {
   //    out above, the libc constructor will be called again (recursively!).
   constructors_called = true;
 
-  if ((flags & FLAG_EXE) == 0 && preinit_array_ != nullptr) {
+  if (!is_main_executable() && preinit_array_ != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
     PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!",
           name, preinit_array_count_);
@@ -1992,11 +2009,43 @@ const char* soinfo::get_string(ElfW(Word) index) const {
 }
 
 bool soinfo::is_gnu_hash() const {
-  return (flags & FLAG_GNU_HASH) != 0;
+  return (flags_ & FLAG_GNU_HASH) != 0;
 }
 
 bool soinfo::can_unload() const {
   return (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
+}
+
+bool soinfo::is_linked() const {
+  return (flags_ & FLAG_LINKED) != 0;
+}
+
+bool soinfo::is_main_executable() const {
+  return (flags_ & FLAG_EXE) != 0;
+}
+
+void soinfo::set_linked() {
+  flags_ |= FLAG_LINKED;
+}
+
+void soinfo::set_linker_flag() {
+  flags_ |= FLAG_LINKER;
+}
+
+void soinfo::set_main_executable() {
+  flags_ |= FLAG_EXE;
+}
+
+void soinfo::increment_ref_count() {
+  local_group_root_->ref_count_++;
+}
+
+size_t soinfo::decrement_ref_count() {
+  return --local_group_root_->ref_count_;
+}
+
+soinfo* soinfo::get_local_group_root() const {
+  return local_group_root_;
 }
 
 /* Force any of the closed stdin, stdout and stderr to be associated with
@@ -2066,10 +2115,10 @@ bool soinfo::prelink_image() {
   phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
 
   /* We can't log anything until the linker is relocated */
-  bool relocating_linker = (flags & FLAG_LINKER) != 0;
+  bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
     INFO("[ linking %s ]", name);
-    DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags);
+    DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
   if (dynamic == nullptr) {
@@ -2133,7 +2182,7 @@ bool soinfo::prelink_image() {
         }
         --gnu_maskwords_;
 
-        flags |= FLAG_GNU_HASH;
+        flags_ |= FLAG_GNU_HASH;
         break;
 
       case DT_STRTAB:
@@ -2406,6 +2455,11 @@ bool soinfo::prelink_image() {
 
 bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
 
+  local_group_root_ = local_group.front();
+  if (local_group_root_ == nullptr) {
+    local_group_root_ = this;
+  }
+
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Make segments writable to allow text relocations to work properly. We will later call
@@ -2598,7 +2652,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   }
 
   /* bootstrap the link map, the main exe always needs to be first */
-  si->flags |= FLAG_EXE;
+  si->set_main_executable();
   link_map* map = &(si->link_map_head);
 
   map->l_addr = 0;
@@ -2631,7 +2685,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     }
   }
   si->dynamic = nullptr;
-  si->ref_count = 1;
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
@@ -2672,6 +2725,12 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (needed_libraries_count > 0 && !find_libraries(si, needed_library_names, needed_libraries_count, nullptr, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
+  } else if (needed_libraries_count == 0) {
+    if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
+      __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
+      exit(EXIT_FAILURE);
+    }
+    si->increment_ref_count();
   }
 
   add_vdso(args);
@@ -2791,7 +2850,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.dynamic = nullptr;
   linker_so.phdr = phdr;
   linker_so.phnum = elf_hdr->e_phnum;
-  linker_so.flags |= FLAG_LINKER;
+  linker_so.set_linker_flag();
 
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because

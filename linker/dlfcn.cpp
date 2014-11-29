@@ -236,16 +236,17 @@ static soinfo __libdl_info("libdl.so", nullptr, 0, RTLD_GLOBAL);
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
-  if ((__libdl_info.flags & FLAG_LINKED) == 0) {
-    __libdl_info.flags |= FLAG_LINKED;
+  if ((__libdl_info.flags_ & FLAG_LINKED) == 0) {
+    __libdl_info.flags_ |= FLAG_LINKED;
     __libdl_info.strtab_ = ANDROID_LIBDL_STRTAB;
     __libdl_info.symtab_ = g_libdl_symtab;
     __libdl_info.nbucket_ = sizeof(g_libdl_buckets)/sizeof(unsigned);
     __libdl_info.nchain_ = sizeof(g_libdl_chains)/sizeof(unsigned);
     __libdl_info.bucket_ = g_libdl_buckets;
     __libdl_info.chain_ = g_libdl_chains;
-    __libdl_info.ref_count = 1;
+    __libdl_info.ref_count_ = 1;
     __libdl_info.strtab_size_ = sizeof(ANDROID_LIBDL_STRTAB);
+    __libdl_info.local_group_root_ = &__libdl_info;
   }
 
   return &__libdl_info;

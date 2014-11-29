@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "gtest_ex.h"
 #include "private/ScopeGuard.h"
 
 #include <string>
@@ -362,6 +363,48 @@ TEST(dlfcn, dlopen_check_order_reloc_nephew) {
   ASSERT_EQ(0, dlclose(handle));
 }
 
+TEST(dlfcn, check_unload_after_reloc) {
+  // This is how this one works:
+  // libtest_two_parents_parent1 <- answer_impl() used by libtest_two_parents_child
+  // |
+  // +-> libtest_two_parents_child
+  //
+  // libtest_two_parents_parent2 <- answer_impl() not used by libtest_two_parents_child
+  // |
+  // +-> libtest_two_parents_child
+  //
+  // Test dlopens parent1 which loads and relocates libtest_two_parents_child.so
+  // as a second step it dlopens parent2 and dlcloses parent1...
+
+  test_isolated([] {
+    void* handle = dlopen("libtest_two_parents_parent1.so", RTLD_NOW | RTLD_LOCAL);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+
+    void* handle2 = dlopen("libtest_two_parents_parent2.so", RTLD_NOW | RTLD_LOCAL);
+    ASSERT_TRUE(handle2 != nullptr) << dlerror();
+
+    typedef int (*fn_t) (void);
+    fn_t fn = reinterpret_cast<fn_t>(dlsym(handle2, "check_order_reloc_get_answer"));
+    ASSERT_TRUE(fn != nullptr) << dlerror();
+    ASSERT_EQ(42, fn());
+
+    ASSERT_EQ(0, dlclose(handle));
+
+    handle = dlopen("libtest_two_parents_parent1.so", RTLD_NOW | RTLD_LOCAL | RTLD_NOLOAD);
+    ASSERT_TRUE(handle != nullptr);
+    ASSERT_EQ(0, dlclose(handle));
+
+    fn = reinterpret_cast<fn_t>(dlsym(handle2, "check_order_reloc_get_answer"));
+    ASSERT_TRUE(fn != nullptr) << dlerror();
+    ASSERT_EQ(42, fn());
+
+    ASSERT_EQ(0, dlclose(handle2));
+
+    handle = dlopen("libtest_two_parents_parent1.so", RTLD_NOW | RTLD_LOCAL | RTLD_NOLOAD);
+    ASSERT_TRUE(handle == nullptr);
+  });
+}
+
 extern "C" int check_order_reloc_root_get_answer_impl() {
   return 42;
 }
@@ -442,25 +485,25 @@ TEST(dlfcn, dlopen_check_rtld_global) {
 // libtest_with_dependency_loop_b.so -> libtest_with_dependency_loop_c.so ->
 // libtest_with_dependency_loop_a.so
 TEST(dlfcn, dlopen_check_loop) {
-  void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
-#if defined(__BIONIC__)
-  ASSERT_TRUE(handle == nullptr);
-  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
-  // This symbol should never be exposed
-  void* f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
-  ASSERT_TRUE(f == nullptr);
-  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+  test_isolated([] {
+    void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    void* f = dlsym(handle, "dlopen_test_loopy_function");
+    ASSERT_TRUE(f != nullptr) << dlerror();
+    EXPECT_TRUE(reinterpret_cast<bool (*)(void)>(f)());
+    ASSERT_EQ(0, dlclose(handle));
 
-  // dlopen second time to make sure that the library wasn't loaded even though dlopen returned null.
-  // This may happen if during cleanup the root library or one of the depended libs were not removed
-  // from soinfo list.
-  handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
-  ASSERT_TRUE(handle == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
-#else // glibc allows recursive links
-  ASSERT_TRUE(handle != nullptr);
-  dlclose(handle);
+    // dlopen second time to make sure that the library was unloaded correctly
+    handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+    // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+    ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #endif
+
+    handle = dlopen("libtest_with_dependency_a.so", RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(handle == nullptr);
+  });
 }
 
 TEST(dlfcn, dlopen_nodelete) {
