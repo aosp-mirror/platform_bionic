@@ -98,6 +98,7 @@ libc_bionic_src_files := \
     bionic/chown.cpp \
     bionic/clearenv.cpp \
     bionic/clock.cpp \
+    bionic/clock_getcpuclockid.cpp \
     bionic/clock_nanosleep.cpp \
     bionic/clone.cpp \
     bionic/__cmsg_nxthdr.cpp \
