@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff82dd17_0a797bf1",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-12-01T14:45:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae44753_c71b92de",
+      "range": {
+        "startLine": 79,
+        "startChar": 2,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "de7e9220757f4ded696b4ff5bbbd765a0aa660b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dae44753_d545fc74",
         "filename": "libc/include/fts.h",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2014-11-18T21:47:08Z",
       "side": 1,
       "message": "now you have \u003csys/types.h\u003e, killing this and the blank line below would move us closer to upstream.",
+      "revId": "de7e9220757f4ded696b4ff5bbbd765a0aa660b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f70f517_84548694",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1000411
+      },
+      "writtenOn": "2014-12-01T14:45:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae44753_d545fc74",
       "revId": "de7e9220757f4ded696b4ff5bbbd765a0aa660b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
