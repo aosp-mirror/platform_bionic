@@ -41,7 +41,7 @@
 #define _POSIX_CHILD_MAX            25
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
 #define _POSIX_CLOCK_SELECTION      200809L
-#define _POSIX_CPUTIME              -1  /* clock_getcpuclockid() not implemented */
+#define _POSIX_CPUTIME              200809L
 #define _POSIX_DELAYTIMER_MAX       32
 #define _POSIX_FSYNC                200809L  /* fdatasync() supported */
 #define _POSIX_HOST_NAME_MAX        255
