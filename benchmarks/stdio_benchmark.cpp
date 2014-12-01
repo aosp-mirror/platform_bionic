@@ -25,37 +25,43 @@
     Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(8)->Arg(16)->Arg(32)->Arg(64)->Arg(512)-> \
     Arg(1*KB)->Arg(4*KB)->Arg(8*KB)->Arg(16*KB)->Arg(64*KB)
 
-static void BM_stdio_fread(int iters, int chunk_size) {
+template <typename Fn>
+static void ReadWriteTest(int iters, int chunk_size, Fn f, bool buffered) {
   StopBenchmarkTiming();
   FILE* fp = fopen("/dev/zero", "rw");
   char* buf = new char[chunk_size];
   StartBenchmarkTiming();
 
+  if (!buffered) {
+    setvbuf(fp, 0, _IONBF, 0);
+  }
+
   for (int i = 0; i < iters; ++i) {
-    fread(buf, chunk_size, 1, fp);
+    f(buf, chunk_size, 1, fp);
   }
 
   StopBenchmarkTiming();
   SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(chunk_size));
   delete[] buf;
   fclose(fp);
+}
+
+static void BM_stdio_fread(int iters, int chunk_size) {
+  ReadWriteTest(iters, chunk_size, fread, true);
 }
 BENCHMARK(BM_stdio_fread)->AT_COMMON_SIZES;
 
-
 static void BM_stdio_fwrite(int iters, int chunk_size) {
-  StopBenchmarkTiming();
-  FILE* fp = fopen("/dev/zero", "rw");
-  char* buf = new char[chunk_size];
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
-      fwrite(buf, chunk_size, 1, fp);
-  }
-
-  StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(chunk_size));
-  delete[] buf;
-  fclose(fp);
+  ReadWriteTest(iters, chunk_size, fwrite, true);
 }
 BENCHMARK(BM_stdio_fwrite)->AT_COMMON_SIZES;
+
+static void BM_stdio_fread_unbuffered(int iters, int chunk_size) {
+  ReadWriteTest(iters, chunk_size, fread, false);
+}
+BENCHMARK(BM_stdio_fread_unbuffered)->AT_COMMON_SIZES;
+
+static void BM_stdio_fwrite_unbuffered(int iters, int chunk_size) {
+  ReadWriteTest(iters, chunk_size, fwrite, false);
+}
+BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
