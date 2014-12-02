@@ -1760,7 +1760,7 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
   // got[1] may be used for a GNU extension.
   // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
   // FIXME: maybe this should be in a separate routine?
-  if ((flags & FLAG_LINKER) == 0) {
+  if ((flags_ & FLAG_LINKER) == 0) {
     size_t g = 0;
     got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadbeef);
     if (reinterpret_cast<intptr_t>(got[g]) < 0) {
