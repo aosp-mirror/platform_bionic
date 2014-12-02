@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfef85fe_908054d3",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "no, you MUST build the implementation with these visible.",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_9bcab728",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "this isn\u0027t C.",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfef85fe_f0e440be",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "this leaks.",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_9bb8776c",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "why does this need scope larger than the for loop?",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_1b4c8707",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "always use braces.",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_5b28cf22",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "function(arg)",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_623ce804",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "can\u0027t we just leave this until pthread_create and let the kernel decide?",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_9b8077d3",
+        "filename": "libc/include/machine/pthread_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "you can\u0027t change the size of this for LP32.",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_42120cc7",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T23:19:45Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "ce15248df5943064823723728acd4a195059ce0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
