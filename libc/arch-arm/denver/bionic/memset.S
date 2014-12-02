@@ -37,6 +37,7 @@
          * memset() returns its first argument.
          */
 
+        .cpu        cortex-a15
         .fpu        neon
         .syntax     unified
 
