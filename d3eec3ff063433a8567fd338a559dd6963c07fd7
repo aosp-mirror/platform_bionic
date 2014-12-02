@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fd1293e_dee95994",
+        "filename": "build/run-on-host.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T22:27:11Z",
+      "side": 1,
+      "message": "actually, should we kill NATIVE_SUFFIX and fix benchmarks/Android.mk in the same way you already fixed tests/Android.mk?",
+      "revId": "d3eec3ff063433a8567fd338a559dd6963c07fd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
