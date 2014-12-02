@@ -16,6 +16,24 @@
       "revId": "212e0e38248860b151b28877225629a988d95b58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fb555f8_4291f657",
+        "filename": "benchmarks/unistd_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T00:57:41Z",
+      "side": 1,
+      "message": "because glibc doesn\u0027t have gettid.",
+      "parentUuid": "1fb25112_bbb34791",
+      "revId": "212e0e38248860b151b28877225629a988d95b58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
