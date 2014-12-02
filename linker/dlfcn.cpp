@@ -29,7 +29,7 @@
 
 /* This file hijacks the symbols stubbed out in libdl.so. */
 
-static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static const char* __bionic_set_dlerror(char* new_value) {
   char** dlerror_slot = &reinterpret_cast<char**>(__get_tls())[TLS_SLOT_DLERROR];

@@ -32,7 +32,6 @@ benchmark_c_flags = \
 benchmark_src_files = \
     benchmark_main.cpp \
     math_benchmark.cpp \
-    property_benchmark.cpp \
     pthread_benchmark.cpp \
     semaphore_benchmark.cpp \
     stdio_benchmark.cpp \
@@ -41,7 +40,8 @@ benchmark_src_files = \
     unistd_benchmark.cpp \
 
 # Build benchmarks for the device (with bionic's .so). Run with:
-#   adb shell bionic-benchmarks
+#   adb shell bionic-benchmarks32
+#   adb shell bionic-benchmarks64
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-benchmarks
 LOCAL_MODULE_STEM_32 := bionic-benchmarks32
@@ -49,9 +49,28 @@ LOCAL_MODULE_STEM_64 := bionic-benchmarks64
 LOCAL_MULTILIB := both
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_SRC_FILES := $(benchmark_src_files)
+LOCAL_SRC_FILES := $(benchmark_src_files) property_benchmark.cpp
 LOCAL_CXX_STL := libc++
 include $(BUILD_EXECUTABLE)
+
+# We don't build a static benchmark executable because it's not usually
+# useful. If you're trying to run the current benchmarks on an older
+# release, it's (so far at least) always because you want to measure the
+# performance of the old release's libc, and a static benchmark isn't
+# going to let you do that.
+
+# Build benchmarks for the host (against glibc!). Run with:
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-benchmarks-glibc
+LOCAL_MODULE_STEM_32 := bionic-benchmarks-glibc32
+LOCAL_MODULE_STEM_64 := bionic-benchmarks-glibc64
+LOCAL_MULTILIB := both
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += $(benchmark_c_flags)
+LOCAL_LDFLAGS += -lrt
+LOCAL_SRC_FILES := $(benchmark_src_files)
+LOCAL_CXX_STL := libc++
+include $(BUILD_HOST_EXECUTABLE)
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 ifeq ($(TARGET_ARCH),x86)
