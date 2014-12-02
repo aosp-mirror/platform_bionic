@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5fa849a2_a687acf1",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-02T01:07:56Z",
+      "side": 1,
+      "message": "It would be nice to do a memset of buf to non-zero before the call, then do an assert that it\u0027s all zero after the read.\n\nMaybe even make the buffer 65 * 1024 and keep everything else the same. This way you can catch if it reads too much data by verifying the last 1024 bytes is stays non-zero.",
+      "range": {
+        "startLine": 825,
+        "startChar": 10,
+        "endLine": 825,
+        "endChar": 13
+      },
+      "revId": "dfea0ef4b35bd0254f1221bbbcde8913c0844535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fb555f8_bffd7315",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 1
