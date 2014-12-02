@@ -68,7 +68,23 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 		fp->_r = 0;
 	total = resid;
 	p = buf;
-	while (resid > (r = fp->_r)) {
+
+	// BEGIN android-added
+	// Avoid pathological behavior on unbuffered files. OpenBSD
+	// will loop reading one byte then memcpying one byte!
+	if ((fp->_flags & __SNBF) != 0) {
+		// We know if we're unbuffered that our buffer is empty, so
+		// we can just read directly.
+		while (resid > 0 && (r = (*fp->_read)(fp->_cookie, p, resid)) > 0) {
+			p += r;
+			resid -= r;
+		}
+		FUNLOCKFILE(fp);
+		return ((total - resid) / size);
+	}
+	// END android-added
+
+	while (resid > (size_t)(r = fp->_r)) {
 		(void)memcpy((void *)p, (void *)fp->_p, (size_t)r);
 		fp->_p += r;
 		/* fp->_r = 0 ... done in __srefill */
