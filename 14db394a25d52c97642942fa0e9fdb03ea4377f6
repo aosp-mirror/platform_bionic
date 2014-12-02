@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bfba25ec_5eb1c5d4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1090,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-02T18:32:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfba25ec_fb61cb35",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffc01d6a_e31240fa",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-02T18:20:14Z",
       "side": 1,
       "message": "either\n\n  was NOUN VERBed?\n\nor\n\n  NOUN was VERBed",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc01d6a_633cf004",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-02T18:32:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffc01d6a_e31240fa",
       "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ffc01d6a_a39e88c1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-02T18:32:17Z",
+      "side": 1,
+      "message": "this check is special case of cleaning up loaded but not linked libraries... when library is linked it always has local_group_root.\n\nwhile is not necessary - there are no nested groups.",
+      "parentUuid": "bfba25ec_5b3c3704",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffc01d6a_639bd002",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-02T18:20:14Z",
       "side": 1,
       "message": "why does this get a setter but GNU hash doesn\u0027t? i\u0027d assumed your rule was \u003e 1 caller gets you a setter, \u003c\u003d 1 caller means direct access?",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc01d6a_838dc491",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2847,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-02T18:32:17Z",
+      "side": 1,
+      "message": "also accessing private fields.. this is special case but I did not want to make flags_ public for it.",
+      "parentUuid": "ffc01d6a_639bd002",
       "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
