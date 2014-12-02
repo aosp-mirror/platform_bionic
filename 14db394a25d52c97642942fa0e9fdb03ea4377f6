@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfba25ec_fb61cb35",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1090,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:20:14Z",
+      "side": 1,
+      "message": "We ... linked.",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc01d6a_e31240fa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:20:14Z",
+      "side": 1,
+      "message": "either\n\n  was NOUN VERBed?\n\nor\n\n  NOUN was VERBed",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfba25ec_5b3c3704",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:20:14Z",
+      "side": 1,
+      "message": "why if rather than while?",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc01d6a_639bd002",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2847,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:20:14Z",
+      "side": 1,
+      "message": "why does this get a setter but GNU hash doesn\u0027t? i\u0027d assumed your rule was \u003e 1 caller gets you a setter, \u003c\u003d 1 caller means direct access?",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
