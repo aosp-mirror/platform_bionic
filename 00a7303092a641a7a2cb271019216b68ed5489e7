@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfba25ec_d84f2db2",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-12-02T17:05:40Z",
+      "side": 1,
+      "message": "handle2",
+      "range": {
+        "startLine": 384,
+        "startChar": 16,
+        "endLine": 384,
+        "endChar": 22
+      },
+      "revId": "00a7303092a641a7a2cb271019216b68ed5489e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fb25112_a42c48c1",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-12-02T17:05:40Z",
+      "side": 1,
+      "message": "Can you update the description or the pic? Which libs will/will not be loaded if they form a loop?",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 486,
+        "endChar": 36
+      },
+      "revId": "00a7303092a641a7a2cb271019216b68ed5489e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc01d6a_a0879ef1",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-12-02T17:05:40Z",
+      "side": 1,
+      "message": "since \u0027libtest_with_dep_loop.so\u0027 will be loaded successfully in the new test, we may not need to test if it has been cleaned up on failure.",
+      "range": {
+        "startLine": 499,
+        "startChar": 4,
+        "endLine": 499,
+        "endChar": 79
+      },
+      "revId": "00a7303092a641a7a2cb271019216b68ed5489e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fb25112_a4f32800",
+        "filename": "tests/libs/Android.build.dlopen_2_parents_reloc.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2014-12-02T17:05:40Z",
+      "side": 1,
+      "message": "needs update",
+      "range": {
+        "startLine": 19,
+        "startChar": 1,
+        "endLine": 19,
+        "endChar": 40
+      },
+      "revId": "00a7303092a641a7a2cb271019216b68ed5489e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
