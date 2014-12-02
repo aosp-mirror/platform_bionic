@@ -44,7 +44,7 @@ struct atfork_list_t {
   atfork_t* last;
 };
 
-static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 static atfork_list_t g_atfork_list = { NULL, NULL };
 
 void __bionic_atfork_run_prepare() {
@@ -73,7 +73,7 @@ void __bionic_atfork_run_child() {
     }
   }
 
-  g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+  g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 }
 
 void __bionic_atfork_run_parent() {

@@ -16,7 +16,9 @@
 
 #include "benchmark.h"
 
+#include <unistd.h>
 #include <sys/syscall.h>
+#include <sys/time.h>
 #include <time.h>
 
 static void BM_time_clock_gettime(int iters) {

@@ -80,7 +80,7 @@ BENCHMARK(BM_pthread_mutex_lock);
 
 static void BM_pthread_mutex_lock_ERRORCHECK(int iters) {
   StopBenchmarkTiming();
-  pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER;
+  pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
   StartBenchmarkTiming();
 
   for (int i = 0; i < iters; ++i) {
@@ -94,7 +94,7 @@ BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
 
 static void BM_pthread_mutex_lock_RECURSIVE(int iters) {
   StopBenchmarkTiming();
-  pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+  pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
   StartBenchmarkTiming();
 
   for (int i = 0; i < iters; ++i) {
