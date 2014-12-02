@@ -21,6 +21,7 @@ common_cppflags += -std=gnu++11
 common_additional_dependencies := \
     $(LOCAL_PATH)/Android.mk \
     $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
+    $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
@@ -166,6 +167,11 @@ module := libtest_nodelete_dt_flags_1
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
+# Build library with two parents
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk
+
+# -----------------------------------------------------------------------------
 # Build libtest_check_order_dlsym.so with its dependencies.
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk
@@ -185,7 +191,7 @@ include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
 #
 # libtest_with_dependency_loop -> a -> b -> c -> a
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_src_files := dlopen_testlib_invalid.cpp
+libtest_with_dependency_loop_src_files := dlopen_testlib_loopy_root.cpp
 
 libtest_with_dependency_loop_shared_libraries := \
     libtest_with_dependency_loop_a
@@ -196,7 +202,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_a.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_a_src_files := dlopen_testlib_invalid.cpp
+libtest_with_dependency_loop_a_src_files := dlopen_testlib_loopy_a.cpp
 
 libtest_with_dependency_loop_a_shared_libraries := \
     libtest_with_dependency_loop_b_tmp
@@ -209,7 +215,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 #
 # this is temporary placeholder - will be removed
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_b_tmp_src_files := dlopen_testlib_invalid.cpp
+libtest_with_dependency_loop_b_tmp_src_files := dlopen_testlib_loopy_invalid.cpp
 libtest_with_dependency_loop_b_tmp_ldflags := -Wl,-soname=libtest_with_dependency_loop_b.so
 
 module := libtest_with_dependency_loop_b_tmp
@@ -218,7 +224,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_b.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_b_src_files := dlopen_testlib_invalid.cpp
+libtest_with_dependency_loop_b_src_files := dlopen_testlib_loopy_b.cpp
 libtest_with_dependency_loop_b_shared_libraries := libtest_with_dependency_loop_c
 
 module := libtest_with_dependency_loop_b
@@ -227,7 +233,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 # libtest_with_dependency_loop_c.so
 # -----------------------------------------------------------------------------
-libtest_with_dependency_loop_c_src_files := dlopen_testlib_invalid.cpp
+libtest_with_dependency_loop_c_src_files := dlopen_testlib_loopy_c.cpp
 
 libtest_with_dependency_loop_c_shared_libraries := \
     libtest_with_dependency_loop_a

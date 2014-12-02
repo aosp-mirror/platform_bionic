@@ -81,6 +81,14 @@ class LinkedList {
     return element;
   }
 
+  T* front() const {
+    if (head_ == nullptr) {
+      return nullptr;
+    }
+
+    return head_->element;
+  }
+
   void clear() {
     while (head_ != nullptr) {
       LinkedListEntry<T>* p = head_;
