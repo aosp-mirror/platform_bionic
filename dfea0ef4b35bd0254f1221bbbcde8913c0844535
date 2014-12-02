@@ -39,6 +39,24 @@
       "revId": "dfea0ef4b35bd0254f1221bbbcde8913c0844535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe57d1c_55053e7e",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T22:22:14Z",
+      "side": 1,
+      "message": "anything like that always ends up being flaky, but it does make the purpose of this test more clear. i\u0027ll rename the test too.",
+      "parentUuid": "3fb555f8_bffd7315",
+      "revId": "dfea0ef4b35bd0254f1221bbbcde8913c0844535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
