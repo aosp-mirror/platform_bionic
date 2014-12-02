@@ -58,6 +58,7 @@ libc_common_src_files := \
     bionic/sigsetmask.c \
     bionic/system_properties_compat.c \
     stdio/findfp.c \
+    stdio/fread.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdio/stdio_ext.cpp \
@@ -406,7 +407,6 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/fputs.c \
     upstream-openbsd/lib/libc/stdio/fputwc.c \
     upstream-openbsd/lib/libc/stdio/fputws.c \
-    upstream-openbsd/lib/libc/stdio/fread.c \
     upstream-openbsd/lib/libc/stdio/freopen.c \
     upstream-openbsd/lib/libc/stdio/fscanf.c \
     upstream-openbsd/lib/libc/stdio/fseek.c \
