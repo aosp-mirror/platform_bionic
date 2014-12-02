@@ -74,7 +74,8 @@ TEST(setjmp, _setjmp_signal_mask) {
   // _setjmp/_longjmp do not save/restore the signal mask.
   sigset_t ss1(SigSetOf(SIGUSR1));
   sigset_t ss2(SigSetOf(SIGUSR2));
-  sigprocmask(SIG_SETMASK, &ss1, NULL);
+  sigset_t original_set;
+  sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
   if (_setjmp(jb) == 0) {
     sigprocmask(SIG_SETMASK, &ss2, NULL);
@@ -85,6 +86,7 @@ TEST(setjmp, _setjmp_signal_mask) {
     sigprocmask(SIG_SETMASK, NULL, &ss);
     EXPECT_TRUE(sigismember(&ss, SIGUSR2));
   }
+  sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
 
 TEST(setjmp, setjmp_signal_mask) {
@@ -93,7 +95,8 @@ TEST(setjmp, setjmp_signal_mask) {
   // behavior unspecified, so any code that cares needs to use sigsetjmp.
   sigset_t ss1(SigSetOf(SIGUSR1));
   sigset_t ss2(SigSetOf(SIGUSR2));
-  sigprocmask(SIG_SETMASK, &ss1, NULL);
+  sigset_t original_set;
+  sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
   if (setjmp(jb) == 0) {
     sigprocmask(SIG_SETMASK, &ss2, NULL);
@@ -110,13 +113,15 @@ TEST(setjmp, setjmp_signal_mask) {
     EXPECT_TRUE(sigismember(&ss, SIGUSR2));
 #endif
   }
+  sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
 
 TEST(setjmp, sigsetjmp_0_signal_mask) {
   // sigsetjmp(0)/siglongjmp do not save/restore the signal mask.
   sigset_t ss1(SigSetOf(SIGUSR1));
   sigset_t ss2(SigSetOf(SIGUSR2));
-  sigprocmask(SIG_SETMASK, &ss1, NULL);
+  sigset_t original_set;
+  sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 0) == 0) {
     sigprocmask(SIG_SETMASK, &ss2, NULL);
@@ -127,13 +132,15 @@ TEST(setjmp, sigsetjmp_0_signal_mask) {
     sigprocmask(SIG_SETMASK, NULL, &ss);
     EXPECT_TRUE(sigismember(&ss, SIGUSR2));
   }
+  sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
 
 TEST(setjmp, sigsetjmp_1_signal_mask) {
   // sigsetjmp(1)/siglongjmp does save/restore the signal mask.
   sigset_t ss1(SigSetOf(SIGUSR1));
   sigset_t ss2(SigSetOf(SIGUSR2));
-  sigprocmask(SIG_SETMASK, &ss1, NULL);
+  sigset_t original_set;
+  sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 1) == 0) {
     sigprocmask(SIG_SETMASK, &ss2, NULL);
@@ -144,4 +151,5 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
     sigprocmask(SIG_SETMASK, NULL, &ss);
     EXPECT_TRUE(sigismember(&ss, SIGUSR1));
   }
+  sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
