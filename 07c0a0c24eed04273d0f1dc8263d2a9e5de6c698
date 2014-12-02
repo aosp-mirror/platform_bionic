@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe57d1c_75972250",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T22:03:24Z",
+      "side": 1,
+      "message": "shouldn\u0027t this stuff be factored out too?",
+      "revId": "07c0a0c24eed04273d0f1dc8263d2a9e5de6c698",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
