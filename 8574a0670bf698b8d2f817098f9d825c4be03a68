@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fd1293e_9ec88182",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T22:05:04Z",
+      "side": 1,
+      "message": "we should probably name these regions so the /proc/pid/maps output is more readable.",
+      "revId": "8574a0670bf698b8d2f817098f9d825c4be03a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
