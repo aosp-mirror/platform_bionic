@@ -44,6 +44,10 @@
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
+#undef stdin
+#undef stdout
+#undef stderr
+
 int	__sdidinit;
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
@@ -65,6 +69,9 @@ FILE __sF[3] = {
 	std(__SWR, STDOUT_FILENO),		/* stdout */
 	std(__SWR|__SNBF, STDERR_FILENO)	/* stderr */
 };
+FILE* stdin = &__sF[0];
+FILE* stdout = &__sF[1];
+FILE* stderr = &__sF[2];
 struct glue __sglue = { &uglue, 3, __sF };
 
 static struct glue *
