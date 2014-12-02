@@ -2370,6 +2370,8 @@ bool soinfo::prelink_image() {
       case DT_VERSYM:
       case DT_VERDEF:
       case DT_VERDEFNUM:
+      case DT_VERNEED:
+      case DT_VERNEEDNUM:
         break;
 
       default:
