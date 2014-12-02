@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "ffc01d6a_8e3babee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:34:30Z",
+      "side": 1,
+      "message": "add a comment giving an example of when this happens?",
+      "parentUuid": "ffc01d6a_a39e88c1",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffc01d6a_639bd002",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "also accessing private fields.. this is special case but I did not want to make flags_ public for it.",
       "parentUuid": "ffc01d6a_639bd002",
+      "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfba25ec_5e4c253a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2847,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:34:30Z",
+      "side": 1,
+      "message": "ah, i hadn\u0027t noticed this was a non-member.",
+      "parentUuid": "ffc01d6a_838dc491",
       "revId": "14db394a25d52c97642942fa0e9fdb03ea4377f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
