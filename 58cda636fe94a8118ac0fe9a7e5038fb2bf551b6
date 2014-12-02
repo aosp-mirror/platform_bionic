@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffc01d6a_634cf03a",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:10:37Z",
+      "side": 1,
+      "message": "this only works because the tests use EXPECT rather than ASSERT, but i think this is fine for now. i\u0027d rather we investigated writing a test runner that supports test isolation than worry about the exact best way to implement this kind of manual cleanup.",
+      "revId": "58cda636fe94a8118ac0fe9a7e5038fb2bf551b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fb25112_84e38c61",
+        "filename": "tests/stack_unwinding_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-02T18:10:37Z",
+      "side": 1,
+      "message": "use {} rather than ;.",
+      "revId": "58cda636fe94a8118ac0fe9a7e5038fb2bf551b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
