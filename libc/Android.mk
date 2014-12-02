@@ -201,8 +201,11 @@ libc_bionic_src_files := \
     bionic/signalfd.cpp \
     bionic/sigpending.cpp \
     bionic/sigprocmask.cpp \
+    bionic/sigqueue.cpp \
     bionic/sigsuspend.cpp \
+    bionic/sigtimedwait.cpp \
     bionic/sigwait.cpp \
+    bionic/sigwaitinfo.cpp \
     bionic/socket.cpp \
     bionic/stat.cpp \
     bionic/statvfs.cpp \

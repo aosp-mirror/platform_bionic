@@ -69,7 +69,7 @@
 #define _POSIX_PRIORITIZED_IO       -1  /* not implemented */
 #define _POSIX_RAW_SOCKETS          200809L
 #define _POSIX_READER_WRITER_LOCKS  200809L
-#define _POSIX_REALTIME_SIGNALS     -1 /* for now, this is not supported */
+#define _POSIX_REALTIME_SIGNALS     200809L
 #define _POSIX_REGEXP               1
 #define _POSIX_RE_DUP_MAX           255
 #define _POSIX_SAVED_IDS            1  /* saved user ids is a Linux feature */
