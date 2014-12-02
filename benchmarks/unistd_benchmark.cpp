@@ -41,6 +41,8 @@ static void BM_unistd_getpid_syscall(int iters) {
 }
 BENCHMARK(BM_unistd_getpid_syscall);
 
+#if defined(__BIONIC__)
+
 // Stop GCC optimizing out our pure function.
 /* Must not be static! */ pid_t (*gettid_fp)() = gettid;
 
@@ -54,6 +56,8 @@ static void BM_unistd_gettid(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_unistd_gettid);
+
+#endif
 
 static void BM_unistd_gettid_syscall(int iters) {
   StartBenchmarkTiming();
