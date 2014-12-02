@@ -73,6 +73,7 @@ TEST(stack_unwinding, easy) {
   ASSERT_EQ(count + 1, deeper_count);
 }
 
+static volatile bool signal_handler_run = false;
 static int killer_count = 0;
 static int handler_count = 0;
 static int handler_one_deeper_count = 0;
@@ -83,6 +84,7 @@ static void noinline UnwindSignalHandler(int) {
 
   handler_one_deeper_count = unwind_one_frame_deeper();
   ASSERT_EQ(handler_count + 1, handler_one_deeper_count);
+  signal_handler_run = true;
 }
 
 TEST(stack_unwinding, unwind_through_signal_frame) {
@@ -90,8 +92,9 @@ TEST(stack_unwinding, unwind_through_signal_frame) {
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
   _Unwind_Backtrace(FrameCounter, &killer_count);
-
+  signal_handler_run = false;
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
+  while (!signal_handler_run) {}
 }
 
 // On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
@@ -100,6 +103,7 @@ TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
   _Unwind_Backtrace(FrameCounter, &killer_count);
-
+  signal_handler_run = false;
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
+  while (!signal_handler_run) {}
 }
