@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 
+# Include once
+ifneq ($(bionic_run_on_host_mk_included),true)
+bionic_run_on_host_mk_included:=true
+
 ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
 LINKER = linker64
 else
@@ -36,4 +40,5 @@ bionic-prepare-run-on-host: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT)/et
 	if [ -d "$(TARGET_OUT)/lib64" ]; then \
 	  ln -fs `realpath $(TARGET_OUT)/lib64` /system/; \
 	fi
+endif
 endif
