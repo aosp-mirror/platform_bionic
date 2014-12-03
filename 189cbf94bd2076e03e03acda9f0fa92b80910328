@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfb999d9_bf37df01",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:16:48Z",
+      "side": 1,
+      "message": "invalid? did you define version 0 to mean pre-versioning, or the first version with a version?\n\n...has no version\"?\n\n\n(should we start trying to prevent people from doing this for LP64?)",
+      "revId": "189cbf94bd2076e03e03acda9f0fa92b80910328",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
