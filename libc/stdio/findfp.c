@@ -44,10 +44,6 @@
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
-#undef stdin
-#undef stdout
-#undef stderr
-
 int	__sdidinit;
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
