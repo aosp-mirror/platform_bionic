@@ -58,14 +58,6 @@
  */
 #define  __ARM_HAVE_HALFWORD_MULTIPLY  1
 
-/* define __ARM_HAVE_LDREXD for ARMv7 architecture
- * (also present in ARMv6K, but not implemented in ARMv7-M, neither of which
- * we care about)
- */
-#if __ARM_ARCH__ >= 7
-#  define __ARM_HAVE_LDREXD
-#endif
-
 /* define _ARM_HAVE_VFP if we have VFPv3
  */
 #if __ARM_ARCH__ >= 7 && defined __VFP_FP__
