@@ -31,13 +31,8 @@
 
 #ifdef __GNUC__
 
-#define __swap16md(x) ({                                        \
-    register u_int16_t _x = (x);                                \
-    __asm volatile ("rev16 %0, %0" : "+r" (_x));                \
-    _x;                                                         \
-})
-
 /* Use GCC builtins */
+#define __swap16md(x) __builtin_bswap16(x)
 #define __swap32md(x) __builtin_bswap32(x)
 #define __swap64md(x) __builtin_bswap64(x)
 
