@@ -408,12 +408,15 @@ bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TAR
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ln -fs `realpath $(TARGET_OUT)/bin` /system/
 	ln -fs `realpath $(TARGET_OUT)/etc` /system/
+	ln -fs `realpath $(TARGET_OUT)/lib` /system/
+	if [ -d "$(TARGET_OUT)/lib64" ]; then \
+	  ln -fs `realpath $(TARGET_OUT)/lib64` /system/; \
+	fi
 
 bionic-unit-tests-run-on-host: bionic-unit-tests bionic-unit-tests-run-on-host-prepare
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
-	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
 		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 endif
 
@@ -423,7 +426,6 @@ bionic-unit-tests-run-on-host32: bionic-unit-tests_32 bionic-unit-tests-run-on-h
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
-	LD_LIBRARY_PATH=$(2ND_TARGET_OUT_SHARED_LIBRARIES) \
 		$(2ND_TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests32 $(BIONIC_TEST_FLAGS)
 endif
 
