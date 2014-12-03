@@ -27,33 +27,13 @@
 #ifndef _MACHINE_ENDIAN_H_
 #define _MACHINE_ENDIAN_H_
 
-#ifdef __GNUC__
-
-#define	__swap32md(x) __statement({					\
-	u_int32_t __swap32md_x = (x);					\
-									\
-	__asm ("bswap %0" : "+r" (__swap32md_x));			\
-	__swap32md_x;							\
-})
-
-#define	__swap64md(x) __statement({					\
-	u_int64_t __swap64md_x = (x);					\
-									\
-	__asm ("bswapq %0" : "+r" (__swap64md_x));			\
-	__swap64md_x;							\
-})
-
-#define	__swap16md(x) __statement({					\
-	u_int16_t __swap16md_x = (x);					\
-									\
-	__asm ("rorw $8, %w0" : "+r" (__swap16md_x));			\
-	__swap16md_x;							\
-})
+/* Use GCC builtins */
+#define __swap16md(x) __builtin_bswap16(x)
+#define __swap32md(x) __builtin_bswap32(x)
+#define __swap64md(x) __builtin_bswap64(x)
 
 /* Tell sys/endian.h we have MD variants of the swap macros.  */
 #define MD_SWAP
-
-#endif	/* __GNUC__ */
 
 #define _BYTE_ORDER _LITTLE_ENDIAN
 #include <sys/types.h>
