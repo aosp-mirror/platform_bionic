@@ -16,6 +16,24 @@
       "revId": "189cbf94bd2076e03e03acda9f0fa92b80910328",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ff481d2_125d8a6a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-03T01:19:31Z",
+      "side": 1,
+      "message": "I started versioning with 0, so this is -1 or i(?)\n\nYes, I think __libc_abort is appropriate for LP64, let me do that.",
+      "parentUuid": "dfb999d9_bf37df01",
+      "revId": "189cbf94bd2076e03e03acda9f0fa92b80910328",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
