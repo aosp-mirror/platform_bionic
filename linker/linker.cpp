@@ -320,7 +320,7 @@ static void soinfo_free(soinfo* si) {
 
   if (trav == nullptr) {
     // si was not in solist
-    DL_ERR("name \"%s\" is not in solist!", si->name);
+    DL_ERR("name \"%s\"@%p is not in solist!", si->name, si);
     return;
   }
 
@@ -1150,20 +1150,29 @@ static void soinfo_unload(soinfo* root) {
     soinfo* si = nullptr;
 
     while ((si = depth_first_list.pop_front()) != nullptr) {
+      if (local_unload_list.contains(si)) {
+        continue;
+      }
+
       local_unload_list.push_back(si);
+
       if (si->has_min_version(0)) {
         soinfo* child = nullptr;
         while ((child = si->get_children().pop_front()) != nullptr) {
-          TRACE("%s needs to unload %s", si->name, child->name);
+          TRACE("%s@%p needs to unload %s@%p", si->name, si, child->name, child);
           if (local_unload_list.contains(child)) {
             continue;
-          } else if (child->get_local_group_root() != root) {
+          } else if (child->is_linked() && child->get_local_group_root() != root) {
             external_unload_list.push_back(child);
           } else {
             depth_first_list.push_front(child);
           }
         }
       } else {
+#ifdef __LP64__
+        __libc_fatal("soinfo for \"%s\"@%p has no version", si->name, si);
+#else
+        PRINT("warning: soinfo for \"%s\"@%p has no version", si->name, si);
         for_each_dt_needed(si, [&] (const char* library_name) {
           TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
           soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
@@ -1175,7 +1184,7 @@ static void soinfo_unload(soinfo* root) {
           } else if (local_unload_list.contains(needed)) {
             // already visited
             return;
-          } else if (needed->get_local_group_root() != root) {
+          } else if (needed->is_linked() && needed->get_local_group_root() != root) {
             // external group
             external_unload_list.push_back(needed);
           } else {
@@ -1183,6 +1192,7 @@ static void soinfo_unload(soinfo* root) {
             depth_first_list.push_front(needed);
           }
         });
+#endif
       }
     }
 
