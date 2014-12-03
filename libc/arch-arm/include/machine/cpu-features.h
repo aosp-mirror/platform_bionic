@@ -53,11 +53,6 @@
 #  endif
 #endif
 
-/* define __ARM_HAVE_HALFWORD_MULTIPLY when half-word multiply instructions
- * this means variants of: smul, smulw, smla, smlaw, smlal
- */
-#define  __ARM_HAVE_HALFWORD_MULTIPLY  1
-
 /* define _ARM_HAVE_VFP if we have VFPv3
  */
 #if __ARM_ARCH__ >= 7 && defined __VFP_FP__
