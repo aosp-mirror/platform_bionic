@@ -29,7 +29,6 @@
 #include "linker_phdr.h"
 
 #include <errno.h>
-#include <machine/exec.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -37,6 +36,20 @@
 
 #include "linker.h"
 #include "linker_debug.h"
+
+static int GetTargetElfMachine() {
+#if defined(__arm__)
+  return EM_ARM;
+#elif defined(__aarch64__)
+  return EM_AARCH64;
+#elif defined(__i386__)
+  return EM_386;
+#elif defined(__mips__)
+  return EM_MIPS;
+#elif defined(__x86_64__)
+  return EM_X86_64;
+#endif
+}
 
 /**
   TECHNICAL NOTE ON ELF LOADING.
@@ -200,7 +213,7 @@ bool ElfReader::VerifyElfHeader() {
     return false;
   }
 
-  if (header_.e_machine != ELF_TARG_MACH) {
+  if (header_.e_machine != GetTargetElfMachine()) {
     DL_ERR("\"%s\" has unexpected e_machine: %d", name_, header_.e_machine);
     return false;
   }
