@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5fd68940_ed0d85dc",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "signal.h may be included by c files, so we should use const union, while in sigqueue.cpp, we can use c++ features and omit union/struct keywords. Right?",
+      "parentUuid": "7f8d0d44_f1aa62e0",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfef85fe_391cf386",
         "filename": "libc/bionic/sigqueue.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-03T01:53:08Z",
       "side": 1,
       "message": "usually we generate stubs. see SYSCALLS.TXT. it makes libc.so larger than it strictly needs to be, but it gives us slightly clearer stack traces because the stack will end in __rt_sigqueueinfo rather than syscall.",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fe09112_6b55018e",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done. Cool feature!",
+      "parentUuid": "bfef85fe_391cf386",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5fd68940_cd12c9fa",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done. I want ask further where should we keep ABI compatibility of sigset_t size with, is it in ndk, user written jni c++ files? or the sigaction struct?",
+      "parentUuid": "bfef85fe_195c8f35",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fcb3196_9fb4f6c7",
         "filename": "libc/bionic/sigwaitinfo.cpp",
         "patchSetId": 4
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "3fe39520_2fea650b",
+        "filename": "libc/bionic/sigwaitinfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done. Simple is better.",
+      "parentUuid": "1fcb3196_9fb4f6c7",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfef85fe_19ea4fb2",
         "filename": "libc/include/signal.h",
         "patchSetId": 4
@@ -81,6 +153,24 @@
       "writtenOn": "2014-12-03T01:53:08Z",
       "side": 1,
       "message": "do we have to do this rather than just \u0027struct timespec\u0027?",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fd68940_0d733156",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "bfef85fe_19ea4fb2",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "3fe39520_0fe7a943",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "comment Removed. Pass loopfn_finish_flag by argument will be harder to understand.",
+      "parentUuid": "9ff481d2_b58228e2",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfef85fe_191fef4c",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
@@ -132,6 +240,24 @@
       "writtenOn": "2014-12-03T01:53:08Z",
       "side": 1,
       "message": "i\u0027ve seen this somewhere before. time to factor this out?",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fd68940_ed40e5d6",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "bfef85fe_191fef4c",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "1fe09112_eb9211e3",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "We prefer ++ here because it can detect if the signal handler runs more than once, right?",
+      "parentUuid": "1fcb3196_9fd076d8",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fcb3196_1fe586b8",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 4
@@ -172,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "5fd68940_8d3f214b",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "1fcb3196_1fe586b8",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ff481d2_55f65c6f",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 4
@@ -183,6 +345,24 @@
       "writtenOn": "2014-12-03T01:53:08Z",
       "side": 1,
       "message": "pending",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fe09112_8b914dde",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-03T05:42:19Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "9ff481d2_55f65c6f",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
