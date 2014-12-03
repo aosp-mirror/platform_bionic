@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f47cdec_f39f9240",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T23:55:06Z",
+      "side": 1,
+      "message": "crash. (for both master and slave.) that name, t, and ws are special cases is explicitly called out in the documentation. (and most callers supply NULLs anyway.)",
+      "parentUuid": "7f47cdec_98b18dd8",
+      "range": {
+        "startLine": 111,
+        "startChar": 17,
+        "endLine": 111,
+        "endChar": 23
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f4ed10c_3b8e373a",
         "filename": "libc/bionic/pty.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-12-03T23:28:30Z",
       "side": 1,
       "message": "Don\u0027t you need to close(*master) here?",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 14
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4ed10c_ded5c1fb",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T23:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f4ed10c_3b8e373a",
       "range": {
         "startLine": 118,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7f47cdec_b3826ae2",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T23:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f47cdec_58946517",
+      "range": {
+        "startLine": 126,
+        "startChar": 5,
+        "endLine": 126,
+        "endChar": 14
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f47cdec_f8d531fb",
         "filename": "libc/bionic/pty.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2014-12-03T23:28:30Z",
       "side": 1,
       "message": "Is it necessary to check the return code of this function and the ioctl below? If they fail, is it okay?",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 35
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f44c9e8_f28f8e92",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T23:55:06Z",
+      "side": 1,
+      "message": "yeah, these ones are ignored, even though the ioctl in login_tty isn\u0027t. (that\u0027s explicitly called out in the documentation.)",
+      "parentUuid": "7f47cdec_f8d531fb",
       "range": {
         "startLine": 136,
         "startChar": 4,
