@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f47cdec_98b18dd8",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-03T23:28:30Z",
+      "side": 1,
+      "message": "If this value is NULL on glibc, does it crash or return an error? Same with the forkpty call down below.",
+      "range": {
+        "startLine": 111,
+        "startChar": 17,
+        "endLine": 111,
+        "endChar": 23
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4ed10c_3b8e373a",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-03T23:28:30Z",
+      "side": 1,
+      "message": "Don\u0027t you need to close(*master) here?",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 14
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f47cdec_58946517",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-03T23:28:30Z",
+      "side": 1,
+      "message": "Do you need to close(*master)?",
+      "range": {
+        "startLine": 126,
+        "startChar": 5,
+        "endLine": 126,
+        "endChar": 14
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f47cdec_f8d531fb",
+        "filename": "libc/bionic/pty.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-03T23:28:30Z",
+      "side": 1,
+      "message": "Is it necessary to check the return code of this function and the ioctl below? If they fail, is it okay?",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 35
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4ed10c_fb120ffa",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-03T23:28:30Z",
+      "side": 1,
+      "message": "There is one case of login_tty that you are not testing, wher the passed in fd is 0,1,2. I\u0027m not sure if that is valid though, and it would be interesting to know how glibc handles this.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 1
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
