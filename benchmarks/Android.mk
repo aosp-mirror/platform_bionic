@@ -73,26 +73,22 @@ LOCAL_CXX_STL := libc++
 include $(BUILD_HOST_EXECUTABLE)
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
-ifeq ($(TARGET_ARCH),x86)
-LINKER = linker
-NATIVE_SUFFIX=32
-else
-LINKER = linker64
-NATIVE_SUFFIX=64
-endif
+include $(LOCAL_PATH)/../build/run-on-host.mk
 
-bionic-benchmarks-run-on-host: bionic-benchmarks $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
-	if [ ! -d /system ]; then \
-	  echo "Attempting to create /system"; \
-	  sudo mkdir -p -m 0777 /system; \
-	fi
-	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	ln -fs `realpath $(TARGET_OUT)/bin` /system/
-	ln -fs `realpath $(TARGET_OUT)/etc` /system/
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+bionic-benchmarks-run-on-host32: bionic-benchmarks bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
-	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_EXECUTABLES)/bionic-benchmarks$(NATIVE_SUFFIX) $(BIONIC_BENCHMARKS_FLAGS)
-endif # linux-x86
+		$(TARGET_OUT_EXECUTABLES)/bionic-benchmarks32 $(BIONIC_BENCHMARKS_FLAGS)
+endif
+
+ifeq ($(TARGET_IS_64_BIT),true)
+bionic-benchmarks-run-on-host64: bionic-benchmarks bionic-prepare-run-on-host
+	ANDROID_DATA=$(TARGET_OUT_DATA) \
+	ANDROID_ROOT=$(TARGET_OUT) \
+		$(TARGET_OUT_EXECUTABLES)/bionic-benchmarks64 $(BIONIC_BENCHMARKS_FLAGS)
+endif
+
+endif
 
 endif # !BUILD_TINY_ANDROID
