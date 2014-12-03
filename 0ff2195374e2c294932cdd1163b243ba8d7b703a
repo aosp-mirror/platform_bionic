@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5f44c9e8_9dfd0316",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T19:57:48Z",
+      "side": 1,
+      "message": "correct.",
+      "parentUuid": "5fd68940_ed0d85dc",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfef85fe_391cf386",
         "filename": "libc/bionic/sigqueue.cpp",
         "patchSetId": 4
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Done. I want ask further where should we keep ABI compatibility of sigset_t size with, is it in ndk, user written jni c++ files? or the sigaction struct?",
       "parentUuid": "bfef85fe_195c8f35",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f47cdec_01098c1e",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T19:57:48Z",
+      "side": 1,
+      "message": "\"NDK\" and \"user written JNI\" are basically the same thing. we deliberately ship a \"too small\" sigaction for LP32 so everything works.\n\nbut, yes, basically the old guys fucked up and shipped the NDK with various types wrong. the most painful of which are sigset_t, off_t, and time_t. all of these are fixed in LP64, but there\u0027s nothing we can do for LP32 that doesn\u0027t break all non-platform native code.",
+      "parentUuid": "5fd68940_cd12c9fa",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -293,6 +329,24 @@
       "side": 1,
       "message": "We prefer ++ here because it can detect if the signal handler runs more than once, right?",
       "parentUuid": "1fcb3196_9fd076d8",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f47cdec_e12ca08d",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T19:57:48Z",
+      "side": 1,
+      "message": "correct.",
+      "parentUuid": "1fe09112_eb9211e3",
       "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
