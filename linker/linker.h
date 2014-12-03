@@ -161,9 +161,9 @@ struct soinfo {
 #endif
 
   soinfo* next;
-  uint32_t flags;
-
  private:
+  uint32_t flags_;
+
   const char* strtab_;
   ElfW(Sym)* symtab_;
 
@@ -203,22 +203,21 @@ struct soinfo {
   linker_function_t init_func_;
   linker_function_t fini_func_;
 
- public:
 #if defined(__arm__)
+ public:
   // ARM EABI section used for stack unwinding.
   uint32_t* ARM_exidx;
   size_t ARM_exidx_count;
-#elif defined(__mips__)
  private:
+#elif defined(__mips__)
   uint32_t mips_symtabno_;
   uint32_t mips_local_gotno_;
   uint32_t mips_gotsym_;
   bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 
 #endif
-
+  size_t ref_count_;
  public:
-  size_t ref_count;
   link_map link_map_head;
 
   bool constructors_called;
@@ -264,8 +263,20 @@ struct soinfo {
   bool is_gnu_hash() const;
 
   bool inline has_min_version(uint32_t min_version) const {
-    return (flags & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
+    return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
   }
+
+  bool is_linked() const;
+  bool is_main_executable() const;
+
+  void set_linked();
+  void set_linker_flag();
+  void set_main_executable();
+
+  void increment_ref_count();
+  size_t decrement_ref_count();
+
+  soinfo* get_local_group_root() const;
 
  private:
   ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
@@ -303,8 +314,9 @@ struct soinfo {
   // version >= 2
   uint32_t gnu_maskwords_;
   uint32_t gnu_shift2_;
-
   ElfW(Addr)* gnu_bloom_filter_;
+
+  soinfo* local_group_root_;
 
   friend soinfo* get_libdl_info();
 };
