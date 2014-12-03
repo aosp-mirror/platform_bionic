@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f8d0d44_f1aa62e0",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "signo would match the siginfo_t field.\n\nno need to say union here.",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfef85fe_391cf386",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "usually we generate stubs. see SYSCALLS.TXT. it makes libc.so larger than it strictly needs to be, but it gives us slightly clearer stack traces because the stack will end in __rt_sigqueueinfo rather than syscall.",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfef85fe_195c8f35",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "no need to name parameters in a forward declaration.\n\nno need to say struct.",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_9fb4f6c7",
+        "filename": "libc/bionic/sigwaitinfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "or just sigtimedwait(set, info, NULL).",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfef85fe_19ea4fb2",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "do we have to do this rather than just \u0027struct timespec\u0027?",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_5f709e78",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "cool. so now the only stuff missing is the stuff that \"may be removed from a future release\" of POSIX and thus probably isn\u0027t worth having! http://pubs.opengroup.org/onlinepubs/9699919799/functions/sighold.html",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ff481d2_b58228e2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "i don\u0027t think there\u0027s much documentation value to \u0027arg\u0027 here. you *could* use the argument to lose the global, though...",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfef85fe_191fef4c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "i\u0027ve seen this somewhere before. time to factor this out?",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_9fd076d8",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "why \u003d 1? ++ would seem the only thing we could guarantee?",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fcb3196_1fe586b8",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "see ScopedSignalHandler.",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ff481d2_55f65c6f",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-03T01:53:08Z",
+      "side": 1,
+      "message": "pending",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
