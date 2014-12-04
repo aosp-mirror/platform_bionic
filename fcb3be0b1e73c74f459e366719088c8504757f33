@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1f55f1ac_0370ce77",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:18:02Z",
+      "side": 1,
+      "message": "Because without this, I can\u0027t define: FuncType GetFunction().\nI can\u0027t write something like void* (*)(void*) GetFunction().",
+      "parentUuid": "1f55f1ac_6315022d",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f5eedd0_cc36638b",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-04T22:13:14Z",
       "side": 1,
       "message": "why re-introduce the global variable?",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f7c112d_60cad85a",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:18:02Z",
+      "side": 1,
+      "message": "Because in some tests like pthread_setname_np__other, the thread of SpinFn may still running while SpinFunctionHelper is destroyed.",
+      "parentUuid": "7f5eedd0_cc36638b",
       "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
