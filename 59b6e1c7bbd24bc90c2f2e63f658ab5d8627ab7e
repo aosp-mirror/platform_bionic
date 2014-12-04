@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff33bd7c_3cd4f1f7",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "move this up with the existing pthread_getspecific test?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff33bd7c_1ca56d97",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "i don\u0027t think this comment is useful.",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df38b95e_b530188e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "ss.ss_size?",
+      "range": {
+        "startLine": 78,
+        "startChar": 54,
+        "endLine": 78,
+        "endChar": 90
+      },
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff33bd7c_fc9f6940",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "this is a weak name. snprintf into a buffer so we can include the tid?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_094691f0",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "same comments as above.",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_899b8101",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "i don\u0027t understand why you\u0027ve duplicated this code?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f69e176_c7cb9eaf",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "why do you need to do this later?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_294fd5ff",
+        "filename": "libc/bionic/pthread_join.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_6955dd8d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T19:06:03Z",
+      "side": 1,
+      "message": "really? why weren\u0027t we hitting this already?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
