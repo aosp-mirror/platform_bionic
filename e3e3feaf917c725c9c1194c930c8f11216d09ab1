@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf3dc54e_943874f2",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-04T20:54:19Z",
+      "side": 0,
+      "message": "Did these functions ever exist?",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 42
+      },
+      "revId": "e3e3feaf917c725c9c1194c930c8f11216d09ab1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
