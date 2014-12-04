@@ -67,6 +67,23 @@
       "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f7c112d_2e83672c",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T18:20:14Z",
+      "side": 1,
+      "message": "this is crazy.\n\nhow would you normally synchronize between two threads? what\u0027s the difference between a thread and a process in this context?",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
