@@ -178,6 +178,24 @@ long sysconf(int name) {
     case _SC_XOPEN_STREAMS:     return -1;            // Obsolescent in POSIX.1-2008.
     case _SC_XOPEN_UUCP:        return -1;
 
+    // We do not have actual implementations for cache queries.
+    // It's valid to return 0 as the result is unknown.
+    case _SC_LEVEL1_ICACHE_SIZE:      return 0;
+    case _SC_LEVEL1_ICACHE_ASSOC:     return 0;
+    case _SC_LEVEL1_ICACHE_LINESIZE:  return 0;
+    case _SC_LEVEL1_DCACHE_SIZE:      return 0;
+    case _SC_LEVEL1_DCACHE_ASSOC:     return 0;
+    case _SC_LEVEL1_DCACHE_LINESIZE:  return 0;
+    case _SC_LEVEL2_CACHE_SIZE:       return 0;
+    case _SC_LEVEL2_CACHE_ASSOC:      return 0;
+    case _SC_LEVEL2_CACHE_LINESIZE:   return 0;
+    case _SC_LEVEL3_CACHE_SIZE:       return 0;
+    case _SC_LEVEL3_CACHE_ASSOC:      return 0;
+    case _SC_LEVEL3_CACHE_LINESIZE:   return 0;
+    case _SC_LEVEL4_CACHE_SIZE:       return 0;
+    case _SC_LEVEL4_CACHE_ASSOC:      return 0;
+    case _SC_LEVEL4_CACHE_LINESIZE:   return 0;
+
     default:
       // Posix says EINVAL is the only error that shall be returned,
       // but glibc uses ENOSYS.
