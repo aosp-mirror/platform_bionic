@@ -54,7 +54,7 @@ extern int mlockall(int);
 extern int munlockall(void);
 extern int mlock(const void*, size_t);
 extern int munlock(const void*, size_t);
-extern int madvise(const void*, size_t, int);
+extern int madvise(void*, size_t, int);
 
 extern int mlock(const void*, size_t);
 extern int munlock(const void*, size_t);
