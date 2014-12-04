@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfc5197a_b6ca4157",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T03:01:00Z",
+      "side": 1,
+      "message": "compatibility",
+      "range": {
+        "startLine": 1121,
+        "startChar": 27,
+        "endLine": 1121,
+        "endChar": 39
+      },
+      "revId": "ed2c2629ad12970a13d588e69c6794f58e249092",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
