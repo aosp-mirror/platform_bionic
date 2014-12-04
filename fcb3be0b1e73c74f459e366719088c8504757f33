@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f55f1ac_6315022d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T22:13:14Z",
+      "side": 1,
+      "message": "this is only used in one place.",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f5eedd0_cc36638b",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T22:13:14Z",
+      "side": 1,
+      "message": "why re-introduce the global variable?",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
