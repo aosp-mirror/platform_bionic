@@ -76,6 +76,24 @@
     },
     {
       "key": {
+        "uuid": "bf3dc54e_8fddc16e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T23:19:26Z",
+      "side": 1,
+      "message": "I checked android kernel yesterday, and found it is so smart that it uses the string pointer directly instead of copying the string. I also did one experiment to prove it. As a result, I can\u0027t find the storage to include tid in the string for each thread.",
+      "parentUuid": "ff33bd7c_fc9f6940",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf3dc54e_094691f0",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 3
@@ -110,6 +128,24 @@
     },
     {
       "key": {
+        "uuid": "ff33bd7c_690f169e",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T23:19:26Z",
+      "side": 1,
+      "message": "Because I want to move munmap operation out of the race region of g_thread_list_lock.",
+      "parentUuid": "bf3dc54e_899b8101",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f69e176_c7cb9eaf",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 3
@@ -121,6 +157,24 @@
       "writtenOn": "2014-12-04T19:06:03Z",
       "side": 1,
       "message": "why do you need to do this later?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_8f15c12f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T23:19:26Z",
+      "side": 1,
+      "message": "Because I want to move munmap operation out of protection of g_thread_list_lock. I think munmap is a system call, which may take more time to run than free().",
+      "parentUuid": "9f69e176_c7cb9eaf",
       "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +209,24 @@
       "writtenOn": "2014-12-04T19:06:03Z",
       "side": 1,
       "message": "really? why weren\u0027t we hitting this already?",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0225b9_b8679918",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T23:19:26Z",
+      "side": 1,
+      "message": "I use grep malloc_tsd_funcs in external/jemalloc, and can find 6 instances.",
+      "parentUuid": "bf3dc54e_6955dd8d",
       "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
