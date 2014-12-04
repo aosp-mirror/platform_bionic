@@ -53,12 +53,6 @@
 #  endif
 #endif
 
-/* define _ARM_HAVE_VFP if we have VFPv3
- */
-#if __ARM_ARCH__ >= 7 && defined __VFP_FP__
-#  define __ARM_HAVE_VFP
-#endif
-
 /* define _ARM_HAVE_NEON for ARMv7 architecture if we support the
  * Neon SIMD instruction set extensions. This also implies
  * that VFPv3-D32 is supported.
