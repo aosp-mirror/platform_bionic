@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5f2da928_cf02e17a",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:10:09Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "1f7c112d_4b55858d",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f2da928_f8ae8d2a",
         "filename": "libc/include/signal.h",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-04T18:18:37Z",
       "side": 1,
       "message": "this is still not ideal. traditionally C libraries were very bad and would just #include the whole file like this, but glibc started to clean things up a decade ago and are pretty clean now. with them you rarely get something that you\u0027re not explicitly specified to get.\n\n#include \u003csys/time.h\u003e is better than #include \u003ctime.h\u003e, but it\u0027s still going to add gettimeofday, settimeofday, getitimer, setitimer, utimes, timerclear, timerisset, timercmp, timeradd, and timersub, plus all the stuff in \u003clinux/time.h\u003e.\n\nit looks like our struct timespec is defined by \u003clinux/time.h\u003e, so that\u0027s probably as good as we can easily get. so let\u0027s do that here, and -- since you\u0027ve done the work to find the other places we should make a struct timespec *definition* (rather than just a forward declaration) available -- please raise a new bug to come back and see if we can clean that up.\n\nthe clean up might be hard, and that\u0027s related to why it\u0027s best not to include unnecessary stuff... as an Android developer you might think \"this doesn\u0027t hurt me; it just means i don\u0027t have to write as many #includes because if i #include one file i get most of the C library for free!\", but there are two disadvantages: 1. your code won\u0027t build on glibc. most of the changes i had to make the other day to get our benchmarks building on glibc were adding missing #includes. 2. (and this explains why glibc cared enough to do the cleanup themselves...) code that does build on a more correct C library might not build on a \"messy\" C library. if i don\u0027t #include the appropriate header file i might assume that certain names aren\u0027t used and use them myself. a crazy example would be:\n\n  #include \u003csignal.h\u003e\n\n  int CLOCK_REALTIME(void) { return 0; }\n\nwhich you obviously wouldn\u0027t to write anyway, but you get the idea.",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f2da928_0fcbf9e0",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:10:09Z",
+      "side": 1,
+      "message": "Done. I have raised a bug for further cleaning.",
+      "parentUuid": "5f2da928_f8ae8d2a",
       "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1f7c112d_25762246",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:10:09Z",
+      "side": 1,
+      "message": "Done. I make a \"RAII\" change for SpinFn.",
+      "parentUuid": "5f2da928_5808e197",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f2da928_981679b4",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 7
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "7f5eedd0_2c8e173a",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:10:09Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "5f2da928_981679b4",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f7c112d_2e83672c",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 7
@@ -81,6 +153,24 @@
       "writtenOn": "2014-12-04T18:20:14Z",
       "side": 1,
       "message": "this is crazy.\n\nhow would you normally synchronize between two threads? what\u0027s the difference between a thread and a process in this context?",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f55f1ac_c3463681",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T22:10:09Z",
+      "side": 1,
+      "message": "In the original test of sigtimedwait, I want to make a scenario that \"main process first sigtimedwait, child process\nthen call sigqueue/kill, then main process can wake up\". In the new change, the test scenario becomes \"main process call sigqueue/kill, then main process use sigtimedwait to get the signal\".\nI agree it is fine to make the change because we are testing bionic/libc, not the kernel. Whether sigtimedwait can handle condition \"signal already pended\" and \"signal will pend\" is determined by the kernel. So I can just make a simple test for sigtimedwait like sigwaitinfo.",
+      "parentUuid": "1f7c112d_2e83672c",
       "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
