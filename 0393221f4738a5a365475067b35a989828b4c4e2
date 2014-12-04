@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf3dc54e_c970a9fe",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-04T20:01:58Z",
+      "side": 1,
+      "message": "Is there a reason to keep this around?",
+      "range": {
+        "startLine": 192,
+        "startChar": 2,
+        "endLine": 200,
+        "endChar": 8
+      },
+      "revId": "0393221f4738a5a365475067b35a989828b4c4e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
