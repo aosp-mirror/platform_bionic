@@ -172,3 +172,46 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   ASSERT_STREQ(NEWPAGE2_MSG, buf);
   ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
 }
+
+TEST(sys_mman, posix_madvise) {
+  TemporaryFile tempfile;
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  char buf[pagesize];
+
+  // Prepare environment.
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), write(tempfile.fd, buf, pagesize));
+  void* map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, tempfile.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Verify different options of posix_madvise.
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_NORMAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_SEQUENTIAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_RANDOM));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_WILLNEED));
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+}
+
+// Verify that memory can still access after posix_madvise(POSIX_MADV_DONTNEED).
+// We should test on MAP_ANONYMOUS memory to verify whether the memory is discarded,
+// because the content of non MAP_ANONYMOUS memory can be reread from file.
+TEST(sys_mman, posix_madvise_POSIX_MADV_DONTNEED) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+
+  void* map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  int* int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    *int_ptr++ = i;
+  }
+
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_DONTNEED));
+
+  int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    ASSERT_EQ(i, *int_ptr++);
+  }
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+}
