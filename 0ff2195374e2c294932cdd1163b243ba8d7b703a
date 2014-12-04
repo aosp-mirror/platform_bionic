@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "1f4ed10c_aa618f84",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:30Z",
+      "side": 1,
+      "message": "I see, although we can change the definition, we can\u0027t recompile user\u0027s native code.",
+      "parentUuid": "7f47cdec_01098c1e",
+      "revId": "0ff2195374e2c294932cdd1163b243ba8d7b703a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fcb3196_9fb4f6c7",
         "filename": "libc/bionic/sigwaitinfo.cpp",
         "patchSetId": 4
