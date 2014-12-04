@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f7c112d_4b55858d",
+        "filename": "libc/bionic/sigtimedwait.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T18:18:37Z",
+      "side": 1,
+      "message": "not needed.",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f2da928_f8ae8d2a",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T18:18:37Z",
+      "side": 1,
+      "message": "this is still not ideal. traditionally C libraries were very bad and would just #include the whole file like this, but glibc started to clean things up a decade ago and are pretty clean now. with them you rarely get something that you\u0027re not explicitly specified to get.\n\n#include \u003csys/time.h\u003e is better than #include \u003ctime.h\u003e, but it\u0027s still going to add gettimeofday, settimeofday, getitimer, setitimer, utimes, timerclear, timerisset, timercmp, timeradd, and timersub, plus all the stuff in \u003clinux/time.h\u003e.\n\nit looks like our struct timespec is defined by \u003clinux/time.h\u003e, so that\u0027s probably as good as we can easily get. so let\u0027s do that here, and -- since you\u0027ve done the work to find the other places we should make a struct timespec *definition* (rather than just a forward declaration) available -- please raise a new bug to come back and see if we can clean that up.\n\nthe clean up might be hard, and that\u0027s related to why it\u0027s best not to include unnecessary stuff... as an Android developer you might think \"this doesn\u0027t hurt me; it just means i don\u0027t have to write as many #includes because if i #include one file i get most of the C library for free!\", but there are two disadvantages: 1. your code won\u0027t build on glibc. most of the changes i had to make the other day to get our benchmarks building on glibc were adding missing #includes. 2. (and this explains why glibc cared enough to do the cleanup themselves...) code that does build on a more correct C library might not build on a \"messy\" C library. if i don\u0027t #include the appropriate header file i might assume that certain names aren\u0027t used and use them myself. a crazy example would be:\n\n  #include \u003csignal.h\u003e\n\n  int CLOCK_REALTIME(void) { return 0; }\n\nwhich you obviously wouldn\u0027t to write anyway, but you get the idea.",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f2da928_5808e197",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T18:18:37Z",
+      "side": 1,
+      "message": "this is what i meant by factoring it out, though. any time you\u0027re writing code to clean up resources, you should be thinking \"RAII\".",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f2da928_981679b4",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T18:18:37Z",
+      "side": 1,
+      "message": "really needed?",
+      "revId": "e198ef2549c0db677d5aa06c2be005a8ad5b0ce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
