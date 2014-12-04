@@ -28,13 +28,15 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <pty.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
+#include <utmp.h>
 
-int getpt(void) {
+int getpt() {
   return posix_openpt(O_RDWR|O_NOCTTY);
 }
 
@@ -47,7 +49,7 @@ int posix_openpt(int flags) {
 }
 
 char* ptsname(int fd) {
-  static char buf[64];
+  static char buf[32];
   return ptsname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
 }
 
@@ -104,4 +106,84 @@ int ttyname_r(int fd, char* buf, size_t len) {
 int unlockpt(int fd) {
   int unlock = 0;
   return ioctl(fd, TIOCSPTLCK, &unlock);
+}
+
+int openpty(int* master, int* slave, char* name, const termios* t, const winsize* ws) {
+  *master = getpt();
+  if (*master == -1) {
+    return -1;
+  }
+
+  if (grantpt(*master) == -1 || unlockpt(*master) == -1) {
+    close(*master);
+    return -1;
+  }
+
+  char buf[32];
+  if (name == NULL) {
+    name = buf;
+  }
+  if (ptsname_r(*master, name, sizeof(buf)) != 0) {
+    close(*master);
+    return -1;
+  }
+
+  *slave = open(name, O_RDWR|O_NOCTTY);
+  if (*slave == -1) {
+    close(*master);
+    return -1;
+  }
+
+  if (t != NULL) {
+    tcsetattr(*slave, TCSAFLUSH, t);
+  }
+  if (ws != NULL) {
+    ioctl(*slave, TIOCSWINSZ, ws);
+  }
+
+  return 0;
+}
+
+int forkpty(int* master, char* name, const termios* t, const winsize* ws) {
+  int slave;
+  if (openpty(master, &slave, name, t, ws) == -1) {
+    return -1;
+  }
+
+  pid_t pid = fork();
+  if (pid == -1) {
+    close(*master);
+    close(slave);
+    return -1;
+  }
+
+  if (pid == 0) {
+    // Child.
+    close(*master);
+    if (login_tty(slave) == -1) {
+      _exit(1);
+    }
+    return 0;
+  }
+
+  // Parent.
+  close(slave);
+  return pid;
+}
+
+int login_tty(int fd) {
+  setsid();
+
+  if (ioctl(fd, TIOCSCTTY, NULL) == -1) {
+    return -1;
+  }
+
+  dup2(fd, STDIN_FILENO);
+  dup2(fd, STDOUT_FILENO);
+  dup2(fd, STDERR_FILENO);
+  if (fd > STDERR_FILENO) {
+    close(fd);
+  }
+
+  return 0;
 }
