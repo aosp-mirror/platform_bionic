@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1f4ed10c_ca665b9a",
+        "filename": "libc/bionic/sigqueue.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "7f47cdec_61417034",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f47cdec_a18218e2",
         "filename": "libc/include/signal.h",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-03T20:06:30Z",
       "side": 1,
       "message": "i was wrong. POSIX explicitly says \"The \u003csignal.h\u003e header shall define the timespec structure as described in \u003ctime.h\u003e.\".\n\ntwo ways we can fix this:\n\n1. #include \u003ctime.h\u003e like you used to. the downside of this is that that gets us *everything* from \u003ctime.h\u003e, not just struct timespec.\n\n2. break struct timespec into its own header, probably in libc/include/machine/ with similar headers, and then #include \u003cmachine/timespec.h\u003e from both places. (and others? is there anywhere else that POSIX says you get timespec?)",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f44c9e8_a66227fb",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "It is easy to miss the specification details.\nHeader files should declare timespec struct:\naio.h, mqueue.h, sched.h, signal.h, sys/select.h,\nsys/stat.h, time.h. aio.h, mqueue.h not implemented,\nothers all include sys/time.h. So I include \u003csys/time.h\u003e\nin signal.h too.",
+      "parentUuid": "7f47cdec_a18218e2",
       "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1f4ed10c_8a693369",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "I didn\u0027t notice SpinFn even it is so close.\nI agree static global value may not be a good choice in such\na big file. But I find one possible bug(maybe just in theory) in SpinFn. You can find the detail in comment above SpinFn.",
+      "parentUuid": "5f44c9e8_e0cb3caf",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f47cdec_e1710084",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-03T20:06:30Z",
       "side": 1,
       "message": "can we synchronize instead of sleeping?",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df219932_e2501c25",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "I can\u0027t think up an easy way to do it. Maybe we can get parent process\u0027s running status in child process, by reading\n/proc/pid/stat, do you think it is suitable to make the change?",
+      "parentUuid": "7f47cdec_e1710084",
       "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "1f4ed10c_2a76df45",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "Decrease it to 1ms.",
+      "parentUuid": "5f44c9e8_a0d5344a",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fd68940_a17786fb",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 5
@@ -98,6 +188,24 @@
       "writtenOn": "2014-12-03T20:06:30Z",
       "side": 1,
       "message": "but we should probably assert that we waited at least as long as the timeout specified.",
+      "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df219932_0256701e",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-04T07:03:38Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5fd68940_a17786fb",
       "revId": "29e0b2a09ff7b5af64e8c90b9a845ac9c119b83b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
