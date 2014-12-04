@@ -81,12 +81,12 @@ glibc_to_bionic_names = {
   '__xpg_basename': '__gnu_basename',
 }
 
-glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
+glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*', 'libutil.so.*')
 bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
 posix = GetSymbolsFromTxt(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'posix-2013.txt'))
 ndk_ignored = GetNdkIgnored()
 
-glibc = map(MangleGlibcNameToBionic, glibc)
+glibc = set(map(MangleGlibcNameToBionic, glibc))
 
 # bionic includes various BSD symbols to ease porting other BSD-licensed code.
 bsd_stuff = set([
@@ -189,21 +189,26 @@ known = set([
 ])
 
 if not only_unwanted:
-  print 'glibc:'
-  for symbol in sorted(glibc):
-    print symbol
+  #print 'glibc:'
+  #for symbol in sorted(glibc):
+  #  print symbol
+  #print
 
-  print
-  print 'bionic:'
-  for symbol in sorted(bionic):
-    print symbol
+  #print 'bionic:'
+  #for symbol in sorted(bionic):
+  #  print symbol
+  #print
 
-  print
-  print 'in posix but not bionic:'
-  for symbol in sorted(posix.difference(bionic)):
+  print 'in glibc (but not posix) but not bionic:'
+  for symbol in sorted((glibc - posix).difference(bionic)):
     print symbol
-
   print
+
+  print 'in posix (and implemented in glibc) but not bionic:'
+  for symbol in sorted((posix.intersection(glibc)).difference(bionic)):
+    print symbol
+  print
+
   print 'in bionic but not glibc:'
 
 allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff |
