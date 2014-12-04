@@ -32,7 +32,7 @@
 
 /* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
 /* Keep it sorted. */
-#define _POSIX_ADVISORY_INFO        -1  /* posix_madvise() not implemented */
+#define _POSIX_ADVISORY_INFO        200809L
 #define _POSIX_AIO_LISTIO_MAX       2
 #define _POSIX_AIO_MAX              1
 #define _POSIX_ARG_MAX              4096
