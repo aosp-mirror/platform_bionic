@@ -72,14 +72,12 @@ ENTRY(setjmp)
 	add     r1, r0, #(_JB_CORE_BASE * 4)
 	stmia   r1, {r4-r14}
 
-#ifdef __ARM_HAVE_VFP
 	/* Store floating-point registers */
 	add     r1, r0, #(_JB_FLOAT_BASE * 4)
 	vstmia  r1, {d8-d15}
 	/* Store floating-point state */
 	fmrx    r1, fpscr
 	str     r1, [r0, #(_JB_FLOAT_STATE * 4)]
-#endif  /* __ARM_HAVE_VFP */
 
 	mov	r0, #0x00000000
 	bx      lr
@@ -115,14 +113,12 @@ ENTRY(longjmp)
 	ldmfd	sp!, {r0, r1, r14}
 	.cfi_def_cfa_offset 0
 
-#ifdef __ARM_HAVE_VFP
 	/* Restore floating-point registers */
 	add     r2, r0, #(_JB_FLOAT_BASE * 4)
 	vldmia  r2, {d8-d15}
 	/* Restore floating-point state */
 	ldr     r2, [r0, #(_JB_FLOAT_STATE * 4)]
 	fmxr    fpscr, r2
-#endif /* __ARM_HAVE_VFP */
 
 	/* Restore core registers */
 	add     r2, r0, #(_JB_CORE_BASE * 4)
@@ -139,11 +135,7 @@ ENTRY(longjmp)
 	teq	r0, #0x00000000
 	moveq	r0, #0x00000001
         bx      lr
-#ifdef __ARM_26__
 	mov	r15, r14
-#else
-	mov	r15, r14
-#endif
 
 	/* validation failed, die die die. */
 botch:
