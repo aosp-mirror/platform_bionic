@@ -234,6 +234,30 @@
       "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f4ed10c_be66b598",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-04T00:06:18Z",
+      "side": 1,
+      "message": "yes, but i think it\u0027s too hard to test this.",
+      "parentUuid": "5f44c9e8_46d483f8",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 1
+      },
+      "revId": "74596eec8b3156c003fb7c0506e017b21237fcad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
