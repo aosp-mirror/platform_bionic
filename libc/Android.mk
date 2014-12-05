@@ -153,6 +153,7 @@ libc_bionic_src_files := \
     bionic/poll.cpp \
     bionic/posix_fadvise.cpp \
     bionic/posix_fallocate.cpp \
+    bionic/posix_madvise.cpp \
     bionic/posix_timers.cpp \
     bionic/pthread_atfork.cpp \
     bionic/pthread_attr.cpp \
