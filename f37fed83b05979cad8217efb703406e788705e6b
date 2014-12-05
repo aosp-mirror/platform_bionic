@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4e7b292_02836a2f",
+        "filename": "libc/arch-arm/bionic/_setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T20:21:11Z",
+      "side": 1,
+      "message": "(i\u0027m going to come back and fix arm [and mips and x86 and x86-64] in the same way, but this change is already big enough.)",
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf2ce57b_68d7e3cc",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T20:21:11Z",
+      "side": 1,
+      "message": "is there a better way to do this \"w9 \u003d save ? mask_y : mask_n\" code?",
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf2ce57b_28cdeb3e",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T20:21:11Z",
+      "side": 1,
+      "message": "is this a legit use of w9?",
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
