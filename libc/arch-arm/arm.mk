@@ -60,9 +60,7 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/libgcc_compat.c \
     arch-arm/bionic/memcmp.S \
     arch-arm/bionic/__restore.S \
-    arch-arm/bionic/_setjmp.S \
     arch-arm/bionic/setjmp.S \
-    arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
 
 libc_arch_static_src_files_arm := arch-arm/bionic/exidx_static.c
