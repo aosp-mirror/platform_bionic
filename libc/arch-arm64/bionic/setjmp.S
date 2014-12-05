@@ -27,97 +27,151 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/setjmp.h>
 
-/*
- * C library - _setjmp, _longjmp
- *
- * _longjmp(jmp_buf state, int value)
- * will generate a "return(v)" from the last call to _setjmp(state) by restoring
- * registers from the stack. The previous signal state is NOT restored.
- *
- * NOTE: x0 return value
- *       x9-x15 temporary registers
- */
+// _JBLEN is the size of a jmp_buf in longs(64bit on AArch64).
+#define _JBLEN 32
+
+// According to AARCH64 PCS document we need to save the following
+// registers:
+//
+// Core     x19 - x30, sp (see section 5.1.1)
+// VFP      d8 - d15 (see section 5.1.2)
+//
+// NOTE: All the registers saved here will have 64bit vales (except FPSR).
+//       AAPCS mandates that the higher part of q registers do not need to
+//       be saved by the callee.
+//
+
+// The structure of jmp_buf for AArch64:
+//
+// NOTE: _JBLEN is the size of jmp_buf in longs(64bit on AArch64)! The table
+//      below computes the offsets in words(32bit).
+//
+//  word        name            description
+//  0       magic           magic number
+//  1       sigmask         signal mask (not used with _setjmp / _longjmp)
+//  2       core_base       base of core registers (x19-x30, sp)
+//  28      float_base      base of float registers (d8-d15)
+//  44      reserved        reserved entries (room to grow)
+//  64
+//
+//
+//  NOTE: The instructions that load/store core/vfp registers expect 8-byte
+//        alignment. Contrary to the previous setjmp header for ARM we do not
+//        need to save status/control registers for VFP (it is not a
+//        requirement for setjmp).
+//
+
+#define _JB_MAGIC       0
+#define _JB_SIGMASK     (_JB_MAGIC+1)
+#define _JB_CORE_BASE   (_JB_SIGMASK+1)
+#define _JB_FLOAT_BASE  (_JB_CORE_BASE + (31-19+1)*2)
+
+.L_setjmp_magic_signal_mask_n: .word 0x53657200
+.L_setjmp_magic_signal_mask_y: .word 0x53657201
 
 ENTRY(setjmp)
-    /* block all signals an retrieve signal mask */
-    stp     x0, x30, [sp, #-16]!
-
-    mov     x0, xzr
-    bl      sigblock
-    mov     w1, w0
-
-    ldp     x0, x30, [sp], #16
-
-    /* store signal mask */
-    str     w1, [x0, #(_JB_SIGMASK *4)]
-
-    /* store magic number */
-    ldr     w9, .L_setjmp_magic
-    str     w9, [x0, #(_JB_MAGIC * 4)]
-
-    /* store core registers */
-    mov     x10, sp
-    stp     x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
-    stp     x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
-    stp     x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
-    stp     x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
-    stp     x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
-    stp     x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
-    str     x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
-
-    /* store floating point registers */
-    stp     d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
-    stp     d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
-    stp     d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
-    stp     d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
-
-    mov     w0, wzr
-    ret
+  mov w1, #1
+  b sigsetjmp
 END(setjmp)
 
-.L_setjmp_magic:
-    .word   _JB_MAGIC__SETJMP
+ENTRY(_setjmp)
+  mov w1, #0
+  b sigsetjmp
+END(_setjmp)
 
-ENTRY(longjmp)
-    /* check magic */
-    ldr     w9, .L_setjmp_magic
-    ldr     w10, [x0, #(_JB_MAGIC * 4)]
-    cmp     w9, w10
-    b.ne    .L_fail
+// int sigsetjmp(sigjmp_buf env, int save_signal_mask);
+ENTRY(sigsetjmp)
+  // Do we need to save the signal mask?
+  ldr w9, .L_setjmp_magic_signal_mask_n
+  cbz w1, 1f
 
-    /* restore core registers */
-    ldp     x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
-    mov     sp, x10
-    ldp     x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
-    ldp     x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
-    ldp     x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
-    ldp     x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
-    ldp     x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
-    ldr     x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
+  // Get current signal mask.
+  stp x0, x30, [sp, #-16]!
+  mov x0, xzr
+  bl sigblock
+  mov w1, w0
+  ldp x0, x30, [sp], #16
 
-    /* restore floating point registers */
-    ldp     d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
-    ldp     d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
-    ldp     d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
-    ldp     d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
+  // Save signal mask.
+  str w1, [x0, #(_JB_SIGMASK * 4)]
 
-    /* validate sp (sp mod 16 = 0) and lr (lr mod 4 = 0) */
-    tst     x30, #3
-    b.ne    .L_fail
-    mov     x10, sp
-    tst     x10, #15
-    b.ne    .L_fail
+  ldr w9, .L_setjmp_magic_signal_mask_y
 
-    /* set return value */
-    cmp     w1, wzr
-    csinc   w0, w1, wzr, ne
-    ret
+1:
+  // Save magic number.
+  str w9, [x0, #(_JB_MAGIC * 4)]
 
-    /* validation failed, die die die */
-.L_fail:
-    bl      longjmperror
-    bl      abort
-    b       . - 8       /* Cannot get here */
-END(longjmp)
+  // Save core registers.
+  mov x10, sp
+  stp x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
+  stp x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
+  stp x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
+  stp x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
+  stp x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
+  stp x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
+  str x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
+
+  // Save floating point registers.
+  stp d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
+  stp d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
+  stp d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
+  stp d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
+
+  mov w0, wzr
+  ret
+END(sigsetjmp)
+
+// void siglongjmp(sigjmp_buf env, int value);
+ENTRY(siglongjmp)
+  // Check magic.
+  ldr w10, [x0, #(_JB_MAGIC * 4)]
+  ldr w9, .L_setjmp_magic_signal_mask_n
+  cmp w9, w10
+  b.eq 1f
+  ldr w9, .L_setjmp_magic_signal_mask_y
+  cmp w9, w10
+  b.ne longjmperror
+
+  // Restore signal mask.
+  stp x0, x30, [sp, #-16]!
+  mov x19, x1
+  ldr w0, [x0, #(_JB_SIGMASK * 4)]
+  bl sigsetmask
+  ldp x0, x30, [sp], #16
+  mov x1, x19
+
+1:
+  // Restore core registers.
+  ldp x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
+  mov sp, x10
+  ldp x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
+  ldp x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
+  ldp x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
+  ldp x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
+  ldp x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
+  ldr x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
+
+  // Restore floating point registers.
+  ldp d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
+  ldp d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
+  ldp d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
+  ldp d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
+
+  // Validate sp (sp mod 16 = 0) and lr (lr mod 4 = 0).
+  tst x30, #3
+  b.ne longjmperror
+  mov x10, sp
+  tst x10, #15
+  b.ne longjmperror
+
+  // Set return value.
+  cmp w1, wzr
+  csinc w0, w1, wzr, ne
+  ret
+END(siglongjmp)
+
+  .globl longjmp
+  .equ longjmp, siglongjmp
+  .globl _longjmp
+  .equ _longjmp, siglongjmp
