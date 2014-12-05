@@ -77,7 +77,7 @@ ENTRY(_longjmp)
 	ldr	r2, .L_setjmp_magic
 	ldr	r3, [r0, #(_JB_MAGIC * 4)]
 	teq	r2, r3
-	bne	botch
+	blne	longjmperror
 
 	/* Restore floating-point registers */
 	add     r2, r0, #(_JB_FLOAT_BASE * 4)
@@ -93,17 +93,11 @@ ENTRY(_longjmp)
 	/* Validate sp and r14 */
 	teq	sp, #0
 	teqne	r14, #0
-	beq	botch
+	bleq	longjmperror
 
 	/* Set return value */
 	mov	r0, r1
 	teq	r0, #0x00000000
 	moveq	r0, #0x00000001
 	bx      lr
-
-	/* validation failed, die die die. */
-botch:
-	bl	longjmperror
-	bl	abort
-	b	. - 8		/* Cannot get here */
 END(_longjmp)

@@ -91,7 +91,7 @@ ENTRY(longjmp)
 	ldr	r2, .Lsetjmp_magic
 	ldr	r3, [r0, #(_JB_MAGIC * 4)]
 	teq	r2, r3
-	bne	botch
+	blne	longjmperror
 
 	/* Fetch signal mask */
 	ldr	r2, [r0, #(_JB_SIGMASK * 4)]
@@ -127,19 +127,12 @@ ENTRY(longjmp)
 	/* Validate sp and r14 */
 	teq	sp, #0
 	teqne	r14, #0
-	beq	botch
+	bleq	longjmperror
 
 	/* Set return value */
-
 	mov	r0, r1
 	teq	r0, #0x00000000
 	moveq	r0, #0x00000001
         bx      lr
 	mov	r15, r14
-
-	/* validation failed, die die die. */
-botch:
-	bl	longjmperror
-	bl	abort
-	b	. - 8		/* Cannot get here */
 END(longjmp)
