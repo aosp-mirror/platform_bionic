@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "c43aaec4_f4cef63e",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T22:59:42Z",
+      "side": 1,
+      "message": "i was looking for something clearer, not faster :-)",
+      "parentUuid": "041be66b_732a006d",
+      "range": {
+        "startLine": 86,
+        "startChar": 2,
+        "endLine": 86,
+        "endChar": 39
+      },
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f26ed9d_06a49a17",
         "filename": "libc/arch-arm64/bionic/setjmp.S",
         "patchSetId": 1
@@ -76,6 +100,30 @@
       "writtenOn": "2014-12-05T22:13:28Z",
       "side": 1,
       "message": "No unwind directives?",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c43aaec4_14e17aa2",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T22:59:42Z",
+      "side": 1,
+      "message": "no, i have a few more changes to come, so i was either going to worry about that at the end or leave them for cferris :-)\n\n(also not a regression.)",
+      "parentUuid": "7f26ed9d_06a49a17",
       "range": {
         "startLine": 90,
         "startChar": 2,
@@ -116,6 +164,30 @@
       "writtenOn": "2014-12-05T22:13:28Z",
       "side": 1,
       "message": "You could rewrite the function slightly and avoid any loads:\n\nmov w2, #0x7200\ncbz ...\n.\n.\n.\n\nstr w1, ...\n\nmov w2, #0x7201\n\n1:\n  mov w9, #0x5365000\n  and w9, w9, w2",
+      "range": {
+        "startLine": 99,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 39
+      },
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c43aaec4_34135e04",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T22:59:42Z",
+      "side": 1,
+      "message": "talking to cferris we came up with changing the constants so that we unconditionally load the top bits, leave the bottom bits zero for \"no signal mask\" and or in some bottom bits for \"yes signal mask\". but if i do that at all, i\u0027ll come back later.",
+      "parentUuid": "041be66b_d36f9465",
       "range": {
         "startLine": 99,
         "startChar": 2,
@@ -186,6 +258,24 @@
     },
     {
       "key": {
+        "uuid": "a43f7ab4_d69e5440",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T22:59:42Z",
+      "side": 1,
+      "message": "oops, i actually meant...",
+      "parentUuid": "c43aaec4_71ad782a",
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a43f7ab4_d313064e",
         "filename": "libc/arch-arm64/bionic/setjmp.S",
         "patchSetId": 1
@@ -203,6 +293,23 @@
         "endLine": 137,
         "endChar": 26
       },
+      "revId": "f37fed83b05979cad8217efb703406e788705e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a43f7ab4_1684dce5",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-05T22:59:42Z",
+      "side": 1,
+      "message": "...to ask whether this was stylistically okay. i think it works fine, because x19 is callee-save, but i wondered whether it was unidiomatic.",
       "revId": "f37fed83b05979cad8217efb703406e788705e6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
