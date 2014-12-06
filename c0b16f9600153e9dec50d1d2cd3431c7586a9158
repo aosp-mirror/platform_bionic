@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "845d1634_6dd11113",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-06T07:36:02Z",
+      "side": 1,
+      "message": "Same as with aarch64: this arg is ignored if the next one is null.",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_01958a4a",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-06T07:36:02Z",
+      "side": 1,
+      "message": "Small nit: you load your args in the opposite order here.",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "845d1634_4dd64d0d",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-06T07:36:02Z",
+      "side": 1,
+      "message": "SIG_SETMASK is ignored.",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
