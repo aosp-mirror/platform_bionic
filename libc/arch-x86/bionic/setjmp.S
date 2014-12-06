@@ -1,4 +1,3 @@
-/* $OpenBSD: setjmp.S,v 1.8 2005/08/07 11:30:38 espie Exp $ */
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -33,55 +32,98 @@
 
 #include <private/bionic_asm.h>
 
-/*
- * C library -- setjmp, longjmp
- *
- *	longjmp(a,v)
- * will generate a "return(v)" from the last call to
- *	setjmp(a)
- * by restoring registers from the stack.
- * The previous signal state is restored.
- */
+#define _JB_EDX 0
+#define _JB_EBX 1
+#define _JB_ESP 2
+#define _JB_EBP 3
+#define _JB_ESI 4
+#define _JB_EDI 5
+#define _JB_SIGMASK 6
+#define _JB_SIGFLAG 7
 
 ENTRY(setjmp)
-	PIC_PROLOGUE
-	pushl	$0
-	call	PIC_PLT(sigblock)
-	addl	$4,%esp
-	PIC_EPILOGUE
-
-	movl	4(%esp),%ecx
-	movl	0(%esp),%edx
-	movl	%edx, 0(%ecx)
-	movl	%ebx, 4(%ecx)
-	movl	%esp, 8(%ecx)
-	movl	%ebp,12(%ecx)
-	movl	%esi,16(%ecx)
-	movl	%edi,20(%ecx)
-	movl	%eax,24(%ecx)
-	xorl	%eax,%eax
-	ret
+  movl 4(%esp),%ecx
+  movl $1,(_JB_SIGFLAG * 4)(%ecx)
+  jmp .L_sigsetjmp_signal_mask
 END(setjmp)
 
-ENTRY(longjmp)
-	movl	4(%esp),%edx
-	PIC_PROLOGUE
-	pushl	24(%edx)
-	call	PIC_PLT(sigsetmask)
-	addl	$4,%esp
-	PIC_EPILOGUE
+ENTRY(_setjmp)
+  movl 4(%esp),%ecx
+  movl $0,(_JB_SIGFLAG * 4)(%ecx)
+  jmp .L_sigsetjmp_no_signal_mask
+END(_setjmp)
 
-	movl	4(%esp),%edx
-	movl	8(%esp),%eax
-	movl	0(%edx),%ecx
-	movl	4(%edx),%ebx
-	movl	8(%edx),%esp
-	movl	12(%edx),%ebp
-	movl	16(%edx),%esi
-	movl	20(%edx),%edi
-	testl	%eax,%eax
-	jnz	1f
-	incl	%eax
-1:	movl	%ecx,0(%esp)
-	ret
-END(longjmp)
+ENTRY(sigsetjmp)
+  movl 4(%esp),%ecx
+  movl 8(%esp),%eax
+
+  // Record whether or not the signal mask is valid.
+  movl %eax,(_JB_SIGFLAG * 4)(%ecx)
+
+  // Do we need to save the signal mask?
+  testl %eax,%eax
+  jz 1f
+
+.L_sigsetjmp_signal_mask:
+  // Get the current signal mask.
+  PIC_PROLOGUE
+  pushl $0
+  call PIC_PLT(sigblock)
+  addl $4,%esp
+  PIC_EPILOGUE
+
+  // Save the signal mask.
+  movl 4(%esp),%ecx
+  movl %eax,(_JB_SIGMASK * 4)(%ecx)
+
+.L_sigsetjmp_no_signal_mask:
+1:
+  // Save the callee-save registers.
+  movl 0(%esp),%edx
+  movl %edx,(_JB_EDX * 4)(%ecx)
+  movl %ebx,(_JB_EBX * 4)(%ecx)
+  movl %esp,(_JB_ESP * 4)(%ecx)
+  movl %ebp,(_JB_EBP * 4)(%ecx)
+  movl %esi,(_JB_ESI * 4)(%ecx)
+  movl %edi,(_JB_EDI * 4)(%ecx)
+
+  xorl %eax,%eax
+  ret
+END(sigsetjmp)
+
+ENTRY(siglongjmp)
+  // Do we have a signal mask to restore?
+  movl 4(%esp),%edx
+  cmpl $0,(_JB_SIGFLAG * 4)(%edx)
+  jz 1f
+
+  // Restore the signal mask.
+  PIC_PROLOGUE
+  pushl (_JB_SIGMASK * 4)(%edx)
+  call PIC_PLT(sigsetmask)
+  addl $4,%esp
+  PIC_EPILOGUE
+
+1:
+  // Restore the callee-save registers.
+  movl 4(%esp),%edx
+  movl 8(%esp),%eax
+  movl (_JB_EDX * 4)(%edx),%ecx
+  movl (_JB_EBX * 4)(%edx),%ebx
+  movl (_JB_ESP * 4)(%edx),%esp
+  movl (_JB_EBP * 4)(%edx),%ebp
+  movl (_JB_ESI * 4)(%edx),%esi
+  movl (_JB_EDI * 4)(%edx),%edi
+
+  testl %eax,%eax
+  jnz 2f
+  incl %eax
+2:
+  movl %ecx,0(%esp)
+  ret
+END(siglongjmp)
+
+  .globl longjmp
+  .equ longjmp, siglongjmp
+  .globl _longjmp
+  .equ _longjmp, siglongjmp
