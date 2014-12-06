@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0449267c_03e02ed5",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T18:29:37Z",
+      "side": 1,
+      "message": "for readability. this originally said \"mov x2, x0\", but (a) that was less readable and (b) meant we couldn\u0027t move _JB_SIGMASK around without rewriting the code. this way it stays correct.\n\nunless it\u0027s the *4 rather than *8 that you\u0027re complaining about, in which case, yes, i wholly agree. i much prefer the x86-64 code. afaics the only reason this code works in uint32s rather than uint64s is to save 8 bytes by packing the magic and non-RT sigmask together. but that\u0027s a bug. i\u0027d like to come back and re-do this. i think (though i reserve the right to change my mind when i\u0027ve actually seen it) that i\u0027d prefer to have a constant for each slot too, rather than the two _BASE constants. but not in this change.",
+      "parentUuid": "840fd623_1dcab32c",
+      "revId": "bbf57c8904c536864f092f3bc9dfb5c815213d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "840fd623_fdcedf3e",
         "filename": "libc/arch-arm64/bionic/setjmp.S",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-06T07:10:31Z",
       "side": 1,
       "message": "man page says this argument is ignored if the next one is null.",
+      "revId": "bbf57c8904c536864f092f3bc9dfb5c815213d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0449267c_c3c1f63d",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T18:29:37Z",
+      "side": 1,
+      "message": "i need it below though. but what i ought to do is #define SIG_SETMASK at the top.\n\nwhy can\u0027t i #include it? because the header file that defines it also defines structs :-(",
+      "parentUuid": "840fd623_fdcedf3e",
       "revId": "bbf57c8904c536864f092f3bc9dfb5c815213d22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
