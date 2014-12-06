@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0449267c_83cbfe5b",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T18:47:33Z",
+      "side": 1,
+      "message": "i\u0027ll add a #define here too. or maybe i should just go with a comment saying it\u0027s unused after all: that would let me assign the other arguments in the natural order here...",
+      "parentUuid": "845d1634_6dd11113",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c488eee4_01958a4a",
         "filename": "libc/arch-x86_64/bionic/setjmp.S",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "244c6a8a_a4c4c23c",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T18:47:33Z",
+      "side": 1,
+      "message": "yeah, this is the natural order. above i had to do rdi(\u0027r0\u0027) last because i need its original value to set up rdx(\u0027r2\u0027).",
+      "parentUuid": "c488eee4_01958a4a",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "845d1634_4dd64d0d",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2014-12-06T07:36:02Z",
       "side": 1,
       "message": "SIG_SETMASK is ignored.",
+      "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48332c3_42f7129a",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T18:47:33Z",
+      "side": 1,
+      "message": "yes, but there\u0027s no SIG_GETMASK so we have to put _something_ here. SIG_SETMASK and SIG_BLOCK are both popular choices. (we\u0027ve -- probably \"i\u0027ve\" -- tended to use the former, while BSD tends to use the latter.) one caller in chrome has 0 /* ignored */.",
+      "parentUuid": "845d1634_4dd64d0d",
       "revId": "c0b16f9600153e9dec50d1d2cd3431c7586a9158",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
