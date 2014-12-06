@@ -1,6 +1,3 @@
-/*	$OpenBSD: setjmp.S,v 1.2 2004/02/01 05:40:52 drahn Exp $	*/
-/*	$NetBSD: setjmp.S,v 1.5 2003/04/05 23:08:51 bjh21 Exp $	*/
-
 /*
  * Copyright (c) 1997 Mark Brinicombe
  * Copyright (c) 2010 Android Open Source Project.
@@ -36,103 +33,154 @@
 
 #include <private/bionic_asm.h>
 #include <machine/setjmp.h>
-#include <machine/cpu-features.h>
 
-/*
- * C library -- setjmp, longjmp
- *
- *	longjmp(a,v)
- * will generate a "return(v)" from the last call to
- *	setjmp(a)
- * by restoring registers from the stack.
- * The previous signal state is restored.
- */
+// According to the ARM AAPCS document, we only need to save
+// the following registers:
+//
+//  Core   r4-r14
+//
+//  VFP    d8-d15  (see section 5.1.2.1)
+//
+//      Registers s16-s31 (d8-d15, q4-q7) must be preserved across subroutine
+//      calls; registers s0-s15 (d0-d7, q0-q3) do not need to be preserved
+//      (and can be used for passing arguments or returning results in standard
+//      procedure-call variants). Registers d16-d31 (q8-q15), if present, do
+//      not need to be preserved.
+//
+//  FPSCR  saved because glibc does.
+
+// The internal structure of a jmp_buf is totally private.
+// Current layout (may change in the future):
+//
+// word   name         description
+// 0      magic        magic number
+// 1      sigmask      signal mask (not used with _setjmp / _longjmp)
+// 2      float_base   base of float registers (d8 to d15)
+// 18     float_state  floating-point status and control register
+// 19     core_base    base of core registers (r4 to r14)
+// 30     reserved     reserved entries (room to grow)
+// 64
+//
+// NOTE: float_base must be at an even word index, since the
+//       FP registers will be loaded/stored with instructions
+//       that expect 8-byte alignment.
+
+#define _JB_MAGIC       0
+#define _JB_SIGMASK     (_JB_MAGIC+1)
+#define _JB_FLOAT_BASE  (_JB_SIGMASK+1)
+#define _JB_FLOAT_STATE (_JB_FLOAT_BASE + (15-8+1)*2)
+#define _JB_CORE_BASE   (_JB_FLOAT_STATE+1)
+
+.L_setjmp_magic_signal_mask_n: .word 0x4278f500
+.L_setjmp_magic_signal_mask_y: .word 0x4278f501
 
 ENTRY(setjmp)
-	/* Block all signals and retrieve the old signal mask */
-	stmfd	sp!, {r0, r14}
-	.cfi_def_cfa_offset 8
-	.cfi_rel_offset r0, 0
-	.cfi_rel_offset r14, 4
-	mov	r0, #0x00000000
-
-	bl	sigblock
-	mov	r1, r0
-
-	ldmfd	sp!, {r0, r14}
-	.cfi_def_cfa_offset 0
-
-	/* Store signal mask */
-	str	r1, [r0, #(_JB_SIGMASK * 4)]
-
-	ldr	r1, .Lsetjmp_magic
-	str	r1, [r0, #(_JB_MAGIC * 4)]
-
-	/* Store core registers */
-	add     r1, r0, #(_JB_CORE_BASE * 4)
-	stmia   r1, {r4-r14}
-
-	/* Store floating-point registers */
-	add     r1, r0, #(_JB_FLOAT_BASE * 4)
-	vstmia  r1, {d8-d15}
-	/* Store floating-point state */
-	fmrx    r1, fpscr
-	str     r1, [r0, #(_JB_FLOAT_STATE * 4)]
-
-	mov	r0, #0x00000000
-	bx      lr
+  mov r1, #1
+  b sigsetjmp
 END(setjmp)
 
-.Lsetjmp_magic:
-	.word	_JB_MAGIC_SETJMP
+ENTRY(_setjmp)
+  mov r1, #0
+  b sigsetjmp
+END(_setjmp)
 
+// int sigsetjmp(sigjmp_buf env, int save_signal_mask);
+ENTRY(sigsetjmp)
+  // Do we need to save the signal mask?
+  teq r1, #0
+  ldreq r1, .L_setjmp_magic_signal_mask_n
+  beq 1f
 
-ENTRY(longjmp)
-	ldr	r2, .Lsetjmp_magic
-	ldr	r3, [r0, #(_JB_MAGIC * 4)]
-	teq	r2, r3
-	blne	longjmperror
+  // Get current signal mask.
+  stmfd sp!, {r0, r14}
+  .cfi_def_cfa_offset 8
+  .cfi_rel_offset r0, 0
+  .cfi_rel_offset r14, 4
+  mov r0, #0
+  bl sigblock
+  mov r1, r0
+  ldmfd sp!, {r0, r14}
+  .cfi_def_cfa_offset 0
 
-	/* Fetch signal mask */
-	ldr	r2, [r0, #(_JB_SIGMASK * 4)]
+  // Save signal mask.
+  str r1, [r0, #(_JB_SIGMASK * 4)]
 
-	/* Set signal mask */
-	stmfd	sp!, {r0, r1, r14}
-	.cfi_def_cfa_offset 12
-	.cfi_rel_offset r0, 0
-	.cfi_rel_offset r1, 4
-	.cfi_rel_offset r14, 8
-	sub	sp, sp, #4	/* align the stack */
-	.cfi_adjust_cfa_offset 4
+  ldr r1, .L_setjmp_magic_signal_mask_y
 
-	mov	r0, r2
-	bl	sigsetmask
+1:
+  // Save magic number.
+  str r1, [r0, #(_JB_MAGIC * 4)]
 
-	add	sp, sp, #4	/* unalign the stack */
-	.cfi_adjust_cfa_offset -4
-	ldmfd	sp!, {r0, r1, r14}
-	.cfi_def_cfa_offset 0
+  // Save core registers.
+  add r1, r0, #(_JB_CORE_BASE * 4)
+  stmia r1, {r4-r14}
 
-	/* Restore floating-point registers */
-	add     r2, r0, #(_JB_FLOAT_BASE * 4)
-	vldmia  r2, {d8-d15}
-	/* Restore floating-point state */
-	ldr     r2, [r0, #(_JB_FLOAT_STATE * 4)]
-	fmxr    fpscr, r2
+  // Save floating-point registers.
+  add r1, r0, #(_JB_FLOAT_BASE * 4)
+  vstmia  r1, {d8-d15}
 
-	/* Restore core registers */
-	add     r2, r0, #(_JB_CORE_BASE * 4)
-	ldmia   r2, {r4-r14}
+  // Save floating-point state.
+  fmrx r1, fpscr
+  str r1, [r0, #(_JB_FLOAT_STATE * 4)]
 
-	/* Validate sp and r14 */
-	teq	sp, #0
-	teqne	r14, #0
-	bleq	longjmperror
+  mov r0, #0
+  bx lr
+END(sigsetjmp)
 
-	/* Set return value */
-	mov	r0, r1
-	teq	r0, #0x00000000
-	moveq	r0, #0x00000001
-        bx      lr
-	mov	r15, r14
-END(longjmp)
+// void siglongjmp(sigjmp_buf env, int value);
+ENTRY(siglongjmp)
+  // Check magic.
+  ldr r3, [r0, #(_JB_MAGIC * 4)]
+  ldr r2, .L_setjmp_magic_signal_mask_n
+  teq r2, r3
+  beq 1f
+  ldr r2, .L_setjmp_magic_signal_mask_y
+  teq r2, r3
+  bne longjmperror
+
+  // Restore signal mask.
+  stmfd sp!, {r0, r1, r14}
+  .cfi_def_cfa_offset 12
+  .cfi_rel_offset r0, 0
+  .cfi_rel_offset r1, 4
+  .cfi_rel_offset r14, 8
+  sub sp, sp, #4 // Align the stack.
+  .cfi_adjust_cfa_offset 4
+
+  ldr r0, [r0, #(_JB_SIGMASK * 4)]
+  bl sigsetmask
+
+  add sp, sp, #4 // Unalign the stack.
+  .cfi_adjust_cfa_offset -4
+  ldmfd sp!, {r0, r1, r14}
+  .cfi_def_cfa_offset 0
+
+1:
+  // Restore floating-point registers.
+  add r2, r0, #(_JB_FLOAT_BASE * 4)
+  vldmia r2, {d8-d15}
+
+  // Restore floating-point state.
+  ldr r2, [r0, #(_JB_FLOAT_STATE * 4)]
+  fmxr fpscr, r2
+
+  // Restore core registers.
+  add r2, r0, #(_JB_CORE_BASE * 4)
+  ldmia r2, {r4-r14}
+
+  // Validate sp and r14.
+  teq sp, #0
+  teqne r14, #0
+  bleq longjmperror
+
+  // Set return value.
+  mov r0, r1
+  teq r0, #0
+  moveq r0, #1
+  bx lr
+END(siglongjmp)
+
+  .globl longjmp
+  .equ longjmp, siglongjmp
+  .globl _longjmp
+  .equ _longjmp, siglongjmp
