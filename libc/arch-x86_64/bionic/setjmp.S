@@ -48,6 +48,7 @@
 #define _JB_PC 7
 #define _JB_SIGFLAG 8
 #define _JB_SIGMASK 9
+#define _JB_SIGMASK_RT 10 // sigprocmask will write here too.
 
 ENTRY(setjmp)
   movl $1,%esi
@@ -62,18 +63,19 @@ END(_setjmp)
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
   // Record whether or not we're saving the signal mask.
-  movl %esi,(_JB_SIGFLAG  * 8)(%rdi)
+  movl %esi,(_JB_SIGFLAG * 8)(%rdi)
 
   // Do we need to save the signal mask?
   testl %esi,%esi
   jz 2f
 
-  // Save the signal mask.
-  pushq %rdi
-  xorq %rdi,%rdi
-  call PIC_PLT(sigblock)
-  popq %rdi
-  movq %rax,(_JB_SIGMASK * 8)(%rdi)
+  // Save current signal mask.
+  pushq %rdi // Push 'env'.
+  // The 'how' argument is ignored if new_mask is NULL.
+  xorq %rsi,%rsi // NULL.
+  leaq (_JB_SIGMASK * 8)(%rdi),%rdx // old_mask.
+  call PIC_PLT(sigprocmask)
+  popq %rdi // Pop 'env'.
 
 2:
   // Save the callee-save registers.
@@ -97,12 +99,14 @@ ENTRY(siglongjmp)
   pushq %rsi // Push 'value'.
 
   // Do we need to restore the signal mask?
-  cmpl $0, (_JB_SIGFLAG * 8)(%rdi)
+  cmpl $0,(_JB_SIGFLAG * 8)(%rdi)
   jz 2f
 
   // Restore the signal mask.
-  movq (_JB_SIGMASK * 8)(%rdi),%rdi
-  call PIC_PLT(sigsetmask)
+  movq $2,%rdi // SIG_SETMASK.
+  leaq (_JB_SIGMASK * 8)(%r12),%rsi // new_mask.
+  xorq %rdx,%rdx // NULL.
+  call PIC_PLT(sigprocmask)
 
 2:
   popq %rax // Pop 'value'.
