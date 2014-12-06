@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c43aaec4_409e1875",
+        "filename": "libc/arch-x86/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-06T03:44:24Z",
+      "side": 1,
+      "message": "ps6 makes sure that setjmp and _setjmp set the flag appropriately in the jmpbuf/sig_jmpbuf.",
+      "revId": "a4c4d482ca19224e2ada681995882ee2cd087497",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
