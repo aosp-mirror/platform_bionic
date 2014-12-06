@@ -1,6 +1,3 @@
-/*	$OpenBSD: setjmp.S,v 1.3 2012/08/22 17:19:34 pascal Exp $	*/
-/*	$NetBSD: __setjmp14.S,v 1.1 2001/06/19 00:25:02 fvdl Exp $	*/
-
 /*
  * Copyright (c) 2001 Wasabi Systems, Inc.
  * All rights reserved.
@@ -37,60 +34,98 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/setjmp.h>
 
-/*
- * C library -- _setjmp, _longjmp
- *
- *	longjmp(a,v)
- * will generate a "return(v)" from the last call to
- *	setjmp(a)
- * by restoring registers from the stack.
- * The previous signal state is restored.
- */
+// These are only the callee-saved registers. Code calling setjmp
+// will expect the rest to be clobbered anyway.
+
+#define _JB_RBX 0
+#define _JB_RBP 1
+#define _JB_R12 2
+#define _JB_R13 3
+#define _JB_R14 4
+#define _JB_R15 5
+#define _JB_RSP 6
+#define _JB_PC 7
+#define _JB_SIGFLAG 8
+#define _JB_SIGMASK 9
 
 ENTRY(setjmp)
-	pushq	%rdi
-	xorq	%rdi,%rdi
-	call	PIC_PLT(sigblock)
-	popq	%rdi
-	movq	%rax,(_JB_SIGMASK * 8)(%rdi)
-
-	movq	(%rsp),%r11
-	movq	%rbx,(_JB_RBX * 8)(%rdi)
-	movq	%rbp,(_JB_RBP * 8)(%rdi)
-	movq	%r12,(_JB_R12 * 8)(%rdi)
-	movq	%r13,(_JB_R13 * 8)(%rdi)
-	movq	%r14,(_JB_R14 * 8)(%rdi)
-	movq	%r15,(_JB_R15 * 8)(%rdi)
-	movq	%rsp,(_JB_RSP * 8)(%rdi)
-	movq	%r11,(_JB_PC  * 8)(%rdi)
-
-2:	xorl	%eax,%eax
-	ret
+  movl $1,%esi
+  jmp PIC_PLT(sigsetjmp)
 END(setjmp)
 
-ENTRY(longjmp)
-	movq	%rdi,%r12
-	movl	%esi,%r8d
+ENTRY(_setjmp)
+  movl $0,%esi
+  jmp PIC_PLT(sigsetjmp)
+END(_setjmp)
 
-	movq	(_JB_SIGMASK * 8)(%rdi),%rdi
-	pushq	%r8
-	call	PIC_PLT(sigsetmask)
-	popq	%r8
-	movq	(_JB_RBX * 8)(%r12),%rbx
-	movq	(_JB_RBP * 8)(%r12),%rbp
-	movq	(_JB_R13 * 8)(%r12),%r13
-	movq	(_JB_R14 * 8)(%r12),%r14
-	movq	(_JB_R15 * 8)(%r12),%r15
-	movq	(_JB_RSP * 8)(%r12),%rsp
-	movq	(_JB_PC  * 8)(%r12),%r11
-	movq	(_JB_R12 * 8)(%r12),%r12
+// int sigsetjmp(sigjmp_buf env, int save_signal_mask);
+ENTRY(sigsetjmp)
+  // Record whether or not we're saving the signal mask.
+  movl %esi,(_JB_SIGFLAG  * 8)(%rdi)
 
-	movl	%r8d,%eax
-	testl	%eax,%eax
-	jnz	1f
-	incl	%eax
-1:	movq	%r11,0(%rsp)
-	ret
-END(longjmp)
+  // Do we need to save the signal mask?
+  testl %esi,%esi
+  jz 2f
+
+  // Save the signal mask.
+  pushq %rdi
+  xorq %rdi,%rdi
+  call PIC_PLT(sigblock)
+  popq %rdi
+  movq %rax,(_JB_SIGMASK * 8)(%rdi)
+
+2:
+  // Save the callee-save registers.
+  movq (%rsp),%r11
+  movq %rbx,(_JB_RBX * 8)(%rdi)
+  movq %rbp,(_JB_RBP * 8)(%rdi)
+  movq %r12,(_JB_R12 * 8)(%rdi)
+  movq %r13,(_JB_R13 * 8)(%rdi)
+  movq %r14,(_JB_R14 * 8)(%rdi)
+  movq %r15,(_JB_R15 * 8)(%rdi)
+  movq %rsp,(_JB_RSP * 8)(%rdi)
+  movq %r11,(_JB_PC  * 8)(%rdi)
+
+  xorl %eax,%eax
+  ret
+END(sigsetjmp)
+
+// void siglongjmp(sigjmp_buf env, int value);
+ENTRY(siglongjmp)
+  movq %rdi,%r12
+  pushq %rsi // Push 'value'.
+
+  // Do we need to restore the signal mask?
+  cmpl $0, (_JB_SIGFLAG * 8)(%rdi)
+  jz 2f
+
+  // Restore the signal mask.
+  movq (_JB_SIGMASK * 8)(%rdi),%rdi
+  call PIC_PLT(sigsetmask)
+
+2:
+  popq %rax // Pop 'value'.
+
+  // Restore the callee-save registers.
+  movq (_JB_RBX * 8)(%r12),%rbx
+  movq (_JB_RBP * 8)(%r12),%rbp
+  movq (_JB_R13 * 8)(%r12),%r13
+  movq (_JB_R14 * 8)(%r12),%r14
+  movq (_JB_R15 * 8)(%r12),%r15
+  movq (_JB_RSP * 8)(%r12),%rsp
+  movq (_JB_PC  * 8)(%r12),%r11
+  movq (_JB_R12 * 8)(%r12),%r12
+
+  testl %eax,%eax
+  jnz 1f
+  incl %eax
+1:
+  movq %r11,0(%rsp)
+  ret
+END(siglongjmp)
+
+  .globl longjmp
+  .equ longjmp, siglongjmp
+  .globl _longjmp
+  .equ _longjmp, siglongjmp
