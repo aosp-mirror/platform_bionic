@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "845d1634_2612134e",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-08T22:06:05Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "367cac6dd89f7994a4659b7643321e0174963bc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_16faaa48",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-08T22:06:05Z",
+      "side": 1,
+      "message": "since we got all the other ones the wrong way round and no-one noticed, you may as well make these ones the wrong way round too.",
+      "revId": "367cac6dd89f7994a4659b7643321e0174963bc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
