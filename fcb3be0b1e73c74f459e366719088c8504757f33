@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "247aaaaa_94ba44de",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-08T22:30:56Z",
+      "side": 1,
+      "message": "not even with auto?",
+      "parentUuid": "1f55f1ac_0370ce77",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f5eedd0_cc36638b",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 8
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Because in some tests like pthread_setname_np__other, the thread of SpinFn may still running while SpinFunctionHelper is destroyed.",
       "parentUuid": "7f5eedd0_cc36638b",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "846b56dc_cc890b4d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-08T22:30:56Z",
+      "side": 1,
+      "message": "but that\u0027s a bug in the test. and if you\u0027re using a global, that means that some other test might start using the global while that old thread is still running.\n\nare we really in need of something more like dimitry\u0027s test_isolated? it could create a pthread and run the given lambda on the original thread, passing the pthread_t as a parameter. does that make our tests more correct?",
+      "parentUuid": "1f7c112d_60cad85a",
       "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
