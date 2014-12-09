@@ -46,6 +46,10 @@ static int __sysconf_monotonic_clock() {
   return (rc == -1) ? -1 : _POSIX_VERSION;
 }
 
+static bool __sysconf_has_clock(clockid_t clock_id) {
+  return clock_getres(clock_id, NULL) == 0;
+}
+
 long sysconf(int name) {
   switch (name) {
     case _SC_ARG_MAX:           return ARG_MAX;
@@ -144,7 +148,9 @@ long sysconf(int name) {
     case _SC_ADVISORY_INFO:     return _POSIX_ADVISORY_INFO;
     case _SC_BARRIERS:          return _POSIX_BARRIERS;
     case _SC_CLOCK_SELECTION:   return _POSIX_CLOCK_SELECTION;
-    case _SC_CPUTIME:           return _POSIX_CPUTIME;
+    case _SC_CPUTIME:
+      return __sysconf_has_clock(CLOCK_PROCESS_CPUTIME_ID) ?_POSIX_VERSION : -1;
+
     case _SC_HOST_NAME_MAX:     return _POSIX_HOST_NAME_MAX;    // Minimum requirement.
     case _SC_IPV6:              return _POSIX_IPV6;
     case _SC_RAW_SOCKETS:       return _POSIX_RAW_SOCKETS;
@@ -156,7 +162,9 @@ long sysconf(int name) {
     case _SC_SPORADIC_SERVER:   return _POSIX_SPORADIC_SERVER;
     case _SC_SS_REPL_MAX:       return -1;
     case _SC_SYMLOOP_MAX:       return _POSIX_SYMLOOP_MAX;      // Minimum requirement.
-    case _SC_THREAD_CPUTIME:    return _POSIX_THREAD_CPUTIME;
+    case _SC_THREAD_CPUTIME:
+      return __sysconf_has_clock(CLOCK_THREAD_CPUTIME_ID) ? _POSIX_VERSION : -1;
+
     case _SC_THREAD_PROCESS_SHARED: return _POSIX_THREAD_PROCESS_SHARED;
     case _SC_THREAD_ROBUST_PRIO_INHERIT:  return _POSIX_THREAD_ROBUST_PRIO_INHERIT;
     case _SC_THREAD_ROBUST_PRIO_PROTECT:  return _POSIX_THREAD_ROBUST_PRIO_PROTECT;
