@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c488eee4_19409680",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T16:09:14Z",
+      "side": 1,
+      "message": "this line should just be indented two spaces from the previous line, like the \"default\" at the bottom.",
+      "revId": "9976d78e325a3e521106ccf30a0ecb6f667ea8be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
