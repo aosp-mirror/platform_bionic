@@ -16,6 +16,24 @@
       "revId": "d6a865d645ae86f4977b7cbbc7cb55d67fae8054",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_d99b0e4e",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:40:24Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "845d1634_e63abbb7",
+      "revId": "d6a865d645ae86f4977b7cbbc7cb55d67fae8054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
