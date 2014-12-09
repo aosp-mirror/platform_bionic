@@ -41,7 +41,7 @@
 #define _POSIX_CHILD_MAX            25
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
 #define _POSIX_CLOCK_SELECTION      200809L
-#define _POSIX_CPUTIME              200809L
+#define _POSIX_CPUTIME              0  /* Use sysconf to detect support at runtime. */
 #define _POSIX_DELAYTIMER_MAX       32
 #define _POSIX_FSYNC                200809L  /* fdatasync() supported */
 #define _POSIX_HOST_NAME_MAX        255
@@ -90,7 +90,7 @@
 #define _POSIX_THREADS              200809L  /* we support threads */
 #define _POSIX_THREAD_ATTR_STACKADDR  200809L
 #define _POSIX_THREAD_ATTR_STACKSIZE  200809L
-#define _POSIX_THREAD_CPUTIME       200809L
+#define _POSIX_THREAD_CPUTIME       0  /* Use sysconf to detect support at runtime. */
 #define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
 #define _POSIX_THREAD_KEYS_MAX      128
 #define _POSIX_THREAD_PRIORITY_SCHEDULING 200809L
