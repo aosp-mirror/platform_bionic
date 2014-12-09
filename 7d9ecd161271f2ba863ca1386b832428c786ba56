@@ -19,6 +19,240 @@
     },
     {
       "key": {
+        "uuid": "24cf0a49_7551ba59",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "constexpr int instead of macros? (or even a std::chrono::duration, which would allow you to write 60000ms once we switch to C++14)",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_a936fd1f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "Probably want std::unordered_map instead (faster lookup times).",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_cc057f3b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "Just a nit on the names: we\u0027re already in a bionic namespace, so adding bionic to each name is redundant.",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_6cd0135f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "Alignment",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_2c121b4e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "enum class to avoid polluting the namespace? (style guide doesn\u0027t seem to mention this at all, so I\u0027m not sure what our stance is).",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b996ac_07db7634",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "const std::string\u0026\n\nActually, why isn\u0027t the name const?",
+      "range": {
+        "startLine": 74,
+        "startChar": 15,
+        "endLine": 74,
+        "endChar": 32
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_2f850899",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "const std::string\u0026 or std::experimental::string_view.",
+      "range": {
+        "startLine": 75,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 13
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_0c139703",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "Reference.",
+      "range": {
+        "startLine": 77,
+        "startChar": 18,
+        "endLine": 77,
+        "endChar": 35
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b996ac_8720c68c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "I think NumTests would be a better name.",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 13
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b996ac_070db62c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "result",
+      "range": {
+        "startLine": 90,
+        "startChar": 45,
+        "endLine": 90,
+        "endChar": 52
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_cccedf3f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "||, not \u0026\u0026",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b996ac_073a96eb",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-09T18:39:27Z",
+      "side": 1,
+      "message": "Would it be easier to store these like so?\n\n    std::tuple\u003cstd::string, TestResult, int64_t\u003e test_list_;\n\nThis would let you use a range based for loop on 113 instead of iterating by index, and also guarantee that no one ever writes a bug where these are not updated identically (though I don\u0027t know how someone would manage that in this case).",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b996ac_47a72e9b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
