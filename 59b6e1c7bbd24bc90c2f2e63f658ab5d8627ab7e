@@ -235,6 +235,24 @@
     },
     {
       "key": {
+        "uuid": "84b996ac_2da6991c",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T20:08:20Z",
+      "side": 1,
+      "message": "Ok, removed.",
+      "parentUuid": "247aaaaa_d482fc29",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf3dc54e_294fd5ff",
         "filename": "libc/bionic/pthread_join.cpp",
         "patchSetId": 3
@@ -299,6 +317,24 @@
       "side": 1,
       "message": "but we have a test that should be failing if this is true. cferris?",
       "parentUuid": "bf0225b9_b8679918",
+      "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ab1e57_65458674",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T20:08:20Z",
+      "side": 1,
+      "message": "After tracing in gdb, I found jemalloc uses 5 pthread keys. I was wrong. But about pthread_key, there are several places using it:\nGLOBAL_INIT_THREAD_LOCAL_BUFFER 7\nlocale.cpp 1\nlinker 3(as it uses some routine in libc)\njemalloc 5\ngtest   1 or 2 (I am not sure).\n\nIf you mean the test of pthread.pthread_key_many_distinct, it is relaxed to not detect small change.\nI am not sure we need to change this. But absolutely not in this submit.",
+      "parentUuid": "846b56dc_b181908d",
       "revId": "59b6e1c7bbd24bc90c2f2e63f658ab5d8627ab7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
