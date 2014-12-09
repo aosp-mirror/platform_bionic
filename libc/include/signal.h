@@ -32,6 +32,7 @@
 #include <asm/sigcontext.h>
 #include <errno.h>
 #include <limits.h>
+#include <linux/time.h>
 #include <machine/pthread_types.h>
 #include <string.h>
 #include <sys/cdefs.h>
@@ -132,6 +133,10 @@ extern void psignal(int, const char*);
 
 extern int pthread_kill(pthread_t, int);
 extern int pthread_sigmask(int, const sigset_t*, sigset_t*);
+
+extern int sigqueue(pid_t, int, const union sigval);
+extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*);
+extern int sigwaitinfo(const sigset_t*, siginfo_t*);
 
 __END_DECLS
 
