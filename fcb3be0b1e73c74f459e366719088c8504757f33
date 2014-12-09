@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c488eee4_995ca6f6",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:51:53Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "247aaaaa_94ba44de",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f5eedd0_cc36638b",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 8
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "but that\u0027s a bug in the test. and if you\u0027re using a global, that means that some other test might start using the global while that old thread is still running.\n\nare we really in need of something more like dimitry\u0027s test_isolated? it could create a pthread and run the given lambda on the original thread, passing the pthread_t as a parameter. does that make our tests more correct?",
       "parentUuid": "1f7c112d_60cad85a",
+      "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_195096d2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:51:53Z",
+      "side": 1,
+      "message": "It doesn\u0027t matter if spin_flag_ is used in several tests,\nbecause it is always set to false after each test. Each thread spins on spin_flag_ can find it becomes false at some time. So I think we don\u0027t need to use test_isolated.",
+      "parentUuid": "846b56dc_cc890b4d",
       "revId": "fcb3be0b1e73c74f459e366719088c8504757f33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
