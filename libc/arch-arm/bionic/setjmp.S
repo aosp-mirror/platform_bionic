@@ -64,14 +64,11 @@
 //       FP registers will be loaded/stored with instructions
 //       that expect 8-byte alignment.
 
-#define _JB_MAGIC       0
-#define _JB_SIGMASK     (_JB_MAGIC+1)
+#define _JB_SIGFLAG     0
+#define _JB_SIGMASK     (_JB_SIGFLAG+1)
 #define _JB_FLOAT_BASE  (_JB_SIGMASK+1)
 #define _JB_FLOAT_STATE (_JB_FLOAT_BASE + (15-8+1)*2)
 #define _JB_CORE_BASE   (_JB_FLOAT_STATE+1)
-
-.L_setjmp_magic_signal_mask_n: .word 0x4278f500
-.L_setjmp_magic_signal_mask_y: .word 0x4278f501
 
 ENTRY(setjmp)
   mov r1, #1
@@ -85,9 +82,11 @@ END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
+  // Record whether or not we're saving the signal mask.
+  str r1, [r0, #(_JB_SIGFLAG * 4)]
+
   // Do we need to save the signal mask?
   teq r1, #0
-  ldreq r1, .L_setjmp_magic_signal_mask_n
   beq 1f
 
   // Get current signal mask.
@@ -101,15 +100,10 @@ ENTRY(sigsetjmp)
   ldmfd sp!, {r0, r14}
   .cfi_def_cfa_offset 0
 
-  // Save signal mask.
+  // Save the signal mask.
   str r1, [r0, #(_JB_SIGMASK * 4)]
 
-  ldr r1, .L_setjmp_magic_signal_mask_y
-
 1:
-  // Save magic number.
-  str r1, [r0, #(_JB_MAGIC * 4)]
-
   // Save core registers.
   add r1, r0, #(_JB_CORE_BASE * 4)
   stmia r1, {r4-r14}
@@ -128,16 +122,12 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
-  // Check magic.
-  ldr r3, [r0, #(_JB_MAGIC * 4)]
-  ldr r2, .L_setjmp_magic_signal_mask_n
-  teq r2, r3
+  // Do we need to restore the signal mask?
+  ldr r2, [r0, #(_JB_SIGFLAG * 4)]
+  teq r2, #0
   beq 1f
-  ldr r2, .L_setjmp_magic_signal_mask_y
-  teq r2, r3
-  bne longjmperror
 
-  // Restore signal mask.
+  // Restore the signal mask.
   stmfd sp!, {r0, r1, r14}
   .cfi_def_cfa_offset 12
   .cfi_rel_offset r0, 0
