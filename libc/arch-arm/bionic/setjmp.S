@@ -32,7 +32,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/setjmp.h>
 
 // According to the ARM AAPCS document, we only need to save
 // the following registers:
