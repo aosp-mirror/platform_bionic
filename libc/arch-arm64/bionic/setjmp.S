@@ -28,9 +28,6 @@
 
 #include <private/bionic_asm.h>
 
-// _JBLEN is the size of a jmp_buf in longs(64bit on AArch64).
-#define _JBLEN 32
-
 // According to AARCH64 PCS document we need to save the following
 // registers:
 //
@@ -40,32 +37,30 @@
 // NOTE: All the registers saved here will have 64bit vales (except FPSR).
 //       AAPCS mandates that the higher part of q registers do not need to
 //       be saved by the callee.
-//
 
 // The structure of jmp_buf for AArch64:
 //
 // NOTE: _JBLEN is the size of jmp_buf in longs(64bit on AArch64)! The table
 //      below computes the offsets in words(32bit).
 //
-//  word        name            description
-//  0       magic           magic number
-//  1       sigmask         signal mask (not used with _setjmp / _longjmp)
+//  word    name            description
+// -------------------------------------------------------------------------
+//  0-1     sigmask         signal mask (not used with _setjmp / _longjmp)
 //  2       core_base       base of core registers (x19-x30, sp)
 //  28      float_base      base of float registers (d8-d15)
-//  44      reserved        reserved entries (room to grow)
+//  44      magic           magic number
+//  45-     reserved        reserved entries (room to grow)
 //  64
-//
 //
 //  NOTE: The instructions that load/store core/vfp registers expect 8-byte
 //        alignment. Contrary to the previous setjmp header for ARM we do not
 //        need to save status/control registers for VFP (it is not a
 //        requirement for setjmp).
-//
 
-#define _JB_MAGIC       0
-#define _JB_SIGMASK     (_JB_MAGIC+1)
-#define _JB_CORE_BASE   (_JB_SIGMASK+1)
+#define _JB_SIGMASK     0
+#define _JB_CORE_BASE   (_JB_SIGMASK + 2)
 #define _JB_FLOAT_BASE  (_JB_CORE_BASE + (31-19+1)*2)
+#define _JB_MAGIC       (_JB_FLOAT_BASE + 16*2)
 
 .L_setjmp_magic_signal_mask_n: .word 0x53657200
 .L_setjmp_magic_signal_mask_y: .word 0x53657201
@@ -86,15 +81,13 @@ ENTRY(sigsetjmp)
   ldr w9, .L_setjmp_magic_signal_mask_n
   cbz w1, 1f
 
-  // Get current signal mask.
+  // Save current signal mask.
   stp x0, x30, [sp, #-16]!
-  mov x0, xzr
-  bl sigblock
-  mov w1, w0
+  // The 'how' argument is ignored if new_mask is NULL.
+  mov x1, #0 // NULL.
+  add x2, x0, #(_JB_SIGMASK * 4) // old_mask.
+  bl sigprocmask
   ldp x0, x30, [sp], #16
-
-  // Save signal mask.
-  str w1, [x0, #(_JB_SIGMASK * 4)]
 
   ldr w9, .L_setjmp_magic_signal_mask_y
 
@@ -135,11 +128,14 @@ ENTRY(siglongjmp)
 
   // Restore signal mask.
   stp x0, x30, [sp, #-16]!
-  mov x19, x1
-  ldr w0, [x0, #(_JB_SIGMASK * 4)]
-  bl sigsetmask
+  mov x19, x1 // Save 'value'.
+  mov x2, x0
+  mov x0, #2 // SIG_SETMASK
+  add x1, x2, #(_JB_SIGMASK * 4) // new_mask.
+  mov x2, #0 // NULL.
+  bl sigprocmask
+  mov x1, x19 // Restore 'value'.
   ldp x0, x30, [sp], #16
-  mov x1, x19
 
 1:
   // Restore core registers.
