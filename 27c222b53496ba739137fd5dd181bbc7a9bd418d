@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "040206f8_21554a15",
+        "filename": "tests/bionic_gtest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T03:28:48Z",
+      "side": 1,
+      "message": "do we actually want to declare tests like this? is this significantly easier to implement than ASSERT_DEADLINE(...)?\n\n(do we even need this kind of control? isn\u0027t this just going to encourage us to add flakiness?)",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6424a2a4_bc20698c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T03:28:48Z",
+      "side": 1,
+      "message": "can\u0027t we reuse the testing::internal::ColoredPrintf (and other parts of the test output infrastructure)?",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "648022c5_9c102dc3",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T03:28:48Z",
+      "side": 1,
+      "message": "popen?",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6424a2a4_9c1dad5c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T03:28:48Z",
+      "side": 1,
+      "message": "fscanf %s?",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
