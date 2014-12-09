@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c488eee4_2fb2e867",
+        "filename": "tests/bionic_gtest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:30:47Z",
+      "side": 1,
+      "message": "(i wasn\u0027t just commenting on TEST_DEADLINE_INFO before. i meant that i don\u0027t think per-test deadlines is really something that makes sense. i\u0027ve tried to explain more in my comments on the previous patch.)",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b996ac_47a72e9b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:30:47Z",
+      "side": 1,
+      "message": "i didn\u0027t just mean ColoredPrintf, btw, i meant that we should reuse everything we can reuse.\n\ni understand that these are in an \u0027internal\u0027 namespace and there would certainly be circumstances where having that dependency would be a terrible idea, but here (a) we\u0027re the team who\u0027ll perform any gtest updates anyway so we can fix any problems here at the same time and (b) i suspect that since we\u0027ve just copy \u0026 pasted the upstream runner that if it\u0027s changed sufficiently to break us, we probably want to look at what they\u0027ve done anyway and get back in sync.",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
