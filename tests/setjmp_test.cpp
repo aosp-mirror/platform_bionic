@@ -63,17 +63,29 @@ TEST(setjmp, sigsetjmp_1_smoke) {
   }
 }
 
-static sigset_t SigSetOf(int signal) {
+static sigset_t SigSetOf(int signal, int rt_signal = 0) {
   sigset_t ss;
   sigemptyset(&ss);
   sigaddset(&ss, signal);
+  if (rt_signal != 0) {
+    sigaddset(&ss, rt_signal);
+  }
   return ss;
+}
+
+void AssertSigmaskEquals(const sigset_t& expected) {
+  sigset_t actual;
+  sigprocmask(0 /* ignored */, NULL, &actual);
+  size_t end = sizeof(sigset_t) * 8;
+  for (size_t i = 1; i <= end; ++i) {
+    EXPECT_EQ(sigismember(&expected, i), sigismember(&actual, i)) << i;
+  }
 }
 
 TEST(setjmp, _setjmp_signal_mask) {
   // _setjmp/_longjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1));
-  sigset_t ss2(SigSetOf(SIGUSR2));
+  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
+  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
@@ -82,9 +94,7 @@ TEST(setjmp, _setjmp_signal_mask) {
     _longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
-    sigset_t ss;
-    sigprocmask(SIG_SETMASK, NULL, &ss);
-    EXPECT_TRUE(sigismember(&ss, SIGUSR2));
+    AssertSigmaskEquals(ss2);
   }
   sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
@@ -93,8 +103,8 @@ TEST(setjmp, setjmp_signal_mask) {
   // setjmp/longjmp do save/restore the signal mask on bionic, but not on glibc.
   // This is a BSD versus System V historical accident. POSIX leaves the
   // behavior unspecified, so any code that cares needs to use sigsetjmp.
-  sigset_t ss1(SigSetOf(SIGUSR1));
-  sigset_t ss2(SigSetOf(SIGUSR2));
+  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
+  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
@@ -103,14 +113,12 @@ TEST(setjmp, setjmp_signal_mask) {
     longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
-    sigset_t ss;
-    sigprocmask(SIG_SETMASK, NULL, &ss);
 #if defined(__BIONIC__)
     // bionic behaves like BSD and does save/restore the signal mask.
-    EXPECT_TRUE(sigismember(&ss, SIGUSR1));
+    AssertSigmaskEquals(ss1);
 #else
     // glibc behaves like System V and doesn't save/restore the signal mask.
-    EXPECT_TRUE(sigismember(&ss, SIGUSR2));
+    AssertSigmaskEquals(ss2);
 #endif
   }
   sigprocmask(SIG_SETMASK, &original_set, NULL);
@@ -118,8 +126,8 @@ TEST(setjmp, setjmp_signal_mask) {
 
 TEST(setjmp, sigsetjmp_0_signal_mask) {
   // sigsetjmp(0)/siglongjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1));
-  sigset_t ss2(SigSetOf(SIGUSR2));
+  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
+  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
@@ -128,17 +136,15 @@ TEST(setjmp, sigsetjmp_0_signal_mask) {
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {
-    sigset_t ss;
-    sigprocmask(SIG_SETMASK, NULL, &ss);
-    EXPECT_TRUE(sigismember(&ss, SIGUSR2));
+    AssertSigmaskEquals(ss2);
   }
   sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
 
 TEST(setjmp, sigsetjmp_1_signal_mask) {
   // sigsetjmp(1)/siglongjmp does save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1));
-  sigset_t ss2(SigSetOf(SIGUSR2));
+  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
+  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
@@ -147,9 +153,7 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {
-    sigset_t ss;
-    sigprocmask(SIG_SETMASK, NULL, &ss);
-    EXPECT_TRUE(sigismember(&ss, SIGUSR1));
+    AssertSigmaskEquals(ss1);
   }
   sigprocmask(SIG_SETMASK, &original_set, NULL);
 }
