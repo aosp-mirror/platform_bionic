@@ -178,17 +178,34 @@ static void* IdFn(void* arg) {
   return arg;
 }
 
-static void* SleepFn(void* arg) {
-  sleep(reinterpret_cast<uintptr_t>(arg));
-  return NULL;
-}
-
-static void* SpinFn(void* arg) {
-  volatile bool* b = reinterpret_cast<volatile bool*>(arg);
-  while (!*b) {
+class SpinFunctionHelper {
+ public:
+  SpinFunctionHelper() {
+    SpinFunctionHelper::spin_flag_ = true;
   }
-  return NULL;
-}
+  ~SpinFunctionHelper() {
+    UnSpin();
+  }
+  auto GetFunction() -> void* (*)(void*) {
+    return SpinFunctionHelper::SpinFn;
+  }
+
+  void UnSpin() {
+    SpinFunctionHelper::spin_flag_ = false;
+  }
+
+ private:
+  static void* SpinFn(void*) {
+    while (spin_flag_) {}
+    return NULL;
+  }
+  static volatile bool spin_flag_;
+};
+
+// It doesn't matter if spin_flag_ is used in several tests,
+// because it is always set to false after each test. Each thread
+// loops on spin_flag_ can find it becomes false at some time.
+volatile bool SpinFunctionHelper::spin_flag_ = false;
 
 static void* JoinFn(void* arg) {
   return reinterpret_cast<void*>(pthread_join(reinterpret_cast<pthread_t>(arg), NULL));
@@ -229,8 +246,10 @@ TEST(pthread, pthread_create_EAGAIN) {
 }
 
 TEST(pthread, pthread_no_join_after_detach) {
+  SpinFunctionHelper spinhelper;
+
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
 
   // After a pthread_detach...
   ASSERT_EQ(0, pthread_detach(t1));
@@ -241,10 +260,10 @@ TEST(pthread, pthread_no_join_after_detach) {
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
-  bool done = false;
+  SpinFunctionHelper spinhelper;
 
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
 
   // If thread 2 is already waiting to join thread 1...
   pthread_t t2;
@@ -256,7 +275,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   ASSERT_EQ(0, pthread_detach(t1));
   AssertDetached(t1, false);
 
-  done = true;
+  spinhelper.UnSpin();
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
@@ -369,8 +388,10 @@ TEST(pthread, pthread_setname_np__self) {
 }
 
 TEST(pthread, pthread_setname_np__other) {
+  SpinFunctionHelper spinhelper;
+
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
 }
 
@@ -451,8 +472,10 @@ TEST(pthread, pthread_detach__leak) {
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
+  SpinFunctionHelper spinhelper;
+
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  ASSERT_EQ(0, pthread_create(&t, NULL, spinhelper.GetFunction(), NULL));
 
   clockid_t c;
   ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
@@ -501,10 +524,10 @@ TEST(pthread, pthread_kill__no_such_thread) {
 }
 
 TEST(pthread, pthread_join__multijoin) {
-  bool done = false;
+  SpinFunctionHelper spinhelper;
 
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
 
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
@@ -514,7 +537,7 @@ TEST(pthread, pthread_join__multijoin) {
   // Multiple joins to the same thread should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
 
-  done = true;
+  spinhelper.UnSpin();
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
