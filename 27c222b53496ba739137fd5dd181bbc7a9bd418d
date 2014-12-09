@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "84b996ac_e7942251",
+        "filename": "tests/bionic_gtest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:25:23Z",
+      "side": 1,
+      "message": "my concern is that any test we write like this is going to be as flaky as a test that contains a sleep... although we run our tests on idle devices, and we only have a small number of devices to test (most of which have order-of-magnitude equivalent performance), when OEMs run CTS the full system is running so mid-test you can find yourself fighting Gmail sync for the CPU or whatever. also, there will probably always be OEMs shipping devices both far more and far less powerful than the ones we\u0027re using.\n\nTL;DR: i don\u0027t think we\u0027d ever be able to come up with a deadline value that works in real life.",
+      "parentUuid": "44c23e1f_50a7f29a",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6424a2a4_bc20698c",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 3
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "For ColoredPrintf, yes, we can reuse it. But it can\u0027t print color in device test by default. I think it is not cool, so I rewrite it and enable color printing by default.\nFor others, we should rewrite PrettyUnitTestResultPrinter to only print info about test, forbidden info about testcase/environment/test iteration.",
       "parentUuid": "6424a2a4_bc20698c",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4bf0e8b_0cdcf7f1",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:25:23Z",
+      "side": 1,
+      "message": "\u003e But it can\u0027t print color in device test by default\n\nwhy not? can we fix that?",
+      "parentUuid": "24cf0a49_cf582187",
       "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -107,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "c4bf0e8b_aceccb98",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:25:23Z",
+      "side": 1,
+      "message": "but you only enumerate the tests once, right, so performance doesn\u0027t matter. or am i misunderstanding what you\u0027re trying to say?",
+      "parentUuid": "44c23e1f_508e1215",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6424a2a4_9c1dad5c",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 3
@@ -136,6 +190,24 @@
       "side": 1,
       "message": "It has problem if gtest can\u0027t parse the arguments and dump the help information. So I change it to fgets.",
       "parentUuid": "6424a2a4_9c1dad5c",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488eee4_8f9454d5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-09T18:25:23Z",
+      "side": 1,
+      "message": "sgtm.",
+      "parentUuid": "24cf0a49_2f4be5a9",
       "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
