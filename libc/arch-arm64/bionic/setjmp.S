@@ -45,11 +45,12 @@
 //
 //  word    name            description
 // -------------------------------------------------------------------------
-//  0-1     sigmask         signal mask (not used with _setjmp / _longjmp)
-//  2       core_base       base of core registers (x19-x30, sp)
-//  28      float_base      base of float registers (d8-d15)
-//  44      magic           magic number
-//  45-     reserved        reserved entries (room to grow)
+//  0       sigflag         0 => signal mask not valid
+//  1       unused          unused (for alignment)
+//  2-3     sigmask         signal mask (not used with _setjmp / _longjmp)
+//  4       core_base       base of core registers (x19-x30, sp)
+//  30      float_base      base of float registers (d8-d15)
+//  46-     reserved        reserved entries (room to grow)
 //  64
 //
 //  NOTE: The instructions that load/store core/vfp registers expect 8-byte
@@ -57,13 +58,10 @@
 //        need to save status/control registers for VFP (it is not a
 //        requirement for setjmp).
 
-#define _JB_SIGMASK     0
+#define _JB_SIGFLAG     0
+#define _JB_SIGMASK     (_JB_SIGFLAG + 2)
 #define _JB_CORE_BASE   (_JB_SIGMASK + 2)
 #define _JB_FLOAT_BASE  (_JB_CORE_BASE + (31-19+1)*2)
-#define _JB_MAGIC       (_JB_FLOAT_BASE + 16*2)
-
-.L_setjmp_magic_signal_mask_n: .word 0x53657200
-.L_setjmp_magic_signal_mask_y: .word 0x53657201
 
 ENTRY(setjmp)
   mov w1, #1
@@ -77,8 +75,10 @@ END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
+  // Record whether or not we're saving the signal mask.
+  str w1, [x0, #(_JB_SIGFLAG * 4)]
+
   // Do we need to save the signal mask?
-  ldr w9, .L_setjmp_magic_signal_mask_n
   cbz w1, 1f
 
   // Save current signal mask.
@@ -89,12 +89,7 @@ ENTRY(sigsetjmp)
   bl sigprocmask
   ldp x0, x30, [sp], #16
 
-  ldr w9, .L_setjmp_magic_signal_mask_y
-
 1:
-  // Save magic number.
-  str w9, [x0, #(_JB_MAGIC * 4)]
-
   // Save core registers.
   mov x10, sp
   stp x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
@@ -111,20 +106,15 @@ ENTRY(sigsetjmp)
   stp d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
   stp d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
 
-  mov w0, wzr
+  mov w0, #0
   ret
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
-  // Check magic.
-  ldr w10, [x0, #(_JB_MAGIC * 4)]
-  ldr w9, .L_setjmp_magic_signal_mask_n
-  cmp w9, w10
-  b.eq 1f
-  ldr w9, .L_setjmp_magic_signal_mask_y
-  cmp w9, w10
-  b.ne longjmperror
+  // Do we need to restore the signal mask?
+  ldr w9, [x0, #(_JB_SIGFLAG * 4)]
+  cbz w9, 1f
 
   // Restore signal mask.
   stp x0, x30, [sp, #-16]!
