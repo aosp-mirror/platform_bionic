@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "44c23e1f_50a7f29a",
+        "filename": "tests/bionic_gtest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:24:43Z",
+      "side": 1,
+      "message": "Removed. I planed we can write test like below:\n\nTEST_DEADLINE_INFO(stdio, printf, 10)\nTEST(stdio, printf) {\n}\nBut It is simpler to just allow TEST_DEADLINE:\nTEST_DEADLINE(stdio, printf, 10) {\n}",
+      "parentUuid": "040206f8_21554a15",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6424a2a4_bc20698c",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-09T03:28:48Z",
       "side": 1,
       "message": "can\u0027t we reuse the testing::internal::ColoredPrintf (and other parts of the test output infrastructure)?",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24cf0a49_cf582187",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:24:43Z",
+      "side": 1,
+      "message": "For ColoredPrintf, yes, we can reuse it. But it can\u0027t print color in device test by default. I think it is not cool, so I rewrite it and enable color printing by default.\nFor others, we should rewrite PrettyUnitTestResultPrinter to only print info about test, forbidden info about testcase/environment/test iteration.",
+      "parentUuid": "6424a2a4_bc20698c",
       "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "44c23e1f_508e1215",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:24:43Z",
+      "side": 1,
+      "message": "Yes, another choice besides fork. But I think fork is easier, as it need not to go through main() again. There is another place that fork is used.",
+      "parentUuid": "648022c5_9c102dc3",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6424a2a4_9c1dad5c",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-09T03:28:48Z",
       "side": 1,
       "message": "fscanf %s?",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24cf0a49_2f4be5a9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-09T05:24:43Z",
+      "side": 1,
+      "message": "It has problem if gtest can\u0027t parse the arguments and dump the help information. So I change it to fgets.",
+      "parentUuid": "6424a2a4_9c1dad5c",
       "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
