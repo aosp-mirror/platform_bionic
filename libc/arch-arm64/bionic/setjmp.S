@@ -34,34 +34,23 @@
 // Core     x19 - x30, sp (see section 5.1.1)
 // VFP      d8 - d15 (see section 5.1.2)
 //
-// NOTE: All the registers saved here will have 64bit vales (except FPSR).
+// NOTE: All the registers saved here will have 64 bit vales.
 //       AAPCS mandates that the higher part of q registers do not need to
 //       be saved by the callee.
 
-// The structure of jmp_buf for AArch64:
-//
-// NOTE: _JBLEN is the size of jmp_buf in longs(64bit on AArch64)! The table
-//      below computes the offsets in words(32bit).
-//
-//  word    name            description
-// -------------------------------------------------------------------------
-//  0       sigflag         0 => signal mask not valid
-//  1       unused          unused (for alignment)
-//  2-3     sigmask         signal mask (not used with _setjmp / _longjmp)
-//  4       core_base       base of core registers (x19-x30, sp)
-//  30      float_base      base of float registers (d8-d15)
-//  46-     reserved        reserved entries (room to grow)
-//  64
-//
-//  NOTE: The instructions that load/store core/vfp registers expect 8-byte
-//        alignment. Contrary to the previous setjmp header for ARM we do not
-//        need to save status/control registers for VFP (it is not a
-//        requirement for setjmp).
-
 #define _JB_SIGFLAG     0
-#define _JB_SIGMASK     (_JB_SIGFLAG + 2)
-#define _JB_CORE_BASE   (_JB_SIGMASK + 2)
-#define _JB_FLOAT_BASE  (_JB_CORE_BASE + (31-19+1)*2)
+#define _JB_SIGMASK     (_JB_SIGFLAG + 1)
+#define _JB_X30_SP      (_JB_SIGMASK + 1)
+#define _JB_X28_X29     (_JB_X30_SP  + 2)
+#define _JB_X26_X27     (_JB_X28_X29 + 2)
+#define _JB_X24_X25     (_JB_X26_X27 + 2)
+#define _JB_X22_X23     (_JB_X24_X25 + 2)
+#define _JB_X20_X21     (_JB_X22_X23 + 2)
+#define _JB_X19         (_JB_X20_X21 + 2)
+#define _JB_D14_D15     (_JB_X19 + 1)
+#define _JB_D12_D13     (_JB_D14_D15 + 2)
+#define _JB_D10_D11     (_JB_D12_D13 + 1)
+#define _JB_D8_D9       (_JB_D10_D11 + 1)
 
 ENTRY(setjmp)
   mov w1, #1
@@ -76,7 +65,7 @@ END(_setjmp)
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
   // Record whether or not we're saving the signal mask.
-  str w1, [x0, #(_JB_SIGFLAG * 4)]
+  str w1, [x0, #(_JB_SIGFLAG * 8)]
 
   // Do we need to save the signal mask?
   cbz w1, 1f
@@ -85,26 +74,26 @@ ENTRY(sigsetjmp)
   stp x0, x30, [sp, #-16]!
   // The 'how' argument is ignored if new_mask is NULL.
   mov x1, #0 // NULL.
-  add x2, x0, #(_JB_SIGMASK * 4) // old_mask.
+  add x2, x0, #(_JB_SIGMASK * 8) // old_mask.
   bl sigprocmask
   ldp x0, x30, [sp], #16
 
 1:
   // Save core registers.
   mov x10, sp
-  stp x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
-  stp x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
-  stp x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
-  stp x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
-  stp x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
-  stp x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
-  str x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
+  stp x30, x10, [x0, #(_JB_X30_SP  * 8)]
+  stp x28, x29, [x0, #(_JB_X28_X29 * 8)]
+  stp x26, x27, [x0, #(_JB_X26_X27 * 8)]
+  stp x24, x25, [x0, #(_JB_X24_X25 * 8)]
+  stp x22, x23, [x0, #(_JB_X22_X23 * 8)]
+  stp x20, x21, [x0, #(_JB_X20_X21 * 8)]
+  str x19,      [x0, #(_JB_X19     * 8)]
 
   // Save floating point registers.
-  stp d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
-  stp d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
-  stp d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
-  stp d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
+  stp d14, d15, [x0, #(_JB_D14_D15 * 8)]
+  stp d12, d13, [x0, #(_JB_D12_D13 * 8)]
+  stp d10, d11, [x0, #(_JB_D10_D11 * 8)]
+  stp d8,  d9,  [x0, #(_JB_D8_D9   * 8)]
 
   mov w0, #0
   ret
@@ -113,7 +102,7 @@ END(sigsetjmp)
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
   // Do we need to restore the signal mask?
-  ldr w9, [x0, #(_JB_SIGFLAG * 4)]
+  ldr w9, [x0, #(_JB_SIGFLAG * 8)]
   cbz w9, 1f
 
   // Restore signal mask.
@@ -121,7 +110,7 @@ ENTRY(siglongjmp)
   mov x19, x1 // Save 'value'.
   mov x2, x0
   mov x0, #2 // SIG_SETMASK
-  add x1, x2, #(_JB_SIGMASK * 4) // new_mask.
+  add x1, x2, #(_JB_SIGMASK * 8) // new_mask.
   mov x2, #0 // NULL.
   bl sigprocmask
   mov x1, x19 // Restore 'value'.
@@ -129,20 +118,20 @@ ENTRY(siglongjmp)
 
 1:
   // Restore core registers.
-  ldp x30, x10, [x0, #(_JB_CORE_BASE * 4 + 16 * 0)]
+  ldp x30, x10, [x0, #(_JB_X30_SP  * 8)]
   mov sp, x10
-  ldp x28, x29, [x0, #(_JB_CORE_BASE * 4 + 16 * 1)]
-  ldp x26, x27, [x0, #(_JB_CORE_BASE * 4 + 16 * 2)]
-  ldp x24, x25, [x0, #(_JB_CORE_BASE * 4 + 16 * 3)]
-  ldp x22, x23, [x0, #(_JB_CORE_BASE * 4 + 16 * 4)]
-  ldp x20, x21, [x0, #(_JB_CORE_BASE * 4 + 16 * 5)]
-  ldr x19,      [x0, #(_JB_CORE_BASE * 4 + 16 * 6)]
+  ldp x28, x29, [x0, #(_JB_X28_X29 * 8)]
+  ldp x26, x27, [x0, #(_JB_X26_X27 * 8)]
+  ldp x24, x25, [x0, #(_JB_X24_X25 * 8)]
+  ldp x22, x23, [x0, #(_JB_X22_X23 * 8)]
+  ldp x20, x21, [x0, #(_JB_X20_X21 * 8)]
+  ldr x19,      [x0, #(_JB_X19     * 8)]
 
   // Restore floating point registers.
-  ldp d14, d15, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 0)]
-  ldp d12, d13, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 1)]
-  ldp d10, d11, [x0, #(_JB_FLOAT_BASE * 4 + 16 * 2)]
-  ldp d8,  d9,  [x0, #(_JB_FLOAT_BASE * 4 + 16 * 3)]
+  ldp d14, d15, [x0, #(_JB_D14_D15 * 8)]
+  ldp d12, d13, [x0, #(_JB_D12_D13 * 8)]
+  ldp d10, d11, [x0, #(_JB_D10_D11 * 8)]
+  ldp d8,  d9,  [x0, #(_JB_D8_D9   * 8)]
 
   // Validate sp (sp mod 16 = 0) and lr (lr mod 4 = 0).
   tst x30, #3
