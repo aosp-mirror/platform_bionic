@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4d5ba01_e3ff0cbe",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-10T19:01:11Z",
+      "side": 1,
+      "message": "Could this be signal_offset instead? Which isn\u0027t very descriptive. Also, the new code isn\u0027t quite the same as before. It\u0027s now SIGUSR1 and SIGRTMIN + 9, SIGUSR2 and SIGRTMIN + 10. Not a big deal though.",
+      "range": {
+        "startLine": 66,
+        "startChar": 31,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4d5ba01_e039c213",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-10T19:01:11Z",
+      "side": 1,
+      "message": "Any reason + 8 is used? If this is old code, I suspect it\u0027s because bionic didn\u0027t set SIGRTMIN correctly in the past.",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 29
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "842516f1_bb87ffa1",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-10T19:01:11Z",
+      "side": 1,
+      "message": "This is a bit confusing when looking at the test code. It\u0027s not completely clear just by reading what you are trying to do.\n\nI think it might be better to do something like this:\n\nsigset_t ss1, ss2;\nMakeUniqueSigSets(\u0026ss1, \u0026ss2);\n\nvoid MakeUniqueSigSets(...) {\n  MakeSigSet(\u0026ss1, 0);\n  MakeSigSet(\u0026ss2, 1);\n}\n\nThis isn\u0027t absolutely necessary, but I think it\u0027s easier to see what you are doing.",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 30
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
