@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a4205adf_7ce2a159",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T19:48:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4d5ba01_e3ff0cbe",
+      "range": {
+        "startLine": 66,
+        "startChar": 31,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4d5ba01_e039c213",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a4205adf_5ce7dd67",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T19:48:52Z",
+      "side": 1,
+      "message": "it\u0027s new code, but i still had the old mindset that the bottom few were reserved. done.",
+      "parentUuid": "a4d5ba01_e039c213",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 29
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "842516f1_bb87ffa1",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2014-12-10T19:01:11Z",
       "side": 1,
       "message": "This is a bit confusing when looking at the test code. It\u0027s not completely clear just by reading what you are trying to do.\n\nI think it might be better to do something like this:\n\nsigset_t ss1, ss2;\nMakeUniqueSigSets(\u0026ss1, \u0026ss2);\n\nvoid MakeUniqueSigSets(...) {\n  MakeSigSet(\u0026ss1, 0);\n  MakeSigSet(\u0026ss2, 1);\n}\n\nThis isn\u0027t absolutely necessary, but I think it\u0027s easier to see what you are doing.",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 30
+      },
+      "revId": "3b74dc9adc3fde3be666953aadf11bc143138707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4d5ba01_2675826c",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T19:48:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "842516f1_bb87ffa1",
       "range": {
         "startLine": 89,
         "startChar": 2,
