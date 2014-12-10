@@ -76,7 +76,7 @@ enum {
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
+#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 9
 
 #if defined(USE_JEMALLOC)
 /* jemalloc uses 5 keys for itself. */

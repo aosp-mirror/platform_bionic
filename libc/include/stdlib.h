@@ -131,7 +131,7 @@ void srandom(unsigned int);
 int getpt(void);
 int grantpt(int);
 int posix_openpt(int);
-char* ptsname(int) __warnattr("ptsname is not thread-safe; use ptsname_r instead");
+char* ptsname(int);
 int ptsname_r(int, char*, size_t);
 int unlockpt(int);
 
