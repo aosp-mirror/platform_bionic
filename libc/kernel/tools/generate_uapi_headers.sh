@@ -159,7 +159,7 @@ if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   cd "${TMPDIR}"
   echo "Fetching android kernel source ${KERNEL_VERSION}"
   git clone https://android.googlesource.com/kernel/common.git
-  cd "${COMMON}"
+  cd "${src_dir}"
   git checkout "${KERNEL_VERSION}"
   KERNEL_DIR="${TMPDIR}"
 elif [[ "${KERNEL_DIR}" == "" ]]; then
@@ -179,6 +179,8 @@ if [[ ${SKIP_GENERATION} -eq 0 ]]; then
     make ARCH=${arch} headers_install
   done
 fi
+
+cd ${ANDROID_BUILD_TOP}
 
 # Copy all of the include/uapi files to the kernel headers uapi directory.
 copy_hdrs "${KERNEL_DIR}/${src_dir}/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"

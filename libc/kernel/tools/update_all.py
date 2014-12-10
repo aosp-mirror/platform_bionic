@@ -40,12 +40,7 @@ else:
     if not os.path.isdir(original_dir):
         panic( "Missing directory, please specify one through command-line: %s\n" % original_dir )
 
-# Fixme: This should be removed after next release.
-# Do not update ion.h ion_test.h until after next release in aosp.
-source = subprocess.check_output('git remote show', shell=True).strip()
 skip_ion = False
-if source == "aosp":
-    skip_ion = True
 
 # find all source files in 'original'
 #
