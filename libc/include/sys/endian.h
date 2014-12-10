@@ -35,13 +35,6 @@
 #define _BYTE_ORDER _LITTLE_ENDIAN
 #define __LITTLE_ENDIAN_BITFIELD
 
-#if __BSD_VISIBLE
-#define LITTLE_ENDIAN _LITTLE_ENDIAN
-#define BIG_ENDIAN _BIG_ENDIAN
-#define PDP_ENDIAN _PDP_ENDIAN
-#define BYTE_ORDER _BYTE_ORDER
-#endif
-
 #ifndef __LITTLE_ENDIAN
 #define __LITTLE_ENDIAN _LITTLE_ENDIAN
 #endif
@@ -53,27 +46,6 @@
 #define __swap16 __builtin_bswap16
 #define __swap32 __builtin_bswap32
 #define __swap64 __builtin_bswap64
-
-#if __BSD_VISIBLE
-#define swap16 __swap16
-#define swap32 __swap32
-#define swap64 __swap64
-#define swap16_multi __swap16_multi
-
-#define htobe16 __swap16
-#define htobe32 __swap32
-#define htobe64 __swap64
-#define betoh16 __swap16
-#define betoh32 __swap32
-#define betoh64 __swap64
-
-#define htole16(x) (x)
-#define htole32(x) (x)
-#define htole64(x) (x)
-#define letoh16(x) (x)
-#define letoh32(x) (x)
-#define letoh64(x) (x)
-#endif /* __BSD_VISIBLE */
 
 /* glibc compatibility. */
 __BEGIN_DECLS
@@ -93,13 +65,34 @@ __END_DECLS
 #define ntohq(x) __swap64(x)
 
 #if __BSD_VISIBLE
+#define LITTLE_ENDIAN _LITTLE_ENDIAN
+#define BIG_ENDIAN _BIG_ENDIAN
+#define PDP_ENDIAN _PDP_ENDIAN
+#define BYTE_ORDER _BYTE_ORDER
+
 #define	NTOHL(x) (x) = ntohl((u_int32_t)(x))
 #define	NTOHS(x) (x) = ntohs((u_int16_t)(x))
 #define	HTONL(x) (x) = htonl((u_int32_t)(x))
 #define	HTONS(x) (x) = htons((u_int16_t)(x))
-#endif
 
-#ifdef __BSD_VISIBLE
+#define swap16 __swap16
+#define swap32 __swap32
+#define swap64 __swap64
+
+#define htobe16 __swap16
+#define htobe32 __swap32
+#define htobe64 __swap64
+#define betoh16 __swap16
+#define betoh32 __swap32
+#define betoh64 __swap64
+
+#define htole16(x) (x)
+#define htole32(x) (x)
+#define htole64(x) (x)
+#define letoh16(x) (x)
+#define letoh32(x) (x)
+#define letoh64(x) (x)
+
 /*
  * glibc-compatible beXXtoh/leXXtoh synonyms for htobeXX/htoleXX.
  * The BSDs export both sets of names, bionic historically only
@@ -112,6 +105,6 @@ __END_DECLS
 #define le16toh(x) htole16(x)
 #define le32toh(x) htole32(x)
 #define le64toh(x) htole64(x)
-#endif
+#endif /* __BSD_VISIBLE */
 
 #endif /* _SYS_ENDIAN_H_ */
