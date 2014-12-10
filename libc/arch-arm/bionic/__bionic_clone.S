@@ -42,12 +42,14 @@ ENTRY(__bionic_clone)
     # load extra parameters
     ldmfd   ip, {r4, r5, r6}
 
-    # store 'fn' and 'arg' to the child stack
+    # Push 'fn' and 'arg' onto the child stack.
     stmdb   r1!, {r5, r6}
 
-    # System call
+    # Make the system call.
     ldr     r7, =__NR_clone
     swi     #0
+
+    # Are we the child?
     movs    r0, r0
     beq     1f
 
@@ -61,6 +63,7 @@ ENTRY(__bionic_clone)
 1:  # The child.
     # Setting lr to 0 will make the unwinder stop at __start_thread
     mov    lr, #0
+    # Call __start_thread with the 'fn' and 'arg' we stored on the child stack.
     pop    {r0, r1}
     b      __start_thread
 END(__bionic_clone)
