@@ -28,10 +28,9 @@
 #ifndef _SCHED_H_
 #define _SCHED_H_
 
-#include <sys/cdefs.h>
-#include <sys/time.h>
-
 #include <linux/sched.h>
+#include <machine/timespec.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
