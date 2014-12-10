@@ -34,6 +34,7 @@
  */
 #include <sys/cdefs.h>
 #include <netinet/in.h>
+#include <stdio.h>
 
 /*
  * Passing NETID_UNSET as the netId causes system/netd/server/DnsProxyListener.cpp to
@@ -68,9 +69,9 @@ extern void _resolv_flush_cache_for_net(unsigned netid) __used_in_netd;
 extern void _resolv_delete_cache_for_net(unsigned netid) __used_in_netd;
 
 /* Internal use only. */
-struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int , unsigned);
-int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t,
-		 int, unsigned, unsigned);
+struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int , unsigned, unsigned) __LIBC_HIDDEN__;
+int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t, int, unsigned, unsigned) __LIBC_HIDDEN__;
+FILE* android_open_proxy(void) __LIBC_HIDDEN__;
 
 /* delete the cache associated with a certain network */
 extern void _resolv_delete_cache_for_net(unsigned netid);
