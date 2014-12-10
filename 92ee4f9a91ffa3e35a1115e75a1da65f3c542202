@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c402ae41_f1d52873",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T16:41:28Z",
+      "side": 1,
+      "message": "good comment.\n\nit does make me wonder whether we should merge this into the regular stack mmap too, and punch a PROT_NONE hole between it and everything else so that if the signal stack gets overrun we still catch it. (if you don\u0027t have a good argument why this is a bad idea, raise a bug and we can come back to it.)",
+      "revId": "92ee4f9a91ffa3e35a1115e75a1da65f3c542202",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
