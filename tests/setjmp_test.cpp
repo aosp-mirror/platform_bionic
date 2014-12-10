@@ -63,15 +63,27 @@ TEST(setjmp, sigsetjmp_1_smoke) {
   }
 }
 
-static sigset_t SigSetOf(int signal, int rt_signal = 0) {
-  sigset_t ss;
-  sigemptyset(&ss);
-  sigaddset(&ss, signal);
-  if (rt_signal != 0) {
-    sigaddset(&ss, rt_signal);
+// Two distinct signal sets, pipu
+struct SigSets {
+  SigSets() : one(MakeSigSet(0)), two(MakeSigSet(1)) {
   }
-  return ss;
-}
+
+  static sigset_t MakeSigSet(int offset) {
+    sigset_t ss;
+    sigemptyset(&ss);
+    sigaddset(&ss, SIGUSR1 + offset);
+#if defined(__LP64__)
+    // For arm and x86, sigset_t was too small for the RT signals.
+    // For mips, sigset_t was large enough but jmp_buf wasn't.
+    sigaddset(&ss, SIGRTMIN + offset);
+#endif
+    return ss;
+  }
+
+  sigset_t one;
+  sigset_t two;
+  sigset_t original;
+};
 
 void AssertSigmaskEquals(const sigset_t& expected) {
   sigset_t actual;
@@ -84,76 +96,68 @@ void AssertSigmaskEquals(const sigset_t& expected) {
 
 TEST(setjmp, _setjmp_signal_mask) {
   // _setjmp/_longjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
-  sigset_t original_set;
-  sigprocmask(SIG_SETMASK, &ss1, &original_set);
+  SigSets ss;
+  sigprocmask(SIG_SETMASK, &ss.one, &ss.original);
   jmp_buf jb;
   if (_setjmp(jb) == 0) {
-    sigprocmask(SIG_SETMASK, &ss2, NULL);
+    sigprocmask(SIG_SETMASK, &ss.two, NULL);
     _longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
-    AssertSigmaskEquals(ss2);
+    AssertSigmaskEquals(ss.two);
   }
-  sigprocmask(SIG_SETMASK, &original_set, NULL);
+  sigprocmask(SIG_SETMASK, &ss.original, NULL);
 }
 
 TEST(setjmp, setjmp_signal_mask) {
   // setjmp/longjmp do save/restore the signal mask on bionic, but not on glibc.
   // This is a BSD versus System V historical accident. POSIX leaves the
   // behavior unspecified, so any code that cares needs to use sigsetjmp.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
-  sigset_t original_set;
-  sigprocmask(SIG_SETMASK, &ss1, &original_set);
+  SigSets ss;
+  sigprocmask(SIG_SETMASK, &ss.one, &ss.original);
   jmp_buf jb;
   if (setjmp(jb) == 0) {
-    sigprocmask(SIG_SETMASK, &ss2, NULL);
+    sigprocmask(SIG_SETMASK, &ss.two, NULL);
     longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
 #if defined(__BIONIC__)
     // bionic behaves like BSD and does save/restore the signal mask.
-    AssertSigmaskEquals(ss1);
+    AssertSigmaskEquals(ss.one);
 #else
     // glibc behaves like System V and doesn't save/restore the signal mask.
-    AssertSigmaskEquals(ss2);
+    AssertSigmaskEquals(ss.two);
 #endif
   }
-  sigprocmask(SIG_SETMASK, &original_set, NULL);
+  sigprocmask(SIG_SETMASK, &ss.original, NULL);
 }
 
 TEST(setjmp, sigsetjmp_0_signal_mask) {
   // sigsetjmp(0)/siglongjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
-  sigset_t original_set;
-  sigprocmask(SIG_SETMASK, &ss1, &original_set);
+  SigSets ss;
+  sigprocmask(SIG_SETMASK, &ss.one, &ss.original);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 0) == 0) {
-    sigprocmask(SIG_SETMASK, &ss2, NULL);
+    sigprocmask(SIG_SETMASK, &ss.two, NULL);
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {
-    AssertSigmaskEquals(ss2);
+    AssertSigmaskEquals(ss.two);
   }
-  sigprocmask(SIG_SETMASK, &original_set, NULL);
+  sigprocmask(SIG_SETMASK, &ss.original, NULL);
 }
 
 TEST(setjmp, sigsetjmp_1_signal_mask) {
   // sigsetjmp(1)/siglongjmp does save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
-  sigset_t original_set;
-  sigprocmask(SIG_SETMASK, &ss1, &original_set);
+  SigSets ss;
+  sigprocmask(SIG_SETMASK, &ss.one, &ss.original);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 1) == 0) {
-    sigprocmask(SIG_SETMASK, &ss2, NULL);
+    sigprocmask(SIG_SETMASK, &ss.two, NULL);
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {
-    AssertSigmaskEquals(ss1);
+    AssertSigmaskEquals(ss.one);
   }
-  sigprocmask(SIG_SETMASK, &original_set, NULL);
+  sigprocmask(SIG_SETMASK, &ss.original, NULL);
 }
