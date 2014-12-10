@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "842516f1_1683826a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T20:04:33Z",
+      "side": 1,
+      "message": "we could just put our stuff inside ::testing::internal too, and lose the \u0027using\u0027s.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4b412e0_1a561d25",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T20:04:33Z",
+      "side": 1,
+      "message": "i still can\u0027t see what this is doing that the original one doesn\u0027t.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4d5ba01_06515ea4",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T20:04:33Z",
+      "side": 1,
+      "message": "what are these for? why don\u0027t we just use the existing --gtest_list_tests?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
