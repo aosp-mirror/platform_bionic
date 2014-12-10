@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "c45d4e61_028df058",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:25Z",
+      "side": 1,
+      "message": "In brief, we can\u0027t. In default, GTEST_FLAG(color) \u003d \"auto\", isatty(fileno(stdout)) is true, but gtest will test further the environment variable TERM, on device the value is vt100(at least on my nexus 7), so colored is not enabled.",
+      "parentUuid": "c4bf0e8b_0cdcf7f1",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "648022c5_9c102dc3",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 3
@@ -155,6 +173,24 @@
       "side": 1,
       "message": "but you only enumerate the tests once, right, so performance doesn\u0027t matter. or am i misunderstanding what you\u0027re trying to say?",
       "parentUuid": "44c23e1f_508e1215",
+      "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8457d640_401a44e2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:25Z",
+      "side": 1,
+      "message": "You are right, using popen/pclose makes code simpler. Previously I thought it may be not easy to go through shell/main again, but it works well.",
+      "parentUuid": "c4bf0e8b_aceccb98",
       "revId": "27c222b53496ba739137fd5dd181bbc7a9bd418d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
