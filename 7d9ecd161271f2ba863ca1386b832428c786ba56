@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8457d640_a0f9a055",
+        "filename": "tests/bionic_gtest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "I see. bionic_gtest.h removed.",
+      "parentUuid": "c488eee4_2fb2e867",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24cf0a49_7551ba59",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-09T18:39:27Z",
       "side": 1,
       "message": "constexpr int instead of macros? (or even a std::chrono::duration, which would allow you to write 60000ms once we switch to C++14)",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4521a4f_de0d95a9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done. constexpr is used.",
+      "parentUuid": "24cf0a49_7551ba59",
       "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "8457d640_60e78868",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Code removed.",
+      "parentUuid": "c4bf0e8b_a936fd1f",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4bf0e8b_cc057f3b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-09T18:39:27Z",
       "side": 1,
       "message": "Just a nit on the names: we\u0027re already in a bionic namespace, so adding bionic to each name is redundant.",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4521a4f_7ecba9e1",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c4bf0e8b_cc057f3b",
       "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "c45d4e61_425c08f5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "I just want someplace to gather result type. Change to all upper letters.",
+      "parentUuid": "c4bf0e8b_2c121b4e",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b996ac_07db7634",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -115,6 +205,30 @@
       "writtenOn": "2014-12-09T18:39:27Z",
       "side": 1,
       "message": "const std::string\u0026\n\nActually, why isn\u0027t the name const?",
+      "range": {
+        "startLine": 74,
+        "startChar": 15,
+        "endLine": 74,
+        "endChar": 32
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45d4e61_c24f7832",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done. Just a mistake.",
+      "parentUuid": "84b996ac_07db7634",
       "range": {
         "startLine": 74,
         "startChar": 15,
@@ -150,6 +264,30 @@
     },
     {
       "key": {
+        "uuid": "a4521a4f_fe62192b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c488eee4_2f850899",
+      "range": {
+        "startLine": 75,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 13
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4bf0e8b_0c139703",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -161,6 +299,30 @@
       "writtenOn": "2014-12-09T18:39:27Z",
       "side": 1,
       "message": "Reference.",
+      "range": {
+        "startLine": 77,
+        "startChar": 18,
+        "endLine": 77,
+        "endChar": 35
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4521a4f_3e4c91c2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c4bf0e8b_0c139703",
       "range": {
         "startLine": 77,
         "startChar": 18,
@@ -196,6 +358,30 @@
     },
     {
       "key": {
+        "uuid": "8457d640_2bf731ed",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "84b996ac_8720c68c",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 13
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b996ac_070db62c",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -207,6 +393,30 @@
       "writtenOn": "2014-12-09T18:39:27Z",
       "side": 1,
       "message": "result",
+      "range": {
+        "startLine": 90,
+        "startChar": 45,
+        "endLine": 90,
+        "endChar": 52
+      },
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646ca215_96cb0c2e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "84b996ac_070db62c",
       "range": {
         "startLine": 90,
         "startChar": 45,
@@ -236,6 +446,24 @@
     },
     {
       "key": {
+        "uuid": "8457d640_ab02212f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c4bf0e8b_cccedf3f",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b996ac_073a96eb",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -253,6 +481,24 @@
     },
     {
       "key": {
+        "uuid": "8457d640_cb0cb561",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "84b996ac_073a96eb",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b996ac_47a72e9b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -264,6 +510,24 @@
       "writtenOn": "2014-12-09T18:30:47Z",
       "side": 1,
       "message": "i didn\u0027t just mean ColoredPrintf, btw, i meant that we should reuse everything we can reuse.\n\ni understand that these are in an \u0027internal\u0027 namespace and there would certainly be circumstances where having that dependency would be a terrible idea, but here (a) we\u0027re the team who\u0027ll perform any gtest updates anyway so we can fix any problems here at the same time and (b) i suspect that since we\u0027ve just copy \u0026 pasted the upstream runner that if it\u0027s changed sufficiently to break us, we probably want to look at what they\u0027ve done anyway and get back in sync.",
+      "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45d4e61_4230888b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T01:38:33Z",
+      "side": 1,
+      "message": "Done. Use ::testing::internal::ColoredPrintf, although I think it might a mistake for gtest not to make ColoredPrintf static, as it is defined as used only in src/gtest.cc. I know what you mean, I will take care of code reuse in further work.",
+      "parentUuid": "84b996ac_47a72e9b",
       "revId": "7d9ecd161271f2ba863ca1386b832428c786ba56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
