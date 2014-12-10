@@ -29,11 +29,11 @@
 #ifndef _SYS_SELECT_H_
 #define _SYS_SELECT_H_
 
-#include <sys/cdefs.h>
-#include <sys/time.h>
-#include <sys/types.h>
+#include <linux/time.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
