@@ -34,6 +34,24 @@
       "revId": "db4990373232182a897e10663344c429f5d1b2d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "842516f1_f6498e2d",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T19:38:19Z",
+      "side": 1,
+      "message": "it would be cleaner if #include \u003csys/select.h\u003e didn\u0027t also drag in the unrelated stuff from \u003clinux/time.h\u003e. it should only include the timespec and timeval structs, none of the rest.",
+      "parentUuid": "a4d5ba01_e38b8c7b",
+      "revId": "db4990373232182a897e10663344c429f5d1b2d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
