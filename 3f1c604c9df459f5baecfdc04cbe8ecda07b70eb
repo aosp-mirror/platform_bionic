@@ -22,6 +22,30 @@
       "revId": "3f1c604c9df459f5baecfdc04cbe8ecda07b70eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "842516f1_c7249e19",
+        "filename": "libc/include/sys/endian.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T04:12:22Z",
+      "side": 0,
+      "message": "yes. i removed __swap16_multi in the previous change, but missed swap16_multi.",
+      "parentUuid": "a4205adf_ebffedbd",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 35
+      },
+      "revId": "3f1c604c9df459f5baecfdc04cbe8ecda07b70eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
