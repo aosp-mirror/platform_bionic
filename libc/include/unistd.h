@@ -195,7 +195,7 @@ extern char *optarg;
 extern int optind, opterr, optopt;
 
 extern int isatty(int);
-extern char* ttyname(int) __warnattr("ttyname is not thread-safe; use ttyname_r instead");
+extern char* ttyname(int);
 extern int ttyname_r(int, char*, size_t);
 
 extern int  acct(const char*  filepath);

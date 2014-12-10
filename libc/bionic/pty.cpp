@@ -36,6 +36,11 @@
 #include <unistd.h>
 #include <utmp.h>
 
+#include "private/ThreadLocalBuffer.h"
+
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(ptsname);
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(ttyname);
+
 int getpt() {
   return posix_openpt(O_RDWR|O_NOCTTY);
 }
@@ -49,8 +54,9 @@ int posix_openpt(int flags) {
 }
 
 char* ptsname(int fd) {
-  static char buf[32];
-  return ptsname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, ptsname, 32);
+  int error = ptsname_r(fd, ptsname_tls_buffer, ptsname_tls_buffer_size);
+  return (error == 0) ? ptsname_tls_buffer : NULL;
 }
 
 int ptsname_r(int fd, char* buf, size_t len) {
@@ -74,8 +80,9 @@ int ptsname_r(int fd, char* buf, size_t len) {
 }
 
 char* ttyname(int fd) {
-  static char buf[64];
-  return ttyname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, ttyname, 64);
+  int error = ttyname_r(fd, ttyname_tls_buffer, ttyname_tls_buffer_size);
+  return (error == 0) ? ttyname_tls_buffer : NULL;
 }
 
 int ttyname_r(int fd, char* buf, size_t len) {
