@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "842516f1_e1e26ad2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T20:33:23Z",
+      "side": 1,
+      "message": "Do you mean to move all stuff in bionic_gtest into namespace testing::internal? I think it seems crazy, because testing::internal is defined and used in external/gtest, shall we use it to include our code? Will it confuse readers for this file?",
+      "parentUuid": "842516f1_1683826a",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4b412e0_1a561d25",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "a4d5ba01_497459bf",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T20:33:23Z",
+      "side": 1,
+      "message": "Sorry, I should explain in more detail.\n1. PrettyUnitTestResultPrinter is a class defined in gtest.cc, we can\u0027t access or derive from it unless we include gtest.cc, which is impossible.\n\n2. The difference is TestResultPrinter doesn\u0027t have print anything in the following functions:\n   OnTestIterationStart(), OnEnvironmentsSetUpStart(), OnTestCaseStart(), OnTestCaseEnd(), OnEnvironmentsTearDownStart(), OnTestIterationEnd().\n  So there will be no annoying printings when we run a single test per RUN_ALL_TESTS() in gtest. Sorry, I should add this comment in code.",
+      "parentUuid": "e4b412e0_1a561d25",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4d5ba01_06515ea4",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -47,6 +83,24 @@
       "writtenOn": "2014-12-10T20:04:33Z",
       "side": 1,
       "message": "what are these for? why don\u0027t we just use the existing --gtest_list_tests?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4b412e0_bacb712d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-10T20:33:23Z",
+      "side": 1,
+      "message": "--list_testcase, and --list_test are options I add in developing, they are used to verify stage progress and debug. If you think they should be removed, I will remove them.",
+      "parentUuid": "a4d5ba01_06515ea4",
       "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
