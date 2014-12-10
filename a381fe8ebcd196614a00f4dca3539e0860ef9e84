@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c42b8ec1_2c1abbe1",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-10T04:31:58Z",
+      "side": 1,
+      "message": "since we weakened the test (as yabinc pointed out) we\u0027d regressed here :-(",
+      "revId": "a381fe8ebcd196614a00f4dca3539e0860ef9e84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
