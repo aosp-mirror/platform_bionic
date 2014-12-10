@@ -32,8 +32,8 @@
 #include <asm/sigcontext.h>
 #include <errno.h>
 #include <limits.h>
-#include <linux/time.h>
 #include <machine/pthread_types.h>
+#include <machine/timespec.h>
 #include <string.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>

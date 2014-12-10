@@ -29,12 +29,11 @@
 #ifndef _SYS_STAT_H_
 #define _SYS_STAT_H_
 
+#include <endian.h>
+#include <linux/stat.h>
+#include <machine/timespec.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <sys/time.h>
-#include <linux/stat.h>
-
-#include <endian.h>
 
 __BEGIN_DECLS
 
