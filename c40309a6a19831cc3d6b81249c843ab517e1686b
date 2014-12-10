@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "842516f1_41a416be",
+        "filename": "tests/Android.mk",
+        "patchSetId": 8
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "I\u0027m a little surprised this compiles. This gets built as BUILD_NATIVE_TEST, which will include libgtest_main.a when linking. Since this also defines a main(), you should be getting a multiple definition error (although the way static libraries are resolved is weird).\n\nTo fix this, we will need to stop using BUILD_NATIVE_TEST and just use BUILD_EXECUTABLE and set LOCAL_MODULE_PATH, add the gtest include paths and link libgtest ourselves. It\u0027s sort of messy, but the alternative is teaching the build system to conditionally not add libgtest_main.\n\nI\u0027m okay with doing this the messy way in our makefiles for now because the goal is to just push these improvements into upstream gtest once we decide they\u0027re stable and don\u0027t need any tweaks, at which point we won\u0027t need to link our own main.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "842516f1_1683826a",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -31,6 +48,64 @@
       "side": 1,
       "message": "Do you mean to move all stuff in bionic_gtest into namespace testing::internal? I think it seems crazy, because testing::internal is defined and used in external/gtest, shall we use it to include our code? Will it confuse readers for this file?",
       "parentUuid": "842516f1_1683826a",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_13ad2c2b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "I don\u0027t like the sound of adding things to someone else\u0027s namespace either. I\u0027m guessing the reason enh suggested it is because this is intended to be more like a feature branch of gtest than an entirely separate test runner, in which case it could be viewed as our namespace.",
+      "parentUuid": "842516f1_e1e26ad2",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_b2e8e0b6",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "const reference?",
+      "range": {
+        "startLine": 84,
+        "startChar": 2,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_d38bb47b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Is there any reason for this to not be const?",
       "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -72,6 +147,69 @@
     },
     {
       "key": {
+        "uuid": "e4997284_b2f2a075",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 145,
+        "startChar": 58,
+        "endLine": 145,
+        "endChar": 64
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49e2e6c_714598e2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "char*",
+      "range": {
+        "startLine": 145,
+        "startChar": 34,
+        "endLine": 145,
+        "endChar": 41
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_366136a5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Should be on separate lines.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4d5ba01_06515ea4",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -101,6 +239,373 @@
       "side": 1,
       "message": "--list_testcase, and --list_test are options I add in developing, they are used to verify stage progress and debug. If you think they should be removed, I will remove them.",
       "parentUuid": "a4d5ba01_06515ea4",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_355bfa4d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "const, and the \u0026 goes on the left.",
+      "range": {
+        "startLine": 298,
+        "startChar": 25,
+        "endLine": 298,
+        "endChar": 48
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_d68ba27b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "foreach",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_56a15202",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Style guide is against using the standard streams.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_55507e25",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 304,
+        "startChar": 21,
+        "endLine": 304,
+        "endChar": 44
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49e2e6c_14a7da9b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "foreach",
+      "range": {
+        "startLine": 305,
+        "startChar": 2,
+        "endLine": 305,
+        "endChar": 51
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_d662c22b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 15
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_559ebe74",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "const?",
+      "range": {
+        "startLine": 313,
+        "startChar": 38,
+        "endLine": 313,
+        "endChar": 49
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49e2e6c_f4989653",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "num_tests or test_count (test_num sounds like an index).",
+      "range": {
+        "startLine": 320,
+        "startChar": 6,
+        "endLine": 320,
+        "endChar": 14
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_3651365b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "foreach",
+      "range": {
+        "startLine": 321,
+        "startChar": 2,
+        "endLine": 321,
+        "endChar": 51
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_352f7a7c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 324,
+        "startChar": 6,
+        "endLine": 324,
+        "endChar": 18
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_55db1e33",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "const",
+      "range": {
+        "startLine": 332,
+        "startChar": 36,
+        "endLine": 332,
+        "endChar": 47
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_b5b7eac6",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Same as above for all these names.",
+      "range": {
+        "startLine": 334,
+        "startChar": 6,
+        "endLine": 334,
+        "endChar": 14
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49e2e6c_1446faf2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "No need to fear \u003e\u003e in C++11",
+      "range": {
+        "startLine": 336,
+        "startChar": 44,
+        "endLine": 336,
+        "endChar": 47
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_79cc7f98",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "http://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Local_Variables",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49e2e6c_742f4629",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "foreach",
+      "range": {
+        "startLine": 340,
+        "startChar": 2,
+        "endLine": 340,
+        "endChar": 51
+      },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04bf66c3_b9c1b73e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "Seems like these could come from gtest.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4997284_d572ae7d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-10T22:33:04Z",
+      "side": 1,
+      "message": "by",
+      "range": {
+        "startLine": 429,
+        "startChar": 21,
+        "endLine": 429,
+        "endChar": 23
+      },
       "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
