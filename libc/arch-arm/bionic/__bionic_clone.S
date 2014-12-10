@@ -43,8 +43,7 @@ ENTRY(__bionic_clone)
     ldmfd   ip, {r4, r5, r6}
 
     # store 'fn' and 'arg' to the child stack
-    str     r5, [r1, #-4]
-    str     r6, [r1, #-8]
+    stmdb   r1!, {r5, r6}
 
     # System call
     ldr     r7, =__NR_clone
@@ -62,8 +61,7 @@ ENTRY(__bionic_clone)
 1:  # The child.
     # Setting lr to 0 will make the unwinder stop at __start_thread
     mov    lr, #0
-    ldr    r0, [sp, #-4]
-    ldr    r1, [sp, #-8]
+    pop    {r0, r1}
     b      __start_thread
 END(__bionic_clone)
 .hidden __bionic_clone
