@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4205adf_aefce345",
+        "filename": "libc/kernel/tools/generate_uapi_headers.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-10T16:50:44Z",
+      "side": 1,
+      "message": "All of the copies below should be using a full path, or is something using a relative directory?\n\nThis is probably a good idea to do any way, but I\u0027m worried something is using a relative directoy when it shouldn\u0027t be.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 23
+      },
+      "revId": "fa343e630d9a96039987ba163aef5b475428d614",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
