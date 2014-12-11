@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e40ed2b4_b07ec04d",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-11T22:54:05Z",
+      "side": 1,
+      "message": "No. I want to force gcc to generate stack protector check code. Do you think it is better to change 128 to buf_len? I think both will work.",
+      "parentUuid": "04e04612_aedad72d",
+      "range": {
+        "startLine": 112,
+        "startChar": 11,
+        "endLine": 112,
+        "endChar": 14
+      },
+      "revId": "bacbec325d4fde078d52487df23fd2a267f4b06d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04e04612_8edf1b1e",
         "filename": "tests/stack_protector_test.cpp",
         "patchSetId": 1
