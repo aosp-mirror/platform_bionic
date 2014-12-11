@@ -16,6 +16,24 @@
       "revId": "72613b19fcd73548e8978f609318eceb84598c17",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e40ed2b4_73abb2e4",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-11T23:56:43Z",
+      "side": 1,
+      "message": "(because if it does still work, you don\u0027t need nearly as much code here.)",
+      "parentUuid": "c4138eda_6f986585",
+      "revId": "72613b19fcd73548e8978f609318eceb84598c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
