@@ -303,7 +303,7 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 			break;
 		}
 	} else {
-		hp = android_gethostbyaddrfornet_proxy(addr, afd->a_addrlen, afd->a_af, netid);
+		hp = android_gethostbyaddrfornet_proxy(addr, afd->a_addrlen, afd->a_af, netid, mark);
 		if (hp) {
 #if 0
 			/*

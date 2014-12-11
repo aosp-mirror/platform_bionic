@@ -423,10 +423,6 @@ android_getaddrinfo_proxy(
     const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res, unsigned netid)
 {
-	int sock;
-	const int one = 1;
-	struct sockaddr_un proxy_addr;
-	FILE* proxy = NULL;
 	int success = 0;
 
 	// Clear this at start, as we use its non-NULLness later (in the
@@ -442,36 +438,14 @@ android_getaddrinfo_proxy(
 		return EAI_NODATA;
 	}
 
-	sock = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-	if (sock < 0) {
-		return EAI_NODATA;
-	}
-
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-	memset(&proxy_addr, 0, sizeof(proxy_addr));
-	proxy_addr.sun_family = AF_UNIX;
-	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
-		sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock,
-				       (const struct sockaddr*) &proxy_addr,
-				       sizeof(proxy_addr))) != 0) {
-		close(sock);
-		return EAI_NODATA;
+	FILE* proxy = android_open_proxy();
+	if (proxy == NULL) {
+		return EAI_SYSTEM;
 	}
 
 	netid = __netdClientDispatch.netIdForResolv(netid);
 
 	// Send the request.
-	proxy = fdopen(sock, "r+");
-	if (proxy == NULL) {
-		// Failed to map sock to FILE*. Check errno for the cause.
-		// @sonymobile.com saw failures in automated testing, but
-		// couldn't reproduce it for debugging.
-		// Fail with EAI_SYSTEM and let callers handle the failure.
-		close(sock);
-		return EAI_SYSTEM;
-	}
-
 	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %u",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
@@ -618,7 +592,6 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 	struct addrinfo ai0;
 	struct addrinfo *pai;
 	const struct explore *ex;
-	const char* cache_mode = getenv("ANDROID_DNS_MODE");
 
 	/* hostname is allowed to be NULL */
 	/* servname is allowed to be NULL */
@@ -753,13 +726,12 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 	if (pai->ai_flags & AI_NUMERICHOST)
 		ERR(EAI_NONAME);
 
-        /*
-         * BEGIN ANDROID CHANGES; proxying to the cache
-         */
-	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
-		// we're not the proxy - pass the request to them
-		return android_getaddrinfo_proxy(hostname, servname, hints, res, netid);
+#if defined(__ANDROID__)
+	int gai_error = android_getaddrinfo_proxy(hostname, servname, hints, res, netid);
+	if (gai_error != EAI_SYSTEM) {
+		return gai_error;
 	}
+#endif
 
 	/*
 	 * hostname as alphabetical name.
