@@ -69,6 +69,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <strings.h>
 #include <syslog.h>
@@ -532,30 +533,32 @@ android_gethostbynamefornet(const char *name, int af, unsigned netid, unsigned m
 	return hp;
 }
 
-
-static FILE* android_open_proxy()
-{
-	int sock;
-	const int one = 1;
-	struct sockaddr_un proxy_addr;
-
-	sock = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-	if (sock < 0) {
+__LIBC_HIDDEN__ FILE* android_open_proxy() {
+	const char* cache_mode = getenv("ANDROID_DNS_MODE");
+	bool use_proxy = (cache_mode == NULL || strcmp(cache_mode, "local") != 0);
+	if (!use_proxy) {
 		return NULL;
 	}
 
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+	int s = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
+	if (s == -1) {
+		return NULL;
+	}
+
+	const int one = 1;
+	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+
+	struct sockaddr_un proxy_addr;
 	memset(&proxy_addr, 0, sizeof(proxy_addr));
 	proxy_addr.sun_family = AF_UNIX;
 	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd", sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock,
-			(const struct sockaddr*) &proxy_addr,
-			sizeof(proxy_addr))) != 0) {
-		close(sock);
+
+	if (TEMP_FAILURE_RETRY(connect(s, (const struct sockaddr*) &proxy_addr, sizeof(proxy_addr))) != 0) {
+		close(s);
 		return NULL;
 	}
 
-	return fdopen(sock, "r+");
+	return fdopen(s, "r+");
 }
 
 static struct hostent *
@@ -565,8 +568,8 @@ android_read_hostent(FILE* proxy)
 	char buf[4];
 	if (fread(buf, 1, sizeof(buf), proxy) != sizeof(buf)) return NULL;
 
-	/* This is reading serialized data from system/netd/server/DnsProxyListener.cpp
-	 * and changes here need to be matched there */
+	// This is reading serialized data from system/netd/server/DnsProxyListener.cpp
+	// and changes here need to be matched there.
 	int result_code = strtol(buf, NULL, 10);
 	if (result_code != DnsProxyQueryResult) {
 		fread(&size, 1, sizeof(size), proxy);
@@ -748,80 +751,39 @@ gethostbyname_internal_real(const char *name, int af, res_state res)
 static struct hostent *
 gethostbyname_internal(const char *name, int af, res_state res, unsigned netid, unsigned mark)
 {
-	const char *cache_mode = getenv("ANDROID_DNS_MODE");
-	FILE* proxy = NULL;
-	struct hostent *result = NULL;
-
-	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
+	FILE* proxy = android_open_proxy();
+	if (proxy == NULL) {
+		// Either we're not supposed to be using the proxy or the proxy is unavailable.
 		res_setnetid(res, netid);
 		res_setmark(res, mark);
 		return gethostbyname_internal_real(name, af, res);
 	}
 
-	proxy = android_open_proxy();
-	if (proxy == NULL) goto exit;
-
 	netid = __netdClientDispatch.netIdForResolv(netid);
 
-	/* This is writing to system/netd/server/DnsProxyListener.cpp and changes
-	 * here need to be matched there */
+	// This is writing to system/netd/server/DnsProxyListener.cpp and changes
+	// here need to be matched there.
 	if (fprintf(proxy, "gethostbyname %u %s %d",
 			netid,
 			name == NULL ? "^" : name,
 			af) < 0) {
-		goto exit;
+		fclose(proxy);
+		return NULL;
 	}
 
 	if (fputc(0, proxy) == EOF || fflush(proxy) != 0) {
-		goto exit;
-	}
-
-	result = android_read_hostent(proxy);
-
-exit:
-	if (proxy != NULL) {
 		fclose(proxy);
+		return NULL;
 	}
+
+	struct hostent* result = android_read_hostent(proxy);
+	fclose(proxy);
 	return result;
 }
 
 
-struct hostent *
-android_gethostbyaddrfornet_proxy(const void *addr,
-    socklen_t len, int af, unsigned netid)
-{
-	struct hostent *result = NULL;
-	FILE* proxy = android_open_proxy();
-
-	if (proxy == NULL) goto exit;
-
-	char buf[INET6_ADDRSTRLEN];  //big enough for IPv4 and IPv6
-	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
-	if (addrStr == NULL) goto exit;
-
-	netid = __netdClientDispatch.netIdForResolv(netid);
-
-	if (fprintf(proxy, "gethostbyaddr %s %d %d %u",
-			addrStr, len, af, netid) < 0) {
-		goto exit;
-	}
-
-	if (fputc(0, proxy) == EOF || fflush(proxy) != 0) {
-		goto exit;
-	}
-
-	result = android_read_hostent(proxy);
-exit:
-	if (proxy != NULL) {
-		fclose(proxy);
-	}
-	return result;
-}
-
-struct hostent *
-android_gethostbyaddrfornet_real(const void *addr,
-    socklen_t len, int af, unsigned netid, unsigned mark)
-{
+static struct hostent *
+android_gethostbyaddrfornet_real(const void *addr, socklen_t len, int af, unsigned netid, unsigned mark) {
 	const u_char *uaddr = (const u_char *)addr;
 	socklen_t size;
 	struct hostent *hp;
@@ -874,16 +836,43 @@ android_gethostbyaddrfornet_real(const void *addr,
 	return hp;
 }
 
+__LIBC_HIDDEN__ struct hostent*
+android_gethostbyaddrfornet_proxy(const void* addr, socklen_t len, int af, unsigned netid, unsigned mark) {
+	FILE* proxy = android_open_proxy();
+	if (proxy == NULL) {
+		// Either we're not supposed to be using the proxy or the proxy is unavailable.
+		return android_gethostbyaddrfornet_real(addr,len, af, netid, mark);
+	}
+
+	char buf[INET6_ADDRSTRLEN];  //big enough for IPv4 and IPv6
+	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
+	if (addrStr == NULL) {
+		fclose(proxy);
+		return NULL;
+	}
+
+	netid = __netdClientDispatch.netIdForResolv(netid);
+
+	if (fprintf(proxy, "gethostbyaddr %s %d %d %u",
+			addrStr, len, af, netid) < 0) {
+		fclose(proxy);
+		return NULL;
+	}
+
+	if (fputc(0, proxy) == EOF || fflush(proxy) != 0) {
+		fclose(proxy);
+		return NULL;
+	}
+
+	struct hostent *result = android_read_hostent(proxy);
+	fclose(proxy);
+	return result;
+}
+
 struct hostent *
 android_gethostbyaddrfornet(const void *addr, socklen_t len, int af, unsigned netid, unsigned mark)
 {
-	const char *cache_mode = getenv("ANDROID_DNS_MODE");
-
-	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
-		return android_gethostbyaddrfornet_proxy(addr, len, af, netid);
-	} else {
-		return android_gethostbyaddrfornet_real(addr,len, af, netid, mark);
-	}
+	return android_gethostbyaddrfornet_proxy(addr, len, af, netid, mark);
 }
 
 struct hostent *
