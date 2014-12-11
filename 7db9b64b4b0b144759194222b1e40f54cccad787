@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e497b25c_c2a06202",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1052243
+      },
+      "writtenOn": "2014-12-11T16:00:46Z",
+      "side": 1,
+      "message": "Elliott: Could you advise me how to test this stuff? I wrote a unit test in bionic/tests and it was ok to include private/bionic_string_utils.h but blew up during linking. It seems that bionic tests are not linked against private methods which makes it really hard to test them :).",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
