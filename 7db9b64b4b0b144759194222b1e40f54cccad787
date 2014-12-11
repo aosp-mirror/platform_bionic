@@ -55,6 +55,29 @@
     },
     {
       "key": {
+        "uuid": "c4eaaeee_b7235094",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-11T18:33:04Z",
+      "side": 1,
+      "message": "*list",
+      "range": {
+        "startLine": 44,
+        "startChar": 9,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4eaaeee_97272cd7",
         "filename": "libc/private/bionic_string_utils.h",
         "patchSetId": 1
