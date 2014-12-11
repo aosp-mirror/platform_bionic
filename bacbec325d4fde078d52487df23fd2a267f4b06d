@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "04e04612_ceabe365",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2014-12-11T23:08:31Z",
+      "side": 1,
+      "message": "add explanation about gcc 4.9 not generating necessary calls without buf ... trickery. Also I\u0027m not sure this is not a gcc bug.",
+      "revId": "bacbec325d4fde078d52487df23fd2a267f4b06d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04e04612_aedad72d",
         "filename": "tests/stack_protector_test.cpp",
         "patchSetId": 1
