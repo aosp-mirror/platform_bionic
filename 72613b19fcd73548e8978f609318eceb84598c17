@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4138eda_6f986585",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-11T23:43:09Z",
+      "side": 1,
+      "message": "i don\u0027t think this is new in GCC 4.9; we\u0027ve had similar problems over in system/core/debuggerd. does \"smash_stack\" in crasher.c still work or is that broken now too?",
+      "revId": "72613b19fcd73548e8978f609318eceb84598c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
