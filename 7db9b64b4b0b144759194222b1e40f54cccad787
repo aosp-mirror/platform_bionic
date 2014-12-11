@@ -16,6 +16,24 @@
       "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e497b25c_a527a8d6",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2014-12-11T17:33:07Z",
+      "side": 1,
+      "message": "I assume you fail to link when building/testing against glibc, which is done by default with mm.\n\nYou should ifdef your test for bionic. Search for \"#ifdef __BIONIC__\" in the test folder to see how it\u0027s done.\n\nmost likely you\u0027ll need to add something like:\n\nTEST(string_utile, copy_list) {\n#ifdef __BIONIC__\n  ASSERT_EQ(0, copy_list(0, 0, 0));\n#endif\n}",
+      "parentUuid": "e497b25c_c2a06202",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
