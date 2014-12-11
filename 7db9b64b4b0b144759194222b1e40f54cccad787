@@ -34,6 +34,41 @@
       "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4eaaeee_b72230c7",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-11T18:11:47Z",
+      "side": 1,
+      "message": "no, we build with -fvisibility\u003dhidden, so if you need to test something like this, it needs to be possible to #include the implementation into the test.",
+      "parentUuid": "e497b25c_a527a8d6",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4eaaeee_97272cd7",
+        "filename": "libc/private/bionic_string_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-11T18:11:47Z",
+      "side": 1,
+      "message": "#include \u003cstdbool.h\u003e",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
