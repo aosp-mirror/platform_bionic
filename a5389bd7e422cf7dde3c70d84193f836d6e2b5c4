@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04e04612_110eaca4",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-12T05:49:29Z",
+      "side": 1,
+      "message": "Isn\u0027t the bug here that sysconf is reporting the wrong number of keys? Or perhaps that pthread_key_create isn\u0027t failing as early as it\u0027s supposed to? man page says pthread_key_create fails after PTHREAD_KEYS_MAX keys have already been created, which is the case here if I understand the bug correctly.",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
