@@ -236,6 +236,30 @@
       "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84eef632_1f9e63f8",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-12T19:55:54Z",
+      "side": 1,
+      "message": "I believe glibc uses __thread internally, which we can\u0027t do yet.\n\nPTHREAD_KEYS_MAX isn\u0027t necessarily the number of keys a user _can_ allocate, but POSIX says they cannot allocate more than that (which is the bug this test caught). This test is written to handle the case where libc or gtest has actually allocated keys for itself, which is why it checks that we fail with EAGAIN somewhere between the 1st keys and the PTHREAD_KEY_MAXth key, not necessarily at the max.",
+      "parentUuid": "247f0a23_2f0e05a5",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
