@@ -95,6 +95,23 @@
     },
     {
       "key": {
+        "uuid": "247f0a23_2f5125a5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "%zu",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04bf66c3_d38bb47b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -141,6 +158,24 @@
       "side": 1,
       "message": "Sorry, I should explain in more detail.\n1. PrettyUnitTestResultPrinter is a class defined in gtest.cc, we can\u0027t access or derive from it unless we include gtest.cc, which is impossible.\n\n2. The difference is TestResultPrinter doesn\u0027t have print anything in the following functions:\n   OnTestIterationStart(), OnEnvironmentsSetUpStart(), OnTestCaseStart(), OnTestCaseEnd(), OnEnvironmentsTearDownStart(), OnTestIterationEnd().\n  So there will be no annoying printings when we run a single test per RUN_ALL_TESTS() in gtest. Sorry, I should add this comment in code.",
       "parentUuid": "e4b412e0_1a561d25",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84eef632_5f610bee",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "you should at least add comments explaining this.\n\nhaving cherrypicked this and run it, i\u0027m not sure it\u0027s particularly valuable. the output\u0027s unreadable with or without this.\n\nplaying about a bit, though, it seemed like if we made OnTestStart, OnEnvironmentsSetUpPrint, OnEnvironmentsTearDownPrint, OnTestCaseStartPrint not output anything in -j mode, and made OnTestCaseEndPrint not output its [---------] ... that output is fairly readable.\n\nso maybe this does make sense and we just need to output even less?\n\n\nwhat happens if multiple tests are failing at once? does the output get interleaved? OnTestPartResult makes me think it does.\n\ni\u0027m assuming here that --isolate -j N is going to be our default way of working in future.",
+      "parentUuid": "a4d5ba01_497459bf",
       "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -606,6 +641,125 @@
         "endLine": 429,
         "endChar": 23
       },
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4021ab9_f8c47121",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "can we replace this with something that just lists the slow tests at the end, like blaze does? we probably need a way to mark \"expected slow\" tests.",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4021ab9_d827edd5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "what is this for?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84eef632_ffb0dfd3",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "and this?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84eef632_7fc5ef36",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "--isolate?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4021ab9_d87d2da3",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "why do we need to handle this ourselves?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4021ab9_3898a984",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "should -j imply --isolate?\n\nshould we default -j to the number of cpus?",
+      "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4021ab9_788d0158",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T20:08:30Z",
+      "side": 1,
+      "message": "do we need to do this? can\u0027t we just look at the flag value that --gtest_repeat sets?",
       "revId": "c40309a6a19831cc3d6b81249c843ab517e1686b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
