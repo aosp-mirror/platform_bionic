@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84eef632_ff229fc7",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-12T19:50:42Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "247f0a23_2c7ff3ff",
+      "range": {
+        "startLine": 49,
+        "startChar": 14,
+        "endLine": 49,
+        "endChar": 54
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "247f0a23_ccac2f31",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-12-12T18:56:40Z",
       "side": 1,
       "message": "This should be EQ.",
+      "range": {
+        "startLine": 52,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 11
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247f0a23_cfe181a7",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-12T19:50:42Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "247f0a23_ccac2f31",
       "range": {
         "startLine": 52,
         "startChar": 9,
@@ -131,6 +179,54 @@
       "side": 1,
       "message": "\"..., or the system-imposed limit on the total number of keys per process {PTHREAD_KEYS_MAX} has been exceeded.\"\n\nSo, the test is actually right. We\u0027re allocating PTHREAD_KEYS_MAX and not failing with EAGAIN. If you look at ScopedTlsMapAccess::CreateKey(), we actually take the whole set into account, not just the ones that are user visible. That\u0027s the bug here.\n\nWe probably should still change the test to use PTHREAD_KEYS_MAX as the upper bound, to more explicitly test the POSIX defined behavior.",
       "parentUuid": "247f0a23_2cccd372",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e46a5265_6d3df1fe",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-12T19:50:42Z",
+      "side": 1,
+      "message": "\"To use one key points to a struct that contains a pointer for each buffer\", we may should know the size of the struct at compile time.",
+      "parentUuid": "247f0a23_2cccd372",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247f0a23_2f0e05a5",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-12T19:50:42Z",
+      "side": 1,
+      "message": "We have pthread.pthread_key_many_distinct to test how much pthread keys we can create, although it is relaxed. In this test, I think it is only to test pthread_key_create can return EAGAIN for error.\nI don\u0027t know whether PTHREAD_KEYS_MAX should be considered as the total pthread keys a process can create(both bionic and user and others). From the test of glibc, user can create exactly PTHREAD_KEY_MAX pthread keys(glibc may not use pthread keys in itself).",
+      "parentUuid": "6475823d_f1c1c261",
       "range": {
         "startLine": 89,
         "startChar": 83,
