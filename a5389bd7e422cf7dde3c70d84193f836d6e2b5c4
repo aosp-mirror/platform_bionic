@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "247f0a23_2c7ff3ff",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-12T18:56:40Z",
+      "side": 1,
+      "message": "Change the name of the test while you\u0027re at it. _SC_THREAD_KEYS_MAX_eq_PTHREAD_KEYS_MAX.",
+      "range": {
+        "startLine": 49,
+        "startChar": 14,
+        "endLine": 49,
+        "endChar": 54
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247f0a23_ccac2f31",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-12T18:56:40Z",
+      "side": 1,
+      "message": "This should be EQ.",
+      "range": {
+        "startLine": 52,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 11
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04e04612_110eaca4",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -61,6 +107,30 @@
       "side": 1,
       "message": "yes, sysconf results do tend to be the \"minimum maximum\".\n\nwe do try to account for the keys bionic can use internally though, and we have been trying to use __attribute__((constructor)) to make things more predictable (though this isn\u0027t free).\n\ni wonder if we should rewrite ThreadLocalBuffer.h to use one key that points to a struct that contains a pointer for each buffer? it would mean that we\u0027d have to have a central registry of all the thread local buffers, but that doesn\u0027t necessarily seem like a bad thing either.\n\nthe keys used by the DNS code are a bionic addition not in upstream, but even when you sync with upstream i think we\u0027ll want to keep that (because in bionic the non-_r functions try to be as safe as possible). there\u0027s a good argument that we shouldn\u0027t do this with the DNS functions but since we historically (\u003c\u003d L!) didn\u0027t have the full set of _r functions i don\u0027t think we can break the non-_r functions for multi-threaded use any time soon.\n\n\n\nbut right here right now, how about we say something like \"sysconf_max * 2\" to make it clear that we\u0027re deliberately just trying to allocate too much. (+10 seems like it might actually mean something, especially since we have roughly 10 internal-use keys.)",
       "parentUuid": "44a87ea2_86a15034",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6475823d_f1c1c261",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-12T18:56:40Z",
+      "side": 1,
+      "message": "\"..., or the system-imposed limit on the total number of keys per process {PTHREAD_KEYS_MAX} has been exceeded.\"\n\nSo, the test is actually right. We\u0027re allocating PTHREAD_KEYS_MAX and not failing with EAGAIN. If you look at ScopedTlsMapAccess::CreateKey(), we actually take the whole set into account, not just the ones that are user visible. That\u0027s the bug here.\n\nWe probably should still change the test to use PTHREAD_KEYS_MAX as the upper bound, to more explicitly test the POSIX defined behavior.",
+      "parentUuid": "247f0a23_2cccd372",
       "range": {
         "startLine": 89,
         "startChar": 83,
