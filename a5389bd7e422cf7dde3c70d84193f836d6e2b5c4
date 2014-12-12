@@ -22,6 +22,30 @@
       "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a87ea2_86a15034",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-12T06:31:42Z",
+      "side": 1,
+      "message": "As far as I can see:\n1. sysconf(_SC_THREAD_KEYS_MAX) should return the system resource limit of maximum pthread_keys user can use. It should never change in the process lifetime. I think it means the low boundary more than the up boundary.\n2. for pthread_key_create, posix standard  said it shall fail EAGAIN if the system lacks necessary resource or system limit of THREAD_KEYS_MAX is exceeded.\n\nAfter doing test on glibc, I find sysconf(_SC_THREAD_KEYS_MAX) returns 1024 and user can create exactly 1024 pthread keys. Yes, that\u0027s the right behavior. \nBut our problem is some of our bionic source code is taking advantages of pthread_keys. For example, if you call gethostbyname, it will use one pthread key, I you don\u0027t call it, it will not use. So the real pthread keys that can be used by users is not a fix number.\n\nCurrently I have no good idea of how to handle this. Maybe just keep it as before. After all, almost all users will not complain about they can create more pthread keys than what system resource limit said.",
+      "parentUuid": "04e04612_110eaca4",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
