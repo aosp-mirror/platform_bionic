@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "44731e24_88f57762",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1052243
+      },
+      "writtenOn": "2014-12-12T10:53:16Z",
+      "side": 1,
+      "message": "including the implementation works. Thanks",
+      "parentUuid": "c4eaaeee_b72230c7",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4eaaeee_b7235094",
         "filename": "libc/bionic/bionic_string_utils.cpp",
         "patchSetId": 1
@@ -78,6 +96,24 @@
     },
     {
       "key": {
+        "uuid": "44731e24_c8c4cf3e",
+        "filename": "libc/bionic/bionic_string_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1052243
+      },
+      "writtenOn": "2014-12-12T10:53:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4eaaeee_b7235094",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4eaaeee_97272cd7",
         "filename": "libc/private/bionic_string_utils.h",
         "patchSetId": 1
@@ -89,6 +125,24 @@
       "writtenOn": "2014-12-11T18:11:47Z",
       "side": 1,
       "message": "#include \u003cstdbool.h\u003e",
+      "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44731e24_a8b793c6",
+        "filename": "libc/private/bionic_string_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1052243
+      },
+      "writtenOn": "2014-12-12T10:53:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4eaaeee_97272cd7",
       "revId": "7db9b64b4b0b144759194222b1e40f54cccad787",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
