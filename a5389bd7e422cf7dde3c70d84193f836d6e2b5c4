@@ -46,6 +46,30 @@
       "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "247f0a23_2cccd372",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-12T18:33:37Z",
+      "side": 1,
+      "message": "yes, sysconf results do tend to be the \"minimum maximum\".\n\nwe do try to account for the keys bionic can use internally though, and we have been trying to use __attribute__((constructor)) to make things more predictable (though this isn\u0027t free).\n\ni wonder if we should rewrite ThreadLocalBuffer.h to use one key that points to a struct that contains a pointer for each buffer? it would mean that we\u0027d have to have a central registry of all the thread local buffers, but that doesn\u0027t necessarily seem like a bad thing either.\n\nthe keys used by the DNS code are a bionic addition not in upstream, but even when you sync with upstream i think we\u0027ll want to keep that (because in bionic the non-_r functions try to be as safe as possible). there\u0027s a good argument that we shouldn\u0027t do this with the DNS functions but since we historically (\u003c\u003d L!) didn\u0027t have the full set of _r functions i don\u0027t think we can break the non-_r functions for multi-threaded use any time soon.\n\n\n\nbut right here right now, how about we say something like \"sysconf_max * 2\" to make it clear that we\u0027re deliberately just trying to allocate too much. (+10 seems like it might actually mean something, especially since we have roughly 10 internal-use keys.)",
+      "parentUuid": "44a87ea2_86a15034",
+      "range": {
+        "startLine": 89,
+        "startChar": 83,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "a5389bd7e422cf7dde3c70d84193f836d6e2b5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
