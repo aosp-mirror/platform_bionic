@@ -106,10 +106,16 @@ extern "C" uintptr_t __stack_chk_guard;
  * This must be marked with "__attribute__ ((noinline))", to ensure the
  * compiler generates the proper stack guards around this function.
  */
+static char* dummy_buf;
+
 __attribute__ ((noinline))
 static void do_modify_stack_chk_guard() {
+  char buf[128];
+  // Store local array's address to global variable to force compiler to generate stack guards.
+  dummy_buf = buf;
   __stack_chk_guard = 0x12345678;
 }
+
 #endif
 
 TEST(stack_protector, global_guard) {
