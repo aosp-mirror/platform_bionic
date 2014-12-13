@@ -75,22 +75,40 @@ enum {
  * enumerated above, and then there are those that are allocated during startup by calls to
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
+ * Following are current pthread keys used internally:
+ *  basename               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  dirname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  uselocale              libc
+ *  getmntent_mntent       libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  getmntent_strings      libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  ptsname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  ttyname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  strerror               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  strsignal              libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  stubs                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  _res_key               libc
+ * je_thread_allocated_tsd jemalloc
+ * je_arenas_tsd           jemalloc
+ * je_tcache_tsd           jemalloc
+ * je_tcache_enabled_tsd   jemalloc
+ * je_quarantine_tsd       jemalloc
+ *
  */
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 9
+
+#define LIBC_TLS_RESERVED_SLOTS 11
 
 #if defined(USE_JEMALLOC)
 /* jemalloc uses 5 keys for itself. */
-#define BIONIC_TLS_RESERVED_SLOTS (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 5)
+#define BIONIC_TLS_RESERVED_SLOTS (LIBC_TLS_RESERVED_SLOTS + 5)
 #else
-#define BIONIC_TLS_RESERVED_SLOTS GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
+#define BIONIC_TLS_RESERVED_SLOTS LIBC_TLS_RESERVED_SLOTS
 #endif
 
 /*
  * Maximum number of elements in the TLS array.
  * This includes space for pthread keys and our own internal slots.
- * We need to round up to maintain stack alignment.
  */
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS, 4)
+#define BIONIC_TLS_SLOTS (PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS)
 
 __END_DECLS
 

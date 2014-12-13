@@ -191,7 +191,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // At offsets >= 0, we have the TLS slots.
   // At offsets < 0, we have the child stack.
   thread->tls = reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
-                                         thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
+                  thread->attr.stack_size - BIONIC_ALIGN(BIONIC_TLS_SLOTS * sizeof(void*), 16));
   void* child_stack = thread->tls;
   __init_tls(thread);
 
