@@ -110,6 +110,30 @@
       "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4b2ae5b_8be98113",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-13T00:37:27Z",
+      "side": 1,
+      "message": "I checked http://pubs.opengroup.org/onlinepubs/9699919799/, is there a difference?",
+      "parentUuid": "84bc3633_63372a1e",
+      "range": {
+        "startLine": 45,
+        "startChar": 52,
+        "endLine": 45,
+        "endChar": 74
+      },
+      "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
