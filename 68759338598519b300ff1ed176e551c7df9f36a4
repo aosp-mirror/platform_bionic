@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4b2ae5b_60a8bc14",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-13T00:22:47Z",
+      "side": 1,
+      "message": "should the 4 here really be 16/sizeof(void*)?",
+      "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4d05a89_dc186de8",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-13T00:22:47Z",
+      "side": 1,
+      "message": "accidentally left in debugging code?",
+      "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
