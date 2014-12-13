@@ -158,6 +158,30 @@
       "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4b2ae5b_aba8c592",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-13T00:42:50Z",
+      "side": 1,
+      "message": "(direct link) http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/limits.h.html\n\nFurther down the page it says that _POSIX_THREAD_KEYS_MAX must be at least 128. That\u0027s the behavior we\u0027re trying to test.\n\nA better way to improve this test would be:\n\n    ASSERT_GE(PTHREAD_KEYS_MAX, _POSIX_THREAD_KEYS_MAX);\n    ASSERT_GE(_POSIX_THREAD_KEYS_MAX, 128);",
+      "parentUuid": "c4b2ae5b_8be98113",
+      "range": {
+        "startLine": 45,
+        "startChar": 52,
+        "endLine": 45,
+        "endChar": 74
+      },
+      "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
