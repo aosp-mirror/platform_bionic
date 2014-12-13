@@ -134,6 +134,30 @@
       "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84bc3633_be6e45ed",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-13T00:40:54Z",
+      "side": 1,
+      "message": "{PTHREAD_KEYS_MAX}\nMaximum number of data keys that can be created by a process.\nMinimum Acceptable Value: {_POSIX_THREAD_KEYS_MAX}\n\n{_POSIX_THREAD_KEYS_MAX}\nThe number of data keys per process.\nValue: 128\n\n(where \u0027value\u0027 means \"a conforming implementation shall provide a value at least this large or shall have no limit\".)\n\nyou could just have both asserts. PTHREAD_KEYS_MAX \u003e\u003d _POSIX_THREAD_KEYS_MAX *and* _POSIX_THREAD_KEYS_MAX \u003e\u003d 128.",
+      "parentUuid": "c4b2ae5b_8be98113",
+      "range": {
+        "startLine": 45,
+        "startChar": 52,
+        "endLine": 45,
+        "endChar": 74
+      },
+      "revId": "68759338598519b300ff1ed176e551c7df9f36a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
