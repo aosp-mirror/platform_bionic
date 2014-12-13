@@ -50,7 +50,6 @@
 #endif
 
 static pthread_key_t   _res_key;
-static pthread_once_t  _res_once = PTHREAD_ONCE_INIT;
 
 typedef struct {
     int                  _h_errno;
@@ -105,6 +104,7 @@ _res_thread_free( void*  _rt )
     free(rt);
 }
 
+__attribute__((constructor))
 static void
 _res_init_key( void )
 {
@@ -115,7 +115,6 @@ static _res_thread*
 _res_thread_get(void)
 {
     _res_thread*  rt;
-    pthread_once( &_res_once, _res_init_key );
     rt = pthread_getspecific( _res_key );
 
     if (rt != NULL) {
