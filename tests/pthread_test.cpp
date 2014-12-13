@@ -42,19 +42,19 @@ TEST(pthread, pthread_key_create) {
 }
 
 TEST(pthread, pthread_keys_max) {
-  // POSIX says PTHREAD_KEYS_MAX should be at least 128.
-  ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+  // POSIX says PTHREAD_KEYS_MAX should be at least _POSIX_THREAD_KEYS_MAX.
+  ASSERT_GE(PTHREAD_KEYS_MAX, _POSIX_THREAD_KEYS_MAX);
 }
 
-TEST(pthread, _SC_THREAD_KEYS_MAX_big_enough_for_POSIX) {
-  // sysconf shouldn't return a smaller value.
+TEST(pthread, sysconf_SC_THREAD_KEYS_MAX_eq_PTHREAD_KEYS_MAX) {
   int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
-  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
+  ASSERT_EQ(sysconf_max, PTHREAD_KEYS_MAX);
 }
 
 TEST(pthread, pthread_key_many_distinct) {
-  // We should be able to allocate at least this many keys.
-  int nkeys = sysconf(_SC_THREAD_KEYS_MAX) / 2;
+  // As gtest uses pthread keys, we can't allocate exactly PTHREAD_KEYS_MAX
+  // pthread keys, but We should be able to allocate at least this many keys.
+  int nkeys = PTHREAD_KEYS_MAX / 2;
   std::vector<pthread_key_t> keys;
 
   auto scope_guard = make_scope_guard([&keys]{
@@ -80,14 +80,13 @@ TEST(pthread, pthread_key_many_distinct) {
   }
 }
 
-TEST(pthread, pthread_key_EAGAIN) {
-  int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
-
+TEST(pthread, pthread_key_not_exceed_PTHREAD_KEYS_MAX) {
   std::vector<pthread_key_t> keys;
   int rv = 0;
-  // Two keys are used by gtest, so sysconf_max should be more than we are
-  // allowed to allocate now.
-  for (int i = 0; i < sysconf_max; i++) {
+
+  // Pthread keys are used by gtest, so PTHREAD_KEYS_MAX should
+  // be more than we are allowed to allocate now.
+  for (int i = 0; i < PTHREAD_KEYS_MAX; i++) {
     pthread_key_t key;
     rv = pthread_key_create(&key, NULL);
     if (rv == EAGAIN) {
