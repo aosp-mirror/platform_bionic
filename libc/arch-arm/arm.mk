@@ -58,7 +58,6 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/__bionic_clone.S \
     arch-arm/bionic/_exit_with_stack_teardown.S \
     arch-arm/bionic/libgcc_compat.c \
-    arch-arm/bionic/memcmp.S \
     arch-arm/bionic/__restore.S \
     arch-arm/bionic/setjmp.S \
     arch-arm/bionic/syscall.S \

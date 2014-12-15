@@ -1,4 +1,5 @@
 libc_bionic_src_files_arm += \
+    arch-arm/generic/bionic/memcmp.S \
     arch-arm/cortex-a15/bionic/memcpy.S \
     arch-arm/cortex-a15/bionic/memset.S \
     arch-arm/cortex-a15/bionic/stpcpy.S \
