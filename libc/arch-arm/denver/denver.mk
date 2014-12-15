@@ -1,4 +1,5 @@
 libc_bionic_src_files_arm += \
+    arch-arm/generic/bionic/memcmp.S \
     arch-arm/denver/bionic/memcpy.S \
     arch-arm/denver/bionic/memmove.S \
     arch-arm/denver/bionic/memset.S \
