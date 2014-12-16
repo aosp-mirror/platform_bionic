@@ -364,22 +364,52 @@ TEST(stdio, snprintf_smoke) {
   EXPECT_STREQ("print_me_twice print_me_twice", buf);
 }
 
-TEST(stdio, snprintf_f_special) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%f", nanf(""));
-  EXPECT_STRCASEEQ("NaN", buf);
+template <typename T>
+void CheckInfNan(int snprintf_fn(T*, size_t, const T*, ...),
+                 const T* fmt, const T* fmt_plus,
+                 const T* minus_inf, const T* inf_, const T* plus_inf,
+                 const T* minus_nan, const T* nan_, const T* plus_nan) {
+  T buf[BUFSIZ];
 
-  snprintf(buf, sizeof(buf), "%f", HUGE_VALF);
-  EXPECT_STRCASEEQ("Inf", buf);
+  snprintf_fn(buf, sizeof(buf), fmt, nan(""));
+  EXPECT_STREQ(nan_, buf) << fmt;
+  snprintf_fn(buf, sizeof(buf), fmt, -nan(""));
+  EXPECT_STREQ(minus_nan, buf) << fmt;
+  snprintf_fn(buf, sizeof(buf), fmt_plus, nan(""));
+  EXPECT_STREQ(plus_nan, buf) << fmt_plus;
+  snprintf_fn(buf, sizeof(buf), fmt_plus, -nan(""));
+  EXPECT_STREQ(minus_nan, buf) << fmt_plus;
+
+  snprintf_fn(buf, sizeof(buf), fmt, HUGE_VAL);
+  EXPECT_STREQ(inf_, buf) << fmt;
+  snprintf_fn(buf, sizeof(buf), fmt, -HUGE_VAL);
+  EXPECT_STREQ(minus_inf, buf) << fmt;
+  snprintf_fn(buf, sizeof(buf), fmt_plus, HUGE_VAL);
+  EXPECT_STREQ(plus_inf, buf) << fmt_plus;
+  snprintf_fn(buf, sizeof(buf), fmt_plus, -HUGE_VAL);
+  EXPECT_STREQ(minus_inf, buf) << fmt_plus;
 }
 
-TEST(stdio, snprintf_g_special) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%g", nan(""));
-  EXPECT_STRCASEEQ("NaN", buf);
+TEST(stdio, snprintf_inf_nan) {
+  CheckInfNan(snprintf, "%a", "%+a", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
+  CheckInfNan(snprintf, "%A", "%+A", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
+  CheckInfNan(snprintf, "%e", "%+e", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
+  CheckInfNan(snprintf, "%E", "%+E", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
+  CheckInfNan(snprintf, "%f", "%+f", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
+  CheckInfNan(snprintf, "%F", "%+F", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
+  CheckInfNan(snprintf, "%g", "%+g", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
+  CheckInfNan(snprintf, "%G", "%+G", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
+}
 
-  snprintf(buf, sizeof(buf), "%g", HUGE_VAL);
-  EXPECT_STRCASEEQ("Inf", buf);
+TEST(stdio, wsprintf_inf_nan) {
+  CheckInfNan(swprintf, L"%a", L"%+a", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
+  CheckInfNan(swprintf, L"%A", L"%+A", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
+  CheckInfNan(swprintf, L"%e", L"%+e", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
+  CheckInfNan(swprintf, L"%E", L"%+E", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
+  CheckInfNan(swprintf, L"%f", L"%+f", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
+  CheckInfNan(swprintf, L"%F", L"%+F", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
+  CheckInfNan(swprintf, L"%g", L"%+g", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
+  CheckInfNan(swprintf, L"%G", L"%+G", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
 }
 
 TEST(stdio, snprintf_d_INT_MAX) {
@@ -439,8 +469,22 @@ TEST(stdio, snprintf_e) {
 TEST(stdio, snprintf_negative_zero_5084292) {
   char buf[BUFSIZ];
 
+  snprintf(buf, sizeof(buf), "%e", -0.0);
+  EXPECT_STREQ("-0.000000e+00", buf);
+  snprintf(buf, sizeof(buf), "%E", -0.0);
+  EXPECT_STREQ("-0.000000E+00", buf);
   snprintf(buf, sizeof(buf), "%f", -0.0);
   EXPECT_STREQ("-0.000000", buf);
+  snprintf(buf, sizeof(buf), "%F", -0.0);
+  EXPECT_STREQ("-0.000000", buf);
+  snprintf(buf, sizeof(buf), "%g", -0.0);
+  EXPECT_STREQ("-0", buf);
+  snprintf(buf, sizeof(buf), "%G", -0.0);
+  EXPECT_STREQ("-0", buf);
+  snprintf(buf, sizeof(buf), "%a", -0.0);
+  EXPECT_STREQ("-0x0p+0", buf);
+  snprintf(buf, sizeof(buf), "%A", -0.0);
+  EXPECT_STREQ("-0X0P+0", buf);
 }
 
 TEST(stdio, snprintf_utf8_15439554) {
