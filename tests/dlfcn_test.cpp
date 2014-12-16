@@ -819,7 +819,7 @@ TEST(dlfcn, rtld_next_known_symbol) {
 
 TEST(dlfcn, dlsym_weak_func) {
   dlerror();
-  void* handle = dlopen("libtest_dlsym_weak_func.so",RTLD_NOW);
+  void* handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
 
   int (*weak_func)();
@@ -827,6 +827,18 @@ TEST(dlfcn, dlsym_weak_func) {
   ASSERT_TRUE(weak_func != NULL) << "dlerror: " << dlerror();
   EXPECT_EQ(42, weak_func());
   dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_undefined_weak_func) {
+  test_isolated([] {
+    void* handle = dlopen("libtest_dlopen_weak_undefined_func.so", RTLD_NOW);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    int (*weak_func)();
+    weak_func = reinterpret_cast<int (*)()>(dlsym(handle, "use_weak_undefined_func"));
+    ASSERT_TRUE(weak_func != nullptr) << dlerror();
+    EXPECT_EQ(6551, weak_func());
+    dlclose(handle);
+  });
 }
 
 TEST(dlfcn, dlopen_symlink) {
