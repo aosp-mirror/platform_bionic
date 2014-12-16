@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1ba449b_1e9f3d70",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2014-12-16T22:51:45Z",
+      "side": 1,
+      "message": "Odd indentation.",
+      "range": {
+        "startLine": 375,
+        "startChar": 2,
+        "endLine": 375,
+        "endChar": 4
+      },
+      "revId": "a11b2c3e364193c91b9b5b41f5d7d6d984ae68b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
