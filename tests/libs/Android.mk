@@ -358,3 +358,12 @@ libtest_dlsym_weak_func_src_files := \
 
 module := libtest_dlsym_weak_func
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Library with weak undefined function
+# -----------------------------------------------------------------------------
+libtest_dlopen_weak_undefined_func_src_files := \
+    dlopen_weak_undefined.cpp
+
+module := libtest_dlopen_weak_undefined_func
+include $(LOCAL_PATH)/Android.build.testlib.mk
