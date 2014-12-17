@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "014af898_1bf8bbd9",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2014-12-17T06:05:09Z",
+      "side": 1,
+      "message": "we have code improperly doing \"#ifdef _POSIX_BARRIERS\" that is breaking builds now...",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 61
+      },
+      "revId": "1c19194c9d2518dbe86973cd313a277ecb70d75c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
