@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81e0a8b0_32d90e89",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T03:02:51Z",
+      "side": 1,
+      "message": "sadly, we\u0027ve found with the libcore tests that we can\u0027t actually test invalid hosts. some OEMs have a networking setup where resolution always succeeds.",
+      "revId": "eeb54142b9d9543ba6dda7fdc8033ed4d62168be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
