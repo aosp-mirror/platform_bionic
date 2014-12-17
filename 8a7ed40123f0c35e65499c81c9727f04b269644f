@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81da6831_df9c9b48",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T17:54:00Z",
+      "side": 1,
+      "message": "i don\u0027t think these belong in this file, do they? if you stay closer to upstream in this file (by adding the missing hostent.h to this directory) you\u0027ll make your life easier with later files (and with future syncs).",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "812508f1_ca12e379",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T17:54:00Z",
+      "side": 1,
+      "message": "don\u0027t you need to change the declaration in the header file to match?\n\n(if you don\u0027t already have a volantis, we should get you one so you can build arm64 by default. that way you\u0027ll catch LP64 errors for free when you build.)",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
