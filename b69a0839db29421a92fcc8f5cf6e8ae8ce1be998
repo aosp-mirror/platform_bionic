@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "21e9bccf_fc7fa9fb",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:53:03Z",
+      "side": 1,
+      "message": "Yes, geethostbyname_r is the interface we support before, but gethostent_r is not. netbsd_gethostent_r is only used internally.",
+      "parentUuid": "21e9bccf_bc08c149",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1d5ac01_4f529961",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-17T22:15:59Z",
       "side": 1,
       "message": "this isn\u0027t in upstream. do we need it? what\u0027s it even saying? \"if there\u0027s neither a # nor a \\n, skip this line\"?",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21e9bccf_3c9bd1dc",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:53:03Z",
+      "side": 1,
+      "message": "Because netbsd uses fparseln() which we don\u0027t have, we use fgets() instead. So I think I should keep the previous parse code.",
+      "parentUuid": "a1d5ac01_4f529961",
       "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "21e9bccf_dfe73f3c",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:53:03Z",
+      "side": 1,
+      "message": "They are the same. Done.",
+      "parentUuid": "812508f1_7b258798",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21e9bccf_dc92ed62",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 8
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "c12b80c1_2f02adff",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:53:03Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "21e9bccf_dc92ed62",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "812508f1_db3593c7",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 8
@@ -98,6 +170,24 @@
       "writtenOn": "2014-12-17T22:15:59Z",
       "side": 1,
       "message": "leave the YP code in? YP will never be #defined, so it doesn\u0027t hurt to keep it, and it minimizes our diff against upstream which tends to make future updates easier.",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e126c4f7_cad3038d",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:53:03Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "812508f1_db3593c7",
       "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
