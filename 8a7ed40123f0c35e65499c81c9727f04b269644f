@@ -69,6 +69,24 @@
       "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81da6831_f3543899",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T21:57:13Z",
+      "side": 1,
+      "message": "yeah, but this declaration is wrong in the header file. it says \u0027int\u0027 rather than socklen_t. that\u0027s an error on LP64, because socklen_t is 64 bits, not 32.",
+      "parentUuid": "812508f1_5046a2f1",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
