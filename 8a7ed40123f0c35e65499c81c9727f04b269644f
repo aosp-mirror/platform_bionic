@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "812508f1_d078d22e",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T21:55:49Z",
+      "side": 1,
+      "message": "Done. hostent.h and sethostent.c added, most of them keep the same as upstream.",
+      "parentUuid": "81da6831_df9c9b48",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "812508f1_ca12e379",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-17T17:54:00Z",
       "side": 1,
       "message": "don\u0027t you need to change the declaration in the header file to match?\n\n(if you don\u0027t already have a volantis, we should get you one so you can build arm64 by default. that way you\u0027ll catch LP64 errors for free when you build.)",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "812508f1_5046a2f1",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T21:55:49Z",
+      "side": 1,
+      "message": "The declarations are ready in include/netdb.h, with some function declarations that are not implemented in bionic.",
+      "parentUuid": "812508f1_ca12e379",
       "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
