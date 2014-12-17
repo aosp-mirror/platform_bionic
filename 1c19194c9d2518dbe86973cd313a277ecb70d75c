@@ -22,6 +22,30 @@
       "revId": "1c19194c9d2518dbe86973cd313a277ecb70d75c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41407075_9dc0433b",
+        "filename": "libc/include/machine/posix_limits.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T06:27:24Z",
+      "side": 1,
+      "message": "not really...\n\n1. we removed that project.\n\n2. that project doesn\u0027t have that bug upstream. some Android idiot introduced that bug locally.\n\nthe right fix is to just remove that project again...",
+      "parentUuid": "014af898_1bf8bbd9",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 61
+      },
+      "revId": "1c19194c9d2518dbe86973cd313a277ecb70d75c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
