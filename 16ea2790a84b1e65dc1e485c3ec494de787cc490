@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81da6831_93112c4c",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T21:38:18Z",
+      "side": 0,
+      "message": "can you do the mv in a later change so there\u0027s a (somewhat) readable diff in this change?",
+      "revId": "16ea2790a84b1e65dc1e485c3ec494de787cc490",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

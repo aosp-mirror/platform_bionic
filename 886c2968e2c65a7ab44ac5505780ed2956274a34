@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "812508f1_d01bb20b",
+        "filename": "libc/dns/include/hostent.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T21:38:18Z",
+      "side": 1,
+      "message": "do you need this? i thought we built this code with -fvisibility\u003dhidden?",
+      "revId": "886c2968e2c65a7ab44ac5505780ed2956274a34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
