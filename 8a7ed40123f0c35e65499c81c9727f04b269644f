@@ -87,6 +87,24 @@
       "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21e9bccf_fcfde9c5",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T22:08:00Z",
+      "side": 1,
+      "message": "Done. It seems socklen_t is uint32_t in LP64 and int32_t in others, as defined in sys/types.h.",
+      "parentUuid": "81da6831_f3543899",
+      "revId": "8a7ed40123f0c35e65499c81c9727f04b269644f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
