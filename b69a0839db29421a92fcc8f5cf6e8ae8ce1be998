@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "a1d5ac01_750c8a30",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T23:18:03Z",
+      "side": 1,
+      "message": "Yes. As we use the interface of glibc for gethostbyname_r, I only take the implementation of gethostbyname_r from netbsd, and don\u0027t have an interface like netbsd_gethostbyname_r. The content in gethostbyname_r is so simple that I think it is fine not to introduce a middle layer. I add a comment for that.",
+      "parentUuid": "812508f1_dbbab33c",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1d5ac01_4f529961",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 8
