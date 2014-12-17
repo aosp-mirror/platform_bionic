@@ -16,6 +16,24 @@
       "revId": "16ea2790a84b1e65dc1e485c3ec494de787cc490",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81da6831_734108d8",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-17T21:55:55Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "81da6831_93112c4c",
+      "revId": "16ea2790a84b1e65dc1e485c3ec494de787cc490",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
