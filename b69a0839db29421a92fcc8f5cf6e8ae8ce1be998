@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "812508f1_dbbab33c",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T22:59:30Z",
+      "side": 1,
+      "message": "gethostbyname_r is different too, in the same way --- ours (and glibc\u0027s) returns int, not struct hostent* like upstream:\n\n  struct hostent *\n  gethostbyname_r(const char *name, struct hostent *hp, char *buf, size_t buflen,\n      int *he)\n  {",
+      "parentUuid": "21e9bccf_fc7fa9fb",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1d5ac01_4f529961",
         "filename": "libc/dns/gethnamaddr.c",
         "patchSetId": 8
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Because netbsd uses fparseln() which we don\u0027t have, we use fgets() instead. So I think I should keep the previous parse code.",
       "parentUuid": "a1d5ac01_4f529961",
+      "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1d5ac01_d508f64a",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-17T22:59:30Z",
+      "side": 1,
+      "message": "ah, i didn\u0027t notice that.",
+      "parentUuid": "21e9bccf_3c9bd1dc",
       "revId": "b69a0839db29421a92fcc8f5cf6e8ae8ce1be998",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
