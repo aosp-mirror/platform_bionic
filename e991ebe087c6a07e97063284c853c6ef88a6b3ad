@@ -34,6 +34,24 @@
       "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41d1503e_75aa68e0",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T23:35:16Z",
+      "side": 1,
+      "message": "i\u0027m not sure this is a bug. if you\u0027re calling pthread_detach on a thread that\u0027s *already* in pthread_exit, something\u0027s wrong.\n\nPOSIX explicitly says \"The behavior is undefined if the value specified by the thread argument to pthread_detach() does not refer to a joinable thread\".\n\nthat said, could we make pthread_detach just call pthread_join? (rather than copy \u0026 paste the pthread_join implementation here.)",
+      "parentUuid": "01cbd895_79a01f2f",
+      "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
