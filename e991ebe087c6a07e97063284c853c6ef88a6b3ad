@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1c5407a_59a7a316",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T23:00:46Z",
+      "side": 1,
+      "message": "you could just test \u003d\u003d 0 and return, making the \u0027else\u0027 the main-line code.\n\nactually, i don\u0027t understand why you need this flag. it seems like you set it if and only if DETACHED in pthread_exit, and you already checked above that the thread isn\u0027t DETACHED. both this code and the pthread_exit code hold the thread list lock, so what\u0027s the race?",
+      "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
