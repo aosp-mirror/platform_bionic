@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e197a45c_22794e31",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T18:10:24Z",
+      "side": 1,
+      "message": "leak.\n\nis it easier to move this calculation into _create_thread_stack? (which we should probably rename.)\n\nif the pthread_internal_t comes first, can we make our lives easier by adding the tls void*[] into the pthread_internal_t? and a trailing array for the stack top? does __attribute__((aligned(x))) help automate things?",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c19c6086_418c525b",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T18:10:24Z",
+      "side": 1,
+      "message": "is this right? or is this just munmap\u0027ing a hole at the bottom of the region?",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1a3ecb1_93711e4f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T18:10:24Z",
+      "side": 1,
+      "message": "(the \"the\" was correct. if you\u0027re talking about the type, you don\u0027t need an article. if you\u0027re talking about an instance of the type, you do.)\n\ni think we need a new name for (the pthread_internal_t + tls area + stack). but maybe if we can move everything into pthread_internal_t and think of it as a variable-length type both the code and comments get clearer and we can just talk about allocating/freeing pthread_internal_t instances.",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c19c6086_a1de7e1f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T18:10:24Z",
+      "side": 1,
+      "message": "is this really what we want to do?\n\nwould we be better off saying:\n\n1. detached threads exit with stack teardown, and everything\u0027s deallocated here.\n\n2. threads that can be joined exit but leave their stacks for the pthread_join caller to clean up.\n\nit seems like that makes things simpler and clearer?",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e197a45c_c2c982e9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T18:10:24Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
