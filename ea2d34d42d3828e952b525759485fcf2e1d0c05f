@@ -22,6 +22,30 @@
       "revId": "ea2d34d42d3828e952b525759485fcf2e1d0c05f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c5407a_995bfbf9",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T21:15:12Z",
+      "side": 1,
+      "message": "it might potentially upset formatting code or signed/unsigned comparisons, but checkbuild succeeds.\n\ni think we want to change our blksize_t and blkcnt_t to be signed though.\n\nand if we look at the wider issue of fixing all these struct stats, though, we\u0027re in a similar situation for st_blksize as for st_nlink --- other architectures think that 32 bits are more than enough for your block size.\n\ni can undo these two for now and come back to them later if you prefer?",
+      "parentUuid": "e1824418_eda60148",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 11
+      },
+      "revId": "ea2d34d42d3828e952b525759485fcf2e1d0c05f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
