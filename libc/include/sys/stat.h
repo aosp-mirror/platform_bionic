@@ -29,7 +29,6 @@
 #ifndef _SYS_STAT_H_
 #define _SYS_STAT_H_
 
-#include <endian.h>
 #include <linux/stat.h>
 #include <machine/timespec.h>
 #include <sys/cdefs.h>
