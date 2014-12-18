@@ -78,15 +78,15 @@ __BEGIN_DECLS
 
 #elif defined(__x86_64__)
 #define __STAT64_BODY \
-  unsigned long st_dev; \
-  unsigned long st_ino; \
+  dev_t st_dev; \
+  ino_t st_ino; \
   unsigned long st_nlink; \
-  unsigned int st_mode; \
+  mode_t st_mode; \
   uid_t st_uid; \
   gid_t st_gid; \
   unsigned int __pad0; \
-  unsigned long st_rdev; \
-  long st_size; \
+  dev_t st_rdev; \
+  off_t st_size; \
   long st_blksize; \
   long st_blocks; \
   struct timespec st_atim; \
