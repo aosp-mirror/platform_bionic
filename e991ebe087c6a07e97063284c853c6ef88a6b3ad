@@ -16,6 +16,24 @@
       "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01cbd895_79a01f2f",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-18T23:26:37Z",
+      "side": 1,
+      "message": "The race is below:\nthread t1 calls thread_exit(), in the lock, it finds it\u0027s not detached, so it decides not to call _pthread_internal_remove_locked().\n\nBut before it calls _exit(0), thread t2 comes and calls pthread_detach(t1), it set the DETACHED flag successfully, and as t1-\u003etid !\u003d 0 (as _exit not called in t1), it will not call _pthread_internal_remove_locked() either.\n\nSo the result is you get a zombie thread t1 in g_thread_list. I think the pthread_test.pthread_detach__leak is used to test this, isn\u0027t it?",
+      "parentUuid": "c1c5407a_59a7a316",
+      "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
