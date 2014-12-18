@@ -42,17 +42,43 @@
 #include "private/libc_logging.h"
 #include "private/ThreadLocalBuffer.h"
 
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(stubs);
+// POSIX seems to envisage an implementation where the <pwd.h> functions are
+// implemented by brute-force searching with getpwent(3), and the <grp.h>
+// functions are implemented similarly with getgrent(3). This means that it's
+// okay for all the <grp.h> functions to share state, and all the <passwd.h>
+// functions to share state, but <grp.h> functions can't clobber <passwd.h>
+// functions' state and vice versa.
 
-struct stubs_state_t {
-  passwd passwd_;
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(group);
+
+struct group_state_t {
   group group_;
   char* group_members_[2];
-  char app_name_buffer_[32];
   char group_name_buffer_[32];
+};
+
+static group_state_t* __group_state() {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(group_state_t*, group, sizeof(group_state_t));
+  if (group_tls_buffer != NULL) {
+    memset(group_tls_buffer, 0, sizeof(group_state_t));
+    group_tls_buffer->group_.gr_mem = group_tls_buffer->group_members_;
+  }
+  return group_tls_buffer;
+}
+
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(passwd);
+
+struct passwd_state_t {
+  passwd passwd_;
+  char app_name_buffer_[32];
   char dir_buffer_[32];
   char sh_buffer_[32];
 };
+
+static passwd_state_t* __passwd_state() {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(passwd_state_t*, passwd, sizeof(passwd_state_t));
+  return passwd_tls_buffer;
+}
 
 static int do_getpw_r(int by_name, const char* name, uid_t uid,
                       passwd* dst, char* buf, size_t byte_count,
@@ -91,7 +117,7 @@ static int do_getpw_r(int by_name, const char* name, uid_t uid,
 
   // pw_passwd and pw_gecos are non-POSIX and unused (always NULL) in bionic.
   dst->pw_passwd = NULL;
-#ifdef __LP64__
+#if defined(__LP64__)
   dst->pw_gecos = NULL;
 #endif
 
@@ -113,17 +139,7 @@ int getpwuid_r(uid_t uid, passwd* pwd,
   return do_getpw_r(0, NULL, uid, pwd, buf, byte_count, result);
 }
 
-static stubs_state_t* __stubs_state() {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(stubs_state_t*, stubs, sizeof(stubs_state_t));
-
-  if (stubs_tls_buffer != NULL) {
-    memset(stubs_tls_buffer, 0, sizeof(stubs_state_t));
-    stubs_tls_buffer->group_.gr_mem = stubs_tls_buffer->group_members_;
-  }
-  return stubs_tls_buffer;
-}
-
-static passwd* android_iinfo_to_passwd(stubs_state_t* state,
+static passwd* android_iinfo_to_passwd(passwd_state_t* state,
                                        const android_id_info* iinfo) {
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
@@ -145,7 +161,7 @@ static group* android_iinfo_to_group(group* gr,
   return gr;
 }
 
-static passwd* android_id_to_passwd(stubs_state_t* state, unsigned id) {
+static passwd* android_id_to_passwd(passwd_state_t* state, unsigned id) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (android_ids[n].aid == id) {
       return android_iinfo_to_passwd(state, android_ids + n);
@@ -154,7 +170,7 @@ static passwd* android_id_to_passwd(stubs_state_t* state, unsigned id) {
   return NULL;
 }
 
-static passwd* android_name_to_passwd(stubs_state_t* state, const char* name) {
+static passwd* android_name_to_passwd(passwd_state_t* state, const char* name) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (!strcmp(android_ids[n].name, name)) {
       return android_iinfo_to_passwd(state, android_ids + n);
@@ -297,9 +313,7 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
 // AID_ISOLATED_START to AID_USER-1 -> u0_i1234
 // AID_USER+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
-static passwd* app_id_to_passwd(uid_t uid, stubs_state_t* state) {
-  passwd* pw = &state->passwd_;
-
+static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
   if (uid < AID_APP) {
     errno = ENOENT;
     return NULL;
@@ -316,18 +330,18 @@ static passwd* app_id_to_passwd(uid_t uid, stubs_state_t* state) {
 
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
+  passwd* pw = &state->passwd_;
   pw->pw_name  = state->app_name_buffer_;
   pw->pw_dir   = state->dir_buffer_;
   pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
-
   return pw;
 }
 
 // Translate a gid into the corresponding app_<gid>
 // group structure (sets errno to ENOENT on failure).
-static group* app_id_to_group(gid_t gid, stubs_state_t* state) {
+static group* app_id_to_group(gid_t gid, group_state_t* state) {
   if (gid < AID_APP) {
     errno = ENOENT;
     return NULL;
@@ -339,13 +353,11 @@ static group* app_id_to_group(gid_t gid, stubs_state_t* state) {
   gr->gr_name   = state->group_name_buffer_;
   gr->gr_gid    = gid;
   gr->gr_mem[0] = gr->gr_name;
-
   return gr;
 }
 
-
 passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
-  stubs_state_t* state = __stubs_state();
+  passwd_state_t* state = __passwd_state();
   if (state == NULL) {
     return NULL;
   }
@@ -358,7 +370,7 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
 }
 
 passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
-  stubs_state_t* state = __stubs_state();
+  passwd_state_t* state = __passwd_state();
   if (state == NULL) {
     return NULL;
   }
@@ -372,12 +384,12 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
 
 // All users are in just one group, the one passed in.
 int getgrouplist(const char* /*user*/, gid_t group, gid_t* groups, int* ngroups) {
-    if (*ngroups < 1) {
-        *ngroups = 1;
-        return -1;
-    }
-    groups[0] = group;
-    return (*ngroups = 1);
+  if (*ngroups < 1) {
+    *ngroups = 1;
+    return -1;
+  }
+  groups[0] = group;
+  return (*ngroups = 1);
 }
 
 char* getlogin() { // NOLINT: implementing bad function.
@@ -386,7 +398,7 @@ char* getlogin() { // NOLINT: implementing bad function.
 }
 
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
-  stubs_state_t* state = __stubs_state();
+  group_state_t* state = __group_state();
   if (state == NULL) {
     return NULL;
   }
@@ -399,7 +411,7 @@ group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
-  stubs_state_t* state = __stubs_state();
+  group_state_t* state = __group_state();
   if (state == NULL) {
     return NULL;
   }
