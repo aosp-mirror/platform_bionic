@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+#include <netdb.h>
+
 #include <gtest/gtest.h>
 
+#include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netdb.h>
 #include <netinet/in.h>
 
 TEST(netdb, getaddrinfo_NULL_host) {
@@ -114,14 +116,132 @@ TEST(netdb, getnameinfo_salen) {
   ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
 }
 
-TEST(netdb, gethostbyname) {
-  hostent* hent = gethostbyname("localhost");
+void VerifyLocalhost(hostent *hent) {
   ASSERT_TRUE(hent != NULL);
   ASSERT_EQ(hent->h_addrtype, AF_INET);
   ASSERT_EQ(hent->h_addr[0], 127);
   ASSERT_EQ(hent->h_addr[1], 0);
   ASSERT_EQ(hent->h_addr[2], 0);
   ASSERT_EQ(hent->h_addr[3], 1);
+}
+
+TEST(netdb, gethostbyname) {
+  hostent* hp = gethostbyname("localhost");
+  VerifyLocalhost(hp);
+}
+
+TEST(netdb, gethostbyname2) {
+  hostent* hp = gethostbyname2("localhost", AF_INET);
+  VerifyLocalhost(hp);
+}
+
+TEST(netdb, gethostbyname_r) {
+  hostent hent;
+  hostent *hp;
+  char buf[512];
+  int err;
+  int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp);
+
+  // Change hp->h_addr to test reentrancy.
+  hp->h_addr[0] = 0;
+
+  hostent hent2;
+  hostent *hp2;
+  char buf2[512];
+  result = gethostbyname_r("localhost", &hent2, buf2, sizeof(buf2), &hp2, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp2);
+
+  ASSERT_EQ(0, hp->h_addr[0]);
+}
+
+TEST(netdb, gethostbyname2_r) {
+  hostent hent;
+  hostent *hp;
+  char buf[512];
+  int err;
+  int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp);
+
+  // Change hp->h_addr to test reentrancy.
+  hp->h_addr[0] = 0;
+
+  hostent hent2;
+  hostent *hp2;
+  char buf2[512];
+  result = gethostbyname2_r("localhost", AF_INET, &hent2, buf2, sizeof(buf2), &hp2, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp2);
+
+  ASSERT_EQ(0, hp->h_addr[0]);
+}
+
+TEST(netdb, gethostbyaddr) {
+  char addr[4];
+  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
+  hostent *hp = gethostbyaddr(addr, sizeof(addr), AF_INET);
+  VerifyLocalhost(hp);
+}
+
+TEST(netdb, gethostbyaddr_r) {
+  char addr[4];
+  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
+
+  hostent hent;
+  hostent *hp;
+  char buf[512];
+  int err;
+  int result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp);
+
+  // Change hp->h_addr to test reentrancy.
+  hp->h_addr[0] = 0;
+
+  hostent hent2;
+  hostent *hp2;
+  char buf2[512];
+  result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent2, buf2, sizeof(buf2), &hp2, &err);
+  ASSERT_EQ(0, result);
+  VerifyLocalhost(hp2);
+
+  ASSERT_EQ(0, hp->h_addr[0]);
+}
+
+TEST(netdb, gethostbyname_r_ERANGE) {
+  hostent hent;
+  hostent *hp;
+  char buf[4]; // Use too small buffer.
+  int err;
+  int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(ERANGE, result);
+  ASSERT_EQ(NULL, hp);
+}
+
+TEST(netdb, gethostbyname2_r_ERANGE) {
+  hostent hent;
+  hostent *hp;
+  char buf[4]; // Use too small buffer.
+  int err;
+  int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(ERANGE, result);
+  ASSERT_EQ(NULL, hp);
+}
+
+TEST(netdb, gethostbyaddr_r_ERANGE) {
+  char addr[4];
+  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
+
+  hostent hent;
+  hostent *hp;
+  char buf[4]; // Use too small buffer.
+  int err;
+  int result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  ASSERT_EQ(ERANGE, result);
+  ASSERT_EQ(NULL, hp);
 }
 
 TEST(netdb, getservbyname) {
