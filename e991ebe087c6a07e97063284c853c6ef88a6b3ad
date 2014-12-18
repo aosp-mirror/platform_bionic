@@ -52,6 +52,24 @@
       "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01cbd895_9c7c09a6",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-18T23:47:11Z",
+      "side": 1,
+      "message": "In our implementaiton, we can call pthread_detach/pthread_join before the thread exit, after the thread exit. Then, why can\u0027t we call pthread_detach when it is exiting?\n\nIf it is forbidden to call pthread_detach when the thread is in pthread_exit, I think we should forbidden it in code explicitly. But the fact is bionic/glibc/netbsd all allow these behaviors.",
+      "parentUuid": "41d1503e_75aa68e0",
+      "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
