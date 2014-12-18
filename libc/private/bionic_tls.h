@@ -85,7 +85,8 @@ enum {
  *  ttyname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  strerror               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  strsignal              libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  stubs                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  passwd                 libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *  group                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  _res_key               libc
  * je_thread_allocated_tsd jemalloc
  * je_arenas_tsd           jemalloc
@@ -95,7 +96,7 @@ enum {
  *
  */
 
-#define LIBC_TLS_RESERVED_SLOTS 11
+#define LIBC_TLS_RESERVED_SLOTS 12
 
 #if defined(USE_JEMALLOC)
 /* jemalloc uses 5 keys for itself. */
