@@ -39,15 +39,15 @@ __BEGIN_DECLS
 
 #if defined(__aarch64__)
 #define __STAT64_BODY \
-  unsigned long st_dev; \
-  unsigned long st_ino; \
-  unsigned int st_mode; \
-  unsigned int st_nlink; \
+  dev_t st_dev; \
+  ino_t st_ino; \
+  mode_t st_mode; \
+  nlink_t st_nlink; \
   uid_t st_uid; \
   gid_t st_gid; \
-  unsigned long st_rdev; \
+  dev_t st_rdev; \
   unsigned long __pad1; \
-  long st_size; \
+  off_t st_size; \
   int st_blksize; \
   int __pad2; \
   long st_blocks; \
@@ -57,13 +57,13 @@ __BEGIN_DECLS
   unsigned int __unused4; \
   unsigned int __unused5; \
 
-#elif defined(__mips__)
+#elif defined(__mips__) /* and mips64 */
 #define __STAT64_BODY \
   unsigned int st_dev; \
   unsigned int __pad0[3]; \
   unsigned long long st_ino; \
-  unsigned int st_mode; \
-  unsigned int st_nlink; \
+  mode_t st_mode; \
+  nlink_t st_nlink; \
   uid_t st_uid; \
   gid_t st_gid; \
   unsigned int st_rdev; \
@@ -94,13 +94,13 @@ __BEGIN_DECLS
   struct timespec st_ctim; \
   long __pad3[3]; \
 
-#else
+#else /* __arm__ || __i386__ */
 #define __STAT64_BODY \
   unsigned long long st_dev; \
   unsigned char __pad0[4]; \
   unsigned long __st_ino; \
   unsigned int st_mode; \
-  unsigned int st_nlink; \
+  nlink_t st_nlink; \
   uid_t st_uid; \
   gid_t st_gid; \
   unsigned long long st_rdev; \
