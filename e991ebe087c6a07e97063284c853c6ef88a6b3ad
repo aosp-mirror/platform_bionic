@@ -70,6 +70,24 @@
       "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c5407a_5cad51a3",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-18T23:54:24Z",
+      "side": 1,
+      "message": "but we moved away from this extra flag because it made things more complicated and less reliable. if we do want to support this, let\u0027s try to implement it more tastefully. pthread_detach during/after exit is basically pthread_join. so i think we\u0027re just missing a per-thread lock? at the moment we just have the thread list lock, which makes things like this hard to implement.",
+      "parentUuid": "01cbd895_9c7c09a6",
+      "revId": "e991ebe087c6a07e97063284c853c6ef88a6b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
