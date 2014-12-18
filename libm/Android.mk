@@ -285,6 +285,7 @@ LOCAL_SRC_FILES := $(libm_common_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
 
 # arch-specific settings
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
@@ -321,6 +322,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
 
 LOCAL_CXX_STL := none
 
