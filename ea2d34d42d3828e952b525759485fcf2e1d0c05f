@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1824418_eda60148",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2014-12-18T21:00:12Z",
+      "side": 1,
+      "message": "I assume it doesn\u0027t matter that this is going from signed to unsigned?\n\nSame with blkcnt_t below.",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 11
+      },
+      "revId": "ea2d34d42d3828e952b525759485fcf2e1d0c05f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
