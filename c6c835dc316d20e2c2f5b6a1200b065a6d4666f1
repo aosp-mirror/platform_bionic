@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6102d48e_1a524dab",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:08:10Z",
+      "side": 1,
+      "message": "yes, i forgot you\u0027ll need to do it anyway for a user-allocated stack. maybe lose the __attribute__ and just add a comment here explaining why we need to manually align (because of the user-allocated stacks)?",
+      "parentUuid": "e197a45c_0518949e",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c19c6086_418c525b",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
