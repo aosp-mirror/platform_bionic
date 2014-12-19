@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6102d48e_b556aad1",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a18bec6e_f31f8acd",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a18bec6e_73039a7f",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-19T19:06:12Z",
       "side": 1,
       "message": "you can pass as const\u0026 here since NULL would never be valid.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a18bec6e_361c2004",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a18bec6e_73039a7f",
       "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a18bec6e_96670c91",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01f918d6_cca9a396",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01f918d6_acc5476e",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-19T19:06:12Z",
       "side": 1,
       "message": "lose this comment now you\u0027ve factored the code out into a function. it was only useful before because one function was doing way too many things.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a18bec6e_b66c9073",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01f918d6_acc5476e",
       "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "01f918d6_cc688313",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done. I should try to find it.",
+      "parentUuid": "01f918d6_cc2f6378",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a18bec6e_f3ed4a49",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -115,6 +205,24 @@
       "writtenOn": "2014-12-19T19:06:12Z",
       "side": 1,
       "message": "prefer \u003d\u003d 0",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_ac6d4721",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done.\nSo For an int variable a, we prefer (a \u003d\u003d 0) to (!a), and prefer (a !\u003d 0) to (a)?\nFor a bool variable b, we prefer (!a) to (a \u003d\u003d false), and prefer (a) to (a \u003d\u003d true)?",
+      "parentUuid": "a18bec6e_f3ed4a49",
       "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -138,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "6102d48e_b5110afd",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6102d48e_9a8d1d15",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6102d48e_1aeecd8f",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 10
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "01f918d6_d7f7ecea",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "Yes, we have a declaration of __exit at the top of the file.\n_exit uses exit_group syscall, which will exit all threads in a process.\n__exit uses exit syscall, which will exit only current thread.",
+      "parentUuid": "6102d48e_1aeecd8f",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01f918d6_8cde0b20",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 10
@@ -166,6 +310,24 @@
       "writtenOn": "2014-12-19T19:06:12Z",
       "side": 1,
       "message": "no, i meant have something like\n\n  char stack_top[1] __attribute__((aligned(16)));",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_d745ac76",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:59:19Z",
+      "side": 1,
+      "message": "We may not use this. The stack grows up to down, stack top is the highest address. And the data structure goes down to up, which means \u0026thread-\u003etls \u003c \u0026thread-\u003estack_top.\n\nWe also can\u0027t put pthread_internal_t below stack, because at the bottom of the stack is the stack guard, which should be page aligned. We can\u0027t save space at that case.",
+      "parentUuid": "01f918d6_8cde0b20",
       "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
