@@ -16,6 +16,24 @@
       "revId": "bd0eff45b9d1c34f516df2f4cebe05442ed84b41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c11380da_8955d917",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T00:46:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01cbd895_07a546ba",
+      "revId": "bd0eff45b9d1c34f516df2f4cebe05442ed84b41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
