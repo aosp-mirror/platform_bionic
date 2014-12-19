@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e197a45c_0518949e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T18:58:05Z",
+      "side": 1,
+      "message": "Move the calculation to allocate_thread().\nAdd void* tls[] in pthread_internal_t.\nAdd stack to pthread_internal_t may be confusing?\nadd __attribute__((aligned(x))) is helpful for self allocated stack, still need alignment for user allocated stack.",
+      "parentUuid": "e197a45c_22794e31",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c19c6086_418c525b",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-18T18:10:24Z",
       "side": 1,
       "message": "is this right? or is this just munmap\u0027ing a hole at the bottom of the region?",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1a3ecb1_d6647403",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T18:58:05Z",
+      "side": 1,
+      "message": "Yes. stack_base and stack_size are not changed after __create_thread_stack, so it will munmap everything.",
+      "parentUuid": "c19c6086_418c525b",
       "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "6102d48e_9ab4fdc6",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T18:58:05Z",
+      "side": 1,
+      "message": "Undo the remove of the.",
+      "parentUuid": "a1a3ecb1_93711e4f",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c19c6086_a1de7e1f",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 8
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-18T18:10:24Z",
       "side": 1,
       "message": "is this really what we want to do?\n\nwould we be better off saying:\n\n1. detached threads exit with stack teardown, and everything\u0027s deallocated here.\n\n2. threads that can be joined exit but leave their stacks for the pthread_join caller to clean up.\n\nit seems like that makes things simpler and clearer?",
+      "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6102d48e_ba88d904",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T18:58:05Z",
+      "side": 1,
+      "message": "Change strategy to always free stack and pthread_internal_t at the same time.",
+      "parentUuid": "c19c6086_a1de7e1f",
       "revId": "c6c835dc316d20e2c2f5b6a1200b065a6d4666f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
