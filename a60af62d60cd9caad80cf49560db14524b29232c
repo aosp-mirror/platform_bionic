@@ -16,6 +16,24 @@
       "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a18bec6e_f39a2ad7",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T19:04:43Z",
+      "side": 1,
+      "message": "See b/18802601? for gethostbyname_r(\"localhost\") without enough buffer, _hf_gethtbyname() set ENOSPC, but it will be reset to ECONNREFUSED by _dns_gethtbyname(). That\u0027 why we need this flag to work around it.",
+      "parentUuid": "a18bec6e_73b71ac9",
+      "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
