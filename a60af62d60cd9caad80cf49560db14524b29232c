@@ -34,6 +34,24 @@
       "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6102d48e_fa9411d6",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:11:20Z",
+      "side": 1,
+      "message": "i saw you wrote that, but i\u0027m saying we could change nsdispatch to recognize that ENOSPC is a fatal error and there\u0027s no point trying the next resolver. it\u0027s not like that\u0027s going to supply a shorter answer.",
+      "parentUuid": "a18bec6e_f39a2ad7",
+      "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
