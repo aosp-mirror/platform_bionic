@@ -71,6 +71,7 @@
 #include <sys/cdefs.h>
 
 #include <assert.h>
+#include <errno.h>
 #include <nsswitch.h>
 #include <stdarg.h>
 #include <strings.h>
@@ -133,6 +134,10 @@ nsdispatch(void *retval, const ns_dtab disp_tab[], const char *database,
 				continue;
 			if (result & srclist[i].flags)
 				break;
+			/* Stop trying next resolver when there is a memory space fatal error. */
+			if ((result & NS_UNAVAIL) != 0 && errno == ENOSPC) {
+			  break;
+			}
 		}
 	}
 	result &= NS_STATUSMASK;	/* clear private flags in result */
