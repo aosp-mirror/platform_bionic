@@ -1208,7 +1208,7 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 	free(buf);
 	__res_put_state(res);
 	if (hp == NULL)
-		switch (h_errno) {
+		switch (*info->he) {
 		case HOST_NOT_FOUND:
 			return NS_NOTFOUND;
 		case TRY_AGAIN:
@@ -1326,6 +1326,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	*info->he = NETDB_SUCCESS;
 	return NS_SUCCESS;
 nospc:
+	errno = ENOSPC;
 	*info->he = NETDB_INTERNAL;
 	return NS_UNAVAIL;
 }
