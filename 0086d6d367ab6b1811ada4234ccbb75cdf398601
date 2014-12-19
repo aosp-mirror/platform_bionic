@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a18bec6e_f31f8acd",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "s/DOWN_ALIGN/ALIGN_DOWN/ so it reads more like a sentence.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a18bec6e_73039a7f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "you can pass as const\u0026 here since NULL would never be valid.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_cca9a396",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "__allocate_thread\n\nwe\u0027ve not been particularly consistent, but we\u0027ve tried to use __ in front of private stuff, so if we accidentally leak it it\u0027s obvious.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_acc5476e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "lose this comment now you\u0027ve factored the code out into a function. it was only useful before because one function was doing way too many things.",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6102d48e_1ad5adc9",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "did you try doing this with __attribute__((aligned))?",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_cc2f6378",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "PTHREAD_STACK_MIN?",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a18bec6e_f3ed4a49",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "prefer \u003d\u003d 0",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6102d48e_9a8d1d15",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "prefer to explicitly say \"!\u003d 0\"",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6102d48e_1aeecd8f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "does this compile? shouldn\u0027t this be _exit?",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01f918d6_8cde0b20",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T19:06:12Z",
+      "side": 1,
+      "message": "no, i meant have something like\n\n  char stack_top[1] __attribute__((aligned(16)));",
+      "revId": "0086d6d367ab6b1811ada4234ccbb75cdf398601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
