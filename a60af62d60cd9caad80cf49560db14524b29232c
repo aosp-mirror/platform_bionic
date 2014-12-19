@@ -52,6 +52,24 @@
       "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6175743d_2ed5a7c9",
+        "filename": "libc/dns/gethnamaddr.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-19T22:13:36Z",
+      "side": 1,
+      "message": "Done. It seems I am fixing in the wrong direction.",
+      "parentUuid": "6102d48e_fa9411d6",
+      "revId": "a60af62d60cd9caad80cf49560db14524b29232c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
