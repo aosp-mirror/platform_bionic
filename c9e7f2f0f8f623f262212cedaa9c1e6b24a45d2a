@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "614734ed_416234f6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2406,
+      "author": {
+        "id": 1040193
+      },
+      "writtenOn": "2014-12-19T17:49:23Z",
+      "side": 1,
+      "message": "The comment should state DT_MIPS_RLD_MAP2",
+      "range": {
+        "startLine": 2406,
+        "startChar": 19,
+        "endLine": 2406,
+        "endChar": 34
+      },
+      "revId": "c9e7f2f0f8f623f262212cedaa9c1e6b24a45d2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "614734ed_01c18c61",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2408,
+      "author": {
+        "id": 1040193
+      },
+      "writtenOn": "2014-12-19T17:49:23Z",
+      "side": 1,
+      "message": "DT_MIPS_RLD_MAP2 has relative offset from the DT entry, while DT_MIPS_RLD_MAP is absolute.\nThe line should be:\nr_debug** dp \u003d reinterpret_cast\u003cr_debug**\u003e(reinterpret_cast\u003cElfW(Addr)\u003e(d) + d-\u003ed_un.d_val);",
+      "range": {
+        "startLine": 2408,
+        "startChar": 0,
+        "endLine": 2408,
+        "endChar": 80
+      },
+      "revId": "c9e7f2f0f8f623f262212cedaa9c1e6b24a45d2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
