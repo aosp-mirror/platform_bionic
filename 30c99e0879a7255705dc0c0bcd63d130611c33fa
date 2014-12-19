@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "017cb82c_eb5b114a",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T23:01:56Z",
+      "side": 1,
+      "message": "reinterpret_cast\u003cuintptr_t\u003e",
+      "revId": "30c99e0879a7255705dc0c0bcd63d130611c33fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
