@@ -116,7 +116,9 @@ _hf_gethtbyname(void *rv, void *cb_data, va_list ap)
 	hp = _hf_gethtbyname2(name, af, info);
 #endif
 	if (hp == NULL) {
-		*info->he = HOST_NOT_FOUND;
+		if (*info->he == NETDB_INTERNAL && errno == ENOSPC) {
+			return NS_UNAVAIL;
+		}
 		return NS_NOTFOUND;
 	}
 	return NS_SUCCESS;
@@ -159,8 +161,12 @@ _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 
 		hp = netbsd_gethostent_r(hf, info->hp, info->buf, info->buflen,
 		    info->he);
-		if (hp == NULL)
+		if (hp == NULL) {
+			if (*info->he == NETDB_INTERNAL && errno == ENOSPC) {
+				goto nospc;
+			}
 			break;
+		}
 
 		if (strcasecmp(hp->h_name, name) != 0) {
 			char **cp;
@@ -259,6 +265,9 @@ _hf_gethtbyaddr(void *rv, void *cb_data, va_list ap)
 	endhostent_r(&hf);
 
 	if (hp == NULL) {
+		if (errno == ENOSPC) {
+			return NS_UNAVAIL;
+		}
 		*info->he = HOST_NOT_FOUND;
 		return NS_NOTFOUND;
 	}
