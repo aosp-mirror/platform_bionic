@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01cbd895_07a546ba",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-19T00:43:06Z",
+      "side": 1,
+      "message": "you can actually pass NULL as the second argument. for some reason we have a lot of callers using dummy variables like this. we should probably clean them up one day...",
+      "revId": "bd0eff45b9d1c34f516df2f4cebe05442ed84b41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
