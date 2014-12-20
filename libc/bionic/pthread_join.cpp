@@ -74,6 +74,6 @@ int pthread_join(pthread_t t, void** return_value) {
     *return_value = thread->return_value;
   }
 
-  _pthread_internal_remove_locked(thread.get());
+  _pthread_internal_remove_locked(thread.get(), true);
   return 0;
 }
