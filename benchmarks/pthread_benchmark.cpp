@@ -47,6 +47,21 @@ static void BM_pthread_getspecific(int iters) {
 }
 BENCHMARK(BM_pthread_getspecific);
 
+static void BM_pthread_setspecific(int iters) {
+  StopBenchmarkTiming();
+  pthread_key_t key;
+  pthread_key_create(&key, NULL);
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; ++i) {
+    pthread_setspecific(key, NULL);
+  }
+
+  StopBenchmarkTiming();
+  pthread_key_delete(key);
+}
+BENCHMARK(BM_pthread_setspecific);
+
 static void DummyPthreadOnceInitFunction() {
 }
 
@@ -137,3 +152,80 @@ static void BM_pthread_rw_lock_write(int iters) {
   pthread_rwlock_destroy(&lock);
 }
 BENCHMARK(BM_pthread_rw_lock_write);
+
+static void* IdleThread(void*) {
+  return NULL;
+}
+
+static void BM_pthread_create(int iters) {
+  StopBenchmarkTiming();
+  pthread_t thread;
+
+  for (int i = 0; i < iters; ++i) {
+    StartBenchmarkTiming();
+    pthread_create(&thread, NULL, IdleThread, NULL);
+    StopBenchmarkTiming();
+    pthread_join(thread, NULL);
+  }
+}
+BENCHMARK(BM_pthread_create);
+
+static void* RunThread(void*) {
+  StopBenchmarkTiming();
+  return NULL;
+}
+
+static void BM_pthread_create_and_run(int iters) {
+  StopBenchmarkTiming();
+  pthread_t thread;
+
+  for (int i = 0; i < iters; ++i) {
+    StartBenchmarkTiming();
+    pthread_create(&thread, NULL, RunThread, NULL);
+    pthread_join(thread, NULL);
+  }
+}
+BENCHMARK(BM_pthread_create_and_run);
+
+static void* ExitThread(void*) {
+  StartBenchmarkTiming();
+  pthread_exit(NULL);
+}
+
+static void BM_pthread_exit_and_join(int iters) {
+  StopBenchmarkTiming();
+  pthread_t thread;
+
+  for (int i = 0; i < iters; ++i) {
+    pthread_create(&thread, NULL, ExitThread, NULL);
+    pthread_join(thread, NULL);
+    StopBenchmarkTiming();
+  }
+}
+BENCHMARK(BM_pthread_exit_and_join);
+
+static void BM_pthread_key_create(int iters) {
+  StopBenchmarkTiming();
+  pthread_key_t key;
+
+  for (int i = 0; i < iters; ++i) {
+    StartBenchmarkTiming();
+    pthread_key_create(&key, NULL);
+    StopBenchmarkTiming();
+    pthread_key_delete(key);
+  }
+}
+BENCHMARK(BM_pthread_key_create);
+
+static void BM_pthread_key_delete(int iters) {
+  StopBenchmarkTiming();
+  pthread_key_t key;
+
+  for (int i = 0; i < iters; ++i) {
+    pthread_key_create(&key, NULL);
+    StartBenchmarkTiming();
+    pthread_key_delete(key);
+    StopBenchmarkTiming();
+  }
+}
+BENCHMARK(BM_pthread_key_delete);

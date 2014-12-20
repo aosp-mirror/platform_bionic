@@ -90,7 +90,7 @@ void pthread_exit(void* return_value) {
   // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
   void* stack_base = thread->attr.stack_base;
   size_t stack_size = thread->attr.stack_size;
-  bool user_allocated_stack = thread->user_allocated_stack();
+  bool free_stack = false;
 
   pthread_mutex_lock(&g_thread_list_lock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
@@ -98,24 +98,18 @@ void pthread_exit(void* return_value) {
     // First make sure that the kernel does not try to clear the tid field
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
-    _pthread_internal_remove_locked(thread);
-  } else {
-    // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
-    // will be unmapped after the exit call below.
-    if (!user_allocated_stack) {
-      thread->attr.stack_base = NULL;
-      thread->attr.stack_size = 0;
-      thread->tls = NULL;
+
+    // pthread_internal_t is freed below with stack, not here.
+    _pthread_internal_remove_locked(thread, false);
+    if (!thread->user_allocated_stack()) {
+      free_stack = true;
     }
-    // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
-    // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
   }
   pthread_mutex_unlock(&g_thread_list_lock);
 
-  if (user_allocated_stack) {
-    // Cleaning up this thread's stack is the creator's responsibility, not ours.
-    __exit(0);
-  } else {
+  // Detached threads exit with stack teardown, and everything deallocated here.
+  // Threads that can be joined exit but leave their stacks for the pthread_join caller to clean up.
+  if (free_stack) {
     // We need to munmap the stack we're running on before calling exit.
     // That's not something we can do in C.
 
@@ -126,5 +120,7 @@ void pthread_exit(void* return_value) {
     sigprocmask(SIG_SETMASK, &mask, NULL);
 
     _exit_with_stack_teardown(stack_base, stack_size);
+  } else {
+    __exit(0);
   }
 }
