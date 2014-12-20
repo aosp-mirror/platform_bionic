@@ -30,6 +30,8 @@
 
 #include <pthread.h>
 
+#include "private/bionic_tls.h"
+
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
 #define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
@@ -72,8 +74,6 @@ struct pthread_internal_t {
     return (attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0;
   }
 
-  void** tls;
-
   pthread_attr_t attr;
 
   __pthread_cleanup_t* cleanup_stack;
@@ -86,16 +86,16 @@ struct pthread_internal_t {
 
   pthread_mutex_t startup_handshake_mutex;
 
+  void* tls[BIONIC_TLS_SLOTS];
+
   /*
    * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
    * per-thread buffer by simply using malloc(3) and free(3).
    */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
-};
+} __attribute__((aligned(16))); // Align it as thread stack top below it should be aligned.
 
-__LIBC_HIDDEN__ pthread_internal_t* __create_thread_struct();
-__LIBC_HIDDEN__ void __free_thread_struct(pthread_internal_t*);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
@@ -105,7 +105,7 @@ __LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
 extern "C" __LIBC64_HIDDEN__ pthread_internal_t* __get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
-__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread, bool free_thread);
 
 /*
  * Traditionally we gave threads a 1MiB stack. When we started

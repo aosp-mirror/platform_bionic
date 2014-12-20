@@ -46,7 +46,7 @@ int pthread_detach(pthread_t t) {
 
   if (thread->tid == 0) {
     // Already exited; clean up.
-    _pthread_internal_remove_locked(thread.get());
+    _pthread_internal_remove_locked(thread.get(), true);
     return 0;
   }
 
