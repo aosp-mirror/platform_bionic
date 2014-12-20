@@ -16,6 +16,24 @@
       "revId": "30c99e0879a7255705dc0c0bcd63d130611c33fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41723059_d0736288",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-20T00:09:46Z",
+      "side": 1,
+      "message": "Removed. Reading pthread_attr_setstack makes realize that it has a check on user allocated stack.",
+      "parentUuid": "017cb82c_eb5b114a",
+      "revId": "30c99e0879a7255705dc0c0bcd63d130611c33fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
