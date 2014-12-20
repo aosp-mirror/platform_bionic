@@ -74,9 +74,7 @@ uintptr_t __stack_chk_guard = 0;
 void __libc_init_tls(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
-  static void* tls[BIONIC_TLS_SLOTS];
   static pthread_internal_t main_thread;
-  main_thread.tls = tls;
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
@@ -96,7 +94,7 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   __init_thread(&main_thread, false);
   __init_tls(&main_thread);
   __set_tls(main_thread.tls);
-  tls[TLS_SLOT_BIONIC_PREINIT] = &args;
+  main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
   __init_alternate_signal_stack(&main_thread);
 }

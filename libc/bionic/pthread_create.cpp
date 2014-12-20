@@ -35,6 +35,7 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_macros.h"
+#include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
@@ -72,6 +73,10 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
     thread->alternate_signal_stack = ss.ss_sp;
+
+    // We can only use const static allocated string for mapped region name, as Android kernel
+    // uses the string pointer directly when dumping /proc/pid/maps.
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
   }
 }
 
@@ -101,29 +106,62 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   return error;
 }
 
-static void* __create_thread_stack(pthread_internal_t* thread) {
+static void* __create_thread_stack(const pthread_attr_t& attr) {
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* stack = mmap(NULL, thread->attr.stack_size, prot, flags, -1, 0);
+  void* stack = mmap(NULL, attr.stack_size, prot, flags, -1, 0);
   if (stack == MAP_FAILED) {
     __libc_format_log(ANDROID_LOG_WARN,
                       "libc",
                       "pthread_create failed: couldn't allocate %zd-byte stack: %s",
-                      thread->attr.stack_size, strerror(errno));
+                      attr.stack_size, strerror(errno));
     return NULL;
   }
 
   // Set the guard region at the end of the stack to PROT_NONE.
-  if (mprotect(stack, thread->attr.guard_size, PROT_NONE) == -1) {
+  if (mprotect(stack, attr.guard_size, PROT_NONE) == -1) {
     __libc_format_log(ANDROID_LOG_WARN, "libc",
                       "pthread_create failed: couldn't mprotect PROT_NONE %zd-byte stack guard region: %s",
-                      thread->attr.guard_size, strerror(errno));
-    munmap(stack, thread->attr.stack_size);
+                      attr.guard_size, strerror(errno));
+    munmap(stack, attr.stack_size);
     return NULL;
   }
 
   return stack;
+}
+
+static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp, void** child_stack) {
+  if (attr->stack_base == NULL) {
+    // The caller didn't provide a stack, so allocate one.
+    // Make sure the stack size and guard size are multiples of PAGE_SIZE.
+    attr->stack_size = BIONIC_ALIGN(attr->stack_size, PAGE_SIZE);
+    attr->guard_size = BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
+    attr->stack_base = __create_thread_stack(*attr);
+    if (attr->stack_base == NULL) {
+      return EAGAIN;
+    }
+  } else {
+    // The caller did provide a stack, so remember we're not supposed to free it.
+    attr->flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
+  }
+
+  // Thread stack is used for two sections:
+  //   pthread_internal_t.
+  //   regular stack, from top to down.
+  uint8_t* stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + attr->stack_size;
+  stack_top -= sizeof(pthread_internal_t);
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
+
+  // No need to check stack_top alignment. The size of pthread_internal_t is 16-bytes aligned,
+  // and user allocated stack is guaranteed by pthread_attr_setstack.
+
+  thread->attr = *attr;
+  __init_tls(thread);
+
+  *threadp = thread;
+  *child_stack = stack_top;
+  return 0;
 }
 
 static int __pthread_start(void* arg) {
@@ -158,42 +196,20 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // Inform the rest of the C library that at least one thread was created.
   __isthreaded = 1;
 
-  pthread_internal_t* thread = __create_thread_struct();
-  if (thread == NULL) {
-    return EAGAIN;
-  }
-
+  pthread_attr_t thread_attr;
   if (attr == NULL) {
-    pthread_attr_init(&thread->attr);
+    pthread_attr_init(&thread_attr);
   } else {
-    thread->attr = *attr;
+    thread_attr = *attr;
     attr = NULL; // Prevent misuse below.
   }
 
-  // Make sure the stack size and guard size are multiples of PAGE_SIZE.
-  thread->attr.stack_size = BIONIC_ALIGN(thread->attr.stack_size, PAGE_SIZE);
-  thread->attr.guard_size = BIONIC_ALIGN(thread->attr.guard_size, PAGE_SIZE);
-
-  if (thread->attr.stack_base == NULL) {
-    // The caller didn't provide a stack, so allocate one.
-    thread->attr.stack_base = __create_thread_stack(thread);
-    if (thread->attr.stack_base == NULL) {
-      __free_thread_struct(thread);
-      return EAGAIN;
-    }
-  } else {
-    // The caller did provide a stack, so remember we're not supposed to free it.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
+  pthread_internal_t* thread = NULL;
+  void* child_stack = NULL;
+  int result = __allocate_thread(&thread_attr, &thread, &child_stack);
+  if (result != 0) {
+    return result;
   }
-
-  // Make room for the TLS area.
-  // The child stack is the same address, just growing in the opposite direction.
-  // At offsets >= 0, we have the TLS slots.
-  // At offsets < 0, we have the child stack.
-  thread->tls = reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
-                  thread->attr.stack_size - BIONIC_ALIGN(BIONIC_TLS_SLOTS * sizeof(void*), 16));
-  void* child_stack = thread->tls;
-  __init_tls(thread);
 
   // Create a mutex for the thread in TLS to wait on once it starts so we can keep
   // it from doing anything until after we notify the debugger about it
@@ -211,7 +227,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
       CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
-  void* tls = thread->tls;
+  void* tls = reinterpret_cast<void*>(thread->tls);
 #if defined(__i386__)
   // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc rather than
   // a pointer to the TLS itself.
@@ -229,7 +245,6 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     if (!thread->user_allocated_stack()) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
-    __free_thread_struct(thread);
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;
   }
