@@ -35,6 +35,9 @@
 /* Ignore all __weak_alias in OpenBSD. */
 #define __weak_alias(alias,sym)
 
+/* Ignore all __warn_references in OpenBSD. */
+#define __warn_references(sym,msg)
+
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
  * Additionally, we changed the numeric/digit type from N to D for libcxx.
  */
