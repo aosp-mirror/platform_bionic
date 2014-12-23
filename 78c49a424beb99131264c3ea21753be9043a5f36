@@ -16,6 +16,24 @@
       "revId": "78c49a424beb99131264c3ea21753be9043a5f36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1d04c89_777cfa21",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2014-12-23T23:27:30Z",
+      "side": 1,
+      "message": "Done. pthread_internal_t is not using space of regular stack. And stack size in pthread_attr_t is not changed.",
+      "parentUuid": "a153ecfb_b07218d3",
+      "revId": "78c49a424beb99131264c3ea21753be9043a5f36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
