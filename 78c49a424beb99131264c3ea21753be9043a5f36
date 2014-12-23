@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a153ecfb_b07218d3",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2014-12-23T20:25:23Z",
+      "side": 1,
+      "message": "isn\u0027t __allocate_thread a better place? it seems odd that if you supply a NULL pthread_attr_t* you don\u0027t actually get the stack size specified by the default pthread attrs; you get sizeof(pthread_internal_t) fewer bytes instead.\n\nplus, if we do this here, pthread_attr_get_stack_size will report a different value than was passed to pthread_create. i think the fact of the pthread_internal_t allocation should be invisible to the caller.",
+      "revId": "78c49a424beb99131264c3ea21753be9043a5f36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
