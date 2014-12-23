@@ -77,7 +77,9 @@
 #define	__GNUC_PREREQ(x, y)	0
 #endif
 
-#include <sys/cdefs_elf.h>
+#define __strong_alias(alias, sym) \
+    __asm__(".global " #alias "\n" \
+            #alias " = " #sym);
 
 #if defined(__cplusplus)
 #define	__BEGIN_DECLS		extern "C" {
@@ -262,13 +264,6 @@
 #define	__func__	""
 #endif
 #endif /* !(__STDC_VERSION__ >= 199901L) */
-
-#if defined(_KERNEL)
-#if defined(NO_KERNEL_RCSIDS)
-#undef __KERNEL_RCSID
-#define	__KERNEL_RCSID(_n, _s)		/* nothing */
-#endif /* NO_KERNEL_RCSIDS */
-#endif /* _KERNEL */
 
 /*
  * A barrier to stop the optimizer from moving code or assume live
