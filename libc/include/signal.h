@@ -30,7 +30,6 @@
 #define _SIGNAL_H_
 
 #include <asm/sigcontext.h>
-#include <errno.h>
 #include <limits.h>
 #include <machine/pthread_types.h>
 #include <machine/timespec.h>
