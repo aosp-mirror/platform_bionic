@@ -33,6 +33,7 @@
 #include <sys/types.h>
 #include <linux/fadvise.h>
 #include <linux/fcntl.h>
+#include <linux/stat.h>
 #include <linux/uio.h>
 #include <unistd.h>  /* this is not required, but makes client code much happier */
 
