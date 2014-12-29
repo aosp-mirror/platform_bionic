@@ -29,6 +29,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 int chown(const char* path, uid_t uid, gid_t gid) {
   return fchownat(AT_FDCWD, path, uid, gid, 0);

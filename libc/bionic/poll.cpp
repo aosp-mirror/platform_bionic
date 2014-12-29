@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <sys/poll.h>
 #include <sys/select.h>
 

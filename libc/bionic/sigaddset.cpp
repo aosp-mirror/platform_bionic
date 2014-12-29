@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <signal.h>
 
 int sigaddset(sigset_t* set, int signum) {
