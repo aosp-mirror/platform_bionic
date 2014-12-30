@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <signal.h>
 
 int sigemptyset(sigset_t* set) {
