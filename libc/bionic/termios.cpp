@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <termios.h>
 #include <unistd.h>
 
