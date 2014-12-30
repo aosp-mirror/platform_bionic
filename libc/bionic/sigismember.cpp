@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <signal.h>
 
 int sigismember(const sigset_t* set, int signum) {
