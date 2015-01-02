@@ -31,6 +31,7 @@
 
 #include <pagemap/pagemap.h>
 
+#include "TemporaryFile.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE(ptr != nullptr) << "dlerror: " << dlerror()
@@ -260,21 +261,14 @@ protected:
     extinfo_.reserved_addr = start;
     extinfo_.reserved_size = LIBSIZE;
     extinfo_.relro_fd = -1;
-
-    const char* android_data = getenv("ANDROID_DATA");
-    ASSERT_TRUE(android_data != nullptr);
-    snprintf(relro_file_, sizeof(relro_file_), "%s/local/tmp/libdlext_test.relro", android_data);
   }
 
   virtual void TearDown() {
     DlExtTest::TearDown();
-    if (extinfo_.relro_fd != -1) {
-      ASSERT_NOERROR(close(extinfo_.relro_fd));
-    }
   }
 
-  void CreateRelroFile(const char* lib) {
-    int relro_fd = open(relro_file_, O_CREAT | O_RDWR | O_TRUNC, 0644);
+  void CreateRelroFile(const char* lib, const char* relro_file) {
+    int relro_fd = open(relro_file, O_RDWR | O_TRUNC);
     ASSERT_NOERROR(relro_fd);
 
     pid_t pid = fork();
@@ -299,7 +293,7 @@ protected:
     ASSERT_EQ(0, WEXITSTATUS(status));
 
     // reopen file for reading so it can be used
-    relro_fd = open(relro_file_, O_RDONLY);
+    relro_fd = open(relro_file, O_RDONLY);
     ASSERT_NOERROR(relro_fd);
     extinfo_.flags |= ANDROID_DLEXT_USE_RELRO;
     extinfo_.relro_fd = relro_fd;
@@ -316,24 +310,31 @@ protected:
   void SpawnChildrenAndMeasurePss(const char* lib, bool share_relro, size_t* pss_out);
 
   android_dlextinfo extinfo_;
-  char relro_file_[PATH_MAX];
 };
 
 TEST_F(DlExtRelroSharingTest, ChildWritesGoodData) {
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME));
+  TemporaryFile tf; // Use tf to get an unique filename.
+  ASSERT_NOERROR(close(tf.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME, tf.filename));
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
+
+  // Use destructor of tf to close and unlink the file.
+  tf.fd = extinfo_.relro_fd;
 }
 
 TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME_NORELRO));
+  TemporaryFile tf; // // Use tf to get an unique filename.
+  ASSERT_NOERROR(close(tf.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME_NORELRO, tf.filename));
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME_NORELRO));
+
+  // Use destructor of tf to close and unlink the file.
+  tf.fd = extinfo_.relro_fd;
 }
 
 TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
-  int relro_fd = open(relro_file_, O_CREAT | O_RDWR | O_TRUNC, 0644);
-  ASSERT_NOERROR(relro_fd);
-  ASSERT_NOERROR(close(relro_fd));
-
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
 }
 
@@ -343,11 +344,11 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
     return;
   }
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME));
-  int relro_fd = open(relro_file_, O_RDONLY);
-  ASSERT_NOERROR(relro_fd);
-  extinfo_.flags |= ANDROID_DLEXT_USE_RELRO;
-  extinfo_.relro_fd = relro_fd;
+  TemporaryFile tf; // Use tf to get an unique filename.
+  ASSERT_NOERROR(close(tf.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME, tf.filename));
+
   int pipefd[2];
   ASSERT_NOERROR(pipe(pipefd));
 
@@ -359,6 +360,9 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   // it saves 40%+ for this test.
   size_t expected_size = without_sharing - (without_sharing/10);
   EXPECT_LT(with_sharing, expected_size);
+
+  // Use destructor of tf to close and unlink the file.
+  tf.fd = extinfo_.relro_fd;
 }
 
 void getPss(pid_t pid, size_t* pss_out) {
