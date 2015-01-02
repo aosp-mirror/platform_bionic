@@ -223,6 +223,7 @@ bionic-unit-tests_static_libraries := \
     liblog \
 
 bionic-unit-tests_src_files := \
+    gtest_main.cpp \
     atexit_test.cpp \
     dl_test.cpp \
     dlext_test.cpp \
@@ -275,6 +276,9 @@ bionic-unit-tests-static_static_libraries := \
     libtinyxml2 \
     liblog \
 
+bionic-unit-tests-static_src_files := \
+    gtest_main.cpp \
+
 bionic-unit-tests-static_force_static_executable := true
 
 # libc and libc++ both define std::nothrow. libc's is a private symbol, but this
@@ -297,6 +301,7 @@ include $(LOCAL_PATH)/Android.build.mk
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
 bionic-unit-tests-glibc_src_files := \
+    gtest_main.cpp \
     atexit_test.cpp \
     dlfcn_test.cpp \
     dl_test.cpp \
