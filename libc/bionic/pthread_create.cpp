@@ -106,25 +106,25 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   return error;
 }
 
-static void* __create_thread_stack(const pthread_attr_t& attr) {
+static void* __create_thread_stack(size_t stack_size, size_t guard_size) {
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* stack = mmap(NULL, attr.stack_size, prot, flags, -1, 0);
+  void* stack = mmap(NULL, stack_size, prot, flags, -1, 0);
   if (stack == MAP_FAILED) {
     __libc_format_log(ANDROID_LOG_WARN,
                       "libc",
                       "pthread_create failed: couldn't allocate %zd-byte stack: %s",
-                      attr.stack_size, strerror(errno));
+                      stack_size, strerror(errno));
     return NULL;
   }
 
   // Set the guard region at the end of the stack to PROT_NONE.
-  if (mprotect(stack, attr.guard_size, PROT_NONE) == -1) {
+  if (mprotect(stack, guard_size, PROT_NONE) == -1) {
     __libc_format_log(ANDROID_LOG_WARN, "libc",
                       "pthread_create failed: couldn't mprotect PROT_NONE %zd-byte stack guard region: %s",
-                      attr.guard_size, strerror(errno));
-    munmap(stack, attr.stack_size);
+                      guard_size, strerror(errno));
+    munmap(stack, stack_size);
     return NULL;
   }
 
@@ -132,30 +132,36 @@ static void* __create_thread_stack(const pthread_attr_t& attr) {
 }
 
 static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp, void** child_stack) {
+  size_t allocate_stack_size;
+  uint8_t* stack_top;
+
   if (attr->stack_base == NULL) {
     // The caller didn't provide a stack, so allocate one.
     // Make sure the stack size and guard size are multiples of PAGE_SIZE.
-    attr->stack_size = BIONIC_ALIGN(attr->stack_size, PAGE_SIZE);
+    allocate_stack_size = BIONIC_ALIGN(attr->stack_size + sizeof(pthread_internal_t), PAGE_SIZE);
     attr->guard_size = BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
-    attr->stack_base = __create_thread_stack(*attr);
+    attr->stack_base = __create_thread_stack(allocate_stack_size, attr->guard_size);
     if (attr->stack_base == NULL) {
       return EAGAIN;
     }
+    stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + allocate_stack_size;
   } else {
     // The caller did provide a stack, so remember we're not supposed to free it.
     attr->flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
+    allocate_stack_size = 0;
+    stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + attr->stack_size;
   }
 
   // Thread stack is used for two sections:
   //   pthread_internal_t.
   //   regular stack, from top to down.
-  uint8_t* stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + attr->stack_size;
   stack_top -= sizeof(pthread_internal_t);
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
 
   // No need to check stack_top alignment. The size of pthread_internal_t is 16-bytes aligned,
   // and user allocated stack is guaranteed by pthread_attr_setstack.
 
+  thread->allocated_stack_size = allocate_stack_size;
   thread->attr = *attr;
   __init_tls(thread);
 
@@ -243,7 +249,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     if (!thread->user_allocated_stack()) {
-      munmap(thread->attr.stack_base, thread->attr.stack_size);
+      munmap(thread->attr.stack_base, thread->allocated_stack_size);
     }
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;

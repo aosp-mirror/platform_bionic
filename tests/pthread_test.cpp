@@ -644,8 +644,7 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
   ASSERT_EQ(32*1024U + 1, stack_size);
 #if defined(__BIONIC__)
-  // Bionic rounds up, which is what POSIX allows.
-  ASSERT_EQ(GetActualStackSize(attributes), (32 + 4)*1024U);
+  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U + 1);
 #else // __BIONIC__
   // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
   ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
