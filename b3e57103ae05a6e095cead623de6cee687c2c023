@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a12ccc7b_8ecfbf6d",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-02T20:10:10Z",
+      "side": 1,
+      "message": "allocated?",
+      "range": {
+        "startLine": 135,
+        "startChar": 9,
+        "endLine": 135,
+        "endChar": 17
+      },
+      "revId": "b3e57103ae05a6e095cead623de6cee687c2c023",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef89d38_7d0bf7cd",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-02T20:10:10Z",
+      "side": 1,
+      "message": "-\u003euser_allocated_stack()?",
+      "range": {
+        "startLine": 56,
+        "startChar": 31,
+        "endLine": 56,
+        "endChar": 82
+      },
+      "revId": "b3e57103ae05a6e095cead623de6cee687c2c023",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
