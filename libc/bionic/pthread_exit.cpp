@@ -89,7 +89,7 @@ void pthread_exit(void* return_value) {
 
   // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
   void* stack_base = thread->attr.stack_base;
-  size_t stack_size = thread->attr.stack_size;
+  size_t stack_size = thread->allocated_stack_size;
   bool free_stack = false;
 
   pthread_mutex_lock(&g_thread_list_lock);
