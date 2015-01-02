@@ -22,10 +22,16 @@
 #include <sys/un.h>
 #include <fcntl.h>
 
-#define SOCK_PATH "test"
+struct ConnectData {
+  bool (*callback_fn)(int);
+  const char* sock_path;
+  ConnectData(bool (*callback_func)(int), const char* socket_path)
+   : callback_fn(callback_func), sock_path(socket_path) {}
+};
 
 static void* ConnectFn(void* data) {
-  bool (*callback_fn)(int) = reinterpret_cast<bool (*)(int)>(data);
+  ConnectData* pdata = reinterpret_cast<ConnectData*>(data);
+  bool (*callback_fn)(int) = pdata->callback_fn;
   void* return_value = NULL;
 
   int fd = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
@@ -38,7 +44,7 @@ static void* ConnectFn(void* data) {
   memset(&addr, 0, sizeof(addr));
   addr.sun_family = AF_UNIX;
   addr.sun_path[0] = '\0';
-  strcpy(addr.sun_path + 1, SOCK_PATH);
+  strcpy(addr.sun_path + 1, pdata->sock_path);
 
   if (connect(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0) {
     GTEST_LOG_(ERROR) << "connect call failed: " << strerror(errno);
@@ -54,7 +60,7 @@ static void* ConnectFn(void* data) {
 }
 
 static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
-                    bool (*callback_fn)(int fd)) {
+                    bool (*callback_fn)(int fd), const char* sock_path) {
   int fd = socket(PF_UNIX, SOCK_SEQPACKET, 0);
   ASSERT_NE(fd, -1) << strerror(errno);
 
@@ -62,14 +68,16 @@ static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
   memset(&addr, 0, sizeof(addr));
   addr.sun_family = AF_UNIX;
   addr.sun_path[0] = '\0';
-  strcpy(addr.sun_path + 1, SOCK_PATH);
+  strcpy(addr.sun_path + 1, sock_path);
 
   ASSERT_NE(-1, bind(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr))) << strerror(errno);
 
   ASSERT_NE(-1, listen(fd, 1)) << strerror(errno);
 
+  ConnectData connect_data(callback_fn, sock_path);
+
   pthread_t thread;
-  ASSERT_EQ(0, pthread_create(&thread, NULL, ConnectFn, reinterpret_cast<void*>(callback_fn)));
+  ASSERT_EQ(0, pthread_create(&thread, NULL, ConnectFn, &connect_data));
 
   fd_set read_set;
   FD_ZERO(&read_set);
@@ -105,7 +113,7 @@ static void TestAccept4(struct sockaddr_un* addr, int fd) {
 }
 
 TEST(sys_socket, accept4_smoke) {
-  RunTest(TestAccept4, NULL);
+  RunTest(TestAccept4, NULL, "test_accept");
 }
 
 const char* g_RecvMsgs[] = {
@@ -160,7 +168,7 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
 }
 
 TEST(sys_socket, recvmmsg_smoke) {
-  RunTest(TestRecvMMsg, SendMultiple);
+  RunTest(TestRecvMMsg, SendMultiple, "test_revmmsg");
 }
 
 TEST(sys_socket, recvmmsg_error) {
@@ -218,7 +226,7 @@ static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
 }
 
 TEST(sys_socket, sendmmsg_smoke) {
-  RunTest(TestSendMMsg, SendMMsg);
+  RunTest(TestSendMMsg, SendMMsg, "test_sendmmsg");
 }
 
 TEST(sys_socket, sendmmsg_error) {
