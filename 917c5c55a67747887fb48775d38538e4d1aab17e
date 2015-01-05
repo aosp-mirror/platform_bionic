@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e1b056c_b6252618",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-05T21:50:45Z",
+      "side": 1,
+      "message": "Is there a reason you are using this instead of checking for __mips64__? It would make it easier to tell what\u0027s going on if you checked for mips64 explicitly.",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
