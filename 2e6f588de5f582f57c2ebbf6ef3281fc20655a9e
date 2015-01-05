@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e1b056c_9377dc3b",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T20:32:45Z",
+      "side": 1,
+      "message": "weird that we already had this for rlim_max.\n\nis this whole block from L38-L49 useful, given that we test all the functions below? does this give us any added coverage, or should we just remove these lines?",
+      "revId": "2e6f588de5f582f57c2ebbf6ef3281fc20655a9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee35d1d2_f22ba8eb",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T20:32:45Z",
+      "side": 1,
+      "message": "if you\u0027re going to check that in, at least use strerror(errno).\n\n(but maybe in another change we should have PASSERT_EQ that automatically \u003c\u003cs strerror(errno)?)",
+      "revId": "2e6f588de5f582f57c2ebbf6ef3281fc20655a9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
