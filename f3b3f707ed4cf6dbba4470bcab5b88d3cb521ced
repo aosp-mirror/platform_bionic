@@ -34,6 +34,24 @@
       "revId": "f3b3f707ed4cf6dbba4470bcab5b88d3cb521ced",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce3acdc4_da38b9bf",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:32:56Z",
+      "side": 1,
+      "message": "please remove the useless flag. don\u0027t leave things lying around unless they\u0027re necessary.",
+      "parentUuid": "8158a81b_8fbb35e8",
+      "revId": "f3b3f707ed4cf6dbba4470bcab5b88d3cb521ced",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
