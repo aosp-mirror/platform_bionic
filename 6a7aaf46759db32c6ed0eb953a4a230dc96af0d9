@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce3acdc4_5ad84935",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:39:34Z",
+      "side": 1,
+      "message": "allocate_stack_size isn\u0027t grammatical. \u0027stack_size\u0027 is probably your least worst choice here. or \u0027desired_stack_size\u0027 if you think that\u0027s confusing.",
+      "revId": "6a7aaf46759db32c6ed0eb953a4a230dc96af0d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e1b056c_bc0865cb",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:39:34Z",
+      "side": 1,
+      "message": "ah, actually, no, using \"stack\" is confusing because this is only loosely related to the stack size. this is the size of the whole allocated region.",
+      "revId": "6a7aaf46759db32c6ed0eb953a4a230dc96af0d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e29e184_373c7ae4",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:39:34Z",
+      "side": 1,
+      "message": "there are more sections, no? the child stack, the pthread_internal_t (which now contains the TLS area), the guard page...",
+      "revId": "6a7aaf46759db32c6ed0eb953a4a230dc96af0d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e29e184_177cdea2",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:39:34Z",
+      "side": 1,
+      "message": "size_t?\n\nmaybe \u0027allocated_size\u0027 is clearer, since this isn\u0027t just the stack size?",
+      "revId": "6a7aaf46759db32c6ed0eb953a4a230dc96af0d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
