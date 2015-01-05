@@ -22,6 +22,30 @@
       "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae0af911_be8aa141",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1063673
+      },
+      "writtenOn": "2015-01-05T22:39:57Z",
+      "side": 1,
+      "message": "No clear reason, taking my cue from glibc and linux kernel sources here. Both use ABI to distinguish this bit, presumably because the layout of this struct is not part of architecture spec.\n\nJust to clarify, the __mips64__ segment below was removed because:\n\n(a) gcc #defines __mips64 and not __mips64__\n\n(b) __mips64 is defined in addition to __mips__. Since __mips__ is checked earlier, the later #ifdef would never have expanded as written.",
+      "parentUuid": "0e1b056c_b6252618",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
