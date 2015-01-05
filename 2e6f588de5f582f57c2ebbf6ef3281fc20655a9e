@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0e1b056c_99fa5bcb",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-05T22:03:09Z",
+      "side": 1,
+      "message": "Yes, it is better to get after set.",
+      "parentUuid": "0e1b056c_9377dc3b",
+      "revId": "2e6f588de5f582f57c2ebbf6ef3281fc20655a9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee35d1d2_f22ba8eb",
         "filename": "tests/sys_resource_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-01-05T20:32:45Z",
       "side": 1,
       "message": "if you\u0027re going to check that in, at least use strerror(errno).\n\n(but maybe in another change we should have PASSERT_EQ that automatically \u003c\u003cs strerror(errno)?)",
+      "revId": "2e6f588de5f582f57c2ebbf6ef3281fc20655a9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce3acdc4_54e5c2b1",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-05T22:03:09Z",
+      "side": 1,
+      "message": "strerror(errno) is used.",
+      "parentUuid": "ee35d1d2_f22ba8eb",
       "revId": "2e6f588de5f582f57c2ebbf6ef3281fc20655a9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
