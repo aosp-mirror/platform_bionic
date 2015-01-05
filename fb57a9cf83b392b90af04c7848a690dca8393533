@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce3acdc4_1a8be103",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:47:29Z",
+      "side": 1,
+      "message": "counts (and indexes!) are usually size_t.",
+      "revId": "fb57a9cf83b392b90af04c7848a690dca8393533",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e1b056c_1c007973",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-05T23:47:29Z",
+      "side": 1,
+      "message": "don\u0027t use a pointer unless it can be null. use a non-const reference instead, like in normal C++. (even though that\u0027s not allowed in google3 code.)\n\ni was actually expecting though that you\u0027d take a const\u0026 of the original arguments and copy what you needed into a new vector. isn\u0027t that clearer than copying everything and then erasing?",
+      "revId": "fb57a9cf83b392b90af04c7848a690dca8393533",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
