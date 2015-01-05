@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "a12ccc7b_911a7edf",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1063673
+      },
+      "writtenOn": "2015-01-05T23:36:34Z",
+      "side": 1,
+      "message": "__LP64__ will break n32 ABI, because that is LP32 mode on mips64 architecture; it needs the \u0027other\u0027 layout.\n\nIt won\u0027t fix the mess, but I will change this to use __mips64 as suggested.",
+      "parentUuid": "8e445558_cf3ebdfa",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e26ddb6_edb2a505",
         "filename": "libc/include/sys/ucontext.h",
         "patchSetId": 1
