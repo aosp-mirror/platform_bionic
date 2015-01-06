@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "a12ccc7b_1c078544",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1063673
+      },
+      "writtenOn": "2015-01-06T03:08:48Z",
+      "side": 1,
+      "message": "This will cause n32 ABI to be built with the mips32 definition of the struct which is simply incorrect. Note that the difference between the 2 layouts is not limited to field-sizes or padding. The order of fields is different; some fields are present in one layout but not in the other. As such, this is not a LP32 vs. LP64 issue - the size of longs/pointers is not relevant to which layout must be chosen.\n\n__mips64 does accurately captures the choice, as does _ABIO32. OTOH, the definition is shared between the C library and the kernel, in the sense that both have binary compatible definitions of this struct. I initially selected the ABI for the C library simply to reflect what the kernel was already doing. glibc and linux have agreed on a certain method (namely the ABI) as the discriminator, bionic can use any other method that happens to work. If we\u0027re sure that Android does not support and does not intend to support n32 ABI for mips, then LP64 will also work; for clarity of intention, we should then put a #error \"unsupported\" to catch the n32 case.",
+      "parentUuid": "0e1b056c_9c4ec905",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e26ddb6_edb2a505",
         "filename": "libc/include/sys/ucontext.h",
         "patchSetId": 1
