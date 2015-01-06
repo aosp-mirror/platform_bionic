@@ -22,6 +22,30 @@
       "revId": "7c895f892655d8358a8110fb2e6d29c992f7e50e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce3acdc4_c0e7a8e5",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-06T02:44:03Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that hard limit can only go down for non-root users.",
+      "parentUuid": "2e3369f6_cf648105",
+      "range": {
+        "startLine": 38,
+        "startChar": 15,
+        "endLine": 38,
+        "endChar": 24
+      },
+      "revId": "7c895f892655d8358a8110fb2e6d29c992f7e50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
