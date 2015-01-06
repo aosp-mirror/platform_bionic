@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e941dff_437cfaa3",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "mapped. or mmapped, but definitely two \u0027p\u0027s :-) one advantage of mapped is that your spelling checker won\u0027t claim it\u0027s misspelled, whereas mmapped isn\u0027t a word.",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e941dff_83abe28f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "why is this flag still here?",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e9ea522_deb8e1b8",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "// comments",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e9ea522_be963522",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "there\u0027s no need for this test.",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea1a95e_7fabcb90",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "// comments\n\nlose the \"valid only without\" part. that\u0027s a bad idea, and you should fix the code rather than add a comment.",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea1a95e_1f0ba71c",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T23:07:11Z",
+      "side": 1,
+      "message": "this comment has become garbled. the main thread doesn\u0027t have a user-allocated stack.",
+      "revId": "15514eecc60e39977bad6fe1ab58b9ea6786ba9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
