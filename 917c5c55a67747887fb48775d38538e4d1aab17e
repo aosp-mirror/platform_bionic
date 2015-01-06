@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "0e3065e8_342c7636",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-06T05:44:09Z",
+      "side": 1,
+      "message": "yeah, there won\u0027t be another 32-bit ABI, just the one we already have.\n\ni don\u0027t think we\u0027ll want to use __mips64 much because __mips__ is defined for both, which -- as you pointed out -- makes __mips__ and __mips64 order-dependent. __mips__ on the outside and the __LP64__ inside seems like the least error-prone choice going forward.",
+      "parentUuid": "a12ccc7b_1c078544",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "917c5c55a67747887fb48775d38538e4d1aab17e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e26ddb6_edb2a505",
         "filename": "libc/include/sys/ucontext.h",
         "patchSetId": 1
