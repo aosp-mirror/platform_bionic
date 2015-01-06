@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e3369f6_cf648105",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-06T01:09:00Z",
+      "side": 1,
+      "message": "Have you run this on a userdebug build as non root to verify that seting is allowed?",
+      "range": {
+        "startLine": 38,
+        "startChar": 15,
+        "endLine": 38,
+        "endChar": 24
+      },
+      "revId": "7c895f892655d8358a8110fb2e6d29c992f7e50e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
