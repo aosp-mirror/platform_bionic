@@ -35,11 +35,8 @@
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
 #define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
-/* Was the thread's stack allocated by the user rather than by us? */
-#define PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK 0x00000002
-
 /* Has the thread been joined by another thread? */
-#define PTHREAD_ATTR_FLAG_JOINED 0x00000004
+#define PTHREAD_ATTR_FLAG_JOINED 0x00000002
 
 /* Is this the main thread? */
 #define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
@@ -70,10 +67,6 @@ struct pthread_internal_t {
     return (*cached_pid != 0);
   }
 
-  bool user_allocated_stack() {
-    return (attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0;
-  }
-
   pthread_attr_t attr;
 
   __pthread_cleanup_t* cleanup_stack;
@@ -86,8 +79,7 @@ struct pthread_internal_t {
 
   pthread_mutex_t startup_handshake_mutex;
 
-  /* Store real allocated stack size, including thread stack and pthread_internal_t. */
-  int allocated_stack_size;
+  size_t mmap_size;
 
   void* tls[BIONIC_TLS_SLOTS];
 

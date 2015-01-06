@@ -51,11 +51,9 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread, bool free_threa
     g_thread_list = thread->next;
   }
 
-  // For threads using user allocated stack (including the main thread), the pthread_internal_t
-  // can't be freed since it is on the stack.
-  if (free_thread && !thread->user_allocated_stack()) {
-    // Use one munmap to free allocated stack size, including thread stack and pthread_internal_t.
-    munmap(thread->attr.stack_base, thread->allocated_stack_size);
+  if (free_thread && thread->mmap_size != 0) {
+    // Free mapped space, including thread stack and pthread_internal_t.
+    munmap(thread->attr.stack_base, thread->mmap_size);
   }
 }
 
