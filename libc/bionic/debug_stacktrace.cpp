@@ -44,12 +44,7 @@
 #define PAD_PTR "08" PRIxPTR
 #endif
 
-/* depends how the system includes define this */
-#ifdef HAVE_UNWIND_CONTEXT_STRUCT
 typedef struct _Unwind_Context __unwind_context;
-#else
-typedef _Unwind_Context __unwind_context;
-#endif
 
 static mapinfo_t* g_map_info = NULL;
 static void* g_demangler;
