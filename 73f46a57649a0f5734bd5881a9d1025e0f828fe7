@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2ea1a95e_c5d330e2",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-07T01:12:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ea1a95e_85ff6872",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e7a89aa_74476880",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-01-07T01:07:05Z",
       "side": 1,
       "message": "s/when exiting/when they exit/",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea1a95e_85e528b5",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-07T01:12:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e7a89aa_74476880",
       "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2e7a89aa_b41bc063",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-07T01:12:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e7a89aa_942fa4a7",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ea1a95e_458ba002",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "2ea1a95e_25da14f6",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-07T01:12:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ea1a95e_458ba002",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e7a89aa_5454ac19",
         "filename": "libc/bionic/pthread_internals.cpp",
         "patchSetId": 2
@@ -81,6 +153,24 @@
       "writtenOn": "2015-01-07T01:07:05Z",
       "side": 1,
       "message": "mapped",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aedbd904_d080bc25",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-07T01:12:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e7a89aa_5454ac19",
       "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
