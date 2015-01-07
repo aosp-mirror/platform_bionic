@@ -2413,7 +2413,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   somain = si;
 
-  si->PrelinkImage();
+  if (!si->PrelinkImage()) {
+    __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
+    exit(EXIT_FAILURE);
+  }
 
   // Load ld_preloads and dependencies.
   StringLinkedList needed_library_name_list;
