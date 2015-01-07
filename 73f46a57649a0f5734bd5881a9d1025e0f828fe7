@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ea1a95e_85ff6872",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T01:07:05Z",
+      "side": 1,
+      "message": "s/is/was/\ns/be/have been/",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e7a89aa_74476880",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T01:07:05Z",
+      "side": 1,
+      "message": "s/when exiting/when they exit/",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e7a89aa_942fa4a7",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T01:07:05Z",
+      "side": 1,
+      "message": "s/Mapped space is zero/Either there was no space mapped/\n\ns/or is/or it is/",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea1a95e_458ba002",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T01:07:05Z",
+      "side": 1,
+      "message": "kill this comment?",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e7a89aa_5454ac19",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T01:07:05Z",
+      "side": 1,
+      "message": "mapped",
+      "revId": "73f46a57649a0f5734bd5881a9d1025e0f828fe7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
