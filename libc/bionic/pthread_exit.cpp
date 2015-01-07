@@ -87,30 +87,23 @@ void pthread_exit(void* return_value) {
     thread->alternate_signal_stack = NULL;
   }
 
-  // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
-  void* stack_base = thread->attr.stack_base;
-  size_t stack_size = thread->allocated_stack_size;
-  bool free_stack = false;
-
+  bool free_mapped_space = false;
   pthread_mutex_lock(&g_thread_list_lock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
-    // The thread is detached, so we can free the pthread_internal_t.
+    // The thread is detached, no one will use pthread_internal_t after pthread_exit.
+    // So we can free mapped space, which includes pthread_internal_t and thread stack.
     // First make sure that the kernel does not try to clear the tid field
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
 
     // pthread_internal_t is freed below with stack, not here.
     _pthread_internal_remove_locked(thread, false);
-    if (!thread->user_allocated_stack()) {
-      free_stack = true;
-    }
+    free_mapped_space = true;
   }
   pthread_mutex_unlock(&g_thread_list_lock);
 
-  // Detached threads exit with stack teardown, and everything deallocated here.
-  // Threads that can be joined exit but leave their stacks for the pthread_join caller to clean up.
-  if (free_stack) {
-    // We need to munmap the stack we're running on before calling exit.
+  if (free_mapped_space && thread->mmap_size != 0) {
+    // We need to free mapped space for detached threads when they exit.
     // That's not something we can do in C.
 
     // We don't want to take a signal after we've unmapped the stack.
@@ -119,8 +112,10 @@ void pthread_exit(void* return_value) {
     sigfillset(&mask);
     sigprocmask(SIG_SETMASK, &mask, NULL);
 
-    _exit_with_stack_teardown(stack_base, stack_size);
+    _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
   } else {
+    // No need to free mapped space. Either there was no space mapped, or it is left for
+    // the pthread_join caller to clean up.
     __exit(0);
   }
 }
