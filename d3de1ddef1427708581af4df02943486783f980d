@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e1ac1b5_c615c260",
+        "filename": "ABI-bugs.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-07T22:41:33Z",
+      "side": 0,
+      "message": "no _FILE_OFFSET_BITS support is still a TODO.\n\nmaybe move these to the readme? i do feel like we should record the known LP32 lossage somewhere. (and eventually we\u0027ll probably have some LP64 lossage to admit to.)",
+      "revId": "d3de1ddef1427708581af4df02943486783f980d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
