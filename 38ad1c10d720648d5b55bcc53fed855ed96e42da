@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2535f1_8a28ebf0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2670,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-07T23:33:05Z",
+      "side": 1,
+      "message": "I am not entirely sure about this... is it better to print the error message and let it continue?",
+      "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
