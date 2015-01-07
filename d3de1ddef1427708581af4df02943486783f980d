@@ -16,6 +16,24 @@
       "revId": "d3de1ddef1427708581af4df02943486783f980d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e1ac1b5_49df25e5",
+        "filename": "ABI-bugs.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-07T23:38:03Z",
+      "side": 0,
+      "message": "we have it in our plan doc: https://docs.google.com/a/google.com/document/d/1DDNgtoQa7SuNerWZyBadLBGOAufTcrE-womsLWOZ-hE",
+      "parentUuid": "6e1ac1b5_c615c260",
+      "revId": "d3de1ddef1427708581af4df02943486783f980d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
