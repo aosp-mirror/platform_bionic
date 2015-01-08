@@ -19,13 +19,6 @@ LOCAL_SRC_FILES_x86_64  := arch/x86_64/begin.S
 LOCAL_SRC_FILES_mips    := arch/mips/begin.S
 LOCAL_SRC_FILES_mips64  := arch/mips64/begin.S
 
-# GNU assembler aborted with clang's output for linker.cpp:
-# Assertion failure in get_line_subseg at
-#   /s/ndk-toolchain/src/build/../binutils/binutils-2.24/gas/dwarf2dbg.c line 271.
-ifeq ($(TARGET_ARCH),mips)
-    LOCAL_CLANG_CFLAGS += -integrated-as
-endif
-
 LOCAL_LDFLAGS := \
     -shared \
     -Wl,-Bsymbolic \
