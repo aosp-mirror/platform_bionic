@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce2badc1_b2dd669d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T04:07:00Z",
+      "side": 1,
+      "message": "use plurals to name collections. so \u0027finished_test_numbers\u0027. (what are these numbers? is there a more specific word than \u0027number\u0027? is it an id or an index?)",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce2badc1_f2c07ebb",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T04:07:00Z",
+      "side": 1,
+      "message": "s/num_finished_testcases/finished_testcase_count/",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced00d12_c18682a7",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T04:07:00Z",
+      "side": 1,
+      "message": "do we need this cast?",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce2badc1_f2d7de76",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T04:07:00Z",
+      "side": 1,
+      "message": "do we need this cast?",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce348d09_302036c2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T04:07:00Z",
+      "side": 1,
+      "message": "even reading the code i\u0027m having trouble understanding what assign_test and assign_testcase mean.",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
