@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ced00d12_41b43275",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T03:56:05Z",
+      "side": 1,
+      "message": "in the old test we used a different value for each of the three functions (123, 456, 789), but now we only have two different values (0, rlim_max).",
+      "revId": "344d54eb417317446d42bdd9ea272f51824985eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
