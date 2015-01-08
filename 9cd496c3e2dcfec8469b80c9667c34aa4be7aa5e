@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e733d24_0b542119",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T22:20:41Z",
+      "side": 1,
+      "message": "that\u0027s not a valid cast. if you\u0027d used the C++ cast (which you always should) it would have disallowed it.",
+      "revId": "9cd496c3e2dcfec8469b80c9667c34aa4be7aa5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
