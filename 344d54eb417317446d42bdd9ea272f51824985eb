@@ -16,6 +16,24 @@
       "revId": "344d54eb417317446d42bdd9ea272f51824985eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e17bd8b_1920dbc1",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-08T04:34:07Z",
+      "side": 1,
+      "message": "Yes. I think it is fine. We can\u0027t guarantee any distinct value like 123 is in [0, rlim_max]. 0 and rlim_max are the min and max value, which are more meaningful.",
+      "parentUuid": "ced00d12_41b43275",
+      "revId": "344d54eb417317446d42bdd9ea272f51824985eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
