@@ -158,6 +158,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   //   thread stack (including guard page)
   stack_top -= sizeof(pthread_internal_t);
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
+  attr->stack_size = stack_top - reinterpret_cast<uint8_t*>(attr->stack_base);
 
   // No need to check stack_top alignment. The size of pthread_internal_t is 16-bytes aligned,
   // and user allocated stack is guaranteed by pthread_attr_setstack.
