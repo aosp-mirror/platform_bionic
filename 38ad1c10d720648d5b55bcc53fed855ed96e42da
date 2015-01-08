@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "8e2535f1_8dfbe549",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2667,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T00:22:15Z",
+      "side": 1,
+      "message": "romlem actually said \"for 32-bit ARM\", but i guess it makes more sense to just do it for all 32-bit architectures.",
+      "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2535f1_8a28ebf0",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -30,6 +47,24 @@
       "writtenOn": "2015-01-08T00:19:57Z",
       "side": 1,
       "message": "I\u0027m partial to making it fail. Who knows what kind of issues we\u0027re going to hit if this isn\u0027t set...",
+      "parentUuid": "8e2535f1_8a28ebf0",
+      "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e17bd8b_65f4c694",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2670,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T00:22:15Z",
+      "side": 1,
+      "message": "the man page is pretty vague about when this can fail. as far as i can tell from the kernel source, it can\u0027t fail. it always returns 0.",
       "parentUuid": "8e2535f1_8a28ebf0",
       "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
