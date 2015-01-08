@@ -32,7 +32,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
@@ -633,18 +632,18 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_EQ(default_stack_size, stack_size);
   ASSERT_GE(GetActualStackSize(attributes), default_stack_size);
 
-  // Large enough and a multiple of the page size.
+  // Large enough and a multiple of the page size; may be rounded up by pthread_create.
   ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
   ASSERT_EQ(32*1024U, stack_size);
-  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
+  ASSERT_GE(GetActualStackSize(attributes), 32*1024U);
 
-  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
+  // Large enough but not aligned; will be rounded up by pthread_create.
   ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
   ASSERT_EQ(32*1024U + 1, stack_size);
 #if defined(__BIONIC__)
-  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U + 1);
+  ASSERT_GT(GetActualStackSize(attributes), 32*1024U + 1);
 #else // __BIONIC__
   // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
   ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
@@ -937,6 +936,29 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 
   EXPECT_EQ(stack_size, stack_size2);
   ASSERT_EQ(6666U, stack_size);
+}
+
+static void pthread_attr_getstack_18908062_helper(void*) {
+  char local_variable;
+  pthread_attr_t attributes;
+  pthread_getattr_np(pthread_self(), &attributes);
+  void* stack_base;
+  size_t stack_size;
+  pthread_attr_getstack(&attributes, &stack_base, &stack_size);
+
+  // Test whether &local_variable is in [stack_base, stack_base + stack_size).
+  ASSERT_LE(reinterpret_cast<char*>(stack_base), &local_variable);
+  ASSERT_LT(&local_variable, reinterpret_cast<char*>(stack_base) + stack_size);
+}
+
+// Check whether something on stack is in the range of
+// [stack_base, stack_base + stack_size). see b/18908062.
+TEST(pthread, pthread_attr_getstack_18908062) {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL,
+            reinterpret_cast<void* (*)(void*)>(pthread_attr_getstack_18908062_helper),
+            NULL));
+  pthread_join(t, NULL);
 }
 
 #if defined(__BIONIC__)
