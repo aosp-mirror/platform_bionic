@@ -69,6 +69,24 @@
       "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce2badc1_0f7249d1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2670,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-08T00:32:23Z",
+      "side": 1,
+      "message": "done. changed this to __libc_fatal(...);",
+      "parentUuid": "4e17bd8b_65f4c694",
+      "revId": "38ad1c10d720648d5b55bcc53fed855ed96e42da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
