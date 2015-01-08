@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e733d24_48afff73",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T21:48:16Z",
+      "side": 1,
+      "message": "elsewhere in the file it looks like we\u0027re naming these test_name_helper (like pthread_gettid_np_helper).",
+      "revId": "495502847235eb5e40b9858eb81ffe52113934da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee97915c_02faca83",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T21:48:16Z",
+      "side": 1,
+      "message": "you can. you just have to be in a function that returns void. it\u0027s not clear that that\u0027s better here (because it\u0027s an extra layer of boilerplate) but you should remove this comment.\n\n(and maybe later we should add another helper that takes a lambda and runs it off the main thread?)",
+      "revId": "495502847235eb5e40b9858eb81ffe52113934da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae7cb9f1_2e63b3b0",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-08T21:48:16Z",
+      "side": 1,
+      "message": "what does LocalVariableSafeScope mean? if you don\u0027t have a good name, just having function_name_1234567 (where 1234567 is the bug number) is fine as long as you have a comment, which you already do.",
+      "revId": "495502847235eb5e40b9858eb81ffe52113934da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
