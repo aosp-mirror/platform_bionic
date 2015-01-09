@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee33117d_abd99902",
+        "filename": "tools/bionicbb/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T23:13:09Z",
+      "side": 1,
+      "message": "empty file?",
+      "revId": "21835b91dea17e3f58861e48866148aa36a11e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
