@@ -23,6 +23,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+// https://code.google.com/p/android/issues/detail?id=13228
+TEST(netdb, freeaddrinfo_NULL) {
+  freeaddrinfo(NULL);
+}
+
 TEST(netdb, getaddrinfo_NULL_host) {
   // It's okay for the host argument to be NULL, as long as service isn't.
   addrinfo* ai = NULL;
