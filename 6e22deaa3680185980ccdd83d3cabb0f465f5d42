@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "6eaba19e_bee9f910",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-09T04:42:58Z",
+      "side": 1,
+      "message": "It is more proper to use size_t than int here. When using size_t for index variables, I would wonder if it was representing size instead of index. size_t may have a more general meaning than I thought.",
+      "parentUuid": "2ee9a9cf_f0fd08c6",
+      "revId": "6e22deaa3680185980ccdd83d3cabb0f465f5d42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce2badc1_f2d7de76",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
