@@ -53,6 +53,7 @@
 #include "linker_debug.h"
 #include "linker_environ.h"
 #include "linker_phdr.h"
+#include "linker_relocs.h"
 #include "linker_allocator.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
@@ -1288,7 +1289,7 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
     const char* sym_name = nullptr;
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
-    if (type == 0) { // R_*_NONE
+    if (type == R_GENERIC_NONE) {
       continue;
     }
 
@@ -1358,21 +1359,40 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
     }
 
     switch (type) {
-#if defined(__aarch64__)
-      case R_AARCH64_JUMP_SLOT:
+      case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
         TRACE_TYPE(RELO, "RELO JMP_SLOT %16llx <- %16llx %s\n",
                    reloc, (sym_addr + rela->r_addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
         break;
-      case R_AARCH64_GLOB_DAT:
+      case R_GENERIC_GLOB_DAT:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
         TRACE_TYPE(RELO, "RELO GLOB_DAT %16llx <- %16llx %s\n",
                    reloc, (sym_addr + rela->r_addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
         break;
+      case R_GENERIC_RELATIVE:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        if (sym) {
+          DL_ERR("error: encountered _RELATIVE relocation with a symbol");
+          return -1;
+        }
+        TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n",
+                   reloc, (base + rela->r_addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
+        break;
+
+      case R_GENERIC_IRELATIVE:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
+        break;
+
+#if defined(__aarch64__)
       case R_AARCH64_ABS64:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
@@ -1452,25 +1472,6 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         }
         break;
 
-      case R_AARCH64_RELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        if (sym) {
-          DL_ERR("odd RELATIVE form...");
-          return -1;
-        }
-        TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n",
-                   reloc, (base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
-        break;
-
-      case R_AARCH64_IRELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
-        break;
-
       case R_AARCH64_COPY:
         /*
          * ET_EXEC is not supported so this should not happen.
@@ -1492,37 +1493,6 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
                    reloc, (sym_addr + rela->r_addend), rela->r_offset);
         break;
 #elif defined(__x86_64__)
-      case R_X86_64_JUMP_SLOT:
-        count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %08zx <- %08zx %s", static_cast<size_t>(reloc),
-                   static_cast<size_t>(sym_addr + rela->r_addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
-        break;
-      case R_X86_64_GLOB_DAT:
-        count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %08zx <- %08zx %s", static_cast<size_t>(reloc),
-                   static_cast<size_t>(sym_addr + rela->r_addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
-        break;
-      case R_X86_64_RELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        if (sym) {
-          DL_ERR("odd RELATIVE form...");
-          return -1;
-        }
-        TRACE_TYPE(RELO, "RELO RELATIVE %08zx <- +%08zx", static_cast<size_t>(reloc),
-                   static_cast<size_t>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = base + rela->r_addend;
-        break;
-      case R_X86_64_IRELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
-        break;
       case R_X86_64_32:
         count_relocation(kRelocRelative);
         MARK(rela->r_offset);
@@ -1566,7 +1536,7 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
     const char* sym_name = nullptr;
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
-    if (type == 0) { // R_*_NONE
+    if (type == R_GENERIC_NONE) {
       continue;
     }
 
@@ -1598,21 +1568,21 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         */
 
         switch (type) {
+#if !defined(__mips__)
+          case R_GENERIC_JUMP_SLOT:
+          case R_GENERIC_GLOB_DAT:
+          case R_GENERIC_RELATIVE:
+          case R_GENERIC_IRELATIVE:
+#endif
+
 #if defined(__arm__)
-          case R_ARM_JUMP_SLOT:
-          case R_ARM_GLOB_DAT:
-          case R_ARM_ABS32:
-          case R_ARM_RELATIVE:    /* Don't care. */
+          case R_ARM_ABS32:    /* Don't care. */
             // sym_addr was initialized to be zero above or relocation
             // code below does not care about value of sym_addr.
             // No need to do anything.
             break;
 #elif defined(__i386__)
-          case R_386_JMP_SLOT:
-          case R_386_GLOB_DAT:
           case R_386_32:
-          case R_386_RELATIVE:    /* Don't care. */
-          case R_386_IRELATIVE:
             // sym_addr was initialized to be zero above or relocation
             // code below does not care about value of sym_addr.
             // No need to do anything.
@@ -1638,19 +1608,42 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
     }
 
     switch (type) {
-#if defined(__arm__)
-      case R_ARM_JUMP_SLOT:
+#if !defined(__mips__)
+      case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
         break;
-      case R_ARM_GLOB_DAT:
+
+      case R_GENERIC_GLOB_DAT:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO GLOB_DAT %08x <- %08x %s", reloc, sym_addr, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
         break;
+
+      case R_GENERIC_RELATIVE:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        if (sym) {
+          DL_ERR("odd RELATIVE form...");
+          return -1;
+        }
+        TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p",
+                   reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
+        break;
+
+      case R_GENERIC_IRELATIVE:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
+        break;
+#endif
+
+#if defined(__arm__)
       case R_ARM_ABS32:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
@@ -1677,18 +1670,6 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         DL_ERR("%s R_ARM_COPY relocations are not supported", name);
         return -1;
 #elif defined(__i386__)
-      case R_386_JMP_SLOT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
-        break;
-      case R_386_GLOB_DAT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
-        break;
       case R_386_32:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
@@ -1724,30 +1705,6 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         } else {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
         }
-        break;
-#endif
-
-#if defined(__arm__)
-      case R_ARM_RELATIVE:
-#elif defined(__i386__)
-      case R_386_RELATIVE:
-#endif
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        if (sym) {
-          DL_ERR("odd RELATIVE form...");
-          return -1;
-        }
-        TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p",
-                   reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
-        break;
-#if defined(__i386__)
-      case R_386_IRELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
         break;
 #endif
 
