@@ -16,6 +16,24 @@
       "revId": "21835b91dea17e3f58861e48866148aa36a11e1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee33117d_6ba3913d",
+        "filename": "tools/bionicbb/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-09T23:17:21Z",
+      "side": 1,
+      "message": "This package has no initialization steps, but the file is still needed so Python knows this directory is a package.",
+      "parentUuid": "ee33117d_abd99902",
+      "revId": "21835b91dea17e3f58861e48866148aa36a11e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
