@@ -264,12 +264,12 @@ LP32 ABI bugs
 This probably belongs in the NDK documentation rather than here, but these
 are the known ABI bugs in LP32:
 
- * time_t is 32-bit. http://b/5819737
+ * `time_t` is 32-bit. <http://b/5819737>
 
- * off_t is 32-bit. There is off64_t, but no _FILE_OFFSET_BITS support.
-   Many of the off64_t functions are missing in older releases, and
+ * `off_t` is 32-bit. There is `off64_t`, but no `_FILE_OFFSET_BITS` support.
+   Many of the `off64_t` functions are missing in older releases, and
    stdio uses 32-bit offsets, so there's no way to fully implement
-   _FILE_OFFSET_BITS.
+   `_FILE_OFFSET_BITS`.
 
- * sigset_t is too small on ARM and x86 (but correct on MIPS), so support
-   for real-time signals is broken. http://b/5828899
+ * `sigset_t` is too small on ARM and x86 (but correct on MIPS), so support
+   for real-time signals is broken. <http://b/5828899>
