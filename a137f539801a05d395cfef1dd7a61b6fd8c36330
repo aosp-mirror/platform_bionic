@@ -22,6 +22,30 @@
       "revId": "a137f539801a05d395cfef1dd7a61b6fd8c36330",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e0d35be_c7e4deb8",
+        "filename": "libc/arch-arm/include/machine/elf_machdep.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T18:42:09Z",
+      "side": 1,
+      "message": "glibc headers... looks like they disagree.",
+      "parentUuid": "8e0d35be_87c70625",
+      "range": {
+        "startLine": 105,
+        "startChar": 26,
+        "endLine": 105,
+        "endChar": 29
+      },
+      "revId": "a137f539801a05d395cfef1dd7a61b6fd8c36330",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
