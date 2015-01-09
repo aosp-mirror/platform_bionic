@@ -45,6 +45,74 @@
       "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee33117d_c55c0cf2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T21:49:42Z",
+      "side": 1,
+      "message": "can you be more specific?",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2efc49c4_38d871a8",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T21:49:42Z",
+      "side": 1,
+      "message": "is \u0027ANY\u0027 or \u0027GENERIC\u0027 more intention-revealing than \u0027BIONIC\u0027?",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2efc49c4_98a3e50d",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T21:49:42Z",
+      "side": 1,
+      "message": "since they\u0027re all uniform, can we do these with a macro?",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee33117d_45d47cca",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T21:49:42Z",
+      "side": 1,
+      "message": "i\u0027m guessing you sorted these before you realized that it\u0027s __i386__ and not __x86__ :-)",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
