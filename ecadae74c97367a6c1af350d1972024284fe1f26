@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eaba19e_84deea95",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-09T20:26:54Z",
+      "side": 1,
+      "message": "Is this not defined for mips so you don\u0027t have to worry about this code not compiling for it? It seems like at least one place will try to compile on mips and fail.",
+      "range": {
+        "startLine": 1282,
+        "startChar": 12,
+        "endLine": 1282,
+        "endChar": 20
+      },
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eee5d11c_b89fc16c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-09T20:26:54Z",
+      "side": 1,
+      "message": "In some of the other cases, the code casts these values to a size_t and prints using that designator. Does this generate any errors/warnings on any arch if TRACE_TYPE is not defined away? Do you need to modify the TRACE_TYPE lines for LP64 here and elsewhere?",
+      "range": {
+        "startLine": 1365,
+        "startChar": 40,
+        "endLine": 1365,
+        "endChar": 46
+      },
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
