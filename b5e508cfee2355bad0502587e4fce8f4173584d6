@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ef945d6_c6aaa48c",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T20:55:33Z",
+      "side": 0,
+      "message": "one day... :-)",
+      "revId": "b5e508cfee2355bad0502587e4fce8f4173584d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

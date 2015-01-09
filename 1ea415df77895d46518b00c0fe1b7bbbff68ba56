@@ -16,6 +16,41 @@
       "revId": "1ea415df77895d46518b00c0fe1b7bbbff68ba56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ef945d6_e6a5a0bc",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T20:55:33Z",
+      "side": 1,
+      "message": "(and -\"/sbin\".)",
+      "parentUuid": "ee33117d_c252c22b",
+      "revId": "1ea415df77895d46518b00c0fe1b7bbbff68ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2efc49c4_cdb3e18c",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T20:55:33Z",
+      "side": 1,
+      "message": "this directory doesn\u0027t normally exist. and even when it does exist, only the \u0027shell\u0027 user has permissions. that said, it\u0027s probably a less bad choice than \"/tmp\". looks like the only place it\u0027s used right now is our tempnam.c anyway.\n\ni wonder if we should remove this? (we can put it back in the openbsd-compat.h for now, probably with your new \"/data/local/tmp\" value.) but we\u0027re fooling ourselves (and developers) if we think code using _PATH_TMP is just going to work.",
+      "revId": "1ea415df77895d46518b00c0fe1b7bbbff68ba56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
