@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea615d2_bf0a1716",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-09T01:31:29Z",
+      "side": 1,
+      "message": "the change to _DIAGASSERT is to bring this in line with the upstream code. i might do a separate patch that fixes them all.",
+      "revId": "c62a4b5a7aede760b06298f4b641b5a9768f5744",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
