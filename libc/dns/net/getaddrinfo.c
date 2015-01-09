@@ -324,7 +324,11 @@ freeaddrinfo(struct addrinfo *ai)
 {
 	struct addrinfo *next;
 
-	assert(ai != NULL);
+#if __ANDROID__
+	if (ai == NULL) return;
+#else
+	_DIAGASSERT(ai != NULL);
+#endif
 
 	do {
 		next = ai->ai_next;
