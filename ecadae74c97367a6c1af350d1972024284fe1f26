@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2efc49c4_bed20963",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "Done - mips build is fixed.",
+      "parentUuid": "6eaba19e_84deea95",
+      "range": {
+        "startLine": 1282,
+        "startChar": 12,
+        "endLine": 1282,
+        "endChar": 20
+      },
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eee5d11c_b89fc16c",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-09T20:26:54Z",
       "side": 1,
       "message": "In some of the other cases, the code casts these values to a size_t and prints using that designator. Does this generate any errors/warnings on any arch if TRACE_TYPE is not defined away? Do you need to modify the TRACE_TYPE lines for LP64 here and elsewhere?",
+      "range": {
+        "startLine": 1365,
+        "startChar": 40,
+        "endLine": 1365,
+        "endChar": 46
+      },
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee33117d_8555a492",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "TRACE_TYPE is not defined away and there are no warnings. I think this works because USE_RELA is for lp64 only... I will revisit it in the next patch.",
+      "parentUuid": "eee5d11c_b89fc16c",
       "range": {
         "startLine": 1365,
         "startChar": 40,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "ee33117d_05ef5445",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "Done. But I am not sure why this check is here...",
+      "parentUuid": "ee33117d_c55c0cf2",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2efc49c4_38d871a8",
         "filename": "linker/linker_relocs.h",
         "patchSetId": 2
@@ -76,6 +142,24 @@
       "writtenOn": "2015-01-09T21:49:42Z",
       "side": 1,
       "message": "is \u0027ANY\u0027 or \u0027GENERIC\u0027 more intention-revealing than \u0027BIONIC\u0027?",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee33117d_0bce85c4",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2efc49c4_38d871a8",
       "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "2efc49c4_934ce6c2",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "with exception of R_386_JMP_SLOT.. I think it is more grepable this way.",
+      "parentUuid": "2efc49c4_98a3e50d",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee33117d_45d47cca",
         "filename": "linker/linker_relocs.h",
         "patchSetId": 2
@@ -110,6 +212,24 @@
       "writtenOn": "2015-01-09T21:49:42Z",
       "side": 1,
       "message": "i\u0027m guessing you sorted these before you realized that it\u0027s __i386__ and not __x86__ :-)",
+      "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2efc49c4_73a96aec",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-09T22:58:39Z",
+      "side": 1,
+      "message": "yes, that\u0027s exactly what happened. :) Done",
+      "parentUuid": "ee33117d_45d47cca",
       "revId": "ecadae74c97367a6c1af350d1972024284fe1f26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
