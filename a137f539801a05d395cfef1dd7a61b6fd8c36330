@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e0d35be_87c70625",
+        "filename": "libc/arch-arm/include/machine/elf_machdep.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-09T18:38:28Z",
+      "side": 1,
+      "message": "Where does this value come from? I found an arm document that has this as 140, but I imagine it doesn\u0027t matter too much.\n\nARM elf doc:\n\nhttp://infocenter.arm.com/help/topic/com.arm.doc.ihi0044e/IHI0044E_aaelf.pdf",
+      "range": {
+        "startLine": 105,
+        "startChar": 26,
+        "endLine": 105,
+        "endChar": 29
+      },
+      "revId": "a137f539801a05d395cfef1dd7a61b6fd8c36330",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
