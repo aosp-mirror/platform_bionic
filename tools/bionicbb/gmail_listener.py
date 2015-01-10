@@ -94,8 +94,7 @@ def get_gerrit_info(body):
 def clean_project(gerrit_info, dry_run):
   username = bionicbb.config.jenkins_credentials['username']
   password = bionicbb.config.jenkins_credentials['password']
-  # TODO(danalbert): Move Jenkins server URL into config.py.
-  jenkins_url = 'http://bionicbb.mtv.corp.google.com:8080'
+  jenkins_url = bionicbb.config.jenkins_url
   jenkins = jenkinsapi.api.Jenkins(jenkins_url, username, password)
 
   build = 'clean-bionic-presubmit'
@@ -130,7 +129,7 @@ def build_project(gerrit_info, dry_run):
 
   username = bionicbb.config.jenkins_credentials['username']
   password = bionicbb.config.jenkins_credentials['password']
-  jenkins_url = 'http://bionicbb.mtv.corp.google.com:8080'
+  jenkins_url = bionicbb.config.jenkins_url
   jenkins = jenkinsapi.api.Jenkins(jenkins_url, username, password)
 
   project = gerrit_info['Project']
@@ -198,9 +197,7 @@ def drop_rejection(gerrit_info, dry_run):
       'changeid': gerrit_info['Change-Id'],
       'patchset': gerrit_info['PatchSet']
   }
-  # TODO(danalbert): Move the URL for the build listener service into
-  # config.py.
-  url = 'http://bionicbb.mtv.corp.google.com:5000/drop-rejection'
+  url = '{}/{}'.format(bionicbb.config.build_listener_url, 'drop-rejection')
   headers = {'Content-Type': 'application/json;charset=UTF-8'}
   if not dry_run:
     try:
