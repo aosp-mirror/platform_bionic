@@ -20,11 +20,15 @@ Setup
 Create a `config.py` in the same directory as the sources. The structure of the
 configuration file is as follows:
 
-    client_secret_file = 'CLIENT_SECRET_FILE.json'
-    jenkins_credentials = {
-        'username': 'JENKINS_USERNAME',
-        'password': 'JENKINS_PASSWORD',
-    }
+```python
+client_secret_file = 'CLIENT_SECRET_FILE.json'
+build_listener_url = 'BUILD_LISTENER_URL'
+jenkins_url = 'JENKINS_URL'
+jenkins_credentials = {
+    'username': 'JENKINS_USERNAME',
+    'password': 'JENKINS_PASSWORD',
+}
+```
 
 The client secret file comes from the Gmail API page of the [Google Developers
 Console](https://console.developers.google.com/). The Jenkins credentials are
@@ -37,8 +41,10 @@ settings](https://android-review.googlesource.com/#/settings/http-password).
 
 To launch the services:
 
-    $ python build_listener.py >build.log 2>&1 &
-    $ python gmail_listener.py >mail.log 2>&1 &
+```bash
+$ python build_listener.py >build.log 2>&1 &
+$ python gmail_listener.py >mail.log 2>&1 &
+```
 
 The mail listener will direct your browser to an authentication page for the
 Gmail API.
