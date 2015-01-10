@@ -5,7 +5,7 @@ import json
 import requests
 import termcolor
 
-import bionicbb.gerrit
+import gerrit
 
 from flask import Flask, request
 app = Flask(__name__)
@@ -79,7 +79,7 @@ def drop_rejection():
   patch_set = revision_info['patchset']
 
   bb_email = 'bionicbb@android.com'
-  labels = bionicbb.gerrit.get_labels(change_id, patch_set)
+  labels = gerrit.get_labels(change_id, patch_set)
   if bb_email in labels['Verified']:
     bb_review = labels['Verified'][bb_email]
   else:
