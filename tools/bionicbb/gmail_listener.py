@@ -130,7 +130,7 @@ def clean_project(gerrit_info, dry_run):
     return True
 
 
-def build_project(gerrit_info, dry_run):
+def build_project(gerrit_info, dry_run, lunch_target=None):
     project_to_jenkins_map = {
         'platform/bionic': 'bionic-presubmit',
         'platform/build': 'bionic-presubmit',
@@ -177,6 +177,8 @@ def build_project(gerrit_info, dry_run):
             'CHANGE_ID': change_id,
             'PROJECT': project_path
         }
+        if lunch_target is not None:
+            params['LUNCH_TARGET'] = lunch_target
         if not dry_run:
             job = jenkins[build].invoke(build_params=params)
             url = job.get_build().baseurl
@@ -233,6 +235,19 @@ def handle_comment(gerrit_info, body, dry_run):
     command_map = {
         'clean': lambda: clean_project(gerrit_info, dry_run),
         'retry': lambda: build_project(gerrit_info, dry_run),
+
+        'arm': lambda: build_project(gerrit_info, dry_run,
+                                     lunch_target='aosp_arm-eng'),
+        'aarch64': lambda: build_project(gerrit_info, dry_run,
+                                         lunch_target='aosp_arm64-eng'),
+        'mips': lambda: build_project(gerrit_info, dry_run,
+                                      lunch_target='aosp_mips-eng'),
+        'mips64': lambda: build_project(gerrit_info, dry_run,
+                                        lunch_target='aosp_mips64-eng'),
+        'x86': lambda: build_project(gerrit_info, dry_run,
+                                     lunch_target='aosp_x86-eng'),
+        'x86_64': lambda: build_project(gerrit_info, dry_run,
+                                        lunch_target='aosp_x86_64-eng'),
     }
 
     def handle_unknown_command():
