@@ -59,6 +59,11 @@
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
+/* OpenBSD has this in paths.h. But this directory doesn't normally exist.
+ * Even when it does exist, only the 'shell' user has permissions.
+ */
+#define _PATH_TMP "/data/local/tmp/"
+
 /* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
 __LIBC_HIDDEN__ extern int getentropy(void*, size_t);
 
