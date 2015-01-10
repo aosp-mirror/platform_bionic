@@ -1,4 +1,6 @@
 config.py
+*.json
+oauth.storage
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
