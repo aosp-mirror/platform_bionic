@@ -15,8 +15,8 @@ import time
 
 import apiclient.errors
 
-import bionicbb.config
-import bionicbb.gerrit
+import config
+import gerrit
 
 
 class GmailError(RuntimeError):
@@ -48,8 +48,7 @@ def build_service():
   STORAGE = Storage('oauth.storage')
 
   # Start the OAuth flow to retrieve credentials
-  flow = flow_from_clientsecrets(bionicbb.config.client_secret_file,
-                                 scope=OAUTH_SCOPE)
+  flow = flow_from_clientsecrets(config.client_secret_file, scope=OAUTH_SCOPE)
   http = httplib2.Http()
 
   # Try to retrieve credentials from storage or run the flow to generate them
@@ -92,9 +91,9 @@ def get_gerrit_info(body):
 
 
 def clean_project(gerrit_info, dry_run):
-  username = bionicbb.config.jenkins_credentials['username']
-  password = bionicbb.config.jenkins_credentials['password']
-  jenkins_url = bionicbb.config.jenkins_url
+  username = config.jenkins_credentials['username']
+  password = config.jenkins_credentials['password']
+  jenkins_url = config.jenkins_url
   jenkins = jenkinsapi.api.Jenkins(jenkins_url, username, password)
 
   build = 'clean-bionic-presubmit'
@@ -127,9 +126,9 @@ def build_project(gerrit_info, dry_run):
       'platform/external/compiler-rt': 'bionic-presubmit',
   }
 
-  username = bionicbb.config.jenkins_credentials['username']
-  password = bionicbb.config.jenkins_credentials['password']
-  jenkins_url = bionicbb.config.jenkins_url
+  username = config.jenkins_credentials['username']
+  password = config.jenkins_credentials['password']
+  jenkins_url = config.jenkins_url
   jenkins = jenkinsapi.api.Jenkins(jenkins_url, username, password)
 
   project = gerrit_info['Project']
@@ -151,8 +150,8 @@ def build_project(gerrit_info, dry_run):
           project_path)
       return False
     try:
-      ref = bionicbb.gerrit.ref_for_change(change_id)
-    except bionicbb.gerrit.GerritError as ex:
+      ref = gerrit.ref_for_change(change_id)
+    except gerrit.GerritError as ex:
       print '{}({}): {} {}'.format(
           termcolor.colored('GERRIT-ERROR', 'red'),
           ex.code,
@@ -197,7 +196,7 @@ def drop_rejection(gerrit_info, dry_run):
       'changeid': gerrit_info['Change-Id'],
       'patchset': gerrit_info['PatchSet']
   }
-  url = '{}/{}'.format(bionicbb.config.build_listener_url, 'drop-rejection')
+  url = '{}/{}'.format(config.build_listener_url, 'drop-rejection')
   headers = {'Content-Type': 'application/json;charset=UTF-8'}
   if not dry_run:
     try:
