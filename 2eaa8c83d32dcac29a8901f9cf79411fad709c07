@@ -16,6 +16,24 @@
       "revId": "2eaa8c83d32dcac29a8901f9cf79411fad709c07",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce380d5f_2ab3435a",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-10T04:04:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eee5d11c_e6cda6c8",
+      "revId": "2eaa8c83d32dcac29a8901f9cf79411fad709c07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
