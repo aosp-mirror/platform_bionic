@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2eab69f1_0f3f69f7",
+        "filename": "tools/bionicbb/gmail_listener.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-12T19:58:06Z",
+      "side": 1,
+      "message": "oops",
+      "revId": "18eb55fed1ad9a6e9c5430ec1eb07e5d6ac066d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
