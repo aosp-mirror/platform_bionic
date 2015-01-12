@@ -200,6 +200,8 @@ def build_project(gerrit_info, dry_run):
 
 
 def handle_change(gerrit_info, _, dry_run):
+    if '@google.com' not in gerrit_info['Gerrit-Owner']:
+        return True
     return build_project(gerrit_info, dry_run)
 handle_newchange = handle_change
 handle_newpatchset = handle_change
@@ -229,6 +231,10 @@ def drop_rejection(gerrit_info, dry_run):
 def handle_comment(gerrit_info, body, dry_run):
     if 'Verified+1' in body:
         drop_rejection(gerrit_info, dry_run)
+
+    # TODO(danalbert): Needs to be based on the account that made the comment.
+    if '@google.com' not in gerrit_info['Gerrit-Owner']:
+        return True
 
     command_map = {
         'clean': lambda: clean_project(gerrit_info, dry_run),
