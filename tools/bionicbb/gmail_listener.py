@@ -51,6 +51,13 @@ def get_headers(msg):
     return headers
 
 
+def should_skip_message(gerrit_info):
+    match = re.search(r'<(\S+)>$', gerrit_info['Owner'])
+    if match:
+        return not match.group(1).endswith('@google.com')
+    raise RuntimeError('Gerrit info missing Gerrit-Owner info.')
+
+
 def build_service():
     from apiclient.discovery import build
     from oauth2client.client import flow_from_clientsecrets
@@ -200,7 +207,7 @@ def build_project(gerrit_info, dry_run):
 
 
 def handle_change(gerrit_info, _, dry_run):
-    if '@google.com' not in gerrit_info['Owner']:
+    if should_skip_message(gerrit_info):
         return True
     return build_project(gerrit_info, dry_run)
 handle_newchange = handle_change
@@ -233,7 +240,7 @@ def handle_comment(gerrit_info, body, dry_run):
         drop_rejection(gerrit_info, dry_run)
 
     # TODO(danalbert): Needs to be based on the account that made the comment.
-    if '@google.com' not in gerrit_info['Owner']:
+    if should_skip_message(gerrit_info):
         return True
 
     command_map = {
