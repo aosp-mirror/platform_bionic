@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e3a5daa_f0ee5e15",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-13T21:41:56Z",
+      "side": 0,
+      "message": "doesn\u0027t have to be in this change, but we should work out what clang doesn\u0027t like here. and either document it (and make sure we\u0027ve raised an upstream bug) or remove this too.",
+      "revId": "5a388898cfa9befb7626dfcd9940713ce942cadd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
