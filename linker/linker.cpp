@@ -1279,14 +1279,33 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   return ifunc_addr;
 }
 
+#if !defined(__mips__)
 #if defined(USE_RELA)
-int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  for (size_t idx = 0; idx < count; ++idx, ++rela) {
-    unsigned type = ELFW(R_TYPE)(rela->r_info);
-    unsigned sym = ELFW(R_SYM)(rela->r_info);
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + load_bias);
+static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
+  return rela->r_addend;
+}
+#else
+static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
+  if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE || ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
+    return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
+  }
+  return 0;
+}
+#endif
+#endif
+
+template<typename ElfRelT>
+int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+    ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
+    ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
+
+    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
+#if !defined(__mips__)
+    ElfW(Addr) addend = get_addend(rel, reloc);
+#endif
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
     if (type == R_GENERIC_NONE) {
@@ -1320,6 +1339,7 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
          */
 
         switch (type) {
+#if !defined(__mips__)
           case R_GENERIC_JUMP_SLOT:
           case R_GENERIC_GLOB_DAT:
           case R_GENERIC_RELATIVE:
@@ -1331,6 +1351,10 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
 #elif defined(__x86_64__)
           case R_X86_64_32:
           case R_X86_64_64:
+#elif defined(__arm__)
+          case R_ARM_ABS32:
+#elif defined(__i386__)
+          case R_386_32:
 #endif
             /*
              * The sym_addr was initialized to be zero above, or the relocation
@@ -1342,9 +1366,14 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
           case R_X86_64_PC32:
             sym_addr = reloc;
             break;
+#elif defined(__i386__)
+          case R_386_PC32:
+            sym_addr = reloc;
+            break;
+#endif
 #endif
           default:
-            DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rela, idx);
+            DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
             return -1;
         }
       } else {
@@ -1355,58 +1384,61 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
     }
 
     switch (type) {
+#if !defined(__mips__)
       case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO JMP_SLOT %16p <- %16p %s\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
+
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
         break;
       case R_GENERIC_GLOB_DAT:
         count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO GLOB_DAT %16p <- %16p %s\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
         break;
       case R_GENERIC_RELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        if (sym) {
-          DL_ERR("error: encountered _RELATIVE relocation with a symbol");
-          return -1;
-        }
-        TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n",
-                   reloc, (base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(base + addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + addend);
         break;
-
       case R_GENERIC_IRELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + rela->r_addend);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
+                    reinterpret_cast<void*>(reloc),
+                    reinterpret_cast<void*>(base + addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + addend);
         break;
+#endif
 
 #if defined(__aarch64__)
       case R_AARCH64_ABS64:
         count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
+                   reloc, (sym_addr + addend), sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
         break;
       case R_AARCH64_ABS32:
         count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
-          *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
+                   reloc, (sym_addr + addend), sym_name);
+        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)),
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)),
                  static_cast<ElfW(Addr)>(INT32_MIN),
                  static_cast<ElfW(Addr)>(UINT32_MAX));
           return -1;
@@ -1414,15 +1446,15 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         break;
       case R_AARCH64_ABS16:
         count_relocation(kRelocAbsolute);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
-          *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
+                   reloc, (sym_addr + addend), sym_name);
+        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)),
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)),
                  static_cast<ElfW(Addr)>(INT16_MIN),
                  static_cast<ElfW(Addr)>(UINT16_MAX));
           return -1;
@@ -1430,22 +1462,22 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         break;
       case R_AARCH64_PREL64:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend) - rela->r_offset;
+                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend) - rel->r_offset;
         break;
       case R_AARCH64_PREL32:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
-        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
-          *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
+                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
+        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + addend) - rel->r_offset);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)),
                  static_cast<ElfW(Addr)>(INT32_MIN),
                  static_cast<ElfW(Addr)>(UINT32_MAX));
           return -1;
@@ -1453,15 +1485,15 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         break;
       case R_AARCH64_PREL16:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
-        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
-          *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
+                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
+        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + addend) - rel->r_offset);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)),
                  static_cast<ElfW(Addr)>(INT16_MIN),
                  static_cast<ElfW(Addr)>(UINT16_MAX));
           return -1;
@@ -1482,159 +1514,36 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         return -1;
       case R_AARCH64_TLS_TPREL64:
         TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset);
+                   reloc, (sym_addr + addend), rel->r_offset);
         break;
       case R_AARCH64_TLS_DTPREL32:
         TRACE_TYPE(RELO, "RELO TLS_DTPREL32 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset);
+                   reloc, (sym_addr + addend), rel->r_offset);
         break;
 #elif defined(__x86_64__)
       case R_X86_64_32:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_32 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
                    static_cast<size_t>(sym_addr), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
       case R_X86_64_64:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_64 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
                    static_cast<size_t>(sym_addr), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend;
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
       case R_X86_64_PC32:
         count_relocation(kRelocRelative);
-        MARK(rela->r_offset);
+        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_PC32 %08zx <- +%08zx (%08zx - %08zx) %s",
                    static_cast<size_t>(reloc), static_cast<size_t>(sym_addr - reloc),
                    static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend - reloc;
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - reloc;
         break;
-#endif
-
-      default:
-        DL_ERR("unknown reloc type %d @ %p (%zu)", type, rela, idx);
-        return -1;
-    }
-  }
-  return 0;
-}
-
-#else // REL, not RELA.
-int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  for (size_t idx = 0; idx < count; ++idx, ++rel) {
-    unsigned type = ELFW(R_TYPE)(rel->r_info);
-    // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
-    unsigned sym = ELFW(R_SYM)(rel->r_info);
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
-    ElfW(Addr) sym_addr = 0;
-    const char* sym_name = nullptr;
-
-    DEBUG("Processing '%s' relocation at index %zd", name, idx);
-    if (type == R_GENERIC_NONE) {
-      continue;
-    }
-
-    ElfW(Sym)* s = nullptr;
-    soinfo* lsi = nullptr;
-
-    if (sym != 0) {
-      sym_name = get_string(symtab_[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
-      if (s == nullptr) {
-        // We only allow an undefined symbol if this is a weak reference...
-        s = &symtab_[sym];
-        if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
-          DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
-          return -1;
-        }
-
-        /* IHI0044C AAELF 4.5.1.1:
-
-           Libraries are not searched to resolve weak references.
-           It is not an error for a weak reference to remain
-           unsatisfied.
-
-           During linking, the value of an undefined weak reference is:
-           - Zero if the relocation type is absolute
-           - The address of the place if the relocation is pc-relative
-           - The address of nominal base address if the relocation
-             type is base-relative.
-        */
-
-        switch (type) {
-#if !defined(__mips__)
-          case R_GENERIC_JUMP_SLOT:
-          case R_GENERIC_GLOB_DAT:
-          case R_GENERIC_RELATIVE:
-          case R_GENERIC_IRELATIVE:
-#endif
-
-#if defined(__arm__)
-          case R_ARM_ABS32:    /* Don't care. */
-            // sym_addr was initialized to be zero above or relocation
-            // code below does not care about value of sym_addr.
-            // No need to do anything.
-            break;
-#elif defined(__i386__)
-          case R_386_32:
-            // sym_addr was initialized to be zero above or relocation
-            // code below does not care about value of sym_addr.
-            // No need to do anything.
-            break;
-          case R_386_PC32:
-            sym_addr = reloc;
-            break;
-#endif
-          default:
-            DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
-            return -1;
-        }
-      } else {
-        // We got a definition.
-        sym_addr = lsi->resolve_symbol_address(s);
-      }
-      count_relocation(kRelocSymbol);
-    }
-
-    switch (type) {
-#if !defined(__mips__)
-      case R_GENERIC_JUMP_SLOT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
-        break;
-
-      case R_GENERIC_GLOB_DAT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr;
-        break;
-
-      case R_GENERIC_RELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        if (sym) {
-          DL_ERR("odd RELATIVE form...");
-          return -1;
-        }
-        TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p",
-                   reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
-        break;
-
-      case R_GENERIC_IRELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
-        break;
-#endif
-
-#if defined(__arm__)
+#elif defined(__arm__)
       case R_ARM_ABS32:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
@@ -1698,7 +1607,6 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         }
         break;
 #endif
-
       default:
         DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
         return -1;
@@ -1706,7 +1614,6 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
   }
   return 0;
 }
-#endif
 
 #if defined(__mips__)
 bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
