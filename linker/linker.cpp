@@ -1320,29 +1320,25 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
          */
 
         switch (type) {
+          case R_GENERIC_JUMP_SLOT:
+          case R_GENERIC_GLOB_DAT:
+          case R_GENERIC_RELATIVE:
+          case R_GENERIC_IRELATIVE:
 #if defined(__aarch64__)
-          case R_AARCH64_JUMP_SLOT:
-          case R_AARCH64_GLOB_DAT:
           case R_AARCH64_ABS64:
           case R_AARCH64_ABS32:
           case R_AARCH64_ABS16:
-          case R_AARCH64_RELATIVE:
-          case R_AARCH64_IRELATIVE:
+#elif defined(__x86_64__)
+          case R_X86_64_32:
+          case R_X86_64_64:
+#endif
             /*
              * The sym_addr was initialized to be zero above, or the relocation
              * code below does not care about value of sym_addr.
              * No need to do anything.
              */
             break;
-#elif defined(__x86_64__)
-          case R_X86_64_JUMP_SLOT:
-          case R_X86_64_GLOB_DAT:
-          case R_X86_64_32:
-          case R_X86_64_64:
-          case R_X86_64_RELATIVE:
-          case R_X86_64_IRELATIVE:
-            // No need to do anything.
-            break;
+#if defined(__x86_64__)
           case R_X86_64_PC32:
             sym_addr = reloc;
             break;
@@ -1590,11 +1586,6 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
           case R_386_PC32:
             sym_addr = reloc;
             break;
-#endif
-
-#if defined(__arm__)
-          case R_ARM_COPY:
-            // Fall through. Can't really copy if weak symbol is not found at run-time.
 #endif
           default:
             DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
