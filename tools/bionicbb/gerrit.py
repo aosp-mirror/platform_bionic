@@ -24,6 +24,11 @@ class GerritError(RuntimeError):
         super(GerritError, self).__init__('Error {}: {}'.format(code, url))
 
 
+def get_commit(change_id, revision):
+    return json.loads(
+        call('/changes/{}/revisions/{}/commit'.format(change_id, revision)))
+
+
 def call(endpoint, method='GET'):
     if method != 'GET':
         raise NotImplementedError('Currently only HTTP GET is supported.')
