@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ecac1df_95b36e8d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1509,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-13T22:58:15Z",
+      "side": 1,
+      "message": "This is getting pretty complicated, and I still think it\u0027s not quite right. These are the three paths I see:\n\nsym \u003d\u003d 0 therefore sym_addr \u003d\u003d 0\n  reloc \u003d rela-\u003er_addend - reloc;\nsym !\u003d 0, s !\u003d nullptr therefore sym_addr !\u003d 0\n  reloc \u003d sym_addr + rela-\u003er_addend - reloc;\nsym !\u003d 0, s \u003d\u003d nullptr therefore sym_addr \u003d reloc\n  reloc \u003d rela-\u003er_addend;",
+      "range": {
+        "startLine": 1509,
+        "startChar": 48,
+        "endLine": 1509,
+        "endChar": 79
+      },
+      "revId": "3d9e1cc43c34a3ea9c3d7dc5109b2d336ea96a72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
