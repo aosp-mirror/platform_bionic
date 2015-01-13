@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e47e93f_72e510dc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-13T23:13:35Z",
+      "side": 1,
+      "message": "what was failing?",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e47e93f_52c3b436",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-13T23:13:35Z",
+      "side": 1,
+      "message": "this would succeed if getaddrinfo returned no results.\n\nwhat\u0027s the second result you\u0027re seeing? (and why doesn\u0027t the next test have the same problem?)",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e3a5daa_219a567c",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-13T23:13:35Z",
+      "side": 1,
+      "message": "why do you need to name this?",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e47e93f_b27bf85d",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-13T23:13:35Z",
+      "side": 1,
+      "message": "but we know what it\u0027s going to be on Android and Ubuntu, right?",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
