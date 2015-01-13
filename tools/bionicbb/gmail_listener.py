@@ -51,11 +51,14 @@ def get_headers(msg):
     return headers
 
 
-def should_skip_message(gerrit_info):
-    match = re.search(r'<(\S+)>$', gerrit_info['Owner'])
-    if match:
-        return not match.group(1).endswith('@google.com')
-    raise RuntimeError('Gerrit info missing Gerrit-Owner info.')
+def should_skip_message(info):
+    if info['MessageType'] in ('newchange', 'newpatchset', 'comment'):
+        commit = gerrit.get_commit(info['Change-Id'], info['PatchSet'])
+        committer = commit['committer']['email']
+        return not committer.endswith('@google.com')
+    else:
+        raise ValueError('should_skip_message() is only valid for new '
+                         'changes, patch sets, and commits.')
 
 
 def build_service():
