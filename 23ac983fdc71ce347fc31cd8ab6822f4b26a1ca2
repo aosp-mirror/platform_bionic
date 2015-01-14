@@ -51,6 +51,24 @@
       "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e3a5daa_07f9ea8b",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T00:38:33Z",
+      "side": 1,
+      "message": "looks like everyone in the office has a different /etc/hosts :-(\n\nhow about you add a new VerifyLocalhostName that accepts any of these, and we call it from L163 and in this function?",
+      "parentUuid": "4e3a5daa_dc7099fa",
+      "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
