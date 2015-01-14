@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e3a5daa_39b36a0c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T03:12:23Z",
+      "side": 1,
+      "message": "I am wondering if this was unfortunate copy-paste, and in fact it should read \u0027reloc + addend\u0027;",
+      "range": {
+        "startLine": 1367,
+        "startChar": 23,
+        "endLine": 1367,
+        "endChar": 28
+      },
+      "revId": "41098957cb9d6d35aee2c85ac751d38c1dbbc7f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e47e93f_06000e74",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1544,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T03:12:23Z",
+      "side": 1,
+      "message": "ops... will fix.",
+      "revId": "41098957cb9d6d35aee2c85ac751d38c1dbbc7f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
