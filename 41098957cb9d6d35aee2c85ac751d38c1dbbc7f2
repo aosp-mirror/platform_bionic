@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "ce372dc2_f2265ea4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1364,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T03:22:58Z",
+      "side": 1,
+      "message": "I am thinking about moving mips-specific relocs out of this function as next step... to reduce if !defined(__mips__) polution.",
+      "parentUuid": "ce372dc2_521f2a51",
+      "revId": "41098957cb9d6d35aee2c85ac751d38c1dbbc7f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e3a5daa_39b36a0c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
