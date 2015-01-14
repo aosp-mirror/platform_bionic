@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ebe78392_c23c6202",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T23:20:50Z",
+      "side": 1,
+      "message": "this-\u003ename",
+      "parentUuid": "2e20c981_075818ca",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebe78392_a2239e11",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2015-01-14T20:13:47Z",
       "side": 1,
       "message": "what\u0027s the advantage of calling the mips version mips_relocate? why isn\u0027t the old code better here?",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bf88f38_00b24807",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T23:20:50Z",
+      "side": 1,
+      "message": "this is to avoid #ifndef __mips__ around generic relocation logic.",
+      "parentUuid": "0e1dc54d_66bab0de",
       "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
