@@ -33,6 +33,24 @@
       "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e3a5daa_dc7099fa",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-14T00:26:46Z",
+      "side": 1,
+      "message": "localhost, ip6-localhost and ip6-loopback. It depends on their relative location in /etc/hosts.",
+      "parentUuid": "ce372dc2_4cbdcfd3",
+      "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
