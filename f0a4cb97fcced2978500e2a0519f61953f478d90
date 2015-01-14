@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2e47e93f_d5aeae76",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T00:09:34Z",
+      "side": 1,
+      "message": "weird. why is your /etc/hosts different from mine? i have\n\n  ::1     ip6-localhost ip6-loopback",
+      "parentUuid": "4e3a5daa_7c49652d",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e3a5daa_219a567c",
         "filename": "tests/netdb_test.cpp",
         "patchSetId": 1
@@ -118,6 +136,24 @@
       "side": 1,
       "message": "Test two possible host value?",
       "parentUuid": "2e47e93f_b27bf85d",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e3a5daa_3cfc3d41",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T00:09:34Z",
+      "side": 1,
+      "message": "that\u0027s probably better than no test. but i don\u0027t understand why your /etc/hosts has \"localhost\" for ::1...",
+      "parentUuid": "ce372dc2_2cb09bfc",
       "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
