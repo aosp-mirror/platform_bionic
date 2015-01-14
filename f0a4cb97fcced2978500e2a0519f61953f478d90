@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "4e3a5daa_7c49652d",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-14T00:06:56Z",
+      "side": 1,
+      "message": "ASSERT_TRUE(ai !\u003d NULL) added.\nI see the second result in bionic-unit-tests-glibc32/64.\nIn /etc/hosts:\n127.0.0.1 localhost\n::1 localhost ip6-localhost\n\nglibc converts ::1 to 127.0.0.1. Next test is search for ip6-localhost, which has only one entry.",
+      "parentUuid": "2e47e93f_52c3b436",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e3a5daa_219a567c",
         "filename": "tests/netdb_test.cpp",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ce372dc2_acc3ab6a",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-14T00:06:56Z",
+      "side": 1,
+      "message": "Changed to assign addr.sin_addr.s_addr directly.",
+      "parentUuid": "4e3a5daa_219a567c",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e47e93f_b27bf85d",
         "filename": "tests/netdb_test.cpp",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2015-01-13T23:13:35Z",
       "side": 1,
       "message": "but we know what it\u0027s going to be on Android and Ubuntu, right?",
+      "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce372dc2_2cb09bfc",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-14T00:06:56Z",
+      "side": 1,
+      "message": "Test two possible host value?",
+      "parentUuid": "2e47e93f_b27bf85d",
       "revId": "f0a4cb97fcced2978500e2a0519f61953f478d90",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
