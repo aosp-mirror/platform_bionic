@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0b0217f8_1ee069a0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T23:49:08Z",
+      "side": 1,
+      "message": "I did it for private fields only...",
+      "parentUuid": "0b0217f8_bbbf472c",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebe78392_a2239e11",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -119,6 +137,24 @@
       "side": 1,
       "message": "no, i like the bit above. it\u0027s this duplication down here i don\u0027t like. and it\u0027s not like you now have zero #ifdefs; you\u0027ve just moved it down here and added duplication. or am i missing something?",
       "parentUuid": "4bf88f38_00b24807",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bf88f38_a0603426",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-14T23:49:08Z",
+      "side": 1,
+      "message": "yes this is correct; this change adds duplication, but considering number of mips build breakages I usually make - it is better this way.",
+      "parentUuid": "2b051bfe_bf6293f5",
       "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
