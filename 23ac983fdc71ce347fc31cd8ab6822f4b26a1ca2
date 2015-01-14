@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e47e93f_95f98691",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T00:06:57Z",
+      "side": 1,
+      "message": "even with ai_family set to AF_INET?",
+      "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce372dc2_4cbdcfd3",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T00:06:57Z",
+      "side": 1,
+      "message": "what are the other names we see?",
+      "revId": "23ac983fdc71ce347fc31cd8ab6822f4b26a1ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
