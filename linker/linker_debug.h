@@ -82,4 +82,23 @@ __LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
 
 #define TRACE_TYPE(t, x...)   do { if (DO_TRACE_##t) { TRACE(x); } } while (0)
 
+#if COUNT_PAGES
+extern uint32_t bitmask[];
+#if defined(__LP64__)
+#define MARK(offset) \
+    do { \
+      if ((((offset) >> 12) >> 5) < 4096) \
+          bitmask[((offset) >> 12) >> 5] |= (1 << (((offset) >> 12) & 31)); \
+    } while (0)
+#else
+#define MARK(offset) \
+    do { \
+      bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
+    } while (0)
+#endif
+#else
+#define MARK(x) do {} while (0)
+
+#endif
+
 #endif /* _LINKER_DEBUG_H_ */
