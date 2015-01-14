@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e20c981_075818ca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T20:13:47Z",
+      "side": 1,
+      "message": "name?",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebe78392_a2239e11",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1598,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T20:13:47Z",
+      "side": 1,
+      "message": "name?",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e1dc54d_66bab0de",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-14T20:13:47Z",
+      "side": 1,
+      "message": "what\u0027s the advantage of calling the mips version mips_relocate? why isn\u0027t the old code better here?",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
