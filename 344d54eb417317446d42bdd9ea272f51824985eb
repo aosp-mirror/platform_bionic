@@ -34,6 +34,24 @@
       "revId": "344d54eb417317446d42bdd9ea272f51824985eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_72e1f8a7",
+        "filename": "tests/sys_resource_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T04:01:47Z",
+      "side": 1,
+      "message": "these numbers are in bytes, though, aren\u0027t they? so the only realistic case where the old numbers won\u0027t work is the case where rlim_max is 0, and in that case we\u0027ll degenerate into using 0 for every test with the new code. i think i\u0027d rather fail and force the caller to fix their rlimit.\n\n(having distinct values like this is helpful when you have to debug a test failure and you\u0027re looking at the strace output. alternatively, we could break this up into more tests.)",
+      "parentUuid": "4e17bd8b_1920dbc1",
+      "revId": "344d54eb417317446d42bdd9ea272f51824985eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
