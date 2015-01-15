@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b051bfe_e5564c56",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:57:30Z",
+      "side": 1,
+      "message": "s/half of//",
+      "revId": "9557c50e2b2f13dd3f7a5276574bcd22f8ef994f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_c5635032",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:57:30Z",
+      "side": 1,
+      "message": "s/It/it/\ns/free/free the/",
+      "revId": "9557c50e2b2f13dd3f7a5276574bcd22f8ef994f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_f2cba82e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:57:30Z",
+      "side": 1,
+      "message": "s/rary/rare/",
+      "revId": "9557c50e2b2f13dd3f7a5276574bcd22f8ef994f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_32c25018",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:57:30Z",
+      "side": 1,
+      "message": "s/is/as/",
+      "revId": "9557c50e2b2f13dd3f7a5276574bcd22f8ef994f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_055a587a",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:57:30Z",
+      "side": 1,
+      "message": "s/Does/Did/\ns/free/freeing/",
+      "revId": "9557c50e2b2f13dd3f7a5276574bcd22f8ef994f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
