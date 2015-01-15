@@ -431,7 +431,7 @@ TEST(pthread, pthread_detach__no_such_thread) {
   ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
 }
 
-TEST(pthread, pthread_detach__leak) {
+TEST(pthread, pthread_detach_no_leak) {
   size_t initial_bytes = 0;
   // Run this loop more than once since the first loop causes some memory
   // to be allocated permenantly. Run an extra loop to help catch any subtle
@@ -464,9 +464,7 @@ TEST(pthread, pthread_detach__leak) {
   size_t final_bytes = mallinfo().uordblks;
   int leaked_bytes = (final_bytes - initial_bytes);
 
-  // User code (like this test) doesn't know how large pthread_internal_t is.
-  // We can be pretty sure it's more than 128 bytes.
-  ASSERT_LT(leaked_bytes, 32 /*threads*/ * 128 /*bytes*/);
+  ASSERT_EQ(0, leaked_bytes);
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
