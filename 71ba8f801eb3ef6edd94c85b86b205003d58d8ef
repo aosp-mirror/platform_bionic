@@ -158,6 +158,24 @@
       "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b216f94_55c36c6c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-15T01:56:00Z",
+      "side": 1,
+      "message": "disregard my comments was thinking of the code at L1589 - done: renamed the method",
+      "parentUuid": "4bf88f38_a0603426",
+      "revId": "71ba8f801eb3ef6edd94c85b86b205003d58d8ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
