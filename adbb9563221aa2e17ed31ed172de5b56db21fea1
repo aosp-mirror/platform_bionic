@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb35c3d2_527b945d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 1,
+      "message": "why not?",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_72a45899",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 1,
+      "message": "is_deleted\n\npersonally though, i prefer \u0027armed\u0027, since that\u0027s the traditional name *and* it\u0027s the word used by POSIX.",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_32aed077",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 1,
+      "message": "this seems functionally equivalent to the old code.",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_05dff893",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 1,
+      "message": "this too, except we lost the comment.",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_52927437",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

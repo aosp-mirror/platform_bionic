@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb35c3d2_92e57ce0",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 0,
+      "message": "excellent!",
+      "revId": "85747809b05a5e3b48bd4da9a7ea98d0adf8f919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b0217f8_2acd1f95",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 0,
+      "message": "if we\u0027re not going to disarm the timer at our level and we\u0027re just going to wait until the kernel stops sending events, we should probably have a comment here explaining that (and explaining why).",
+      "revId": "85747809b05a5e3b48bd4da9a7ea98d0adf8f919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_25a31410",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-15T03:37:11Z",
+      "side": 0,
+      "message": "can\u0027t we just add a sleep? it\u0027s important that the timer stop firing, even if we can\u0027t guarantee it\u0027ll stop right away.",
+      "revId": "85747809b05a5e3b48bd4da9a7ea98d0adf8f919",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
