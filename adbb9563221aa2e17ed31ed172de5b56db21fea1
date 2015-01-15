@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6b971303_feb28165",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-15T22:33:32Z",
+      "side": 1,
+      "message": "I think it is a little complex. In order to get rid of b/18263854, I need more work-around in timer_settime.\nThen I realize it is not necessary, and glibc doesn\u0027t support\nthis, making time.timer_disarm_terminates always fail on bionic-unit-tests-glibcxx. So I think it will be easier to just remove this work-around. If you or anyone think it is not proper, please let me know and we can talk about this.",
+      "parentUuid": "eb35c3d2_527b945d",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb35c3d2_72a45899",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-01-15T03:37:11Z",
       "side": 1,
       "message": "is_deleted\n\npersonally though, i prefer \u0027armed\u0027, since that\u0027s the traditional name *and* it\u0027s the word used by POSIX.",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b971303_5eeb7538",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-15T22:33:32Z",
+      "side": 1,
+      "message": "Changed to is_deleted. \u0027armed\u0027 may be used to refer whether the timer is on or off(stopped or deleted). I want to just mean \u0027deleted\u0027 here.",
+      "parentUuid": "eb35c3d2_72a45899",
       "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "8b928710_82d75c06",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-15T22:33:32Z",
+      "side": 1,
+      "message": "The comment is moved to definition of PosixTimer, and in function __timer_thread_start. I think the name deleted_flag (or is_deleted) is clear enough here, so we can drop the comment.",
+      "parentUuid": "2b051bfe_05dff893",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb35c3d2_52927437",
         "filename": "tests/time_test.cpp",
         "patchSetId": 2
@@ -81,6 +135,24 @@
       "writtenOn": "2015-01-15T03:37:11Z",
       "side": 1,
       "message": "why?",
+      "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ba19b5e_bc4f2101",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-15T22:33:32Z",
+      "side": 1,
+      "message": "Before \"Make bionic-unit-tests default run isolate mode\" is merged, I try to run the test with \"--gtest_repeat\u003d100\" option to catch flaky test, then I found it fails here. Not necessary in isolation test mode, but I think it is better.",
+      "parentUuid": "eb35c3d2_52927437",
       "revId": "adbb9563221aa2e17ed31ed172de5b56db21fea1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
