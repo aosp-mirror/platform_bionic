@@ -42,8 +42,8 @@ enum GTestColor {
 
 void ColoredPrintf(GTestColor color, const char* fmt, ...);
 
-} // namespace internal
-} // namespace testing
+}  // namespace internal
+}  // namespace testing
 
 using testing::internal::GTestColor;
 using testing::internal::COLOR_DEFAULT;
@@ -73,6 +73,24 @@ static int GetWarnlineInfo(const std::string& /*test_name*/) {
   return global_test_run_warnline_in_ms;
 }
 
+static void PrintHelpInfo() {
+  printf("Bionic Unit Test Options:\n"
+         "  -j [JOB_COUNT]\n"
+         "      Run up to JOB_COUNT tests in parallel.\n"
+         "      Use isolation mode, Run each test in a separate process.\n"
+         "      If JOB_COUNT is not given, it is set to the count of available processors.\n"
+         "  --no-isolate\n"
+         "      Don't use isolation mode, run all tests in a single process.\n"
+         "  --deadline=[TIME_IN_MS]\n"
+         "      Run each test in no longer than [TIME_IN_MS] time.\n"
+         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
+         "  --warnline=[TIME_IN_MS]\n"
+         "      Test running longer than [TIME_IN_MS] will be warned.\n"
+         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
+         "\nDefault bionic unit test option is -j.\n"
+         "\n");
+}
+
 enum TestResult {
   TEST_SUCCESS = 0,
   TEST_FAILED,
@@ -90,37 +108,37 @@ class TestCase {
     test_list_.push_back(std::make_tuple(test_name, TEST_FAILED, 0LL));
   }
 
-  int NumTests() const { return test_list_.size(); }
+  size_t TestCount() const { return test_list_.size(); }
 
-  std::string GetTestName(int test_id) const {
+  std::string GetTestName(size_t test_id) const {
     VerifyTestId(test_id);
     return name_ + "." + std::get<0>(test_list_[test_id]);
   }
 
-  void SetTestResult(int test_id, TestResult result) {
+  void SetTestResult(size_t test_id, TestResult result) {
     VerifyTestId(test_id);
     std::get<1>(test_list_[test_id]) = result;
   }
 
-  TestResult GetTestResult(int test_id) const {
+  TestResult GetTestResult(size_t test_id) const {
     VerifyTestId(test_id);
     return std::get<1>(test_list_[test_id]);
   }
 
-  void SetTestTime(int test_id, int64_t elapsed_time) {
+  void SetTestTime(size_t test_id, int64_t elapsed_time) {
     VerifyTestId(test_id);
     std::get<2>(test_list_[test_id]) = elapsed_time;
   }
 
-  int64_t GetTestTime(int test_id) const {
+  int64_t GetTestTime(size_t test_id) const {
     VerifyTestId(test_id);
     return std::get<2>(test_list_[test_id]);
   }
 
  private:
-  void VerifyTestId(int test_id) const {
-    if(test_id < 0 || test_id >= static_cast<int>(test_list_.size())) {
-      fprintf(stderr, "test_id %d out of range [0, %zu)\n", test_id, test_list_.size());
+  void VerifyTestId(size_t test_id) const {
+    if(test_id >= test_list_.size()) {
+      fprintf(stderr, "test_id %zu out of range [0, %zu)\n", test_id, test_list_.size());
       exit(1);
     }
   }
@@ -167,15 +185,15 @@ void TestResultPrinter::OnTestPartResult(const testing::TestPartResult& result) 
   int towrite = strlen(buf);
   char* p = buf;
   while (towrite > 0) {
-    ssize_t num_write = write(fileno(stdout), p, towrite);
-    if (num_write == -1) {
+    ssize_t write_count = write(fileno(stdout), p, towrite);
+    if (write_count == -1) {
       if (errno != EINTR) {
         fprintf(stderr, "write, errno = %d\n", errno);
         break;
       }
     } else {
-      towrite -= num_write;
-      p += num_write;
+      towrite -= write_count;
+      p += write_count;
     }
   }
 }
@@ -265,46 +283,36 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   return (result != -1 && WEXITSTATUS(result) == 0);
 }
 
-static void PrintHelpInfo() {
-  printf("Bionic Unit Test Options:\n"
-         "  --isolate\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "  --deadline=[TIME_IN_MS]\n"
-         "      Run each test in no longer than [TIME_IN_MS] time.\n"
-         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
-         "  --warnline=[TIME_IN_MS]\n"
-         "      Test running longer than [TIME_IN_MS] will be warned.\n"
-         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
-         "  -j [JOB_NUM]\n"
-         "      Run up to JOB_NUM tests in parallel.\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "      If JOB_NUM is not given, it is set to the number of cpus available.\n"
-         "\n");
-}
-
 // Part of the following *Print functions are copied from external/gtest/src/gtest.cc:
 // PrettyUnitTestResultPrinter. The reason for copy is that PrettyUnitTestResultPrinter
 // is defined and used in gtest.cc, which is hard to reuse.
-static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, int iteration,
-                                      int num_iterations) {
-  if (num_iterations > 1) {
-    printf("\nRepeating all tests (iteration %d) . . .\n\n", iteration);
+static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, size_t iteration,
+                                      size_t iteration_count) {
+  if (iteration_count > 1) {
+    printf("\nRepeating all tests (iteration %zu) . . .\n\n", iteration);
   }
   ColoredPrintf(COLOR_GREEN,  "[==========] ");
 
-  int num_testcases = testcase_list.size();
-  int num_tests = 0;
+  size_t testcase_count = testcase_list.size();
+  size_t test_count = 0;
   for (const auto& testcase : testcase_list) {
-    num_tests += testcase.NumTests();
+    test_count += testcase.TestCount();
   }
 
-  printf("Running %d %s from %d %s.\n",
-         num_tests, (num_tests == 1) ? "test" : "tests",
-         num_testcases, (num_testcases == 1) ? "test case" : "test cases");
+  printf("Running %zu %s from %zu %s.\n",
+         test_count, (test_count == 1) ? "test" : "tests",
+         testcase_count, (testcase_count == 1) ? "test case" : "test cases");
   fflush(stdout);
 }
 
-static void OnTestTimeoutPrint(const TestCase& testcase, int test_id) {
+static void OnTestTerminatedPrint(const TestCase& testcase, size_t test_id, int sig) {
+  ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
+  printf("%s terminated by signal: %s\n", testcase.GetTestName(test_id).c_str(),
+                                          strsignal(sig));
+  fflush(stdout);
+}
+
+static void OnTestTimeoutPrint(const TestCase& testcase, size_t test_id) {
   ColoredPrintf(COLOR_RED, "[ TIMEOUT  ] ");
   printf("%s (killed by timeout at %lld ms)\n", testcase.GetTestName(test_id).c_str(),
                                                 testcase.GetTestTime(test_id) / 1000000LL);
@@ -313,17 +321,17 @@ static void OnTestTimeoutPrint(const TestCase& testcase, int test_id) {
 
 static void TestcaseTimePrint(const TestCase& testcase) {
   int64_t testcase_time = 0;
-  for (int i = 0; i < testcase.NumTests(); ++i) {
+  for (size_t i = 0; i < testcase.TestCount(); ++i) {
     testcase_time += testcase.GetTestTime(i);
   }
-  printf("%d %s from %s (%lld ms total)\n", testcase.NumTests(),
-                                            (testcase.NumTests() == 1) ? "test" : "tests",
-                                            testcase.GetName().c_str(),
-                                            testcase_time / 1000000LL);
+  printf("%zu %s from %s (%lld ms total)\n", testcase.TestCount(),
+                                             (testcase.TestCount() == 1) ? "test" : "tests",
+                                             testcase.GetName().c_str(),
+                                             testcase_time / 1000000LL);
   fflush(stdout);
 }
 
-static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, int /*iteration*/,
+static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, size_t /*iteration*/,
                                     int64_t elapsed_time) {
 
   std::vector<std::string> fail_test_name_list;
@@ -331,16 +339,16 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
 
   // For tests run exceed warnline but not timeout.
   std::vector<std::tuple<std::string, int64_t, int>> timewarn_test_list;
-  int num_testcases = testcase_list.size();
-  int num_tests = 0;
-  int num_success_tests = 0;
+  size_t testcase_count = testcase_list.size();
+  size_t test_count = 0;
+  size_t success_test_count = 0;
 
   for (const auto& testcase : testcase_list) {
-    num_tests += testcase.NumTests();
-    for (int i = 0; i < testcase.NumTests(); ++i) {
+    test_count += testcase.TestCount();
+    for (size_t i = 0; i < testcase.TestCount(); ++i) {
       TestResult result = testcase.GetTestResult(i);
       if (result == TEST_SUCCESS) {
-        ++num_success_tests;
+        ++success_test_count;
       } else if (result == TEST_FAILED) {
         fail_test_name_list.push_back(testcase.GetTestName(i));
       } else if (result == TEST_TIMEOUT) {
@@ -361,20 +369,20 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   }
 
   ColoredPrintf(COLOR_GREEN,  "[==========] ");
-  printf("%d %s from %d %s ran.", num_tests, (num_tests == 1) ? "test" : "tests",
-                                  num_testcases, (num_testcases == 1) ? "test case" : "test cases");
+  printf("%zu %s from %zu %s ran.", test_count, (test_count == 1) ? "test" : "tests",
+                                    testcase_count, (testcase_count == 1) ? "test case" : "test cases");
   if (testing::GTEST_FLAG(print_time)) {
     printf(" (%lld ms total)", elapsed_time / 1000000LL);
   }
   printf("\n");
   ColoredPrintf(COLOR_GREEN,  "[  PASSED  ] ");
-  printf("%d %s.\n", num_success_tests, (num_success_tests == 1) ? "test" : "tests");
+  printf("%zu %s.\n", success_test_count, (success_test_count == 1) ? "test" : "tests");
 
   // Print tests failed.
-  int num_fail_tests = fail_test_name_list.size();
-  if (num_fail_tests > 0) {
+  size_t fail_test_count = fail_test_name_list.size();
+  if (fail_test_count > 0) {
     ColoredPrintf(COLOR_RED,  "[  FAILED  ] ");
-    printf("%d %s, listed below:\n", num_fail_tests, (num_fail_tests == 1) ? "test" : "tests");
+    printf("%zu %s, listed below:\n", fail_test_count, (fail_test_count == 1) ? "test" : "tests");
     for (const auto& name : fail_test_name_list) {
       ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
       printf("%s\n", name.c_str());
@@ -382,10 +390,10 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   }
 
   // Print tests run timeout.
-  int num_timeout_tests = timeout_test_list.size();
-  if (num_timeout_tests > 0) {
+  size_t timeout_test_count = timeout_test_list.size();
+  if (timeout_test_count > 0) {
     ColoredPrintf(COLOR_RED, "[ TIMEOUT  ] ");
-    printf("%d %s, listed below:\n", num_timeout_tests, (num_timeout_tests == 1) ? "test" : "tests");
+    printf("%zu %s, listed below:\n", timeout_test_count, (timeout_test_count == 1) ? "test" : "tests");
     for (const auto& timeout_pair : timeout_test_list) {
       ColoredPrintf(COLOR_RED, "[ TIMEOUT  ] ");
       printf("%s (stopped at %lld ms)\n", timeout_pair.first.c_str(),
@@ -394,10 +402,10 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   }
 
   // Print tests run exceed warnline.
-  int num_timewarn_tests = timewarn_test_list.size();
-  if (num_timewarn_tests > 0) {
+  size_t timewarn_test_count = timewarn_test_list.size();
+  if (timewarn_test_count > 0) {
     ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
-    printf("%d %s, listed below:\n", num_timewarn_tests, (num_timewarn_tests == 1) ? "test" : "tests");
+    printf("%zu %s, listed below:\n", timewarn_test_count, (timewarn_test_count == 1) ? "test" : "tests");
     for (const auto& timewarn_tuple : timewarn_test_list) {
       ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
       printf("%s (%lld ms, exceed warnline %d ms)\n", std::get<0>(timewarn_tuple).c_str(),
@@ -406,14 +414,14 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     }
   }
 
-  if (num_fail_tests > 0) {
-    printf("\n%2d FAILED %s\n", num_fail_tests, (num_fail_tests == 1) ? "TEST" : "TESTS");
+  if (fail_test_count > 0) {
+    printf("\n%2zu FAILED %s\n", fail_test_count, (fail_test_count == 1) ? "TEST" : "TESTS");
   }
-  if (num_timeout_tests > 0) {
-    printf("%2d TIMEOUT %s\n", num_timeout_tests, (num_timeout_tests == 1) ? "TEST" : "TESTS");
+  if (timeout_test_count > 0) {
+    printf("%2zu TIMEOUT %s\n", timeout_test_count, (timeout_test_count == 1) ? "TEST" : "TESTS");
   }
-  if (num_timewarn_tests > 0) {
-    printf("%2d TIMEWARN %s\n", num_timewarn_tests, (num_timewarn_tests == 1) ? "TEST" : "TESTS");
+  if (timewarn_test_count > 0) {
+    printf("%2zu TIMEWARN %s\n", timewarn_test_count, (timewarn_test_count == 1) ? "TEST" : "TESTS");
   }
   fflush(stdout);
 }
@@ -438,19 +446,20 @@ struct ChildProcInfo {
   pid_t pid;
   int64_t start_time;
   int64_t deadline_time;
-  int testcase_id, test_id;
+  size_t testcase_id, test_id;
   bool done_flag;
-  TestResult test_result;
+  bool timeout_flag;
+  int exit_status;
   ChildProcInfo() : pid(0) {}
 };
 
 static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
   pid_t result;
-  int exit_status;
+  int status;
   bool loop_flag = true;
 
   while (true) {
-    while ((result = waitpid(-1, &exit_status, WNOHANG)) == -1) {
+    while ((result = waitpid(-1, &status, WNOHANG)) == -1) {
       if (errno != EINTR) {
         break;
       }
@@ -465,7 +474,7 @@ static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
       for (size_t i = 0; i < child_proc_list.size(); ++i) {
         if (child_proc_list[i].deadline_time <= current_time) {
           child_proc_list[i].done_flag = true;
-          child_proc_list[i].test_result = TEST_TIMEOUT;
+          child_proc_list[i].timeout_flag = true;
           loop_flag = false;
         }
       }
@@ -474,8 +483,8 @@ static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
       for (size_t i = 0; i < child_proc_list.size(); ++i) {
         if (child_proc_list[i].pid == result) {
           child_proc_list[i].done_flag = true;
-          child_proc_list[i].test_result = (WEXITSTATUS(exit_status) == 0) ? TEST_SUCCESS :
-                                                                             TEST_FAILED;
+          child_proc_list[i].timeout_flag = false;
+          child_proc_list[i].exit_status = status;
           loop_flag = false;
           break;
         }
@@ -511,26 +520,32 @@ static TestResult WaitChildProc(pid_t pid) {
 // We choose to use multi-fork and multi-wait here instead of multi-thread, because it always
 // makes deadlock to use fork in multi-thread.
 static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
-                                  int num_iterations, int num_jobs) {
+                                  size_t iteration_count, size_t job_count) {
   // Stop default result printer to avoid environment setup/teardown information for each test.
   testing::UnitTest::GetInstance()->listeners().Release(
                         testing::UnitTest::GetInstance()->listeners().default_result_printer());
   testing::UnitTest::GetInstance()->listeners().Append(new TestResultPrinter);
 
-  for (int iteration = 1; iteration <= num_iterations; ++iteration) {
-    OnTestIterationStartPrint(testcase_list, iteration, num_iterations);
+  for (size_t iteration = 1; iteration <= iteration_count; ++iteration) {
+    OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
     int64_t iteration_start_time = NanoTime();
 
-    std::vector<ChildProcInfo> child_proc_list(num_jobs);
-    int assign_testcase = 0, assign_test = 0;
-    std::vector<int> finish_test_num_list(testcase_list.size(), 0);
-    int num_finish_testcases = 0;
+    // Run up to job_count tests in parallel, each test in a child process.
+    std::vector<ChildProcInfo> child_proc_list(job_count);
 
-    while (num_finish_testcases < static_cast<int>(testcase_list.size())) {
-      // Fork child process up to num_jobs.
+    // Next test to run is [next_testcase_id:next_test_id].
+    size_t next_testcase_id = 0;
+    size_t next_test_id = 0;
+
+    // Record how many tests are finished.
+    std::vector<size_t> finished_test_count_list(testcase_list.size(), 0);
+    size_t finished_testcase_count = 0;
+
+    while (finished_testcase_count < testcase_list.size()) {
+      // Fork up to job_count child processes.
       for (auto& child_proc : child_proc_list) {
-        if (child_proc.pid == 0 && assign_testcase < static_cast<int>(testcase_list.size())) {
-          std::string test_name = testcase_list[assign_testcase].GetTestName(assign_test);
+        if (child_proc.pid == 0 && next_testcase_id < testcase_list.size()) {
+          std::string test_name = testcase_list[next_testcase_id].GetTestName(next_test_id);
           pid_t pid = fork();
           if (pid == -1) {
             perror("fork in RunTestInSeparateProc");
@@ -543,12 +558,12 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
           child_proc.pid = pid;
           child_proc.start_time = NanoTime();
           child_proc.deadline_time = child_proc.start_time + GetDeadlineInfo(test_name) * 1000000LL;
-          child_proc.testcase_id = assign_testcase;
-          child_proc.test_id = assign_test;
+          child_proc.testcase_id = next_testcase_id;
+          child_proc.test_id = next_test_id;
           child_proc.done_flag = false;
-          if (++assign_test == testcase_list[assign_testcase].NumTests()) {
-            assign_test = 0;
-            ++assign_testcase;
+          if (++next_test_id == testcase_list[next_testcase_id].TestCount()) {
+            next_test_id = 0;
+            ++next_testcase_id;
           }
         }
       }
@@ -559,22 +574,31 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
       // Collect result.
       for (auto& child_proc : child_proc_list) {
         if (child_proc.pid != 0 && child_proc.done_flag == true) {
-          int testcase_id = child_proc.testcase_id;
-          int test_id = child_proc.test_id;
-          TestResult test_result = child_proc.test_result;
-          if (test_result == TEST_TIMEOUT) {
-            // Kill and wait the child process.
+          size_t testcase_id = child_proc.testcase_id;
+          size_t test_id = child_proc.test_id;
+          TestCase& testcase = testcase_list[testcase_id];
+          testcase.SetTestTime(test_id, NanoTime() - child_proc.start_time);
+
+          if (child_proc.timeout_flag) {
+            // Kill and wait the timeout child process.
             kill(child_proc.pid, SIGKILL);
             WaitChildProc(child_proc.pid);
-          }
-          TestCase& testcase = testcase_list[testcase_id];
-          testcase.SetTestResult(test_id, test_result);
-          testcase.SetTestTime(test_id, NanoTime() - child_proc.start_time);
-          if (test_result == TEST_TIMEOUT) {
+            testcase.SetTestResult(test_id, TEST_TIMEOUT);
             OnTestTimeoutPrint(testcase, test_id);
+
+          } else if (WIFSIGNALED(child_proc.exit_status)) {
+            // Record signal terminated test as failed.
+            testcase.SetTestResult(test_id, TEST_FAILED);
+            OnTestTerminatedPrint(testcase, test_id, WTERMSIG(child_proc.exit_status));
+
+          } else {
+            testcase.SetTestResult(test_id, WEXITSTATUS(child_proc.exit_status) == 0 ?
+                                   TEST_SUCCESS : TEST_FAILED);
+            // TestResultPrinter::OnTestEnd has already printed result for normal exit.
           }
-          if (++finish_test_num_list[testcase_id] == testcase.NumTests()) {
-            ++num_finish_testcases;
+
+          if (++finished_test_count_list[testcase_id] == testcase.TestCount()) {
+            ++finished_testcase_count;
           }
           child_proc.pid = 0;
           child_proc.done_flag = false;
@@ -586,80 +610,64 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   }
 }
 
-static int GetCpuNumber() {
-  FILE* fp = popen("cat /proc/cpuinfo | grep processor | wc -l", "r");
-  int result = 1; // Return 1 if we can't get the exact cpu number.
-  if (fp != NULL) {
-    fscanf(fp, "%d", &result);
-    if (result < 1) {
-      result = 1;
-    }
-    pclose(fp);
-  }
-  return result;
+static size_t GetProcessorCount() {
+  return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
-// Pick options not for gtest; Return false if run error.
-// Use exit_flag to indicate whether we need to run gtest flow after PickOptions.
-static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
-  int argc = *pargc;
-  char** argv = *pargv;
+// Pick options not for gtest: There are two parts in argv, one part is handled by PickOptions()
+// as described in PrintHelpInfo(), the other part is handled by testing::InitGoogleTest() in
+// gtest. PickOptions() picks the first part of options and change them into flags and operations,
+// lefting the second part in argv.
+// Arguments:
+//  argv is used to pass in all command arguments, and pass out only the part of options for gtest.
+//  exit_flag is to indicate whether we need to run gtest workflow after PickOptions.
+// Return false if run error.
+static bool PickOptions(std::vector<char*>& argv, bool* exit_flag) {
   *exit_flag = false;
-  for (int i = 0; i < argc; ++i) {
+  for (size_t i = 1; i < argv.size() - 1; ++i) {
     if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
       PrintHelpInfo();
       return true;
     }
   }
 
-  // Move --gtest_filter option to last, and add "-bionic_gtest*" to disable self test.
-  int gtest_filter_option_pos = 0;
-  for (int i = argc - 1; i >= 1; --i) {
+  // Move --gtest_filter option to last, and add "-bionic_selftest*" to disable self test.
+  std::string gtest_filter_str = "--gtest_filter=-bionic_selftest*";
+  for (size_t i = argv.size() - 2; i >= 1; --i) {
     if (strncmp(argv[i], "--gtest_filter=", sizeof("--gtest_filter=") - 1) == 0) {
-      gtest_filter_option_pos = i;
+      gtest_filter_str = std::string(argv[i]) + ":-bionic_selftest*";
+      argv.erase(argv.begin() + i);
       break;
     }
   }
-  if (gtest_filter_option_pos != 0) {
-    char* gtest_filter_arg = argv[gtest_filter_option_pos];
-    for (int i = gtest_filter_option_pos; i < argc - 1; ++i) {
-      argv[i] = argv[i + 1];
-    }
-    char* new_arg = new char[strlen(gtest_filter_arg) + sizeof(":-bionic_gtest*")];
-    strcpy(new_arg, gtest_filter_arg);
-    strcat(new_arg, ":-bionic_gtest*");
-    argv[argc - 1] = new_arg;
-  } else {
-    char** new_argv = new char* [argc + 1];
-    for (int i = 0; i < argc; ++i) {
-      new_argv[i] = argv[i];
-    }
-    new_argv[argc++] = const_cast<char*>("--gtest_filter=-bionic_gtest*");
-    *pargv = argv = new_argv;
-  }
+  argv.insert(argv.end() - 1, strdup(gtest_filter_str.c_str()));
 
-  // Parse bionic_gtest specific options.
-  bool isolate_option = false;
-  int job_num_option = 1;
+  // Init default bionic_gtest option.
+  bool isolate_option = true;
+  size_t job_count_option = GetProcessorCount();
 
-  int deadline_option_len = sizeof("--deadline=") - 1;
-  int warnline_option_len = sizeof("--warnline=") - 1;
-  int gtest_color_option_len = sizeof("--gtest_color=") - 1;
+  size_t deadline_option_len = strlen("--deadline=");
+  size_t warnline_option_len = strlen("--warnline=");
+  size_t gtest_color_option_len = strlen("--gtest_color=");
 
-  for (int i = 1; i < argc; ++i) {
-    int remove_arg_num = 0;
+  // Parse bionic_gtest specific options in arguments.
+  for (size_t i = 1; i < argv.size() - 1; ++i) {
+    if (strcmp(argv[i], "-j") == 0) {
+      isolate_option = true; // Enable isolation mode when -j is used.
+      int tmp;
+      if (argv[i + 1] != NULL && (tmp = atoi(argv[i + 1])) > 0) {
+        job_count_option = tmp;
+        argv.erase(argv.begin() + i);
+      } else {
+        job_count_option = GetProcessorCount();
+      }
+      argv.erase(argv.begin() + i);
+      --i;
 
-    // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
-    // So we should parse gtest options for printing here.
-    if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
-      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
-
-    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
-      testing::GTEST_FLAG(print_time) = false;
-
-    } else if (strcmp(argv[i], "--isolate") == 0) {
-      isolate_option = true;
-      remove_arg_num = 1;
+    } else if (strcmp(argv[i], "--no-isolate") == 0) {
+      isolate_option = false;
+      argv.erase(argv.begin() + i);
+      --i;
 
     } else if (strncmp(argv[i], "--deadline=", deadline_option_len) == 0) {
       global_test_run_deadline_in_ms = atoi(argv[i] + deadline_option_len);
@@ -668,7 +676,8 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
                 argv[i] + deadline_option_len);
         exit(1);
       }
-      remove_arg_num = 1;
+      argv.erase(argv.begin() + i);
+      --i;
 
     } else if (strncmp(argv[i], "--warnline=", warnline_option_len) == 0) {
       global_test_run_warnline_in_ms = atoi(argv[i] + warnline_option_len);
@@ -677,98 +686,107 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
                 argv[i] + warnline_option_len);
         exit(1);
       }
-      remove_arg_num = 1;
-
-    } else if (strcmp(argv[i], "--bionic_gtest") == 0) {
-      // Enable "bionic_gtest*" for self test.
-      // Don't remove this option from argument list.
-      argv[argc - 1] = const_cast<char*>("--gtest_filter=bionic_gtest*");
-
-    } else if (strcmp(argv[i], "-j") == 0) {
-      isolate_option = true; // Enable isolation mode when -j is used.
-      if (i + 1 < argc && (job_num_option = atoi(argv[i + 1])) > 0) {
-        remove_arg_num = 2;
-      } else {
-        job_num_option = GetCpuNumber();
-        remove_arg_num = 1;
-      }
-    }
-
-    if (remove_arg_num != 0) {
-      for (int j = i; j < argc - remove_arg_num; ++j) {
-        argv[j] = argv[j + remove_arg_num];
-      }
-      argc -= remove_arg_num;
+      argv.erase(argv.begin() + i);
       --i;
+
+    } else if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
+      // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
+    // So we should parse gtest options for printing by ourselves.
+      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
+
+    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
+      testing::GTEST_FLAG(print_time) = false;
+
+    } else if (strcmp(argv[i], "--gtest_list_tests") == 0) {
+      // Disable isolation mode in gtest_list_tests option.
+      isolate_option = false;
+
+    } else if (strcmp(argv[i], "--bionic-selftest") == 0) {
+      // This option is to enable "bionic_selftest*" for self test, and not shown in help informantion.
+      // Don't remove this option from argument list.
+      argv[argv.size() - 2] = strdup("--gtest_filter=bionic_selftest*");
     }
   }
 
   // Handle --gtest_repeat=[COUNT] option if we are in isolation mode.
   // We should check and remove this option to avoid child process running single test for several
   // iterations.
-  int gtest_repeat_num = 1;
+  size_t gtest_repeat_count = 1;
   if (isolate_option == true) {
     int len = sizeof("--gtest_repeat=") - 1;
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argv.size() - 1; ++i) {
       if (strncmp(argv[i], "--gtest_repeat=", len) == 0) {
-        gtest_repeat_num = atoi(argv[i] + len);
-        if (gtest_repeat_num < 0) {
+        int tmp = atoi(argv[i] + len);
+        if (tmp < 0) {
           fprintf(stderr, "error count for option --gtest_repeat=[COUNT]\n");
           return false;
         }
-        for (int j = i; j < argc - 1; ++j) {
-          argv[j] = argv[j + 1];
-        }
-        --argc;
+        gtest_repeat_count = tmp;
+        argv.erase(argv.begin() + i);
         break;
       }
     }
   }
 
-  *pargc = argc;
+  // Add --no-isolate option in argv to suppress subprocess running in isolation mode again.
+  // As DeathTest will try to execve again, this option should always be set.
+  argv.insert(argv.begin() + 1, strdup("--no-isolate"));
 
   // Run tests in isolation mode.
   if (isolate_option) {
     *exit_flag = true;
 
     std::vector<TestCase> testcase_list;
-    if (EnumerateTests(argc, argv, testcase_list) == false) {
+    int argc = static_cast<int>(argv.size()) - 1;
+    if (EnumerateTests(argc, argv.data(), testcase_list) == false) {
       return false;
     }
-    RunTestInSeparateProc(argc, argv, testcase_list, gtest_repeat_num, job_num_option);
+    RunTestInSeparateProc(argc, argv.data(), testcase_list, gtest_repeat_count, job_count_option);
     return true;
   }
   return true;
 }
 
 int main(int argc, char** argv) {
+  std::vector<char*> arg_list;
+  for (int i = 0; i < argc; ++i) {
+    arg_list.push_back(argv[i]);
+  }
+  arg_list.push_back(NULL);
+
   bool exit_flag;
   int return_result = 0;
 
-  if (PickOptions(&argc, &argv, &exit_flag) == false) {
+  if (PickOptions(arg_list, &exit_flag) == false) {
     return_result = 1;
   } else if (!exit_flag) {
-    testing::InitGoogleTest(&argc, argv);
+    argc = static_cast<int>(arg_list.size()) - 1;
+    testing::InitGoogleTest(&argc, arg_list.data());
     return_result = RUN_ALL_TESTS();
   }
   return return_result;
 }
 
 //################################################################################
-// Bionic Gtest self test, run this by --bionic_gtest --isolate option.
+// Bionic Gtest self test, run this by --bionic-selftest option.
 
-TEST(bionic_gtest, test_success) {
+TEST(bionic_selftest, test_success) {
   ASSERT_EQ(1, 1);
 }
 
-TEST(bionic_gtest, test_fail) {
+TEST(bionic_selftest, test_fail) {
   ASSERT_EQ(0, 1);
 }
 
-TEST(bionic_gtest, test_time_warn) {
+TEST(bionic_selftest, test_time_warn) {
   sleep(4);
 }
 
-TEST(bionic_gtest, test_timeout) {
+TEST(bionic_selftest, test_timeout) {
   while (1) {}
+}
+
+TEST(bionic_selftest, test_signal_SEGV_terminated) {
+  char* p = reinterpret_cast<char*>(static_cast<intptr_t>(atoi("0")));
+  *p = 3;
 }
