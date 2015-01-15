@@ -99,6 +99,9 @@ void pthread_exit(void* return_value) {
     // pthread_internal_t is freed below with stack, not here.
     _pthread_internal_remove_locked(thread, false);
     free_mapped_space = true;
+  } else {
+    // Mark the thread as exiting without freeing pthread_internal_t.
+    thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
   }
   pthread_mutex_unlock(&g_thread_list_lock);
 

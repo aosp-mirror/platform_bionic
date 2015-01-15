@@ -38,6 +38,9 @@
 /* Has the thread been joined by another thread? */
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000002
 
+/* Did the thread exit without freeing pthread_internal_t? */
+#define PTHREAD_ATTR_FLAG_ZOMBIE 0x00000004
+
 /* Is this the main thread? */
 #define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
 
