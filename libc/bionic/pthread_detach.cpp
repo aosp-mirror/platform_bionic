@@ -27,29 +27,32 @@
  */
 
 #include <errno.h>
+#include <pthread.h>
 
 #include "pthread_accessor.h"
 
 int pthread_detach(pthread_t t) {
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
+  {
+    pthread_accessor thread(t);
+    if (thread.get() == NULL) {
       return ESRCH;
+    }
+
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
+      return EINVAL; // Already detached.
+    }
+
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
+      return 0; // Already being joined; silently do nothing, like glibc.
+    }
+
+    // If the thread has not exited, we can detach it safely.
+    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) == 0) {
+      thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+      return 0;
+    }
   }
 
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-    return EINVAL; // Already detached.
-  }
-
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-    return 0; // Already being joined; silently do nothing, like glibc.
-  }
-
-  if (thread->tid == 0) {
-    // Already exited; clean up.
-    _pthread_internal_remove_locked(thread.get(), true);
-    return 0;
-  }
-
-  thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
-  return 0;
+  // The thread is in zombie state, use pthread_join to clean it up.
+  return pthread_join(t, NULL);
 }
