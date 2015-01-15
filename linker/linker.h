@@ -286,11 +286,8 @@ struct soinfo {
 
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void call_function(const char* function_name, linker_function_t function);
-#if defined(USE_RELA)
-  int relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
-#else
-  int relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
-#endif
+  template<typename ElfRelT>
+  int relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 
  private:
   // This part of the structure is only available
