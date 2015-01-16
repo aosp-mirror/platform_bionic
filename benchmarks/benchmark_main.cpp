@@ -22,7 +22,7 @@
 #include <time.h>
 
 #include <string>
-#include <map>
+#include <vector>
 
 #include <inttypes.h>
 
@@ -36,6 +36,41 @@ typedef std::vector<::testing::Benchmark*> BenchmarkList;
 static BenchmarkList& Benchmarks() {
   static BenchmarkList benchmarks;
   return benchmarks;
+}
+
+// Similar to the code in art, but supporting both binary and decimal prefixes.
+static std::string PrettyInt(uint64_t count, size_t base) {
+  if (base != 2 && base != 10) abort();
+
+  // The byte thresholds at which we display amounts. A count is displayed
+  // in unit U when kUnitThresholds[U] <= bytes < kUnitThresholds[U+1].
+  static const uint64_t kUnitThresholds2[] = {
+    1024*1024*1024 /* Gi */, 2*1024*1024 /* Mi */, 3*1024 /* Ki */, 0,
+  };
+  static const uint64_t kUnitThresholds10[] = {
+    1000*1000*1000 /* G */, 2*1000*1000 /* M */, 3*1000 /* k */, 0,
+  };
+  static const uint64_t kAmountPerUnit2[] = { 1024*1024*1024, 1024*1024, 1024, 1 };
+  static const uint64_t kAmountPerUnit10[] = { 1000*1000*1000, 1000*1000, 1000, 1 };
+  static const char* const kUnitStrings2[] = { "Gi", "Mi", "Ki", "" };
+  static const char* const kUnitStrings10[] = { "G", "M", "k", "" };
+
+  // Which set are we using?
+  const uint64_t* kUnitThresholds = ((base == 2) ? kUnitThresholds2 : kUnitThresholds10);
+  const uint64_t* kAmountPerUnit = ((base == 2) ? kAmountPerUnit2 : kAmountPerUnit10);
+  const char* const* kUnitStrings = ((base == 2) ? kUnitStrings2 : kUnitStrings10);
+
+  size_t i = 0;
+  for (; kUnitThresholds[i] != 0; ++i) {
+    if (count >= kUnitThresholds[i]) {
+      break;
+    }
+  }
+  char* s = NULL;
+  asprintf(&s, "%" PRId64 "%s", count / kAmountPerUnit[i], kUnitStrings[i]);
+  std::string result(s);
+  free(s);
+  return result;
 }
 
 static int Round(int n) {
@@ -154,27 +189,25 @@ void Benchmark::RunWithArg(int arg) {
 
   char throughput[100];
   throughput[0] = '\0';
+
   if (g_benchmark_total_time_ns > 0 && g_bytes_processed > 0) {
-    double mib_processed = static_cast<double>(g_bytes_processed)/1e6;
+    double gib_processed = static_cast<double>(g_bytes_processed)/1e9;
     double seconds = static_cast<double>(g_benchmark_total_time_ns)/1e9;
-    snprintf(throughput, sizeof(throughput), " %8.2f MiB/s", mib_processed/seconds);
+    snprintf(throughput, sizeof(throughput), " %8.3f GiB/s", gib_processed/seconds);
   }
 
   char full_name[100];
   if (fn_range_ != NULL) {
-    if (arg >= (1<<20)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dM", name_, arg/(1<<20));
-    } else if (arg >= (1<<10)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dK", name_, arg/(1<<10));
-    } else {
-      snprintf(full_name, sizeof(full_name), "%s/%d", name_, arg);
-    }
+    snprintf(full_name, sizeof(full_name), "%s/%s", name_, PrettyInt(arg, 2).c_str());
   } else {
     snprintf(full_name, sizeof(full_name), "%s", name_);
   }
 
-  printf("%-*s %10d %10" PRId64 "%s\n", g_name_column_width, full_name,
-         iterations, g_benchmark_total_time_ns/iterations, throughput);
+  printf("%-*s %10s %10" PRId64 "%s\n",
+         g_name_column_width, full_name,
+         PrettyInt(iterations, 10).c_str(),
+         g_benchmark_total_time_ns/iterations,
+         throughput);
   fflush(stdout);
 }
 
