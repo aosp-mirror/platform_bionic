@@ -134,19 +134,23 @@ void Benchmark::RunRepeatedlyWithArg(int iterations, int arg) {
 }
 
 void Benchmark::RunWithArg(int arg) {
-  // run once in case it's expensive
+  // Run once in case it's expensive.
   int iterations = 1;
+  int64_t realStartTime = NanoTime();
   RunRepeatedlyWithArg(iterations, arg);
-  while (g_benchmark_total_time_ns < 1e9 && iterations < 1e9) {
+  int64_t realTotalTime = NanoTime() - realStartTime;
+  while (realTotalTime < 1e9 && iterations < 1e8) {
     int last = iterations;
-    if (g_benchmark_total_time_ns/iterations == 0) {
+    if (realTotalTime/iterations == 0) {
       iterations = 1e9;
     } else {
-      iterations = 1e9 / (g_benchmark_total_time_ns/iterations);
+      iterations = 1e9 / (realTotalTime/iterations);
     }
     iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
+    realStartTime = NanoTime();
     RunRepeatedlyWithArg(iterations, arg);
+    realTotalTime = NanoTime() - realStartTime;
   }
 
   char throughput[100];
