@@ -31,11 +31,10 @@ static int64_t g_benchmark_total_time_ns;
 static int64_t g_benchmark_start_time_ns;
 static int g_name_column_width = 20;
 
-typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
-typedef BenchmarkMap::iterator BenchmarkMapIt;
+typedef std::vector<::testing::Benchmark*> BenchmarkList;
 
-static BenchmarkMap& Benchmarks() {
-  static BenchmarkMap benchmarks;
+static BenchmarkList& Benchmarks() {
+  static BenchmarkList benchmarks;
   return benchmarks;
 }
 
@@ -102,7 +101,7 @@ void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int
     exit(EXIT_FAILURE);
   }
 
-  Benchmarks().insert(std::make_pair(name, this));
+  Benchmarks().push_back(this);
 }
 
 void Benchmark::Run() {
@@ -204,14 +203,13 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  for (BenchmarkMapIt it = Benchmarks().begin(); it != Benchmarks().end(); ++it) {
-    int name_width = static_cast<int>(strlen(it->second->Name()));
+  for (auto& b : Benchmarks()) {
+    int name_width = static_cast<int>(strlen(b->Name()));
     g_name_column_width = std::max(g_name_column_width, name_width);
   }
 
   bool need_header = true;
-  for (BenchmarkMapIt it = Benchmarks().begin(); it != Benchmarks().end(); ++it) {
-    ::testing::Benchmark* b = it->second;
+  for (auto& b : Benchmarks()) {
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
         printf("%-*s %10s %10s\n", g_name_column_width, "", "iterations", "ns/op");
@@ -225,8 +223,8 @@ int main(int argc, char* argv[]) {
   if (need_header) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
-    for (BenchmarkMapIt it = Benchmarks().begin(); it != Benchmarks().end(); ++it) {
-      fprintf(stderr, "  %s\n", it->second->Name());
+    for (auto& b : Benchmarks()) {
+      fprintf(stderr, "  %s\n", b->Name());
     }
     exit(EXIT_FAILURE);
   }
