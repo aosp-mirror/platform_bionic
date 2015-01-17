@@ -65,3 +65,13 @@ static void BM_stdio_fwrite_unbuffered(int iters, int chunk_size) {
   ReadWriteTest(iters, chunk_size, fwrite, false);
 }
 BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
+
+static void BM_stdio_fopen_fgets_fclose(int iters) {
+  char buf[1024];
+  for (int i = 0; i < iters; ++i) {
+    FILE* fp = fopen("/proc/version", "re");
+    fgets(buf, sizeof(buf), fp);
+    fclose(fp);
+  }
+}
+BENCHMARK(BM_stdio_fopen_fgets_fclose);
