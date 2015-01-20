@@ -34,7 +34,13 @@
 TEST(stdio_ext, __fbufsize) {
   FILE* fp = fopen("/proc/version", "r");
 
+  // Initially, there's no buffer in case the first thing you do is disable buffering.
+  ASSERT_EQ(0U, __fbufsize(fp));
+
+  // A read forces a buffer to be created.
   char buf[128];
+  fgets(buf, sizeof(buf), fp);
+  ASSERT_EQ(1024U, __fbufsize(fp));
 
   ASSERT_EQ(0, setvbuf(fp, buf, _IOFBF, 1));
   ASSERT_EQ(1U, __fbufsize(fp));
