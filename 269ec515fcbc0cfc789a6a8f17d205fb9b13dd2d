@@ -16,6 +16,24 @@
       "revId": "269ec515fcbc0cfc789a6a8f17d205fb9b13dd2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b2527f1_47a38e0e",
+        "filename": "libc/stdio/fread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-20T23:25:20Z",
+      "side": 1,
+      "message": "[talking with you in the office...] i think so, but i think we need to set the __SEOF and/or __SERR flags. (__srefill normally does that for you.) i\u0027ll try to write some tests with funopen.",
+      "parentUuid": "8b2527f1_67d21267",
+      "revId": "269ec515fcbc0cfc789a6a8f17d205fb9b13dd2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
