@@ -319,18 +319,6 @@ static void OnTestTimeoutPrint(const TestCase& testcase, size_t test_id) {
   fflush(stdout);
 }
 
-static void TestcaseTimePrint(const TestCase& testcase) {
-  int64_t testcase_time = 0;
-  for (size_t i = 0; i < testcase.TestCount(); ++i) {
-    testcase_time += testcase.GetTestTime(i);
-  }
-  printf("%zu %s from %s (%lld ms total)\n", testcase.TestCount(),
-                                             (testcase.TestCount() == 1) ? "test" : "tests",
-                                             testcase.GetName().c_str(),
-                                             testcase_time / 1000000LL);
-  fflush(stdout);
-}
-
 static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, size_t /*iteration*/,
                                     int64_t elapsed_time) {
 
@@ -362,10 +350,6 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
                                                      GetWarnlineInfo(testcase.GetTestName(i))));
       }
     }
-  }
-
-  for (auto const& testcase : testcase_list) {
-    TestcaseTimePrint(testcase);
   }
 
   ColoredPrintf(COLOR_GREEN,  "[==========] ");
