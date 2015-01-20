@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab202bdf_cb97891f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-20T22:25:22Z",
+      "side": 1,
+      "message": "please don\u0027t put unrelated changes in one CL. please break this into two separate changes. combining changes like this makes review harder, makes it harder if we need to revert one part but not others, harder to cherrypick if a branch needs one fix but not others, etc...\n\n(as a rule of thumb, if it wouldn\u0027t make sense to merge the buganizer bugs, you should think hard about whether it makes sense to merge the code changes.)",
+      "revId": "2468d208084f14a9cac9489ba366aca670028162",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
