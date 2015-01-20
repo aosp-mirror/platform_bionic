@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bf85789_8b3f4df5",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-20T21:06:57Z",
+      "side": 1,
+      "message": "Nit, the other libraries use a slightly different naming rule. To follow it, this should probably be libBionicGtestMain.",
+      "range": {
+        "startLine": 223,
+        "startChar": 10,
+        "endLine": 223,
+        "endChar": 30
+      },
+      "revId": "8f8abf0d9f4a18585f9ad9fad5a6624d91a7653f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
