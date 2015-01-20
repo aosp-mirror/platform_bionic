@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b2527f1_67d21267",
+        "filename": "libc/stdio/fread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-20T22:24:42Z",
+      "side": 1,
+      "message": "I guess it is ok if total % size !\u003d 0 in this case...",
+      "revId": "269ec515fcbc0cfc789a6a8f17d205fb9b13dd2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
