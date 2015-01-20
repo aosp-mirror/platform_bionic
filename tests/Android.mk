@@ -212,19 +212,36 @@ build_type := host
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library of bionic customized gtest main function.
+# -----------------------------------------------------------------------------
+libBionicGtestMain_src_files := gtest_main.cpp
+
+libBionicGtestMain_cflags := $(test_cflags)
+
+libBionicGtestMain_cppflags := $(test_cppflags)
+
+module := libBionicGtestMain
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Tests for the device using bionic's .so. Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
 # -----------------------------------------------------------------------------
 bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
+    libBionicGtestMain \
 
 bionic-unit-tests_static_libraries := \
     libtinyxml2 \
     liblog \
 
 bionic-unit-tests_src_files := \
-    gtest_main.cpp \
     atexit_test.cpp \
     dl_test.cpp \
     dlext_test.cpp \
@@ -268,6 +285,7 @@ include $(LOCAL_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 bionic-unit-tests-static_whole_static_libraries := \
     libBionicTests \
+    libBionicGtestMain \
 
 bionic-unit-tests-static_static_libraries := \
     libm \
@@ -276,9 +294,6 @@ bionic-unit-tests-static_static_libraries := \
     libdl \
     libtinyxml2 \
     liblog \
-
-bionic-unit-tests-static_src_files := \
-    gtest_main.cpp \
 
 bionic-unit-tests-static_force_static_executable := true
 
@@ -302,7 +317,6 @@ include $(LOCAL_PATH)/Android.build.mk
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
 bionic-unit-tests-glibc_src_files := \
-    gtest_main.cpp \
     atexit_test.cpp \
     dlfcn_test.cpp \
     dl_test.cpp \
@@ -315,6 +329,7 @@ bionic-unit-tests-glibc_shared_libraries += libdl_test_df_1_global
 
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
+    libBionicGtestMain \
 
 bionic-unit-tests-glibc_ldlibs := \
     -lrt -ldl -lutil \
