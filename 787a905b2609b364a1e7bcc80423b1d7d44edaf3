@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bda8731_a20d005e",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T01:00:47Z",
+      "side": 1,
+      "message": "(do we want to just call this TARGET_IS_64_BIT in C too, for ease of grepping?)",
+      "revId": "787a905b2609b364a1e7bcc80423b1d7d44edaf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
