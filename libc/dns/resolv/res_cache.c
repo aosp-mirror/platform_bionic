@@ -1090,7 +1090,7 @@ answer_getTTL(const void* answer, int answerlen)
         XLOG("ns_parserr failed. %s\n", strerror(errno));
     }
 
-    XLOG("TTL = %d\n", result);
+    XLOG("TTL = %lu\n", result);
 
     return result;
 }
