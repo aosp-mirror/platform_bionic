@@ -83,7 +83,7 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 		/*
 		 * Copy data out of the buffer.
 		 */
-		size_t buffered_bytes = MIN(fp->_r, total);
+		size_t buffered_bytes = MIN((size_t) fp->_r, total);
 		memcpy(dst, fp->_p, buffered_bytes);
 		fp->_p += buffered_bytes;
 		fp->_r -= buffered_bytes;
