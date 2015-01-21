@@ -31,6 +31,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -46,7 +47,7 @@ __sread(void *cookie, char *buf, int n)
 	FILE *fp = cookie;
 	int ret;
 	
-	ret = read(fp->_file, buf, n);
+	ret = TEMP_FAILURE_RETRY(read(fp->_file, buf, n));
 	/* if the read succeeded, update the current offset */
 	if (ret >= 0)
 		fp->_offset += ret;
@@ -61,9 +62,9 @@ __swrite(void *cookie, const char *buf, int n)
 	FILE *fp = cookie;
 
 	if (fp->_flags & __SAPP)
-		(void) lseek(fp->_file, (off_t)0, SEEK_END);
+		(void) TEMP_FAILURE_RETRY(lseek(fp->_file, (off_t)0, SEEK_END));
 	fp->_flags &= ~__SOFF;	/* in case FAPPEND mode is set */
-	return (write(fp->_file, buf, n));
+	return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
 fpos_t
@@ -72,7 +73,7 @@ __sseek(void *cookie, fpos_t offset, int whence)
 	FILE *fp = cookie;
 	off_t ret;
 	
-	ret = lseek(fp->_file, (off_t)offset, whence);
+	ret = TEMP_FAILURE_RETRY(lseek(fp->_file, (off_t)offset, whence));
 	if (ret == (off_t)-1)
 		fp->_flags &= ~__SOFF;
 	else {
@@ -85,5 +86,5 @@ __sseek(void *cookie, fpos_t offset, int whence)
 int
 __sclose(void *cookie)
 {
-	return (close(((FILE *)cookie)->_file));
+	return TEMP_FAILURE_RETRY(close(((FILE *)cookie)->_file));
 }
