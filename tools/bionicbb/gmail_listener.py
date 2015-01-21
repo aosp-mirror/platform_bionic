@@ -297,6 +297,13 @@ def process_message(msg, dry_run):
     except NotImplementedError as ex:
         print ex
         return False
+    except gerrit.GerritError as ex:
+        if ex.code == 404:
+            print '{}(404): {}!'.format(
+                termcolor.colored('ERROR', 'red'), ex)
+            return True
+        else:
+            return False
 
 
 def main(argc, argv):
