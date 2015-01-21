@@ -35,6 +35,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <errno.h>
+#include <sys/param.h>
 #include "local.h"
 
 #define MUL_NO_OVERFLOW	(1UL << (sizeof(size_t) * 4))
@@ -42,13 +43,8 @@
 size_t
 fread(void *buf, size_t size, size_t count, FILE *fp)
 {
-	size_t resid;
-	char *p;
-	int r;
-	size_t total;
-
 	/*
-	 * Extension:  Catch integer overflow
+	 * Extension:  Catch integer overflow.
 	 */
 	if ((size >= MUL_NO_OVERFLOW || count >= MUL_NO_OVERFLOW) &&
 	    size > 0 && SIZE_MAX / size < count) {
@@ -57,48 +53,81 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 		return (0);
 	}
 
+	const size_t desired_total = count * size;
+	size_t total = desired_total;
+
 	/*
 	 * ANSI and SUSv2 require a return value of 0 if size or count are 0.
 	 */
-	if ((resid = count * size) == 0)
+	if (total == 0) {
 		return (0);
+	}
+
 	FLOCKFILE(fp);
 	_SET_ORIENTATION(fp, -1);
+
+	// TODO: how can this ever happen?!
 	if (fp->_r < 0)
 		fp->_r = 0;
-	total = resid;
-	p = buf;
 
-	// BEGIN android-added
-	// Avoid pathological behavior on unbuffered files. OpenBSD
-	// will loop reading one byte then memcpying one byte!
-	if ((fp->_flags & __SNBF) != 0) {
-		// We know if we're unbuffered that our buffer is empty, so
-		// we can just read directly.
-		while (resid > 0 && (r = (*fp->_read)(fp->_cookie, p, resid)) > 0) {
-			p += r;
-			resid -= r;
-		}
-		FUNLOCKFILE(fp);
-		return ((total - resid) / size);
+	/*
+	 * Ensure _bf._size is valid.
+	 */
+	if (fp->_bf._base == NULL) {
+		__smakebuf(fp);
 	}
-	// END android-added
 
-	while (resid > (size_t)(r = fp->_r)) {
-		(void)memcpy((void *)p, (void *)fp->_p, (size_t)r);
-		fp->_p += r;
-		/* fp->_r = 0 ... done in __srefill */
-		p += r;
-		resid -= r;
+	char* dst = buf;
+
+	while (total > 0) {
+		/*
+		 * Copy data out of the buffer.
+		 */
+		size_t buffered_bytes = MIN(fp->_r, total);
+		memcpy(dst, fp->_p, buffered_bytes);
+		fp->_p += buffered_bytes;
+		fp->_r -= buffered_bytes;
+		dst += buffered_bytes;
+		total -= buffered_bytes;
+
+		/*
+		 * Are we done?
+		 */
+		if (total == 0) {
+			goto out;
+		}
+
+		/*
+		 * Do we have so much more to read that we should
+		 * avoid copying it through the buffer?
+		 */
+		if (total > (size_t) fp->_bf._size) {
+			break;
+		}
+
+		/*
+		 * Less than a buffer to go, so refill the buffer and
+		 * go around the loop again.
+		 */
 		if (__srefill(fp)) {
-			/* no more input: return partial result */
-			FUNLOCKFILE(fp);
-			return ((total - resid) / size);
+			goto out;
 		}
 	}
-	(void)memcpy((void *)p, (void *)fp->_p, resid);
-	fp->_r -= resid;
-	fp->_p += resid;
+
+	/*
+	 * Read directly into the caller's buffer.
+	 */
+	while (total > 0) {
+		ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, total);
+		if (bytes_read <= 0) {
+			fp->_flags = (fp->_r == 0) ? __SEOF : __SERR;
+			break;
+		}
+		dst += bytes_read;
+		total -= bytes_read;
+	}
+
+out:
 	FUNLOCKFILE(fp);
-	return (count);
+	return ((desired_total - total) / size);
 }
