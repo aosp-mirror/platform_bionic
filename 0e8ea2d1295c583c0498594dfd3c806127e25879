@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bda8731_854486eb",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T04:13:03Z",
+      "side": 1,
+      "message": "does \"user_handles_locking\" seem clearer? or reverse the sense and have \"stdio_handles_locking\"?",
+      "revId": "0e8ea2d1295c583c0498594dfd3c806127e25879",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
