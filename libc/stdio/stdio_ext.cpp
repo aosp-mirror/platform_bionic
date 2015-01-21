@@ -27,13 +27,10 @@
  */
 
 #include <stdio_ext.h>
+#include <stdlib.h>
 
-#include <stdio.h>
 #include "local.h"
-
-#define FSETLOCKING_QUERY 0
-#define FSETLOCKING_INTERNAL 1
-#define FSETLOCKING_BYCALLER 2
+#include "private/libc_logging.h"
 
 size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;
@@ -76,11 +73,19 @@ void _flushlbf() {
   fflush(NULL);
 }
 
-int __fsetlocking(FILE*, int) {
-  // We don't currently have an implementation that would obey this,
-  // so make setting the state a no-op and always return "we handle locking for you".
-  // http://b/17154740 suggests ways we could fix this.
-  return FSETLOCKING_INTERNAL;
+int __fsetlocking(FILE* fp, int type) {
+  int old_state = _EXT(fp)->_stdio_handles_locking ? FSETLOCKING_INTERNAL : FSETLOCKING_BYCALLER;
+  if (type == FSETLOCKING_QUERY) {
+    return old_state;
+  }
+
+  if (type != FSETLOCKING_INTERNAL && type != FSETLOCKING_BYCALLER) {
+    // The API doesn't let us report an error, so blow up.
+    __libc_fatal("Bad type (%d) passed to __fsetlocking", type);
+  }
+
+  _EXT(fp)->_stdio_handles_locking = (type == FSETLOCKING_INTERNAL);
+  return old_state;
 }
 
 void clearerr_unlocked(FILE* fp) {

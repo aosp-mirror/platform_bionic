@@ -133,7 +133,10 @@ TEST(stdio_ext, __freadable__fwritable) {
 
 TEST(stdio_ext, __fsetlocking) {
   FILE* fp = fopen("/proc/version", "r");
-  // Android doesn't actually support the other modes.
+  ASSERT_EQ(FSETLOCKING_INTERNAL, __fsetlocking(fp, FSETLOCKING_QUERY));
+  ASSERT_EQ(FSETLOCKING_INTERNAL, __fsetlocking(fp, FSETLOCKING_BYCALLER));
+  ASSERT_EQ(FSETLOCKING_BYCALLER, __fsetlocking(fp, FSETLOCKING_QUERY));
+  ASSERT_EQ(FSETLOCKING_BYCALLER, __fsetlocking(fp, FSETLOCKING_INTERNAL));
   ASSERT_EQ(FSETLOCKING_INTERNAL, __fsetlocking(fp, FSETLOCKING_QUERY));
   fclose(fp);
 }
