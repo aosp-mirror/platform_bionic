@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bdf1324_e7b1d051",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T04:26:48Z",
+      "side": 1,
+      "message": "ps3 changes the name to \"_stdio_handles_locking\" and adds a comment here.",
+      "revId": "633b72a783a0e60ba3d39da8ff4d339c6f79192c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bdf1324_07af9cee",
+        "filename": "tests/stdio_ext_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T04:26:48Z",
+      "side": 1,
+      "message": "...and adds more testing.\n\n(i\u0027m hoping we can rely on the benchmarks to tell us whether we\u0027re actually obeying the flag that this test demonstrates we now store.)",
+      "revId": "633b72a783a0e60ba3d39da8ff4d339c6f79192c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
