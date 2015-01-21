@@ -16,6 +16,24 @@
       "revId": "d0592ca19591e7739fed6d053852ac1360c366d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bda8731_e579d230",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T04:05:30Z",
+      "side": 1,
+      "message": "no, ISO C explicitly says that there _is_ locking. __fsetlocking is a non-standard (glibc) API that lets you override that.",
+      "parentUuid": "6bdf1324_276c98f7",
+      "revId": "d0592ca19591e7739fed6d053852ac1360c366d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
