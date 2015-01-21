@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bdf1324_87280c72",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-21T02:33:02Z",
+      "side": 0,
+      "message": "oops...",
+      "revId": "ffad8df672363bad43528898cc47aa2ed3d08c66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
