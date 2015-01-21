@@ -888,3 +888,25 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
     ASSERT_EQ('\xff', buf[i]);
   }
 }
+
+TEST(fread, fread_EOF) {
+  const char* digits = "0123456789";
+  FILE* fp = fmemopen((char*) digits, sizeof(digits), "r");
+
+  // Try to read too much, but little enough that it still fits in the FILE's internal buffer.
+  char buf1[4 * 4];
+  memset(buf1, 0, sizeof(buf1));
+  ASSERT_EQ(2U, fread(buf1, 4, 4, fp));
+  ASSERT_STREQ(buf1, "01234567");
+  ASSERT_TRUE(feof(fp));
+
+  rewind(fp);
+
+  char buf2[4 * 4];
+  memset(buf2, 0, sizeof(buf2));
+  ASSERT_EQ(2U, fread(buf2, 4, 4096, fp));
+  ASSERT_STREQ(buf2, "01234567");
+  ASSERT_TRUE(feof(fp));
+
+  fclose(fp);
+}
