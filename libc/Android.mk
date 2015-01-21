@@ -61,6 +61,7 @@ libc_common_src_files := \
     stdio/fread.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
+    stdio/stdio.c \
     stdio/stdio_ext.cpp \
 
 # Fortify implementations of libc functions.
@@ -450,7 +451,6 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/setbuffer.c \
     upstream-openbsd/lib/libc/stdio/setvbuf.c \
     upstream-openbsd/lib/libc/stdio/sscanf.c \
-    upstream-openbsd/lib/libc/stdio/stdio.c \
     upstream-openbsd/lib/libc/stdio/swprintf.c \
     upstream-openbsd/lib/libc/stdio/swscanf.c \
     upstream-openbsd/lib/libc/stdio/tempnam.c \
