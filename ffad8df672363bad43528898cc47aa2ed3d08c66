@@ -16,6 +16,24 @@
       "revId": "ffad8df672363bad43528898cc47aa2ed3d08c66",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bda8731_45619e7e",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-21T03:51:21Z",
+      "side": 0,
+      "message": "no, it\u0027s defined to 1 or 0.",
+      "parentUuid": "6bdf1324_87280c72",
+      "revId": "ffad8df672363bad43528898cc47aa2ed3d08c66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
