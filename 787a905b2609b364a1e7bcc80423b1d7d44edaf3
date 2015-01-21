@@ -16,6 +16,24 @@
       "revId": "787a905b2609b364a1e7bcc80423b1d7d44edaf3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abd58b01_e6cf1a69",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-21T01:30:58Z",
+      "side": 1,
+      "message": "Sure why not. I\u0027ll modify makefile in the other CL too so I\u0027m consistent.",
+      "parentUuid": "8bda8731_a20d005e",
+      "revId": "787a905b2609b364a1e7bcc80423b1d7d44edaf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
