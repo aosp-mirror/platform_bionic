@@ -17,6 +17,7 @@
 #include "benchmark.h"
 
 #include <stdio.h>
+#include <stdio_ext.h>
 
 #define KB 1024
 #define MB 1024*KB
@@ -29,6 +30,7 @@ template <typename Fn>
 static void ReadWriteTest(int iters, int chunk_size, Fn f, bool buffered) {
   StopBenchmarkTiming();
   FILE* fp = fopen("/dev/zero", "rw");
+  __fsetlocking(fp, FSETLOCKING_BYCALLER);
   char* buf = new char[chunk_size];
   StartBenchmarkTiming();
 
@@ -66,12 +68,22 @@ static void BM_stdio_fwrite_unbuffered(int iters, int chunk_size) {
 }
 BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
 
-static void BM_stdio_fopen_fgets_fclose(int iters) {
+static void FopenFgetsFclose(int iters, bool no_locking) {
   char buf[1024];
   for (int i = 0; i < iters; ++i) {
     FILE* fp = fopen("/proc/version", "re");
+    if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
     fgets(buf, sizeof(buf), fp);
     fclose(fp);
   }
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose);
+
+static void BM_stdio_fopen_fgets_fclose_locking(int iters) {
+  FopenFgetsFclose(iters, false);
+}
+BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
+
+static void BM_stdio_fopen_fgets_fclose_no_locking(int iters) {
+  FopenFgetsFclose(iters, true);
+}
+BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
