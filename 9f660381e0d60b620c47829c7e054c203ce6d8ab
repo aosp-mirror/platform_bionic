@@ -46,6 +46,80 @@
       "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ba88fa2_c09d00cd",
+        "filename": "libc/bionic/scandir.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-22T01:00:06Z",
+      "side": 1,
+      "message": "Long line.",
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bb21712_3bc057ba",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-22T01:00:06Z",
+      "side": 1,
+      "message": "Gross.",
+      "range": {
+        "startLine": 210,
+        "startChar": 7,
+        "endLine": 210,
+        "endChar": 15
+      },
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ba88fa2_c3d18a62",
+        "filename": "libc/bionic/sysinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-22T01:00:06Z",
+      "side": 1,
+      "message": "Inconsistent whitespace formatting.",
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ba88fa2_031ad296",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-22T01:00:06Z",
+      "side": 1,
+      "message": "Might add a comment explaining why you\u0027ve disabled this for C++.",
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
