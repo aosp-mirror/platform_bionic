@@ -207,7 +207,7 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
 // u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
 // u1_system -> 1 * AID_USER + android_ids['system']
 // returns 0 and sets errno to ENOENT in case of error
-static unsigned app_id_from_name(const char* name, bool is_group) {
+static id_t app_id_from_name(const char* name, bool is_group) {
   char* end;
   unsigned long userid;
   bool is_shared_gid = false;
@@ -272,7 +272,7 @@ static unsigned app_id_from_name(const char* name, bool is_group) {
     return 0;
   }
 
-  return static_cast<unsigned>(appid + userid*AID_USER);
+  return (appid + userid*AID_USER);
 }
 
 static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
