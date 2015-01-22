@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebc0636a_3a318109",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-22T00:35:28Z",
+      "side": 1,
+      "message": "Is there a reason this can\u0027t be Dtor? Thus removing the need for the casts down below.",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 21
+      },
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
