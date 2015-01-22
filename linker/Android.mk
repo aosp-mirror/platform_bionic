@@ -36,6 +36,10 @@ LOCAL_CONLYFLAGS += \
 LOCAL_CPPFLAGS += \
     -std=gnu++11 \
 
+ifeq ($(TARGET_IS_64_BIT),true)
+LOCAL_CPPFLAGS += -DTARGET_IS_64_BIT
+endif
+
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
