@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b763314_896f3d68",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T02:04:29Z",
+      "side": 1,
+      "message": "definitely worth saying what this one is. in fact, can we build this in a separate makefile?",
+      "revId": "38b407bea930e853a643ece9e822cba7e82dda45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b763314_a96cf973",
+        "filename": "libc/tools/ndk_missing_symbols.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T02:04:29Z",
+      "side": 1,
+      "message": "libc twice?",
+      "revId": "38b407bea930e853a643ece9e822cba7e82dda45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
