@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "eb33037d_45879c3a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T23:27:56Z",
+      "side": 1,
+      "message": "\u0026x[0] is preferred because it works on arrays as well as STL collections.",
+      "parentUuid": "eb33037d_0548b48d",
+      "revId": "d0a701e35e0f139cf6d8a460c84e1a65b5e16f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb33037d_65374000",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2015-01-22T23:24:41Z",
       "side": 1,
       "message": "4*4096?",
+      "range": {
+        "startLine": 906,
+        "startChar": 16,
+        "endLine": 906,
+        "endChar": 17
+      },
+      "revId": "d0a701e35e0f139cf6d8a460c84e1a65b5e16f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb38ff5e_81a59a11",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T23:27:56Z",
+      "side": 1,
+      "message": "i was relying on the fact that there are only 10 bytes in the stream, but i guess it\u0027s more obviously correct if i make this larger. (it did also occur to me that one day we might fortify fread.)",
+      "parentUuid": "eb33037d_65374000",
       "range": {
         "startLine": 906,
         "startChar": 16,
