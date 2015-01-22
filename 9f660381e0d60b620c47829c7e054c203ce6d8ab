@@ -22,6 +22,30 @@
       "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebc0636a_7afed93b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T00:51:51Z",
+      "side": 1,
+      "message": "this is what happens when you fix errors by repeatedly running make and fixing the last one on the list :-)",
+      "parentUuid": "ebc0636a_3a318109",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 21
+      },
+      "revId": "9f660381e0d60b620c47829c7e054c203ce6d8ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
