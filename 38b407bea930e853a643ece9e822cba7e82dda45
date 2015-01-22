@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2b70bb17_4a1457e9",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-22T02:12:58Z",
+      "side": 1,
+      "message": "but building individual source files is quite likely, isn\u0027t it?\n\nthis makefile\u0027s already a nightmare, so i guess this is the least of our worries.",
+      "parentUuid": "cbc55f7a_d9373381",
+      "revId": "38b407bea930e853a643ece9e822cba7e82dda45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b763314_a96cf973",
         "filename": "libc/tools/ndk_missing_symbols.py",
         "patchSetId": 1
