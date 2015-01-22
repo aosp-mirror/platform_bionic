@@ -43,7 +43,7 @@ sighandler_t _signal(int signum, sighandler_t handler, int flags) {
     return SIG_ERR;
   }
 
-  return (sighandler_t) sa.sa_handler;
+  return sa.sa_handler;
 }
 
 sighandler_t signal(int signum, sighandler_t handler) {
