@@ -41,8 +41,10 @@
 
 extern "C" int tgkill(int tgid, int tid, int sig);
 
-#if __LP64__
-#define DEBUGGER_SOCKET_NAME "android:debuggerd64"
+// Crash actions have to be sent to the proper debuggerd.
+// On 64 bit systems, the 32 bit debuggerd is named differently.
+#if defined(TARGET_IS_64_BIT) && !defined(__LP64__)
+#define DEBUGGER_SOCKET_NAME "android:debuggerd32"
 #else
 #define DEBUGGER_SOCKET_NAME "android:debuggerd"
 #endif
@@ -57,15 +59,10 @@ enum debugger_action_t {
 };
 
 /* message sent over the socket */
-struct debugger_msg_t {
-  // version 1 included:
-  debugger_action_t action;
+struct __attribute__((packed)) debugger_msg_t {
+  int32_t action;
   pid_t tid;
-
-  // version 2 added:
-  uintptr_t abort_msg_address;
-
-  // version 3 added:
+  uint64_t abort_msg_address;
   int32_t original_si_code;
 };
 
