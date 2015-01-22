@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0bb21712_deb2818a",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-22T02:17:29Z",
+      "side": 1,
+      "message": "I think we can probably architect around it, but until I know for sure I\u0027ll leave it here. I\u0027d be much happier with it living in ndk/, so we\u0027ll see.",
+      "parentUuid": "2b70bb17_4a1457e9",
+      "revId": "38b407bea930e853a643ece9e822cba7e82dda45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b763314_a96cf973",
         "filename": "libc/tools/ndk_missing_symbols.py",
         "patchSetId": 1
