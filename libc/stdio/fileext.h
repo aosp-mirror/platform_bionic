@@ -47,7 +47,12 @@ struct __sfileext {
 	bool _stdio_handles_locking;	/* __fsetlocking support */
 };
 
+#if defined(__cplusplus)
+#define _EXT(fp) reinterpret_cast<__sfileext*>((fp)->_ext._base)
+#else
 #define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
+#endif
+
 #define _UB(fp) _EXT(fp)->_ub
 #define _FLOCK(fp)  _EXT(fp)->_lock
 

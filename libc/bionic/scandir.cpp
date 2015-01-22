@@ -49,7 +49,8 @@ class ScandirResult {
   bool Add(dirent* entry) {
     if (size_ >= capacity_) {
       size_t new_capacity = capacity_ + 32;
-      dirent** new_names = (dirent**) realloc(names_, new_capacity * sizeof(dirent*));
+      dirent** new_names =
+          reinterpret_cast<dirent**>(realloc(names_, new_capacity * sizeof(dirent*)));
       if (new_names == NULL) {
         return false;
       }
@@ -68,7 +69,8 @@ class ScandirResult {
   void Sort(int (*comparator)(const dirent**, const dirent**)) {
     // If we have entries and a comparator, sort them.
     if (size_ > 0 && comparator != NULL) {
-      qsort(names_, size_, sizeof(dirent*), (int (*)(const void*, const void*)) comparator);
+      qsort(names_, size_, sizeof(dirent*),
+            reinterpret_cast<int (*)(const void*, const void*)>(comparator));
     }
   }
 
@@ -80,7 +82,7 @@ class ScandirResult {
   static dirent* CopyDirent(dirent* original) {
     // Allocate the minimum number of bytes necessary, rounded up to a 4-byte boundary.
     size_t size = ((original->d_reclen + 3) & ~3);
-    dirent* copy = (dirent*) malloc(size);
+    dirent* copy = reinterpret_cast<dirent*>(malloc(size));
     memcpy(copy, original, original->d_reclen);
     return copy;
   }
