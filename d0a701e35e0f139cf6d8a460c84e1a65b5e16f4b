@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb33037d_0548b48d",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-22T23:24:41Z",
+      "side": 1,
+      "message": "digits.begin()?",
+      "revId": "d0a701e35e0f139cf6d8a460c84e1a65b5e16f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb33037d_65374000",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-22T23:24:41Z",
+      "side": 1,
+      "message": "4*4096?",
+      "range": {
+        "startLine": 906,
+        "startChar": 16,
+        "endLine": 906,
+        "endChar": 17
+      },
+      "revId": "d0a701e35e0f139cf6d8a460c84e1a65b5e16f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
