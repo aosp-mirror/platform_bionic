@@ -70,7 +70,7 @@ GLOBAL_INIT_THREAD_LOCAL_BUFFER(passwd);
 
 struct passwd_state_t {
   passwd passwd_;
-  char app_name_buffer_[32];
+  char name_buffer_[32];
   char dir_buffer_[32];
   char sh_buffer_[32];
 };
@@ -141,11 +141,12 @@ int getpwuid_r(uid_t uid, passwd* pwd,
 
 static passwd* android_iinfo_to_passwd(passwd_state_t* state,
                                        const android_id_info* iinfo) {
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "%s", iinfo->name);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
   passwd* pw = &state->passwd_;
-  pw->pw_name  = (char*) iinfo->name;
+  pw->pw_name  = state->name_buffer_;
   pw->pw_uid   = iinfo->aid;
   pw->pw_gid   = iinfo->aid;
   pw->pw_dir   = state->dir_buffer_;
@@ -153,9 +154,12 @@ static passwd* android_iinfo_to_passwd(passwd_state_t* state,
   return pw;
 }
 
-static group* android_iinfo_to_group(group* gr,
+static group* android_iinfo_to_group(group_state_t* state,
                                      const android_id_info* iinfo) {
-  gr->gr_name   = (char*) iinfo->name;
+  snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_), "%s", iinfo->name);
+
+  group* gr = &state->group_;
+  gr->gr_name   = state->group_name_buffer_;
   gr->gr_gid    = iinfo->aid;
   gr->gr_mem[0] = gr->gr_name;
   return gr;
@@ -179,19 +183,19 @@ static passwd* android_name_to_passwd(passwd_state_t* state, const char* name) {
   return NULL;
 }
 
-static group* android_id_to_group(group* gr, unsigned id) {
+static group* android_id_to_group(group_state_t* state, unsigned id) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (android_ids[n].aid == id) {
-      return android_iinfo_to_group(gr, android_ids + n);
+      return android_iinfo_to_group(state, android_ids + n);
     }
   }
   return NULL;
 }
 
-static group* android_name_to_group(group* gr, const char* name) {
+static group* android_name_to_group(group_state_t* state, const char* name) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (!strcmp(android_ids[n].name, name)) {
-      return android_iinfo_to_group(gr, android_ids + n);
+      return android_iinfo_to_group(state, android_ids + n);
     }
   }
   return NULL;
@@ -268,7 +272,7 @@ static unsigned app_id_from_name(const char* name, bool is_group) {
     return 0;
   }
 
-  return (unsigned)(appid + userid*AID_USER);
+  return static_cast<unsigned>(appid + userid*AID_USER);
 }
 
 static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
@@ -319,7 +323,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
     return NULL;
   }
 
-  print_app_name_from_uid(uid, state->app_name_buffer_, sizeof(state->app_name_buffer_));
+  print_app_name_from_uid(uid, state->name_buffer_, sizeof(state->name_buffer_));
 
   const uid_t appid = uid % AID_USER;
   if (appid < AID_APP) {
@@ -331,7 +335,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
   passwd* pw = &state->passwd_;
-  pw->pw_name  = state->app_name_buffer_;
+  pw->pw_name  = state->name_buffer_;
   pw->pw_dir   = state->dir_buffer_;
   pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
@@ -403,7 +407,7 @@ group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
     return NULL;
   }
 
-  group* gr = android_id_to_group(&state->group_, gid);
+  group* gr = android_id_to_group(state, gid);
   if (gr != NULL) {
     return gr;
   }
@@ -416,7 +420,7 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
     return NULL;
   }
 
-  if (android_name_to_group(&state->group_, name) != 0) {
+  if (android_name_to_group(state, name) != 0) {
     return &state->group_;
   }
   return app_id_to_group(app_id_from_name(name, true), state);

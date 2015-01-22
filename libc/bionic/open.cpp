@@ -54,7 +54,7 @@ int open(const char* pathname, int flags, ...) {
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = static_cast<mode_t>(va_arg(args, int));
     va_end(args);
   }
 
@@ -76,7 +76,7 @@ int openat(int fd, const char *pathname, int flags, ...) {
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = static_cast<mode_t>(va_arg(args, int));
     va_end(args);
   }
 

@@ -83,29 +83,29 @@ int get_nprocs() {
   return result;
 }
 
-static int __get_meminfo(const char* pattern) {
+static int __get_meminfo_page_count(const char* pattern) {
   FILE* fp = fopen("/proc/meminfo", "re");
   if (fp == NULL) {
     return -1;
   }
 
-  int result = -1;
+  int page_count = -1;
   char buf[256];
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      result = (int) (total / (PAGE_SIZE/1024));
+      page_count = static_cast<int>(total / (PAGE_SIZE / 1024));
       break;
     }
   }
   fclose(fp);
-  return result;
+  return page_count;
 }
 
 long get_phys_pages() {
-  return __get_meminfo("MemTotal: %ld kB");
+  return __get_meminfo_page_count("MemTotal: %ld kB");
 }
 
 long get_avphys_pages() {
-  return __get_meminfo("MemFree: %ld kB");
+  return __get_meminfo_page_count("MemFree: %ld kB");
 }
