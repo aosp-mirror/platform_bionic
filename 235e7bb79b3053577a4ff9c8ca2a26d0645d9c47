@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bf937d6_66df7093",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-22T23:33:28Z",
+      "side": 1,
+      "message": "this is strange combination.. what happens if we remove -shared?",
+      "revId": "235e7bb79b3053577a4ff9c8ca2a26d0645d9c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
