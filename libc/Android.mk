@@ -944,6 +944,26 @@ LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
+# libc_ndk.a
+# Compatibility library for the NDK. This library contains
+# all the parts of libc that are safe to statically link.
+# We can't safely statically link things that can only run
+# on a certain version of the OS. Examples include
+# anything that talks to netd (a large portion of the DNS
+# code) and anything that is dependent on the layout of a
+# data structure that has changed across releases (such as
+# pthread_t).
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := libc_ndk
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_syscalls libm
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+
+include $(BUILD_STATIC_LIBRARY)
+
+# ========================================================
 # libc_common.a
 # ========================================================
 
