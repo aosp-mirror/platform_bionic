@@ -889,7 +889,7 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
   }
 }
 
-TEST(fread, fread_EOF) {
+TEST(stdio, fread_EOF) {
   const char* digits = "0123456789";
   FILE* fp = fmemopen((char*) digits, sizeof(digits), "r");
 
