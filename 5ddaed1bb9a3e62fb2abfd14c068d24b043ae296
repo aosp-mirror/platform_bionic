@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebdf837d_c518ace8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2689,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-23T20:10:54Z",
+      "side": 1,
+      "message": "would __linker_init_post_relocation be a better place for this?",
+      "revId": "5ddaed1bb9a3e62fb2abfd14c068d24b043ae296",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
