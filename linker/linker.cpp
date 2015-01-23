@@ -2675,6 +2675,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   protect_data(PROT_READ);
 
+  INFO("[ jumping to _start ]");
+
   // Return the address that the calling assembly stub should jump to.
   return start_address;
 }
