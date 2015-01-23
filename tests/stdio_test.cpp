@@ -107,7 +107,7 @@ TEST(stdio, getdelim) {
     ASSERT_FALSE(feof(fp));
     ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), static_cast<int>(strlen(expected[i])));
     ASSERT_GE(allocated_length, strlen(expected[i]));
-    ASSERT_STREQ(word_read, expected[i]);
+    ASSERT_STREQ(expected[i], word_read);
   }
   // The last read should have set the end-of-file indicator for the stream.
   ASSERT_TRUE(feof(fp));
@@ -171,7 +171,7 @@ TEST(stdio, getline) {
   while ((read_char_count = getline(&line_read, &allocated_length, fp)) != -1) {
     ASSERT_EQ(read_char_count, static_cast<int>(strlen(line_written)));
     ASSERT_GE(allocated_length, strlen(line_written));
-    ASSERT_STREQ(line_read, line_written);
+    ASSERT_STREQ(line_written, line_read);
     ++read_line_count;
   }
   ASSERT_EQ(read_line_count, line_count);
@@ -890,22 +890,23 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
 }
 
 TEST(stdio, fread_EOF) {
-  const char* digits = "0123456789";
-  FILE* fp = fmemopen((char*) digits, sizeof(digits), "r");
+  std::string digits("0123456789");
+  FILE* fp = fmemopen(&digits[0], digits.size(), "r");
 
   // Try to read too much, but little enough that it still fits in the FILE's internal buffer.
   char buf1[4 * 4];
   memset(buf1, 0, sizeof(buf1));
   ASSERT_EQ(2U, fread(buf1, 4, 4, fp));
-  ASSERT_STREQ(buf1, "01234567");
+  ASSERT_STREQ("0123456789", buf1);
   ASSERT_TRUE(feof(fp));
 
   rewind(fp);
 
-  char buf2[4 * 4];
+  // Try to read way too much so stdio tries to read more direct from the stream.
+  char buf2[4 * 4096];
   memset(buf2, 0, sizeof(buf2));
   ASSERT_EQ(2U, fread(buf2, 4, 4096, fp));
-  ASSERT_STREQ(buf2, "01234567");
+  ASSERT_STREQ("0123456789", buf2);
   ASSERT_TRUE(feof(fp));
 
   fclose(fp);
