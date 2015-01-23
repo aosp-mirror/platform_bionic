@@ -63,6 +63,30 @@
       "revId": "c414f38f6947664d7adfee2e7acf793bd35ff3bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab3d8b4e_e3a6ecc8",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-23T00:32:11Z",
+      "side": 1,
+      "message": "Done - removed the cast.",
+      "parentUuid": "0bf937d6_e9c1f1c5",
+      "range": {
+        "startLine": 701,
+        "startChar": 35,
+        "endLine": 701,
+        "endChar": 43
+      },
+      "revId": "c414f38f6947664d7adfee2e7acf793bd35ff3bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
