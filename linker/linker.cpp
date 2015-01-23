@@ -71,6 +71,10 @@
  *   and NOEXEC
  */
 
+// Override macros to use C++ style casts
+#undef ELF_ST_TYPE
+#define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
+
 #if defined(__LP64__)
 #define SEARCH_NAME(x) x
 #else
@@ -364,12 +368,12 @@ static void parse_LD_PRELOAD(const char* path) {
 //
 // This function is exposed via dlfcn.cpp and libdl.so.
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
-  unsigned addr = (unsigned)pc;
+  uintptr_t addr = reinterpret_cast<uintptr_t>(pc);
 
   for (soinfo* si = solist; si != 0; si = si->next) {
     if ((addr >= si->base) && (addr < (si->base + si->size))) {
         *pcount = si->ARM_exidx_count;
-        return (_Unwind_Ptr)si->ARM_exidx;
+        return reinterpret_cast<_Unwind_Ptr>(si->ARM_exidx);
     }
   }
   *pcount = 0;
@@ -2090,7 +2094,7 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_INIT_ARRAYSZ:
-        init_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        init_array_count_ = static_cast<uint32_t>(d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_FINI_ARRAY:
@@ -2099,7 +2103,7 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_FINI_ARRAYSZ:
-        fini_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        fini_array_count_ = static_cast<uint32_t>(d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_PREINIT_ARRAY:
@@ -2108,7 +2112,7 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_PREINIT_ARRAYSZ:
-        preinit_array_count_ = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
+        preinit_array_count_ = static_cast<uint32_t>(d->d_un.d_val) / sizeof(ElfW(Addr));
         break;
 
       case DT_TEXTREL:

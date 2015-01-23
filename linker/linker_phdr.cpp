@@ -688,7 +688,7 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
  */
 int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                              ElfW(Addr) load_bias,
-                             ElfW(Addr)** arm_exidx, unsigned* arm_exidx_count) {
+                             ElfW(Addr)** arm_exidx, size_t* arm_exidx_count) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
 
@@ -698,7 +698,7 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
     }
 
     *arm_exidx = reinterpret_cast<ElfW(Addr)*>(load_bias + phdr->p_vaddr);
-    *arm_exidx_count = (unsigned)(phdr->p_memsz / 8);
+    *arm_exidx_count = phdr->p_memsz / 8;
     return 0;
   }
   *arm_exidx = nullptr;
@@ -757,7 +757,7 @@ bool ElfReader::FindPhdr() {
         ElfW(Addr)  elf_addr = load_bias_ + phdr->p_vaddr;
         const ElfW(Ehdr)* ehdr = reinterpret_cast<const ElfW(Ehdr)*>(elf_addr);
         ElfW(Addr)  offset = ehdr->e_phoff;
-        return CheckPhdr((ElfW(Addr))ehdr + offset);
+        return CheckPhdr(reinterpret_cast<ElfW(Addr)>(ehdr) + offset);
       }
       break;
     }
