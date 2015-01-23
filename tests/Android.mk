@@ -413,11 +413,15 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 include $(LOCAL_PATH)/../build/run-on-host.mk
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+
+TEST_TIMEOUT := 0
+
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
 bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
+		timeout $(TEST_TIMEOUT) \
 		$(TARGET_OUT_DATA)/nativetest/bionic-unit-tests/bionic-unit-tests32 $(BIONIC_TEST_FLAGS)
 
 ifeq ($(TARGET_IS_64_BIT),true)
@@ -426,6 +430,7 @@ bionic-unit-tests-run-on-host64: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
+		timeout $(TEST_TIMEOUT) \
 		$(TARGET_OUT_DATA)/nativetest64/bionic-unit-tests/bionic-unit-tests64 $(BIONIC_TEST_FLAGS)
 endif
 
