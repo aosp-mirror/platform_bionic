@@ -98,7 +98,7 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
 
 #if defined(__arm__)
 int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias,
-                             ElfW(Addr)** arm_exidx, unsigned* arm_exidix_count);
+                             ElfW(Addr)** arm_exidx, size_t* arm_exidix_count);
 #endif
 
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
