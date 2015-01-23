@@ -850,3 +850,17 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
+
+// libtest_dlopen_from_ctor_main.so depends on
+// libtest_dlopen_from_ctor.so which has a constructor
+// that calls dlopen(libc...). This is to test the situation
+// described in b/7941716.
+TEST(dlfcn, dlopen_dlopen_from_ctor) {
+#if defined(__BIONIC__)
+  void* handle = dlopen("libtest_dlopen_from_ctor_main.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+#else
+  GTEST_LOG_(INFO) << "This test is disabled for glibc (glibc segfaults if you try to call dlopen from a constructor).\n";
+#endif
+}
