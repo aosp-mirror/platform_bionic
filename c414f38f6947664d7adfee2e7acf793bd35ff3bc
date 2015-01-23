@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bf937d6_e9c1f1c5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-23T00:19:20Z",
+      "side": 1,
+      "message": "Above it\u0027s unsigned, but you\u0027re switching it to uint32_t. Shouldn\u0027t it be left as unsigned?\n\nSame for the other places you do this.",
+      "range": {
+        "startLine": 701,
+        "startChar": 35,
+        "endLine": 701,
+        "endChar": 43
+      },
+      "revId": "c414f38f6947664d7adfee2e7acf793bd35ff3bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
