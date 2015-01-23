@@ -28,7 +28,7 @@ def GetFromTxt(txt_file):
     return symbols
 
 
-def GetFromSo(so_file):
+def GetFromElf(elf_file, sym_type='--dyn-syms'):
     # pylint: disable=line-too-long
     # Example readelf output:
     #     264: 0001623c         4 FUNC        GLOBAL DEFAULT        8 cabsf
@@ -41,7 +41,7 @@ def GetFromSo(so_file):
 
     symbols = set()
 
-    output = subprocess.check_output(['readelf', '--dyn-syms', '-W', so_file])
+    output = subprocess.check_output(['readelf', sym_type, '-W', elf_file])
     for line in output.split('\n'):
         if ' HIDDEN ' in line or ' UND ' in line:
             continue
@@ -54,6 +54,22 @@ def GetFromSo(so_file):
     return symbols
 
 
+def GetFromAndroidStaticLib(files):
+    out_dir = os.environ['ANDROID_PRODUCT_OUT']
+    lib_dir = os.path.join(out_dir, 'obj')
+
+    results = set()
+    for f in files:
+        static_lib_dir = os.path.join(
+            lib_dir,
+            'STATIC_LIBRARIES',
+            '{}_intermediates'.format(os.path.splitext(f)[0]))
+        results |= GetFromElf(
+            os.path.join(static_lib_dir, f),
+            sym_type='--syms')
+    return results
+
+
 def GetFromAndroidSo(files):
     out_dir = os.environ['ANDROID_PRODUCT_OUT']
     lib_dir = os.path.join(out_dir, 'system/lib64')
@@ -62,7 +78,7 @@ def GetFromAndroidSo(files):
 
     results = set()
     for f in files:
-        results |= GetFromSo(os.path.join(lib_dir, f))
+        results |= GetFromElf(os.path.join(lib_dir, f))
     return results
 
 
@@ -70,5 +86,5 @@ def GetFromSystemSo(files):
     lib_dir = '/lib/x86_64-linux-gnu'
     results = set()
     for f in files:
-        results |= GetFromSo(glob.glob(os.path.join(lib_dir, f))[-1])
+        results |= GetFromElf(glob.glob(os.path.join(lib_dir, f))[-1])
     return results

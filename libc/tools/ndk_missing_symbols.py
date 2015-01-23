@@ -33,10 +33,14 @@ def main():
     adb_pull('/system/lib/libm.so', tmp_dir)
 
     current = symbols.GetFromAndroidSo(['libc.so', 'libm.so'])
-    device = (symbols.GetFromSo(os.path.join(tmp_dir, 'libc.so')) |
-              symbols.GetFromSo(os.path.join(tmp_dir, 'libm.so')))
+    device = (symbols.GetFromElf(os.path.join(tmp_dir, 'libc.so')) |
+              symbols.GetFromElf(os.path.join(tmp_dir, 'libm.so')))
+    compat_lib = symbols.GetFromAndroidStaticLib(['libc_ndk.a'])
 
-    for symbol in sorted(current - device):
+    missing_symbols = current - device
+    compat_not_covered = missing_symbols - compat_lib
+
+    for symbol in sorted(compat_not_covered):
         print symbol
 
 
