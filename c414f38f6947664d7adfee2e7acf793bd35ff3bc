@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "eb33037d_c8f9838c",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-23T00:30:01Z",
+      "side": 1,
+      "message": "this should probably be in LOCAL_CPPFLAGS? (since it\u0027s not supported when compiling C.)",
+      "revId": "c414f38f6947664d7adfee2e7acf793bd35ff3bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bf937d6_e9c1f1c5",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
@@ -13,6 +30,30 @@
       "writtenOn": "2015-01-23T00:19:20Z",
       "side": 1,
       "message": "Above it\u0027s unsigned, but you\u0027re switching it to uint32_t. Shouldn\u0027t it be left as unsigned?\n\nSame for the other places you do this.",
+      "range": {
+        "startLine": 701,
+        "startChar": 35,
+        "endLine": 701,
+        "endChar": 43
+      },
+      "revId": "c414f38f6947664d7adfee2e7acf793bd35ff3bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bf937d6_acd1c762",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-23T00:30:01Z",
+      "side": 1,
+      "message": "we should probably change the argument type. in this case, to size_t.",
+      "parentUuid": "0bf937d6_e9c1f1c5",
       "range": {
         "startLine": 701,
         "startChar": 35,
