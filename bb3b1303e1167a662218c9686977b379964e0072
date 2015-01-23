@@ -16,6 +16,24 @@
       "revId": "bb3b1303e1167a662218c9686977b379964e0072",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebdf837d_45b65c5c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1599,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-23T22:58:22Z",
+      "side": 0,
+      "message": "nope, there is no test... and the simple case - one lib with one ctor won\u0027t catch this bug.. we need at least 2 libraries to reproduce this.",
+      "parentUuid": "cbe47f53_04a1f8ae",
+      "revId": "bb3b1303e1167a662218c9686977b379964e0072",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
