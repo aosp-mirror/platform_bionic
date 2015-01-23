@@ -369,7 +369,7 @@ LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx \
 
 LOCAL_CLANG := false
 LOCAL_MODULE := bionic-compile-time-tests-g++
-LOCAL_CXXFLAGS := -Wall
+LOCAL_CPPFLAGS := -Wall
 LOCAL_SRC_FILES := fortify_sprintf_warnings.cpp
 include $(BUILD_STATIC_LIBRARY)
 
@@ -386,7 +386,7 @@ LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
 
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests-clang++
-LOCAL_CXXFLAGS := -Wall
+LOCAL_CPPFLAGS := -Wall
 # FileCheck will error if there aren't any CLANG: lines in the file, but there
 # don't appear to be any cases where clang _does_ emit warnings for sn?printf :(
 LOCAL_SRC_FILES :=
