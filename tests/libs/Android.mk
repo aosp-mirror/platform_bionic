@@ -367,3 +367,29 @@ libtest_dlopen_weak_undefined_func_src_files := \
 
 module := libtest_dlopen_weak_undefined_func
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Library with constructor that calls dlopen() b/7941716
+# -----------------------------------------------------------------------------
+libtest_dlopen_from_ctor_src_files := \
+   dlopen_testlib_dlopen_from_ctor.cpp
+
+module := libtest_dlopen_from_ctor
+
+build_target := SHARED_LIBRARY
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+
+libtest_dlopen_from_ctor_shared_libraries := libdl
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library that depends on the library with constructor that calls dlopen() b/7941716
+# -----------------------------------------------------------------------------
+
+libtest_dlopen_from_ctor_main_src_files := empty.cpp
+libtest_dlopen_from_ctor_main_shared_libraries := libtest_dlopen_from_ctor
+
+module := libtest_dlopen_from_ctor_main
+include $(LOCAL_PATH)/Android.build.testlib.mk

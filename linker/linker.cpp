@@ -262,11 +262,6 @@ void SoinfoListAllocator::free(LinkedListEntry<soinfo>* entry) {
   g_soinfo_links_allocator.free(entry);
 }
 
-static void protect_data(int protection) {
-  g_soinfo_allocator.protect_all(protection);
-  g_soinfo_links_allocator.protect_all(protection);
-}
-
 static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, uint32_t rtld_flags) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
@@ -588,6 +583,34 @@ ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found
 
   return s;
 }
+
+class ProtectedDataGuard {
+ public:
+  ProtectedDataGuard() {
+    if (ref_count_++ == 0) {
+      protect_data(PROT_READ | PROT_WRITE);
+    }
+  }
+
+  ~ProtectedDataGuard() {
+    if (ref_count_ == 0) { // overflow
+      __libc_fatal("Too many nested calls to dlopen()");
+    }
+
+    if (--ref_count_ == 0) {
+      protect_data(PROT_READ);
+    }
+  }
+ private:
+  void protect_data(int protection) {
+    g_soinfo_allocator.protect_all(protection);
+    g_soinfo_links_allocator.protect_all(protection);
+  }
+
+  static size_t ref_count_;
+};
+
+size_t ProtectedDataGuard::ref_count_ = 0;
 
 // Each size has it's own allocator.
 template<size_t size>
@@ -1237,19 +1260,18 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
       return nullptr;
     }
   }
-  protect_data(PROT_READ | PROT_WRITE);
+
+  ProtectedDataGuard guard;
   soinfo* si = find_library(name, flags, extinfo);
   if (si != nullptr) {
     si->call_constructors();
   }
-  protect_data(PROT_READ);
   return si;
 }
 
 void do_dlclose(soinfo* si) {
-  protect_data(PROT_READ | PROT_WRITE);
+  ProtectedDataGuard guard;
   soinfo_unload(si);
-  protect_data(PROT_READ);
 }
 
 static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
@@ -1595,10 +1617,6 @@ void soinfo::call_function(const char* function_name __unused, linker_function_t
   TRACE("[ Calling %s @ %p for '%s' ]", function_name, function, name);
   function();
   TRACE("[ Done calling %s @ %p for '%s' ]", function_name, function, name);
-
-  // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
-  // are still writable. This happens with our debug malloc (see http://b/7941716).
-  protect_data(PROT_READ | PROT_WRITE);
 }
 
 void soinfo::call_pre_init_constructors() {
@@ -2522,15 +2540,19 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   add_vdso(args);
 
-  si->call_pre_init_constructors();
+  {
+    ProtectedDataGuard guard;
 
-  /* After the prelink_image, the si->load_bias is initialized.
-   * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
-   * We need to update this value for so exe here. So Unwind_Backtrace
-   * for some arch like x86 could work correctly within so exe.
-   */
-  map->l_addr = si->load_bias;
-  si->call_constructors();
+    si->call_pre_init_constructors();
+
+    /* After the prelink_image, the si->load_bias is initialized.
+     * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
+     * We need to update this value for so exe here. So Unwind_Backtrace
+     * for some arch like x86 could work correctly within so exe.
+     */
+    map->l_addr = si->load_bias;
+    si->call_constructors();
+  }
 
 #if TIMING
   gettimeofday(&t1, nullptr);
@@ -2672,8 +2694,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
-
-  protect_data(PROT_READ);
 
   INFO("[ jumping to _start ]");
 
