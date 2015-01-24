@@ -31,7 +31,6 @@
 #include <sys/cdefs.h>
 
 #include <stddef.h>
-#include <string.h>
 #include <alloca.h>
 #include <strings.h>
 #include <memory.h>
