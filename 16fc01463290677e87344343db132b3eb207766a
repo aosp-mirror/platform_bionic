@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bcab3df_09112d46",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-24T00:26:28Z",
+      "side": 1,
+      "message": "either \"the file\" or remove \"the\".\n\n(why? because you don\u0027t say \"the Dimitry\".)",
+      "revId": "16fc01463290677e87344343db132b3eb207766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bc43bd1_87918834",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-24T00:26:28Z",
+      "side": 1,
+      "message": "constructor\n\n(sorry, didn\u0027t scroll last time.)",
+      "revId": "16fc01463290677e87344343db132b3eb207766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
