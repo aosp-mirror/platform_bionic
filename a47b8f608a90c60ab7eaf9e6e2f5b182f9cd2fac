@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b8f13ae_21c6c859",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-24T06:44:44Z",
+      "side": 1,
+      "message": "I know this is unchanged, but why are these separate bits?  This goes from 0 to ONCE_INITIALIZING to ONCE_COMPLETING, and both should never be set.",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 43
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b8a879b_3fb507be",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-24T06:44:44Z",
+      "side": 1,
+      "message": "What breaks?",
+      "range": {
+        "startLine": 45,
+        "startChar": 68,
+        "endLine": 45,
+        "endChar": 73
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab858b8b_2027aa52",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-24T06:44:44Z",
+      "side": 1,
+      "message": "Is there a reason to drop the __predict_true?  The \"!\u003d0\" seems redundant in an if.  (I know it was there ...)\n\nSorry about all the criticisms here, but it looks to me like this code already needed other cleanup to start with.",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 27
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b8a879b_9f75336d",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-24T06:44:44Z",
+      "side": 1,
+      "message": "I\u0027d use ! instead of \u003d\u003d false.\nIsn\u0027t it simpler to get rid of the nested loops by just continuing the outer loop in case this fails?\nIt\u0027s also clear that you then need the initial separate ONCE_COMPLETED check.\nAnd you may just always want to use acquire loads instead of the fence afterwards.  I don\u0027t think that increases the number of fences on ARM in the likely cases.\nThe logic here seems needlessly baroque.",
+      "range": {
+        "startLine": 75,
+        "startChar": 46,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab858b8b_4024ae4b",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-24T06:44:44Z",
+      "side": 1,
+      "message": "I\u0027d use atomic_thread_fence(memory_order_acquire) instead.  Or revamp the logic to avoid it.",
+      "range": {
+        "startLine": 82,
+        "startChar": 6,
+        "endLine": 82,
+        "endChar": 67
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
