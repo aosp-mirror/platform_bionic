@@ -33,7 +33,6 @@
 #include <limits.h>
 #include <machine/pthread_types.h>
 #include <machine/timespec.h>
-#include <string.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
