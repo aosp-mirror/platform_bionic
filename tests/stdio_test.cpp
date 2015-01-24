@@ -27,6 +27,8 @@
 #include <wchar.h>
 #include <locale.h>
 
+#include <vector>
+
 #include "TemporaryFile.h"
 
 TEST(stdio, flockfile_18208568_stderr) {
@@ -872,7 +874,7 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
 
   time_t t0 = time(NULL);
   for (size_t i = 0; i < 1024; ++i) {
-    fread(buf, 64*1024, 1, fp);
+    ASSERT_EQ(1U, fread(buf, 64*1024, 1, fp));
   }
   time_t t1 = time(NULL);
 
@@ -910,4 +912,56 @@ TEST(stdio, fread_EOF) {
   ASSERT_TRUE(feof(fp));
 
   fclose(fp);
+}
+
+static void test_fread_from_write_only_stream(size_t n) {
+  FILE* fp = fopen("/dev/null", "w");
+  std::vector<char> buf(n, 0);
+  errno = 0;
+  ASSERT_EQ(0U, fread(&buf[0], n, 1, fp));
+  ASSERT_EQ(EBADF, errno);
+  ASSERT_TRUE(ferror(fp));
+  ASSERT_FALSE(feof(fp));
+  fclose(fp);
+}
+
+TEST(stdio, fread_from_write_only_stream_slow_path) {
+  test_fread_from_write_only_stream(1);
+}
+
+TEST(stdio, fread_from_write_only_stream_fast_path) {
+  test_fread_from_write_only_stream(64*1024);
+}
+
+static void test_fwrite_after_fread(size_t n) {
+  TemporaryFile tf;
+
+  FILE* fp = fdopen(tf.fd, "w+");
+  ASSERT_EQ(1U, fwrite("1", 1, 1, fp));
+  fflush(fp);
+
+  // We've flushed but not rewound, so there's nothing to read.
+  std::vector<char> buf(n, 0);
+  ASSERT_EQ(0U, fread(&buf[0], 1, buf.size(), fp));
+  ASSERT_TRUE(feof(fp));
+
+  // But hitting EOF doesn't prevent us from writing...
+  errno = 0;
+  ASSERT_EQ(1U, fwrite("2", 1, 1, fp)) << errno;
+
+  // And if we rewind, everything's there.
+  rewind(fp);
+  ASSERT_EQ(2U, fread(&buf[0], 1, buf.size(), fp));
+  ASSERT_EQ('1', buf[0]);
+  ASSERT_EQ('2', buf[1]);
+
+  fclose(fp);
+}
+
+TEST(stdio, fwrite_after_fread_slow_path) {
+  test_fwrite_after_fread(16);
+}
+
+TEST(stdio, fwrite_after_fread_fast_path) {
+  test_fwrite_after_fread(64*1024);
 }
