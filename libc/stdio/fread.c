@@ -120,7 +120,7 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 	while (total > 0) {
 		ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, total);
 		if (bytes_read <= 0) {
-			fp->_flags = (fp->_r == 0) ? __SEOF : __SERR;
+			fp->_flags |= (bytes_read == 0) ? __SEOF : __SERR;
 			break;
 		}
 		dst += bytes_read;
