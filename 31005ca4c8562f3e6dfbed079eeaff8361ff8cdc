@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b8a879b_3f50a7d1",
+        "filename": "libc/stdio/refill.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-24T08:20:23Z",
+      "side": 0,
+      "message": "Actually, there is no need to move this file, since it is not modified.",
+      "revId": "31005ca4c8562f3e6dfbed079eeaff8361ff8cdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
