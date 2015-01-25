@@ -57,6 +57,7 @@ libBionicStandardTests_src_files := \
     complex_test.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
+    error_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
     fenv_test.cpp \

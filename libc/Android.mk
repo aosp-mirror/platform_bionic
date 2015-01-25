@@ -112,6 +112,7 @@ libc_bionic_src_files := \
     bionic/epoll_pwait.cpp \
     bionic/epoll_wait.cpp \
     bionic/__errno.cpp \
+    bionic/error.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
     bionic/ffs.cpp \
