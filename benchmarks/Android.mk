@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-ifneq ($(BUILD_TINY_ANDROID), true)
-
 LOCAL_PATH := $(call my-dir)
 
 # -----------------------------------------------------------------------------
@@ -108,5 +106,3 @@ bionic-benchmarks-run-on-host64: bionic-benchmarks bionic-prepare-run-on-host
 endif
 
 endif
-
-endif # !BUILD_TINY_ANDROID

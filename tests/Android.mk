@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-ifneq ($(BUILD_TINY_ANDROID),true)
-
 LOCAL_PATH := $(call my-dir)
 
 # -----------------------------------------------------------------------------
@@ -438,4 +436,3 @@ endif # x86 x86_64
 endif # linux-x86
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
-endif # !BUILD_TINY_ANDROID
