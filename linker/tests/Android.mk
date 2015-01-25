@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-ifneq ($(BUILD_TINY_ANDROID),true)
-
 LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -34,5 +32,3 @@ LOCAL_SRC_FILES := \
   ../linker_allocator.cpp
 
 include $(BUILD_NATIVE_TEST)
-
-endif # !BUILD_TINY_ANDROID
