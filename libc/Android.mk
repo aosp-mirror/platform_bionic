@@ -896,7 +896,14 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_ADDRESS_SANITIZER := false
-LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+# b/17574078: Need to disable coverage until we have a prebuilt libprofile_rt.
+# Since this is a static library built with clang, it needs to link
+# libprofile_rt when it is linked into the final binary. Since the final binary
+# is built with GCC, it won't link libprofile_rt. We can't very easily just add
+# libprofile_rt to all link lines the way we've done for libgcov because
+# libprofile_rt isn't prebuilt, and it would be tricky to write a rule that
+# would make sure libprofile_rt is built.
+LOCAL_NATIVE_COVERAGE := false
 
 include $(BUILD_STATIC_LIBRARY)
 
