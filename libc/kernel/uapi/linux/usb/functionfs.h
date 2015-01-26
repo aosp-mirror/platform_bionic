@@ -33,25 +33,65 @@ enum functionfs_flags {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  FUNCTIONFS_HAS_HS_DESC = 2,
  FUNCTIONFS_HAS_SS_DESC = 4,
+ FUNCTIONFS_HAS_MS_OS_DESC = 8,
+ FUNCTIONFS_VIRTUAL_ADDR = 16,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct usb_endpoint_descriptor_no_audio {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 bLength;
  __u8 bDescriptorType;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 bEndpointAddress;
  __u8 bmAttributes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __le16 wMaxPacketSize;
  __u8 bInterval;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} __attribute__((packed));
+struct usb_functionfs_descs_head_v2 {
+ __le32 magic;
+ __le32 length;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le32 flags;
 } __attribute__((packed));
 struct usb_functionfs_descs_head {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __le32 magic;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __le32 length;
  __le32 fs_count;
  __le32 hs_count;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed, deprecated));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct usb_os_desc_header {
+ __u8 interface;
+ __le32 dwLength;
+ __le16 bcdVersion;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __le16 wIndex;
+ union {
+ struct {
+ __u8 bCount;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 Reserved;
+ };
+ __le16 wCount;
+ };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} __attribute__((packed));
+struct usb_ext_compat_desc {
+ __u8 bFirstInterfaceNumber;
+ __u8 Reserved1;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 CompatibleID[8];
+ __u8 SubCompatibleID[8];
+ __u8 Reserved2[6];
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct usb_ext_prop_desc {
+ __le32 dwSize;
+ __le32 dwPropertyDataType;
+ __le16 wPropertyNameLength;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} __attribute__((packed));
 struct usb_functionfs_strings_head {
  __le32 magic;
  __le32 length;
@@ -86,4 +126,5 @@ struct usb_functionfs_event {
 #define FUNCTIONFS_INTERFACE_REVMAP _IO('g', 128)
 #define FUNCTIONFS_ENDPOINT_REVMAP _IO('g', 129)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FUNCTIONFS_ENDPOINT_DESC _IOR('g', 130,   struct usb_endpoint_descriptor)
 #endif
