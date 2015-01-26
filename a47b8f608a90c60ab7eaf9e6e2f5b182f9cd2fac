@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b26339e_260b5649",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T20:23:36Z",
+      "side": 1,
+      "message": "I also can\u0027t find any reason to keep them separate bits.",
+      "parentUuid": "6b8f13ae_21c6c859",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 43
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b8a879b_3fb507be",
         "filename": "libc/bionic/pthread_once.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-24T06:44:44Z",
       "side": 1,
       "message": "What breaks?",
+      "range": {
+        "startLine": 45,
+        "startChar": 68,
+        "endLine": 45,
+        "endChar": 73
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b26339e_267d169d",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T20:23:36Z",
+      "side": 1,
+      "message": "pthread.h is included by some source file in libcxx, so stdatomic.h is also included if we decare pthread_once_t to be atomic_int directly in pthread.h. However, _USING_LIBCXX flag is not set, so \u003catomic\u003e is not used in stdatomic.h. It means if some file in libcxx includes both pthread.h and \u003catomic\u003e, there will be two different definitions of atomic_thread_fence(), atomic_signal_fence(), and so on. That makes compilation error.",
+      "parentUuid": "8b8a879b_3fb507be",
       "range": {
         "startLine": 45,
         "startChar": 68,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8b31a7d3_27019a78",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T20:23:36Z",
+      "side": 1,
+      "message": "Sorry, I forgot that.",
+      "parentUuid": "ab858b8b_2027aa52",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 27
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b8a879b_9f75336d",
         "filename": "libc/bionic/pthread_once.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "ab2cab7b_c83e0f4c",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T20:23:36Z",
+      "side": 1,
+      "message": "Inner loop removed. I can\u0027t make sure the performance penalty of using memory_order_acquire instead of memory_order_relaxed. Some race situations are hard to produce.",
+      "parentUuid": "8b8a879b_9f75336d",
+      "range": {
+        "startLine": 75,
+        "startChar": 46,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab858b8b_4024ae4b",
         "filename": "libc/bionic/pthread_once.cpp",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2015-01-24T06:44:44Z",
       "side": 1,
       "message": "I\u0027d use atomic_thread_fence(memory_order_acquire) instead.  Or revamp the logic to avoid it.",
+      "range": {
+        "startLine": 82,
+        "startChar": 6,
+        "endLine": 82,
+        "endChar": 67
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b31a7d3_27dc3a9c",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T20:23:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab858b8b_4024ae4b",
       "range": {
         "startLine": 82,
         "startChar": 6,
