@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab2cab7b_11692edc",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T23:10:08Z",
+      "side": 1,
+      "message": "printing the empty message is harmless, no? seems like we could remove the comment and the \u0027if\u0027 without losing anything.",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7e7c792_25c0b84d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T23:10:08Z",
+      "side": 1,
+      "message": "shouldn\u0027t the !xml_output_filename.empty() test be here?",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7e7c792_2597985b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T23:10:08Z",
+      "side": 1,
+      "message": "do you actually want this end time to include the time spent in OnTestIterationEndPrint? don\u0027t you want to compute the end time before you start any printing?",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
