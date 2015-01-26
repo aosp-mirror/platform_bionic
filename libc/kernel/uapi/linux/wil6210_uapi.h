@@ -16,40 +16,36 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_FCNTL_H
-#define _UAPI_LINUX_FCNTL_H
-#include <asm/fcntl.h>
-#define F_SETLEASE (F_LINUX_SPECIFIC_BASE + 0)
+#ifndef __WIL6210_UAPI_H__
+#define __WIL6210_UAPI_H__
+#define __user
+#include <linux/sockios.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define F_GETLEASE (F_LINUX_SPECIFIC_BASE + 1)
-#define F_CANCELLK (F_LINUX_SPECIFIC_BASE + 5)
-#define F_DUPFD_CLOEXEC (F_LINUX_SPECIFIC_BASE + 6)
-#define F_NOTIFY (F_LINUX_SPECIFIC_BASE+2)
+#define WIL_IOCTL_MEMIO (SIOCDEVPRIVATE + 2)
+#define WIL_IOCTL_MEMIO_BLOCK (SIOCDEVPRIVATE + 3)
+enum wil_memio_op {
+ wil_mmio_read = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define F_SETPIPE_SZ (F_LINUX_SPECIFIC_BASE + 7)
-#define F_GETPIPE_SZ (F_LINUX_SPECIFIC_BASE + 8)
-#define F_ADD_SEALS (F_LINUX_SPECIFIC_BASE + 9)
-#define F_GET_SEALS (F_LINUX_SPECIFIC_BASE + 10)
+ wil_mmio_write = 1,
+ wil_mmio_op_mask = 0xff,
+ wil_mmio_addr_linker = 0 << 8,
+ wil_mmio_addr_ahb = 1 << 8,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define F_SEAL_SEAL 0x0001
-#define F_SEAL_SHRINK 0x0002
-#define F_SEAL_GROW 0x0004
-#define F_SEAL_WRITE 0x0008
+ wil_mmio_addr_bar = 2 << 8,
+ wil_mmio_addr_mask = 0xff00,
+};
+struct wil_memio {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DN_ACCESS 0x00000001
-#define DN_MODIFY 0x00000002
-#define DN_CREATE 0x00000004
-#define DN_DELETE 0x00000008
+ uint32_t op;
+ uint32_t addr;
+ uint32_t val;
+};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DN_RENAME 0x00000010
-#define DN_ATTRIB 0x00000020
-#define DN_MULTISHOT 0x80000000
-#define AT_FDCWD -100
+struct wil_memio_block {
+ uint32_t op;
+ uint32_t addr;
+ uint32_t size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define AT_SYMLINK_NOFOLLOW 0x100
-#define AT_REMOVEDIR 0x200
-#define AT_SYMLINK_FOLLOW 0x400
-#define AT_NO_AUTOMOUNT 0x800
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define AT_EMPTY_PATH 0x1000
+ void __user *block;
+};
 #endif

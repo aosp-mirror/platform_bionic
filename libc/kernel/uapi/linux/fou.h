@@ -16,19 +16,35 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_SWAB_H
-#define _ASM_SWAB_H
-#include <linux/compiler.h>
-#include <linux/types.h>
+#ifndef _UAPI_LINUX_FOU_H
+#define _UAPI_LINUX_FOU_H
+#define FOU_GENL_NAME "fou"
+#define FOU_GENL_VERSION 0x1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __SWAB_64_THRU_32__
-#if defined(__mips_isa_rev) && __mips_isa_rev >= 2 || defined(_MIPS_ARCH_LOONGSON3A)
-#define __arch_swab16 __arch_swab16
-#define __arch_swab32 __arch_swab32
+enum {
+ FOU_ATTR_UNSPEC,
+ FOU_ATTR_PORT,
+ FOU_ATTR_AF,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#ifdef __mips64
-#define __arch_swab64 __arch_swab64
-#endif
-#endif
+ FOU_ATTR_IPPROTO,
+ FOU_ATTR_TYPE,
+ __FOU_ATTR_MAX,
+};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FOU_ATTR_MAX (__FOU_ATTR_MAX - 1)
+enum {
+ FOU_CMD_UNSPEC,
+ FOU_CMD_ADD,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ FOU_CMD_DEL,
+ __FOU_CMD_MAX,
+};
+enum {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ FOU_ENCAP_UNSPEC,
+ FOU_ENCAP_DIRECT,
+ FOU_ENCAP_GUE,
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FOU_CMD_MAX (__FOU_CMD_MAX - 1)
 #endif

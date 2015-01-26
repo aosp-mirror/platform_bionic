@@ -372,8 +372,13 @@
 #define __NR_sched_getattr 275
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_renameat2 276
+#define __NR_seccomp 277
+#define __NR_getrandom 278
+#define __NR_memfd_create 279
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_bpf 280
 #undef __NR_syscalls
-#define __NR_syscalls 277
+#define __NR_syscalls 281
 #ifdef __ARCH_WANT_SYSCALL_NO_AT
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_open 1024

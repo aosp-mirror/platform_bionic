@@ -414,5 +414,11 @@
 #define __NR_sched_setattr 314
 #define __NR_sched_getattr 315
 #define __NR_renameat2 316
-#endif
+#define __NR_seccomp 317
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_getrandom 318
+#define __NR_memfd_create 319
+#define __NR_kexec_file_load 320
+#define __NR_bpf 321
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

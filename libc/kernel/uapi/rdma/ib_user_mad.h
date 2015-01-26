@@ -88,9 +88,31 @@ struct ib_user_mad_reg_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  __u8 rmpp_version;
 };
+enum {
+ IB_USER_MAD_USER_RMPP = (1 << 0),
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+#define IB_USER_MAD_REG_FLAGS_CAP (IB_USER_MAD_USER_RMPP)
+struct ib_user_mad_reg_req2 {
+ __u32 id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 qpn;
+ __u8 mgmt_class;
+ __u8 mgmt_class_version;
+ __u16 res;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 flags;
+ __u64 method_mask[2];
+ __u32 oui;
+ __u8 rmpp_version;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u8 reserved[3];
+};
 #define IB_IOCTL_MAGIC 0x1b
 #define IB_USER_MAD_REGISTER_AGENT _IOWR(IB_IOCTL_MAGIC, 1,   struct ib_user_mad_reg_req)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IB_USER_MAD_UNREGISTER_AGENT _IOW(IB_IOCTL_MAGIC, 2, __u32)
 #define IB_USER_MAD_ENABLE_PKEY _IO(IB_IOCTL_MAGIC, 3)
+#define IB_USER_MAD_REGISTER_AGENT2 _IOWR(IB_IOCTL_MAGIC, 4,   struct ib_user_mad_reg_req2)
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -59,21 +59,22 @@ struct uinput_ff_erase {
 #define UI_BEGIN_FF_ERASE _IOWR(UINPUT_IOCTL_BASE, 202, struct uinput_ff_erase)
 #define UI_END_FF_ERASE _IOW(UINPUT_IOCTL_BASE, 203, struct uinput_ff_erase)
 #define UI_GET_SYSNAME(len) _IOC(_IOC_READ, UINPUT_IOCTL_BASE, 300, len)
-#define EV_UINPUT 0x0101
+#define UI_GET_VERSION _IOR(UINPUT_IOCTL_BASE, 301, unsigned int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define EV_UINPUT 0x0101
 #define UI_FF_UPLOAD 1
 #define UI_FF_ERASE 2
 #define UINPUT_MAX_NAME_SIZE 80
-struct uinput_user_dev {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct uinput_user_dev {
  char name[UINPUT_MAX_NAME_SIZE];
  struct input_id id;
  __u32 ff_effects_max;
- __s32 absmax[ABS_CNT];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __s32 absmax[ABS_CNT];
  __s32 absmin[ABS_CNT];
  __s32 absfuzz[ABS_CNT];
  __s32 absflat[ABS_CNT];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
