@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b31a7d3_075ad67a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "failure\n\n\"trace info\" or \"trace\"?\n\nwhat is this exactly? it\u0027s just the failure message? in which case, that would seem like the right name.",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b31a7d3_478bee7e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "the child process\n\nfailure",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab2cab7b_c890cfdf",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "The parent process",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b26339e_46e932b9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "file*name*",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b31a7d3_ead66757",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "why isn\u0027t this an error?",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab2cab7b_e8d0338e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "the usual style is \"failed to open \u0027%s\u0027: %s\", with the second %s being strerror(errno).",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab2cab7b_c8128fc5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "always use TEMP_FAILURE_RETRY.",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab2cab7b_08df4793",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "options",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b26339e_a6a8266c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "leaving",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b26339e_269ef63d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T20:38:17Z",
+      "side": 1,
+      "message": "the usual style is \"invalid job count: %s\".",
+      "revId": "a4f619e6622b648dcbe52e6a394c83b4172a0e0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
