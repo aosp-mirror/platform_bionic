@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "ab2cab7b_eba58dba",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T21:01:46Z",
+      "side": 1,
+      "message": "i think we only care about the usual case, which is the ONCE_COMPLETED case. there\u0027s a benchmark for that in the bionic benchmarks. (worth running on x86-64 as well as arm.)",
+      "parentUuid": "ab2cab7b_c83e0f4c",
+      "range": {
+        "startLine": 75,
+        "startChar": 46,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "a47b8f608a90c60ab7eaf9e6e2f5b182f9cd2fac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab858b8b_4024ae4b",
         "filename": "libc/bionic/pthread_once.cpp",
         "patchSetId": 1
