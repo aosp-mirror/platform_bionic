@@ -33,7 +33,7 @@ struct arpt_mangle
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  struct in_addr tgt_ip;
  } u_t;
- u_int8_t flags;
+ __u8 flags;
  int target;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };

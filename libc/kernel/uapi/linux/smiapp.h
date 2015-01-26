@@ -16,19 +16,13 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_SWAB_H
-#define _ASM_SWAB_H
-#include <linux/compiler.h>
-#include <linux/types.h>
+#ifndef __UAPI_LINUX_SMIAPP_H_
+#define __UAPI_LINUX_SMIAPP_H_
+#define V4L2_SMIAPP_TEST_PATTERN_MODE_DISABLED 0
+#define V4L2_SMIAPP_TEST_PATTERN_MODE_SOLID_COLOUR 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __SWAB_64_THRU_32__
-#if defined(__mips_isa_rev) && __mips_isa_rev >= 2 || defined(_MIPS_ARCH_LOONGSON3A)
-#define __arch_swab16 __arch_swab16
-#define __arch_swab32 __arch_swab32
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#ifdef __mips64
-#define __arch_swab64 __arch_swab64
-#endif
+#define V4L2_SMIAPP_TEST_PATTERN_MODE_COLOUR_BARS 2
+#define V4L2_SMIAPP_TEST_PATTERN_MODE_COLOUR_BARS_GREY 3
+#define V4L2_SMIAPP_TEST_PATTERN_MODE_PN9 4
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
