@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b58c71b_6fcd3170",
+        "filename": "libc/bionic/error.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-26T17:41:38Z",
+      "side": 1,
+      "message": "it might result in extra colon after program name. does glibc output colon space between program_name and file:line?",
+      "revId": "5336f2ff4507e0f4d2d56e4a348efa8205d2de43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3d539e_2e3407f9",
+        "filename": "tests/error_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-01-26T17:41:38Z",
+      "side": 1,
+      "message": "death test for error_at_line? to check output to strerr.",
+      "revId": "5336f2ff4507e0f4d2d56e4a348efa8205d2de43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
