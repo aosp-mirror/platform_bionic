@@ -16,6 +16,24 @@
       "revId": "96ccd2dabda2a6ed2f26eaae5da9e76a9a6e9df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4e970c_5e3771ff",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-26T22:56:30Z",
+      "side": 1,
+      "message": "Explained in more detail in comment.",
+      "parentUuid": "eb1ce3fc_1a857d9a",
+      "revId": "96ccd2dabda2a6ed2f26eaae5da9e76a9a6e9df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
