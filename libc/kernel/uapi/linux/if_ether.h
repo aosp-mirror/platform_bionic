@@ -126,10 +126,11 @@
 #define ETH_P_IEEE802154 0x00F6
 #define ETH_P_CAIF 0x00F7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define ETH_P_XDSA 0x00F8
 struct ethhdr {
  unsigned char h_dest[ETH_ALEN];
  unsigned char h_source[ETH_ALEN];
- __be16 h_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __be16 h_proto;
 } __attribute__((packed));
 #endif

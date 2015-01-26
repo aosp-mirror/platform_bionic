@@ -359,46 +359,52 @@
 #define __NR_sched_setattr (__X32_SYSCALL_BIT + 314)
 #define __NR_sched_getattr (__X32_SYSCALL_BIT + 315)
 #define __NR_renameat2 (__X32_SYSCALL_BIT + 316)
-#define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
+#define __NR_seccomp (__X32_SYSCALL_BIT + 317)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_getrandom (__X32_SYSCALL_BIT + 318)
+#define __NR_memfd_create (__X32_SYSCALL_BIT + 319)
+#define __NR_kexec_file_load (__X32_SYSCALL_BIT + 320)
+#define __NR_bpf (__X32_SYSCALL_BIT + 321)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)
 #define __NR_readv (__X32_SYSCALL_BIT + 515)
-#define __NR_writev (__X32_SYSCALL_BIT + 516)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_writev (__X32_SYSCALL_BIT + 516)
 #define __NR_recvfrom (__X32_SYSCALL_BIT + 517)
 #define __NR_sendmsg (__X32_SYSCALL_BIT + 518)
 #define __NR_recvmsg (__X32_SYSCALL_BIT + 519)
-#define __NR_execve (__X32_SYSCALL_BIT + 520)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_execve (__X32_SYSCALL_BIT + 520)
 #define __NR_ptrace (__X32_SYSCALL_BIT + 521)
 #define __NR_rt_sigpending (__X32_SYSCALL_BIT + 522)
 #define __NR_rt_sigtimedwait (__X32_SYSCALL_BIT + 523)
-#define __NR_rt_sigqueueinfo (__X32_SYSCALL_BIT + 524)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_rt_sigqueueinfo (__X32_SYSCALL_BIT + 524)
 #define __NR_sigaltstack (__X32_SYSCALL_BIT + 525)
 #define __NR_timer_create (__X32_SYSCALL_BIT + 526)
 #define __NR_mq_notify (__X32_SYSCALL_BIT + 527)
-#define __NR_kexec_load (__X32_SYSCALL_BIT + 528)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_kexec_load (__X32_SYSCALL_BIT + 528)
 #define __NR_waitid (__X32_SYSCALL_BIT + 529)
 #define __NR_set_robust_list (__X32_SYSCALL_BIT + 530)
 #define __NR_get_robust_list (__X32_SYSCALL_BIT + 531)
-#define __NR_vmsplice (__X32_SYSCALL_BIT + 532)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_vmsplice (__X32_SYSCALL_BIT + 532)
 #define __NR_move_pages (__X32_SYSCALL_BIT + 533)
 #define __NR_preadv (__X32_SYSCALL_BIT + 534)
 #define __NR_pwritev (__X32_SYSCALL_BIT + 535)
-#define __NR_rt_tgsigqueueinfo (__X32_SYSCALL_BIT + 536)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_rt_tgsigqueueinfo (__X32_SYSCALL_BIT + 536)
 #define __NR_recvmmsg (__X32_SYSCALL_BIT + 537)
 #define __NR_sendmmsg (__X32_SYSCALL_BIT + 538)
 #define __NR_process_vm_readv (__X32_SYSCALL_BIT + 539)
-#define __NR_process_vm_writev (__X32_SYSCALL_BIT + 540)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_process_vm_writev (__X32_SYSCALL_BIT + 540)
 #define __NR_setsockopt (__X32_SYSCALL_BIT + 541)
 #define __NR_getsockopt (__X32_SYSCALL_BIT + 542)
 #define __NR_io_setup (__X32_SYSCALL_BIT + 543)
-#define __NR_io_submit (__X32_SYSCALL_BIT + 544)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_io_submit (__X32_SYSCALL_BIT + 544)
 #endif

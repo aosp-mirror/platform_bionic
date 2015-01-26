@@ -461,10 +461,15 @@
 #define __NR_sched_getattr (__NR_Linux + 350)
 #define __NR_renameat2 (__NR_Linux + 351)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __NR_Linux_syscalls 351
+#define __NR_seccomp (__NR_Linux + 352)
+#define __NR_getrandom (__NR_Linux + 353)
+#define __NR_memfd_create (__NR_Linux + 354)
+#define __NR_bpf (__NR_Linux + 355)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_Linux_syscalls 355
 #endif
 #define __NR_O32_Linux 4000
-#define __NR_O32_Linux_syscalls 351
+#define __NR_O32_Linux_syscalls 355
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if _MIPS_SIM == _MIPS_SIM_ABI64
 #define __NR_Linux 5000
@@ -857,11 +862,16 @@
 #define __NR_sched_getattr (__NR_Linux + 310)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_renameat2 (__NR_Linux + 311)
-#define __NR_Linux_syscalls 311
+#define __NR_seccomp (__NR_Linux + 312)
+#define __NR_getrandom (__NR_Linux + 313)
+#define __NR_memfd_create (__NR_Linux + 314)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_bpf (__NR_Linux + 315)
+#define __NR_Linux_syscalls 315
 #endif
 #define __NR_64_Linux 5000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __NR_64_Linux_syscalls 311
+#define __NR_64_Linux_syscalls 315
 #if _MIPS_SIM == _MIPS_SIM_NABI32
 #define __NR_Linux 6000
 #define __NR_read (__NR_Linux + 0)
@@ -1258,9 +1268,14 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sched_getattr (__NR_Linux + 314)
 #define __NR_renameat2 (__NR_Linux + 315)
-#define __NR_Linux_syscalls 315
+#define __NR_seccomp (__NR_Linux + 316)
+#define __NR_getrandom (__NR_Linux + 317)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_memfd_create (__NR_Linux + 318)
+#define __NR_bpf (__NR_Linux + 319)
+#define __NR_Linux_syscalls 319
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_N32_Linux 6000
-#define __NR_N32_Linux_syscalls 315
+#define __NR_N32_Linux_syscalls 319
 #endif
