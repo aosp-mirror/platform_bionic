@@ -22,6 +22,30 @@
       "revId": "b8a8cf0d1a333401eae9c9e1d70b9c1b154ff9c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b26339e_c66fe218",
+        "filename": "libc/bionic/error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-26T21:10:44Z",
+      "side": 1,
+      "message": "glibc\u0027s don\u0027t seem to be. C programmers, dude.\n\nif it weren\u0027t for the fact that this is used by gnu tests that people want to run, i\u0027d say we shouldn\u0027t add this API at all. as it is, well, i\u0027m still not sure. i certainly wouldn\u0027t want to encourage new code to use it.",
+      "parentUuid": "8b31a7d3_0aa2db39",
+      "range": {
+        "startLine": 35,
+        "startChar": 13,
+        "endLine": 35,
+        "endChar": 32
+      },
+      "revId": "b8a8cf0d1a333401eae9c9e1d70b9c1b154ff9c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
