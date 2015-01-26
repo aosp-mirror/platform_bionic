@@ -126,7 +126,7 @@ struct binder_handle_cookie {
  __u32 handle;
  binder_uintptr_t cookie;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__((packed));
+} __packed;
 struct binder_pri_desc {
  __s32 priority;
  __u32 desc;

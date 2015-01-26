@@ -117,22 +117,32 @@ enum {
  INET_DIAG_SKMEMINFO,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
  INET_DIAG_SHUTDOWN,
+ INET_DIAG_DCTCPINFO,
 };
-#define INET_DIAG_MAX INET_DIAG_SHUTDOWN
-struct inet_diag_meminfo {
+#define INET_DIAG_MAX INET_DIAG_DCTCPINFO
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct inet_diag_meminfo {
  __u32 idiag_rmem;
  __u32 idiag_wmem;
  __u32 idiag_fmem;
- __u32 idiag_tmem;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 idiag_tmem;
 };
 struct tcpvegas_info {
  __u32 tcpv_enabled;
- __u32 tcpv_rttcnt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 tcpv_rttcnt;
  __u32 tcpv_rtt;
  __u32 tcpv_minrtt;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct tcp_dctcp_info {
+ __u16 dctcp_enabled;
+ __u16 dctcp_ce_state;
+ __u32 dctcp_alpha;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+ __u32 dctcp_ab_ecn;
+ __u32 dctcp_ab_tot;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

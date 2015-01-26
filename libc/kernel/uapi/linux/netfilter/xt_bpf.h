@@ -22,10 +22,12 @@
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_BPF_MAX_NUM_INSTR 64
+struct bpf_prog;
 struct xt_bpf_info {
  __u16 bpf_program_num_elem;
- struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sk_filter *filter __attribute__((aligned(8)));
+ struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
+ struct bpf_prog *filter __attribute__((aligned(8)));
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
